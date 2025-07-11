@@ -22,3 +22,7 @@ document.querySelector('#app').innerHTML = `
 `;
 
 setupCounter(document.querySelector('#counter'));
+
+function messy() {
+  console.log('bad spacing');
+}
