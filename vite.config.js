@@ -2,13 +2,13 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  root: '.', // project root
-  base: './', // relative base path for assets (can be '/', './', etc.)
+  root: '.', // optional if everything is in root
+  base: './',
   build: {
     outDir: 'dist',
   },
   server: {
     port: 5173,
-    open: true, // opens the browser on npm run dev
+    open: true,
   },
 });

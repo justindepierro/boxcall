@@ -7,10 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "tailwind:build": "tailwindcss -i ./src/styles/tailwind.css -o ./public/output.css --watch",
-    "prepare": "husky install",
+    "tailwind:build": "npx tailwindcss -i ./src/styles/tailwind.css -o ./public/output.css --watch",
     "format": "prettier --write .",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "dev:all": "concurrently \"npm:tailwind:build\" \"npm:dev\""
   },
   "lint-staged": {
     "**/*.{js,jsx,css,html,json,md}": [
@@ -19,8 +19,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
-    "@tailwindcss/cli": "^4.1.11",
     "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.0",
+    "css": "^3.0.0",
     "eslint": "^9.30.1",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
@@ -28,9 +29,10 @@
     "globals": "^16.3.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
+    "post": "^0.0.1",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
-    "tailwindcss": "^4.1.11",
+    "tailwindcss": "^3.4.1",
     "vite": "^7.0.4"
   }
 }
