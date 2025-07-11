@@ -1,6 +1,6 @@
 // src/auth/AuthGuard.js
-import { getSession } from './auth.js';
-import { navigateTo } from '../router/router.js'; // adjust path if needed
+import { getSession } from '../auth/auth.js';
+import { navigateTo } from '../routes/router.js'; // adjust path if needed
 
 /**
  * AuthGuard

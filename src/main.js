@@ -1,9 +1,5 @@
-import './styles/tailwind.css';
-import { HomePage } from './pages/home.js';
+// src/js/main.js
+// import '../../styles/tailwind.css'
+import { initApp } from './init.js'
 
-document.addEventListener('DOMContentLoaded', () => {
-  const el = document.querySelector('#some-element');
-  if (el) {
-    el.innerHTML = 'Tailwind is working!';
-  }
-});
+document.addEventListener('DOMContentLoaded', initApp)
