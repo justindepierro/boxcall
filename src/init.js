@@ -5,7 +5,7 @@ import { applyFontTheme, applyColorTheme } from '../src/config/themes/themeLoade
 import { initAuthListeners } from '../src/components/authGuard.js';
 import { renderAppShell } from '../src/render/renderAppShell.js';
 // import { renderLoadingScreen } from './loading.js';     // Optional
-import { handleRouting } from '../src/routes/router.js';       // Enable later
+import { handleRouting } from '../src/routes/router.js'; // Enable later
 
 const PUBLIC_PAGES = ['login', 'signup', 'forgot'];
 
@@ -37,7 +37,7 @@ export async function initApp() {
   try {
     await applyContextualTheme(currentPage);
   } catch (err) {
-    console.warn('⚠️ Theme fallback triggered');
+    console.warn('⚠️ Theme fallback triggered:', err.message);
     applyFontTheme('classic');
     applyColorTheme('classic');
   }

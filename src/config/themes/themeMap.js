@@ -90,4 +90,4 @@ export const themeMap = {
       border: 'border-amber-300',
     },
   },
-}
+};

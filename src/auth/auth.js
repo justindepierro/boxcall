@@ -49,7 +49,7 @@ export async function getSession() {
 
 export async function resetPassword(email) {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/#/login`
-  })
-  return { error }
+    redirectTo: `${window.location.origin}/#/login`,
+  });
+  return { error };
 }

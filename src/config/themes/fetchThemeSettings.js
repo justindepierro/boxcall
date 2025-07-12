@@ -9,16 +9,14 @@ export async function fetchThemeSettings(userId, teamId = null) {
     }
 
     // ✅ FIXED QUERY ORDER
-const { data: userSettings, error: userError } = await supabase
-  .from('user_settings')
-  .select(' * ')
-  .eq({ user_id: userId })  // more reliable than .eq()
-  .maybeSingle();
-
-    
+    const { data: userSettings, error: userError } = await supabase
+      .from('user_settings')
+      .select(' * ')
+      .eq({ user_id: userId }) // more reliable than .eq()
+      .maybeSingle();
 
     if (userSettings && !userError) {
-        console.warn('⚠️ Theme fetch error:', userError.message);
+      console.warn('⚠️ Theme fetch error:', userError.message);
       cacheTheme(userSettings);
       return {
         font: userSettings.font_theme || 'classic',
@@ -29,7 +27,7 @@ const { data: userSettings, error: userError } = await supabase
     if (teamId) {
       const { data: teamSettings, error: teamError } = await supabase
         .from('team_settings')
-        .select( '*' )
+        .select('*')
         .eq('team_id', teamId)
         .maybeSingle();
 

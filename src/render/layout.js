@@ -9,5 +9,5 @@ export function withSidebar(contentHTML) {
         ${contentHTML}
       </main>
     </div>
-  `
+  `;
 }

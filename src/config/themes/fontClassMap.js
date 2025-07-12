@@ -30,4 +30,4 @@ export const fontClassMap = {
     body: 'font-b-casual',
     mono: 'font-m-casual',
   },
-}
+};

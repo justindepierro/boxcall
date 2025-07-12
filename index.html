@@ -1,22 +1,25 @@
-  <body class="h-full bg-gray-900 text-white font-sans antialiased">
-    <!-- App Layout -->
-    <div id="app" class="flex min-h-screen">
-      <!-- Sidebar will be injected here -->
-      <aside id="sidebar-root" class="w-64 shrink-0 hidden md:block bg-gray-900 text-white"></aside>
+<body class="h-full bg-gray-900 text-white font-sans antialiased">
+  <!-- App Layout -->
+  <div id="app" class="flex min-h-screen">
+    <!-- Sidebar will be injected here -->
+    <aside id="sidebar-root" class="w-64 shrink-0 hidden md:block bg-gray-900 text-white"></aside>
 
-      <!-- Main Content Area -->
-      <main id="page-view" class="flex-1 p-6 overflow-y-auto bg-white text-black dark:bg-gray-950 dark:text-white transition-colors duration-300"></main>
-    </div>
+    <!-- Main Content Area -->
+    <main
+      id="page-view"
+      class="flex-1 p-6 overflow-y-auto bg-white text-black dark:bg-gray-950 dark:text-white transition-colors duration-300"
+    ></main>
+  </div>
 
-    <!-- 🔽 Move footer here -->
-    <footer class="text-xs text-gray-400 text-center py-4 w-full">
-      &copy; <span id="year"></span> BoxCall Inc. All rights reserved. |
-      <a href="#/terms" class="underline">Terms of Use</a> |
-      <a href="#/privacy" class="underline">Privacy Policy</a>
-    </footer>
+  <!-- 🔽 Move footer here -->
+  <footer class="text-xs text-gray-400 text-center py-4 w-full">
+    &copy; <span id="year"></span> BoxCall Inc. All rights reserved. |
+    <a href="#/terms" class="underline">Terms of Use</a> |
+    <a href="#/privacy" class="underline">Privacy Policy</a>
+  </footer>
 
-    <script type="module" src="/src/main.js"></script>
-    <script>
-      document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
-  </body>
+  <script type="module" src="/src/main.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>

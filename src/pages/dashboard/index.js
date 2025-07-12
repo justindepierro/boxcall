@@ -1,6 +1,6 @@
 // src/pages/dashboard/index.js
-import { AuthGuard } from '../../components/authGuard.js'
-import { renderSidebar } from '../../components/sidebar.js'
+import { AuthGuard } from '../../components/authGuard.js';
+import { renderSidebar } from '../../components/sidebar.js';
 
 export default function renderDashboardPage(container) {
   AuthGuard(() => {
@@ -12,8 +12,8 @@ export default function renderDashboardPage(container) {
           <p>Welcome to your dashboard.</p>
         </main>
       </div>
-    `
+    `;
 
-    renderSidebar()
-  })
+    renderSidebar();
+  });
 }

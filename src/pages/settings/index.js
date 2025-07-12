@@ -7,7 +7,7 @@ const colorThemes = ['classic', 'dark', 'professional', 'athletic', 'tech', 'cas
 
 export function renderSettingsPage() {
   const container = document.getElementById('page-view');
- const session = JSON.parse(localStorage.getItem('supabaseSession'));
+  const session = JSON.parse(localStorage.getItem('supabaseSession'));
   const userId = session?.user?.id;
 
   if (!userId) {
@@ -23,14 +23,14 @@ export function renderSettingsPage() {
         <label class="block">
           <span class="text-sm text-gray-600">Font Theme</span>
           <select id="font-theme" class="mt-1 w-full p-2 border rounded">
-            ${fontThemes.map(f => `<option value="${f}" ${f === font ? 'selected' : ''}>${capitalize(f)}</option>`).join('')}
+            ${fontThemes.map((f) => `<option value="${f}" ${f === font ? 'selected' : ''}>${capitalize(f)}</option>`).join('')}
           </select>
         </label>
 
         <label class="block">
           <span class="text-sm text-gray-600">Color Theme</span>
           <select id="color-theme" class="mt-1 w-full p-2 border rounded">
-            ${colorThemes.map(c => `<option value="${c}" ${c === color ? 'selected' : ''}>${capitalize(c)}</option>`).join('')}
+            ${colorThemes.map((c) => `<option value="${c}" ${c === color ? 'selected' : ''}>${capitalize(c)}</option>`).join('')}
           </select>
         </label>
 

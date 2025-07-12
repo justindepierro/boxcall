@@ -1,8 +1,8 @@
 // src/render/renderAppShell.js
-import { renderSidebar } from '../components/sidebar.js'
+import { renderSidebar } from '../components/sidebar.js';
 
 export function renderAppShell(contentHTML) {
-  const root = document.getElementById('app')
+  const root = document.getElementById('app');
 
   root.innerHTML = `
     <div class="flex h-screen">
@@ -11,7 +11,7 @@ export function renderAppShell(contentHTML) {
         ${contentHTML}
       </div>
     </div>
-  `
+  `;
 
-  renderSidebar()
+  renderSidebar();
 }

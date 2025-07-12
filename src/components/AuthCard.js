@@ -12,5 +12,5 @@ export function authCard(title, contentHTML) {
       <h1 class="text-2xl font-semibold mb-4">${title}</h1>
       ${contentHTML}
     </div>
-  `
+  `;
 }
