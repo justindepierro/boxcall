@@ -1,30 +1,44 @@
-// src/auth/authListener.js
+// src/auth/authListener.js (or wherever this lives)
 import { supabase } from './supabaseClient.js';
+import { applyContextualTheme } from '../config/themes/themeController.js';
 
 /**
- * Subscribe to Supabase auth changes (sign in/out/token refresh).
- * Useful for syncing UI, caching session, or redirecting.
+ * Listen for auth changes and invoke the callback.
+ * Also persists session and applies contextual theme.
  *
- * @param {Function} callback - Receives { event, session }
- * @returns {Function} unsubscribe function
+ * @param {function({ event: string, session: object|null }): void} callback
+ * @returns {function} unsubscribe function
  */
 export function listenToAuthChanges(callback) {
   const {
     data: { subscription },
   } = supabase.auth.onAuthStateChange((event, session) => {
     console.log('🌀 Auth event:', event);
-    callback({ event, session });
 
-    // Optional: persist session to localStorage for hydration
+    // 🔄 Save session or clear storage
     if (session) {
-      localStorage.setItem('supabaseSession', JSON.stringify(session));
+      localStorage.setItem('session', JSON.stringify(session));
+      localStorage.setItem('team_id', session.user?.user_metadata?.team_id || '');
     } else {
-      localStorage.removeItem('supabaseSession');
+      localStorage.removeItem('session');
+      localStorage.removeItem('team_id');
+    }
+
+    // 🎨 Apply theme only when signed in or refreshed with session
+    if (['SIGNED_IN', 'INITIAL_SESSION'].includes(event) && session) {
+      applyContextualTheme();
+    }
+
+    // 🎯 Run any custom logic
+    if (typeof callback === 'function') {
+      callback({ event, session });
     }
   });
 
-  // Return unsubscribe function
-  return () => subscription.unsubscribe();
+  // 🧹 Return unsubscribe function
+  return () => {
+    subscription?.unsubscribe?.();
+  };
 }
 
 /**

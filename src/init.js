@@ -1,42 +1,67 @@
+// src/js/init.js
 
-import { initRouter } from './routes/router.js';
-import { applyContextualTheme } from './config/themes/themeController.js';
-import { applyFontTheme, applyColorTheme } from './config/themes/themeLoader.js';
-import { renderSidebar } from './components/sidebar.js';
-import { renderLoadingScreen } from './js/loading.js';
-import { initAuthListeners } from './components/auth/authGuard.js';
+import { applyContextualTheme } from '../src/config/themes/themeController.js';
+import { applyFontTheme, applyColorTheme } from '../src/config/themes/themeLoader.js';
+import { initAuthListeners } from '../src/components/authGuard.js';
+import { renderAppShell } from '../src/render/renderAppShell.js';
+// import { renderLoadingScreen } from './loading.js';     // Optional
+import { handleRouting } from '../src/routes/router.js';       // Enable later
 
-const isProtectedPage = (page) => !['login', 'signup', 'forgot'].includes(page);
+const PUBLIC_PAGES = ['login', 'signup', 'forgot'];
+
+function isProtectedPage(page) {
+  return !PUBLIC_PAGES.includes(page);
+}
+
+function getCurrentPage() {
+  const raw = location.hash || '';
+  return raw.replace(/^#\/?/, '') || 'dashboard';
+}
 
 export async function initApp() {
   console.log('📦 Initializing BoxCall App...');
   initAuthListeners();
 
-  const currentPage = location.hash.replace('#', '') || 'dashboard';
+  const currentPage = getCurrentPage();
   const sessionStr = localStorage.getItem('session');
-  const session = sessionStr ? JSON.parse(sessionStr) : null;
-  const userId = session?.user?.id;
+  const sessionObj = sessionStr ? JSON.parse(sessionStr) : null;
+  const userId = sessionObj?.user?.id || null;
 
+  // 🔐 Redirect to login if needed
   if (isProtectedPage(currentPage) && !userId) {
-    location.hash = '#login';
+    console.warn('🔒 No session, redirecting to login...');
+    window.location.hash = '#/login';
     return;
   }
 
+  // 🎨 Theme Setup
   try {
     await applyContextualTheme(currentPage);
-    console.log(`🎨 Theme applied based on ${currentPage}`);
+    console.log(`🎨 Theme applied based on: ${currentPage}`);
   } catch (err) {
     console.warn('⚠️ Failed to apply theme:', err.message);
-    applyFontTheme('font-coach');
-    applyColorTheme('light');
+    applyFontTheme('classic');
+    applyColorTheme('classic');
   }
 
+  // 🧱 Layout Shell Mount
+  renderAppShell();
+
+    // ✅ Render sidebar only if user is logged in and page is protected
   if (userId && isProtectedPage(currentPage)) {
+    const { renderSidebar } = await import('../src/components/sidebar.js');
     renderSidebar();
   }
 
+  // 🧾 Optional Direct Page Render for Public Routes
   const pageView = document.getElementById('page-view');
-  if (pageView) renderLoadingScreen(pageView);
+  if (currentPage === 'login') {
+    const { default: renderLoginPage } = await import('../src/pages/login/index.js');
+    renderLoginPage(pageView);
+    return; // 🛑 Stop here; no router needed for login page
+  }
 
-  initRouter();
+  // 🧭 Boot the router (initial + reactive)
+  await handleRouting(); // Render route immediately
+  window.addEventListener('hashchange', handleRouting); // React to hash changes
 }

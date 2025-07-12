@@ -1,6 +1,6 @@
 // src/routes/router.js
 
-// Define routes and their corresponding lazy-loaded modules
+// Dynamically map route names to their respective page modules
 const routes = {
   home: () => import('../pages/home/index.js'),
   dashboard: () => import('../pages/dashboard/index.js'),
@@ -17,29 +17,51 @@ const routes = {
   '404': () => import('../pages/404/index.js'),
 }
 
-// Main function to handle page routing
+/**
+ * Navigate to a specific page by updating the hash
+ */
+export function navigateTo(page) {
+  window.location.hash = `#/${page}`
+}
+
+/**
+ * Boot up the router
+ */
+export function initRouter() {
+  window.addEventListener('hashchange', handleRouting)
+  handleRouting() // Trigger on initial load
+}
+
+/**
+ * Handle routing by dynamically rendering the appropriate page
+ */
 export async function handleRouting() {
-  const container = document.getElementById('app')
+  const hash = window.location.hash.replace(/^#\/?/, '') || 'dashboard'
+  const route = routes[hash] || routes['404']
+  const container = document.getElementById('page-view') || document.getElementById('app')
+
   if (!container) {
-    console.error('❌ Missing #app container in index.html')
+    console.error('❌ Missing #page-view or #app container in index.html')
     return
   }
 
-  const hash = window.location.hash.replace(/^#\/?/, '') || 'home'
-  const loadRoute = routes[hash] || routes['404']
-
   try {
-    const module = await loadRoute()
-    const renderFn = Object.values(module)[0]
-    renderFn(container)
-  } catch (err) {
-    console.error(`❌ Failed to load route: ${hash}`, err)
-    const fallback = await routes['404']()
-    const render404 = Object.values(fallback)[0]
-    render404(container)
-  }
-}
+    const module = await route()
 
-export function navigateTo(page) {
-  window.location.hash = `#/${page}`
+    // 🧠 Support both default export and named "render" function
+    const renderFn = module.default || module.render
+
+    if (typeof renderFn === 'function') {
+      renderFn(container)
+    } else {
+      throw new Error(`Module for route "${hash}" is missing a render function`)
+    }
+  } catch (err) {
+    console.error(`❌ Error loading route "${hash}"`, err)
+
+    // Graceful fallback to 404 page
+    const fallback = await routes['404']()
+    const fallbackRender = fallback.default || fallback.render
+    fallbackRender(container)
+  }
 }

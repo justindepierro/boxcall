@@ -1,0 +1,10 @@
+@tailwind components;
+
+/* Page shell layout */
+#app {
+  @apply flex min-h-screen;
+}
+
+#page-view {
+  @apply flex-1 p-4 overflow-y-auto;
+}

@@ -1,0 +1,17 @@
+/* Buttons */
+.btn {
+  @apply px-4 py-2 rounded font-medium transition;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700;
+}
+
+.btn-danger {
+  @apply bg-red-600 text-white hover:bg-red-700;
+}
+
+/* Inputs */
+.input {
+  @apply border border-gray-300 p-2 rounded w-full;
+}

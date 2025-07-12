@@ -1,0 +1,13 @@
+@tailwind base;
+
+body {
+  @apply font-sans text-white bg-green-900;
+}
+
+/* Headings */
+h1 {
+  @apply text-3xl font-bold;
+}
+h2 {
+  @apply text-2xl font-semibold;
+}
