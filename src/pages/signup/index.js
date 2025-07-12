@@ -1,6 +1,9 @@
 // src/pages/signup/index.js
 import { signUp } from '../../auth/auth.js'
 import { authCard } from '../../lib/authCard.js'
+import { showToast } from '../../../utils/toast.js';
+
+// Inside submit handler:
 
 export default function renderSignupPage(container) {
   container.innerHTML = authCard('Sign Up', `
@@ -26,6 +29,7 @@ export default function renderSignupPage(container) {
       message.textContent = `⚠️ ${error.message}`
     } else {
       message.textContent = `✅ Check your email to confirm your account.`
+       showToast('Account created! Check your email.', 'success');
     }
   })
 }

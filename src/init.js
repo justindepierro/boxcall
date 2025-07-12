@@ -27,19 +27,17 @@ export async function initApp() {
   const sessionObj = sessionStr ? JSON.parse(sessionStr) : null;
   const userId = sessionObj?.user?.id || null;
 
-  // 🔐 Redirect to login if needed
+  // 🔐 Redirect only if needed (but don’t return early)
   if (isProtectedPage(currentPage) && !userId) {
     console.warn('🔒 No session, redirecting to login...');
     window.location.hash = '#/login';
-    return;
   }
 
   // 🎨 Theme Setup
   try {
     await applyContextualTheme(currentPage);
-    console.log(`🎨 Theme applied based on: ${currentPage}`);
   } catch (err) {
-    console.warn('⚠️ Failed to apply theme:', err.message);
+    console.warn('⚠️ Theme fallback triggered');
     applyFontTheme('classic');
     applyColorTheme('classic');
   }
@@ -47,21 +45,29 @@ export async function initApp() {
   // 🧱 Layout Shell Mount
   renderAppShell();
 
-    // ✅ Render sidebar only if user is logged in and page is protected
-  if (userId && isProtectedPage(currentPage)) {
-    const { renderSidebar } = await import('../src/components/sidebar.js');
-    renderSidebar();
-  }
+  // Wait for layout shell to mount
+  requestAnimationFrame(async () => {
+    const pageView = document.getElementById('page-view');
+    if (!pageView) {
+      console.error('❌ #page-view not found!');
+      return;
+    }
 
-  // 🧾 Optional Direct Page Render for Public Routes
-  const pageView = document.getElementById('page-view');
-  if (currentPage === 'login') {
-    const { default: renderLoginPage } = await import('../src/pages/login/index.js');
-    renderLoginPage(pageView);
-    return; // 🛑 Stop here; no router needed for login page
-  }
+    const newPage = getCurrentPage(); // Get latest hash after possible redirect
 
-  // 🧭 Boot the router (initial + reactive)
-  await handleRouting(); // Render route immediately
-  window.addEventListener('hashchange', handleRouting); // React to hash changes
+    if (newPage === 'login') {
+      const { default: renderLoginPage } = await import('../src/pages/login/index.js');
+      renderLoginPage(pageView);
+      return;
+    }
+
+    // 🧭 Sidebar + Routing
+    if (userId && isProtectedPage(newPage)) {
+      const { renderSidebar } = await import('../src/components/sidebar.js');
+      renderSidebar();
+    }
+
+    await handleRouting();
+    window.addEventListener('hashchange', handleRouting);
+  });
 }
