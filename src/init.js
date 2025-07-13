@@ -1,11 +1,11 @@
 // src/js/init.js
-
+import { initAuthState, isLoggedIn } from '../src/state/authState.js';
 import { applyContextualTheme } from '../src/config/themes/themeController.js';
 import { applyFontTheme, applyColorTheme } from '../src/config/themes/themeLoader.js';
 import { initAuthListeners } from '../src/components/authGuard.js';
 import { renderAppShell } from '../src/render/renderAppShell.js';
-// import { renderLoadingScreen } from './loading.js';     // Optional
-import { handleRouting } from '../src/routes/router.js'; // Enable later
+// import { renderLoadingScreen } from './loading.js';
+import { handleRouting } from '../src/routes/router.js';
 
 const PUBLIC_PAGES = ['login', 'signup', 'forgot'];
 
@@ -20,20 +20,20 @@ function getCurrentPage() {
 
 export async function initApp() {
   console.log('📦 Initializing BoxCall App...');
+
+  // 🔐 Init auth state globally
+  await initAuthState();
   initAuthListeners();
 
   const currentPage = getCurrentPage();
-  const sessionStr = localStorage.getItem('session');
-  const sessionObj = sessionStr ? JSON.parse(sessionStr) : null;
-  const userId = sessionObj?.user?.id || null;
 
-  // 🔐 Redirect only if needed (but don’t return early)
-  if (isProtectedPage(currentPage) && !userId) {
-    console.warn('🔒 No session, redirecting to login...');
+  // 🚧 Redirect if user not logged in and trying to access protected page
+  if (isProtectedPage(currentPage) && !isLoggedIn()) {
+    console.warn('🔒 Not logged in, redirecting...');
     window.location.hash = '#/login';
   }
 
-  // 🎨 Theme Setup
+  // 🎨 Load user/team theme
   try {
     await applyContextualTheme(currentPage);
   } catch (err) {
@@ -42,10 +42,10 @@ export async function initApp() {
     applyColorTheme('classic');
   }
 
-  // 🧱 Layout Shell Mount
+  // 🧱 Layout Shell
   renderAppShell();
 
-  // Wait for layout shell to mount
+  // Wait 1 frame to allow layout shell to mount
   requestAnimationFrame(async () => {
     const pageView = document.getElementById('page-view');
     if (!pageView) {
@@ -53,7 +53,7 @@ export async function initApp() {
       return;
     }
 
-    const newPage = getCurrentPage(); // Get latest hash after possible redirect
+    const newPage = getCurrentPage();
 
     if (newPage === 'login') {
       const { default: renderLoginPage } = await import('../src/pages/login/index.js');
@@ -61,12 +61,13 @@ export async function initApp() {
       return;
     }
 
-    // 🧭 Sidebar + Routing
-    if (userId && isProtectedPage(newPage)) {
+    // 🧭 Sidebar only if logged in on protected page
+    if (isLoggedIn() && isProtectedPage(newPage)) {
       const { renderSidebar } = await import('../src/components/sidebar.js');
       renderSidebar();
     }
 
+    // 🚦 Route to appropriate view
     await handleRouting();
     window.addEventListener('hashchange', handleRouting);
   });

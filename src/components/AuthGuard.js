@@ -1,46 +1,45 @@
-// src/auth/AuthGuard.js
-import { getSession } from '../auth/auth.js';
-import { listenToAuthChanges } from '../auth/authListener.js';
-import { navigateTo } from '../routes/router.js';
-import { applyContextualTheme } from '../config/themes/themeController.js';
+// src/utils/authGuard.js
+import { isLoggedIn, getCurrentUser } from "../state/authState.js";
+import { navigateTo } from "../routes/router.js";
+import { listenToAuthChanges } from "../auth/authListener.js";
+import { applyContextualTheme } from "../../src/config/themes/themeController.js";
 
 /**
- * AuthGuard
- * Wrap this around any protected page logic.
- * Redirects to login page if the user is not authenticated.
- *
- * @param {Function} onAuth - Callback to run if user is authenticated
+ * AuthGuard wrapper for protected page logic.
+ * @param {Function} onAuth - Callback to execute if the user is authenticated
+ * @param {Object} [options]
+ * @param {string} [options.redirectTo='/login'] - Where to send unauthenticated users
  */
-export async function AuthGuard(onAuth) {
-  try {
-    const session = await getSession();
+export function authGuard(onAuth, options = {}) {
+  const redirectTo = options.redirectTo || "/login";
 
-    if (session) {
-      console.log('🟢 AuthGuard: User is signed in');
-      onAuth(session);
+  try {
+    if (isLoggedIn()) {
+      console.log("🟢 AuthGuard: User is signed in");
+      onAuth(getCurrentUser());
     } else {
-      console.warn('🔴 AuthGuard: No active session, redirecting to login');
-      navigateTo('/login');
+      console.warn("🔴 AuthGuard: Not signed in, redirecting...");
+      navigateTo(redirectTo);
     }
-  } catch (error) {
-    console.error('⚠️ AuthGuard error:', error);
-    navigateTo('/login');
+  } catch (err) {
+    console.error("⚠️ AuthGuard error:", err);
+    navigateTo(redirectTo);
   }
 }
-
 /**
- * Global listener for Supabase auth events
- * - Handles sign in / sign out / token refresh
- * - Redirects or re-applies themes automatically
+ * Global listener for Supabase auth changes.
+ * Handles sign in/out/refresh events.
  */
 export function initAuthListeners() {
   listenToAuthChanges(async ({ event, session }) => {
-    console.log('🔄 Auth state changed:', event);
+    console.log("🔄 Auth state changed:", event);
 
     if (!session) {
-      navigateTo('/login');
+      console.warn("🚪 Logged out – redirecting");
+      navigateTo("/login");
     } else {
-      await applyContextualTheme(); // reapply user/team theme on login
+      console.log("🎨 Reapplying theme for new session...");
+      await applyContextualTheme();
     }
   });
 }
