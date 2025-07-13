@@ -13,7 +13,7 @@ export async function fetchThemeSettings(userId, teamId = null) {
       .from('user_settings')
       .select('*')
       .eq('user_id', userId)
-      .maybeSingle();
+      .single();
 
     console.log('🧪 Raw userSettings:', userSettings);
     console.log('🧪 Supabase userError:', userError);
@@ -33,7 +33,7 @@ export async function fetchThemeSettings(userId, teamId = null) {
         .from('team_settings')
         .select('*')
         .eq('team_id', teamId)
-        .maybeSingle();
+        .single();
 
       console.log('🧪 Raw teamSettings:', teamSettings);
       console.log('🧪 Supabase teamError:', teamError);

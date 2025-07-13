@@ -1,27 +1,12 @@
-// src/routes/router.js
+import { showSpinner, hideSpinner } from '@utils/spinner.js';
 
-// Dynamically map route names to their respective page modules
-const routes = {
-  home: () => import('@pages/home/index.js'),
-  dashboard: () => import('@pages/dashboard/index.js'),
-  teamdashboard: () => import('@pages/teamdashboard/index.js'),
-  boxcall: () => import('@pages/boxcall/index.js'),
-  calendar: () => import('@pages/calendar/index.js'),
-  templates: () => import('@pages/templates/index.js'),
-  login: () => import('@pages/login/index.js'),
-  signup: () => import('@pages/signup/index.js'),
-  playbook: () => import('@pages/playbook/index.js'),
-  team: () => import('@pages/team/index.js'),
-  settings: () => import('@pages/settings/index.js'),
-  forgot: () => import('@pages/forgot/index.js'),
-  404: () => import('@pages/404/index.js'),
-};
+const pageModules = import.meta.glob('@pages/**/*.js');
 
 /**
  * Navigate to a specific page by updating the hash
  */
 export function navigateTo(page = '') {
-  const cleanPage = page.replace(/^\/+/, ''); // 🧼 strip any leading slashes
+  const cleanPage = page.replace(/^\/+/, '');
   window.location.hash = `#/${cleanPage}`;
 }
 
@@ -34,35 +19,68 @@ export function initRouter() {
 }
 
 /**
- * Handle routing by dynamically rendering the appropriate page
+ * Handles routing by dynamically resolving the best match
  */
 export async function handleRouting() {
   const hash = window.location.hash.replace(/^#\/?/, '') || 'dashboard';
-  const route = routes[hash] || routes['404'];
-  const container = document.getElementById('page-view') || document.getElementById('app');
+  const pathParts = hash.split('/'); // ['team', 'settings']
+  const routeBase = pathParts[0]; // 'team'
+  const subRoute = pathParts[1]; // 'settings' (optional)
 
+  const container = document.getElementById('page-view') || document.getElementById('app');
   if (!container) {
     console.error('❌ Missing #page-view or #app container in index.html');
     return;
   }
 
-  try {
-    const module = await route();
+  showSpinner();
 
-    // 🧠 Support both default export and named "render" function
+  try {
+    // Try to match nested route first (e.g. /pages/team/settings.js)
+    const nestedPath = Object.keys(pageModules).find((path) =>
+      path.toLowerCase().includes(`/pages/${routeBase}/${subRoute}.js`)
+    );
+
+    // Otherwise, fall back to index.js in folder
+    const indexPath = Object.keys(pageModules).find((path) =>
+      path.toLowerCase().includes(`/pages/${routeBase}/index.js`)
+    );
+
+    // Choose the best match
+    const modulePath = nestedPath || indexPath;
+    if (!modulePath) throw new Error(`No route found for "${hash}"`);
+
+    const module = await pageModules[modulePath]();
     const renderFn = module.default || module.render;
 
     if (typeof renderFn === 'function') {
       renderFn(container);
     } else {
-      throw new Error(`Module for route "${hash}" is missing a render function`);
+      throw new Error(`Module for "${hash}" is missing a valid render function`);
     }
   } catch (err) {
-    console.error(`❌ Error loading route "${hash}"`, err);
-
-    // Graceful fallback to 404 page
-    const fallback = await routes['404']();
-    const fallbackRender = fallback.default || fallback.render;
-    fallbackRender(container);
+    console.warn(`⚠️ Falling back to 404 for "${hash}"`, err);
+    const fallback = await loadFallback404();
+    fallback(container);
+  } finally {
+    hideSpinner(); // ✅ This is now correctly part of the try/catch/finally
   }
+}
+
+/**
+ * Gracefully loads the 404 fallback module
+ */
+async function loadFallback404() {
+  const fallbackPath = Object.keys(pageModules).find((p) =>
+    p.toLowerCase().includes('/pages/404/index.js')
+  );
+
+  if (!fallbackPath) {
+    return (el) => {
+      el.innerHTML = `<h1 class="text-red-500 text-center mt-10">404: Page not found</h1>`;
+    };
+  }
+
+  const mod = await pageModules[fallbackPath]();
+  return mod.default || mod.render;
 }
