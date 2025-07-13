@@ -1,12 +1,12 @@
 // src/pages/forgot/index.js
-import { resetPassword } from '../../auth/auth.js';
-import { authCard } from '../../components/AuthCard.js';
-import { showToast } from '../../../utils/toast.js';
-import { formatError } from '../../../utils/errors.js';
+import { resetPassword } from "../../auth/auth.js";
+import { authCard } from "../../components/AuthCard.js";
+import { showToast } from "../../utils/toast.js";
+import { formatError } from "../../utils/errors.js";
 
 export default function renderForgotPage(container) {
   container.innerHTML = authCard(
-    'Forgot Password',
+    "Forgot Password",
     `
     <form id="forgot-form" class="space-y-4">
       <input type="email" id="forgot-email" placeholder="Enter your email" required class="w-full border p-2 rounded" />
@@ -15,28 +15,28 @@ export default function renderForgotPage(container) {
     </form>
     <a href="#/login" class="block mt-4 text-sm text-blue-600 hover:underline">Back to login</a>
   `,
-    "We’ll send a password reset link to your email. Check your spam folder if you don't see it within a few minutes."
+    "We’ll send a password reset link to your email. Check your spam folder if you don't see it within a few minutes.",
   );
 
-  const form = document.getElementById('forgot-form');
-  form.addEventListener('submit', handleForgotSubmit);
+  const form = document.getElementById("forgot-form");
+  form.addEventListener("submit", handleForgotSubmit);
 }
 
 async function handleForgotSubmit(e) {
   e.preventDefault();
 
-  const email = document.getElementById('forgot-email').value.trim();
-  const btn = document.getElementById('forgot-btn');
-  const msg = document.getElementById('forgot-message');
+  const email = document.getElementById("forgot-email").value.trim();
+  const btn = document.getElementById("forgot-btn");
+  const msg = document.getElementById("forgot-message");
 
-  msg.textContent = '';
+  msg.textContent = "";
   btn.disabled = true;
-  btn.textContent = 'Sending...';
+  btn.textContent = "Sending...";
 
-  if (!email.includes('@')) {
-    msg.textContent = '⚠️ Please enter a valid email address.';
+  if (!email.includes("@")) {
+    msg.textContent = "⚠️ Please enter a valid email address.";
     btn.disabled = false;
-    btn.textContent = 'Send Reset Link';
+    btn.textContent = "Send Reset Link";
     return;
   }
 
@@ -45,16 +45,16 @@ async function handleForgotSubmit(e) {
   if (error) {
     const formatted = formatError ? formatError(error) : error.message;
     msg.textContent = `⚠️ ${formatted}`;
-    showToast('Reset failed: ' + formatted, 'error');
+    showToast("Reset failed: " + formatted, "error");
   } else {
     msg.innerHTML = `
       ✅ Reset email sent to <strong>${email}</strong>.<br>
       If you don't see it, check your spam folder or use your school-issued email.<br>
       You can also <a href="#/forgot" class="underline">try again</a> if needed.
     `;
-    showToast('Check your inbox for a reset email.', 'success');
+    showToast("Check your inbox for a reset email.", "success");
   }
 
   btn.disabled = false;
-  btn.textContent = 'Send Reset Link';
+  btn.textContent = "Send Reset Link";
 }

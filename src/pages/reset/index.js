@@ -1,7 +1,7 @@
 // src/pages/reset/index.js
 import { supabase } from "../../lib/supabase/client.js";
 import { authCard } from "../../components/AuthCard.js";
-import { showToast } from "../../../utils/toast.js";
+import { showToast } from "../../utils/toast.js";
 import { initAuthState } from "../../state/authState.js";
 import { navigateTo } from "../../routes/router.js";
 
@@ -25,7 +25,7 @@ export default function renderResetPage(container) {
       <p id="reset-message" class="text-sm mt-2 text-blue-500"></p>
     </form>
   `,
-    "Enter and confirm your new password below to complete your reset. You’ll be redirected once successful."
+    "Enter and confirm your new password below to complete your reset. You’ll be redirected once successful.",
   );
 
   const form = document.getElementById("reset-form");

@@ -1,13 +1,27 @@
-import { supabase } from '../../auth/supabaseClient.js';
-import { fetchThemeSettings } from '../../config/themes/fetchThemeSettings.js';
-import { applyContextualTheme } from '../../config/themes/themeController.js';
+import { supabase } from "../../auth/supabaseClient.js";
+import { fetchThemeSettings } from "../../config/themes/fetchThemeSettings.js";
+import { applyContextualTheme } from "../../config/themes/themeController.js";
 
-const fontThemes = ['classic', 'modern', 'professional', 'athletic', 'tech', 'casual'];
-const colorThemes = ['classic', 'dark', 'professional', 'athletic', 'tech', 'casual'];
+const fontThemes = [
+  "classic",
+  "modern",
+  "professional",
+  "athletic",
+  "tech",
+  "casual",
+];
+const colorThemes = [
+  "classic",
+  "dark",
+  "professional",
+  "athletic",
+  "tech",
+  "casual",
+];
 
 export function renderSettingsPage() {
-  const container = document.getElementById('page-view');
-  const session = JSON.parse(localStorage.getItem('supabaseSession'));
+  const container = document.getElementById("page-view");
+  const session = JSON.parse(localStorage.getItem("supabaseSession"));
   const userId = session?.user?.id;
 
   if (!userId) {
@@ -23,14 +37,14 @@ export function renderSettingsPage() {
         <label class="block">
           <span class="text-sm text-gray-600">Font Theme</span>
           <select id="font-theme" class="mt-1 w-full p-2 border rounded">
-            ${fontThemes.map((f) => `<option value="${f}" ${f === font ? 'selected' : ''}>${capitalize(f)}</option>`).join('')}
+            ${fontThemes.map((f) => `<option value="${f}" ${f === font ? "selected" : ""}>${capitalize(f)}</option>`).join("")}
           </select>
         </label>
 
         <label class="block">
           <span class="text-sm text-gray-600">Color Theme</span>
           <select id="color-theme" class="mt-1 w-full p-2 border rounded">
-            ${colorThemes.map((c) => `<option value="${c}" ${c === color ? 'selected' : ''}>${capitalize(c)}</option>`).join('')}
+            ${colorThemes.map((c) => `<option value="${c}" ${c === color ? "selected" : ""}>${capitalize(c)}</option>`).join("")}
           </select>
         </label>
 
@@ -39,22 +53,24 @@ export function renderSettingsPage() {
       </section>
     `;
 
-    document.getElementById('save-theme-btn').addEventListener('click', async () => {
-      const font_theme = document.getElementById('font-theme').value;
-      const color_theme = document.getElementById('color-theme').value;
+    document
+      .getElementById("save-theme-btn")
+      .addEventListener("click", async () => {
+        const font_theme = document.getElementById("font-theme").value;
+        const color_theme = document.getElementById("color-theme").value;
 
-      const { error } = await supabase
-        .from('user_settings')
-        .update({ font_theme, color_theme })
-        .eq('user_id', userId);
+        const { error } = await supabase
+          .from("user_settings")
+          .update({ font_theme, color_theme })
+          .eq("user_id", userId);
 
-      if (!error) {
-        document.getElementById('save-status').classList.remove('hidden');
-        await applyContextualTheme(); // refresh the UI theme
-      } else {
-        alert('❌ Failed to save theme.');
-      }
-    });
+        if (!error) {
+          document.getElementById("save-status").classList.remove("hidden");
+          await applyContextualTheme(); // refresh the UI theme
+        } else {
+          alert("❌ Failed to save theme.");
+        }
+      });
   });
 }
 

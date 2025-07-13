@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "tailwind:build": "npx tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/output.css --watch",
     "format": "prettier --write .",
-    "lint": "eslint src/",
+    "lint": "eslint",
     "dev:all": "concurrently \"npm:tailwind:build\" \"npm:dev\""
   },
   "lint-staged": {
@@ -22,7 +22,7 @@
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.2.0",
     "css": "^3.0.0",
-    "eslint": "^9.30.1",
+    "eslint": "^9.31.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
     "eslint-plugin-react": "^7.37.5",

@@ -1,9 +1,9 @@
 // src/pages/login/index.js
-import { signIn } from '../../auth/auth.js'; // 🔁 adjust path as needed
+import { signIn } from '@auth/auth.js'; // instead of ../../auth/auth.js
 import { authCard } from '../../components/AuthCard.js';
-import { showToast } from '../../../utils/toast.js';
+import { showToast } from '../../utils/toast.js';
 import { navigateTo } from '../../routes/router.js'; // 🔁 if you have a router
-import { formatError } from '../../../utils/errors.js';     // 🔁 optional helper
+import { formatError } from '../../utils/errors.js'; // 🔁 optional helper
 
 export default function renderLoginPage(container) {
   console.log('🔑 Rendering Login Page');
@@ -44,7 +44,7 @@ async function handleLoginSubmit(e) {
     errorEl.textContent = '⚠️ ' + msg;
   } else {
     showToast('✅ Login successful!', 'success');
-    navigateTo('/dashboard'); // more reliable than hash assignment
+    navigateTo('dashboard'); // more reliable than hash assignment
   }
 
   btn.disabled = false;

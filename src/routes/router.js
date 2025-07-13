@@ -2,26 +2,27 @@
 
 // Dynamically map route names to their respective page modules
 const routes = {
-  home: () => import('../pages/home/index.js'),
-  dashboard: () => import('../pages/dashboard/index.js'),
-  teamdashboard: () => import('../pages/teamdashboard/index.js'),
-  boxcall: () => import('../pages/boxcall/index.js'),
-  calendar: () => import('../pages/calendar/index.js'),
-  templates: () => import('../pages/templates/index.js'),
-  login: () => import('../pages/login/index.js'),
-  signup: () => import('../pages/signup/index.js'),
-  playbook: () => import('../pages/playbook/index.js'),
-  team: () => import('../pages/team/index.js'),
-  settings: () => import('../pages/settings/index.js'),
-  forgot: () => import('../pages/forgot/index.js'),
-  404: () => import('../pages/404/index.js'),
+  home: () => import('@pages/home/index.js'),
+  dashboard: () => import('@pages/dashboard/index.js'),
+  teamdashboard: () => import('@pages/teamdashboard/index.js'),
+  boxcall: () => import('@pages/boxcall/index.js'),
+  calendar: () => import('@pages/calendar/index.js'),
+  templates: () => import('@pages/templates/index.js'),
+  login: () => import('@pages/login/index.js'),
+  signup: () => import('@pages/signup/index.js'),
+  playbook: () => import('@pages/playbook/index.js'),
+  team: () => import('@pages/team/index.js'),
+  settings: () => import('@pages/settings/index.js'),
+  forgot: () => import('@pages/forgot/index.js'),
+  404: () => import('@pages/404/index.js'),
 };
 
 /**
  * Navigate to a specific page by updating the hash
  */
-export function navigateTo(page) {
-  window.location.hash = `#/${page}`;
+export function navigateTo(page = '') {
+  const cleanPage = page.replace(/^\/+/, ''); // 🧼 strip any leading slashes
+  window.location.hash = `#/${cleanPage}`;
 }
 
 /**

@@ -1,6 +1,7 @@
 // src/config/themes/fetchThemeSettings.js
 import { supabase } from '../../auth/supabaseClient.js';
 
+// src/config/themes/fetchThemeSettings.js
 export async function fetchThemeSettings(userId, teamId = null) {
   try {
     if (!userId) {
@@ -8,20 +9,23 @@ export async function fetchThemeSettings(userId, teamId = null) {
       return { font: 'classic', color: 'classic' };
     }
 
-    // ✅ FIXED QUERY ORDER
     const { data: userSettings, error: userError } = await supabase
       .from('user_settings')
-      .select(' * ')
-      .eq({ user_id: userId }) // more reliable than .eq()
+      .select('*')
+      .eq('user_id', userId)
       .maybeSingle();
 
+    console.log('🧪 Raw userSettings:', userSettings);
+    console.log('🧪 Supabase userError:', userError);
+
     if (userSettings && !userError) {
-      console.warn('⚠️ Theme fetch error:', userError.message);
-      cacheTheme(userSettings);
-      return {
+      const result = {
         font: userSettings.font_theme || 'classic',
         color: userSettings.color_theme || 'classic',
       };
+      console.log('🎯 Fetched user theme settings:', result);
+      cacheTheme(result);
+      return result;
     }
 
     if (teamId) {
@@ -31,17 +35,25 @@ export async function fetchThemeSettings(userId, teamId = null) {
         .eq('team_id', teamId)
         .maybeSingle();
 
+      console.log('🧪 Raw teamSettings:', teamSettings);
+      console.log('🧪 Supabase teamError:', teamError);
+
       if (teamSettings && !teamError) {
-        cacheTheme(teamSettings);
-        return {
+        const result = {
           font: teamSettings.font_theme || 'classic',
           color: teamSettings.color_theme || 'classic',
         };
+        console.log('🎯 Fetched team theme settings:', result);
+        cacheTheme(result);
+        return result;
       }
     }
 
     const cached = loadCachedTheme();
-    if (cached) return cached;
+    if (cached) {
+      console.log('📦 Loaded cached theme:', cached);
+      return cached;
+    }
 
     return { font: 'classic', color: 'classic' };
   } catch (err) {
@@ -50,10 +62,11 @@ export async function fetchThemeSettings(userId, teamId = null) {
   }
 }
 
-function cacheTheme({ font_theme, color_theme }) {
+// ✅ FIXED: Correctly destructures cached font/color keys
+function cacheTheme({ font, color }) {
   const toCache = {
-    font: font_theme || 'classic',
-    color: color_theme || 'classic',
+    font: font || 'classic',
+    color: color || 'classic',
   };
   localStorage.setItem('lastTheme', JSON.stringify(toCache));
 }

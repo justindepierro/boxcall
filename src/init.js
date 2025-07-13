@@ -2,7 +2,7 @@
 import { initAuthState, isLoggedIn } from '../src/state/authState.js';
 import { applyContextualTheme } from '../src/config/themes/themeController.js';
 import { applyFontTheme, applyColorTheme } from '../src/config/themes/themeLoader.js';
-import { initAuthListeners } from '../src/components/authGuard.js';
+import { initAuthListeners } from '../src/components/AuthGuard.js';
 import { renderAppShell } from '../src/render/renderAppShell.js';
 // import { renderLoadingScreen } from './loading.js';
 import { handleRouting } from '../src/routes/router.js';
@@ -23,6 +23,19 @@ export async function initApp() {
 
   // 🔐 Init auth state globally
   await initAuthState();
+
+  // ✅ Log session and user ID for debugging
+  const sessionRaw = localStorage.getItem('session');
+  if (sessionRaw) {
+    try {
+      const session = JSON.parse(sessionRaw);
+      console.log('👤 Logged-in user ID:', session?.user?.id);
+      console.log('👥 Logged-in team ID:', session?.team_id);
+    } catch (err) {
+      console.error("⚠️ Couldn't parse session JSON:", err);
+    }
+  }
+
   initAuthListeners();
 
   const currentPage = getCurrentPage();

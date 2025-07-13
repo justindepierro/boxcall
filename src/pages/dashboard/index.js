@@ -1,9 +1,9 @@
 // src/pages/dashboard/index.js
-import { AuthGuard } from '../../components/authGuard.js';
+import { authGuard } from '../../components/AuthGuard.js';
 import { renderSidebar } from '../../components/sidebar.js';
 
 export default function renderDashboardPage(container) {
-  AuthGuard(() => {
+  authGuard(() => {
     container.innerHTML = `
       <div class="flex h-screen">
         <div id="sidebar-root" class="w-64"></div>
