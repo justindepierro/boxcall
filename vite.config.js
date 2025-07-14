@@ -10,6 +10,13 @@ const __dirname = dirname(__filename);
 export default defineConfig({
   root: '.', // optional if everything is in root
   base: './',
+  css: {
+    preprocessorOptions: {
+      css: {
+        charset: false,
+      },
+    },
+  },
   build: {
     outDir: 'dist',
   },
