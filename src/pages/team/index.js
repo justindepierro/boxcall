@@ -4,7 +4,7 @@ import { getUserSettings } from '@lib/teams/user/getUserSettings.js';
 import renderJoinOnlyTeamPage from './joinTeam.js';
 import renderJoinOrCreateTeamPage from './joinOrCreate.js';
 import renderCreateTeamPage from './create.js';
-import renderTeamInfoPage from './teaminfo.js';
+import renderTeamInfoPage from './teamInfo.js';
 import renderTeamSettingsPage from './teamSettings.js';
 
 /**
