@@ -54,7 +54,7 @@
 /* TECH THEME */
 @font-face {
   font-family: 'Orbitron';
-  src: url('@/assets/fonts/orbitron-v34-latin-regular.woff2') format('woff2');
+  src: url('../assets/fonts/orbitron-v34-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
