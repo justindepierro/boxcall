@@ -1,6 +1,6 @@
 // src/js/main.js
-import '../src/styles/tailwind.css'; // ✅ ENSURE Tailwind loads
-import '../src/styles/fonts.css'; // Ensure fonts are loaded
+import './styles/tailwind.css'; // ✅ ENSURE Tailwind loads
+import './styles/fonts.css'; // Ensure fonts are loaded
 import { initApp } from './init.js';
 
 document.addEventListener('DOMContentLoaded', () => {
