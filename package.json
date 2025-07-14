@@ -7,7 +7,6 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "tailwind:build": "npx tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/output.css --watch",
     "format": "prettier --write .",
     "lint": "eslint",
     "dev:all": "concurrently \"npm:tailwind:build\" \"npm:dev\""
