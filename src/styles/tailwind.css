@@ -1,4 +1,5 @@
-@import './fonts.css'; /* ✅ relative path from this file */
+@import './fonts.css'; /* ✅ LOCAL relative import from same folder */ /* 
+src/styles/tailwind.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -1,5 +1,7 @@
-// src/js/main.js
-import './styles/tailwind.css';
+// src/main.js
+import './styles/tailwind.css'; // ✅ Tailwind entry point
+import './styles/fonts.css'; // ✅ Custom fonts
+
 import { initApp } from './init.js';
 
 document.addEventListener('DOMContentLoaded', () => {
