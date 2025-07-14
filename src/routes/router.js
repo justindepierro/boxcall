@@ -1,4 +1,5 @@
 import { showSpinner, hideSpinner } from '@utils/spinner.js';
+import { devLog } from '@utils/devLogger.js';
 
 const pageModules = import.meta.glob('@pages/**/*.js');
 
@@ -8,6 +9,7 @@ const pageModules = import.meta.glob('@pages/**/*.js');
 export function navigateTo(page = '') {
   const cleanPage = page.replace(/^\/+/, '');
   window.location.hash = `#/${cleanPage}`;
+  devLog('🚦 Reached new page after routing');
 }
 
 /**

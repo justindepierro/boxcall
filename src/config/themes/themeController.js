@@ -1,6 +1,7 @@
 // src/config/themes/themeController.js
 import { fetchThemeSettings } from './fetchThemeSettings.js';
 import { applyFontTheme, applyColorTheme } from './themeLoader.js';
+import { getOverrideTheme } from '../../state/devToolState.js';
 
 // Prevents reapplying the theme multiple times during session
 let themeApplied = false;
@@ -15,7 +16,6 @@ export async function applyContextualTheme() {
     return;
   }
 
-  // 🧠 Load session from localStorage
   const sessionRaw = localStorage.getItem('session');
   if (!sessionRaw) {
     console.warn('⚠️ No session in localStorage');
@@ -30,7 +30,6 @@ export async function applyContextualTheme() {
     return;
   }
 
-  // ✅ Get user and team ID
   const userId = session?.user?.id;
   const teamId = session?.team_id || null;
 
@@ -39,15 +38,20 @@ export async function applyContextualTheme() {
     return;
   }
 
+  // 🧪 Check for override
+  const override = getOverrideTheme();
+  if (override) {
+    applyFontTheme(override);
+    applyColorTheme(override);
+    themeApplied = true;
+    console.log(`🎨 Dev Theme override applied: ${override}`);
+    return;
+  }
+
   // 🎯 Fetch font/color from Supabase
   const { font, color } = await fetchThemeSettings(userId, teamId);
-
-  // 🖋️ Apply the font + color themes
   applyFontTheme(font);
   applyColorTheme(color);
-
-  // 🛑 Mark theme as applied to prevent duplicates
   themeApplied = true;
-
   console.log(`🎨 Theme applied: ${font} + ${color}`);
 }
