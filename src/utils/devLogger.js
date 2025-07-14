@@ -9,19 +9,24 @@ export function devLog(msg) {
   const panel = document.getElementById('dev-log-console');
   const entry = document.createElement('div');
   entry.textContent = formatted;
+
+  // 🎨 Apply color based on content
+  entry.className = getLogClass(msg);
+
   panel.appendChild(entry);
   panel.scrollTop = panel.scrollHeight;
 
   console.log(formatted);
 }
-
 function getContextHTML() {
   return `
-    <div>Page: <code>${location.hash || '(none)'}</code></div>
-    <div>Role: <code>${window.userSettings?.role || 'unknown'}</code></div>
-    <div>Team ID: <code>${window.userSettings?.team_id || 'none'}</code></div>
-    <div>Font: <code>${window.userSettings?.font_theme || 'default'}</code></div>
-    <div>Color: <code>${window.userSettings?.color_theme || 'default'}</code></div>
+    <div class="space-y-[2px] font-mono text-[11px] leading-snug text-white/90">
+      <div><span class="text-white/60">Page:</span> <code>${location.hash || '(none)'}</code></div>
+      <div><span class="text-white/60">Role:</span> <code>${window.userSettings?.role || 'unknown'}</code></div>
+      <div><span class="text-white/60">Team ID:</span> <code>${window.userSettings?.team_id || 'none'}</code></div>
+      <div><span class="text-white/60">Font:</span> <code>${window.userSettings?.font_theme || 'default'}</code></div>
+      <div><span class="text-white/60">Color:</span> <code>${window.userSettings?.color_theme || 'default'}</code></div>
+    </div>
   `;
 }
 
@@ -62,4 +67,23 @@ export function refreshDevContext() {
   if (context) {
     context.innerHTML = getContextHTML(); // or however you're generating the context
   }
+}
+
+function getLogClass(msg) {
+  if (msg.includes('✅') || msg.includes('done') || msg.includes('success')) {
+    return 'text-green-400';
+  }
+  if (msg.includes('⚠️') || msg.includes('warn') || msg.includes('slow')) {
+    return 'text-yellow-300';
+  }
+  if (msg.includes('❌') || msg.includes('error') || msg.includes('fail')) {
+    return 'text-red-400';
+  }
+  if (msg.includes('🧪') || msg.includes('test') || msg.includes('debug')) {
+    return 'text-purple-300';
+  }
+  if (msg.includes('🔄') || msg.includes('refresh') || msg.includes('context')) {
+    return 'text-blue-300';
+  }
+  return 'text-white/80';
 }

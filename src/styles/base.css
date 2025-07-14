@@ -1,13 +1,17 @@
 @tailwind base;
 
-body {
-  @apply font-sans text-white bg-green-900;
+/* src/styles/base.css */
+html[class*='font-b-'] body {
+  @apply font-inherit;
 }
 
-/* Headings */
-h1 {
-  @apply text-3xl font-bold;
+html[class*='font-h-'] h1,
+html[class*='font-h-'] h2,
+html[class*='font-h-'] h3 {
+  @apply font-inherit;
 }
-h2 {
-  @apply text-2xl font-semibold;
+
+html[class*='font-m-'] code,
+html[class*='font-m-'] pre {
+  @apply font-inherit;
 }

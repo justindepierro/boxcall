@@ -6,6 +6,7 @@
   src: url('assets/fonts/merriweather-sans-v27-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -13,81 +14,89 @@
   src: url('assets/fonts/inter-v19-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Fira Mono';
-  src: url('/assets/fonts/fira-mono-v15-latin-regular.woff2') format('woff2');
+  src: url('assets/fonts/fira-mono-v15-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
-
-/* MODERN THEME - Shares Inter & Fira Mono */
-/* Already included above */
 
 /* PROFESSIONAL THEME */
 @font-face {
   font-family: 'Fira Sans';
-  src: url('/assets/fonts/fira-sans-v17-latin-regular.woff2') format('woff2');
+  src: url('assets/fonts/fira-sans-v17-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 /* ATHLETIC THEME */
 @font-face {
   font-family: 'Oswald';
-  src: url('/assets/fonts/oswald-v56-latin-regular.woff2') format('woff2');
+  src: url('assets/fonts/oswald-v56-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Share Tech Mono';
-  src: url('/assets/fonts/share-tech-mono-v15-latin-regular.woff2') format('woff2');
+  src: url('assets/fonts/share-tech-mono-v15-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 /* TECH THEME */
 @font-face {
   font-family: 'Orbitron';
-  src: url('/assets/fonts/orbitron-v34-latin-regular.woff2') format('woff2');
+  src: url('assets/fonts/orbitron-v34-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src: url('/assets/fonts/roboto-v48-latin-regular.woff2') format('woff2');
+  src: url('assets/fonts/roboto-v48-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/assets/fonts/jetbrains-mono-v23-latin-regular.woff2') format('woff2');
+  src: url('assets/fonts/jetbrains-mono-v23-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 /* CASUAL THEME */
 @font-face {
   font-family: 'Comic Neue';
-  src: url('/assets/fonts/comic-neue-v8-latin-regular.woff2') format('woff2');
+  src: url('assets/fonts/comic-neue-v8-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Open Sans';
-  src: url('/assets/fonts/open-sans-v43-latin-regular.woff2') format('woff2');
+  src: url('assets/fonts/open-sans-v43-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Courier Prime';
-  src: url('/assets/fonts/courier-prime-v10-latin-regular.woff2') format('woff2');
+  src: url('assets/fonts/courier-prime-v10-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }

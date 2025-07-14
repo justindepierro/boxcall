@@ -1,20 +1,31 @@
 // src/config/themes/themeLoader.js
 import { themeMap } from './themeMap.js';
-import { fontClassMap } from './fontClassMap.js';
 
 function removeOldClasses(classMap, target = document.body) {
-  Object.values(classMap).forEach((obj) => {
-    Object.values(obj).forEach((cls) => target.classList.remove(cls));
+  Object.values(classMap).forEach((group) => {
+    Object.values(group).forEach((cls) => {
+      target.classList.remove(cls);
+    });
   });
 }
 
 export function applyFontTheme(themeKey = 'classic') {
-  const fonts = fontClassMap[themeKey] || fontClassMap.classic;
+  const html = document.documentElement;
 
-  removeOldClasses(fontClassMap);
+  // Step 1: Remove any existing font-h-*, font-b-*, font-m-* classes
+  html.classList.forEach((cls) => {
+    if (/^font-(h|b|m)-/.test(cls)) {
+      html.classList.remove(cls);
+    }
+  });
 
-  document.body.classList.add(fonts.header, fonts.body, fonts.mono);
-  console.log(`🖋️ Font theme applied: ${themeKey}`);
+  // Step 2: Add the new font classes
+  const fallback = themeMap['classic'].fonts;
+  const { header, body, mono } = themeMap[themeKey]?.fonts || fallback;
+
+  html.classList.add(header, body, mono);
+
+  console.log(`🎨 Font theme "${themeKey}" applied:`, header, body, mono);
 }
 
 export function applyColorTheme(themeKey = 'classic') {

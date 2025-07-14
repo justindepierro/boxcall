@@ -79,5 +79,10 @@ export default async function renderTeamInfoPage() {
       <div><strong>Location:</strong> ${team.location || 'N/A'}</div>
       <div><strong>Created By:</strong> ${team.created_by}</div>
     </div>
+    <div class="p-4 space-y-2">
+  <div class="font-h-athletic text-lg">Header Athletic</div>
+  <div class="font-b-athletic text-base">Body Athletic</div>
+  <div class="font-m-athletic text-sm">Mono Athletic</div>
+</div>
   `;
 }

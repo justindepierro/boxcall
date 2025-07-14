@@ -20,14 +20,14 @@ export function renderDevToolsPanel() {
   toggleBtn.id = 'dev-tools-toggle';
   toggleBtn.title = 'Dev Tools';
   toggleBtn.className =
-    'fixed bottom-4 right-4 z-[9998] bg-gray-900 text-white w-10 h-10 rounded-full shadow-lg hover:bg-gray-700';
+    'fixed bottom-4 right-4 z-[9998] bg-black/50 backdrop-blur-sm text-white w-10 h-10 rounded-full shadow-lg hover:bg-black/70';
   document.body.appendChild(toggleBtn);
 
   // 🧱 Panel
   const panel = document.createElement('div');
   panel.id = 'dev-tools-panel';
   panel.className =
-    'fixed bottom-16 right-4 bg-black bg-opacity-90 text-white p-4 rounded-xl shadow-xl z-[9999] text-sm w-[320px]';
+    'fixed bottom-16 right-4 bg-black/60 backdrop-blur-sm text-white p-4 rounded-xl shadow-xl z-[9999] text-sm w-[320px]';
   if (localStorage.getItem('dev.panelOpen') === 'true') {
     panel.classList.remove('hidden');
   } else {

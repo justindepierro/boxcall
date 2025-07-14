@@ -3,14 +3,25 @@ import plugin from 'tailwindcss/plugin';
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
-  theme: {
-    fontFamily: {
-      sans: ['Inter', 'system-ui', 'sans-serif'],
-      mono: ['Fira Mono', 'monospace'],
-      serif: ['Merriweather', 'serif'],
+
+  safelist: [
+    {
+      pattern: /^font-(h|b|m)-(classic|modern|professional|athletic|tech|casual)$/,
     },
+  ],
+
+  theme: {
     extend: {
+      // ✅ Ensure Tailwind knows to treat `inherit` as a valid font family
       fontFamily: {
+        inherit: 'inherit',
+
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['Fira Mono', 'monospace'],
+        serif: ['Merriweather', 'serif'],
+
+        // === THEME FONTS ===
+
         // athletic
         'h-athletic': ['"Oswald"', 'sans-serif'],
         'b-athletic': ['"Inter"', 'sans-serif'],
@@ -43,6 +54,7 @@ export default {
       },
     },
   },
+
   plugins: [
     plugin(function ({ addUtilities, theme }) {
       const families = theme('fontFamily');
