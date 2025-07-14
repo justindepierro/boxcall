@@ -1,9 +1,9 @@
-/* src/styles/font.css */
+/* src/styles/fonts.css */
 
 /* CLASSIC THEME */
 @font-face {
   font-family: 'Merriweather Sans';
-  src: url('../assets/fonts/merriweather-sans-v27-latin-regular.woff2') format('woff2');
+  src: url('/fonts/merriweather-sans-v27-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -11,7 +11,7 @@
 
 @font-face {
   font-family: 'Inter';
-  src: url('../assets/fonts/inter-v19-latin-regular.woff2') format('woff2');
+  src: url('/fonts/inter-v19-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -19,7 +19,7 @@
 
 @font-face {
   font-family: 'Fira Mono';
-  src: url('../assets/fonts/fira-mono-v15-latin-regular.woff2') format('woff2');
+  src: url('/fonts/fira-mono-v15-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -28,7 +28,7 @@
 /* PROFESSIONAL THEME */
 @font-face {
   font-family: 'Fira Sans';
-  src: url('../assets/fonts/fira-sans-v17-latin-regular.woff2') format('woff2');
+  src: url('/fonts/fira-sans-v17-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -37,7 +37,7 @@
 /* ATHLETIC THEME */
 @font-face {
   font-family: 'Oswald';
-  src: url('../assets/fonts/oswald-v56-latin-regular.woff2') format('woff2');
+  src: url('/fonts/oswald-v56-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -45,7 +45,7 @@
 
 @font-face {
   font-family: 'Share Tech Mono';
-  src: url('../assets/fonts/share-tech-mono-v15-latin-regular.woff2') format('woff2');
+  src: url('/fonts/share-tech-mono-v15-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -54,7 +54,7 @@
 /* TECH THEME */
 @font-face {
   font-family: 'Orbitron';
-  src: url('../assets/fonts/orbitron-v34-latin-regular.woff2') format('woff2');
+  src: url('/fonts/orbitron-v34-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -62,7 +62,7 @@
 
 @font-face {
   font-family: 'Roboto';
-  src: url('../assets/fonts/roboto-v48-latin-regular.woff2') format('woff2');
+  src: url('/fonts/roboto-v48-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -70,7 +70,7 @@
 
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('../assets/fonts/jetbrains-mono-v23-latin-regular.woff2') format('woff2');
+  src: url('/fonts/jetbrains-mono-v23-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -79,7 +79,7 @@
 /* CASUAL THEME */
 @font-face {
   font-family: 'Comic Neue';
-  src: url('../assets/fonts/comic-neue-v8-latin-regular.woff2') format('woff2');
+  src: url('/fonts/comic-neue-v8-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -87,7 +87,7 @@
 
 @font-face {
   font-family: 'Open Sans';
-  src: url('../assets/fonts/open-sans-v43-latin-regular.woff2') format('woff2');
+  src: url('/fonts/open-sans-v43-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -95,7 +95,7 @@
 
 @font-face {
   font-family: 'Courier Prime';
-  src: url('../assets/fonts/courier-prime-v10-latin-regular.woff2') format('woff2');
+  src: url('/fonts/courier-prime-v10-latin-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
