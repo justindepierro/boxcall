@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev:all": "vite",
+    "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "lint": "eslint"
+    "lint": "eslint",
+    "dev:all": "vite"
   },
   "lint-staged": {
     "**/*.{js,jsx,css,html,json,md}": [
