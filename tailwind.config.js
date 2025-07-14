@@ -65,6 +65,19 @@ export default {
       }
 
       addUtilities(newUtilities, ['responsive']);
+
+      // ✅ Add .font-header, .font-body, .font-mono as utility classes
+      addUtilities({
+        '.font-header': {
+          fontFamily: 'inherit',
+        },
+        '.font-body': {
+          fontFamily: 'inherit',
+        },
+        '.font-mono': {
+          fontFamily: 'inherit',
+        },
+      });
     }),
   ],
 };

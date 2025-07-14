@@ -109,6 +109,8 @@ export function renderDevToolsPanel() {
     <option value="modern">Modern</option>
     <option value="athletic">Athletic</option>
     <option value="tech">Tech</option>
+    <option value="casual">Casual</option>
+    <option value="professional">Professional</option>
   `;
   themeSelect.value = localStorage.getItem('dev.overrideTheme') || '';
   general.appendChild(themeSelect);
