@@ -8,7 +8,7 @@ import { renderAppShell } from '@render/renderAppShell.js';
 import { handleRouting } from '@routes/router.js';
 import { getUserSettings } from '@lib/teams/user/getUserSettings.js';
 import { getOverrideRole, getOverrideTheme } from '@state/devToolState.js';
-import { renderDevToolsPanel } from '@components/dev/DevToolsPanel.js';
+import { renderDevToolsPanel } from '@components/dev/devToolsPanel.js';
 import { mountLiveLogger, updateLogContext } from '@components/dev/liveLogger.js';
 import { DEV_EMAIL } from '@config/devConfig.js';
 
