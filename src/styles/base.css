@@ -1,17 +1,14 @@
-@tailwind base;
-
 /* src/styles/base.css */
 html[class*='font-b-'] body {
-  @apply font-inherit;
+  @apply font-body;
 }
-
 html[class*='font-h-'] h1,
 html[class*='font-h-'] h2,
 html[class*='font-h-'] h3 {
-  @apply font-inherit;
+  @apply font-header;
 }
-
 html[class*='font-m-'] code,
-html[class*='font-m-'] pre {
-  @apply font-inherit;
+html[class*='font-m-'] pre,
+html[class*='font-m-'] .mono {
+  @apply font-mono;
 }

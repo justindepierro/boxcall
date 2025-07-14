@@ -116,12 +116,19 @@ export function renderDevToolsPanel() {
   general.appendChild(themeSelect);
 
   themeSelect.addEventListener('change', (e) => {
-    const newTheme = e.target.value || null;
-    setOverrideTheme(newTheme);
-    window.userSettings.font_theme = newTheme;
-    window.userSettings.color_theme = newTheme;
-    applyFontTheme(newTheme);
-    applyColorTheme(newTheme);
-    refreshDevContext(); // 🧠 updates live logger
+    const selected = e.target.value || null;
+
+    setOverrideTheme(selected);
+    window.userSettings.font_theme = selected;
+    window.userSettings.color_theme = selected;
+
+    applyFontTheme(selected);
+    applyColorTheme(selected);
+
+    if (window.BoxCall?.forceApplyTheme) {
+      window.BoxCall.forceApplyTheme(selected); // ✅ Pass selected, not hardcoded
+    }
+
+    refreshDevContext();
   });
 }

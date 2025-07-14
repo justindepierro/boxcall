@@ -1,5 +1,24 @@
 @import './fonts.css'; /* ✅ LOCAL relative import from same folder */ /* 
 src/styles/tailwind.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import './base.css'; /* ✅ Needs to come after fonts */
+@import './layout.css';
+@import './components.css';
+@import './utilities.css';
+
+/* Optional: prevent sidebar area from staying when collapsed */
+#sidebar-root {
+  height: 100%;
+  position: relative;
+  z-index: 50;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+#sidebar-root {
+  height: 100%;
+}

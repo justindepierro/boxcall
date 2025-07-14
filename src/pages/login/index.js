@@ -1,12 +1,17 @@
 // src/pages/login/index.js
-import { signIn } from '@auth/auth.js'; // instead of ../../auth/auth.js
+import { signIn } from '@auth/auth.js';
 import { authCard } from '../../components/AuthCard.js';
 import { showToast } from '../../utils/toast.js';
-import { navigateTo } from '../../routes/router.js'; // 🔁 if you have a router
-import { formatError } from '../../utils/errors.js'; // 🔁 optional helper
+import { navigateTo } from '../../routes/router.js';
+import { formatError } from '../../utils/errors.js';
 
 export default function renderLoginPage(container) {
   console.log('🔑 Rendering Login Page');
+
+  // Remove sidebar if it's still rendered
+  const sidebar = document.getElementById('sidebar-root');
+  if (sidebar) sidebar.innerHTML = '';
+
   container.innerHTML = authCard(
     'Login',
     `
@@ -21,32 +26,31 @@ export default function renderLoginPage(container) {
   );
 
   const form = document.getElementById('login-form');
-  form.addEventListener('submit', handleLoginSubmit);
+  form?.addEventListener('submit', handleLoginSubmit);
 }
 
 async function handleLoginSubmit(e) {
   e.preventDefault();
-
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
-  const errorEl = document.getElementById('login-error');
   const btn = document.getElementById('login-btn');
+  const errorEl = document.getElementById('login-error');
 
   btn.disabled = true;
   btn.textContent = 'Logging in...';
   errorEl.textContent = '';
 
   const { error } = await signIn(email, password);
-
   if (error) {
     const msg = formatError ? formatError(error) : error.message;
-    showToast('❌ Login failed: ' + msg, 'error');
-    errorEl.textContent = '⚠️ ' + msg;
-  } else {
-    showToast('✅ Login successful!', 'success');
-    navigateTo('dashboard'); // more reliable than hash assignment
+    showToast(`❌ ${msg}`, 'error');
+    errorEl.textContent = `⚠️ ${msg}`;
+    btn.disabled = false;
+    btn.textContent = 'Login';
+    return;
   }
 
-  btn.disabled = false;
-  btn.textContent = 'Login';
+  // Wait for Supabase to trigger session + listener
+  showToast('✅ Logged in successfully!', 'success');
+  setTimeout(() => navigateTo('dashboard'), 200); // buffer to ensure theme applies
 }

@@ -2,6 +2,7 @@
 import { fetchThemeSettings } from './fetchThemeSettings.js';
 import { applyFontTheme, applyColorTheme } from './themeLoader.js';
 import { getOverrideTheme } from '../../state/devToolState.js';
+import { themeMap } from './themeMap.js';
 
 // Prevents reapplying the theme multiple times during session
 let themeApplied = false;
@@ -54,4 +55,40 @@ export async function applyContextualTheme() {
   applyColorTheme(color);
   themeApplied = true;
   console.log(`🎨 Theme applied: ${font} + ${color}`);
+}
+
+export function getTheme() {
+  const override = getOverrideTheme();
+  if (override) return override;
+
+  const sessionRaw = localStorage.getItem('session');
+  if (!sessionRaw) return 'modern'; // fallback default
+
+  try {
+    const session = JSON.parse(sessionRaw);
+    return session?.theme || 'modern';
+  } catch (err) {
+    console.error('⚠️ Failed to parse session in getTheme():', err);
+    return 'modern';
+  }
+}
+
+export function setTheme(themeKey = 'classic') {
+  if (!themeMap[themeKey]) {
+    console.warn(`❌ Unknown theme key: ${themeKey}`);
+    return;
+  }
+
+  // Apply both font and color instantly
+  applyFontTheme(themeKey);
+  applyColorTheme(themeKey);
+
+  // Persist override if needed
+  localStorage.setItem('overrideTheme', themeKey);
+  console.log(`🎨 Theme manually set to: ${themeKey}`);
+}
+
+export function forceApplyTheme(key) {
+  applyFontTheme(key);
+  applyColorTheme(key);
 }
