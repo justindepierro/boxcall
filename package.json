@@ -8,8 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "lint": "eslint",
-    "dev:all": "concurrently \"npm:tailwind:build\" \"npm:dev\""
+    "lint": "eslint"
   },
   "lint-staged": {
     "**/*.{js,jsx,css,html,json,md}": [
