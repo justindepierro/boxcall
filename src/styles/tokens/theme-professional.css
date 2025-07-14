@@ -1,0 +1,13 @@
+/* theme-professional.css */
+.theme-professional {
+  --font-header: 'Merriweather Sans', sans-serif;
+  --font-body: 'Fira Sans', sans-serif;
+  --font-mono: 'Fira Mono', monospace;
+
+  --color-bg: #f1f5f9; /* bg-slate-50 */
+  --color-text: #334155; /* text-slate-800 */
+  --color-accent: #4f46e5; /* text-indigo-600 */
+  --color-border: #cbd5e1; /* border-slate-300 */
+  --color-sidebar: #1e293b; /* bg-slate-800 */
+  --color-header: #0f172a; /* text-slate-900 */
+}

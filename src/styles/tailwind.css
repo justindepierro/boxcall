@@ -5,6 +5,13 @@ src/styles/tailwind.css */
 @import './components.css';
 @import './utilities.css';
 
+@import '../tokens/theme-classic.css';
+@import '../tokens/theme-modern.css';
+@import '../tokens/theme-professional.css';
+@import '../tokens/theme-athletic.css';
+@import '../tokens/theme-tech.css';
+@import '../tokens/theme-casual.css';
+
 /* Optional: prevent sidebar area from staying when collapsed */
 #sidebar-root {
   height: 100%;

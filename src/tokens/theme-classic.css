@@ -1,0 +1,9 @@
+/* src/tokens/theme-classic.css */
+:root.theme-classic {
+  --color-bg: #f8fafc; /* light gray */
+  --color-text: #1e293b; /* slate-800 */
+  --color-accent: #2563eb; /* blue-600 */
+  --color-border: #cbd5e1; /* slate-300 */
+  --color-sidebar: #1e293b; /* slate-800 */
+  --color-header: #0f172a; /* slate-900 */
+}

@@ -12,15 +12,13 @@ export default {
 
   theme: {
     extend: {
-      // ✅ Ensure Tailwind knows to treat `inherit` as a valid font family
       fontFamily: {
         inherit: 'inherit',
+        header: 'inherit',
+        body: 'inherit',
+        mono: 'inherit',
 
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['Fira Mono', 'monospace'],
-        serif: ['Merriweather', 'serif'],
-
-        // === THEME FONTS ===
+        // === THEME FONT MAPS ===
 
         // athletic
         'h-athletic': ['"Oswald"', 'sans-serif'],
@@ -52,31 +50,34 @@ export default {
         'b-tech': ['"Roboto"', 'sans-serif'],
         'm-tech': ['"JetBrains Mono"', 'monospace'],
       },
+
+      colors: {
+        // 🌈 Dynamic theme bindings to CSS variables
+        main: 'var(--color-bg)',
+        'text-main': 'var(--color-text)',
+        'accent-main': 'var(--color-accent)',
+        'border-main': 'var(--color-border)',
+        'sidebar-main': 'var(--color-sidebar)',
+        'header-main': 'var(--color-header)',
+      },
     },
   },
 
   plugins: [
     plugin(function ({ addUtilities, theme }) {
       const families = theme('fontFamily');
-      const newUtilities = {};
+      const utilities = {};
 
       for (const [key, value] of Object.entries(families)) {
-        newUtilities[`.font-${key}`] = { fontFamily: value };
+        utilities[`.font-${key}`] = { fontFamily: value };
       }
 
-      addUtilities(newUtilities, ['responsive']);
+      addUtilities(utilities, ['responsive']);
 
-      // ✅ Add .font-header, .font-body, .font-mono as utility classes
       addUtilities({
-        '.font-header': {
-          fontFamily: 'inherit',
-        },
-        '.font-body': {
-          fontFamily: 'inherit',
-        },
-        '.font-mono': {
-          fontFamily: 'inherit',
-        },
+        '.font-header': { fontFamily: 'inherit' },
+        '.font-body': { fontFamily: 'inherit' },
+        '.font-mono': { fontFamily: 'inherit' },
       });
     }),
   ],
