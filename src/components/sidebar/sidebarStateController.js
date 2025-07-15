@@ -1,9 +1,5 @@
 // src/components/sidebar/sidebarStateController.js
 
-// 🧠 This controller applies visual and layout changes based on the sidebar state
-// It modifies sidebar width, label/icon visibility, and main content margin
-// It also updates the internal state via setSidebarState
-
 import { setSidebarState } from '../../state/sidebarState.js';
 import {
   getSidebarParts,
@@ -11,7 +7,6 @@ import {
   safeSetText,
 } from '../../utils/sidebarUtils.js';
 
-// 🔒 Define the valid states in one place for consistency and validation
 const SIDEBAR_STATES = ['expanded', 'icon', 'collapsed'];
 
 /**
@@ -36,20 +31,24 @@ export function applySidebarState(newState) {
 
   console.log(`🎯 Switching sidebar to "${newState}"`);
 
-  // 🧼 Remove all sizing and visibility classes before applying new state
-  sidebar.classList.remove(
+  // 🧼 Reset sidebar and content panel classes
+  const resetClasses = [
     'w-64',
     'w-16',
     'w-0',
     'opacity-0',
     'opacity-100',
     'pointer-events-none',
-    'pointer-events-auto'
-  );
+    'pointer-events-auto',
+    'ml-64',
+    'ml-16',
+    'ml-0',
+  ];
 
-  mainContent.classList.remove('ml-64', 'ml-16', 'ml-0');
+  sidebar.classList.remove(...resetClasses);
+  mainContent.classList.remove(...resetClasses);
 
-  // 🎯 Apply state-specific styles
+  // 🎯 Apply new state-specific classes
   switch (newState) {
     case 'expanded':
       sidebar.classList.add('w-64', 'opacity-100', 'pointer-events-auto');

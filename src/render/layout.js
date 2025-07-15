@@ -1,13 +1,13 @@
-// src/render/layout.js
 import { renderSidebar } from '../components/sidebar/sidebarDOM.js';
 
 /**
- * Injects a full layout with sidebar and main content.
- * @param {string} contentHTML
- * @returns {string}
+ * Renders a full app shell with sidebar and main content.
+ * @param {string[] | string} contentBlocks - Either a single HTML string or array of content blocks
+ * @returns {string} Full HTML structure with sidebar
  */
-// src/render/layout.js
-export function withSidebar(contentHTML = '') {
+export function withSidebar(contentBlocks = '') {
+  const contentHTML = Array.isArray(contentBlocks) ? contentBlocks.join('\n') : contentBlocks;
+
   return `
     <div class="flex h-screen overflow-hidden">
       <aside id="sidebar-root" class="h-screen w-64 shrink-0 transition-all duration-300 ease-in-out"></aside>
@@ -19,19 +19,26 @@ export function withSidebar(contentHTML = '') {
 }
 
 /**
- * Render the full layout with sidebar and content
- * @param {HTMLElement} container
- * @param {string} contentHTML
+ * Injects the full layout into the provided container and mounts the sidebar
+ * @param {HTMLElement} container - DOM element to mount into (usually #page-view)
+ * @param {string[] | string} contentBlocks - HTML content to render
  */
-export function renderPage(container, contentHTML) {
-  container.innerHTML = withSidebar(contentHTML);
-  renderSidebar(); // 🧠 This handles all buttons, logic, etc
+export function renderPage(container, contentBlocks = '') {
+  container.innerHTML = withSidebar(contentBlocks);
+  renderSidebar(); // Mounts interactive sidebar elements
 }
 
-export function withSimpleLayout(contentHTML = '') {
+/**
+ * Renders a centered layout without a sidebar (for public pages)
+ * @param {string[] | string} contentBlocks
+ * @returns {string} HTML structure
+ */
+export function withSimpleLayout(contentBlocks = '') {
+  const contentHTML = Array.isArray(contentBlocks) ? contentBlocks.join('\n') : contentBlocks;
+
   return `
-      <main class="p-6 max-w-2xl mx-auto">
-        ${contentHTML}
-      </main>
-    `;
+    <main class="p-6 max-w-2xl mx-auto">
+      ${contentHTML}
+    </main>
+  `;
 }

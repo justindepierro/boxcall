@@ -1,0 +1,27 @@
+/* theme-professional.css */
+
+:root {
+  /* Font Variables */
+  --font-h-professional: 'Fira Sans', sans-serif;
+  --font-b-professional: 'Inter', sans-serif;
+  --font-m-professional: 'Fira Mono', monospace;
+
+  /* Color Variables */
+  --color-bg: #f5f5f4; /* Neutral light gray */
+  --color-text: #1a1a1a; /* True black for professionalism */
+  --color-accent: #2563eb; /* Deep professional blue */
+  --color-border: #d6d3d1; /* Subtle neutral border */
+  --color-sidebar: #e7e5e4; /* Slightly darker sidebar */
+  --color-header: #ffffff; /* Clean white header */
+  --color-header-text: #1a1a1a; /* Crisp header text */
+}
+
+/* Theme color variables:
+  --color-bg:           Main app background
+  --color-text:         Primary foreground text
+  --color-sidebar:      Sidebar background
+  --color-accent:       Buttons, links, highlights
+  --color-border:       Input/section outlines
+  --color-header-bg:    Top bar background
+  --color-header-text:  Top bar text
+*/

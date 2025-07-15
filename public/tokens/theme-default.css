@@ -1,0 +1,15 @@
+:root {
+  /* Fonts */
+  --font-header: 'Oswald', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'Fira Mono', monospace;
+
+  /* Colors */
+  --color-bg: #ffffff;
+  --color-text: #1f2937;
+  --color-accent: #16a34a;
+  --color-border: #d1d5db;
+  --color-sidebar: #1e3a8a;
+  --color-header: #0f172a;
+  --color-header-text: #ffffff;
+}

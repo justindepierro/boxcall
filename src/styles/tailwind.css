@@ -1,24 +1,10 @@
-@import './fonts.css'; /* ✅ LOCAL relative import from same folder */ /* 
-src/styles/tailwind.css */
-@import './base.css'; /* ✅ Needs to come after fonts */
-@import './layout.css';
-@import './components.css';
-@import './utilities.css';
+/* src/styles/tailwind.css */
 
-@import '../tokens/theme-classic.css';
-@import '../tokens/theme-modern.css';
-@import '../tokens/theme-professional.css';
-@import '../tokens/theme-athletic.css';
-@import '../tokens/theme-tech.css';
-@import '../tokens/theme-casual.css';
+@import './fonts.css'; /* ✅ Custom fonts */
+@import './base.css'; /* ✅ Normalize + reset */
+@import './components.css'; /* ✅ Component styles */
 
-/* Optional: prevent sidebar area from staying when collapsed */
-#sidebar-root {
-  height: 100%;
-  position: relative;
-  z-index: 50;
-}
-
+/* Layout guards */
 html,
 body,
 #app {
@@ -28,4 +14,6 @@ body,
 
 #sidebar-root {
   height: 100%;
+  position: relative;
+  z-index: 50;
 }

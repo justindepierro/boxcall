@@ -1,0 +1,13 @@
+:root {
+  --font-h-athletic: 'Oswald', sans-serif;
+  --font-b-athletic: 'Inter', sans-serif;
+  --font-m-athletic: 'Share Tech Mono', monospace;
+
+  --color-bg: #f4f4f5;
+  --color-text: #4e4e4e;
+  --color-accent: #f97316;
+  --color-border: #a1a1aa;
+  --color-sidebar: #18181b;
+  --color-header: #ffffff;
+  --color-header-text: #ffffff;
+}

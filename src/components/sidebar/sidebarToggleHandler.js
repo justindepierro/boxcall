@@ -5,8 +5,7 @@ import { applySidebarState } from './sidebarStateController.js';
 import { getSidebarParts } from '../../utils/sidebarUtils.js';
 
 /**
- * Toggles between expanded and icon-only states.
- * Removes 'collapsed' from the cycle.
+ * Cycles between 'expanded' and 'icon' sidebar states
  */
 export function handleSidebarToggle() {
   const current = getSidebarState();
@@ -18,17 +17,17 @@ export function handleSidebarToggle() {
 }
 
 /**
- * Attaches the toggle button listener to cycle between expanded/icon
+ * Initializes the sidebar toggle button
  */
 export function initSidebarToggle() {
   const { minimizeBtn } = getSidebarParts();
   if (!minimizeBtn) {
-    console.warn('❌ Minimize button not found!');
+    console.warn('❌ Sidebar minimize button not found');
     return;
   }
 
   minimizeBtn.addEventListener('click', () => {
-    console.log(`🔘 Minimize clicked — current state: ${getSidebarState()}`);
+    console.log(`🔘 Sidebar minimize clicked — current: ${getSidebarState()}`);
     handleSidebarToggle();
   });
 }

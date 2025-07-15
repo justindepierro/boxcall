@@ -1,14 +1,43 @@
-/* src/styles/base.css */
-html[class*='font-b-'] body {
-  @apply font-body;
+html {
+  --font-header: 'Oswald', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'Fira Mono', monospace;
 }
-html[class*='font-h-'] h1,
-html[class*='font-h-'] h2,
-html[class*='font-h-'] h3 {
-  @apply font-header;
+
+body {
+  font-family: var(--font-body);
 }
-html[class*='font-m-'] code,
-html[class*='font-m-'] pre,
-html[class*='font-m-'] .mono {
-  @apply font-mono;
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-header);
+}
+
+code,
+pre {
+  font-family: var(--font-mono);
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+button,
+input,
+select,
+textarea {
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+aside {
+  background-color: var(--color-sidebar);
+  color: var(--color-text);
+}
+
+header {
+  background-color: var(--color-header);
+  color: var(--color-header-text);
 }

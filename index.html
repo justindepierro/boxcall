@@ -1,59 +1,27 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="antialiased theme-default font-body font-header">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BoxCall</title>
+
+    <!-- Theme Tokens (must match class above) -->
+    <link rel="stylesheet" href="/tokens/theme-default.css" id="theme-tokens" />
   </head>
-  <body
-    style="background-color: var(--color-bg); color: var(--color-text)"
-    class="font-body antialiased"
-  >
+
+  <body class="bg-[var(--color-bg)] text-[var(--color-text)]">
     <div id="app" class="flex min-h-screen w-full">
-      <!-- Sidebar will be injected here -->
+      <!-- Sidebar -->
       <aside
         id="sidebar-root"
-        style="background-color: var(--color-sidebar); color: var(--color-text)"
+        class="hidden md:block w-64 shrink-0 bg-[var(--color-sidebar)] text-[var(--color-text)]"
       ></aside>
 
-      <!-- Main Content Area -->
-      <main
-        id="page-view"
-        class="flex-1 p-6 overflow-y-auto"
-        style="background-color: var(--color-bg); color: var(--color-text)"
-      ></main>
+      <!-- Main View -->
+      <main id="page-view" class="flex-1 p-6 overflow-y-auto transition-colors duration-300"></main>
     </div>
 
-    <!-- Spinner -->
-    <div
-      id="route-spinner"
-      class="hidden fixed inset-0 z-50 flex items-center justify-center"
-      style="background-color: var(--color-overlay)"
-    >
-      <div class="loader ease-linear rounded-full border-4 border-t-4 h-12 w-12"></div>
-    </div>
-
-    <!-- Footer -->
-    <footer style="color: var(--color-border)" class="text-xs text-center py-4 w-full">
-      &copy; <span id="year"></span> BoxCall Inc. All rights reserved. |
-      <a href="#/terms" class="underline">Terms of Use</a> |
-      <a href="#/privacy" class="underline">Privacy Policy</a>
-    </footer>
-
-    <!-- Spinner Style -->
-    <style>
-      .loader {
-        border-top-color: var(--color-accent);
-        animation: spin 1s linear infinite;
-      }
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
-
-    <!-- JavaScript -->
+    <!-- Spinner, Footer, etc... -->
     <script type="module" src="/src/main.js"></script>
     <script>
       document.getElementById('year').textContent = new Date().getFullYear();

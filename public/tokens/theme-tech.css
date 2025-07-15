@@ -1,0 +1,27 @@
+/* theme-tech.css */
+
+:root {
+  /* Font Variables */
+  --font-h-tech: 'Orbitron', sans-serif;
+  --font-b-tech: 'Roboto', sans-serif;
+  --font-m-tech: 'JetBrains Mono', monospace;
+
+  /* Color Variables */
+  --color-bg: #0f172a; /* Deep navy */
+  --color-text: #e2e8f0; /* Cool gray text */
+  --color-accent: #0ea5e9; /* Sky blue accent */
+  --color-border: #334155; /* Slate border */
+  --color-sidebar: #1e293b; /* Dark sidebar */
+  --color-header: #1e293b; /* Matching header */
+  --color-header-text: #e2e8f0; /* Light readable header text */
+}
+
+/* Theme color variables:
+  --color-bg:           Main app background
+  --color-text:         Primary foreground text
+  --color-sidebar:      Sidebar background
+  --color-accent:       Buttons, links, highlights
+  --color-border:       Input/section outlines
+  --color-header-bg:    Top bar background
+  --color-header-text:  Top bar text
+*/

@@ -1,0 +1,27 @@
+/* theme-modern.css */
+
+:root {
+  /* Font Variables */
+  --font-h-modern: 'Inter', sans-serif;
+  --font-b-modern: 'Inter', sans-serif;
+  --font-m-modern: 'Fira Mono', monospace;
+
+  /* Color Variables */
+  --color-bg: #f9fafb; /* Light gray background */
+  --color-text: #1f2937; /* Slate-800 text */
+  --color-accent: #3b82f6; /* Blue-500 accent */
+  --color-border: #e5e7eb; /* Gray-200 border */
+  --color-sidebar: #ffffff; /* White sidebar */
+  --color-header: #f3f4f6; /* Gray-100 header */
+  --color-header-text: #1f2937; /* Slate-800 header text */
+}
+
+/* Theme color variables:
+  --color-bg:           Main app background
+  --color-text:         Primary foreground text
+  --color-sidebar:      Sidebar background
+  --color-accent:       Buttons, links, highlights
+  --color-border:       Input/section outlines
+  --color-header-bg:    Top bar background
+  --color-header-text:  Top bar text
+*/

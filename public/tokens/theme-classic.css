@@ -1,0 +1,27 @@
+/* theme-classic.css */
+
+:root {
+  /* Font Variables */
+  --font-h-classic: 'Merriweather Sans', sans-serif;
+  --font-b-classic: 'Inter', sans-serif;
+  --font-m-classic: 'Fira Mono', monospace;
+
+  /* Color Variables */
+  --color-bg: #ffffff; /* Classic white background */
+  --color-text: #111827; /* Neutral dark text */
+  --color-accent: #1d4ed8; /* Traditional deep blue accent */
+  --color-border: #d1d5db; /* Cool gray border */
+  --color-sidebar: #f3f4f6; /* Light sidebar */
+  --color-header: #e5e7eb; /* Soft gray header */
+  --color-header-text: #111827; /* Crisp, readable text */
+}
+
+/* Theme color variables:
+  --color-bg:           Main app background
+  --color-text:         Primary foreground text
+  --color-sidebar:      Sidebar background
+  --color-accent:       Buttons, links, highlights
+  --color-border:       Input/section outlines
+  --color-header-bg:    Top bar background
+  --color-header-text:  Top bar text
+*/

@@ -1,0 +1,86 @@
+:root {
+  --font-h-classic: 'Merriweather Sans', sans-serif;
+  --font-b-classic: 'Inter', sans-serif;
+  --font-m-classic: 'Fira Mono', monospace;
+}
+
+/* theme-athletic.css */
+.theme-athletic {
+  --font-header: 'Oswald', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+
+  --color-bg: #f4f4f5; /* bg-zinc-100 */
+  --color-text: #e4e4e7; /* text-zinc-200 */
+  --color-accent: #f97316; /* text-orange-500 */
+  --color-border: #a1a1aa; /* border-zinc-400 */
+  --color-sidebar: #18181b; /* bg-zinc-900 */
+  --color-header: #ffffff; /* text-white */
+}
+
+.theme-casual {
+  --font-header: 'Comic Neue', sans-serif;
+  --font-body: 'Open Sans', sans-serif;
+  --font-mono: 'Courier Prime', monospace;
+
+  --color-bg: #fffbeb; /* bg-amber-100 */
+  --color-text: #ffffff; /* text-white */
+  --color-accent: #fde047; /* text-yellow-300 */
+  --color-border: #fcd34d; /* border-amber-300 */
+  --color-sidebar: #f59e0b; /* bg-amber-500 */
+  --color-header: #ffffff; /* text-white */
+}
+
+.theme-classic {
+  --font-header: 'Merriweather Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'Fira Mono', monospace;
+
+  --color-bg: #f8fafc; /* bg-gray-100 */
+  --color-text: #1f2937; /* text-gray-800 */
+  --color-accent: #2563eb; /* text-blue-600 */
+  --color-border: #d1d5db; /* border-gray-300 */
+  --color-sidebar: #1f2937; /* bg-gray-800 */
+  --color-header: #111827; /* text-gray-900 */
+}
+
+/* src/styles/tokens/theme-modern.css */
+.theme-modern {
+  --font-header: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'Fira Mono', monospace;
+
+  --color-bg: #ffffff;
+  --color-text: #1f2937;
+  --color-accent: #0ea5e9;
+  --color-border: #e5e7eb;
+  --color-sidebar: #1f2937;
+  --color-header: #111827;
+}
+
+/* theme-professional.css */
+.theme-professional {
+  --font-header: 'Merriweather Sans', sans-serif;
+  --font-body: 'Fira Sans', sans-serif;
+  --font-mono: 'Fira Mono', monospace;
+
+  --color-bg: #f1f5f9; /* bg-slate-50 */
+  --color-text: #334155; /* text-slate-800 */
+  --color-accent: #4f46e5; /* text-indigo-600 */
+  --color-border: #cbd5e1; /* border-slate-300 */
+  --color-sidebar: #1e293b; /* bg-slate-800 */
+  --color-header: #0f172a; /* text-slate-900 */
+}
+
+.theme-tech {
+  --font-header: 'Orbitron', sans-serif;
+  --font-body: 'Roboto', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-bg: #000000; /* bg-black */
+  --color-text: #d1d5db; /* text-gray-300 */
+  --color-accent: #22d3ee; /* text-cyan-400 */
+  --color-border: #374151; /* border-gray-700 */
+  --color-sidebar: #0f172a; /* bg-gray-950 */
+  --color-header: #a3e635; /* text-lime-400 */
+}

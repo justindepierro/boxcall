@@ -1,18 +1,16 @@
-// src/components/dev/devToolsPanel.js
-
 import { ROLES } from '@utils/roles.js';
 import { setOverrideRole, setOverrideTheme } from '@state/devToolState.js';
 import { DEV_EMAIL } from '@config/devConfig.js';
 import { refreshDevContext } from '@utils/devLogger.js';
 import { createButton } from './devUI.js';
-import { applyFontTheme, applyColorTheme } from '@config/themes/themeLoader.js';
+import { applyTheme } from '@utils/themeManager.js';
 
 export function renderDevToolsPanel() {
   const user = window.userSettings || {};
   if (user.email !== DEV_EMAIL) return;
   if (document.getElementById('dev-tools-panel')) return;
 
-  // ⚙️ Toggle button
+  // ⚙️ Toggle Button
   const toggleBtn = createButton('⚙️', () => {
     const isHidden = panel.classList.toggle('hidden');
     localStorage.setItem('dev.panelOpen', !isHidden);
@@ -41,6 +39,7 @@ export function renderDevToolsPanel() {
   header.textContent = '🛠️ Dev Tools';
   panel.appendChild(header);
 
+  // 🧭 Tab Navigation
   const tabRow = document.createElement('div');
   tabRow.className = 'flex gap-2 mb-2';
   panel.appendChild(tabRow);
@@ -70,7 +69,7 @@ export function renderDevToolsPanel() {
   // === GENERAL TAB ===
   const general = tabContents.general;
 
-  // Role selector
+  // 🔑 Role Selector
   const roleLabel = document.createElement('label');
   roleLabel.textContent = 'Override Role:';
   roleLabel.className = 'block mb-1';
@@ -91,10 +90,10 @@ export function renderDevToolsPanel() {
   roleSelect.addEventListener('change', (e) => {
     setOverrideRole(e.target.value || null);
     window.userSettings.role = e.target.value || null;
-    refreshDevContext(); // 🧠 updates live logger
+    refreshDevContext();
   });
 
-  // Theme selector
+  // 🎨 Theme Selector
   const themeLabel = document.createElement('label');
   themeLabel.textContent = 'Override Theme:';
   themeLabel.className = 'block mb-1';
@@ -117,18 +116,8 @@ export function renderDevToolsPanel() {
 
   themeSelect.addEventListener('change', (e) => {
     const selected = e.target.value || null;
-
     setOverrideTheme(selected);
-    window.userSettings.font_theme = selected;
-    window.userSettings.color_theme = selected;
-
-    applyFontTheme(selected);
-    applyColorTheme(selected);
-
-    if (window.BoxCall?.forceApplyTheme) {
-      window.BoxCall.forceApplyTheme(selected); // ✅ Pass selected, not hardcoded
-    }
-
+    applyTheme(selected);
     refreshDevContext();
   });
 }

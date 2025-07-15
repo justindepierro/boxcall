@@ -1,15 +1,15 @@
-// src/js/init.js
+// src/init.js
 
 import { initAuthState, isLoggedIn, getCurrentUser } from '@state/authState.js';
-import { applyFontTheme, applyColorTheme } from '@config/themes/themeLoader.js';
-import { applyContextualTheme } from '@config/themes/themeController.js';
 import { initAuthListeners } from '@components/AuthGuard.js';
 import { handleRouting } from '@routes/router.js';
 import { getUserSettings } from '@lib/teams/user/getUserSettings.js';
-import { getOverrideRole, getOverrideTheme } from '@state/devToolState.js';
+import { getOverrideRole } from '@state/devToolState.js';
 import { renderDevToolsPanel } from '@components/dev/devToolsPanel.js';
 import { mountLiveLogger, updateLogContext } from '@components/dev/liveLogger.js';
 import { DEV_EMAIL } from '@config/devConfig.js';
+import { applyTheme } from '@utils/themeManager.js';
+import { applyContextualTheme } from '@config/themes/themeController.js'; // ✅ New theme flow
 
 const PUBLIC_PAGES = ['login', 'signup', 'forgot'];
 
@@ -29,40 +29,34 @@ export async function initApp() {
   const user = getCurrentUser();
   if (user) {
     const settings = await getUserSettings(user.id);
-    window.userSettings = { ...settings, email: user.email };
-
     const overrideRole = getOverrideRole();
+
     if (overrideRole) {
-      window.userSettings.original_role = settings.role;
-      window.userSettings.role = overrideRole;
+      settings.original_role = settings.role;
+      settings.role = overrideRole;
       console.log(`🧪 Dev Role Override: ${overrideRole}`);
     }
+
+    window.userSettings = { ...settings, email: user.email };
   }
 
   initAuthListeners();
 
   const currentPage = getCurrentPage();
 
-  // 🚧 Redirect to login if not authenticated
+  // 🔒 Redirect to login if not authenticated
   if (isProtectedPage(currentPage) && !isLoggedIn()) {
     console.warn('🔒 Not logged in, redirecting...');
     window.location.hash = '#/login';
+    return;
   }
 
-  // 🎨 Apply theme
-  const overrideTheme = getOverrideTheme();
-  if (overrideTheme) {
-    console.log(`🎨 Dev Theme Override: ${overrideTheme}`);
-    applyFontTheme(overrideTheme);
-    applyColorTheme(overrideTheme);
-  } else {
-    try {
-      await applyContextualTheme(currentPage);
-    } catch (err) {
-      console.warn('⚠️ Theme fallback triggered:', err.message);
-      applyFontTheme('classic');
-      applyColorTheme('classic');
-    }
+  // 🎨 Apply contextual theme
+  try {
+    await applyContextualTheme(); // ⬅️ handles overrides, Supabase theme, fallback
+  } catch (err) {
+    console.error('❌ Theme application failed:', err.message);
+    applyTheme('classic'); // safe fallback
   }
 
   // 🚦 Route & render page
@@ -73,8 +67,7 @@ export async function initApp() {
   window.BoxCall = window.BoxCall || {};
   window.BoxCall.forceApplyTheme = (themeKey) => {
     console.log(`🎨 Forcing live theme apply: ${themeKey}`);
-    applyFontTheme(themeKey);
-    applyColorTheme(themeKey);
+    applyTheme(themeKey);
   };
 
   // 🛠️ Dev Tools
