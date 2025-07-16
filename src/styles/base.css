@@ -50,10 +50,6 @@ header {
   overflow: hidden;
 }
 
-#sidebar-root {
-  width: 16rem;
-}
-
 #page-view {
   flex: 1;
   padding: 2rem;

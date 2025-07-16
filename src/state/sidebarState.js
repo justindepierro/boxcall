@@ -1,43 +1,65 @@
 // /state/sidebarState.js
-// 🧠 This module centralizes all logic related to the sidebar's visibility state
-// It provides helper functions to read, write, and cycle through sidebar modes
-// Modes include:
-// - 'expanded' (full width with labels)
-// - 'icon' (narrow with icons only)
-// - 'collapsed' (fully hidden or overlayed)
+// 🧠 Centralized sidebar state manager
+// Handles: reading, writing, cycling states like 'expanded', 'icon', and 'collapsed'
 
-// ✅ Default sidebar state — used on page load unless overridden by user preference or device size
-let sidebarState = 'expanded'; // possible values: 'expanded' | 'icon' | 'collapsed'
+const SIDEBAR_STATES = ['expanded', 'icon', 'collapsed'];
+const DEFAULT_STATE = 'expanded';
+
+let sidebarState = DEFAULT_STATE;
 
 /**
- * Returns the current sidebar state
- * @returns {string} sidebarState
+ * 📦 Returns the current sidebar state
+ * @returns {'expanded' | 'icon' | 'collapsed'}
  */
 export function getSidebarState() {
   return sidebarState;
 }
 
 /**
- * Sets a new sidebar state
- * Also a future hook point for saving to localStorage or persisting across sessions
- * @param {string} newState - one of 'expanded', 'icon', or 'collapsed'
+ * 💾 Sets the current sidebar state and saves to localStorage
+ * @param {'expanded' | 'icon' | 'collapsed'} newState
  */
 export function setSidebarState(newState) {
-  // ⛑️ Optional: add validation here if needed
+  if (!SIDEBAR_STATES.includes(newState)) {
+    console.warn(`❌ Invalid sidebar state: "${newState}".`);
+    return;
+  }
+
   sidebarState = newState;
+  saveSidebarStateToStorage();
 }
 
 /**
- * Cycles the sidebar state in order:
- * expanded ➝ icon ➝ collapsed ➝ expanded ...
- * Useful for minimizing logic tied to a single toggle button
+ * 🔁 Cycles sidebar state:
+ * expanded → icon → collapsed → expanded ...
  */
 export function cycleSidebarState() {
-  if (sidebarState === 'expanded') {
-    setSidebarState('icon');
-  } else if (sidebarState === 'icon') {
-    setSidebarState('collapsed');
-  } else {
-    setSidebarState('expanded');
+  const currentIndex = SIDEBAR_STATES.indexOf(sidebarState);
+  const nextIndex = (currentIndex + 1) % SIDEBAR_STATES.length;
+  setSidebarState(SIDEBAR_STATES[nextIndex]);
+}
+
+/**
+ * 📤 Save sidebar state to localStorage
+ */
+export function saveSidebarStateToStorage() {
+  try {
+    localStorage.setItem('sidebarState', sidebarState);
+  } catch (err) {
+    console.warn('⚠️ Failed to save sidebarState to localStorage:', err);
+  }
+}
+
+/**
+ * 📥 Restore sidebar state from localStorage
+ */
+export function loadSidebarStateFromStorage() {
+  try {
+    const stored = localStorage.getItem('sidebarState');
+    if (SIDEBAR_STATES.includes(stored)) {
+      sidebarState = stored;
+    }
+  } catch (err) {
+    console.warn('⚠️ Failed to load sidebarState from localStorage:', err);
   }
 }

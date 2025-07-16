@@ -11,6 +11,7 @@ import { applyTheme } from '@utils/themeManager.js';
 // 🧱 APP SHELL + ROUTING
 import { renderAppShell } from '@render/renderAppShell.js';
 import { handleRouting } from '@routes/router.js';
+import { loadSidebarStateFromStorage } from '@state/sidebarState.js';
 
 // 🛠️ DEV TOOLS
 import { renderDevToolsPanel } from '@components/dev/devToolsPanel.js';
@@ -60,6 +61,9 @@ export async function initApp() {
     console.error('🎨 Theme error, falling back to classic:', err.message);
     applyTheme('classic');
   }
+
+  // before renderAppShell()
+  loadSidebarStateFromStorage();
 
   // 5️⃣ Inject app shell (sidebar, layout, etc)
   renderAppShell();

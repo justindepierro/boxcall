@@ -1,16 +1,25 @@
 // src/components/sidebar/sidebarStateController.js
 
 import { setSidebarState } from '@state/sidebarState.js';
-import { getSidebarParts, toggleElementsVisibility, safeSetText } from '@utils/sidebarUtils.js';
-
-const SIDEBAR_STATES = ['expanded', 'icon', 'collapsed'];
+import {
+  querySidebarElements,
+  safeSetText,
+  adjustSidebarButtons,
+  updateSidebarVisibility,
+} from '@utils/sidebarUtils.js';
+import {
+  SIDEBAR_STATES,
+  WIDTH_CLASSES,
+  MARGIN_CLASSES,
+  MINIMIZE_SYMBOLS,
+} from '@config/sidebarConfig.js';
 
 /**
  * Applies layout and visibility changes based on sidebar state.
  * @param {'expanded' | 'icon' | 'collapsed'} newState
  */
 export function applySidebarState(newState) {
-  const parts = getSidebarParts();
+  const parts = querySidebarElements();
   if (!parts) {
     console.warn('❌ applySidebarState(): Sidebar DOM parts missing.');
     return;
@@ -20,18 +29,16 @@ export function applySidebarState(newState) {
 
   if (!SIDEBAR_STATES.includes(newState)) {
     console.error(
-      `🚨 applySidebarState(): Invalid state "${newState}". Expected one of: ${SIDEBAR_STATES.join(', ')}`
+      `🚨 Invalid sidebar state "${newState}". Expected one of: ${SIDEBAR_STATES.join(', ')}`
     );
     return;
   }
 
   console.log(`🎯 Sidebar → ${newState}`);
 
-  // 🔄 Reset widths and margins
-  outer?.classList.remove('w-64', 'w-16', 'w-0');
-  mainContent?.classList.remove('ml-64', 'ml-16', 'ml-0');
-
-  // 🔄 Reset interaction and opacity
+  // 🔄 Reset layout classes
+  outer?.classList.remove(...Object.values(WIDTH_CLASSES));
+  mainContent?.classList.remove(...Object.values(MARGIN_CLASSES));
   sidebar?.classList.remove(
     'opacity-0',
     'opacity-100',
@@ -39,38 +46,35 @@ export function applySidebarState(newState) {
     'pointer-events-auto'
   );
 
-  // 📦 Apply new state classes and behavior
-  switch (newState) {
-    case 'expanded':
-      outer?.classList.add('w-64');
-      mainContent?.classList.add('ml-64');
-      sidebar?.classList.add('opacity-100', 'pointer-events-auto');
-      toggleElementsVisibility(labels, true);
-      toggleElementsVisibility(icons, true);
-      title?.classList.remove('hidden');
-      safeSetText(minimizeBtn, '⇤');
-      break;
+  // ✅ Apply new layout classes
+  outer?.classList.add(WIDTH_CLASSES[newState]);
+  mainContent?.classList.add(MARGIN_CLASSES[newState]);
 
-    case 'icon':
-      outer?.classList.add('w-16');
-      mainContent?.classList.add('ml-16');
-      sidebar?.classList.add('opacity-100', 'pointer-events-auto');
-      toggleElementsVisibility(labels, false);
-      toggleElementsVisibility(icons, true);
-      title?.classList.add('hidden');
-      safeSetText(minimizeBtn, '⇥');
-      break;
+  const isVisible = newState !== 'collapsed';
+  sidebar?.classList.add(isVisible ? 'opacity-100' : 'opacity-0');
+  sidebar?.classList.add(isVisible ? 'pointer-events-auto' : 'pointer-events-none');
 
-    case 'collapsed':
-      outer?.classList.add('w-0');
-      mainContent?.classList.add('ml-0');
-      sidebar?.classList.add('opacity-0', 'pointer-events-none');
-      toggleElementsVisibility(labels, false);
-      toggleElementsVisibility(icons, false);
-      title?.classList.add('hidden');
-      safeSetText(minimizeBtn, '☰');
-      break;
-  }
+  // 🎨 Handle visibility and layout
+  updateSidebarVisibility({ labels, icons, title }, newState);
+  adjustSidebarButtons(newState);
 
+  // 🔘 Update toggle symbol
+  safeSetText(minimizeBtn, MINIMIZE_SYMBOLS[newState]);
+
+  // 💾 Save current state
   setSidebarState(newState);
+}
+
+export function applySidebarVisualState(state, parts) {
+  const { labels, icons, title } = parts;
+
+  const isExpanded = state === 'expanded';
+  const isVisible = state !== 'collapsed';
+
+  updateSidebarVisibility(labels, isExpanded);
+  updateSidebarVisibility(icons, isVisible);
+  title?.classList.toggle('hidden', !isExpanded);
+  labels?.forEach((el) => el.classList.toggle('hidden', !isExpanded));
+
+  adjustSidebarButtons(state);
 }

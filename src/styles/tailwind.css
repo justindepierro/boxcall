@@ -1,5 +1,9 @@
 /* src/styles/tailwind.css */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import './fonts.css'; /* ✅ Custom fonts */
 @import './base.css'; /* ✅ Normalize + reset */
 @import './components.css'; /* ✅ Component styles */
@@ -20,11 +24,7 @@ body,
 #shell {
   height: 100%;
   width: 100%;
-}
-
-#app {
   display: flex;
   flex-direction: row;
   min-height: 100vh;
-  width: 100%;
 }

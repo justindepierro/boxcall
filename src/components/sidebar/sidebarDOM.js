@@ -7,15 +7,17 @@ export function renderSidebar() {
   if (!container) return console.warn('❌ #sidebar-root not found');
 
   container.innerHTML = `
-<aside id="sidebar" class="flex flex-col h-screen w-64 bg-[var(--color-sidebar)] border-r border-[var(--color-border)] text-[var(--color-text)]">
-  
+<aside
+  id="sidebar"
+  class="flex flex-col h-full transition-all duration-300 w-64 bg-[var(--color-sidebar)] text-[var(--color-sidebar-text)] border-r border-[var(--color-border)]"
+>
   <!-- 🔝 Header -->
   <div class="p-4 border-b border-[var(--color-border)] flex justify-between items-center font-header text-lg">
     <span class="sidebar-title">📦 BoxCall</span>
     <button id="sidebar-minimize" title="Toggle Sidebar">☰</button>
   </div>
 
-  <!-- 🧭 Scrollable Main Nav -->
+  <!-- 🧭 Main Navigation (grows to fill space) -->
   <div class="flex-1 overflow-y-auto">
     <nav class="flex flex-col px-2 py-3 space-y-2 font-body">
       ${mainPages
@@ -31,8 +33,8 @@ export function renderSidebar() {
     </nav>
   </div>
 
-  <!-- ⚙️ Bottom Pinned Settings Nav -->
-  <div class="mt-auto border-t border-[var(--color-border)]">
+  <!-- ⚙️ Bottom Settings Nav (pinned to bottom) -->
+  <div class="border-t border-[var(--color-border)] p-2">
     <nav class="flex flex-col px-2 py-3 space-y-2 font-body">
       ${settingsPages
         .map(
@@ -46,7 +48,6 @@ export function renderSidebar() {
         .join('')}
     </nav>
   </div>
-
 </aside>
 `;
 

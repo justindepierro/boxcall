@@ -12,6 +12,18 @@ module.exports = {
     'font-header',
     'font-body',
     'font-mono',
+    'w-64',
+    'w-16',
+    'w-0',
+    'ml-64',
+    'ml-16',
+    'ml-0',
+    'transition-all',
+    'duration-300',
+    'opacity-0',
+    'opacity-100',
+    'pointer-events-none',
+    'pointer-events-auto',
   ],
   theme: {
     extend: {

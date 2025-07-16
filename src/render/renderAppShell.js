@@ -1,7 +1,4 @@
-// src/render/renderAppShell.js
-import { renderSidebar } from '@components/sidebar/sidebarDOM.js';
-import { applySidebarState } from '@components/sidebar/sidebarStateController.js';
-import { getSidebarState } from '@state/sidebarState.js';
+import { renderSidebar, initSidebarEvents } from '@components/sidebar';
 
 export function renderAppShell() {
   const root = document.getElementById('app');
@@ -11,7 +8,7 @@ export function renderAppShell() {
 
   root.innerHTML = `
     <div id="shell" class="flex h-screen w-full overflow-hidden bg-[var(--color-bg)] text-[var(--color-text)]">
-      <div id="sidebar-root"></div> <!-- 💡 inserted here -->
+      <div id="sidebar-root" class="flex flex-col h-full"></div>
       <main id="page-view" class="flex-1 overflow-y-auto p-6 bg-[var(--color-bg)]">
         <div id="page-content" class="max-w-screen-lg mx-auto"></div>
       </main>
@@ -21,14 +18,10 @@ export function renderAppShell() {
     </div>
   `;
 
-  // ✅ Only after HTML injected
   requestAnimationFrame(() => {
-    console.log('✅ renderAppShell(): Layout injected, calling renderSidebar()');
-    renderSidebar();
-
-    console.log('✅ renderAppShell(): Sidebar rendered, applying sidebar state');
-    applySidebarState(getSidebarState());
-
+    console.log('✅ renderAppShell(): Layout injected, rendering sidebar and events');
+    renderSidebar(); // ⬅️ DOM only
+    initSidebarEvents(); // ⬅️ Attach events and apply initial state
     console.log('✅ renderAppShell(): Shell fully initialized');
   });
 }
