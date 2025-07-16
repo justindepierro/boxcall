@@ -40,7 +40,7 @@ export function renderSidebar() {
         .map(
           ({ id, label, icon }) => `
           <button data-page="${id}" class="nav-btn flex items-center gap-2 px-3 py-2 rounded hover:bg-[var(--color-accent)] transition">
-            <span class="nav-icon">${icon}</span>
+            <span class="nav-icon text-xl">${icon}</span>
             <span class="nav-label label">${label}</span>
           </button>
         `

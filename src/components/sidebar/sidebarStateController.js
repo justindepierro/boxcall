@@ -3,7 +3,6 @@
 import { setSidebarState } from '@state/sidebarState.js';
 import {
   querySidebarElements,
-  safeSetText,
   adjustSidebarButtons,
   updateSidebarVisibility,
 } from '@utils/sidebarUtils.js';
@@ -13,6 +12,7 @@ import {
   MARGIN_CLASSES,
   MINIMIZE_SYMBOLS,
 } from '@config/sidebarConfig.js';
+import { createIconElement } from '@utils/iconRenderer.js';
 
 /**
  * Applies layout and visibility changes based on sidebar state.
@@ -57,10 +57,10 @@ export function applySidebarState(newState) {
   // 🧼 Ensure sidebar is hidden only when collapsed
   if (newState === 'collapsed') {
     sidebar.style.display = 'none';
-    outer.style.width = '48px'; // Just wide enough to hold the toggle button
-    mainContent?.classList.add(MARGIN_CLASSES.collapsed); // e.g., 'ml-12'
+    outer.classList.add(WIDTH_CLASSES.collapsed);
+    mainContent?.classList.add(MARGIN_CLASSES.collapsed);
   } else {
-    sidebar.style.display = ''; // Restore default
+    sidebar.style.display = '';
     outer.classList.add(WIDTH_CLASSES[newState]);
     mainContent?.classList.add(MARGIN_CLASSES[newState]);
     sidebar.classList.add('opacity-100', 'pointer-events-auto');
@@ -71,7 +71,13 @@ export function applySidebarState(newState) {
   adjustSidebarButtons(newState);
 
   // 🔘 Update toggle button symbol
-  safeSetText(minimizeBtn, MINIMIZE_SYMBOLS[newState]);
+  // 🔘 Swap out the minimize icon
+  const iconName = MINIMIZE_SYMBOLS[newState];
+  if (minimizeBtn) {
+    minimizeBtn.innerHTML = ''; // clear old icon
+    const iconEl = createIconElement(iconName, 20);
+    minimizeBtn.appendChild(iconEl);
+  }
 
   // 💾 Save state to storage
   setSidebarState(newState);

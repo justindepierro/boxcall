@@ -1,4 +1,4 @@
-import { initAuthState, getCurrentUser } from '@state/authState.js';
+import { initAuthState, getCurrentUser } from '@state/userState.js';
 import { initAuthListeners } from '@components/AuthGuard.js';
 
 /**

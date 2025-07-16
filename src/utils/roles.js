@@ -1,6 +1,6 @@
 // src/utils/roles.js
 import { getOverrideRole } from '@state/devToolState.js';
-import { getCurrentUser } from '@state/authState';
+import { getCurrentUser } from '@state/userState';
 
 export function getCurrentRole() {
   const override = getOverrideRole();

@@ -7,11 +7,12 @@
   /* Colors */
   --color-bg: #ffffff;
   --color-text: #1f2937;
-  --color-accent: #16a34a;
+  --color-accent: #032f3c;
   --color-border: #d1d5db;
-  --color-sidebar: #1e3a8a;
+  --color-sidebar: #046169;
   --color-header: #0f172a;
   --color-header-text: #ffffff;
 
   --color-sidebar-text: #ffffff;
+  --color-sidebar-icon: #ffffff;
 }

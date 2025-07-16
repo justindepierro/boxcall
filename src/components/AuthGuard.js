@@ -1,8 +1,8 @@
 // src/utils/authGuard.js
-import { isLoggedIn, getCurrentUser } from "../state/authState.js";
-import { navigateTo } from "../routes/router.js";
-import { listenToAuthChanges } from "../auth/authListener.js";
-import { applyContextualTheme } from "../../src/config/themes/themeController.js";
+import { isLoggedIn, getCurrentUser } from '../state/userState.js';
+import { navigateTo } from '../routes/router.js';
+import { listenToAuthChanges } from '../auth/authListener.js';
+import { applyContextualTheme } from '../../src/config/themes/themeController.js';
 
 /**
  * AuthGuard wrapper for protected page logic.
@@ -11,18 +11,18 @@ import { applyContextualTheme } from "../../src/config/themes/themeController.js
  * @param {string} [options.redirectTo='/login'] - Where to send unauthenticated users
  */
 export function authGuard(onAuth, options = {}) {
-  const redirectTo = options.redirectTo || "/login";
+  const redirectTo = options.redirectTo || '/login';
 
   try {
     if (isLoggedIn()) {
-      console.log("🟢 AuthGuard: User is signed in");
+      console.log('🟢 AuthGuard: User is signed in');
       onAuth(getCurrentUser());
     } else {
-      console.warn("🔴 AuthGuard: Not signed in, redirecting...");
+      console.warn('🔴 AuthGuard: Not signed in, redirecting...');
       navigateTo(redirectTo);
     }
   } catch (err) {
-    console.error("⚠️ AuthGuard error:", err);
+    console.error('⚠️ AuthGuard error:', err);
     navigateTo(redirectTo);
   }
 }
@@ -32,13 +32,13 @@ export function authGuard(onAuth, options = {}) {
  */
 export function initAuthListeners() {
   listenToAuthChanges(async ({ event, session }) => {
-    console.log("🔄 Auth state changed:", event);
+    console.log('🔄 Auth state changed:', event);
 
     if (!session) {
-      console.warn("🚪 Logged out – redirecting");
-      navigateTo("/login");
+      console.warn('🚪 Logged out – redirecting');
+      navigateTo('/login');
     } else {
-      console.log("🎨 Reapplying theme for new session...");
+      console.log('🎨 Reapplying theme for new session...');
       await applyContextualTheme();
     }
   });

@@ -1,6 +1,6 @@
 import { showSpinner, hideSpinner } from '@utils/spinner.js';
 import { devLog } from '@utils/devLogger.js';
-import { renderPage } from '@core/renderEngine.js';
+import { renderPage } from '@render/renderPage.js';
 
 // 🧠 Auto-import every page module under /pages/
 const pageModules = import.meta.glob('@pages/**/*.js');

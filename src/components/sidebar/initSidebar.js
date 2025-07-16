@@ -1,7 +1,7 @@
 // src/components/sidebar/initSidebar.js
 
 import { loadSidebarStateFromStorage, getSidebarState } from '@state/sidebarState.js';
-import { renderSidebar } from './sidebarRender.js';
+import { renderSidebar } from './renderSidebar.js';
 import { applySidebarState } from './sidebarStateController.js';
 import { initSidebarToggle } from './sidebarToggleHandler.js';
 
@@ -12,21 +12,23 @@ import { initSidebarToggle } from './sidebarToggleHandler.js';
  * 3. Applies layout and visibility
  * 4. Hooks up interactions
  */
-export function initSidebar() {
+export async function initSidebar() {
   console.log('🧱 initSidebar(): Loading sidebar...');
 
-  // 1. Load state from storage
+  // 1. Load state from localStorage FIRST
   loadSidebarStateFromStorage();
 
-  // 2. Render sidebar DOM structure
-  renderSidebar();
+  // 2. NOW read the actual current state
+  const currentState = getSidebarState();
 
-  // 3. Apply visual/layout state
-  const state = getSidebarState();
-  applySidebarState(state);
+  // 3. Render sidebar using currentState (for correct toggle icon)
+  renderSidebar(currentState);
 
-  // 4. Hook up minimize button and shortcuts
+  // 4. Apply layout changes for currentState
+  applySidebarState(currentState);
+
+  // 5. Set up toggle button listener
   initSidebarToggle();
 
-  console.log(`✅ Sidebar initialized in "${state}" state`);
+  console.log(`✅ Sidebar initialized in "${currentState}" state`);
 }

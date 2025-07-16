@@ -1,6 +1,6 @@
 // src/lib/init/initUser.js
 
-import { getCurrentUser, isLoggedIn } from '@state/authState.js';
+import { getCurrentUser, isLoggedIn } from '@state/userState.js';
 import { getUserSettings } from '@lib/teams/user/getUserSettings.js';
 import { getOverrideRole } from '@state/devToolState.js';
 

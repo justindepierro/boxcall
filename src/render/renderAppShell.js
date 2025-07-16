@@ -8,7 +8,7 @@ export function renderAppShell() {
 
   root.innerHTML = `
     <div id="shell" class="flex h-screen w-full overflow-hidden bg-[var(--color-bg)] text-[var(--color-text)]">
-      <div id="sidebar-root" class="flex flex-col h-full"></div>
+      <div id="sidebar-root" class="flex flex-col h-full w-64"></div>
       <main id="page-view" class="flex-1 overflow-y-auto p-6 bg-[var(--color-bg)]">
         <div id="page-content" class="max-w-screen-lg mx-auto"></div>
       </main>

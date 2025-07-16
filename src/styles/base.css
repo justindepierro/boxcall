@@ -66,3 +66,10 @@ header {
 .nav-btn {
   padding-left: 1rem; /* match above */
 }
+
+#sidebar-root button {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
