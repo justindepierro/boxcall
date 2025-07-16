@@ -1,58 +1,50 @@
 // src/components/sidebar/sidebarStateController.js
 
-import { setSidebarState } from '../../state/sidebarState.js';
-import {
-  getSidebarParts,
-  toggleElementsVisibility,
-  safeSetText,
-} from '../../utils/sidebarUtils.js';
+import { setSidebarState } from '@state/sidebarState.js';
+import { getSidebarParts, toggleElementsVisibility, safeSetText } from '@utils/sidebarUtils.js';
 
 const SIDEBAR_STATES = ['expanded', 'icon', 'collapsed'];
 
 /**
- * Applies visual and layout changes for the given sidebar state.
- * - Updates sidebar size, label/icon visibility, main margin, and button text
- * - Updates global sidebar state using setSidebarState()
- *
+ * Applies layout and visibility changes based on sidebar state.
  * @param {'expanded' | 'icon' | 'collapsed'} newState
  */
 export function applySidebarState(newState) {
-  const { sidebar, mainContent, labels, title, icons, minimizeBtn } = getSidebarParts();
-
-  if (!sidebar || !mainContent || !minimizeBtn) {
-    console.warn('❌ applySidebarState() aborted — missing sidebar elements');
+  const parts = getSidebarParts();
+  if (!parts) {
+    console.warn('❌ applySidebarState(): Sidebar DOM parts missing.');
     return;
   }
+
+  const { outer, sidebar, mainContent, labels, title, icons, minimizeBtn } = parts;
 
   if (!SIDEBAR_STATES.includes(newState)) {
-    console.error(`🚨 Invalid sidebar state: "${newState}"`);
+    console.error(
+      `🚨 applySidebarState(): Invalid state "${newState}". Expected one of: ${SIDEBAR_STATES.join(', ')}`
+    );
     return;
   }
 
-  console.log(`🎯 Switching sidebar to "${newState}"`);
+  console.log(`🎯 Sidebar → ${newState}`);
 
-  // 🧼 Reset sidebar and content panel classes
-  const resetClasses = [
-    'w-64',
-    'w-16',
-    'w-0',
+  // 🔄 Reset widths and margins
+  outer?.classList.remove('w-64', 'w-16', 'w-0');
+  mainContent?.classList.remove('ml-64', 'ml-16', 'ml-0');
+
+  // 🔄 Reset interaction and opacity
+  sidebar?.classList.remove(
     'opacity-0',
     'opacity-100',
     'pointer-events-none',
-    'pointer-events-auto',
-    'ml-64',
-    'ml-16',
-    'ml-0',
-  ];
+    'pointer-events-auto'
+  );
 
-  sidebar.classList.remove(...resetClasses);
-  mainContent.classList.remove(...resetClasses);
-
-  // 🎯 Apply new state-specific classes
+  // 📦 Apply new state classes and behavior
   switch (newState) {
     case 'expanded':
-      sidebar.classList.add('w-64', 'opacity-100', 'pointer-events-auto');
-      mainContent.classList.add('ml-64');
+      outer?.classList.add('w-64');
+      mainContent?.classList.add('ml-64');
+      sidebar?.classList.add('opacity-100', 'pointer-events-auto');
       toggleElementsVisibility(labels, true);
       toggleElementsVisibility(icons, true);
       title?.classList.remove('hidden');
@@ -60,8 +52,9 @@ export function applySidebarState(newState) {
       break;
 
     case 'icon':
-      sidebar.classList.add('w-16', 'opacity-100', 'pointer-events-auto');
-      mainContent.classList.add('ml-16');
+      outer?.classList.add('w-16');
+      mainContent?.classList.add('ml-16');
+      sidebar?.classList.add('opacity-100', 'pointer-events-auto');
       toggleElementsVisibility(labels, false);
       toggleElementsVisibility(icons, true);
       title?.classList.add('hidden');
@@ -69,8 +62,9 @@ export function applySidebarState(newState) {
       break;
 
     case 'collapsed':
-      sidebar.classList.add('w-0', 'opacity-0', 'pointer-events-none');
-      mainContent.classList.add('ml-0');
+      outer?.classList.add('w-0');
+      mainContent?.classList.add('ml-0');
+      sidebar?.classList.add('opacity-0', 'pointer-events-none');
       toggleElementsVisibility(labels, false);
       toggleElementsVisibility(icons, false);
       title?.classList.add('hidden');
@@ -78,6 +72,5 @@ export function applySidebarState(newState) {
       break;
   }
 
-  // ✅ Save to global store
   setSidebarState(newState);
 }

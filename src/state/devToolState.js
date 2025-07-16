@@ -16,7 +16,6 @@ export function setOverrideRole(role) {
 }
 
 export function getOverrideRole() {
-  if (DEV_EMAIL) return null;
   return localStorage.getItem('dev.overrideRole') || overrideRole;
 }
 

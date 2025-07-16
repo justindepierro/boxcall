@@ -4,16 +4,27 @@
 @import './base.css'; /* ✅ Normalize + reset */
 @import './components.css'; /* ✅ Component styles */
 
-/* Layout guards */
 html,
-body,
-#app {
+body {
   height: 100%;
+  width: 100%;
   margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent side-scroll jank */
+  box-sizing: border-box;
 }
 
-#sidebar-root {
+html,
+body,
+#app,
+#shell {
   height: 100%;
-  position: relative;
-  z-index: 50;
+  width: 100%;
+}
+
+#app {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  width: 100%;
 }

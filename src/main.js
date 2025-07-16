@@ -1,26 +1,33 @@
 // src/main.js
 
-// ✅ Tailwind + Font Imports
+// ✅ Import Tailwind and Fonts
 import './styles/tailwind.css';
 import './styles/fonts.css';
 
-// ✅ App Bootstrapping Logic
+// ✅ Initialize the full app system
 import { initApp } from './init.js';
 
-// ✅ Start app on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('📦 Initializing BoxCall App...');
+/**
+ * DOM Ready Boot Sequence
+ */
+document.addEventListener('DOMContentLoaded', async () => {
+  console.log('🚀 DOM ready — booting BoxCall...');
 
-  // 🧼 Apply fallback body styling immediately
+  // Fallback styles (in case theme is slow to load)
   document.body.classList.add('bg-[var(--color-bg)]', 'text-[var(--color-text)]');
 
   try {
-    initApp(); // Fully async init system
+    await initApp(); // Full async bootstrap
   } catch (err) {
-    console.error('❌ App failed to initialize:', err);
-    const app = document.getElementById('app');
-    if (app) {
-      app.innerHTML = `<div class="text-red-500 p-4">Critical error loading app.</div>`;
+    console.error('❌ BoxCall failed to initialize:', err);
+    const root = document.getElementById('page-view') || document.getElementById('app');
+    if (root) {
+      root.innerHTML = `
+        <div class="text-red-500 bg-white p-4 rounded shadow max-w-md mx-auto mt-20">
+          <h1 class="text-2xl font-bold mb-2">⚠️ App Failed to Load</h1>
+          <p>${err.message || 'Unexpected error during initialization.'}</p>
+        </div>
+      `;
     }
   }
 });

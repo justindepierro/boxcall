@@ -1,18 +1,23 @@
 // src/pages/login/index.js
 import { signIn } from '@auth/auth.js';
-import { authCard } from '../../components/AuthCard.js';
-import { showToast } from '../../utils/toast.js';
-import { navigateTo } from '../../routes/router.js';
-import { formatError } from '../../utils/errors.js';
+import { authCard } from '@components/AuthCard.js';
+import { showToast } from '@utils/toast.js';
+import { navigateTo } from '@routes/router.js';
+import { formatError } from '@utils/errors.js';
+import { renderPage } from '@core/renderEngine.js';
 
 export default function renderLoginPage(container) {
-  console.log('🔑 Rendering Login Page');
+  renderPage({
+    containerId: container.id,
+    component: LoginComponent,
+    title: 'Login',
+    hideSidebar: true,
+  });
+}
 
-  // Remove sidebar if it's still rendered
-  const sidebar = document.getElementById('sidebar-root');
-  if (sidebar) sidebar.innerHTML = '';
-
-  container.innerHTML = authCard(
+function LoginComponent() {
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = authCard(
     'Login',
     `
     <form id="login-form" class="space-y-4">
@@ -22,11 +27,11 @@ export default function renderLoginPage(container) {
       <p id="login-error" class="text-red-500 text-sm mt-2"></p>
       <a href="#/forgot" class="text-sm text-blue-500 hover:underline block mt-2">Forgot your password?</a>
     </form>
-  `
+    `
   );
 
-  const form = document.getElementById('login-form');
-  form?.addEventListener('submit', handleLoginSubmit);
+  wrapper.querySelector('#login-form')?.addEventListener('submit', handleLoginSubmit);
+  return wrapper;
 }
 
 async function handleLoginSubmit(e) {
@@ -50,7 +55,6 @@ async function handleLoginSubmit(e) {
     return;
   }
 
-  // Wait for Supabase to trigger session + listener
   showToast('✅ Logged in successfully!', 'success');
-  setTimeout(() => navigateTo('dashboard'), 200); // buffer to ensure theme applies
+  setTimeout(() => navigateTo('dashboard'), 200);
 }

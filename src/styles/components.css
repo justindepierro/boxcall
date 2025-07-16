@@ -15,3 +15,11 @@
 .input {
   @apply border border-gray-300 p-2 rounded w-full;
 }
+
+nav.flex {
+  display: flex;
+}
+
+nav.flex.flex-col {
+  flex-direction: column;
+}

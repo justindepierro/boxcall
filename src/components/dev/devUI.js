@@ -1,10 +1,17 @@
+// src/components/dev/devUI.js
+
+/**
+ * Creates a reusable checkbox component
+ */
 export function createCheckbox(id, label, checked = false, onChange = () => {}) {
   const wrapper = document.createElement('label');
-  wrapper.className = 'flex items-center gap-2 text-xs';
+  wrapper.className = 'flex items-center gap-2 text-xs cursor-pointer';
+  wrapper.htmlFor = id;
 
   const box = document.createElement('input');
   box.type = 'checkbox';
   box.id = id;
+  box.name = id;
   box.checked = checked;
   box.className = 'form-checkbox';
 
@@ -19,20 +26,30 @@ export function createCheckbox(id, label, checked = false, onChange = () => {}) 
   return wrapper;
 }
 
-export function createButton(label, onClick, className = '') {
+/**
+ * Creates a styled button with click handler
+ */
+export function createButton(label, onClick, className = '', title = '') {
   const btn = document.createElement('button');
   btn.textContent = label;
   btn.className = `px-2 py-1 rounded text-xs ${className}`;
+  if (title) btn.title = title;
+  btn.setAttribute('aria-label', title || label);
   btn.addEventListener('click', onClick);
   return btn;
 }
 
+/**
+ * Creates a text input with optional input handler
+ */
 export function createTextInput(id, placeholder = '', onInput = () => {}) {
   const input = document.createElement('input');
   input.type = 'text';
   input.id = id;
+  input.name = id;
   input.placeholder = placeholder;
   input.className = 'text-black text-xs p-1 rounded w-full';
+  input.setAttribute('aria-label', placeholder || id);
 
   input.addEventListener('input', () => onInput(input.value));
   return input;

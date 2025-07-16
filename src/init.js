@@ -1,82 +1,89 @@
-// src/init.js
+// 🌐 AUTH INIT
+import { initAuth } from '@lib/init/initAuth.js';
 
-import { initAuthState, isLoggedIn, getCurrentUser } from '@state/authState.js';
-import { initAuthListeners } from '@components/AuthGuard.js';
+// 🧑‍💼 USER SETTINGS + DEV OVERRIDES
+import { initializeUser, handleAuthRedirect } from '@lib/init/initUser.js';
+
+// 🎨 THEMING
+import { applyContextualTheme } from '@config/themes/themeController.js';
+import { applyTheme } from '@utils/themeManager.js';
+
+// 🧱 APP SHELL + ROUTING
+import { renderAppShell } from '@render/renderAppShell.js';
 import { handleRouting } from '@routes/router.js';
-import { getUserSettings } from '@lib/teams/user/getUserSettings.js';
-import { getOverrideRole } from '@state/devToolState.js';
+
+// 🛠️ DEV TOOLS
 import { renderDevToolsPanel } from '@components/dev/devToolsPanel.js';
 import { mountLiveLogger, updateLogContext } from '@components/dev/liveLogger.js';
 import { DEV_EMAIL } from '@config/devConfig.js';
-import { applyTheme } from '@utils/themeManager.js';
-import { applyContextualTheme } from '@config/themes/themeController.js'; // ✅ New theme flow
 
+// 🌐 Routing rules
 const PUBLIC_PAGES = ['login', 'signup', 'forgot'];
+
+function getCurrentPage() {
+  return (location.hash || '').replace(/^#\/?/, '') || 'dashboard';
+}
 
 function isProtectedPage(page) {
   return !PUBLIC_PAGES.includes(page);
 }
 
-function getCurrentPage() {
-  const raw = location.hash || '';
-  return raw.replace(/^#\/?/, '') || 'dashboard';
-}
-
 export async function initApp() {
-  console.log('📦 Initializing BoxCall App...');
-  await initAuthState();
+  console.log('🧠 initApp(): Starting full app initialization...');
 
-  const user = getCurrentUser();
-  if (user) {
-    const settings = await getUserSettings(user.id);
-    const overrideRole = getOverrideRole();
+  const page = getCurrentPage();
 
-    if (overrideRole) {
-      settings.original_role = settings.role;
-      settings.role = overrideRole;
-      console.log(`🧪 Dev Role Override: ${overrideRole}`);
-    }
+  // 1️⃣ Supabase Auth Setup
+  await initAuth();
+  console.log('🧪 window.supabaseUser:', window.supabaseUser);
 
-    window.userSettings = { ...settings, email: user.email };
-  }
+  const user = window.supabaseUser;
+  const isLoggedIn = !!user;
 
-  initAuthListeners();
-
-  const currentPage = getCurrentPage();
-
-  // 🔒 Redirect to login if not authenticated
-  if (isProtectedPage(currentPage) && !isLoggedIn()) {
-    console.warn('🔒 Not logged in, redirecting...');
-    window.location.hash = '#/login';
+  // 2️⃣ Handle redirect if unauthorized on protected page
+  if (isProtectedPage(page) && !isLoggedIn) {
+    handleAuthRedirect();
     return;
   }
 
-  // 🎨 Apply contextual theme
-  try {
-    await applyContextualTheme(); // ⬅️ handles overrides, Supabase theme, fallback
-  } catch (err) {
-    console.error('❌ Theme application failed:', err.message);
-    applyTheme('classic'); // safe fallback
+  // 3️⃣ Load user settings (with dev overrides)
+  if (user) {
+    window.userSettings = await initializeUser(user);
+    console.log('✅ userSettings loaded');
   }
 
-  // 🚦 Route & render page
+  // 4️⃣ Apply theme (from user/team/dev fallback)
+  try {
+    await applyContextualTheme();
+    console.log('🎨 Theme applied');
+  } catch (err) {
+    console.error('🎨 Theme error, falling back to classic:', err.message);
+    applyTheme('classic');
+  }
+
+  // 5️⃣ Inject app shell (sidebar, layout, etc)
+  renderAppShell();
+  console.log('✅ renderAppShell() called');
+
+  // 6️⃣ Load current route
   await handleRouting();
   window.addEventListener('hashchange', handleRouting);
+  console.log('🚦 handleRouting() finished');
 
-  // ✅ Expose theme switcher for DevTools
+  // 7️⃣ Inject Dev Tools if authorized
+  if (window.userSettings?.email === DEV_EMAIL) {
+    console.log('🛠️ Dev mode: Initializing tools...');
+    renderDevToolsPanel(window.userSettings);
+    mountLiveLogger();
+    updateLogContext();
+  }
+
+  // 8️⃣ Expose global theming tool (for live overrides)
   window.BoxCall = window.BoxCall || {};
   window.BoxCall.forceApplyTheme = (themeKey) => {
-    console.log(`🎨 Forcing live theme apply: ${themeKey}`);
+    console.log(`🎨 Live theme override: ${themeKey}`);
     applyTheme(themeKey);
   };
 
-  // 🛠️ Dev Tools
-  if (window.userSettings?.email === DEV_EMAIL) {
-    console.log('🛠️ Dev mode active — mounting dev tools and logger...');
-    renderDevToolsPanel();
-    mountLiveLogger();
-    updateLogContext();
-  } else {
-    console.log('🧪 Dev tools skipped for non-dev user.');
-  }
+  console.log('✅ initApp(): App fully initialized.');
 }

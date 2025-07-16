@@ -5,26 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BoxCall</title>
 
-    <!-- Theme Tokens (must match class above) -->
+    <!-- Theme Tokens (must match the `theme-default` class above) -->
     <link rel="stylesheet" href="/tokens/theme-default.css" id="theme-tokens" />
   </head>
 
   <body class="bg-[var(--color-bg)] text-[var(--color-text)]">
-    <div id="app" class="flex min-h-screen w-full">
-      <!-- Sidebar -->
-      <aside
-        id="sidebar-root"
-        class="hidden md:block w-64 shrink-0 bg-[var(--color-sidebar)] text-[var(--color-text)]"
-      ></aside>
+    <div id="app"></div>
+    <!-- App shell gets injected here -->
 
-      <!-- Main View -->
-      <main id="page-view" class="flex-1 p-6 overflow-y-auto transition-colors duration-300"></main>
-    </div>
-
-    <!-- Spinner, Footer, etc... -->
+    <!-- Mount App -->
     <script type="module" src="/src/main.js"></script>
-    <script>
-      document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
   </body>
 </html>

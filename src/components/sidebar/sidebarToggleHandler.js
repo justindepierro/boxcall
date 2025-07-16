@@ -1,11 +1,11 @@
 // src/components/sidebar/sidebarToggleHandler.js
 
-import { getSidebarState, setSidebarState } from '../../state/sidebarState.js';
+import { getSidebarState, setSidebarState } from '@state/sidebarState.js';
 import { applySidebarState } from './sidebarStateController.js';
-import { getSidebarParts } from '../../utils/sidebarUtils.js';
+import { getSidebarParts } from '@utils/sidebarUtils.js'; // 🔁 keep utils close if local
 
 /**
- * Cycles between 'expanded' and 'icon' sidebar states
+ * 🔁 Toggle between 'expanded' and 'icon' sidebar states
  */
 export function handleSidebarToggle() {
   const current = getSidebarState();
@@ -17,12 +17,13 @@ export function handleSidebarToggle() {
 }
 
 /**
- * Initializes the sidebar toggle button
+ * 🧩 Initialize sidebar toggle button
  */
 export function initSidebarToggle() {
   const { minimizeBtn } = getSidebarParts();
+
   if (!minimizeBtn) {
-    console.warn('❌ Sidebar minimize button not found');
+    console.warn('❌ initSidebarToggle(): Minimize button not found');
     return;
   }
 
