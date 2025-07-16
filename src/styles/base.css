@@ -57,3 +57,12 @@ header {
   background-color: var(--color-bg);
   color: var(--color-text);
 }
+
+/* Tailwind classes used: */
+#sidebar-toggle-wrapper {
+  padding-left: 1rem; /* or px-4 */
+}
+
+.nav-btn {
+  padding-left: 1rem; /* match above */
+}

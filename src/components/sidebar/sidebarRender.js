@@ -9,15 +9,16 @@ export function renderSidebar() {
   if (!container) return console.warn('❌ #sidebar-root not found');
 
   container.innerHTML = `
-<aside
+<div id="sidebar-toggle-wrapper" class="flex items-left justify-left px-3 py-2 transition-all duration-300 w-64 bg-[var(--color-sidebar)] text-[var(--color-sidebar-text)] border-r border-[var(--color-border)]">
+  <button id="sidebar-minimize" title="Toggle Sidebar" class="text-lg">☰</button>
+  <span id="sidebar-brand" class="ml-2 text-white font-bold">BoxCall</span>
+</div>
+
+  <aside
   id="sidebar"
   class="flex flex-col h-full transition-all duration-300 w-64 bg-[var(--color-sidebar)] text-[var(--color-sidebar-text)] border-r border-[var(--color-border)]"
 >
-  <!-- 🔝 Header -->
-  <div class="p-4 border-b border-[var(--color-border)] flex justify-between items-center font-header text-lg">
-    <span class="sidebar-title">📦 BoxCall</span>
-    <button id="sidebar-minimize" title="Toggle Sidebar">☰</button>
-  </div>
+
 
   <!-- 🧭 Main Navigation -->
   <div class="flex-1 overflow-y-auto">
@@ -43,10 +44,13 @@ function renderNavButtons(pages = []) {
   return pages
     .map(
       ({ id, label, icon }) => `
-      <button data-page="${id}" class="nav-btn flex items-center gap-2 px-3 py-2 rounded hover:bg-[var(--color-accent)] transition">
-        <span class="nav-icon">${icon}</span>
-        <span class="nav-label label">${label}</span>
-      </button>
+<button
+  data-page="${id}"
+  class="nav-btn pr-4 flex items-center w-full transition rounded hover:bg-[var(--color-accent)]"
+>
+  <span class="nav-icon flex-shrink-0 w-6 text-center">${icon}</span>
+  <span class="nav-label ml-3">${label}</span>
+</button>
     `
     )
     .join('');

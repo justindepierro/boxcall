@@ -25,7 +25,15 @@ export function applySidebarState(newState) {
     return;
   }
 
-  const { outer, sidebar, mainContent, labels, title, icons, minimizeBtn } = parts;
+  const {
+    outer, // #sidebar-root (wraps toggle + sidebar)
+    sidebar, // <aside id="sidebar">
+    mainContent,
+    labels,
+    title,
+    icons,
+    minimizeBtn,
+  } = parts;
 
   if (!SIDEBAR_STATES.includes(newState)) {
     console.error(
@@ -46,22 +54,26 @@ export function applySidebarState(newState) {
     'pointer-events-auto'
   );
 
-  // ✅ Apply new layout classes
-  outer?.classList.add(WIDTH_CLASSES[newState]);
-  mainContent?.classList.add(MARGIN_CLASSES[newState]);
+  // 🧼 Ensure sidebar is hidden only when collapsed
+  if (newState === 'collapsed') {
+    sidebar.style.display = 'none';
+    outer.style.width = '48px'; // Just wide enough to hold the toggle button
+    mainContent?.classList.add(MARGIN_CLASSES.collapsed); // e.g., 'ml-12'
+  } else {
+    sidebar.style.display = ''; // Restore default
+    outer.classList.add(WIDTH_CLASSES[newState]);
+    mainContent?.classList.add(MARGIN_CLASSES[newState]);
+    sidebar.classList.add('opacity-100', 'pointer-events-auto');
+  }
 
-  const isVisible = newState !== 'collapsed';
-  sidebar?.classList.add(isVisible ? 'opacity-100' : 'opacity-0');
-  sidebar?.classList.add(isVisible ? 'pointer-events-auto' : 'pointer-events-none');
-
-  // 🎨 Handle visibility and layout
+  // 🎨 Update visibility of labels/icons/titles and buttons
   updateSidebarVisibility({ labels, icons, title }, newState);
   adjustSidebarButtons(newState);
 
-  // 🔘 Update toggle symbol
+  // 🔘 Update toggle button symbol
   safeSetText(minimizeBtn, MINIMIZE_SYMBOLS[newState]);
 
-  // 💾 Save current state
+  // 💾 Save state to storage
   setSidebarState(newState);
 }
 

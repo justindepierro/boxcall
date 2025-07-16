@@ -68,22 +68,65 @@ export function querySidebarElements() {
 }
 
 export function adjustSidebarButtons(newState) {
+  const sidebar = document.getElementById('sidebar');
+  const width = sidebar?.offsetWidth || 0;
+
   document.querySelectorAll('.nav-btn').forEach((btn) => {
-    btn.classList.remove('gap-2', 'justify-start', 'pl-4', 'justify-center', 'px-2');
+    btn.classList.remove('gap-2', 'justify-start', 'justify-center', 'pl-4', 'px-2', 'px-1');
+
+    // Decide alignment based on sidebar width
+    const isNarrow = width <= 64;
+    btn.classList.add(isNarrow ? 'justify-center' : 'justify-start');
+
     if (newState === 'expanded') {
-      btn.classList.add('gap-2', 'justify-start', 'pl-4');
-    } else {
-      btn.classList.add('justify-center', 'px-2');
+      btn.classList.add('gap-2', 'pl-4');
+    } else if (newState === 'icon') {
+      btn.classList.add('px-2');
+    } else if (newState === 'collapsed') {
+      btn.classList.add('px-1');
     }
   });
 }
 
 export function updateSidebarVisibility({ labels, icons, title }, newState) {
   const isExpanded = newState === 'expanded';
-  const isVisible = newState !== 'collapsed';
+  const isCollapsed = newState === 'collapsed';
 
   toggleElementsVisibility(labels, isExpanded);
-  toggleElementsVisibility(icons, isVisible);
+  toggleElementsVisibility(icons, !isCollapsed);
   title?.classList.toggle('hidden', !isExpanded);
-  labels?.forEach((el) => el.classList.toggle('hidden', !isExpanded));
+
+  const toggleWrapper = document.getElementById('sidebar-toggle-wrapper');
+  const allSidebarChildren = Array.from(document.getElementById('sidebar')?.children || []);
+  const brand = document.getElementById('sidebar-brand');
+  if (brand) {
+    brand.style.display = isExpanded ? 'inline' : 'none';
+  }
+  allSidebarChildren.forEach((child) => {
+    if (newState === 'collapsed') {
+      // 👇 Only keep the toggle wrapper visible, hide all others
+      child.style.display = child.contains(toggleWrapper) ? 'flex' : 'none';
+    } else {
+      child.style.display = '';
+    }
+  });
+}
+
+export function applyDynamicSidebarWidth() {
+  const sidebar = document.getElementById('sidebar');
+  const labelEls = document.querySelectorAll('.nav-btn .label'); // assuming each label has class 'label'
+
+  if (!sidebar || !labelEls.length) return;
+
+  let maxWidth = 0;
+
+  labelEls.forEach((label) => {
+    const width = label.offsetWidth;
+    if (width > maxWidth) maxWidth = width;
+  });
+
+  const paddingBuffer = 64; // ⬅️ adjust as needed
+  const totalWidth = maxWidth + paddingBuffer;
+
+  sidebar.style.width = `${totalWidth}px`;
 }

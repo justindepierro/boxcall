@@ -18,17 +18,16 @@ export const settingsPages = [
 
 export const SIDEBAR_STATES = ['expanded', 'icon', 'collapsed'];
 export const WIDTH_CLASSES = {
-  expanded: 'w-64',
-  icon: 'w-16',
-  collapsed: 'w-12',
+  icon: 'w-8',
+  collapsed: 'w-6',
 };
 export const MARGIN_CLASSES = {
   expanded: 'ml-64',
-  icon: 'ml-16',
-  collapsed: 'ml-12',
+  icon: 'ml-8',
+  collapsed: 'ml-8',
 };
 export const MINIMIZE_SYMBOLS = {
   expanded: '⇤',
-  icon: '⇥',
+  icon: '⇤',
   collapsed: '☰',
 };

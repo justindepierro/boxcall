@@ -1,4 +1,4 @@
-import { renderSidebar, initSidebarEvents } from '@components/sidebar';
+import { initSidebar } from '../components/sidebar/initSidebar';
 
 export function renderAppShell() {
   const root = document.getElementById('app');
@@ -20,8 +20,7 @@ export function renderAppShell() {
 
   requestAnimationFrame(() => {
     console.log('✅ renderAppShell(): Layout injected, rendering sidebar and events');
-    renderSidebar(); // ⬅️ DOM only
-    initSidebarEvents(); // ⬅️ Attach events and apply initial state
+    initSidebar();
     console.log('✅ renderAppShell(): Shell fully initialized');
   });
 }
