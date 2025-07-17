@@ -17,6 +17,11 @@ import {
   Info,
   Menu,
   ArrowLeftToLine,
+  Trash,
+  ArrowDownToLine,
+  Loader,
+  MousePointerClick,
+  Sparkles,
 } from 'lucide';
 
 // 🗺️ Map kebab-case names to Lucide icon components
@@ -34,6 +39,11 @@ const iconMap = {
   info: Info,
   menu: Menu,
   'arrow-left-to-line': ArrowLeftToLine,
+  trash: Trash,
+  'arrow-down-to-line': ArrowDownToLine,
+  loader: Loader,
+  'mouse-pointer-click': MousePointerClick,
+  sparkles: Sparkles,
 };
 
 /**

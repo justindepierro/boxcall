@@ -1,9 +1,7 @@
-import { renderPage } from '@core/renderEngine.js';
-
 /**
  * 404 Component — returns a DOM element
  */
-function NotFoundComponent() {
+export default function NotFoundPage() {
   const div = document.createElement('div');
   div.className = 'text-center py-20 font-body text-[var(--color-text)]';
 
@@ -14,14 +12,4 @@ function NotFoundComponent() {
   `;
 
   return div;
-}
-
-/**
- * Render 404 Page
- */
-export default function render404Page(container) {
-  renderPage({
-    component: NotFoundComponent,
-    containerId: container.id,
-  });
 }

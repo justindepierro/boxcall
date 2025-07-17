@@ -1,31 +1,19 @@
+// src/components/ui/SidebarButton.js
 import { createIconElement } from '@utils/iconRenderer.js';
 import { getSidebarState } from '@state/sidebarState.js';
-import {
-  // SIDEBAR_PADDING_X,
-  // SIDEBAR_PADDING_Y,
-  // SIDEBAR_GAP,
-  SIDEBAR_ICON_SIZE,
-} from '@config/sidebarConfig.js';
+import { navigateTo } from '@routes/router.js'; // ✅ add this
 
-/**
- * Sidebar button with icon + label.
- * @param {Object} opts
- * @param {string} opts.id - page ID (for routing)
- * @param {string} opts.label - visible label
- * @param {string} opts.icon - Lucide icon name
- * @returns {HTMLButtonElement}
- */
 export function SidebarButton({ id, label, icon }) {
   const btn = document.createElement('button');
   btn.className = `
-  nav-btn group flex items-center rounded transition
-  hover:bg-[var(--color-accent)] text-[var(--color-sidebar-text)]
-  justify-start gap-2 px-4 py-2 w-full
-`;
+    nav-btn group flex items-center rounded transition
+    hover:bg-[var(--color-accent)] text-[var(--color-sidebar-text)]
+    justify-start gap-2 px-2 py-2 w-full
+  `.trim();
 
   btn.dataset.page = id;
 
-  const iconEl = createIconElement(icon, SIDEBAR_ICON_SIZE);
+  const iconEl = createIconElement(icon, 20);
   iconEl.classList.add(
     'nav-icon',
     'text-[var(--color-sidebar-icon)]',
@@ -40,6 +28,11 @@ export function SidebarButton({ id, label, icon }) {
     labelEl.classList.add('hidden');
   }
   labelEl.textContent = label;
+
+  // ✅ ROUTER INTEGRATION
+  btn.addEventListener('click', () => {
+    navigateTo(id);
+  });
 
   btn.append(iconEl, labelEl);
   return btn;

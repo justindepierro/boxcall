@@ -1,10 +1,10 @@
 :root {
-  /* Fonts */
+  /* 🖋️ Fonts */
   --font-header: 'Oswald', sans-serif;
   --font-body: 'Inter', sans-serif;
   --font-mono: 'Fira Mono', monospace;
 
-  /* Colors */
+  /* 🎨 Colors */
   --color-bg: #ffffff;
   --color-text: #1f2937;
   --color-accent: #032f3c;
@@ -15,4 +15,9 @@
 
   --color-sidebar-text: #ffffff;
   --color-sidebar-icon: #ffffff;
+
+  /* ✅ NEW BUTTON-SPECIFIC TOKENS */
+  --color-button-text: #ffffff; /* Used for .bg-[var(--color-accent)] */
+  --color-button-secondary: #f3f4f6; /* Used for bg of secondary */
+  --color-button-secondary-text: #1f2937; /* Used for text inside secondary */
 }
