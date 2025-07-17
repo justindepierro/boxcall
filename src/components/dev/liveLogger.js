@@ -45,7 +45,7 @@ export function mountLiveLogger() {
   toggleBtn.title = 'Toggle Logs';
   toggleBtn.innerText = '👁️';
   toggleBtn.className =
-    'bg-black/60 backdrop-blur text-white w-8 h-8 rounded-full flex items-center justify-center shadow hover:bg-black/80';
+    'bg-black/60 backdrop-blur text-white w-8 h-8 gap-2 px-4 rounded-full flex items-center justify-center shadow hover:bg-black/80';
 
   toggleBtn.addEventListener('click', () => {
     const isHidden = panel.classList.toggle('hidden');

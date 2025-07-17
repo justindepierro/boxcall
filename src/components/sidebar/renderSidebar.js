@@ -2,7 +2,7 @@ import {
   mainPages,
   settingsPages,
   MINIMIZE_SYMBOLS,
-  WRAPPER_CLASSES,
+  // WRAPPER_CLASSES,
   TOGGLE_BUTTON_CLASSES,
   SIDEBAR_ICON_SIZE,
 } from '@config/sidebarConfig.js';
@@ -21,7 +21,10 @@ export function renderSidebar(state = 'expanded') {
   // 🔘 Header Toggle
   const toggleWrapper = document.createElement('div');
   toggleWrapper.id = 'sidebar-toggle-wrapper';
-  toggleWrapper.className = WRAPPER_CLASSES;
+  toggleWrapper.className = `
+  flex items-center justify-start gap-2 h-[56px] w-full px-4
+  bg-[var(--color-sidebar)] border-r border-[var(--color-border)]
+`;
 
   const toggleBtn = document.createElement('button');
   toggleBtn.id = 'sidebar-minimize';
@@ -31,7 +34,8 @@ export function renderSidebar(state = 'expanded') {
   const currentState = getSidebarState();
   const iconName = MINIMIZE_SYMBOLS[currentState] || 'menu';
   const iconEl = createIconElement(iconName, SIDEBAR_ICON_SIZE);
-  iconEl.classList.add('w-5', 'h-5');
+  iconEl.classList.add('w-5', 'h-5'); // ensure sizing
+  toggleBtn.innerHTML = '';
   toggleBtn.appendChild(iconEl);
 
   const brand = document.createElement('span');
@@ -49,9 +53,10 @@ export function renderSidebar(state = 'expanded') {
   const aside = document.createElement('aside');
   aside.id = 'sidebar';
   aside.className = `
-    flex flex-col h-full transition-all duration-300
-    bg-[var(--color-sidebar)] text-[var(--color-sidebar-text)] border-r border-[var(--color-border)]
-  `;
+  flex flex-col h-full w-full
+  transition-all duration-300
+  bg-[var(--color-sidebar)] text-[var(--color-sidebar-text)] border-r border-[var(--color-border)]
+`;
 
   // 🧭 Main Nav
   const navMain = document.createElement('nav');
@@ -61,18 +66,18 @@ export function renderSidebar(state = 'expanded') {
   });
 
   const navMainWrapper = document.createElement('div');
-  navMainWrapper.className = 'flex-1 overflow-y-auto';
+  navMainWrapper.className = 'flex-1 overflow-y-auto  py-3';
   navMainWrapper.appendChild(navMain);
 
   // ⚙️ Settings Nav
   const navSettings = document.createElement('nav');
-  navSettings.className = 'flex flex-col px-2 py-3 space-y-2 font-body';
+  navSettings.className = 'flex flex-col py-3 space-y-2 font-body';
   settingsPages.forEach((page) => {
     navSettings.appendChild(SidebarButton(page));
   });
 
   const navSettingsWrapper = document.createElement('div');
-  navSettingsWrapper.className = 'flex-1';
+  navSettingsWrapper.className = 'border-t border-[var(--color-border)] py-3';
   navSettingsWrapper.appendChild(navSettings);
 
   // 📦 Final Assembly

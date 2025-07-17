@@ -63,13 +63,19 @@ header {
   padding-left: 1rem; /* or px-4 */
 }
 
-.nav-btn {
-  padding-left: 1rem; /* match above */
-}
-
 #sidebar-root button {
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+:root {
+  --sidebar-expanded-width: 240px;
+}
+
+.label {
+  transition:
+    opacity 0.2s ease,
+    width 0.2s ease;
 }

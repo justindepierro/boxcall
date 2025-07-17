@@ -54,7 +54,7 @@ export function createIconElement(name, size = 20) {
   }
 
   const wrapper = document.createElement('span');
-  wrapper.className = `inline-flex items-center justify-center w-[${size}px] h-[${size}px]`;
+  wrapper.className = `flex items-center justify-center min-w-[24px] h-[24px]`;
 
   const svg = createElement(IconComponent, {
     size,

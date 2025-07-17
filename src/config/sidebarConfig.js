@@ -1,6 +1,14 @@
+// src/config/sidebarConfig.js
+
 import { getCurrentUser } from '@state/userState.js';
 import { DEV_EMAIL } from '@config/devConfig.js';
 
+// 🔢 App states
+export const SIDEBAR_STATES = ['expanded', 'icon', 'collapsed'];
+
+/**
+ * 🔁 Page structure
+ */
 export function mainPages() {
   const user = getCurrentUser();
 
@@ -27,87 +35,65 @@ export const settingsPages = [
   { id: 'about', label: 'About', icon: 'info' },
 ];
 
-export const SIDEBAR_STATES = ['expanded', 'icon', 'collapsed'];
-
+/**
+ * 📏 Sidebar width and margin classes for each state
+ * Expanded uses dynamic variable for future flexibility
+ */
 export const WIDTH_CLASSES = {
   expanded: 'w-64',
-  icon: 'w-8',
-  collapsed: 'w-6',
+  icon: 'w-[56px]', // 💡 formerly w-64
+  collapsed: 'w-[56px]', // 💡 formerly w-64
 };
 
 export const MARGIN_CLASSES = {
   expanded: 'ml-64',
-  icon: 'ml-8',
-  collapsed: 'ml-8',
+  icon: 'ml-64',
+  collapsed: 'ml-[56]',
 };
 
+/**
+ * 🧭 Icon changes for toggle button
+ */
 export const MINIMIZE_SYMBOLS = {
   expanded: 'arrow-left-to-line',
   icon: 'arrow-left-to-line',
   collapsed: 'menu',
 };
 
-// src/config/uiConstants.js
-export const SIDEBAR_PADDING_X = 'pl-4 pr-2'; // left + right padding
-export const SIDEBAR_PADDING_Y = 'py-2'; // vertical padding
-export const SIDEBAR_GAP = 'gap-2'; // spacing between icon + label
-export const SIDEBAR_ICON_SIZE = 20; // consistent icon size
+/**
+ * 🎨 Sidebar layout constants
+ */
+export const SIDEBAR_ICON_SIZE = 20; // applies across views
+
+export const SIDEBAR_PADDING_X = 'pl-4 pr-2'; // icon & label spacing
+export const SIDEBAR_PADDING_Y = 'py-2';
+export const SIDEBAR_GAP = 'gap-2';
 
 /**
- * Sidebar layout wrapper classes
- * - Includes padding, margin, and background color
- * - Uses CSS variables for theming
- * - Responsive design with flexbox
- * - Transition effects for smooth state changes
- * - Border for visual separation
- * - Font styling for consistency
+ * 📦 Wrapper (toggle + sidebar column)
  */
 export const WRAPPER_CLASSES = `
-  w-full
-  flex items-center justify-start ${SIDEBAR_PADDING_X} ${SIDEBAR_PADDING_Y} ${SIDEBAR_GAP}
-  mb-2 border-r border-[var(--color-border)]
-  bg-[var(--color-sidebar)] text-[var(--color-sidebar-text)]
-  transition-all duration-300
+  flex h-full transition-all duration-300
 `;
 
 /**
- * Sidebar toggle button classes
- * - Flexbox for centering icon
- * - Padding for clickable area
- *  - Rounded corners for aesthetics
- * - Hover effect for interactivity
+ * ⏹️ Toggle button styling
  */
 export const TOGGLE_BUTTON_CLASSES = `
-  sidebar-toggle-btn flex items-center justify-center 
+  sidebar-toggle-btn flex items-center justify-center
   w-8 h-8 p-0 rounded
   hover:bg-[var(--color-accent)]
-  transition duration-200 text-[var(--color-icon)]
+  transition duration-200 text-[var(--color-sidebar-icon)]
 `;
 
 /**
- * Sidebar layout configuration
- * - Padding, gap, and icon size for consistent layout
- * - Wrapper class for overall sidebar container
- * - Toggle button class for the minimize/expand button
- *  - Icon size for sidebar icons
- * - Responsive design with flexbox
- * - Transition effects for smooth state changes
+ * 🧩 Default layout map for use in rendering
  */
-
 export const SIDEBAR_LAYOUT = {
-  paddingX: 'pl-4 pr-2',
-  paddingY: 'py-2',
-  gap: 'gap-2',
-  iconSize: 20,
-  wrapper: `
-    flex items-center justify-start pl-4 pr-2 py-2 gap-2
-    mb-2 border-r border-[var(--color-border)]
-    bg-[var(--color-sidebar)] text-[var(--color-sidebar-text)]
-    transition-all duration-300
-  `,
-  toggleButton: `
-    sidebar-toggle-btn flex items-center justify-center p-2 rounded
-    hover:bg-[var(--color-accent)]
-    transition duration-200 text-[var(--color-icon)]
-  `,
+  iconSize: SIDEBAR_ICON_SIZE,
+  paddingX: SIDEBAR_PADDING_X,
+  paddingY: SIDEBAR_PADDING_Y,
+  gap: SIDEBAR_GAP,
+  wrapper: WRAPPER_CLASSES,
+  toggleButton: TOGGLE_BUTTON_CLASSES,
 };

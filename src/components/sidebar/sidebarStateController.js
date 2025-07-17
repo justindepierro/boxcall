@@ -26,7 +26,7 @@ export function applySidebarState(newState) {
   }
 
   const {
-    outer, // #sidebar-root (wraps toggle + sidebar)
+    outer, // #sidebar-root
     sidebar, // <aside id="sidebar">
     mainContent,
     labels,
@@ -44,55 +44,33 @@ export function applySidebarState(newState) {
 
   console.log(`🎯 Sidebar → ${newState}`);
 
-  // 🔄 Reset layout classes
+  // 🔄 Remove any old layout classes
   outer?.classList.remove(...Object.values(WIDTH_CLASSES));
   mainContent?.classList.remove(...Object.values(MARGIN_CLASSES));
-  sidebar?.classList.remove(
-    'opacity-0',
-    'opacity-100',
-    'pointer-events-none',
-    'pointer-events-auto'
-  );
 
-  // 🧼 Ensure sidebar is hidden only when collapsed
+  // 🧼 Sidebar visibility
   if (newState === 'collapsed') {
     sidebar.style.display = 'none';
-    outer.classList.add(WIDTH_CLASSES.collapsed);
-    mainContent?.classList.add(MARGIN_CLASSES.collapsed);
   } else {
-    sidebar.style.display = '';
-    outer.classList.add(WIDTH_CLASSES[newState]);
-    mainContent?.classList.add(MARGIN_CLASSES[newState]);
+    sidebar.style.display = 'flex'; // ensure visible
     sidebar.classList.add('opacity-100', 'pointer-events-auto');
   }
 
-  // 🎨 Update visibility of labels/icons/titles and buttons
+  // ✅ Apply new width and margin (to wrapper + main content)
+  outer?.classList.add(WIDTH_CLASSES[newState]);
+  mainContent?.classList.add(MARGIN_CLASSES[newState]);
+
+  // 🎨 Label + icon visibility
   updateSidebarVisibility({ labels, icons, title }, newState);
   adjustSidebarButtons(newState);
 
-  // 🔘 Update toggle button symbol
-  // 🔘 Swap out the minimize icon
+  // 🔘 Update icon inside toggle button
   const iconName = MINIMIZE_SYMBOLS[newState];
   if (minimizeBtn) {
-    minimizeBtn.innerHTML = ''; // clear old icon
-    const iconEl = createIconElement(iconName, 20);
-    minimizeBtn.appendChild(iconEl);
+    minimizeBtn.innerHTML = '';
+    minimizeBtn.appendChild(createIconElement(iconName, 20));
   }
 
-  // 💾 Save state to storage
+  // 💾 Save to local state
   setSidebarState(newState);
-}
-
-export function applySidebarVisualState(state, parts) {
-  const { labels, icons, title } = parts;
-
-  const isExpanded = state === 'expanded';
-  const isVisible = state !== 'collapsed';
-
-  updateSidebarVisibility(labels, isExpanded);
-  updateSidebarVisibility(icons, isVisible);
-  title?.classList.toggle('hidden', !isExpanded);
-  labels?.forEach((el) => el.classList.toggle('hidden', !isExpanded));
-
-  adjustSidebarButtons(state);
 }

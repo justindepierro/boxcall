@@ -1,46 +1,129 @@
-// src/components/sidebar/sidebarUtils.js
+// src/components/sidebar/renderSidebar.js
 
-/**
- * 🧠 Returns the current page ID from the URL hash.
- * Example: #/dashboard → 'dashboard'
- */
-export function getCurrentPage() {
-  const hash = location.hash.replace(/^#\/?/, '').split('/')[0];
-  return hash || 'dashboard';
+import { mainPages, settingsPages, TOGGLE_BUTTON_CLASSES } from '@config/sidebarConfig.js';
+import { navigateTo } from '@routes/router.js';
+import { initSidebarToggle } from '@components/sidebar/sidebarToggleHandler.js';
+import { createIconElement } from '@utils/iconRenderer.js';
+
+export function renderSidebar() {
+  const container = document.getElementById('sidebar-root');
+  if (!container) return console.warn('❌ #sidebar-root not found');
+
+  container.innerHTML = '';
+
+  // 🔘 Toggle Header
+  const toggleWrapper = document.createElement('div');
+  toggleWrapper.id = 'sidebar-toggle-wrapper';
+  toggleWrapper.className = `
+    flex items-center justify-start gap-2 h-[56px] w-full px-4
+    bg-[var(--color-sidebar)] border-r border-[var(--color-border)]
+  `;
+
+  const toggleBtn = document.createElement('button');
+  toggleBtn.id = 'sidebar-minimize';
+  toggleBtn.title = 'Toggle Sidebar';
+  toggleBtn.className = TOGGLE_BUTTON_CLASSES;
+  toggleBtn.appendChild(createIconElement('arrow-left-to-line'));
+
+  const brand = document.createElement('span');
+  brand.id = 'sidebar-brand';
+  brand.className = 'font-bold text-[var(--color-sidebar-text)]';
+  brand.textContent = 'BoxCall';
+
+  toggleWrapper.append(toggleBtn, brand);
+
+  // 📐 Sidebar Container
+  const sidebar = document.createElement('aside');
+  sidebar.id = 'sidebar';
+  sidebar.className = `
+    flex flex-col h-full transition-all duration-300
+    bg-[var(--color-sidebar)] text-[var(--color-sidebar-text)]
+    border-r border-[var(--color-border)]
+  `;
+
+  // 🧭 Main Nav
+  const mainNavWrapper = document.createElement('div');
+  mainNavWrapper.className = 'flex-1 overflow-y-auto py-3 px-2';
+
+  const mainNav = document.createElement('nav');
+  mainNav.id = 'sidebar-nav';
+  mainNav.className = 'flex flex-col gap-2 font-body';
+
+  mainPages().forEach(({ id, label, icon }) => {
+    const btn = document.createElement('button');
+    btn.dataset.page = id;
+    btn.className = `
+      nav-btn group flex items-center w-full rounded transition
+      hover:bg-[var(--color-accent)] text-[var(--color-sidebar-text)]
+      justify-start gap-2 px-4 py-2
+    `;
+
+    const iconEl = createIconElement(icon, 20);
+    iconEl.classList.add('nav-icon');
+
+    const labelEl = document.createElement('span');
+    labelEl.className = 'label nav-label';
+    labelEl.textContent = label;
+
+    btn.append(iconEl, labelEl);
+    mainNav.appendChild(btn);
+  });
+
+  mainNavWrapper.appendChild(mainNav);
+
+  // ⚙️ Settings Nav
+  const settingsNavWrapper = document.createElement('div');
+  settingsNavWrapper.className = 'border-t border-[var(--color-border)] py-3 px-2';
+
+  const settingsNav = document.createElement('nav');
+  settingsNav.id = 'sidebar-settings';
+  settingsNav.className = 'flex flex-col gap-2 font-body';
+
+  settingsPages.forEach(({ id, label, icon }) => {
+    const btn = document.createElement('button');
+    btn.dataset.page = id;
+    btn.className = `
+      nav-btn group flex items-center w-full rounded transition
+      hover:bg-[var(--color-accent)] text-[var(--color-sidebar-text)]
+      justify-start gap-2 px-4 py-2
+    `;
+
+    const iconEl = createIconElement(icon, 20);
+    iconEl.classList.add('nav-icon');
+
+    const labelEl = document.createElement('span');
+    labelEl.className = 'label nav-label';
+    labelEl.textContent = label;
+
+    btn.append(iconEl, labelEl);
+    settingsNav.appendChild(btn);
+  });
+
+  settingsNavWrapper.appendChild(settingsNav);
+
+  // ✅ Final Assembly
+  container.appendChild(toggleWrapper);
+  container.appendChild(sidebar);
+  sidebar.appendChild(mainNavWrapper);
+  sidebar.appendChild(settingsNavWrapper);
+
+  attachSidebarEvents();
+  initSidebarToggle();
+}
+
+function attachSidebarEvents() {
+  const navButtons = document.querySelectorAll('.nav-btn');
+  navButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const page = btn.dataset.page;
+      if (page) navigateTo(page);
+    });
+  });
 }
 
 /**
- * 🎭 Shows or hides a list of elements using `.hidden`
- * @param {NodeListOf<HTMLElement>} elements
- * @param {boolean} show - true to show, false to hide
- */
-export function toggleElementsVisibility(elements, show = true) {
-  if (!elements?.length) return;
-  elements.forEach((el) => el.classList.toggle('hidden', !show));
-}
-
-/**
- * 🖊️ Safely updates textContent of a DOM element
- * @param {HTMLElement | null} el
- * @param {string} text
- */
-export function safeSetText(el, text) {
-  if (el) el.textContent = text;
-}
-
-/**
- * 🧩 Queries all major sidebar DOM parts and returns them in one object
- * Used for state handling and layout control
- *
- * @returns {{
- *   outer: HTMLElement | null,
- *   sidebar: HTMLElement | null,
- *   mainContent: HTMLElement | null,
- *   labels: NodeListOf<HTMLElement>,
- *   icons: NodeListOf<HTMLElement>,
- *   title: HTMLElement | null,
- *   minimizeBtn: HTMLElement | null
- * }}
+ * Returns key parts of the sidebar DOM
+ * @returns {Object} parts
  */
 export function querySidebarElements() {
   const outer = document.getElementById('sidebar-root');
@@ -48,85 +131,64 @@ export function querySidebarElements() {
   const mainContent = document.getElementById('page-view');
   const labels = document.querySelectorAll('.nav-label');
   const icons = document.querySelectorAll('.nav-icon');
-  const title = document.querySelector('.sidebar-title');
+  const title = document.getElementById('sidebar-brand');
   const minimizeBtn = document.getElementById('sidebar-minimize');
-
-  if (!sidebar || !outer || !mainContent || !minimizeBtn) {
-    console.warn('⚠️ querySidebarElements(): Some required sidebar parts are missing.', {
-      outer,
-      sidebar,
-      mainContent,
-      labels,
-      icons,
-      title,
-      minimizeBtn,
-    });
-    return null;
-  }
 
   return { outer, sidebar, mainContent, labels, icons, title, minimizeBtn };
 }
 
-export function adjustSidebarButtons(newState) {
-  const sidebar = document.getElementById('sidebar');
-  const width = sidebar?.offsetWidth || 0;
+/**
+ * Adjusts sidebar button alignment and spacing based on sidebar state.
+ * @param {'expanded' | 'icon' | 'collapsed'} state
+ */
+export function adjustSidebarButtons(state) {
+  const buttons = document.querySelectorAll('.nav-btn');
 
-  document.querySelectorAll('.nav-btn').forEach((btn) => {
-    btn.classList.remove('gap-2', 'justify-start', 'justify-center', 'pl-4', 'px-2', 'px-1');
+  buttons.forEach((btn) => {
+    // Reset alignment and padding
+    btn.classList.remove('justify-center', 'justify-start', 'px-2', 'px-4');
 
-    // Decide alignment based on sidebar width
-    const isNarrow = width <= 64;
-    btn.classList.add(isNarrow ? 'justify-center' : 'justify-start');
+    // ✨ Common classes
+    btn.classList.add('items-center', 'transition', 'rounded', 'hover:bg-[var(--color-accent)]');
 
-    if (newState === 'expanded') {
-      btn.classList.add('gap-2', 'pl-4');
-    } else if (newState === 'icon') {
-      btn.classList.add('px-2');
-    } else if (newState === 'collapsed') {
-      btn.classList.add('px-1');
+    if (state === 'expanded') {
+      btn.classList.add('justify-start', 'gap-2', 'px-4');
+    } else if (state === 'icon') {
+      btn.classList.add('justify-center', 'px-2');
+    } else if (state === 'collapsed') {
+      btn.classList.add('justify-center', 'px-2');
     }
   });
 }
 
+/**
+ * Shows/hides sidebar elements like labels, icons, and title based on state.
+ * @param {Object} elements - { labels, icons, title }
+ * @param {'expanded' | 'icon' | 'collapsed'} newState
+ */
 export function updateSidebarVisibility({ labels, icons, title }, newState) {
   const isExpanded = newState === 'expanded';
   const isCollapsed = newState === 'collapsed';
 
+  // 🏷️ Show/hide labels
   toggleElementsVisibility(labels, isExpanded);
-  toggleElementsVisibility(icons, !isCollapsed);
-  title?.classList.toggle('hidden', !isExpanded);
 
-  const toggleWrapper = document.getElementById('sidebar-toggle-wrapper');
-  const allSidebarChildren = Array.from(document.getElementById('sidebar')?.children || []);
+  // 🔘 Show icons in expanded + icon mode
+  toggleElementsVisibility(icons, !isCollapsed);
+
+  // 📛 Show title only in expanded
+  if (title) title.classList.toggle('hidden', !isExpanded);
+
+  // 📛 Brand label visibility
   const brand = document.getElementById('sidebar-brand');
-  if (brand) {
-    brand.style.display = isExpanded ? 'inline' : 'none';
-  }
-  allSidebarChildren.forEach((child) => {
-    if (newState === 'collapsed') {
-      // 👇 Only keep the toggle wrapper visible, hide all others
-      child.style.display = child.contains(toggleWrapper) ? 'flex' : 'none';
-    } else {
-      child.style.display = '';
-    }
-  });
+  if (brand) brand.style.display = isExpanded ? 'inline' : 'none';
 }
 
-export function applyDynamicSidebarWidth() {
-  const sidebar = document.getElementById('sidebar');
-  const labelEls = document.querySelectorAll('.nav-btn .label'); // assuming each label has class 'label'
-
-  if (!sidebar || !labelEls.length) return;
-
-  let maxWidth = 0;
-
-  labelEls.forEach((label) => {
-    const width = label.offsetWidth;
-    if (width > maxWidth) maxWidth = width;
+/**
+ * Helper for toggling visibility of multiple DOM elements.
+ */
+function toggleElementsVisibility(elements, visible) {
+  elements.forEach((el) => {
+    el.classList.toggle('hidden', !visible);
   });
-
-  const paddingBuffer = 64; // ⬅️ adjust as needed
-  const totalWidth = maxWidth + paddingBuffer;
-
-  sidebar.style.width = `${totalWidth}px`;
 }
