@@ -1,6 +1,6 @@
 // src/pages/team/create.js
 
-import { getCurrentUser } from '@state/authState.js';
+import { getCurrentUser } from '@state/userState.js';
 import { createTeam } from '@lib/teams/createTeams.js'; // You’ll build this next
 import { updateUserSettings } from '@lib/teams/user/updateUserSettings.js';
 import { navigateTo } from '@routes/router.js';

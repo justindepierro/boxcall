@@ -1,4 +1,4 @@
-import { getCurrentUser } from '@state/authState.js';
+import { getCurrentUser } from '@state/userState.js';
 import { getUserSettings } from '@lib/teams/user/getUserSettings.js';
 
 import renderJoinOnlyTeamPage from './joinTeam.js';

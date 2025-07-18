@@ -1,7 +1,7 @@
 // src/pages/team/teaminfo.js
 
 import { supabase } from '@auth/supabaseClient.js';
-import { getCurrentUser } from '@state/authState.js';
+import { getCurrentUser } from '@state/userState.js';
 import { getUserSettings } from '@lib/teams/user/getUserSettings.js';
 import { showSpinner, hideSpinner } from '@utils/spinner.js';
 

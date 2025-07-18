@@ -1,5 +1,5 @@
 // src/state/authState.js
-import { getUser, getSession } from "../auth/auth.js"; // 🔁 adjust path as needed
+import { getUser, getSession } from '../auth/auth.js'; // 🔁 adjust path as needed
 
 let user = null;
 let session = null;
@@ -11,7 +11,7 @@ let session = null;
 export async function initAuthState() {
   session = await getSession();
   user = await getUser();
-  console.log("🔐 Auth initialized:", { session, user });
+  console.log('🔐 Auth initialized:', { session, user });
 }
 
 /**
@@ -41,5 +41,5 @@ export function isLoggedIn() {
 export function clearAuthState() {
   user = null;
   session = null;
-  console.log("🔒 Auth state cleared");
+  console.log('🔒 Auth state cleared');
 }

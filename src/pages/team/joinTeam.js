@@ -1,7 +1,7 @@
 // src/pages/team/joinTeam.js
 
 import { supabase } from '@auth/supabaseClient.js';
-import { getCurrentUser } from '@state/authState.js';
+import { getCurrentUser } from '@state/userState.js';
 import { navigateTo } from '@routes/router.js';
 import { showToast } from '@utils/toast.js';
 import { showSpinner, hideSpinner } from '@utils/spinner.js';

@@ -2,7 +2,7 @@
 import { supabase } from '@auth/supabaseClient.js';
 import { authCard } from '../../components/AuthCard.js';
 import { showToast } from '../../utils/toast.js';
-import { initAuthState } from '../../state/authState.js';
+import { initAuthState } from '../../state/userState.js';
 import { navigateTo } from '../../routes/router.js';
 
 export default function renderResetPage(container) {
