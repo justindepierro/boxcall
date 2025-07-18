@@ -2,6 +2,8 @@
 import { BaseButton } from '@components/ui/BaseButton.js';
 import { BaseToggle } from '@components/ui/BaseToggle.js';
 import { BaseSlider } from '@components/ui/BaseSlider.js';
+//import { MultiRangeSlider } from '../../components/ui/multiRangeSlider';
+import { FieldMultiRangeSlider } from '../../components/ui/fieldMultiRangeSlider';
 
 export default function PlaygroundPage() {
   const wrapper = document.createElement('div');
@@ -87,6 +89,18 @@ export default function PlaygroundPage() {
   );
 
   wrapper.appendChild(sliders);
+
+  const fieldMultiSlider = FieldMultiRangeSlider({
+    ranges: [
+      { start: -40, end: -20, include: true },
+      { start: 20, end: 35, include: false },
+    ],
+    onChange: (fieldMultiSlider) => {
+      console.log('🔍 Playground Initial Ranges:', fieldMultiSlider);
+    },
+  });
+
+  wrapper.appendChild(fieldMultiSlider);
 
   return wrapper;
 }
