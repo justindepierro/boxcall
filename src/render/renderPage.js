@@ -1,5 +1,5 @@
 import { devLog } from '@utils/devLogger.js';
-import { clearAllUIZones } from '@render/uiZones.js';
+import { clearAllUIZones } from '@render/UIZones.js';
 import { PageWrapper } from '@components/layout/PageWrapper.js';
 
 /**
