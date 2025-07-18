@@ -1,161 +1,174 @@
 /**
  * 🏈 FootballField Class
- * -----------------------
- * Handles the math for mapping football yardlines (-50 to +50)
- * to a normalized slider range (0–100%).
+ * ----------------------
+ * Utility class for handling football field math and yardline → slider mapping.
  *
- * Visual Mapping (Slider):
- *   0%   10%   20%   30%   40%   50%   60%   70%   80%   90%  100%
- *   0   -10   -20   -30   -40    50    40    30    20    10     0
+ * Field Layout:
+ *  - Left side (own goal line):  0, -10, -20, -30, -40
+ *  - Midfield:                   50
+ *  - Right side (opp goal line): 40, 30, 20, 10, 0
  *
- * Key Points:
- * - The "0%" position represents the left endzone (our goal line).
- * - "50%" represents midfield (yardline 50).
- * - "100%" represents the opponent's goal line (their 0).
- *
- * Conversion Steps:
- *   1. Yardline → X-Axis (−5 to +5)
- *   2. X-Axis → Slider Percent (0–100)
- *
- * Example:
- *   yardToPercent(-20) -> 20%
- *   yardToPercent(40)  -> 60%
+ * Slider Mapping:
+ *  - 0 (own)   → 0%
+ *  -10         → 10%
+ *  -20         → 20%
+ *  -30         → 30%
+ *  -40         → 40%
+ *  50 (mid)    → 50%
+ *  40          → 60%
+ *  30          → 70%
+ *  20          → 80%
+ *  10          → 90%
+ *  0 (opp)     → 100%
  */
 export class FootballField {
   constructor() {
-    this.maxYard = 50; // Max yards from midfield to each goal line
+    this.maxYard = 50; // 50 yards each side of midfield
   }
 
+  // =========================================================================
+  // BASIC UTILITIES
+  // =========================================================================
+
   /**
-   * Clamp yardline between -50 and +50.
-   * Ensures we never exceed the field bounds.
+   * Clamp a yardline to the valid range (-49 to +50).
+   * -50 is NOT allowed, because crossing to midfield (50) is handled manually.
    */
   clamp(val) {
-    const clamped = Math.max(-this.maxYard, Math.min(this.maxYard, val));
-    console.log(`[clamp] Input=${val} → ${clamped}`);
-    return clamped;
+    if (val <= -50) return -49;
+    if (val > 50) return 50;
+    return val;
   }
 
   /**
-   * Snap yardline to the nearest 5-yard increment.
+   * Snap to nearest 5-yard increment by default.
    */
   snap(val) {
-    const snapped = Math.round(val / 5) * 5;
-    console.log(`[snap] Input=${val} → ${snapped}`);
-    return snapped;
+    return Math.round(val / 5) * 5;
   }
 
   /**
-   * Normalize a range so that start < end.
-   * (This is useful for calculating widths.)
+   * Snap to a specified interval (e.g., 5 or 10 yards).
+   */
+  snapTo(val, interval = 5) {
+    if (interval <= 0) return val;
+    return Math.round(val / interval) * interval;
+  }
+
+  /**
+   * Normalize a range so [start, end] are sorted left-to-right.
    */
   normalizeRange(a, b) {
-    const norm = a < b ? [a, b] : [b, a];
-    console.log(`[normalizeRange] Input=(${a}, ${b}) → ${norm}`);
-    return norm;
+    return a < b ? [a, b] : [b, a];
   }
 
+  // =========================================================================
+  // YARDLINE ↔ SLIDER PERCENT
+  // =========================================================================
+
   /**
-   * Convert a football yardline (-50 to +50)
-   * to a slider percentage (0–100).
-   *
-   * @param {number} yard - Yardline value.
-   * @returns {number} Slider percentage (0–100).
+   * Convert yardline to slider percentage.
+   * @param {number} yard
    */
   yardToPercent(yard) {
     yard = this.clamp(yard);
 
-    let percent;
+    if (yard === 50) return 50; // Midfield
+    if (yard === 0) return 0; // Own goal line (leftmost)
+    if (yard < 0) return Math.abs(yard); // Left side: -10 → 10%, -40 → 40%
 
-    if (yard < 0) {
-      // Our side: 0% to 50%
-      percent = (Math.abs(yard) / 50) * 50; // -10 -> 10%, -40 -> 40%
-    } else if (yard > 0) {
-      // Opponent side: 50% to 100%
-      percent = 50 + ((50 - yard) / 50) * 50; // 40 -> 60%, 10 -> 90%
-    } else {
-      // Special cases: 0 or midfield
-      percent = yard === 0 ? 100 : 50; // Opponent goal line or midfield
-    }
-
-    console.log(`[yardToPercent] yard=${yard} → ${percent.toFixed(2)}%`);
-    return percent;
+    // Opponent side (right side)
+    return 50 + (50 - yard); // 40 → 60%, 10 → 90%, 0 (opp) → 100
   }
 
   /**
-   * Reverse: Convert slider percent (0–100)
-   * back to a football yardline (-50 to +50).
-   *
-   * @param {number} percent
-   * @returns {number} Yardline.
+   * Convert slider percentage (0–100) to yardline.
    */
   percentToYard(percent) {
-    let yard;
+    percent = Math.max(0, Math.min(100, percent));
 
-    if (percent <= 50) {
-      // Our side: 0% to 50%
-      yard = -(percent / 50) * 50; // 20% → -20
-    } else {
-      // Opponent side: 50% to 100%
-      yard = 50 - ((percent - 50) / 50) * 50; // 70% → 30
-    }
-
-    console.log(`[percentToYard] percent=${percent} → yard=${yard}`);
-    return this.clamp(this.snap(yard));
+    if (percent === 50) return 50;
+    if (percent < 50) return -percent;
+    return 100 - percent;
   }
 
   /**
-   * Map a start and end yardline to { left, width } in percentages.
-   *
-   * @param {number} start - Start yardline.
-   * @param {number} end - End yardline.
-   * @returns {{ left: number, width: number }}
+   * Convert yardline range to { left, width }.
    */
   mapRangeToPercent(start, end) {
-    const [s, e] = this.normalizeRange(start, end);
-    const sPercent = this.yardToPercent(s);
-    const ePercent = this.yardToPercent(e);
-
-    const left = Math.min(sPercent, ePercent);
-    const width = Math.abs(ePercent - sPercent);
-
-    console.log(
-      `[mapRangeToPercent] start=${start}, end=${end}, s%=${sPercent}, e%=${ePercent}, left=${left}, width=${width}`
-    );
-
-    return { left, width };
+    const sPercent = this.yardToPercent(start);
+    const ePercent = this.yardToPercent(end);
+    return {
+      left: Math.min(sPercent, ePercent),
+      width: Math.abs(ePercent - sPercent),
+    };
   }
 
+  // =========================================================================
+  // STEP & CROSSING LOGIC
+  // =========================================================================
+
   /**
-   * Distance (in yards) between two yardlines.
-   * Handles crossing midfield correctly.
+   * Step a yardline left/right across the field.
+   * - UP (direction=+1) always moves right (slider →).
+   * - DOWN (direction=-1) always moves left (slider ←).
+   * - When moving right from -49, jump to 50 (midfield).
+   * - When moving left from 50, jump to -49 (own side).
    */
+  stepYardline(val, direction, step = 1) {
+    console.log(`🟢 stepYardline called: val=${val}, direction=${direction}, step=${step}`);
+
+    if (direction > 0) {
+      // Moving right →
+      if (val < 0) {
+        // If we hit -49 and go further right, jump to 50.
+        if (val + step > -49) {
+          console.log(`➡ Crossing midfield: ${val} → 50`);
+          return 50;
+        }
+      } else if (val >= 0) {
+        // Normal increment on right side
+        return this.clamp(val - step);
+      }
+    } else if (direction < 0) {
+      // Moving left ←
+      if (val > 0) {
+        // If we're at 50 and moving left, jump to -49
+        if (val - step < 50) {
+          console.log(`⬅ Crossing midfield: ${val} → -49`);
+          return -49;
+        }
+      } else if (val <= 0) {
+        // Normal decrement on left side
+        return this.clamp(val + step);
+      }
+    }
+
+    // Default step + clamp
+    let newVal = val + (direction > 0 ? step : -step);
+    return this.clamp(newVal);
+  }
+
+  // =========================================================================
+  // DISTANCE & LABELS
+  // =========================================================================
+
   distance(start, end) {
     const sameSide = (start < 0 && end < 0) || (start > 0 && end > 0);
-    const dist = sameSide
+    return sameSide
       ? Math.abs(Math.abs(start) - Math.abs(end))
       : this.maxYard - Math.abs(start) + (this.maxYard - Math.abs(end));
-
-    console.log(`[distance] start=${start}, end=${end} → ${dist} yards`);
-    return dist;
   }
 
-  /**
-   * Human-readable yardline label.
-   */
   describeYardLine(yard) {
     if (yard === 50) return 'Midfield';
     if (yard === 0) return 'Goal Line';
     return yard < 0 ? `Own ${Math.abs(yard)} yd` : `Opp ${yard} yd`;
   }
 
-  /**
-   * Human-readable range label.
-   */
   describeRange(start, end) {
     return `${this.describeYardLine(start)} → ${this.describeYardLine(end)}`;
   }
 }
 
-// Export singleton
 export const field = new FootballField();

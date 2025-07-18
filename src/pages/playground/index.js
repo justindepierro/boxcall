@@ -1,19 +1,27 @@
 // /src/pages/playground/index.js
-import { BaseButton } from '@components/ui/BaseButton.js';
-import { BaseToggle } from '@components/ui/BaseToggle.js';
-import { BaseSlider } from '@components/ui/BaseSlider.js';
-//import { MultiRangeSlider } from '../../components/ui/multiRangeSlider';
-import { FieldMultiRangeSlider } from '../../components/ui/fieldMultiRangeSlider';
+import { BaseButton } from '@components/ui/baseButton.js';
+import { BaseToggle } from '@components/ui/baseToggle.js';
+import { BaseSlider } from '@components/ui/baseSlider.js';
+import { FieldMultiRangeSlider } from '../../components/ui/fieldMultiRangeSlider.js';
+import { Modal } from '@components/ui/modal.js';
+import { FieldForm } from '@components/ui/formField.js';
 
 export default function PlaygroundPage() {
+  // Wrapper container
   const wrapper = document.createElement('div');
   wrapper.className = 'p-6 space-y-6';
 
+  // =========================================================================
+  //  HEADING
+  // =========================================================================
   const heading = document.createElement('h1');
   heading.className = 'text-xl font-bold';
   heading.innerHTML = '🧪 Button Test Lab';
   wrapper.appendChild(heading);
 
+  // =========================================================================
+  //  BUTTON GROUP
+  // =========================================================================
   const buttonGroup = document.createElement('div');
   buttonGroup.className = 'space-y-4';
 
@@ -37,7 +45,9 @@ export default function PlaygroundPage() {
 
   wrapper.appendChild(buttonGroup);
 
-  // ⏱️ Toggle Group
+  // =========================================================================
+  //  TOGGLE GROUP
+  // =========================================================================
   const toggleGroup = document.createElement('div');
   toggleGroup.className = 'space-y-4 pt-8';
 
@@ -75,6 +85,9 @@ export default function PlaygroundPage() {
 
   wrapper.appendChild(toggleGroup);
 
+  // =========================================================================
+  //  SLIDER GROUP
+  // =========================================================================
   const sliders = document.createElement('div');
   sliders.className = 'space-y-4 pt-8';
 
@@ -90,6 +103,9 @@ export default function PlaygroundPage() {
 
   wrapper.appendChild(sliders);
 
+  // =========================================================================
+  //  FIELD MULTI-RANGE SLIDER
+  // =========================================================================
   const fieldMultiSlider = FieldMultiRangeSlider({
     ranges: [
       { start: -40, end: -20, include: true },
@@ -101,6 +117,30 @@ export default function PlaygroundPage() {
   });
 
   wrapper.appendChild(fieldMultiSlider);
+
+  // =========================================================================
+  //  OPEN FIELD EDITOR BUTTON
+  // =========================================================================
+  const fieldEditorBtn = BaseButton({
+    label: 'Open Field Editor',
+    icon: 'edit',
+    variant: 'primary',
+    onClick: () => {
+      const form = FieldForm({
+        initialRanges: [{ start: -20, end: 10, include: true }],
+        onSave: (ranges) => {
+          console.log('💾 Saved Ranges:', ranges);
+        },
+        onCancel: () => {
+          console.log('❌ Field editor cancelled.');
+        },
+      });
+
+      Modal({ title: 'Field Range Editor', content: form });
+    },
+  });
+
+  wrapper.appendChild(fieldEditorBtn);
 
   return wrapper;
 }

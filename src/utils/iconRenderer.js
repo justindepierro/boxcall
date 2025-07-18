@@ -22,6 +22,8 @@ import {
   Loader,
   MousePointerClick,
   Sparkles,
+  Edit,
+  X,
 } from 'lucide';
 
 // 🗺️ Map kebab-case names to Lucide icon components
@@ -44,6 +46,8 @@ const iconMap = {
   loader: Loader,
   'mouse-pointer-click': MousePointerClick,
   sparkles: Sparkles,
+  edit: Edit,
+  x: X,
 };
 
 /**
