@@ -1,9 +1,7 @@
-// src/components/sidebar/sidebarToggleHandler.js
-
-import { getSidebarState, setSidebarState } from '@state/sidebarState.js';
+// /components/sidebar/sidebarToggleHandler.js
+import { getSidebarState, setSidebarState, SIDEBAR_STATES } from '@state/sidebarState.js';
 import { applySidebarState } from './sidebarStateController.js';
 import { querySidebarElements } from '@utils/sidebarUtils.js';
-import { SIDEBAR_STATES } from '../../config/sidebarConfig.js';
 
 /**
  * 🔁 Cycles sidebar to the next state in sequence
@@ -12,6 +10,7 @@ export function handleSidebarToggle() {
   const current = getSidebarState();
   const currentIndex = SIDEBAR_STATES.indexOf(current);
   const nextIndex = (currentIndex + 1) % SIDEBAR_STATES.length;
+  /** @type {'expanded' | 'icon' | 'collapsed'} */
   const next = SIDEBAR_STATES[nextIndex];
 
   console.log(`🔁 Sidebar toggle: ${current} → ${next}`);

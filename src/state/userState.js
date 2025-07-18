@@ -65,3 +65,13 @@ export function setUserSettings(settings) {
 export function getUserSettings() {
   return userSettings;
 }
+
+let supabaseUser = null;
+
+export function setSupabaseUser(user) {
+  supabaseUser = user;
+}
+
+export function getSupabaseUser() {
+  return supabaseUser;
+}

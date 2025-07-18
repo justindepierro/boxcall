@@ -1,4 +1,5 @@
-import { initAuthState, getCurrentUser } from '@state/userState.js';
+import { initAuthState, getCurrentUser, setSupabaseUser } from '@state/userState.js';
+
 import { initAuthListeners } from '@components/AuthGuard.js';
 
 /**
@@ -10,9 +11,7 @@ export async function initAuth() {
   await initAuthState();
   initAuthListeners();
 
-  // 🛠️ SET window.supabaseUser — this is MISSING right now
   const user = getCurrentUser();
-  window.supabaseUser = user;
-
-  console.log('✅ Supabase Auth initialized');
+  setSupabaseUser(user); // Store in state
+  console.log('✅ Supabase Auth initialized:', user);
 }

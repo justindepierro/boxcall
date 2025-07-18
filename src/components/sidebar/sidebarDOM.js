@@ -117,8 +117,9 @@ export function renderSidebar() {
 function attachSidebarEvents() {
   const navButtons = document.querySelectorAll('.nav-btn');
   navButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const page = btn.dataset.page;
+    const button = /** @type {HTMLButtonElement} */ (btn);
+    button.addEventListener('click', () => {
+      const page = button.dataset.page;
       if (page) navigateTo(page);
     });
   });

@@ -1,5 +1,13 @@
-// components/ui/Dropdown.js
+// components/ui/dropdown.js
 
+/**
+ * Creates a dropdown menu component.
+ * @param {Object} options
+ * @param {string} [options.label='Options'] - The text for the dropdown button.
+ * @param {string[]} [options.items=[]] - List of dropdown items.
+ * @param {Function} [options.onSelect=()=>{}] - Callback when an item is clicked.
+ * @returns {HTMLDivElement} The dropdown wrapper element.
+ */
 export function createDropdown({ label = 'Options', items = [], onSelect = () => {} }) {
   const wrapper = document.createElement('div');
   wrapper.className = 'relative inline-block text-left';
@@ -25,24 +33,31 @@ export function createDropdown({ label = 'Options', items = [], onSelect = () =>
     </div>
   `;
 
-  const toggle = wrapper.querySelector('#dropdown-toggle');
-  const menu = wrapper.querySelector('#dropdown-menu');
-  const itemEls = wrapper.querySelectorAll('.dropdown-item');
+  const toggle = /** @type {HTMLButtonElement} */ (wrapper.querySelector('#dropdown-toggle'));
+  const menu = /** @type {HTMLDivElement} */ (wrapper.querySelector('#dropdown-menu'));
+  const itemEls = /** @type {NodeListOf<HTMLButtonElement>} */ (
+    wrapper.querySelectorAll('.dropdown-item')
+  );
 
+  // Toggle menu
   toggle.addEventListener('click', () => {
     menu.classList.toggle('hidden');
   });
 
+  // Handle item selection
   itemEls.forEach((el) => {
     el.addEventListener('click', (e) => {
-      const index = parseInt(e.currentTarget.dataset.index, 10);
+      const target = /** @type {HTMLButtonElement} */ (e.currentTarget);
+      const index = parseInt(target.dataset.index, 10);
       onSelect(items[index]);
       menu.classList.add('hidden');
     });
   });
 
+  // Close dropdown when clicking outside
   document.addEventListener('click', (e) => {
-    if (!wrapper.contains(e.target)) {
+    const target = /** @type {Node} */ (e.target);
+    if (!wrapper.contains(target)) {
       menu.classList.add('hidden');
     }
   });

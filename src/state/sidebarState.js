@@ -2,14 +2,20 @@
 // 🧠 Centralized sidebar state manager
 // Handles: reading, writing, cycling states like 'expanded', 'icon', and 'collapsed'
 
-const SIDEBAR_STATES = ['expanded', 'icon', 'collapsed'];
-const DEFAULT_STATE = 'expanded';
+/**
+ * @typedef {'expanded' | 'icon' | 'collapsed'} SidebarState
+ */
 
+/** @type {SidebarState[]} */
+export const SIDEBAR_STATES = ['expanded', 'icon', 'collapsed'];
+export const DEFAULT_STATE = 'expanded';
+
+/** @type {SidebarState} */
 let sidebarState = DEFAULT_STATE;
 
 /**
  * 📦 Returns the current sidebar state
- * @returns {'expanded' | 'icon' | 'collapsed'}
+ * @returns {SidebarState}
  */
 export function getSidebarState() {
   return sidebarState;
@@ -17,7 +23,7 @@ export function getSidebarState() {
 
 /**
  * 💾 Sets the current sidebar state and saves to localStorage
- * @param {'expanded' | 'icon' | 'collapsed'} newState
+ * @param {SidebarState} newState
  */
 export function setSidebarState(newState) {
   if (!SIDEBAR_STATES.includes(newState)) {
@@ -56,10 +62,20 @@ export function saveSidebarStateToStorage() {
 export function loadSidebarStateFromStorage() {
   try {
     const stored = localStorage.getItem('sidebarState');
-    if (SIDEBAR_STATES.includes(stored)) {
+
+    if (isSidebarState(stored)) {
       sidebarState = stored;
     }
   } catch (err) {
     console.warn('⚠️ Failed to load sidebarState from localStorage:', err);
   }
+}
+
+/**
+ * Type guard to check if a value is a valid SidebarState.
+ * @param {any} value
+ * @returns {value is SidebarState}
+ */
+function isSidebarState(value) {
+  return value === 'expanded' || value === 'icon' || value === 'collapsed';
 }

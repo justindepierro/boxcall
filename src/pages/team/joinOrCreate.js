@@ -1,10 +1,11 @@
 // src/pages/team/joinOrCreate.js
 
-export default function renderJoinOrCreateTeamPage() {
-  const root = document.getElementById('main-content');
-  if (!root) return;
+export default function renderJoinOrCreateTeamPage(
+  container = document.getElementById('main-content')
+) {
+  if (!(container instanceof HTMLElement)) return;
 
-  root.innerHTML = `
+  container.innerHTML = `
     <section class="p-6 max-w-xl mx-auto text-white">
       <h1 class="text-2xl font-bold mb-4">You're not on a team yet</h1>
       <p class="mb-6">As a coach, you can either join an existing team or create your own.</p>

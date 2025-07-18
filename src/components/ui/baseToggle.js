@@ -1,21 +1,21 @@
 /**
  * Renders a flexible, accessible toggle switch.
- * @param {Object} options
- * @param {boolean} [options.checked=false]
- * @param {Function} [options.onChange]
- * @param {string} [options.label]
- * @param {string} [options.size='md']
- * @param {string} [options.variant='primary']
- * @param {boolean} [options.disabled=false]
- * @param {boolean} [options.focused=false]
- * @param {boolean} [options.selected=false]
- * @param {string} [options.tooltip]
- * @param {Object} [options.dataAttrs] - Optional dataset
- * @returns {HTMLDivElement}
+ * @param {Object} options - Config object for the toggle.
+ * @param {boolean} [options.checked=false] - Initial checked state.
+ * @param {Function} [options.onChange] - Callback fired on toggle change with the new checked value.
+ * @param {string} [options.label=''] - Optional label text displayed next to the toggle.
+ * @param {'sm'|'md'|'lg'} [options.size='md'] - Size of the toggle.
+ * @param {'primary'|'danger'|'neutral'} [options.variant='primary'] - Color variant for toggle when checked.
+ * @param {boolean} [options.disabled=false] - Disables interaction when true.
+ * @param {boolean} [options.focused=false] - Adds visual focus outline when true.
+ * @param {boolean} [options.selected=false] - Adds a "selected" highlight (extra ring).
+ * @param {string} [options.tooltip=''] - Tooltip text shown on hover.
+ * @param {Object} [options.dataAttrs={}] - Custom dataset attributes to apply to the button.
+ * @returns {HTMLDivElement} - A wrapper <div> containing the toggle button and optional label.
  */
 export function BaseToggle({
   checked = false,
-  onChange,
+  onChange = null,
   label = '',
   size = 'md',
   variant = 'primary',
@@ -25,19 +25,26 @@ export function BaseToggle({
   tooltip = '',
   dataAttrs = {},
 } = {}) {
+  // === Outer wrapper
   const wrapper = document.createElement('div');
   wrapper.className = 'inline-flex items-center gap-2';
 
+  // === Toggle button
   const toggle = document.createElement('button');
   toggle.type = 'button';
   toggle.setAttribute('role', 'switch');
-  toggle.setAttribute('aria-checked', checked);
+  toggle.setAttribute('aria-checked', String(checked));
+  toggle.setAttribute('aria-label', label || 'Toggle switch');
 
+  if (disabled) toggle.setAttribute('aria-disabled', 'true');
   if (tooltip) toggle.title = tooltip;
+
+  // Apply dataset attributes
   for (const [key, val] of Object.entries(dataAttrs)) {
     toggle.dataset[key] = val;
   }
 
+  // === Track styles (outer toggle background)
   toggle.className = `
     relative inline-flex flex-shrink-0 items-center transition-colors rounded-full
     focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
@@ -48,6 +55,7 @@ export function BaseToggle({
     ${focused ? 'outline outline-2 outline-[var(--color-accent)]' : ''}
   `.trim();
 
+  // === Thumb styles (the inner circle that slides)
   const thumb = document.createElement('span');
   thumb.className = `
     inline-block transform rounded-full bg-white shadow transition-transform
@@ -58,6 +66,7 @@ export function BaseToggle({
   toggle.appendChild(thumb);
   wrapper.appendChild(toggle);
 
+  // === Label (optional)
   if (label) {
     const span = document.createElement('span');
     span.textContent = label;
@@ -65,27 +74,45 @@ export function BaseToggle({
     wrapper.appendChild(span);
   }
 
+  // === Toggle click handler
   toggle.addEventListener('click', () => {
     if (disabled) return;
+
+    // Flip state
     checked = !checked;
-    toggle.setAttribute('aria-checked', checked);
-    toggle.classList.toggle(colorMap[variant], checked);
-    toggle.classList.toggle('bg-gray-300', !checked);
+
+    // Update aria-checked
+    toggle.setAttribute('aria-checked', String(checked));
+
+    // Update track color
+    if (checked) {
+      toggle.classList.add(colorMap[variant] || colorMap.primary);
+      toggle.classList.remove('bg-gray-300');
+    } else {
+      toggle.classList.remove(colorMap[variant] || colorMap.primary);
+      toggle.classList.add('bg-gray-300');
+    }
+
+    // Update thumb position
     thumb.classList.toggle(sizeMap[size].thumbTranslate, checked);
-    if (onChange) onChange(checked);
+
+    // Fire external onChange callback if defined
+    if (typeof onChange === 'function') {
+      onChange(checked);
+    }
   });
 
   return wrapper;
 }
 
-// 🎨 Color variants
+/* 🎨 Color variants for toggle track */
 const colorMap = {
   primary: 'bg-[var(--color-accent)]',
   danger: 'bg-red-500',
   neutral: 'bg-gray-500',
 };
 
-// 📏 Size map for track and thumb
+/* 📏 Size map for track and thumb */
 const sizeMap = {
   sm: {
     track: 'h-4 w-8',

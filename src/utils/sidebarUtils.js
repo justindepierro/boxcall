@@ -112,7 +112,9 @@ export function renderSidebar() {
 }
 
 function attachSidebarEvents() {
+  /** @type {NodeListOf<HTMLButtonElement>} */
   const navButtons = document.querySelectorAll('.nav-btn');
+
   navButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const page = btn.dataset.page;

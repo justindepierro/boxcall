@@ -2,8 +2,11 @@
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
+    "types": ["vite/client"],
     "noEmit": true,
     "moduleResolution": "node",
+    "module": "esnext",
+    "target": "es2020",
     "baseUrl": ".",
     "paths": {
       "@components/*": ["src/components/*"],
@@ -16,7 +19,8 @@
       "@render/*": ["src/render/*"],
       "@routes/*": ["src/routes/*"],
       "@state/*": ["src/state/*"],
-      "@styles/*": ["src/styles/*"]
+      "@styles/*": ["src/styles/*"],
+      "@auth/*": ["src/auth/*"]
     }
   },
   "include": ["src"]

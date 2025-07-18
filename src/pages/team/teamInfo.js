@@ -7,9 +7,14 @@ import { showSpinner, hideSpinner } from '@utils/spinner.js';
 
 /**
  * Renders the read-only team info panel.
+ * @param {HTMLElement} container - The container where the team info should be rendered.
  */
-export default async function renderTeamInfoPage() {
-  const container = document.getElementById('page-view');
+export default async function renderTeamInfoPage(container = document.getElementById('page-view')) {
+  if (!(container instanceof HTMLElement)) {
+    console.error('❌ Invalid container provided to renderTeamInfoPage');
+    return;
+  }
+
   const user = getCurrentUser();
 
   if (!user) {
@@ -56,7 +61,7 @@ export default async function renderTeamInfoPage() {
     .from('team_settings')
     .select('*')
     .eq('id', teamId)
-    .maybeSingle(); // 👈 Prevents crash if RLS blocks access
+    .maybeSingle();
 
   hideSpinner();
 
@@ -80,9 +85,9 @@ export default async function renderTeamInfoPage() {
       <div><strong>Created By:</strong> ${team.created_by}</div>
     </div>
     <div class="p-4 space-y-2">
-  <div class="font-h-athletic text-lg">Header Athletic</div>
-  <div class="font-b-athletic text-base">Body Athletic</div>
-  <div class="font-m-athletic text-sm">Mono Athletic</div>
-</div>
+      <div class="font-h-athletic text-lg">Header Athletic</div>
+      <div class="font-b-athletic text-base">Body Athletic</div>
+      <div class="font-m-athletic text-sm">Mono Athletic</div>
+    </div>
   `;
 }

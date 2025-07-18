@@ -6,8 +6,11 @@ import { navigateTo } from '@routes/router.js';
 import { showToast } from '@utils/toast.js';
 import { showSpinner, hideSpinner } from '@utils/spinner.js';
 
-export default function renderJoinOnlyTeamPage() {
-  const container = document.getElementById('page-view');
+export default function renderJoinOnlyTeamPage(
+  container = document.getElementById('main-content')
+) {
+  if (!(container instanceof HTMLElement)) return;
+
   container.innerHTML = `
     <h2>Join a Team</h2>
     <form id="join-team-form">
@@ -19,7 +22,8 @@ export default function renderJoinOnlyTeamPage() {
   const form = document.getElementById('join-team-form');
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const teamId = document.getElementById('team-id').value.trim();
+    const teamIdInput = /** @type {HTMLInputElement} */ (document.getElementById('team-id'));
+    const teamId = teamIdInput?.value.trim() || '';
     if (!teamId) return;
 
     await handleJoinTeam(teamId);

@@ -1,6 +1,6 @@
 import { devLog } from '@utils/devLogger.js';
 import { clearAllUIZones } from '@render/UIZones.js';
-import { PageWrapper } from '@components/layout/PageWrapper.js';
+import { PageWrapper } from '@components/layout/pageWrapper.js';
 
 /**
  * Renders a given page/component into the app

@@ -6,12 +6,14 @@ import { BaseButton } from '@components/ui/baseButton.js';
  * A form for editing and saving football field ranges.
  *
  * @param {Object} options
- * @param {Array} options.initialRanges - Initial field ranges
- * @param {Function} options.onSave - Callback when the form is saved
+ * @param {Array} [options.initialRanges=[]] - Initial field ranges
+ * @param {Function} [options.onSave] - Callback when the form is saved
  * @param {Function} [options.onCancel] - Callback when the form is canceled
  * @returns {HTMLDivElement} The form element
  */
-export function FieldForm({ initialRanges = [], onSave, onCancel } = {}) {
+export function FieldForm(options = {}) {
+  const { initialRanges = [], onSave = () => {}, onCancel = () => {} } = options;
+
   const container = document.createElement('div');
   container.className = 'space-y-4';
 
@@ -32,7 +34,7 @@ export function FieldForm({ initialRanges = [], onSave, onCancel } = {}) {
     size: 'md',
     onClick: () => {
       console.log('💾 Saving ranges:', initialRanges);
-      if (onSave) onSave(initialRanges);
+      onSave(initialRanges);
     },
   });
 
@@ -42,7 +44,7 @@ export function FieldForm({ initialRanges = [], onSave, onCancel } = {}) {
     size: 'md',
     onClick: () => {
       console.log('❌ Cancel clicked.');
-      if (onCancel) onCancel();
+      onCancel();
     },
   });
 

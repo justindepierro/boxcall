@@ -25,18 +25,18 @@ export function MultiRangeSlider({ ranges = [], onChange }) {
 
       const startInput = document.createElement('input');
       startInput.type = 'number';
-      startInput.min = 0;
-      startInput.max = 100;
-      startInput.step = 5;
-      startInput.value = range.start;
+      startInput.min = '0';
+      startInput.max = '100';
+      startInput.step = '5';
+      startInput.value = String(range.start);
       startInput.className = 'w-20 px-2 py-1 border rounded';
 
       const endInput = document.createElement('input');
       endInput.type = 'number';
-      endInput.min = 0;
-      endInput.max = 100;
-      endInput.step = 5;
-      endInput.value = range.end;
+      endInput.min = '0';
+      endInput.max = '100';
+      endInput.step = '5';
+      endInput.value = String(range.end);
       endInput.className = 'w-20 px-2 py-1 border rounded';
 
       const toggleBtn = document.createElement('button');

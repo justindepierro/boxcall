@@ -8,7 +8,6 @@ import {
 } from '@config/sidebarConfig.js';
 
 import { SidebarButton } from '@components/ui/sideBarButton.js';
-import { getCurrentUser } from '@state/userState.js';
 import { getSidebarState } from '@state/sidebarState.js';
 import { createIconElement } from '@utils/iconRenderer.js';
 
@@ -16,7 +15,7 @@ export function renderSidebar(state = 'expanded') {
   const container = document.getElementById('sidebar-root');
   if (!container) return console.warn('❌ #sidebar-root not found');
 
-  const main = mainPages(getCurrentUser());
+  const main = mainPages();
 
   // 🔘 Header Toggle
   const toggleWrapper = document.createElement('div');

@@ -2,15 +2,14 @@
 import { supabase } from '@auth/supabaseClient.js';
 
 /**
- * Fetches user_settings row for a given user_id
- * @param {string} user_id - Supabase user ID
- * @returns {object|null} settings object or null if error
+ * Fetches user_settings row for a given userId.
+ * @param {string} userId - Supabase user ID
+ * @returns {Promise<object|null>} settings object or null if error
  */
-
 export async function getUserSettings(userId) {
   const { data, error } = await supabase
     .from('user_settings')
-    .select('*') // or explicitly select needed fields
+    .select('*') // Consider selecting only needed fields for performance
     .eq('user_id', userId)
     .single();
 

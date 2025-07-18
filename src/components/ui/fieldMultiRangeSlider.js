@@ -1,21 +1,9 @@
-import { field } from '../../utils/fbMath.js'; // Our FootballField class instance
+import { field } from '../../utils/fbMath.js'; // Football field math utilities
 
 /**
- * FieldMultiRangeSlider
- * ----------------------
- * A multi-range slider representing a football field from -50 (own goal line)
- * to +50 (opponent's goal line), mapped to slider percentages 0–100%.
- *
- * Core logic:
- *   - Football yards (-40, 50, 40) → X-axis (-5 to +5) → slider percent (0–100).
- *   - UI displays yardline markers (0, -10, -20, ... 50 ... 20, 10, 0).
- *
- * @param {Object} options
- * @param {Array} options.ranges - [{ start, end, include }] (yardline positions)
- * @param {Function} options.onChange - Callback fired when ranges update.
- * @returns {HTMLDivElement} The constructed slider UI.
+ * @param {{ ranges?: Array<{ start: number, end: number, include: boolean }>, onChange?: Function }} options
  */
-export function FieldMultiRangeSlider({ ranges = [], onChange } = {}) {
+export function FieldMultiRangeSlider({ ranges = [], onChange = () => {} } = {}) {
   const wrapper = document.createElement('div');
   wrapper.className = 'space-y-4';
 
@@ -34,7 +22,7 @@ export function FieldMultiRangeSlider({ ranges = [], onChange } = {}) {
 
   yardLabels.forEach((num) => {
     const tick = document.createElement('div');
-    tick.textContent = num;
+    tick.textContent = String(num); // Convert number to string
     tick.className = 'w-[8.5%] text-center';
     numberLine.appendChild(tick);
   });
@@ -47,8 +35,7 @@ export function FieldMultiRangeSlider({ ranges = [], onChange } = {}) {
 
   const trackWrapper = document.createElement('div');
   trackWrapper.className = 'space-y-1';
-  trackWrapper.appendChild(numberLine);
-  trackWrapper.appendChild(sliderTrack);
+  trackWrapper.append(numberLine, sliderTrack);
   wrapper.appendChild(trackWrapper);
 
   // === CONTROLS PANEL ===
@@ -56,39 +43,27 @@ export function FieldMultiRangeSlider({ ranges = [], onChange } = {}) {
   controlsWrapper.className = 'space-y-3';
   wrapper.appendChild(controlsWrapper);
 
-  // ========================================================================
-  //  RENDER RANGES
-  // ========================================================================
+  // ==========================================================
+  // RENDER RANGES
+  // ==========================================================
   function renderRanges() {
-    sliderTrack.innerHTML = ''; // Clear any old blocks
+    sliderTrack.innerHTML = '';
     console.log('🔄 Re-rendering Ranges:', JSON.stringify(ranges));
 
     ranges.forEach(({ start, end, include }, i) => {
-      console.log(`  ➡️ Range #${i}: start=${start}, end=${end}, include=${include}`);
-
-      // Ensure order from left to right
       const [leftVal, rightVal] = field.normalizeRange(start, end);
-
-      // Map to slider percentages
       const { left, width } = field.mapRangeToPercent(leftVal, rightVal);
-      console.log(
-        `    • Normalized: [${leftVal}, ${rightVal}] → left=${left.toFixed(
-          2
-        )}%, width=${width.toFixed(2)}%`
-      );
 
-      // Create visual range block
       const rangeDiv = document.createElement('div');
       rangeDiv.className =
         'absolute top-0 bottom-0 z-10 rounded transition-all duration-200 cursor-grab';
       rangeDiv.style.left = `${left}%`;
       rangeDiv.style.width = `${width}%`;
       rangeDiv.style.backgroundColor = include
-        ? 'rgba(59, 130, 246, 0.5)' // Blue
-        : 'rgba(239, 68, 68, 0.5)'; // Red
-      rangeDiv.dataset.index = i;
+        ? 'rgba(59, 130, 246, 0.5)'
+        : 'rgba(239, 68, 68, 0.5)';
+      rangeDiv.dataset.index = String(i);
 
-      // Add label (e.g., "Own 20 yd → Opp 15 yd")
       const label = document.createElement('div');
       label.textContent = field.describeRange(start, end);
       label.className =
@@ -99,19 +74,21 @@ export function FieldMultiRangeSlider({ ranges = [], onChange } = {}) {
     });
   }
 
-  // ========================================================================
-  //  RENDER CONTROLS
-  // ========================================================================
+  // ==========================================================
+  // RENDER CONTROLS
+  // ==========================================================
   function renderControls() {
+    // Clear existing control rows
     controlsWrapper.innerHTML = '';
 
     ranges.forEach(({ start, end, include }, i) => {
-      console.log(`📝 Control Row #${i}: start=${start}, end=${end}`);
-
+      // Row wrapper for all controls
       const row = document.createElement('div');
       row.className = 'flex items-center gap-2';
 
-      // Toggle Include/Exclude
+      // ==========================================================
+      // Include/Exclude Toggle Button
+      // ==========================================================
       const toggle = document.createElement('button');
       toggle.textContent = include ? 'Include' : 'Exclude';
       toggle.className = `px-2 py-1 rounded text-sm font-mono ${
@@ -119,74 +96,81 @@ export function FieldMultiRangeSlider({ ranges = [], onChange } = {}) {
       }`;
       toggle.addEventListener('click', () => {
         ranges[i].include = !ranges[i].include;
-        console.log(`  🔀 Toggled Range #${i}: include=${ranges[i].include}`);
         update();
       });
 
+      // ==========================================================
       // Start Yard Input
+      // ==========================================================
       const from = document.createElement('input');
       from.type = 'number';
-      from.value = start;
+      from.value = String(start);
       from.className = 'w-16 border text-sm px-1 py-0.5 rounded';
       from.addEventListener('change', (e) => {
-        const newVal = field.clamp(parseInt(e.target.value, 10));
-        console.log(`  ✏️ Start Changed #${i}: ${start} → ${newVal}`);
-        ranges[i].start = newVal;
-        update();
+        const target = e.target;
+        if (target instanceof HTMLInputElement) {
+          const newVal = field.clamp(parseInt(target.value, 10));
+          ranges[i].start = newVal;
+          update();
+        }
       });
 
+      // ==========================================================
       // End Yard Input
+      // ==========================================================
       const to = document.createElement('input');
       to.type = 'number';
-      to.value = end;
+      to.value = String(end);
       to.className = 'w-16 border text-sm px-1 py-0.5 rounded';
       to.addEventListener('change', (e) => {
-        const newVal = field.clamp(parseInt(e.target.value, 10));
-        console.log(`  ✏️ End Changed #${i}: ${end} → ${newVal}`);
-        ranges[i].end = newVal;
-        update();
+        const target = e.target;
+        if (target instanceof HTMLInputElement) {
+          const newVal = field.clamp(parseInt(target.value, 10));
+          ranges[i].end = newVal;
+          update();
+        }
       });
 
+      // ==========================================================
       // Remove Button
+      // ==========================================================
       const remove = document.createElement('button');
       remove.textContent = '✖';
       remove.className = 'text-red-500 hover:underline text-sm';
       remove.addEventListener('click', () => {
-        console.log(`  🗑️ Removing Range #${i}`);
         ranges.splice(i, 1);
         update();
       });
 
+      // Append all controls to row
       row.append(toggle, from, to, remove);
       controlsWrapper.appendChild(row);
     });
   }
 
-  // ========================================================================
-  //  ADD RANGE BUTTON
-  // ========================================================================
+  // ==========================================================
+  // ADD RANGE BUTTON
+  // ==========================================================
   const addBtn = document.createElement('button');
   addBtn.textContent = '+ Add Range';
   addBtn.className =
     'bg-[var(--color-accent)] text-white text-sm px-3 py-1 rounded hover:brightness-110';
   addBtn.addEventListener('click', () => {
-    console.log('➕ Adding default range: -20 → -10');
     ranges.push({ start: -20, end: -10, include: true });
     update();
   });
   wrapper.appendChild(addBtn);
 
-  // ========================================================================
-  //  UPDATE FUNCTION
-  // ========================================================================
+  // ==========================================================
+  // UPDATE FUNCTION
+  // ==========================================================
   function update() {
-    console.log('🔃 Updating Slider...');
     renderRanges();
     renderControls();
     if (onChange) onChange([...ranges]);
   }
 
-  // Initial Render
+  // Initial render
   update();
   return wrapper;
 }

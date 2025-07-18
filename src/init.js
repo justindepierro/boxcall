@@ -3,7 +3,7 @@ import { initAuth } from '@lib/init/initAuth.js';
 
 // 🧑‍💼 USER SETTINGS + DEV OVERRIDES
 import { initializeUser, handleAuthRedirect } from '@lib/init/initUser.js';
-import { getUserSettings, setUserSettings } from '@state/userState.js';
+import { getUserSettings, setUserSettings, getSupabaseUser } from '@state/userState.js';
 
 // 🎨 THEMING
 import { applyContextualTheme } from '@config/themes/themeController.js';
@@ -37,14 +37,14 @@ export async function initApp() {
 
   // 1️⃣ Supabase Auth Setup
   await initAuth();
-  console.log('🧪 Authenticated user:', window.supabaseUser);
+  const user = getSupabaseUser(); // Use state instead of window
+  console.log('🧪 Authenticated user:', user);
 
-  const user = window.supabaseUser;
   const isLoggedIn = !!user;
 
   // 2️⃣ Handle redirect if unauthorized on protected page
   if (isProtectedPage(page) && !isLoggedIn) {
-    handleAuthRedirect();
+    handleAuthRedirect(page, PUBLIC_PAGES);
     return;
   }
 
@@ -92,13 +92,6 @@ export async function initApp() {
     mountLiveLogger();
     updateLogContext();
   }
-
-  // 8️⃣ Expose global theming tool (for live overrides)
-  window.BoxCall = window.BoxCall || {};
-  window.BoxCall.forceApplyTheme = (themeKey) => {
-    console.log(`🎨 Live theme override: ${themeKey}`);
-    applyTheme(themeKey);
-  };
 
   console.log('✅ initApp(): App fully initialized.');
 }

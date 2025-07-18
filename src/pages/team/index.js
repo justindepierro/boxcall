@@ -9,8 +9,14 @@ import renderTeamSettingsPage from './teamSettings.js';
 
 /**
  * Main router/controller for /team route
+ * @param {HTMLElement} [container=document.getElementById('main-content')]
  */
-export default async function renderTeamPage(container) {
+export default async function renderTeamPage(container = document.getElementById('main-content')) {
+  if (!(container instanceof HTMLElement)) {
+    console.error('❌ renderTeamPage: Container is not a valid HTMLElement.');
+    return;
+  }
+
   const user = getCurrentUser();
   if (!user) {
     console.warn('🚫 Not logged in');
