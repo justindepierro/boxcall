@@ -4,15 +4,11 @@ import { authCard } from '@components/AuthCard.js';
 import { showToast } from '@utils/toast.js';
 import { navigateTo } from '@routes/router.js';
 import { formatError } from '@utils/errors.js';
-import { renderPage } from '@core/renderEngine.js';
 
 export default function renderLoginPage(container) {
-  renderPage({
-    containerId: container.id,
-    component: LoginComponent,
-    title: 'Login',
-    hideSidebar: true,
-  });
+  // Directly render LoginComponent instead of using renderEngine
+  container.innerHTML = '';
+  container.appendChild(LoginComponent());
 }
 
 function LoginComponent() {

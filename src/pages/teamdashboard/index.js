@@ -1,5 +1,3 @@
-import { renderPage } from '@core/renderEngine.js';
-
 /**
  * Team Dashboard Component
  */
@@ -17,10 +15,9 @@ function TeamDashboardComponent() {
 
 /**
  * Render Team Dashboard Page
+ * @param {HTMLElement} container - The DOM container where the page will be rendered
  */
 export default function renderTeamDashboard(container) {
-  renderPage({
-    component: TeamDashboardComponent,
-    containerId: container.id,
-  });
+  container.innerHTML = ''; // Clear old content
+  container.appendChild(TeamDashboardComponent());
 }
