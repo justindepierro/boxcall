@@ -1,14 +1,19 @@
 // src/utils/roles.js
 import { getOverrideRole } from '@state/devToolState.js';
-import { getCurrentUser } from '@state/userState';
+import { getCurrentUser, getUserSettings } from '@state/userState.js';
 
+/**
+ * Returns the current role, considering any dev override.
+ * @returns {string|null}
+ */
 export function getCurrentRole() {
   const override = getOverrideRole();
   if (override) {
     console.warn('🧪 Using overridden role:', override);
     return override;
   }
-  return window.userSettings?.role || null;
+  const settings = getUserSettings();
+  return settings?.role || null;
 }
 
 // 1. Define known roles
@@ -75,10 +80,14 @@ export function canViewBoxCall() {
   return isTeamMember(); // exclude family
 }
 
+/**
+ * Gets the user's role directly from the user object, falling back to overrides.
+ * @returns {string|null}
+ */
 export function getUserRole() {
   const override = getOverrideRole();
   if (override) return override;
 
   const user = getCurrentUser();
-  return user?.role || null;
+  return user?.role || getCurrentRole() || null;
 }

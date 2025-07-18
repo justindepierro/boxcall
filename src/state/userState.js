@@ -1,12 +1,12 @@
-// src/state/authState.js
-import { getUser, getSession } from '../auth/auth.js'; // 🔁 adjust path as needed
+// src/state/userState.js
+import { getUser, getSession } from '../auth/auth.js';
 
 let user = null;
 let session = null;
+let userSettings = null; // <-- Local variable instead of window.userSettings
 
 /**
  * Initializes auth state once on page load or login.
- * Optionally re-fetches user metadata and session.
  */
 export async function initAuthState() {
   session = await getSession();
@@ -41,5 +41,27 @@ export function isLoggedIn() {
 export function clearAuthState() {
   user = null;
   session = null;
+  userSettings = null;
   console.log('🔒 Auth state cleared');
+}
+
+/* -------------------------------------------------------------------------- */
+/*                            USER SETTINGS MANAGEMENT                        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Set the current user's settings.
+ * @param {object} settings - User settings object
+ */
+export function setUserSettings(settings) {
+  userSettings = settings;
+  console.log('⚙️ userSettings updated:', userSettings);
+}
+
+/**
+ * Get the current user's settings.
+ * @returns {object|null} User settings
+ */
+export function getUserSettings() {
+  return userSettings;
 }

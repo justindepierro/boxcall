@@ -37,6 +37,7 @@ export default defineConfig({
       '@state': path.resolve(__dirname, './src/state'),
       '@render': path.resolve(__dirname, './src/render'),
       '@core': path.resolve(__dirname, './src/core'),
+      '@styles': path.resolve(__dirname, './src/styles'),
     },
   },
 });

@@ -6,11 +6,12 @@
   "commonjs": "modern",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run check && vite build",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "lint": "eslint",
-    "dev:all": "vite"
+    "lint": "eslint src --ext .js",
+    "dev:all": "vite",
+    "check": "npm run lint && tsc --noEmit"
   },
   "lint-staged": {
     "**/*.{js,jsx,css,html,json,md}": [

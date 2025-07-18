@@ -3,6 +3,7 @@ import { initAuth } from '@lib/init/initAuth.js';
 
 // 🧑‍💼 USER SETTINGS + DEV OVERRIDES
 import { initializeUser, handleAuthRedirect } from '@lib/init/initUser.js';
+import { getUserSettings, setUserSettings } from '@state/userState.js';
 
 // 🎨 THEMING
 import { applyContextualTheme } from '@config/themes/themeController.js';
@@ -36,7 +37,7 @@ export async function initApp() {
 
   // 1️⃣ Supabase Auth Setup
   await initAuth();
-  console.log('🧪 window.supabaseUser:', window.supabaseUser);
+  console.log('🧪 Authenticated user:', window.supabaseUser);
 
   const user = window.supabaseUser;
   const isLoggedIn = !!user;
@@ -49,8 +50,17 @@ export async function initApp() {
 
   // 3️⃣ Load user settings (with dev overrides)
   if (user) {
-    window.userSettings = await initializeUser(user);
-    console.log('✅ userSettings loaded');
+    try {
+      const { settings } = await initializeUser();
+      if (settings) {
+        setUserSettings({ ...settings, email: user.email });
+        console.log('✅ User settings loaded:', getUserSettings());
+      } else {
+        console.warn('⚠️ No user settings found.');
+      }
+    } catch (error) {
+      console.error('❌ Failed to initialize user settings:', error);
+    }
   }
 
   // 4️⃣ Apply theme (from user/team/dev fallback)
@@ -62,7 +72,7 @@ export async function initApp() {
     applyTheme('classic');
   }
 
-  // before renderAppShell()
+  // Before renderAppShell()
   loadSidebarStateFromStorage();
 
   // 5️⃣ Inject app shell (sidebar, layout, etc)
@@ -75,9 +85,10 @@ export async function initApp() {
   console.log('🚦 handleRouting() finished');
 
   // 7️⃣ Inject Dev Tools if authorized
-  if (window.userSettings?.email === DEV_EMAIL) {
+  const userSettings = getUserSettings();
+  if (userSettings?.email === DEV_EMAIL) {
     console.log('🛠️ Dev mode: Initializing tools...');
-    renderDevToolsPanel(window.userSettings);
+    renderDevToolsPanel(userSettings);
     mountLiveLogger();
     updateLogContext();
   }
