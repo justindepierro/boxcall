@@ -11,6 +11,9 @@ import { ROLES } from '@utils/roles.js';
  * - Log viewer
  * - Role & theme override controls
  * Safe to call multiple times.
+ *
+ * @param {object} [user={}]
+ * @param {string} [user.email]
  */
 export function renderDevToolsPanel(user = {}) {
   if (user.email !== DEV_EMAIL) return;
@@ -48,7 +51,10 @@ export function renderDevToolsPanel(user = {}) {
   setupControlListeners();
 }
 
-// 🧩 Builds the role/theme dropdown HTML
+/**
+ * Builds the role/theme dropdown HTML.
+ * @returns {string}
+ */
 function getRoleThemeControlsHTML() {
   return `
     <label class="mr-2">Role:</label>
@@ -72,10 +78,30 @@ function getRoleThemeControlsHTML() {
   `;
 }
 
+/**
+ * Helper to cast query results to HTMLSelectElement.
+ * @param {string} id
+ * @returns {HTMLSelectElement}
+ */
+function getSelectElement(id) {
+  const el = document.getElementById(id);
+  if (!el) throw new Error(`Missing element: ${id}`);
+  return /** @type {HTMLSelectElement} */ (el);
+}
+
+/**
+ * Safely extract value from an event target (as HTMLSelectElement).
+ * @param {Event} e
+ * @returns {string}
+ */
+function getSelectValue(e) {
+  return /** @type {HTMLSelectElement} */ (e.target).value || '';
+}
+
 // 🔁 Binds dropdowns to devToolState
 function setupControlListeners() {
-  const roleSelect = document.getElementById('dev-role');
-  const themeSelect = document.getElementById('dev-theme');
+  const roleSelect = getSelectElement('dev-role');
+  const themeSelect = getSelectElement('dev-theme');
 
   // Pre-fill values
   roleSelect.value = localStorage.getItem('dev.overrideRole') || '';
@@ -83,13 +109,13 @@ function setupControlListeners() {
 
   // Role change
   roleSelect.addEventListener('change', (e) => {
-    setOverrideRole(e.target.value || null);
+    setOverrideRole(getSelectValue(e) || null);
     refreshDevContext();
   });
 
   // Theme change
   themeSelect.addEventListener('change', (e) => {
-    const theme = e.target.value || null;
+    const theme = getSelectValue(e) || null;
     setOverrideTheme(theme);
     applyTheme(theme);
     refreshDevContext();

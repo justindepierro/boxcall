@@ -2,29 +2,32 @@
 import { createIconElement } from '@utils/iconRenderer.js';
 
 /**
+ * @typedef {Object} BaseButtonOptions
+ * @property {string} [label]
+ * @property {string} [icon]
+ * @property {string} [iconEnd]
+ * @property {string} [variant='primary']
+ * @property {string} [size='md']
+ * @property {boolean} [fullWidth=false]
+ * @property {boolean} [disabled=false]
+ * @property {boolean} [loading=false]
+ * @property {boolean} [iconOnly=false]
+ * @property {boolean} [selected=false]
+ * @property {boolean} [focused=false]
+ * @property {boolean} [uppercase=false]
+ * @property {string}  [rounded='md']
+ * @property {string}  [tooltip]
+ * @property {string}  [ariaLabel]
+ * @property {Object}  [dataAttrs]
+ * @property {string}  [slotStart]
+ * @property {string}  [slotMain]
+ * @property {string}  [slotEnd]
+ * @property {(e: MouseEvent) => void} [onClick]  // <-- Explicit type
+ */
+
+/**
  * Fully featured, theme-aware, accessible button component.
- *
- * @param {Object} options
- * @param {string} [options.label] - Visible text (ignored if slotMain is used)
- * @param {string} [options.icon] - Lucide icon name (placed before label)
- * @param {string} [options.iconEnd] - Icon after the label
- * @param {string} [options.variant='primary']
- * @param {string} [options.size='md']
- * @param {boolean} [options.fullWidth=false]
- * @param {boolean} [options.disabled=false]
- * @param {boolean} [options.loading=false]
- * @param {boolean} [options.iconOnly=false]
- * @param {boolean} [options.selected=false]
- * @param {boolean} [options.focused=false]
- * @param {boolean} [options.uppercase=false]
- * @param {string}  [options.rounded='md']
- * @param {string}  [options.tooltip] - Shown on hover
- * @param {string}  [options.ariaLabel] - Required for icon-only
- * @param {Object}  [options.dataAttrs] - Custom data-* attributes
- * @param {string}  [options.slotStart] - HTML before label
- * @param {string}  [options.slotMain] - Replaces label + icon
- * @param {string}  [options.slotEnd] - HTML after label
- * @param {Function} [options.onClick]
+ * @param {BaseButtonOptions} options
  * @returns {HTMLButtonElement}
  */
 export function BaseButton({
@@ -49,10 +52,11 @@ export function BaseButton({
   slotEnd = '',
   onClick,
 }) {
+  /** @type {HTMLButtonElement} */
   const btn = document.createElement('button');
   btn.type = 'button';
 
-  // ✅ Accessibility
+  // Accessibility
   if (iconOnly && ariaLabel) {
     btn.setAttribute('aria-label', ariaLabel);
     btn.title = tooltip || ariaLabel;
@@ -60,7 +64,7 @@ export function BaseButton({
     btn.title = tooltip;
   }
 
-  // 🧼 Tailwind classes
+  // Classes
   btn.className = `
     base-btn inline-flex items-center justify-center
     font-medium transition-all
@@ -75,20 +79,16 @@ export function BaseButton({
     ${focused ? 'outline outline-2 outline-[var(--color-accent)]' : ''}
   `.trim();
 
-  // 🧩 Build content
-  btn.innerHTML = ''; // clear first
+  // Content
+  btn.innerHTML = '';
 
-  // Slot overrides everything
+  // Main slot or label
   if (slotMain) {
     const temp = document.createElement('div');
     temp.innerHTML = `${slotStart}${slotMain}${slotEnd}`;
     [...temp.childNodes].forEach((n) => btn.appendChild(n));
   } else if (loading) {
-    if (slotStart) {
-      const temp = document.createElement('div');
-      temp.innerHTML = slotStart;
-      [...temp.childNodes].forEach((n) => btn.appendChild(n));
-    }
+    if (slotStart) appendHTML(btn, slotStart);
 
     const spinner = document.createElement('span');
     spinner.className = 'animate-spin h-4 w-4';
@@ -101,19 +101,10 @@ export function BaseButton({
       btn.appendChild(span);
     }
 
-    if (slotEnd) {
-      const temp = document.createElement('div');
-      temp.innerHTML = slotEnd;
-      [...temp.childNodes].forEach((n) => btn.appendChild(n));
-    }
+    if (slotEnd) appendHTML(btn, slotEnd);
   } else {
-    if (slotStart) {
-      const temp = document.createElement('div');
-      temp.innerHTML = slotStart;
-      [...temp.childNodes].forEach((n) => btn.appendChild(n));
-    } else if (icon) {
-      btn.appendChild(createIconElement(icon, 18));
-    }
+    if (slotStart) appendHTML(btn, slotStart);
+    else if (icon) btn.appendChild(createIconElement(icon, 18));
 
     if (label && !iconOnly) {
       const span = document.createElement('span');
@@ -121,27 +112,27 @@ export function BaseButton({
       btn.appendChild(span);
     }
 
-    if (iconEnd) {
-      btn.appendChild(createIconElement(iconEnd, 18));
-    }
-
-    if (slotEnd) {
-      const temp = document.createElement('div');
-      temp.innerHTML = slotEnd;
-      [...temp.childNodes].forEach((n) => btn.appendChild(n));
-    }
+    if (iconEnd) btn.appendChild(createIconElement(iconEnd, 18));
+    if (slotEnd) appendHTML(btn, slotEnd);
   }
 
-  // ⚙️ Behavior
+  // Behavior
   if (disabled || loading) btn.disabled = true;
-  if (onClick) btn.addEventListener('click', onClick);
+  if (onClick) btn.addEventListener('click', /** @param {MouseEvent} e */ (e) => onClick(e));
 
-  // 🧩 data-* attributes
+  // data-* attributes
   for (const [key, val] of Object.entries(dataAttrs)) {
     btn.dataset[key] = val;
   }
 
   return btn;
+}
+
+// Helper for injecting HTML fragments
+function appendHTML(container, html) {
+  const temp = document.createElement('div');
+  temp.innerHTML = html;
+  [...temp.childNodes].forEach((n) => container.appendChild(n));
 }
 
 // 🎨 Variants

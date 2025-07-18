@@ -9,7 +9,7 @@
  * @param {number} [options.max=100]
  * @param {number} [options.step=1]
  * @param {number} [options.value=0]
- * @param {Function} [options.onChange] - Called with new value
+ * @param {(value: number) => void} [options.onChange] - Called with new value
  * @param {boolean} [options.disabled=false]
  * @param {boolean} [options.showValue=true]
  * @returns {HTMLDivElement}
@@ -24,9 +24,11 @@ export function BaseSlider({
   disabled = false,
   showValue = true,
 } = {}) {
+  /** @type {HTMLDivElement} */
   const wrapper = document.createElement('div');
   wrapper.className = 'space-y-1 w-full';
 
+  // Label
   if (label) {
     const labelEl = document.createElement('label');
     labelEl.className = 'block text-sm font-medium text-[var(--color-text)]';
@@ -37,12 +39,13 @@ export function BaseSlider({
   const sliderWrapper = document.createElement('div');
   sliderWrapper.className = 'flex items-center gap-3';
 
+  /** @type {HTMLInputElement} */
   const input = document.createElement('input');
   input.type = 'range';
-  input.min = min;
-  input.max = max;
-  input.step = step;
-  input.value = value;
+  input.min = String(min); // ensure string type
+  input.max = String(max);
+  input.step = String(step);
+  input.value = String(value);
   input.disabled = disabled;
 
   input.className = `
@@ -51,14 +54,16 @@ export function BaseSlider({
     focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
   `.trim();
 
+  /** @type {HTMLSpanElement} */
   const valueEl = document.createElement('span');
   valueEl.className = 'text-sm text-[var(--color-muted)] min-w-[2ch] text-right';
-  valueEl.textContent = showValue ? value : '';
+  valueEl.textContent = showValue ? String(value) : '';
 
   // 📈 Change handler
-  input.addEventListener('input', () => {
-    valueEl.textContent = showValue ? input.value : '';
-    if (onChange) onChange(Number(input.value));
+  input.addEventListener('input', (e) => {
+    const target = /** @type {HTMLInputElement} */ (e.target);
+    valueEl.textContent = showValue ? target.value : '';
+    if (onChange) onChange(Number(target.value));
   });
 
   sliderWrapper.appendChild(input);

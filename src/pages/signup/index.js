@@ -20,10 +20,17 @@ export default function renderSignupPage(container) {
   const form = document.getElementById('signup-form');
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('signup-email').value.trim();
-    const password = document.getElementById('signup-password').value;
-    const btn = document.getElementById('signup-btn');
-    const errorEl = document.getElementById('signup-error');
+
+    // Cast inputs and button to their correct types
+    const emailInput = /** @type {HTMLInputElement} */ (document.getElementById('signup-email'));
+    const passwordInput = /** @type {HTMLInputElement} */ (
+      document.getElementById('signup-password')
+    );
+    const btn = /** @type {HTMLButtonElement} */ (document.getElementById('signup-btn'));
+    const errorEl = /** @type {HTMLParagraphElement} */ (document.getElementById('signup-error'));
+
+    const email = emailInput?.value.trim();
+    const password = passwordInput?.value;
 
     btn.disabled = true;
     btn.textContent = 'Creating...';

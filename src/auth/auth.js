@@ -1,10 +1,15 @@
 // src/auth/auth.js
-import { supabase } from "./supabaseClient.js";
+import { supabase } from './supabaseClient.js';
+
+/**
+ * @typedef {import('@supabase/supabase-js').Session} Session
+ * @typedef {import('@supabase/supabase-js').User} User
+ */
 
 // Internal logger toggle
 const DEBUG = true;
 function log(...args) {
-  if (DEBUG) console.log("[🔐 AUTH]", ...args);
+  if (DEBUG) console.log('[🔐 AUTH]', ...args);
 }
 
 /**
@@ -18,14 +23,14 @@ export async function signUp(email, password) {
     password,
     options: {
       data: {
-        theme_pref: "classic",
-        font_pref: "coach",
-        role: "player",
+        theme_pref: 'classic',
+        font_pref: 'coach',
+        role: 'player',
       },
     },
   });
 
-  log("Sign Up →", { data, error });
+  log('Sign Up →', { data, error });
 
   return {
     user: data?.user || null,
@@ -44,7 +49,7 @@ export async function signIn(email, password) {
     password,
   });
 
-  log("Sign In →", { data, error });
+  log('Sign In →', { data, error });
 
   return {
     user: data?.user || null,
@@ -59,7 +64,7 @@ export async function signIn(email, password) {
  */
 export async function signOut() {
   const { error } = await supabase.auth.signOut();
-  log("Sign Out →", { error });
+  log('Sign Out →', { error });
   return { error };
 }
 
@@ -70,7 +75,7 @@ export async function signOut() {
 export async function getSession() {
   const { data, error } = await supabase.auth.getSession();
   if (error) {
-    log("Get Session ❌", error.message);
+    log('Get Session ❌', error.message);
     return null;
   }
 
@@ -85,7 +90,7 @@ export async function getUser() {
   const { data, error } = await supabase.auth.getUser();
 
   if (error) {
-    log("Get User ❌", error.message);
+    log('Get User ❌', error.message);
     return null;
   }
 
@@ -101,7 +106,7 @@ export async function refreshSession() {
   const { data, error } = await supabase.auth.refreshSession();
 
   if (error) {
-    log("Refresh Session ❌", error.message);
+    log('Refresh Session ❌', error.message);
     return null;
   }
 
@@ -117,6 +122,6 @@ export async function resetPassword(email) {
     redirectTo: `${window.location.origin}/#/reset`,
   });
 
-  log("Reset Password →", { email, error });
+  log('Reset Password →', { email, error });
   return { data, error };
 }

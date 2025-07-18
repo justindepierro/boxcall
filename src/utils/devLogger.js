@@ -1,3 +1,5 @@
+import { getUserSettings } from '@state/userState';
+
 const logQueue = [];
 
 export function devLog(msg) {
@@ -19,13 +21,14 @@ export function devLog(msg) {
   console.log(formatted);
 }
 function getContextHTML() {
+  const settings = getUserSettings() || {};
   return `
     <div class="space-y-[2px] font-mono text-[11px] leading-snug text-white/90">
       <div><span class="text-white/60">Page:</span> <code>${location.hash || '(none)'}</code></div>
-      <div><span class="text-white/60">Role:</span> <code>${window.userSettings?.role || 'unknown'}</code></div>
-      <div><span class="text-white/60">Team ID:</span> <code>${window.userSettings?.team_id || 'none'}</code></div>
-      <div><span class="text-white/60">Font:</span> <code>${window.userSettings?.font_theme || 'default'}</code></div>
-      <div><span class="text-white/60">Color:</span> <code>${window.userSettings?.color_theme || 'default'}</code></div>
+      <div><span class="text-white/60">Role:</span> <code>${settings.role || 'unknown'}</code></div>
+      <div><span class="text-white/60">Team ID:</span> <code>${settings.team_id || 'none'}</code></div>
+      <div><span class="text-white/60">Font:</span> <code>${settings.font_theme || 'default'}</code></div>
+      <div><span class="text-white/60">Color:</span> <code>${settings.color_theme || 'default'}</code></div>
     </div>
   `;
 }
