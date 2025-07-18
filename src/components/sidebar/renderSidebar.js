@@ -7,7 +7,7 @@ import {
   SIDEBAR_ICON_SIZE,
 } from '@config/sidebarConfig.js';
 
-import { SidebarButton } from '@components/ui/sidebarButton.js';
+import { SidebarButton } from '@components/ui/sideBarButton.js';
 import { getCurrentUser } from '@state/userState.js';
 import { getSidebarState } from '@state/sidebarState.js';
 import { createIconElement } from '@utils/iconRenderer.js';
