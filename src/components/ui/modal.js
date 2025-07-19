@@ -12,7 +12,6 @@ import { BaseButton } from '@components/ui/baseButton.js';
  * @returns {HTMLDivElement} The modal element
  */
 export function Modal(options = {}) {
-  // Safely destructure with defaults
   const {
     title = 'Untitled Modal',
     content = document.createElement('div'),
@@ -41,8 +40,8 @@ export function Modal(options = {}) {
     variant: 'secondary',
     size: 'sm',
     onClick: () => {
-      overlay.remove();
-      onClose();
+      overlay.remove(); // Remove overlay from DOM
+      onClose(); // Trigger onClose callback
     },
   });
 
@@ -56,7 +55,6 @@ export function Modal(options = {}) {
 
   modal.append(header, contentEl);
   overlay.appendChild(modal);
-  document.body.appendChild(overlay);
 
-  return overlay;
+  return overlay; // DO NOT append to document.body here
 }

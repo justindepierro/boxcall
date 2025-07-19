@@ -1,11 +1,14 @@
 // src/components/dev/devUI.js
 
+import { getChecked } from '@utils/domHelper.js';
+
 /**
- * Creates a reusable checkbox component.
- * @param {string} id
- * @param {string} label
- * @param {boolean} [checked=false]
- * @param {(checked: boolean) => void} [onChange=() => {}]
+ * Creates a reusable, styled checkbox component with label and callback.
+ *
+ * @param {string} id - The element ID.
+ * @param {string} label - The label text next to the checkbox.
+ * @param {boolean} [checked=false] - Initial checked state.
+ * @param {(checked: boolean) => void} [onChange=() => {}] - Callback triggered on change.
  * @returns {HTMLLabelElement}
  */
 export function createCheckbox(id, label, checked = false, onChange = () => {}) {
@@ -19,42 +22,45 @@ export function createCheckbox(id, label, checked = false, onChange = () => {}) 
   box.id = id;
   box.name = id;
   box.checked = checked;
-  box.className = 'form-checkbox';
+  box.className = 'form-checkbox accent-blue-600';
 
-  box.addEventListener('change', () => onChange(box.checked));
+  // Use `getChecked` for type-safe state retrieval
+  box.addEventListener('change', (e) => onChange(getChecked(e)));
 
   const text = document.createElement('span');
   text.textContent = label;
 
-  wrapper.appendChild(box);
-  wrapper.appendChild(text);
-
+  wrapper.append(box, text);
   return wrapper;
 }
 
 /**
- * Creates a styled button with click handler.
- * @param {string} label
- * @param {() => void} onClick
- * @param {string} [className='']
- * @param {string} [title='']
+ * Creates a styled button with an accessible click handler.
+ *
+ * @param {string} label - Button text.
+ * @param {() => void} onClick - Click handler function.
+ * @param {string} [className=''] - Additional Tailwind classes.
+ * @param {string} [title=''] - Tooltip/ARIA label.
  * @returns {HTMLButtonElement}
  */
 export function createButton(label, onClick, className = '', title = '') {
   const btn = document.createElement('button');
+  btn.type = 'button';
   btn.textContent = label;
-  btn.className = `px-2 py-1 rounded text-xs ${className}`;
-  if (title) btn.title = title;
+  btn.className = `px-2 py-1 rounded text-xs ${className}`.trim();
   btn.setAttribute('aria-label', title || label);
+  if (title) btn.title = title;
+
   btn.addEventListener('click', onClick);
   return btn;
 }
 
 /**
- * Creates a text input with optional input handler.
- * @param {string} id
- * @param {string} [placeholder='']
- * @param {(value: string) => void} [onInput=() => {}]
+ * Creates a reusable text input with optional callback for input events.
+ *
+ * @param {string} id - The input element ID.
+ * @param {string} [placeholder=''] - Placeholder text.
+ * @param {(value: string) => void} [onInput=() => {}] - Callback triggered on input.
  * @returns {HTMLInputElement}
  */
 export function createTextInput(id, placeholder = '', onInput = () => {}) {
@@ -64,7 +70,7 @@ export function createTextInput(id, placeholder = '', onInput = () => {}) {
   input.id = id;
   input.name = id;
   input.placeholder = placeholder;
-  input.className = 'text-black text-xs p-1 rounded w-full';
+  input.className = 'text-black text-xs p-1 rounded w-full border border-gray-300';
   input.setAttribute('aria-label', placeholder || id);
 
   input.addEventListener('input', () => onInput(input.value));

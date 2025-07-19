@@ -15,20 +15,25 @@ import { initSidebarToggle } from './sidebarToggleHandler.js';
 export async function initSidebar() {
   console.log('🧱 initSidebar(): Loading sidebar...');
 
-  // 1. Load state from localStorage FIRST
-  loadSidebarStateFromStorage();
+  try {
+    // 1. Load state from localStorage FIRST
+    loadSidebarStateFromStorage();
 
-  // 2. NOW read the actual current state
-  const currentState = getSidebarState();
+    // 2. NOW read the actual current state
+    const currentState = getSidebarState() || 'expanded';
+    console.log(`🔍 Current sidebar state: "${currentState}"`);
 
-  // 3. Render sidebar using currentState (for correct toggle icon)
-  renderSidebar(currentState);
+    // 3. Render sidebar using currentState (for correct toggle icon)
+    renderSidebar(currentState);
 
-  // 4. Apply layout changes for currentState
-  applySidebarState(currentState);
+    // 4. Apply layout changes for currentState
+    applySidebarState(currentState);
 
-  // 5. Set up toggle button listener
-  initSidebarToggle();
+    // 5. Set up toggle button listener
+    initSidebarToggle();
 
-  console.log(`✅ Sidebar initialized in "${currentState}" state`);
+    console.log(`✅ Sidebar initialized in "${currentState}" state`);
+  } catch (err) {
+    console.error('❌ initSidebar(): Failed to initialize sidebar', err);
+  }
 }

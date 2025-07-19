@@ -1,5 +1,8 @@
 // src/auth/auth.js
 import { supabase } from './supabaseClient.js';
+import { renderAppShell } from '@render/renderAppShell.js';
+import { navigateTo, handleRouting } from '@routes/router.js';
+import { showToast } from '@render/UIZones.js';
 
 /**
  * @typedef {import('@supabase/supabase-js').Session} Session
@@ -13,9 +16,23 @@ function log(...args) {
 }
 
 /**
+ * Saves session data to localStorage for persistence.
+ * @param {Session|null} session
+ */
+function persistSession(session) {
+  if (session) {
+    localStorage.setItem('supabaseSession', JSON.stringify(session));
+    log('Session persisted →', session);
+  } else {
+    localStorage.removeItem('supabaseSession');
+    log('Session cleared.');
+  }
+}
+
+/**
  * Sign up a new user with email and password.
  * Adds default metadata for future theming and roles.
- * @returns {Promise<{ user, session, error }>}
+ * @returns {Promise<{ user: User|null, session: Session|null, error: Error|null }>}
  */
 export async function signUp(email, password) {
   const { data, error } = await supabase.auth.signUp({
@@ -31,6 +48,7 @@ export async function signUp(email, password) {
   });
 
   log('Sign Up →', { data, error });
+  persistSession(data?.session || null);
 
   return {
     user: data?.user || null,
@@ -41,7 +59,8 @@ export async function signUp(email, password) {
 
 /**
  * Sign in an existing user.
- * @returns {Promise<{ user, session, error }>}
+ * Automatically persists the session.
+ * @returns {Promise<{ user: User|null, session: Session|null, error: Error|null }>}
  */
 export async function signIn(email, password) {
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -50,6 +69,7 @@ export async function signIn(email, password) {
   });
 
   log('Sign In →', { data, error });
+  persistSession(data?.session || null);
 
   return {
     user: data?.user || null,
@@ -60,10 +80,12 @@ export async function signIn(email, password) {
 
 /**
  * Sign out the current user.
- * @returns {Promise<{ error }>}
+ * Clears the local session.
+ * @returns {Promise<{ error: Error|null }>}
  */
 export async function signOut() {
   const { error } = await supabase.auth.signOut();
+  persistSession(null);
   log('Sign Out →', { error });
   return { error };
 }
@@ -79,7 +101,9 @@ export async function getSession() {
     return null;
   }
 
-  return data?.session || null;
+  const session = data?.session || null;
+  persistSession(session); // Keep local storage in sync
+  return session;
 }
 
 /**
@@ -88,7 +112,6 @@ export async function getSession() {
  */
 export async function getUser() {
   const { data, error } = await supabase.auth.getUser();
-
   if (error) {
     log('Get User ❌', error.message);
     return null;
@@ -104,18 +127,18 @@ export async function getUser() {
  */
 export async function refreshSession() {
   const { data, error } = await supabase.auth.refreshSession();
-
   if (error) {
     log('Refresh Session ❌', error.message);
     return null;
   }
 
+  persistSession(data?.session || null);
   return data?.session || null;
 }
 
 /**
  * Trigger password reset flow.
- * @returns {Promise<{ data, error }>}
+ * @returns {Promise<{ data: any, error: Error|null }>}
  */
 export async function resetPassword(email) {
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -124,4 +147,28 @@ export async function resetPassword(email) {
 
   log('Reset Password →', { email, error });
   return { data, error };
+}
+
+/**
+ * Logs out the user, resets the UI to public mode, and navigates to login.
+ * @returns {Promise<{ error: Error|null }>}
+ */
+export async function handleLogout() {
+  const { error } = await signOut();
+  if (error) {
+    console.error('❌ handleLogout(): Logout failed', error);
+    showToast(`❌ Logout failed: ${error.message}`, 'error');
+    return { error };
+  }
+
+  showToast('👋 Logged out successfully!', 'info');
+
+  // Reset layout to public shell
+  renderAppShell(true);
+
+  // Navigate to login and refresh routing
+  navigateTo('login');
+  await handleRouting();
+
+  return { error: null };
 }

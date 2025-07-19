@@ -24,6 +24,7 @@ import {
   Sparkles,
   Edit,
   X,
+  LogOut,
 } from 'lucide';
 
 // 🗺️ Map kebab-case names to Lucide icon components
@@ -48,6 +49,7 @@ const iconMap = {
   sparkles: Sparkles,
   edit: Edit,
   x: X,
+  'log-out': LogOut,
 };
 
 /**

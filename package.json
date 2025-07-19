@@ -9,13 +9,17 @@
     "build": "npm run check && vite build",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "lint": "eslint src --ext .js",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "dev:all": "vite",
-    "check": "npm run lint && tsc --noEmit"
+    "check": "npm run lint && tsc --noEmit",
+    "tscheck": "tsc --noEmit",
+    "tswatch": "tsc --noEmit --watch",
+    "prepare": "husky"
   },
   "lint-staged": {
     "**/*.{js,jsx,css,html,json,md}": [
-      "prettier --write"
+      "prettier --write",
+      "eslint --fix"
     ]
   },
   "devDependencies": {

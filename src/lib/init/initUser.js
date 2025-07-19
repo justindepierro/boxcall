@@ -3,6 +3,7 @@
 import { getCurrentUser, setUserSettings } from '@state/userState.js';
 import { getUserSettings as fetchUserSettings } from '@lib/teams/user/getUserSettings.js';
 import { getOverrideRole } from '@state/devToolState.js';
+import { getSession } from '@auth/auth.js';
 
 /**
  * Loads the current user's settings and applies dev overrides if needed.
@@ -10,7 +11,32 @@ import { getOverrideRole } from '@state/devToolState.js';
  * @returns {Promise<{ user: object|null, settings: object|null }>}
  */
 export async function initializeUser() {
-  const user = getCurrentUser();
+  let user = getCurrentUser();
+
+  // 🚀 Try restoring from localStorage if user is not already in state
+  if (!user) {
+    const storedSession = localStorage.getItem('supabaseSession');
+    if (storedSession) {
+      try {
+        const parsed = JSON.parse(storedSession);
+        user = parsed?.user || null;
+        console.log('♻️ Restored user from localStorage:', user);
+      } catch (err) {
+        console.warn('⚠️ Failed to parse local session:', err);
+      }
+    }
+  }
+
+  // 🔄 If still no user, fetch session from Supabase
+  if (!user) {
+    const session = await getSession();
+    user = session?.user || null;
+    if (user) {
+      console.log('🌐 User loaded from Supabase session:', user);
+    }
+  }
+
+  // Fetch user settings from DB
   const settings = user ? await fetchUserSettings(user.id) : null;
 
   if (!user || !settings) {
@@ -26,7 +52,7 @@ export async function initializeUser() {
     console.log(`🧪 Dev role override active: ${overrideRole}`);
   }
 
-  // Store settings in our centralized user state
+  // Store settings in centralized state
   setUserSettings({ ...settings, email: user.email });
 
   console.log('✅ User settings initialized:', settings);

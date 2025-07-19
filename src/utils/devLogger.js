@@ -1,25 +1,95 @@
+// src/utils/devLogger.js
+
 import { getUserSettings } from '@state/userState';
 
 const logQueue = [];
+const MAX_LOGS = 500;
 
-export function devLog(msg) {
-  const formatted = `[${new Date().toLocaleTimeString()}] ${msg}`;
-  logQueue.push(formatted);
+/**
+ * Adds a new log entry with timestamp and triggers UI updates.
+ * @param {string} msg
+ * @param {'info' | 'warn' | 'error' | 'debug'} [level='info']
+ */
+export function devLog(msg, level = 'info') {
+  const timestamp = `[${new Date().toLocaleTimeString()}]`;
+  const formatted = `${timestamp} ${msg}`;
+  logQueue.push({ message: formatted, level });
 
-  if (!ensureLogPanelExists()) return;
+  // Trim logQueue if too large
+  if (logQueue.length > MAX_LOGS) logQueue.shift();
 
+  renderLogEntry(formatted, level); // UI update
+  console.log(formatted);
+  saveLogsToSession();
+}
+
+/**
+ * Renders a single log entry in the UI panel (if present).
+ * @param {string} message
+ * @param {'info'|'warn'|'error'|'debug'} level
+ */
+function renderLogEntry(message, level) {
   const panel = document.getElementById('dev-log-console');
-  const entry = document.createElement('div');
-  entry.textContent = formatted;
+  if (!panel) return;
 
-  // 🎨 Apply color based on content
-  entry.className = getLogClass(msg);
+  const entry = document.createElement('div');
+  entry.textContent = message;
+  entry.className = getLogClass(level);
 
   panel.appendChild(entry);
   panel.scrollTop = panel.scrollHeight;
-
-  console.log(formatted);
 }
+
+/**
+ * Retrieves all current logs as an array of strings.
+ * @returns {string[]}
+ */
+export function getDevLogs() {
+  return logQueue.map((log) => log.message);
+}
+
+/**
+ * Clears all logs and updates the panel.
+ */
+export function clearDevLogs() {
+  logQueue.length = 0;
+  const panel = document.getElementById('dev-log-console');
+  if (panel) panel.innerHTML = '';
+  saveLogsToSession();
+}
+
+/**
+ * Saves logs to session storage.
+ */
+export function saveLogsToSession() {
+  sessionStorage.setItem('dev.logs', JSON.stringify(logQueue));
+}
+
+/**
+ * Restores logs from session storage.
+ */
+export function restoreLogsFromSession() {
+  const saved = sessionStorage.getItem('dev.logs');
+  if (saved) {
+    const logs = JSON.parse(saved);
+    logQueue.push(...logs);
+    renderAllLogs();
+  }
+}
+
+/**
+ * Refreshes the role/theme context section in the dev panel.
+ */
+export function refreshDevContext() {
+  const context = document.getElementById('log-context');
+  if (context) {
+    context.innerHTML = getContextHTML();
+  }
+}
+
+/**
+ * Builds the HTML snippet for user context.
+ */
 function getContextHTML() {
   const settings = getUserSettings() || {};
   return `
@@ -33,60 +103,30 @@ function getContextHTML() {
   `;
 }
 
-export function getDevLogs() {
-  return logQueue.slice(); // Clone
-}
-
-export function clearDevLogs() {
-  logQueue.length = 0;
+/**
+ * Renders all logs into the dev panel (e.g., after restore).
+ */
+function renderAllLogs() {
   const panel = document.getElementById('dev-log-console');
-  if (panel) panel.innerHTML = '';
+  if (!panel) return;
+  panel.innerHTML = '';
+  logQueue.forEach((log) => {
+    renderLogEntry(log.message, log.level);
+  });
 }
 
-// In devLogger.js
-export function saveLogsToSession() {
-  sessionStorage.setItem('dev.logs', JSON.stringify(logQueue));
-}
-
-export function restoreLogsFromSession() {
-  const saved = sessionStorage.getItem('dev.logs');
-  if (saved) {
-    const logs = JSON.parse(saved);
-    logs.forEach(devLog); // replay logs
+/**
+ * Maps log level to Tailwind color classes.
+ */
+function getLogClass(level) {
+  switch (level) {
+    case 'error':
+      return 'text-red-400';
+    case 'warn':
+      return 'text-yellow-300';
+    case 'debug':
+      return 'text-purple-300';
+    default:
+      return 'text-white/80';
   }
-}
-
-function ensureLogPanelExists() {
-  const el = document.getElementById('dev-log-console');
-  if (!el) {
-    console.warn('⚠️ dev-log-console not found — devLog() ignored.');
-    return false;
-  }
-  return true;
-}
-
-export function refreshDevContext() {
-  const context = document.getElementById('log-context');
-  if (context) {
-    context.innerHTML = getContextHTML(); // or however you're generating the context
-  }
-}
-
-function getLogClass(msg) {
-  if (msg.includes('✅') || msg.includes('done') || msg.includes('success')) {
-    return 'text-green-400';
-  }
-  if (msg.includes('⚠️') || msg.includes('warn') || msg.includes('slow')) {
-    return 'text-yellow-300';
-  }
-  if (msg.includes('❌') || msg.includes('error') || msg.includes('fail')) {
-    return 'text-red-400';
-  }
-  if (msg.includes('🧪') || msg.includes('test') || msg.includes('debug')) {
-    return 'text-purple-300';
-  }
-  if (msg.includes('🔄') || msg.includes('refresh') || msg.includes('context')) {
-    return 'text-blue-300';
-  }
-  return 'text-white/80';
 }

@@ -2,82 +2,80 @@
 import { signIn } from '@auth/auth.js';
 import { authCard } from '@components/AuthCard.js';
 import { showToast } from '@utils/toast.js';
-import { navigateTo } from '@routes/router.js';
 import { formatError } from '@utils/errors.js';
+import { initializeUser } from '@lib/init/initUser.js';
+import { qsInput, qsButton } from '@utils/domHelper.js';
+import { BaseButton } from '@components/ui/baseButton.js';
+import { createTextInput } from '@components/dev/devUI.js';
+import { resetAppToPrivate } from '@render/appReset.js';
 
 /**
- * Renders the login page.
- * @param {HTMLElement} container - The container to render the login form into.
+ * Renders the login page into the given container.
+ * @param {HTMLElement} container
  */
 export default function renderLoginPage(container) {
-  container.innerHTML = ''; // Clear container
+  container.innerHTML = '';
   container.appendChild(LoginComponent());
 }
 
 /**
- * Creates the login form component.
- * @returns {HTMLDivElement} - Wrapper element containing the login form.
+ * Builds the login form component wrapped in authCard.
  */
 function LoginComponent() {
   const wrapper = document.createElement('div');
-  wrapper.innerHTML = authCard(
-    'Login',
-    `
-      <form id="login-form" class="space-y-4">
-        <input 
-          type="email" 
-          id="login-email" 
-          placeholder="Email" 
-          required 
-          class="w-full border p-2 rounded" 
-        />
-        <input 
-          type="password" 
-          id="login-password" 
-          placeholder="Password" 
-          required 
-          class="w-full border p-2 rounded" 
-        />
-        <button 
-          id="login-btn" 
-          type="submit" 
-          class="w-full bg-blue-600 text-white py-2 rounded"
-        >
-          Login
-        </button>
-        <p id="login-error" class="text-red-500 text-sm mt-2"></p>
-        <a href="#/forgot" class="text-sm text-blue-500 hover:underline block mt-2">
-          Forgot your password?
-        </a>
-      </form>
-    `
-  );
 
-  wrapper.querySelector('#login-form')?.addEventListener('submit', handleLoginSubmit);
+  const form = document.createElement('form');
+  form.id = 'login-form';
+  form.className = 'space-y-4';
+
+  const emailInput = createTextInput('login-email', 'Email');
+  form.appendChild(emailInput);
+
+  const passwordInput = createTextInput('login-password', 'Password');
+  passwordInput.type = 'password';
+  form.appendChild(passwordInput);
+
+  const loginBtn = BaseButton({
+    label: 'Login',
+    variant: 'primary',
+    fullWidth: true,
+    onClick: () => form.requestSubmit(),
+  });
+  loginBtn.id = 'login-btn';
+  form.appendChild(loginBtn);
+
+  const errorEl = document.createElement('p');
+  errorEl.id = 'login-error';
+  errorEl.className = 'text-red-500 text-sm mt-2';
+  form.appendChild(errorEl);
+
+  const forgotLink = document.createElement('a');
+  forgotLink.href = '#/forgot';
+  forgotLink.className = 'text-sm text-blue-500 hover:underline block mt-2';
+  forgotLink.textContent = 'Forgot your password?';
+  form.appendChild(forgotLink);
+
+  wrapper.appendChild(authCard('Login', form));
+
+  form.addEventListener('submit', handleLoginSubmit);
   return wrapper;
 }
 
-/**
- * Handles the login form submission.
- * @param {Event} e - The form submit event.
- */
 async function handleLoginSubmit(e) {
   e.preventDefault();
+  const form = e.currentTarget;
+  if (!(form instanceof HTMLFormElement)) return;
 
-  // Cast elements to the correct types
-  const emailInput = /** @type {HTMLInputElement} */ (document.getElementById('login-email'));
-  const passwordInput = /** @type {HTMLInputElement} */ (document.getElementById('login-password'));
-  const btn = /** @type {HTMLButtonElement} */ (document.getElementById('login-btn'));
-  const errorEl = document.getElementById('login-error');
-
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
+  const emailInput = qsInput('#login-email', form);
+  const passwordInput = qsInput('#login-password', form);
+  const btn = qsButton('#login-btn', form);
+  const errorEl = form.querySelector('#login-error');
 
   btn.disabled = true;
   btn.textContent = 'Logging in...';
-  errorEl.textContent = '';
+  if (errorEl) errorEl.textContent = '';
 
-  const { error } = await signIn(email, password);
+  const { error } = await signIn(emailInput.value.trim(), passwordInput.value);
   if (error) {
     const msg = formatError ? formatError(error) : error.message;
     showToast(`❌ ${msg}`, 'error');
@@ -87,6 +85,8 @@ async function handleLoginSubmit(e) {
     return;
   }
 
+  await initializeUser();
   showToast('✅ Logged in successfully!', 'success');
-  setTimeout(() => navigateTo('dashboard'), 200);
+
+  await resetAppToPrivate('dashboard'); // <-- Switch to private shell
 }

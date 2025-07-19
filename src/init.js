@@ -19,8 +19,7 @@ import { renderDevToolsPanel } from '@components/dev/devToolsPanel.js';
 import { mountLiveLogger, updateLogContext } from '@components/dev/liveLogger.js';
 import { DEV_EMAIL } from '@config/devConfig.js';
 
-// 🌐 Routing rules
-const PUBLIC_PAGES = ['login', 'signup', 'forgot'];
+const PUBLIC_PAGES = ['login', 'signup', 'forgot', '404'];
 
 function getCurrentPage() {
   return (location.hash || '').replace(/^#\/?/, '') || 'dashboard';
@@ -34,22 +33,23 @@ export async function initApp() {
   console.log('🧠 initApp(): Starting full app initialization...');
 
   const page = getCurrentPage();
+  const isPublicPage = !isProtectedPage(page);
 
   // 1️⃣ Supabase Auth Setup
   await initAuth();
-  const user = getSupabaseUser(); // Use state instead of window
+  const user = getSupabaseUser();
   console.log('🧪 Authenticated user:', user);
 
   const isLoggedIn = !!user;
 
-  // 2️⃣ Handle redirect if unauthorized on protected page
+  // 2️⃣ Handle unauthorized access
   if (isProtectedPage(page) && !isLoggedIn) {
     handleAuthRedirect(page, PUBLIC_PAGES);
     return;
   }
 
-  // 3️⃣ Load user settings (with dev overrides)
-  if (user) {
+  // 3️⃣ Load user settings if logged in
+  if (isLoggedIn) {
     try {
       const { settings } = await initializeUser();
       if (settings) {
@@ -63,7 +63,7 @@ export async function initApp() {
     }
   }
 
-  // 4️⃣ Apply theme (from user/team/dev fallback)
+  // 4️⃣ Apply theme
   try {
     await applyContextualTheme();
     console.log('🎨 Theme applied');
@@ -72,19 +72,18 @@ export async function initApp() {
     applyTheme('classic');
   }
 
-  // Before renderAppShell()
   loadSidebarStateFromStorage();
 
-  // 5️⃣ Inject app shell (sidebar, layout, etc)
-  renderAppShell();
-  console.log('✅ renderAppShell() called');
+  // 5️⃣ Render correct shell
+  renderAppShell(isPublicPage);
+  console.log(`✅ renderAppShell() called (${isPublicPage ? 'public' : 'private'})`);
 
-  // 6️⃣ Load current route
+  // 6️⃣ Handle current route
   await handleRouting();
   window.addEventListener('hashchange', handleRouting);
   console.log('🚦 handleRouting() finished');
 
-  // 7️⃣ Inject Dev Tools if authorized
+  // 7️⃣ Developer tools
   const userSettings = getUserSettings();
   if (userSettings?.email === DEV_EMAIL) {
     console.log('🛠️ Dev mode: Initializing tools...');
