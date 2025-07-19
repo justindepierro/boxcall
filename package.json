@@ -16,7 +16,8 @@
     "check": "npm run lint && tsc --noEmit",
     "tscheck": "tsc --noEmit",
     "tswatch": "tsc --noEmit --watch",
-    "prepare": "husky"
+    "prepare": "husky",
+    "sonar": "SONAR_TOKEN=$SONAR_TOKEN npx sonar-scanner"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [

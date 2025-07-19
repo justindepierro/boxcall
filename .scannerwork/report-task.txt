@@ -1,0 +1,7 @@
+organization=justindepierro
+projectKey=boxcall
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.65541
+dashboardUrl=https://sonarcloud.io/dashboard?id=boxcall
+ceTaskId=AZgkEr4vp5nk-H5hIoqH
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZgkEr4vp5nk-H5hIoqH
