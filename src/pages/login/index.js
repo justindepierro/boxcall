@@ -7,6 +7,7 @@ import { resetAppToPrivate } from '@render/appReset.js';
 import { markTemporarySession } from '@utils/sessionHelper';
 import { handleAuthSubmit } from '@utils/authForms.js';
 import { createAuthPage } from '@components/AuthFormPage.js';
+import { createRememberMe } from '@components/ui/rememberMe.js';
 
 export default function renderLoginPage(container) {
   container.innerHTML = '';
@@ -24,7 +25,7 @@ export default function renderLoginPage(container) {
         { id: 'login-password', label: 'Password', type: 'password' },
       ],
       button: { label: 'Login', variant: 'primary', fullWidth: true },
-      extraElements: [forgotLink],
+      extraElements: [createRememberMe(), forgotLink],
       onSubmit: async (e, form, loginBtn, errorEl) => {
         e.preventDefault();
         const email = qsInput('#login-email', form).value.trim();
@@ -34,8 +35,11 @@ export default function renderLoginPage(container) {
           loadingText: 'Logging in...',
           withOverlay: true,
           onSuccess: async () => {
-            const rememberMe = form.querySelector('#remember-me')?.checked || false;
+            const rememberMeEl = form.querySelector('#remember-me');
+            const rememberMe =
+              rememberMeEl instanceof HTMLInputElement ? rememberMeEl.checked : false;
             markTemporarySession(!rememberMe);
+
             await initializeUser();
             showToast('✅ Logged in successfully!', 'success');
             await resetAppToPrivate('dashboard');
