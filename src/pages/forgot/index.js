@@ -2,10 +2,12 @@
 import { resetPassword } from '@auth/auth.js';
 import { authCard } from '@components/AuthCard.js';
 import { showToast } from '@utils/toast.js';
-import { qsInput, qsButton } from '@utils/domHelper.js';
+import { qsInputSafe } from '@utils/domHelper.js';
 import { BaseButton } from '@components/ui/baseButton.js';
 import { createTextInput } from '@components/dev/devUI.js';
 import { resetAppToPublic } from '@render/appReset.js';
+import { resetErrors, handleAuthSubmit } from '@utils/authForms.js';
+import { showLoadingOverlay, hideLoadingOverlay } from '@components/ui/loadingOverlay.js';
 
 /**
  * Renders the Forgot Password page and handles password reset requests.
@@ -14,23 +16,24 @@ import { resetAppToPublic } from '@render/appReset.js';
 export default function renderForgotPasswordPage(container) {
   container.innerHTML = '';
   container.appendChild(ForgotComponent());
+
+  // Auto-focus email field
+  const emailField = container.querySelector('#forgot-email');
+  if (emailField instanceof HTMLInputElement) emailField.focus();
 }
 
 /**
- * Builds the Forgot Password component with reusable UI components.
+ * Builds the Forgot Password component.
  * @returns {HTMLDivElement}
  */
 function ForgotComponent() {
   const wrapper = document.createElement('div');
-
-  // === Form ===
   const form = document.createElement('form');
   form.id = 'forgot-form';
   form.className = 'space-y-4';
 
   // Email input
-  const emailInput = createTextInput('forgot-email', 'Your email');
-  form.appendChild(emailInput);
+  form.appendChild(createTextInput('forgot-email', 'Your email'));
 
   // Submit button
   const forgotBtn = BaseButton({
@@ -46,38 +49,42 @@ function ForgotComponent() {
   // Feedback message
   const errorEl = document.createElement('p');
   errorEl.id = 'forgot-error';
-  errorEl.className = 'text-red-500 text-sm mt-2';
+  errorEl.className = 'text-red-500 text-sm mt-2 error-message';
   form.appendChild(errorEl);
 
-  // Wrap form with authCard
   wrapper.appendChild(authCard('Forgot Password', form));
 
-  // === Event Listener ===
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  // Attach submit handler
+  form.addEventListener('submit', (e) => handleForgotSubmit(e, form, forgotBtn));
+  return wrapper;
+}
 
-    const emailField = qsInput('#forgot-email', form);
-    const btn = qsButton('#forgot-btn', form);
-    const errorEl = form.querySelector('#forgot-error');
+/**
+ * Handles Forgot Password form submission.
+ */
+async function handleForgotSubmit(e, form, forgotBtn) {
+  e.preventDefault();
+  if (!(form instanceof HTMLFormElement) || !(forgotBtn instanceof HTMLButtonElement)) return;
 
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
+  const emailField = qsInputSafe('#forgot-email', form);
+  const errorEl = form.querySelector('#forgot-error');
+  resetErrors(form);
 
-    const { error } = await resetPassword(emailField.value.trim());
-    if (error) {
-      if (errorEl) errorEl.textContent = `⚠️ ${error.message}`;
-      showToast(`❌ ${error.message}`, 'error');
-    } else {
+  showLoadingOverlay('Sending reset link...');
+
+  await handleAuthSubmit(form, forgotBtn, () => resetPassword(emailField.value.trim()), {
+    loadingText: 'Sending...',
+    onSuccess: () => {
       showToast('📬 Reset link sent. Check your inbox.', 'success');
       if (errorEl) errorEl.textContent = '✅ Email sent successfully.';
-
-      // Redirect to login page after 2.5s
       setTimeout(() => resetAppToPublic('login'), 2500);
-    }
-
-    btn.disabled = false;
-    btn.textContent = 'Send Reset Link';
+    },
+    onError: (err) => {
+      const msg = err?.message || 'Unknown error occurred';
+      showToast(`❌ ${msg}`, 'error');
+      if (errorEl) errorEl.textContent = `⚠️ ${msg}`;
+    },
   });
 
-  return wrapper;
+  hideLoadingOverlay();
 }

@@ -166,7 +166,7 @@ function renderLogoutButton() {
       showToast(`❌ Logout failed: ${error.message}`, 'error');
     } else {
       showToast('👋 Logged out successfully!', 'info');
-      await resetAppToPublic(); // Call the helper
+      await resetAppToPublic('login'); // Reset the app shell to public mode
     }
   });
 

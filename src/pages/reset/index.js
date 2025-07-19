@@ -4,9 +4,11 @@ import { authCard } from '@components/AuthCard.js';
 import { showToast } from '@utils/toast.js';
 import { initAuthState } from '@state/userState.js';
 import { navigateTo } from '@routes/router.js';
-import { qsInput, qsButton } from '@utils/domHelper.js';
+import { qsInputSafe } from '@utils/domHelper.js';
 import { BaseButton } from '@components/ui/baseButton.js';
 import { createTextInput } from '@components/dev/devUI.js';
+import { resetErrors, validatePassword, handleAuthSubmit } from '@utils/authForms.js';
+import { showLoadingOverlay, hideLoadingOverlay } from '@components/ui/loadingOverlay.js';
 
 /**
  * Renders the Reset Password page.
@@ -17,24 +19,25 @@ export default function renderResetPage(container) {
   const params = new URLSearchParams(hash.split('?')[1]);
   const type = params.get('type');
 
-  // Check if the reset link is valid
+  // Validate reset link
   if (type !== 'recovery') {
-    container.innerHTML = `<p class="text-red-500">Invalid or expired reset link.</p>`;
+    container.innerHTML = `<p class="text-red-500 text-center">Invalid or expired reset link.</p>`;
     return;
   }
 
   container.innerHTML = '';
   container.appendChild(ResetComponent());
+
+  // Auto-focus new password field
+  const newPasswordField = container.querySelector('#new-password');
+  if (newPasswordField instanceof HTMLInputElement) newPasswordField.focus();
 }
 
 /**
- * Builds the Reset Password component.
- * @returns {HTMLDivElement}
+ * Builds the Reset Password component UI.
  */
 function ResetComponent() {
   const wrapper = document.createElement('div');
-
-  // Create form
   const form = document.createElement('form');
   form.id = 'reset-form';
   form.className = 'space-y-4';
@@ -52,7 +55,7 @@ function ResetComponent() {
   // Submit button
   const resetBtn = BaseButton({
     label: 'Update Password',
-    variant: 'success', // Define green style in BaseButton
+    variant: 'success',
     size: 'md',
     fullWidth: true,
     onClick: () => form.requestSubmit(),
@@ -60,79 +63,67 @@ function ResetComponent() {
   resetBtn.id = 'reset-btn';
   form.appendChild(resetBtn);
 
-  // Message element
+  // Feedback message
   const msg = document.createElement('p');
   msg.id = 'reset-message';
-  msg.className = 'text-sm mt-2 text-blue-500';
+  msg.className = 'text-sm mt-2 text-blue-500 error-message';
   form.appendChild(msg);
 
-  // Wrap form in authCard
   wrapper.appendChild(
     authCard(
       'Reset Password',
       form,
-      'Enter and confirm your new password below to complete your reset. You’ll be redirected once successful.'
+      'Enter and confirm your new password below. You will be redirected once successful.'
     )
   );
 
-  // Submit event listener
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    await handleResetSubmit(form);
-  });
-
+  form.addEventListener('submit', (e) => handleResetSubmit(e, form, resetBtn, msg));
   return wrapper;
 }
 
 /**
- * Handles password reset submission.
- * @param {HTMLFormElement} form
+ * Handles the Reset Password submission.
  */
-async function handleResetSubmit(form) {
-  const newPasswordInput = qsInput('#new-password', form);
-  const confirmPasswordInput = qsInput('#confirm-password', form);
-  const btn = qsButton('#reset-btn', form);
-  const msg = form.querySelector('#reset-message');
+async function handleResetSubmit(e, form, resetBtn, msg) {
+  e.preventDefault();
+  if (!(form instanceof HTMLFormElement) || !(resetBtn instanceof HTMLButtonElement)) return;
 
-  const newPassword = newPasswordInput.value;
-  const confirmPassword = confirmPasswordInput.value;
+  const newPassword = qsInputSafe('#new-password', form).value;
+  const confirmPassword = qsInputSafe('#confirm-password', form).value;
+  resetErrors(form);
 
-  msg.textContent = '';
-  btn.disabled = true;
-  btn.textContent = 'Updating...';
+  showLoadingOverlay('Updating password...');
 
-  // Basic validation
-  if (newPassword.length < 6) {
-    msg.textContent = '⚠️ Password must be at least 6 characters.';
-    resetButton(btn);
-    return;
-  }
-  if (newPassword !== confirmPassword) {
-    msg.textContent = '⚠️ Passwords do not match.';
-    resetButton(btn);
-    return;
-  }
+  await handleAuthSubmit(
+    form,
+    resetBtn,
+    async () => {
+      const { valid, errors } = validatePassword(newPassword);
+      if (!valid) {
+        msg.textContent = `⚠️ ${errors.join(', ')}`;
+        throw new Error(errors.join(', '));
+      }
+      if (newPassword !== confirmPassword) {
+        msg.textContent = '⚠️ Passwords do not match.';
+        throw new Error('Passwords do not match');
+      }
+      return supabase.auth.updateUser({ password: newPassword });
+    },
+    {
+      loadingText: 'Updating...',
+      onSuccess: async () => {
+        await initAuthState();
+        msg.textContent = '✅ Password updated! Redirecting...';
+        showToast('Password successfully reset.', 'success');
+        setTimeout(() => navigateTo('dashboard'), 2500);
+      },
+      onError: (err) => {
+        const message = err?.message || 'Reset failed.';
+        msg.textContent = `⚠️ ${message}`;
+        showToast(`❌ ${message}`, 'error');
+      },
+    }
+  );
 
-  const { error } = await supabase.auth.updateUser({ password: newPassword });
-
-  if (error) {
-    msg.textContent = `⚠️ ${error.message}`;
-    showToast('Reset failed: ' + error.message, 'error');
-  } else {
-    await initAuthState(); // Load new session
-    msg.textContent = '✅ Password updated! Redirecting...';
-    showToast('Password successfully reset.', 'success');
-    setTimeout(() => navigateTo('dashboard'), 2500);
-  }
-
-  resetButton(btn);
-}
-
-/**
- * Resets the button state back to default.
- * @param {HTMLButtonElement} btn
- */
-function resetButton(btn) {
-  btn.disabled = false;
-  btn.textContent = 'Update Password';
+  hideLoadingOverlay();
 }

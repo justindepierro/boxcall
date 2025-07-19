@@ -37,12 +37,18 @@ export function initAuthListeners() {
  * Helper to check if a user is authenticated.
  * Redirects to login if not.
  */
-export function ensureAuthenticated() {
-  const user = supabase.auth.getUser();
-  if (!user) {
-    console.warn('🔒 ensureAuthenticated(): User not logged in, redirecting.');
+export async function ensureAuthenticated() {
+  try {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data?.user) {
+      console.warn('🔒 ensureAuthenticated(): User not logged in, redirecting.');
+      navigateTo('login');
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('⚠️ ensureAuthenticated(): Error checking user:', err);
     navigateTo('login');
     return false;
   }
-  return true;
 }

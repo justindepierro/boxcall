@@ -54,24 +54,48 @@ export function setSelectValue(el, value) {
 }
 /**
  * Query and cast an input element.
+ * Returns null if the element is not found.
  * @param {string} selector - CSS selector for the input.
  * @param {Document | HTMLElement} [parent=document] - Parent to search in.
- * @returns {HTMLInputElement} - The matched input element.
+ * @returns {HTMLInputElement | null}
  */
 export function qsInput(selector, parent = document) {
   const el = parent.querySelector(selector);
-  if (!el) throw new Error(`Element not found: ${selector}`);
-  return /** @type {HTMLInputElement} */ (el);
+  return el instanceof HTMLInputElement ? el : null;
 }
 
 /**
  * Query and cast a button element.
+ * Returns null if the element is not found.
+ * @param {string} selector
+ * @param {Document | HTMLElement} [parent=document]
+ * @returns {HTMLButtonElement | null}
+ */
+export function qsButton(selector, parent = document) {
+  const el = parent.querySelector(selector);
+  return el instanceof HTMLButtonElement ? el : null;
+}
+
+/**
+ * Strict variant of qsInput — throws error if not found.
+ * @param {string} selector
+ * @param {Document | HTMLElement} [parent=document]
+ * @returns {HTMLInputElement}
+ */
+export function qsInputSafe(selector, parent = document) {
+  const input = qsInput(selector, parent);
+  if (!input) throw new Error(`Input element not found: ${selector}`);
+  return input;
+}
+
+/**
+ * Strict variant of qsButton — throws error if not found.
  * @param {string} selector
  * @param {Document | HTMLElement} [parent=document]
  * @returns {HTMLButtonElement}
  */
-export function qsButton(selector, parent = document) {
-  const el = parent.querySelector(selector);
-  if (!el) throw new Error(`Button not found: ${selector}`);
-  return /** @type {HTMLButtonElement} */ (el);
+export function qsButtonSafe(selector, parent = document) {
+  const button = qsButton(selector, parent);
+  if (!button) throw new Error(`Button element not found: ${selector}`);
+  return button;
 }
