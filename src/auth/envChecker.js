@@ -5,8 +5,8 @@ export function checkEnv(requiredKeys = []) {
   const missing = requiredKeys.filter((key) => !env[key]);
 
   if (missing.length > 0) {
-    console.error(`❌ Missing env variables: ${missing.join(", ")}`);
-    throw new Error("Supabase env vars are not defined!");
+    console.error(`❌ Missing env variables: ${missing.join(', ')}`);
+    throw new Error('Supabase env vars are not defined!');
   }
 
   const result = {};
@@ -14,6 +14,6 @@ export function checkEnv(requiredKeys = []) {
     result[key] = env[key];
   });
 
-  console.log("✅ Supabase env loaded");
+  console.log('✅ Supabase env loaded');
   return result;
 }
