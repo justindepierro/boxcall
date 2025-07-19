@@ -1,6 +1,7 @@
 import { showSpinner, hideSpinner } from '@utils/spinner.js';
 import { devLog } from '@utils/devLogger.js';
 import { renderPage } from '@render/renderPage.js';
+import { fadeIn, fadeOut } from '@utils/pageTransitions';
 
 /**
  * Define a type-safe structure for our page modules.
@@ -49,13 +50,15 @@ export async function handleRouting() {
   showSpinner();
 
   try {
+    // Fade-out current content
+    await fadeOut(container);
+
     const modulePath = findPageModulePath(base, sub);
     if (!modulePath) throw new Error(`Route not found for "${hash}"`);
 
     devLog(`📦 Loading page module: ${modulePath}`);
     const mod = await pageModules[modulePath]();
 
-    // Safely extract Component
     const Component = mod.default || mod.render;
     if (typeof Component !== 'function') {
       console.warn(`⚠️ Module "${modulePath}" has no valid default export or render() function`);
@@ -66,17 +69,20 @@ export async function handleRouting() {
     const routeProps = { base, sub, full: hash };
     renderPage({ component: Component, props: routeProps, container });
 
-    // ♿ Accessibility & scroll reset
+    // Accessibility & scroll reset
     container.setAttribute('tabindex', '-1');
     container.focus();
     container.scrollTo(0, 0);
 
+    // Fade-in new content
+    fadeIn(container);
+
     devLog(`✅ Loaded route: ${hash}`);
   } catch (err) {
     console.warn(`⚠️ Fallback to 404 for route "${hash}"`, err);
-
     const Fallback404 = await loadFallback404();
     renderPage({ component: Fallback404, container });
+    fadeIn(container);
   } finally {
     hideSpinner();
   }
