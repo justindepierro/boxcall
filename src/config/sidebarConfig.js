@@ -63,7 +63,7 @@ export const MINIMIZE_SYMBOLS = {
 /**
  * 🎨 Sidebar layout constants
  */
-export const SIDEBAR_ICON_SIZE = 20; // applies across views
+export const SIDEBAR_ICON_SIZE = '20'; // applies across views
 
 export const SIDEBAR_PADDING_X = 'pl-4 pr-2'; // icon & label spacing
 export const SIDEBAR_PADDING_Y = 'py-2';

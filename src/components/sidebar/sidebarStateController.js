@@ -68,7 +68,7 @@ export function applySidebarState(newState) {
   const iconName = MINIMIZE_SYMBOLS[newState];
   if (minimizeBtn) {
     minimizeBtn.innerHTML = '';
-    minimizeBtn.appendChild(createIconElement(iconName, 20));
+    minimizeBtn.appendChild(createIconElement(iconName, '20'));
   }
 
   // 💾 Save to local state

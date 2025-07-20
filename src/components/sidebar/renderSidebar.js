@@ -7,11 +7,12 @@ import {
   MINIMIZE_SYMBOLS,
 } from '@config/sidebarConfig.js';
 import { navigateTo } from '@routes/router.js';
-import { initSidebarToggle } from './sidebarToggleHandler.js';
 import { createIconElement } from '@utils/iconRenderer.js';
 import { signOut } from '@auth/auth.js';
 import { showToast } from '@render/UIZones.js';
 import { resetAppToPublic } from '@render/appReset.js';
+
+import { initSidebarToggle } from './sidebarToggleHandler.js';
 
 /**
  * Renders the entire sidebar (main navigation, settings, logout).

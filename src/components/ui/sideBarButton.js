@@ -13,7 +13,7 @@ export function SidebarButton({ id, label, icon }) {
 
   btn.dataset.page = id;
 
-  const iconEl = createIconElement(icon, 20);
+  const iconEl = createIconElement(icon, '20');
   iconEl.classList.add(
     'nav-icon',
     'text-[var(--color-sidebar-icon)]',
