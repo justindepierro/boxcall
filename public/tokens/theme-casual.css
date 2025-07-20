@@ -1,6 +1,6 @@
 :root.theme-casual {
   /* 🖋️ Fonts */
-  --font-header: 'Baloo 2', cursive;
+  --font-header: 'Baloo', cursive;
   --font-body: 'Nunito', sans-serif;
   --font-mono: 'Fira Mono', monospace;
 

@@ -79,6 +79,36 @@
 
 @font-face {
   font-family: 'Georgia';
-  src: url('fonts/noto-sans-georgian-v47-latin-regular.woff2') format ('woff2');
+  src: url('fonts/noto-sans-georgian-v47-latin-regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Baloo';
+  src: url('public/fonts/baloo-2-v22-latin-regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url('public/fonts/bebas-neue-v15-latin-regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex';
+  src: url('public/fonts/ibm-plex-mono-v19-latin-regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('public/fonts/nunito-v31-latin-regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: ('Souce Code Pro');
+  src: url('public/fonts/source-code-pro-v30-latin-regular.woff2') format('woff2');
   font-display: swap;
 }
