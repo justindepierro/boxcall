@@ -1,7 +1,7 @@
 import { showSpinner, hideSpinner } from '@utils/spinner.js';
-import { devLog } from '@utils/devLogger.js';
 import { renderPage } from '@render/renderPage.js';
 import { fadeIn, fadeOut } from '@utils/pageTransitions';
+import { devLog } from '@utils/devLogger';
 
 /**
  * Define a type-safe structure for our page modules.

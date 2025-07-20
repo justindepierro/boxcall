@@ -1,5 +1,6 @@
 import { getCurrentUser } from '@state/userState.js';
 import { getUserSettings } from '@lib/teams/user/getUserSettings.js';
+import { devError, devWarn } from '@utils/devLogger.js';
 
 import renderJoinOnlyTeamPage from './joinTeam.js';
 import renderJoinOrCreateTeamPage from './joinOrCreate.js';
@@ -13,13 +14,13 @@ import renderTeamSettingsPage from './teamSettings.js';
  */
 export default async function renderTeamPage(container = document.getElementById('main-content')) {
   if (!(container instanceof HTMLElement)) {
-    console.error('❌ renderTeamPage: Container is not a valid HTMLElement.');
+    devError('❌ renderTeamPage: Container is not a valid HTMLElement.');
     return;
   }
 
   const user = getCurrentUser();
   if (!user) {
-    console.warn('🚫 Not logged in');
+    devWarn('🚫 Not logged in');
     return;
   }
 

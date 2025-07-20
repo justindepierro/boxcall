@@ -1,11 +1,12 @@
 // src/auth/envChecker.js
+import { devError, devLog } from '@utils/devLogger.js';
 
 export function checkEnv(requiredKeys = []) {
   const env = import.meta.env;
   const missing = requiredKeys.filter((key) => !env[key]);
 
   if (missing.length > 0) {
-    console.error(`❌ Missing env variables: ${missing.join(', ')}`);
+    devError(`❌ Missing env variables: ${missing.join(', ')}`);
     throw new Error('Supabase env vars are not defined!');
   }
 
@@ -14,6 +15,6 @@ export function checkEnv(requiredKeys = []) {
     result[key] = env[key];
   });
 
-  console.log('✅ Supabase env loaded');
+  devLog('✅ Supabase env loaded');
   return result;
 }

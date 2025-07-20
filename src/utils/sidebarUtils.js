@@ -4,9 +4,11 @@ import { navigateTo } from '@routes/router.js';
 import { initSidebarToggle } from '@components/sidebar/sidebarToggleHandler.js';
 import { createIconElement } from '@utils/iconRenderer.js';
 
+import { devWarn } from './devLogger';
+
 export function renderSidebar() {
   const container = document.getElementById('sidebar-root');
-  if (!container) return console.warn('❌ #sidebar-root not found');
+  if (!container) return devWarn('❌ #sidebar-root not found');
 
   container.innerHTML = '';
 

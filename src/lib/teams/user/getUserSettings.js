@@ -1,5 +1,6 @@
 // src/lib/user/getUserSettings.js
 import { supabase } from '@auth/supabaseClient.js';
+import { devError } from '@utils/devLogger';
 
 /**
  * Fetches user profile and team memberships for a given userId.
@@ -16,7 +17,7 @@ export async function getUserSettings(userId) {
       .single();
 
     if (profileError) {
-      console.error('❌ Failed to fetch profile:', profileError.message);
+      devError('❌ Failed to fetch profile: ${profileError.message}');
       return null;
     }
 

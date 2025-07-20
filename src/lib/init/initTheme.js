@@ -1,7 +1,7 @@
 import { loadAndApplyTheme } from '@config/themes/themeService.js';
 import { getCurrentUser } from '@state/userState.js';
 import { DEFAULT_THEME } from '@config/themes/themeConstants.js';
-import { devLog } from '@utils/devLogger.js';
+import { devLog } from '@utils/devLogger';
 
 /**
  * Initializes the active theme for the app.

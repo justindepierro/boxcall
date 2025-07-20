@@ -1,5 +1,7 @@
 import { getSupabaseUser } from '@state/userState.js';
 import { handleRouting } from '@routes/router.js';
+import { devLog, devWarn } from '@utils/devLogger';
+import { devSafeAuthCheck } from '@utils/devSafeAuthChecker.js';
 
 const PUBLIC_PAGES = ['login', 'signup', 'forgot', '404'];
 
@@ -16,16 +18,21 @@ export async function checkAuthOnRouteChange() {
   const user = getSupabaseUser();
   const isLoggedIn = !!user;
 
+  // Dev-safe temporary session check
+  if (devSafeAuthCheck(isLoggedIn, page, PUBLIC_PAGES, user)) {
+    return;
+  }
+
   // Redirect if not logged in and trying to access protected page
   if (isProtectedPage(page) && !isLoggedIn) {
-    console.warn('🔒 Not logged in — redirecting to login');
+    devWarn('🔒 Not logged in — redirecting to login');
     location.hash = '#/login';
     return;
   }
 
   // Redirect if logged in and trying to access login/signup
   if (!isProtectedPage(page) && isLoggedIn) {
-    console.log('⚡ Already logged in — redirecting to dashboard');
+    devLog('⚡ Already logged in — redirecting to dashboard');
     location.hash = '#/dashboard';
     return;
   }

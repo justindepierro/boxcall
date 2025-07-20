@@ -1,5 +1,5 @@
 import { BaseButton } from '@components/ui/baseButton.js';
-import { devLog } from '@utils/devLogger.js'; // Use our custom dev logger
+import { devLog } from '@utils/devLogger';
 
 /**
  * FieldForm Component

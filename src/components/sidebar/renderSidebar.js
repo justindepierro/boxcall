@@ -11,6 +11,7 @@ import { createIconElement } from '@utils/iconRenderer.js';
 import { signOut } from '@auth/auth.js';
 import { showToast } from '@render/UIZones.js';
 import { resetAppToPublic } from '@render/appReset.js';
+import { devWarn } from '@utils/devLogger.js';
 
 import { initSidebarToggle } from './sidebarToggleHandler.js';
 
@@ -20,7 +21,7 @@ import { initSidebarToggle } from './sidebarToggleHandler.js';
  */
 export function renderSidebar(state = 'expanded') {
   const container = document.getElementById('sidebar-root');
-  if (!container) return console.warn('❌ #sidebar-root not found');
+  if (!container) return devWarn('❌ #sidebar-root not found');
 
   // Clear existing content
   container.innerHTML = '';

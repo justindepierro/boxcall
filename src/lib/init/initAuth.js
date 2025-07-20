@@ -1,7 +1,7 @@
 import { supabase } from '@auth/supabaseClient.js';
 import { initAuthState, setSupabaseUser } from '@state/userState.js';
 import { initAuthListeners } from '@components/AuthManager.js';
-import { devLog } from '@utils/devLogger.js';
+import { devLog } from '@utils/devLogger';
 
 /**
  * Initializes Supabase auth and restores session if present.

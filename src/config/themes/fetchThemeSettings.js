@@ -1,4 +1,4 @@
-import { devLog } from '@utils/devLogger.js'; // Centralized logger
+import { devLog } from '@utils/devLogger.js';
 
 // src/config/themes/fetchThemeSettings.js
 import { supabase } from '../../auth/supabaseClient.js';

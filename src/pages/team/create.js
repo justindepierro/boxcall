@@ -3,6 +3,7 @@ import { getCurrentUser } from '@state/userState.js';
 import { createTeam } from '@lib/teams/createTeams.js';
 import { updateUserSettings } from '@lib/teams/user/updateUserSettings.js';
 import { navigateTo } from '@routes/router.js';
+import { devError } from '@utils/devLogger';
 
 /**
  * Renders the Create Team page and handles team creation.
@@ -10,7 +11,7 @@ import { navigateTo } from '@routes/router.js';
  */
 export default function renderCreateTeamPage(container = document.getElementById('main-content')) {
   if (!container) {
-    console.error('❌ renderCreateTeamPage: No container found.');
+    devError('❌ renderCreateTeamPage: No container found.');
     return;
   }
 

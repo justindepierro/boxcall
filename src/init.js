@@ -2,25 +2,19 @@
 import { initAuth } from '@lib/init/initAuth.js';
 // 🧑‍💼 USER SETTINGS + DEV OVERRIDES
 import { initializeUser, handleAuthRedirect } from '@lib/init/initUser.js';
-import {
-  getUserSettings,
-  setUserSettings,
-  getSupabaseUser,
-  clearAuthState,
-} from '@state/userState.js';
-import { isTemporarySession } from '@utils/sessionHelper';
+import { getUserSettings, setUserSettings, getSupabaseUser } from '@state/userState.js';
+import { devSafeAuthCheck } from '@utils/devSafeAuthChecker.js';
+import { devLog, devWarn, devError } from '@utils/devLogger';
 // 🎨 THEMING
 import { initTheme } from '@lib/init/initTheme.js';
 // 🧱 APP SHELL + ROUTING
-import { renderAppShell } from '@render/renderAppShell.js';
+import { renderPublicAppShell, renderPrivateAppShell } from '@render/renderAppShell.js';
 import { loadSidebarStateFromStorage } from '@state/sidebarState.js';
 // 🛠️ DEV TOOLS
 import { renderDevToolsPanel } from '@components/dev/devToolsPanel.js';
 import { mountLiveLogger, updateLogContext } from '@components/dev/liveLogger.js';
 import { DEV_EMAIL } from '@config/devConfig.js';
 import { checkAuthOnRouteChange } from '@routes/checkRouteOnAuthChange';
-// 🔧 LOGGING
-import { devLog } from '@utils/devLogger.js';
 
 const PUBLIC_PAGES = ['login', 'signup', 'forgot', '404'];
 
@@ -34,38 +28,6 @@ function isProtectedPage(page) {
   return !PUBLIC_PAGES.includes(page);
 }
 
-/**
- * Handles session checks and redirects unauthenticated users.
- * @param {boolean} isLoggedIn
- * @param {string} page
- * @returns {boolean} - True if navigation should stop (redirected), false otherwise.
- */
-function handleAuthChecks(isLoggedIn, page) {
-  // Temporary session logout
-  if (isLoggedIn && isTemporarySession()) {
-    console.warn('⚠️ Temporary session detected. Forcing logout.');
-    clearAuthState();
-    handleAuthRedirect(page, PUBLIC_PAGES);
-    return true;
-  }
-
-  // Redirect unauthenticated users from protected pages
-  if (isProtectedPage(page) && !isLoggedIn) {
-    console.warn('🔒 No user found — redirecting to login');
-    handleAuthRedirect(page, PUBLIC_PAGES);
-    return true;
-  }
-
-  // Redirect authenticated users away from public pages
-  if (!isProtectedPage(page) && isLoggedIn) {
-    devLog('⚡ Already logged in, redirecting to dashboard');
-    location.hash = '#/dashboard';
-    return true;
-  }
-
-  return false;
-}
-
 /** Loads user settings and applies themes. */
 async function loadUserSettingsIfNeeded(isLoggedIn, user) {
   if (!isLoggedIn) {
@@ -74,15 +36,15 @@ async function loadUserSettingsIfNeeded(isLoggedIn, user) {
   }
 
   try {
-    const { settings } = await initializeUser(); // Theme is applied here
+    const { settings } = await initializeUser();
     if (settings) {
       setUserSettings({ ...settings, email: user.email });
       devLog(`✅ User settings loaded for: ${user.email}`);
     } else {
-      console.warn('⚠️ No user settings found.');
+      devWarn('⚠️ No user settings found.');
     }
   } catch (error) {
-    console.error('❌ Failed to initialize user settings:', error);
+    devError(`❌ Failed to initialize user settings: ${error}`);
   }
 }
 
@@ -106,8 +68,22 @@ export async function initApp() {
   const isLoggedIn = !!user;
   devLog(`🧪 Authenticated user: ${user ? user.email : 'No user'}`);
 
-  // 2️⃣ Authentication & redirection checks
-  if (handleAuthChecks(isLoggedIn, page)) return;
+  // 2️⃣ Authentication & redirection checks (now using devSafeAuthCheck)
+  if (devSafeAuthCheck(isLoggedIn, page, PUBLIC_PAGES, user)) {
+    return;
+  }
+
+  if (isProtectedPage(page) && !isLoggedIn) {
+    devWarn('🔒 No user found — redirecting to login');
+    handleAuthRedirect(page, PUBLIC_PAGES);
+    return;
+  }
+
+  if (!isProtectedPage(page) && isLoggedIn) {
+    devLog('⚡ Already logged in, redirecting to dashboard');
+    location.hash = '#/dashboard';
+    return;
+  }
 
   // 3️⃣ Load user settings (or fallback theme)
   await loadUserSettingsIfNeeded(isLoggedIn, user);
@@ -116,8 +92,13 @@ export async function initApp() {
   loadSidebarStateFromStorage();
 
   // 5️⃣ Render correct shell
-  renderAppShell(!isProtectedPage(page));
-  devLog(`✅ renderAppShell() called (${isProtectedPage(page) ? 'private' : 'public'})`);
+  if (isProtectedPage(page)) {
+    renderPrivateAppShell();
+    devLog('✅ Private app shell rendered (with sidebar)');
+  } else {
+    renderPublicAppShell();
+    devLog('✅ Public app shell rendered (no sidebar)');
+  }
 
   // 6️⃣ Handle current route
   await checkAuthOnRouteChange();

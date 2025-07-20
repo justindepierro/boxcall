@@ -6,6 +6,7 @@ import { updateThemeSettings } from '@lib/teams/user/updateThemeSettings.js';
 import { showToast } from '@utils/toast.js';
 import { qs } from '@utils/domHelper.js';
 import { supabase } from '@auth/supabaseClient.js';
+import { devError } from '@utils/devLogger';
 
 /**
  * Safely retrieves the `.value` of an element by selector.
@@ -88,7 +89,7 @@ export default async function renderSettingsPage(container) {
       .single();
 
     if (error) {
-      console.error('⚠️ Failed to fetch profile:', error);
+      devError('⚠️ Failed to fetch profile: ${error}');
       showToast('⚠️ Failed to load profile settings.', 'warn');
     } else if (profile) {
       const { full_name, bio, settings = {} } = profile;

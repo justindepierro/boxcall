@@ -1,11 +1,11 @@
 // src/render/renderPage.js
-import { devLog } from '@utils/devLogger.js';
 import { clearAllUIZones } from '@render/UIZones.js';
 import { PageWrapper } from '@components/layout/pageWrapper.js';
+import { devError, devLog, devWarn } from '@utils/devLogger';
 
 export function renderPage({ component, container, props = {} }) {
   if (!(container instanceof HTMLElement)) {
-    console.error('❌ renderPage(): Invalid container', container);
+    devError('❌ renderPage(): Invalid container ${ontainer}');
     return;
   }
 
@@ -28,7 +28,7 @@ export function renderPage({ component, container, props = {} }) {
     container.innerHTML = '';
     container.appendChild(wrapped);
   } else if (content !== undefined) {
-    console.warn('⚠️ renderPage(): Component returned a non-HTMLElement value', content);
+    devWarn('⚠️ renderPage(): Component returned a non-HTMLElement value ${content}');
   }
 
   devLog(`✅ Page rendered into #${container.id || container.tagName.toLowerCase()}`);

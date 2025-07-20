@@ -1,4 +1,5 @@
 import { Toast } from '@components/ui/toast.js';
+import { devWarn } from '@utils/devLogger.js';
 
 import { Modal } from '../components/ui/modal.js';
 /**
@@ -18,7 +19,7 @@ export function clearAllUIZones() {
 export function renderModal(contentHTML = '') {
   const root = document.getElementById('modal-root');
   if (!root) {
-    console.warn('❌ renderModal(): #modal-root not found');
+    devWarn('❌ renderModal(): #modal-root not found');
     return;
   }
 

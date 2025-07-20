@@ -11,7 +11,7 @@ import { getUserSettings as fetchUserSettings } from '@lib/teams/user/getUserSet
 import { getOverrideRole } from '@state/devToolState.js';
 import { getSession } from '@auth/auth.js';
 import { applyTheme } from '@utils/themeManager.js';
-import { devLog } from '@utils/devLogger.js';
+import { devLog } from '@utils/devLogger';
 
 /**
  * @typedef {Object} Membership

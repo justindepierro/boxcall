@@ -1,18 +1,17 @@
 // src/state/devToolState.js
 
-//import { getCurrentUser } from './authState.js';
 import { DEV_EMAIL } from '@config/devConfig.js';
+import { devLog, devWarn } from '@utils/devLogger';
 
 let overrideRole = null;
 let overrideTheme = null;
 let spoofedUser = null;
 let flags = {};
-
 export function setOverrideRole(role) {
   if (!DEV_EMAIL) return;
   overrideRole = role;
   localStorage.setItem('dev.overrideRole', role);
-  console.warn('🧪 Role overridden:', role);
+  devWarn(`🧪 Role overridden: ${role}`);
 }
 
 export function getOverrideRole() {
@@ -22,7 +21,7 @@ export function getOverrideRole() {
 export function clearOverrideRole() {
   overrideRole = null;
   localStorage.removeItem('dev.overrideRole');
-  console.log('🧹 Role override cleared');
+  devLog('🧹 Role override cleared');
 }
 
 export function setOverrideTheme(theme) {

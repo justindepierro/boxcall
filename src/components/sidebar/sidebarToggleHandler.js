@@ -1,4 +1,5 @@
 // /components/sidebar/sidebarToggleHandler.js
+import { devLog, devWarn } from '@utils/devLogger.js';
 import { getSidebarState, setSidebarState, SIDEBAR_STATES } from '@state/sidebarState.js';
 import { querySidebarElements } from '@utils/sidebarUtils.js';
 
@@ -14,7 +15,7 @@ export function handleSidebarToggle() {
   /** @type {'expanded' | 'icon' | 'collapsed'} */
   const next = SIDEBAR_STATES[nextIndex];
 
-  console.log(`🔁 Sidebar toggle: ${current} → ${next}`);
+  devLog(`🔁 Sidebar toggle: ${current} → ${next}`);
   setSidebarState(next);
   applySidebarState(next);
 }
@@ -24,7 +25,7 @@ export function handleSidebarToggle() {
  * @param {'expanded' | 'icon' | 'collapsed'} state
  */
 export function forceSidebarState(state) {
-  console.log(`🔪 Forcing sidebar to: ${state}`);
+  devLog(`🔪 Forcing sidebar to: ${state}`);
   setSidebarState(state);
   applySidebarState(state);
 }
@@ -36,12 +37,12 @@ export function initSidebarToggle() {
   const { minimizeBtn } = querySidebarElements();
 
   if (!minimizeBtn) {
-    console.warn('❌ initSidebarToggle(): Minimize button not found');
+    devWarn('❌ initSidebarToggle(): Minimize button not found');
     return;
   }
 
   minimizeBtn.addEventListener('click', () => {
-    console.log(`🔘 Minimize button clicked (state: ${getSidebarState()})`);
+    devLog(`🔘 Minimize button clicked (state: ${getSidebarState()})`);
     handleSidebarToggle();
   });
 
@@ -56,7 +57,7 @@ export function initSidebarToggle() {
 export function initSidebarShortcuts() {
   document.addEventListener('keydown', (e) => {
     if (e.key === '[' || e.key === ']') {
-      console.log(`⌨️ Sidebar shortcut key: ${e.key}`);
+      devLog(`⌨️ Sidebar shortcut key: ${e.key}`);
       handleSidebarToggle();
     }
   });

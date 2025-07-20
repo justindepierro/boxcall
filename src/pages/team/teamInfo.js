@@ -1,9 +1,9 @@
 // src/pages/team/teaminfo.js
-
 import { supabase } from '@auth/supabaseClient.js';
 import { getCurrentUser } from '@state/userState.js';
 import { getUserSettings } from '@lib/teams/user/getUserSettings.js';
 import { showSpinner, hideSpinner } from '@utils/spinner.js';
+import { devError, devLog } from '@utils/devLogger';
 
 /**
  * Renders the read-only team info panel.
@@ -11,7 +11,7 @@ import { showSpinner, hideSpinner } from '@utils/spinner.js';
  */
 export default async function renderTeamInfoPage(container = document.getElementById('page-view')) {
   if (!(container instanceof HTMLElement)) {
-    console.error('❌ Invalid container provided to renderTeamInfoPage');
+    devError('❌ Invalid container provided to renderTeamInfoPage');
     return;
   }
 
@@ -34,7 +34,7 @@ export default async function renderTeamInfoPage(container = document.getElement
     return;
   }
 
-  console.log('🔍 Fetching team with ID:', teamId);
+  devLog('🔍 Fetching team with ID:', teamId);
 
   // Check the Supabase auth state
   const {
@@ -45,7 +45,7 @@ export default async function renderTeamInfoPage(container = document.getElement
   if (userError) {
     console.error('🚨 Error getting user:', userError.message);
   } else {
-    console.log('🔐 Current user ID:', currentUser.id);
+    devLog(`🔐 Current user ID: ${currentUser.id}`);
   }
 
   // Optional debug: RPC function to confirm Supabase identity from RLS perspective
@@ -53,7 +53,7 @@ export default async function renderTeamInfoPage(container = document.getElement
   if (whoamiError) {
     console.error('❌ Supabase RLS check failed (whoami):', whoamiError.message);
   } else {
-    console.log('✅ Supabase sees user as:', whoamiData);
+    devLog('✅ Supabase sees user as:', whoamiData);
   }
 
   // Query team info using maybeSingle to avoid 500 on RLS denial

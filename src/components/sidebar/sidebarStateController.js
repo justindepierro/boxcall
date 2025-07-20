@@ -1,5 +1,6 @@
 // src/components/sidebar/sidebarStateController.js
 
+import { devLog, devError } from '@utils/devLogger.js';
 import { setSidebarState } from '@state/sidebarState.js';
 import {
   querySidebarElements,
@@ -13,7 +14,6 @@ import {
   MINIMIZE_SYMBOLS,
 } from '@config/sidebarConfig.js';
 import { createIconElement } from '@utils/iconRenderer.js';
-import { devLog, devError } from '@utils/devLogger.js';
 
 /**
  * Applies layout and visibility changes based on sidebar state.

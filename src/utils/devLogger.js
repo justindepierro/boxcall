@@ -1,34 +1,32 @@
 /* eslint-disable no-console */
 
-import { getUserSettings } from '@state/userState';
-
 /** @typedef {'info' | 'warn' | 'error' | 'debug'} LogLevel */
 
-const logQueue = [];
+// 🛡️ Safe log queue initialization
+const logQueue = Array.isArray(globalThis.__logQueue) ? globalThis.__logQueue : [];
+globalThis.__logQueue = logQueue;
+
 const MAX_LOGS = 500;
 
 /**
- * Adds a new log entry with timestamp and triggers UI updates.
- * @param {string} msg
- * @param {LogLevel} [level='info']
+ * Main developer logger.
+ * @param {string} msg - The message to log.
+ * @param {LogLevel} [level='info'] - Log level.
  */
 export function devLog(msg, level = 'info') {
   const timestamp = `[${new Date().toLocaleTimeString()}]`;
   const formatted = `${timestamp} ${msg}`;
-  logQueue.push({ message: formatted, level });
 
+  logQueue.push({ message: formatted, level });
   if (logQueue.length > MAX_LOGS) logQueue.shift();
 
   renderLogEntry(formatted, level);
-  if (level === 'error') console.error(formatted);
-  else if (level === 'warn') console.warn(formatted);
-  else console.info(formatted);
-
+  directConsoleLog(formatted, level);
   saveLogsToSession();
 }
 
 /**
- * Specialized logger for errors.
+ * Logs an error-level message.
  * @param {string} msg
  */
 export function devError(msg) {
@@ -36,7 +34,7 @@ export function devError(msg) {
 }
 
 /**
- * Specialized logger for warnings.
+ * Logs a warning-level message.
  * @param {string} msg
  */
 export function devWarn(msg) {
@@ -44,11 +42,29 @@ export function devWarn(msg) {
 }
 
 /**
- * Specialized logger for debug messages.
+ * Logs a debug-level message.
  * @param {string} msg
  */
 export function devDebug(msg) {
   devLog(msg, 'debug');
+}
+
+/**
+ * Ensures we don't call devLog recursively by directly using console.
+ * @param {string} formatted
+ * @param {LogLevel} level
+ */
+function directConsoleLog(formatted, level) {
+  switch (level) {
+    case 'error':
+      console.error(formatted);
+      break;
+    case 'warn':
+      console.warn(formatted);
+      break;
+    default:
+      console.info(formatted);
+  }
 }
 
 /**
@@ -66,10 +82,17 @@ function renderLogEntry(message, level) {
   panel.scrollTop = panel.scrollHeight;
 }
 
+/**
+ * Returns all logs.
+ * @returns {string[]}
+ */
 export function getDevLogs() {
   return logQueue.map((log) => log.message);
 }
 
+/**
+ * Clears logs from memory and UI.
+ */
 export function clearDevLogs() {
   logQueue.length = 0;
   const panel = document.getElementById('dev-log-console');
@@ -77,10 +100,20 @@ export function clearDevLogs() {
   saveLogsToSession();
 }
 
+/**
+ * Saves logs to sessionStorage.
+ */
 export function saveLogsToSession() {
-  sessionStorage.setItem('dev.logs', JSON.stringify(logQueue));
+  try {
+    sessionStorage.setItem('dev.logs', JSON.stringify(logQueue));
+  } catch (e) {
+    console.warn('⚠️ Failed to save logs:', e);
+  }
 }
 
+/**
+ * Restores logs from sessionStorage.
+ */
 export function restoreLogsFromSession() {
   const saved = sessionStorage.getItem('dev.logs');
   if (saved) {
@@ -90,6 +123,9 @@ export function restoreLogsFromSession() {
   }
 }
 
+/**
+ * Refreshes the developer context panel.
+ */
 export function refreshDevContext() {
   const context = document.getElementById('log-context');
   if (context) {
@@ -97,8 +133,20 @@ export function refreshDevContext() {
   }
 }
 
+/**
+ * Dynamically loads user settings (avoids circular imports).
+ */
+function getSafeUserSettings() {
+  try {
+    const { getUserSettings } = require('@state/userState'); // Dynamic require
+    return getUserSettings();
+  } catch {
+    return {};
+  }
+}
+
 function getContextHTML() {
-  const settings = getUserSettings() || {};
+  const settings = getSafeUserSettings() || {};
   return `
     <div class="space-y-[2px] font-mono text-[11px] leading-snug text-white/90">
       <div><span class="text-white/60">Page:</span> <code>${location.hash || '(none)'}</code></div>

@@ -1,3 +1,5 @@
+import { devWarn } from '@utils/devLogger';
+
 // /state/sidebarState.js
 // 🧠 Centralized sidebar state manager
 // Handles: reading, writing, cycling states like 'expanded', 'icon', and 'collapsed'
@@ -27,7 +29,7 @@ export function getSidebarState() {
  */
 export function setSidebarState(newState) {
   if (!SIDEBAR_STATES.includes(newState)) {
-    console.warn(`❌ Invalid sidebar state: "${newState}".`);
+    devWarn(`❌ Invalid sidebar state: "${newState}".`);
     return;
   }
 

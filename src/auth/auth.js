@@ -1,10 +1,10 @@
 // src/auth/auth.js
 
 // Absolute imports
-import { renderAppShell } from '@render/renderAppShell.js';
+import { renderPublicAppShell } from '@render/renderAppShell.js';
 import { navigateTo, handleRouting } from '@routes/router.js';
 import { showToast } from '@render/UIZones.js';
-import { devLog, devError } from '@utils/devLogger.js';
+import { devError, devLog } from '@utils/devLogger.js';
 
 // Relative imports
 import { supabase } from './supabaseClient.js';
@@ -30,7 +30,6 @@ function persistSession(session) {
 
 /**
  * Sign up a new user with email and password.
- * Adds default metadata for future theming and roles.
  * @returns {Promise<{ user: User|null, session: Session|null, error: Error|null }>}
  */
 export async function signUp(email, password) {
@@ -49,37 +48,23 @@ export async function signUp(email, password) {
   devLog(`Sign Up → data=${JSON.stringify(data)} error=${error?.message || 'none'}`);
   persistSession(data?.session || null);
 
-  return {
-    user: data?.user || null,
-    session: data?.session || null,
-    error,
-  };
+  return { user: data?.user || null, session: data?.session || null, error };
 }
 
 /**
  * Sign in an existing user.
- * Automatically persists the session.
  * @returns {Promise<{ user: User|null, session: Session|null, error: Error|null }>}
  */
 export async function signIn(email, password) {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   devLog(`Sign In → data=${JSON.stringify(data)} error=${error?.message || 'none'}`);
   persistSession(data?.session || null);
 
-  return {
-    user: data?.user || null,
-    session: data?.session || null,
-    error,
-  };
+  return { user: data?.user || null, session: data?.session || null, error };
 }
 
 /**
- * Sign out the current user.
- * Clears the local session.
+ * Sign out the current user and clear the local session.
  * @returns {Promise<{ error: Error|null }>}
  */
 export async function signOut() {
@@ -90,7 +75,7 @@ export async function signOut() {
 }
 
 /**
- * Get the current session (if logged in).
+ * Get the current session.
  * @returns {Promise<Session|null>}
  */
 export async function getSession() {
@@ -101,12 +86,12 @@ export async function getSession() {
   }
 
   const session = data?.session || null;
-  persistSession(session); // Keep local storage in sync
+  persistSession(session);
   return session;
 }
 
 /**
- * Get the current authenticated user + metadata.
+ * Get the current authenticated user.
  * @returns {Promise<User|null>}
  */
 export async function getUser() {
@@ -115,13 +100,11 @@ export async function getUser() {
     devError(`Get User ❌ ${error.message}`);
     return null;
   }
-
   return data?.user || null;
 }
 
 /**
  * Refresh the user session manually.
- * Useful after long idle periods.
  * @returns {Promise<Session|null>}
  */
 export async function refreshSession() {
@@ -163,7 +146,7 @@ export async function handleLogout() {
   showToast('👋 Logged out successfully!', 'info');
 
   // Reset layout to public shell
-  renderAppShell(true);
+  renderPublicAppShell();
 
   // Navigate to login and refresh routing
   navigateTo('login');

@@ -3,12 +3,13 @@
 import { mainPages, settingsPages, TOGGLE_BUTTON_CLASSES } from '@config/sidebarConfig.js';
 import { navigateTo } from '@routes/router.js';
 import { createIconElement } from '@utils/iconRenderer.js';
+import { devWarn } from '@utils/devLogger.js';
 
 import { initSidebarToggle } from './sidebarToggleHandler.js';
 
 export function renderSidebar() {
   const container = document.getElementById('sidebar-root');
-  if (!container) return console.warn('❌ #sidebar-root not found');
+  if (!container) return devWarn('❌ #sidebar-root not found');
 
   // Reset inner HTML
   container.innerHTML = '';

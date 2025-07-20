@@ -1,6 +1,6 @@
 import { applyTheme } from '@utils/themeManager.js';
 import { getCurrentUser } from '@state/userState.js';
-import { devLog } from '@utils/devLogger.js'; // Use centralized logging
+import { devLog } from '@utils/devLogger.js';
 
 import { fetchThemeSettings } from './fetchThemeSettings.js';
 import { DEFAULT_THEME } from './themeConstants.js';

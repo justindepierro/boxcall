@@ -1,5 +1,5 @@
 // src/pages/team/joinTeam.js
-
+import { devLog } from '@utils/devLogger';
 import { supabase } from '@auth/supabaseClient.js';
 import { getCurrentUser } from '@state/userState.js';
 import { navigateTo } from '@routes/router.js';
@@ -43,7 +43,7 @@ async function handleJoinTeam(teamId) {
 
   if (error) {
     showToast('❌ Failed to join team');
-    console.error(error);
+    devLog(`❌ ${error.message}`);
   } else {
     showToast('✅ Joined team!');
     navigateTo('team'); // ✅ Auto-navigate to team info

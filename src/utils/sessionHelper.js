@@ -1,22 +1,21 @@
 // src/utils/sessionHelper.js
+import { devLog } from './devLogger';
 
 /**
- * Sets session persistence depending on the "Remember Me" flag.
- * If rememberMe is false, store session in sessionStorage only.
- * Otherwise, store in localStorage for persistence.
- *
- * @param {boolean} rememberMe
+ * Enables a persistent session (stored in localStorage).
  */
-export function setSessionPersistence(rememberMe) {
-  if (!rememberMe) {
-    console.log('⚠️ Session will NOT persist beyond this session.');
-    sessionStorage.setItem('supabase-temporary', 'true');
-    localStorage.removeItem('supabase-temporary');
-  } else {
-    console.log('✅ Persistent session enabled.');
-    localStorage.setItem('supabase-temporary', 'false');
-    sessionStorage.removeItem('supabase-temporary');
-  }
+export function enablePersistentSession() {
+  localStorage.setItem('supabase-temporary', 'false');
+  sessionStorage.removeItem('supabase-temporary');
+  devLog('✅ Persistent session enabled.');
+}
+
+/**
+ * Enables a temporary (non-persistent) session (stored in sessionStorage).
+ */
+export function enableTemporarySession() {
+  localStorage.setItem('supabase-temporary', 'true');
+  devLog('⚠️ Session will NOT persist beyond this session.');
 }
 
 /**
@@ -24,26 +23,13 @@ export function setSessionPersistence(rememberMe) {
  * @returns {boolean}
  */
 export function isTemporarySession() {
-  return sessionStorage.getItem('supabase-temporary') === 'true';
-}
-
-// src/utils/sessionHelper.js
-
-/**
- * Marks the session as temporary if "Remember Me" is unchecked.
- * @param {boolean} isTemporary - Whether the session should be temporary.
- */
-export function markTemporarySession(isTemporary = true) {
-  if (isTemporary) {
-    localStorage.setItem('supabase-temporary', 'true');
-  } else {
-    localStorage.setItem('supabase-temporary', 'false');
-  }
+  return localStorage.getItem('supabase-temporary') === 'true';
 }
 
 /**
  * Clears the session flag (e.g., on logout).
  */
-export function clearTemporarySession() {
+export function clearSessionPersistence() {
   localStorage.removeItem('supabase-temporary');
+  devLog('🧹 Session persistence cleared.');
 }

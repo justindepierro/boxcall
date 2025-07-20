@@ -2,6 +2,8 @@
 import { getOverrideRole } from '@state/devToolState.js';
 import { getCurrentUser, getUserSettings } from '@state/userState.js';
 
+import { devWarn } from './devLogger';
+
 /**
  * Returns the current role, considering any dev override.
  * @returns {string|null}
@@ -9,7 +11,7 @@ import { getCurrentUser, getUserSettings } from '@state/userState.js';
 export function getCurrentRole() {
   const override = getOverrideRole();
   if (override) {
-    console.warn('🧪 Using overridden role:', override);
+    devWarn('🧪 Using overridden role: ${override}');
     return override;
   }
   const settings = getUserSettings();

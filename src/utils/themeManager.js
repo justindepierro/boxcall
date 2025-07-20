@@ -1,5 +1,6 @@
 import { DEFAULT_THEME, VALID_THEME_KEYS } from '@config/themes/themeConstants.js';
-import { devLog } from '@utils/devLogger.js';
+
+import { devLog } from './devLogger';
 
 /**
  * Applies the color and font theme by:

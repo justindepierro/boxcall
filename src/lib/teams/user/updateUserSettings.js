@@ -1,7 +1,7 @@
 // src/lib/users/updateUserSettings.js
 
 import { supabase } from '@auth/supabaseClient.js';
-import { devLog } from '@utils/devLogger.js';
+import { devLog } from '@utils/devLogger';
 
 /**
  * Updates a user's profile and optional team role in Supabase.

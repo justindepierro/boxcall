@@ -1,7 +1,7 @@
-import { getDevLogs, clearDevLogs } from '@utils/devLogger.js';
 import { DEV_EMAIL } from '@config/devConfig.js';
 import { getUserSettings } from '@state/userState.js';
 import { qs, getChecked } from '@utils/domHelper.js';
+import { clearDevLogs, getDevLogs } from '@utils/devLogger';
 
 /**
  * Mounts the floating live logger panel for developers.

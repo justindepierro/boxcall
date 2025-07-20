@@ -1,3 +1,5 @@
+import { devLog, devWarn } from '@utils/devLogger.js';
+
 // src/auth/authListener.js (or wherever this lives)
 import { applyContextualTheme } from '../config/themes/themeController.js';
 
@@ -14,7 +16,7 @@ export function listenToAuthChanges(callback) {
   const {
     data: { subscription },
   } = supabase.auth.onAuthStateChange((event, session) => {
-    console.log('🌀 Auth event:', event);
+    devLog(`Auth event: ${event}`);
 
     // 🔄 Save session or clear storage
     if (session) {
@@ -52,7 +54,7 @@ export function loadCachedSession() {
     const raw = localStorage.getItem('supabaseSession');
     return raw ? JSON.parse(raw) : null;
   } catch (err) {
-    console.warn('⚠️ Failed to parse cached session:', err);
+    devWarn(`⚠️ Failed to parse cached session: ${err}`);
     return null;
   }
 }

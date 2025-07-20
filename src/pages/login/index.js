@@ -1,10 +1,9 @@
-// src/pages/login/index.js
 import { signIn } from '@auth/auth.js';
 import { showToast } from '@utils/toast.js';
 import { qsInput } from '@utils/domHelper.js';
 import { initializeUser } from '@lib/init/initUser.js';
 import { resetAppToPrivate } from '@render/appReset.js';
-import { markTemporarySession } from '@utils/sessionHelper';
+import { enablePersistentSession, enableTemporarySession } from '@utils/sessionHelper';
 import { handleAuthSubmit } from '@utils/authForms.js';
 import { createAuthPage } from '@components/AuthFormPage.js';
 import { createRememberMe } from '@components/ui/rememberMe.js';
@@ -43,7 +42,12 @@ export default function renderLoginPage(container) {
             const rememberMeEl = form.querySelector('#remember-me');
             const rememberMe =
               rememberMeEl instanceof HTMLInputElement ? rememberMeEl.checked : false;
-            markTemporarySession(!rememberMe);
+
+            if (rememberMe) {
+              enablePersistentSession();
+            } else {
+              enableTemporarySession();
+            }
 
             await initializeUser();
             showToast('✅ Logged in successfully!', 'success');

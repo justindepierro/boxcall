@@ -1,16 +1,17 @@
 // src/render/appReset.js
-import { renderAppShell } from '@render/renderAppShell.js';
+import { renderPublicAppShell, renderPrivateAppShell } from '@render/renderAppShell.js';
 import { navigateTo, handleRouting } from '@routes/router.js';
+import { devLog } from '@utils/devLogger';
 
 /**
  * Resets the application to the public layout (login/signup/forgot).
  * @param {string} page - Target page to navigate to (default: 'login').
  */
 export async function resetAppToPublic(page = 'login') {
-  console.log(`🔄 resetAppToPublic(): Switching to public layout → ${page}`);
+  devLog(`🔄 resetAppToPublic(): Switching to public layout → ${page}`);
 
-  // 1. Render the app shell without the sidebar
-  renderAppShell(true); // 'true' means public layout mode
+  // 1. Render the public app shell (no sidebar)
+  renderPublicAppShell();
 
   // 2. Force routing to rebuild public pages
   await handleRouting();
@@ -25,10 +26,10 @@ export async function resetAppToPublic(page = 'login') {
  * @param {string} page - Target private page (default: 'dashboard').
  */
 export async function resetAppToPrivate(page = 'dashboard') {
-  console.log(`🔐 resetAppToPrivate(): Switching to private layout → ${page}`);
+  devLog(`🔐 resetAppToPrivate(): Switching to private layout → ${page}`);
 
-  // 1. Render the app shell with the sidebar
-  renderAppShell(false); // 'false' means private layout mode
+  // 1. Render the private app shell (with sidebar)
+  renderPrivateAppShell();
 
   // 2. Force routing to rebuild private pages
   await handleRouting();

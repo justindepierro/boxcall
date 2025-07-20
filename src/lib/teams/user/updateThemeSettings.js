@@ -1,6 +1,6 @@
 // src/lib/teams/user/updateThemeSettings.js
 import { supabase } from '@auth/supabaseClient.js';
-import { devLog } from '@utils/devLogger.js';
+import { devLog } from '@utils/devLogger';
 
 /**
  * Updates the theme settings (font_theme, color_theme) for a given user.

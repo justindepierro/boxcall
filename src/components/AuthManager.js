@@ -5,7 +5,7 @@ import { navigateTo } from '@routes/router.js';
 import { applyContextualTheme } from '@config/themes/themeController.js';
 import { showToast } from '@utils/toast.js';
 import { resetAppToPublic } from '@render/appReset';
-import { devLog } from '@utils/devLogger.js'; // Centralized logger
+import { devLog } from '@utils/devLogger.js';
 
 /**
  * Starts Supabase auth change listeners.

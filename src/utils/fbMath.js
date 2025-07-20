@@ -1,3 +1,5 @@
+import { devLog } from './devLogger.js';
+
 /**
  * 🏈 FootballField Class
  * ----------------------
@@ -116,14 +118,14 @@ export class FootballField {
    * - When moving left from 50, jump to -49 (own side).
    */
   stepYardline(val, direction, step = 1) {
-    console.log(`🟢 stepYardline called: val=${val}, direction=${direction}, step=${step}`);
+    devLog(`🟢 stepYardline called: val=${val}, direction=${direction}, step=${step}`);
 
     if (direction > 0) {
       // Moving right →
       if (val < 0) {
         // If we hit -49 and go further right, jump to 50.
         if (val + step > -49) {
-          console.log(`➡ Crossing midfield: ${val} → 50`);
+          devLog(`➡ Crossing midfield: ${val} → 50`);
           return 50;
         }
       } else if (val >= 0) {
@@ -135,7 +137,7 @@ export class FootballField {
       if (val > 0) {
         // If we're at 50 and moving left, jump to -49
         if (val - step < 50) {
-          console.log(`⬅ Crossing midfield: ${val} → -49`);
+          devLog(`⬅ Crossing midfield: ${val} → -49`);
           return -49;
         }
       } else if (val <= 0) {
