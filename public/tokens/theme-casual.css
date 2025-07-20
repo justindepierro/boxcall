@@ -12,9 +12,10 @@
   --color-sidebar: #34d399;
   --color-header: #10b981;
   --color-header-text: #ffffff;
+  --color-card-bg: #fdf6e3; /* Slightly darker cream for cards */
 
-  --color-sidebar-text: #ffffff;
-  --color-sidebar-icon: #e0f2f1;
+  --color-sidebar-text: #1f2937; /* Darker text for contrast */
+  --color-sidebar-icon: #064e3b; /* Dark green icons for better contrast */
 
   /* Buttons */
   --color-button-text: #ffffff;

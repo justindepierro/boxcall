@@ -12,6 +12,7 @@
   --color-sidebar: #046169;
   --color-header: #0f172a;
   --color-header-text: #ffffff;
+  --color-card-bg: #f9fafb; /* Slight contrast from pure white */
 
   --color-sidebar-text: #ffffff;
   --color-sidebar-icon: #ffffff;
