@@ -1,6 +1,13 @@
 // src/utils/themeConfig.js
 
 export const themeMap = {
+  default: {
+    fonts: {
+      header: 'font-h-default', // Matches --font-header from tokens/theme-default.css
+      body: 'font-b-default', // Matches --font-body
+      mono: 'font-m-default', // Matches --font-mono
+    },
+  },
   classic: {
     fonts: {
       header: 'font-h-classic',
