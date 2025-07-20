@@ -109,6 +109,7 @@ function getControlsTabHTML() {
     <div id="tab-controls" class="p-2 space-y-3 ${activeTab === 'controls' ? '' : 'hidden'}">
       ${getRoleThemeControlsHTML()}
       ${getExtraControlsHTML()}
+      ${getFontsInfoHTML()}
     </div>
   `;
 }
@@ -189,6 +190,27 @@ function getToolbarHTML() {
   `;
 }
 
+function getFontsInfoHTML() {
+  const { headerFont, bodyFont, monoFont } = getActiveFonts();
+  return `
+    <div id="dev-fonts-info" class="border-t border-gray-600 pt-2 text-xs">
+      <strong class="text-green-400 block mb-1">🖋️ Active Fonts</strong>
+      <div><span class="text-gray-400">Header:</span> ${headerFont}</div>
+      <div><span class="text-gray-400">Body:</span> ${bodyFont}</div>
+      <div><span class="text-gray-400">Mono:</span> ${monoFont}</div>
+    </div>
+  `;
+}
+
+function getActiveFonts() {
+  const styles = getComputedStyle(document.documentElement);
+  return {
+    headerFont: styles.getPropertyValue('--font-header').trim() || 'N/A',
+    bodyFont: styles.getPropertyValue('--font-body').trim() || 'N/A',
+    monoFont: styles.getPropertyValue('--font-mono').trim() || 'N/A',
+  };
+}
+
 /* -------------------------------------------------------------------------- */
 /*                               EVENT HANDLERS                               */
 /* -------------------------------------------------------------------------- */
@@ -243,6 +265,7 @@ function setupControlListeners() {
       const theme = getValue(e);
       setOverrideTheme(theme);
       applyTheme(theme);
+      refreshFontsInfo();
       refreshDevContext();
     });
   }
@@ -300,6 +323,19 @@ function setupToolbarListeners() {
     if (panel instanceof HTMLElement) panel.style.opacity = '0';
     if (toggle instanceof HTMLElement) toggle.innerText = '👁️';
   });
+}
+
+function updateFontsInfo() {
+  const fontsInfo = qsi('#dev-fonts-info');
+  if (!fontsInfo) return;
+
+  const { headerFont, bodyFont, monoFont } = getActiveFonts();
+  fontsInfo.innerHTML = `
+    <strong class="text-green-400 block mb-1">🖋️ Active Fonts</strong>
+    <div><span class="text-gray-400">Header:</span> ${headerFont}</div>
+    <div><span class="text-gray-400">Body:</span> ${bodyFont}</div>
+    <div><span class="text-gray-400">Mono:</span> ${monoFont}</div>
+  `;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -401,4 +437,26 @@ function startAutoRefresh() {
 function stopAutoRefresh() {
   if (refreshInterval) clearInterval(refreshInterval);
   refreshInterval = null;
+}
+
+/**
+ * Updates the Fonts Info section in the DevTools panel
+ * by reading current CSS variable values for fonts.
+ */
+export function refreshFontsInfo() {
+  const rootStyle = getComputedStyle(document.documentElement);
+
+  const headerFont = rootStyle.getPropertyValue('--font-header').trim() || 'N/A';
+  const bodyFont = rootStyle.getPropertyValue('--font-body').trim() || 'N/A';
+  const monoFont = rootStyle.getPropertyValue('--font-mono').trim() || 'N/A';
+
+  const headerEl = qsi('#font-header-value');
+  const bodyEl = qsi('#font-body-value');
+  const monoEl = qsi('#font-mono-value');
+
+  if (headerEl) headerEl.textContent = headerFont;
+  if (bodyEl) bodyEl.textContent = bodyFont;
+  if (monoEl) monoEl.textContent = monoFont;
+
+  console.log(`🔤 Fonts Info updated: header=${headerFont}, body=${bodyFont}, mono=${monoFont}`);
 }

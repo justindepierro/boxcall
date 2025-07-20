@@ -1,41 +1,50 @@
 import { DEFAULT_THEME, VALID_THEME_KEYS } from '@config/themes/themeConstants.js';
 
 /**
- * Applies the selected theme by:
- * - Adding `theme-*` class to <html>
- * - Injecting the correct CSS token file from /public/tokens/
- * - Logging current font variables
+ * Applies the color and font theme by:
+ * - Adding `theme-*` classes to <html>
+ * - Injecting the proper CSS tokens file from /public/tokens/
+ * - Logging the active fonts (from CSS variables)
  *
- * @param {string} themeKey - The theme key (e.g., 'classic', 'modern').
+ * @param {string} colorKey - Color theme key (e.g., 'modern', 'tech').
  */
-export function applyTheme(themeKey = DEFAULT_THEME) {
+export function applyTheme(colorKey = DEFAULT_THEME, fontKey = DEFAULT_THEME) {
   const html = document.documentElement;
 
-  // 🧼 Remove any old theme classes
+  // Clean classes
   [...html.classList].forEach((cls) => {
-    if (cls.startsWith('theme-')) {
+    if (cls.startsWith('theme-') || cls.startsWith('font-')) {
       html.classList.remove(cls);
     }
   });
 
-  // ✅ Validate theme key
-  const safeThemeKey = VALID_THEME_KEYS.includes(themeKey) ? themeKey : DEFAULT_THEME;
+  // Safe keys
+  const safeColorKey = VALID_THEME_KEYS.includes(colorKey) ? colorKey : DEFAULT_THEME;
+  const safeFontKey = VALID_THEME_KEYS.includes(fontKey) ? fontKey : DEFAULT_THEME;
 
-  // 🎨 Add the new theme class
-  html.classList.add(`theme-${safeThemeKey}`);
+  // Apply new classes
+  html.classList.add(`theme-${safeColorKey}`);
+  html.classList.add(`font-${safeFontKey}`);
 
-  // 📄 Load the corresponding CSS tokens
-  loadThemeCSS(safeThemeKey);
+  // Apply CSS tokens
+  loadThemeCSS(safeColorKey);
 
-  // ✍️ Log the active font
-  const currentFont = getComputedStyle(html).getPropertyValue('--font-header').trim();
-  console.log(`🎨 Theme applied → ${safeThemeKey}, font: ${currentFont}`);
+  // Fetch CSS variable fonts (real-time)
+  const rootStyle = getComputedStyle(html);
+  const headerFont = rootStyle.getPropertyValue('--font-header').trim();
+  const bodyFont = rootStyle.getPropertyValue('--font-body').trim();
+  const monoFont = rootStyle.getPropertyValue('--font-mono').trim();
+
+  console.log(
+    `🎨 Theme applied → ${safeColorKey}, fonts: header=${headerFont}, body=${bodyFont}, mono=${monoFont}`
+  );
 }
 
 /**
- * Loads the CSS file for the given theme.
+ * Ensures a <link> element is pointing to the current theme CSS.
+ * If it doesn't exist, create one and append it to <head>.
  *
- * @param {string} themeKey
+ * @param {string} themeKey - The validated theme key.
  */
 function loadThemeCSS(themeKey) {
   const linkId = 'theme-tokens';
@@ -44,14 +53,24 @@ function loadThemeCSS(themeKey) {
   let link = document.getElementById(linkId);
 
   if (link instanceof HTMLLinkElement) {
-    // Update existing <link>
     link.href = cssPath;
   } else {
-    // Create new <link>
     const newLink = document.createElement('link');
     newLink.id = linkId;
     newLink.rel = 'stylesheet';
     newLink.href = cssPath;
     document.head.appendChild(newLink);
   }
+}
+
+/**
+ * Logs the currently applied fonts by reading CSS variables.
+ */
+function logAppliedFonts() {
+  const styles = getComputedStyle(document.documentElement);
+  const headerFont = styles.getPropertyValue('--font-header').trim();
+  const bodyFont = styles.getPropertyValue('--font-body').trim();
+  const monoFont = styles.getPropertyValue('--font-mono').trim();
+
+  console.log(`🖋️ Active fonts → header: ${headerFont}, body: ${bodyFont}, mono: ${monoFont}`);
 }
