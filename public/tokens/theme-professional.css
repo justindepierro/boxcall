@@ -1,27 +1,23 @@
-/* theme-professional.css */
+:root.theme-professional {
+  /* 🖋️ Fonts */
+  --font-header: 'Roboto Slab', serif;
+  --font-body: 'Open Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
 
-:root {
-  /* Font Variables */
-  --font-h-professional: 'Fira Sans', sans-serif;
-  --font-b-professional: 'Inter', sans-serif;
-  --font-m-professional: 'Fira Mono', monospace;
+  /* 🎨 Colors */
+  --color-bg: #f8f9fa;
+  --color-text: #212529;
+  --color-accent: #0d6efd; /* Bootstrap blue */
+  --color-border: #dee2e6;
+  --color-sidebar: #343a40;
+  --color-header: #212529;
+  --color-header-text: #f8f9fa;
 
-  /* Color Variables */
-  --color-bg: #f5f5f4; /* Neutral light gray */
-  --color-text: #1a1a1a; /* True black for professionalism */
-  --color-accent: #2563eb; /* Deep professional blue */
-  --color-border: #d6d3d1; /* Subtle neutral border */
-  --color-sidebar: #e7e5e4; /* Slightly darker sidebar */
-  --color-header: #ffffff; /* Clean white header */
-  --color-header-text: #1a1a1a; /* Crisp header text */
+  --color-sidebar-text: #e9ecef;
+  --color-sidebar-icon: #ced4da;
+
+  /* Buttons */
+  --color-button-text: #ffffff;
+  --color-button-secondary: #e9ecef;
+  --color-button-secondary-text: #212529;
 }
-
-/* Theme color variables:
-  --color-bg:           Main app background
-  --color-text:         Primary foreground text
-  --color-sidebar:      Sidebar background
-  --color-accent:       Buttons, links, highlights
-  --color-border:       Input/section outlines
-  --color-header-bg:    Top bar background
-  --color-header-text:  Top bar text
-*/

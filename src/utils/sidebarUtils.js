@@ -1,5 +1,4 @@
 // src/components/sidebar/renderSidebar.js
-
 import { mainPages, settingsPages, TOGGLE_BUTTON_CLASSES } from '@config/sidebarConfig.js';
 import { navigateTo } from '@routes/router.js';
 import { initSidebarToggle } from '@components/sidebar/sidebarToggleHandler.js';
@@ -23,7 +22,7 @@ export function renderSidebar() {
   toggleBtn.id = 'sidebar-minimize';
   toggleBtn.title = 'Toggle Sidebar';
   toggleBtn.className = TOGGLE_BUTTON_CLASSES;
-  toggleBtn.appendChild(createIconElement('arrow-left-to-line'));
+  toggleBtn.appendChild(createIconElement('arrow-left-to-line', 'h-5 w-5'));
 
   const brand = document.createElement('span');
   brand.id = 'sidebar-brand';
@@ -58,7 +57,7 @@ export function renderSidebar() {
       justify-start gap-2 px-4 py-2
     `;
 
-    const iconEl = createIconElement(icon, 20);
+    const iconEl = createIconElement(icon, 'h-5 w-5');
     iconEl.classList.add('nav-icon');
 
     const labelEl = document.createElement('span');
@@ -88,7 +87,7 @@ export function renderSidebar() {
       justify-start gap-2 px-4 py-2
     `;
 
-    const iconEl = createIconElement(icon, 20);
+    const iconEl = createIconElement(icon, 'h-5 w-5');
     iconEl.classList.add('nav-icon');
 
     const labelEl = document.createElement('span');
@@ -123,10 +122,6 @@ function attachSidebarEvents() {
   });
 }
 
-/**
- * Returns key parts of the sidebar DOM
- * @returns {Object} parts
- */
 export function querySidebarElements() {
   const outer = document.getElementById('sidebar-root');
   const sidebar = document.getElementById('sidebar');
@@ -139,56 +134,34 @@ export function querySidebarElements() {
   return { outer, sidebar, mainContent, labels, icons, title, minimizeBtn };
 }
 
-/**
- * Adjusts sidebar button alignment and spacing based on sidebar state.
- * @param {'expanded' | 'icon' | 'collapsed'} state
- */
 export function adjustSidebarButtons(state) {
   const buttons = document.querySelectorAll('.nav-btn');
 
   buttons.forEach((btn) => {
-    // Reset alignment and padding
     btn.classList.remove('justify-center', 'justify-start', 'px-2', 'px-4');
-
-    // ✨ Common classes
     btn.classList.add('items-center', 'transition', 'rounded', 'hover:bg-[var(--color-accent)]');
 
     if (state === 'expanded') {
       btn.classList.add('justify-start', 'gap-2', 'px-4');
-    } else if (state === 'icon') {
-      btn.classList.add('justify-center', 'px-2');
-    } else if (state === 'collapsed') {
+    } else {
       btn.classList.add('justify-center', 'px-2');
     }
   });
 }
 
-/**
- * Shows/hides sidebar elements like labels, icons, and title based on state.
- * @param {Object} elements - { labels, icons, title }
- * @param {'expanded' | 'icon' | 'collapsed'} newState
- */
 export function updateSidebarVisibility({ labels, icons, title }, newState) {
   const isExpanded = newState === 'expanded';
   const isCollapsed = newState === 'collapsed';
 
-  // 🏷️ Show/hide labels
   toggleElementsVisibility(labels, isExpanded);
-
-  // 🔘 Show icons in expanded + icon mode
   toggleElementsVisibility(icons, !isCollapsed);
 
-  // 📛 Show title only in expanded
   if (title) title.classList.toggle('hidden', !isExpanded);
 
-  // 📛 Brand label visibility
   const brand = document.getElementById('sidebar-brand');
   if (brand) brand.style.display = isExpanded ? 'inline' : 'none';
 }
 
-/**
- * Helper for toggling visibility of multiple DOM elements.
- */
 function toggleElementsVisibility(elements, visible) {
   elements.forEach((el) => {
     el.classList.toggle('hidden', !visible);

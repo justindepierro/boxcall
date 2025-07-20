@@ -1,5 +1,3 @@
-// src/utils/iconRenderer.js
-
 import { createElement } from 'lucide';
 
 // 🧠 Import each icon you want to use from Lucide
@@ -25,6 +23,9 @@ import {
   Edit,
   X,
   LogOut,
+  Shield,
+  Crown,
+  ClipboardList,
 } from 'lucide';
 
 // 🗺️ Map kebab-case names to Lucide icon components
@@ -50,31 +51,33 @@ const iconMap = {
   edit: Edit,
   x: X,
   'log-out': LogOut,
+  shield: Shield,
+  crown: Crown,
+  'clipboard-list': ClipboardList,
 };
 
 /**
- * Returns an SVG icon inside a span container.
+ * Returns a Lucide SVG icon inside a <span> wrapper.
  * @param {string} name - kebab-case name like "calendar-days"
- * @param {number} size - size in px
+ * @param {string} className - Tailwind classes for styling the SVG (e.g., "h-5 w-5 text-gray-600")
  * @returns {HTMLElement}
  */
-export function createIconElement(name, size = 20) {
+export function createIconElement(name, className = 'h-5 w-5 text-gray-700') {
   const IconComponent = iconMap[name];
 
   if (!IconComponent) {
     console.warn(`❌ Unknown Lucide icon: "${name}"`);
     const fallback = document.createElement('span');
     fallback.textContent = '?';
-    fallback.className = `inline-block w-[${size}px] h-[${size}px] bg-red-500 text-white text-xs text-center`;
+    fallback.className = `inline-block ${className} bg-red-500 text-white text-xs text-center`;
     return fallback;
   }
 
   const wrapper = document.createElement('span');
-  wrapper.className = `flex items-center justify-center min-w-[24px] h-[24px]`;
+  wrapper.className = 'inline-flex items-center justify-center';
 
   const svg = createElement(IconComponent, {
-    size,
-    color: 'currentColor',
+    class: className,
   });
 
   wrapper.appendChild(svg);

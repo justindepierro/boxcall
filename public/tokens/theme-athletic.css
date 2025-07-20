@@ -1,13 +1,23 @@
-:root {
-  --font-h-athletic: 'Oswald', sans-serif;
-  --font-b-athletic: 'Inter', sans-serif;
-  --font-m-athletic: 'Share Tech Mono', monospace;
+:root.theme-athletic {
+  /* 🖋️ Fonts */
+  --font-header: 'Bebas Neue', sans-serif;
+  --font-body: 'Roboto', sans-serif;
+  --font-mono: 'Fira Mono', monospace;
 
-  --color-bg: #f4f4f5;
-  --color-text: #4e4e4e;
-  --color-accent: #f97316;
-  --color-border: #a1a1aa;
-  --color-sidebar: #18181b;
-  --color-header: #ffffff;
+  /* 🎨 Colors */
+  --color-bg: #fefefe;
+  --color-text: #1f2937;
+  --color-accent: #e11d48; /* Sporty red */
+  --color-border: #e5e7eb;
+  --color-sidebar: #111827;
+  --color-header: #e11d48;
   --color-header-text: #ffffff;
+
+  --color-sidebar-text: #f9fafb;
+  --color-sidebar-icon: #e5e7eb;
+
+  /* Buttons */
+  --color-button-text: #ffffff;
+  --color-button-secondary: #f3f4f6;
+  --color-button-secondary-text: #1f2937;
 }

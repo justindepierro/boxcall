@@ -6,6 +6,8 @@ import { createIconElement } from '@utils/iconRenderer.js';
  * @property {string} [label]
  * @property {string} [icon]
  * @property {string} [iconEnd]
+ * @property {string} [iconClass='h-5 w-5']
+ * @property {string} [iconEndClass='h-5 w-5']
  * @property {string} [variant='primary']
  * @property {string} [size='md']
  * @property {boolean} [fullWidth=false]
@@ -22,7 +24,7 @@ import { createIconElement } from '@utils/iconRenderer.js';
  * @property {string}  [slotStart]
  * @property {string}  [slotMain]
  * @property {string}  [slotEnd]
- * @property {(e: MouseEvent) => void} [onClick]  // <-- Explicit type
+ * @property {(e: MouseEvent) => void} [onClick]
  */
 
 /**
@@ -34,6 +36,8 @@ export function BaseButton({
   label,
   icon,
   iconEnd,
+  iconClass = 'h-5 w-5',
+  iconEndClass = 'h-5 w-5',
   variant = 'primary',
   size = 'md',
   fullWidth = false,
@@ -82,7 +86,6 @@ export function BaseButton({
   // Content
   btn.innerHTML = '';
 
-  // Main slot or label
   if (slotMain) {
     const temp = document.createElement('div');
     temp.innerHTML = `${slotStart}${slotMain}${slotEnd}`;
@@ -91,8 +94,8 @@ export function BaseButton({
     if (slotStart) appendHTML(btn, slotStart);
 
     const spinner = document.createElement('span');
-    spinner.className = 'animate-spin h-4 w-4';
-    spinner.appendChild(createIconElement('loader', 16));
+    spinner.className = 'animate-spin';
+    spinner.appendChild(createIconElement('loader', iconClass));
     btn.appendChild(spinner);
 
     if (!iconOnly) {
@@ -104,7 +107,7 @@ export function BaseButton({
     if (slotEnd) appendHTML(btn, slotEnd);
   } else {
     if (slotStart) appendHTML(btn, slotStart);
-    else if (icon) btn.appendChild(createIconElement(icon, 18));
+    else if (icon) btn.appendChild(createIconElement(icon, iconClass));
 
     if (label && !iconOnly) {
       const span = document.createElement('span');
@@ -112,13 +115,13 @@ export function BaseButton({
       btn.appendChild(span);
     }
 
-    if (iconEnd) btn.appendChild(createIconElement(iconEnd, 18));
+    if (iconEnd) btn.appendChild(createIconElement(iconEnd, iconEndClass));
     if (slotEnd) appendHTML(btn, slotEnd);
   }
 
   // Behavior
   if (disabled || loading) btn.disabled = true;
-  if (onClick) btn.addEventListener('click', /** @param {MouseEvent} e */ (e) => onClick(e));
+  if (onClick) btn.addEventListener('click', (e) => onClick(e));
 
   // data-* attributes
   for (const [key, val] of Object.entries(dataAttrs)) {
@@ -135,7 +138,7 @@ function appendHTML(container, html) {
   [...temp.childNodes].forEach((n) => container.appendChild(n));
 }
 
-// 🎨 Variants
+// Variants
 const variantMap = {
   primary: 'bg-[var(--color-accent)] text-[var(--color-button-text)]',
   secondary:
@@ -144,14 +147,14 @@ const variantMap = {
   outline: 'border border-[var(--color-border)] text-[var(--color-text)] bg-transparent',
 };
 
-// 📏 Sizes
+// Sizes
 const sizeMap = {
   sm: 'text-sm px-3 py-1.5',
   md: 'text-base px-4 py-2',
   lg: 'text-lg px-5 py-3',
 };
 
-// 🟠 Rounded map
+// Rounded options
 const roundedMap = {
   none: 'rounded-none',
   sm: 'rounded-sm',

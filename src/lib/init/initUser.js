@@ -1,19 +1,34 @@
 // src/lib/init/initUser.js
 
-import { getCurrentUser, setUserSettings } from '@state/userState.js';
+import { supabase } from '@auth/supabaseClient.js';
+import {
+  getCurrentUser,
+  setUserSettings,
+  setUserProfile,
+  setUserTeams,
+  setActiveRole,
+  setActiveTeam,
+} from '@state/userState.js';
 import { getUserSettings as fetchUserSettings } from '@lib/teams/user/getUserSettings.js';
 import { getOverrideRole } from '@state/devToolState.js';
 import { getSession } from '@auth/auth.js';
 
 /**
- * Loads the current user's settings and applies dev overrides if needed.
+ * @typedef {Object} Membership
+ * @property {string} team_id
+ * @property {string} role
+ * @property {{ name: string }} teams
+ */
+
+/**
+ * Loads the current user's settings, Supabase profile, and team memberships.
  *
- * @returns {Promise<{ user: object|null, settings: object|null }>}
+ * @returns {Promise<{ user: object|null, settings: object|null, profile: object|null, teams: Membership[], activeRole: string, activeTeam: Membership|null }>}
  */
 export async function initializeUser() {
   let user = getCurrentUser();
 
-  // 🚀 Try restoring from localStorage if user is not already in state
+  // 🚀 Restore user from localStorage if not in state
   if (!user) {
     const storedSession = localStorage.getItem('supabaseSession');
     if (storedSession) {
@@ -27,44 +42,97 @@ export async function initializeUser() {
     }
   }
 
-  // 🔄 If still no user, fetch session from Supabase
+  // 🔄 Fallback: fetch from Supabase
   if (!user) {
     const session = await getSession();
     user = session?.user || null;
-    if (user) {
-      console.log('🌐 User loaded from Supabase session:', user);
-    }
+    if (user) console.log('🌐 User loaded from Supabase session:', user);
   }
 
-  // Fetch user settings from DB
-  const settings = user ? await fetchUserSettings(user.id) : null;
-
-  if (!user || !settings) {
-    console.warn('⚠️ No user or settings found during initialization.');
-    return { user: null, settings: null };
+  if (!user) {
+    console.warn('⚠️ No user found during initialization.');
+    return {
+      user: null,
+      settings: null,
+      profile: null,
+      teams: [],
+      activeRole: null,
+      activeTeam: null,
+    };
   }
+
+  // Fetch legacy user settings (optional)
+  const settings = await fetchUserSettings(user.id);
+
+  // Fetch Supabase profile
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+
+  if (profileError) console.warn('⚠️ Failed to load profile', profileError);
+  setUserProfile(profile || null);
+
+  // Fetch team memberships
+  const { data: membershipsData, error: membershipsError } = await supabase
+    .from('team_memberships')
+    .select('team_id, role, teams(name)')
+    .eq('user_id', user.id);
+
+  if (membershipsError) console.warn('⚠️ Failed to load team memberships', membershipsError);
+
+  /** @type {Membership[]} */
+  const memberships = (membershipsData || []).map((m) => ({
+    team_id: m.team_id,
+    role: m.role,
+    teams: m.teams?.[0] || { name: 'Unknown Team' },
+  }));
+
+  setUserTeams(memberships || []);
 
   // Apply dev override role
+  let activeRole = settings?.role || 'player';
   const overrideRole = getOverrideRole();
   if (overrideRole) {
-    settings.original_role = settings.role;
-    settings.role = overrideRole;
+    activeRole = overrideRole;
+    setActiveRole(overrideRole);
     console.log(`🧪 Dev role override active: ${overrideRole}`);
+  } else {
+    setActiveRole(activeRole);
   }
 
-  // Store settings in centralized state
-  setUserSettings({ ...settings, email: user.email });
+  // Auto-select the first team as activeTeam if available
+  let activeTeam = null;
+  if (memberships.length > 0) {
+    activeTeam = memberships[0];
+    setActiveTeam(activeTeam.team_id);
+    console.log(`🏆 Active team set to: ${activeTeam.teams.name}`);
+  }
 
-  console.log('✅ User settings initialized:', settings);
-  return { user, settings };
+  // Store user settings
+  setUserSettings({
+    ...settings,
+    email: user.email,
+    profile,
+    teams: memberships,
+    activeRole,
+    activeTeam,
+  });
+
+  console.log('✅ User initialized:', {
+    user,
+    settings,
+    profile,
+    memberships,
+    activeRole,
+    activeTeam,
+  });
+  return { user, settings, profile, teams: memberships, activeRole, activeTeam };
 }
 
 /**
  * Redirect to login if not authorized for current page.
- *
- * @param {string} currentPage
- * @param {string[]} publicPages
- * @returns {boolean} True if redirected
  */
 export function handleAuthRedirect(currentPage, publicPages = ['login', 'signup', 'forgot']) {
   const isPublic = publicPages.includes(currentPage);

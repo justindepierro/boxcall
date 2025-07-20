@@ -17,6 +17,11 @@ export default function renderLoginPage(container) {
   forgotLink.className = 'text-sm text-blue-500 hover:underline block mt-2';
   forgotLink.textContent = 'Forgot your password?';
 
+  const signupLink = document.createElement('a');
+  signupLink.href = '#/signup';
+  signupLink.className = 'text-sm text-blue-500 hover:underline block mt-2';
+  signupLink.textContent = "Don't have an account? Sign up here.";
+
   container.appendChild(
     createAuthPage({
       title: 'Login',
@@ -25,7 +30,7 @@ export default function renderLoginPage(container) {
         { id: 'login-password', label: 'Password', type: 'password' },
       ],
       button: { label: 'Login', variant: 'primary', fullWidth: true },
-      extraElements: [createRememberMe(), forgotLink],
+      extraElements: [createRememberMe(), forgotLink, signupLink],
       onSubmit: async (e, form, loginBtn, errorEl) => {
         e.preventDefault();
         const email = qsInput('#login-email', form).value.trim();

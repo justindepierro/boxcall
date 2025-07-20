@@ -2,8 +2,9 @@
 
 import { mainPages, settingsPages, TOGGLE_BUTTON_CLASSES } from '@config/sidebarConfig.js';
 import { navigateTo } from '@routes/router.js';
-import { initSidebarToggle } from './sidebarToggleHandler.js';
 import { createIconElement } from '@utils/iconRenderer.js';
+
+import { initSidebarToggle } from './sidebarToggleHandler.js';
 
 export function renderSidebar() {
   const container = document.getElementById('sidebar-root');
@@ -59,7 +60,7 @@ export function renderSidebar() {
       justify-start gap-2 px-4 py-2
     `;
 
-    const iconEl = createIconElement(icon, 20);
+    const iconEl = createIconElement(icon, '20px');
     iconEl.classList.add('nav-icon');
 
     const labelEl = document.createElement('span');
@@ -89,7 +90,7 @@ export function renderSidebar() {
       justify-start gap-2 px-4 py-2
     `;
 
-    const iconEl = createIconElement(icon, 20);
+    const iconEl = createIconElement(icon, '20px');
     iconEl.classList.add('nav-icon');
 
     const labelEl = document.createElement('span');

@@ -12,8 +12,7 @@ import {
 import { isTemporarySession } from '@utils/sessionHelper';
 
 // 🎨 THEMING
-import { applyContextualTheme } from '@config/themes/themeController.js';
-import { applyTheme } from '@utils/themeManager.js';
+import { initTheme } from '@lib/init/initTheme';
 
 // 🧱 APP SHELL + ROUTING
 import { renderAppShell } from '@render/renderAppShell.js';
@@ -86,13 +85,7 @@ export async function initApp() {
   }
 
   // 6️⃣ Apply theme
-  try {
-    await applyContextualTheme();
-    console.log('🎨 Theme applied');
-  } catch (err) {
-    console.error('🎨 Theme error, falling back to classic:', err.message);
-    applyTheme('classic');
-  }
+  await initTheme();
 
   loadSidebarStateFromStorage();
 

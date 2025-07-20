@@ -1,27 +1,23 @@
-/* theme-tech.css */
+:root.theme-tech {
+  /* 🖋️ Fonts */
+  --font-header: 'Orbitron', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'Source Code Pro', monospace;
 
-:root {
-  /* Font Variables */
-  --font-h-tech: 'Orbitron', sans-serif;
-  --font-b-tech: 'Roboto', sans-serif;
-  --font-m-tech: 'JetBrains Mono', monospace;
+  /* 🎨 Colors */
+  --color-bg: #0f172a;
+  --color-text: #f1f5f9;
+  --color-accent: #06b6d4; /* Neon cyan */
+  --color-border: #1e293b;
+  --color-sidebar: #1e293b;
+  --color-header: #0f172a;
+  --color-header-text: #e2e8f0;
 
-  /* Color Variables */
-  --color-bg: #0f172a; /* Deep navy */
-  --color-text: #e2e8f0; /* Cool gray text */
-  --color-accent: #0ea5e9; /* Sky blue accent */
-  --color-border: #334155; /* Slate border */
-  --color-sidebar: #1e293b; /* Dark sidebar */
-  --color-header: #1e293b; /* Matching header */
-  --color-header-text: #e2e8f0; /* Light readable header text */
+  --color-sidebar-text: #94a3b8;
+  --color-sidebar-icon: #38bdf8;
+
+  /* Buttons */
+  --color-button-text: #ffffff;
+  --color-button-secondary: #334155;
+  --color-button-secondary-text: #f1f5f9;
 }
-
-/* Theme color variables:
-  --color-bg:           Main app background
-  --color-text:         Primary foreground text
-  --color-sidebar:      Sidebar background
-  --color-accent:       Buttons, links, highlights
-  --color-border:       Input/section outlines
-  --color-header-bg:    Top bar background
-  --color-header-text:  Top bar text
-*/

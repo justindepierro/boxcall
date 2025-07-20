@@ -76,3 +76,9 @@
   src: url('/fonts/courier-prime-v10-latin-regular.woff2') format('woff2');
   font-display: swap;
 }
+
+@font-face {
+  font-family: 'Georgia';
+  src: url('fonts/noto-sans-georgian-v47-latin-regular.woff2') format ('woff2');
+  font-display: swap;
+}

@@ -1,3 +1,4 @@
+// src/pages/signup/index.js
 import { signUp } from '@auth/auth.js';
 import { showToast } from '@utils/toast.js';
 import { qsInput } from '@utils/domHelper.js';
@@ -5,15 +6,11 @@ import { evaluatePasswordStrength } from '@utils/passwordStrength';
 import { delayedRedirect } from '@utils/navigation';
 import { resetErrors, handleAuthSubmit, validatePassword } from '@utils/authForms.js';
 import { createAuthPage } from '@components/AuthFormPage.js';
+import { createBackToLoginLink } from '@components/ui/backToLogin.js'; // Shared link component
 
-/**
- * Renders the Sign Up page into the container.
- * @param {HTMLElement} container
- */
 export default function renderSignupPage(container) {
   container.innerHTML = '';
 
-  // Create the Sign Up form using our shared page builder
   container.appendChild(
     createAuthPage({
       title: 'Sign Up',
@@ -29,101 +26,99 @@ export default function renderSignupPage(container) {
         size: 'md',
         fullWidth: true,
       },
+      extraElements: [createBackToLoginLink()],
       onSubmit: handleSignupSubmit,
       errorId: 'signup-error',
     })
   );
 
-  // Auto-focus email
   qsInput('#signup-email')?.focus();
-
-  // Attach password strength UI
   attachPasswordStrengthUI();
 }
 
 /**
- * Handles Sign Up form submission.
+ * Handle sign-up submission.
  */
 async function handleSignupSubmit(e, form, signupBtn, errorEl) {
   e.preventDefault();
   if (!(form instanceof HTMLFormElement) || !(signupBtn instanceof HTMLButtonElement)) return;
 
-  const emailInput = qsInput('#signup-email', form);
-  const passwordInput = qsInput('#signup-password', form);
-  const confirmInput = qsInput('#signup-confirm', form);
+  const email = qsInput('#signup-email', form).value.trim();
+  const password = qsInput('#signup-password', form).value;
+  const confirmPassword = qsInput('#signup-confirm', form).value;
 
   resetErrors(form);
 
-  // Password validation
-  const { valid, errors } = validatePassword(passwordInput.value);
-  if (!valid) {
-    const msg = errors.join(', ');
-    if (errorEl) errorEl.textContent = `⚠️ ${msg}`;
-    showToast(`❌ ${msg}`, 'error');
-    return;
-  }
+  // Validate password
+  const { valid, errors } = validatePassword(password);
+  if (!valid) return displayError(errors.join(', '), errorEl);
 
-  if (passwordInput.value !== confirmInput.value) {
-    const msg = 'Passwords do not match.';
-    if (errorEl) errorEl.textContent = `⚠️ ${msg}`;
-    showToast(`❌ ${msg}`, 'error');
-    return;
-  }
+  if (password !== confirmPassword) return displayError('Passwords do not match.', errorEl);
 
-  await handleAuthSubmit(
-    form,
-    signupBtn,
-    () => signUp(emailInput.value.trim(), passwordInput.value),
-    {
-      loadingText: 'Creating...',
-      withOverlay: true,
-      overlayMessage: 'Creating account...',
-      onSuccess: () => {
-        showToast('✅ Check your email to confirm your account.', 'success');
-        if (errorEl) errorEl.textContent = '📧 Confirmation email sent. Redirecting...';
-        delayedRedirect('login', 3500);
-      },
-      onError: (err) => {
-        const msg = err?.message || 'Signup failed.';
-        showToast(`❌ ${msg}`, 'error');
-        if (errorEl) errorEl.textContent = `⚠️ ${msg}`;
-      },
-    }
-  );
+  await handleAuthSubmit(form, signupBtn, () => signUp(email, password), {
+    loadingText: 'Creating...',
+    withOverlay: true,
+    overlayMessage: 'Creating account...',
+    onSuccess: () => {
+      showToast('✅ Check your email to confirm your account.', 'success');
+      if (errorEl) errorEl.textContent = '📧 Confirmation email sent. Redirecting...';
+      delayedRedirect('login', 3500);
+    },
+    onError: (err) => displayError(err?.message || 'Signup failed.', errorEl),
+  });
 }
 
 /**
- * Adds a password strength meter under the password input field.
+ * Display error both inline and as a toast.
+ */
+function displayError(message, errorEl) {
+  if (errorEl) errorEl.textContent = `⚠️ ${message}`;
+  showToast(`❌ ${message}`, 'error');
+}
+
+/**
+ * Adds a password strength meter under the password input.
  */
 function attachPasswordStrengthUI() {
   const passwordField = document.querySelector('#signup-password');
   if (!(passwordField instanceof HTMLInputElement)) return;
 
-  // Create strength elements
-  const strengthEl = document.createElement('p');
-  strengthEl.id = 'password-strength';
-  strengthEl.className = 'text-xs text-gray-500 mt-1';
-  strengthEl.textContent = 'Enter a password';
-
-  const strengthBar = document.createElement('div');
-  strengthBar.className = 'h-2 w-full bg-gray-200 rounded overflow-hidden mt-1';
-  const strengthFill = document.createElement('div');
-  strengthFill.className = 'h-full w-0 bg-red-500 transition-all duration-300';
-  strengthBar.appendChild(strengthFill);
+  const strengthEl = createStrengthMessage();
+  const strengthBar = createStrengthBar();
 
   passwordField.insertAdjacentElement('afterend', strengthBar);
   passwordField.insertAdjacentElement('afterend', strengthEl);
 
-  // Update strength on input
+  const strengthFill = strengthBar.querySelector('div');
+
   passwordField.addEventListener('input', (e) => {
     if (!(e.target instanceof HTMLInputElement)) return;
     const { text, score } = evaluatePasswordStrength(e.target.value);
     strengthEl.textContent = text;
     strengthFill.style.width = `${Math.min(score * 20, 100)}%`;
-
-    // Color changes based on strength
-    strengthFill.className = `h-full transition-all duration-300 ${
-      score <= 2 ? 'bg-red-500' : score === 3 ? 'bg-yellow-500' : 'bg-green-500'
-    }`;
+    strengthFill.className = getStrengthColor(score);
   });
+}
+
+function createStrengthMessage() {
+  const el = document.createElement('p');
+  el.id = 'password-strength';
+  el.className = 'text-xs text-gray-500 mt-1';
+  el.textContent = 'Enter a password';
+  return el;
+}
+
+function createStrengthBar() {
+  const bar = document.createElement('div');
+  bar.className = 'h-2 w-full bg-gray-200 rounded overflow-hidden mt-1';
+  const fill = document.createElement('div');
+  fill.className = 'h-full w-0 bg-red-500 transition-all duration-300';
+  bar.appendChild(fill);
+  return bar;
+}
+
+function getStrengthColor(score) {
+  return `h-full transition-all duration-300 ${
+    score <= 2 ? 'bg-red-500' : score === 3 ? 'bg-yellow-500' : 'bg-green-500'
+  }`;
 }

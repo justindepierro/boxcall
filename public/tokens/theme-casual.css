@@ -1,27 +1,23 @@
-/* theme-casual.css */
+:root.theme-casual {
+  /* 🖋️ Fonts */
+  --font-header: 'Baloo 2', cursive;
+  --font-body: 'Nunito', sans-serif;
+  --font-mono: 'Fira Mono', monospace;
 
-:root {
-  /* Font Variables */
-  --font-h-casual: 'Comic Neue', cursive;
-  --font-b-casual: 'Open Sans', sans-serif;
-  --font-m-casual: 'Courier Prime', monospace;
+  /* 🎨 Colors */
+  --color-bg: #fffaf0;
+  --color-text: #3f3f46;
+  --color-accent: #10b981; /* Soft green */
+  --color-border: #e2e8f0;
+  --color-sidebar: #34d399;
+  --color-header: #10b981;
+  --color-header-text: #ffffff;
 
-  /* Color Variables */
-  --color-bg: #fffdf6; /* Soft off-white */
-  --color-text: #3f3f3f; /* Friendly dark gray */
-  --color-accent: #fbbf24; /* Warm yellow */
-  --color-border: #d4d4d4; /* Light neutral border */
-  --color-sidebar: #fafaf9; /* Light sidebar */
-  --color-header: #fffbea; /* Light yellow header */
-  --color-header-text: #3f3f3f; /* Dark readable header text */
+  --color-sidebar-text: #ffffff;
+  --color-sidebar-icon: #e0f2f1;
+
+  /* Buttons */
+  --color-button-text: #ffffff;
+  --color-button-secondary: #f3f4f6;
+  --color-button-secondary-text: #3f3f46;
 }
-
-/* Theme color variables:
-  --color-bg:           Main app background
-  --color-text:         Primary foreground text
-  --color-sidebar:      Sidebar background
-  --color-accent:       Buttons, links, highlights
-  --color-border:       Input/section outlines
-  --color-header-bg:    Top bar background
-  --color-header-text:  Top bar text
-*/
