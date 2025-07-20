@@ -1,6 +1,7 @@
 // src/components/sidebar/initSidebar.js
 
 import { loadSidebarStateFromStorage, getSidebarState } from '@state/sidebarState.js';
+
 import { renderSidebar } from './renderSidebar.js';
 import { applySidebarState } from './sidebarStateController.js';
 import { initSidebarToggle } from './sidebarToggleHandler.js';

@@ -1,12 +1,61 @@
 {
+  "root": true,
   "env": {
     "browser": true,
     "es2021": true
   },
-  "extends": ["eslint:recommended", "plugin:import/errors", "plugin:import/warnings"],
-  "plugins": ["import"],
+  "extends": ["eslint:recommended", "plugin:import/recommended", "plugin:prettier/recommended"],
+  "plugins": ["import", "prettier"],
   "rules": {
-    "import/no-unresolved": "error",
-    "import/no-absolute-path": "error"
+    "prettier/prettier": [
+      "error",
+      {
+        "semi": true,
+        "singleQuote": true,
+        "tabWidth": 2,
+        "trailingComma": "es5",
+        "printWidth": 100,
+        "bracketSpacing": true
+      }
+    ],
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "import/order": [
+      "warn",
+      {
+        "groups": [["builtin", "external", "internal"]],
+        "pathGroups": [
+          {
+            "pattern": "@{auth,components,config,lib,pages,routes,state,render,utils}/**",
+            "group": "internal",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "alphabetize": { "order": "asc", "caseInsensitive": true },
+        "newlines-between": "always"
+      }
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      },
+      "alias": {
+        "map": [
+          ["@auth", "./src/auth"],
+          ["@components", "./src/components"],
+          ["@config", "./src/config"],
+          ["@lib", "./src/lib"],
+          ["@pages", "./src/pages"],
+          ["@routes", "./src/routes"],
+          ["@state", "./src/state"],
+          ["@render", "./src/render"],
+          ["@utils", "./src/utils"]
+        ],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
   }
 }

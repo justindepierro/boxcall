@@ -1,6 +1,7 @@
 // src/auth/authListener.js (or wherever this lives)
-import { supabase } from './supabaseClient.js';
 import { applyContextualTheme } from '../config/themes/themeController.js';
+
+import { supabase } from './supabaseClient.js';
 
 /**
  * Listen for auth changes and invoke the callback.

@@ -1,6 +1,8 @@
-// src/utils/devLogger.js
+/* eslint-disable no-console */
 
 import { getUserSettings } from '@state/userState';
+
+/** @typedef {'info' | 'warn' | 'error' | 'debug'} LogLevel */
 
 const logQueue = [];
 const MAX_LOGS = 500;
@@ -8,25 +10,49 @@ const MAX_LOGS = 500;
 /**
  * Adds a new log entry with timestamp and triggers UI updates.
  * @param {string} msg
- * @param {'info' | 'warn' | 'error' | 'debug'} [level='info']
+ * @param {LogLevel} [level='info']
  */
 export function devLog(msg, level = 'info') {
   const timestamp = `[${new Date().toLocaleTimeString()}]`;
   const formatted = `${timestamp} ${msg}`;
   logQueue.push({ message: formatted, level });
 
-  // Trim logQueue if too large
   if (logQueue.length > MAX_LOGS) logQueue.shift();
 
-  renderLogEntry(formatted, level); // UI update
-  console.log(formatted);
+  renderLogEntry(formatted, level);
+  if (level === 'error') console.error(formatted);
+  else if (level === 'warn') console.warn(formatted);
+  else console.info(formatted);
+
   saveLogsToSession();
 }
 
 /**
+ * Specialized logger for errors.
+ * @param {string} msg
+ */
+export function devError(msg) {
+  devLog(msg, 'error');
+}
+
+/**
+ * Specialized logger for warnings.
+ * @param {string} msg
+ */
+export function devWarn(msg) {
+  devLog(msg, 'warn');
+}
+
+/**
+ * Specialized logger for debug messages.
+ * @param {string} msg
+ */
+export function devDebug(msg) {
+  devLog(msg, 'debug');
+}
+
+/**
  * Renders a single log entry in the UI panel (if present).
- * @param {string} message
- * @param {'info'|'warn'|'error'|'debug'} level
  */
 function renderLogEntry(message, level) {
   const panel = document.getElementById('dev-log-console');
@@ -40,17 +66,10 @@ function renderLogEntry(message, level) {
   panel.scrollTop = panel.scrollHeight;
 }
 
-/**
- * Retrieves all current logs as an array of strings.
- * @returns {string[]}
- */
 export function getDevLogs() {
   return logQueue.map((log) => log.message);
 }
 
-/**
- * Clears all logs and updates the panel.
- */
 export function clearDevLogs() {
   logQueue.length = 0;
   const panel = document.getElementById('dev-log-console');
@@ -58,16 +77,10 @@ export function clearDevLogs() {
   saveLogsToSession();
 }
 
-/**
- * Saves logs to session storage.
- */
 export function saveLogsToSession() {
   sessionStorage.setItem('dev.logs', JSON.stringify(logQueue));
 }
 
-/**
- * Restores logs from session storage.
- */
 export function restoreLogsFromSession() {
   const saved = sessionStorage.getItem('dev.logs');
   if (saved) {
@@ -77,9 +90,6 @@ export function restoreLogsFromSession() {
   }
 }
 
-/**
- * Refreshes the role/theme context section in the dev panel.
- */
 export function refreshDevContext() {
   const context = document.getElementById('log-context');
   if (context) {
@@ -87,9 +97,6 @@ export function refreshDevContext() {
   }
 }
 
-/**
- * Builds the HTML snippet for user context.
- */
 function getContextHTML() {
   const settings = getUserSettings() || {};
   return `
@@ -103,21 +110,13 @@ function getContextHTML() {
   `;
 }
 
-/**
- * Renders all logs into the dev panel (e.g., after restore).
- */
 function renderAllLogs() {
   const panel = document.getElementById('dev-log-console');
   if (!panel) return;
   panel.innerHTML = '';
-  logQueue.forEach((log) => {
-    renderLogEntry(log.message, log.level);
-  });
+  logQueue.forEach((log) => renderLogEntry(log.message, log.level));
 }
 
-/**
- * Maps log level to Tailwind color classes.
- */
 function getLogClass(level) {
   switch (level) {
     case 'error':

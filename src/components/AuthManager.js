@@ -5,20 +5,20 @@ import { navigateTo } from '@routes/router.js';
 import { applyContextualTheme } from '@config/themes/themeController.js';
 import { showToast } from '@utils/toast.js';
 import { resetAppToPublic } from '@render/appReset';
+import { devLog } from '@utils/devLogger.js'; // Centralized logger
 
 /**
  * Starts Supabase auth change listeners.
  */
 export function initAuthListeners() {
-  console.log('🔄 AuthManager: Initializing auth state listeners...');
+  devLog('🔄 AuthManager: Initializing auth state listeners...', 'debug');
 
   supabase.auth.onAuthStateChange(async (event, session) => {
-    console.log('🔄 AuthManager: Auth state changed →', event, session);
-
-    // ...
+    devLog(`🔄 AuthManager: Auth state changed → ${event}`, 'debug');
+    if (session) devLog(`Session User: ${JSON.stringify(session.user)}`, 'debug');
 
     if (!session) {
-      console.warn('🚪 Logged out — redirecting to login');
+      devLog('🚪 Logged out — redirecting to login', 'warn');
       clearAuthState();
       showToast('👋 You have been logged out.', 'info');
 
@@ -41,13 +41,13 @@ export async function ensureAuthenticated() {
   try {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data?.user) {
-      console.warn('🔒 ensureAuthenticated(): User not logged in, redirecting.');
+      devLog('🔒 ensureAuthenticated(): User not logged in, redirecting.', 'warn');
       navigateTo('login');
       return false;
     }
     return true;
   } catch (err) {
-    console.error('⚠️ ensureAuthenticated(): Error checking user:', err);
+    devLog(`⚠️ ensureAuthenticated(): Error checking user: ${err.message}`, 'error');
     navigateTo('login');
     return false;
   }

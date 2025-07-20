@@ -1,4 +1,5 @@
 import { DEFAULT_THEME, VALID_THEME_KEYS } from '@config/themes/themeConstants.js';
+import { devLog } from '@utils/devLogger.js';
 
 /**
  * Applies the color and font theme by:
@@ -7,18 +8,19 @@ import { DEFAULT_THEME, VALID_THEME_KEYS } from '@config/themes/themeConstants.j
  * - Logging the active fonts (from CSS variables)
  *
  * @param {string} colorKey - Color theme key (e.g., 'modern', 'tech').
+ * @param {string} fontKey - Font theme key (e.g., 'modern', 'classic').
  */
 export function applyTheme(colorKey = DEFAULT_THEME, fontKey = DEFAULT_THEME) {
   const html = document.documentElement;
 
-  // Clean classes
+  // Clean existing theme/font classes
   [...html.classList].forEach((cls) => {
     if (cls.startsWith('theme-') || cls.startsWith('font-')) {
       html.classList.remove(cls);
     }
   });
 
-  // Safe keys
+  // Ensure valid keys
   const safeColorKey = VALID_THEME_KEYS.includes(colorKey) ? colorKey : DEFAULT_THEME;
   const safeFontKey = VALID_THEME_KEYS.includes(fontKey) ? fontKey : DEFAULT_THEME;
 
@@ -26,7 +28,7 @@ export function applyTheme(colorKey = DEFAULT_THEME, fontKey = DEFAULT_THEME) {
   html.classList.add(`theme-${safeColorKey}`);
   html.classList.add(`font-${safeFontKey}`);
 
-  // Apply CSS tokens
+  // Load CSS tokens for theme
   loadThemeCSS(safeColorKey);
 
   // Fetch CSS variable fonts (real-time)
@@ -35,7 +37,7 @@ export function applyTheme(colorKey = DEFAULT_THEME, fontKey = DEFAULT_THEME) {
   const bodyFont = rootStyle.getPropertyValue('--font-body').trim();
   const monoFont = rootStyle.getPropertyValue('--font-mono').trim();
 
-  console.log(
+  devLog(
     `🎨 Theme applied → ${safeColorKey}, fonts: header=${headerFont}, body=${bodyFont}, mono=${monoFont}`
   );
 }
@@ -65,12 +67,13 @@ function loadThemeCSS(themeKey) {
 
 /**
  * Logs the currently applied fonts by reading CSS variables.
+ * (Kept as a utility for debugging purposes.)
  */
-function logAppliedFonts() {
+export function logAppliedFonts() {
   const styles = getComputedStyle(document.documentElement);
   const headerFont = styles.getPropertyValue('--font-header').trim();
   const bodyFont = styles.getPropertyValue('--font-body').trim();
   const monoFont = styles.getPropertyValue('--font-mono').trim();
 
-  console.log(`🖋️ Active fonts → header: ${headerFont}, body: ${bodyFont}, mono: ${monoFont}`);
+  devLog(`🖋️ Active fonts → header: ${headerFont}, body: ${bodyFont}, mono: ${monoFont}`);
 }

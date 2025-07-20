@@ -1,6 +1,6 @@
-// src/config/themes/themeService.js
 import { supabase } from '@auth/supabaseClient.js';
 import { applyTheme } from '@utils/themeManager.js';
+import { devLog } from '@utils/devLogger.js';
 
 import { fetchThemeSettings } from './fetchThemeSettings.js';
 import { DEFAULT_THEME } from './themeConstants.js';
@@ -22,8 +22,8 @@ export async function loadAndApplyTheme(userId, teamId = null, fallback = DEFAUL
   try {
     let theme = await fetchThemeSettings(userId, teamId);
 
-    if (!theme || !theme.color) {
-      console.warn('⚠️ No valid theme returned. Using fallback:', fallback);
+    if (!theme?.color) {
+      devLog(`⚠️ No valid theme returned. Using fallback: ${fallback}`, 'warn');
       theme = { color: fallback };
     }
 
@@ -35,10 +35,10 @@ export async function loadAndApplyTheme(userId, teamId = null, fallback = DEFAUL
     // Cache applied theme
     cacheTheme(normalized);
 
-    console.log('🎨 Theme applied via themeService:', normalized);
+    devLog(`🎨 Theme applied via themeService: ${JSON.stringify(normalized)}`, 'info');
     return normalized;
   } catch (err) {
-    console.error('❌ loadAndApplyTheme() failed. Using fallback theme:', err);
+    devLog(`❌ loadAndApplyTheme() failed. Using fallback theme: ${err.message}`, 'error');
     const fallbackTheme = { color: fallback };
     applyTheme(fallback);
     cacheTheme(fallbackTheme);
@@ -81,10 +81,10 @@ export async function updateThemeSettings(userId, updates) {
     cacheTheme(normalized);
     applyTheme(normalized.color);
 
-    console.log('✅ Theme updated successfully:', normalized);
+    devLog(`✅ Theme updated successfully: ${JSON.stringify(normalized)}`, 'info');
     return normalized;
   } catch (err) {
-    console.error('❌ updateThemeSettings() failed:', err);
+    devLog(`❌ updateThemeSettings() failed: ${err.message}`, 'error');
     return getFallbackTheme('update-error');
   }
 }
@@ -113,11 +113,11 @@ function cacheTheme(theme) {
     const { color } = normalizeTheme(theme);
     localStorage.setItem('lastTheme', JSON.stringify({ color }));
   } catch (err) {
-    console.warn('⚠️ Failed to cache theme:', err.message);
+    devLog(`⚠️ Failed to cache theme: ${err.message}`, 'warn');
   }
 }
 
 function getFallbackTheme(reason = '') {
-  console.warn(`🛑 Using default theme fallback: ${reason}`);
+  devLog(`🛑 Using default theme fallback: ${reason}`, 'warn');
   return { color: DEFAULT_THEME };
 }

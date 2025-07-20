@@ -13,6 +13,7 @@ import {
   MINIMIZE_SYMBOLS,
 } from '@config/sidebarConfig.js';
 import { createIconElement } from '@utils/iconRenderer.js';
+import { devLog, devError } from '@utils/devLogger.js';
 
 /**
  * Applies layout and visibility changes based on sidebar state.
@@ -20,8 +21,9 @@ import { createIconElement } from '@utils/iconRenderer.js';
  */
 export function applySidebarState(newState) {
   const parts = querySidebarElements();
+
   if (!parts) {
-    console.warn('❌ applySidebarState(): Sidebar DOM parts missing.');
+    devError('❌ applySidebarState(): Sidebar DOM parts missing.');
     return;
   }
 
@@ -35,42 +37,40 @@ export function applySidebarState(newState) {
     minimizeBtn,
   } = parts;
 
+  // Validate newState
   if (!SIDEBAR_STATES.includes(newState)) {
-    console.error(
+    devError(
       `🚨 Invalid sidebar state "${newState}". Expected one of: ${SIDEBAR_STATES.join(', ')}`
     );
     return;
   }
 
-  console.log(`🎯 Sidebar → ${newState}`);
+  devLog(`🎯 Sidebar → ${newState}`);
 
-  // 🔄 Remove any old layout classes
+  // Remove previous layout classes
   outer?.classList.remove(...Object.values(WIDTH_CLASSES));
   mainContent?.classList.remove(...Object.values(MARGIN_CLASSES));
 
-  // 🧼 Sidebar visibility
-  if (newState === 'collapsed') {
-    sidebar.style.display = 'none';
-  } else {
-    sidebar.style.display = 'flex'; // ensure visible
+  // Update sidebar visibility
+  sidebar.style.display = newState === 'collapsed' ? 'none' : 'flex';
+  if (newState !== 'collapsed') {
     sidebar.classList.add('opacity-100', 'pointer-events-auto');
   }
 
-  // ✅ Apply new width and margin (to wrapper + main content)
+  // Apply new width and margin
   outer?.classList.add(WIDTH_CLASSES[newState]);
   mainContent?.classList.add(MARGIN_CLASSES[newState]);
 
-  // 🎨 Label + icon visibility
+  // Update visibility of labels, icons, and title
   updateSidebarVisibility({ labels, icons, title }, newState);
   adjustSidebarButtons(newState);
 
-  // 🔘 Update icon inside toggle button
-  const iconName = MINIMIZE_SYMBOLS[newState];
+  // Update icon inside toggle button
   if (minimizeBtn) {
     minimizeBtn.innerHTML = '';
-    minimizeBtn.appendChild(createIconElement(iconName, '20'));
+    minimizeBtn.appendChild(createIconElement(MINIMIZE_SYMBOLS[newState], '20'));
   }
 
-  // 💾 Save to local state
+  // Save to local state
   setSidebarState(newState);
 }

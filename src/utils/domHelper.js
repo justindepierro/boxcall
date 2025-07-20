@@ -22,8 +22,7 @@ export function qs(selector) {
  * @returns {T|null}
  */
 export function qsi(selector) {
-  const el = document.querySelector(selector);
-  return el ? /** @type {T} */ (el) : null;
+  return /** @type {T|null} */ (document.querySelector(selector));
 }
 
 /**
@@ -32,7 +31,8 @@ export function qsi(selector) {
  * @returns {boolean}
  */
 export function getChecked(e) {
-  return !!(e.target && /** @type {HTMLInputElement} */ (e.target).checked);
+  const target = e.target;
+  return target instanceof HTMLInputElement ? target.checked : false;
 }
 
 /**
@@ -41,7 +41,11 @@ export function getChecked(e) {
  * @returns {string}
  */
 export function getValue(e) {
-  return e.target && 'value' in e.target ? /** @type {HTMLInputElement} */ (e.target).value : '';
+  const target = e.target;
+  if (target instanceof HTMLInputElement || target instanceof HTMLSelectElement) {
+    return target.value || '';
+  }
+  return '';
 }
 
 /**
@@ -50,8 +54,11 @@ export function getValue(e) {
  * @param {string} value
  */
 export function setSelectValue(el, value) {
-  if (el instanceof HTMLSelectElement) el.value = value;
+  if (el instanceof HTMLSelectElement) {
+    el.value = value;
+  }
 }
+
 /**
  * Query and cast an input element.
  * Returns null if the element is not found.
@@ -84,7 +91,9 @@ export function qsButton(selector, parent = document) {
  */
 export function qsInputSafe(selector, parent = document) {
   const input = qsInput(selector, parent);
-  if (!input) throw new Error(`Input element not found: ${selector}`);
+  if (!input) {
+    throw new Error(`Input element not found: ${selector}`);
+  }
   return input;
 }
 
@@ -96,6 +105,8 @@ export function qsInputSafe(selector, parent = document) {
  */
 export function qsButtonSafe(selector, parent = document) {
   const button = qsButton(selector, parent);
-  if (!button) throw new Error(`Button element not found: ${selector}`);
+  if (!button) {
+    throw new Error(`Button element not found: ${selector}`);
+  }
   return button;
 }

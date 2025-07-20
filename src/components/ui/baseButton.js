@@ -1,4 +1,6 @@
-// src/components/ui/BaseButton.js
+// src/components/ui/baseButton.js
+
+// --- Imports ---
 import { createIconElement } from '@utils/iconRenderer.js';
 
 /**
@@ -6,69 +8,129 @@ import { createIconElement } from '@utils/iconRenderer.js';
  * @property {string} [label]
  * @property {string} [icon]
  * @property {string} [iconEnd]
- * @property {string} [iconClass='h-5 w-5']
- * @property {string} [iconEndClass='h-5 w-5']
- * @property {string} [variant='primary']
- * @property {string} [size='md']
- * @property {boolean} [fullWidth=false]
- * @property {boolean} [disabled=false]
- * @property {boolean} [loading=false]
- * @property {boolean} [iconOnly=false]
- * @property {boolean} [selected=false]
- * @property {boolean} [focused=false]
- * @property {boolean} [uppercase=false]
- * @property {string}  [rounded='md']
- * @property {string}  [tooltip]
- * @property {string}  [ariaLabel]
- * @property {Object}  [dataAttrs]
- * @property {string}  [slotStart]
- * @property {string}  [slotMain]
- * @property {string}  [slotEnd]
- * @property {(e: MouseEvent) => void} [onClick]
+ * @property {string} [iconClass]
+ * @property {string} [iconEndClass]
+ * @property {string} [variant]
+ * @property {string} [size]
+ * @property {string} [rounded]
+ * @property {boolean} [fullWidth]
+ * @property {boolean} [disabled]
+ * @property {boolean} [loading]
+ * @property {boolean} [iconOnly]
+ * @property {boolean} [uppercase]
+ * @property {boolean} [selected]
+ * @property {boolean} [focused]
+ * @property {string} [tooltip]
+ * @property {string} [ariaLabel]
+ * @property {Function} [onClick]
+ * @property {Object<string, string>} [dataAttrs]
+ * @property {string} [slotMain]
+ * @property {string} [slotStart]
+ * @property {string} [slotEnd]
  */
 
+// --- Style Maps ---
+const variantMap = {
+  primary: 'bg-[var(--color-accent)] text-white',
+  secondary: 'bg-gray-200 text-black',
+  outline: 'border border-gray-300 text-black',
+};
+
+const sizeMap = {
+  sm: 'text-sm px-2 py-1',
+  md: 'text-base px-3 py-2',
+  lg: 'text-lg px-4 py-3',
+};
+
+const roundedMap = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  full: 'rounded-full',
+};
+
+// --- Main Function ---
 /**
  * Fully featured, theme-aware, accessible button component.
  * @param {BaseButtonOptions} options
  * @returns {HTMLButtonElement}
  */
-export function BaseButton({
-  label,
-  icon,
-  iconEnd,
-  iconClass = 'h-5 w-5',
-  iconEndClass = 'h-5 w-5',
-  variant = 'primary',
-  size = 'md',
-  fullWidth = false,
-  disabled = false,
-  loading = false,
-  iconOnly = false,
-  selected = false,
-  focused = false,
-  uppercase = false,
-  rounded = 'md',
-  tooltip = '',
-  ariaLabel = '',
-  dataAttrs = {},
-  slotStart = '',
-  slotMain = '',
-  slotEnd = '',
-  onClick,
-}) {
+export function BaseButton(options) {
+  const {
+    label = '',
+    icon = '',
+    iconEnd = '',
+    iconClass = 'h-5 w-5',
+    iconEndClass = 'h-5 w-5',
+    variant = 'primary',
+    size = 'md',
+    rounded = 'md',
+    fullWidth = false,
+    disabled = false,
+    loading = false,
+    iconOnly = false,
+    uppercase = false,
+    selected = false,
+    focused = false,
+    tooltip = '',
+    ariaLabel = '',
+    onClick = null,
+    dataAttrs = {},
+    slotMain = '',
+    slotStart = '',
+    slotEnd = '',
+  } = options;
+
   /** @type {HTMLButtonElement} */
   const btn = document.createElement('button');
   btn.type = 'button';
 
-  // Accessibility
+  applyAccessibility(btn, { iconOnly, ariaLabel, tooltip });
+  applyButtonClasses(btn, {
+    variant,
+    size,
+    rounded,
+    uppercase,
+    fullWidth,
+    disabled,
+    loading,
+    iconOnly,
+    selected,
+    focused,
+  });
+  setButtonContent(btn, {
+    slotMain,
+    slotStart,
+    slotEnd,
+    loading,
+    icon,
+    iconClass,
+    label,
+    iconOnly,
+    iconEnd,
+    iconEndClass,
+  });
+  applyBehavior(btn, { disabled, loading, onClick });
+  applyDataAttributes(btn, dataAttrs);
+
+  return btn;
+}
+
+// --- Helper Functions ---
+function applyAccessibility(btn, { iconOnly, ariaLabel, tooltip }) {
   if (iconOnly && ariaLabel) {
     btn.setAttribute('aria-label', ariaLabel);
     btn.title = tooltip || ariaLabel;
   } else if (tooltip) {
     btn.title = tooltip;
   }
+}
 
-  // Classes
+function applyButtonClasses(
+  btn,
+  { variant, size, rounded, uppercase, fullWidth, disabled, loading, iconOnly, selected, focused }
+) {
   btn.className = `
     base-btn inline-flex items-center justify-center
     font-medium transition-all
@@ -82,83 +144,93 @@ export function BaseButton({
     ${selected ? 'ring-2 ring-[var(--color-accent)]' : ''}
     ${focused ? 'outline outline-2 outline-[var(--color-accent)]' : ''}
   `.trim();
+}
 
-  // Content
+function setButtonContent(
+  btn,
+  { slotMain, slotStart, slotEnd, loading, icon, iconClass, label, iconOnly, iconEnd, iconEndClass }
+) {
   btn.innerHTML = '';
 
   if (slotMain) {
-    const temp = document.createElement('div');
-    temp.innerHTML = `${slotStart}${slotMain}${slotEnd}`;
-    [...temp.childNodes].forEach((n) => btn.appendChild(n));
-  } else if (loading) {
-    if (slotStart) appendHTML(btn, slotStart);
-
-    const spinner = document.createElement('span');
-    spinner.className = 'animate-spin';
-    spinner.appendChild(createIconElement('loader', iconClass));
-    btn.appendChild(spinner);
-
-    if (!iconOnly) {
-      const span = document.createElement('span');
-      span.textContent = 'Loading...';
-      btn.appendChild(span);
-    }
-
-    if (slotEnd) appendHTML(btn, slotEnd);
-  } else {
-    if (slotStart) appendHTML(btn, slotStart);
-    else if (icon) btn.appendChild(createIconElement(icon, iconClass));
-
-    if (label && !iconOnly) {
-      const span = document.createElement('span');
-      span.textContent = label;
-      btn.appendChild(span);
-    }
-
-    if (iconEnd) btn.appendChild(createIconElement(iconEnd, iconEndClass));
-    if (slotEnd) appendHTML(btn, slotEnd);
+    appendSlots(btn, slotStart, slotMain, slotEnd);
+    return;
   }
 
-  // Behavior
-  if (disabled || loading) btn.disabled = true;
-  if (onClick) btn.addEventListener('click', (e) => onClick(e));
+  if (loading) {
+    renderLoadingState(btn, { slotStart, slotEnd, iconOnly, iconClass });
+    return;
+  }
 
-  // data-* attributes
+  renderDefaultContent(btn, {
+    slotStart,
+    slotEnd,
+    icon,
+    iconClass,
+    label,
+    iconOnly,
+    iconEnd,
+    iconEndClass,
+  });
+}
+
+function appendSlots(btn, slotStart, slotMain, slotEnd) {
+  const temp = document.createElement('div');
+  temp.innerHTML = `${slotStart || ''}${slotMain || ''}${slotEnd || ''}`;
+  [...temp.childNodes].forEach((n) => btn.appendChild(n));
+}
+
+function renderLoadingState(btn, { slotStart, slotEnd, iconOnly, iconClass }) {
+  if (slotStart) appendHTML(btn, slotStart);
+
+  const spinner = document.createElement('span');
+  spinner.className = 'animate-spin';
+  spinner.appendChild(createIconElement('loader', iconClass)); // From iconRenderer
+  btn.appendChild(spinner);
+
+  if (!iconOnly) {
+    const span = document.createElement('span');
+    span.textContent = 'Loading...';
+    btn.appendChild(span);
+  }
+
+  if (slotEnd) appendHTML(btn, slotEnd);
+}
+
+function renderDefaultContent(
+  btn,
+  { slotStart, slotEnd, icon, iconClass, label, iconOnly, iconEnd, iconEndClass }
+) {
+  if (slotStart) {
+    appendHTML(btn, slotStart);
+  } else if (icon) {
+    btn.appendChild(createIconElement(icon, iconClass)); // From iconRenderer
+  }
+
+  if (label && !iconOnly) {
+    const span = document.createElement('span');
+    span.textContent = label;
+    btn.appendChild(span);
+  }
+
+  if (iconEnd) btn.appendChild(createIconElement(iconEnd, iconEndClass)); // From iconRenderer
+  if (slotEnd) appendHTML(btn, slotEnd);
+}
+
+function applyBehavior(btn, { disabled, loading, onClick }) {
+  btn.disabled = disabled || loading;
+  if (onClick) btn.addEventListener('click', (e) => onClick(e));
+}
+
+function applyDataAttributes(btn, dataAttrs) {
   for (const [key, val] of Object.entries(dataAttrs)) {
     btn.dataset[key] = val;
   }
-
-  return btn;
 }
 
-// Helper for injecting HTML fragments
-function appendHTML(container, html) {
+// --- Utilities ---
+function appendHTML(el, html) {
   const temp = document.createElement('div');
   temp.innerHTML = html;
-  [...temp.childNodes].forEach((n) => container.appendChild(n));
+  [...temp.childNodes].forEach((node) => el.appendChild(node));
 }
-
-// Variants
-const variantMap = {
-  primary: 'bg-[var(--color-accent)] text-[var(--color-button-text)]',
-  secondary:
-    'bg-[var(--color-button-secondary)] text-[var(--color-button-secondary-text)] border border-[var(--color-border)]',
-  danger: 'bg-red-600 text-white',
-  outline: 'border border-[var(--color-border)] text-[var(--color-text)] bg-transparent',
-};
-
-// Sizes
-const sizeMap = {
-  sm: 'text-sm px-3 py-1.5',
-  md: 'text-base px-4 py-2',
-  lg: 'text-lg px-5 py-3',
-};
-
-// Rounded options
-const roundedMap = {
-  none: 'rounded-none',
-  sm: 'rounded-sm',
-  md: 'rounded',
-  lg: 'rounded-lg',
-  pill: 'rounded-full',
-};

@@ -1,7 +1,8 @@
 // /components/sidebar/sidebarToggleHandler.js
 import { getSidebarState, setSidebarState, SIDEBAR_STATES } from '@state/sidebarState.js';
-import { applySidebarState } from './sidebarStateController.js';
 import { querySidebarElements } from '@utils/sidebarUtils.js';
+
+import { applySidebarState } from './sidebarStateController.js';
 
 /**
  * 🔁 Cycles sidebar to the next state in sequence

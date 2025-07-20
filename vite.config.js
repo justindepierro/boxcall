@@ -1,22 +1,14 @@
 // vite.config.js
 import { defineConfig } from 'vite';
-import path from 'path';
-import { fileURLToPath } from 'url'; // ✅ needed for __dirname
-import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { dirname, path } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
   root: '.', // optional if everything is in root
-  base: './',
-  css: {
-    preprocessorOptions: {
-      css: {
-        charset: false,
-      },
-    },
-  },
+  base: './', // or '/' for absolute paths
   build: {
     outDir: 'dist',
   },
@@ -24,7 +16,6 @@ export default defineConfig({
     port: 5173,
     open: true,
   },
-
   resolve: {
     alias: {
       '@auth': path.resolve(__dirname, './src/auth'),
@@ -39,5 +30,6 @@ export default defineConfig({
       '@core': path.resolve(__dirname, './src/core'),
       '@styles': path.resolve(__dirname, './src/styles'),
     },
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '.json'],
   },
 });

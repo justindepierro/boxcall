@@ -118,7 +118,13 @@ function createStrengthBar() {
 }
 
 function getStrengthColor(score) {
-  return `h-full transition-all duration-300 ${
-    score <= 2 ? 'bg-red-500' : score === 3 ? 'bg-yellow-500' : 'bg-green-500'
-  }`;
+  let colorClass = 'bg-red-500'; // default for low scores
+
+  if (score === 3) {
+    colorClass = 'bg-yellow-500';
+  } else if (score > 3) {
+    colorClass = 'bg-green-500';
+  }
+
+  return `h-full transition-all duration-300 ${colorClass}`;
 }

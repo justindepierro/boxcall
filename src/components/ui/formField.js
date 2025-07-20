@@ -1,4 +1,5 @@
 import { BaseButton } from '@components/ui/baseButton.js';
+import { devLog } from '@utils/devLogger.js'; // Use our custom dev logger
 
 /**
  * FieldForm Component
@@ -33,7 +34,7 @@ export function FieldForm(options = {}) {
     variant: 'primary',
     size: 'md',
     onClick: () => {
-      console.log('💾 Saving ranges:', initialRanges);
+      devLog(`💾 Saving ranges: ${JSON.stringify(initialRanges)}`);
       onSave(initialRanges);
     },
   });
@@ -43,7 +44,7 @@ export function FieldForm(options = {}) {
     variant: 'secondary',
     size: 'md',
     onClick: () => {
-      console.log('❌ Cancel clicked.');
+      devLog('❌ Cancel clicked.');
       onCancel();
     },
   });

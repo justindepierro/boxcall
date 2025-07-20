@@ -43,7 +43,7 @@ export async function handleRouting() {
 
   const container = document.getElementById('page-view') || document.getElementById('app');
   if (!(container instanceof HTMLElement)) {
-    console.error('❌ handleRouting(): Missing #page-view or #app container');
+    devLog(`❌ handleRouting(): Missing #page-view or #app container`, 'error');
     return;
   }
 
@@ -61,7 +61,7 @@ export async function handleRouting() {
 
     const Component = mod.default || mod.render;
     if (typeof Component !== 'function') {
-      console.warn(`⚠️ Module "${modulePath}" has no valid default export or render() function`);
+      devLog(`⚠️ Module "${modulePath}" has no valid default export or render() function`, 'warn');
       throw new Error(`Invalid component for route "${hash}"`);
     }
 
@@ -79,7 +79,7 @@ export async function handleRouting() {
 
     devLog(`✅ Loaded route: ${hash}`);
   } catch (err) {
-    console.warn(`⚠️ Fallback to 404 for route "${hash}"`, err);
+    devLog(`⚠️ Fallback to 404 for route "${hash}" - ${err}`, 'warn');
     const Fallback404 = await loadFallback404();
     renderPage({ component: Fallback404, container });
     fadeIn(container);
@@ -116,7 +116,7 @@ async function loadFallback404() {
   );
 
   if (!fallbackPath) {
-    console.warn('⚠️ No 404 fallback page found. Rendering inline message.');
+    devLog('⚠️ No 404 fallback page found. Rendering inline message.', 'warn');
     return () => {
       const el = document.createElement('section');
       el.innerHTML = `<h1 class="text-red-500 text-center text-3xl mt-20">404 – Page Not Found</h1>`;
@@ -139,13 +139,13 @@ async function checkPageModules() {
     try {
       const mod = await loader();
       if (!mod.default && !mod.render) {
-        console.warn(`⚠️ Page module "${path}" has no default or render() export`);
+        devLog(`⚠️ Page module "${path}" has no default or render() export`, 'warn');
         invalidPages.push(path);
       } else {
         devLog(`✅ Page module "${path}" is valid`);
       }
     } catch (err) {
-      console.error(`❌ Failed to load page module "${path}"`, err);
+      devLog(`❌ Failed to load page module "${path}" - ${err}`, 'error');
       invalidPages.push(`${path} (Load Error)`);
     }
   });
@@ -153,13 +153,14 @@ async function checkPageModules() {
   await Promise.all(loadPromises);
 
   if (invalidPages.length > 0) {
-    console.groupCollapsed(
-      `🚨 Page Module Check Complete — ${invalidPages.length} Invalid Page(s) Found`
+    devLog(
+      `🚨 Page Module Check Complete — ${invalidPages.length} Invalid Page(s) Found: ${invalidPages.join(
+        ', '
+      )}`,
+      'warn'
     );
-    invalidPages.forEach((page) => console.warn(` - ${page}`));
-    console.groupEnd();
   } else {
-    console.log('🎉 All page modules are valid.');
+    devLog('🎉 All page modules are valid.');
   }
 
   devLog('🔎 Page module check complete');

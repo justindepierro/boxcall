@@ -1,8 +1,9 @@
 // src/components/sidebar/sidebarEvents.js
 import { navigateTo } from '@routes/router.js';
+import { getSidebarState } from '@state/sidebarState.js';
+
 import { initSidebarToggle } from './sidebarToggleHandler.js';
 import { applySidebarState } from './sidebarStateController.js';
-import { getSidebarState } from '@state/sidebarState.js';
 
 /**
  * Attaches nav + toggle handlers and applies stored state.

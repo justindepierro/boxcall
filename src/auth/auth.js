@@ -1,19 +1,18 @@
 // src/auth/auth.js
-import { supabase } from './supabaseClient.js';
+
+// Absolute imports
 import { renderAppShell } from '@render/renderAppShell.js';
 import { navigateTo, handleRouting } from '@routes/router.js';
 import { showToast } from '@render/UIZones.js';
+import { devLog, devError } from '@utils/devLogger.js';
+
+// Relative imports
+import { supabase } from './supabaseClient.js';
 
 /**
  * @typedef {import('@supabase/supabase-js').Session} Session
  * @typedef {import('@supabase/supabase-js').User} User
  */
-
-// Internal logger toggle
-const DEBUG = true;
-function log(...args) {
-  if (DEBUG) console.log('[🔐 AUTH]', ...args);
-}
 
 /**
  * Saves session data to localStorage for persistence.
@@ -22,10 +21,10 @@ function log(...args) {
 function persistSession(session) {
   if (session) {
     localStorage.setItem('supabaseSession', JSON.stringify(session));
-    log('Session persisted →', session);
+    devLog(`Session persisted → ${JSON.stringify(session)}`);
   } else {
     localStorage.removeItem('supabaseSession');
-    log('Session cleared.');
+    devLog('Session cleared.');
   }
 }
 
@@ -47,7 +46,7 @@ export async function signUp(email, password) {
     },
   });
 
-  log('Sign Up →', { data, error });
+  devLog(`Sign Up → data=${JSON.stringify(data)} error=${error?.message || 'none'}`);
   persistSession(data?.session || null);
 
   return {
@@ -68,7 +67,7 @@ export async function signIn(email, password) {
     password,
   });
 
-  log('Sign In →', { data, error });
+  devLog(`Sign In → data=${JSON.stringify(data)} error=${error?.message || 'none'}`);
   persistSession(data?.session || null);
 
   return {
@@ -86,7 +85,7 @@ export async function signIn(email, password) {
 export async function signOut() {
   const { error } = await supabase.auth.signOut();
   persistSession(null);
-  log('Sign Out →', { error });
+  devLog(`Sign Out → ${error ? error.message : 'no error'}`);
   return { error };
 }
 
@@ -97,7 +96,7 @@ export async function signOut() {
 export async function getSession() {
   const { data, error } = await supabase.auth.getSession();
   if (error) {
-    log('Get Session ❌', error.message);
+    devError(`Get Session ❌ ${error.message}`);
     return null;
   }
 
@@ -113,7 +112,7 @@ export async function getSession() {
 export async function getUser() {
   const { data, error } = await supabase.auth.getUser();
   if (error) {
-    log('Get User ❌', error.message);
+    devError(`Get User ❌ ${error.message}`);
     return null;
   }
 
@@ -128,7 +127,7 @@ export async function getUser() {
 export async function refreshSession() {
   const { data, error } = await supabase.auth.refreshSession();
   if (error) {
-    log('Refresh Session ❌', error.message);
+    devError(`Refresh Session ❌ ${error.message}`);
     return null;
   }
 
@@ -145,7 +144,7 @@ export async function resetPassword(email) {
     redirectTo: `${window.location.origin}/#/reset`,
   });
 
-  log('Reset Password →', { email, error });
+  devLog(`Reset Password → email=${email} error=${error?.message || 'none'}`);
   return { data, error };
 }
 
@@ -156,7 +155,7 @@ export async function resetPassword(email) {
 export async function handleLogout() {
   const { error } = await signOut();
   if (error) {
-    console.error('❌ handleLogout(): Logout failed', error);
+    devError(`❌ handleLogout(): Logout failed → ${error.message}`);
     showToast(`❌ Logout failed: ${error.message}`, 'error');
     return { error };
   }

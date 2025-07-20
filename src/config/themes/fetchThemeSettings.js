@@ -1,3 +1,5 @@
+import { devLog } from '@utils/devLogger.js'; // Centralized logger
+
 // src/config/themes/fetchThemeSettings.js
 import { supabase } from '../../auth/supabaseClient.js';
 
@@ -13,7 +15,7 @@ import { DEFAULT_THEME } from './themeConstants.js';
  */
 export async function fetchThemeSettings(userId, teamId = null) {
   if (!userId) {
-    console.warn('⚠️ No user ID provided to fetchThemeSettings()');
+    devLog('⚠️ No user ID provided to fetchThemeSettings()', 'warn');
     return getFallbackTheme('no-user');
   }
 
@@ -26,12 +28,12 @@ export async function fetchThemeSettings(userId, teamId = null) {
       .single();
 
     if (profileError) {
-      console.error('❌ Supabase error fetching profile settings:', profileError.message);
+      devLog(`❌ Supabase error fetching profile settings: ${profileError.message}`, 'error');
     }
 
     if (profile?.settings) {
       const normalized = normalizeTheme(profile.settings);
-      console.log('🎯 User color theme found:', normalized);
+      devLog(`🎯 User color theme found: ${JSON.stringify(normalized)}`, 'info');
       cacheTheme(normalized);
       return normalized;
     }
@@ -46,7 +48,7 @@ export async function fetchThemeSettings(userId, teamId = null) {
 
       if (teamSettings && !teamError) {
         const normalized = normalizeTheme(teamSettings);
-        console.log('🎯 Team color theme found:', normalized);
+        devLog(`🎯 Team color theme found: ${JSON.stringify(normalized)}`, 'info');
         cacheTheme(normalized);
         return normalized;
       }
@@ -55,13 +57,13 @@ export async function fetchThemeSettings(userId, teamId = null) {
     // 💾 Try cached fallback
     const cached = loadCachedTheme();
     if (cached) {
-      console.log('📦 Using cached color theme:', cached);
+      devLog(`📦 Using cached color theme: ${JSON.stringify(cached)}`, 'info');
       return cached;
     }
 
     return getFallbackTheme('no-settings');
   } catch (err) {
-    console.error('❌ fetchThemeSettings() failed:', err.message);
+    devLog(`❌ fetchThemeSettings() failed: ${err.message}`, 'error');
     return getFallbackTheme('error');
   }
 }
@@ -83,7 +85,7 @@ function cacheTheme(theme) {
     const { color } = normalizeTheme(theme);
     localStorage.setItem('lastTheme', JSON.stringify({ color }));
   } catch (err) {
-    console.warn('⚠️ Failed to cache theme:', err.message);
+    devLog(`⚠️ Failed to cache theme: ${err.message}`, 'warn');
   }
 }
 
@@ -99,6 +101,6 @@ function loadCachedTheme() {
 
 /** Final fallback */
 function getFallbackTheme(reason = '') {
-  console.warn(`🛑 Using default color theme fallback: ${reason}`);
+  devLog(`🛑 Using default color theme fallback: ${reason}`, 'warn');
   return { color: DEFAULT_THEME };
 }

@@ -1,5 +1,6 @@
 // src/auth/supabaseClient.js
 import { createClient } from '@supabase/supabase-js';
+
 import { checkEnv } from '../auth/envChecker.js';
 
 const { VITE_SUPABASE_URL: supabaseUrl, VITE_SUPABASE_ANON_KEY: supabaseAnonKey } = checkEnv([

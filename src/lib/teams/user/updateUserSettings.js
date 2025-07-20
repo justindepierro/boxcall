@@ -1,11 +1,10 @@
-// src/lib/teams/user/updateUserSettings.js
+// src/lib/users/updateUserSettings.js
+
 import { supabase } from '@auth/supabaseClient.js';
+import { devLog } from '@utils/devLogger.js';
 
 /**
- * Updates user settings in the `profiles` table.
- * - Updates profile fields (full_name, bio, etc.).
- * - Merges updates into `profiles.settings` JSONB (e.g., font_theme, color_theme).
- * - Optionally updates team role in `team_memberships`.
+ * Updates a user's profile and optional team role in Supabase.
  *
  * @param {string} userId - Supabase user ID
  * @param {object} updates - Fields to update (e.g., { full_name, bio, avatar_url, settings })
@@ -13,58 +12,86 @@ import { supabase } from '@auth/supabaseClient.js';
  */
 export async function updateUserSettings(userId, updates, teamId = null) {
   try {
-    // -------------------------
+    // Build the profile data object
+    const profileData = buildProfileData(updates);
+
     // 1. Update Profile Columns
-    // -------------------------
-    const profileData = {};
-    if (updates.full_name) profileData.full_name = updates.full_name;
-    if (updates.bio) profileData.bio = updates.bio;
-    if (updates.avatar_url) profileData.avatar_url = updates.avatar_url;
-    if (updates.phone) profileData.phone = updates.phone;
-    if (updates.role) profileData.role = updates.role; // fallback role
-
-    // -------------------------
-    // 2. Update Settings (JSONB)
-    // -------------------------
-    if (updates.settings || updates.font_theme || updates.color_theme) {
-      const settingsUpdate = updates.settings || {};
-      if (updates.font_theme) settingsUpdate.font_theme = updates.font_theme;
-      if (updates.color_theme) settingsUpdate.color_theme = updates.color_theme;
-
-      profileData.settings = supabase.rpc('jsonb_merge_patch', {
-        column: 'settings',
-        value: settingsUpdate,
-      });
-    }
-
-    // -------------------------
-    // 3. Perform Profile Update
-    // -------------------------
     if (Object.keys(profileData).length > 0) {
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update(profileData)
-        .eq('id', userId);
-
-      if (profileError) throw new Error(`Profile update failed: ${profileError.message}`);
+      await updateProfile(userId, profileData);
     }
 
-    // -------------------------
-    // 4. Team Role Update
-    // -------------------------
+    // 2. Team Role Update
     if (teamId && updates.role) {
-      const { error: membershipError } = await supabase
-        .from('team_memberships')
-        .update({ role: updates.role })
-        .eq('user_id', userId)
-        .eq('team_id', teamId);
-
-      if (membershipError) throw new Error(`Team role update failed: ${membershipError.message}`);
+      await updateTeamRole(userId, teamId, updates.role);
     }
 
-    console.log('✅ User settings updated:', { userId, updates, teamId });
+    devLog(
+      `✅ User settings updated → userId=${userId}, updates=${JSON.stringify(updates)}, teamId=${teamId || 'none'}`
+    );
   } catch (err) {
-    console.error('❌ Failed to update user settings:', err);
+    devLog(`❌ Failed to update user settings: ${err.message}`, 'error');
     throw err;
   }
+}
+
+// ------------------------------------------------------------
+// Helper Functions
+// ------------------------------------------------------------
+
+/**
+ * Builds the profileData object from the provided updates.
+ * @param {object} updates
+ * @returns {object} profileData
+ */
+function buildProfileData(updates) {
+  const profileData = {};
+  const basicFields = ['full_name', 'bio', 'avatar_url', 'phone', 'role'];
+
+  // Copy simple fields
+  for (const field of basicFields) {
+    if (updates[field]) profileData[field] = updates[field];
+  }
+
+  // Handle settings (JSONB)
+  if (updates.settings || updates.font_theme || updates.color_theme) {
+    const settingsUpdate = {
+      ...(updates.settings || {}),
+      ...(updates.font_theme ? { font_theme: updates.font_theme } : {}),
+      ...(updates.color_theme ? { color_theme: updates.color_theme } : {}),
+    };
+
+    profileData.settings = supabase.rpc('jsonb_merge_patch', {
+      column: 'settings',
+      value: settingsUpdate,
+    });
+  }
+
+  return profileData;
+}
+
+/**
+ * Updates the profile row in the 'profiles' table.
+ * @param {string} userId
+ * @param {object} profileData
+ */
+async function updateProfile(userId, profileData) {
+  const { error } = await supabase.from('profiles').update(profileData).eq('id', userId);
+
+  if (error) throw new Error(`Profile update failed: ${error.message}`);
+}
+
+/**
+ * Updates the team role for a given user and team.
+ * @param {string} userId
+ * @param {string} teamId
+ * @param {string} role
+ */
+async function updateTeamRole(userId, teamId, role) {
+  const { error } = await supabase
+    .from('team_memberships')
+    .update({ role })
+    .eq('user_id', userId)
+    .eq('team_id', teamId);
+
+  if (error) throw new Error(`Team role update failed: ${error.message}`);
 }

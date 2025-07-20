@@ -1,4 +1,5 @@
 // src/state/userState.js
+import { devLog, devError } from '@utils/devLogger.js';
 
 import { getUser, getSession } from '../auth/auth.js';
 
@@ -11,7 +12,7 @@ let supabaseUser = null;
 export async function initAuthState() {
   session = await getSession();
   user = await getUser();
-  console.log('🔐 Auth initialized:', { session, user });
+  devLog(`🔐 Auth initialized: ${JSON.stringify({ session, user })}`);
 }
 
 export function getCurrentUser() {
@@ -30,13 +31,13 @@ export function clearAuthState() {
   user = null;
   session = null;
   userSettings = null;
-  console.log('🔒 Auth state cleared');
+  devLog('🔒 Auth state cleared');
 }
 
 /* --------------------------- USER SETTINGS STATE --------------------------- */
 export function setUserSettings(settings) {
   userSettings = settings;
-  console.log('⚙️ userSettings updated:', userSettings);
+  devLog(`⚙️ userSettings updated: ${JSON.stringify(userSettings)}`);
 }
 
 export function getUserSettings() {
@@ -54,7 +55,7 @@ export function getActiveRole() {
 export function setActiveRole(role) {
   if (!userSettings) userSettings = {};
   userSettings.activeRole = role;
-  console.log(`🎭 Active role set to: ${role}`);
+  devLog(`🎭 Active role set to: ${role}`);
 }
 
 /* --------------------------- PROFILE & TEAMS --------------------------- */
@@ -70,7 +71,7 @@ export function getUserProfile() {
 export function setUserTeams(teams) {
   if (!userSettings) userSettings = {};
   userSettings.teams = teams;
-  console.log('🏈 Teams updated:', teams);
+  devLog(`🏈 Teams updated: ${JSON.stringify(teams)}`);
 }
 
 export function getUserTeams() {
@@ -93,11 +94,11 @@ export function setActiveTeam(teamId) {
   const teams = getUserTeams();
   const team = teams.find((t) => t.team_id === teamId);
   if (!team) {
-    console.warn(`⚠️ Team with id ${teamId} not found in user teams.`);
+    devError(`⚠️ Team with id ${teamId} not found in user teams.`);
     return false;
   }
   userSettings.activeTeam = team;
-  console.log(`🏆 Active team set to: ${team.teams?.name || teamId}`);
+  devLog(`🏆 Active team set to: ${team.teams?.name || teamId}`);
   return true;
 }
 
@@ -109,10 +110,10 @@ export function setActiveTeamByIndex(index = 0) {
   const teams = getUserTeams();
   if (teams[index]) {
     userSettings.activeTeam = teams[index];
-    console.log(`🏆 Active team set to: ${teams[index].teams?.name || teams[index].team_id}`);
+    devLog(`🏆 Active team set to: ${teams[index].teams?.name || teams[index].team_id}`);
     return true;
   }
-  console.warn(`⚠️ No team found at index ${index}`);
+  devError(`⚠️ No team found at index ${index}`);
   return false;
 }
 
@@ -133,5 +134,5 @@ export function resetUserState() {
   session = null;
   userSettings = null;
   supabaseUser = null;
-  console.log('🔄 User state fully reset');
+  devLog('🔄 User state fully reset');
 }

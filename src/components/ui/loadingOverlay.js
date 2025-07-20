@@ -60,12 +60,10 @@ export function hideLoadingOverlay() {
   overlayEl.classList.remove('opacity-100');
   overlayEl.classList.add('opacity-0', 'pointer-events-none');
 
-  // Optional: Remove from DOM after transition
+  // Optional: Remove from DOM after transition (refactored with optional chaining)
   setTimeout(() => {
-    if (overlayEl && overlayEl.parentNode) {
-      overlayEl.parentNode.removeChild(overlayEl);
-      overlayEl = null;
-      messageEl = null;
-    }
+    overlayEl?.parentNode?.removeChild(overlayEl);
+    overlayEl = null;
+    messageEl = null;
   }, 300);
 }

@@ -1,5 +1,6 @@
 // src/lib/teams/user/updateThemeSettings.js
 import { supabase } from '@auth/supabaseClient.js';
+import { devLog } from '@utils/devLogger.js';
 
 /**
  * Updates the theme settings (font_theme, color_theme) for a given user.
@@ -11,14 +12,14 @@ import { supabase } from '@auth/supabaseClient.js';
  */
 export async function updateThemeSettings(userId, themeUpdates) {
   if (!userId) {
-    console.warn('⚠️ updateThemeSettings(): Missing userId');
+    devLog('⚠️ updateThemeSettings(): Missing userId', 'warn');
     return;
   }
 
   try {
     const { font_theme, color_theme } = themeUpdates;
     if (!font_theme && !color_theme) {
-      console.warn('⚠️ No theme updates provided');
+      devLog('⚠️ No theme updates provided', 'warn');
       return;
     }
 
@@ -31,8 +32,8 @@ export async function updateThemeSettings(userId, themeUpdates) {
 
     if (error) throw new Error(`Failed to update theme settings: ${error.message}`);
 
-    console.log('🎨 Theme settings updated:', { userId, patch });
+    devLog(`🎨 Theme settings updated for user ${userId}: ${JSON.stringify(patch)}`);
   } catch (err) {
-    console.error('❌ updateThemeSettings() failed:', err.message);
+    devLog(`❌ updateThemeSettings() failed: ${err.message}`, 'error');
   }
 }

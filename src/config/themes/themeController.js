@@ -1,7 +1,6 @@
-// src/config/themes/themeController.js
-
 import { applyTheme } from '@utils/themeManager.js';
 import { getCurrentUser } from '@state/userState.js';
+import { devLog } from '@utils/devLogger.js'; // Use centralized logging
 
 import { fetchThemeSettings } from './fetchThemeSettings.js';
 import { DEFAULT_THEME } from './themeConstants.js';
@@ -27,9 +26,9 @@ export async function applyContextualTheme(teamId = null) {
     // Apply color theme
     applyTheme(color);
 
-    console.log(`🎨 Contextual theme applied: color=${color}`);
+    devLog(`🎨 Contextual theme applied: color=${color}`, 'info');
   } catch (err) {
-    console.error('❌ Failed to apply contextual theme:', err);
+    devLog(`❌ Failed to apply contextual theme: ${err.message}`, 'error');
     applyTheme(DEFAULT_THEME); // fallback
   }
 }

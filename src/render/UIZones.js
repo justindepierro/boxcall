@@ -1,5 +1,6 @@
-import { Modal } from '../components/ui/modal.js';
 import { Toast } from '@components/ui/toast.js';
+
+import { Modal } from '../components/ui/modal.js';
 /**
  * Clears all UI overlay zones: modals, zoom, toast.
  */

@@ -1,3 +1,5 @@
+import { devLog } from '@utils/devLogger.js';
+
 import { field } from '../../utils/fbMath.js'; // Football field math utilities
 
 /**
@@ -7,8 +9,7 @@ export function FieldMultiRangeSlider({ ranges = [], onChange = () => {} } = {})
   const wrapper = document.createElement('div');
   wrapper.className = 'space-y-4';
 
-  console.log('🟢 Initial Ranges:', JSON.stringify(ranges));
-
+  devLog(`🟢 Initial Ranges: ${JSON.stringify(ranges)}`, 'debug');
   // === TITLE ===
   const title = document.createElement('h3');
   title.className = 'text-lg font-bold text-[var(--color-text)]';
@@ -48,8 +49,7 @@ export function FieldMultiRangeSlider({ ranges = [], onChange = () => {} } = {})
   // ==========================================================
   function renderRanges() {
     sliderTrack.innerHTML = '';
-    console.log('🔄 Re-rendering Ranges:', JSON.stringify(ranges));
-
+    devLog(`🔄 Re-rendering Ranges: ${JSON.stringify(ranges)}`, 'debug');
     ranges.forEach(({ start, end, include }, i) => {
       const [leftVal, rightVal] = field.normalizeRange(start, end);
       const { left, width } = field.mapRangeToPercent(leftVal, rightVal);
@@ -86,9 +86,7 @@ export function FieldMultiRangeSlider({ ranges = [], onChange = () => {} } = {})
       const row = document.createElement('div');
       row.className = 'flex items-center gap-2';
 
-      // ==========================================================
       // Include/Exclude Toggle Button
-      // ==========================================================
       const toggle = document.createElement('button');
       toggle.textContent = include ? 'Include' : 'Exclude';
       toggle.className = `px-2 py-1 rounded text-sm font-mono ${
@@ -99,9 +97,7 @@ export function FieldMultiRangeSlider({ ranges = [], onChange = () => {} } = {})
         update();
       });
 
-      // ==========================================================
       // Start Yard Input
-      // ==========================================================
       const from = document.createElement('input');
       from.type = 'number';
       from.value = String(start);
@@ -115,9 +111,7 @@ export function FieldMultiRangeSlider({ ranges = [], onChange = () => {} } = {})
         }
       });
 
-      // ==========================================================
       // End Yard Input
-      // ==========================================================
       const to = document.createElement('input');
       to.type = 'number';
       to.value = String(end);
@@ -131,9 +125,7 @@ export function FieldMultiRangeSlider({ ranges = [], onChange = () => {} } = {})
         }
       });
 
-      // ==========================================================
       // Remove Button
-      // ==========================================================
       const remove = document.createElement('button');
       remove.textContent = '✖';
       remove.className = 'text-red-500 hover:underline text-sm';
@@ -142,7 +134,6 @@ export function FieldMultiRangeSlider({ ranges = [], onChange = () => {} } = {})
         update();
       });
 
-      // Append all controls to row
       row.append(toggle, from, to, remove);
       controlsWrapper.appendChild(row);
     });

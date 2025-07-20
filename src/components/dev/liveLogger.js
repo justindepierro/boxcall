@@ -1,5 +1,3 @@
-// src/components/dev/liveLogger.js
-
 import { getDevLogs, clearDevLogs } from '@utils/devLogger.js';
 import { DEV_EMAIL } from '@config/devConfig.js';
 import { getUserSettings } from '@state/userState.js';
@@ -98,10 +96,9 @@ export function mountLiveLogger() {
  */
 export function updateLogBody(bodyEl = qs('#live-log-body')) {
   if (!bodyEl) return;
-
-  const logs = getDevLogs();
   bodyEl.innerHTML = '';
 
+  const logs = getDevLogs();
   logs.forEach((log) => {
     const entry = document.createElement('div');
     entry.textContent = log;

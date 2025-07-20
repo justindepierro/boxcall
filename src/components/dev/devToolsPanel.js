@@ -2,7 +2,7 @@
 
 import { DEV_EMAIL } from '@config/devConfig.js';
 import { setOverrideRole, setOverrideTheme, clearDevOverrides } from '@state/devToolState.js';
-import { refreshDevContext, clearDevLogs, getDevLogs } from '@utils/devLogger.js';
+import { refreshDevContext, clearDevLogs, getDevLogs, devLog } from '@utils/devLogger.js';
 import { applyTheme } from '@utils/themeManager.js';
 import { ROLES } from '@utils/roles.js';
 import { qs, qsi, getValue, setSelectValue } from '@utils/domHelper.js';
@@ -24,7 +24,6 @@ export function renderDevToolsPanel(user = {}) {
   if (user.email !== DEV_EMAIL) return;
   if (qs('#dev-tools-wrapper')) return;
 
-  // === Wrapper ===
   const wrapper = document.createElement('div');
   wrapper.id = 'dev-tools-wrapper';
   wrapper.className = 'fixed bottom-0 right-4 z-[9999] w-[350px] transition-opacity duration-300';
@@ -32,7 +31,6 @@ export function renderDevToolsPanel(user = {}) {
   wrapper.style.bottom = '0';
   wrapper.style.right = '4px';
 
-  // === Background Overlay ===
   const bgOverlay = document.createElement('div');
   bgOverlay.id = 'dev-tools-bg';
   bgOverlay.className = 'absolute inset-0 bg-black rounded-t';
@@ -40,7 +38,6 @@ export function renderDevToolsPanel(user = {}) {
   bgOverlay.style.zIndex = '-1';
   bgOverlay.style.transition = 'opacity 0.3s ease';
 
-  // === Toggle Button ===
   const toggleBtn = document.createElement('button');
   toggleBtn.id = 'dev-tools-toggle';
   toggleBtn.title = 'Toggle Dev Tools';
@@ -51,7 +48,6 @@ export function renderDevToolsPanel(user = {}) {
     shadow-md hover:bg-gray-800 transition-all
   `;
 
-  // === Panel ===
   const panel = document.createElement('div');
   panel.id = 'dev-tools-panel';
   panel.style.height = `${panelHeight}px`;
@@ -69,11 +65,9 @@ export function renderDevToolsPanel(user = {}) {
   `;
   panel.appendChild(bgOverlay);
 
-  // Append to body
   wrapper.append(toggleBtn, panel);
   document.body.appendChild(wrapper);
 
-  // Event listeners
   toggleBtn.addEventListener('click', () => togglePanel(panel, toggleBtn));
   setupTabListeners();
   setupControlListeners();
@@ -325,19 +319,6 @@ function setupToolbarListeners() {
   });
 }
 
-function updateFontsInfo() {
-  const fontsInfo = qsi('#dev-fonts-info');
-  if (!fontsInfo) return;
-
-  const { headerFont, bodyFont, monoFont } = getActiveFonts();
-  fontsInfo.innerHTML = `
-    <strong class="text-green-400 block mb-1">🖋️ Active Fonts</strong>
-    <div><span class="text-gray-400">Header:</span> ${headerFont}</div>
-    <div><span class="text-gray-400">Body:</span> ${bodyFont}</div>
-    <div><span class="text-gray-400">Mono:</span> ${monoFont}</div>
-  `;
-}
-
 /* -------------------------------------------------------------------------- */
 /*                                LOG RENDER                                  */
 /* -------------------------------------------------------------------------- */
@@ -402,7 +383,7 @@ function setupPanelDrag(wrapper) {
 
   header?.addEventListener('mousedown', (e) => {
     if (!(e instanceof MouseEvent)) return;
-    if (!e.shiftKey) return; // Only drag if Shift is held
+    if (!e.shiftKey) return;
     e.preventDefault();
     startX = e.clientX;
     startY = e.clientY;
@@ -458,5 +439,8 @@ export function refreshFontsInfo() {
   if (bodyEl) bodyEl.textContent = bodyFont;
   if (monoEl) monoEl.textContent = monoFont;
 
-  console.log(`🔤 Fonts Info updated: header=${headerFont}, body=${bodyFont}, mono=${monoFont}`);
+  devLog(
+    `🔤 Fonts Info updated: header=${headerFont}, body=${bodyFont}, mono=${monoFont}`,
+    'debug'
+  );
 }
