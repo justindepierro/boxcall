@@ -12,6 +12,7 @@ import {
 import { getUserSettings as fetchUserSettings } from '@lib/teams/user/getUserSettings.js';
 import { getOverrideRole } from '@state/devToolState.js';
 import { getSession } from '@auth/auth.js';
+import { applyTheme } from '@utils/themeManager.js';
 
 /**
  * @typedef {Object} Membership
@@ -21,14 +22,27 @@ import { getSession } from '@auth/auth.js';
  */
 
 /**
- * Loads the current user's settings, Supabase profile, and team memberships.
+ * Initializes the current user's state:
+ *  - Loads Supabase user and profile
+ *  - Fetches team memberships
+ *  - Applies dev role overrides
+ *  - Applies user or default theme
  *
- * @returns {Promise<{ user: object|null, settings: object|null, profile: object|null, teams: Membership[], activeRole: string, activeTeam: Membership|null }>}
+ * @returns {Promise<{
+ *   user: object|null,
+ *   settings: object|null,
+ *   profile: object|null,
+ *   teams: Membership[],
+ *   activeRole: string|null,
+ *   activeTeam: Membership|null
+ * }>}
  */
 export async function initializeUser() {
   let user = getCurrentUser();
 
-  // 🚀 Restore user from localStorage if not in state
+  // ------------------------------------------------------------
+  // 1️⃣ Restore user from localStorage if missing
+  // ------------------------------------------------------------
   if (!user) {
     const storedSession = localStorage.getItem('supabaseSession');
     if (storedSession) {
@@ -42,7 +56,9 @@ export async function initializeUser() {
     }
   }
 
-  // 🔄 Fallback: fetch from Supabase
+  // ------------------------------------------------------------
+  // 2️⃣ Fallback: fetch from Supabase session if still missing
+  // ------------------------------------------------------------
   if (!user) {
     const session = await getSession();
     user = session?.user || null;
@@ -61,26 +77,63 @@ export async function initializeUser() {
     };
   }
 
-  // Fetch legacy user settings (optional)
+  // ------------------------------------------------------------
+  // 3️⃣ Fetch legacy user settings (optional)
+  // ------------------------------------------------------------
   const settings = await fetchUserSettings(user.id);
 
-  // Fetch Supabase profile
+  // ------------------------------------------------------------
+  // 4️⃣ Fetch Supabase profile (with theme JSONB)
+  // ------------------------------------------------------------
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', user.id)
     .single();
 
-  if (profileError) console.warn('⚠️ Failed to load profile', profileError);
-  setUserProfile(profile || null);
+  if (profileError) {
+    console.warn('⚠️ Failed to load profile', profileError);
+  } else {
+    setUserProfile(profile || null);
+  }
 
-  // Fetch team memberships
+  // ------------------------------------------------------------
+  // 5️⃣ Parse theme settings from profile.settings JSONB
+  // ------------------------------------------------------------
+  let fontTheme = 'classic';
+  let colorTheme = 'classic';
+
+  if (profile?.settings) {
+    try {
+      const parsedSettings =
+        typeof profile.settings === 'string' ? JSON.parse(profile.settings) : profile.settings;
+
+      fontTheme = parsedSettings?.font_theme || 'classic';
+      colorTheme = parsedSettings?.color_theme || 'classic';
+
+      console.log(`🎨 Theme from profile: font=${fontTheme}, color=${colorTheme}`);
+
+      // Apply theme immediately
+      applyTheme(colorTheme);
+    } catch (err) {
+      console.warn('⚠️ Failed to parse user settings JSON:', err);
+    }
+  } else {
+    console.warn('⚠️ No theme settings found in profile, using defaults.');
+    applyTheme(colorTheme);
+  }
+
+  // ------------------------------------------------------------
+  // 6️⃣ Fetch team memberships
+  // ------------------------------------------------------------
   const { data: membershipsData, error: membershipsError } = await supabase
     .from('team_memberships')
     .select('team_id, role, teams(name)')
     .eq('user_id', user.id);
 
-  if (membershipsError) console.warn('⚠️ Failed to load team memberships', membershipsError);
+  if (membershipsError) {
+    console.warn('⚠️ Failed to load team memberships', membershipsError);
+  }
 
   /** @type {Membership[]} */
   const memberships = (membershipsData || []).map((m) => ({
@@ -91,7 +144,9 @@ export async function initializeUser() {
 
   setUserTeams(memberships || []);
 
-  // Apply dev override role
+  // ------------------------------------------------------------
+  // 7️⃣ Apply dev override role if present
+  // ------------------------------------------------------------
   let activeRole = settings?.role || 'player';
   const overrideRole = getOverrideRole();
   if (overrideRole) {
@@ -102,7 +157,9 @@ export async function initializeUser() {
     setActiveRole(activeRole);
   }
 
-  // Auto-select the first team as activeTeam if available
+  // ------------------------------------------------------------
+  // 8️⃣ Auto-select the first team as activeTeam if available
+  // ------------------------------------------------------------
   let activeTeam = null;
   if (memberships.length > 0) {
     activeTeam = memberships[0];
@@ -110,7 +167,9 @@ export async function initializeUser() {
     console.log(`🏆 Active team set to: ${activeTeam.teams.name}`);
   }
 
-  // Store user settings
+  // ------------------------------------------------------------
+  // 9️⃣ Store user settings globally
+  // ------------------------------------------------------------
   setUserSettings({
     ...settings,
     email: user.email,
@@ -118,6 +177,8 @@ export async function initializeUser() {
     teams: memberships,
     activeRole,
     activeTeam,
+    fontTheme,
+    colorTheme,
   });
 
   console.log('✅ User initialized:', {
@@ -127,12 +188,18 @@ export async function initializeUser() {
     memberships,
     activeRole,
     activeTeam,
+    fontTheme,
+    colorTheme,
   });
+
   return { user, settings, profile, teams: memberships, activeRole, activeTeam };
 }
 
 /**
  * Redirect to login if not authorized for current page.
+ * @param {string} currentPage
+ * @param {string[]} publicPages
+ * @returns {boolean}
  */
 export function handleAuthRedirect(currentPage, publicPages = ['login', 'signup', 'forgot']) {
   const isPublic = publicPages.includes(currentPage);

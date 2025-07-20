@@ -1,13 +1,15 @@
 // src/config/themes/fetchThemeSettings.js
 import { supabase } from '../../auth/supabaseClient.js';
 
+import { DEFAULT_THEME } from './themeConstants.js';
+
 /**
- * Fetches theme settings for a user (from profiles.settings JSONB)
- * or falls back to cached/default themes.
+ * Fetches the user's color theme from profiles.settings (JSONB).
+ * Falls back to cached or DEFAULT_THEME if nothing is found.
  *
  * @param {string} userId - Supabase user ID
  * @param {string|null} teamId - Optional team ID (future-proofing)
- * @returns {Promise<{ font: string, color: string }>}
+ * @returns {Promise<{ color: string }>}
  */
 export async function fetchThemeSettings(userId, teamId = null) {
   if (!userId) {
@@ -29,7 +31,7 @@ export async function fetchThemeSettings(userId, teamId = null) {
 
     if (profile?.settings) {
       const normalized = normalizeTheme(profile.settings);
-      console.log('🎯 User theme settings found:', normalized);
+      console.log('🎯 User color theme found:', normalized);
       cacheTheme(normalized);
       return normalized;
     }
@@ -38,13 +40,13 @@ export async function fetchThemeSettings(userId, teamId = null) {
     if (teamId) {
       const { data: teamSettings, error: teamError } = await supabase
         .from('team_settings')
-        .select('font_theme, color_theme')
+        .select('color_theme')
         .eq('team_id', teamId)
         .single();
 
       if (teamSettings && !teamError) {
         const normalized = normalizeTheme(teamSettings);
-        console.log('🎯 Team theme settings found:', normalized);
+        console.log('🎯 Team color theme found:', normalized);
         cacheTheme(normalized);
         return normalized;
       }
@@ -53,7 +55,7 @@ export async function fetchThemeSettings(userId, teamId = null) {
     // 💾 Try cached fallback
     const cached = loadCachedTheme();
     if (cached) {
-      console.log('📦 Using cached theme:', cached);
+      console.log('📦 Using cached color theme:', cached);
       return cached;
     }
 
@@ -71,16 +73,15 @@ export async function fetchThemeSettings(userId, teamId = null) {
 /** Normalize raw settings to safe defaults */
 function normalizeTheme(settings) {
   return {
-    font: settings?.font_theme || 'classic',
-    color: settings?.color_theme || 'classic',
+    color: settings?.color_theme || DEFAULT_THEME,
   };
 }
 
 /** Save theme to localStorage */
 function cacheTheme(theme) {
   try {
-    const { font, color } = normalizeTheme(theme);
-    localStorage.setItem('lastTheme', JSON.stringify({ font, color }));
+    const { color } = normalizeTheme(theme);
+    localStorage.setItem('lastTheme', JSON.stringify({ color }));
   } catch (err) {
     console.warn('⚠️ Failed to cache theme:', err.message);
   }
@@ -98,6 +99,6 @@ function loadCachedTheme() {
 
 /** Final fallback */
 function getFallbackTheme(reason = '') {
-  console.warn(`🛑 Using default theme fallback: ${reason}`);
-  return { font: 'classic', color: 'classic' };
+  console.warn(`🛑 Using default color theme fallback: ${reason}`);
+  return { color: DEFAULT_THEME };
 }

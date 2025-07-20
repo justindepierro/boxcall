@@ -4,46 +4,32 @@ import { applyTheme } from '@utils/themeManager.js';
 import { getCurrentUser } from '@state/userState.js';
 
 import { fetchThemeSettings } from './fetchThemeSettings.js';
-import { DEFAULT_THEME, VALID_THEME_KEYS } from './themeConstants.js';
+import { DEFAULT_THEME } from './themeConstants.js';
 
 /**
- * Ensures the given theme key is valid, otherwise falls back to DEFAULT_THEME.
- * @param {string | null | undefined} key
- * @returns {string}
- */
-function sanitizeThemeKey(key) {
-  return VALID_THEME_KEYS.includes(key) ? key : DEFAULT_THEME;
-}
-
-/**
- * Applies a theme based on user/team settings and returns the applied theme key.
- * Priority:
+ * Applies a theme based on the current user and team context.
+ * Fallback order:
  *  1. User theme (if available)
  *  2. Team theme (if available)
- *  3. Default theme (classic)
+ *  3. Default theme (DEFAULT_THEME)
  *
- * @param {string|null} [teamId=null] - Optional team ID for theme context.
- * @returns {Promise<string>} The applied color theme key.
+ * @param {string|null} teamId - Optional team ID (future feature)
  */
 export async function applyContextualTheme(teamId = null) {
   try {
     const user = getCurrentUser();
     const userId = user?.id || null;
 
-    // Fetch theme settings
-    const { font, color } = await fetchThemeSettings(userId, teamId);
+    // Fetch user/team theme settings (color only)
+    const theme = await fetchThemeSettings(userId, teamId);
+    const color = theme?.color || DEFAULT_THEME;
 
-    const safeColor = sanitizeThemeKey(color);
-    const safeFont = sanitizeThemeKey(font);
+    // Apply color theme
+    applyTheme(color);
 
-    // Apply both color and font themes
-    applyTheme(safeColor, safeFont);
-
-    console.log(`🎨 Contextual theme applied: color=${safeColor}, font=${safeFont}`);
-    return safeColor; // Return applied color theme
+    console.log(`🎨 Contextual theme applied: color=${color}`);
   } catch (err) {
     console.error('❌ Failed to apply contextual theme:', err);
-    applyTheme(DEFAULT_THEME, DEFAULT_THEME);
-    return DEFAULT_THEME;
+    applyTheme(DEFAULT_THEME); // fallback
   }
 }

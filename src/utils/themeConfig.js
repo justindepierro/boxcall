@@ -1,53 +1,10 @@
 // src/utils/themeConfig.js
-
 export const themeMap = {
-  default: {
-    fonts: {
-      header: 'font-h-default', // Matches --font-header from tokens/theme-default.css
-      body: 'font-b-default', // Matches --font-body
-      mono: 'font-m-default', // Matches --font-mono
-    },
-  },
-  classic: {
-    fonts: {
-      header: 'font-h-classic',
-      body: 'font-b-classic',
-      mono: 'font-m-classic',
-    },
-  },
-  modern: {
-    fonts: {
-      header: 'font-h-modern',
-      body: 'font-b-modern',
-      mono: 'font-m-modern',
-    },
-  },
-  professional: {
-    fonts: {
-      header: 'font-h-professional',
-      body: 'font-b-professional',
-      mono: 'font-m-professional',
-    },
-  },
-  athletic: {
-    fonts: {
-      header: 'font-h-athletic',
-      body: 'font-b-athletic',
-      mono: 'font-m-athletic',
-    },
-  },
-  tech: {
-    fonts: {
-      header: 'font-h-tech',
-      body: 'font-b-tech',
-      mono: 'font-m-tech',
-    },
-  },
-  casual: {
-    fonts: {
-      header: 'font-h-casual',
-      body: 'font-b-casual',
-      mono: 'font-m-casual',
-    },
-  },
+  default: 'theme-default.css',
+  classic: 'theme-classic.css',
+  modern: 'theme-modern.css',
+  professional: 'theme-professional.css',
+  athletic: 'theme-athletic.css',
+  tech: 'theme-tech.css',
+  casual: 'theme-casual.css',
 };

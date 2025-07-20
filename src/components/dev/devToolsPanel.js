@@ -15,11 +15,11 @@ let panelHeight = parseInt(localStorage.getItem('devTools.height') || '250', 10)
 let panelOpacity = parseFloat(localStorage.getItem('devTools.opacity') || '0.9');
 let isDragging = false;
 let activeTab = 'logs';
+let refreshInterval = null;
 
-/**
- * Render DevTools Panel (entry point).
- * @param {object} user
- */
+/* -------------------------------------------------------------------------- */
+/*                               MAIN RENDER                                  */
+/* -------------------------------------------------------------------------- */
 export function renderDevToolsPanel(user = {}) {
   if (user.email !== DEV_EMAIL) return;
   if (qs('#dev-tools-wrapper')) return;
@@ -32,7 +32,7 @@ export function renderDevToolsPanel(user = {}) {
   wrapper.style.bottom = '0';
   wrapper.style.right = '4px';
 
-  // Background overlay (opacity-controlled layer)
+  // === Background Overlay ===
   const bgOverlay = document.createElement('div');
   bgOverlay.id = 'dev-tools-bg';
   bgOverlay.className = 'absolute inset-0 bg-black rounded-t';
@@ -69,7 +69,7 @@ export function renderDevToolsPanel(user = {}) {
   `;
   panel.appendChild(bgOverlay);
 
-  // Append
+  // Append to body
   wrapper.append(toggleBtn, panel);
   document.body.appendChild(wrapper);
 
@@ -84,10 +84,8 @@ export function renderDevToolsPanel(user = {}) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                  TEMPLATES                                 */
+/*                               TEMPLATE HTML                                */
 /* -------------------------------------------------------------------------- */
-
-/** Header section */
 function getHeaderHTML() {
   return `
     <div id="dev-header" class="cursor-ns-resize p-2 flex justify-between items-center border-b border-gray-600 bg-black/80">
@@ -97,7 +95,6 @@ function getHeaderHTML() {
   `;
 }
 
-/** Tabs (Logs / Controls) */
 function getTabButtonsHTML() {
   return `
     <div class="flex border-b border-gray-600 bg-black/70">
@@ -107,7 +104,6 @@ function getTabButtonsHTML() {
   `;
 }
 
-/** Controls Tab */
 function getControlsTabHTML() {
   return `
     <div id="tab-controls" class="p-2 space-y-3 ${activeTab === 'controls' ? '' : 'hidden'}">
@@ -117,7 +113,6 @@ function getControlsTabHTML() {
   `;
 }
 
-/** Logs Tab */
 function getLogsTabHTML() {
   return `
     <div id="tab-logs" class="p-2 font-mono text-xs leading-tight space-y-1 ${activeTab === 'logs' ? '' : 'hidden'}">
@@ -127,7 +122,6 @@ function getLogsTabHTML() {
   `;
 }
 
-/** Role & Theme Controls */
 function getRoleThemeControlsHTML() {
   return `
     <div class="flex flex-col gap-2">
@@ -164,7 +158,6 @@ function getRoleThemeControlsHTML() {
   `;
 }
 
-/** Extra controls */
 function getExtraControlsHTML() {
   return `
     <div class="flex items-center gap-2 mt-2">
@@ -178,7 +171,6 @@ function getExtraControlsHTML() {
   `;
 }
 
-/** Log Toolbar */
 function getToolbarHTML() {
   return `
     <div class="flex items-center gap-2">
@@ -200,8 +192,6 @@ function getToolbarHTML() {
 /* -------------------------------------------------------------------------- */
 /*                               EVENT HANDLERS                               */
 /* -------------------------------------------------------------------------- */
-
-/** Toggle panel visibility */
 function togglePanel(panel, toggleBtn) {
   panelVisible = !panelVisible;
   if (panel instanceof HTMLElement) {
@@ -213,7 +203,6 @@ function togglePanel(panel, toggleBtn) {
   }
 }
 
-/** Switch tabs */
 function setupTabListeners() {
   const tabBtns = document.querySelectorAll('.dev-tab-btn');
   tabBtns.forEach((btn) => {
@@ -221,7 +210,6 @@ function setupTabListeners() {
       if (!(e.target instanceof HTMLElement)) return;
       const tab = e.target.dataset.tab;
       if (!tab) return;
-
       activeTab = tab;
       const logs = qsi('#tab-logs');
       const controls = qsi('#tab-controls');
@@ -233,42 +221,46 @@ function setupTabListeners() {
   });
 }
 
-/** Setup controls for role/theme/opacity */
 function setupControlListeners() {
   const roleSelect = qsi('#dev-role');
   const themeSelect = qsi('#dev-theme');
-  const opacitySlider = /** @type {HTMLInputElement|null} */ (qsi('#dev-opacity-slider'));
+  const opacitySlider = qsi('#dev-opacity-slider');
   const resetOpacityBtn = qsi('#reset-opacity');
   const resetBtn = qsi('#reset-dev');
   const refreshBtn = qsi('#refresh-context');
 
-  setSelectValue(roleSelect, localStorage.getItem('dev.overrideRole') || '');
-  setSelectValue(themeSelect, localStorage.getItem('dev.overrideTheme') || '');
+  if (roleSelect instanceof HTMLSelectElement) {
+    setSelectValue(roleSelect, localStorage.getItem('dev.overrideRole') || '');
+    roleSelect.addEventListener('change', (e) => {
+      setOverrideRole(getValue(e));
+      refreshDevContext();
+    });
+  }
 
-  roleSelect?.addEventListener('change', (e) => {
-    setOverrideRole(getValue(e));
-    refreshDevContext();
-  });
+  if (themeSelect instanceof HTMLSelectElement) {
+    setSelectValue(themeSelect, localStorage.getItem('dev.overrideTheme') || '');
+    themeSelect.addEventListener('change', (e) => {
+      const theme = getValue(e);
+      setOverrideTheme(theme);
+      applyTheme(theme);
+      refreshDevContext();
+    });
+  }
 
-  themeSelect?.addEventListener('change', (e) => {
-    const theme = getValue(e);
-    setOverrideTheme(theme);
-    applyTheme(theme);
-    refreshDevContext();
-  });
-
-  opacitySlider?.addEventListener('input', () => {
-    panelOpacity = parseFloat(opacitySlider.value);
-    const bg = qsi('#dev-tools-bg');
-    if (bg instanceof HTMLElement) bg.style.opacity = panelOpacity.toString();
-    localStorage.setItem('devTools.opacity', panelOpacity.toString());
-  });
+  if (opacitySlider instanceof HTMLInputElement) {
+    opacitySlider.addEventListener('input', () => {
+      panelOpacity = parseFloat(opacitySlider.value);
+      const bg = qsi('#dev-tools-bg');
+      if (bg instanceof HTMLElement) bg.style.opacity = panelOpacity.toString();
+      localStorage.setItem('devTools.opacity', panelOpacity.toString());
+    });
+  }
 
   resetOpacityBtn?.addEventListener('click', () => {
     panelOpacity = 0.9;
     const bg = qsi('#dev-tools-bg');
     if (bg instanceof HTMLElement) bg.style.opacity = '0.9';
-    if (opacitySlider) opacitySlider.value = '0.9';
+    if (opacitySlider instanceof HTMLInputElement) opacitySlider.value = '0.9';
     localStorage.setItem('devTools.opacity', '0.9');
   });
 
@@ -282,10 +274,9 @@ function setupControlListeners() {
   refreshBtn?.addEventListener('click', refreshDevContext);
 }
 
-/** Toolbar buttons (logs) */
 function setupToolbarListeners() {
   const clearBtn = qsi('#clear-logs');
-  const autoRefresh = /** @type {HTMLInputElement|null} */ (qsi('#auto-refresh'));
+  const autoRefreshEl = qsi('#auto-refresh');
   const errorsOnly = qsi('#errors-only');
   const closeBtn = qsi('#dev-tools-close');
 
@@ -294,9 +285,11 @@ function setupToolbarListeners() {
     renderLogs();
   });
 
-  autoRefresh?.addEventListener('change', () => {
-    autoRefresh.checked ? startAutoRefresh() : stopAutoRefresh();
-  });
+  if (autoRefreshEl instanceof HTMLInputElement) {
+    autoRefreshEl.addEventListener('change', () => {
+      autoRefreshEl.checked ? startAutoRefresh() : stopAutoRefresh();
+    });
+  }
 
   errorsOnly?.addEventListener('change', renderLogs);
 
@@ -310,13 +303,15 @@ function setupToolbarListeners() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                 LOG RENDER                                 */
+/*                                LOG RENDER                                  */
 /* -------------------------------------------------------------------------- */
 function renderLogs() {
   const container = qsi('#dev-log-console');
   if (!container) return;
 
-  const errorsOnly = /** @type {HTMLInputElement|null} */ (qsi('#errors-only'))?.checked;
+  const errorsOnlyEl = qsi('#errors-only');
+  const errorsOnly = errorsOnlyEl instanceof HTMLInputElement ? errorsOnlyEl.checked : false;
+
   container.innerHTML = getDevLogs()
     .filter((log) => !errorsOnly || log.includes('❌') || log.includes('error'))
     .map((log) => `<div class="${getLogColorClass(log)}">${log}</div>`)
@@ -332,7 +327,7 @@ function getLogColorClass(log) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                               PANEL BEHAVIOR                               */
+/*                            PANEL BEHAVIOR                                  */
 /* -------------------------------------------------------------------------- */
 function setupPanelResize(panel) {
   const header = qsi('#dev-header');
@@ -362,7 +357,6 @@ function setupPanelResize(panel) {
   }
 }
 
-/** Make panel draggable */
 function setupPanelDrag(wrapper) {
   const header = qsi('#dev-header');
   let startX = 0;
@@ -399,9 +393,8 @@ function setupPanelDrag(wrapper) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                              AUTO REFRESH LOGS                             */
+/*                          AUTO REFRESH LOGS                                 */
 /* -------------------------------------------------------------------------- */
-let refreshInterval = null;
 function startAutoRefresh() {
   if (!refreshInterval) refreshInterval = setInterval(renderLogs, 1000);
 }

@@ -1,41 +1,41 @@
-// src/utils/themeManager.js
-
 import { DEFAULT_THEME, VALID_THEME_KEYS } from '@config/themes/themeConstants.js';
 
 /**
- * Applies the color and font theme by adding theme-* classes
- * and injecting the proper CSS tokens file from /public/tokens/.
+ * Applies the selected theme by:
+ * - Adding `theme-*` class to <html>
+ * - Injecting the correct CSS token file from /public/tokens/
+ * - Logging current font variables
  *
- * @param {string} colorKey - The color theme key (e.g., 'modern', 'tech').
- * @param {string} fontKey - The font theme key (e.g., 'modern', 'tech').
+ * @param {string} themeKey - The theme key (e.g., 'classic', 'modern').
  */
-export function applyTheme(colorKey = DEFAULT_THEME, fontKey = DEFAULT_THEME) {
+export function applyTheme(themeKey = DEFAULT_THEME) {
   const html = document.documentElement;
 
-  // Clean previous classes
-  html.classList.forEach((cls) => {
-    if (cls.startsWith('theme-') || cls.startsWith('font-')) {
+  // 🧼 Remove any old theme classes
+  [...html.classList].forEach((cls) => {
+    if (cls.startsWith('theme-')) {
       html.classList.remove(cls);
     }
   });
 
-  // Validate keys
-  const safeColorKey = VALID_THEME_KEYS.includes(colorKey) ? colorKey : DEFAULT_THEME;
-  const safeFontKey = VALID_THEME_KEYS.includes(fontKey) ? fontKey : DEFAULT_THEME;
+  // ✅ Validate theme key
+  const safeThemeKey = VALID_THEME_KEYS.includes(themeKey) ? themeKey : DEFAULT_THEME;
 
-  // Add new classes
-  html.classList.add(`theme-${safeColorKey}`);
-  html.classList.add(`font-${safeFontKey}`);
+  // 🎨 Add the new theme class
+  html.classList.add(`theme-${safeThemeKey}`);
 
-  // Apply CSS token file for color theme
-  loadThemeCSS(safeColorKey);
+  // 📄 Load the corresponding CSS tokens
+  loadThemeCSS(safeThemeKey);
 
-  console.log(`🎨 Theme applied → color: ${safeColorKey}, font: ${safeFontKey}`);
+  // ✍️ Log the active font
+  const currentFont = getComputedStyle(html).getPropertyValue('--font-header').trim();
+  console.log(`🎨 Theme applied → ${safeThemeKey}, font: ${currentFont}`);
 }
 
 /**
- * Injects or updates a <link> element pointing to the current theme CSS.
- * @param {string} themeKey - The validated theme key.
+ * Loads the CSS file for the given theme.
+ *
+ * @param {string} themeKey
  */
 function loadThemeCSS(themeKey) {
   const linkId = 'theme-tokens';
@@ -44,8 +44,10 @@ function loadThemeCSS(themeKey) {
   let link = document.getElementById(linkId);
 
   if (link instanceof HTMLLinkElement) {
+    // Update existing <link>
     link.href = cssPath;
   } else {
+    // Create new <link>
     const newLink = document.createElement('link');
     newLink.id = linkId;
     newLink.rel = 'stylesheet';

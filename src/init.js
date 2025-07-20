@@ -36,7 +36,6 @@ function isProtectedPage(page) {
 
 export async function initApp() {
   console.log('🧠 initApp(): Starting full app initialization...');
-
   const page = getCurrentPage();
 
   // 1️⃣ Supabase Auth Setup
@@ -69,10 +68,10 @@ export async function initApp() {
     return;
   }
 
-  // 5️⃣ Load user settings if logged in
+  // 5️⃣ Load user settings (and theme) if logged in
   if (isLoggedIn) {
     try {
-      const { settings } = await initializeUser();
+      const { settings } = await initializeUser(); // Theme is applied here
       if (settings) {
         setUserSettings({ ...settings, email: user.email });
         console.log('✅ User settings loaded:', getUserSettings());
@@ -82,23 +81,24 @@ export async function initApp() {
     } catch (error) {
       console.error('❌ Failed to initialize user settings:', error);
     }
+  } else {
+    // 6️⃣ Apply fallback theme (if not logged in)
+    await initTheme();
   }
 
-  // 6️⃣ Apply theme
-  await initTheme();
-
+  // 7️⃣ Load sidebar state
   loadSidebarStateFromStorage();
 
-  // 7️⃣ Render correct shell
+  // 8️⃣ Render correct shell
   renderAppShell(!isProtectedPage(page));
   console.log(`✅ renderAppShell() called (${isProtectedPage(page) ? 'private' : 'public'})`);
 
-  // 8️⃣ Handle current route
+  // 9️⃣ Handle current route
   await checkAuthOnRouteChange();
   window.addEventListener('hashchange', checkAuthOnRouteChange);
   console.log('🚦 handleRouting() finished');
 
-  // 9️⃣ Developer tools
+  // 🔟 Developer tools
   const userSettings = getUserSettings();
   if (userSettings?.email === DEV_EMAIL) {
     console.log('🛠️ Dev mode: Initializing tools...');
