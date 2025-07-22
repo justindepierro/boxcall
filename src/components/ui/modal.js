@@ -35,6 +35,7 @@ export function Modal(options = {}) {
   titleEl.className = 'text-lg font-semibold text-gray-800';
   titleEl.textContent = title;
 
+  // Use BaseButton but wrap for extra classes
   const closeBtn = BaseButton({
     label: '×',
     variant: 'secondary',
@@ -44,6 +45,7 @@ export function Modal(options = {}) {
       onClose(); // Trigger onClose callback
     },
   });
+  closeBtn.classList.add('ml-2', 'text-gray-600', 'hover:text-gray-800');
 
   header.append(titleEl, closeBtn);
 

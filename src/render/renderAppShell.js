@@ -1,23 +1,24 @@
+// src/render/renderAppShell.js
 import { initSidebar } from '@components/sidebar/initSidebar.js';
 import { devError, devLog } from '@utils/devLogger';
 
 /**
- * Injects the base app HTML layout.
- * @param {boolean} includeSidebar - If true, includes sidebar in layout.
+ * Injects the base app HTML layout with optional sidebar.
+ * @param {boolean} includeSidebar
  */
 function renderBaseAppShell(includeSidebar) {
   const root = document.getElementById('app');
   if (!root) {
-    devError('❌ renderAppShell(): #app container not found');
+    devError('❌ renderBaseAppShell(): #app container not found');
     return;
   }
 
   root.innerHTML = `
     <div id="shell" class="flex h-screen w-full overflow-hidden bg-[var(--color-bg)] text-[var(--color-text)]">
-      ${includeSidebar ? '<div id="sidebar-root" class="flex flex-col h-full w-64"></div>' : ''}
+      ${includeSidebar ? '<aside id="sidebar-root" class="flex-shrink-0 h-full w-64"></aside>' : ''}
       
-      <main id="page-view" class="flex-1 overflow-y-auto p-6 bg-[var(--color-bg)]">
-        <div id="page-content" class="max-w-screen-lg mx-auto"></div>
+      <main id="page-view" class="flex-1 overflow-y-auto bg-[var(--color-bg)]">
+        <div id="page-content"></div>
       </main>
       
       <!-- Global Overlay Zones -->
@@ -33,9 +34,7 @@ function renderBaseAppShell(includeSidebar) {
  */
 export function renderPublicAppShell() {
   renderBaseAppShell(false);
-  requestAnimationFrame(() => {
-    devLog('✅ renderPublicAppShell(): Public shell initialized');
-  });
+  requestAnimationFrame(() => devLog('✅ Public app shell initialized'));
 }
 
 /**
@@ -45,6 +44,6 @@ export function renderPrivateAppShell() {
   renderBaseAppShell(true);
   requestAnimationFrame(() => {
     initSidebar();
-    devLog('✅ renderPrivateAppShell(): Shell with sidebar initialized');
+    devLog('✅ Private app shell initialized');
   });
 }

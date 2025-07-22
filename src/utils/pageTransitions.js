@@ -1,13 +1,12 @@
-/**
- * Applies fade-in transition to the container.
- * @param {HTMLElement} container
- */
-export function fadeIn(container) {
-  if (!(container instanceof HTMLElement)) return;
-  container.classList.add('opacity-0', 'transition-opacity', 'duration-300');
-
-  // Trigger fade-in after a single frame
-  requestAnimationFrame(() => container.classList.remove('opacity-0'));
+export function fadeIn(element, duration = 300) {
+  return new Promise((resolve) => {
+    element.style.opacity = 0;
+    element.style.transition = `opacity ${duration}ms`;
+    requestAnimationFrame(() => {
+      element.style.opacity = 1;
+    });
+    setTimeout(resolve, duration);
+  });
 }
 
 /**

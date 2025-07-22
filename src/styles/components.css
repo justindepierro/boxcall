@@ -23,3 +23,25 @@ nav.flex {
 nav.flex.flex-col {
   flex-direction: column;
 }
+
+.tooltip {
+  position: fixed;
+  z-index: 9999;
+  padding: 0.25rem 0.5rem; /* 4px 8px */
+  font-size: 0.75rem; /* text-xs */
+  border-radius: 0.25rem; /* rounded */
+  background: var(--color-card-bg, #111827);
+  color: var(--color-text, #f9fafb);
+  border: 1px solid var(--color-border, rgba(0, 0, 0, 0.1));
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transform: translateY(-5px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.tooltip.show {
+  opacity: 1;
+  transform: translateY(0);
+}

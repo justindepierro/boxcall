@@ -1,4 +1,4 @@
-// components/ui/dropdown.js
+// src/components/ui/dropdown.js
 
 /**
  * Creates a dropdown menu component.
@@ -48,7 +48,7 @@ export function createDropdown({ label = 'Options', items = [], onSelect = () =>
   itemEls.forEach((el) => {
     el.addEventListener('click', (e) => {
       const target = /** @type {HTMLButtonElement} */ (e.currentTarget);
-      const index = parseInt(target.dataset.index, 10);
+      const index = parseInt(target.dataset.index || '0', 10);
       onSelect(items[index]);
       menu.classList.add('hidden');
     });

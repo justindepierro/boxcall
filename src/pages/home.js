@@ -1,12 +1,13 @@
-// src/pages/Home.js
-import { renderHeader } from '../components/header.js';
-//import renderHomePage from "./home/index.js";
+// src/pages/home.js
+import { PageContainer } from '@components/layout/pageContainer.js';
 
-export function HomePage() {
-  return `
-    ${renderHeader}
-    <main class="p-6">
-      <h1 class="text-2xl font-semibold">Welcome to BoxCall</h1>
-    </main>
+export default function renderHomePage() {
+  const content = `
+    <div class="p-6 text-center space-y-4">
+      <h1 class="text-3xl font-bold text-[var(--color-accent)]">Welcome Home!</h1>
+      <p class="text-gray-600">This is the home page.</p>
+    </div>
   `;
+
+  return PageContainer(content, { title: 'Home' });
 }

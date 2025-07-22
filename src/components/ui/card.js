@@ -1,20 +1,95 @@
+import { createIconElement } from '@utils/iconRenderer.js';
+
+let cardIdCounter = 0;
+
 /**
- * Generic Card component for wrapping content with a consistent style.
+ * Advanced Card Component with support for:
+ * - Icons, badges, and subtitles
+ * - Collapsible content
+ * - Variants (default, elevated, outline, accent)
+ * - Sizes (sm, md, lg)
+ *
  * @param {object} props
- * @param {string} [props.title] - Optional card title.
- * @param {string} [props.content] - Inner HTML content of the card.
- * @param {string} [props.footer] - Optional footer content.
- * @param {string} [props.theme='default'] - Theme variant for the card.
- * @param {string} [props.className] - Extra CSS classes for the card.
+ * @param {string} [props.title]
+ * @param {string} [props.subtitle]
+ * @param {string} [props.content]
+ * @param {string} [props.footer]
+ * @param {string} [props.icon] - Lucide icon name (kebab-case).
+ * @param {string} [props.badge] - Small label displayed in the header.
+ * @param {boolean} [props.collapsible]
+ * @param {'default'|'elevated'|'outline'|'accent'} [props.variant]
+ * @param {'sm'|'md'|'lg'} [props.size]
+ * @param {string} [props.className]
  * @returns {string}
  */
-// src/components/ui/card.js
-export function Card({ title = '', content = '', footer = '', className = '' } = {}) {
+export function Card({
+  title = '',
+  subtitle = '',
+  content = '',
+  footer = '',
+  icon = '',
+  badge = '',
+  collapsible = false,
+  variant = 'default',
+  size = 'md',
+  className = '',
+} = {}) {
+  const variantClasses = {
+    default: 'border bg-[var(--color-card-bg)]',
+    elevated: 'shadow-md border bg-[var(--color-card-bg)]',
+    outline: 'border border-[var(--color-border)] bg-transparent',
+    accent: 'border-t-[4px] border-[var(--color-accent)] bg-[var(--color-card-bg)]',
+  };
+
+  const sizeClasses = {
+    sm: 'p-3 text-sm',
+    md: 'p-4',
+    lg: 'p-6 text-lg',
+  };
+
+  const cardId = `card-${++cardIdCounter}`;
+  const collapseAttr = collapsible ? `data-collapsible="true" data-card-id="${cardId}"` : '';
+
   return `
-    <div class="rounded-md shadow-sm border p-4 bg-[var(--color-card-bg)] text-[var(--color-text)] transition-colors ${className}">
-      ${title ? `<h3 class="text-lg font-semibold mb-3">${title}</h3>` : ''}
-      <div class="text-sm space-y-2">${content}</div>
-      ${footer ? `<div class="border-t mt-3 pt-2 text-right text-xs">${footer}</div>` : ''}
+    <div class="card rounded-md transition-colors ${variantClasses[variant]} ${sizeClasses[size]} ${className}"
+      ${collapseAttr}>
+      ${renderHeader({ title, subtitle, icon, badge, collapsible, cardId })}
+      <div class="card-content mt-3" id="${cardId}-content">${content}</div>
+      ${footer ? renderFooter(footer) : ''}
+    </div>
+  `;
+}
+
+/** ---------------- HEADER ---------------- */
+function renderHeader({ title, subtitle, icon, badge, collapsible, cardId }) {
+  if (!title && !icon) return '';
+
+  const iconHTML = icon
+    ? `<span class="icon-wrapper mr-2">${createIconElement(icon, 'h-5 w-5 text-[var(--color-accent)]').outerHTML}</span>`
+    : '';
+
+  const collapseToggle = collapsible
+    ? `<button class="collapse-btn ml-auto text-xs text-[var(--color-accent)] hover:underline" data-toggle="${cardId}">Toggle</button>`
+    : '';
+
+  return `
+    <div class="card-header flex items-center gap-2 border-b pb-2">
+      ${iconHTML}
+      <div class="flex-1">
+        ${title ? `<h3 class="font-semibold">${title}</h3>` : ''}
+        ${subtitle ? `<p class="text-xs text-gray-500">${subtitle}</p>` : ''}
+      </div>
+      ${badge ? `<span class="bg-[var(--color-accent)] text-white text-xs px-2 py-0.5 rounded-full">${badge}</span>` : ''}
+      ${collapseToggle}
+    </div>
+  `;
+}
+
+/** ---------------- FOOTER ---------------- */
+function renderFooter(footer) {
+  return `
+    <div class="card-footer border-t mt-3 pt-2 text-right">
+      ${footer}
     </div>
   `;
 }

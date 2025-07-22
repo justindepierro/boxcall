@@ -1,71 +1,74 @@
+// src/pages/dashboard/index.js
+import { PageContainer } from '@components/layout/pageContainer.js';
 import { Card } from '@components/ui/card.js';
-import { DashboardMessages } from '@components/dashboard/DashboardMessages.js';
-import { getUser } from '@auth/auth.js';
-import { showToast } from '@utils/toast.js';
-import { devLog } from '@utils/devLogger.js';
+import { Tabs } from '@components/ui/tabs.js';
+import { createDropdown } from '@components/ui/dropdown.js';
+import { Modal } from '@components/ui/modal.js';
+import { initPageUI } from '@utils/initPageUI.js';
+import { devLog } from '@utils/devLogger';
 
-/**
- * Renders the Dashboard page with modular cards.
- * @param {HTMLElement} container
- */
-export default async function renderDashboardPage(container) {
-  container.innerHTML = '';
-
-  const user = await getUser();
-  if (!user) {
-    showToast('❌ No user found. Please log in.', 'error');
-    return;
-  }
-
-  devLog(`✅ Dashboard loaded for user: ${user.email}`);
-
-  // Example messages
-  const messages = [
-    'Welcome to BoxCall! 🎉',
-    'Remember to update your profile in Settings.',
-    'New feature: Dev Tools Panel (accessible for dev accounts).',
-  ];
-
-  container.innerHTML = `
-    <section class="p-6 space-y-4 max-w-2xl mx-auto">
-      
-      <!-- LEFT COLUMN -->
-      <div class="lg:col-span-2 space-y-6">
+export default function renderDashboardPage() {
+  const content = `
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      <!-- Column 1 -->
+      <div class="space-y-4 md:space-y-6">
         ${Card({
-          title: `Hello, ${user.email.split('@')[0]} 👋`,
-          content: `
-            <p class="text-gray-700 dark:text-gray-300">
-              Here’s what’s happening with your team and account today.
-            </p>
-          `,
+          title: 'Welcome to BoxCall!',
+          subtitle: 'Dashboard Overview',
+          content: '<p class="text-sm">Reusable components demo.</p>',
         })}
-
         ${Card({
-          title: 'Quick Actions',
-          content: `
-            <div class="grid grid-cols-2 gap-4">
-              <button class="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-500">
-                View Playbook
-              </button>
-              <button class="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-500">
-                Start Practice Mode
-              </button>
-              <button class="bg-yellow-600 text-white px-3 py-2 rounded hover:bg-yellow-500">
-                Check Calendar
-              </button>
-              <button class="bg-purple-600 text-white px-3 py-2 rounded hover:bg-purple-500">
-                Manage Team
-              </button>
-            </div>
-          `,
+          title: 'Collapsible Card',
+          content: '<p class="text-sm">Try me!</p>',
+          collapsible: true,
         })}
       </div>
 
-      <!-- RIGHT COLUMN -->
-      <div class="space-y-6">
-        ${DashboardMessages(messages)}
+      <!-- Column 2 -->
+      <div class="space-y-4 md:space-y-6">
+        ${Tabs({
+          tabs: ['Tab 1', 'Tab 2'],
+          contents: ['<p>Tab 1 Content</p>', '<p>Tab 2 Content</p>'],
+        })}
+        <div class="flex justify-center">
+          ${createDropdown({ label: 'Menu', items: ['Action 1', 'Action 2'] }).outerHTML}
+        </div>
       </div>
 
-    </section>
+      <!-- Column 3 -->
+      <div class="space-y-4 md:space-y-6 text-center">
+        ${Card({
+          title: 'Modal Demo',
+          content: `
+            <button id="openModalBtn" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-500">
+              Open Modal
+            </button>
+          `,
+        })}
+      </div>
+    </div>
   `;
+
+  const page = PageContainer(content, {
+    title: 'Dashboard',
+    headerContent: `<button class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-500">Action</button>`,
+  });
+
+  // Initialize UI after DOM insertion
+  setTimeout(() => {
+    initPageUI();
+    const openModalBtn = document.querySelector('#openModalBtn');
+    if (openModalBtn) {
+      openModalBtn.addEventListener('click', () => {
+        const modal = Modal({
+          title: 'Demo Modal',
+          content: '<p>This is a modal example. Click × to close.</p>',
+          onClose: () => devLog('Modal closed.'),
+        });
+        document.body.appendChild(modal);
+      });
+    }
+  }, 0);
+
+  return page;
 }

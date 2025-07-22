@@ -8,12 +8,19 @@ import { Card } from '@components/ui/card.js';
 export function DashboardMessages(messages = []) {
   const content = messages.length
     ? messages
-        .map((msg) => `<div class="p-2 border-b border-gray-200 last:border-none">${msg}</div>`)
-        .join('')
+        .map(
+          (msg) => `
+            <div class="px-4 py-3 bg-[var(--color-card-bg-alt)] rounded-md border border-[var(--color-border)] shadow-sm">
+              <p class="text-sm text-[var(--color-text)]">${msg}</p>
+            </div>
+          `
+        )
+        .join('<div class="h-2"></div>') // small vertical gap between updates
     : '<p class="text-gray-500 text-sm">No updates available.</p>';
 
   return Card({
     title: 'Latest Updates',
     content,
+    collapsible: true, // enable collapsible feature
   });
 }

@@ -43,6 +43,7 @@ header {
   color: var(--color-header-text);
 }
 
+/* App Shell Layout */
 #shell {
   display: flex;
   height: 100vh;
@@ -52,13 +53,26 @@ header {
 
 #page-view {
   flex: 1;
-  padding: 2rem;
   overflow-y: auto;
   background-color: var(--color-bg);
   color: var(--color-text);
+  /* Removed padding to avoid double spacing. PageContainer handles spacing. */
 }
 
-/* Tailwind classes used: */
+/* Sidebar Offset for Desktop */
+#page-view.with-sidebar {
+  margin-left: var(--sidebar-expanded-width, 240px);
+  transition: margin-left 0.3s ease;
+}
+
+/* Mobile Friendly Adjustments */
+@media (max-width: 768px) {
+  #page-view.with-sidebar {
+    margin-left: 0;
+  }
+}
+
+/* Tailwind helper classes */
 #sidebar-toggle-wrapper {
   padding-left: 1rem; /* or px-4 */
 }

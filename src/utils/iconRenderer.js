@@ -30,7 +30,6 @@ import { devWarn } from './devLogger';
 
 /**
  * A map of kebab-case icon names to Lucide icon components.
- * Add more icons here as needed.
  */
 const iconMap = {
   home: Home,
@@ -59,6 +58,9 @@ const iconMap = {
   'clipboard-list': ClipboardList,
 };
 
+// Cache to avoid re-creating icons unnecessarily
+const iconCache = {};
+
 /**
  * Returns a Lucide SVG icon inside a <span> wrapper.
  *
@@ -67,19 +69,25 @@ const iconMap = {
  * @returns {HTMLElement}
  */
 export function createIconElement(name, className = 'h-5 w-5 text-gray-700') {
-  const IconComponent = iconMap[name] || Info; // Fallback to "Info" icon
+  const iconKey = name.toLowerCase();
+  const IconComponent = iconMap[iconKey] || Info;
 
-  if (!iconMap[name]) {
+  if (!iconMap[iconKey]) {
     devWarn(`❌ Unknown Lucide icon: "${name}", using fallback "Info".`);
   }
 
-  // Wrapper <span> to ensure consistent alignment
+  // Use cached icon if available
+  const cacheKey = `${iconKey}-${className}`;
+  if (iconCache[cacheKey]) {
+    return iconCache[cacheKey].cloneNode(true);
+  }
+
   const wrapper = document.createElement('span');
   wrapper.className = 'inline-flex items-center justify-center';
 
-  // Create SVG icon
   const svg = createElement(IconComponent, { class: className });
   wrapper.appendChild(svg);
 
+  iconCache[cacheKey] = wrapper.cloneNode(true);
   return wrapper;
 }
