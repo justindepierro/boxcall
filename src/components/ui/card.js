@@ -3,11 +3,10 @@ import { createIconElement } from '@utils/iconRenderer.js';
 let cardIdCounter = 0;
 
 /**
- * Advanced Card Component with support for:
- * - Icons, badges, and subtitles
- * - Collapsible content
- * - Variants (default, elevated, outline, accent)
- * - Sizes (sm, md, lg)
+ * Advanced Card Component with updated design:
+ * - Square edges
+ * - Subtle drop shadow (default variant)
+ * - Reduced padding for tighter layout
  *
  * @param {object} props
  * @param {string} [props.title]
@@ -35,26 +34,26 @@ export function Card({
   className = '',
 } = {}) {
   const variantClasses = {
-    default: 'border bg-[var(--color-card-bg)]',
+    default: 'shadow-sm border bg-[var(--color-card-bg)]',
     elevated: 'shadow-md border bg-[var(--color-card-bg)]',
     outline: 'border border-[var(--color-border)] bg-transparent',
     accent: 'border-t-[4px] border-[var(--color-accent)] bg-[var(--color-card-bg)]',
   };
 
   const sizeClasses = {
-    sm: 'p-3 text-sm',
-    md: 'p-4',
-    lg: 'p-6 text-lg',
+    sm: 'p-2 text-sm',
+    md: 'p-3',
+    lg: 'p-5 text-lg',
   };
 
   const cardId = `card-${++cardIdCounter}`;
   const collapseAttr = collapsible ? `data-collapsible="true" data-card-id="${cardId}"` : '';
 
   return `
-    <div class="card rounded-md transition-colors ${variantClasses[variant]} ${sizeClasses[size]} ${className}"
+    <div class="card rounded-none transition-colors ${variantClasses[variant]} ${sizeClasses[size]} ${className}"
       ${collapseAttr}>
       ${renderHeader({ title, subtitle, icon, badge, collapsible, cardId })}
-      <div class="card-content mt-3" id="${cardId}-content">${content}</div>
+      <div class="card-content mt-2" id="${cardId}-content">${content}</div>
       ${footer ? renderFooter(footer) : ''}
     </div>
   `;
@@ -88,7 +87,7 @@ function renderHeader({ title, subtitle, icon, badge, collapsible, cardId }) {
 /** ---------------- FOOTER ---------------- */
 function renderFooter(footer) {
   return `
-    <div class="card-footer border-t mt-3 pt-2 text-right">
+    <div class="card-footer border-t mt-2 pt-2 text-right">
       ${footer}
     </div>
   `;

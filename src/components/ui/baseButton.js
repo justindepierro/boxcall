@@ -29,17 +29,23 @@ import { createIconElement } from '@utils/iconRenderer.js';
  * @property {string} [slotEnd]
  */
 
-// --- Style Maps ---
 const variantMap = {
   primary: 'bg-[var(--color-accent)] text-white',
   secondary: 'bg-gray-200 text-black',
   outline: 'border border-gray-300 text-black',
+  sidebar: `
+    bg-transparent text-[var(--color-sidebar-text)]
+    hover:bg-[var(--color-sidebar-hover)]
+    hover:text-[var(--color-sidebar-text-hover)]
+    justify-start
+  `.trim(),
 };
 
 const sizeMap = {
   sm: 'text-sm px-2 py-1',
   md: 'text-base px-3 py-2',
   lg: 'text-lg px-4 py-3',
+  sidebar: 'text-base px-4 py-2 gap-2', // Gap for icon + label
 };
 
 const roundedMap = {
@@ -139,7 +145,7 @@ function applyButtonClasses(
     ${roundedMap[rounded] || 'rounded'}
     ${uppercase ? 'uppercase' : ''}
     ${fullWidth ? 'w-full' : ''}
-    ${disabled || loading ? 'opacity-50 cursor-not-allowed' : 'hover:brightness-105'}
+    ${disabled || loading ? 'opacity-50 cursor-not-allowed' : variant !== 'sidebar' ? 'hover:brightness-105' : ''}
     ${iconOnly ? 'p-2 w-auto h-auto' : 'gap-2'}
     ${selected ? 'ring-2 ring-[var(--color-accent)]' : ''}
     ${focused ? 'outline outline-2 outline-[var(--color-accent)]' : ''}
@@ -207,9 +213,12 @@ function renderDefaultContent(
     btn.appendChild(createIconElement(icon, iconClass)); // From iconRenderer
   }
 
-  if (label && !iconOnly) {
+  if (label) {
     const span = document.createElement('span');
     span.textContent = label;
+    if (iconOnly) {
+      span.classList.add('hidden'); // Hide when iconOnly
+    }
     btn.appendChild(span);
   }
 

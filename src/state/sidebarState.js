@@ -1,8 +1,4 @@
-import { devWarn } from '@utils/devLogger';
-
-// /state/sidebarState.js
-// 🧠 Centralized sidebar state manager
-// Handles: reading, writing, cycling states like 'expanded', 'icon', and 'collapsed'
+import { devWarn, devLog } from '@utils/devLogger.js';
 
 /**
  * @typedef {'expanded' | 'icon' | 'collapsed'} SidebarState
@@ -10,13 +6,15 @@ import { devWarn } from '@utils/devLogger';
 
 /** @type {SidebarState[]} */
 export const SIDEBAR_STATES = ['expanded', 'icon', 'collapsed'];
-export const DEFAULT_STATE = 'expanded';
+
+/** @type {SidebarState} */
+export const DEFAULT_STATE = 'icon';
 
 /** @type {SidebarState} */
 let sidebarState = DEFAULT_STATE;
 
 /**
- * 📦 Returns the current sidebar state
+ * Returns the current sidebar state.
  * @returns {SidebarState}
  */
 export function getSidebarState() {
@@ -24,60 +22,46 @@ export function getSidebarState() {
 }
 
 /**
- * 💾 Sets the current sidebar state and saves to localStorage
+ * Sets the current sidebar state and saves to localStorage.
  * @param {SidebarState} newState
  */
 export function setSidebarState(newState) {
   if (!SIDEBAR_STATES.includes(newState)) {
-    devWarn(`❌ Invalid sidebar state: "${newState}".`);
+    devWarn(`❌ Invalid sidebar state: "${newState}"`);
     return;
   }
-
   sidebarState = newState;
-  saveSidebarStateToStorage();
+  localStorage.setItem('sidebarState', sidebarState);
+  devLog(`📦 Sidebar state set to: ${newState}`);
 }
 
 /**
- * 🔁 Cycles sidebar state:
- * expanded → icon → collapsed → expanded ...
- */
-export function cycleSidebarState() {
-  const currentIndex = SIDEBAR_STATES.indexOf(sidebarState);
-  const nextIndex = (currentIndex + 1) % SIDEBAR_STATES.length;
-  setSidebarState(SIDEBAR_STATES[nextIndex]);
-}
-
-/**
- * 📤 Save sidebar state to localStorage
- */
-export function saveSidebarStateToStorage() {
-  try {
-    localStorage.setItem('sidebarState', sidebarState);
-  } catch (err) {
-    console.warn('⚠️ Failed to save sidebarState to localStorage:', err);
-  }
-}
-
-/**
- * 📥 Restore sidebar state from localStorage
- */
-export function loadSidebarStateFromStorage() {
-  try {
-    const stored = localStorage.getItem('sidebarState');
-
-    if (isSidebarState(stored)) {
-      sidebarState = stored;
-    }
-  } catch (err) {
-    console.warn('⚠️ Failed to load sidebarState from localStorage:', err);
-  }
-}
-
-/**
- * Type guard to check if a value is a valid SidebarState.
  * @param {any} value
  * @returns {value is SidebarState}
  */
 function isSidebarState(value) {
-  return value === 'expanded' || value === 'icon' || value === 'collapsed';
+  return SIDEBAR_STATES.includes(value);
+}
+/**
+ * Loads the sidebar state from localStorage.
+ */
+export function loadSidebarStateFromStorage() {
+  const stored = localStorage.getItem('sidebarState');
+  sidebarState = isSidebarState(stored) ? stored : DEFAULT_STATE;
+}
+
+/**
+ * Cycles through sidebar states: expanded → icon → collapsed → expanded.
+ */
+export function cycleSidebarState() {
+  const current = getSidebarState();
+  const index = SIDEBAR_STATES.indexOf(current);
+  const nextState = SIDEBAR_STATES[(index + 1) % SIDEBAR_STATES.length];
+  setSidebarState(nextState);
+  return nextState; // <--- THIS FIXES TS ERROR
+}
+
+export function resetSidebarState() {
+  sidebarState = DEFAULT_STATE;
+  localStorage.removeItem('sidebarState');
 }

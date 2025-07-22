@@ -1,0 +1,114 @@
+/* === Sidebar Layout === */
+#sidebar-root {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-sidebar);
+  color: var(--color-sidebar-text);
+  border-right: 1px solid var(--color-border);
+  overflow: hidden;
+  transition: width 0.3s ease;
+  height: 100vh; /* Full height */
+  position: relative;
+}
+
+#sidebar-root.expanded {
+  width: 240px; /* Expanded state */
+}
+
+#sidebar-root.icon {
+  width: 64px; /* Icon-only state */
+}
+
+#sidebar-root.collapsed {
+  width: 0; /* Collapsed state */
+  border-right: none;
+}
+
+/* === Page Content === */
+#page-view {
+  flex: 1;
+  transition: margin-left 0.3s ease;
+}
+
+#shell.sidebar-expanded #page-view {
+  margin-left: 240px;
+}
+
+#shell.sidebar-icon #page-view {
+  margin-left: 64px;
+}
+
+#shell.sidebar-collapsed #page-view {
+  margin-left: 0;
+}
+
+/* === Sidebar Header === */
+#sidebar-toggle-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-sidebar);
+}
+
+#sidebar-brand {
+  font-weight: bold;
+  color: var(--color-sidebar-text);
+  white-space: nowrap;
+}
+
+/* === Sidebar Buttons === */
+.nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: var(--color-sidebar-text);
+  text-align: left;
+  border: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  cursor: pointer;
+}
+
+.nav-btn:hover {
+  background-color: var(--color-sidebar-hover);
+  color: var(--color-sidebar-text-hover);
+}
+
+#sidebar-root.icon .nav-btn {
+  justify-content: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+#sidebar-root.icon .nav-label {
+  display: none;
+}
+
+/* === Bottom Logout Button === */
+#sidebar-bottom {
+  margin-top: auto;
+  padding: 0.5rem 1rem;
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-sidebar);
+}
+
+/* === Responsive Adjustments === */
+@media (max-width: 768px) {
+  #sidebar-root.expanded,
+  #sidebar-root.icon {
+    position: absolute;
+    z-index: 50;
+    height: 100vh;
+  }
+
+  #page-view {
+    margin-left: 0 !important;
+  }
+}

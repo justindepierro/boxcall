@@ -2,6 +2,7 @@ html {
   --font-header: 'Oswald', sans-serif;
   --font-body: 'Inter', sans-serif;
   --font-mono: 'Fira Mono', monospace;
+  --sidebar-offset: 64px; /* Default to icon state width */
   height: 100%;
   width: 100%;
 }
@@ -56,36 +57,16 @@ header {
   overflow-y: auto;
   background-color: var(--color-bg);
   color: var(--color-text);
-  /* Removed padding to avoid double spacing. PageContainer handles spacing. */
-}
-
-/* Sidebar Offset for Desktop */
-#page-view.with-sidebar {
-  margin-left: var(--sidebar-expanded-width, 240px);
+  margin-left: var(--sidebar-offset);
   transition: margin-left 0.3s ease;
+  padding: 0; /* Remove default padding for tighter layout */
 }
 
 /* Mobile Friendly Adjustments */
 @media (max-width: 768px) {
-  #page-view.with-sidebar {
+  #page-view {
     margin-left: 0;
   }
-}
-
-/* Tailwind helper classes */
-#sidebar-toggle-wrapper {
-  padding-left: 1rem; /* or px-4 */
-}
-
-#sidebar-root button {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-:root {
-  --sidebar-expanded-width: 240px;
 }
 
 .label {
