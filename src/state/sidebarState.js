@@ -1,5 +1,3 @@
-import { devWarn, devLog } from '@utils/devLogger.js';
-
 /**
  * @typedef {'expanded' | 'icon' | 'collapsed'} SidebarState
  */
@@ -27,41 +25,40 @@ export function getSidebarState() {
  */
 export function setSidebarState(newState) {
   if (!SIDEBAR_STATES.includes(newState)) {
-    devWarn(`❌ Invalid sidebar state: "${newState}"`);
+    console.warn(`❌ Invalid sidebar state: "${newState}"`);
     return;
   }
   sidebarState = newState;
   localStorage.setItem('sidebarState', sidebarState);
-  devLog(`📦 Sidebar state set to: ${newState}`);
 }
 
 /**
- * @param {any} value
- * @returns {value is SidebarState}
+ * Cycles through expanded → icon → collapsed states.
+ * @returns {SidebarState}
  */
-function isSidebarState(value) {
-  return SIDEBAR_STATES.includes(value);
+export function cycleSidebarState() {
+  const currentIndex = SIDEBAR_STATES.indexOf(sidebarState);
+  const nextIndex = (currentIndex + 1) % SIDEBAR_STATES.length;
+  sidebarState = SIDEBAR_STATES[nextIndex];
+  localStorage.setItem('sidebarState', sidebarState);
+  return sidebarState;
 }
+
 /**
  * Loads the sidebar state from localStorage.
  */
 export function loadSidebarStateFromStorage() {
   const stored = localStorage.getItem('sidebarState');
-  sidebarState = isSidebarState(stored) ? stored : DEFAULT_STATE;
+  if (isSidebarState(stored)) {
+    sidebarState = /** @type {SidebarState} */ (stored); // TS now knows this is valid
+  }
 }
 
 /**
- * Cycles through sidebar states: expanded → icon → collapsed → expanded.
+ * Type guard to check if a value is a SidebarState.
+ * @param {string | null} value
+ * @returns {value is SidebarState}
  */
-export function cycleSidebarState() {
-  const current = getSidebarState();
-  const index = SIDEBAR_STATES.indexOf(current);
-  const nextState = SIDEBAR_STATES[(index + 1) % SIDEBAR_STATES.length];
-  setSidebarState(nextState);
-  return nextState; // <--- THIS FIXES TS ERROR
-}
-
-export function resetSidebarState() {
-  sidebarState = DEFAULT_STATE;
-  localStorage.removeItem('sidebarState');
+function isSidebarState(value) {
+  return value !== null && SIDEBAR_STATES.includes(/** @type {SidebarState} */ (value));
 }

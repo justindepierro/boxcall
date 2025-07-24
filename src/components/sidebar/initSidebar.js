@@ -9,11 +9,11 @@ export async function initSidebar() {
   try {
     devLog('🧱 initSidebar(): Starting...');
     loadSidebarStateFromStorage();
-    /** @type {import('@state/sidebarState.js').SidebarState} */
     const currentState = getSidebarState() || 'icon';
-    renderSidebar(currentState);
-    applySidebarState(currentState);
-    initSidebarToggle();
+
+    renderSidebar(currentState); // Only render once
+    applySidebarState(currentState); // Just apply classes
+    initSidebarToggle(); // Attach toggle button
     devLog(`✅ Sidebar initialized in "${currentState}" state`);
   } catch (err) {
     devError(`❌ initSidebar(): Failed — ${err}`);

@@ -1,39 +1,35 @@
-import { devLog, devWarn } from '@utils/devLogger.js';
+// src/components/sidebar/sidebarStateController.js
+import { devLog, devError } from '@utils/devLogger.js';
 import { setSidebarState } from '@state/sidebarState.js';
 import { SIDEBAR_STATES } from '@config/sidebarConfig.js';
 
 /**
- * Applies sidebar state by toggling shell + sidebar classes.
+ * Applies a new sidebar state by updating classes only.
  * @param {'expanded' | 'icon' | 'collapsed'} newState
  */
 export function applySidebarState(newState) {
   if (!SIDEBAR_STATES.includes(newState)) {
-    devWarn(`🚨 Invalid sidebar state "${newState}"`);
+    devError(`🚨 Invalid sidebar state "${newState}"`);
     return;
   }
-
-  const shell = document.getElementById('shell');
-  const sidebar = document.getElementById('sidebar-root');
-
-  if (!shell || !sidebar) {
-    devWarn('❌ applySidebarState(): Missing #shell or #sidebar-root');
-    return;
-  }
-
-  // Remove old states
-  shell.classList.remove('sidebar-expanded', 'sidebar-icon', 'sidebar-collapsed');
-  sidebar.classList.remove('expanded', 'icon', 'collapsed');
-
-  // Add new states
-  const classMap = {
-    expanded: 'sidebar-expanded',
-    icon: 'sidebar-icon',
-    collapsed: 'sidebar-collapsed',
-  };
-
-  shell.classList.add(classMap[newState]);
-  sidebar.classList.add(newState);
 
   devLog(`🎯 Sidebar → ${newState}`);
+
+  const root = document.getElementById('sidebar-root');
+  const shell = document.getElementById('shell');
+
+  if (!root || !shell) {
+    devError('❌ Sidebar or shell element not found');
+    return;
+  }
+
+  // Remove previous classes
+  root.classList.remove('expanded', 'icon', 'collapsed');
+  shell.classList.remove('sidebar-expanded', 'sidebar-icon', 'sidebar-collapsed');
+
+  // Add new classes
+  root.classList.add(newState);
+  shell.classList.add(`sidebar-${newState}`);
+
   setSidebarState(newState);
 }

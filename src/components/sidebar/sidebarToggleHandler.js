@@ -1,3 +1,4 @@
+// src/components/sidebar/sidebarToggleHandler.js
 import { devLog, devWarn } from '@utils/devLogger.js';
 import { cycleSidebarState, setSidebarState } from '@state/sidebarState.js';
 
@@ -7,8 +8,8 @@ import { querySidebarElements } from './sidebarDOMHelpers.js';
 /**
  * Cycles sidebar through expanded → icon → collapsed.
  */
-export function handleSidebarToggle() {
-  const nextState = cycleSidebarState(); // Ensure cycleSidebarState returns the new state
+function handleSidebarToggle() {
+  const nextState = cycleSidebarState();
   if (!nextState) {
     devWarn('⚠️ handleSidebarToggle: cycleSidebarState() returned no state');
     return;
@@ -19,7 +20,6 @@ export function handleSidebarToggle() {
 
 /**
  * Forces sidebar into a specific state.
- * @param {'expanded' | 'icon' | 'collapsed'} state
  */
 export function forceSidebarState(state) {
   if (!state) return devWarn('⚠️ forceSidebarState: No state provided');
@@ -37,5 +37,9 @@ export function initSidebarToggle() {
     devWarn('❌ initSidebarToggle(): Minimize button not found');
     return;
   }
-  minimizeBtn.addEventListener('click', handleSidebarToggle);
+
+  // Ensure we don't attach multiple event listeners
+  minimizeBtn.replaceWith(minimizeBtn.cloneNode(true)); // Removes existing listeners
+  const refreshedBtn = document.getElementById('sidebar-minimize');
+  refreshedBtn.addEventListener('click', handleSidebarToggle);
 }
