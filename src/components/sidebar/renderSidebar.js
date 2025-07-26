@@ -47,9 +47,7 @@ export function renderSidebar(state = 'icon') {
   const bottom = document.createElement('div');
   bottom.id = 'sidebar-bottom';
   bottom.className = 'mt-auto px-4 py-3';
-  const logoutBtn = renderLogoutButton(state);
-  logoutBtn.classList.add('nav-btn', 'text-left', 'justify-start');
-  bottom.appendChild(logoutBtn);
+  bottom.appendChild(renderLogoutButton(state));
   root.appendChild(bottom);
 
   // Initialize toggle button listener
@@ -70,13 +68,12 @@ function createSidebarButton(id, label, icon, state) {
     onClick: () => navigateTo(id),
   });
 
-  // Create a label span so icon-only mode can hide it
   const labelSpan = document.createElement('span');
   labelSpan.className = 'nav-label';
   labelSpan.textContent = label;
 
   btn.appendChild(labelSpan);
-  btn.classList.add('nav-btn', 'justify-start');
+  btn.classList.add('nav-btn'); // No extra justify-start needed (BaseButton handles it)
 
   return btn;
 }
@@ -91,7 +88,8 @@ function renderSidebarHeader(state) {
 
   const toggleBtn = document.createElement('button');
   toggleBtn.id = 'sidebar-minimize';
-  toggleBtn.className = 'hover:bg-[var(--color-accent)] rounded p-1 text-white';
+  toggleBtn.className = 'hover:bg-[var(--color-accent)] rounded p-1';
+  toggleBtn.style.color = 'var(--color-sidebar-icon)'; // enforce icon color
   toggleBtn.appendChild(createIconElement(MINIMIZE_SYMBOLS[state], SIDEBAR_ICON_SIZE));
 
   const brand = document.createElement('span');
@@ -130,7 +128,7 @@ function renderLogoutButton(state) {
   labelSpan.textContent = 'Logout';
 
   btn.appendChild(labelSpan);
-  btn.classList.add('nav-btn', 'justify-start');
+  btn.classList.add('nav-btn', 'logout-btn'); // Add logout-btn class for extra CSS targeting
 
   return btn;
 }

@@ -4,7 +4,7 @@ export { BaseToggle } from './baseToggle.js';
 export { createDropdown } from './dropdown.js';
 export { FieldMultiRangeSlider } from './fieldMultiRangeSlider.js';
 export { FieldForm } from './formField.js';
+export { FileUpload } from './fileUpload.js';
 export { Modal } from './modal.js';
 export { MultiRangeSlider } from './multiRangeSlider.js';
-export { SidebarButton } from './sideBarButton.js';
 export { Toast } from './toast.js';

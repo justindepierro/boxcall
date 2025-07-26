@@ -21,10 +21,33 @@ export function getCurrentRole() {
 // 1. Define known roles
 export const ROLES = {
   HEAD_COACH: 'head_coach',
-  COACH: 'coach',
+  COACH: 'coach', // Simplified from assistant_coach and coordinator
   PLAYER: 'player',
-  FAMILY: 'family',
+  FAMILY: 'family', // Changed from parent
   MANAGER: 'manager',
+};
+
+// Super Admin roles (platform level)
+export const ADMIN_ROLES = {
+  SUPER_ADMIN: 'super_admin',
+  ADMIN: 'admin',
+  MODERATOR: 'moderator',
+};
+
+// 2. Define role hierarchies/relationships
+export const ROLE_HIERARCHY = {
+  [ROLES.HEAD_COACH]: 4,
+  [ROLES.COACH]: 3, // Simplified from assistant_coach and coordinator
+  [ROLES.MANAGER]: 2,
+  [ROLES.PLAYER]: 1,
+  [ROLES.FAMILY]: 1, // Changed from parent
+};
+
+// Super admin roles have highest privilege
+export const ADMIN_HIERARCHY = {
+  [ADMIN_ROLES.SUPER_ADMIN]: 100,
+  [ADMIN_ROLES.ADMIN]: 90,
+  [ADMIN_ROLES.MODERATOR]: 80,
 };
 
 // 3. Basic role checkers
@@ -92,4 +115,40 @@ export function getUserRole() {
 
   const user = getCurrentUser();
   return user?.role || getCurrentRole() || null;
+}
+
+// 6. Super Admin functionality
+export function isSuperAdmin() {
+  const user = getCurrentUser();
+  return user?.email === 'justindepierro@gmail.com' || user?.admin_role === ADMIN_ROLES.SUPER_ADMIN;
+}
+
+export function isAdmin() {
+  return isSuperAdmin() || getCurrentUser()?.admin_role === ADMIN_ROLES.ADMIN;
+}
+
+export function isModerator() {
+  return isAdmin() || getCurrentUser()?.admin_role === ADMIN_ROLES.MODERATOR;
+}
+
+export function canManagePlatform() {
+  return isSuperAdmin();
+}
+
+export function canManageTeams() {
+  return isAdmin();
+}
+
+export function canModerateContent() {
+  return isModerator();
+}
+
+export function hasHigherRole(userRole, targetRole) {
+  const userLevel = ROLE_HIERARCHY[userRole] || 0;
+  const targetLevel = ROLE_HIERARCHY[targetRole] || 0;
+  return userLevel > targetLevel;
+}
+
+export function hasAdminAccess() {
+  return isSuperAdmin() || isAdmin() || isModerator();
 }

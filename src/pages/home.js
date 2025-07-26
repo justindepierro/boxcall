@@ -1,5 +1,5 @@
 // src/pages/home.js
-import { PageContainer } from '@components/layout/pageContainer.js';
+import { createPage } from '@utils/index.js';
 
 export default function renderHomePage() {
   const content = `
@@ -9,5 +9,8 @@ export default function renderHomePage() {
     </div>
   `;
 
-  return PageContainer(content, { title: 'Home' });
+  return createPage({
+    name: 'Home',
+    content,
+  });
 }

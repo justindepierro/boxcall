@@ -1,39 +1,40 @@
 // src/render/appReset.js
-import { renderPublicAppShell, renderPrivateAppShell } from '@render/renderAppShell.js';
+import { renderAppShell } from '@render/renderAppShell.js';
 import { navigateTo, handleRouting } from '@routes/router.js';
 import { devLog } from '@utils/devLogger.js';
 
 /**
- * Resets the application to the public layout (login/signup/forgot).
- * @param {string} page - Target page to navigate to (default: 'login').
+ * Resets the app to a given layout and routes to the specified page.
+ *
+ * @param {Object} options
+ * @param {boolean} [options.includeSidebar=false] - Whether the private sidebar layout should be used.
+ * @param {string} [options.page='login'] - The target page to navigate to.
  */
-export async function resetAppToPublic(page = 'login') {
-  devLog(`🔄 resetAppToPublic(): Switching to public layout → ${page}`);
+async function resetApp({ includeSidebar = false, page = 'login' } = {}) {
+  devLog(`🔄 resetApp(): Switching to ${includeSidebar ? 'private' : 'public'} layout → ${page}`);
 
-  // 1. Render the public app shell
-  renderPublicAppShell();
+  // 1. Render the app shell
+  renderAppShell({ includeSidebar });
 
-  // 2. Force routing to rebuild public pages
-  await handleRouting();
-
-  // 3. Navigate to the requested page
+  // 2. Navigate to the target page
   navigateTo(page);
+
+  // 3. Handle routing
+  await handleRouting();
 }
 
 /**
- * Resets the application to the private layout (dashboard).
- * This is called after successful login/signup.
+ * Resets the application to the public layout (login/signup/forgot).
+ * @param {string} page - Target page (default: 'login').
+ */
+export async function resetAppToPublic(page = 'login') {
+  return resetApp({ includeSidebar: false, page });
+}
+
+/**
+ * Resets the application to the private layout (e.g., dashboard).
  * @param {string} page - Target private page (default: 'dashboard').
  */
 export async function resetAppToPrivate(page = 'dashboard') {
-  devLog(`🔐 resetAppToPrivate(): Switching to private layout → ${page}`);
-
-  // 1. Render the private app shell
-  renderPrivateAppShell();
-
-  // 2. Force routing to rebuild private pages
-  await handleRouting();
-
-  // 3. Navigate to the requested page
-  navigateTo(page);
+  return resetApp({ includeSidebar: true, page });
 }

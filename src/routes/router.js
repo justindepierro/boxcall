@@ -2,110 +2,164 @@
 import { showSpinner, hideSpinner } from '@utils/spinner.js';
 import { renderPage } from '@render/renderPage.js';
 import { fadeIn, fadeOut } from '@utils/pageTransitions.js';
-import { devLog, devError } from '@utils/devLogger.js';
+import { devLog, devError, devWarn } from '@utils/devLogger.js';
+
+import { checkAuthOnRouteChange } from './checkRouteOnAuthChange.js';
+
+/* -------------------------------------------------------------------------- */
+/*                               CONFIGURATION                                */
+/* -------------------------------------------------------------------------- */
 
 /**
- * Dynamically imported page modules via Vite's import.meta.glob.
- * Every page should export either `default` or `render`.
+ * Dynamically imported page modules (via Vite).
+ * Each page module must export `default` or `render`.
  */
 const pageModules = /** @type {Record<string, () => Promise<any>>} */ (
   import.meta.glob('@pages/**/*.js')
 );
 
 const DEFAULT_ROUTE = 'dashboard';
+const DEFAULT_404_MESSAGE = `<h1 class="text-red-500 text-center text-3xl mt-20">404 – Page Not Found</h1>`;
+
+/* -------------------------------------------------------------------------- */
+/*                              PUBLIC FUNCTIONS                              */
+/* -------------------------------------------------------------------------- */
 
 /**
- * Programmatically navigate to a route.
- * @param {string} page - e.g., 'dashboard', 'team/settings'
+ * Programmatically navigates to a page.
+ * @param {string} page - e.g., 'dashboard' or 'team/settings'.
  */
 export function navigateTo(page = '') {
-  const cleanPage = page.replace(/^\/+/g, '');
+  const cleanPage = page.replace(/^\/+/, '');
   window.location.hash = `#/${cleanPage}`;
-  devLog(`🚦 Navigating to: ${cleanPage}`);
+  devLog(`🚦 navigateTo(): ${cleanPage}`);
 }
 
 /**
- * Initialize the router. (Does NOT handle auth!)
+ * Initializes the router and sets up hashchange listeners.
+ * Auth checks are always applied before rendering routes.
  */
 export function initRouter() {
+  devLog('🛣️ initRouter(): Starting router with auth checks...');
   validatePageModules();
-  window.addEventListener('hashchange', handleRouting);
-  handleRouting(); // Initial route load
+
+  window.addEventListener('hashchange', checkAuthOnRouteChange);
+  checkAuthOnRouteChange(); // Run immediately on load
 }
 
 /**
- * Main routing logic (purely loads pages).
+ * Handles the actual route loading (after auth checks).
  */
 export async function handleRouting() {
-  const hash = window.location.hash.replace(/^#\/?/, '') || DEFAULT_ROUTE;
+  const hash = normalizeHash(window.location.hash) || DEFAULT_ROUTE;
   const [base, sub] = hash.split('/');
 
   const container = document.getElementById('page-content');
-  if (!(container instanceof HTMLElement)) {
-    devError('❌ handleRouting(): #page-content not found.');
+  if (!container) {
+    devError('❌ handleRouting(): #page-content not found. Did you call resetAppShell()?');
     return;
   }
 
   showSpinner();
 
   try {
-    // Fade out old content
     await fadeOut(container);
-
-    // Find and load page module
     const modulePath = findPageModulePath(base, sub);
-    if (!modulePath) throw new Error(`Route not found for "${hash}"`);
 
-    devLog(`📦 Loading page module: ${modulePath}`);
-    const mod = await pageModules[modulePath]();
-
-    const PageComponent = mod.default || mod.render;
-    if (typeof PageComponent !== 'function') {
-      throw new Error(`Invalid component for route "${hash}". Must export a function.`);
+    if (!modulePath) {
+      devWarn(`⚠️ No route found for "${hash}". Falling back to 404.`);
+      await render404(container);
+      return;
     }
 
-    // Render the page
+    const PageComponent = await loadPageComponent(modulePath, hash);
+    if (!PageComponent) return; // Already handled errors
+
     renderPage(PageComponent, { title: base });
+    resetContainerState(container);
 
-    // Reset accessibility and scroll
-    container.setAttribute('tabindex', '-1');
-    container.focus?.();
-    container.scrollTo(0, 0);
-
-    // Fade in new content
     await fadeIn(container);
-
-    devLog(`✅ Route loaded: ${hash}`);
+    devLog(`✅ handleRouting(): Route loaded successfully → ${hash}`);
   } catch (err) {
-    devError(`⚠️ Fallback to 404 for route "${hash}" - ${err}`);
-    const Fallback404 = await loadFallback404();
-    renderPage(Fallback404, { title: '404' });
-    await fadeIn(container);
+    devError(`❌ handleRouting(): ${err}`);
+    await render404(container);
   } finally {
     hideSpinner();
   }
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                HELPERS                                     */
+/* -------------------------------------------------------------------------- */
+
 /**
- * Finds the module path for a given route.
+ * Normalizes the window hash to a clean route string.
+ * @param {string} hash
+ * @returns {string}
+ */
+function normalizeHash(hash) {
+  return (hash || '').replace(/^#\/?/, '').toLowerCase();
+}
+
+/**
+ * Finds the module path for a given base/sub route.
+ * @param {string} base
+ * @param {string} sub
+ * @returns {string | undefined}
  */
 function findPageModulePath(base, sub) {
   const lower = (str) => str.toLowerCase();
 
-  // Check for nested route: /pages/<base>/<sub>.js
   if (sub) {
-    const nested = Object.keys(pageModules).find((path) =>
+    return Object.keys(pageModules).find((path) =>
       lower(path).endsWith(`/pages/${base}/${sub}.js`)
     );
-    if (nested) return nested;
   }
 
-  // Otherwise, check for index.js in the base folder
   return Object.keys(pageModules).find((path) => lower(path).endsWith(`/pages/${base}/index.js`));
 }
 
 /**
- * Load a fallback 404 page if no route matches.
+ * Loads and validates a page component.
+ * @param {string} modulePath
+ * @param {string} route
+ * @returns {Promise<Function | null>}
+ */
+async function loadPageComponent(modulePath, route) {
+  try {
+    devLog(`📦 Loading page module: ${modulePath}`);
+    const mod = await pageModules[modulePath]();
+    const PageComponent = mod.default || mod.render;
+
+    if (typeof PageComponent !== 'function') {
+      throw new Error(`Invalid page module for "${route}" (expected a function export).`);
+    }
+
+    return PageComponent;
+  } catch (err) {
+    devError(`❌ Failed to load page module "${route}": ${err}`);
+    return null;
+  }
+}
+
+/**
+ * Attempts to render a 404 fallback page.
+ * @param {HTMLElement} container
+ */
+async function render404(container) {
+  try {
+    const Fallback404 = await loadFallback404();
+    renderPage(Fallback404, { title: '404' });
+    await fadeIn(container);
+  } catch (err) {
+    devError(`❌ render404(): ${err}`);
+    container.innerHTML = DEFAULT_404_MESSAGE;
+  }
+}
+
+/**
+ * Loads a fallback 404 module, or returns an inline renderer.
+ * @returns {Promise<Function>}
  */
 async function loadFallback404() {
   const fallbackPath = Object.keys(pageModules).find((path) =>
@@ -113,12 +167,8 @@ async function loadFallback404() {
   );
 
   if (!fallbackPath) {
-    devLog('⚠️ No 404 fallback page found. Rendering inline message.', 'warn');
-    return () => {
-      const el = document.createElement('section');
-      el.innerHTML = `<h1 class="text-red-500 text-center text-3xl mt-20">404 – Page Not Found</h1>`;
-      return el;
-    };
+    devWarn('⚠️ No 404 page module found. Using inline fallback.');
+    return () => DEFAULT_404_MESSAGE;
   }
 
   const mod = await pageModules[fallbackPath]();
@@ -126,30 +176,39 @@ async function loadFallback404() {
 }
 
 /**
- * Validate that all page modules have a default or render export.
+ * Validates that all pages have a default or render export.
  */
-async function validatePageModules() {
+export async function validatePageModules() {
   devLog('🔍 Validating page modules...');
   const invalidPages = [];
 
-  const loadPromises = Object.entries(pageModules).map(async ([path, loader]) => {
-    try {
-      const mod = await loader();
-      if (!mod.default && !mod.render) {
-        devLog(`⚠️ Page module "${path}" missing default or render() export`, 'warn');
+  await Promise.all(
+    Object.entries(pageModules).map(async ([path, loader]) => {
+      try {
+        const mod = await loader();
+        if (!mod.default && !mod.render) {
+          invalidPages.push(path);
+        }
+      } catch (err) {
+        devError(`❌ Failed to load page module "${path}" - ${err}`);
         invalidPages.push(path);
       }
-    } catch (err) {
-      devError(`❌ Failed to load page module "${path}" - ${err}`);
-      invalidPages.push(`${path} (Load Error)`);
-    }
-  });
+    })
+  );
 
-  await Promise.all(loadPromises);
-
-  if (invalidPages.length > 0) {
-    devError(`🚨 Invalid Page Modules Found: ${invalidPages.join(', ')}`);
+  if (invalidPages.length) {
+    devError(`🚨 Invalid Page Modules: ${invalidPages.join(', ')}`);
   } else {
     devLog('🎉 All page modules are valid.');
   }
+}
+
+/**
+ * Resets scroll and accessibility state for a container.
+ * @param {HTMLElement} container
+ */
+function resetContainerState(container) {
+  container.setAttribute('tabindex', '-1');
+  container.focus?.();
+  container.scrollTo(0, 0);
 }

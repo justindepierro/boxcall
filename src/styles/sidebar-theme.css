@@ -1,0 +1,113 @@
+/* Sidebar Theme - Works with Tailwind CSS */
+
+:root {
+  /* Sidebar Theme Tokens */
+  --color-sidebar-bg: var(--color-sidebar, #046169);
+  --color-sidebar-header-bg: var(--color-sidebar-bg); /* Match main sidebar color */
+  --color-sidebar-footer-bg: var(--color-sidebar-bg); /* Match main sidebar color */
+  --color-sidebar-border: color-mix(in srgb, var(--color-sidebar-bg) 70%, white 30%);
+  --color-sidebar-text: #ffffff; /* Force white for better contrast */
+  --color-sidebar-icon: #ffffff; /* Force white icons */
+  --color-sidebar-hover: color-mix(in srgb, var(--color-sidebar-bg) 80%, white 20%);
+  --color-sidebar-active: color-mix(in srgb, var(--color-sidebar-bg) 70%, white 30%);
+
+  /* Sidebar Widths - Work with Tailwind */
+  --sidebar-width-expanded: 16rem; /* w-64 equivalent */
+  --sidebar-width-icon: 4rem; /* w-16 equivalent */
+  --sidebar-width-collapsed: 3rem; /* w-12 equivalent - hamburger mode */
+}
+
+/* Force sidebar widths to override Tailwind classes */
+.sidebar-expanded #sidebar-root {
+  width: var(--sidebar-width-expanded) !important;
+}
+.sidebar-icon #sidebar-root {
+  width: var(--sidebar-width-icon) !important;
+}
+.sidebar-collapsed #sidebar-root {
+  width: var(--sidebar-width-collapsed) !important;
+  background: transparent !important;
+  border-right: none !important;
+  overflow: visible !important;
+}
+
+/* Remove page margin adjustments - flexbox handles spacing automatically */
+/* No margin-left needed since we're using flex layout */
+
+/* Hamburger Mode Styling */
+.sidebar-collapsed .sidebar-header {
+  background-color: #f9fafb !important; /* bg-gray-50 */
+  border: 1px solid #e5e7eb !important; /* border-gray-200 */
+  border-radius: 0.5rem !important; /* rounded-lg */
+  margin: 0.5rem 0.25rem !important; /* mx-1 my-2 */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important; /* shadow-sm */
+  height: 3rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.sidebar-collapsed .sidebar-title,
+.sidebar-collapsed .sidebar-main-nav,
+.sidebar-collapsed .sidebar-settings-nav,
+.sidebar-collapsed .sidebar-footer {
+  display: none !important;
+}
+
+.sidebar-collapsed #sidebar-toggle {
+  width: 2rem !important; /* w-8 */
+  height: 2rem !important; /* h-8 */
+  padding: 0.25rem !important; /* p-1 */
+  border-radius: 0.25rem !important; /* rounded */
+  background: transparent !important;
+  color: #4b5563 !important; /* text-gray-600 */
+  transition: all 0.2s ease !important;
+}
+
+.sidebar-collapsed #sidebar-toggle:hover {
+  background-color: #2563eb !important; /* bg-blue-600 */
+  color: #ffffff !important; /* text-white */
+}
+
+/* Standard Sidebar Theming */
+.sidebar-header {
+  background: var(--color-sidebar-header-bg) !important;
+  color: var(--color-sidebar-text) !important;
+}
+
+.sidebar-title {
+  color: var(--color-sidebar-text) !important;
+  font-weight: bold !important;
+}
+
+.sidebar-footer {
+  background: var(--color-sidebar-footer-bg) !important;
+  color: var(--color-sidebar-text) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  padding: 0.5rem !important; /* Reduced padding to match nav sections */
+}
+
+/* Specific logout button alignment */
+.sidebar-footer .sidebar-nav-item {
+  justify-content: flex-start !important;
+  text-align: left !important;
+  width: calc(100% - 1rem) !important; /* Account for margins */
+  margin: 0 0.5rem !important; /* Match mx-2 from other nav items */
+  padding: 0.75rem !important; /* Match p-3 from other nav items */
+}
+
+.sidebar-nav-item {
+  color: var(--color-sidebar-text) !important;
+}
+
+.sidebar-nav-item:hover {
+  background: var(--color-sidebar-hover) !important;
+  color: var(--color-sidebar-text) !important;
+}
+
+.sidebar-nav-item:active {
+  background: var(--color-sidebar-active) !important;
+  color: var(--color-sidebar-text) !important;
+}

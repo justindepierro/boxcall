@@ -21,7 +21,7 @@ export function PageContainer(
   wrapper.className = `
     page-container
     ${maxWidth}
-    pl-2 pr-3 md:pl-3 md:pr-4
+    pl-1 pr-2 md:pl-2 md:pr-3
     space-y-4
     transition-all
     ${className}

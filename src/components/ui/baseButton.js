@@ -34,11 +34,12 @@ const variantMap = {
   secondary: 'bg-gray-200 text-black',
   outline: 'border border-gray-300 text-black',
   sidebar: `
-    bg-transparent text-[var(--color-sidebar-text)]
-    hover:bg-[var(--color-sidebar-hover)]
-    hover:text-[var(--color-sidebar-text-hover)]
-    justify-start
-  `.trim(),
+  bg-transparent text-[var(--color-sidebar-text)]
+  hover:bg-[var(--color-sidebar-hover)]
+  hover:text-[var(--color-sidebar-text-hover)]
+  justify-start
+  [&>span]:justify-start
+`.trim(),
 };
 
 const sizeMap = {
@@ -138,7 +139,7 @@ function applyButtonClasses(
   { variant, size, rounded, uppercase, fullWidth, disabled, loading, iconOnly, selected, focused }
 ) {
   btn.className = `
-    base-btn inline-flex items-center justify-center
+    base-btn inline-flex items-center ${variant === 'sidebar' ? 'justify-start' : 'justify-center'}
     font-medium transition-all
     ${variantMap[variant] || variantMap.primary}
     ${sizeMap[size] || sizeMap.md}

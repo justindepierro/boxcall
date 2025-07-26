@@ -13,11 +13,12 @@ export function Header({ title = 'BoxCall', version = 'v0.1 Beta', icon = '📦'
   const container = document.createElement('header');
 
   container.className = `
-    w-full px-6 py-4 flex items-center justify-between
+    w-full px-6 py-3 flex items-center justify-between
     border-b font-header
-    text-xl md:text-2xl
+    text-lg md:text-xl
     bg-[var(--color-header)] text-[var(--color-header-text)]
     transition-colors duration-300
+    h-16
   `;
 
   container.innerHTML = `

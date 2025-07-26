@@ -3,6 +3,7 @@
 @import './fonts.css'; /* ✅ Custom fonts */
 @import './base.css'; /* ✅ Normalize + reset */
 @import './components.css'; /* ✅ Component styles */
+@import './sidebar-theme.css'; /* ✅ Sidebar theming */
 
 @tailwind base;
 @tailwind components;

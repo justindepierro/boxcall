@@ -8,9 +8,12 @@ import { handleAuthSubmit } from '@utils/authForms.js';
 import { createAuthPage } from '@components/AuthFormPage.js';
 import { createRememberMe } from '@components/ui/rememberMe.js';
 
-export default function renderLoginPage(container) {
-  container.innerHTML = '';
+export default function renderLoginPage() {
+  // Create a wrapper element (root node for this page)
+  const wrapper = document.createElement('div');
+  wrapper.className = 'login-page max-w-md mx-auto p-4 space-y-4';
 
+  // Create extra links
   const forgotLink = document.createElement('a');
   forgotLink.href = '#/forgot';
   forgotLink.className = 'text-sm text-blue-500 hover:underline block mt-2';
@@ -21,45 +24,48 @@ export default function renderLoginPage(container) {
   signupLink.className = 'text-sm text-blue-500 hover:underline block mt-2';
   signupLink.textContent = "Don't have an account? Sign up here.";
 
-  container.appendChild(
-    createAuthPage({
-      title: 'Login',
-      fields: [
-        { id: 'login-email', label: 'Email' },
-        { id: 'login-password', label: 'Password', type: 'password' },
-      ],
-      button: { label: 'Login', variant: 'primary', fullWidth: true },
-      extraElements: [createRememberMe(), forgotLink, signupLink],
-      onSubmit: async (e, form, loginBtn, errorEl) => {
-        e.preventDefault();
-        const email = qsInput('#login-email', form).value.trim();
-        const password = qsInput('#login-password', form).value;
+  // Create the login form
+  const loginForm = createAuthPage({
+    title: 'Login',
+    fields: [
+      { id: 'login-email', label: 'Email' },
+      { id: 'login-password', label: 'Password', type: 'password' },
+    ],
+    button: { label: 'Login', variant: 'primary', fullWidth: true },
+    extraElements: [createRememberMe(), forgotLink, signupLink],
+    onSubmit: async (e, form, loginBtn, errorEl) => {
+      e.preventDefault();
+      const email = qsInput('#login-email', form).value.trim();
+      const password = qsInput('#login-password', form).value;
 
-        await handleAuthSubmit(form, loginBtn, () => signIn(email, password), {
-          loadingText: 'Logging in...',
-          withOverlay: true,
-          onSuccess: async () => {
-            const rememberMeEl = form.querySelector('#remember-me');
-            const rememberMe =
-              rememberMeEl instanceof HTMLInputElement ? rememberMeEl.checked : false;
+      await handleAuthSubmit(form, loginBtn, () => signIn(email, password), {
+        loadingText: 'Logging in...',
+        withOverlay: true,
+        onSuccess: async () => {
+          const rememberMeEl = form.querySelector('#remember-me');
+          const rememberMe =
+            rememberMeEl instanceof HTMLInputElement ? rememberMeEl.checked : false;
 
-            if (rememberMe) {
-              enablePersistentSession();
-            } else {
-              enableTemporarySession();
-            }
+          if (rememberMe) {
+            enablePersistentSession();
+          } else {
+            enableTemporarySession();
+          }
 
-            await initializeUser();
-            showToast('✅ Logged in successfully!', 'success');
-            await resetAppToPrivate('dashboard');
-          },
-          onError: (err) => {
-            const msg = err.message || 'Login failed.';
-            if (errorEl) errorEl.textContent = `⚠️ ${msg}`;
-            showToast(`❌ ${msg}`, 'error');
-          },
-        });
-      },
-    })
-  );
+          await initializeUser();
+          showToast('✅ Logged in successfully!', 'success');
+          await resetAppToPrivate('dashboard');
+        },
+        onError: (err) => {
+          const msg = err.message || 'Login failed.';
+          if (errorEl) errorEl.textContent = `⚠️ ${msg}`;
+          showToast(`❌ ${msg}`, 'error');
+        },
+      });
+    },
+  });
+
+  // Append form to wrapper
+  wrapper.appendChild(loginForm);
+  return wrapper; // Return for renderPage to handle
 }

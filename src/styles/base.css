@@ -2,7 +2,6 @@ html {
   --font-header: 'Oswald', sans-serif;
   --font-body: 'Inter', sans-serif;
   --font-mono: 'Fira Mono', monospace;
-  --sidebar-offset: 64px; /* Default to icon state width */
   height: 100%;
   width: 100%;
 }
@@ -57,16 +56,13 @@ header {
   overflow-y: auto;
   background-color: var(--color-bg);
   color: var(--color-text);
-  margin-left: var(--sidebar-offset);
-  transition: margin-left 0.3s ease;
+  /* Removed margin-left - flexbox handles spacing automatically */
   padding: 0; /* Remove default padding for tighter layout */
 }
 
 /* Mobile Friendly Adjustments */
 @media (max-width: 768px) {
-  #page-view {
-    margin-left: 0;
-  }
+  /* Flexbox layout handles mobile automatically */
 }
 
 .label {
