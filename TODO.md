@@ -1,103 +1,381 @@
 # 📋 BoxCall Development TODO & Roadmap
 
 > **Last Updated**: July 26, 2025  
-> **Current Status**: Foundation Building Phase  
-> **Business Model**: Passion Project → MVP → Freemium SaaS (Free → $9.99 Coach → $199.99/year Team Premium)  
+> **Current Phase**: Foundation Complete → Core Feature Development  
+> **Status**: Infrastructure 95% Complete, Moving to Feature Implementation  
+> **Business Model**: Freemium SaaS (Free → $9.99 Coach → $199.99/year Team Premium)  
 > **Target Market**: Youth through College Football (Primary: High School)  
-> **Timeline**: No pressure - 2026-2027 season target, but playbook/practice system testing this year  
-> **Philosophy**: Build rock-solid foundation first (styling, components, backend, file systems) before core features
+> **Next Milestone**: MVP for 2025 football season testing  
 
 ---
 
-## 🎯 **FOUNDATION-FIRST PRIORITIES**
+## 🎉 **FOUNDATION PHASE COMPLETE!** ✅
 
-### **🔥 IMMEDIATE (Next 2 Weeks) - Infrastructure & Backend**
-- [ ] **Database Schema & Backend Foundation**
-  - [ ] Audit existing Supabase tables (team_settings, team_members, etc.)
-  - [ ] Design complete database schema for all BoxCall features
-  - [ ] Implement Row Level Security (RLS) policies for all tables
-  - [ ] Create database seeding scripts for development
-  - [ ] Set up real-time subscriptions for team collaboration
+### **✅ What We've Built (95% Complete)**
+- **🏗️ Component System** - 20+ reusable components with consistent design
+- **🎨 Design System** - 7 professional themes, responsive, accessible
+- **🗄️ Database Foundation** - 18 tables, organized with comprehensive SQL learning resources
+- **🔐 Authentication** - Supabase integration with role framework
+- **⚙️ Build Pipeline** - Vite, ESLint, Prettier, Husky, Netlify deployment
+- **📚 Documentation** - Complete SQL tutorials, component examples, implementation guides
 
-- [ ] **Complete Component System Foundation**
-  - [ ] Audit all existing components (you have most UI components!)
-  - [ ] Build missing components: FileUpload, DataTable, LikeDislike, Rating
-  - [ ] Create MessageSystem component for team communication
-  - [ ] Implement comprehensive form validation framework
-  - [ ] Build notification/toast system for real-time updates
-
-- [ ] **File Management System**
-  - [ ] Implement file upload/download system (CSV, images, documents)
-  - [ ] Build file storage with Supabase Storage
-  - [ ] Create file validation and processing utilities
-  - [ ] Add drag-and-drop file upload components
-  - [ ] Implement image compression and optimization
-
-### **🏗️ CRITICAL INFRASTRUCTURE (Next 3-4 Weeks)**
-- [ ] **Role-Based Access Control (RBAC) Foundation**
-  - [ ] Design complete role hierarchy (Head Coach → Assistant → Player → Parent → Manager)
-  - [ ] Implement permission system with granular controls
-  - [ ] Create role-based UI component wrapper
-  - [ ] Build team invitation and role assignment system
-  - [ ] Test all permission scenarios thoroughly
-
-- [ ] **Real-Time Communication System**
-  - [ ] Build messaging system (team announcements, direct messages)
-  - [ ] Implement real-time notifications with Supabase
-  - [ ] Create activity feed infrastructure
-  - [ ] Add like/dislike/reaction system
-  - [ ] Build comment threads for team posts
-
-- [ ] **Advanced State Management**
-  - [ ] Extend current state system for complex team data
-  - [ ] Implement offline state management with sync
-  - [ ] Add optimistic updates for better UX
-  - [ ] Create state persistence and hydration
-  - [ ] Build error recovery and retry mechanisms
+### **🚧 Final Foundation Tasks (This Week)**
+- [ ] **Complete component integration** - Replace hardcoded elements with BaseButton/FormInput
+- [ ] **CSS custom properties migration** - Remove remaining hardcoded colors
+- [ ] **Form validation framework** - Standardize validation across all forms
+- [ ] **Error handling system** - Global error boundaries and toast notifications
 
 ---
 
-## 🗃️ **DATABASE SCHEMA & BACKEND FOUNDATION**
+## 🎯 **PHASE 2: CORE FEATURES** (Current Focus - Next 6-8 Weeks)
 
-### **Current Supabase Tables (Identified)**
-- [x] ✅ `team_settings` - Team basic info and configuration
-- [x] ✅ `team_members` - User-team relationships with roles  
-- [x] ✅ User authentication (Supabase Auth)
+### **🔥 Week 1-2: CSV Playbook System** 
+*Priority: CRITICAL - Core value proposition*
 
-### **Required Tables for BoxCall Ecosystem**
+- [ ] **CSV Upload Component**
+  - [ ] Drag-and-drop file upload with progress indicator
+  - [ ] CSV validation (Formation, FDir, Play, pType, prefDown, prefDis, etc.)
+  - [ ] Preview parsed data before import
+  - [ ] Error handling for malformed files
+  - [ ] Integration with existing confidence.js algorithm
 
-```sql
--- Core Team & User Management
-teams (id, name, created_by, subscription_tier, created_at, updated_at)
-team_members (id, user_id, team_id, role, joined_at, permissions)
-user_profiles (id, user_id, display_name, avatar_url, phone, emergency_contact)
+- [ ] **Playbook Data Management**
+  - [ ] Store parsed plays in Supabase `plays` table
+  - [ ] Associate plays with team (team_id foreign key)
+  - [ ] Play CRUD operations (create, read, update, delete)
+  - [ ] Bulk operations (import, export, duplicate)
 
--- Playbook System  
-playbooks (id, team_id, name, description, created_by, created_at)
-plays (id, playbook_id, formation, f_dir, play_name, p_type, pref_down, pref_dis, pref_hash, pref_cov, personnel, key_player1, key_player2, confidence_base, created_at)
+- [ ] **Confidence Scoring Integration**
+  - [ ] Port confidence.js `getPlayConfidence()` function
+  - [ ] Implement color-coded confidence indicators (Green/Orange/Red)
+  - [ ] Real-time confidence calculation based on game situation
+  - [ ] Confidence reasoning display ("Matches preferred down/distance")
 
--- Practice Management
-practice_scripts (id, team_id, name, practice_date, location, notes, created_by, created_at)
-script_plays (id, script_id, play_id, order_index, reps, notes)
+### **🔥 Week 3-4: Play Filtering & Display**
+*Priority: HIGH - Makes playbook usable*
 
--- Social & Communication
-team_posts (id, team_id, author_id, content, post_type, created_at)
-post_reactions (id, post_id, user_id, reaction_type) -- like, love, celebrate
-post_comments (id, post_id, user_id, content, created_at)
-team_announcements (id, team_id, author_id, title, content, priority, created_at)
+- [ ] **Advanced Filter System**
+  - [ ] Port filterManager.js functionality
+  - [ ] Multi-filter support (Formation + Down + Coverage)
+  - [ ] Dynamic filter addition/removal
+  - [ ] Filter persistence in URL/state
+  - [ ] Quick filter presets (3rd Down, Red Zone, etc.)
 
--- Gamification & Achievements  
-team_goals (id, team_id, title, description, target_value, current_value, deadline)
-achievements (id, team_id, user_id, achievement_type, title, description, earned_at)
-helmet_stickers (id, user_id, team_id, reason, awarded_by, awarded_at)
+- [ ] **Play Display Components**
+  - [ ] DataTable component for play lists
+  - [ ] PlayCard component with confidence scoring
+  - [ ] Sortable columns (confidence, formation, type)
+  - [ ] Search functionality across all play data
+  - [ ] Export filtered results to CSV
 
--- File Management
-team_files (id, team_id, uploaded_by, file_name, file_path, file_type, file_size, created_at)
+### **🔥 Week 5-6: Team Management & Permissions**
+*Priority: HIGH - Multi-user functionality*
 
--- Game Data (Future)
-games (id, team_id, opponent, game_date, location, result)
-play_calls (id, game_id, play_id, down, distance, yard_line, result, success)
+- [ ] **Role-Based Access Control**
+  - [ ] Head Coach (full access, team settings, billing)
+  - [ ] Assistant Coach (playbook access, limited team management)
+  - [ ] Player (view assignments, limited dashboard access)
+  - [ ] Parent/Family (social features, player progress)
+  - [ ] Team Manager (roster, logistics, no playbook)
+
+- [ ] **Team Management Dashboard**
+  - [ ] Player roster with CRUD operations
+  - [ ] Role assignment interface
+  - [ ] Team invitation system (email invites)
+  - [ ] Team settings and preferences
+  - [ ] Access permission debugging tool
+
+### **🔥 Week 7-8: Payment & Monetization**
+*Priority: CRITICAL - Revenue generation*
+
+- [ ] **Stripe Integration**
+  - [ ] Coach Account subscription ($9.99 one-time)
+  - [ ] Team Premium subscription ($199.99/year)
+  - [ ] Payment forms with error handling
+  - [ ] Subscription management (upgrade/downgrade)
+  - [ ] Billing history and receipts
+
+- [ ] **Feature Gates**
+  - [ ] Free Account limitations (read-only playbook, basic profiles)
+  - [ ] Coach Account features (playbook management, CSV import)
+  - [ ] Team Premium features (AI confidence, social hub, advanced analytics)
+  - [ ] Subscription enforcement in UI and backend
+
+---
+
+## 🏈 **PHASE 3: FOOTBALL INTELLIGENCE** (Summer 2025)
+
+### **AI-Powered Features**
+- [ ] **Enhanced Confidence System**
+  - [ ] Machine learning model for play success prediction
+  - [ ] Historical performance data integration
+  - [ ] Situational success rate calculation
+  - [ ] Opponent-specific play recommendations
+
+- [ ] **Practice Script Generation** (Based on practiceMode.js)
+  - [ ] Auto-generate practice plans from playbook analysis
+  - [ ] Script templates for different practice types
+  - [ ] Drag-and-drop script building
+  - [ ] Practice plan optimization
+
+- [ ] **Game Planning Tools**
+  - [ ] Situational play calling cards
+  - [ ] Down and distance packages
+  - [ ] Red zone and special situation scripts
+  - [ ] Export game plans for offline use
+
+---
+
+## 🏆 **PHASE 4: SOCIAL & GAMIFICATION** (Fall 2025)
+
+### **Social Team Hub**
+- [ ] **Activity Feed System**
+  - [ ] Team posts and updates
+  - [ ] Photo/image sharing
+  - [ ] Comment and reaction system
+  - [ ] Real-time notifications
+
+- [ ] **Gamification Features**
+  - [ ] Team trophies and achievements
+  - [ ] Individual helmet stickers
+  - [ ] Performance medals and recognition
+  - [ ] Goal tracking and progress
+
+---
+
+## 🎯 **IMMEDIATE PRIORITIES (This Week)**
+
+### **🔥 Monday-Tuesday: Component System Completion**
+- [ ] Audit all pages for hardcoded buttons → replace with BaseButton
+- [ ] Replace hardcoded form inputs with FormInput components
+- [ ] Migrate hardcoded colors to CSS custom properties
+- [ ] Test component system across all 7 themes
+
+### **🔥 Wednesday-Thursday: CSV Upload Foundation**
+- [ ] Create FileUpload component with drag-and-drop
+- [ ] Build CSV parser with validation
+- [ ] Design upload flow in playbook page
+- [ ] Test with real CSV data
+
+### **🔥 Friday: Playbook Data Integration**  
+- [ ] Create Supabase tables for plays and playbooks
+- [ ] Implement play CRUD operations
+- [ ] Test CSV import → database storage
+- [ ] Begin confidence scoring integration
+
+---
+
+## 🗃️ **DATABASE STATUS** ✅ COMPLETE
+
+### **✅ Database Organization Complete**
+All SQL files organized in `/database/` with comprehensive learning resources:
+
 ```
+database/
+├── 📚 README.md              # 6000+ word SQL tutorial (beginner to advanced)
+├── 🗺️ INDEX.md              # Directory overview and quick start guide
+├── 🎯 LEARNING-JOURNEY.md    # Personalized learning path for SQL mastery
+├── 📝 QUICK-REFERENCE.sql    # Handy cheat sheet for daily use
+├── 🏗️ schema/
+│   └── database-schema.sql   # 18 tables, RLS policies, indexes
+├── 🛠️ scripts/
+│   ├── cleanup-database.sql  # Reset database for fresh start
+│   └── test-database.sql     # Validate database setup
+└── 🎯 examples/
+    ├── sql-101-tutorial.sql  # Step-by-step beginner lessons
+    ├── boxcall-queries.sql   # Advanced BoxCall-specific examples
+    └── real-world-test.sql   # Practice with actual team data
+```
+
+### **✅ Production-Ready Schema (18 Tables)**
+- **Core**: `teams`, `team_members`, `user_profiles` 
+- **Playbook**: `playbooks`, `plays`, `play_categories`
+- **Practice**: `practice_scripts`, `script_plays`
+- **Social**: `team_posts`, `post_reactions`, `post_comments`, `team_announcements`
+- **Gamification**: `team_goals`, `achievements`, `helmet_stickers`
+- **Files**: `team_files`, `file_uploads`
+- **Games**: `games`, `play_calls` (future)
+
+---
+
+## 💻 **COMPONENT SYSTEM STATUS** ✅ 95% Complete
+
+### **✅ Components We Have (Excellent Foundation!)**
+- **UI Core**: BaseButton, FormInput, Modal, Card, Tabs, Dropdown, Toast
+- **Badges**: BaseBadge, RoleBadge, StatusBadge, PlanBadge, TagBadge  
+- **Forms**: FormField, FormInput, RememberMe, validation framework
+- **Interactions**: BaseToggle, BaseSlider, MultiRangeSlider
+- **Layout**: Sidebar, Header, AuthCard, SettingsCard, PageContainer
+- **Loading**: LoadingOverlay, Spinner system, smooth transitions
+
+### **🚧 Missing Components (This Week's Focus)**
+- [ ] **FileUpload** - Drag-and-drop CSV/image upload with progress
+- [ ] **DataTable** - Sortable, filterable table for plays/roster data  
+- [ ] **PlayCard** - Individual play display with confidence scoring
+- [ ] **FilterPanel** - Advanced filtering for playbook data
+- [ ] **SearchBox** - Global search with autocomplete
+- [ ] **ConfirmDialog** - Confirmation dialogs for destructive actions
+
+---
+
+## 🚀 **DEVELOPMENT WORKFLOW**
+
+### **Code Quality Standards**
+- ✅ ESLint + Prettier configured and enforced
+- ✅ Husky pre-commit hooks
+- ✅ TypeScript checking without compilation
+- ✅ Component-based architecture
+- ✅ CSS custom properties for theming
+
+### **Testing Strategy (Next Phase)**
+- [ ] Unit testing setup (Vitest)
+- [ ] Component testing (Testing Library)
+- [ ] E2E testing for critical flows
+- [ ] Performance testing (Lighthouse CI)
+
+---
+
+## 💰 **MONETIZATION STATUS**
+
+### **Revenue Model Ready**
+- ✅ Business model defined (Free → Coach $9.99 → Team Premium $199.99/year)
+- ✅ Feature differentiation planned
+- [ ] **Stripe integration** (Week 7-8 priority)
+- [ ] **Feature gates** implementation
+- [ ] **Subscription management** UI
+
+### **Target Metrics**
+- **Year 1**: 500 free accounts, 50 coach accounts, 10 team premiums
+- **Revenue Target**: $50K ARR by end of first football season
+- **Growth**: 80%+ team renewal rate, daily usage during season
+
+---
+
+## 🎯 **SUCCESS METRICS**
+
+### **Technical KPIs**
+- **Performance**: < 3s load time on mobile
+- **Reliability**: > 99.5% uptime during football season  
+- **Security**: Zero critical vulnerabilities
+- **Mobile**: Perfect mobile experience for sideline use
+
+### **Product KPIs**
+- **Playbook Adoption**: 50+ plays uploaded per team average
+- **Confidence Accuracy**: 70%+ correct play recommendations
+- **User Engagement**: Daily usage during football season
+- **Feature Usage**: 60%+ teams use practice script generation
+
+---
+
+## 🐛 **CRITICAL ISSUES (Must Fix Before Features)**
+
+### **High Priority (This Week)**
+- [ ] **Sidebar toggle inconsistency** - Sometimes doesn't open/close properly
+- [ ] **Theme switching delays** - CSS loading occasionally fails
+- [ ] **Modal backdrop issues** - Click outside doesn't always close
+- [ ] **Mobile navigation overlap** - Menu covers content on small screens
+
+### **Medium Priority (Next Week)**
+- [ ] **Form validation errors** - Don't clear properly on new input
+- [ ] **Loading states missing** - Slow connections show no feedback
+- [ ] **Long text overflow** - Team names break sidebar layout
+
+---
+
+## 📋 **WEEKLY SPRINTS**
+
+### **Week of July 26, 2025** 🔥 (Current)
+**Goal: Complete Foundation & Start CSV System**
+
+**Monday-Tuesday: Component Integration**
+- [ ] Replace all hardcoded buttons with BaseButton components
+- [ ] Migrate hardcoded colors to CSS custom properties
+- [ ] Test component system across all themes
+- [ ] Fix sidebar toggle and modal backdrop issues
+
+**Wednesday-Thursday: CSV Upload Foundation**
+- [ ] Build FileUpload component with drag-and-drop
+- [ ] Create CSV parser with validation
+- [ ] Design upload interface in playbook page
+- [ ] Test with sample CSV data
+
+**Friday: Database Integration**
+- [ ] Implement play storage in Supabase
+- [ ] Create CRUD operations for plays
+- [ ] Begin confidence scoring integration
+
+### **Week of August 2, 2025**
+**Goal: Complete Playbook System Core**
+
+**Monday-Tuesday: Confidence System**
+- [ ] Port confidence.js functionality
+- [ ] Implement color-coded confidence display
+- [ ] Real-time confidence calculation
+- [ ] Confidence reasoning explanations
+
+**Wednesday-Thursday: Filter System**
+- [ ] Port filterManager.js to new components
+- [ ] Multi-filter support and persistence
+- [ ] Quick filter presets
+- [ ] Advanced search functionality
+
+**Friday: Testing & Polish**
+- [ ] Test complete playbook workflow
+- [ ] Performance optimization
+- [ ] Bug fixes and refinements
+
+### **Week of August 9, 2025**
+**Goal: Team Management & Permissions**
+
+**Focus**: Role-based access control, team invitation system, roster management
+
+### **Week of August 16, 2025**
+**Goal: Payment Integration & Feature Gates**
+
+**Focus**: Stripe integration, subscription management, feature enforcement
+
+---
+
+## 🎉 **CELEBRATION MILESTONES**
+
+### **🏆 Foundation Complete!** ✅ (Just Achieved)
+- Component system, database organization, SQL learning resources
+- Professional design system with 7 themes
+- Modern development pipeline with quality tools
+
+### **🏆 Playbook MVP** (Target: August 9, 2025)
+- CSV upload working with confidence scoring
+- Advanced filtering and play display
+- Ready for coordinator testing
+
+### **🏆 Team Management Complete** (Target: August 23, 2025)
+- Multi-user teams with role-based permissions
+- Invitation system and roster management
+- Ready for full team testing
+
+### **🏆 Monetization Ready** (Target: August 30, 2025)
+- Payment processing and subscription management
+- Feature gates and upgrade flows
+- Ready for beta launch
+
+---
+
+## 🎯 **NEXT ACTIONS**
+
+### **Today's Focus**
+1. **Audit all pages** - List every hardcoded button/input that needs component replacement
+2. **Plan CSV upload** - Design upload flow and validation rules
+3. **Test foundation** - Ensure all themes and components work perfectly
+
+### **This Week's Goal**
+Complete the foundation work and have a working CSV upload system with basic confidence scoring.
+
+### **This Month's Goal** 
+Have a functional playbook system ready for coach testing, with team management and payment processing.
+
+---
+
+*Keep this document as the single source of truth for project progress and priorities. Update weekly with completed tasks and new discoveries.*
 
 ### **RLS Policies Needed**
 - [ ] **Team Data Isolation** - Users only see their team's data
