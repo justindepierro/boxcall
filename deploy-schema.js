@@ -11,7 +11,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const schemaPath = path.join(process.cwd(), 'database-schema.sql');
+const schemaPath = path.join(process.cwd(), 'database/schema/database-schema.sql');
 
 console.log('🚀 BoxCall Database Schema Deployment Guide\n');
 
@@ -35,8 +35,8 @@ console.log('🔧 Deployment Steps:');
 console.log('1. Go to your Supabase Dashboard');
 console.log('2. Navigate to SQL Editor');
 console.log('3. Create a new query');
-console.log('4. 🚨 FIRST: Copy and run cleanup-database.sql (removes existing tables)');
-console.log('5. Then: Copy the contents of database-schema.sql');
+console.log('4. 🚨 FIRST: Copy and run database/scripts/cleanup-database.sql (removes existing tables)');
+console.log('5. Then: Copy the contents of database/schema/database-schema.sql');
 console.log('6. Paste and run the complete schema');
 console.log('7. Verify all tables and policies are created\n');
 

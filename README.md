@@ -80,6 +80,37 @@ boxcall-app/
 └── docs/                       # Documentation and examples
 ```
 
+## 🗄️ **Database Foundation**
+
+BoxCall uses **Supabase PostgreSQL** with enterprise-grade security:
+
+- **📊 18 Production Tables** - Complete football ecosystem
+- **🔒 Row Level Security** - Team data isolation  
+- **👑 5-Role System** + Super Admin - Clean hierarchy
+- **⚡ Optimized Performance** - Indexes and constraints
+- **📚 SQL Learning Resources** - Comprehensive tutorials
+
+### **Quick Database Setup:**
+```bash
+# 1. Deploy to Supabase
+node deploy-schema.js
+
+# 2. Learn SQL with our tutorials  
+open database/README.md
+
+# 3. Try example queries
+cat database/examples/sql-101-tutorial.sql
+```
+
+### **Database Directory:**
+```
+database/
+├── 📚 README.md              # Complete SQL learning guide
+├── 🏗️ schema/               # Database structure
+├── 🛠️ scripts/              # Utilities (cleanup, test)
+└── 🎯 examples/             # SQL tutorials & queries
+```
+
 ---
 
 ## � **Business Model & Pricing**
