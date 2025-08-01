@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Clear Localhost Storage</title>
+  </head>
+  <body>
+    <h1>Clearing Localhost Storage...</h1>
+    <div id="status">Working...</div>
+
+    <script>
+      // Clear all storage types
+      try {
+        // Clear localStorage
+        localStorage.clear();
+        console.log("localStorage cleared");
+
+        // Clear sessionStorage
+        sessionStorage.clear();
+        console.log("sessionStorage cleared");
+
+        // Clear IndexedDB
+        if ("indexedDB" in window) {
+          indexedDB.databases().then((databases) => {
+            databases.forEach((db) => {
+              indexedDB.deleteDatabase(db.name);
+              console.log(`Deleted database: ${db.name}`);
+            });
+          });
+        }
+
+        // Clear cache storage
+        if ("caches" in window) {
+          caches.keys().then((names) => {
+            names.forEach((name) => {
+              caches.delete(name);
+              console.log(`Deleted cache: ${name}`);
+            });
+          });
+        }
+
+        // Clear WebSQL (deprecated but might exist)
+        if (window.openDatabase) {
+          try {
+            const db = window.openDatabase("", "", "", "");
+            db.transaction((tx) => {
+              tx.executeSql("DROP TABLE IF EXISTS storage");
+            });
+            console.log("WebSQL cleared");
+          } catch (e) {
+            console.log("WebSQL not available or already clear");
+          }
+        }
+
+        document.getElementById("status").innerHTML = `
+                <h2 style="color: green;">✅ Storage Cleared Successfully!</h2>
+                <p>The following have been cleared:</p>
+                <ul>
+                    <li>localStorage</li>
+                    <li>sessionStorage</li>
+                    <li>IndexedDB databases</li>
+                    <li>Cache Storage</li>
+                    <li>WebSQL (if available)</li>
+                </ul>
+                <p><strong>You can now close this tab and restart your development server.</strong></p>
+            `;
+      } catch (error) {
+        document.getElementById("status").innerHTML = `
+                <h2 style="color: red;">❌ Error clearing storage</h2>
+                <p>${error.message}</p>
+            `;
+      }
+    </script>
+  </body>
+</html>

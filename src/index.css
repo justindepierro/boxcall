@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: "Inter", system-ui, sans-serif;
+  }
+
+  /* Global theme override - force proper light/dark mode styling */
+  html:not(.dark) * {
+    /* Force light mode for any dark background classes */
+  }
+  
+  html:not(.dark) .card,
+  html:not(.dark) [class*="bg-gray-8"],
+  html:not(.dark) [class*="bg-gray-9"] {
+    @apply bg-white text-gray-900 !important;
+  }
+
+  /* Override specific problematic background classes in light mode */
+  html:not(.dark) [style*="background-color: rgb(31, 41, 55)"],
+  html:not(.dark) [style*="background-color: rgb(17, 24, 39)"] {
+    background-color: white !important;
+    color: rgb(17, 24, 39) !important;
+  }
+
+  /* Force proper dark mode styling when in dark mode */
+  html.dark .card {
+    @apply bg-gray-800 text-gray-100 !important;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 m-0;
+    min-height: 100vh;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-800;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400 dark:bg-gray-500;
+  }
+}
+
+@layer components {
+  /* Button variants */
+  .btn-primary {
+    @apply bg-team-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-medium py-2 px-4 rounded-lg transition-colors;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors;
+  }
+
+  /* Card components */
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6;
+  }
+
+  .play-card {
+    @apply card hover:shadow-play-card transition-shadow cursor-pointer;
+  }
+
+  /* Confidence indicators */
+  .confidence-high {
+    @apply bg-confidence-high text-white;
+  }
+
+  .confidence-medium {
+    @apply bg-confidence-medium text-white;
+  }
+
+  .confidence-low {
+    @apply bg-confidence-low text-white;
+  }
+
+  .confidence-unknown {
+    @apply bg-confidence-unknown text-white;
+  }
+
+  /* Form styling */
+  .form-input {
+    @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-team-primary focus:ring focus:ring-team-primary focus:ring-opacity-50;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+  }
+
+  /* Navigation */
+  .nav-link {
+    @apply flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors;
+  }
+
+  .nav-link-active {
+    @apply nav-link bg-sidebar-active text-white;
+  }
+
+  .nav-link-inactive {
+    @apply nav-link text-gray-300 hover:bg-sidebar-hover hover:text-white;
+  }
+
+  /* Field/canvas styling */
+  .field-canvas {
+    @apply border-2 border-field-green bg-field-light rounded-lg;
+  }
+
+  /* Play type indicators */
+  .play-run {
+    @apply bg-play-run text-white;
+  }
+
+  .play-pass {
+    @apply bg-play-pass text-white;
+  }
+
+  .play-special {
+    @apply bg-play-special text-white;
+  }
+
+  .play-defense {
+    @apply bg-play-defense text-white;
+  }
+}
+
+@layer utilities {
+  /* Custom utilities */
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .backdrop-blur-xs {
+    backdrop-filter: blur(2px);
+  }
+
+  /* Confidence animations */
+  .confidence-pulse {
+    animation: confidencePulse 2s infinite;
+  }
+
+  /* Grid layouts for different screen sizes */
+  .grid-plays {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
+  }
+
+  .grid-dashboard {
+    @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
+  }
+}
