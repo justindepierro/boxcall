@@ -31,9 +31,7 @@ export interface BreadcrumbProps {
   showIcons?: boolean;
 }
 
-const getBreadcrumbStyles = (
-  size: BreadcrumbProps["size"]
-) => {
+const getBreadcrumbStyles = (size: BreadcrumbProps["size"]) => {
   const sizeStyles = {
     sm: "text-sm",
     md: "text-base",
@@ -103,9 +101,7 @@ const CollapsedIndicator: React.FC<{
       </button>
 
       {isExpanded && (
-        <div
-          className="absolute top-full left-0 mt-1 py-1 z-10 min-w-48 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 border rounded-md shadow-lg"
-        >
+        <div className="absolute top-full left-0 mt-1 py-1 z-10 min-w-48 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 border rounded-md shadow-lg">
           {hiddenItems.map((item) => (
             <button
               key={item.id}
@@ -167,18 +163,13 @@ const BreadcrumbItem: React.FC<{
 
   if (!item.current && item.onClick) {
     return (
-      <button
-        className={getBreadcrumbItemStyles(item)}
-        onClick={handleClick}
-      >
+      <button className={getBreadcrumbItemStyles(item)} onClick={handleClick}>
         {content}
       </button>
     );
   }
 
-  return (
-    <span className={getBreadcrumbItemStyles(item)}>{content}</span>
-  );
+  return <span className={getBreadcrumbItemStyles(item)}>{content}</span>;
 };
 
 export const Breadcrumb: React.FC<BreadcrumbProps> = ({
@@ -189,7 +180,6 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
   size = "md",
   showIcons = true,
 }) => {
-
   const handleItemClick = (item: BreadcrumbItem) => {
     item.onClick?.();
   };

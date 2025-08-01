@@ -38,9 +38,12 @@ const selectStyles: SelectStylesConfig = {
     },
     statuses: {
       default: "",
-      error: "border-red-300 dark:border-red-600 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 bg-red-50 dark:bg-red-900/20",
-      success: "border-green-300 dark:border-green-600 focus:border-green-500 dark:focus:border-green-400 focus:ring-green-500 dark:focus:ring-green-400 bg-green-50 dark:bg-green-900/20",
-      warning: "border-yellow-300 dark:border-yellow-600 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-yellow-50 dark:bg-yellow-900/20",
+      error:
+        "border-red-300 dark:border-red-600 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 bg-red-50 dark:bg-red-900/20",
+      success:
+        "border-green-300 dark:border-green-600 focus:border-green-500 dark:focus:border-green-400 focus:ring-green-500 dark:focus:ring-green-400 bg-green-50 dark:bg-green-900/20",
+      warning:
+        "border-yellow-300 dark:border-yellow-600 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-yellow-50 dark:bg-yellow-900/20",
     },
     states: {
       disabled: "opacity-50 cursor-not-allowed",
@@ -62,8 +65,10 @@ const selectStyles: SelectStylesConfig = {
     base: "flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700",
     states: {
       default: "",
-      highlighted: "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300",
-      selected: "font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300",
+      highlighted:
+        "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300",
+      selected:
+        "font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300",
       disabled: "opacity-50 cursor-not-allowed",
     },
     withIcon: "pl-10",
@@ -402,9 +407,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
           <div className="flex-1">
             <div>{option.label}</div>
             {option.description && (
-              <div
-                className="text-xs text-gray-500 dark:text-gray-400"
-              >
+              <div className="text-xs text-gray-500 dark:text-gray-400">
                 {option.description}
               </div>
             )}

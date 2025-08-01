@@ -8,6 +8,8 @@ import { Auth } from "./components/ui/Auth";
 import { Breadcrumb } from "./components/ui/Breadcrumb";
 import { Button } from "./components/ui/Button";
 import { Card } from "./components/ui/Card";
+
+// Supabase Integration
 import { Input } from "./components/ui/Input";
 import { Modal } from "./components/ui/Modal";
 import { NavBar } from "./components/ui/NavBar";
@@ -23,10 +25,32 @@ import type { BreadcrumbItem } from "./components/ui/Breadcrumb";
 import type { NavBarItem } from "./components/ui/NavBar";
 import type { SidebarItem } from "./components/ui/Sidebar";
 import type { TableColumn } from "./components/ui/Table";
+import { testDatabaseConnection } from "./lib/database-helpers";
 
 function App() {
+  const { theme, setTheme } = useUI();
+
+  // Test database connection on app start
+  useEffect(() => {
+    const initBoxCall = async () => {
+      console.log("🚀 Initializing BoxCall database...");
+
+      const connectionOk = await testDatabaseConnection();
+      if (connectionOk) {
+        console.log("✅ BoxCall database connected successfully!");
+      } else {
+        console.log(
+          "❌ Database connection failed - check your .env.local configuration"
+        );
+      }
+    };
+
+    initBoxCall();
+  }, []);
+
   // UI state
-  const { theme, sidebarOpen, toggleSidebar, setTheme } = useUI();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   // Modal states
   const [isDefaultModalOpen, setIsDefaultModalOpen] = useState(false);
@@ -45,8 +69,10 @@ function App() {
 
     // Force all elements with problematic background classes to update
     setTimeout(() => {
-      const elements = document.querySelectorAll('[style*="background-color: rgb(31, 41, 55)"], [style*="background-color: rgb(17, 24, 39)"]');
-      elements.forEach(el => {
+      const elements = document.querySelectorAll(
+        '[style*="background-color: rgb(31, 41, 55)"], [style*="background-color: rgb(17, 24, 39)"]'
+      );
+      elements.forEach((el) => {
         if (theme === "light") {
           (el as HTMLElement).style.backgroundColor = "white";
           (el as HTMLElement).style.color = "rgb(17, 24, 39)";
@@ -461,9 +487,7 @@ function App() {
   ];
 
   // Table selection state
-  const [selectedPlayers, setSelectedPlayers] = useState<string[]>(
-    []
-  );
+  const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
 
   return (
     <ErrorBoundary>
@@ -533,7 +557,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Breadcrumb Navigation */}
           <section className="mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
               <Typography
                 variant="headline-md"
                 as="h2"
@@ -584,7 +608,7 @@ function App() {
 
             {/* Typography Showcase */}
             <div
-              className={`rounded-lg p-6 shadow-sm border mb-6 ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
+              className={`rounded-lg p-6 shadow-sm mb-6 ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}
             >
               <Typography
                 variant="headline-md"
@@ -671,7 +695,7 @@ function App() {
 
             {/* Button Showcase */}
             <div
-              className={`rounded-lg p-6 shadow-sm border mb-6 ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
+              className={`rounded-lg p-6 shadow-sm mb-6 ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}
             >
               <Typography
                 variant="headline-md"
@@ -760,7 +784,7 @@ function App() {
 
             {/* Input Components Showcase */}
             <div
-              className={`rounded-lg p-6 shadow-sm border mb-6 ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
+              className={`rounded-lg p-6 shadow-sm mb-6 ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}
             >
               <Typography
                 variant="headline-md"
@@ -959,7 +983,7 @@ function App() {
 
             {/* Card Components Showcase */}
             <div
-              className={`rounded-lg p-6 shadow-sm border mb-6 ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
+              className={`rounded-lg p-6 shadow-sm mb-6 ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}
             >
               <Typography
                 variant="headline-md"
@@ -1111,7 +1135,7 @@ function App() {
           {/* Application Status */}
           <section className="mb-8">
             <div
-              className={`rounded-lg p-6 shadow-sm border ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
+              className={`rounded-lg p-6 shadow-sm ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}
             >
               <Typography
                 variant="headline-md"
@@ -1123,7 +1147,7 @@ function App() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div
-                  className={`p-4 rounded-lg border ${theme === "dark" ? "bg-gray-900 border-gray-600" : "bg-gray-50 border-gray-200"}`}
+                  className={`p-4 rounded-lg ${theme === "dark" ? "bg-gray-900" : "bg-gray-50"}`}
                 >
                   <Typography
                     variant="label-lg"
@@ -1144,7 +1168,7 @@ function App() {
                 </div>
 
                 <div
-                  className={`p-4 rounded-lg border ${theme === "dark" ? "bg-gray-900 border-gray-600" : "bg-gray-50 border-gray-200"}`}
+                  className={`p-4 rounded-lg ${theme === "dark" ? "bg-gray-900" : "bg-gray-50"}`}
                 >
                   <Typography
                     variant="label-lg"
@@ -1165,7 +1189,7 @@ function App() {
                 </div>
 
                 <div
-                  className={`p-4 rounded-lg border ${theme === "dark" ? "bg-gray-900 border-gray-600" : "bg-gray-50 border-gray-200"}`}
+                  className={`p-4 rounded-lg ${theme === "dark" ? "bg-gray-900" : "bg-gray-50"}`}
                 >
                   <Typography
                     variant="label-lg"
@@ -1190,7 +1214,7 @@ function App() {
 
           {/* Table Showcase */}
           <section className="mb-12">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
               <Typography
                 variant="headline-md"
                 as="h2"
@@ -1245,7 +1269,7 @@ function App() {
 
           {/* Authentication Showcase */}
           <section className="mb-12">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
               <Typography
                 variant="headline-md"
                 as="h2"
@@ -1323,7 +1347,7 @@ function App() {
 
           {/* Modal Showcase */}
           <section>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
               <Typography
                 variant="headline-md"
                 as="h2"
@@ -1361,7 +1385,7 @@ function App() {
           {/* Quick Actions */}
           <section>
             <div
-              className={`rounded-lg p-6 shadow-sm border ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
+              className={`rounded-lg p-6 shadow-sm ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}
             >
               <Typography
                 variant="headline-md"

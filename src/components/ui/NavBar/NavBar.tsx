@@ -119,9 +119,7 @@ const NavBarItem: React.FC<{
           </svg>
         )}
 
-        {item.badge && (
-          <span className={getBadgeStyles()}>{item.badge}</span>
-        )}
+        {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
       </div>
 
       {/* Dropdown Menu */}

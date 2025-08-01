@@ -80,10 +80,7 @@ const getSidebarStyles = () => {
   `;
 };
 
-const getSidebarItemStyles = (
-  item: SidebarItem,
-  level: number = 0
-) => {
+const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
   const paddingLeft = level > 0 ? `pl-${4 + level * 4}` : "pl-4";
   const baseStyles = `
     flex items-center px-4 py-3 text-sm font-medium cursor-pointer
@@ -139,16 +136,11 @@ const SidebarItem: React.FC<{
 
   return (
     <div>
-      <div
-        className={getSidebarItemStyles(item, level)}
-        onClick={handleClick}
-      >
+      <div className={getSidebarItemStyles(item, level)} onClick={handleClick}>
         {item.icon && <span className="mr-3 flex-shrink-0">{item.icon}</span>}
         <span className="flex-1">{item.label}</span>
 
-        {item.badge && (
-          <span className={getBadgeStyles()}>{item.badge}</span>
-        )}
+        {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
 
         {hasChildren && (
           <svg
@@ -274,9 +266,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         {/* Header */}
         {header && (
-          <div
-            className="px-4 py-4 border-b border-gray-200 dark:border-gray-700"
-          >
+          <div className="px-4 py-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <div className="flex-1">{header}</div>
 
@@ -320,9 +310,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Footer */}
         {footer && (
-          <div
-            className="px-4 py-4 border-t border-gray-200 dark:border-gray-700"
-          >
+          <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
             {footer}
           </div>
         )}

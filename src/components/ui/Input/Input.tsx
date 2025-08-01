@@ -19,7 +19,7 @@ const inputStyles: InputStylesConfig = {
 
   sizes: {
     sm: "px-3 py-1.5 text-sm",
-    md: "px-3 py-2 text-sm", 
+    md: "px-3 py-2 text-sm",
     lg: "px-4 py-3 text-base",
   },
 
@@ -34,14 +34,19 @@ const inputStyles: InputStylesConfig = {
   },
 
   statuses: {
-    default: "border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400",
-    error: "border-red-300 dark:border-red-600 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 bg-red-50 dark:bg-red-900/20",
-    success: "border-green-300 dark:border-green-600 focus:border-green-500 dark:focus:border-green-400 focus:ring-green-500 dark:focus:ring-green-400 bg-green-50 dark:bg-green-900/20",
-    warning: "border-yellow-300 dark:border-yellow-600 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-yellow-50 dark:bg-yellow-900/20",
+    default:
+      "border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400",
+    error:
+      "border-red-300 dark:border-red-600 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 bg-red-50 dark:bg-red-900/20",
+    success:
+      "border-green-300 dark:border-green-600 focus:border-green-500 dark:focus:border-green-400 focus:ring-green-500 dark:focus:ring-green-400 bg-green-50 dark:bg-green-900/20",
+    warning:
+      "border-yellow-300 dark:border-yellow-600 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-yellow-50 dark:bg-yellow-900/20",
   },
 
   focus: "focus:ring-2 focus:ring-offset-2",
-  disabled: "disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 dark:disabled:border-gray-600",
+  disabled:
+    "disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 dark:disabled:border-gray-600",
 };
 
 // Size configuration
@@ -166,10 +171,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <div className={containerClasses}>
         {label && (
           <label htmlFor={inputId} className={labelClasses}>
-            <Typography
-              variant="label-md"
-              color="error"
-            >
+            <Typography variant="label-md" color="error">
               {label}
               {required && <span className="text-red-500 ml-1">*</span>}
             </Typography>

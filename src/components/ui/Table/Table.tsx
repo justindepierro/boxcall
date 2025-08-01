@@ -121,7 +121,10 @@ const getHeaderStyles = (size?: "sm" | "md" | "lg") => {
   ].join(" ");
 };
 
-const getCellStyles = (size?: "sm" | "md" | "lg", align?: "left" | "center" | "right") => {
+const getCellStyles = (
+  size?: "sm" | "md" | "lg",
+  align?: "left" | "center" | "right"
+) => {
   const sizeStyles = {
     sm: "px-2 py-1",
     md: "px-4 py-2",
@@ -162,18 +165,30 @@ const getRowStyles = (
 const SortIcon: React.FC<{ direction: SortDirection }> = ({ direction }) => {
   if (!direction) {
     return (
-      <svg className="w-4 h-4 text-gray-400 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+      <svg
+        className="w-4 h-4 text-gray-400 dark:text-gray-500"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
         <path d="M5 12a1 1 0 102 0V6.414l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L5 6.414V12zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z" />
       </svg>
     );
   }
 
   return direction === "asc" ? (
-    <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+    <svg
+      className="w-4 h-4 text-blue-600 dark:text-blue-400"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+    >
       <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 16a1 1 0 011-1h4a1 1 0 110 2H4a1 1 0 01-1-1z" />
     </svg>
   ) : (
-    <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+    <svg
+      className="w-4 h-4 text-blue-600 dark:text-blue-400"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+    >
       <path d="M3 4a1 1 0 011-1h4a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 16a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" />
     </svg>
   );
@@ -249,8 +264,8 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
         ? currentSortState.direction === "asc"
           ? "desc"
           : currentSortState.direction === "desc"
-          ? null
-          : "asc"
+            ? null
+            : "asc"
         : "asc";
 
     const newSortState = { columnId, direction: newDirection };
@@ -278,23 +293,29 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
       result = result.filter((row) =>
         columns.some((column) => {
           const value = column.accessorKey ? row[column.accessorKey] : "";
-          return String(value).toLowerCase().includes(currentGlobalFilter.toLowerCase());
+          return String(value)
+            .toLowerCase()
+            .includes(currentGlobalFilter.toLowerCase());
         })
       );
     }
 
     // Apply sorting
     if (currentSortState.direction && currentSortState.columnId) {
-      const column = columns.find((col) => col.id === currentSortState.columnId);
+      const column = columns.find(
+        (col) => col.id === currentSortState.columnId
+      );
       if (column?.accessorKey) {
         result.sort((a, b) => {
           const aValue = a[column.accessorKey!];
           const bValue = b[column.accessorKey!];
-          
+
           if (aValue === bValue) return 0;
-          
+
           const comparison = aValue < bValue ? -1 : 1;
-          return currentSortState.direction === "asc" ? comparison : -comparison;
+          return currentSortState.direction === "asc"
+            ? comparison
+            : -comparison;
         });
       }
     }
@@ -304,31 +325,36 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
 
   const paginatedData = useMemo(() => {
     if (!pagination) return filteredAndSortedData;
-    
+
     const startIndex = currentPage * pageSize;
     return filteredAndSortedData.slice(startIndex, startIndex + pageSize);
   }, [filteredAndSortedData, pagination, currentPage, pageSize]);
 
   const handleSelectAll = (checked: boolean) => {
     if (!onSelectionChange) return;
-    
+
     const newSelection = checked ? paginatedData.map((row) => row.id) : [];
     onSelectionChange(newSelection);
   };
 
   const handleSelectRow = (rowId: string, checked: boolean) => {
     if (!onSelectionChange) return;
-    
+
     const newSelection = checked
       ? [...selectedRows, rowId]
       : selectedRows.filter((id) => id !== rowId);
     onSelectionChange(newSelection);
   };
 
-  const isAllSelected = paginatedData.length > 0 && paginatedData.every((row) => selectedRows.includes(row.id));
-  const isIndeterminate = paginatedData.some((row) => selectedRows.includes(row.id)) && !isAllSelected;
+  const isAllSelected =
+    paginatedData.length > 0 &&
+    paginatedData.every((row) => selectedRows.includes(row.id));
+  const isIndeterminate =
+    paginatedData.some((row) => selectedRows.includes(row.id)) &&
+    !isAllSelected;
 
-  const totalPages = pagination && totalItems ? Math.ceil(totalItems / pageSize) : 0;
+  const totalPages =
+    pagination && totalItems ? Math.ceil(totalItems / pageSize) : 0;
 
   return (
     <div className={["space-y-4", className].filter(Boolean).join(" ")}>
@@ -372,7 +398,9 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
                     {column.sortable && (
                       <SortIcon
                         direction={
-                          currentSortState.columnId === column.id ? currentSortState.direction : null
+                          currentSortState.columnId === column.id
+                            ? currentSortState.direction
+                            : null
                         }
                       />
                     )}
@@ -409,20 +437,26 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
                         <input
                           type="checkbox"
                           checked={isSelected}
-                          onChange={(e) => handleSelectRow(row.id, e.target.checked)}
+                          onChange={(e) =>
+                            handleSelectRow(row.id, e.target.checked)
+                          }
                           className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
                         />
                       </td>
                     )}
                     {columns.map((column) => {
-                      const value = column.accessorKey ? row[column.accessorKey] : undefined;
-                      
+                      const value = column.accessorKey
+                        ? row[column.accessorKey]
+                        : undefined;
+
                       return (
                         <td
                           key={column.id}
                           className={getCellStyles(size, column.align)}
                         >
-                          {column.cell ? column.cell(value, row, rowIndex) : String(value || "")}
+                          {column.cell
+                            ? column.cell(value, row, rowIndex)
+                            : String(value || "")}
                         </td>
                       );
                     })}
@@ -438,8 +472,11 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
         <div className="flex items-center justify-between">
           <div className="text-sm text-gray-700 dark:text-gray-300">
             Showing {currentPage * pageSize + 1} to{" "}
-            {Math.min((currentPage + 1) * pageSize, totalItems || filteredAndSortedData.length)} of{" "}
-            {totalItems || filteredAndSortedData.length} results
+            {Math.min(
+              (currentPage + 1) * pageSize,
+              totalItems || filteredAndSortedData.length
+            )}{" "}
+            of {totalItems || filteredAndSortedData.length} results
           </div>
           <div className="flex items-center space-x-2">
             <Button

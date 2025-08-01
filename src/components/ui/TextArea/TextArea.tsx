@@ -8,16 +8,20 @@ import { forwardRef, useEffect, useRef } from "react";
 import { Typography } from "../../design-system";
 import type { TextAreaProps } from "./TextArea.types";
 
-// TextArea styles using only Tailwind dark mode classes  
+// TextArea styles using only Tailwind dark mode classes
 const textareaStyles = {
   base: "block w-full rounded-md border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 dark:disabled:border-gray-600",
-  
+
   statuses: {
-    default: "border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400",
-    error: "border-red-300 dark:border-red-600 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 bg-red-50 dark:bg-red-900/20",
-    success: "border-green-300 dark:border-green-600 focus:border-green-500 dark:focus:border-green-400 focus:ring-green-500 dark:focus:ring-green-400 bg-green-50 dark:bg-green-900/20",
-    warning: "border-yellow-300 dark:border-yellow-600 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-yellow-50 dark:bg-yellow-900/20"
-  }
+    default:
+      "border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400",
+    error:
+      "border-red-300 dark:border-red-600 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 bg-red-50 dark:bg-red-900/20",
+    success:
+      "border-green-300 dark:border-green-600 focus:border-green-500 dark:focus:border-green-400 focus:ring-green-500 dark:focus:ring-green-400 bg-green-50 dark:bg-green-900/20",
+    warning:
+      "border-yellow-300 dark:border-yellow-600 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-yellow-50 dark:bg-yellow-900/20",
+  },
 };
 
 /**
@@ -152,10 +156,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       <div className={containerClasses}>
         {label && (
           <label htmlFor={textareaId} className={labelClasses}>
-            <Typography
-              variant="label-md"
-              color="error"
-            >
+            <Typography variant="label-md" color="error">
               {label}
               {required && <span className="text-red-500 ml-1">*</span>}
             </Typography>
