@@ -2,10 +2,13 @@ import "./App.css";
 import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 
+// Authentication
+import { AuthProvider } from "./components/AuthProvider";
+import { AuthTest } from "./components/AuthTest";
+
 // Design System Components
 import { Typography } from "./components/design-system";
 import { Auth } from "./components/ui/Auth";
-import { AuthTest } from "./components/AuthTest";
 import { Breadcrumb } from "./components/ui/Breadcrumb";
 import { Button } from "./components/ui/Button";
 import { Card } from "./components/ui/Card";
@@ -491,10 +494,11 @@ function App() {
   const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
 
   return (
-    <ErrorBoundary>
-      <div
-        className={`min-h-screen ${theme === "dark" ? "bg-gray-900" : "bg-gray-50"}`}
-      >
+    <AuthProvider>
+      <ErrorBoundary>
+        <div
+          className={`min-h-screen ${theme === "dark" ? "bg-gray-900" : "bg-gray-50"}`}
+        >
         <DevHealthCheck />
 
         {/* Navigation Bar */}
@@ -1518,6 +1522,7 @@ function App() {
         </Modal>
       </div>
     </ErrorBoundary>
+    </AuthProvider>
   );
 }
 

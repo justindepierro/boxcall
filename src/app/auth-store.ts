@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { User, Session } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
+import { supabase } from '../lib/supabase';
 
 // User profile type from our database (main profiles table with role)
 type UserProfile = Database['public']['Tables']['profiles']['Row'];
@@ -34,6 +35,9 @@ interface AuthState {
   // Utility actions
   clearError: () => void;
   reset: () => void;
+  
+  // Profile fetching
+  fetchUserProfile: (userId: string) => Promise<void>;
 }
 
 const initialState = {
@@ -46,7 +50,7 @@ const initialState = {
 
 export const useAuth = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...initialState,
       
       // Basic state setters
@@ -56,20 +60,36 @@ export const useAuth = create<AuthState>()(
       setLoading: (loading) => set({ loading }),
       setError: (error) => set({ error }),
       
-      // Authentication methods (placeholder implementations - will be updated with Supabase)
+      // Authentication methods - Real Supabase implementation
       signIn: async (email: string, password: string) => {
         set({ loading: true, error: null });
         
         try {
-          // TODO: Implement Supabase signIn with password
-          console.log('SignIn attempt:', { email, passwordProvided: !!password });
-          
-          // Placeholder implementation
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          
-          // For now, return success placeholder
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (error) {
+            set({ error: error.message, loading: false });
+            return { success: false, error: error.message };
+          }
+
+          if (data.user && data.session) {
+            set({ 
+              user: data.user, 
+              session: data.session, 
+              loading: false 
+            });
+
+            // Fetch user profile
+            await get().fetchUserProfile(data.user.id);
+            
+            return { success: true };
+          }
+
           set({ loading: false });
-          return { success: true };
+          return { success: false, error: 'No user data returned' };
           
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Sign in failed';
@@ -82,13 +102,49 @@ export const useAuth = create<AuthState>()(
         set({ loading: true, error: null });
         
         try {
-          // TODO: Implement Supabase signUp with password and userData
-          console.log('SignUp attempt:', { email, userData, passwordProvided: !!password });
-          
-          // Placeholder implementation
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          
-          set({ loading: false });
+          // Step 1: Create auth user
+          const { data: authData, error: authError } = await supabase.auth.signUp({
+            email,
+            password,
+          });
+
+          if (authError) {
+            set({ error: authError.message, loading: false });
+            return { success: false, error: authError.message };
+          }
+
+          if (!authData.user) {
+            set({ error: 'Failed to create user account', loading: false });
+            return { success: false, error: 'Failed to create user account' };
+          }
+
+          // Step 2: Create user profile in our database
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert({
+              id: authData.user.id,
+              full_name: `${userData.firstName} ${userData.lastName}`,
+              display_name: `${userData.firstName} ${userData.lastName}`,
+              email: email,
+              role: userData.role,
+            });
+
+          if (profileError) {
+            set({ error: profileError.message, loading: false });
+            return { success: false, error: profileError.message };
+          }
+
+          set({ 
+            user: authData.user, 
+            session: authData.session,
+            loading: false 
+          });
+
+          // Fetch the created profile
+          if (authData.session) {
+            await get().fetchUserProfile(authData.user.id);
+          }
+
           return { success: true };
           
         } catch (error) {
@@ -102,9 +158,13 @@ export const useAuth = create<AuthState>()(
         set({ loading: true, error: null });
         
         try {
-          // TODO: Implement Supabase signOut
-          console.log('SignOut attempt');
+          const { error } = await supabase.auth.signOut();
           
+          if (error) {
+            set({ error: error.message, loading: false });
+            return;
+          }
+
           // Clear all auth state
           set({ 
             user: null, 
@@ -123,10 +183,14 @@ export const useAuth = create<AuthState>()(
         set({ loading: true, error: null });
         
         try {
-          // TODO: Implement Supabase password reset
-          console.log('Password reset attempt:', { email });
+          const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${window.location.origin}/reset-password`,
+          });
           
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          if (error) {
+            set({ error: error.message, loading: false });
+            return { success: false, error: error.message };
+          }
           
           set({ loading: false });
           return { success: true };
@@ -135,6 +199,26 @@ export const useAuth = create<AuthState>()(
           const errorMessage = error instanceof Error ? error.message : 'Password reset failed';
           set({ error: errorMessage, loading: false });
           return { success: false, error: errorMessage };
+        }
+      },
+      
+      // Profile fetching method
+      fetchUserProfile: async (userId: string) => {
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', userId)
+            .single();
+
+          if (error) {
+            console.error('Error fetching user profile:', error);
+            return;
+          }
+
+          set({ profile: data });
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
         }
       },
       
