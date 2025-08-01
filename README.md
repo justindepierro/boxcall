@@ -2,6 +2,13 @@
 
 > **Professional, scalable, hair-preserving development strategy**
 
+[![GitHub Stars](https://img.shields.io/github/stars/justindepierro/boxcall?style=social)](https://github.com/justindepierro/boxcall/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/justindepierro/boxcall?style=social)](https://github.com/justindepierro/boxcall/network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/justindepierro/boxcall)](https://github.com/justindepierro/boxcall/issues)
+[![GitHub License](https://img.shields.io/github/license/justindepierro/boxcall)](https://github.com/justindepierro/boxcall/blob/main/LICENSE)
+
+**🔗 Repository**: [github.com/justindepierro/boxcall](https://github.com/justindepierro/boxcall)
+
 ## 🎯 **Vision Statement**
 
 BoxCall revolutionizes how teams organize, communicate, and succeed. The app is used to organize and connect teammates and coaches, share and make playbooks, develop gameplans and practice scripts, give real-time analysis and play calling assistance to sideline coaches, schedule team activities, highlight achievements, help keep parents on track, give managers responsibilities, and reach and achieve new goals.
@@ -652,7 +659,7 @@ All BoxCall components follow enterprise-grade standards:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/boxcall.git
+git clone https://github.com/justindepierro/boxcall.git
 cd boxcall
 
 # Install dependencies
@@ -661,7 +668,7 @@ npm install
 # Start development server
 npm run dev
 
-# Open your browser to http://localhost:5174
+# Open your browser to http://localhost:5173
 # The app will hot-reload as you make changes!
 ```
 
@@ -782,6 +789,24 @@ boxcall/
 ## 🤝 **Contributing**
 
 We welcome contributions! Please read our [Contributing Guide](./docs/CONTRIBUTING.md) for details on our development process and code standards.
+
+### **🚀 How to Contribute**
+
+1. **Fork the repository** on GitHub
+2. **Clone your fork**: `git clone https://github.com/your-username/boxcall.git`
+3. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+4. **Make your changes** and test thoroughly
+5. **Commit your changes**: `git commit -m 'feat: add amazing feature'`
+6. **Push to your branch**: `git push origin feature/amazing-feature`
+7. **Open a Pull Request** on GitHub
+
+### **🐛 Reporting Issues**
+
+Found a bug or have a feature request? Please [open an issue](https://github.com/justindepierro/boxcall/issues) on GitHub with:
+- Clear description of the problem/feature
+- Steps to reproduce (for bugs)
+- Expected vs actual behavior
+- Your environment details (OS, browser, etc.)
 
 For comprehensive documentation, see our [Documentation Index](./docs/README.md).
 
