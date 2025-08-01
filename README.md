@@ -783,6 +783,15 @@ boxcall/
 
 We welcome contributions! Please read our [Contributing Guide](./docs/CONTRIBUTING.md) for details on our development process and code standards.
 
+For comprehensive documentation, see our [Documentation Index](./docs/README.md).
+
+## 📚 **Documentation**
+
+- **📖 [Full Documentation](./docs/README.md)** - Complete documentation index
+- **🚀 [Setup Guide](./docs/setup/SUPABASE_SETUP.md)** - Environment setup instructions  
+- **🗄️ [Database Schema](./docs/database/COMPLETE_SCHEMA_REFERENCE.md)** - Complete database reference
+- **⚡ [Development Status](./docs/development/CURRENT_STATUS.md)** - Current progress and milestones
+
 ## 📄 **License**
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

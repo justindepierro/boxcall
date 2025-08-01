@@ -3,8 +3,7 @@ import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 
 // Authentication
-import { AuthProvider } from "./components/AuthProvider";
-import { AuthTest } from "./components/AuthTest";
+import { AuthProvider, AuthTest } from "./components/auth";
 
 // Design System Components
 import { Typography } from "./components/design-system";
