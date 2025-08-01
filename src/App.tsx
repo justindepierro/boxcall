@@ -5,6 +5,7 @@ import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 // Design System Components
 import { Typography } from "./components/design-system";
 import { Auth } from "./components/ui/Auth";
+import { AuthTest } from "./components/AuthTest";
 import { Breadcrumb } from "./components/ui/Breadcrumb";
 import { Button } from "./components/ui/Button";
 import { Card } from "./components/ui/Card";
@@ -555,6 +556,28 @@ function App() {
         />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Authentication Store Test */}
+          <section className="mb-8">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+              <Typography
+                variant="headline-md"
+                as="h2"
+                className="mb-4 text-gray-900 dark:text-white font-semibold"
+              >
+                🔐 Phase 4: Authentication System Test
+              </Typography>
+              
+              <div className="mb-4">
+                <Typography variant="body-md" color="muted">
+                  Testing our Zustand authentication store with placeholder implementations.
+                  This will be connected to Supabase Auth in the next step.
+                </Typography>
+              </div>
+              
+              <AuthTest />
+            </div>
+          </section>
+
           {/* Breadcrumb Navigation */}
           <section className="mb-8">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">

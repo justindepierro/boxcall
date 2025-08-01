@@ -48,7 +48,7 @@ export async function discoverAllTables() {
         } else {
           console.log(`⚠️ ${tableName}: Access restricted`);
         }
-      } catch (err) {
+      } catch {
         console.log(`❌ ${tableName}: Not accessible`);
       }
     }
@@ -150,8 +150,14 @@ async function manualTableDiscovery() {
   return existingTables;
 }
 
+// Table interface
+interface TableInfo {
+  name: string;
+  [key: string]: unknown;
+}
+
 // Generate TypeScript types from discovered tables
-export async function generateTypesFromTables(tables: any[]) {
+export async function generateTypesFromTables(tables: TableInfo[]) {
   console.log("🔧 Generating TypeScript types for your tables...");
 
   let typesContent = `// Auto-generated types from your Supabase database
@@ -222,7 +228,7 @@ export interface Database {
   return typesContent;
 }
 
-function inferTypeFromValue(value: any): string {
+function inferTypeFromValue(value: unknown): string {
   if (value === null || value === undefined) return "string | null";
   if (typeof value === "boolean") return "boolean";
   if (typeof value === "number") return "number";
