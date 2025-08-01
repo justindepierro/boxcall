@@ -46,6 +46,7 @@
 ### **📋 Database Integration Notes**
 
 Our authentication store correctly uses:
+
 - **`profiles` table**: Main user data with `role` field ('coach' | 'player' | 'family' | 'admin')
 - **`user_profiles` table**: Extended player-specific data (jersey_number, position, etc.)
 - **Proper TypeScript types**: Full integration with generated database types
@@ -101,6 +102,7 @@ Our authentication store correctly uses:
 ### **📋 Database Integration**
 
 Our authentication system now:
+
 - **Creates auth users**: Using Supabase Auth service
 - **Creates profiles**: Automatically creates entries in our `profiles` table
 - **Syncs data**: Real-time synchronization between auth and profile data

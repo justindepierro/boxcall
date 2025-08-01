@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Button, Input, Card } from '../ui';
-import { Typography } from '../design-system';
-import { useAuth } from '../../app/auth-store';
+import React, { useState } from "react";
+import { useAuth } from "../../app/auth-store";
+import { Typography } from "../design-system";
+import { Button, Card, Input } from "../ui";
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -10,34 +10,34 @@ interface LoginFormProps {
 
 /**
  * LoginForm Component
- * 
+ *
  * Professional login form with email/password authentication
  * Integrates with our Supabase auth store
  */
-export const LoginForm: React.FC<LoginFormProps> = ({ 
-  onSuccess, 
-  onSwitchToRegister 
+export const LoginForm: React.FC<LoginFormProps> = ({
+  onSuccess,
+  onSwitchToRegister,
 }) => {
   const { signIn, loading, error, clearError } = useAuth();
-  
+
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
-  
+
   const [validationErrors, setValidationErrors] = useState<{
     email?: string;
     password?: string;
   }>({});
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
     // Clear validation error when user starts typing
     if (validationErrors[field as keyof typeof validationErrors]) {
-      setValidationErrors(prev => ({ ...prev, [field]: undefined }));
+      setValidationErrors((prev) => ({ ...prev, [field]: undefined }));
     }
-    
+
     // Clear auth error
     if (error) {
       clearError();
@@ -46,34 +46,34 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
   const validateForm = () => {
     const errors: typeof validationErrors = {};
-    
+
     if (!formData.email) {
-      errors.email = 'Email is required';
+      errors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = 'Please enter a valid email address';
+      errors.email = "Please enter a valid email address";
     }
-    
+
     if (!formData.password) {
-      errors.password = 'Password is required';
+      errors.password = "Password is required";
     } else if (formData.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
+      errors.password = "Password must be at least 6 characters";
     }
-    
+
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     const result = await signIn(formData.email, formData.password);
-    
+
     if (result.success) {
-      console.log('✅ Login successful!');
+      console.log("✅ Login successful!");
       onSuccess?.();
     }
   };
@@ -96,8 +96,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             label="Email"
             placeholder="coach@team.com"
             value={formData.email}
-            onChange={(e) => handleInputChange('email', e.target.value)}
-            status={validationErrors.email ? 'error' : undefined}
+            onChange={(e) => handleInputChange("email", e.target.value)}
+            status={validationErrors.email ? "error" : undefined}
             errorMessage={validationErrors.email}
             required
             fullWidth
@@ -108,8 +108,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             label="Password"
             placeholder="Enter your password"
             value={formData.password}
-            onChange={(e) => handleInputChange('password', e.target.value)}
-            status={validationErrors.password ? 'error' : undefined}
+            onChange={(e) => handleInputChange("password", e.target.value)}
+            status={validationErrors.password ? "error" : undefined}
             errorMessage={validationErrors.password}
             showPasswordToggle
             required
@@ -118,7 +118,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
           {error && (
             <div className="p-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-md">
-              <Typography variant="body-sm" className="text-red-700 dark:text-red-400">
+              <Typography
+                variant="body-sm"
+                className="text-red-700 dark:text-red-400"
+              >
                 {error}
               </Typography>
             </div>
@@ -132,13 +135,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             fullWidth
             size="lg"
           >
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? "Signing In..." : "Sign In"}
           </Button>
         </form>
 
         <div className="mt-6 text-center">
           <Typography variant="body-sm" color="muted">
-            Don't have an account?{' '}
+            Don't have an account?{" "}
             <button
               type="button"
               onClick={onSwitchToRegister}

@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import type { ReactNode } from 'react';
-import { supabase } from '../lib/supabase';
-import { useAuth } from '../app/auth-store';
+import type { ReactNode } from "react";
+import React, { useEffect } from "react";
+import { useAuth } from "../app/auth-store";
+import { supabase } from "../lib/supabase";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -9,7 +9,7 @@ interface AuthProviderProps {
 
 /**
  * AuthProvider Component
- * 
+ *
  * Manages authentication state initialization and listens for auth changes.
  * Should wrap the entire app to ensure auth state is properly managed.
  */
@@ -21,7 +21,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       if (session?.user) {
         fetchUserProfile(session.user.id);
       }
@@ -31,8 +31,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('🔐 Auth state changed:', event, session?.user?.email);
-      
+      console.log("🔐 Auth state changed:", event, session?.user?.email);
+
       setSession(session);
       setUser(session?.user ?? null);
 

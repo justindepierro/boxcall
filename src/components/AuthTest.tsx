@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
-import { Button } from '../components/ui';
-import { useAuth, useAuthLoading, useAuthError, useIsAuthenticated, useAuthUser, useAuthProfile } from '../app/auth-store';
-import { Auth } from './auth';
+import React, { useState } from "react";
+import {
+  useAuth,
+  useAuthError,
+  useAuthLoading,
+  useAuthProfile,
+  useAuthUser,
+  useIsAuthenticated,
+} from "../app/auth-store";
+import { Button } from "../components/ui";
+import { Auth } from "./auth";
 
 /**
  * AuthTest Component
- * 
+ *
  * Comprehensive testing interface for our authentication system
  * Shows real authentication status and provides both quick tests and full forms
  */
@@ -16,25 +23,25 @@ export const AuthTest: React.FC = () => {
   const isAuthenticated = useIsAuthenticated();
   const user = useAuthUser();
   const profile = useAuthProfile();
-  
+
   const [showFullAuth, setShowFullAuth] = useState(false);
-  const [resetEmail, setResetEmail] = useState('');
+  const [resetEmail, setResetEmail] = useState("");
 
   const handleTestSignOut = async () => {
     await signOut();
-    console.log('SignOut completed');
+    console.log("SignOut completed");
   };
 
   const handlePasswordReset = async () => {
     if (!resetEmail) {
-      alert('Please enter an email for password reset');
+      alert("Please enter an email for password reset");
       return;
     }
-    
+
     const result = await resetPassword(resetEmail);
     if (result.success) {
-      alert('Password reset email sent! Check your inbox.');
-      setResetEmail('');
+      alert("Password reset email sent! Check your inbox.");
+      setResetEmail("");
     }
   };
 
@@ -51,7 +58,7 @@ export const AuthTest: React.FC = () => {
             ← Back to Test Panel
           </Button>
         </div>
-        
+
         <Auth onSuccess={() => setShowFullAuth(false)} />
       </div>
     );
@@ -62,46 +69,47 @@ export const AuthTest: React.FC = () => {
       <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
         🔐 Auth System Test Panel
       </h2>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Status Panel */}
         <div className="space-y-3">
-          <h3 className="font-semibold text-gray-900 dark:text-white">Authentication Status</h3>
-          
+          <h3 className="font-semibold text-gray-900 dark:text-white">
+            Authentication Status
+          </h3>
+
           <div className="text-sm space-y-2">
             <div>
-              <strong>Status:</strong>{' '}
-              <span className={isAuthenticated ? 'text-green-600' : 'text-red-600'}>
-                {isAuthenticated ? '✅ Authenticated' : '❌ Not Authenticated'}
+              <strong>Status:</strong>{" "}
+              <span
+                className={isAuthenticated ? "text-green-600" : "text-red-600"}
+              >
+                {isAuthenticated ? "✅ Authenticated" : "❌ Not Authenticated"}
               </span>
             </div>
-            
+
             {user && (
               <div>
                 <strong>Email:</strong> {user.email}
               </div>
             )}
-            
+
             {profile && (
               <>
                 <div>
-                  <strong>Name:</strong> {profile.display_name || profile.full_name}
+                  <strong>Name:</strong>{" "}
+                  {profile.display_name || profile.full_name}
                 </div>
                 <div>
-                  <strong>Role:</strong>{' '}
+                  <strong>Role:</strong>{" "}
                   <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">
                     {profile.role}
                   </span>
                 </div>
               </>
             )}
-            
-            {loading && (
-              <div className="text-blue-600">
-                ⏳ Loading...
-              </div>
-            )}
-            
+
+            {loading && <div className="text-blue-600">⏳ Loading...</div>}
+
             {error && (
               <div className="text-red-600 text-sm">
                 <div>❌ Error: {error}</div>
@@ -120,8 +128,10 @@ export const AuthTest: React.FC = () => {
 
         {/* Actions Panel */}
         <div className="space-y-3">
-          <h3 className="font-semibold text-gray-900 dark:text-white">Quick Actions</h3>
-          
+          <h3 className="font-semibold text-gray-900 dark:text-white">
+            Quick Actions
+          </h3>
+
           <div className="space-y-2">
             {!isAuthenticated ? (
               <Button
@@ -142,7 +152,7 @@ export const AuthTest: React.FC = () => {
                 👋 Sign Out
               </Button>
             )}
-            
+
             <div className="border-t pt-3 mt-3">
               <h4 className="text-sm font-medium mb-2">Password Reset Test</h4>
               <div className="flex space-x-2">
@@ -166,7 +176,7 @@ export const AuthTest: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="text-xs text-gray-500 dark:text-gray-400 mt-4 border-t pt-4">
         💡 <strong>Testing Guide:</strong>
         <ul className="list-disc list-inside mt-1 space-y-1">
