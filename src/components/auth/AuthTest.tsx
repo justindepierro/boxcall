@@ -6,9 +6,9 @@ import {
   useAuthProfile,
   useAuthUser,
   useIsAuthenticated,
-} from "../app/auth-store";
-import { Button } from "../components/ui";
-import { Auth } from "./auth";
+} from "../../app/auth-store";
+import { Button } from "../ui";
+import { Auth } from "./Auth";
 
 /**
  * AuthTest Component
