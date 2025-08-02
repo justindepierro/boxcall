@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Typography } from '../design-system';
-import { useDevMode } from '../../app/dev-mode-store';
-import type { DevMode } from '../../app/dev-mode-store';
+import { useDevMode } from '../../app/dev-mode-hooks';
+import type { DevMode } from '../../app/dev-mode-types';
 import { useAuthProfile } from '../../app/auth-store';
 
 const DevModeSwitcher: React.FC = () => {
   const { devMode, setDevMode, isDevMode } = useDevMode();
   const profile = useAuthProfile();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Only show in development environment
   if (import.meta.env.PROD) {
@@ -73,52 +74,65 @@ const DevModeSwitcher: React.FC = () => {
           <Typography variant="headline-sm" className="text-sm font-bold">
             🛠️ Dev Mode
           </Typography>
-          <div className={`px-2 py-1 rounded text-xs font-medium ${
-            isDevMode ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
-          }`}>
-            {isDevMode ? 'DEV' : 'PROD'}
-          </div>
-        </div>
-
-        <div className="mb-3">
-          <Typography variant="body-sm" color="muted" className="text-xs">
-            Current User: {profile?.email || 'Not authenticated'}
-          </Typography>
-          <Typography variant="body-sm" color="muted" className="text-xs">
-            Real Role: {profile?.role || 'None'}
-          </Typography>
-        </div>
-
-        <div className="space-y-2 max-h-64 overflow-y-auto">
-          {devModes.map(({ mode, label, description, color }) => (
+          <div className="flex items-center gap-2">
             <button
-              key={mode}
-              onClick={() => setDevMode(mode)}
-              className={`w-full text-left p-2 rounded-lg border-2 transition-all ${
-                devMode === mode 
-                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-950 dark:border-blue-400' 
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-              } ${color}`}
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-xs"
+              title={isCollapsed ? "Expand" : "Collapse"}
             >
-              <div className="text-xs font-medium">{label}</div>
-              <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                {description}
-              </div>
+              {isCollapsed ? '🔼' : '🔽'}
             </button>
-          ))}
+            <div className={`px-2 py-1 rounded text-xs font-medium ${
+              isDevMode ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
+            }`}>
+              {isDevMode ? 'DEV' : 'PROD'}
+            </div>
+          </div>
         </div>
 
-        {isDevMode && (
-          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setDevMode('production')}
-              className="w-full text-xs"
-            >
-              Return to Production
-            </Button>
-          </div>
+        {!isCollapsed && (
+          <>
+            <div className="mb-3">
+              <Typography variant="body-sm" color="muted" className="text-xs">
+                Current User: {profile?.email || 'Not authenticated'}
+              </Typography>
+              <Typography variant="body-sm" color="muted" className="text-xs">
+                Real Role: {profile?.role || 'None'}
+              </Typography>
+            </div>
+
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {devModes.map(({ mode, label, description, color }) => (
+                <button
+                  key={mode}
+                  onClick={() => setDevMode(mode)}
+                  className={`w-full text-left p-2 rounded-lg border-2 transition-all ${
+                    devMode === mode 
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-950 dark:border-blue-400' 
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                  } ${color}`}
+                >
+                  <div className="text-xs font-medium">{label}</div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                    {description}
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {isDevMode && (
+              <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setDevMode('production')}
+                  className="w-full text-xs"
+                >
+                  Return to Production
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </Card>
