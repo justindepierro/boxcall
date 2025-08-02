@@ -5,3 +5,5 @@ export { SuperAdminPage } from "./SuperAdminPage";
 export { TeamManagementPage } from "./TeamManagementPage";
 export { ProfilePage } from "./ProfilePage";
 export { TeamDashboard } from "./TeamDashboard";
+export { CalendarPage } from "./CalendarPage";
+export { PracticeSchedulePage } from "./PracticeSchedulePage";

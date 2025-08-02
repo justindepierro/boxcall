@@ -52,6 +52,14 @@ export const Navigation: React.FC = () => {
             >
               Dashboard
             </button>
+
+            {/* Master Calendar - Available to all users */}
+            <button
+              onClick={() => handleNavigation("/calendar")}
+              className="text-gray-700 dark:text-gray-300 hover:text-jade-600 hover:bg-jade-50 dark:hover:text-jade-400 dark:hover:bg-jade-900/10 px-4 py-2 rounded-sm text-sm font-display font-medium transition-all duration-200 border border-transparent hover:border-jade-200"
+            >
+              📅 Calendar
+            </button>
             
             {/* Team Navigation - Show for different user types */}
             {(profile?.role === "admin" || profile?.role === "coach") && (
@@ -193,6 +201,13 @@ export const Navigation: React.FC = () => {
                 className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"
               >
                 🏠 Dashboard
+              </button>
+
+              <button
+                onClick={() => handleNavigation("/calendar")}
+                className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"
+              >
+                📅 Calendar
               </button>
               
               {(profile?.role === "admin" || profile?.role === "coach") && (

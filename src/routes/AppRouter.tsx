@@ -19,7 +19,9 @@ import {
   SuperAdminPage,
   TeamManagementPage,
   ProfilePage,
-  TeamDashboard 
+  TeamDashboard,
+  CalendarPage,
+  PracticeSchedulePage 
 } from "../pages";
 import AnimationShowcasePage from "../pages/AnimationShowcasePage";
 
@@ -59,6 +61,16 @@ export const AppRouter: React.FC = () => {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Master Calendar - Available to all authenticated users */}
+          <Route
+            path="/calendar"
+            element={
+              <ProtectedRoute>
+                <CalendarPage />
               </ProtectedRoute>
             }
           />
@@ -109,6 +121,16 @@ export const AppRouter: React.FC = () => {
             element={
               <TeamMemberRoute allowedTeamRoles={["head_coach", "coach", "player", "family", "manager"]}>
                 <TeamDashboard />
+              </TeamMemberRoute>
+            }
+          />
+
+          {/* Practice Schedule - Coaches and team management */}
+          <Route
+            path="/team/:teamId/practice"
+            element={
+              <TeamMemberRoute allowedTeamRoles={["head_coach", "coach", "manager"]}>
+                <PracticeSchedulePage />
               </TeamMemberRoute>
             }
           />

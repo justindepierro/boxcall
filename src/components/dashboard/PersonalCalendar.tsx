@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Typography } from '../design-system';
 import { Card } from '../ui';
 import { useUpcomingEvents, useCalendar } from '../../hooks/useCalendar';
@@ -21,6 +22,7 @@ interface PersonalCalendarProps {
  * - Quick RSVP and calendar integration
  */
 export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({ userId }) => {
+  const navigate = useNavigate();
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   
@@ -74,27 +76,37 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({ userId }) =>
       {/* Header with view toggle */}
       <div className="flex items-center justify-between p-6 border-b border-gray-200 shrink-0">
         <Typography variant="headline-lg" className="text-navy-900">Personal Calendar</Typography>
-        <div className="flex rounded-lg bg-gray-100 p-1">
+        
+        <div className="flex items-center space-x-4">
           <button
-            onClick={() => setViewMode('list')}
-            className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-              viewMode === 'list' 
-                ? 'bg-white text-navy-900 shadow-sm' 
-                : 'text-gray-600 hover:text-navy-900'
-            }`}
+            onClick={() => navigate('/calendar')}
+            className="text-jade-600 hover:text-jade-700 text-sm font-medium transition-colors"
           >
-            List
+            View Full Calendar →
           </button>
-          <button
-            onClick={() => setViewMode('calendar')}
-            className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-              viewMode === 'calendar' 
-                ? 'bg-white text-navy-900 shadow-sm' 
-                : 'text-gray-600 hover:text-navy-900'
-            }`}
-          >
-            Calendar
-          </button>
+
+          <div className="flex rounded-lg bg-gray-100 p-1">
+            <button
+              onClick={() => setViewMode('list')}
+              className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                viewMode === 'list' 
+                  ? 'bg-white text-navy-900 shadow-sm' 
+                  : 'text-gray-600 hover:text-navy-900'
+              }`}
+            >
+              List
+            </button>
+            <button
+              onClick={() => setViewMode('calendar')}
+              className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                viewMode === 'calendar' 
+                  ? 'bg-white text-navy-900 shadow-sm' 
+                  : 'text-gray-600 hover:text-navy-900'
+              }`}
+            >
+              Calendar
+            </button>
+          </div>
         </div>
       </div>
 

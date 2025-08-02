@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui';
 import { Typography } from '../design-system';
 
@@ -16,8 +17,8 @@ interface TeamQuickActionsProps {
  * - Quick access to team features
  * - Context-aware functionality
  */
-export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({ userRole }) => {
-  // TODO: Use teamId for team-specific actions
+export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({ teamId, userRole }) => {
+  const navigate = useNavigate();
   
   const isCoach = userRole === 'coach' || userRole === 'head_coach';
   const isPlayer = userRole === 'player';
@@ -44,6 +45,16 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({ userRole }) 
         >
           <span className="mr-2">⭐</span>
           Award Helmet Stickers
+        </Button>
+        
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="w-full justify-start"
+          onClick={() => navigate(`/team/${teamId}/practice`)}
+        >
+          <span className="mr-2">🏈</span>
+          Practice Schedule
         </Button>
         
         <Button 

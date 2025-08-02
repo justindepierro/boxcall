@@ -136,28 +136,33 @@ Settings/Management Pages (roster sync)
 
 ## Phase 2: Advanced Features (Sprint 2)
 
-### 2.1 Master Calendar Page
+### 2.1 Master Calendar Page ✅ **COMPLETE**
 
-- [ ] Create `/calendar` route and page
-- [ ] Implement full FullCalendar interface
-- [ ] Universal search functionality
-- [ ] Advanced filtering (by team, type, date range)
-- [ ] Calendar import/export
+- [x] Create `/calendar` route and page
+- [x] Implement full FullCalendar interface
+- [x] Universal search functionality
+- [x] Advanced filtering (by team, type, date range)
+- [x] Calendar import/export
 
-### 2.2 Practice Schedule System
+### 2.2 Practice Schedule System ✅ **COMPLETE**
 
-- [ ] Practice schedule popouts with detailed info
-- [ ] Recurring practice templates
-- [ ] Weather integration for outdoor practices
-- [ ] Equipment and field management integration
-- [ ] Attendance tracking
+- [x] Practice schedule popouts with detailed info
+- [x] Recurring practice templates
+- [x] Weather integration for outdoor practices
+- [x] Equipment and field management integration
+- [x] Attendance tracking
+- [x] Ability to save practice schedule templates
+- [x] Ability to drag and drop practice blocks to reorganize.
+- [x] ability to set a practice start and end time and lock time to keep on schedule
+- [x] ability to attach/link Practice Scripts (not yet implemented) or "Make new Practice Script for this Time Block"
+- [x] Ability to make quick intervals of practice 5min/10min/15min. or custom time.
 
-### 2.3 Enhanced Team Features
+### 2.3 Enhanced Team Features ✅ **COMPLETE**
 
-- [ ] Team-wide polling for events
-- [ ] Advanced RSVP with conditional responses
-- [ ] Team calendar permissions and roles
-- [ ] Bulk event operations
+- [x] Team-wide polling for events
+- [x] Advanced RSVP with conditional responses
+- [x] Team calendar permissions and roles
+- [x] Bulk event operations
 
 ## Phase 3: Intelligent Features (Sprint 3)
 
