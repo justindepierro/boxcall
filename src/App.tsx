@@ -3,6 +3,8 @@ import "./App.css";
 import { AppRouter } from "./routes/AppRouter";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { DevHealthCheck } from "./components/ui/DevHealthCheck";
+import { DevModeProvider } from "./app/dev-mode-store";
+import DevModeSwitcher from "./components/dev/DevModeSwitcher";
 import { testDatabaseConnection } from "./lib/database-helpers";
 
 /**
@@ -32,10 +34,13 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <div className="App">
-        <DevHealthCheck />
-        <AppRouter />
-      </div>
+      <DevModeProvider>
+        <div className="App">
+          <DevHealthCheck />
+          <AppRouter />
+          <DevModeSwitcher />
+        </div>
+      </DevModeProvider>
     </ErrorBoundary>
   );
 }
