@@ -4,7 +4,7 @@ import { Card, Button, Input } from '../ui';
 
 interface PersonalProfileProps {
   profile: {
-    bio?: string;
+    bio?: string | null;
     gpa?: string;
     favorite_position?: string;
     gear?: {

@@ -1,5 +1,7 @@
 import React from 'react';
-import { useAuth } from '../components/auth';
+import { useAuth } from '../app/auth-store';
+import { useDashboardData } from '../hooks/useDashboard';
+import { DashboardService } from '../services/dashboardService';
 import { PersonalTrophyShelf } from '../components/dashboard/PersonalTrophyShelf';
 import { PersonalProfile } from '../components/dashboard/PersonalProfile';
 import { CrossTeamMessages } from '../components/dashboard/CrossTeamMessages';
@@ -23,6 +25,15 @@ import { Card } from '../components/ui';
  */
 export const DashboardPage: React.FC = () => {
   const { user, profile } = useAuth();
+  
+  // Get dashboard data with real database integration
+  const { 
+    userTeams, 
+    totalTeams, 
+    recentActivity, 
+    loading: dashboardLoading, 
+    error: dashboardError 
+  } = useDashboardData(user?.id);
 
   if (!user || !profile) {
     return (
@@ -36,10 +47,40 @@ export const DashboardPage: React.FC = () => {
     );
   }
 
+  // Show loading state while fetching dashboard data
+  if (dashboardLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
+          <Typography variant="headline-lg" color="muted">
+            Loading your teams and activities...
+          </Typography>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if dashboard data failed to load
+  if (dashboardError) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Typography variant="headline-lg" className="text-red-600 mb-2">
+            Failed to load dashboard
+          </Typography>
+          <Typography variant="body-lg" color="muted">
+            {dashboardError}
+          </Typography>
+        </div>
+      </div>
+    );
+  }
+
   // Determine user role for role-based content
-  const userRole = profile.user_type || 'player';
+  const userRole = profile.role || 'player';
   const isPlayer = userRole === 'player';
-  const isCoach = userRole === 'coach' || userRole === 'head_coach';
+  const isCoach = userRole === 'coach';
   const isFamily = userRole === 'family';
 
   const renderQuickActions = () => {
@@ -57,7 +98,7 @@ export const DashboardPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <Typography variant="headline-xl" className="text-gray-900 dark:text-white">
-                Welcome back, {profile.first_name || user.email}!
+                Welcome back, {profile.full_name?.split(' ')[0] || profile.display_name || user.email}!
               </Typography>
               <Typography variant="body-lg" color="muted" className="mt-1">
                 Your personal football command center
@@ -69,7 +110,7 @@ export const DashboardPage: React.FC = () => {
                   Role: {userRole.replace('_', ' ').toUpperCase()}
                 </Typography>
                 <Typography variant="body-sm" color="muted">
-                  Active Teams: 3 {/* TODO: Get from user teams */}
+                  Active Teams: {totalTeams}
                 </Typography>
               </div>
             </div>
@@ -121,24 +162,26 @@ export const DashboardPage: React.FC = () => {
                 Recent Activity
               </Typography>
               <div className="space-y-3">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-jade-500 rounded-full"></div>
+                {recentActivity.length > 0 ? (
+                  recentActivity.map((activity) => (
+                    <div key={activity.id} className="flex items-center space-x-3">
+                      <div className={`w-2 h-2 bg-${activity.color}-500 rounded-full`}></div>
+                      <div className="flex-1">
+                        <Typography variant="body-sm" className="font-medium text-gray-900 dark:text-white">
+                          {activity.title}
+                        </Typography>
+                        <Typography variant="body-sm" color="muted">
+                          {activity.description}
+                          {activity.teamName && ` • ${activity.teamName}`}
+                        </Typography>
+                      </div>
+                    </div>
+                  ))
+                ) : (
                   <Typography variant="body-sm" color="muted">
-                    New helmet sticker earned - "Touchdown Pass"
+                    No recent activity
                   </Typography>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <Typography variant="body-sm" color="muted">
-                    Practice script updated for Friday
-                  </Typography>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  <Typography variant="body-sm" color="muted">
-                    New message from Coach Johnson
-                  </Typography>
-                </div>
+                )}
               </div>
             </Card>
 
@@ -148,53 +191,37 @@ export const DashboardPage: React.FC = () => {
                 Your Teams
               </Typography>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div>
-                    <Typography variant="body-md" className="font-semibold">
-                      Eastside Eagles
+                {userTeams.length > 0 ? (
+                  userTeams.map((userTeam) => {
+                    const status = DashboardService.getTeamStatus();
+                    return (
+                      <div key={userTeam.team.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div>
+                          <Typography variant="body-md" className="font-semibold">
+                            {userTeam.team.name}
+                          </Typography>
+                          <Typography variant="body-sm" color="muted">
+                            {userTeam.membership.role.replace('_', ' ')} • {userTeam.memberCount} members
+                          </Typography>
+                        </div>
+                        <div className="text-right">
+                          <Typography variant="body-sm" className={`text-${status.color}-600 dark:text-${status.color}-400`}>
+                            {status.status}
+                          </Typography>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="text-center py-8">
+                    <Typography variant="body-md" color="muted">
+                      You're not a member of any teams yet
                     </Typography>
-                    <Typography variant="body-sm" color="muted">
-                      Varsity Football
-                    </Typography>
-                  </div>
-                  <div className="text-right">
-                    <Typography variant="body-sm" className="text-jade-600 dark:text-jade-400">
-                      Active
-                    </Typography>
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div>
-                    <Typography variant="body-md" className="font-semibold">
-                      Elite 7v7
-                    </Typography>
-                    <Typography variant="body-sm" color="muted">
-                      Summer League
-                    </Typography>
-                  </div>
-                  <div className="text-right">
-                    <Typography variant="body-sm" className="text-blue-600 dark:text-blue-400">
-                      In Season
-                    </Typography>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div>
-                    <Typography variant="body-md" className="font-semibold">
-                      Spring Development
-                    </Typography>
-                    <Typography variant="body-sm" color="muted">
-                      Off-Season Training
+                    <Typography variant="body-sm" color="muted" className="mt-1">
+                      Join a team to get started
                     </Typography>
                   </div>
-                  <div className="text-right">
-                    <Typography variant="body-sm" className="text-gray-600 dark:text-gray-400">
-                      Off Season
-                    </Typography>
-                  </div>
-                </div>
+                )}
               </div>
             </Card>
           </div>

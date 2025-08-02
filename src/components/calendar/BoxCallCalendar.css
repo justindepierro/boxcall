@@ -1,0 +1,210 @@
+/* BoxCall Calendar Styling */
+.boxcall-calendar {
+  --fc-border-color: #E5E7EB;
+  --fc-button-bg-color: #00A86B;
+  --fc-button-border-color: #00A86B;
+  --fc-button-hover-bg-color: #008F5A;
+  --fc-button-hover-border-color: #008F5A;
+  --fc-button-active-bg-color: #007A4D;
+  --fc-button-active-border-color: #007A4D;
+  --fc-today-bg-color: rgba(0, 168, 107, 0.1);
+  --fc-neutral-bg-color: #F9FAFB;
+  --fc-page-bg-color: #FFFFFF;
+  --fc-text-color: #374151;
+}
+
+/* Typography */
+.boxcall-calendar .fc-toolbar-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  color: #1E3A8A;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+}
+
+.boxcall-calendar .fc-button {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border-radius: 0.375rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.boxcall-calendar .fc-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 168, 107, 0.2);
+}
+
+/* Event Styling */
+.boxcall-calendar .fc-event {
+  border-radius: 0.25rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.15s ease-in-out;
+}
+
+.boxcall-calendar .fc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Event Type Colors */
+.boxcall-calendar .event-game {
+  background-color: #1E3A8A !important;
+  border-color: #1E3A8A !important;
+}
+
+.boxcall-calendar .event-practice {
+  background-color: #00A86B !important;
+  border-color: #00A86B !important;
+}
+
+.boxcall-calendar .event-meeting {
+  background-color: #F59E0B !important;
+  border-color: #F59E0B !important;
+}
+
+.boxcall-calendar .event-film {
+  background-color: #8B5CF6 !important;
+  border-color: #8B5CF6 !important;
+}
+
+.boxcall-calendar .event-other {
+  background-color: #6B7280 !important;
+  border-color: #6B7280 !important;
+}
+
+/* Day Grid Styling */
+.boxcall-calendar .fc-daygrid-event {
+  margin: 1px 2px;
+  padding: 2px 4px;
+}
+
+.boxcall-calendar .fc-day-today {
+  background-color: var(--fc-today-bg-color) !important;
+}
+
+.boxcall-calendar .fc-day-header {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  font-size: 0.75rem;
+  padding: 0.5rem;
+}
+
+/* Time Grid Styling */
+.boxcall-calendar .fc-timegrid-slot {
+  border-color: #F3F4F6;
+}
+
+.boxcall-calendar .fc-timegrid-axis {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: #6B7280;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .boxcall-calendar .fc-toolbar {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  
+  .boxcall-calendar .fc-toolbar-title {
+    font-size: 1.25rem;
+    margin: 0;
+  }
+  
+  .boxcall-calendar .fc-button-group {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .boxcall-calendar .fc-button {
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+  }
+  
+  .boxcall-calendar .fc-event {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .boxcall-calendar .fc-toolbar-title {
+    font-size: 1.125rem;
+  }
+  
+  .boxcall-calendar .fc-button {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .boxcall-calendar .fc-daygrid-event {
+    font-size: 0.625rem;
+    margin: 0.5px 1px;
+    padding: 1px 2px;
+  }
+}
+
+/* Animation and Interactions */
+.boxcall-calendar .fc-event.fc-event-dragging {
+  opacity: 0.7;
+  transform: rotate(5deg);
+}
+
+.boxcall-calendar .fc-event.fc-event-selected {
+  box-shadow: 0 0 0 2px #00A86B;
+}
+
+/* Loading State */
+.boxcall-calendar.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.boxcall-calendar.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  border: 3px solid #E5E7EB;
+  border-top-color: #00A86B;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Custom Scrollbar for Time View */
+.boxcall-calendar .fc-scroller::-webkit-scrollbar {
+  width: 8px;
+}
+
+.boxcall-calendar .fc-scroller::-webkit-scrollbar-track {
+  background: #F3F4F6;
+  border-radius: 4px;
+}
+
+.boxcall-calendar .fc-scroller::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 4px;
+}
+
+.boxcall-calendar .fc-scroller::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}

@@ -13,6 +13,9 @@
 - [`/database/COMPLETE_SCHEMA_REFERENCE.md`](./database/COMPLETE_SCHEMA_REFERENCE.md) - Complete database schema reference
 - [`/database/database-schema.sql`](./database/database-schema.sql) - SQL schema file
 
+### **🏗️ Architecture Documentation**
+- [`/architecture/DASHBOARD_INFRASTRUCTURE.md`](./architecture/DASHBOARD_INFRASTRUCTURE.md) - Complete dashboard infrastructure documentation
+
 ### **⚡ Development Logs**
 - [`/development/CURRENT_STATUS.md`](./development/CURRENT_STATUS.md) - Current development status and milestones
 - [`/development/PHASE_4_AUTH_LOG.md`](./development/PHASE_4_AUTH_LOG.md) - Phase 4 authentication development log
@@ -24,6 +27,7 @@
 2. **Database Setup**: Follow [SUPABASE_SETUP.md](./setup/SUPABASE_SETUP.md)
 3. **Current Status**: Check [CURRENT_STATUS.md](./development/CURRENT_STATUS.md)
 4. **Database Reference**: Use [COMPLETE_SCHEMA_REFERENCE.md](./database/COMPLETE_SCHEMA_REFERENCE.md)
+5. **Dashboard Architecture**: Review [DASHBOARD_INFRASTRUCTURE.md](./architecture/DASHBOARD_INFRASTRUCTURE.md)
 
 ### **For Contributors**
 1. **Project Overview**: Main [README.md](../README.md) has full roadmap
@@ -46,6 +50,7 @@ All BoxCall documentation follows these standards:
 
 ---
 
-**Last Updated**: August 1, 2025  
-**Documentation Version**: 1.0  
+**Last Updated**: August 2, 2025  
+**Documentation Version**: 1.1  
+**Current Phase**: Dashboard Infrastructure Complete, Component Enhancement Phase  
 **Project Phase**: 4.2 - Authentication System Complete

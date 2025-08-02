@@ -48,3 +48,5 @@ export const TeamNavigation: React.FC<TeamNavigationProps> = ({ teamId, userRole
     </div>
   );
 };
+
+export default TeamNavigation;

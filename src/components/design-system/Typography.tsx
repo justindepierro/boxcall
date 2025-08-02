@@ -38,7 +38,8 @@ export type TypographyElement =
   | "p"
   | "span"
   | "div"
-  | "label";
+  | "label"
+  | "code";
 
 export interface TypographyProps {
   /** Typography variant for consistent styling */
