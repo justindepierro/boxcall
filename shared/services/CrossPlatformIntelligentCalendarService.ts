@@ -59,7 +59,7 @@ export class CrossPlatformIntelligentCalendarService {
           platformOptimizations,
           platformType: this.config.platform.type
         }
-      });
+      }) as ConflictDetection[];
       
       // Cache results for offline use
       if (this.config.offlineEnabled) {
@@ -97,15 +97,14 @@ export class CrossPlatformIntelligentCalendarService {
     try {
       // Platform-specific scheduling optimizations
       const platformConstraints = this.getPlatformSpecificConstraints(constraints);
+      const platformOptimizations = this.getPlatformOptimizations();
       
       const suggestions = await this.callIntelligentAPI('generateSuggestions', {
         constraints: platformConstraints,
-        options: {
-          ...options,
-          platformType: this.config.platform.type,
-          platformCapabilities: this.config.platform.capabilities
-        }
-      });
+        options,
+        platformOptimizations,
+        platformType: this.config.platform.type
+      }) as SchedulingSuggestion[];
       
       // Apply platform-specific post-processing
       const optimizedSuggestions = await this.optimizeSuggestionsForPlatform(suggestions);
@@ -152,7 +151,7 @@ export class CrossPlatformIntelligentCalendarService {
           platformType: this.config.platform.type,
           includePlatformMetrics: true
         }
-      });
+      }) as EventAnalytics;
       
       // Add platform-specific analytics
       const platformAnalytics = await this.generatePlatformAnalytics(teamId, period);
@@ -307,7 +306,8 @@ export class CrossPlatformIntelligentCalendarService {
     }
   }
   
-  private getDisplayOptimizations(suggestion: SchedulingSuggestion): Record<string, unknown> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private getDisplayOptimizations(_suggestion: SchedulingSuggestion): Record<string, unknown> {
     switch (this.config.platform.type) {
       case 'ios':
       case 'android':
@@ -387,7 +387,8 @@ export class CrossPlatformIntelligentCalendarService {
     return { eventKitData: suggestion };
   }
   
-  private generateiOSNotification(suggestion: SchedulingSuggestion): unknown {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private generateiOSNotification(_suggestion: SchedulingSuggestion): unknown {
     return { iOSNotification: true };
   }
   
@@ -399,7 +400,8 @@ export class CrossPlatformIntelligentCalendarService {
     return { calendarContract: suggestion };
   }
   
-  private generateAndroidNotification(suggestion: SchedulingSuggestion): unknown {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private generateAndroidNotification(_suggestion: SchedulingSuggestion): unknown {
     return { androidNotification: true };
   }
   
@@ -492,8 +494,8 @@ class OfflineManager {
   }
   
   async detectConflictsOffline(
-    event: Partial<CrossPlatformCalendarEvent>, 
-    options: ConflictDetectionOptions
+    _event: Partial<CrossPlatformCalendarEvent>, 
+    _options: ConflictDetectionOptions
   ): Promise<ConflictDetectionResult> {
     // Mock offline conflict detection
     return {
@@ -519,7 +521,7 @@ class OfflineManager {
   }
   
   async getCachedSchedulingSuggestions(
-    constraints: SchedulingConstraints
+    _constraints: SchedulingConstraints
   ): Promise<SchedulingSuggestionResult> {
     return {
       suggestions: [],
@@ -537,7 +539,8 @@ class OfflineManager {
     console.log('Caching analytics:', { teamId, period, analytics });
   }
   
-  async getCachedAnalytics(teamId: string, period: AnalyticsPeriod): Promise<AnalyticsResult> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getCachedAnalytics(_teamId: string, _period: AnalyticsPeriod): Promise<AnalyticsResult> {
     return {
       analytics: {} as EventAnalytics,
       platformEnriched: false,

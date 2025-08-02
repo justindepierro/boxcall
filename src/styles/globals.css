@@ -1,5 +1,10 @@
 /* Global Styles for BoxCall Football Management Platform */
 
+/* Tailwind CSS base, components, and utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Import animation system */
 @import './animations.css';
 
