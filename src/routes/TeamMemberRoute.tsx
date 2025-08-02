@@ -99,7 +99,7 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
   if (loading || (!isAdmin && checkingMembership)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
       </div>
     );
   }
@@ -129,7 +129,7 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
           </p>
           <button
             onClick={() => (window.location.href = fallbackTo)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            className="bg-jade-500 text-white px-4 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold"
           >
             Return to Dashboard
           </button>
@@ -151,7 +151,7 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
           </p>
           <button
             onClick={() => window.history.back()}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            className="bg-jade-500 text-white px-4 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold"
           >
             Go Back
           </button>

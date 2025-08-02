@@ -1,8 +1,8 @@
 /**
  * BoxCall Input Component
  *
- * Professional input component with multiple variants and validation states
- * Follows enterprise design system standards
+ * Masculine, technical input component with jade/navy theme
+ * Square, confident design for football team management
  */
 
 import { forwardRef, useState } from "react";
@@ -13,38 +13,38 @@ import type {
   InputStylesConfig,
 } from "./Input.types";
 
-// Input base styles configuration with proper dark mode support
+// Input base styles configuration - Square, technical styling with jade/navy theme
 const inputStyles: InputStylesConfig = {
-  base: "block w-full rounded-md border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400",
+  base: "block w-full rounded-xs border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 font-sans",
 
   sizes: {
-    sm: "px-3 py-1.5 text-sm",
-    md: "px-3 py-2 text-sm",
-    lg: "px-4 py-3 text-base",
+    sm: "px-3 py-2 text-sm",
+    md: "px-4 py-3 text-sm",
+    lg: "px-5 py-4 text-base",
   },
 
   variants: {
     text: "",
     email: "",
     password: "",
-    number: "",
-    tel: "",
+    number: "font-mono", // Monospace for numerical precision
+    tel: "font-mono",   // Monospace for phone numbers
     url: "",
     search: "",
   },
 
   statuses: {
     default:
-      "border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400",
+      "border-gray-300 dark:border-gray-600 focus:border-jade-500 dark:focus:border-jade-400 focus:ring-jade-500 dark:focus:ring-jade-400",
     error:
-      "border-red-300 dark:border-red-600 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 bg-red-50 dark:bg-red-900/20",
+      "border-red-400 dark:border-red-500 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 bg-red-50 dark:bg-red-900/20",
     success:
-      "border-green-300 dark:border-green-600 focus:border-green-500 dark:focus:border-green-400 focus:ring-green-500 dark:focus:ring-green-400 bg-green-50 dark:bg-green-900/20",
+      "border-jade-400 dark:border-jade-500 focus:border-jade-500 dark:focus:border-jade-400 focus:ring-jade-500 dark:focus:ring-jade-400 bg-jade-50 dark:bg-jade-900/20",
     warning:
-      "border-yellow-300 dark:border-yellow-600 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-yellow-50 dark:bg-yellow-900/20",
+      "border-yellow-400 dark:border-yellow-500 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-yellow-50 dark:bg-yellow-900/20",
   },
 
-  focus: "focus:ring-2 focus:ring-offset-2",
+  focus: "focus:ring-2 focus:ring-offset-1",
   disabled:
     "disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 dark:disabled:border-gray-600",
 };
@@ -152,11 +152,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       .filter(Boolean)
       .join(" ");
 
-    // Label classes with theme awareness
+    // Label classes with display font for masculine impact
     const labelClasses = [
       sizeConfig.label,
       size === "sm" ? "text-xs" : "text-sm",
-      "font-medium text-gray-700 dark:text-gray-300",
+      "font-display font-medium text-gray-700 dark:text-gray-300", // Display font for labels
       labelClassName,
     ]
       .filter(Boolean)
@@ -255,7 +255,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
           {loading && (
             <div className={`${sizeConfig.icon} right-3`}>
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent"></div>
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-jade-500 border-t-transparent"></div>
             </div>
           )}
         </div>

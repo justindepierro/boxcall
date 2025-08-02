@@ -16,21 +16,21 @@ export const TeamManagementPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="bg-blue-500 border border-blue-600 rounded-lg p-6 mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
+        <div className="bg-jade-500 border border-jade-600 rounded-md p-6 mb-8">
+          <h1 className="text-3xl font-display font-bold text-white mb-2">
             🏀 Team Management
           </h1>
-          <p className="text-blue-100">
+          <p className="text-jade-100 font-sans">
             Team ID: {teamId || "Not specified"}
           </p>
         </div>
 
         {/* User Context */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4">Your Access</h2>
-          <div className="space-y-2">
+        <div className="bg-white dark:bg-gray-800 rounded-md shadow-sm p-6 mb-8">
+          <h2 className="text-xl font-display font-semibold mb-4">Your Access</h2>
+          <div className="space-y-2 font-sans">
             <p><strong>Email:</strong> {profile?.email}</p>
-            <p><strong>Team Role:</strong> <span className="text-blue-600">Team Member</span></p>
+            <p><strong>Team Role:</strong> <span className="text-jade-600 font-semibold">Team Member</span></p>
             <p><strong>Access Level:</strong> Team Management</p>
           </div>
         </div>
@@ -38,17 +38,17 @@ export const TeamManagementPage: React.FC = () => {
         {/* Management Tools Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Team Overview */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-            <h3 className="text-lg font-semibold mb-3 text-blue-600">
+          <div className="bg-white dark:bg-gray-800 rounded-md shadow-sm p-6">
+            <h3 className="text-lg font-display font-semibold mb-3 text-jade-600">
               📋 Team Overview
             </h3>
-            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400 font-sans">
               <li>• Team information</li>
               <li>• Member list</li>
               <li>• Recent activity</li>
               <li>• Team statistics</li>
             </ul>
-            <button className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+            <button className="mt-4 w-full bg-jade-500 text-white py-2 px-4 rounded-sm hover:bg-jade-600 font-sans font-semibold">
               View Team Details
             </button>
           </div>
@@ -135,8 +135,8 @@ export const TeamManagementPage: React.FC = () => {
         </div>
 
         {/* Role-Based Actions */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mt-8">
-          <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-4">
+        <div className="bg-jade-50 dark:bg-navy-900/20 border border-jade-200 dark:border-navy-800 rounded-md p-6 mt-8">
+          <h3 className="text-lg font-display font-semibold text-navy-800 dark:text-jade-200 mb-4">
             Role-Based Access
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -174,7 +174,7 @@ export const TeamManagementPage: React.FC = () => {
           </button>
           <button
             onClick={() => window.location.href = "/dashboard"}
-            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+            className="bg-jade-500 text-white px-6 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold"
           >
             Return to Dashboard
           </button>

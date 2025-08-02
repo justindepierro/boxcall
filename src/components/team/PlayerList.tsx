@@ -98,7 +98,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterLevel}
               onChange={(e) => setFilterLevel(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-white font-sans"
             >
               <option value="all">All Levels</option>
               {TEAM_LEVELS.map(level => (
@@ -114,7 +114,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterPosition}
               onChange={(e) => setFilterPosition(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-white font-sans"
             >
               <option value="all">All Positions</option>
               {allPositions.map(position => (
@@ -165,7 +165,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center space-x-3">
                     {/* Jersey Number */}
-                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+                    <div className="w-12 h-12 bg-jade-500 rounded-md flex items-center justify-center text-white font-display font-bold">
                       {player.jersey_number || "?"}
                     </div>
                     
@@ -186,7 +186,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                   <div className="flex space-x-1">
                     <button
                       onClick={() => onEditPlayer(player)}
-                      className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
+                      className="p-1 text-gray-400 hover:text-jade-600 transition-colors"
                       title="Edit Player"
                     >
                       ✏️

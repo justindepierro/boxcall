@@ -154,7 +154,7 @@ const getRowStyles = (
   return [
     "transition-colors duration-200",
     hoverable && "hover:bg-gray-50 dark:hover:bg-gray-700",
-    isSelected && "bg-blue-50 dark:bg-blue-900/20",
+    isSelected && "bg-jade-50 dark:bg-navy-900/20",
     striped && isEven && "bg-gray-50 dark:bg-gray-800",
   ]
     .filter(Boolean)
@@ -177,7 +177,7 @@ const SortIcon: React.FC<{ direction: SortDirection }> = ({ direction }) => {
 
   return direction === "asc" ? (
     <svg
-      className="w-4 h-4 text-blue-600 dark:text-blue-400"
+      className="w-4 h-4 text-jade-600 dark:text-jade-400"
       fill="currentColor"
       viewBox="0 0 20 20"
     >
@@ -185,7 +185,7 @@ const SortIcon: React.FC<{ direction: SortDirection }> = ({ direction }) => {
     </svg>
   ) : (
     <svg
-      className="w-4 h-4 text-blue-600 dark:text-blue-400"
+      className="w-4 h-4 text-jade-600 dark:text-jade-400"
       fill="currentColor"
       viewBox="0 0 20 20"
     >
@@ -196,7 +196,7 @@ const SortIcon: React.FC<{ direction: SortDirection }> = ({ direction }) => {
 
 const LoadingSpinner: React.FC = () => (
   <div className="flex justify-center items-center py-8">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400" />
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600 dark:border-jade-400" />
   </div>
 );
 
@@ -382,7 +382,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
                       if (el) el.indeterminate = isIndeterminate;
                     }}
                     onChange={(e) => handleSelectAll(e.target.checked)}
-                    className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
+                    className="rounded-sm border-gray-300 dark:border-gray-600 text-jade-600 focus:ring-jade-500"
                   />
                 </th>
               )}
@@ -440,7 +440,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
                           onChange={(e) =>
                             handleSelectRow(row.id, e.target.checked)
                           }
-                          className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
+                          className="rounded-sm border-gray-300 dark:border-gray-600 text-jade-600 focus:ring-jade-500"
                         />
                       </td>
                     )}

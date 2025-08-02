@@ -1,8 +1,8 @@
 /**
  * BoxCall Button Component
  *
- * Professional button component with multiple variants and sizes
- * Follows enterprise design system standards
+ * Masculine, square button component with jade/navy theme
+ * Professional, confident design for football team management
  */
 
 import React, { forwardRef } from "react";
@@ -12,45 +12,45 @@ import type {
   ButtonStylesConfig,
 } from "./Button.types";
 
-// Button variant styles configuration
+// Button variant styles configuration - Updated with jade/navy theme
 const buttonVariants: ButtonStylesConfig = {
   primary: {
-    base: "bg-blue-600 text-white border border-blue-600",
-    hover: "hover:bg-blue-700 hover:border-blue-700",
-    active: "active:bg-blue-800 active:border-blue-800",
+    base: "bg-jade-500 text-white border border-jade-500",
+    hover: "hover:bg-jade-600 hover:border-jade-600",
+    active: "active:bg-jade-700 active:border-jade-700",
     disabled:
-      "disabled:bg-blue-300 disabled:border-blue-300 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+      "disabled:bg-jade-300 disabled:border-jade-300 disabled:cursor-not-allowed",
+    focus: "focus:ring-2 focus:ring-jade-500 focus:ring-offset-2",
   },
   secondary: {
-    base: "bg-gray-100 text-gray-900 border border-gray-300",
-    hover: "hover:bg-gray-200 hover:border-gray-400",
-    active: "active:bg-gray-300 active:border-gray-500",
+    base: "bg-transparent text-navy-600 border-2 border-navy-500",
+    hover: "hover:bg-navy-500 hover:text-white hover:border-navy-500",
+    active: "active:bg-navy-600 active:text-white active:border-navy-600",
     disabled:
-      "disabled:bg-gray-50 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-gray-500 focus:ring-offset-2",
+      "disabled:text-navy-300 disabled:border-navy-300 disabled:cursor-not-allowed",
+    focus: "focus:ring-2 focus:ring-navy-500 focus:ring-offset-2",
   },
   outline: {
-    base: "bg-transparent text-blue-600 border border-blue-600",
-    hover: "hover:bg-blue-50 hover:text-blue-700",
-    active: "active:bg-blue-100 active:text-blue-800",
+    base: "bg-transparent text-jade-600 border border-jade-500",
+    hover: "hover:bg-jade-50 hover:text-jade-700 hover:border-jade-600",
+    active: "active:bg-jade-100 active:text-jade-800 active:border-jade-700",
     disabled:
-      "disabled:text-blue-300 disabled:border-blue-300 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+      "disabled:text-jade-300 disabled:border-jade-300 disabled:cursor-not-allowed",
+    focus: "focus:ring-2 focus:ring-jade-500 focus:ring-offset-2",
   },
   ghost: {
     base: "bg-transparent text-gray-600 border border-transparent",
     hover: "hover:bg-gray-100 hover:text-gray-900",
     active: "active:bg-gray-200 active:text-gray-900",
     disabled: "disabled:text-gray-400 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-gray-500 focus:ring-offset-2",
+    focus: "focus:ring-2 focus:ring-jade-500 focus:ring-offset-2",
   },
   link: {
-    base: "bg-transparent text-blue-600 border border-transparent p-0 h-auto",
-    hover: "hover:text-blue-700 hover:underline",
-    active: "active:text-blue-800",
-    disabled: "disabled:text-blue-300 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:rounded",
+    base: "bg-transparent text-jade-600 border border-transparent p-0 h-auto",
+    hover: "hover:text-jade-700 hover:underline",
+    active: "active:text-jade-800",
+    disabled: "disabled:text-jade-300 disabled:cursor-not-allowed",
+    focus: "focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:rounded-xs",
   },
   danger: {
     base: "bg-red-600 text-white border border-red-600",
@@ -61,12 +61,12 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus:ring-2 focus:ring-red-500 focus:ring-offset-2",
   },
   success: {
-    base: "bg-green-600 text-white border border-green-600",
-    hover: "hover:bg-green-700 hover:border-green-700",
-    active: "active:bg-green-800 active:border-green-800",
+    base: "bg-jade-600 text-white border border-jade-600",
+    hover: "hover:bg-jade-700 hover:border-jade-700",
+    active: "active:bg-jade-800 active:border-jade-800",
     disabled:
-      "disabled:bg-green-300 disabled:border-green-300 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-green-500 focus:ring-offset-2",
+      "disabled:bg-jade-300 disabled:border-jade-300 disabled:cursor-not-allowed",
+    focus: "focus:ring-2 focus:ring-jade-500 focus:ring-offset-2",
   },
   warning: {
     base: "bg-yellow-600 text-white border border-yellow-600",
@@ -78,37 +78,37 @@ const buttonVariants: ButtonStylesConfig = {
   },
 };
 
-// Button size styles configuration
+// Button size styles configuration - Enhanced for masculine, substantial feel
 const buttonSizes: ButtonSizeConfig = {
   xs: {
-    padding: "px-2 py-1",
-    fontSize: "text-xs",
+    padding: "px-3 py-1.5",
+    fontSize: "text-xs font-medium",
     iconSize: "w-3 h-3",
-    height: "h-6",
+    height: "h-7",
   },
   sm: {
-    padding: "px-3 py-1.5",
-    fontSize: "text-sm",
+    padding: "px-4 py-2",
+    fontSize: "text-sm font-medium",
     iconSize: "w-4 h-4",
-    height: "h-8",
+    height: "h-9",
   },
   md: {
-    padding: "px-4 py-2",
-    fontSize: "text-sm",
+    padding: "px-6 py-3",
+    fontSize: "text-sm font-semibold",
     iconSize: "w-4 h-4",
-    height: "h-10",
+    height: "h-11",
   },
   lg: {
-    padding: "px-6 py-3",
-    fontSize: "text-base",
+    padding: "px-8 py-4",
+    fontSize: "text-base font-semibold",
     iconSize: "w-5 h-5",
-    height: "h-12",
+    height: "h-13",
   },
   xl: {
-    padding: "px-8 py-4",
-    fontSize: "text-lg",
+    padding: "px-10 py-5",
+    fontSize: "text-lg font-bold font-display",
     iconSize: "w-6 h-6",
-    height: "h-14",
+    height: "h-16",
   },
 };
 
@@ -174,13 +174,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     // Determine if button should be disabled
     const isDisabled = disabled || loading;
 
-    // Build class string
+    // Build class string - Square, masculine styling with enhanced animations
     const baseClasses = [
-      // Base button styles
+      // Base button styles - square, confident
       "inline-flex items-center justify-center",
-      "font-semibold rounded-md",
-      "transition-all duration-150 ease-in-out",
+      "font-sans rounded-sm", // Square corners for masculine feel
+      "transition-square hover-lift active-press focus-square",
       "focus:outline-none",
+      "shadow-sm hover:shadow-md", // Stronger shadows for depth
 
       // Variant styles
       variantStyles.base,

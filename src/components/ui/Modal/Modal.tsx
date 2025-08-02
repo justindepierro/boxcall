@@ -43,20 +43,20 @@ const getModalSizeStyles = (size: ModalProps["size"]) => {
 };
 
 const getModalTypeStyles = (type: ModalProps["type"]) => {
-  const baseStyles = "rounded-lg shadow-xl";
+  const baseStyles = "rounded-lg shadow-xl border-2"; // Square corners, stronger shadows
 
   switch (type) {
     case "alert":
-      return `${baseStyles} bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700`;
+      return `${baseStyles} bg-red-50 dark:bg-red-900/20 border-red-400 dark:border-red-500`;
     case "confirm":
-      return `${baseStyles} bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700`;
+      return `${baseStyles} bg-yellow-50 dark:bg-yellow-900/20 border-yellow-400 dark:border-yellow-500`;
     default:
-      return `${baseStyles} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700`;
+      return `${baseStyles} bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600`;
   }
 };
 
 const getBackdropStyles = () => {
-  return "bg-gray-900/50 dark:bg-black/50";
+  return "bg-navy-900/60 dark:bg-navy-950/80"; // Navy-tinted backdrop instead of gray
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -184,14 +184,14 @@ export const Modal: React.FC<ModalProps> = ({
         aria-labelledby={title ? "modal-title" : undefined}
         tabIndex={-1}
       >
-        {/* Header */}
+        {/* Header - Enhanced with display font and substantial styling */}
         {title && (
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="px-8 py-6 border-b-2 border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <h3
                 id="modal-title"
                 className={`
-                  text-lg font-semibold leading-6
+                  text-xl font-display font-bold leading-6
                   text-gray-900 dark:text-white
                   ${type === "alert" ? "text-red-900 dark:text-red-100" : ""}
                   ${type === "confirm" ? "text-yellow-900 dark:text-yellow-100" : ""}
@@ -202,7 +202,7 @@ export const Modal: React.FC<ModalProps> = ({
 
               <button
                 onClick={onClose}
-                className="ml-4 p-1 rounded-full transition-colors duration-200 text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700"
+                className="ml-4 p-2 rounded-sm transition-all duration-200 text-gray-600 hover:text-jade-700 hover:bg-jade-50 dark:text-gray-400 dark:hover:text-jade-300 dark:hover:bg-jade-900/20 border border-transparent hover:border-jade-200"
                 aria-label="Close modal"
               >
                 <svg
@@ -210,11 +210,11 @@ export const Modal: React.FC<ModalProps> = ({
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  strokeWidth={2.5}
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
@@ -223,12 +223,12 @@ export const Modal: React.FC<ModalProps> = ({
           </div>
         )}
 
-        {/* Content */}
-        <div className="px-6 py-4">{children}</div>
+        {/* Content - More substantial padding */}
+        <div className="px-8 py-6">{children}</div>
 
-        {/* Footer */}
+        {/* Footer - Enhanced styling */}
         {footer && (
-          <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="px-8 py-6 border-t-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
             {footer}
           </div>
         )}

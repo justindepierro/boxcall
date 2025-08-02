@@ -29,7 +29,7 @@ export const AdminPage: React.FC = () => {
             <Typography variant="body-md" className="mb-4">
               Manage user accounts, roles, and permissions.
             </Typography>
-            <button className="w-full p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+            <button className="w-full p-3 bg-jade-500 text-white rounded-sm hover:bg-jade-600 transition-colors font-sans font-semibold">
               View Users
             </button>
           </Card>

@@ -21,6 +21,7 @@ import {
   ProfilePage,
   TeamDashboard 
 } from "../pages";
+import AnimationShowcasePage from "../pages/AnimationShowcasePage";
 
 /**
  * AppRouter Component
@@ -82,6 +83,16 @@ export const AppRouter: React.FC = () => {
             }
           />
 
+          {/* Animation Showcase - Development route */}
+          <Route
+            path="/animations"
+            element={
+              <ProtectedRoute>
+                <AnimationShowcasePage />
+              </ProtectedRoute>
+            }
+          />
+
           {/* Team Management Routes - Permission-based access */}
           <Route
             path="/team/:teamId/manage"
@@ -135,7 +146,7 @@ export const AppRouter: React.FC = () => {
                   </p>
                   <button
                     onClick={() => window.history.back()}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    className="bg-jade-500 text-white px-4 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold"
                   >
                     Go Back
                   </button>

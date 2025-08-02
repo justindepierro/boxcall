@@ -85,7 +85,7 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
   if (loading || checkingSubscription) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
       </div>
     );
   }
@@ -113,7 +113,7 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
           </p>
           <button
             onClick={() => window.location.href = fallbackTo}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            className="bg-jade-500 text-white px-4 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold"
           >
             Return to Dashboard
           </button>
@@ -135,7 +135,7 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
             Current plan: {subscription.subscription_tier || "none"}
           </p>
           <div className="space-y-3">
-            <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+            <button className="w-full bg-jade-500 text-white px-4 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold">
               Upgrade Subscription
             </button>
             <button
@@ -165,7 +165,7 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
               Please renew to continue using premium features.
             </p>
             <div className="space-y-3">
-              <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+              <button className="w-full bg-jade-500 text-white px-4 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold">
                 Renew Subscription
               </button>
               <button

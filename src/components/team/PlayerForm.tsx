@@ -266,7 +266,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   onClick={() => handlePositionToggle(position)}
                   className={`px-3 py-2 text-sm font-medium rounded transition-colors ${
                     formData.positions?.includes(position)
-                      ? "bg-blue-600 text-white"
+                      ? "bg-jade-500 text-white"
                       : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                   }`}
                 >

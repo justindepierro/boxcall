@@ -184,7 +184,13 @@ CREATE INDEX IF NOT EXISTS idx_team_invites_email ON team_invites(email);
 CREATE INDEX IF NOT EXISTS idx_user_profiles_user_id ON user_profiles(user_id);
 
 -- Create or replace function to generate team codes
-CREATE OR REPLACE FUNCTION generate_team_code()
+-- Drop existing triggers and functions first to avoid dependency conflicts
+DROP TRIGGER IF EXISTS generate_team_code_trigger ON teams;
+DROP TRIGGER IF EXISTS trigger_set_team_code ON teams;
+DROP FUNCTION IF EXISTS generate_team_code() CASCADE;
+DROP FUNCTION IF EXISTS set_team_code() CASCADE;
+
+CREATE FUNCTION generate_team_code()
 RETURNS TEXT AS $$
 DECLARE
     characters TEXT := 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -209,7 +215,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Create trigger to auto-generate team codes if not provided
-CREATE OR REPLACE FUNCTION set_team_code()
+CREATE FUNCTION set_team_code()
 RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.team_code IS NULL OR NEW.team_code = '' THEN
@@ -226,7 +232,11 @@ CREATE TRIGGER trigger_set_team_code
     EXECUTE FUNCTION set_team_code();
 
 -- Create or replace function to update updated_at timestamp
-CREATE OR REPLACE FUNCTION update_updated_at_column()
+-- Drop existing triggers and function first to avoid conflicts
+DROP TRIGGER IF EXISTS trigger_teams_updated_at ON teams;
+DROP FUNCTION IF EXISTS update_updated_at_column() CASCADE;
+
+CREATE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.updated_at = NOW();

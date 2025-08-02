@@ -1,5 +1,8 @@
 /* Global Styles for BoxCall Football Management Platform */
 
+/* Import animation system */
+@import './animations.css';
+
 /* Base styles and resets */
 *,
 *::before,

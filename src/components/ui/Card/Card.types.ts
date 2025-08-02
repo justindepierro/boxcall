@@ -7,8 +7,9 @@ import type { HTMLAttributes, ReactNode } from "react";
 export type CardVariant =
   | "default" // Standard card
   | "elevated" // Card with shadow
-  | "outlined" // Card with border only
-  | "filled"; // Card with background fill
+  | "outlined" // Card with jade border
+  | "filled" // Card with background fill
+  | "accent"; // Card with navy accent theme
 
 export type CardSize =
   | "sm" // Small padding

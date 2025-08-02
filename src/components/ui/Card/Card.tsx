@@ -1,37 +1,39 @@
 /**
  * BoxCall Card Component
  *
- * Professional card component for content containers
+ * Masculine, square card component with jade/navy accents
+ * Professional, confident design for football team management
  */
 
 import { forwardRef } from "react";
 import type { CardProps, CardStylesConfig } from "./Card.types";
 
-// Card styles configuration using only Tailwind dark mode classes
-// This ensures consistent theme behavior without JavaScript conflicts
-
+// Card styles configuration - Square, substantial styling with jade/navy theme
 const cardStyles: CardStylesConfig = {
-  base: "rounded-lg transition-all duration-200",
+  base: "rounded-md transition-all duration-200 shadow-sm", // More square corners, stronger shadows
 
   variants: {
     default:
-      "bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700",
+      "bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 hover:shadow-md",
     elevated:
-      "bg-white shadow-lg border border-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-900/20",
-    outlined: "bg-transparent border-2 border-gray-300 dark:border-gray-600",
+      "bg-white shadow-lg border border-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-900/20 hover:shadow-xl",
+    outlined: 
+      "bg-transparent border-2 border-jade-500 dark:border-jade-400 hover:bg-jade-50 dark:hover:bg-jade-900/10", // Jade outlined variant
     filled:
-      "bg-gray-50 border border-gray-200 dark:bg-gray-900 dark:border-gray-700",
+      "bg-gray-50 border border-gray-200 dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800",
+    accent:
+      "bg-navy-50 border-2 border-navy-500 dark:bg-navy-900/20 dark:border-navy-400", // New navy accent variant
   },
 
   sizes: {
-    sm: "p-3",
-    md: "p-4",
-    lg: "p-6",
-    xl: "p-8",
+    sm: "p-4",   // More substantial padding
+    md: "p-6",   // Increased from p-4
+    lg: "p-8",   // Increased from p-6  
+    xl: "p-10",  // Increased from p-8
   },
 
   interactive:
-    "cursor-pointer hover:shadow-md hover:scale-[1.02] active:scale-[0.98]",
+    "cursor-pointer hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0", // Subtle lift effect, no scale
   disabled: "opacity-50 cursor-not-allowed",
   loading: "animate-pulse",
 };

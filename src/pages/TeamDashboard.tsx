@@ -146,7 +146,7 @@ export const TeamDashboard: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
       </div>
     );
   }
@@ -178,7 +178,7 @@ export const TeamDashboard: React.FC = () => {
                   className="w-16 h-16 rounded-lg object-cover"
                 />
               ) : (
-                <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-16 h-16 bg-jade-500 rounded-md flex items-center justify-center text-white text-2xl font-display font-bold">
                   {teamSettings.name[0]}
                 </div>
               )}
@@ -220,9 +220,9 @@ export const TeamDashboard: React.FC = () => {
             <nav className="-mb-px flex space-x-8 px-6">
               <button
                 onClick={() => setActiveTab("roster")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                className={`py-4 px-1 border-b-2 font-sans font-medium text-sm ${
                   activeTab === "roster"
-                    ? "border-blue-500 text-blue-600 dark:text-blue-400"
+                    ? "border-jade-500 text-jade-600 dark:text-jade-400"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
                 }`}
               >
@@ -231,9 +231,9 @@ export const TeamDashboard: React.FC = () => {
               
               <button
                 onClick={() => setActiveTab("settings")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                className={`py-4 px-1 border-b-2 font-sans font-medium text-sm ${
                   activeTab === "settings"
-                    ? "border-blue-500 text-blue-600 dark:text-blue-400"
+                    ? "border-jade-500 text-jade-600 dark:text-jade-400"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
                 }`}
               >

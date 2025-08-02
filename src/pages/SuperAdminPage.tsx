@@ -36,17 +36,17 @@ export const SuperAdminPage: React.FC = () => {
         {/* Admin Tools Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Database Management */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-            <h3 className="text-lg font-semibold mb-3 text-blue-600">
+          <div className="bg-white dark:bg-gray-800 rounded-md shadow-sm p-6">
+            <h3 className="text-lg font-display font-semibold mb-3 text-jade-600">
               🗄️ Database Management
             </h3>
-            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400 font-sans">
               <li>• View all tables</li>
               <li>• Execute raw queries</li>
               <li>• Database migrations</li>
               <li>• Backup/restore</li>
             </ul>
-            <button className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+            <button className="mt-4 w-full bg-jade-500 text-white py-2 px-4 rounded-sm hover:bg-jade-600 font-sans font-semibold">
               Open Database Console
             </button>
           </div>
@@ -160,7 +160,7 @@ export const SuperAdminPage: React.FC = () => {
           </button>
           <button
             onClick={() => window.location.href = "/dashboard"}
-            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+            className="bg-jade-500 text-white px-6 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold"
           >
             Return to Dashboard
           </button>

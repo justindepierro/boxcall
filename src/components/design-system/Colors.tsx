@@ -1,27 +1,55 @@
 /**
  * BoxCall Design System - Colors
  *
- * Professional color system for football management platform
- * Provides consistent color tokens and utilities
+ * Masculine, professional color system with jade/navy theme
+ * Square, confident aesthetic for football team management
  */
 
-// BoxCall Football Color Palette
+// BoxCall Professional Color Palette
 export const colors = {
-  // Primary Brand Colors
-  primary: {
-    50: "#f0f9ff", // lightest blue
-    100: "#e0f2fe",
-    200: "#bae6fd",
-    300: "#7dd3fc",
-    400: "#38bdf8",
-    500: "#0ea5e9", // primary blue
-    600: "#0284c7", // primary dark
-    700: "#0369a1",
-    800: "#075985",
-    900: "#0c4a6e", // darkest blue
+  // Primary Brand - Jade Green System
+  jade: {
+    50: '#ECFDF5',   // Very light jade for backgrounds
+    100: '#D1FAE5',  // Light jade for hover states
+    200: '#A7F3D0',  // Soft jade for disabled states
+    300: '#6EE7B7',  // Medium jade for borders
+    400: '#34D399',  // Bright jade for active states
+    500: '#00A86B',  // PRIMARY - Main brand color
+    600: '#059669',  // Dark jade for hover/focus
+    700: '#047857',  // Darker jade for pressed states
+    800: '#065F46',  // Deep jade for dark mode
+    900: '#064E3B',  // Darkest jade for text
   },
 
-  // Football Field Green
+  // Secondary Brand - Navy Blue System
+  navy: {
+    50: '#EFF6FF',   // Very light navy
+    100: '#DBEAFE',  // Light navy for backgrounds
+    200: '#BFDBFE',  // Soft navy
+    300: '#93C5FD',  // Medium navy for borders
+    400: '#60A5FA',  // Bright navy
+    500: '#1E3A8A',  // PRIMARY - Main navy
+    600: '#1E40AF',  // Dark navy for hover
+    700: '#1D4ED8',  // Darker navy for focus
+    800: '#1E3A8A',  // Deep navy
+    900: '#1E3A8A',  // Darkest navy for text
+  },
+
+  // Legacy Primary Brand Colors (DEPRECATED - use jade)
+  primary: {
+    50: "#ECFDF5", // Map to jade for backward compatibility
+    100: "#D1FAE5",
+    200: "#A7F3D0", 
+    300: "#6EE7B7",
+    400: "#34D399",
+    500: "#00A86B", // jade-500
+    600: "#059669", // jade-600
+    700: "#047857",
+    800: "#065F46",
+    900: "#064E3B",
+  },
+
+  // Football Field Green (Legacy)
   field: {
     50: "#f0fdf4",
     100: "#dcfce7",
@@ -35,7 +63,7 @@ export const colors = {
     900: "#14532d",
   },
 
-  // Warning/Alert Colors (Yellow for penalties, etc.)
+  // Warning/Alert Colors (Complementary to jade/navy)
   warning: {
     50: "#fffbeb",
     100: "#fef3c7",
@@ -92,7 +120,7 @@ export const colors = {
   },
 } as const;
 
-// Semantic color mappings for component usage
+// Semantic color mappings for component usage - Updated with jade/navy
 export const semanticColors = {
   // Text colors
   text: {
@@ -100,6 +128,8 @@ export const semanticColors = {
     secondary: colors.gray[600],
     muted: colors.gray[500],
     inverse: "#ffffff",
+    brand: colors.jade[600],        // Jade for brand text
+    accent: colors.navy[600],       // Navy for accent text
   },
 
   // Background colors
@@ -108,27 +138,34 @@ export const semanticColors = {
     secondary: colors.gray[50],
     muted: colors.gray[100],
     dark: colors.gray[900],
+    brand: colors.jade[50],         // Light jade backgrounds
+    accent: colors.navy[50],        // Light navy backgrounds
   },
 
   // Border colors
   border: {
     primary: colors.gray[200],
     secondary: colors.gray[300],
-    focus: colors.primary[500],
+    focus: colors.jade[500],        // Jade focus borders
     error: colors.error[500],
+    brand: colors.jade[300],        // Jade brand borders
+    accent: colors.navy[300],       // Navy accent borders
   },
 
-  // Interactive colors
+  // Interactive colors - Updated with jade/navy
   interactive: {
-    primary: colors.primary[500],
-    primaryHover: colors.primary[600],
-    primaryActive: colors.primary[700],
-    secondary: colors.gray[100],
-    secondaryHover: colors.gray[200],
-    secondaryActive: colors.gray[300],
+    primary: colors.jade[500],           // Jade primary actions
+    primaryHover: colors.jade[600],      // Jade hover states
+    primaryActive: colors.jade[700],     // Jade active states
+    secondary: colors.navy[500],         // Navy secondary actions
+    secondaryHover: colors.navy[600],    // Navy hover states
+    secondaryActive: colors.navy[700],   // Navy active states
+    outline: colors.gray[100],           // Outline button background
+    outlineHover: colors.gray[200],      // Outline button hover
+    outlineActive: colors.gray[300],     // Outline button active
   },
 
-  // Status colors
+  // Status colors - Enhanced with jade/navy
   status: {
     success: colors.success[500],
     successLight: colors.success[100],
@@ -136,8 +173,10 @@ export const semanticColors = {
     warningLight: colors.warning[100],
     error: colors.error[500],
     errorLight: colors.error[100],
-    info: colors.primary[500],
-    infoLight: colors.primary[100],
+    info: colors.jade[500],          // Jade for info states
+    infoLight: colors.jade[100],     // Light jade for info backgrounds
+    accent: colors.navy[500],        // Navy for accent status
+    accentLight: colors.navy[100],   // Light navy for accent backgrounds
   },
 
   // Football-specific colors
@@ -215,7 +254,7 @@ export const colorClasses = {
     secondary: "text-gray-600",
     muted: "text-gray-500",
     inverse: "text-white",
-    brand: "text-blue-600",
+    brand: "text-jade-600",
     success: "text-green-600",
     warning: "text-yellow-600",
     error: "text-red-600",
@@ -228,8 +267,8 @@ export const colorClasses = {
     secondary: "bg-gray-50",
     muted: "bg-gray-100",
     dark: "bg-gray-900",
-    brand: "bg-blue-600",
-    brandLight: "bg-blue-50",
+    brand: "bg-jade-500",
+    brandLight: "bg-jade-50",
     success: "bg-green-600",
     successLight: "bg-green-50",
     warning: "bg-yellow-600",
@@ -244,7 +283,7 @@ export const colorClasses = {
   border: {
     primary: "border-gray-200",
     secondary: "border-gray-300",
-    focus: "border-blue-500",
+    focus: "border-jade-500",
     success: "border-green-500",
     warning: "border-yellow-500",
     error: "border-red-500",
@@ -253,7 +292,7 @@ export const colorClasses = {
 
   // Ring color classes (for focus states)
   ring: {
-    primary: "ring-blue-500",
+    primary: "ring-jade-500",
     success: "ring-green-500",
     warning: "ring-yellow-500",
     error: "ring-red-500",

@@ -27,7 +27,7 @@ const DevModeSwitcher: React.FC = () => {
       mode: 'super_admin_real',
       label: '👑 Super Admin (Your Team)',
       description: 'Super admin access with your real team data',
-      color: 'bg-blue-100 dark:bg-blue-900'
+      color: 'bg-jade-100 dark:bg-jade-900'
     },
     {
       mode: 'super_admin_mock',
@@ -106,9 +106,9 @@ const DevModeSwitcher: React.FC = () => {
                 <button
                   key={mode}
                   onClick={() => setDevMode(mode)}
-                  className={`w-full text-left p-2 rounded-lg border-2 transition-all ${
+                  className={`w-full text-left p-2 rounded-md border-2 transition-all font-sans ${
                     devMode === mode 
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-950 dark:border-blue-400' 
+                      ? 'border-jade-500 bg-jade-50 dark:bg-navy-950 dark:border-jade-400' 
                       : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                   } ${color}`}
                 >
