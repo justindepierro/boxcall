@@ -19,9 +19,9 @@ BoxCall's dashboard system is built with a **TypeScript-first, service-oriented 
 
 ```typescript
 export class DashboardService {
-  static async getUserTeams(userId: string): Promise<UserTeam[]>
-  static async getDashboardData(userId: string): Promise<DashboardData>
-  static async getTeamStatus(teams: UserTeam[]): Promise<TeamStatusSummary>
+  static async getUserTeams(userId: string): Promise<UserTeam[]>;
+  static async getDashboardData(userId: string): Promise<DashboardData>;
+  static async getTeamStatus(teams: UserTeam[]): Promise<TeamStatusSummary>;
 }
 ```
 
@@ -33,20 +33,22 @@ export class DashboardService {
 export class EnhancedCalendarService {
   // Event Polling System
   polling: EventPollingService;
-  
+
   // Advanced RSVP Management
   rsvp: AdvancedRSVPService;
-  
+
   // Role-based Permissions
   permissions: CalendarPermissionsService;
-  
+
   // Bulk Operations
   bulkOperations: BulkOperationsService;
-  
+
   // Enhanced Event Queries
-  async queryEnhancedEvents(query: EnhancedCalendarQuery): Promise<EnhancedCalendarEvent[]>
-  async getSystemConfig(): Promise<CalendarSystemConfig>
-  async createWebhook(webhook: CalendarWebhook): Promise<CalendarWebhook>
+  async queryEnhancedEvents(
+    query: EnhancedCalendarQuery
+  ): Promise<EnhancedCalendarEvent[]>;
+  async getSystemConfig(): Promise<CalendarSystemConfig>;
+  async createWebhook(webhook: CalendarWebhook): Promise<CalendarWebhook>;
 }
 ```
 
@@ -57,20 +59,40 @@ export class EnhancedCalendarService {
 ```typescript
 export class PracticeService {
   // Practice Schedule CRUD
-  static async createPracticeSchedule(data: CreatePracticeScheduleData): Promise<PracticeSchedule>
-  static async getPracticeSchedules(teamId: string, filters?: PracticeFilters): Promise<PracticeSchedule[]>
-  
+  static async createPracticeSchedule(
+    data: CreatePracticeScheduleData
+  ): Promise<PracticeSchedule>;
+  static async getPracticeSchedules(
+    teamId: string,
+    filters?: PracticeFilters
+  ): Promise<PracticeSchedule[]>;
+
   // Practice Block Management
-  static async addPracticeBlock(scheduleId: string, blockData: CreatePracticeBlockData): Promise<PracticeBlock>
-  static async reorderPracticeBlocks(scheduleId: string, blocks: PracticeBlock[]): Promise<void>
-  
+  static async addPracticeBlock(
+    scheduleId: string,
+    blockData: CreatePracticeBlockData
+  ): Promise<PracticeBlock>;
+  static async reorderPracticeBlocks(
+    scheduleId: string,
+    blocks: PracticeBlock[]
+  ): Promise<void>;
+
   // Template System
-  static async createPracticeTemplate(template: PracticeTemplate): Promise<PracticeTemplate>
-  static async createScheduleFromTemplate(templateId: string, scheduleData: CreatePracticeScheduleData): Promise<PracticeSchedule>
-  
+  static async createPracticeTemplate(
+    template: PracticeTemplate
+  ): Promise<PracticeTemplate>;
+  static async createScheduleFromTemplate(
+    templateId: string,
+    scheduleData: CreatePracticeScheduleData
+  ): Promise<PracticeSchedule>;
+
   // Attendance & Equipment
-  static async recordAttendance(practiceId: string, playerId: string, status: AttendanceStatus): Promise<PracticeAttendance>
-  static async getAvailableEquipment(teamId: string): Promise<Equipment[]>
+  static async recordAttendance(
+    practiceId: string,
+    playerId: string,
+    status: AttendanceStatus
+  ): Promise<PracticeAttendance>;
+  static async getAvailableEquipment(teamId: string): Promise<Equipment[]>;
 }
 ```
 
@@ -87,27 +109,40 @@ export function useEventPolls(eventId: string): {
   loading: boolean;
   error: string | null;
   createPoll: (pollData: Partial<EventPoll>) => Promise<EventPoll>;
-  submitResponse: (pollId: string, userId: string, responseData: Partial<PollResponse>) => Promise<PollResponse>;
+  submitResponse: (
+    pollId: string,
+    userId: string,
+    responseData: Partial<PollResponse>
+  ) => Promise<PollResponse>;
   closePoll: (pollId: string) => Promise<void>;
-}
+};
 
 // Advanced RSVP Hooks
-export function useAdvancedRSVP(eventId: string, userId: string): {
+export function useAdvancedRSVP(
+  eventId: string,
+  userId: string
+): {
   rsvp: AdvancedRSVP | null;
   loading: boolean;
   error: string | null;
   updateRSVP: (rsvpData: Partial<AdvancedRSVP>) => Promise<AdvancedRSVP>;
   sendReminder: () => Promise<void>;
-}
+};
 
 // Calendar Permissions Hooks
-export function useCalendarPermissions(userId: string, teamId: string): {
+export function useCalendarPermissions(
+  userId: string,
+  teamId: string
+): {
   permissions: CalendarPermissions | null;
   loading: boolean;
   error: string | null;
-  updatePermissions: (role: CalendarRole, customPermissions?: CalendarPermission[]) => Promise<CalendarPermissions>;
+  updatePermissions: (
+    role: CalendarRole,
+    customPermissions?: CalendarPermission[]
+  ) => Promise<CalendarPermissions>;
   revokePermissions: () => Promise<void>;
-}
+};
 
 // Bulk Operations Hooks
 export function useBulkOperations(teamId: string): {
@@ -115,10 +150,14 @@ export function useBulkOperations(teamId: string): {
   templates: BulkOperationTemplate[];
   loading: boolean;
   error: string | null;
-  executeBulkOperation: (type: BulkOperationType, targetIds: string[], operationData: Record<string, any>) => Promise<BulkOperation>;
+  executeBulkOperation: (
+    type: BulkOperationType,
+    targetIds: string[],
+    operationData: Record<string, any>
+  ) => Promise<BulkOperation>;
   getOperationStatus: (operationId: string) => Promise<BulkOperation | null>;
   cancelOperation: (operationId: string) => Promise<boolean>;
-}
+};
 ```
 
 #### **Practice Management Hooks** (`src/hooks/usePractice.ts`) ⭐ **NEW**
@@ -127,33 +166,49 @@ export function useBulkOperations(teamId: string): {
 
 ```typescript
 // Practice Schedule Management
-export function usePracticeSchedule(teamId: string, filters?: PracticeFilters): {
+export function usePracticeSchedule(
+  teamId: string,
+  filters?: PracticeFilters
+): {
   schedules: PracticeSchedule[];
   loading: boolean;
   error: string | null;
-  createSchedule: (data: CreatePracticeScheduleData) => Promise<PracticeSchedule>;
-  updateSchedule: (id: string, updates: Partial<PracticeSchedule>) => Promise<PracticeSchedule>;
+  createSchedule: (
+    data: CreatePracticeScheduleData
+  ) => Promise<PracticeSchedule>;
+  updateSchedule: (
+    id: string,
+    updates: Partial<PracticeSchedule>
+  ) => Promise<PracticeSchedule>;
   deleteSchedule: (id: string) => Promise<void>;
-}
+};
 
 // Practice Block Management
 export function usePracticeBlocks(scheduleId: string): {
   loading: boolean;
   error: string | null;
   addBlock: (blockData: CreatePracticeBlockData) => Promise<PracticeBlock>;
-  updateBlock: (blockId: string, updates: Partial<PracticeBlock>) => Promise<void>;
+  updateBlock: (
+    blockId: string,
+    updates: Partial<PracticeBlock>
+  ) => Promise<void>;
   reorderBlocks: (blocks: PracticeBlock[]) => Promise<void>;
   deleteBlock: (blockId: string) => Promise<void>;
-}
+};
 
 // Practice Templates
 export function usePracticeTemplates(teamId: string): {
   templates: PracticeTemplate[];
   loading: boolean;
   error: string | null;
-  createTemplate: (template: Omit<PracticeTemplate, 'id' | 'createdAt' | 'usageCount'>) => Promise<PracticeTemplate>;
-  createScheduleFromTemplate: (templateId: string, scheduleData: CreatePracticeScheduleData) => Promise<PracticeSchedule>;
-}
+  createTemplate: (
+    template: Omit<PracticeTemplate, "id" | "createdAt" | "usageCount">
+  ) => Promise<PracticeTemplate>;
+  createScheduleFromTemplate: (
+    templateId: string,
+    scheduleData: CreatePracticeScheduleData
+  ) => Promise<PracticeSchedule>;
+};
 
 // Practice Timer for Live Sessions
 export function usePracticeTimer(): {
@@ -165,10 +220,11 @@ export function usePracticeTimer(): {
   getElapsedTime: () => number;
   getTimeRemaining: (endTime: Date) => number;
   formatTime: (seconds: number) => string;
-}
+};
 ```
 
 **Achievement Types**:
+
 - **Helmet Stickers**: Awarded by coaches for on-field performance
 - **BoxCall Medals**: Platform-wide achievements (profile completion, activity streaks)
 - **Progress Tracking**: Real-time progress bars for incomplete medals
@@ -186,12 +242,13 @@ export const useDashboard = (userId: string) => {
     dashboardData: DashboardData | null,
     loading: boolean,
     error: string | null,
-    refreshDashboard: () => Promise<void>
-  }
-}
+    refreshDashboard: () => Promise<void>,
+  };
+};
 ```
 
 **Features**:
+
 - Automatic data fetching on mount
 - Loading and error state management
 - Manual refresh functionality
@@ -207,12 +264,13 @@ export const useAchievements = (userId: string) => {
     achievements: AchievementData | null,
     loading: boolean,
     error: string | null,
-    refreshAchievements: () => Promise<void>
-  }
-}
+    refreshAchievements: () => Promise<void>,
+  };
+};
 ```
 
 **Features**:
+
 - Achievement data with progress tracking
 - Helmet stickers and BoxCall medals
 - Streak calculation and points totaling
@@ -223,9 +281,10 @@ export const useAchievements = (userId: string) => {
 #### **Real Database Queries**
 
 **Team Membership**:
+
 ```sql
 -- Get user's teams with roles
-SELECT 
+SELECT
   t.id, t.name, t.school, t.season, t.level,
   tm.role, tm.status, tm.joined_at
 FROM teams t
@@ -235,9 +294,10 @@ ORDER BY tm.joined_at DESC
 ```
 
 **Achievement Data**:
+
 ```sql
 -- Future: Helmet stickers from coaches
-SELECT 
+SELECT
   hs.*,
   t.name as team_name,
   p.display_name as awarded_by_name
@@ -251,6 +311,7 @@ ORDER BY hs.created_at DESC
 #### **Mock Data System**
 
 During development, services use sophisticated mock data that:
+
 - Varies by user ID for realistic testing
 - Includes all required fields and relationships
 - Simulates real database response patterns
@@ -271,7 +332,7 @@ const PersonalTrophyShelf: React.FC = () => {
 
   if (loading) return <AchievementSkeleton />;
   if (error) return <ErrorMessage message={error} />;
-  
+
   return (
     <div className="personal-trophy-shelf">
       <HelmetStickerGrid stickers={achievements?.helmetStickers} />
@@ -283,6 +344,7 @@ const PersonalTrophyShelf: React.FC = () => {
 ```
 
 **Key Improvements**:
+
 - Real achievement data from AchievementService
 - Loading states with skeleton UI
 - Error handling with graceful fallbacks
@@ -292,6 +354,7 @@ const PersonalTrophyShelf: React.FC = () => {
 ### **DashboardPage Enhancement**
 
 **Enhanced Features**:
+
 - Real team data integration via useDashboard hook
 - Role-based content display (player vs coach vs parent)
 - Activity feed with real team events
@@ -302,6 +365,7 @@ const PersonalTrophyShelf: React.FC = () => {
 ### **Hot Module Reloading**
 
 **Status**: ✅ Working perfectly on port 5174
+
 - Instant updates on service changes
 - Real-time hook state updates
 - Component re-rendering with preserved state
@@ -309,6 +373,7 @@ const PersonalTrophyShelf: React.FC = () => {
 ### **Error Resolution**
 
 **Import Path Issues**: ✅ Resolved
+
 - Fixed incorrect `useAuth` imports from `../components/auth`
 - Updated to correct path: `../app/auth-store`
 - All dashboard pages now load without module errors
@@ -316,6 +381,7 @@ const PersonalTrophyShelf: React.FC = () => {
 ### **TypeScript Integration**
 
 **Lint Status**: ✅ Clean
+
 - All services fully typed with interfaces
 - No unused variables or parameters
 - Strict TypeScript compliance

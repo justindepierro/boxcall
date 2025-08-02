@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import {
-  useIsAuthenticated,
-  useAuthProfile,
   useAuthLoading,
+  useAuthProfile,
+  useIsAuthenticated,
 } from "../app/auth-store";
 import { supabase } from "../lib/supabase";
-import { useEffect, useState } from "react";
 import type { Database } from "../types/database";
 
 // Team member role type

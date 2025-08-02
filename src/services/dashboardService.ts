@@ -1,10 +1,10 @@
-import { supabase } from '../lib/supabase';
-import type { Database } from '../types/database';
+import { supabase } from "../lib/supabase";
+import type { Database } from "../types/database";
 
 // Type definitions
-export type TeamMember = Database['public']['Tables']['team_members']['Row'];
-export type Team = Database['public']['Tables']['teams']['Row'];
-export type UserProfile = Database['public']['Tables']['profiles']['Row'];
+export type TeamMember = Database["public"]["Tables"]["team_members"]["Row"];
+export type Team = Database["public"]["Tables"]["teams"]["Row"];
+export type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
 
 export interface UserTeamData {
   team: Team;
@@ -21,7 +21,7 @@ export interface DashboardData {
 
 export interface ActivityItem {
   id: string;
-  type: 'achievement' | 'message' | 'event' | 'practice' | 'game';
+  type: "achievement" | "message" | "event" | "practice" | "game";
   title: string;
   description: string;
   timestamp: string;
@@ -36,23 +36,24 @@ export interface ActivityItem {
  * Provides centralized data fetching for dashboard components
  */
 export class DashboardService {
-  
   /**
    * Get all teams for a user with their membership data
    */
   static async getUserTeams(userId: string): Promise<UserTeamData[]> {
     try {
       const { data: memberships, error } = await supabase
-        .from('team_members')
-        .select(`
+        .from("team_members")
+        .select(
+          `
           *,
           teams (*)
-        `)
-        .eq('user_id', userId)
-        .eq('status', 'active');
+        `
+        )
+        .eq("user_id", userId)
+        .eq("status", "active");
 
       if (error) {
-        console.error('Error fetching user teams:', error);
+        console.error("Error fetching user teams:", error);
         return [];
       }
 
@@ -61,22 +62,22 @@ export class DashboardService {
         (memberships || []).map(async (membership) => {
           // Get member count for each team
           const { count } = await supabase
-            .from('team_members')
-            .select('*', { count: 'exact', head: true })
-            .eq('team_id', membership.team_id)
-            .eq('status', 'active');
+            .from("team_members")
+            .select("*", { count: "exact", head: true })
+            .eq("team_id", membership.team_id)
+            .eq("status", "active");
 
           return {
             team: membership.teams as Team,
             membership: membership as TeamMember,
-            memberCount: count || 0
+            memberCount: count || 0,
           };
         })
       );
 
       return userTeams;
     } catch (error) {
-      console.error('Error in getUserTeams:', error);
+      console.error("Error in getUserTeams:", error);
       return [];
     }
   }
@@ -87,7 +88,7 @@ export class DashboardService {
   static async getDashboardData(userId: string): Promise<DashboardData> {
     try {
       const userTeams = await this.getUserTeams(userId);
-      
+
       // Filter active teams (in season)
       const activeTeams = userTeams.filter(() => {
         // TODO: Add season logic - for now, all teams are considered active
@@ -101,15 +102,15 @@ export class DashboardService {
         userTeams,
         totalTeams: userTeams.length,
         activeTeams,
-        recentActivity
+        recentActivity,
       };
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      console.error("Error fetching dashboard data:", error);
       return {
         userTeams: [],
         totalTeams: 0,
         activeTeams: [],
-        recentActivity: []
+        recentActivity: [],
       };
     }
   }
@@ -118,42 +119,45 @@ export class DashboardService {
    * Get recent activity for dashboard
    * TODO: Implement real activity feed from events, messages, achievements
    */
-  static async getRecentActivity(_userId: string, userTeams: UserTeamData[]): Promise<ActivityItem[]> {
+  static async getRecentActivity(
+    _userId: string,
+    userTeams: UserTeamData[]
+  ): Promise<ActivityItem[]> {
     // Mock activity data for now
     const mockActivity: ActivityItem[] = [
       {
-        id: '1',
-        type: 'achievement',
-        title: 'New helmet sticker earned',
-        description: 'Touchdown Pass - Game vs. Central',
+        id: "1",
+        type: "achievement",
+        title: "New helmet sticker earned",
+        description: "Touchdown Pass - Game vs. Central",
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
         teamId: userTeams[0]?.team?.id,
         teamName: userTeams[0]?.team?.name,
-        icon: '🏆',
-        color: 'jade'
+        icon: "🏆",
+        color: "jade",
       },
       {
-        id: '2',
-        type: 'practice',
-        title: 'Practice script updated',
-        description: 'Friday practice plan uploaded',
+        id: "2",
+        type: "practice",
+        title: "Practice script updated",
+        description: "Friday practice plan uploaded",
         timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(), // 6 hours ago
         teamId: userTeams[0]?.team?.id,
         teamName: userTeams[0]?.team?.name,
-        icon: '📋',
-        color: 'blue'
+        icon: "📋",
+        color: "blue",
       },
       {
-        id: '3',
-        type: 'message',
-        title: 'New message from coach',
-        description: 'Important update about Saturday game',
+        id: "3",
+        type: "message",
+        title: "New message from coach",
+        description: "Important update about Saturday game",
         timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(), // 12 hours ago
         teamId: userTeams[0]?.team?.id,
         teamName: userTeams[0]?.team?.name,
-        icon: '💬',
-        color: 'purple'
-      }
+        icon: "💬",
+        color: "purple",
+      },
     ];
 
     return mockActivity;
@@ -166,13 +170,15 @@ export class DashboardService {
     // TODO: Implement real season/status logic
     // For now, simple mock logic based on current date
     const currentMonth = new Date().getMonth(); // 0-11
-    
-    if (currentMonth >= 7 && currentMonth <= 11) { // Aug-Dec
-      return { status: 'Active', color: 'jade' };
-    } else if (currentMonth >= 2 && currentMonth <= 5) { // Mar-Jun
-      return { status: 'Spring Season', color: 'blue' };
+
+    if (currentMonth >= 7 && currentMonth <= 11) {
+      // Aug-Dec
+      return { status: "Active", color: "jade" };
+    } else if (currentMonth >= 2 && currentMonth <= 5) {
+      // Mar-Jun
+      return { status: "Spring Season", color: "blue" };
     } else {
-      return { status: 'Off Season', color: 'gray' };
+      return { status: "Off Season", color: "gray" };
     }
   }
 
@@ -181,13 +187,14 @@ export class DashboardService {
    */
   static getPrimaryTeam(userTeams: UserTeamData[]): UserTeamData | null {
     if (userTeams.length === 0) return null;
-    
+
     // Sort by joined date and return most recent
-    const sorted = [...userTeams].sort((a, b) => 
-      new Date(b.membership.joined_at || '').getTime() - 
-      new Date(a.membership.joined_at || '').getTime()
+    const sorted = [...userTeams].sort(
+      (a, b) =>
+        new Date(b.membership.joined_at || "").getTime() -
+        new Date(a.membership.joined_at || "").getTime()
     );
-    
+
     return sorted[0];
   }
 }

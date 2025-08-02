@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 /* Import animation system */
-@import './animations.css';
+@import "./animations.css";
 
 /* Base styles and resets */
 *,

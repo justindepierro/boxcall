@@ -36,7 +36,6 @@ export interface AchievementData {
  * Manages user achievements, helmet stickers, and BoxCall medals
  */
 export class AchievementService {
-  
   /**
    * Get all achievements for a user
    */
@@ -47,7 +46,7 @@ export class AchievementService {
       const mockAchievements = this.getMockAchievements(userId);
       return mockAchievements;
     } catch (error) {
-      console.error('Error fetching user achievements:', error);
+      console.error("Error fetching user achievements:", error);
       return this.getEmptyAchievements();
     }
   }
@@ -72,7 +71,7 @@ export class AchievementService {
       // For now, return mock data
       return this.getMockHelmetStickers(userId);
     } catch (error) {
-      console.error('Error fetching helmet stickers:', error);
+      console.error("Error fetching helmet stickers:", error);
       return [];
     }
   }
@@ -85,7 +84,7 @@ export class AchievementService {
       // TODO: Implement medal calculation based on user activity
       return this.calculateBoxCallMedals(userId);
     } catch (error) {
-      console.error('Error calculating BoxCall medals:', error);
+      console.error("Error calculating BoxCall medals:", error);
       return [];
     }
   }
@@ -97,10 +96,10 @@ export class AchievementService {
     try {
       // TODO: Calculate based on user login/activity data
       // For now, return mock data
-      console.log('Calculating activity streak for user:', userId);
+      console.log("Calculating activity streak for user:", userId);
       return Math.floor(Math.random() * 14) + 1; // 1-14 days
     } catch (error) {
-      console.error('Error calculating activity streak:', error);
+      console.error("Error calculating activity streak:", error);
       return 0;
     }
   }
@@ -110,9 +109,10 @@ export class AchievementService {
    */
   static calculateTotalPoints(achievements: AchievementData): number {
     const stickerPoints = achievements.helmetStickers.length * 25; // 25 points per sticker
-    const medalPoints = achievements.boxcallMedals.filter(m => m.earned).length * 50; // 50 points per medal
+    const medalPoints =
+      achievements.boxcallMedals.filter((m) => m.earned).length * 50; // 50 points per medal
     const streakBonus = achievements.weeklyStreak * 5; // 5 points per day streak
-    
+
     return stickerPoints + medalPoints + streakBonus;
   }
 
@@ -123,17 +123,20 @@ export class AchievementService {
     const helmetStickers = this.getMockHelmetStickers(userId);
     const boxcallMedals = this.getMockBoxCallMedals();
     const weeklyStreak = Math.floor(Math.random() * 14) + 1;
-    
+
     const achievements: AchievementData = {
       helmetStickers,
       boxcallMedals,
       weeklyStreak,
       totalPoints: 0,
-      recentAchievements: []
+      recentAchievements: [],
     };
 
     achievements.totalPoints = this.calculateTotalPoints(achievements);
-    achievements.recentAchievements = [...helmetStickers.slice(0, 2), ...boxcallMedals.filter(m => m.earned).slice(0, 1)];
+    achievements.recentAchievements = [
+      ...helmetStickers.slice(0, 2),
+      ...boxcallMedals.filter((m) => m.earned).slice(0, 1),
+    ];
 
     return achievements;
   }
@@ -142,20 +145,65 @@ export class AchievementService {
     // Create different stickers based on user ID for variety
     const stickerSets = [
       [
-        { name: "First Touchdown", icon: "🏈", awardedBy: "coach-1", awardedByName: "Coach Johnson" },
-        { name: "Perfect Practice", icon: "⭐", awardedBy: "coach-2", awardedByName: "Coach Williams" },
-        { name: "Team Leader", icon: "👑", awardedBy: "coach-1", awardedByName: "Coach Johnson" },
+        {
+          name: "First Touchdown",
+          icon: "🏈",
+          awardedBy: "coach-1",
+          awardedByName: "Coach Johnson",
+        },
+        {
+          name: "Perfect Practice",
+          icon: "⭐",
+          awardedBy: "coach-2",
+          awardedByName: "Coach Williams",
+        },
+        {
+          name: "Team Leader",
+          icon: "👑",
+          awardedBy: "coach-1",
+          awardedByName: "Coach Johnson",
+        },
       ],
       [
-        { name: "Defensive Stop", icon: "🛡️", awardedBy: "coach-3", awardedByName: "Coach Davis" },
-        { name: "Hustle Award", icon: "🏃", awardedBy: "coach-1", awardedByName: "Coach Johnson" },
+        {
+          name: "Defensive Stop",
+          icon: "🛡️",
+          awardedBy: "coach-3",
+          awardedByName: "Coach Davis",
+        },
+        {
+          name: "Hustle Award",
+          icon: "🏃",
+          awardedBy: "coach-1",
+          awardedByName: "Coach Johnson",
+        },
       ],
       [
-        { name: "Game Winner", icon: "🎯", awardedBy: "coach-2", awardedByName: "Coach Williams" },
-        { name: "Sportsmanship", icon: "🤝", awardedBy: "coach-1", awardedByName: "Coach Johnson" },
-        { name: "Study Hall", icon: "📚", awardedBy: "coach-3", awardedByName: "Coach Davis" },
-        { name: "Community Service", icon: "🌟", awardedBy: "coach-1", awardedByName: "Coach Johnson" },
-      ]
+        {
+          name: "Game Winner",
+          icon: "🎯",
+          awardedBy: "coach-2",
+          awardedByName: "Coach Williams",
+        },
+        {
+          name: "Sportsmanship",
+          icon: "🤝",
+          awardedBy: "coach-1",
+          awardedByName: "Coach Johnson",
+        },
+        {
+          name: "Study Hall",
+          icon: "📚",
+          awardedBy: "coach-3",
+          awardedByName: "Coach Davis",
+        },
+        {
+          name: "Community Service",
+          icon: "🌟",
+          awardedBy: "coach-1",
+          awardedByName: "Coach Johnson",
+        },
+      ],
     ];
 
     const userIndex = userId.length % stickerSets.length;
@@ -164,9 +212,11 @@ export class AchievementService {
     return stickers.map((sticker, index) => ({
       id: `sticker-${index + 1}`,
       ...sticker,
-      date: new Date(Date.now() - (index + 1) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      teamId: 'team-1',
-      teamName: 'Eastside Eagles'
+      date: new Date(Date.now() - (index + 1) * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
+      teamId: "team-1",
+      teamName: "Eastside Eagles",
     }));
   }
 
@@ -178,7 +228,9 @@ export class AchievementService {
         icon: "✅",
         description: "Completed profile setup with photo and info",
         earned: true,
-        earnedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        earnedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0],
       },
       {
         id: "team-player",
@@ -186,7 +238,9 @@ export class AchievementService {
         icon: "🤝",
         description: "Joined your first team",
         earned: true,
-        earnedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        earnedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0],
       },
       {
         id: "week-warrior",
@@ -195,7 +249,7 @@ export class AchievementService {
         description: "Active for 7 consecutive days",
         earned: false,
         progress: Math.floor(Math.random() * 7),
-        maxProgress: 7
+        maxProgress: 7,
       },
       {
         id: "social-butterfly",
@@ -204,7 +258,7 @@ export class AchievementService {
         description: "Send 10 team messages",
         earned: Math.random() > 0.5,
         progress: Math.floor(Math.random() * 10),
-        maxProgress: 10
+        maxProgress: 10,
       },
       {
         id: "calendar-keeper",
@@ -213,18 +267,20 @@ export class AchievementService {
         description: "RSVP to 5 team events",
         earned: false,
         progress: Math.floor(Math.random() * 5),
-        maxProgress: 5
-      }
+        maxProgress: 5,
+      },
     ];
   }
 
-  private static async calculateBoxCallMedals(userId: string): Promise<BoxCallMedal[]> {
+  private static async calculateBoxCallMedals(
+    userId: string
+  ): Promise<BoxCallMedal[]> {
     const medals = this.getMockBoxCallMedals();
-    
+
     // TODO: Calculate real progress based on user data
     // - Profile completion: Check if user has filled out profile
     // - Team membership: Check team_members table
-    console.log('Calculating BoxCall medals for user:', userId);
+    console.log("Calculating BoxCall medals for user:", userId);
     // - Activity streak: Check login history
     // - Social activity: Check message/post counts
     // - Calendar activity: Check RSVP history
@@ -238,7 +294,7 @@ export class AchievementService {
       boxcallMedals: [],
       weeklyStreak: 0,
       totalPoints: 0,
-      recentAchievements: []
+      recentAchievements: [],
     };
   }
 }

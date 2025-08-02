@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Typography } from '../design-system';
-import { Card } from '../ui';
-import { useUpcomingEvents, useCalendar } from '../../hooks/useCalendar';
-import { BoxCallCalendar } from '../calendar/BoxCallCalendar';
-import { format } from 'date-fns';
-import type { CalendarEvent } from '../../services/calendarService';
-import '../calendar/BoxCallCalendar.css';
+import { format } from "date-fns";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCalendar, useUpcomingEvents } from "../../hooks/useCalendar";
+import type { CalendarEvent } from "../../services/calendarService";
+import { BoxCallCalendar } from "../calendar/BoxCallCalendar";
+import "../calendar/BoxCallCalendar.css";
+import { Typography } from "../design-system";
+import { Card } from "../ui";
 
 interface PersonalCalendarProps {
   userId: string;
@@ -14,20 +14,27 @@ interface PersonalCalendarProps {
 
 /**
  * Personal Calendar - Cross-team events and schedule
- * 
+ *
  * Features:
  * - Events from all teams user belongs to
  * - Upcoming games, practices, meetings
  * - Personal reminders and deadlines
  * - Quick RSVP and calendar integration
  */
-export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({ userId }) => {
+export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
+  userId,
+}) => {
   const navigate = useNavigate();
-  const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
-  
+  const [viewMode, setViewMode] = useState<"list" | "calendar">("list");
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
+    null
+  );
+
   // Use calendar hooks
-  const { upcomingEvents, loading: upcomingLoading } = useUpcomingEvents(userId, 8);
+  const { upcomingEvents, loading: upcomingLoading } = useUpcomingEvents(
+    userId,
+    8
+  );
   const { events, loading: calendarLoading } = useCalendar(userId);
 
   // Handle event click
@@ -38,30 +45,32 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({ userId }) =>
   // Get event type badge color
   const getEventTypeBadge = (type: string) => {
     const colors = {
-      game: 'bg-navy-600 text-white',
-      practice: 'bg-jade-600 text-white', 
-      meeting: 'bg-amber-600 text-white',
-      film: 'bg-purple-600 text-white',
-      other: 'bg-gray-600 text-white'
+      game: "bg-navy-600 text-white",
+      practice: "bg-jade-600 text-white",
+      meeting: "bg-amber-600 text-white",
+      film: "bg-purple-600 text-white",
+      other: "bg-gray-600 text-white",
     };
     return colors[type as keyof typeof colors] || colors.other;
   };
 
   // Format event time
   const formatEventTime = (start: string, end?: string) => {
-    const startTime = format(new Date(start), 'h:mm a');
+    const startTime = format(new Date(start), "h:mm a");
     if (end) {
-      const endTime = format(new Date(end), 'h:mm a');
+      const endTime = format(new Date(end), "h:mm a");
       return `${startTime} - ${endTime}`;
     }
     return startTime;
   };
 
-  if (upcomingLoading && viewMode === 'list') {
+  if (upcomingLoading && viewMode === "list") {
     return (
       <Card className="h-full">
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <Typography variant="headline-lg" className="text-navy-900">Personal Calendar</Typography>
+          <Typography variant="headline-lg" className="text-navy-900">
+            Personal Calendar
+          </Typography>
         </div>
         <div className="p-6 flex items-center justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
@@ -75,11 +84,13 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({ userId }) =>
     <Card className="h-full flex flex-col">
       {/* Header with view toggle */}
       <div className="flex items-center justify-between p-6 border-b border-gray-200 shrink-0">
-        <Typography variant="headline-lg" className="text-navy-900">Personal Calendar</Typography>
-        
+        <Typography variant="headline-lg" className="text-navy-900">
+          Personal Calendar
+        </Typography>
+
         <div className="flex items-center space-x-4">
           <button
-            onClick={() => navigate('/calendar')}
+            onClick={() => navigate("/calendar")}
             className="text-jade-600 hover:text-jade-700 text-sm font-medium transition-colors"
           >
             View Full Calendar →
@@ -87,21 +98,21 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({ userId }) =>
 
           <div className="flex rounded-lg bg-gray-100 p-1">
             <button
-              onClick={() => setViewMode('list')}
+              onClick={() => setViewMode("list")}
               className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                viewMode === 'list' 
-                  ? 'bg-white text-navy-900 shadow-sm' 
-                  : 'text-gray-600 hover:text-navy-900'
+                viewMode === "list"
+                  ? "bg-white text-navy-900 shadow-sm"
+                  : "text-gray-600 hover:text-navy-900"
               }`}
             >
               List
             </button>
             <button
-              onClick={() => setViewMode('calendar')}
+              onClick={() => setViewMode("calendar")}
               className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                viewMode === 'calendar' 
-                  ? 'bg-white text-navy-900 shadow-sm' 
-                  : 'text-gray-600 hover:text-navy-900'
+                viewMode === "calendar"
+                  ? "bg-white text-navy-900 shadow-sm"
+                  : "text-gray-600 hover:text-navy-900"
               }`}
             >
               Calendar
@@ -112,7 +123,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({ userId }) =>
 
       {/* Content */}
       <div className="flex-1 overflow-hidden">
-        {viewMode === 'list' ? (
+        {viewMode === "list" ? (
           /* List View */
           <div className="p-6 overflow-y-auto">
             <div className="space-y-4">
@@ -136,21 +147,26 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({ userId }) =>
                     {/* Event Icon */}
                     <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
                       <span className="text-lg">
-                        {event.type === 'game' && '🏈'}
-                        {event.type === 'practice' && '⚡'}
-                        {event.type === 'meeting' && '👥'}
-                        {event.type === 'film' && '🎬'}
-                        {event.type === 'other' && '📋'}
+                        {event.type === "game" && "🏈"}
+                        {event.type === "practice" && "⚡"}
+                        {event.type === "meeting" && "👥"}
+                        {event.type === "film" && "🎬"}
+                        {event.type === "other" && "📋"}
                       </span>
                     </div>
 
                     {/* Event Details */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
-                        <Typography variant="headline-sm" className="text-navy-900 font-semibold truncate">
+                        <Typography
+                          variant="headline-sm"
+                          className="text-navy-900 font-semibold truncate"
+                        >
                           {event.title}
                         </Typography>
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${getEventTypeBadge(event.type)}`}>
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${getEventTypeBadge(event.type)}`}
+                        >
                           {event.type}
                         </span>
                         {event.is_home && (
@@ -159,11 +175,11 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({ userId }) =>
                           </span>
                         )}
                       </div>
-                      
+
                       <div className="flex items-center space-x-4 text-sm text-gray-600">
                         <span className="flex items-center">
                           <span className="w-4 h-4 mr-1">📅</span>
-                          {format(new Date(event.start), 'MMM d, yyyy')}
+                          {format(new Date(event.start), "MMM d, yyyy")}
                         </span>
                         <span className="flex items-center">
                           <span className="w-4 h-4 mr-1">⏰</span>
@@ -186,7 +202,10 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({ userId }) =>
                       )}
 
                       {event.opponent && (
-                        <Typography variant="caption" className="text-gray-600 mt-1 block">
+                        <Typography
+                          variant="caption"
+                          className="text-gray-600 mt-1 block"
+                        >
                           vs. {event.opponent}
                         </Typography>
                       )}
@@ -244,7 +263,9 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({ userId }) =>
 
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
-                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${getEventTypeBadge(selectedEvent.type)}`}>
+                  <span
+                    className={`px-2 py-1 text-xs font-medium rounded-full ${getEventTypeBadge(selectedEvent.type)}`}
+                  >
                     {selectedEvent.type}
                   </span>
                   {selectedEvent.is_home && (
@@ -257,7 +278,10 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({ userId }) =>
                 <div className="text-sm text-gray-600 space-y-1">
                   <div className="flex items-center">
                     <span className="w-4 h-4 mr-2">📅</span>
-                    {format(new Date(selectedEvent.start), 'EEEE, MMMM d, yyyy')}
+                    {format(
+                      new Date(selectedEvent.start),
+                      "EEEE, MMMM d, yyyy"
+                    )}
                   </div>
                   <div className="flex items-center">
                     <span className="w-4 h-4 mr-2">⏰</span>
@@ -293,7 +317,10 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({ userId }) =>
 
                 {selectedEvent.rsvp_required && (
                   <div className="pt-3 border-t border-gray-200">
-                    <Typography variant="caption" className="text-gray-600 block mb-2">
+                    <Typography
+                      variant="caption"
+                      className="text-gray-600 block mb-2"
+                    >
                       RSVP Required
                     </Typography>
                     <div className="flex space-x-2">

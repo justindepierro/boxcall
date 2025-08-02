@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { useIsAuthenticated, useAuthLoading } from "../app/auth-store";
+import { useAuthLoading, useIsAuthenticated } from "../app/auth-store";
 import { Layout } from "../components/layout/Layout";
 
 interface ProtectedRouteProps {
@@ -11,10 +11,10 @@ interface ProtectedRouteProps {
 
 /**
  * ProtectedRoute Component
- * 
+ *
  * Handles route protection based on authentication status.
  * Redirects unauthenticated users to login and preserves intended destination.
- * 
+ *
  * @param children - The component(s) to render if access is granted
  * @param requireAuth - Whether authentication is required (default: true)
  * @param redirectTo - Where to redirect if access is denied (default: '/login')

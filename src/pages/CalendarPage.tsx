@@ -1,24 +1,27 @@
-import React, { useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useAuth } from '../app/auth-store';
-import { useCalendar } from '../hooks/useCalendar';
-import { CalendarService } from '../services/calendarService';
-import { BoxCallCalendar } from '../components/calendar/BoxCallCalendar';
-import type { BoxCallCalendarRef } from '../components/calendar/BoxCallCalendar';
-import { Typography } from '../components/design-system';
-import { Card, Button, Input } from '../components/ui';
-import type { CalendarEvent, CalendarFilters } from '../services/calendarService';
-import '../components/calendar/BoxCallCalendar.css';
+import React, { useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useAuth } from "../app/auth-store";
+import type { BoxCallCalendarRef } from "../components/calendar/BoxCallCalendar";
+import { BoxCallCalendar } from "../components/calendar/BoxCallCalendar";
+import "../components/calendar/BoxCallCalendar.css";
+import { Typography } from "../components/design-system";
+import { Button, Card, Input } from "../components/ui";
+import { useCalendar } from "../hooks/useCalendar";
+import type {
+  CalendarEvent,
+  CalendarFilters,
+} from "../services/calendarService";
+import { CalendarService } from "../services/calendarService";
 
 interface CalendarPageState {
   userTeamsFilter?: string[];
   teamFilter?: string;
-  defaultView?: 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay';
+  defaultView?: "dayGridMonth" | "timeGridWeek" | "timeGridDay";
 }
 
 /**
  * Master Calendar Page - Comprehensive calendar management interface
- * 
+ *
  * Features:
  * - Full FullCalendar integration
  * - Universal search across all calendars
@@ -26,7 +29,7 @@ interface CalendarPageState {
  * - Event creation and management
  * - Cross-team event aggregation
  * - Export capabilities
- * 
+ *
  * Referenced by:
  * - PersonalCalendar.tsx (View Full Calendar)
  * - TeamCalendar.tsx (View Team Calendar)
@@ -41,32 +44,43 @@ export const CalendarPage: React.FC = () => {
   const state = location.state as CalendarPageState;
 
   // State management
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
+    null
+  );
+  const [searchQuery, setSearchQuery] = useState("");
   const [showEventModal, setShowEventModal] = useState(false);
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
-  const [currentView, setCurrentView] = useState(state?.defaultView || 'dayGridMonth');
+  const [currentView, setCurrentView] = useState(
+    state?.defaultView || "dayGridMonth"
+  );
   const [filters, setFilters] = useState<CalendarFilters>({
-    teamIds: state?.teamFilter ? [state.teamFilter] : state?.userTeamsFilter || [],
+    teamIds: state?.teamFilter
+      ? [state.teamFilter]
+      : state?.userTeamsFilter || [],
     eventTypes: [],
     dateRange: {
-      start: new Date().toISOString().split('T')[0],
-      end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-    }
+      start: new Date().toISOString().split("T")[0],
+      end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
+    },
   });
 
   // Use calendar hook with filters
-  const { events, loading, error } = useCalendar(user?.id || '');
+  const { events, loading, error } = useCalendar(user?.id || "");
 
   // Handle search
   const handleSearch = async () => {
     if (searchQuery.trim()) {
       try {
-        const searchResults = await CalendarService.searchEvents(searchQuery, filters);
+        const searchResults = await CalendarService.searchEvents(
+          searchQuery,
+          filters
+        );
         // TODO: Update events with search results
-        console.log('Search results:', searchResults);
+        console.log("Search results:", searchResults);
       } catch (error) {
-        console.error('Search failed:', error);
+        console.error("Search failed:", error);
       }
     }
   };
@@ -78,15 +92,18 @@ export const CalendarPage: React.FC = () => {
   };
 
   // Handle date selection for creating events
-  const handleDateSelect = (selectInfo: { startStr: string; endStr: string }) => {
-    if (profile?.role === 'coach' || profile?.role === 'admin') {
+  const handleDateSelect = (selectInfo: {
+    startStr: string;
+    endStr: string;
+  }) => {
+    if (profile?.role === "coach" || profile?.role === "admin") {
       setIsCreatingEvent(true);
       setSelectedEvent({
-        id: '',
-        title: '',
+        id: "",
+        title: "",
         start: selectInfo.startStr,
         end: selectInfo.endStr,
-        type: 'practice',
+        type: "practice",
         created_at: new Date().toISOString(),
       } as CalendarEvent);
       setShowEventModal(true);
@@ -94,24 +111,26 @@ export const CalendarPage: React.FC = () => {
   };
 
   // Handle view change
-  const handleViewChange = (view: 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay') => {
+  const handleViewChange = (
+    view: "dayGridMonth" | "timeGridWeek" | "timeGridDay"
+  ) => {
     setCurrentView(view);
     calendarRef.current?.changeView(view);
   };
 
   // Handle filter changes
   const handleFilterChange = (newFilters: Partial<CalendarFilters>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
+    setFilters((prev) => ({ ...prev, ...newFilters }));
   };
 
   // Export calendar functionality
   const handleExportCalendar = async () => {
     try {
       // TODO: Implement calendar export
-      console.log('Exporting calendar with events:', events);
-      alert('Calendar export functionality coming soon!');
+      console.log("Exporting calendar with events:", events);
+      alert("Calendar export functionality coming soon!");
     } catch (error) {
-      console.error('Export failed:', error);
+      console.error("Export failed:", error);
     }
   };
 
@@ -153,29 +172,32 @@ export const CalendarPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <Typography variant="headline-xl" className="text-gray-900 dark:text-white">
+              <Typography
+                variant="headline-xl"
+                className="text-gray-900 dark:text-white"
+              >
                 📅 Master Calendar
               </Typography>
               <Typography variant="body-lg" color="muted" className="mt-1">
                 Your comprehensive schedule across all teams
               </Typography>
             </div>
-            
+
             {/* Action Buttons */}
             <div className="flex items-center space-x-3">
               <Button variant="outline" onClick={handleExportCalendar}>
                 📤 Export
               </Button>
-              {(profile?.role === 'coach' || profile?.role === 'admin') && (
-                <Button 
-                  variant="primary" 
+              {(profile?.role === "coach" || profile?.role === "admin") && (
+                <Button
+                  variant="primary"
                   onClick={() => {
                     setIsCreatingEvent(true);
                     setSelectedEvent({
-                      id: '',
-                      title: '',
+                      id: "",
+                      title: "",
                       start: new Date().toISOString(),
-                      type: 'practice',
+                      type: "practice",
                       created_at: new Date().toISOString(),
                     } as CalendarEvent);
                     setShowEventModal(true);
@@ -195,7 +217,10 @@ export const CalendarPage: React.FC = () => {
           <div className="lg:col-span-1 space-y-6">
             {/* Universal Search */}
             <Card className="p-6">
-              <Typography variant="headline-md" className="mb-4 text-gray-900 dark:text-white">
+              <Typography
+                variant="headline-md"
+                className="mb-4 text-gray-900 dark:text-white"
+              >
                 🔍 Universal Search
               </Typography>
               <div className="space-y-3">
@@ -204,9 +229,14 @@ export const CalendarPage: React.FC = () => {
                   placeholder="Search events, teams, locations..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                 />
-                <Button variant="primary" size="sm" onClick={handleSearch} className="w-full">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handleSearch}
+                  className="w-full"
+                >
                   Search
                 </Button>
               </div>
@@ -214,80 +244,105 @@ export const CalendarPage: React.FC = () => {
 
             {/* Advanced Filters */}
             <Card className="p-6">
-              <Typography variant="headline-md" className="mb-4 text-gray-900 dark:text-white">
+              <Typography
+                variant="headline-md"
+                className="mb-4 text-gray-900 dark:text-white"
+              >
                 🎯 Filters
               </Typography>
               <div className="space-y-4">
                 {/* Event Type Filter */}
                 <div>
-                  <Typography variant="body-sm" className="font-semibold mb-2">Event Types</Typography>
+                  <Typography variant="body-sm" className="font-semibold mb-2">
+                    Event Types
+                  </Typography>
                   <div className="space-y-2">
-                    {['game', 'practice', 'meeting', 'film', 'other'].map((type) => (
-                      <label key={type} className="flex items-center">
-                        <input
-                          type="checkbox"
-                          className="rounded border-gray-300 text-jade-600 focus:ring-jade-500"
-                          checked={filters.eventTypes?.includes(type) || false}
-                          onChange={(e) => {
-                            const newTypes = e.target.checked
-                              ? [...(filters.eventTypes || []), type]
-                              : (filters.eventTypes || []).filter((t: string) => t !== type);
-                            handleFilterChange({ eventTypes: newTypes });
-                          }}
-                        />
-                        <span className="ml-2 text-sm capitalize">{type}</span>
-                      </label>
-                    ))}
+                    {["game", "practice", "meeting", "film", "other"].map(
+                      (type) => (
+                        <label key={type} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            className="rounded border-gray-300 text-jade-600 focus:ring-jade-500"
+                            checked={
+                              filters.eventTypes?.includes(type) || false
+                            }
+                            onChange={(e) => {
+                              const newTypes = e.target.checked
+                                ? [...(filters.eventTypes || []), type]
+                                : (filters.eventTypes || []).filter(
+                                    (t: string) => t !== type
+                                  );
+                              handleFilterChange({ eventTypes: newTypes });
+                            }}
+                          />
+                          <span className="ml-2 text-sm capitalize">
+                            {type}
+                          </span>
+                        </label>
+                      )
+                    )}
                   </div>
                 </div>
 
                 {/* Date Range Filter */}
                 <div>
-                  <Typography variant="body-sm" className="font-semibold mb-2">Date Range</Typography>
+                  <Typography variant="body-sm" className="font-semibold mb-2">
+                    Date Range
+                  </Typography>
                   <div className="space-y-2">
                     <Input
                       type="date"
-                      value={filters.dateRange?.start || ''}
-                      onChange={(e) => handleFilterChange({
-                        dateRange: { 
-                          start: e.target.value, 
-                          end: filters.dateRange?.end || e.target.value 
-                        }
-                      })}
+                      value={filters.dateRange?.start || ""}
+                      onChange={(e) =>
+                        handleFilterChange({
+                          dateRange: {
+                            start: e.target.value,
+                            end: filters.dateRange?.end || e.target.value,
+                          },
+                        })
+                      }
                     />
                     <Input
                       type="date"
-                      value={filters.dateRange?.end || ''}
-                      onChange={(e) => handleFilterChange({
-                        dateRange: { 
-                          start: filters.dateRange?.start || e.target.value, 
-                          end: e.target.value 
-                        }
-                      })}
+                      value={filters.dateRange?.end || ""}
+                      onChange={(e) =>
+                        handleFilterChange({
+                          dateRange: {
+                            start: filters.dateRange?.start || e.target.value,
+                            end: e.target.value,
+                          },
+                        })
+                      }
                     />
                   </div>
                 </div>
 
                 {/* Quick Filters */}
                 <div>
-                  <Typography variant="body-sm" className="font-semibold mb-2">Quick Filters</Typography>
+                  <Typography variant="body-sm" className="font-semibold mb-2">
+                    Quick Filters
+                  </Typography>
                   <div className="grid grid-cols-2 gap-2">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
-                      onClick={() => handleFilterChange({ eventTypes: ['game'] })}
+                      onClick={() =>
+                        handleFilterChange({ eventTypes: ["game"] })
+                      }
                     >
                       Games Only
                     </Button>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
-                      onClick={() => handleFilterChange({ eventTypes: ['practice'] })}
+                      onClick={() =>
+                        handleFilterChange({ eventTypes: ["practice"] })
+                      }
                     >
                       Practices
                     </Button>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => handleFilterChange({ eventTypes: [] })}
                     >
@@ -300,7 +355,10 @@ export const CalendarPage: React.FC = () => {
 
             {/* Calendar Stats */}
             <Card className="p-6">
-              <Typography variant="headline-md" className="mb-4 text-gray-900 dark:text-white">
+              <Typography
+                variant="headline-md"
+                className="mb-4 text-gray-900 dark:text-white"
+              >
                 📊 Stats
               </Typography>
               <div className="space-y-3">
@@ -311,24 +369,28 @@ export const CalendarPage: React.FC = () => {
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">This Month</span>
                   <span className="font-semibold">
-                    {events.filter(e => {
-                      const eventDate = new Date(e.start);
-                      const now = new Date();
-                      return eventDate.getMonth() === now.getMonth() && 
-                             eventDate.getFullYear() === now.getFullYear();
-                    }).length}
+                    {
+                      events.filter((e) => {
+                        const eventDate = new Date(e.start);
+                        const now = new Date();
+                        return (
+                          eventDate.getMonth() === now.getMonth() &&
+                          eventDate.getFullYear() === now.getFullYear()
+                        );
+                      }).length
+                    }
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">Games</span>
                   <span className="font-semibold">
-                    {events.filter(e => e.type === 'game').length}
+                    {events.filter((e) => e.type === "game").length}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">Practices</span>
                   <span className="font-semibold">
-                    {events.filter(e => e.type === 'practice').length}
+                    {events.filter((e) => e.type === "practice").length}
                   </span>
                 </div>
               </div>
@@ -341,13 +403,25 @@ export const CalendarPage: React.FC = () => {
               {/* Calendar Header Controls */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-4">
-                  <Button variant="outline" size="sm" onClick={() => calendarRef.current?.today()}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => calendarRef.current?.today()}
+                  >
                     Today
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => calendarRef.current?.prev()}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => calendarRef.current?.prev()}
+                  >
                     ‹ Prev
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => calendarRef.current?.next()}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => calendarRef.current?.next()}
+                  >
                     Next ›
                   </Button>
                 </div>
@@ -355,31 +429,31 @@ export const CalendarPage: React.FC = () => {
                 {/* View Switcher */}
                 <div className="flex rounded-lg bg-gray-100 p-1">
                   <button
-                    onClick={() => handleViewChange('dayGridMonth')}
+                    onClick={() => handleViewChange("dayGridMonth")}
                     className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                      currentView === 'dayGridMonth'
-                        ? 'bg-white text-navy-900 shadow-sm'
-                        : 'text-gray-600 hover:text-navy-900'
+                      currentView === "dayGridMonth"
+                        ? "bg-white text-navy-900 shadow-sm"
+                        : "text-gray-600 hover:text-navy-900"
                     }`}
                   >
                     Month
                   </button>
                   <button
-                    onClick={() => handleViewChange('timeGridWeek')}
+                    onClick={() => handleViewChange("timeGridWeek")}
                     className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                      currentView === 'timeGridWeek'
-                        ? 'bg-white text-navy-900 shadow-sm'
-                        : 'text-gray-600 hover:text-navy-900'
+                      currentView === "timeGridWeek"
+                        ? "bg-white text-navy-900 shadow-sm"
+                        : "text-gray-600 hover:text-navy-900"
                     }`}
                   >
                     Week
                   </button>
                   <button
-                    onClick={() => handleViewChange('timeGridDay')}
+                    onClick={() => handleViewChange("timeGridDay")}
                     className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                      currentView === 'timeGridDay'
-                        ? 'bg-white text-navy-900 shadow-sm'
-                        : 'text-gray-600 hover:text-navy-900'
+                      currentView === "timeGridDay"
+                        ? "bg-white text-navy-900 shadow-sm"
+                        : "text-gray-600 hover:text-navy-900"
                     }`}
                   >
                     Day
@@ -394,8 +468,12 @@ export const CalendarPage: React.FC = () => {
                   events={events}
                   onEventClick={handleEventClick}
                   onDateSelect={handleDateSelect}
-                  editable={profile?.role === 'coach' || profile?.role === 'admin'}
-                  selectable={profile?.role === 'coach' || profile?.role === 'admin'}
+                  editable={
+                    profile?.role === "coach" || profile?.role === "admin"
+                  }
+                  selectable={
+                    profile?.role === "coach" || profile?.role === "admin"
+                  }
                   height="100%"
                   initialView={currentView}
                   className="h-full"
@@ -413,7 +491,7 @@ export const CalendarPage: React.FC = () => {
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <Typography variant="headline-md" className="text-navy-900">
-                  {isCreatingEvent ? '➕ Create Event' : '📅 Event Details'}
+                  {isCreatingEvent ? "➕ Create Event" : "📅 Event Details"}
                 </Typography>
                 <button
                   onClick={() => {
@@ -433,31 +511,53 @@ export const CalendarPage: React.FC = () => {
                   <Input
                     label="Event Title"
                     value={selectedEvent.title}
-                    onChange={(e) => setSelectedEvent({...selectedEvent, title: e.target.value})}
+                    onChange={(e) =>
+                      setSelectedEvent({
+                        ...selectedEvent,
+                        title: e.target.value,
+                      })
+                    }
                     placeholder="Practice, Game vs. Team Name, etc."
                   />
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <Input
                       label="Start Date"
                       type="datetime-local"
                       value={selectedEvent.start?.slice(0, 16)}
-                      onChange={(e) => setSelectedEvent({...selectedEvent, start: e.target.value})}
+                      onChange={(e) =>
+                        setSelectedEvent({
+                          ...selectedEvent,
+                          start: e.target.value,
+                        })
+                      }
                     />
                     <Input
                       label="End Date"
                       type="datetime-local"
-                      value={selectedEvent.end?.slice(0, 16) || ''}
-                      onChange={(e) => setSelectedEvent({...selectedEvent, end: e.target.value})}
+                      value={selectedEvent.end?.slice(0, 16) || ""}
+                      onChange={(e) =>
+                        setSelectedEvent({
+                          ...selectedEvent,
+                          end: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Event Type</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Event Type
+                      </label>
                       <select
                         value={selectedEvent.type}
-                        onChange={(e) => setSelectedEvent({...selectedEvent, type: e.target.value as CalendarEvent['type']})}
+                        onChange={(e) =>
+                          setSelectedEvent({
+                            ...selectedEvent,
+                            type: e.target.value as CalendarEvent["type"],
+                          })
+                        }
                         className="w-full border border-gray-300 rounded-md px-3 py-2"
                       >
                         <option value="practice">Practice</option>
@@ -469,17 +569,29 @@ export const CalendarPage: React.FC = () => {
                     </div>
                     <Input
                       label="Location"
-                      value={selectedEvent.location || ''}
-                      onChange={(e) => setSelectedEvent({...selectedEvent, location: e.target.value})}
+                      value={selectedEvent.location || ""}
+                      onChange={(e) =>
+                        setSelectedEvent({
+                          ...selectedEvent,
+                          location: e.target.value,
+                        })
+                      }
                       placeholder="Field, Stadium, etc."
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Description
+                    </label>
                     <textarea
-                      value={selectedEvent.description || ''}
-                      onChange={(e) => setSelectedEvent({...selectedEvent, description: e.target.value})}
+                      value={selectedEvent.description || ""}
+                      onChange={(e) =>
+                        setSelectedEvent({
+                          ...selectedEvent,
+                          description: e.target.value,
+                        })
+                      }
                       placeholder="Event details, notes, etc."
                       rows={3}
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
@@ -487,8 +599,8 @@ export const CalendarPage: React.FC = () => {
                   </div>
 
                   <div className="flex space-x-3 pt-4">
-                    <Button 
-                      variant="primary" 
+                    <Button
+                      variant="primary"
                       onClick={async () => {
                         try {
                           await CalendarService.createEvent({
@@ -504,14 +616,14 @@ export const CalendarPage: React.FC = () => {
                           // Refresh events
                           window.location.reload();
                         } catch (error) {
-                          console.error('Failed to create event:', error);
+                          console.error("Failed to create event:", error);
                         }
                       }}
                     >
                       Create Event
                     </Button>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       onClick={() => {
                         setShowEventModal(false);
                         setIsCreatingEvent(false);
@@ -525,13 +637,19 @@ export const CalendarPage: React.FC = () => {
                 /* Event Display */
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2">
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      selectedEvent.type === 'game' ? 'bg-red-100 text-red-800' :
-                      selectedEvent.type === 'practice' ? 'bg-blue-100 text-blue-800' :
-                      selectedEvent.type === 'meeting' ? 'bg-amber-100 text-amber-800' :
-                      selectedEvent.type === 'film' ? 'bg-purple-100 text-purple-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 text-xs font-medium rounded-full ${
+                        selectedEvent.type === "game"
+                          ? "bg-red-100 text-red-800"
+                          : selectedEvent.type === "practice"
+                            ? "bg-blue-100 text-blue-800"
+                            : selectedEvent.type === "meeting"
+                              ? "bg-amber-100 text-amber-800"
+                              : selectedEvent.type === "film"
+                                ? "bg-purple-100 text-purple-800"
+                                : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
                       {selectedEvent.type}
                     </span>
                     {selectedEvent.is_home && (
@@ -544,24 +662,37 @@ export const CalendarPage: React.FC = () => {
                   <div className="space-y-2 text-sm text-gray-600">
                     <div className="flex items-center">
                       <span className="w-4 h-4 mr-2">📅</span>
-                      {new Date(selectedEvent.start).toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
+                      {new Date(selectedEvent.start).toLocaleDateString(
+                        "en-US",
+                        {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
                     </div>
                     <div className="flex items-center">
                       <span className="w-4 h-4 mr-2">⏰</span>
-                      {new Date(selectedEvent.start).toLocaleTimeString('en-US', {
-                        hour: 'numeric',
-                        minute: '2-digit'
-                      })}
+                      {new Date(selectedEvent.start).toLocaleTimeString(
+                        "en-US",
+                        {
+                          hour: "numeric",
+                          minute: "2-digit",
+                        }
+                      )}
                       {selectedEvent.end && (
-                        <> - {new Date(selectedEvent.end).toLocaleTimeString('en-US', {
-                          hour: 'numeric',
-                          minute: '2-digit'
-                        })}</>
+                        <>
+                          {" "}
+                          -{" "}
+                          {new Date(selectedEvent.end).toLocaleTimeString(
+                            "en-US",
+                            {
+                              hour: "numeric",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </>
                       )}
                     </div>
                     {selectedEvent.location && (

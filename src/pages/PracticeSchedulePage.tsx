@@ -1,20 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { format } from 'date-fns';
-import { Typography } from '../components/design-system/Typography';
-import { Button } from '../components/ui/Button/Button';
-import Input from '../components/ui/Input/Input';
-import Card from '../components/ui/Card/Card';
-import { Modal } from '../components/ui/Modal/Modal';
-import { usePracticeSchedule, usePracticeBlocks, usePracticeTemplates, usePracticeTimer } from '../hooks/usePractice';
-import { PRACTICE_BLOCK_TYPES, QUICK_TIME_INTERVALS } from '../types/practice';
-import type { PracticeBlock, CreatePracticeBlockData, DragDropResult, PracticeTemplate } from '../types/practice';
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { format } from "date-fns";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Typography } from "../components/design-system/Typography";
+import { Button } from "../components/ui/Button/Button";
+import Card from "../components/ui/Card/Card";
+import Input from "../components/ui/Input/Input";
+import { Modal } from "../components/ui/Modal/Modal";
+import {
+  usePracticeBlocks,
+  usePracticeSchedule,
+  usePracticeTemplates,
+  usePracticeTimer,
+} from "../hooks/usePractice";
+import type {
+  CreatePracticeBlockData,
+  DragDropResult,
+  PracticeBlock,
+  PracticeTemplate,
+} from "../types/practice";
+import { PRACTICE_BLOCK_TYPES, QUICK_TIME_INTERVALS } from "../types/practice";
 
 export function PracticeSchedulePage() {
   const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
-  const [selectedScheduleId, setSelectedScheduleId] = useState<string>('');
+  const [selectedScheduleId, setSelectedScheduleId] = useState<string>("");
   const [isCreateBlockModalOpen, setIsCreateBlockModalOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [currentBlocks, setCurrentBlocks] = useState<PracticeBlock[]>([]);
@@ -22,10 +32,12 @@ export function PracticeSchedulePage() {
   const [lockedSchedule, setLockedSchedule] = useState(false);
 
   // Hooks
-  const { schedules, loading } = usePracticeSchedule(teamId || '');
-  const { addBlock, reorderBlocks, deleteBlock } = usePracticeBlocks(selectedScheduleId);
-  const { templates } = usePracticeTemplates(teamId || '');
-  const { startTimer, stopTimer, getTimeRemaining, formatTime } = usePracticeTimer();
+  const { schedules, loading } = usePracticeSchedule(teamId || "");
+  const { addBlock, reorderBlocks, deleteBlock } =
+    usePracticeBlocks(selectedScheduleId);
+  const { templates } = usePracticeTemplates(teamId || "");
+  const { startTimer, stopTimer, getTimeRemaining, formatTime } =
+    usePracticeTimer();
 
   // Select the first schedule if available
   useEffect(() => {
@@ -37,7 +49,7 @@ export function PracticeSchedulePage() {
 
   // Update blocks when schedule changes
   useEffect(() => {
-    const selectedSchedule = schedules.find(s => s.id === selectedScheduleId);
+    const selectedSchedule = schedules.find((s) => s.id === selectedScheduleId);
     if (selectedSchedule) {
       setCurrentBlocks(selectedSchedule.blocks);
     }
@@ -58,34 +70,37 @@ export function PracticeSchedulePage() {
     } catch (err) {
       // Revert on error
       setCurrentBlocks(currentBlocks);
-      console.error('Failed to reorder blocks:', err);
+      console.error("Failed to reorder blocks:", err);
     }
   };
 
-  const handleQuickAddBlock = async (blockType: keyof typeof PRACTICE_BLOCK_TYPES, duration?: number) => {
+  const handleQuickAddBlock = async (
+    blockType: keyof typeof PRACTICE_BLOCK_TYPES,
+    duration?: number
+  ) => {
     const blockConfig = PRACTICE_BLOCK_TYPES[blockType];
     const blockData: CreatePracticeBlockData = {
       title: blockConfig.title,
       duration: duration || blockConfig.defaultDuration,
-      description: `${blockConfig.title} - ${duration || blockConfig.defaultDuration} minutes`
+      description: `${blockConfig.title} - ${duration || blockConfig.defaultDuration} minutes`,
     };
 
     try {
       const newBlock = await addBlock(blockData);
-      setCurrentBlocks(prev => [...prev, newBlock]);
+      setCurrentBlocks((prev) => [...prev, newBlock]);
     } catch (err) {
-      console.error('Failed to add block:', err);
+      console.error("Failed to add block:", err);
     }
   };
 
   const handleDeleteBlock = async (blockId: string) => {
     if (lockedSchedule) return;
-    
+
     try {
       await deleteBlock(blockId);
-      setCurrentBlocks(prev => prev.filter(block => block.id !== blockId));
+      setCurrentBlocks((prev) => prev.filter((block) => block.id !== blockId));
     } catch (error) {
-      console.error('Failed to delete block:', error);
+      console.error("Failed to delete block:", error);
     }
   };
 
@@ -104,12 +119,14 @@ export function PracticeSchedulePage() {
     setLockedSchedule(false);
   };
 
-  const selectedSchedule = schedules.find(s => s.id === selectedScheduleId);
+  const selectedSchedule = schedules.find((s) => s.id === selectedScheduleId);
 
   if (!teamId) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Typography variant="body-lg" className="text-gray-600">Team not found</Typography>
+        <Typography variant="body-lg" className="text-gray-600">
+          Team not found
+        </Typography>
       </div>
     );
   }
@@ -136,7 +153,10 @@ export function PracticeSchedulePage() {
               >
                 ← Back to Team
               </Button>
-              <Typography variant="headline-lg" className="text-navy-900 font-display">
+              <Typography
+                variant="headline-lg"
+                className="text-navy-900 font-display"
+              >
                 Practice Schedule
               </Typography>
             </div>
@@ -144,10 +164,11 @@ export function PracticeSchedulePage() {
             <div className="flex items-center space-x-4">
               {selectedSchedule && (
                 <div className="text-sm text-gray-600">
-                  {format(selectedSchedule.date, 'MMM d, yyyy')} • {selectedSchedule.location}
+                  {format(selectedSchedule.date, "MMM d, yyyy")} •{" "}
+                  {selectedSchedule.location}
                 </div>
               )}
-              
+
               {practiceStarted && (
                 <div className="flex items-center space-x-2 px-3 py-1 bg-jade-100 text-jade-800 rounded-md">
                   <div className="w-2 h-2 bg-jade-600 rounded-full animate-pulse"></div>
@@ -189,7 +210,7 @@ export function PracticeSchedulePage() {
                         >
                           ⏹️ End Practice
                         </Button>
-                        
+
                         {lockedSchedule && (
                           <Button
                             onClick={handleUnlockSchedule}
@@ -213,18 +234,25 @@ export function PracticeSchedulePage() {
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                         className={`space-y-3 min-h-[200px] p-4 rounded-lg border-2 border-dashed transition-colors ${
-                          snapshot.isDraggingOver 
-                            ? 'border-jade-400 bg-jade-50' 
-                            : 'border-gray-300 bg-gray-50'
+                          snapshot.isDraggingOver
+                            ? "border-jade-400 bg-jade-50"
+                            : "border-gray-300 bg-gray-50"
                         }`}
                       >
                         {currentBlocks.length === 0 ? (
                           <div className="text-center py-8">
-                            <Typography variant="body-lg" className="text-gray-500 mb-4">
+                            <Typography
+                              variant="body-lg"
+                              className="text-gray-500 mb-4"
+                            >
                               No practice blocks yet
                             </Typography>
-                            <Typography variant="body-sm" className="text-gray-400">
-                              Add blocks using the quick actions or create custom blocks
+                            <Typography
+                              variant="body-sm"
+                              className="text-gray-400"
+                            >
+                              Add blocks using the quick actions or create
+                              custom blocks
                             </Typography>
                           </div>
                         ) : (
@@ -240,47 +268,62 @@ export function PracticeSchedulePage() {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   className={`bg-white border rounded-lg p-4 shadow-sm transition-shadow ${
-                                    snapshot.isDragging ? 'shadow-lg' : 'hover:shadow-md'
-                                  } ${lockedSchedule ? 'opacity-75' : ''}`}
+                                    snapshot.isDragging
+                                      ? "shadow-lg"
+                                      : "hover:shadow-md"
+                                  } ${lockedSchedule ? "opacity-75" : ""}`}
                                 >
                                   <div className="flex items-center justify-between">
                                     <div className="flex items-center space-x-4">
                                       <div
                                         {...provided.dragHandleProps}
                                         className={`cursor-grab active:cursor-grabbing p-1 rounded ${
-                                          lockedSchedule ? 'cursor-not-allowed opacity-50' : ''
+                                          lockedSchedule
+                                            ? "cursor-not-allowed opacity-50"
+                                            : ""
                                         }`}
                                       >
                                         ⋮⋮
                                       </div>
-                                      
+
                                       <div className="flex-1">
                                         <div className="flex items-center space-x-3">
-                                          <Typography variant="body-lg" className="font-semibold text-navy-900">
+                                          <Typography
+                                            variant="body-lg"
+                                            className="font-semibold text-navy-900"
+                                          >
                                             {block.title}
                                           </Typography>
-                                          
+
                                           {block.isLocked && (
-                                            <span className="text-amber-500 text-sm">🔒</span>
+                                            <span className="text-amber-500 text-sm">
+                                              🔒
+                                            </span>
                                           )}
-                                          
+
                                           <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-mono">
                                             {block.duration}min
                                           </span>
-                                          
+
                                           {practiceStarted && (
                                             <span className="px-2 py-1 bg-jade-100 text-jade-800 rounded text-sm font-mono">
-                                              {formatTime(getTimeRemaining(block.endTime))} left
+                                              {formatTime(
+                                                getTimeRemaining(block.endTime)
+                                              )}{" "}
+                                              left
                                             </span>
                                           )}
                                         </div>
-                                        
+
                                         {block.description && (
-                                          <Typography variant="body-sm" className="text-gray-600 mt-1">
+                                          <Typography
+                                            variant="body-sm"
+                                            className="text-gray-600 mt-1"
+                                          >
                                             {block.description}
                                           </Typography>
                                         )}
-                                        
+
                                         {block.practiceScriptId && (
                                           <div className="mt-2">
                                             <Button
@@ -306,11 +349,13 @@ export function PracticeSchedulePage() {
                                       >
                                         ✏️
                                       </Button>
-                                      
+
                                       <Button
                                         variant="ghost"
                                         size="sm"
-                                        onClick={() => handleDeleteBlock(block.id)}
+                                        onClick={() =>
+                                          handleDeleteBlock(block.id)
+                                        }
                                         disabled={lockedSchedule}
                                         className="text-red-600 hover:text-red-700 hover:bg-red-50"
                                       >
@@ -338,33 +383,48 @@ export function PracticeSchedulePage() {
               {/* Quick Time Intervals */}
               <Card>
                 <div className="p-4">
-                  <Typography variant="headline-sm" className="text-navy-900 mb-4">
+                  <Typography
+                    variant="headline-sm"
+                    className="text-navy-900 mb-4"
+                  >
                     Quick Add Blocks
                   </Typography>
-                  
+
                   <div className="space-y-3">
-                    {Object.entries(PRACTICE_BLOCK_TYPES).map(([key, config]) => (
-                      <div key={key} className="space-y-2">
-                        <Typography variant="body-sm" className="font-medium text-gray-700">
-                          {config.title}
-                        </Typography>
-                        
-                        <div className="flex flex-wrap gap-1">
-                          {Object.values(QUICK_TIME_INTERVALS).map(interval => (
-                            <Button
-                              key={interval.duration}
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleQuickAddBlock(key as keyof typeof PRACTICE_BLOCK_TYPES, interval.duration)}
-                              disabled={lockedSchedule}
-                              className="text-xs"
-                            >
-                              {interval.label}
-                            </Button>
-                          ))}
+                    {Object.entries(PRACTICE_BLOCK_TYPES).map(
+                      ([key, config]) => (
+                        <div key={key} className="space-y-2">
+                          <Typography
+                            variant="body-sm"
+                            className="font-medium text-gray-700"
+                          >
+                            {config.title}
+                          </Typography>
+
+                          <div className="flex flex-wrap gap-1">
+                            {Object.values(QUICK_TIME_INTERVALS).map(
+                              (interval) => (
+                                <Button
+                                  key={interval.duration}
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() =>
+                                    handleQuickAddBlock(
+                                      key as keyof typeof PRACTICE_BLOCK_TYPES,
+                                      interval.duration
+                                    )
+                                  }
+                                  disabled={lockedSchedule}
+                                  className="text-xs"
+                                >
+                                  {interval.label}
+                                </Button>
+                              )
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      )
+                    )}
                   </div>
                 </div>
               </Card>
@@ -372,10 +432,13 @@ export function PracticeSchedulePage() {
               {/* Custom Block */}
               <Card>
                 <div className="p-4">
-                  <Typography variant="headline-sm" className="text-navy-900 mb-4">
+                  <Typography
+                    variant="headline-sm"
+                    className="text-navy-900 mb-4"
+                  >
                     Custom Block
                   </Typography>
-                  
+
                   <Button
                     onClick={() => setIsCreateBlockModalOpen(true)}
                     className="w-full bg-jade-600 hover:bg-jade-700 text-white"
@@ -389,12 +452,15 @@ export function PracticeSchedulePage() {
               {/* Templates */}
               <Card>
                 <div className="p-4">
-                  <Typography variant="headline-sm" className="text-navy-900 mb-4">
+                  <Typography
+                    variant="headline-sm"
+                    className="text-navy-900 mb-4"
+                  >
                     Practice Templates
                   </Typography>
-                  
+
                   <div className="space-y-2">
-                    {templates.slice(0, 3).map(template => (
+                    {templates.slice(0, 3).map((template) => (
                       <Button
                         key={template.id}
                         variant="outline"
@@ -405,7 +471,7 @@ export function PracticeSchedulePage() {
                         📋 {template.name}
                       </Button>
                     ))}
-                    
+
                     <Button
                       variant="ghost"
                       size="sm"
@@ -422,37 +488,57 @@ export function PracticeSchedulePage() {
               {selectedSchedule && (
                 <Card>
                   <div className="p-4">
-                    <Typography variant="headline-sm" className="text-navy-900 mb-4">
+                    <Typography
+                      variant="headline-sm"
+                      className="text-navy-900 mb-4"
+                    >
                       Practice Info
                     </Typography>
-                    
+
                     <div className="space-y-3 text-sm">
                       <div>
                         <span className="font-medium text-gray-700">Date:</span>
-                        <span className="ml-2">{format(selectedSchedule.date, 'MMM d, yyyy')}</span>
+                        <span className="ml-2">
+                          {format(selectedSchedule.date, "MMM d, yyyy")}
+                        </span>
                       </div>
-                      
+
                       <div>
                         <span className="font-medium text-gray-700">Time:</span>
                         <span className="ml-2">
-                          {format(selectedSchedule.startTime, 'h:mm a')} - {format(selectedSchedule.endTime, 'h:mm a')}
+                          {format(selectedSchedule.startTime, "h:mm a")} -{" "}
+                          {format(selectedSchedule.endTime, "h:mm a")}
                         </span>
                       </div>
-                      
+
                       <div>
-                        <span className="font-medium text-gray-700">Location:</span>
-                        <span className="ml-2">{selectedSchedule.location}</span>
+                        <span className="font-medium text-gray-700">
+                          Location:
+                        </span>
+                        <span className="ml-2">
+                          {selectedSchedule.location}
+                        </span>
                       </div>
-                      
+
                       <div>
-                        <span className="font-medium text-gray-700">Field:</span>
-                        <span className="ml-2 capitalize">{selectedSchedule.fieldType}</span>
+                        <span className="font-medium text-gray-700">
+                          Field:
+                        </span>
+                        <span className="ml-2 capitalize">
+                          {selectedSchedule.fieldType}
+                        </span>
                       </div>
-                      
+
                       <div>
-                        <span className="font-medium text-gray-700">Total Duration:</span>
+                        <span className="font-medium text-gray-700">
+                          Total Duration:
+                        </span>
                         <span className="ml-2 font-mono">
-                          {currentBlocks.reduce((total, block) => total + block.duration, 0)} min
+                          {currentBlocks.reduce(
+                            (total, block) => total + block.duration,
+                            0
+                          )}{" "}
+                          min
                         </span>
                       </div>
                     </div>
@@ -469,7 +555,7 @@ export function PracticeSchedulePage() {
         isOpen={isCreateBlockModalOpen}
         onClose={() => setIsCreateBlockModalOpen(false)}
         onSave={async (blockData) => {
-          await handleQuickAddBlock('CUSTOM', blockData.duration);
+          await handleQuickAddBlock("CUSTOM", blockData.duration);
           setIsCreateBlockModalOpen(false);
         }}
       />
@@ -496,22 +582,22 @@ interface CreateBlockModalProps {
 }
 
 function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [duration, setDuration] = useState(15);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     await onSave({
       title,
       description,
-      duration
+      duration,
     });
-    
+
     // Reset form
-    setTitle('');
-    setDescription('');
+    setTitle("");
+    setDescription("");
     setDuration(15);
   };
 
@@ -521,7 +607,7 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
         <Typography variant="headline-md" className="text-navy-900 mb-6">
           Create Custom Practice Block
         </Typography>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -535,7 +621,7 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
               required
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Description
@@ -548,7 +634,7 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
               rows={3}
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Duration (minutes)
@@ -562,12 +648,15 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
               required
             />
           </div>
-          
+
           <div className="flex justify-end space-x-3 pt-4">
             <Button variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" className="bg-jade-600 hover:bg-jade-700 text-white">
+            <Button
+              type="submit"
+              className="bg-jade-600 hover:bg-jade-700 text-white"
+            >
               Create Block
             </Button>
           </div>
@@ -585,17 +674,25 @@ interface TemplatesModalProps {
   onSelectTemplate: (templateId: string) => Promise<void>;
 }
 
-function TemplatesModal({ isOpen, onClose, templates, onSelectTemplate }: TemplatesModalProps) {
+function TemplatesModal({
+  isOpen,
+  onClose,
+  templates,
+  onSelectTemplate,
+}: TemplatesModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-6">
         <Typography variant="headline-md" className="text-navy-900 mb-6">
           Practice Templates
         </Typography>
-        
+
         <div className="space-y-3">
-          {templates.map(template => (
-            <div key={template.id} className="border rounded-lg p-4 hover:bg-gray-50">
+          {templates.map((template) => (
+            <div
+              key={template.id}
+              className="border rounded-lg p-4 hover:bg-gray-50"
+            >
               <div className="flex items-center justify-between">
                 <div>
                   <Typography variant="body-lg" className="font-medium">
@@ -605,7 +702,7 @@ function TemplatesModal({ isOpen, onClose, templates, onSelectTemplate }: Templa
                     {template.duration} min • {template.blocks.length} blocks
                   </Typography>
                 </div>
-                
+
                 <Button
                   size="sm"
                   onClick={() => onSelectTemplate(template.id)}
@@ -617,7 +714,7 @@ function TemplatesModal({ isOpen, onClose, templates, onSelectTemplate }: Templa
             </div>
           ))}
         </div>
-        
+
         <div className="flex justify-end pt-4">
           <Button variant="outline" onClick={onClose}>
             Close

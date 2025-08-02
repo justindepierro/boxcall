@@ -16,8 +16,8 @@ export interface ApiResponse<T> {
 export interface ExternalProvider {
   id: string;
   name: string;
-  type: 'calendar' | 'conferencing' | 'productivity' | 'crm';
-  status: 'connected' | 'disconnected' | 'error' | 'pending';
+  type: "calendar" | "conferencing" | "productivity" | "crm";
+  status: "connected" | "disconnected" | "error" | "pending";
   config: ProviderConfig;
   lastSync?: Date;
   syncInterval?: number;
@@ -38,13 +38,13 @@ export interface IntegrationMapping {
   providerId: string;
   fieldMappings: Record<string, string>;
   transformRules: TransformRule[];
-  syncDirection: 'bidirectional' | 'inbound' | 'outbound';
-  conflictResolution: 'provider-wins' | 'boxcall-wins' | 'manual';
+  syncDirection: "bidirectional" | "inbound" | "outbound";
+  conflictResolution: "provider-wins" | "boxcall-wins" | "manual";
 }
 
 export interface TransformRule {
   field: string;
-  type: 'format' | 'filter' | 'calculate' | 'lookup';
+  type: "format" | "filter" | "calculate" | "lookup";
   rule: string;
   parameters?: Record<string, unknown>;
 }
@@ -52,8 +52,8 @@ export interface TransformRule {
 export interface SyncOperation {
   id: string;
   providerId: string;
-  type: 'full' | 'incremental' | 'realtime';
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  type: "full" | "incremental" | "realtime";
+  status: "pending" | "running" | "completed" | "failed";
   startTime: Date;
   endTime?: Date;
   recordsProcessed: number;
@@ -64,7 +64,7 @@ export interface SyncOperation {
 
 export interface SyncError {
   recordId?: string;
-  errorType: 'auth' | 'validation' | 'transform' | 'conflict' | 'network';
+  errorType: "auth" | "validation" | "transform" | "conflict" | "network";
   message: string;
   details?: Record<string, unknown>;
 }
@@ -99,12 +99,12 @@ export class ExternalIntegrationService {
    * Register a new external provider
    */
   static async registerProvider(
-    provider: Omit<ExternalProvider, 'status' | 'lastSync'>
+    provider: Omit<ExternalProvider, "status" | "lastSync">
   ): Promise<ApiResponse<ExternalProvider>> {
     try {
       const fullProvider: ExternalProvider = {
         ...provider,
-        status: 'pending'
+        status: "pending",
       };
 
       // Validate provider configuration
@@ -113,13 +113,13 @@ export class ExternalIntegrationService {
         return {
           success: false,
           error: `Provider validation failed: ${validation.error}`,
-          data: null
+          data: null,
         };
       }
 
       // Test connection
       const connectionTest = await this.testProviderConnection();
-      fullProvider.status = connectionTest.success ? 'connected' : 'error';
+      fullProvider.status = connectionTest.success ? "connected" : "error";
 
       this.providers.set(provider.id, fullProvider);
 
@@ -128,14 +128,14 @@ export class ExternalIntegrationService {
         data: fullProvider,
         metadata: {
           providerId: provider.id,
-          connectionStatus: fullProvider.status
-        }
+          connectionStatus: fullProvider.status,
+        },
       };
     } catch (error) {
       return {
         success: false,
         error: `Failed to register provider: ${error}`,
-        data: null
+        data: null,
       };
     }
   }
@@ -153,12 +153,12 @@ export class ExternalIntegrationService {
         return {
           success: false,
           error: `Provider ${providerId} not found`,
-          data: null
+          data: null,
         };
       }
 
       const updatedProvider = { ...provider, ...updates };
-      
+
       // Re-validate if config changed
       if (updates.config) {
         const validation = await this.validateProviderConfig(updatedProvider);
@@ -166,7 +166,7 @@ export class ExternalIntegrationService {
           return {
             success: false,
             error: `Provider validation failed: ${validation.error}`,
-            data: null
+            data: null,
           };
         }
       }
@@ -178,14 +178,14 @@ export class ExternalIntegrationService {
         data: updatedProvider,
         metadata: {
           providerId,
-          fieldsUpdated: Object.keys(updates)
-        }
+          fieldsUpdated: Object.keys(updates),
+        },
       };
     } catch (error) {
       return {
         success: false,
         error: `Failed to update provider: ${error}`,
-        data: null
+        data: null,
       };
     }
   }
@@ -193,14 +193,16 @@ export class ExternalIntegrationService {
   /**
    * Remove a provider and all its mappings
    */
-  static async removeProvider(providerId: string): Promise<ApiResponse<boolean>> {
+  static async removeProvider(
+    providerId: string
+  ): Promise<ApiResponse<boolean>> {
     try {
       const provider = this.providers.get(providerId);
       if (!provider) {
         return {
           success: false,
           error: `Provider ${providerId} not found`,
-          data: null
+          data: null,
         };
       }
 
@@ -226,14 +228,14 @@ export class ExternalIntegrationService {
         data: true,
         metadata: {
           providerId,
-          removedMappings: Array.from(this.mappings.keys()).length
-        }
+          removedMappings: Array.from(this.mappings.keys()).length,
+        },
       };
     } catch (error) {
       return {
         success: false,
         error: `Failed to remove provider: ${error}`,
-        data: null
+        data: null,
       };
     }
   }
@@ -244,20 +246,21 @@ export class ExternalIntegrationService {
   static async getProviders(): Promise<ApiResponse<ExternalProvider[]>> {
     try {
       const providers = Array.from(this.providers.values());
-      
+
       return {
         success: true,
         data: providers,
         metadata: {
           totalProviders: providers.length,
-          activeProviders: providers.filter(p => p.status === 'connected').length
-        }
+          activeProviders: providers.filter((p) => p.status === "connected")
+            .length,
+        },
       };
     } catch (error) {
       return {
         success: false,
         error: `Failed to get providers: ${error}`,
-        data: null
+        data: null,
       };
     }
   }
@@ -271,7 +274,7 @@ export class ExternalIntegrationService {
    */
   static async startSync(
     providerId: string,
-    type: 'full' | 'incremental' | 'realtime' = 'incremental'
+    type: "full" | "incremental" | "realtime" = "incremental"
   ): Promise<ApiResponse<SyncOperation>> {
     try {
       const provider = this.providers.get(providerId);
@@ -279,15 +282,15 @@ export class ExternalIntegrationService {
         return {
           success: false,
           error: `Provider ${providerId} not found`,
-          data: null
+          data: null,
         };
       }
 
-      if (provider.status !== 'connected') {
+      if (provider.status !== "connected") {
         return {
           success: false,
           error: `Provider ${providerId} is not connected`,
-          data: null
+          data: null,
         };
       }
 
@@ -296,25 +299,25 @@ export class ExternalIntegrationService {
         id: syncId,
         providerId,
         type,
-        status: 'pending',
+        status: "pending",
         startTime: new Date(),
         recordsProcessed: 0,
         recordsSucceeded: 0,
         recordsFailed: 0,
-        errors: []
+        errors: [],
       };
 
       this.activeSyncs.set(syncId, syncOperation);
 
       // Start the sync process asynchronously
-      this.performSync(syncOperation).catch(error => {
+      this.performSync(syncOperation).catch((error) => {
         console.error(`Sync ${syncId} failed:`, error);
-        syncOperation.status = 'failed';
+        syncOperation.status = "failed";
         syncOperation.endTime = new Date();
         syncOperation.errors.push({
-          errorType: 'network',
+          errorType: "network",
           message: `Sync failed: ${error}`,
-          details: { error: error.toString() }
+          details: { error: error.toString() },
         });
       });
 
@@ -324,14 +327,14 @@ export class ExternalIntegrationService {
         metadata: {
           syncId,
           providerId,
-          syncType: type
-        }
+          syncType: type,
+        },
       };
     } catch (error) {
       return {
         success: false,
         error: `Failed to start sync: ${error}`,
-        data: null
+        data: null,
       };
     }
   }
@@ -339,14 +342,16 @@ export class ExternalIntegrationService {
   /**
    * Get sync operation status
    */
-  static async getSyncStatus(syncId: string): Promise<ApiResponse<SyncOperation>> {
+  static async getSyncStatus(
+    syncId: string
+  ): Promise<ApiResponse<SyncOperation>> {
     try {
       const syncOp = this.activeSyncs.get(syncId);
       if (!syncOp) {
         return {
           success: false,
           error: `Sync operation ${syncId} not found`,
-          data: null
+          data: null,
         };
       }
 
@@ -356,16 +361,16 @@ export class ExternalIntegrationService {
         metadata: {
           syncId,
           providerId: syncOp.providerId,
-          duration: syncOp.endTime 
+          duration: syncOp.endTime
             ? syncOp.endTime.getTime() - syncOp.startTime.getTime()
-            : Date.now() - syncOp.startTime.getTime()
-        }
+            : Date.now() - syncOp.startTime.getTime(),
+        },
       };
     } catch (error) {
       return {
         success: false,
         error: `Failed to get sync status: ${error}`,
-        data: null
+        data: null,
       };
     }
   }
@@ -380,24 +385,24 @@ export class ExternalIntegrationService {
         return {
           success: false,
           error: `Sync operation ${syncId} not found`,
-          data: null
+          data: null,
         };
       }
 
-      if (syncOp.status === 'completed' || syncOp.status === 'failed') {
+      if (syncOp.status === "completed" || syncOp.status === "failed") {
         return {
           success: false,
           error: `Sync operation ${syncId} is already ${syncOp.status}`,
-          data: null
+          data: null,
         };
       }
 
-      syncOp.status = 'failed';
+      syncOp.status = "failed";
       syncOp.endTime = new Date();
       syncOp.errors.push({
-        errorType: 'network',
-        message: 'Sync operation was cancelled',
-        details: { reason: 'user_cancelled' }
+        errorType: "network",
+        message: "Sync operation was cancelled",
+        details: { reason: "user_cancelled" },
       });
 
       return {
@@ -406,14 +411,14 @@ export class ExternalIntegrationService {
         metadata: {
           syncId,
           providerId: syncOp.providerId,
-          cancelledAt: syncOp.endTime
-        }
+          cancelledAt: syncOp.endTime,
+        },
       };
     } catch (error) {
       return {
         success: false,
         error: `Failed to cancel sync: ${error}`,
-        data: null
+        data: null,
       };
     }
   }
@@ -427,7 +432,7 @@ export class ExternalIntegrationService {
    */
   static async setMapping(
     providerId: string,
-    mapping: Omit<IntegrationMapping, 'providerId'>
+    mapping: Omit<IntegrationMapping, "providerId">
   ): Promise<ApiResponse<IntegrationMapping>> {
     try {
       const provider = this.providers.get(providerId);
@@ -435,13 +440,13 @@ export class ExternalIntegrationService {
         return {
           success: false,
           error: `Provider ${providerId} not found`,
-          data: null
+          data: null,
         };
       }
 
       const fullMapping: IntegrationMapping = {
         ...mapping,
-        providerId
+        providerId,
       };
 
       const mappingId = `mapping_${providerId}`;
@@ -453,14 +458,14 @@ export class ExternalIntegrationService {
         metadata: {
           mappingId,
           providerId,
-          fieldsCount: Object.keys(mapping.fieldMappings).length
-        }
+          fieldsCount: Object.keys(mapping.fieldMappings).length,
+        },
       };
     } catch (error) {
       return {
         success: false,
         error: `Failed to set mapping: ${error}`,
-        data: null
+        data: null,
       };
     }
   }
@@ -472,27 +477,31 @@ export class ExternalIntegrationService {
     try {
       const providers = Array.from(this.providers.values());
       const syncs = Array.from(this.activeSyncs.values());
-      
-      const completedSyncs = syncs.filter(s => s.status === 'completed');
-      const successRate = syncs.length > 0 
-        ? (completedSyncs.length / syncs.length) * 100 
-        : 0;
 
-      const lastSyncTime = syncs.length > 0
-        ? new Date(Math.max(...syncs.map(s => s.startTime.getTime())))
-        : undefined;
+      const completedSyncs = syncs.filter((s) => s.status === "completed");
+      const successRate =
+        syncs.length > 0 ? (completedSyncs.length / syncs.length) * 100 : 0;
+
+      const lastSyncTime =
+        syncs.length > 0
+          ? new Date(Math.max(...syncs.map((s) => s.startTime.getTime())))
+          : undefined;
 
       const stats: IntegrationStats = {
         totalProviders: providers.length,
-        activeProviders: providers.filter(p => p.status === 'connected').length,
+        activeProviders: providers.filter((p) => p.status === "connected")
+          .length,
         totalSyncs: syncs.length,
         successRate,
         lastSyncTime,
         dataVolume: {
-          events: completedSyncs.reduce((sum, s) => sum + s.recordsSucceeded, 0),
+          events: completedSyncs.reduce(
+            (sum, s) => sum + s.recordsSucceeded,
+            0
+          ),
           contacts: 0, // TODO: Implement contact sync
-          organizations: 0 // TODO: Implement organization sync
-        }
+          organizations: 0, // TODO: Implement organization sync
+        },
       };
 
       return {
@@ -500,15 +509,15 @@ export class ExternalIntegrationService {
         data: stats,
         metadata: {
           calculatedAt: new Date(),
-          syncsPending: syncs.filter(s => s.status === 'pending').length,
-          syncsRunning: syncs.filter(s => s.status === 'running').length
-        }
+          syncsPending: syncs.filter((s) => s.status === "pending").length,
+          syncsRunning: syncs.filter((s) => s.status === "running").length,
+        },
       };
     } catch (error) {
       return {
         success: false,
         error: `Failed to get integration stats: ${error}`,
-        data: null
+        data: null,
       };
     }
   }
@@ -523,25 +532,34 @@ export class ExternalIntegrationService {
     try {
       // Basic validation
       if (!provider.id || !provider.name || !provider.type) {
-        return { success: false, error: 'Missing required provider fields' };
+        return { success: false, error: "Missing required provider fields" };
       }
 
       // Type-specific validation
       switch (provider.type) {
-        case 'calendar':
+        case "calendar":
           if (!provider.config.apiKey && !provider.config.accessToken) {
-            return { success: false, error: 'Calendar providers require API key or access token' };
+            return {
+              success: false,
+              error: "Calendar providers require API key or access token",
+            };
           }
           break;
-        case 'conferencing':
+        case "conferencing":
           if (!provider.config.clientId || !provider.config.clientSecret) {
-            return { success: false, error: 'Conferencing providers require client credentials' };
+            return {
+              success: false,
+              error: "Conferencing providers require client credentials",
+            };
           }
           break;
         default:
           // Basic config check for other types
           if (!provider.config.apiKey && !provider.config.accessToken) {
-            return { success: false, error: 'Provider requires authentication credentials' };
+            return {
+              success: false,
+              error: "Provider requires authentication credentials",
+            };
           }
       }
 
@@ -551,17 +569,20 @@ export class ExternalIntegrationService {
     }
   }
 
-  private static async testProviderConnection(): Promise<{ success: boolean; error?: string }> {
+  private static async testProviderConnection(): Promise<{
+    success: boolean;
+    error?: string;
+  }> {
     try {
       // TODO: Implement actual connection testing based on provider type
       // For now, simulate connection test
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       // Simulate 90% success rate for testing
       const isSuccessful = Math.random() > 0.1;
-      
+
       if (!isSuccessful) {
-        return { success: false, error: 'Connection test failed' };
+        return { success: false, error: "Connection test failed" };
       }
 
       return { success: true };
@@ -570,10 +591,12 @@ export class ExternalIntegrationService {
     }
   }
 
-  private static async performSync(syncOperation: SyncOperation): Promise<void> {
+  private static async performSync(
+    syncOperation: SyncOperation
+  ): Promise<void> {
     try {
-      syncOperation.status = 'running';
-      
+      syncOperation.status = "running";
+
       const provider = this.providers.get(syncOperation.providerId);
       if (!provider) {
         throw new Error(`Provider ${syncOperation.providerId} not found`);
@@ -582,13 +605,13 @@ export class ExternalIntegrationService {
       // TODO: Implement actual sync logic based on provider type
       // For now, simulate sync process
       const recordsToSync = Math.floor(Math.random() * 100) + 1;
-      
+
       for (let i = 0; i < recordsToSync; i++) {
         // Simulate processing each record
-        await new Promise(resolve => setTimeout(resolve, 10));
-        
+        await new Promise((resolve) => setTimeout(resolve, 10));
+
         syncOperation.recordsProcessed++;
-        
+
         // Simulate 95% success rate
         if (Math.random() > 0.05) {
           syncOperation.recordsSucceeded++;
@@ -596,26 +619,25 @@ export class ExternalIntegrationService {
           syncOperation.recordsFailed++;
           syncOperation.errors.push({
             recordId: `record_${i}`,
-            errorType: 'validation',
-            message: 'Simulated validation error',
-            details: { recordIndex: i }
+            errorType: "validation",
+            message: "Simulated validation error",
+            details: { recordIndex: i },
           });
         }
       }
 
-      syncOperation.status = 'completed';
+      syncOperation.status = "completed";
       syncOperation.endTime = new Date();
-      
+
       // Update provider last sync time
       provider.lastSync = new Date();
-      
     } catch (error) {
-      syncOperation.status = 'failed';
+      syncOperation.status = "failed";
       syncOperation.endTime = new Date();
       syncOperation.errors.push({
-        errorType: 'network',
+        errorType: "network",
         message: `Sync failed: ${error}`,
-        details: { error: String(error) }
+        details: { error: String(error) },
       });
     }
   }

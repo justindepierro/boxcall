@@ -5,7 +5,7 @@ Professional button component with multiple variants, sizes, and states for the 
 ## Design System Integration
 
 - **Primary Color**: Jade Green (#00A86B) for primary actions
-- **Secondary Color**: Navy Blue (#1E3A8A) for secondary actions  
+- **Secondary Color**: Navy Blue (#1E3A8A) for secondary actions
 - **Typography**: Inter font family with precise sizing
 - **Motion**: Square motion language with confident animations
 - **Football Context**: Designed for coaching and team management interfaces

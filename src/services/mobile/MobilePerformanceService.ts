@@ -2,8 +2,8 @@
 // PHASE 4.2: MOBILE OPTIMIZATION - MOBILE PERFORMANCE SERVICE
 // ============================================================================
 
-import { MobileCalendarService } from './MobileCalendarService';
-import { MobileUIService } from './MobileUIService';
+import { MobileCalendarService } from "./MobileCalendarService";
+import { MobileUIService } from "./MobileUIService";
 
 // ============================================================================
 // MOBILE PERFORMANCE TYPES
@@ -12,18 +12,18 @@ import { MobileUIService } from './MobileUIService';
 export interface PerformanceMetric {
   name: string;
   value: number;
-  unit: 'ms' | 'fps' | 'mb' | 'percent' | 'score';
+  unit: "ms" | "fps" | "mb" | "percent" | "score";
   threshold: {
     good: number;
     fair: number;
     poor: number;
   };
-  status: 'good' | 'fair' | 'poor';
+  status: "good" | "fair" | "poor";
   timestamp: Date;
 }
 
 export interface BatteryOptimization {
-  strategy: 'aggressive' | 'balanced' | 'performance';
+  strategy: "aggressive" | "balanced" | "performance";
   actions: BatteryAction[];
   estimatedSavings: number; // percentage
   currentLevel: number; // percentage
@@ -31,9 +31,14 @@ export interface BatteryOptimization {
 }
 
 export interface BatteryAction {
-  type: 'reduce-refresh-rate' | 'disable-animations' | 'reduce-sync' | 'dim-display' | 'background-processing';
+  type:
+    | "reduce-refresh-rate"
+    | "disable-animations"
+    | "reduce-sync"
+    | "dim-display"
+    | "background-processing";
   description: string;
-  impact: 'low' | 'medium' | 'high';
+  impact: "low" | "medium" | "high";
   enabled: boolean;
 }
 
@@ -47,14 +52,14 @@ export interface MemoryOptimization {
 }
 
 export interface MemoryWarning {
-  type: 'high-usage' | 'memory-leak' | 'cache-overflow' | 'background-tasks';
-  severity: 'info' | 'warning' | 'critical';
+  type: "high-usage" | "memory-leak" | "cache-overflow" | "background-tasks";
+  severity: "info" | "warning" | "critical";
   message: string;
   recommendation: string;
 }
 
 export interface MemoryAction {
-  type: 'clear-cache' | 'compress-images' | 'limit-history' | 'reduce-quality';
+  type: "clear-cache" | "compress-images" | "limit-history" | "reduce-quality";
   description: string;
   memoryFreed: number; // MB
   executed: boolean;
@@ -72,8 +77,8 @@ export interface NetworkOptimization {
     requestBatching: boolean;
     imageLazyLoading: boolean;
   };
-  connectionType: 'wifi' | 'cellular' | '5g' | '4g' | '3g' | 'offline';
-  quality: 'excellent' | 'good' | 'poor' | 'offline';
+  connectionType: "wifi" | "cellular" | "5g" | "4g" | "3g" | "offline";
+  quality: "excellent" | "good" | "poor" | "offline";
 }
 
 export interface RenderingOptimization {
@@ -86,7 +91,7 @@ export interface RenderingOptimization {
     layoutCaching: boolean;
     imageOptimization: boolean;
   };
-  quality: 'smooth' | 'acceptable' | 'choppy';
+  quality: "smooth" | "acceptable" | "choppy";
 }
 
 export interface PerformanceProfile {
@@ -94,9 +99,9 @@ export interface PerformanceProfile {
   name: string;
   description: string;
   settings: {
-    batteryOptimization: BatteryOptimization['strategy'];
-    renderingQuality: 'high' | 'balanced' | 'performance';
-    networkUsage: 'unlimited' | 'limited' | 'minimal';
+    batteryOptimization: BatteryOptimization["strategy"];
+    renderingQuality: "high" | "balanced" | "performance";
+    networkUsage: "unlimited" | "limited" | "minimal";
     backgroundProcessing: boolean;
     animations: boolean;
     hapticFeedback: boolean;
@@ -106,7 +111,7 @@ export interface PerformanceProfile {
 export interface PerformanceDashboard {
   overall: {
     score: number; // 0-100
-    status: 'excellent' | 'good' | 'fair' | 'poor';
+    status: "excellent" | "good" | "fair" | "poor";
   };
   metrics: PerformanceMetric[];
   battery: BatteryOptimization;
@@ -118,8 +123,8 @@ export interface PerformanceDashboard {
 
 export interface PerformanceRecommendation {
   id: string;
-  type: 'battery' | 'memory' | 'network' | 'rendering';
-  priority: 'low' | 'medium' | 'high' | 'critical';
+  type: "battery" | "memory" | "network" | "rendering";
+  priority: "low" | "medium" | "high" | "critical";
   title: string;
   description: string;
   action: string;
@@ -138,7 +143,7 @@ export class MobilePerformanceService {
     battery: null as BatteryOptimization | null,
     memory: null as MemoryOptimization | null,
     network: null as NetworkOptimization | null,
-    rendering: null as RenderingOptimization | null
+    rendering: null as RenderingOptimization | null,
   };
   private static monitoringInterval: number | null = null;
 
@@ -150,8 +155,12 @@ export class MobilePerformanceService {
    * Initialize performance monitoring
    */
   static async initialize(
-    profileId: 'battery-saver' | 'balanced' | 'performance' = 'balanced'
-  ): Promise<{ success: boolean; profile: PerformanceProfile; error?: string }> {
+    profileId: "battery-saver" | "balanced" | "performance" = "balanced"
+  ): Promise<{
+    success: boolean;
+    profile: PerformanceProfile;
+    error?: string;
+  }> {
     try {
       // Load performance profile
       const profile = this.getPerformanceProfile(profileId);
@@ -168,13 +177,13 @@ export class MobilePerformanceService {
 
       return {
         success: true,
-        profile
+        profile,
       };
     } catch (error) {
       return {
         success: false,
-        profile: this.getPerformanceProfile('balanced'),
-        error: `Failed to initialize performance service: ${error}`
+        profile: this.getPerformanceProfile("balanced"),
+        error: `Failed to initialize performance service: ${error}`,
       };
     }
   }
@@ -195,14 +204,14 @@ export class MobilePerformanceService {
     return {
       overall: {
         score: overallScore,
-        status: this.getPerformanceStatus(overallScore)
+        status: this.getPerformanceStatus(overallScore),
       },
       metrics: this.metrics,
       battery: this.optimizations.battery!,
       memory: this.optimizations.memory!,
       network: this.optimizations.network!,
       rendering: this.optimizations.rendering!,
-      recommendations
+      recommendations,
     };
   }
 
@@ -210,7 +219,7 @@ export class MobilePerformanceService {
    * Switch performance profile
    */
   static async switchProfile(
-    profileId: 'battery-saver' | 'balanced' | 'performance'
+    profileId: "battery-saver" | "balanced" | "performance"
   ): Promise<{ success: boolean; profile: PerformanceProfile }> {
     try {
       const newProfile = this.getPerformanceProfile(profileId);
@@ -219,12 +228,12 @@ export class MobilePerformanceService {
 
       return {
         success: true,
-        profile: newProfile
+        profile: newProfile,
       };
     } catch {
       return {
         success: false,
-        profile: this.currentProfile || this.getPerformanceProfile('balanced')
+        profile: this.currentProfile || this.getPerformanceProfile("balanced"),
       };
     }
   }
@@ -240,7 +249,10 @@ export class MobilePerformanceService {
     currentLevel: number,
     isLowPowerMode: boolean = false
   ): Promise<BatteryOptimization> {
-    const strategy = this.determineBatteryStrategy(currentLevel, isLowPowerMode);
+    const strategy = this.determineBatteryStrategy(
+      currentLevel,
+      isLowPowerMode
+    );
     const actions = this.getBatteryActions(strategy);
 
     const optimization: BatteryOptimization = {
@@ -248,12 +260,14 @@ export class MobilePerformanceService {
       actions,
       estimatedSavings: this.calculateBatterySavings(actions),
       currentLevel,
-      isLowPowerMode
+      isLowPowerMode,
     };
 
     // Apply high-impact optimizations automatically if battery is very low
     if (currentLevel < 20) {
-      await this.applyBatteryOptimizations(actions.filter(a => a.impact === 'high'));
+      await this.applyBatteryOptimizations(
+        actions.filter((a) => a.impact === "high")
+      );
     }
 
     this.optimizations.battery = optimization;
@@ -297,7 +311,10 @@ export class MobilePerformanceService {
   static async optimizeMemory(): Promise<MemoryOptimization> {
     const memoryInfo = await this.getMemoryInfo();
     const warnings = this.analyzeMemoryUsage(memoryInfo);
-    const optimizations = this.generateMemoryOptimizations(memoryInfo, warnings);
+    const optimizations = this.generateMemoryOptimizations(
+      memoryInfo,
+      warnings
+    );
 
     const optimization: MemoryOptimization = {
       totalMemory: memoryInfo.total,
@@ -305,14 +322,14 @@ export class MobilePerformanceService {
       availableMemory: memoryInfo.available,
       warnings,
       optimizations,
-      cacheSize: memoryInfo.cache
+      cacheSize: memoryInfo.cache,
     };
 
     // Auto-apply critical optimizations
-    const criticalActions = optimizations.filter(() => 
-      warnings.some(w => w.severity === 'critical')
+    const criticalActions = optimizations.filter(() =>
+      warnings.some((w) => w.severity === "critical")
     );
-    
+
     if (criticalActions.length > 0) {
       await this.applyMemoryOptimizations(criticalActions);
     }
@@ -324,7 +341,10 @@ export class MobilePerformanceService {
   /**
    * Clear various caches to free memory
    */
-  static async clearCaches(): Promise<{ freedMemory: number; clearedCaches: string[] }> {
+  static async clearCaches(): Promise<{
+    freedMemory: number;
+    clearedCaches: string[];
+  }> {
     const clearedCaches: string[] = [];
     let freedMemory = 0;
 
@@ -333,7 +353,7 @@ export class MobilePerformanceService {
       const calendarState = MobileCalendarService.getState();
       if (calendarState) {
         // TODO: Implement cache clearing in MobileCalendarService
-        clearedCaches.push('calendar');
+        clearedCaches.push("calendar");
         freedMemory += 5; // Estimated MB
       }
 
@@ -341,17 +361,16 @@ export class MobilePerformanceService {
       const uiState = MobileUIService.getCurrentTheme();
       if (uiState) {
         // TODO: Implement cache clearing in MobileUIService
-        clearedCaches.push('ui-components');
+        clearedCaches.push("ui-components");
         freedMemory += 2; // Estimated MB
       }
 
       // Clear image cache
       // TODO: Implement image cache clearing
-      clearedCaches.push('images');
+      clearedCaches.push("images");
       freedMemory += 15; // Estimated MB
-
     } catch {
-      console.error('Failed to clear some caches');
+      console.error("Failed to clear some caches");
     }
 
     return { freedMemory, clearedCaches };
@@ -365,7 +384,7 @@ export class MobilePerformanceService {
    * Optimize network usage based on connection type
    */
   static async optimizeNetwork(
-    connectionType: NetworkOptimization['connectionType']
+    connectionType: NetworkOptimization["connectionType"]
   ): Promise<NetworkOptimization> {
     const usage = await this.getNetworkUsage();
     const optimization = this.getNetworkOptimization(connectionType);
@@ -374,11 +393,11 @@ export class MobilePerformanceService {
       usage,
       optimization,
       connectionType,
-      quality: this.determineNetworkQuality(connectionType)
+      quality: this.determineNetworkQuality(connectionType),
     };
 
     // Apply optimizations based on connection type
-    if (connectionType === '3g' || connectionType === 'cellular') {
+    if (connectionType === "3g" || connectionType === "cellular") {
       await this.applyDataSavingMode();
     }
 
@@ -402,7 +421,7 @@ export class MobilePerformanceService {
       virtualization: frameRate < 45,
       lazyRendering: renderTime > 16,
       layoutCaching: droppedFrames > 5,
-      imageOptimization: true
+      imageOptimization: true,
     };
 
     const renderingOpt: RenderingOptimization = {
@@ -410,11 +429,11 @@ export class MobilePerformanceService {
       renderTime,
       droppedFrames,
       optimizations,
-      quality: this.determineRenderingQuality(frameRate, renderTime)
+      quality: this.determineRenderingQuality(frameRate, renderTime),
     };
 
     // Auto-apply optimizations if performance is poor
-    if (renderingOpt.quality === 'choppy') {
+    if (renderingOpt.quality === "choppy") {
       await this.applyRenderingOptimizations(optimizations);
     }
 
@@ -438,21 +457,27 @@ export class MobilePerformanceService {
     const optimizations: string[] = [];
 
     // Battery optimization
-    if (this.optimizations.battery?.currentLevel && this.optimizations.battery.currentLevel < 50) {
+    if (
+      this.optimizations.battery?.currentLevel &&
+      this.optimizations.battery.currentLevel < 50
+    ) {
       await this.optimizeBattery(this.optimizations.battery.currentLevel);
-      optimizations.push('Battery optimization applied');
+      optimizations.push("Battery optimization applied");
     }
 
     // Memory optimization
     const memoryOpt = await this.optimizeMemory();
-    if (memoryOpt.warnings.some(w => w.severity === 'warning')) {
-      optimizations.push('Memory optimization applied');
+    if (memoryOpt.warnings.some((w) => w.severity === "warning")) {
+      optimizations.push("Memory optimization applied");
     }
 
     // Rendering optimization
     const renderingOpt = await this.optimizeRendering();
-    if (renderingOpt.quality === 'choppy' || renderingOpt.quality === 'acceptable') {
-      optimizations.push('Rendering optimization applied');
+    if (
+      renderingOpt.quality === "choppy" ||
+      renderingOpt.quality === "acceptable"
+    ) {
+      optimizations.push("Rendering optimization applied");
     }
 
     const afterScore = this.calculateOverallScore();
@@ -463,7 +488,7 @@ export class MobilePerformanceService {
     return {
       optimizations,
       improvementScore: improvement,
-      recommendations
+      recommendations,
     };
   }
 
@@ -473,54 +498,56 @@ export class MobilePerformanceService {
 
   private static getPerformanceProfile(id: string): PerformanceProfile {
     const profiles: Record<string, PerformanceProfile> = {
-      'battery-saver': {
-        id: 'battery-saver',
-        name: 'Battery Saver',
-        description: 'Maximize battery life with reduced performance',
+      "battery-saver": {
+        id: "battery-saver",
+        name: "Battery Saver",
+        description: "Maximize battery life with reduced performance",
         settings: {
-          batteryOptimization: 'aggressive',
-          renderingQuality: 'performance',
-          networkUsage: 'minimal',
+          batteryOptimization: "aggressive",
+          renderingQuality: "performance",
+          networkUsage: "minimal",
           backgroundProcessing: false,
           animations: false,
-          hapticFeedback: false
-        }
+          hapticFeedback: false,
+        },
       },
-      'balanced': {
-        id: 'balanced',
-        name: 'Balanced',
-        description: 'Balance performance and battery life',
+      balanced: {
+        id: "balanced",
+        name: "Balanced",
+        description: "Balance performance and battery life",
         settings: {
-          batteryOptimization: 'balanced',
-          renderingQuality: 'balanced',
-          networkUsage: 'limited',
+          batteryOptimization: "balanced",
+          renderingQuality: "balanced",
+          networkUsage: "limited",
           backgroundProcessing: true,
           animations: true,
-          hapticFeedback: true
-        }
+          hapticFeedback: true,
+        },
       },
-      'performance': {
-        id: 'performance',
-        name: 'Performance',
-        description: 'Maximum performance and features',
+      performance: {
+        id: "performance",
+        name: "Performance",
+        description: "Maximum performance and features",
         settings: {
-          batteryOptimization: 'performance',
-          renderingQuality: 'high',
-          networkUsage: 'unlimited',
+          batteryOptimization: "performance",
+          renderingQuality: "high",
+          networkUsage: "unlimited",
           backgroundProcessing: true,
           animations: true,
-          hapticFeedback: true
-        }
-      }
+          hapticFeedback: true,
+        },
+      },
     };
 
-    return profiles[id] || profiles['balanced'];
+    return profiles[id] || profiles["balanced"];
   }
 
-  private static async applyPerformanceProfile(profile: PerformanceProfile): Promise<void> {
+  private static async applyPerformanceProfile(
+    profile: PerformanceProfile
+  ): Promise<void> {
     // TODO: Apply profile settings to various services
     console.log(`Applying performance profile: ${profile.name}`);
-    
+
     // Apply to UI service
     if (MobileUIService.getLayoutConfig()) {
       MobileUIService.updateLayoutConfig({
@@ -528,8 +555,8 @@ export class MobilePerformanceService {
           reduceMotion: !profile.settings.animations,
           highContrast: false,
           largeText: false,
-          voiceOver: false
-        }
+          voiceOver: false,
+        },
       });
     }
   }
@@ -544,7 +571,7 @@ export class MobilePerformanceService {
   private static async initializeOptimizations(): Promise<void> {
     this.optimizations.battery = await this.optimizeBattery(100, false);
     this.optimizations.memory = await this.optimizeMemory();
-    this.optimizations.network = await this.optimizeNetwork('wifi');
+    this.optimizations.network = await this.optimizeNetwork("wifi");
     this.optimizations.rendering = await this.optimizeRendering();
   }
 
@@ -553,27 +580,49 @@ export class MobilePerformanceService {
 
     // Update frame rate metric
     const frameRate = await this.measureFrameRate();
-    this.updateMetric('frame-rate', frameRate, 'fps', { good: 55, fair: 30, poor: 0 }, timestamp);
+    this.updateMetric(
+      "frame-rate",
+      frameRate,
+      "fps",
+      { good: 55, fair: 30, poor: 0 },
+      timestamp
+    );
 
     // Update memory usage metric
     const memoryInfo = await this.getMemoryInfo();
     const memoryUsage = (memoryInfo.used / memoryInfo.total) * 100;
-    this.updateMetric('memory-usage', memoryUsage, 'percent', { good: 70, fair: 85, poor: 100 }, timestamp);
+    this.updateMetric(
+      "memory-usage",
+      memoryUsage,
+      "percent",
+      { good: 70, fair: 85, poor: 100 },
+      timestamp
+    );
 
     // Update render time metric
     const renderTime = await this.measureRenderTime();
-    this.updateMetric('render-time', renderTime, 'ms', { good: 16, fair: 33, poor: 100 }, timestamp);
+    this.updateMetric(
+      "render-time",
+      renderTime,
+      "ms",
+      { good: 16, fair: 33, poor: 100 },
+      timestamp
+    );
   }
 
   private static updateMetric(
     name: string,
     value: number,
-    unit: PerformanceMetric['unit'],
-    threshold: PerformanceMetric['threshold'],
+    unit: PerformanceMetric["unit"],
+    threshold: PerformanceMetric["threshold"],
     timestamp: Date
   ): void {
-    const status = value <= threshold.good ? 'good' : 
-                  value <= threshold.fair ? 'fair' : 'poor';
+    const status =
+      value <= threshold.good
+        ? "good"
+        : value <= threshold.fair
+          ? "fair"
+          : "poor";
 
     const metric: PerformanceMetric = {
       name,
@@ -581,11 +630,11 @@ export class MobilePerformanceService {
       unit,
       threshold,
       status,
-      timestamp
+      timestamp,
     };
 
     // Replace existing metric or add new one
-    const existingIndex = this.metrics.findIndex(m => m.name === name);
+    const existingIndex = this.metrics.findIndex((m) => m.name === name);
     if (existingIndex !== -1) {
       this.metrics[existingIndex] = metric;
     } else {
@@ -601,55 +650,76 @@ export class MobilePerformanceService {
   private static calculateOverallScore(): number {
     if (this.metrics.length === 0) return 100;
 
-    const scores = this.metrics.map(metric => {
+    const scores = this.metrics.map((metric) => {
       switch (metric.status) {
-        case 'good': return 100;
-        case 'fair': return 60;
-        case 'poor': return 20;
-        default: return 50;
+        case "good":
+          return 100;
+        case "fair":
+          return 60;
+        case "poor":
+          return 20;
+        default:
+          return 50;
       }
     });
 
-    return Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length);
+    return Math.round(
+      scores.reduce((sum, score) => sum + score, 0) / scores.length
+    );
   }
 
-  private static getPerformanceStatus(score: number): 'excellent' | 'good' | 'fair' | 'poor' {
-    if (score >= 90) return 'excellent';
-    if (score >= 70) return 'good';
-    if (score >= 50) return 'fair';
-    return 'poor';
+  private static getPerformanceStatus(
+    score: number
+  ): "excellent" | "good" | "fair" | "poor" {
+    if (score >= 90) return "excellent";
+    if (score >= 70) return "good";
+    if (score >= 50) return "fair";
+    return "poor";
   }
 
-  private static async generateRecommendations(): Promise<PerformanceRecommendation[]> {
+  private static async generateRecommendations(): Promise<
+    PerformanceRecommendation[]
+  > {
     const recommendations: PerformanceRecommendation[] = [];
 
     // Battery recommendations
-    if (this.optimizations.battery?.currentLevel && this.optimizations.battery.currentLevel < 30) {
+    if (
+      this.optimizations.battery?.currentLevel &&
+      this.optimizations.battery.currentLevel < 30
+    ) {
       recommendations.push({
-        id: 'battery-low',
-        type: 'battery',
-        priority: 'high',
-        title: 'Low Battery Detected',
-        description: 'Your battery is running low. Consider enabling battery saver mode.',
-        action: 'Enable battery saver mode',
+        id: "battery-low",
+        type: "battery",
+        priority: "high",
+        title: "Low Battery Detected",
+        description:
+          "Your battery is running low. Consider enabling battery saver mode.",
+        action: "Enable battery saver mode",
         estimatedImpact: 40,
-        autoApply: false
+        autoApply: false,
       });
     }
 
     // Memory recommendations
-    if (this.optimizations.memory?.usedMemory && this.optimizations.memory.totalMemory) {
-      const usage = (this.optimizations.memory.usedMemory / this.optimizations.memory.totalMemory) * 100;
+    if (
+      this.optimizations.memory?.usedMemory &&
+      this.optimizations.memory.totalMemory
+    ) {
+      const usage =
+        (this.optimizations.memory.usedMemory /
+          this.optimizations.memory.totalMemory) *
+        100;
       if (usage > 80) {
         recommendations.push({
-          id: 'memory-high',
-          type: 'memory',
-          priority: 'medium',
-          title: 'High Memory Usage',
-          description: 'Memory usage is above 80%. Clear caches to improve performance.',
-          action: 'Clear caches',
+          id: "memory-high",
+          type: "memory",
+          priority: "medium",
+          title: "High Memory Usage",
+          description:
+            "Memory usage is above 80%. Clear caches to improve performance.",
+          action: "Clear caches",
           estimatedImpact: 25,
-          autoApply: true
+          autoApply: true,
         });
       }
     }
@@ -660,57 +730,59 @@ export class MobilePerformanceService {
   private static determineBatteryStrategy(
     level: number,
     isLowPowerMode: boolean
-  ): BatteryOptimization['strategy'] {
-    if (isLowPowerMode || level < 20) return 'aggressive';
-    if (level < 50) return 'balanced';
-    return 'performance';
+  ): BatteryOptimization["strategy"] {
+    if (isLowPowerMode || level < 20) return "aggressive";
+    if (level < 50) return "balanced";
+    return "performance";
   }
 
-  private static getBatteryActions(strategy: BatteryOptimization['strategy']): BatteryAction[] {
+  private static getBatteryActions(
+    strategy: BatteryOptimization["strategy"]
+  ): BatteryAction[] {
     const actions: BatteryAction[] = [
       {
-        type: 'reduce-refresh-rate',
-        description: 'Reduce screen refresh rate to 30Hz',
-        impact: 'medium',
-        enabled: false
+        type: "reduce-refresh-rate",
+        description: "Reduce screen refresh rate to 30Hz",
+        impact: "medium",
+        enabled: false,
       },
       {
-        type: 'disable-animations',
-        description: 'Disable UI animations and transitions',
-        impact: 'low',
-        enabled: false
+        type: "disable-animations",
+        description: "Disable UI animations and transitions",
+        impact: "low",
+        enabled: false,
       },
       {
-        type: 'reduce-sync',
-        description: 'Reduce background sync frequency',
-        impact: 'medium',
-        enabled: false
+        type: "reduce-sync",
+        description: "Reduce background sync frequency",
+        impact: "medium",
+        enabled: false,
       },
       {
-        type: 'background-processing',
-        description: 'Limit background processing',
-        impact: 'high',
-        enabled: false
-      }
+        type: "background-processing",
+        description: "Limit background processing",
+        impact: "high",
+        enabled: false,
+      },
     ];
 
     // Filter actions based on strategy
-    if (strategy === 'aggressive') {
+    if (strategy === "aggressive") {
       return actions; // All actions available
-    } else if (strategy === 'balanced') {
-      return actions.filter(a => a.impact !== 'high');
+    } else if (strategy === "balanced") {
+      return actions.filter((a) => a.impact !== "high");
     } else {
-      return actions.filter(a => a.impact === 'low');
+      return actions.filter((a) => a.impact === "low");
     }
   }
 
   private static calculateBatterySavings(actions: BatteryAction[]): number {
     const savings = {
-      'reduce-refresh-rate': 15,
-      'disable-animations': 5,
-      'reduce-sync': 20,
-      'dim-display': 25,
-      'background-processing': 30
+      "reduce-refresh-rate": 15,
+      "disable-animations": 5,
+      "reduce-sync": 20,
+      "dim-display": 25,
+      "background-processing": 30,
     };
 
     return actions.reduce((total, action) => {
@@ -718,19 +790,21 @@ export class MobilePerformanceService {
     }, 0);
   }
 
-  private static async executeBatteryAction(action: BatteryAction): Promise<void> {
+  private static async executeBatteryAction(
+    action: BatteryAction
+  ): Promise<void> {
     // TODO: Implement actual battery optimization actions
     console.log(`Executing battery action: ${action.type}`);
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
   private static getActionSavings(action: BatteryAction): number {
     const savings = {
-      'reduce-refresh-rate': 15,
-      'disable-animations': 5,
-      'reduce-sync': 20,
-      'dim-display': 25,
-      'background-processing': 30
+      "reduce-refresh-rate": 15,
+      "disable-animations": 5,
+      "reduce-sync": 20,
+      "dim-display": 25,
+      "background-processing": 30,
     };
     return savings[action.type] || 0;
   }
@@ -746,7 +820,7 @@ export class MobilePerformanceService {
       total: 4096, // 4GB
       used: 2048, // 2GB
       available: 2048, // 2GB
-      cache: 512 // 512MB
+      cache: 512, // 512MB
     };
   }
 
@@ -761,26 +835,26 @@ export class MobilePerformanceService {
 
     if (usagePercent > 90) {
       warnings.push({
-        type: 'high-usage',
-        severity: 'critical',
-        message: 'Memory usage is critically high (>90%)',
-        recommendation: 'Close unnecessary apps and clear caches immediately'
+        type: "high-usage",
+        severity: "critical",
+        message: "Memory usage is critically high (>90%)",
+        recommendation: "Close unnecessary apps and clear caches immediately",
       });
     } else if (usagePercent > 80) {
       warnings.push({
-        type: 'high-usage',
-        severity: 'warning',
-        message: 'Memory usage is high (>80%)',
-        recommendation: 'Consider clearing caches or closing background apps'
+        type: "high-usage",
+        severity: "warning",
+        message: "Memory usage is high (>80%)",
+        recommendation: "Consider clearing caches or closing background apps",
       });
     }
 
     if (memoryInfo.cache > 1024) {
       warnings.push({
-        type: 'cache-overflow',
-        severity: 'info',
-        message: 'Cache size is large (>1GB)',
-        recommendation: 'Clear application caches to free memory'
+        type: "cache-overflow",
+        severity: "info",
+        message: "Cache size is large (>1GB)",
+        recommendation: "Clear application caches to free memory",
       });
     }
 
@@ -788,87 +862,100 @@ export class MobilePerformanceService {
   }
 
   private static generateMemoryOptimizations(
-    memoryInfo: { total: number; used: number; available: number; cache: number },
+    memoryInfo: {
+      total: number;
+      used: number;
+      available: number;
+      cache: number;
+    },
     warnings: MemoryWarning[]
   ): MemoryAction[] {
     const actions: MemoryAction[] = [];
 
-    if (warnings.some(w => w.type === 'cache-overflow')) {
+    if (warnings.some((w) => w.type === "cache-overflow")) {
       actions.push({
-        type: 'clear-cache',
-        description: 'Clear application caches',
+        type: "clear-cache",
+        description: "Clear application caches",
         memoryFreed: Math.min(memoryInfo.cache * 0.8, 512),
-        executed: false
+        executed: false,
       });
     }
 
-    if (warnings.some(w => w.severity === 'critical')) {
+    if (warnings.some((w) => w.severity === "critical")) {
       actions.push({
-        type: 'compress-images',
-        description: 'Compress cached images',
+        type: "compress-images",
+        description: "Compress cached images",
         memoryFreed: 128,
-        executed: false
+        executed: false,
       });
     }
 
     return actions;
   }
 
-  private static async applyMemoryOptimizations(optimizations: MemoryAction[]): Promise<void> {
+  private static async applyMemoryOptimizations(
+    optimizations: MemoryAction[]
+  ): Promise<void> {
     for (const optimization of optimizations) {
       try {
-        if (optimization.type === 'clear-cache') {
+        if (optimization.type === "clear-cache") {
           await this.clearCaches();
         }
         optimization.executed = true;
       } catch (error) {
-        console.error(`Failed to apply memory optimization ${optimization.type}:`, error);
+        console.error(
+          `Failed to apply memory optimization ${optimization.type}:`,
+          error
+        );
       }
     }
   }
 
-  private static async getNetworkUsage(): Promise<NetworkOptimization['usage']> {
+  private static async getNetworkUsage(): Promise<
+    NetworkOptimization["usage"]
+  > {
     // TODO: Implement actual network usage measurement
     return {
       sent: 1024 * 1024, // 1MB
       received: 5 * 1024 * 1024, // 5MB
-      requests: 150
+      requests: 150,
     };
   }
 
   private static getNetworkOptimization(
-    connectionType: NetworkOptimization['connectionType']
-  ): NetworkOptimization['optimization'] {
-    const isSlowConnection = connectionType === '3g' || connectionType === 'cellular';
-    
+    connectionType: NetworkOptimization["connectionType"]
+  ): NetworkOptimization["optimization"] {
+    const isSlowConnection =
+      connectionType === "3g" || connectionType === "cellular";
+
     return {
       compression: true,
       caching: true,
       requestBatching: isSlowConnection,
-      imageLazyLoading: isSlowConnection
+      imageLazyLoading: isSlowConnection,
     };
   }
 
   private static determineNetworkQuality(
-    connectionType: NetworkOptimization['connectionType']
-  ): NetworkOptimization['quality'] {
+    connectionType: NetworkOptimization["connectionType"]
+  ): NetworkOptimization["quality"] {
     switch (connectionType) {
-      case 'wifi':
-      case '5g':
-        return 'excellent';
-      case '4g':
-        return 'good';
-      case '3g':
-      case 'cellular':
-        return 'poor';
+      case "wifi":
+      case "5g":
+        return "excellent";
+      case "4g":
+        return "good";
+      case "3g":
+      case "cellular":
+        return "poor";
       default:
-        return 'offline';
+        return "offline";
     }
   }
 
   private static async applyDataSavingMode(): Promise<void> {
     // TODO: Implement data saving mode
-    console.log('Applying data saving mode');
+    console.log("Applying data saving mode");
   }
 
   private static async measureFrameRate(): Promise<number> {
@@ -886,10 +973,13 @@ export class MobilePerformanceService {
     return 2;
   }
 
-  private static determineRenderingQuality(frameRate: number, renderTime: number): RenderingOptimization['quality'] {
-    if (frameRate >= 55 && renderTime <= 16) return 'smooth';
-    if (frameRate >= 30 && renderTime <= 33) return 'acceptable';
-    return 'choppy';
+  private static determineRenderingQuality(
+    frameRate: number,
+    renderTime: number
+  ): RenderingOptimization["quality"] {
+    if (frameRate >= 55 && renderTime <= 16) return "smooth";
+    if (frameRate >= 30 && renderTime <= 33) return "acceptable";
+    return "choppy";
   }
 
   private static async applyRenderingOptimizations(optimizations: {
@@ -899,7 +989,7 @@ export class MobilePerformanceService {
     imageOptimization: boolean;
   }): Promise<void> {
     // TODO: Implement rendering optimizations
-    console.log('Applying rendering optimizations:', optimizations);
+    console.log("Applying rendering optimizations:", optimizations);
   }
 
   // ==========================================
@@ -941,7 +1031,7 @@ export class MobilePerformanceService {
       battery: null,
       memory: null,
       network: null,
-      rendering: null
+      rendering: null,
     };
   }
 }

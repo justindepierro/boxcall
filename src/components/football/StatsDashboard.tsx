@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 // Football Statistics Interface
 interface PlayerStats {
@@ -58,7 +58,7 @@ const mockPlayerStats: PlayerStats[] = [
     rushingTDs: 4,
   },
   {
-    playerId: "2", 
+    playerId: "2",
     playerName: "Darius Williams",
     position: "RB",
     jerseyNumber: 23,
@@ -98,15 +98,19 @@ const StatCard: React.FC<{
   subtitle?: string;
   highlight?: boolean;
 }> = ({ title, value, subtitle, highlight = false }) => (
-  <div className={`bg-white dark:bg-gray-800 rounded-md p-4 border-2 ${
-    highlight ? 'border-jade-500' : 'border-gray-200 dark:border-gray-700'
-  }`}>
+  <div
+    className={`bg-white dark:bg-gray-800 rounded-md p-4 border-2 ${
+      highlight ? "border-jade-500" : "border-gray-200 dark:border-gray-700"
+    }`}
+  >
     <div className="text-sm font-sans font-medium text-gray-600 dark:text-gray-400 mb-1">
       {title}
     </div>
-    <div className={`text-2xl font-mono font-bold ${
-      highlight ? 'text-jade-600' : 'text-gray-900 dark:text-white'
-    }`}>
+    <div
+      className={`text-2xl font-mono font-bold ${
+        highlight ? "text-jade-600" : "text-gray-900 dark:text-white"
+      }`}
+    >
       {value}
     </div>
     {subtitle && (
@@ -119,14 +123,19 @@ const StatCard: React.FC<{
 
 const PlayerStatsRow: React.FC<{ player: PlayerStats }> = ({ player }) => {
   const getPositionColor = (position: string) => {
-    if (['QB'].includes(position)) return 'text-red-600 bg-red-50';
-    if (['RB', 'FB', 'HB'].includes(position)) return 'text-green-600 bg-green-50';
-    if (['WR', 'TE'].includes(position)) return 'text-blue-600 bg-blue-50';
-    if (['LB', 'MLB', 'OLB', 'ILB'].includes(position)) return 'text-purple-600 bg-purple-50';
-    if (['CB', 'S', 'FS', 'SS', 'DB'].includes(position)) return 'text-yellow-600 bg-yellow-50';
-    if (['DE', 'DT', 'NT', 'DL'].includes(position)) return 'text-gray-600 bg-gray-50';
-    if (['LT', 'LG', 'C', 'RG', 'RT', 'OL'].includes(position)) return 'text-navy-600 bg-navy-50';
-    return 'text-gray-600 bg-gray-50';
+    if (["QB"].includes(position)) return "text-red-600 bg-red-50";
+    if (["RB", "FB", "HB"].includes(position))
+      return "text-green-600 bg-green-50";
+    if (["WR", "TE"].includes(position)) return "text-blue-600 bg-blue-50";
+    if (["LB", "MLB", "OLB", "ILB"].includes(position))
+      return "text-purple-600 bg-purple-50";
+    if (["CB", "S", "FS", "SS", "DB"].includes(position))
+      return "text-yellow-600 bg-yellow-50";
+    if (["DE", "DT", "NT", "DL"].includes(position))
+      return "text-gray-600 bg-gray-50";
+    if (["LT", "LG", "C", "RG", "RT", "OL"].includes(position))
+      return "text-navy-600 bg-navy-50";
+    return "text-gray-600 bg-gray-50";
   };
 
   return (
@@ -140,7 +149,9 @@ const PlayerStatsRow: React.FC<{ player: PlayerStats }> = ({ player }) => {
             <div className="font-sans font-semibold text-gray-900 dark:text-white">
               {player.playerName}
             </div>
-            <div className={`inline-flex px-2 py-1 rounded-sm text-xs font-mono font-bold ${getPositionColor(player.position)}`}>
+            <div
+              className={`inline-flex px-2 py-1 rounded-sm text-xs font-mono font-bold ${getPositionColor(player.position)}`}
+            >
               {player.position}
             </div>
           </div>
@@ -150,25 +161,32 @@ const PlayerStatsRow: React.FC<{ player: PlayerStats }> = ({ player }) => {
         {player.gamesPlayed}
       </td>
       <td className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 text-center font-mono">
-        {player.passingYards || '-'}
+        {player.passingYards || "-"}
       </td>
       <td className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 text-center font-mono">
-        {player.rushingYards || '-'}
+        {player.rushingYards || "-"}
       </td>
       <td className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 text-center font-mono">
-        {player.receivingYards || '-'}
+        {player.receivingYards || "-"}
       </td>
       <td className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 text-center font-mono">
-        {player.tackles || '-'}
+        {player.tackles || "-"}
       </td>
     </tr>
   );
 };
 
 export const StatsDashboard: React.FC = () => {
-  const winPercentage = ((mockTeamStats.wins / mockTeamStats.gamesPlayed) * 100).toFixed(1);
-  const avgPointsFor = (mockTeamStats.pointsFor / mockTeamStats.gamesPlayed).toFixed(1);
-  const avgPointsAgainst = (mockTeamStats.pointsAgainst / mockTeamStats.gamesPlayed).toFixed(1);
+  const winPercentage = (
+    (mockTeamStats.wins / mockTeamStats.gamesPlayed) *
+    100
+  ).toFixed(1);
+  const avgPointsFor = (
+    mockTeamStats.pointsFor / mockTeamStats.gamesPlayed
+  ).toFixed(1);
+  const avgPointsAgainst = (
+    mockTeamStats.pointsAgainst / mockTeamStats.gamesPlayed
+  ).toFixed(1);
 
   return (
     <div className="space-y-6">
@@ -217,7 +235,7 @@ export const StatsDashboard: React.FC = () => {
             Key performance metrics by player
           </p>
         </div>
-        
+
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-700">

@@ -1,11 +1,11 @@
-import { useContext } from 'react';
-import { useAuthProfile } from './auth-store';
-import { DevModeContext } from './dev-mode-context';
+import { useContext } from "react";
+import { useAuthProfile } from "./auth-store";
+import { DevModeContext } from "./dev-mode-context";
 
 export const useDevMode = () => {
   const context = useContext(DevModeContext);
   if (!context) {
-    throw new Error('useDevMode must be used within a DevModeProvider');
+    throw new Error("useDevMode must be used within a DevModeProvider");
   }
   return context;
 };
@@ -14,13 +14,14 @@ export const useDevMode = () => {
 export const useIsSuperAdmin = () => {
   const { devMode } = useDevMode();
   const profile = useAuthProfile();
-  
+
   // Real super admin check (using 'admin' role from actual auth system)
-  const isRealSuperAdmin = profile?.role === 'admin';
-  
+  const isRealSuperAdmin = profile?.role === "admin";
+
   // Simulated super admin in dev mode
-  const isSimulatedSuperAdmin = devMode === 'super_admin_real' || devMode === 'super_admin_mock';
-  
+  const isSimulatedSuperAdmin =
+    devMode === "super_admin_real" || devMode === "super_admin_mock";
+
   return isRealSuperAdmin || isSimulatedSuperAdmin;
 };
 
@@ -33,13 +34,14 @@ export const useEffectiveTeamRole = () => {
 // Hook to determine if we should use mock data or real database data
 export const useTeamDataSource = () => {
   const { devMode, effectiveTeamData } = useDevMode();
-  
-  const shouldUseMockData = devMode === 'super_admin_mock' || devMode.startsWith('view_as_');
+
+  const shouldUseMockData =
+    devMode === "super_admin_mock" || devMode.startsWith("view_as_");
   const teamData = effectiveTeamData;
-  
+
   return {
     shouldUseMockData,
     mockTeamData: teamData,
-    dataSource: shouldUseMockData ? 'mock' : 'database' as const
+    dataSource: shouldUseMockData ? "mock" : ("database" as const),
   };
 };

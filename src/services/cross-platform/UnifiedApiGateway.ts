@@ -1,16 +1,35 @@
 /**
  * Phase 4.1: Cross-Platform Integration - Unified API Gateway
- * 
+ *
  * Central API service that provides platform-agnostic access to all BoxCall features,
  * ensuring consistent behavior across web, mobile, and external integrations.
  */
 
-import { ConflictDetectionService, type ConflictDetectionRequest, type ConflictDetectionResult } from '../phase3/ConflictDetectionService';
-import { SmartSchedulingOptimizer, type SchedulingConstraints, type TimeSuggestion } from '../phase3/SmartSchedulingOptimizer';
-import { AttendanceAnalyticsService, type AttendanceAnalytics } from '../phase3/AttendanceAnalyticsService';
-import { IntelligentCalendarService, type IntelligentCalendarRequest, type ScheduleAnalysisResult } from '../phase3/IntelligentCalendarService';
-import type { CalendarEvent, CalendarEventCreate, CalendarEventUpdate } from '../../types/calendar';
-import { supabase } from '../../lib/supabase';
+import { supabase } from "../../lib/supabase";
+import type {
+  CalendarEvent,
+  CalendarEventCreate,
+  CalendarEventUpdate,
+} from "../../types/calendar";
+import {
+  AttendanceAnalyticsService,
+  type AttendanceAnalytics,
+} from "../phase3/AttendanceAnalyticsService";
+import {
+  ConflictDetectionService,
+  type ConflictDetectionRequest,
+  type ConflictDetectionResult,
+} from "../phase3/ConflictDetectionService";
+import {
+  IntelligentCalendarService,
+  type IntelligentCalendarRequest,
+  type ScheduleAnalysisResult,
+} from "../phase3/IntelligentCalendarService";
+import {
+  SmartSchedulingOptimizer,
+  type SchedulingConstraints,
+  type TimeSuggestion,
+} from "../phase3/SmartSchedulingOptimizer";
 
 // ============================================================================
 // UNIFIED API TYPES
@@ -22,12 +41,12 @@ export interface UnifiedApiResponse<T = unknown> {
   error?: string;
   message?: string;
   timestamp: string;
-  platform?: 'web' | 'mobile' | 'api';
+  platform?: "web" | "mobile" | "api";
   version: string;
 }
 
 export interface PlatformContext {
-  platform: 'web' | 'mobile' | 'api';
+  platform: "web" | "mobile" | "api";
   version: string;
   userAgent?: string;
   deviceId?: string;
@@ -36,9 +55,9 @@ export interface PlatformContext {
 
 export interface SyncRequest {
   sourceData: Record<string, unknown>;
-  targetPlatform: 'web' | 'mobile' | 'all';
-  syncType: 'full' | 'incremental' | 'intelligent';
-  conflictResolution: 'merge' | 'overwrite' | 'prompt';
+  targetPlatform: "web" | "mobile" | "all";
+  syncType: "full" | "incremental" | "intelligent";
+  conflictResolution: "merge" | "overwrite" | "prompt";
 }
 
 export interface SyncResult {
@@ -51,11 +70,11 @@ export interface SyncResult {
 
 export interface DataConflict {
   id: string;
-  type: 'event' | 'team' | 'user' | 'settings';
+  type: "event" | "team" | "user" | "settings";
   localData: Record<string, unknown>;
   remoteData: Record<string, unknown>;
   conflictFields: string[];
-  resolution?: 'local' | 'remote' | 'merged';
+  resolution?: "local" | "remote" | "merged";
 }
 
 // ============================================================================
@@ -63,8 +82,8 @@ export interface DataConflict {
 // ============================================================================
 
 export class UnifiedApiGateway {
-  private static readonly API_VERSION = '4.1.0';
-  
+  private static readonly API_VERSION = "4.1.0";
+
   // ==========================================
   // Intelligent Calendar APIs
   // ==========================================
@@ -77,11 +96,19 @@ export class UnifiedApiGateway {
     context: PlatformContext
   ): Promise<UnifiedApiResponse<ScheduleAnalysisResult>> {
     try {
-      const result = await IntelligentCalendarService.handleScheduleAnalysis(request);
-      
-      return this.createSuccessResponse(result, context, 'Intelligent scheduling analysis completed');
+      const result =
+        await IntelligentCalendarService.handleScheduleAnalysis(request);
+
+      return this.createSuccessResponse(
+        result,
+        context,
+        "Intelligent scheduling analysis completed"
+      );
     } catch (error) {
-      return this.createErrorResponse(error as Error, context) as UnifiedApiResponse<ScheduleAnalysisResult>;
+      return this.createErrorResponse(
+        error as Error,
+        context
+      ) as UnifiedApiResponse<ScheduleAnalysisResult>;
     }
   }
 
@@ -94,10 +121,17 @@ export class UnifiedApiGateway {
   ): Promise<UnifiedApiResponse<ConflictDetectionResult>> {
     try {
       const result = await ConflictDetectionService.detectConflicts(request);
-      
-      return this.createSuccessResponse(result, context, 'Conflict detection completed');
+
+      return this.createSuccessResponse(
+        result,
+        context,
+        "Conflict detection completed"
+      );
     } catch (error) {
-      return this.createErrorResponse(error as Error, context) as UnifiedApiResponse<ConflictDetectionResult>;
+      return this.createErrorResponse(
+        error as Error,
+        context
+      ) as UnifiedApiResponse<ConflictDetectionResult>;
     }
   }
 
@@ -110,11 +144,22 @@ export class UnifiedApiGateway {
     context: PlatformContext
   ): Promise<UnifiedApiResponse<TimeSuggestion[]>> {
     try {
-      const suggestions = await SmartSchedulingOptimizer.suggestOptimalPracticeTime(teamId, constraints);
-      
-      return this.createSuccessResponse(suggestions, context, 'Scheduling optimization completed');
+      const suggestions =
+        await SmartSchedulingOptimizer.suggestOptimalPracticeTime(
+          teamId,
+          constraints
+        );
+
+      return this.createSuccessResponse(
+        suggestions,
+        context,
+        "Scheduling optimization completed"
+      );
     } catch (error) {
-      return this.createErrorResponse(error as Error, context) as UnifiedApiResponse<TimeSuggestion[]>;
+      return this.createErrorResponse(
+        error as Error,
+        context
+      ) as UnifiedApiResponse<TimeSuggestion[]>;
     }
   }
 
@@ -123,15 +168,25 @@ export class UnifiedApiGateway {
    */
   static async getAttendanceAnalytics(
     teamId: string,
-    period: 'week' | 'month' | 'season' | 'all_time',
+    period: "week" | "month" | "season" | "all_time",
     context: PlatformContext
   ): Promise<UnifiedApiResponse<AttendanceAnalytics>> {
     try {
-      const analytics = await AttendanceAnalyticsService.getAttendanceAnalytics(teamId, period);
-      
-      return this.createSuccessResponse(analytics, context, 'Attendance analytics generated');
+      const analytics = await AttendanceAnalyticsService.getAttendanceAnalytics(
+        teamId,
+        period
+      );
+
+      return this.createSuccessResponse(
+        analytics,
+        context,
+        "Attendance analytics generated"
+      );
     } catch (error) {
-      return this.createErrorResponse(error as Error, context) as UnifiedApiResponse<AttendanceAnalytics>;
+      return this.createErrorResponse(
+        error as Error,
+        context
+      ) as UnifiedApiResponse<AttendanceAnalytics>;
     }
   }
 
@@ -149,11 +204,11 @@ export class UnifiedApiGateway {
     try {
       // Create event via database
       const { data, error } = await supabase
-        .from('calendar_events')
+        .from("calendar_events")
         .insert({
           ...eventData,
           created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .select()
         .single();
@@ -165,9 +220,16 @@ export class UnifiedApiGateway {
         await this.triggerIntelligentAnalysis(data);
       }
 
-      return this.createSuccessResponse(data, context, 'Event created successfully');
+      return this.createSuccessResponse(
+        data,
+        context,
+        "Event created successfully"
+      );
     } catch (error) {
-      return this.createErrorResponse(error as Error, context) as UnifiedApiResponse<CalendarEvent>;
+      return this.createErrorResponse(
+        error as Error,
+        context
+      ) as UnifiedApiResponse<CalendarEvent>;
     }
   }
 
@@ -180,12 +242,12 @@ export class UnifiedApiGateway {
   ): Promise<UnifiedApiResponse<CalendarEvent>> {
     try {
       const { data, error } = await supabase
-        .from('calendar_events')
+        .from("calendar_events")
         .update({
           ...updateData,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
-        .eq('id', updateData.id)
+        .eq("id", updateData.id)
         .select()
         .single();
 
@@ -196,9 +258,16 @@ export class UnifiedApiGateway {
         await this.triggerConflictReanalysis(data);
       }
 
-      return this.createSuccessResponse(data, context, 'Event updated successfully');
+      return this.createSuccessResponse(
+        data,
+        context,
+        "Event updated successfully"
+      );
     } catch (error) {
-      return this.createErrorResponse(error as Error, context) as UnifiedApiResponse<CalendarEvent>;
+      return this.createErrorResponse(
+        error as Error,
+        context
+      ) as UnifiedApiResponse<CalendarEvent>;
     }
   }
 
@@ -216,23 +285,23 @@ export class UnifiedApiGateway {
     context: PlatformContext
   ): Promise<UnifiedApiResponse<CalendarEvent[]>> {
     try {
-      let query = supabase.from('calendar_events').select('*');
+      let query = supabase.from("calendar_events").select("*");
 
       // Apply filters
       if (filters.teamId) {
-        query = query.eq('team_id', filters.teamId);
+        query = query.eq("team_id", filters.teamId);
       }
       if (filters.startDate) {
-        query = query.gte('start', filters.startDate);
+        query = query.gte("start", filters.startDate);
       }
       if (filters.endDate) {
-        query = query.lte('start', filters.endDate);
+        query = query.lte("start", filters.endDate);
       }
       if (filters.eventType) {
-        query = query.eq('type', filters.eventType);
+        query = query.eq("type", filters.eventType);
       }
 
-      const { data, error } = await query.order('start', { ascending: true });
+      const { data, error } = await query.order("start", { ascending: true });
 
       if (error) throw error;
 
@@ -242,9 +311,16 @@ export class UnifiedApiGateway {
         enhancedData = await this.enhanceEventsWithIntelligentData(data);
       }
 
-      return this.createSuccessResponse(enhancedData, context, 'Events retrieved successfully');
+      return this.createSuccessResponse(
+        enhancedData,
+        context,
+        "Events retrieved successfully"
+      );
     } catch (error) {
-      return this.createErrorResponse(error as Error, context) as UnifiedApiResponse<CalendarEvent[]>;
+      return this.createErrorResponse(
+        error as Error,
+        context
+      ) as UnifiedApiResponse<CalendarEvent[]>;
     }
   }
 
@@ -261,10 +337,17 @@ export class UnifiedApiGateway {
   ): Promise<UnifiedApiResponse<SyncResult>> {
     try {
       const syncResult = await this.performPlatformSync();
-      
-      return this.createSuccessResponse(syncResult, context, 'Cross-platform sync completed');
+
+      return this.createSuccessResponse(
+        syncResult,
+        context,
+        "Cross-platform sync completed"
+      );
     } catch (error) {
-      return this.createErrorResponse(error as Error, context) as UnifiedApiResponse<SyncResult>;
+      return this.createErrorResponse(
+        error as Error,
+        context
+      ) as UnifiedApiResponse<SyncResult>;
     }
   }
 
@@ -272,23 +355,28 @@ export class UnifiedApiGateway {
    * Establish real-time synchronization connection
    */
   static async establishRealTimeSync(
-    platforms: ('web' | 'mobile')[],
+    platforms: ("web" | "mobile")[],
     context: PlatformContext
   ): Promise<UnifiedApiResponse<{ connectionId: string; channels: string[] }>> {
     try {
       // Create real-time sync channels for each platform
-      const channels = platforms.map(platform => `boxcall-sync-${platform}-${context.sessionId}`);
-      
+      const channels = platforms.map(
+        (platform) => `boxcall-sync-${platform}-${context.sessionId}`
+      );
+
       // TODO: Implement WebSocket connection establishment
       const connectionId = `conn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
+
       return this.createSuccessResponse(
         { connectionId, channels },
         context,
-        'Real-time sync connection established'
+        "Real-time sync connection established"
       );
     } catch (error) {
-      return this.createErrorResponse(error as Error, context) as UnifiedApiResponse<{ connectionId: string; channels: string[] }>;
+      return this.createErrorResponse(
+        error as Error,
+        context
+      ) as UnifiedApiResponse<{ connectionId: string; channels: string[] }>;
     }
   }
 
@@ -308,15 +396,15 @@ export class UnifiedApiGateway {
         teamId: event.team_id,
         checkAcademicCalendar: true,
         checkVenueConflicts: true,
-        checkFamilySchedules: true
+        checkFamilySchedules: true,
       };
 
       await ConflictDetectionService.detectConflicts(conflictRequest);
-      
+
       // Store analysis results for future reference
       // TODO: Implement intelligent analysis storage
     } catch (error) {
-      console.error('Failed to trigger intelligent analysis:', error);
+      console.error("Failed to trigger intelligent analysis:", error);
     }
   }
 
@@ -340,7 +428,7 @@ export class UnifiedApiGateway {
       success: true,
       syncedEntities: 0,
       conflicts: [],
-      lastSyncTime: new Date().toISOString()
+      lastSyncTime: new Date().toISOString(),
     };
   }
 
@@ -352,10 +440,10 @@ export class UnifiedApiGateway {
     return {
       success: true,
       data,
-      message: message || 'Operation completed successfully',
+      message: message || "Operation completed successfully",
       timestamp: new Date().toISOString(),
       platform: context.platform,
-      version: this.API_VERSION
+      version: this.API_VERSION,
     };
   }
 
@@ -366,10 +454,10 @@ export class UnifiedApiGateway {
     return {
       success: false,
       error: error.message,
-      message: 'Operation failed',
+      message: "Operation failed",
       timestamp: new Date().toISOString(),
       platform: context.platform,
-      version: this.API_VERSION
+      version: this.API_VERSION,
     };
   }
 }
@@ -384,10 +472,10 @@ export class UnifiedApiGateway {
 export class WebPlatformAdapter {
   static createContext(sessionId: string, userAgent?: string): PlatformContext {
     return {
-      platform: 'web',
-      version: UnifiedApiGateway['API_VERSION'],
+      platform: "web",
+      version: UnifiedApiGateway["API_VERSION"],
       userAgent,
-      sessionId
+      sessionId,
     };
   }
 
@@ -398,11 +486,11 @@ export class WebPlatformAdapter {
   ): Promise<T> {
     const context = this.createContext(sessionId, userAgent);
     const response = await apiCall(context);
-    
+
     if (!response.success) {
-      throw new Error(response.error || 'API call failed');
+      throw new Error(response.error || "API call failed");
     }
-    
+
     return response.data!;
   }
 }
@@ -413,10 +501,10 @@ export class WebPlatformAdapter {
 export class MobilePlatformAdapter {
   static createContext(sessionId: string, deviceId?: string): PlatformContext {
     return {
-      platform: 'mobile',
-      version: UnifiedApiGateway['API_VERSION'],
+      platform: "mobile",
+      version: UnifiedApiGateway["API_VERSION"],
       deviceId,
-      sessionId
+      sessionId,
     };
   }
 
@@ -427,11 +515,11 @@ export class MobilePlatformAdapter {
   ): Promise<T> {
     const context = this.createContext(sessionId, deviceId);
     const response = await apiCall(context);
-    
+
     if (!response.success) {
-      throw new Error(response.error || 'API call failed');
+      throw new Error(response.error || "API call failed");
     }
-    
+
     return response.data!;
   }
 }

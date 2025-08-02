@@ -17,7 +17,7 @@ const cardStyles: CardStylesConfig = {
       "bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 hover:shadow-md",
     elevated:
       "bg-white shadow-lg border border-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-900/20 hover:shadow-xl",
-    outlined: 
+    outlined:
       "bg-transparent border-2 border-jade-500 dark:border-jade-400 hover:bg-jade-50 dark:hover:bg-jade-900/10", // Jade outlined variant
     filled:
       "bg-gray-50 border border-gray-200 dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800",
@@ -26,10 +26,10 @@ const cardStyles: CardStylesConfig = {
   },
 
   sizes: {
-    sm: "p-4",   // More substantial padding
-    md: "p-6",   // Increased from p-4
-    lg: "p-8",   // Increased from p-6  
-    xl: "p-10",  // Increased from p-8
+    sm: "p-4", // More substantial padding
+    md: "p-6", // Increased from p-4
+    lg: "p-8", // Increased from p-6
+    xl: "p-10", // Increased from p-8
   },
 
   interactive:

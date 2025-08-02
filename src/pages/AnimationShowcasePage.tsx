@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { 
-  SquareProgressBar, 
-  SquareLoadingSpinner, 
-  SquareSkeleton, 
-  SquarePulseIndicator,
+import React, { useState } from "react";
+import {
   FootballLoadingSpinner,
-  SquarePageTransition 
-} from '../components/ui/Animations/SquareAnimations';
-import Button from '../components/ui/Button/Button';
-import Card from '../components/ui/Card/Card';
+  SquareLoadingSpinner,
+  SquarePageTransition,
+  SquareProgressBar,
+  SquarePulseIndicator,
+  SquareSkeleton,
+} from "../components/ui/Animations/SquareAnimations";
+import Button from "../components/ui/Button/Button";
+import Card from "../components/ui/Card/Card";
 
 const AnimationShowcasePage: React.FC = () => {
   const [progressValue, setProgressValue] = useState(75);
@@ -33,7 +33,8 @@ const AnimationShowcasePage: React.FC = () => {
             Square Animation System
           </h1>
           <p className="text-lg font-sans text-gray-600 dark:text-gray-400">
-            Masculine, confident motion language for professional football management
+            Masculine, confident motion language for professional football
+            management
           </p>
         </div>
 
@@ -43,7 +44,7 @@ const AnimationShowcasePage: React.FC = () => {
             <h2 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-4">
               Progress Indicators
             </h2>
-            
+
             <div className="space-y-6">
               <div>
                 <h3 className="text-lg font-sans font-medium text-gray-800 dark:text-gray-200 mb-3">
@@ -108,13 +109,17 @@ const AnimationShowcasePage: React.FC = () => {
             <h2 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-4">
               Loading States
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center space-y-4">
                 <h3 className="text-lg font-sans font-medium text-gray-800 dark:text-gray-200">
                   Basic Spinner
                 </h3>
-                <SquareLoadingSpinner variant="jade" size="lg" label="Loading..." />
+                <SquareLoadingSpinner
+                  variant="jade"
+                  size="lg"
+                  label="Loading..."
+                />
               </div>
 
               <div className="text-center space-y-4">
@@ -152,7 +157,7 @@ const AnimationShowcasePage: React.FC = () => {
             <h2 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-4">
               Skeleton Loading
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="text-lg font-sans font-medium text-gray-800 dark:text-gray-200 mb-3">
@@ -177,7 +182,7 @@ const AnimationShowcasePage: React.FC = () => {
             <h2 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-4">
               Enhanced Button Interactions
             </h2>
-            
+
             <div className="flex flex-wrap gap-4">
               <Button variant="primary" size="lg">
                 Primary Action
@@ -195,9 +200,10 @@ const AnimationShowcasePage: React.FC = () => {
                 Danger Action
               </Button>
             </div>
-            
+
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
-              Hover and click buttons to see enhanced square animations with lift, press, and focus effects.
+              Hover and click buttons to see enhanced square animations with
+              lift, press, and focus effects.
             </p>
           </div>
         </Card>
@@ -208,12 +214,12 @@ const AnimationShowcasePage: React.FC = () => {
             <h2 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-4">
               Page Transitions
             </h2>
-            
+
             <div className="space-y-4">
               <Button onClick={triggerTransition} variant="primary">
                 Toggle Transition Demo
               </Button>
-              
+
               {showTransition && (
                 <SquarePageTransition direction="right">
                   <div className="bg-jade-50 dark:bg-jade-900/20 p-6 rounded-sm border border-jade-200 dark:border-jade-800">
@@ -221,8 +227,10 @@ const AnimationShowcasePage: React.FC = () => {
                       Transition Content
                     </h3>
                     <p className="text-jade-700 dark:text-jade-300">
-                      This content slides in with square, confident motion. The animation uses technical timing curves
-                      designed for professional applications with masculine, direct movement patterns.
+                      This content slides in with square, confident motion. The
+                      animation uses technical timing curves designed for
+                      professional applications with masculine, direct movement
+                      patterns.
                     </p>
                   </div>
                 </SquarePageTransition>
@@ -237,30 +245,46 @@ const AnimationShowcasePage: React.FC = () => {
             <h2 className="text-2xl font-display font-semibold text-gray-900 dark:text-white mb-4">
               Square Animation Principles
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="text-center">
                 <div className="w-16 h-16 bg-jade-500 rounded-sm mx-auto mb-3 animate-punchScale"></div>
-                <h4 className="font-sans font-semibold text-gray-900 dark:text-white mb-1">Confident</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Direct, purposeful motion</p>
+                <h4 className="font-sans font-semibold text-gray-900 dark:text-white mb-1">
+                  Confident
+                </h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Direct, purposeful motion
+                </p>
               </div>
 
               <div className="text-center">
                 <div className="w-16 h-16 bg-navy-500 rounded-sm mx-auto mb-3 transition-square hover:scale-105"></div>
-                <h4 className="font-sans font-semibold text-gray-900 dark:text-white mb-1">Technical</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Precise, calculated timing</p>
+                <h4 className="font-sans font-semibold text-gray-900 dark:text-white mb-1">
+                  Technical
+                </h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Precise, calculated timing
+                </p>
               </div>
 
               <div className="text-center">
                 <div className="w-16 h-16 bg-gray-500 rounded-sm mx-auto mb-3 hover-lift"></div>
-                <h4 className="font-sans font-semibold text-gray-900 dark:text-white mb-1">Masculine</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Strong, substantial feel</p>
+                <h4 className="font-sans font-semibold text-gray-900 dark:text-white mb-1">
+                  Masculine
+                </h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Strong, substantial feel
+                </p>
               </div>
 
               <div className="text-center">
                 <div className="w-16 h-16 bg-jade-600 rounded-sm mx-auto mb-3 active-press"></div>
-                <h4 className="font-sans font-semibold text-gray-900 dark:text-white mb-1">Responsive</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Clear interaction feedback</p>
+                <h4 className="font-sans font-semibold text-gray-900 dark:text-white mb-1">
+                  Responsive
+                </h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Clear interaction feedback
+                </p>
               </div>
             </div>
           </div>

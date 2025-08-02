@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 // Football Formation Types
 interface PlayerPosition {
@@ -14,50 +14,204 @@ interface Formation {
   id: string;
   name: string;
   description: string;
-  category: 'offense' | 'defense' | 'special';
+  category: "offense" | "defense" | "special";
   positions: PlayerPosition[];
 }
 
 // Mock Formation Data
 const mockFormations: Formation[] = [
   {
-    id: 'spread-offense',
-    name: 'Spread Offense',
-    description: '4-wide receiver spread formation with shotgun QB',
-    category: 'offense',
+    id: "spread-offense",
+    name: "Spread Offense",
+    description: "4-wide receiver spread formation with shotgun QB",
+    category: "offense",
     positions: [
-      { id: 'qb', position: 'QB', jerseyNumber: 12, playerName: 'Marcus Johnson', x: 20, y: 50 },
-      { id: 'rb', position: 'RB', jerseyNumber: 23, playerName: 'Darius Williams', x: 35, y: 50 },
-      { id: 'wr1', position: 'WR', jerseyNumber: 81, playerName: 'Antonio Davis', x: 70, y: 20 },
-      { id: 'wr2', position: 'WR', jerseyNumber: 11, playerName: 'Mike Thompson', x: 70, y: 40 },
-      { id: 'wr3', position: 'WR', jerseyNumber: 3, playerName: 'Chris Brown', x: 70, y: 60 },
-      { id: 'wr4', position: 'WR', jerseyNumber: 88, playerName: 'David Wilson', x: 70, y: 80 },
-      { id: 'lt', position: 'LT', jerseyNumber: 75, playerName: 'Jake Miller', x: 45, y: 35 },
-      { id: 'lg', position: 'LG', jerseyNumber: 66, playerName: 'Tom Garcia', x: 45, y: 42 },
-      { id: 'c', position: 'C', jerseyNumber: 52, playerName: 'Alex Martinez', x: 45, y: 50 },
-      { id: 'rg', position: 'RG', jerseyNumber: 77, playerName: 'Ryan Lee', x: 45, y: 58 },
-      { id: 'rt', position: 'RT', jerseyNumber: 69, playerName: 'Steve Anderson', x: 45, y: 65 },
-    ]
+      {
+        id: "qb",
+        position: "QB",
+        jerseyNumber: 12,
+        playerName: "Marcus Johnson",
+        x: 20,
+        y: 50,
+      },
+      {
+        id: "rb",
+        position: "RB",
+        jerseyNumber: 23,
+        playerName: "Darius Williams",
+        x: 35,
+        y: 50,
+      },
+      {
+        id: "wr1",
+        position: "WR",
+        jerseyNumber: 81,
+        playerName: "Antonio Davis",
+        x: 70,
+        y: 20,
+      },
+      {
+        id: "wr2",
+        position: "WR",
+        jerseyNumber: 11,
+        playerName: "Mike Thompson",
+        x: 70,
+        y: 40,
+      },
+      {
+        id: "wr3",
+        position: "WR",
+        jerseyNumber: 3,
+        playerName: "Chris Brown",
+        x: 70,
+        y: 60,
+      },
+      {
+        id: "wr4",
+        position: "WR",
+        jerseyNumber: 88,
+        playerName: "David Wilson",
+        x: 70,
+        y: 80,
+      },
+      {
+        id: "lt",
+        position: "LT",
+        jerseyNumber: 75,
+        playerName: "Jake Miller",
+        x: 45,
+        y: 35,
+      },
+      {
+        id: "lg",
+        position: "LG",
+        jerseyNumber: 66,
+        playerName: "Tom Garcia",
+        x: 45,
+        y: 42,
+      },
+      {
+        id: "c",
+        position: "C",
+        jerseyNumber: 52,
+        playerName: "Alex Martinez",
+        x: 45,
+        y: 50,
+      },
+      {
+        id: "rg",
+        position: "RG",
+        jerseyNumber: 77,
+        playerName: "Ryan Lee",
+        x: 45,
+        y: 58,
+      },
+      {
+        id: "rt",
+        position: "RT",
+        jerseyNumber: 69,
+        playerName: "Steve Anderson",
+        x: 45,
+        y: 65,
+      },
+    ],
   },
   {
-    id: '4-3-defense',
-    name: '4-3 Defense',
-    description: 'Base 4-3 defensive formation with 4 down linemen',
-    category: 'defense',
+    id: "4-3-defense",
+    name: "4-3 Defense",
+    description: "Base 4-3 defensive formation with 4 down linemen",
+    category: "defense",
     positions: [
-      { id: 'de1', position: 'DE', jerseyNumber: 95, playerName: 'Marcus Johnson', x: 55, y: 25 },
-      { id: 'dt1', position: 'DT', jerseyNumber: 91, playerName: 'Kevin Davis', x: 55, y: 40 },
-      { id: 'dt2', position: 'DT', jerseyNumber: 93, playerName: 'Tony Rodriguez', x: 55, y: 60 },
-      { id: 'de2', position: 'DE', jerseyNumber: 94, playerName: 'James Wilson', x: 55, y: 75 },
-      { id: 'mlb', position: 'MLB', jerseyNumber: 55, playerName: 'Carlos Martinez', x: 40, y: 50 },
-      { id: 'olb1', position: 'OLB', jerseyNumber: 51, playerName: 'Andre Thomas', x: 40, y: 30 },
-      { id: 'olb2', position: 'OLB', jerseyNumber: 53, playerName: 'DeShawn Brown', x: 40, y: 70 },
-      { id: 'cb1', position: 'CB', jerseyNumber: 21, playerName: 'Jamal Jones', x: 25, y: 15 },
-      { id: 'cb2', position: 'CB', jerseyNumber: 24, playerName: 'Terrell Green', x: 25, y: 85 },
-      { id: 'fs', position: 'FS', jerseyNumber: 20, playerName: 'Michael White', x: 15, y: 50 },
-      { id: 'ss', position: 'SS', jerseyNumber: 26, playerName: 'Isaiah Johnson', x: 20, y: 35 },
-    ]
-  }
+      {
+        id: "de1",
+        position: "DE",
+        jerseyNumber: 95,
+        playerName: "Marcus Johnson",
+        x: 55,
+        y: 25,
+      },
+      {
+        id: "dt1",
+        position: "DT",
+        jerseyNumber: 91,
+        playerName: "Kevin Davis",
+        x: 55,
+        y: 40,
+      },
+      {
+        id: "dt2",
+        position: "DT",
+        jerseyNumber: 93,
+        playerName: "Tony Rodriguez",
+        x: 55,
+        y: 60,
+      },
+      {
+        id: "de2",
+        position: "DE",
+        jerseyNumber: 94,
+        playerName: "James Wilson",
+        x: 55,
+        y: 75,
+      },
+      {
+        id: "mlb",
+        position: "MLB",
+        jerseyNumber: 55,
+        playerName: "Carlos Martinez",
+        x: 40,
+        y: 50,
+      },
+      {
+        id: "olb1",
+        position: "OLB",
+        jerseyNumber: 51,
+        playerName: "Andre Thomas",
+        x: 40,
+        y: 30,
+      },
+      {
+        id: "olb2",
+        position: "OLB",
+        jerseyNumber: 53,
+        playerName: "DeShawn Brown",
+        x: 40,
+        y: 70,
+      },
+      {
+        id: "cb1",
+        position: "CB",
+        jerseyNumber: 21,
+        playerName: "Jamal Jones",
+        x: 25,
+        y: 15,
+      },
+      {
+        id: "cb2",
+        position: "CB",
+        jerseyNumber: 24,
+        playerName: "Terrell Green",
+        x: 25,
+        y: 85,
+      },
+      {
+        id: "fs",
+        position: "FS",
+        jerseyNumber: 20,
+        playerName: "Michael White",
+        x: 15,
+        y: 50,
+      },
+      {
+        id: "ss",
+        position: "SS",
+        jerseyNumber: 26,
+        playerName: "Isaiah Johnson",
+        x: 20,
+        y: 35,
+      },
+    ],
+  },
 ];
 
 const PlayerDot: React.FC<{
@@ -66,26 +220,35 @@ const PlayerDot: React.FC<{
   onClick: () => void;
 }> = ({ player, isSelected, onClick }) => {
   const getPositionColor = (position: string) => {
-    if (['QB'].includes(position)) return 'bg-red-500 border-red-600';
-    if (['RB', 'FB', 'HB'].includes(position)) return 'bg-green-500 border-green-600';
-    if (['WR', 'TE'].includes(position)) return 'bg-blue-500 border-blue-600';
-    if (['LB', 'MLB', 'OLB', 'ILB'].includes(position)) return 'bg-purple-500 border-purple-600';
-    if (['CB', 'S', 'FS', 'SS', 'DB'].includes(position)) return 'bg-yellow-500 border-yellow-600';
-    if (['DE', 'DT', 'NT', 'DL'].includes(position)) return 'bg-gray-600 border-gray-700';
-    if (['LT', 'LG', 'C', 'RG', 'RT', 'OL'].includes(position)) return 'bg-navy-500 border-navy-600';
-    return 'bg-jade-500 border-jade-600';
+    if (["QB"].includes(position)) return "bg-red-500 border-red-600";
+    if (["RB", "FB", "HB"].includes(position))
+      return "bg-green-500 border-green-600";
+    if (["WR", "TE"].includes(position)) return "bg-blue-500 border-blue-600";
+    if (["LB", "MLB", "OLB", "ILB"].includes(position))
+      return "bg-purple-500 border-purple-600";
+    if (["CB", "S", "FS", "SS", "DB"].includes(position))
+      return "bg-yellow-500 border-yellow-600";
+    if (["DE", "DT", "NT", "DL"].includes(position))
+      return "bg-gray-600 border-gray-700";
+    if (["LT", "LG", "C", "RG", "RT", "OL"].includes(position))
+      return "bg-navy-500 border-navy-600";
+    return "bg-jade-500 border-jade-600";
   };
 
   return (
     <div
       className="absolute cursor-pointer transition-transform hover:scale-110"
-      style={{ left: `${player.x}%`, top: `${player.y}%`, transform: 'translate(-50%, -50%)' }}
+      style={{
+        left: `${player.x}%`,
+        top: `${player.y}%`,
+        transform: "translate(-50%, -50%)",
+      }}
       onClick={onClick}
     >
       <div
-        className={`w-8 h-8 rounded-sm border-2 flex items-center justify-center text-white font-mono font-bold text-xs ${
-          getPositionColor(player.position)
-        } ${isSelected ? 'ring-4 ring-jade-300' : ''}`}
+        className={`w-8 h-8 rounded-sm border-2 flex items-center justify-center text-white font-mono font-bold text-xs ${getPositionColor(
+          player.position
+        )} ${isSelected ? "ring-4 ring-jade-300" : ""}`}
       >
         {player.jerseyNumber}
       </div>
@@ -111,13 +274,22 @@ const FormationField: React.FC<{ formation: Formation }> = ({ formation }) => {
             style={{ left: `${yard}%` }}
           />
         ))}
-        
+
         {/* 50 Yard Line */}
-        <div className="absolute h-full border-l-2 border-white dark:border-green-600" style={{ left: '50%' }} />
-        
+        <div
+          className="absolute h-full border-l-2 border-white dark:border-green-600"
+          style={{ left: "50%" }}
+        />
+
         {/* Hash Marks */}
-        <div className="absolute w-full border-t border-white/30 dark:border-green-600/30" style={{ top: '25%' }} />
-        <div className="absolute w-full border-t border-white/30 dark:border-green-600/30" style={{ top: '75%' }} />
+        <div
+          className="absolute w-full border-t border-white/30 dark:border-green-600/30"
+          style={{ top: "25%" }}
+        />
+        <div
+          className="absolute w-full border-t border-white/30 dark:border-green-600/30"
+          style={{ top: "75%" }}
+        />
       </div>
 
       {/* Player Positions */}
@@ -127,7 +299,9 @@ const FormationField: React.FC<{ formation: Formation }> = ({ formation }) => {
             key={player.id}
             player={player}
             isSelected={selectedPlayer === player.id}
-            onClick={() => setSelectedPlayer(selectedPlayer === player.id ? null : player.id)}
+            onClick={() =>
+              setSelectedPlayer(selectedPlayer === player.id ? null : player.id)
+            }
           />
         ))}
       </div>
@@ -136,7 +310,9 @@ const FormationField: React.FC<{ formation: Formation }> = ({ formation }) => {
       {selectedPlayer && (
         <div className="mt-4 p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
           {(() => {
-            const player = formation.positions.find(p => p.id === selectedPlayer);
+            const player = formation.positions.find(
+              (p) => p.id === selectedPlayer
+            );
             if (!player) return null;
             return (
               <div className="flex items-center space-x-3">
@@ -161,10 +337,16 @@ const FormationField: React.FC<{ formation: Formation }> = ({ formation }) => {
 };
 
 export const FormationDiagram: React.FC = () => {
-  const [activeFormation, setActiveFormation] = useState<Formation>(mockFormations[0]);
-  const [activeCategory, setActiveCategory] = useState<'offense' | 'defense' | 'special'>('offense');
+  const [activeFormation, setActiveFormation] = useState<Formation>(
+    mockFormations[0]
+  );
+  const [activeCategory, setActiveCategory] = useState<
+    "offense" | "defense" | "special"
+  >("offense");
 
-  const filteredFormations = mockFormations.filter(f => f.category === activeCategory);
+  const filteredFormations = mockFormations.filter(
+    (f) => f.category === activeCategory
+  );
 
   return (
     <div className="space-y-6">
@@ -182,7 +364,7 @@ export const FormationDiagram: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 rounded-md shadow-sm">
         <div className="border-b border-gray-200 dark:border-gray-700">
           <nav className="-mb-px flex space-x-8 px-6">
-            {(['offense', 'defense', 'special'] as const).map((category) => (
+            {(["offense", "defense", "special"] as const).map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
@@ -192,9 +374,9 @@ export const FormationDiagram: React.FC = () => {
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
                 }`}
               >
-                {category === 'offense' && '⚡'} 
-                {category === 'defense' && '🛡️'} 
-                {category === 'special' && '🎯'} 
+                {category === "offense" && "⚡"}
+                {category === "defense" && "🛡️"}
+                {category === "special" && "🎯"}
                 {category}
               </button>
             ))}
@@ -210,8 +392,8 @@ export const FormationDiagram: React.FC = () => {
                 onClick={() => setActiveFormation(formation)}
                 className={`text-left p-4 rounded-md border-2 transition-all ${
                   activeFormation.id === formation.id
-                    ? 'border-jade-500 bg-jade-50 dark:bg-jade-900/20'
-                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                    ? "border-jade-500 bg-jade-50 dark:bg-jade-900/20"
+                    : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
                 <div className="font-display font-semibold text-gray-900 dark:text-white mb-1">
@@ -237,10 +419,19 @@ export const FormationDiagram: React.FC = () => {
                 Formation Details
               </h3>
               <div className="space-y-2 text-sm font-sans">
-                <div><strong>Name:</strong> {activeFormation.name}</div>
-                <div><strong>Category:</strong> <span className="capitalize">{activeFormation.category}</span></div>
-                <div><strong>Players:</strong> {activeFormation.positions.length}</div>
-                <div><strong>Description:</strong> {activeFormation.description}</div>
+                <div>
+                  <strong>Name:</strong> {activeFormation.name}
+                </div>
+                <div>
+                  <strong>Category:</strong>{" "}
+                  <span className="capitalize">{activeFormation.category}</span>
+                </div>
+                <div>
+                  <strong>Players:</strong> {activeFormation.positions.length}
+                </div>
+                <div>
+                  <strong>Description:</strong> {activeFormation.description}
+                </div>
               </div>
             </div>
 
@@ -249,11 +440,17 @@ export const FormationDiagram: React.FC = () => {
                 Position Breakdown
               </h3>
               <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                {Array.from(new Set(activeFormation.positions.map(p => p.position))).map(position => (
+                {Array.from(
+                  new Set(activeFormation.positions.map((p) => p.position))
+                ).map((position) => (
                   <div key={position} className="flex justify-between">
                     <span>{position}:</span>
                     <span className="font-bold">
-                      {activeFormation.positions.filter(p => p.position === position).length}
+                      {
+                        activeFormation.positions.filter(
+                          (p) => p.position === position
+                        ).length
+                      }
                     </span>
                   </div>
                 ))}

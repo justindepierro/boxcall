@@ -6,7 +6,7 @@ export interface CalendarEvent {
   title: string;
   start: string; // ISO date string
   end?: string; // ISO date string
-  type: 'game' | 'practice' | 'meeting' | 'film' | 'other';
+  type: "game" | "practice" | "meeting" | "film" | "other";
   team_id?: string;
   team_name?: string;
   location?: string;
@@ -25,7 +25,7 @@ export interface CalendarEventCreate {
   title: string;
   start: string;
   end?: string;
-  type: 'game' | 'practice' | 'meeting' | 'film' | 'other';
+  type: "game" | "practice" | "meeting" | "film" | "other";
   team_id?: string;
   location?: string;
   description?: string;
@@ -39,7 +39,7 @@ export interface EventRSVP {
   id: string;
   event_id: string;
   user_id: string;
-  status: 'attending' | 'not_attending' | 'maybe';
+  status: "attending" | "not_attending" | "maybe";
   note?: string;
   created_at: string;
   updated_at: string;
@@ -60,17 +60,19 @@ export interface CalendarFilters {
  * Manages calendar events, RSVP functionality, and schedule management
  */
 export class CalendarService {
-  
   /**
    * Get all events for a user across all teams
    */
-  static async getUserEvents(userId: string, filters?: CalendarFilters): Promise<CalendarEvent[]> {
+  static async getUserEvents(
+    userId: string,
+    filters?: CalendarFilters
+  ): Promise<CalendarEvent[]> {
     try {
       // TODO: Implement real database query
       // For now, return comprehensive mock data
       return this.getMockUserEvents(userId, filters);
     } catch (error) {
-      console.error('Error fetching user events:', error);
+      console.error("Error fetching user events:", error);
       return [];
     }
   }
@@ -78,7 +80,10 @@ export class CalendarService {
   /**
    * Get events for a specific team
    */
-  static async getTeamEvents(teamId: string, filters?: CalendarFilters): Promise<CalendarEvent[]> {
+  static async getTeamEvents(
+    teamId: string,
+    filters?: CalendarFilters
+  ): Promise<CalendarEvent[]> {
     try {
       // TODO: Query calendar_events table joined with teams
       // const { data, error } = await supabase
@@ -93,7 +98,7 @@ export class CalendarService {
 
       return this.getMockTeamEvents(teamId, filters);
     } catch (error) {
-      console.error('Error fetching team events:', error);
+      console.error("Error fetching team events:", error);
       return [];
     }
   }
@@ -101,7 +106,9 @@ export class CalendarService {
   /**
    * Create a new calendar event
    */
-  static async createEvent(eventData: CalendarEventCreate): Promise<CalendarEvent | null> {
+  static async createEvent(
+    eventData: CalendarEventCreate
+  ): Promise<CalendarEvent | null> {
     try {
       // TODO: Implement real database creation
       // const { data, error } = await supabase
@@ -123,7 +130,7 @@ export class CalendarService {
 
       return mockEvent;
     } catch (error) {
-      console.error('Error creating event:', error);
+      console.error("Error creating event:", error);
       return null;
     }
   }
@@ -131,7 +138,10 @@ export class CalendarService {
   /**
    * Update an existing calendar event
    */
-  static async updateEvent(eventId: string, updates: Partial<CalendarEventCreate>): Promise<CalendarEvent | null> {
+  static async updateEvent(
+    eventId: string,
+    updates: Partial<CalendarEventCreate>
+  ): Promise<CalendarEvent | null> {
     try {
       // TODO: Implement real database update
       // const { data, error } = await supabase
@@ -144,10 +154,10 @@ export class CalendarService {
       //   .select()
       //   .single();
 
-      console.log('Mock update event:', eventId, updates);
+      console.log("Mock update event:", eventId, updates);
       return null; // Mock implementation
     } catch (error) {
-      console.error('Error updating event:', error);
+      console.error("Error updating event:", error);
       return null;
     }
   }
@@ -163,10 +173,10 @@ export class CalendarService {
       //   .delete()
       //   .eq('id', eventId);
 
-      console.log('Mock delete event:', eventId);
+      console.log("Mock delete event:", eventId);
       return true; // Mock implementation
     } catch (error) {
-      console.error('Error deleting event:', error);
+      console.error("Error deleting event:", error);
       return false;
     }
   }
@@ -188,7 +198,7 @@ export class CalendarService {
 
       return this.getMockRSVPs(eventId);
     } catch (error) {
-      console.error('Error fetching event RSVPs:', error);
+      console.error("Error fetching event RSVPs:", error);
       return [];
     }
   }
@@ -197,9 +207,9 @@ export class CalendarService {
    * Create or update RSVP for an event
    */
   static async updateRSVP(
-    eventId: string, 
-    userId: string, 
-    status: 'attending' | 'not_attending' | 'maybe',
+    eventId: string,
+    userId: string,
+    status: "attending" | "not_attending" | "maybe",
     note?: string
   ): Promise<EventRSVP | null> {
     try {
@@ -228,7 +238,7 @@ export class CalendarService {
 
       return mockRSVP;
     } catch (error) {
-      console.error('Error updating RSVP:', error);
+      console.error("Error updating RSVP:", error);
       return null;
     }
   }
@@ -236,7 +246,10 @@ export class CalendarService {
   /**
    * Search events across all calendars
    */
-  static async searchEvents(query: string, filters?: CalendarFilters): Promise<CalendarEvent[]> {
+  static async searchEvents(
+    query: string,
+    filters?: CalendarFilters
+  ): Promise<CalendarEvent[]> {
     try {
       // TODO: Implement full-text search
       // const { data, error } = await supabase
@@ -247,17 +260,18 @@ export class CalendarService {
       //     config: 'english'
       //   });
 
-      const allEvents = this.getMockUserEvents('search-user', filters);
+      const allEvents = this.getMockUserEvents("search-user", filters);
       const searchTerm = query.toLowerCase();
-      
-      return allEvents.filter(event => 
-        event.title.toLowerCase().includes(searchTerm) ||
-        event.description?.toLowerCase().includes(searchTerm) ||
-        event.location?.toLowerCase().includes(searchTerm) ||
-        event.opponent?.toLowerCase().includes(searchTerm)
+
+      return allEvents.filter(
+        (event) =>
+          event.title.toLowerCase().includes(searchTerm) ||
+          event.description?.toLowerCase().includes(searchTerm) ||
+          event.location?.toLowerCase().includes(searchTerm) ||
+          event.opponent?.toLowerCase().includes(searchTerm)
       );
     } catch (error) {
-      console.error('Error searching events:', error);
+      console.error("Error searching events:", error);
       return [];
     }
   }
@@ -265,17 +279,22 @@ export class CalendarService {
   /**
    * Get upcoming events for dashboard widgets
    */
-  static async getUpcomingEvents(userId: string, limit: number = 5): Promise<CalendarEvent[]> {
+  static async getUpcomingEvents(
+    userId: string,
+    limit: number = 5
+  ): Promise<CalendarEvent[]> {
     try {
       const events = await this.getUserEvents(userId);
       const now = new Date();
-      
+
       return events
-        .filter(event => new Date(event.start) >= now)
-        .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+        .filter((event) => new Date(event.start) >= now)
+        .sort(
+          (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()
+        )
         .slice(0, limit);
     } catch (error) {
-      console.error('Error fetching upcoming events:', error);
+      console.error("Error fetching upcoming events:", error);
       return [];
     }
   }
@@ -283,79 +302,82 @@ export class CalendarService {
   /**
    * Mock data for development - User Events
    */
-  private static getMockUserEvents(_userId: string, filters?: CalendarFilters): CalendarEvent[] {
+  private static getMockUserEvents(
+    _userId: string,
+    filters?: CalendarFilters
+  ): CalendarEvent[] {
     const baseEvents: CalendarEvent[] = [
       {
-        id: '1',
-        title: 'Game vs. Central Lions',
-        start: '2025-08-16T19:00:00',
-        end: '2025-08-16T21:30:00',
-        type: 'game',
-        team_id: 'team-1',
-        team_name: 'Eastside Eagles',
-        location: 'Memorial Stadium',
-        description: 'Homecoming game against Central Lions',
+        id: "1",
+        title: "Game vs. Central Lions",
+        start: "2025-08-16T19:00:00",
+        end: "2025-08-16T21:30:00",
+        type: "game",
+        team_id: "team-1",
+        team_name: "Eastside Eagles",
+        location: "Memorial Stadium",
+        description: "Homecoming game against Central Lions",
         is_home: true,
-        opponent: 'Central Lions',
+        opponent: "Central Lions",
         rsvp_required: false,
-        tags: ['important', 'homecoming'],
-        created_at: '2025-07-15T10:00:00Z',
+        tags: ["important", "homecoming"],
+        created_at: "2025-07-15T10:00:00Z",
       },
       {
-        id: '2',
-        title: 'Practice',
-        start: '2025-08-13T15:30:00',
-        end: '2025-08-13T17:30:00',
-        type: 'practice',
-        team_id: 'team-1',
-        team_name: 'Eastside Eagles',
-        location: 'School Field',
-        description: 'Offensive line drills and scrimmage',
+        id: "2",
+        title: "Practice",
+        start: "2025-08-13T15:30:00",
+        end: "2025-08-13T17:30:00",
+        type: "practice",
+        team_id: "team-1",
+        team_name: "Eastside Eagles",
+        location: "School Field",
+        description: "Offensive line drills and scrimmage",
         rsvp_required: false,
-        tags: ['practice', 'offense'],
-        created_at: '2025-07-10T09:00:00Z',
+        tags: ["practice", "offense"],
+        created_at: "2025-07-10T09:00:00Z",
       },
       {
-        id: '3',
-        title: '7v7 Tournament',
-        start: '2025-08-17T08:00:00',
-        end: '2025-08-17T16:00:00',
-        type: 'game',
-        team_id: 'team-2',
-        team_name: 'Elite 7v7',
-        location: 'Regional Sports Complex',
-        description: 'Summer 7v7 championship tournament',
+        id: "3",
+        title: "7v7 Tournament",
+        start: "2025-08-17T08:00:00",
+        end: "2025-08-17T16:00:00",
+        type: "game",
+        team_id: "team-2",
+        team_name: "Elite 7v7",
+        location: "Regional Sports Complex",
+        description: "Summer 7v7 championship tournament",
         rsvp_required: true,
-        tags: ['tournament', '7v7'],
-        created_at: '2025-07-05T14:00:00Z',
+        tags: ["tournament", "7v7"],
+        created_at: "2025-07-05T14:00:00Z",
       },
       {
-        id: '4',
-        title: 'Film Session',
-        start: '2025-08-14T14:45:00',
-        end: '2025-08-14T16:00:00',
-        type: 'film',
-        team_id: 'team-1',
-        team_name: 'Eastside Eagles',
-        location: 'Team Room',
-        description: 'Review game film from last week',
+        id: "4",
+        title: "Film Session",
+        start: "2025-08-14T14:45:00",
+        end: "2025-08-14T16:00:00",
+        type: "film",
+        team_id: "team-1",
+        team_name: "Eastside Eagles",
+        location: "Team Room",
+        description: "Review game film from last week",
         rsvp_required: false,
-        tags: ['film', 'analysis'],
-        created_at: '2025-07-12T11:00:00Z',
+        tags: ["film", "analysis"],
+        created_at: "2025-07-12T11:00:00Z",
       },
       {
-        id: '5',
-        title: 'Team Meeting',
-        start: '2025-08-15T16:00:00',
-        end: '2025-08-15T17:00:00',
-        type: 'meeting',
-        team_id: 'team-1',
-        team_name: 'Eastside Eagles',
-        location: 'Coach Office',
-        description: 'Weekly team meeting and game prep',
+        id: "5",
+        title: "Team Meeting",
+        start: "2025-08-15T16:00:00",
+        end: "2025-08-15T17:00:00",
+        type: "meeting",
+        team_id: "team-1",
+        team_name: "Eastside Eagles",
+        location: "Coach Office",
+        description: "Weekly team meeting and game prep",
         rsvp_required: true,
-        tags: ['meeting', 'preparation'],
-        created_at: '2025-07-08T13:00:00Z',
+        tags: ["meeting", "preparation"],
+        created_at: "2025-07-08T13:00:00Z",
       },
     ];
 
@@ -370,9 +392,12 @@ export class CalendarService {
   /**
    * Mock data for development - Team Events
    */
-  private static getMockTeamEvents(teamId: string, filters?: CalendarFilters): CalendarEvent[] {
-    const userEvents = this.getMockUserEvents('team-user', filters);
-    return userEvents.filter(event => event.team_id === teamId);
+  private static getMockTeamEvents(
+    teamId: string,
+    filters?: CalendarFilters
+  ): CalendarEvent[] {
+    const userEvents = this.getMockUserEvents("team-user", filters);
+    return userEvents.filter((event) => event.team_id === teamId);
   }
 
   /**
@@ -383,20 +408,20 @@ export class CalendarService {
       {
         id: `rsvp-1-${eventId}`,
         event_id: eventId,
-        user_id: 'user-1',
-        status: 'attending',
-        note: 'Will be there early for warm-up',
-        created_at: '2025-08-01T10:00:00Z',
-        updated_at: '2025-08-01T10:00:00Z',
+        user_id: "user-1",
+        status: "attending",
+        note: "Will be there early for warm-up",
+        created_at: "2025-08-01T10:00:00Z",
+        updated_at: "2025-08-01T10:00:00Z",
       },
       {
         id: `rsvp-2-${eventId}`,
         event_id: eventId,
-        user_id: 'user-2',
-        status: 'maybe',
-        note: 'Depends on work schedule',
-        created_at: '2025-08-01T11:00:00Z',
-        updated_at: '2025-08-01T11:00:00Z',
+        user_id: "user-2",
+        status: "maybe",
+        note: "Depends on work schedule",
+        created_at: "2025-08-01T11:00:00Z",
+        updated_at: "2025-08-01T11:00:00Z",
       },
     ];
   }
@@ -404,17 +429,20 @@ export class CalendarService {
   /**
    * Apply filters to events
    */
-  private static applyFilters(events: CalendarEvent[], filters: CalendarFilters): CalendarEvent[] {
+  private static applyFilters(
+    events: CalendarEvent[],
+    filters: CalendarFilters
+  ): CalendarEvent[] {
     let filtered = [...events];
 
     if (filters.teamIds && filters.teamIds.length > 0) {
-      filtered = filtered.filter(event => 
-        event.team_id && filters.teamIds!.includes(event.team_id)
+      filtered = filtered.filter(
+        (event) => event.team_id && filters.teamIds!.includes(event.team_id)
       );
     }
 
     if (filters.eventTypes && filters.eventTypes.length > 0) {
-      filtered = filtered.filter(event => 
+      filtered = filtered.filter((event) =>
         filters.eventTypes!.includes(event.type)
       );
     }
@@ -422,15 +450,16 @@ export class CalendarService {
     if (filters.dateRange) {
       const start = new Date(filters.dateRange.start);
       const end = new Date(filters.dateRange.end);
-      filtered = filtered.filter(event => {
+      filtered = filtered.filter((event) => {
         const eventDate = new Date(event.start);
         return eventDate >= start && eventDate <= end;
       });
     }
 
     if (filters.tags && filters.tags.length > 0) {
-      filtered = filtered.filter(event => 
-        event.tags && event.tags.some(tag => filters.tags!.includes(tag))
+      filtered = filtered.filter(
+        (event) =>
+          event.tags && event.tags.some((tag) => filters.tags!.includes(tag))
       );
     }
 

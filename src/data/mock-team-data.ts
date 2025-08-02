@@ -2,7 +2,7 @@
 export const MOCK_TEAM_DATA = {
   id: "mock-team-id",
   name: "Eastside Eagles",
-  school_name: "Eastside High School", 
+  school_name: "Eastside High School",
   mascot: "Eagles",
   colors_primary: "#1B4332",
   colors_secondary: "#FFD700",
@@ -12,7 +12,7 @@ export const MOCK_TEAM_DATA = {
   created_by: "mock-coach-id",
   subscription_tier: "team_premium" as const,
   created_at: "2024-08-01T00:00:00Z",
-  updated_at: "2024-08-01T00:00:00Z"
+  updated_at: "2024-08-01T00:00:00Z",
 };
 
 export const MOCK_TEAM_MEMBERS = [
@@ -23,32 +23,32 @@ export const MOCK_TEAM_MEMBERS = [
     team_id: "mock-team-id",
     role: "head_coach" as const,
     status: "active" as const,
-    joined_at: "2024-08-01T00:00:00Z"
+    joined_at: "2024-08-01T00:00:00Z",
   },
   // Assistant Coaches
   {
-    id: "mock-member-coach-2", 
+    id: "mock-member-coach-2",
     user_id: "mock-coach-2-id",
     team_id: "mock-team-id",
     role: "coach" as const,
     status: "active" as const,
-    joined_at: "2024-08-01T00:00:00Z"
+    joined_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-member-coach-3",
-    user_id: "mock-coach-3-id", 
+    user_id: "mock-coach-3-id",
     team_id: "mock-team-id",
     role: "coach" as const,
     status: "active" as const,
-    joined_at: "2024-08-01T00:00:00Z"
+    joined_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-member-coach-4",
     user_id: "mock-coach-4-id",
-    team_id: "mock-team-id", 
+    team_id: "mock-team-id",
     role: "coach" as const,
     status: "active" as const,
-    joined_at: "2024-08-01T00:00:00Z"
+    joined_at: "2024-08-01T00:00:00Z",
   },
   // Players
   {
@@ -57,15 +57,15 @@ export const MOCK_TEAM_MEMBERS = [
     team_id: "mock-team-id",
     role: "player" as const,
     status: "active" as const,
-    joined_at: "2024-08-01T00:00:00Z"
+    joined_at: "2024-08-01T00:00:00Z",
   },
   {
-    id: "mock-member-player-2", 
+    id: "mock-member-player-2",
     user_id: "mock-player-2-id",
     team_id: "mock-team-id",
     role: "player" as const,
     status: "active" as const,
-    joined_at: "2024-08-01T00:00:00Z"
+    joined_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-member-player-3",
@@ -73,7 +73,7 @@ export const MOCK_TEAM_MEMBERS = [
     team_id: "mock-team-id",
     role: "player" as const,
     status: "active" as const,
-    joined_at: "2024-08-01T00:00:00Z"
+    joined_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-member-player-4",
@@ -81,7 +81,7 @@ export const MOCK_TEAM_MEMBERS = [
     team_id: "mock-team-id",
     role: "player" as const,
     status: "active" as const,
-    joined_at: "2024-08-01T00:00:00Z"
+    joined_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-member-player-5",
@@ -89,7 +89,7 @@ export const MOCK_TEAM_MEMBERS = [
     team_id: "mock-team-id",
     role: "player" as const,
     status: "active" as const,
-    joined_at: "2024-08-01T00:00:00Z"
+    joined_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-member-player-6",
@@ -97,7 +97,7 @@ export const MOCK_TEAM_MEMBERS = [
     team_id: "mock-team-id",
     role: "player" as const,
     status: "active" as const,
-    joined_at: "2024-08-01T00:00:00Z"
+    joined_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-member-player-7",
@@ -105,7 +105,7 @@ export const MOCK_TEAM_MEMBERS = [
     team_id: "mock-team-id",
     role: "player" as const,
     status: "active" as const,
-    joined_at: "2024-08-01T00:00:00Z"
+    joined_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-member-player-8",
@@ -113,8 +113,8 @@ export const MOCK_TEAM_MEMBERS = [
     team_id: "mock-team-id",
     role: "player" as const,
     status: "active" as const,
-    joined_at: "2024-08-01T00:00:00Z"
-  }
+    joined_at: "2024-08-01T00:00:00Z",
+  },
 ];
 
 export const MOCK_USER_PROFILES = [
@@ -125,15 +125,15 @@ export const MOCK_USER_PROFILES = [
     display_name: "Coach Mike Johnson",
     phone: "(555) 123-4567",
     created_at: "2024-08-01T00:00:00Z",
-    updated_at: "2024-08-01T00:00:00Z"
+    updated_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-profile-coach-2",
-    user_id: "mock-coach-2-id", 
+    user_id: "mock-coach-2-id",
     display_name: "Coach Sarah Williams",
     phone: "(555) 234-5678",
     created_at: "2024-08-01T00:00:00Z",
-    updated_at: "2024-08-01T00:00:00Z"
+    updated_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-profile-coach-3",
@@ -141,15 +141,15 @@ export const MOCK_USER_PROFILES = [
     display_name: "Coach David Brown",
     phone: "(555) 345-6789",
     created_at: "2024-08-01T00:00:00Z",
-    updated_at: "2024-08-01T00:00:00Z"
+    updated_at: "2024-08-01T00:00:00Z",
   },
   {
-    id: "mock-profile-coach-4", 
+    id: "mock-profile-coach-4",
     user_id: "mock-coach-4-id",
     display_name: "Coach Lisa Davis",
     phone: "(555) 456-7890",
     created_at: "2024-08-01T00:00:00Z",
-    updated_at: "2024-08-01T00:00:00Z"
+    updated_at: "2024-08-01T00:00:00Z",
   },
   // Players
   {
@@ -163,7 +163,7 @@ export const MOCK_USER_PROFILES = [
     height_inches: 73,
     weight_lbs: 185,
     created_at: "2024-08-01T00:00:00Z",
-    updated_at: "2024-08-01T00:00:00Z"
+    updated_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-profile-player-2",
@@ -172,15 +172,15 @@ export const MOCK_USER_PROFILES = [
     phone: "(555) 678-9012",
     position: "Running Back",
     jersey_number: 24,
-    grade_level: "11th", 
+    grade_level: "11th",
     height_inches: 69,
     weight_lbs: 175,
     created_at: "2024-08-01T00:00:00Z",
-    updated_at: "2024-08-01T00:00:00Z"
+    updated_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-profile-player-3",
-    user_id: "mock-player-3-id", 
+    user_id: "mock-player-3-id",
     display_name: "Tyler Anderson",
     phone: "(555) 789-0123",
     position: "Wide Receiver",
@@ -188,21 +188,21 @@ export const MOCK_USER_PROFILES = [
     grade_level: "12th",
     height_inches: 71,
     weight_lbs: 165,
-    created_at: "2024-08-01T00:00:00Z", 
-    updated_at: "2024-08-01T00:00:00Z"
+    created_at: "2024-08-01T00:00:00Z",
+    updated_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-profile-player-4",
     user_id: "mock-player-4-id",
     display_name: "Brandon Lee",
     phone: "(555) 890-1234",
-    position: "Linebacker", 
+    position: "Linebacker",
     jersey_number: 52,
     grade_level: "11th",
     height_inches: 72,
     weight_lbs: 195,
     created_at: "2024-08-01T00:00:00Z",
-    updated_at: "2024-08-01T00:00:00Z"
+    updated_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-profile-player-5",
@@ -215,20 +215,20 @@ export const MOCK_USER_PROFILES = [
     height_inches: 75,
     weight_lbs: 225,
     created_at: "2024-08-01T00:00:00Z",
-    updated_at: "2024-08-01T00:00:00Z"
+    updated_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-profile-player-6",
     user_id: "mock-player-6-id",
     display_name: "Jordan Wilson",
-    phone: "(555) 012-3456", 
+    phone: "(555) 012-3456",
     position: "Defensive Back",
     jersey_number: 21,
     grade_level: "10th",
     height_inches: 70,
     weight_lbs: 170,
     created_at: "2024-08-01T00:00:00Z",
-    updated_at: "2024-08-01T00:00:00Z"
+    updated_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-profile-player-7",
@@ -241,7 +241,7 @@ export const MOCK_USER_PROFILES = [
     height_inches: 74,
     weight_lbs: 205,
     created_at: "2024-08-01T00:00:00Z",
-    updated_at: "2024-08-01T00:00:00Z"
+    updated_at: "2024-08-01T00:00:00Z",
   },
   {
     id: "mock-profile-player-8",
@@ -254,6 +254,6 @@ export const MOCK_USER_PROFILES = [
     height_inches: 76,
     weight_lbs: 240,
     created_at: "2024-08-01T00:00:00Z",
-    updated_at: "2024-08-01T00:00:00Z"
-  }
+    updated_at: "2024-08-01T00:00:00Z",
+  },
 ];

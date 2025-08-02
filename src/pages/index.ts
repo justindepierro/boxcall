@@ -1,9 +1,9 @@
+export { AdminPage } from "./AdminPage";
+export { CalendarPage } from "./CalendarPage";
 export { DashboardPage } from "./DashboardPage";
 export { LoginPage } from "./LoginPage";
-export { AdminPage } from "./AdminPage";
-export { SuperAdminPage } from "./SuperAdminPage";
-export { TeamManagementPage } from "./TeamManagementPage";
-export { ProfilePage } from "./ProfilePage";
-export { TeamDashboard } from "./TeamDashboard";
-export { CalendarPage } from "./CalendarPage";
 export { PracticeSchedulePage } from "./PracticeSchedulePage";
+export { ProfilePage } from "./ProfilePage";
+export { SuperAdminPage } from "./SuperAdminPage";
+export { TeamDashboard } from "./TeamDashboard";
+export { TeamManagementPage } from "./TeamManagementPage";

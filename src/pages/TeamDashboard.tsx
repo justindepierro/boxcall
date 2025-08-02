@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../app/auth-store";
-import { TeamTrophyCase } from "../components/team-dashboard/TeamTrophyCase";
-import { TeamFeed } from "../components/team-dashboard/TeamFeed";
 import { TeamCalendar } from "../components/team-dashboard/TeamCalendar";
+import { TeamFeed } from "../components/team-dashboard/TeamFeed";
 import { TeamQuickActions } from "../components/team-dashboard/TeamQuickActions";
+import { TeamTrophyCase } from "../components/team-dashboard/TeamTrophyCase";
 // import TeamNavigation from '../components/team-dashboard/TeamNavigation';
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";

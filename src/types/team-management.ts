@@ -5,28 +5,28 @@ export interface TeamPlayer {
   id: string;
   team_id: string;
   user_id?: string; // Optional - links to profiles table if user has account
-  
+
   // Basic Information
   first_name: string;
   last_name: string;
   email?: string;
-  
+
   // Contact Information
   phone?: string;
   parent_email?: string;
-  
+
   // Physical Information
   positions: string[]; // Array of positions like ["QB", "WR", "Safety"]
   jersey_number?: number;
   height?: string; // Format: "6'2\"" or "6 feet 2 inches"
   weight?: number; // In pounds
-  
+
   // Academic Information
   graduation_year?: number;
-  
+
   // Team Information
   team_level: "varsity" | "jv" | "middle_school" | "freshman";
-  
+
   // System Fields
   created_at: string;
   updated_at: string;
@@ -70,7 +70,7 @@ export interface TeamPlayerUpdate {
 }
 
 // Team Configuration Types
-import type { SubscriptionTier } from './permissions';
+import type { SubscriptionTier } from "./permissions";
 
 // Team Settings
 export interface TeamSettings {
@@ -89,9 +89,9 @@ export interface TeamSettings {
   subscription: {
     tier: SubscriptionTier;
     features: string[];
-    staffCount?: number;        // Number of staff subscriptions
-    maxStaff?: number;         // Max staff allowed (5 for $40 deal)
-    headCoachId: string;       // User ID of the head coach who owns subscription
+    staffCount?: number; // Number of staff subscriptions
+    maxStaff?: number; // Max staff allowed (5 for $40 deal)
+    headCoachId: string; // User ID of the head coach who owns subscription
   };
   familyPermissions: {
     canViewRoster: boolean;
@@ -108,12 +108,12 @@ export interface CoachInvitation {
   team_id: string;
   email: string;
   role: "head_coach" | "coach" | "assistant_coach" | "manager";
-  
+
   // Invitation Details
   invite_token: string;
   status: "pending" | "accepted" | "expired" | "cancelled";
   expires_at: string;
-  
+
   // Tracking
   invited_by: string;
   accepted_at?: string;
@@ -152,7 +152,7 @@ export interface ParsedPlayerData {
   weight?: number;
   graduation_year?: number;
   team_level: "varsity" | "jv" | "middle_school" | "freshman";
-  
+
   // Import metadata
   row_index: number;
   has_errors: boolean;
@@ -170,25 +170,62 @@ export interface CSVImportResult {
 // Position Constants
 export const FOOTBALL_POSITIONS = [
   // Offense
-  "QB", "QB1", "QB2",
-  "RB", "RB1", "RB2", "FB", "HB",
-  "WR", "WR1", "WR2", "WR3", "Slot",
-  "TE", "TE1", "TE2",
-  "LT", "LG", "C", "RG", "RT", "OL",
-  
+  "QB",
+  "QB1",
+  "QB2",
+  "RB",
+  "RB1",
+  "RB2",
+  "FB",
+  "HB",
+  "WR",
+  "WR1",
+  "WR2",
+  "WR3",
+  "Slot",
+  "TE",
+  "TE1",
+  "TE2",
+  "LT",
+  "LG",
+  "C",
+  "RG",
+  "RT",
+  "OL",
+
   // Defense
-  "DE", "DT", "NT", "DL",
-  "OLB", "MLB", "ILB", "LB",
-  "CB", "CB1", "CB2", "FS", "SS", "S", "DB",
-  
+  "DE",
+  "DT",
+  "NT",
+  "DL",
+  "OLB",
+  "MLB",
+  "ILB",
+  "LB",
+  "CB",
+  "CB1",
+  "CB2",
+  "FS",
+  "SS",
+  "S",
+  "DB",
+
   // Special Teams
-  "K", "P", "LS", "KR", "PR", "ST",
-  
+  "K",
+  "P",
+  "LS",
+  "KR",
+  "PR",
+  "ST",
+
   // Common Combinations
-  "RB/WR", "WR/DB", "LB/DE", "OL/DL",
+  "RB/WR",
+  "WR/DB",
+  "LB/DE",
+  "OL/DL",
 ] as const;
 
-export type FootballPosition = typeof FOOTBALL_POSITIONS[number];
+export type FootballPosition = (typeof FOOTBALL_POSITIONS)[number];
 
 // Team Level Constants
 export const TEAM_LEVELS = [
@@ -198,4 +235,4 @@ export const TEAM_LEVELS = [
   { value: "middle_school", label: "Middle School", color: "purple" },
 ] as const;
 
-export type TeamLevel = typeof TEAM_LEVELS[number]["value"];
+export type TeamLevel = (typeof TEAM_LEVELS)[number]["value"];

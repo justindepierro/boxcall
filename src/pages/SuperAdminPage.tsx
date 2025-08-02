@@ -3,7 +3,7 @@ import { useAuthProfile } from "../app/auth-store";
 
 /**
  * SuperAdminPage Component
- * 
+ *
  * Developer tools and system administration page.
  * Only accessible to users in the super_admins table.
  */
@@ -27,9 +27,15 @@ export const SuperAdminPage: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">Current User</h2>
           <div className="space-y-2">
-            <p><strong>Email:</strong> {profile?.email}</p>
-            <p><strong>User ID:</strong> {profile?.id}</p>
-            <p><strong>Access Level:</strong> Super Administrator</p>
+            <p>
+              <strong>Email:</strong> {profile?.email}
+            </p>
+            <p>
+              <strong>User ID:</strong> {profile?.id}
+            </p>
+            <p>
+              <strong>Access Level:</strong> Super Administrator
+            </p>
           </div>
         </div>
 
@@ -143,8 +149,9 @@ export const SuperAdminPage: React.FC = () => {
                 Super Admin Access Warning
               </h3>
               <p className="text-yellow-700 dark:text-yellow-300">
-                You have developer-level access to BoxCall. Actions performed here can affect all users and teams.
-                Always follow proper procedures and document any system changes.
+                You have developer-level access to BoxCall. Actions performed
+                here can affect all users and teams. Always follow proper
+                procedures and document any system changes.
               </p>
             </div>
           </div>
@@ -159,7 +166,7 @@ export const SuperAdminPage: React.FC = () => {
             Go Back
           </button>
           <button
-            onClick={() => window.location.href = "/dashboard"}
+            onClick={() => (window.location.href = "/dashboard")}
             className="bg-jade-500 text-white px-6 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold"
           >
             Return to Dashboard

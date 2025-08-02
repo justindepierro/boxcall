@@ -61,7 +61,7 @@ export interface MobileViewport {
   width: number;
   height: number;
   scale: number;
-  orientation: 'portrait' | 'landscape';
+  orientation: "portrait" | "landscape";
   safeArea: {
     top: number;
     bottom: number;
@@ -71,7 +71,7 @@ export interface MobileViewport {
 }
 
 export interface MobileInteraction {
-  type: 'tap' | 'swipe' | 'pinch' | 'pan' | 'long-press';
+  type: "tap" | "swipe" | "pinch" | "pan" | "long-press";
   target: string;
   timestamp: number;
   position: { x: number; y: number };
@@ -81,16 +81,16 @@ export interface MobileInteraction {
 
 export interface MobileAnimation {
   id: string;
-  type: 'slide' | 'fade' | 'scale' | 'rotate' | 'bounce';
+  type: "slide" | "fade" | "scale" | "rotate" | "bounce";
   duration: number;
-  easing: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'spring';
+  easing: "linear" | "ease-in" | "ease-out" | "ease-in-out" | "spring";
   delay?: number;
   loop?: boolean | number;
 }
 
 export interface MobileLayoutConfig {
-  density: 'compact' | 'comfortable' | 'spacious';
-  orientation: 'auto' | 'portrait' | 'landscape';
+  density: "compact" | "comfortable" | "spacious";
+  orientation: "auto" | "portrait" | "landscape";
   tabletMode: boolean;
   oneHandedMode: boolean;
   accessibility: {
@@ -103,7 +103,7 @@ export interface MobileLayoutConfig {
 
 export interface MobileComponentState {
   id: string;
-  type: 'button' | 'input' | 'card' | 'list' | 'modal' | 'sheet';
+  type: "button" | "input" | "card" | "list" | "modal" | "sheet";
   visible: boolean;
   enabled: boolean;
   loading: boolean;
@@ -155,7 +155,7 @@ export class MobileUIService {
    */
   static async initialize(
     viewport: MobileViewport,
-    themeId: 'light' | 'dark' | 'auto' = 'auto',
+    themeId: "light" | "dark" | "auto" = "auto",
     layoutConfig: Partial<MobileLayoutConfig> = {}
   ): Promise<{ success: boolean; theme: MobileUITheme; error?: string }> {
     try {
@@ -168,46 +168,46 @@ export class MobileUIService {
 
       // Configure layout
       this.layoutConfig = {
-        density: 'comfortable',
-        orientation: 'auto',
+        density: "comfortable",
+        orientation: "auto",
         tabletMode: viewport.width >= 768,
         oneHandedMode: viewport.height > 700 && !(viewport.width >= 768),
         accessibility: {
           reduceMotion: false,
           highContrast: false,
           largeText: false,
-          voiceOver: false
+          voiceOver: false,
         },
-        ...layoutConfig
+        ...layoutConfig,
       };
 
       // Initialize navigation
       this.navigationState = {
-        currentRoute: '/',
-        history: ['/'],
+        currentRoute: "/",
+        history: ["/"],
         canGoBack: false,
         canGoForward: false,
         modalStack: [],
         tabState: {
           activeTab: 0,
           tabs: [
-            { id: 'calendar', label: 'Calendar', icon: 'calendar' },
-            { id: 'teams', label: 'Teams', icon: 'group' },
-            { id: 'notifications', label: 'Alerts', icon: 'bell' },
-            { id: 'profile', label: 'Profile', icon: 'user' }
-          ]
-        }
+            { id: "calendar", label: "Calendar", icon: "calendar" },
+            { id: "teams", label: "Teams", icon: "group" },
+            { id: "notifications", label: "Alerts", icon: "bell" },
+            { id: "profile", label: "Profile", icon: "user" },
+          ],
+        },
       };
 
       return {
         success: true,
-        theme: selectedTheme
+        theme: selectedTheme,
       };
     } catch (error) {
       return {
         success: false,
         theme: this.getDefaultTheme(),
-        error: `Failed to initialize mobile UI: ${error}`
+        error: `Failed to initialize mobile UI: ${error}`,
       };
     }
   }
@@ -215,27 +215,31 @@ export class MobileUIService {
   /**
    * Switch between light and dark themes
    */
-  static async switchTheme(themeId: 'light' | 'dark' | 'auto'): Promise<MobileUITheme> {
+  static async switchTheme(
+    themeId: "light" | "dark" | "auto"
+  ): Promise<MobileUITheme> {
     const newTheme = await this.getTheme(themeId);
     this.theme = newTheme;
-    
+
     // Animate theme transition
     await this.animateThemeTransition();
-    
+
     return newTheme;
   }
 
   /**
    * Update layout configuration
    */
-  static updateLayoutConfig(config: Partial<MobileLayoutConfig>): MobileLayoutConfig {
+  static updateLayoutConfig(
+    config: Partial<MobileLayoutConfig>
+  ): MobileLayoutConfig {
     if (!this.layoutConfig) {
-      throw new Error('Mobile UI not initialized');
+      throw new Error("Mobile UI not initialized");
     }
 
     this.layoutConfig = {
       ...this.layoutConfig,
-      ...config
+      ...config,
     };
 
     // Trigger layout recalculation
@@ -253,7 +257,7 @@ export class MobileUIService {
    */
   static registerComponent(
     id: string,
-    type: MobileComponentState['type'],
+    type: MobileComponentState["type"],
     initialState: Partial<MobileComponentState> = {}
   ): MobileComponentState {
     const component: MobileComponentState = {
@@ -265,7 +269,7 @@ export class MobileUIService {
       dimensions: { width: 0, height: 0, x: 0, y: 0 },
       animations: [],
       interactions: [],
-      ...initialState
+      ...initialState,
     };
 
     this.componentStates.set(id, component);
@@ -295,7 +299,7 @@ export class MobileUIService {
    */
   static async animateComponent(
     componentId: string,
-    animation: Omit<MobileAnimation, 'id'>
+    animation: Omit<MobileAnimation, "id">
   ): Promise<{ success: boolean; animationId?: string }> {
     const component = this.componentStates.get(componentId);
     if (!component) {
@@ -304,7 +308,7 @@ export class MobileUIService {
 
     const fullAnimation: MobileAnimation = {
       id: `anim_${componentId}_${Date.now()}`,
-      ...animation
+      ...animation,
     };
 
     // Add to component animations
@@ -329,7 +333,7 @@ export class MobileUIService {
    */
   static async navigateTo(
     route: string,
-    transition: 'slide' | 'fade' | 'modal' | 'none' = 'slide'
+    transition: "slide" | "fade" | "modal" | "none" = "slide"
   ): Promise<{ success: boolean; previousRoute?: string }> {
     if (!this.navigationState) {
       return { success: false };
@@ -343,8 +347,8 @@ export class MobileUIService {
     this.navigationState.canGoBack = this.navigationState.history.length > 1;
 
     // Animate transition
-    if (transition !== 'none') {
-      await this.animatePageTransition(transition, 'forward');
+    if (transition !== "none") {
+      await this.animatePageTransition(transition, "forward");
     }
 
     return { success: true, previousRoute };
@@ -354,7 +358,7 @@ export class MobileUIService {
    * Go back in navigation history
    */
   static async goBack(
-    transition: 'slide' | 'fade' | 'none' = 'slide'
+    transition: "slide" | "fade" | "none" = "slide"
   ): Promise<{ success: boolean; currentRoute?: string }> {
     if (!this.navigationState || !this.navigationState.canGoBack) {
       return { success: false };
@@ -362,14 +366,15 @@ export class MobileUIService {
 
     // Remove current route from history
     this.navigationState.history.pop();
-    const previousRoute = this.navigationState.history[this.navigationState.history.length - 1];
-    
+    const previousRoute =
+      this.navigationState.history[this.navigationState.history.length - 1];
+
     this.navigationState.currentRoute = previousRoute;
     this.navigationState.canGoBack = this.navigationState.history.length > 1;
 
     // Animate transition
-    if (transition !== 'none') {
-      await this.animatePageTransition(transition, 'backward');
+    if (transition !== "none") {
+      await this.animatePageTransition(transition, "backward");
     }
 
     return { success: true, currentRoute: previousRoute };
@@ -378,7 +383,10 @@ export class MobileUIService {
   /**
    * Switch active tab
    */
-  static switchTab(tabIndex: number): { success: boolean; previousTab?: number } {
+  static switchTab(tabIndex: number): {
+    success: boolean;
+    previousTab?: number;
+  } {
     if (!this.navigationState) {
       return { success: false };
     }
@@ -403,12 +411,19 @@ export class MobileUIService {
     // Update tablet mode
     if (this.layoutConfig) {
       this.layoutConfig.tabletMode = newViewport.width >= 768;
-      this.layoutConfig.oneHandedMode = newViewport.height > 700 && newViewport.width < 768;
+      this.layoutConfig.oneHandedMode =
+        newViewport.height > 700 && newViewport.width < 768;
     }
 
     // Animate orientation change if needed
-    if (previousViewport && previousViewport.orientation !== newViewport.orientation) {
-      return this.animateOrientationChange(previousViewport.orientation, newViewport.orientation);
+    if (
+      previousViewport &&
+      previousViewport.orientation !== newViewport.orientation
+    ) {
+      return this.animateOrientationChange(
+        previousViewport.orientation,
+        newViewport.orientation
+      );
     }
 
     return Promise.resolve();
@@ -420,7 +435,7 @@ export class MobileUIService {
   static calculateResponsiveDimensions(
     baseWidth: number,
     baseHeight: number,
-    breakpoint: 'mobile' | 'tablet' | 'desktop' = 'mobile'
+    breakpoint: "mobile" | "tablet" | "desktop" = "mobile"
   ): { width: number; height: number; scale: number } {
     if (!this.viewport) {
       return { width: baseWidth, height: baseHeight, scale: 1 };
@@ -430,7 +445,7 @@ export class MobileUIService {
     return {
       width: baseWidth * scale,
       height: baseHeight * scale,
-      scale
+      scale,
     };
   }
 
@@ -453,16 +468,16 @@ export class MobileUIService {
 
     // Clean up old component states
     this.cleanupInactiveComponents();
-    optimizations.push('Cleaned inactive components');
+    optimizations.push("Cleaned inactive components");
 
     // Optimize animations
     this.optimizeAnimations();
-    optimizations.push('Optimized animations');
+    optimizations.push("Optimized animations");
 
     // Reduce rendering complexity
     if (this.layoutConfig?.accessibility.reduceMotion) {
       this.disableNonEssentialAnimations();
-      optimizations.push('Disabled non-essential animations');
+      optimizations.push("Disabled non-essential animations");
     }
 
     // Measure performance
@@ -483,7 +498,7 @@ export class MobileUIService {
     return {
       renderTime: 16, // Target 60fps
       animationFrameRate: 60,
-      memoryUsage: this.componentStates.size * 0.5 // Estimated KB per component
+      memoryUsage: this.componentStates.size * 0.5, // Estimated KB per component
     };
   }
 
@@ -491,74 +506,78 @@ export class MobileUIService {
   // Private Helper Methods
   // ==========================================
 
-  private static async getTheme(themeId: 'light' | 'dark' | 'auto'): Promise<MobileUITheme> {
+  private static async getTheme(
+    themeId: "light" | "dark" | "auto"
+  ): Promise<MobileUITheme> {
     let selectedThemeId = themeId;
-    
-    if (themeId === 'auto') {
+
+    if (themeId === "auto") {
       // TODO: Detect system theme preference
-      selectedThemeId = 'light';
+      selectedThemeId = "light";
     }
 
-    return selectedThemeId === 'dark' ? this.getDarkTheme() : this.getLightTheme();
+    return selectedThemeId === "dark"
+      ? this.getDarkTheme()
+      : this.getLightTheme();
   }
 
   private static getLightTheme(): MobileUITheme {
     return {
-      id: 'light',
-      name: 'Light Theme',
+      id: "light",
+      name: "Light Theme",
       colors: {
-        primary: '#007AFF',
-        secondary: '#5856D6',
-        background: '#FFFFFF',
-        surface: '#F2F2F7',
+        primary: "#007AFF",
+        secondary: "#5856D6",
+        background: "#FFFFFF",
+        surface: "#F2F2F7",
         text: {
-          primary: '#000000',
-          secondary: '#3C3C43',
-          disabled: '#8E8E93'
+          primary: "#000000",
+          secondary: "#3C3C43",
+          disabled: "#8E8E93",
         },
         status: {
-          success: '#34C759',
-          warning: '#FF9500',
-          error: '#FF3B30',
-          info: '#007AFF'
-        }
+          success: "#34C759",
+          warning: "#FF9500",
+          error: "#FF3B30",
+          info: "#007AFF",
+        },
       },
       typography: {
         sizes: { xs: 12, sm: 14, base: 16, lg: 18, xl: 20, xxl: 24 },
-        weights: { light: 300, normal: 400, medium: 500, bold: 600 }
+        weights: { light: 300, normal: 400, medium: 500, bold: 600 },
       },
       spacing: { xs: 4, sm: 8, md: 16, lg: 24, xl: 32 },
-      borderRadius: { sm: 4, md: 8, lg: 12, full: 9999 }
+      borderRadius: { sm: 4, md: 8, lg: 12, full: 9999 },
     };
   }
 
   private static getDarkTheme(): MobileUITheme {
     return {
-      id: 'dark',
-      name: 'Dark Theme',
+      id: "dark",
+      name: "Dark Theme",
       colors: {
-        primary: '#0A84FF',
-        secondary: '#5E5CE6',
-        background: '#000000',
-        surface: '#1C1C1E',
+        primary: "#0A84FF",
+        secondary: "#5E5CE6",
+        background: "#000000",
+        surface: "#1C1C1E",
         text: {
-          primary: '#FFFFFF',
-          secondary: '#EBEBF5',
-          disabled: '#8E8E93'
+          primary: "#FFFFFF",
+          secondary: "#EBEBF5",
+          disabled: "#8E8E93",
         },
         status: {
-          success: '#30D158',
-          warning: '#FF9F0A',
-          error: '#FF453A',
-          info: '#64D2FF'
-        }
+          success: "#30D158",
+          warning: "#FF9F0A",
+          error: "#FF453A",
+          info: "#64D2FF",
+        },
       },
       typography: {
         sizes: { xs: 12, sm: 14, base: 16, lg: 18, xl: 20, xxl: 24 },
-        weights: { light: 300, normal: 400, medium: 500, bold: 600 }
+        weights: { light: 300, normal: 400, medium: 500, bold: 600 },
       },
       spacing: { xs: 4, sm: 8, md: 16, lg: 24, xl: 32 },
-      borderRadius: { sm: 4, md: 8, lg: 12, full: 9999 }
+      borderRadius: { sm: 4, md: 8, lg: 12, full: 9999 },
     };
   }
 
@@ -568,50 +587,55 @@ export class MobileUIService {
 
   private static async animateThemeTransition(): Promise<void> {
     // TODO: Implement smooth theme transition animation
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
   }
 
   private static recalculateLayout(): void {
     // TODO: Trigger layout recalculation for all components
-    console.log('Recalculating layout for mobile UI');
+    console.log("Recalculating layout for mobile UI");
   }
 
-  private static async processAnimation(animation: MobileAnimation): Promise<void> {
+  private static async processAnimation(
+    animation: MobileAnimation
+  ): Promise<void> {
     // TODO: Implement actual animation processing
-    await new Promise(resolve => setTimeout(resolve, animation.duration));
-    
+    await new Promise((resolve) => setTimeout(resolve, animation.duration));
+
     // Remove from animation queue when complete
-    const index = this.animationQueue.findIndex(a => a.id === animation.id);
+    const index = this.animationQueue.findIndex((a) => a.id === animation.id);
     if (index !== -1) {
       this.animationQueue.splice(index, 1);
     }
   }
 
   private static async animatePageTransition(
-    transition: 'slide' | 'fade' | 'modal',
+    transition: "slide" | "fade" | "modal",
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _direction: 'forward' | 'backward'
+    _direction: "forward" | "backward"
   ): Promise<void> {
-    const duration = transition === 'modal' ? 400 : 300;
-    
+    const duration = transition === "modal" ? 400 : 300;
+
     // TODO: Implement actual page transition animations
-    await new Promise(resolve => setTimeout(resolve, duration));
+    await new Promise((resolve) => setTimeout(resolve, duration));
   }
 
   private static async animateOrientationChange(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _from: 'portrait' | 'landscape',
+    _from: "portrait" | "landscape",
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _to: 'portrait' | 'landscape'
+    _to: "portrait" | "landscape"
   ): Promise<void> {
     // TODO: Implement orientation change animation
-    await new Promise(resolve => setTimeout(resolve, 200));
+    await new Promise((resolve) => setTimeout(resolve, 200));
   }
 
-  private static calculateScale(breakpoint: 'mobile' | 'tablet' | 'desktop'): number {
+  private static calculateScale(
+    breakpoint: "mobile" | "tablet" | "desktop"
+  ): number {
     if (!this.viewport) return 1;
 
-    const baseWidth = breakpoint === 'mobile' ? 375 : breakpoint === 'tablet' ? 768 : 1024;
+    const baseWidth =
+      breakpoint === "mobile" ? 375 : breakpoint === "tablet" ? 768 : 1024;
     return Math.min(this.viewport.width / baseWidth, 1.2); // Max scale of 1.2x
   }
 
@@ -621,7 +645,8 @@ export class MobileUIService {
     const maxAge = 5 * 60 * 1000; // 5 minutes
 
     for (const [id, component] of this.componentStates) {
-      const lastInteraction = component.interactions[component.interactions.length - 1];
+      const lastInteraction =
+        component.interactions[component.interactions.length - 1];
       if (lastInteraction && now - lastInteraction.timestamp > maxAge) {
         this.componentStates.delete(id);
       }
@@ -638,7 +663,7 @@ export class MobileUIService {
 
   private static disableNonEssentialAnimations(): void {
     // TODO: Disable decorative animations for accessibility
-    console.log('Disabling non-essential animations');
+    console.log("Disabling non-essential animations");
   }
 
   // ==========================================

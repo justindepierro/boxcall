@@ -1,15 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
-import { PracticeService } from '../services/practiceService';
-import type { 
-  PracticeSchedule, 
-  PracticeTemplate, 
-  PracticeBlock, 
-  PracticeAttendance,
-  CreatePracticeScheduleData,
+import { useCallback, useEffect, useState } from "react";
+import { PracticeService } from "../services/practiceService";
+import type {
   CreatePracticeBlockData,
+  CreatePracticeScheduleData,
+  Equipment,
+  PracticeAttendance,
+  PracticeBlock,
   PracticeFilters,
-  Equipment
-} from '../types/practice';
+  PracticeSchedule,
+  PracticeTemplate,
+} from "../types/practice";
 
 // Practice Schedule Hook
 export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
@@ -19,14 +19,18 @@ export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
 
   const fetchSchedules = useCallback(async () => {
     if (!teamId) return;
-    
+
     try {
       setLoading(true);
       setError(null);
       const data = await PracticeService.getPracticeSchedules(teamId, filters);
       setSchedules(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch practice schedules');
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to fetch practice schedules"
+      );
     } finally {
       setLoading(false);
     }
@@ -39,23 +43,39 @@ export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
   const createSchedule = async (data: CreatePracticeScheduleData) => {
     try {
       const newSchedule = await PracticeService.createPracticeSchedule(data);
-      setSchedules(prev => [...prev, newSchedule]);
+      setSchedules((prev) => [...prev, newSchedule]);
       return newSchedule;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create practice schedule');
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to create practice schedule"
+      );
       throw err;
     }
   };
 
-  const updateSchedule = async (id: string, updates: Partial<PracticeSchedule>) => {
+  const updateSchedule = async (
+    id: string,
+    updates: Partial<PracticeSchedule>
+  ) => {
     try {
-      const updatedSchedule = await PracticeService.updatePracticeSchedule(id, updates);
-      setSchedules(prev => prev.map(schedule => 
-        schedule.id === id ? updatedSchedule : schedule
-      ));
+      const updatedSchedule = await PracticeService.updatePracticeSchedule(
+        id,
+        updates
+      );
+      setSchedules((prev) =>
+        prev.map((schedule) =>
+          schedule.id === id ? updatedSchedule : schedule
+        )
+      );
       return updatedSchedule;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update practice schedule');
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to update practice schedule"
+      );
       throw err;
     }
   };
@@ -63,9 +83,13 @@ export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
   const deleteSchedule = async (id: string) => {
     try {
       await PracticeService.deletePracticeSchedule(id);
-      setSchedules(prev => prev.filter(schedule => schedule.id !== id));
+      setSchedules((prev) => prev.filter((schedule) => schedule.id !== id));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete practice schedule');
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to delete practice schedule"
+      );
       throw err;
     }
   };
@@ -77,7 +101,7 @@ export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
     createSchedule,
     updateSchedule,
     deleteSchedule,
-    refetch: fetchSchedules
+    refetch: fetchSchedules,
   };
 }
 
@@ -90,23 +114,33 @@ export function usePracticeBlocks(scheduleId: string) {
     try {
       setLoading(true);
       setError(null);
-      const newBlock = await PracticeService.addPracticeBlock(scheduleId, blockData);
+      const newBlock = await PracticeService.addPracticeBlock(
+        scheduleId,
+        blockData
+      );
       return newBlock;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to add practice block');
+      setError(
+        err instanceof Error ? err.message : "Failed to add practice block"
+      );
       throw err;
     } finally {
       setLoading(false);
     }
   };
 
-  const updateBlock = async (blockId: string, updates: Partial<PracticeBlock>) => {
+  const updateBlock = async (
+    blockId: string,
+    updates: Partial<PracticeBlock>
+  ) => {
     try {
       setLoading(true);
       setError(null);
       await PracticeService.updatePracticeBlock(scheduleId, blockId, updates);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update practice block');
+      setError(
+        err instanceof Error ? err.message : "Failed to update practice block"
+      );
       throw err;
     } finally {
       setLoading(false);
@@ -119,7 +153,9 @@ export function usePracticeBlocks(scheduleId: string) {
       setError(null);
       await PracticeService.reorderPracticeBlocks(scheduleId, blocks);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to reorder practice blocks');
+      setError(
+        err instanceof Error ? err.message : "Failed to reorder practice blocks"
+      );
       throw err;
     } finally {
       setLoading(false);
@@ -132,7 +168,9 @@ export function usePracticeBlocks(scheduleId: string) {
       setError(null);
       await PracticeService.deletePracticeBlock(scheduleId, blockId);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete practice block');
+      setError(
+        err instanceof Error ? err.message : "Failed to delete practice block"
+      );
       throw err;
     } finally {
       setLoading(false);
@@ -145,7 +183,7 @@ export function usePracticeBlocks(scheduleId: string) {
     addBlock,
     updateBlock,
     reorderBlocks,
-    deleteBlock
+    deleteBlock,
   };
 }
 
@@ -157,14 +195,18 @@ export function usePracticeTemplates(teamId: string) {
 
   const fetchTemplates = useCallback(async () => {
     if (!teamId) return;
-    
+
     try {
       setLoading(true);
       setError(null);
       const data = await PracticeService.getPracticeTemplates(teamId);
       setTemplates(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch practice templates');
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to fetch practice templates"
+      );
     } finally {
       setLoading(false);
     }
@@ -174,23 +216,40 @@ export function usePracticeTemplates(teamId: string) {
     fetchTemplates();
   }, [fetchTemplates]);
 
-  const createTemplate = async (template: Omit<PracticeTemplate, 'id' | 'createdAt' | 'usageCount'>) => {
+  const createTemplate = async (
+    template: Omit<PracticeTemplate, "id" | "createdAt" | "usageCount">
+  ) => {
     try {
-      const newTemplate = await PracticeService.createPracticeTemplate(template);
-      setTemplates(prev => [...prev, newTemplate]);
+      const newTemplate =
+        await PracticeService.createPracticeTemplate(template);
+      setTemplates((prev) => [...prev, newTemplate]);
       return newTemplate;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create practice template');
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to create practice template"
+      );
       throw err;
     }
   };
 
-  const createScheduleFromTemplate = async (templateId: string, scheduleData: CreatePracticeScheduleData) => {
+  const createScheduleFromTemplate = async (
+    templateId: string,
+    scheduleData: CreatePracticeScheduleData
+  ) => {
     try {
-      const schedule = await PracticeService.createScheduleFromTemplate(templateId, scheduleData);
+      const schedule = await PracticeService.createScheduleFromTemplate(
+        templateId,
+        scheduleData
+      );
       return schedule;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create schedule from template');
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to create schedule from template"
+      );
       throw err;
     }
   };
@@ -201,7 +260,7 @@ export function usePracticeTemplates(teamId: string) {
     error,
     createTemplate,
     createScheduleFromTemplate,
-    refetch: fetchTemplates
+    refetch: fetchTemplates,
   };
 }
 
@@ -213,14 +272,18 @@ export function usePracticeAttendance(practiceId: string) {
 
   const fetchAttendance = useCallback(async () => {
     if (!practiceId) return;
-    
+
     try {
       setLoading(true);
       setError(null);
       const data = await PracticeService.getPracticeAttendance(practiceId);
       setAttendance(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch practice attendance');
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to fetch practice attendance"
+      );
     } finally {
       setLoading(false);
     }
@@ -231,23 +294,30 @@ export function usePracticeAttendance(practiceId: string) {
   }, [fetchAttendance]);
 
   const recordAttendance = async (
-    playerId: string, 
-    status: 'present' | 'absent' | 'late' | 'excused', 
+    playerId: string,
+    status: "present" | "absent" | "late" | "excused",
     notes?: string
   ) => {
     try {
-      const record = await PracticeService.recordAttendance(practiceId, playerId, status, notes);
-      setAttendance(prev => {
-        const existing = prev.find(a => a.playerId === playerId);
+      const record = await PracticeService.recordAttendance(
+        practiceId,
+        playerId,
+        status,
+        notes
+      );
+      setAttendance((prev) => {
+        const existing = prev.find((a) => a.playerId === playerId);
         if (existing) {
-          return prev.map(a => a.playerId === playerId ? record : a);
+          return prev.map((a) => (a.playerId === playerId ? record : a));
         } else {
           return [...prev, record];
         }
       });
       return record;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to record attendance');
+      setError(
+        err instanceof Error ? err.message : "Failed to record attendance"
+      );
       throw err;
     }
   };
@@ -257,7 +327,7 @@ export function usePracticeAttendance(practiceId: string) {
     loading,
     error,
     recordAttendance,
-    refetch: fetchAttendance
+    refetch: fetchAttendance,
   };
 }
 
@@ -269,14 +339,16 @@ export function useEquipment(teamId: string) {
 
   const fetchEquipment = useCallback(async () => {
     if (!teamId) return;
-    
+
     try {
       setLoading(true);
       setError(null);
       const data = await PracticeService.getAvailableEquipment(teamId);
       setEquipment(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch equipment');
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch equipment"
+      );
     } finally {
       setLoading(false);
     }
@@ -290,7 +362,7 @@ export function useEquipment(teamId: string) {
     equipment,
     loading,
     error,
-    refetch: fetchEquipment
+    refetch: fetchEquipment,
   };
 }
 
@@ -306,7 +378,7 @@ export function usePracticeSearch() {
       const results = await PracticeService.searchPractices(query, teamId);
       return results;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Search failed');
+      setError(err instanceof Error ? err.message : "Search failed");
       throw err;
     } finally {
       setLoading(false);
@@ -316,7 +388,7 @@ export function usePracticeSearch() {
   return {
     searchPractices,
     loading,
-    error
+    error,
   };
 }
 
@@ -328,7 +400,7 @@ export function usePracticeTimer() {
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    
+
     if (isRunning) {
       interval = setInterval(() => {
         setCurrentTime(new Date());
@@ -363,14 +435,16 @@ export function usePracticeTimer() {
   };
 
   const getTimeRemaining = (endTime: Date) => {
-    const remaining = Math.floor((endTime.getTime() - currentTime.getTime()) / 1000);
+    const remaining = Math.floor(
+      (endTime.getTime() - currentTime.getTime()) / 1000
+    );
     return Math.max(0, remaining);
   };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
   return {
@@ -381,6 +455,6 @@ export function usePracticeTimer() {
     resetTimer,
     getElapsedTime,
     getTimeRemaining,
-    formatTime
+    formatTime,
   };
 }

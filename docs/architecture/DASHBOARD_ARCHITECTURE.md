@@ -5,9 +5,11 @@
 BoxCall has two distinct dashboard types serving different purposes:
 
 ### **1. Personal Dashboard (`/dashboard`)**
+
 **Individual user's personal space - think MySpace profile meets Strava achievements**
 
 #### **For Players:**
+
 - **🏆 Personal Trophy Shelf** - Pinned at top
   - **Helmet Stickers** - Team achievements assigned by coaches
   - **Medals** - BoxCall-specific achievements (like Strava challenges/Garmin achievements/Xbox points)
@@ -22,6 +24,7 @@ BoxCall has two distinct dashboard types serving different purposes:
 - **⚡ Quick Actions** - Personal shortcuts and preferences
 
 #### **For Coaches:**
+
 - **🏆 Personal Trophy Shelf** - Coaching achievements and certifications
 - **👤 Coach Profile** - Professional coaching bio
 - **📋 Quick Actions Dashboard**
@@ -34,6 +37,7 @@ BoxCall has two distinct dashboard types serving different purposes:
 - **🎓 Professional Development** - Coaching resources and training
 
 #### **For Family Members:**
+
 - **👤 Family Profile** - Parent/guardian information
 - **📅 Family Calendar** - All player events and schedules
 - **📬 Coach Communications** - Updates and announcements from coaches
@@ -44,9 +48,11 @@ BoxCall has two distinct dashboard types serving different purposes:
 ---
 
 ### **2. Team Bulletin (`/team/:teamId/bulletin`)**
+
 **Team-specific bulletin board and command center - football-style team communication hub**
 
 #### **Team-Specific Features:**
+
 - **🏆 Team Trophy Case** (not shelf) - Collective team achievements
   - **Team Goal Trophies** - Season objectives and milestones
   - **Team Medals** - BoxCall team-specific achievements
@@ -68,32 +74,35 @@ BoxCall has two distinct dashboard types serving different purposes:
 
 ## 🎯 **Key Architectural Differences**
 
-| Feature | Personal Dashboard | Team Dashboard |
-|---------|-------------------|----------------|
-| **Scope** | Cross-team, personal | Single team focused |
-| **Trophy Display** | Personal Trophy Shelf | Team Trophy Case |
-| **Achievements** | Individual + BoxCall medals | Team goals + collective stickers |
-| **Communications** | All teams messages | Team-specific feed |
-| **Calendar** | Personal events across teams | Team events only |
-| **Quick Actions** | Role-based personal shortcuts | Team-specific role actions |
-| **Profile** | Personal bio (MySpace style) | Team role and status |
+| Feature            | Personal Dashboard            | Team Dashboard                   |
+| ------------------ | ----------------------------- | -------------------------------- |
+| **Scope**          | Cross-team, personal          | Single team focused              |
+| **Trophy Display** | Personal Trophy Shelf         | Team Trophy Case                 |
+| **Achievements**   | Individual + BoxCall medals   | Team goals + collective stickers |
+| **Communications** | All teams messages            | Team-specific feed               |
+| **Calendar**       | Personal events across teams  | Team events only                 |
+| **Quick Actions**  | Role-based personal shortcuts | Team-specific role actions       |
+| **Profile**        | Personal bio (MySpace style)  | Team role and status             |
 
 ---
 
 ## 📱 **User Experience Flow**
 
 ### **Navigation Pattern:**
+
 1. **Login** → **Personal Dashboard** (default landing)
 2. **Team Selector** → **Team Dashboard** (specific team context)
 3. **Header Navigation** → Switch between Personal and Team views
 
 ### **Multi-Team Support:**
+
 - Players can belong to multiple teams simultaneously
 - Each team has its own dashboard and context
 - Personal dashboard aggregates across all teams
 - Team selector allows switching between team contexts
 
 ### **Role-Based Customization:**
+
 - **Players**: Focus on achievements, gear, and personal development
 - **Coaches**: Emphasis on team management tools and quick actions
 - **Family**: Communication and progress tracking priority
@@ -103,6 +112,7 @@ BoxCall has two distinct dashboard types serving different purposes:
 ## 🛠️ **Technical Implementation Notes**
 
 ### **Dashboard Component Structure:**
+
 ```typescript
 // Personal Dashboard Components
 /pages/DashboardPage.tsx           // Main personal dashboard
@@ -127,6 +137,7 @@ BoxCall has two distinct dashboard types serving different purposes:
 ```
 
 ### **State Management:**
+
 ```typescript
 // Dashboard Store
 interface DashboardState {
@@ -140,6 +151,7 @@ interface DashboardState {
 ```
 
 ### **Database Requirements:**
+
 - **achievements** table - Personal and team achievements
 - **helmet_stickers** table - Team-assigned recognition
 - **team_goals** table - Team objectives and milestones
@@ -150,4 +162,4 @@ interface DashboardState {
 
 ---
 
-*This architecture ensures clear separation between personal and team contexts while supporting BoxCall's multi-team environment and role-based functionality.*
+_This architecture ensures clear separation between personal and team contexts while supporting BoxCall's multi-team environment and role-based functionality._

@@ -11,7 +11,7 @@ react-native/
 ├── src/
 │   ├── components/          # Reusable UI components
 │   │   ├── common/          # Cross-platform components
-│   │   ├── ios/             # iOS-specific components  
+│   │   ├── ios/             # iOS-specific components
 │   │   └── android/         # Android-specific components
 │   ├── screens/             # Application screens
 │   │   ├── Calendar/        # Calendar-related screens
@@ -36,12 +36,14 @@ react-native/
 ## 🎯 Key Features
 
 ### Phase 3 Intelligence on Mobile
+
 - ✅ **Conflict Detection** - Touch-optimized conflict viewing and resolution
 - ✅ **Smart Scheduling** - Mobile-friendly scheduling suggestions with haptic feedback
 - ✅ **Attendance Analytics** - Mobile dashboard with swipe gestures and charts
 - ✅ **Real-Time Sync** - Instant updates across all devices
 
 ### Mobile-Specific Features
+
 - 📱 **Native Calendar Integration** - Two-way sync with iOS Calendar and Google Calendar
 - 🔔 **Smart Push Notifications** - Intelligent notifications with action buttons
 - 📍 **Location Services** - GPS-based travel time calculations
@@ -52,13 +54,15 @@ react-native/
 ### Platform-Specific Optimizations
 
 #### iOS Features
+
 - **Siri Shortcuts** - "Hey Siri, show my practice schedule"
 - **iOS Widgets** - Home screen widgets for quick schedule access
 - **Apple Watch** - Companion app for schedule viewing
 - **CarPlay** - In-car schedule access for parents
 - **Live Activities** - Real-time event updates in Dynamic Island
 
-#### Android Features  
+#### Android Features
+
 - **Google Assistant** - Voice commands and actions
 - **Android Widgets** - Material Design home screen widgets
 - **Wear OS** - Smartwatch companion app
@@ -68,6 +72,7 @@ react-native/
 ## 🛠️ Technical Stack
 
 ### Core Technologies
+
 - **React Native** 0.73+ - Cross-platform mobile development
 - **TypeScript** - Type-safe development
 - **React Navigation** 6+ - Navigation and routing
@@ -78,6 +83,7 @@ react-native/
 - **DateFns** - Date manipulation and formatting
 
 ### Native Modules
+
 - **React Native Calendar Events** - Native calendar integration
 - **React Native Push Notifications** - Cross-platform notifications
 - **React Native Biometrics** - Biometric authentication
@@ -86,6 +92,7 @@ react-native/
 - **React Native Camera** - Photo and video capture
 
 ### Development Tools
+
 - **Metro** - JavaScript bundler
 - **Flipper** - Debugging and development tools
 - **Reactotron** - React Native debugging
@@ -95,6 +102,7 @@ react-native/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - React Native CLI
 - Xcode 15+ (for iOS development)
@@ -102,6 +110,7 @@ react-native/
 - CocoaPods (for iOS dependencies)
 
 ### Installation
+
 ```bash
 # Install dependencies
 npm install
@@ -113,6 +122,7 @@ cd ios && pod install && cd ..
 ```
 
 ### Development
+
 ```bash
 # Start Metro bundler
 npm start
@@ -120,7 +130,7 @@ npm start
 # Run iOS
 npm run ios
 
-# Run Android  
+# Run Android
 npm run android
 
 # Run with specific device
@@ -131,53 +141,62 @@ npm run android -- --deviceId=emulator-5554
 ## 📱 App Architecture
 
 ### State Management
+
 ```typescript
 // Zustand store structure
 interface AppStore {
   // User state
   user: UserState;
   teams: TeamState[];
-  
+
   // Calendar state
   events: CrossPlatformCalendarEvent[];
   selectedDate: Date;
-  calendarView: 'month' | 'week' | 'day';
-  
+  calendarView: "month" | "week" | "day";
+
   // Intelligence state
   conflicts: ConflictDetection[];
   suggestions: SchedulingSuggestion[];
   analytics: AnalyticsCache;
-  
+
   // App state
   isOnline: boolean;
   syncStatus: SyncStatus;
   notifications: NotificationState[];
-  
+
   // Actions
   actions: {
     // Calendar actions
     loadEvents: (dateRange: DateRange) => Promise<void>;
     createEvent: (event: Partial<CrossPlatformCalendarEvent>) => Promise<void>;
-    updateEvent: (id: string, updates: Partial<CrossPlatformCalendarEvent>) => Promise<void>;
+    updateEvent: (
+      id: string,
+      updates: Partial<CrossPlatformCalendarEvent>
+    ) => Promise<void>;
     deleteEvent: (id: string) => Promise<void>;
-    
+
     // Intelligence actions
-    detectConflicts: (event: Partial<CrossPlatformCalendarEvent>) => Promise<void>;
+    detectConflicts: (
+      event: Partial<CrossPlatformCalendarEvent>
+    ) => Promise<void>;
     generateSuggestions: (constraints: SchedulingConstraints) => Promise<void>;
     loadAnalytics: (teamId: string, period: AnalyticsPeriod) => Promise<void>;
-    
+
     // Sync actions
     forceSyncAllPlatforms: () => Promise<void>;
     enableOfflineMode: () => void;
-    
+
     // User actions
-    updateUserPreferences: (preferences: Partial<UserPreferences>) => Promise<void>;
+    updateUserPreferences: (
+      preferences: Partial<UserPreferences>
+    ) => Promise<void>;
     switchTeam: (teamId: string) => void;
   };
 }
 ```
 
 ### Navigation Structure
+
 ```typescript
 // Navigation hierarchy
 type RootStackParamList = {
@@ -185,10 +204,10 @@ type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   ForgotPassword: undefined;
-  
+
   // Main App
   MainTabs: undefined;
-  
+
   // Modal Screens
   EventDetails: { eventId: string };
   CreateEvent: { initialDate?: Date };
@@ -209,6 +228,7 @@ type MainTabParamList = {
 ## 🎨 Design System
 
 ### Theme Configuration
+
 ```typescript
 // Mobile theme extending shared design tokens
 interface MobileTheme {
@@ -218,21 +238,21 @@ interface MobileTheme {
     secondary: string;
     background: string;
     surface: string;
-    
+
     // Mobile-specific colors
     touchable: string;
     disabled: string;
     overlay: string;
   };
-  
+
   spacing: {
-    xs: number;    // 4px
-    sm: number;    // 8px
-    md: number;    // 16px
-    lg: number;    // 24px
-    xl: number;    // 32px
+    xs: number; // 4px
+    sm: number; // 8px
+    md: number; // 16px
+    lg: number; // 24px
+    xl: number; // 32px
   };
-  
+
   typography: {
     // Mobile-optimized typography
     heading1: TextStyle;
@@ -241,14 +261,14 @@ interface MobileTheme {
     caption: TextStyle;
     button: TextStyle;
   };
-  
+
   borderRadius: {
-    sm: number;    // 4px
-    md: number;    // 8px
-    lg: number;    // 12px
-    xl: number;    // 16px
+    sm: number; // 4px
+    md: number; // 8px
+    lg: number; // 12px
+    xl: number; // 16px
   };
-  
+
   shadows: {
     // Platform-specific shadows
     card: ShadowStyle;
@@ -261,18 +281,21 @@ interface MobileTheme {
 ## 📈 Performance Optimization
 
 ### Bundle Size Optimization
+
 - **Code Splitting** - Lazy load screens and features
 - **Tree Shaking** - Remove unused code
 - **Image Optimization** - WebP format with fallbacks
 - **Bundle Analysis** - Regular bundle size monitoring
 
-### Runtime Performance  
+### Runtime Performance
+
 - **FlatList Virtualization** - Efficient long list rendering
 - **Image Caching** - Smart image loading and caching
 - **Memory Management** - Proper cleanup and garbage collection
 - **Animation Performance** - 60fps animations with Reanimated
 
 ### Network Optimization
+
 - **Request Deduplication** - Prevent duplicate API calls
 - **Offline-First** - Work seamlessly without internet
 - **Background Sync** - Sync data when app returns to foreground
@@ -281,6 +304,7 @@ interface MobileTheme {
 ## 🧪 Testing Strategy
 
 ### Unit Testing
+
 ```bash
 # Run unit tests
 npm run test
@@ -293,6 +317,7 @@ npm run test:coverage
 ```
 
 ### Integration Testing
+
 ```bash
 # Run integration tests
 npm run test:integration
@@ -303,6 +328,7 @@ npm run test:e2e:android
 ```
 
 ### Testing Tools
+
 - **Jest** - Unit testing framework
 - **React Native Testing Library** - Component testing
 - **Detox** - E2E testing for React Native
@@ -311,6 +337,7 @@ npm run test:e2e:android
 ## 🚀 Deployment
 
 ### iOS App Store
+
 ```bash
 # Build release version
 npm run build:ios:release
@@ -320,6 +347,7 @@ npm run deploy:ios
 ```
 
 ### Google Play Store
+
 ```bash
 # Build release APK/AAB
 npm run build:android:release
@@ -329,17 +357,20 @@ npm run deploy:android
 ```
 
 ### Over-the-Air Updates
+
 - **CodePush** - Instant updates without app store approval
 - **Expo Updates** - Alternative OTA update solution
 
 ## 📊 Monitoring & Analytics
 
 ### Performance Monitoring
+
 - **Flipper** - Development-time performance monitoring
 - **React Native Performance** - Production performance tracking
 - **Crashlytics** - Crash reporting and analysis
 
 ### User Analytics
+
 - **React Native Analytics** - User behavior tracking
 - **Custom Events** - Feature usage analytics
 - **Conversion Tracking** - User journey optimization

@@ -1,11 +1,16 @@
-import { useState, useEffect } from 'react';
-import { AchievementService, type AchievementData } from '../services/achievementService';
+import { useEffect, useState } from "react";
+import {
+  AchievementService,
+  type AchievementData,
+} from "../services/achievementService";
 
 /**
  * Hook for managing user achievements
  */
 export const useAchievements = (userId: string | undefined) => {
-  const [achievements, setAchievements] = useState<AchievementData | null>(null);
+  const [achievements, setAchievements] = useState<AchievementData | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,14 +29,16 @@ export const useAchievements = (userId: string | undefined) => {
 
       try {
         const data = await AchievementService.getUserAchievements(userId);
-        
+
         if (!isCancelled) {
           setAchievements(data);
           setError(null);
         }
       } catch (err) {
         if (!isCancelled) {
-          setError(err instanceof Error ? err.message : 'Failed to load achievements');
+          setError(
+            err instanceof Error ? err.message : "Failed to load achievements"
+          );
           setAchievements(null);
         }
       } finally {
@@ -56,6 +63,6 @@ export const useAchievements = (userId: string | undefined) => {
     totalPoints: achievements?.totalPoints || 0,
     recentAchievements: achievements?.recentAchievements || [],
     loading,
-    error
+    error,
   };
 };

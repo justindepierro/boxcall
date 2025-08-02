@@ -1,9 +1,9 @@
-import React from 'react';
-import { Button } from '../../ui';
+import React from "react";
+import { Button } from "../../ui";
 
 /**
  * Family Quick Actions - Family member-specific dashboard shortcuts
- * 
+ *
  * Features:
  * - View player progress and stats
  * - Check schedules and events
@@ -13,71 +13,71 @@ import { Button } from '../../ui';
 export const FamilyQuickActions: React.FC = () => {
   return (
     <div className="space-y-3">
-      <Button 
-        variant="primary" 
-        size="sm" 
+      <Button
+        variant="primary"
+        size="sm"
         className="w-full justify-start"
-        onClick={() => console.log('Player Progress')}
+        onClick={() => console.log("Player Progress")}
       >
         <span className="mr-2">📈</span>
         My Player&apos;s Progress
       </Button>
-      
-      <Button 
-        variant="outline" 
-        size="sm" 
+
+      <Button
+        variant="outline"
+        size="sm"
         className="w-full justify-start"
-        onClick={() => console.log('Team Schedule')}
+        onClick={() => console.log("Team Schedule")}
       >
         <span className="mr-2">📅</span>
         Team Schedule
       </Button>
-      
-      <Button 
-        variant="outline" 
-        size="sm" 
+
+      <Button
+        variant="outline"
+        size="sm"
         className="w-full justify-start"
-        onClick={() => console.log('Message Coach')}
+        onClick={() => console.log("Message Coach")}
       >
         <span className="mr-2">💬</span>
         Message Coach
       </Button>
-      
-      <Button 
-        variant="outline" 
-        size="sm" 
+
+      <Button
+        variant="outline"
+        size="sm"
         className="w-full justify-start"
-        onClick={() => console.log('Game Highlights')}
+        onClick={() => console.log("Game Highlights")}
       >
         <span className="mr-2">🎬</span>
         Game Highlights
       </Button>
-      
-      <Button 
-        variant="ghost" 
-        size="sm" 
+
+      <Button
+        variant="ghost"
+        size="sm"
         className="w-full justify-start"
-        onClick={() => console.log('RSVP Events')}
+        onClick={() => console.log("RSVP Events")}
       >
         <span className="mr-2">✅</span>
         RSVP to Events
       </Button>
-      
-      <Button 
-        variant="ghost" 
-        size="sm" 
+
+      <Button
+        variant="ghost"
+        size="sm"
         className="w-full justify-start"
-        onClick={() => console.log('Team Photos')}
+        onClick={() => console.log("Team Photos")}
       >
         <span className="mr-2">📸</span>
         Team Photos
       </Button>
-      
-      <Button 
-        variant="ghost" 
-        size="sm" 
+
+      <Button
+        variant="ghost"
+        size="sm"
         className="w-full justify-start"
-        onClick={() => console.log('Parent Network')}
+        onClick={() => console.log("Parent Network")}
       >
         <span className="mr-2">👥</span>
         Parent Network

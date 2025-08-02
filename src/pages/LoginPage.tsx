@@ -1,10 +1,10 @@
 import React from "react";
-import { Typography } from "../components/design-system";
 import { Auth } from "../components/auth";
+import { Typography } from "../components/design-system";
 
 /**
  * Login Page
- * 
+ *
  * Public route for user authentication.
  * Redirects authenticated users to dashboard.
  */

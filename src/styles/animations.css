@@ -8,7 +8,7 @@
   --timing-square-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --timing-square-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
   --timing-square-punch: cubic-bezier(0.76, 0, 0.24, 1);
-  
+
   /* Duration tokens - Technical intervals */
   --duration-instant: 100ms;
   --duration-quick: 200ms;
@@ -64,11 +64,13 @@
 }
 
 .animate-slideInRight {
-  animation: slideInRight var(--duration-smooth) var(--timing-square-ease) forwards;
+  animation: slideInRight var(--duration-smooth) var(--timing-square-ease)
+    forwards;
 }
 
 .animate-slideInLeft {
-  animation: slideInLeft var(--duration-smooth) var(--timing-square-ease) forwards;
+  animation: slideInLeft var(--duration-smooth) var(--timing-square-ease)
+    forwards;
 }
 
 .animate-slideInUp {
@@ -76,7 +78,8 @@
 }
 
 .animate-slideInDown {
-  animation: slideInDown var(--duration-smooth) var(--timing-square-ease) forwards;
+  animation: slideInDown var(--duration-smooth) var(--timing-square-ease)
+    forwards;
 }
 
 /* === SQUARE SCALE ANIMATIONS === */
@@ -116,11 +119,13 @@
 }
 
 .animate-scaleSquareIn {
-  animation: scaleSquareIn var(--duration-quick) var(--timing-square-snap) forwards;
+  animation: scaleSquareIn var(--duration-quick) var(--timing-square-snap)
+    forwards;
 }
 
 .animate-scaleSquareOut {
-  animation: scaleSquareOut var(--duration-quick) var(--timing-square-snap) forwards;
+  animation: scaleSquareOut var(--duration-quick) var(--timing-square-snap)
+    forwards;
 }
 
 .animate-punchScale {
@@ -148,11 +153,13 @@
 }
 
 .animate-fadeSquareIn {
-  animation: fadeSquareIn var(--duration-smooth) var(--timing-square-ease) forwards;
+  animation: fadeSquareIn var(--duration-smooth) var(--timing-square-ease)
+    forwards;
 }
 
 .animate-fadeSquareOut {
-  animation: fadeSquareOut var(--duration-quick) var(--timing-square-ease) forwards;
+  animation: fadeSquareOut var(--duration-quick) var(--timing-square-ease)
+    forwards;
 }
 
 /* === LOADING ANIMATIONS === */
@@ -167,7 +174,8 @@
 }
 
 @keyframes skeletonPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.4;
   }
   50% {
@@ -185,7 +193,8 @@
 }
 
 .animate-progressFill {
-  animation: progressFill var(--duration-deliberate) var(--timing-square-ease) forwards;
+  animation: progressFill var(--duration-deliberate) var(--timing-square-ease)
+    forwards;
 }
 
 .animate-skeletonPulse {
@@ -226,7 +235,8 @@
 }
 
 .animate-buttonHover {
-  animation: buttonHover var(--duration-quick) var(--timing-square-ease) forwards;
+  animation: buttonHover var(--duration-quick) var(--timing-square-ease)
+    forwards;
 }
 
 /* === FOOTBALL-SPECIFIC ANIMATIONS === */
@@ -273,7 +283,8 @@
 }
 
 .animate-fieldExpand {
-  animation: fieldExpand var(--duration-confident) var(--timing-square-ease) forwards;
+  animation: fieldExpand var(--duration-confident) var(--timing-square-ease)
+    forwards;
 }
 
 .animate-playerMove {
@@ -281,7 +292,8 @@
 }
 
 .animate-statCount {
-  animation: statCount var(--duration-smooth) var(--timing-square-bounce) forwards;
+  animation: statCount var(--duration-smooth) var(--timing-square-bounce)
+    forwards;
 }
 
 /* === UTILITY CLASSES === */
@@ -339,7 +351,7 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  
+
   .animate-slideInRight,
   .animate-slideInLeft,
   .animate-slideInUp,

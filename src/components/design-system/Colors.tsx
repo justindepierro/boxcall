@@ -9,37 +9,37 @@
 export const colors = {
   // Primary Brand - Jade Green System
   jade: {
-    50: '#ECFDF5',   // Very light jade for backgrounds
-    100: '#D1FAE5',  // Light jade for hover states
-    200: '#A7F3D0',  // Soft jade for disabled states
-    300: '#6EE7B7',  // Medium jade for borders
-    400: '#34D399',  // Bright jade for active states
-    500: '#00A86B',  // PRIMARY - Main brand color
-    600: '#059669',  // Dark jade for hover/focus
-    700: '#047857',  // Darker jade for pressed states
-    800: '#065F46',  // Deep jade for dark mode
-    900: '#064E3B',  // Darkest jade for text
+    50: "#ECFDF5", // Very light jade for backgrounds
+    100: "#D1FAE5", // Light jade for hover states
+    200: "#A7F3D0", // Soft jade for disabled states
+    300: "#6EE7B7", // Medium jade for borders
+    400: "#34D399", // Bright jade for active states
+    500: "#00A86B", // PRIMARY - Main brand color
+    600: "#059669", // Dark jade for hover/focus
+    700: "#047857", // Darker jade for pressed states
+    800: "#065F46", // Deep jade for dark mode
+    900: "#064E3B", // Darkest jade for text
   },
 
   // Secondary Brand - Navy Blue System
   navy: {
-    50: '#EFF6FF',   // Very light navy
-    100: '#DBEAFE',  // Light navy for backgrounds
-    200: '#BFDBFE',  // Soft navy
-    300: '#93C5FD',  // Medium navy for borders
-    400: '#60A5FA',  // Bright navy
-    500: '#1E3A8A',  // PRIMARY - Main navy
-    600: '#1E40AF',  // Dark navy for hover
-    700: '#1D4ED8',  // Darker navy for focus
-    800: '#1E3A8A',  // Deep navy
-    900: '#1E3A8A',  // Darkest navy for text
+    50: "#EFF6FF", // Very light navy
+    100: "#DBEAFE", // Light navy for backgrounds
+    200: "#BFDBFE", // Soft navy
+    300: "#93C5FD", // Medium navy for borders
+    400: "#60A5FA", // Bright navy
+    500: "#1E3A8A", // PRIMARY - Main navy
+    600: "#1E40AF", // Dark navy for hover
+    700: "#1D4ED8", // Darker navy for focus
+    800: "#1E3A8A", // Deep navy
+    900: "#1E3A8A", // Darkest navy for text
   },
 
   // Legacy Primary Brand Colors (DEPRECATED - use jade)
   primary: {
     50: "#ECFDF5", // Map to jade for backward compatibility
     100: "#D1FAE5",
-    200: "#A7F3D0", 
+    200: "#A7F3D0",
     300: "#6EE7B7",
     400: "#34D399",
     500: "#00A86B", // jade-500
@@ -128,8 +128,8 @@ export const semanticColors = {
     secondary: colors.gray[600],
     muted: colors.gray[500],
     inverse: "#ffffff",
-    brand: colors.jade[600],        // Jade for brand text
-    accent: colors.navy[600],       // Navy for accent text
+    brand: colors.jade[600], // Jade for brand text
+    accent: colors.navy[600], // Navy for accent text
   },
 
   // Background colors
@@ -138,31 +138,31 @@ export const semanticColors = {
     secondary: colors.gray[50],
     muted: colors.gray[100],
     dark: colors.gray[900],
-    brand: colors.jade[50],         // Light jade backgrounds
-    accent: colors.navy[50],        // Light navy backgrounds
+    brand: colors.jade[50], // Light jade backgrounds
+    accent: colors.navy[50], // Light navy backgrounds
   },
 
   // Border colors
   border: {
     primary: colors.gray[200],
     secondary: colors.gray[300],
-    focus: colors.jade[500],        // Jade focus borders
+    focus: colors.jade[500], // Jade focus borders
     error: colors.error[500],
-    brand: colors.jade[300],        // Jade brand borders
-    accent: colors.navy[300],       // Navy accent borders
+    brand: colors.jade[300], // Jade brand borders
+    accent: colors.navy[300], // Navy accent borders
   },
 
   // Interactive colors - Updated with jade/navy
   interactive: {
-    primary: colors.jade[500],           // Jade primary actions
-    primaryHover: colors.jade[600],      // Jade hover states
-    primaryActive: colors.jade[700],     // Jade active states
-    secondary: colors.navy[500],         // Navy secondary actions
-    secondaryHover: colors.navy[600],    // Navy hover states
-    secondaryActive: colors.navy[700],   // Navy active states
-    outline: colors.gray[100],           // Outline button background
-    outlineHover: colors.gray[200],      // Outline button hover
-    outlineActive: colors.gray[300],     // Outline button active
+    primary: colors.jade[500], // Jade primary actions
+    primaryHover: colors.jade[600], // Jade hover states
+    primaryActive: colors.jade[700], // Jade active states
+    secondary: colors.navy[500], // Navy secondary actions
+    secondaryHover: colors.navy[600], // Navy hover states
+    secondaryActive: colors.navy[700], // Navy active states
+    outline: colors.gray[100], // Outline button background
+    outlineHover: colors.gray[200], // Outline button hover
+    outlineActive: colors.gray[300], // Outline button active
   },
 
   // Status colors - Enhanced with jade/navy
@@ -173,10 +173,10 @@ export const semanticColors = {
     warningLight: colors.warning[100],
     error: colors.error[500],
     errorLight: colors.error[100],
-    info: colors.jade[500],          // Jade for info states
-    infoLight: colors.jade[100],     // Light jade for info backgrounds
-    accent: colors.navy[500],        // Navy for accent status
-    accentLight: colors.navy[100],   // Light navy for accent backgrounds
+    info: colors.jade[500], // Jade for info states
+    infoLight: colors.jade[100], // Light jade for info backgrounds
+    accent: colors.navy[500], // Navy for accent status
+    accentLight: colors.navy[100], // Light navy for accent backgrounds
   },
 
   // Football-specific colors

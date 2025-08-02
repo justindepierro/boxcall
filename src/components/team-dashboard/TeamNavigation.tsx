@@ -1,5 +1,5 @@
-import React from 'react';
-import { Typography } from '../design-system';
+import React from "react";
+import { Typography } from "../design-system";
 
 interface TeamNavigationProps {
   teamId: string;
@@ -8,24 +8,48 @@ interface TeamNavigationProps {
 
 /**
  * Team Navigation - Team-specific navigation tabs
- * 
+ *
  * Features:
  * - Role-based navigation options
  * - Team context switching
  * - Quick access to team sections
  */
-export const TeamNavigation: React.FC<TeamNavigationProps> = ({ teamId, userRole }) => {
+export const TeamNavigation: React.FC<TeamNavigationProps> = ({
+  teamId,
+  userRole,
+}) => {
   const navigationItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '🏠', href: `/team/${teamId}` },
-    { id: 'roster', label: 'Roster', icon: '👥', href: `/team/${teamId}/roster` },
-    { id: 'schedule', label: 'Schedule', icon: '📅', href: `/team/${teamId}/schedule` },
-    { id: 'playbook', label: 'Playbook', icon: '📋', href: `/team/${teamId}/playbook`, roles: ['coach', 'head_coach', 'player'] },
-    { id: 'stats', label: 'Stats', icon: '📊', href: `/team/${teamId}/stats` },
-    { id: 'media', label: 'Media', icon: '📸', href: `/team/${teamId}/media` },
+    {
+      id: "dashboard",
+      label: "Dashboard",
+      icon: "🏠",
+      href: `/team/${teamId}`,
+    },
+    {
+      id: "roster",
+      label: "Roster",
+      icon: "👥",
+      href: `/team/${teamId}/roster`,
+    },
+    {
+      id: "schedule",
+      label: "Schedule",
+      icon: "📅",
+      href: `/team/${teamId}/schedule`,
+    },
+    {
+      id: "playbook",
+      label: "Playbook",
+      icon: "📋",
+      href: `/team/${teamId}/playbook`,
+      roles: ["coach", "head_coach", "player"],
+    },
+    { id: "stats", label: "Stats", icon: "📊", href: `/team/${teamId}/stats` },
+    { id: "media", label: "Media", icon: "📸", href: `/team/${teamId}/media` },
   ];
 
-  const visibleItems = navigationItems.filter(item => 
-    !item.roles || item.roles.includes(userRole)
+  const visibleItems = navigationItems.filter(
+    (item) => !item.roles || item.roles.includes(userRole)
   );
 
   return (

@@ -1,12 +1,18 @@
-import { useState, useEffect } from 'react';
-import { DashboardService, type DashboardData, type UserTeamData } from '../services/dashboardService';
+import { useEffect, useState } from "react";
+import {
+  DashboardService,
+  type DashboardData,
+  type UserTeamData,
+} from "../services/dashboardService";
 
 /**
  * Hook for dashboard data management
  * Provides data for Personal Dashboard components
  */
 export const useDashboardData = (userId: string | undefined) => {
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,14 +31,16 @@ export const useDashboardData = (userId: string | undefined) => {
 
       try {
         const data = await DashboardService.getDashboardData(userId);
-        
+
         if (!isCancelled) {
           setDashboardData(data);
           setError(null);
         }
       } catch (err) {
         if (!isCancelled) {
-          setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
+          setError(
+            err instanceof Error ? err.message : "Failed to load dashboard data"
+          );
           setDashboardData(null);
         }
       } finally {
@@ -60,7 +68,9 @@ export const useDashboardData = (userId: string | undefined) => {
       setDashboardData(data);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to refresh dashboard data');
+      setError(
+        err instanceof Error ? err.message : "Failed to refresh dashboard data"
+      );
     } finally {
       setLoading(false);
     }
@@ -74,7 +84,7 @@ export const useDashboardData = (userId: string | undefined) => {
     recentActivity: dashboardData?.recentActivity || [],
     loading,
     error,
-    refreshDashboard
+    refreshDashboard,
   };
 };
 
@@ -101,14 +111,14 @@ export const useUserTeams = (userId: string | undefined) => {
 
       try {
         const teams = await DashboardService.getUserTeams(userId);
-        
+
         if (!isCancelled) {
           setUserTeams(teams);
           setError(null);
         }
       } catch (err) {
         if (!isCancelled) {
-          setError(err instanceof Error ? err.message : 'Failed to load teams');
+          setError(err instanceof Error ? err.message : "Failed to load teams");
           setUserTeams([]);
         }
       } finally {
@@ -125,13 +135,14 @@ export const useUserTeams = (userId: string | undefined) => {
     };
   }, [userId]);
 
-  const primaryTeam = userTeams.length > 0 ? DashboardService.getPrimaryTeam(userTeams) : null;
+  const primaryTeam =
+    userTeams.length > 0 ? DashboardService.getPrimaryTeam(userTeams) : null;
 
   return {
     userTeams,
     primaryTeam,
     teamCount: userTeams.length,
     loading,
-    error
+    error,
   };
 };

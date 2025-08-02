@@ -1,16 +1,16 @@
-import React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import FlashMessage from 'react-native-flash-message';
-import { StyleSheet } from 'react-native';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React from "react";
+import { StyleSheet } from "react-native";
+import FlashMessage from "react-native-flash-message";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { AppNavigator } from '@/navigation/AppNavigator';
-import { useAppStore } from '@/store/useAppStore';
-import { ThemeProvider } from '@/components/common/ThemeProvider';
-import { SyncProvider } from '@/services/sync/SyncProvider';
-import { OfflineProvider } from '@/services/offline/OfflineProvider';
-import { NotificationProvider } from '@/services/notifications/NotificationProvider';
+import { ThemeProvider } from "@/components/common/ThemeProvider";
+import { AppNavigator } from "@/navigation/AppNavigator";
+import { NotificationProvider } from "@/services/notifications/NotificationProvider";
+import { OfflineProvider } from "@/services/offline/OfflineProvider";
+import { SyncProvider } from "@/services/sync/SyncProvider";
+import { useAppStore } from "@/store/useAppStore";
 
 // Create React Query client
 const queryClient = new QueryClient({
@@ -29,10 +29,10 @@ const queryClient = new QueryClient({
 
 /**
  * BoxCall Mobile Application
- * 
+ *
  * Cross-platform mobile app providing intelligent calendar management
  * for teams with real-time synchronization and offline capabilities.
- * 
+ *
  * Features:
  * - Phase 3 Intelligence: Conflict detection, smart scheduling, analytics
  * - Cross-Platform Sync: Real-time data synchronization across all platforms

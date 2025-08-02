@@ -67,6 +67,7 @@ Enhanced Features     Features           Integration          Integration       
 ## ✅ **Current Architecture (Phase 2.3 Complete)**
 
 ### Core Navigation Flow
+
 ```
 Authentication → Role Detection → Component Routing
                                        ↓
@@ -83,13 +84,16 @@ Personal Dashboard ←→ Team Bulletin ←→ Master Calendar ←→ Enhanced F
 ### 1. Master Calendar Integration (`/calendar`)
 
 #### CalendarPage.tsx - Universal Calendar Interface
+
 **Dependencies:**
+
 - `BoxCallCalendar.tsx` → Core FullCalendar component
 - `useCalendar.ts` → Calendar data management hook
 - `CalendarService.ts` → Event CRUD operations
 - `EnhancedTeamFeaturesPage.tsx` → Advanced team features access
 
 **Enhanced Integrations:**
+
 - Universal search across all team calendars
 - Advanced filtering (team, type, date range, priority)
 - Event creation with role-based permissions
@@ -97,6 +101,7 @@ Personal Dashboard ←→ Team Bulletin ←→ Master Calendar ←→ Enhanced F
 - Direct access to enhanced team features
 
 **Data Flow:**
+
 ```typescript
 CalendarPage → CalendarService → Supabase
      ↓              ↓
@@ -110,10 +115,12 @@ Event Selection → EnhancedTeamFeaturesPage
 ### 2. Enhanced Team Features Hub
 
 #### EnhancedTeamFeaturesPage.tsx - Phase 2.3 Command Center
+
 **Purpose**: Unified interface for advanced team coordination features
 **Role-based Access**: Owner, Head Coach, Assistant Coach, Player, Parent
 
 **Component Architecture:**
+
 ```typescript
 EnhancedTeamFeaturesPage
 ├── EventPollingInterface.tsx       // Team-wide polling system
@@ -123,6 +130,7 @@ EnhancedTeamFeaturesPage
 ```
 
 **Feature Integration:**
+
 - **Event Polling**: Multi-choice, rating, text response polls
 - **Advanced RSVP**: Conditional responses, analytics, emergency contacts
 - **Permissions**: Role-based calendar access (Owner → Guest hierarchy)
@@ -131,12 +139,15 @@ EnhancedTeamFeaturesPage
 ### 3. Practice Management Ecosystem
 
 #### PracticeSchedulePage.tsx - Comprehensive Practice Management
+
 **Dependencies:**
+
 - `usePractice.ts` → Practice scheduling hooks
 - `PracticeService.ts` → Supabase practice operations
 - `@hello-pangea/dnd` → Drag-and-drop interface
 
 **Features:**
+
 - Drag-and-drop practice block scheduling
 - Practice templates and reusable blocks
 - Real-time practice timer with locked schedules
@@ -144,6 +155,7 @@ EnhancedTeamFeaturesPage
 - Quick time intervals (5min, 10min, 15min, custom)
 
 **Component Structure:**
+
 ```typescript
 PracticeSchedulePage
 ├── DragDropContext                 // Practice block reordering
@@ -158,26 +170,32 @@ PracticeSchedulePage
 ### 1. Dashboard Ecosystem
 
 #### Personal Dashboard (`/dashboard`)
+
 **Dependencies:**
+
 - `PersonalCalendar.tsx` → References Master Calendar data
 - `CrossTeamMessages.tsx` → Aggregates from Team Bulletin feeds
 - `PersonalTrophyShelf.tsx` → Pulls achievements from all teams
 - `QuickActions/` → Routes to appropriate team contexts
 
 **Data Sources:**
+
 - User's team memberships (cross-team aggregation)
 - Achievement data from all teams
 - Calendar events from all teams
 - Messages from all teams user belongs to
 
 #### Team Bulletin (`/teams/:teamId/bulletin`)
+
 **Dependencies:**
+
 - `TeamCalendar.tsx` → References Master Calendar for team events
 - `TeamRoster.tsx` → Syncs with Team Management settings
 - `TeamFeed.tsx` → Integrates with communication system
 - `TeamTrophyCase.tsx` → Links to achievement system
 
 **Data Sources:**
+
 - Single team context
 - Team-specific events and announcements
 - Team member data
@@ -188,6 +206,7 @@ PracticeSchedulePage
 ### Enhanced Data Flow Architecture (Phase 2.3)
 
 ### Calendar System Data Flow
+
 ```
 Supabase Database
     ↓
@@ -212,35 +231,37 @@ Component Layer
 ```
 
 ### Permission-Based Component Visibility
+
 ```typescript
 // Role-based feature access
 interface ComponentVisibility {
   polling: {
-    create: ['owner', 'head_coach', 'assistant_coach'];
-    view: ['all_roles'];
-    manage: ['owner', 'head_coach'];
+    create: ["owner", "head_coach", "assistant_coach"];
+    view: ["all_roles"];
+    manage: ["owner", "head_coach"];
   };
-  
+
   rsvp: {
-    manage_all: ['owner', 'head_coach'];
-    view_analytics: ['owner', 'head_coach', 'assistant_coach'];
-    respond: ['all_roles'];
+    manage_all: ["owner", "head_coach"];
+    view_analytics: ["owner", "head_coach", "assistant_coach"];
+    respond: ["all_roles"];
   };
-  
+
   bulk_operations: {
-    execute: ['owner', 'head_coach', 'assistant_coach'];
-    templates: ['owner', 'head_coach'];
-    view_results: ['owner', 'head_coach', 'assistant_coach'];
+    execute: ["owner", "head_coach", "assistant_coach"];
+    templates: ["owner", "head_coach"];
+    view_results: ["owner", "head_coach", "assistant_coach"];
   };
-  
+
   permissions: {
-    manage: ['owner', 'head_coach'];
-    view_own: ['all_roles'];
+    manage: ["owner", "head_coach"];
+    view_own: ["all_roles"];
   };
 }
 ```
 
 #### Calendar Component Connections
+
 - **Personal Dashboard Calendar** → Links to Master Calendar with user's team filter
 - **Team Bulletin Calendar** → Links to Master Calendar with specific team filter
 - **Master Calendar** → Provides data to both dashboard calendars
@@ -249,6 +270,7 @@ interface ComponentVisibility {
 ### 3. Team Management Integration
 
 #### Team Settings Flow
+
 ```
 Team Bulletin → Team Management (Settings)
     ↓              ↓
@@ -259,6 +281,7 @@ Permissions      Controls              & Quick Actions
 ```
 
 #### Data Synchronization
+
 - **Team Roster changes** → Update calendar event permissions
 - **Role modifications** → Reflect in dashboard quick actions
 - **Team settings updates** → Cascade to all team components
@@ -267,32 +290,35 @@ Permissions      Controls              & Quick Actions
 ## Detailed Component References
 
 ### PersonalCalendar.tsx → Master Calendar
+
 ```typescript
 // Navigation from dashboard widget to full calendar
 onViewFullCalendar = () => {
-  navigate('/calendar', { 
-    state: { 
+  navigate("/calendar", {
+    state: {
       userTeamsFilter: user.teamMemberships,
-      defaultView: 'month' 
-    }
+      defaultView: "month",
+    },
   });
 };
 ```
 
 ### TeamCalendar.tsx → Master Calendar
+
 ```typescript
 // Navigation from team bulletin to team-filtered calendar
 onViewTeamCalendar = () => {
-  navigate('/calendar', { 
-    state: { 
+  navigate("/calendar", {
+    state: {
       teamFilter: teamId,
-      defaultView: 'month' 
-    }
+      defaultView: "month",
+    },
   });
 };
 ```
 
 ### TeamRoster.tsx → Team Management
+
 ```typescript
 // Sync roster data with team settings
 useEffect(() => {
@@ -302,17 +328,18 @@ useEffect(() => {
 ```
 
 ### Dashboard Quick Actions → Team Context
+
 ```typescript
 // Role-based quick actions that route to team contexts
 const PlayerQuickActions = () => (
   <>
-    <QuickAction 
-      label="View Practice Schedule" 
-      onClick={() => navigate(`/teams/${activeTeam}/bulletin`, { anchor: 'calendar' })} 
+    <QuickAction
+      label="View Practice Schedule"
+      onClick={() => navigate(`/teams/${activeTeam}/bulletin`, { anchor: 'calendar' })}
     />
-    <QuickAction 
-      label="Team Messages" 
-      onClick={() => navigate(`/teams/${activeTeam}/bulletin`, { anchor: 'feed' })} 
+    <QuickAction
+      label="Team Messages"
+      onClick={() => navigate(`/teams/${activeTeam}/bulletin`, { anchor: 'feed' })}
     />
   </>
 );
@@ -321,6 +348,7 @@ const PlayerQuickActions = () => (
 ## State Management Connections
 
 ### Global State Dependencies
+
 ```typescript
 // User context affects all components
 interface UserContext {
@@ -340,13 +368,14 @@ interface TeamContext {
 
 // Calendar context spans both dashboard types
 interface CalendarContext {
-  userEvents: CalendarEvent[];     // For PersonalCalendar
-  teamEvents: CalendarEvent[];     // For TeamCalendar
+  userEvents: CalendarEvent[]; // For PersonalCalendar
+  teamEvents: CalendarEvent[]; // For TeamCalendar
   masterCalendar: CalendarEvent[]; // For /calendar page
 }
 ```
 
 ### Cross-Component Data Sharing
+
 - **Achievement System**: Personal Trophy Shelf ←→ Team Trophy Case
 - **Communication Hub**: Cross-Team Messages ←→ Team Feed
 - **Calendar Integration**: All calendar components share event data
@@ -355,6 +384,7 @@ interface CalendarContext {
 ## Database Schema Connections
 
 ### Key Table Relationships
+
 ```sql
 -- Core user and team relationships
 users → team_members → teams
@@ -363,7 +393,7 @@ achievements ← team_achievements
    ↓              ↓
 personal_shelf   team_trophy_case
 
--- Calendar system relationships  
+-- Calendar system relationships
 teams → team_events → calendar_events
 users → user_events → calendar_events
    ↓         ↓
@@ -377,6 +407,7 @@ users → cross_team_messages
 ## Navigation Architecture
 
 ### Route Structure
+
 ```
 /dashboard                    # Personal Dashboard
 /teams/:teamId/bulletin      # Team Bulletin
@@ -386,6 +417,7 @@ users → cross_team_messages
 ```
 
 ### Component-to-Route Mapping
+
 - **PersonalCalendar** → `/calendar?userTeams=true`
 - **TeamCalendar** → `/calendar?team=${teamId}`
 - **TeamRoster** → `/teams/${teamId}/settings#roster`
@@ -395,12 +427,14 @@ users → cross_team_messages
 ## Performance Considerations
 
 ### Data Loading Strategy
+
 - **Personal Dashboard**: Lazy load cross-team data
 - **Team Bulletin**: Cache team-specific data
 - **Calendar System**: Paginated event loading
 - **Settings Pages**: On-demand configuration loading
 
 ### State Synchronization
+
 - **Real-time updates**: Supabase subscriptions for live data
 - **Optimistic updates**: Immediate UI feedback
 - **Background sync**: Periodic data refresh
@@ -411,6 +445,7 @@ users → cross_team_messages
 ### Phase 3: Intelligent Features Integration
 
 #### Smart Calendar Ecosystem
+
 ```typescript
 // Enhanced Calendar with AI Integration
 CalendarPage ↔ SmartSchedulingService ↔ ConflictDetectionEngine
@@ -421,6 +456,7 @@ Weather Integration → AutoRescheduling → NotificationSystem
 ```
 
 **New Component Integrations:**
+
 - **SmartSchedulingDashboard.tsx** - AI-powered scheduling insights
 - **ConflictDetectionPanel.tsx** - Real-time conflict identification
 - **AttendanceAnalyticsDashboard.tsx** - Predictive attendance modeling
@@ -429,6 +465,7 @@ Weather Integration → AutoRescheduling → NotificationSystem
 ### Phase 4.1: Cross-Platform Integration
 
 #### Mobile and Family Ecosystem
+
 ```typescript
 // Cross-Platform Architecture
 WebApp ↔ MobileCalendarSync ↔ NativeCalendars (iOS/Android)
@@ -439,6 +476,7 @@ CoachDashboard ← MultiTeamService ← CrossTeamAnalytics
 ```
 
 **New Platform Components:**
+
 - **MobileCalendarSyncService.ts** - Native calendar integration
 - **FamilyCalendarPortal.tsx** - Unified family scheduling interface
 - **MultiTeamCoachDashboard.tsx** - Cross-team management console
@@ -447,6 +485,7 @@ CoachDashboard ← MultiTeamService ← CrossTeamAnalytics
 ### Phase 5: Ecosystem Integration
 
 #### Unified Platform Architecture
+
 ```typescript
 // Unified State Management
 UnifiedStateManager ↔ ComponentSynchronizer ↔ RealtimeSync
@@ -457,6 +496,7 @@ Seamless UX ← ConsistentDesign ← ContextAwareNavigation ← ProgressiveEnhan
 ```
 
 **Integration Components:**
+
 - **EcosystemStateManager.ts** - Unified state across all components
 - **CrossComponentSync.ts** - Real-time data synchronization
 - **UnifiedNavigationService.ts** - Context-aware routing system
@@ -465,6 +505,7 @@ Seamless UX ← ConsistentDesign ← ContextAwareNavigation ← ProgressiveEnhan
 ### Phase 6: BoxCall App & Playbook System
 
 #### Native App and Football Intelligence
+
 ```typescript
 // Native App Architecture
 BoxCallNativeApp ↔ OfflineDataManager ↔ DeviceIntegration
@@ -475,6 +516,7 @@ AIPlayCalling ← RecruitingPlatform ← TournamentManager ← BroadcastIntegrat
 ```
 
 **Ultimate Platform Components:**
+
 - **NativeAppShell.tsx** - Native iOS/Android application framework
 - **DigitalPlaybookEditor.tsx** - Visual play design and management
 - **GameFilmAnalyzer.tsx** - Video analysis and breakdown tools
@@ -484,26 +526,31 @@ AIPlayCalling ← RecruitingPlatform ← TournamentManager ← BroadcastIntegrat
 ## 📊 **Data Flow Evolution**
 
 ### Current State (Phase 2.3)
+
 ```
 Database (Supabase) → Calendar Service → React Components → User Interface
 ```
 
 ### Phase 3: Intelligence Layer
+
 ```
 Database → AI/ML Services → Smart Scheduling → Enhanced Calendar → User Interface
 ```
 
 ### Phase 4.1: Cross-Platform
+
 ```
 Database ↔ Sync Services ↔ Multiple Platforms ↔ Unified Experience
 ```
 
 ### Phase 5: Ecosystem Integration
+
 ```
 Unified Database ↔ Ecosystem Services ↔ Synchronized Components ↔ Seamless UX
 ```
 
 ### Phase 6: Native Platform
+
 ```
 Cloud Database ↔ Native Apps ↔ Football Intelligence ↔ Industry Leadership
 ```
@@ -511,6 +558,7 @@ Cloud Database ↔ Native Apps ↔ Football Intelligence ↔ Industry Leadership
 ## 🔮 **Future Navigation Architecture**
 
 ### Enhanced Route Structure (Post-Integration)
+
 ```
 /                            # Unified Landing Experience
 /dashboard                   # AI-Enhanced Personal Dashboard
@@ -524,6 +572,7 @@ Cloud Database ↔ Native Apps ↔ Football Intelligence ↔ Industry Leadership
 ```
 
 ### Cross-Platform Navigation
+
 - **Web App** ↔ **Mobile Apps** - Seamless state synchronization
 - **Family Portal** ↔ **Player View** - Role-based experience switching
 - **Coach Dashboard** ↔ **Multi-Team Management** - Context-aware routing
@@ -534,6 +583,7 @@ Cloud Database ↔ Native Apps ↔ Football Intelligence ↔ Industry Leadership
 - **League Integration**: Multi-team tournament management
 
 ### Scalability Architecture
+
 - **Microservice Ready**: Component isolation for service extraction
 - **API Gateway**: Centralized data access layer
 - **Event-Driven**: Component communication via events

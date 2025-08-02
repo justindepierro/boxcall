@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "../ui/Button";
-import { Input } from "../ui/Input";
+import React, { useEffect, useState } from "react";
 import type { TeamPlayer, TeamPlayerInsert } from "../../types/team-management";
 import { FOOTBALL_POSITIONS, TEAM_LEVELS } from "../../types/team-management";
+import { Button } from "../ui/Button";
+import { Input } from "../ui/Input";
 
 interface PlayerFormProps {
   player?: TeamPlayer | null;
@@ -13,7 +13,7 @@ interface PlayerFormProps {
 
 /**
  * PlayerForm Component
- * 
+ *
  * Modal form for adding or editing team players.
  * Includes all player fields with validation.
  */
@@ -52,17 +52,20 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
   }, [player, teamId]);
 
   // Handle input changes
-  const handleInputChange = (field: keyof TeamPlayerInsert, value: string | number | string[] | undefined) => {
-    setFormData(prev => ({
+  const handleInputChange = (
+    field: keyof TeamPlayerInsert,
+    value: string | number | string[] | undefined
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
-    
+
     // Clear error for this field
     if (errors[field]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [field]: ""
+        [field]: "",
       }));
     }
   };
@@ -71,9 +74,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
   const handlePositionToggle = (position: string) => {
     const currentPositions = formData.positions || [];
     const newPositions = currentPositions.includes(position)
-      ? currentPositions.filter(p => p !== position)
+      ? currentPositions.filter((p) => p !== position)
       : [...currentPositions, position];
-    
+
     handleInputChange("positions", newPositions);
   };
 
@@ -93,7 +96,10 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
       newErrors.email = "Please enter a valid email address";
     }
 
-    if (formData.parent_email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.parent_email)) {
+    if (
+      formData.parent_email &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.parent_email)
+    ) {
       newErrors.parent_email = "Please enter a valid parent email address";
     }
 
@@ -113,7 +119,10 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
 
     if (formData.graduation_year !== undefined) {
       const currentYear = new Date().getFullYear();
-      if (formData.graduation_year < currentYear || formData.graduation_year > currentYear + 10) {
+      if (
+        formData.graduation_year < currentYear ||
+        formData.graduation_year > currentYear + 10
+      ) {
         newErrors.graduation_year = `Graduation year must be between ${currentYear} and ${currentYear + 10}`;
       }
     }
@@ -125,13 +134,13 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setSaving(true);
-    
+
     try {
       const playerData: TeamPlayer = {
         id: player?.id || Date.now().toString(),
@@ -176,7 +185,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
               Basic Information
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -185,11 +194,15 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 <Input
                   type="text"
                   value={formData.first_name || ""}
-                  onChange={(e) => handleInputChange("first_name", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("first_name", e.target.value)
+                  }
                   placeholder="John"
                 />
                 {errors.first_name && (
-                  <p className="text-red-600 text-sm mt-1">{errors.first_name}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.first_name}
+                  </p>
                 )}
               </div>
 
@@ -200,11 +213,15 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 <Input
                   type="text"
                   value={formData.last_name || ""}
-                  onChange={(e) => handleInputChange("last_name", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("last_name", e.target.value)
+                  }
                   placeholder="Smith"
                 />
                 {errors.last_name && (
-                  <p className="text-red-600 text-sm mt-1">{errors.last_name}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.last_name}
+                  </p>
                 )}
               </div>
 
@@ -242,11 +259,15 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 <Input
                   type="email"
                   value={formData.parent_email || ""}
-                  onChange={(e) => handleInputChange("parent_email", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("parent_email", e.target.value)
+                  }
                   placeholder="parent@email.com"
                 />
                 {errors.parent_email && (
-                  <p className="text-red-600 text-sm mt-1">{errors.parent_email}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.parent_email}
+                  </p>
                 )}
               </div>
             </div>
@@ -257,9 +278,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
               Positions *
             </h3>
-            
+
             <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-              {FOOTBALL_POSITIONS.map(position => (
+              {FOOTBALL_POSITIONS.map((position) => (
                 <button
                   key={position}
                   type="button"
@@ -274,7 +295,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 </button>
               ))}
             </div>
-            
+
             {errors.positions && (
               <p className="text-red-600 text-sm mt-2">{errors.positions}</p>
             )}
@@ -285,7 +306,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
               Physical Information
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -296,11 +317,18 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   min="0"
                   max="99"
                   value={formData.jersey_number || ""}
-                  onChange={(e) => handleInputChange("jersey_number", e.target.value ? parseInt(e.target.value) : undefined)}
+                  onChange={(e) =>
+                    handleInputChange(
+                      "jersey_number",
+                      e.target.value ? parseInt(e.target.value) : undefined
+                    )
+                  }
                   placeholder="12"
                 />
                 {errors.jersey_number && (
-                  <p className="text-red-600 text-sm mt-1">{errors.jersey_number}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.jersey_number}
+                  </p>
                 )}
               </div>
 
@@ -324,7 +352,12 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   type="number"
                   min="1"
                   value={formData.weight || ""}
-                  onChange={(e) => handleInputChange("weight", e.target.value ? parseInt(e.target.value) : undefined)}
+                  onChange={(e) =>
+                    handleInputChange(
+                      "weight",
+                      e.target.value ? parseInt(e.target.value) : undefined
+                    )
+                  }
                   placeholder="185"
                 />
                 {errors.weight && (
@@ -341,11 +374,18 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   min={new Date().getFullYear()}
                   max={new Date().getFullYear() + 10}
                   value={formData.graduation_year || ""}
-                  onChange={(e) => handleInputChange("graduation_year", e.target.value ? parseInt(e.target.value) : undefined)}
+                  onChange={(e) =>
+                    handleInputChange(
+                      "graduation_year",
+                      e.target.value ? parseInt(e.target.value) : undefined
+                    )
+                  }
                   placeholder="2026"
                 />
                 {errors.graduation_year && (
-                  <p className="text-red-600 text-sm mt-1">{errors.graduation_year}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.graduation_year}
+                  </p>
                 )}
               </div>
             </div>
@@ -356,9 +396,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
               Team Level
             </h3>
-            
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {TEAM_LEVELS.map(level => (
+              {TEAM_LEVELS.map((level) => (
                 <button
                   key={level.value}
                   type="button"
@@ -385,7 +425,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             >
               Cancel
             </Button>
-            
+
             <Button
               type="submit"
               variant="primary"

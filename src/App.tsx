@@ -1,15 +1,15 @@
 import { useEffect } from "react";
 import "./App.css";
-import { AppRouter } from "./routes/AppRouter";
-import { ErrorBoundary } from "./components/ui/ErrorBoundary";
-import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { DevModeProvider } from "./app/dev-mode-store";
 import DevModeSwitcher from "./components/dev/DevModeSwitcher";
+import { DevHealthCheck } from "./components/ui/DevHealthCheck";
+import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { testDatabaseConnection } from "./lib/database-helpers";
+import { AppRouter } from "./routes/AppRouter";
 
 /**
  * App Component
- * 
+ *
  * Main application component with routing, error boundaries, and initialization.
  * Now uses React Router for multi-page navigation with authentication.
  */

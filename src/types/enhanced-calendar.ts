@@ -1,7 +1,7 @@
 // Enhanced Calendar Types for Phase 2.3 Features
 // Team-wide polling, advanced RSVP, permissions, and bulk operations
 
-import type { CalendarEvent } from '../services/calendarService';
+import type { CalendarEvent } from "../services/calendarService";
 
 // ============================================================================
 // EVENT POLLING SYSTEM
@@ -13,7 +13,12 @@ export interface EventPoll {
   title: string;
   description?: string;
   question: string;
-  poll_type: 'single_choice' | 'multiple_choice' | 'text_response' | 'rating' | 'yes_no';
+  poll_type:
+    | "single_choice"
+    | "multiple_choice"
+    | "text_response"
+    | "rating"
+    | "yes_no";
   options: PollOption[];
   is_anonymous: boolean;
   allow_comments: boolean;
@@ -80,47 +85,52 @@ export interface AdvancedRSVP {
   event_id: string;
   user_id: string;
   status: RSVPStatus;
-  response_type: 'simple' | 'conditional' | 'detailed';
-  
+  response_type: "simple" | "conditional" | "detailed";
+
   // Conditional responses
   conditions?: RSVPCondition[];
   conditional_status?: RSVPStatus;
-  
+
   // Detailed information
   arrival_time?: string;
   departure_time?: string;
-  transportation?: 'driving' | 'walking' | 'bus' | 'carpool' | 'other';
+  transportation?: "driving" | "walking" | "bus" | "carpool" | "other";
   dietary_restrictions?: string[];
   special_requests?: string;
   emergency_contact?: EmergencyContact;
-  
+
   // Group responses (for parents/guardians)
   group_size?: number;
   attendee_names?: string[];
-  
+
   // Additional fields
   notes?: string;
   private_notes?: string; // Only visible to coaches
   confidence_level?: 1 | 2 | 3 | 4 | 5; // How sure they are about attending
-  
+
   // Timestamps
   responded_at: string;
   updated_at: string;
   reminder_sent_at?: string;
 }
 
-export type RSVPStatus = 
-  | 'attending' 
-  | 'not_attending' 
-  | 'maybe' 
-  | 'late' 
-  | 'early_departure' 
-  | 'conditional' 
-  | 'no_response';
+export type RSVPStatus =
+  | "attending"
+  | "not_attending"
+  | "maybe"
+  | "late"
+  | "early_departure"
+  | "conditional"
+  | "no_response";
 
 export interface RSVPCondition {
   id: string;
-  type: 'weather' | 'time_change' | 'location_change' | 'opponent_change' | 'custom';
+  type:
+    | "weather"
+    | "time_change"
+    | "location_change"
+    | "opponent_change"
+    | "custom";
   description: string;
   if_condition: string;
   then_status: RSVPStatus;
@@ -171,54 +181,54 @@ export interface CalendarPermissions {
   is_active: boolean;
 }
 
-export type CalendarRole = 
-  | 'owner'           // Team owner - full access
-  | 'head_coach'      // Head coach - full calendar management
-  | 'assistant_coach' // Assistant coach - limited management
-  | 'team_captain'    // Team captain - player coordination
-  | 'parent_admin'    // Parent admin - family coordination
-  | 'player'          // Player - view and respond
-  | 'parent'          // Parent/guardian - family management
-  | 'viewer'          // Read-only access
-  | 'guest';          // Temporary limited access
+export type CalendarRole =
+  | "owner" // Team owner - full access
+  | "head_coach" // Head coach - full calendar management
+  | "assistant_coach" // Assistant coach - limited management
+  | "team_captain" // Team captain - player coordination
+  | "parent_admin" // Parent admin - family coordination
+  | "player" // Player - view and respond
+  | "parent" // Parent/guardian - family management
+  | "viewer" // Read-only access
+  | "guest"; // Temporary limited access
 
-export type CalendarPermission = 
+export type CalendarPermission =
   // Event Management
-  | 'create_events'
-  | 'edit_events'
-  | 'delete_events'
-  | 'publish_events'
-  | 'archive_events'
-  
+  | "create_events"
+  | "edit_events"
+  | "delete_events"
+  | "publish_events"
+  | "archive_events"
+
   // Practice Management
-  | 'create_practices'
-  | 'edit_practice_plans'
-  | 'manage_attendance'
-  | 'assign_practice_roles'
-  
+  | "create_practices"
+  | "edit_practice_plans"
+  | "manage_attendance"
+  | "assign_practice_roles"
+
   // Game Management
-  | 'create_games'
-  | 'edit_game_details'
-  | 'manage_lineups'
-  | 'update_scores'
-  
+  | "create_games"
+  | "edit_game_details"
+  | "manage_lineups"
+  | "update_scores"
+
   // RSVP and Polling
-  | 'create_polls'
-  | 'view_poll_results'
-  | 'manage_rsvps'
-  | 'view_rsvp_analytics'
-  
+  | "create_polls"
+  | "view_poll_results"
+  | "manage_rsvps"
+  | "view_rsvp_analytics"
+
   // Team Coordination
-  | 'send_notifications'
-  | 'bulk_operations'
-  | 'export_calendar'
-  | 'import_calendar'
-  
+  | "send_notifications"
+  | "bulk_operations"
+  | "export_calendar"
+  | "import_calendar"
+
   // Administrative
-  | 'manage_permissions'
-  | 'view_analytics'
-  | 'manage_integrations'
-  | 'access_private_notes';
+  | "manage_permissions"
+  | "view_analytics"
+  | "manage_integrations"
+  | "access_private_notes";
 
 export interface CustomPermission {
   id: string;
@@ -252,62 +262,69 @@ export interface PermissionResult {
 export interface BulkOperation {
   id: string;
   type: BulkOperationType;
-  target_type: 'events' | 'rsvps' | 'polls' | 'permissions';
+  target_type: "events" | "rsvps" | "polls" | "permissions";
   target_ids: string[];
   operation_data: Record<string, string | number | boolean | string[]>;
   filters?: BulkOperationFilter[];
-  
+
   // Execution details
-  status: 'pending' | 'in_progress' | 'completed' | 'failed' | 'cancelled';
+  status: "pending" | "in_progress" | "completed" | "failed" | "cancelled";
   total_items: number;
   processed_items: number;
   successful_items: number;
   failed_items: number;
-  
+
   // User and team context
   team_id: string;
   initiated_by: string;
   initiated_at: string;
   completed_at?: string;
-  
+
   // Results and logging
   results?: BulkOperationResult[];
   error_log?: BulkOperationError[];
   summary?: string;
 }
 
-export type BulkOperationType = 
+export type BulkOperationType =
   // Event operations
-  | 'update_events'
-  | 'delete_events'
-  | 'duplicate_events'
-  | 'move_events'
-  | 'change_event_type'
-  | 'bulk_reschedule'
-  
+  | "update_events"
+  | "delete_events"
+  | "duplicate_events"
+  | "move_events"
+  | "change_event_type"
+  | "bulk_reschedule"
+
   // RSVP operations
-  | 'send_rsvp_reminders'
-  | 'update_rsvp_status'
-  | 'export_rsvp_data'
-  | 'clear_rsvp_responses'
-  
+  | "send_rsvp_reminders"
+  | "update_rsvp_status"
+  | "export_rsvp_data"
+  | "clear_rsvp_responses"
+
   // Poll operations
-  | 'create_polls_for_events'
-  | 'close_polls'
-  | 'export_poll_results'
-  | 'duplicate_polls'
-  
+  | "create_polls_for_events"
+  | "close_polls"
+  | "export_poll_results"
+  | "duplicate_polls"
+
   // Permission operations
-  | 'update_user_permissions'
-  | 'bulk_invite_users'
-  | 'revoke_permissions'
-  | 'migrate_permissions';
+  | "update_user_permissions"
+  | "bulk_invite_users"
+  | "revoke_permissions"
+  | "migrate_permissions";
 
 export interface BulkOperationFilter {
   field: string;
-  operator: 'equals' | 'not_equals' | 'contains' | 'starts_with' | 'ends_with' | 'in' | 'between';
+  operator:
+    | "equals"
+    | "not_equals"
+    | "contains"
+    | "starts_with"
+    | "ends_with"
+    | "in"
+    | "between";
   value: string | number | boolean | string[] | number[];
-  and_or?: 'and' | 'or';
+  and_or?: "and" | "or";
 }
 
 export interface BulkOperationResult {
@@ -324,7 +341,7 @@ export interface BulkOperationError {
   item_id: string;
   error_code: string;
   error_message: string;
-  severity: 'warning' | 'error' | 'critical';
+  severity: "warning" | "error" | "critical";
   timestamp: string;
 }
 
@@ -346,26 +363,26 @@ export interface BulkOperationTemplate {
 // ENHANCED EVENT TYPES
 // ============================================================================
 
-export interface EnhancedCalendarEvent extends Omit<CalendarEvent, 'tags'> {
+export interface EnhancedCalendarEvent extends Omit<CalendarEvent, "tags"> {
   // Polling integration
   polls: EventPoll[];
   active_polls_count: number;
-  
+
   // Advanced RSVP
   rsvp_config: RSVPConfiguration;
   rsvp_analytics: RSVPAnalytics;
-  
+
   // Permissions
   required_permissions: CalendarPermission[];
-  visibility_level: 'public' | 'team' | 'coaches' | 'private';
-  
+  visibility_level: "public" | "team" | "coaches" | "private";
+
   // Bulk operation tracking
   bulk_operation_id?: string;
   last_bulk_update?: string;
-  
+
   // Enhanced metadata
   tags: EventTag[];
-  priority: 'low' | 'medium' | 'high' | 'critical';
+  priority: "low" | "medium" | "high" | "critical";
   reminder_config: ReminderConfiguration;
 }
 
@@ -385,13 +402,13 @@ export interface EventTag {
   name: string;
   color: string;
   icon?: string;
-  category: 'system' | 'team' | 'custom';
+  category: "system" | "team" | "custom";
 }
 
 export interface ReminderConfiguration {
   enabled: boolean;
   schedule: ReminderSchedule[];
-  channels: ('email' | 'sms' | 'push' | 'in_app')[];
+  channels: ("email" | "sms" | "push" | "in_app")[];
   custom_message?: string;
 }
 
@@ -414,24 +431,29 @@ export interface EnhancedCalendarQuery {
     start: string;
     end: string;
   };
-  
+
   // Enhanced filters
-  poll_status?: ('has_polls' | 'active_polls' | 'completed_polls' | 'no_polls')[];
+  poll_status?: (
+    | "has_polls"
+    | "active_polls"
+    | "completed_polls"
+    | "no_polls"
+  )[];
   rsvp_status?: RSVPStatus[];
   permission_level?: CalendarPermission[];
   tags?: string[];
-  priority?: ('low' | 'medium' | 'high' | 'critical')[];
-  
+  priority?: ("low" | "medium" | "high" | "critical")[];
+
   // User-specific filters
   user_permissions?: CalendarPermission[];
   user_role?: CalendarRole[];
   user_rsvp_status?: RSVPStatus[];
-  
+
   // Search and sorting
   search_query?: string;
-  sort_by?: 'date' | 'priority' | 'rsvp_count' | 'poll_count' | 'updated_at';
-  sort_order?: 'asc' | 'desc';
-  
+  sort_by?: "date" | "priority" | "rsvp_count" | "poll_count" | "updated_at";
+  sort_order?: "asc" | "desc";
+
   // Pagination
   page?: number;
   limit?: number;
@@ -454,19 +476,19 @@ export interface CalendarWebhook {
   last_triggered?: string;
 }
 
-export type CalendarWebhookEvent = 
-  | 'event.created'
-  | 'event.updated'
-  | 'event.deleted'
-  | 'rsvp.created'
-  | 'rsvp.updated'
-  | 'poll.created'
-  | 'poll.completed'
-  | 'bulk_operation.completed';
+export type CalendarWebhookEvent =
+  | "event.created"
+  | "event.updated"
+  | "event.deleted"
+  | "rsvp.created"
+  | "rsvp.updated"
+  | "poll.created"
+  | "poll.completed"
+  | "bulk_operation.completed";
 
 export interface WebhookRetryConfig {
   max_attempts: number;
-  backoff_strategy: 'linear' | 'exponential';
+  backoff_strategy: "linear" | "exponential";
   base_delay: number; // milliseconds
   max_delay: number; // milliseconds
 }
@@ -485,7 +507,7 @@ export interface CalendarSystemConfig {
     webhook_integrations: boolean;
     analytics_dashboard: boolean;
   };
-  
+
   // Limits and quotas
   limits: {
     max_polls_per_event: number;
@@ -494,7 +516,7 @@ export interface CalendarSystemConfig {
     max_webhook_retries: number;
     max_custom_permissions: number;
   };
-  
+
   // Default configurations
   defaults: {
     rsvp_deadline_hours: number;

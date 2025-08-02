@@ -4,7 +4,7 @@ import { supabase } from "../../lib/supabase";
 
 /**
  * Navigation Component
- * 
+ *
  * Masculine, square navigation with jade/navy theme
  * Professional, confident design for football team management
  */
@@ -40,7 +40,9 @@ export const Navigation: React.FC = () => {
               className="flex items-center space-x-3 text-xl font-display font-bold text-jade-600 hover:text-jade-700 transition-colors"
             >
               <span className="text-2xl">🏈</span>
-              <span className="font-display text-2xl tracking-wide">BoxCall</span>
+              <span className="font-display text-2xl tracking-wide">
+                BoxCall
+              </span>
             </button>
           </div>
 
@@ -60,7 +62,7 @@ export const Navigation: React.FC = () => {
             >
               📅 Calendar
             </button>
-            
+
             {/* Team Navigation - Show for different user types */}
             {(profile?.role === "admin" || profile?.role === "coach") && (
               <button
@@ -70,7 +72,7 @@ export const Navigation: React.FC = () => {
                 {profile?.role === "admin" ? "Team Management" : "My Team"}
               </button>
             )}
-            
+
             {/* Playbook Tools - For coaches and above */}
             {(profile?.role === "admin" || profile?.role === "coach") && (
               <button
@@ -80,7 +82,7 @@ export const Navigation: React.FC = () => {
                 Playbooks
               </button>
             )}
-            
+
             {/* Conditional Admin Links */}
             {profile?.role === "admin" && (
               <button
@@ -104,7 +106,9 @@ export const Navigation: React.FC = () => {
                   {profile?.display_name?.[0] || profile?.email?.[0] || "U"}
                 </div>
                 <span className="hidden sm:block font-sans font-medium">
-                  {profile?.display_name || profile?.email?.split("@")[0] || "User"}
+                  {profile?.display_name ||
+                    profile?.email?.split("@")[0] ||
+                    "User"}
                 </span>
                 <svg
                   className={`w-4 h-4 transition-transform ${userMenuOpen ? "rotate-180" : ""}`}
@@ -112,7 +116,12 @@ export const Navigation: React.FC = () => {
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
 
@@ -142,7 +151,7 @@ export const Navigation: React.FC = () => {
                     >
                       👤 My Profile
                     </button>
-                    
+
                     <button
                       onClick={() => handleNavigation("/dashboard")}
                       className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-gray-700 dark:text-gray-300 hover:bg-jade-50 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 transition-all duration-200 border-l-2 border-transparent hover:border-jade-500"
@@ -179,12 +188,21 @@ export const Navigation: React.FC = () => {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="text-gray-700 dark:text-gray-300 hover:text-jade-600 dark:hover:text-jade-400 hover:bg-jade-50 dark:hover:bg-jade-900/10 p-2 rounded-sm border border-transparent hover:border-jade-200 transition-all duration-200"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d={mobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                    d={
+                      mobileMenuOpen
+                        ? "M6 18L18 6M6 6l12 12"
+                        : "M4 6h16M4 12h16M4 18h16"
+                    }
                   />
                 </svg>
               </button>
@@ -209,7 +227,7 @@ export const Navigation: React.FC = () => {
               >
                 📅 Calendar
               </button>
-              
+
               {(profile?.role === "admin" || profile?.role === "coach") && (
                 <button
                   onClick={() => handleNavigation("/team/1")}
@@ -218,7 +236,7 @@ export const Navigation: React.FC = () => {
                   🏈 {profile?.role === "admin" ? "Team Management" : "My Team"}
                 </button>
               )}
-              
+
               {(profile?.role === "admin" || profile?.role === "coach") && (
                 <button
                   onClick={() => handleNavigation("/playbooks")}
@@ -227,7 +245,7 @@ export const Navigation: React.FC = () => {
                   📋 Playbooks
                 </button>
               )}
-              
+
               <button
                 onClick={() => handleNavigation("/profile")}
                 className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Button } from "../ui/Button";
-import { Input } from "../ui/Input";
 import type { TeamPlayer } from "../../types/team-management";
 import { TEAM_LEVELS } from "../../types/team-management";
+import { Button } from "../ui/Button";
+import { Input } from "../ui/Input";
 
 interface PlayerListProps {
   players: TeamPlayer[];
@@ -13,7 +13,7 @@ interface PlayerListProps {
 
 /**
  * PlayerList Component
- * 
+ *
  * Displays team roster with search, filter, and management capabilities.
  */
 export const PlayerList: React.FC<PlayerListProps> = ({
@@ -27,29 +27,34 @@ export const PlayerList: React.FC<PlayerListProps> = ({
   const [filterPosition, setFilterPosition] = useState<string>("all");
 
   // Get unique positions from all players
-  const allPositions = [...new Set(players.flatMap(p => p.positions))].sort();
+  const allPositions = [...new Set(players.flatMap((p) => p.positions))].sort();
 
   // Filter players based on search and filters
-  const filteredPlayers = players.filter(player => {
-    const matchesSearch = 
+  const filteredPlayers = players.filter((player) => {
+    const matchesSearch =
       player.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       player.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      player.positions.some(pos => pos.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (player.jersey_number && player.jersey_number.toString().includes(searchTerm));
+      player.positions.some((pos) =>
+        pos.toLowerCase().includes(searchTerm.toLowerCase())
+      ) ||
+      (player.jersey_number &&
+        player.jersey_number.toString().includes(searchTerm));
 
-    const matchesLevel = filterLevel === "all" || player.team_level === filterLevel;
-    const matchesPosition = filterPosition === "all" || player.positions.includes(filterPosition);
+    const matchesLevel =
+      filterLevel === "all" || player.team_level === filterLevel;
+    const matchesPosition =
+      filterPosition === "all" || player.positions.includes(filterPosition);
 
     return matchesSearch && matchesLevel && matchesPosition;
   });
 
   const getTeamLevelColor = (level: string) => {
-    const teamLevel = TEAM_LEVELS.find(tl => tl.value === level);
+    const teamLevel = TEAM_LEVELS.find((tl) => tl.value === level);
     return teamLevel?.color || "gray";
   };
 
   const getTeamLevelLabel = (level: string) => {
-    const teamLevel = TEAM_LEVELS.find(tl => tl.value === level);
+    const teamLevel = TEAM_LEVELS.find((tl) => tl.value === level);
     return teamLevel?.label || level;
   };
 
@@ -62,10 +67,15 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             No Players Yet
           </h3>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Start building your roster by adding players manually or importing from CSV.
+            Start building your roster by adding players manually or importing
+            from CSV.
           </p>
           <div className="space-y-3">
-            <Button onClick={onAddPlayer} variant="primary" className="w-full sm:w-auto">
+            <Button
+              onClick={onAddPlayer}
+              variant="primary"
+              className="w-full sm:w-auto"
+            >
               👤 Add First Player
             </Button>
             <Button variant="outline" className="w-full sm:w-auto ml-0 sm:ml-3">
@@ -101,7 +111,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-white font-sans"
             >
               <option value="all">All Levels</option>
-              {TEAM_LEVELS.map(level => (
+              {TEAM_LEVELS.map((level) => (
                 <option key={level.value} value={level.value}>
                   {level.label}
                 </option>
@@ -117,7 +127,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-white font-sans"
             >
               <option value="all">All Positions</option>
-              {allPositions.map(position => (
+              {allPositions.map((position) => (
                 <option key={position} value={position}>
                   {position}
                 </option>
@@ -131,7 +141,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
           <p className="text-sm text-gray-600 dark:text-gray-400">
             Showing {filteredPlayers.length} of {players.length} players
           </p>
-          
+
           <div className="space-x-2">
             <Button onClick={onAddPlayer} variant="primary" size="sm">
               👤 Add Player
@@ -156,7 +166,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPlayers.map(player => (
+            {filteredPlayers.map((player) => (
               <div
                 key={player.id}
                 className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
@@ -168,7 +178,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     <div className="w-12 h-12 bg-jade-500 rounded-md flex items-center justify-center text-white font-display font-bold">
                       {player.jersey_number || "?"}
                     </div>
-                    
+
                     {/* Name and Level */}
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white">
@@ -204,7 +214,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                 {/* Positions */}
                 <div className="mb-3">
                   <div className="flex flex-wrap gap-1">
-                    {player.positions.map(position => (
+                    {player.positions.map((position) => (
                       <span
                         key={position}
                         className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded"
@@ -219,17 +229,20 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                 <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 dark:text-gray-400">
                   {player.height && (
                     <div>
-                      <span className="font-medium">Height:</span> {player.height}
+                      <span className="font-medium">Height:</span>{" "}
+                      {player.height}
                     </div>
                   )}
                   {player.weight && (
                     <div>
-                      <span className="font-medium">Weight:</span> {player.weight} lbs
+                      <span className="font-medium">Weight:</span>{" "}
+                      {player.weight} lbs
                     </div>
                   )}
                   {player.graduation_year && (
                     <div className="col-span-2">
-                      <span className="font-medium">Class:</span> {player.graduation_year}
+                      <span className="font-medium">Class:</span>{" "}
+                      {player.graduation_year}
                     </div>
                   )}
                 </div>

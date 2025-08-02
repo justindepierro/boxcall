@@ -5,11 +5,11 @@ import React, { useState } from "react";
 import { useEventPolls, usePollResults } from "../hooks/useEnhancedCalendar";
 import type {
   EventPoll,
+  OptionResult,
+  PollComment,
   PollOption,
   PollResponse,
   PollResults,
-  OptionResult,
-  PollComment,
 } from "../types/enhanced-calendar";
 
 interface EventPollingInterfaceProps {

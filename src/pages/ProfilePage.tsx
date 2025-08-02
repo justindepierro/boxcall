@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useAuthProfile, useAuthLoading } from "../app/auth-store";
-import { supabase } from "../lib/supabase";
+import React, { useEffect, useState } from "react";
+import { useAuthLoading, useAuthProfile } from "../app/auth-store";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
+import { supabase } from "../lib/supabase";
 
 /**
  * ProfilePage Component
- * 
+ *
  * User profile management and settings page.
  * Allows users to update their personal information and preferences.
  */
@@ -14,8 +14,11 @@ export const ProfilePage: React.FC = () => {
   const profile = useAuthProfile();
   const loading = useAuthLoading();
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+
   // Form state
   const [formData, setFormData] = useState({
     display_name: "",
@@ -40,9 +43,9 @@ export const ProfilePage: React.FC = () => {
 
   // Handle form input changes
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -68,12 +71,15 @@ export const ProfilePage: React.FC = () => {
         .eq("id", profile.id);
 
       if (error) {
-        setMessage({ type: 'error', text: 'Failed to update profile: ' + error.message });
+        setMessage({
+          type: "error",
+          text: "Failed to update profile: " + error.message,
+        });
       } else {
-        setMessage({ type: 'success', text: 'Profile updated successfully!' });
+        setMessage({ type: "success", text: "Profile updated successfully!" });
       }
     } catch {
-      setMessage({ type: 'error', text: 'An unexpected error occurred' });
+      setMessage({ type: "error", text: "An unexpected error occurred" });
     } finally {
       setSaving(false);
     }
@@ -84,17 +90,26 @@ export const ProfilePage: React.FC = () => {
     if (!profile?.email) return;
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(profile.email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      });
+      const { error } = await supabase.auth.resetPasswordForEmail(
+        profile.email,
+        {
+          redirectTo: `${window.location.origin}/reset-password`,
+        }
+      );
 
       if (error) {
-        setMessage({ type: 'error', text: 'Failed to send password reset email: ' + error.message });
+        setMessage({
+          type: "error",
+          text: "Failed to send password reset email: " + error.message,
+        });
       } else {
-        setMessage({ type: 'success', text: 'Password reset email sent! Check your inbox.' });
+        setMessage({
+          type: "success",
+          text: "Password reset email sent! Check your inbox.",
+        });
       }
     } catch {
-      setMessage({ type: 'error', text: 'An unexpected error occurred' });
+      setMessage({ type: "error", text: "An unexpected error occurred" });
     }
   };
 
@@ -110,8 +125,12 @@ export const ProfilePage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Profile Not Found</h1>
-          <p className="text-gray-600 dark:text-gray-400">Unable to load your profile information.</p>
+          <h1 className="text-2xl font-bold text-red-600 mb-4">
+            Profile Not Found
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Unable to load your profile information.
+          </p>
         </div>
       </div>
     );
@@ -132,11 +151,13 @@ export const ProfilePage: React.FC = () => {
 
         {/* Message Display */}
         {message && (
-          <div className={`mb-6 p-4 rounded-lg border ${
-            message.type === 'success' 
-              ? 'bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200'
-              : 'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200'
-          }`}>
+          <div
+            className={`mb-6 p-4 rounded-lg border ${
+              message.type === "success"
+                ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200"
+                : "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200"
+            }`}
+          >
             {message.text}
           </div>
         )}
@@ -146,7 +167,7 @@ export const ProfilePage: React.FC = () => {
           {/* Basic Information */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -158,7 +179,9 @@ export const ProfilePage: React.FC = () => {
                   disabled
                   className="bg-gray-100 dark:bg-gray-700"
                 />
-                <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Email cannot be changed
+                </p>
               </div>
 
               <div>
@@ -169,7 +192,9 @@ export const ProfilePage: React.FC = () => {
                   type="text"
                   placeholder="How you'd like to be called"
                   value={formData.display_name}
-                  onChange={(e) => handleInputChange('display_name', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("display_name", e.target.value)
+                  }
                 />
               </div>
 
@@ -181,7 +206,9 @@ export const ProfilePage: React.FC = () => {
                   type="text"
                   placeholder="Your full name"
                   value={formData.full_name}
-                  onChange={(e) => handleInputChange('full_name', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("full_name", e.target.value)
+                  }
                 />
               </div>
 
@@ -193,7 +220,7 @@ export const ProfilePage: React.FC = () => {
                   type="tel"
                   placeholder="(555) 123-4567"
                   value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
                 />
               </div>
 
@@ -207,7 +234,9 @@ export const ProfilePage: React.FC = () => {
                   disabled
                   className="bg-gray-100 dark:bg-gray-700 capitalize"
                 />
-                <p className="text-xs text-gray-500 mt-1">Role is set by team administrators</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Role is set by team administrators
+                </p>
               </div>
 
               <div className="md:col-span-2">
@@ -218,7 +247,7 @@ export const ProfilePage: React.FC = () => {
                   type="text"
                   placeholder="Your address"
                   value={formData.address}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
+                  onChange={(e) => handleInputChange("address", e.target.value)}
                 />
               </div>
             </div>
@@ -231,7 +260,7 @@ export const ProfilePage: React.FC = () => {
                 rows={4}
                 placeholder="Tell us about yourself..."
                 value={formData.bio}
-                onChange={(e) => handleInputChange('bio', e.target.value)}
+                onChange={(e) => handleInputChange("bio", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-white font-sans"
               />
             </div>
@@ -240,7 +269,7 @@ export const ProfilePage: React.FC = () => {
           {/* Account Security */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold mb-4">Account Security</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -277,14 +306,14 @@ export const ProfilePage: React.FC = () => {
             >
               Cancel
             </Button>
-            
+
             <Button
               type="submit"
               variant="primary"
               loading={saving}
               disabled={saving}
             >
-              {saving ? 'Saving...' : 'Save Changes'}
+              {saving ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </form>
@@ -295,15 +324,21 @@ export const ProfilePage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
               <span className="font-medium">Account Created:</span>{" "}
-              {profile.created_at ? new Date(profile.created_at).toLocaleDateString() : "Unknown"}
+              {profile.created_at
+                ? new Date(profile.created_at).toLocaleDateString()
+                : "Unknown"}
             </div>
             <div>
               <span className="font-medium">Last Updated:</span>{" "}
-              {profile.updated_at ? new Date(profile.updated_at).toLocaleDateString() : "Never"}
+              {profile.updated_at
+                ? new Date(profile.updated_at).toLocaleDateString()
+                : "Never"}
             </div>
             <div>
               <span className="font-medium">Role:</span>{" "}
-              <span className="capitalize">{profile.role || "Not assigned"}</span>
+              <span className="capitalize">
+                {profile.role || "Not assigned"}
+              </span>
             </div>
             <div>
               <span className="font-medium">User ID:</span>{" "}

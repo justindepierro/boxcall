@@ -1,6 +1,10 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useIsAuthenticated, useAuthProfile, useAuthLoading } from "../app/auth-store";
+import {
+  useAuthLoading,
+  useAuthProfile,
+  useIsAuthenticated,
+} from "../app/auth-store";
 import type { Database } from "../types/database";
 
 // User role type from database
@@ -14,10 +18,10 @@ interface RoleProtectedRouteProps {
 
 /**
  * RoleProtectedRoute Component
- * 
+ *
  * Protects routes based on user roles in addition to authentication.
  * Useful for admin panels, coach-only features, etc.
- * 
+ *
  * @param children - The component(s) to render if role access is granted
  * @param allowedRoles - Array of roles that can access this route
  * @param fallbackTo - Where to redirect if role access is denied (default: '/dashboard')

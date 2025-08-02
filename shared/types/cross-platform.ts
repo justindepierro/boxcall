@@ -1,6 +1,6 @@
 /**
  * Phase 4.1: Cross-Platform Shared Services
- * 
+ *
  * Shared business logic and services that work across web, mobile, and PWA platforms.
  * This abstracts the Phase 3 intelligent features for cross-platform use.
  */
@@ -10,7 +10,7 @@
 // ============================================================================
 
 export interface Platform {
-  type: 'web' | 'ios' | 'android' | 'pwa';
+  type: "web" | "ios" | "android" | "pwa";
   version: string;
   capabilities: PlatformCapability[];
 }
@@ -40,16 +40,16 @@ export interface CrossPlatformCalendarEvent {
   startTime: Date;
   endTime: Date;
   location?: string;
-  type: 'practice' | 'game' | 'meeting' | 'event';
+  type: "practice" | "game" | "meeting" | "event";
   teamId: string;
   createdBy: string;
   isRecurring: boolean;
-  
+
   // Cross-platform specific fields
-  syncedPlatforms: Platform['type'][];
+  syncedPlatforms: Platform["type"][];
   lastSyncTimestamp: Date;
   platformSpecificData?: Record<string, unknown>;
-  
+
   // Phase 3 intelligent features
   conflicts?: ConflictDetection[];
   suggestions?: SchedulingSuggestion[];
@@ -58,8 +58,8 @@ export interface CrossPlatformCalendarEvent {
 
 export interface ConflictDetection {
   id: string;
-  type: 'team' | 'coach' | 'venue' | 'academic' | 'travel';
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  type: "team" | "coach" | "venue" | "academic" | "travel";
+  severity: "low" | "medium" | "high" | "critical";
   description: string;
   suggestions: string[];
   conflictingEvents: string[];
@@ -80,12 +80,12 @@ export interface OptimizationFactor {
   factor: string;
   weight: number;
   score: number;
-  impact: 'positive' | 'negative' | 'neutral';
+  impact: "positive" | "negative" | "neutral";
 }
 
 export interface EventAnalytics {
   attendanceRate: number;
-  attendanceTrend: 'improving' | 'declining' | 'stable';
+  attendanceTrend: "improving" | "declining" | "stable";
   optimalTimingScore: number;
   performanceImpact: number;
   recommendations: string[];
@@ -105,7 +105,7 @@ export interface SyncStatus {
 
 export interface SyncError {
   id: string;
-  type: 'network' | 'conflict' | 'validation' | 'permission';
+  type: "network" | "conflict" | "validation" | "permission";
   message: string;
   timestamp: Date;
   retryable: boolean;
@@ -126,7 +126,7 @@ export interface UserState {
   email: string;
   firstName: string;
   lastName: string;
-  role: 'player' | 'parent' | 'coach' | 'admin';
+  role: "player" | "parent" | "coach" | "admin";
   preferences: UserPreferences;
   platforms: Platform[];
   lastActiveTimestamp: Date;
@@ -144,7 +144,7 @@ export interface TeamState {
 
 export interface TeamMember {
   userId: string;
-  role: 'player' | 'coach' | 'assistant' | 'parent';
+  role: "player" | "coach" | "assistant" | "parent";
   permissions: string[];
   joinedAt: Date;
   isActive: boolean;
@@ -181,7 +181,7 @@ export interface CustomReminder {
 }
 
 export interface NotificationChannel {
-  type: 'email' | 'sms' | 'push' | 'inapp';
+  type: "email" | "sms" | "push" | "inapp";
   enabled: boolean;
   address?: string; // email address, phone number, etc.
 }
@@ -196,13 +196,13 @@ export interface IntelligenceSettings {
 }
 
 export interface UserPreferences {
-  theme: 'light' | 'dark' | 'auto';
+  theme: "light" | "dark" | "auto";
   language: string;
   timezone: string;
   dateFormat: string;
-  timeFormat: '12h' | '24h';
+  timeFormat: "12h" | "24h";
   startOfWeek: 0 | 1; // Sunday or Monday
-  defaultCalendarView: 'month' | 'week' | 'day' | 'agenda';
+  defaultCalendarView: "month" | "week" | "day" | "agenda";
   intelligencePreferences: IntelligencePreferences;
   notificationPreferences: NotificationPreferences;
 }
@@ -231,8 +231,8 @@ export interface QuietHours {
 }
 
 export interface UrgencyLevel {
-  level: 'low' | 'medium' | 'high' | 'urgent';
-  enabledChannels: NotificationChannel['type'][];
+  level: "low" | "medium" | "high" | "urgent";
+  enabledChannels: NotificationChannel["type"][];
   respectQuietHours: boolean;
 }
 
@@ -254,7 +254,7 @@ export interface AnalyticsCache {
 
 export interface TeamAnalytics {
   attendanceRate: number;
-  attendanceTrend: 'improving' | 'declining' | 'stable';
+  attendanceTrend: "improving" | "declining" | "stable";
   optimalSchedulingScore: number;
   conflictRate: number;
   performanceMetrics: PerformanceMetrics;
@@ -264,7 +264,7 @@ export interface PlayerAnalytics {
   attendanceRate: number;
   punctualityScore: number;
   participationLevel: number;
-  improvementTrend: 'improving' | 'declining' | 'stable';
+  improvementTrend: "improving" | "declining" | "stable";
   strengths: string[];
   areasForImprovement: string[];
 }
@@ -280,7 +280,7 @@ export interface ScheduleAnalytics {
 export interface ConflictHotspot {
   timeSlot: string;
   conflictFrequency: number;
-  conflictTypes: ConflictDetection['type'][];
+  conflictTypes: ConflictDetection["type"][];
   suggestions: string[];
 }
 
@@ -317,7 +317,7 @@ export interface PerformanceBenchmark {
   metric: string;
   current: number;
   target: number;
-  trend: 'improving' | 'declining' | 'stable';
+  trend: "improving" | "declining" | "stable";
   recommendations: string[];
 }
 

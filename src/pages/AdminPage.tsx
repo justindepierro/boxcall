@@ -4,7 +4,7 @@ import { Card } from "../components/ui";
 
 /**
  * Admin Page
- * 
+ *
  * Admin-only dashboard for system management.
  * Protected by RoleProtectedRoute.
  */
@@ -60,12 +60,16 @@ export const AdminPage: React.FC = () => {
         </div>
 
         <div className="mt-8">
-          <Card variant="outlined" className="p-6 border-yellow-200 bg-yellow-50 dark:bg-yellow-950 dark:border-yellow-800">
+          <Card
+            variant="outlined"
+            className="p-6 border-yellow-200 bg-yellow-50 dark:bg-yellow-950 dark:border-yellow-800"
+          >
             <Typography variant="headline-md" className="mb-4">
               🚨 Admin Notice
             </Typography>
             <Typography variant="body-md">
-              This page is only accessible to users with admin privileges. All actions are logged for security.
+              This page is only accessible to users with admin privileges. All
+              actions are logged for security.
             </Typography>
           </Card>
         </div>

@@ -7,7 +7,7 @@ interface LayoutProps {
 
 /**
  * Layout Component
- * 
+ *
  * Main application layout wrapper that includes navigation
  * and consistent styling for all authenticated pages.
  */

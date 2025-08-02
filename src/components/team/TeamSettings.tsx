@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import type { TeamSettings as TeamSettingsType } from "../../types/team-management";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
-import type { TeamSettings as TeamSettingsType } from "../../types/team-management";
 
 interface TeamSettingsProps {
   teamSettings: TeamSettingsType;
@@ -10,7 +10,7 @@ interface TeamSettingsProps {
 
 /**
  * TeamSettings Component
- * 
+ *
  * Team configuration and settings management interface.
  */
 export const TeamSettings: React.FC<TeamSettingsProps> = ({
@@ -29,13 +29,16 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
   });
 
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   // Handle input changes
   const handleInputChange = (field: string, value: string | number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -56,16 +59,22 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           address: formData.address,
           city: formData.city,
           state: formData.state,
-          zipCode: formData.zipCode
-        }
+          zipCode: formData.zipCode,
+        },
       };
 
       // TODO: Save to database
       onUpdate(updatedSettings);
-      setMessage({ type: 'success', text: 'Team settings updated successfully!' });
+      setMessage({
+        type: "success",
+        text: "Team settings updated successfully!",
+      });
     } catch (error) {
       console.error("Error updating team settings:", error);
-      setMessage({ type: 'error', text: 'Failed to update team settings. Please try again.' });
+      setMessage({
+        type: "error",
+        text: "Failed to update team settings. Please try again.",
+      });
     } finally {
       setSaving(false);
     }
@@ -74,7 +83,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
   // Handle logo upload
   const handleLogoUpload = () => {
     // TODO: Implement file upload
-    setMessage({ type: 'success', text: 'Logo upload feature coming soon!' });
+    setMessage({ type: "success", text: "Logo upload feature coming soon!" });
   };
 
   return (
@@ -91,11 +100,13 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
       {/* Message Display */}
       {message && (
-        <div className={`mx-6 mt-4 p-4 rounded-lg border ${
-          message.type === 'success' 
-            ? 'bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200'
-            : 'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200'
-        }`}>
+        <div
+          className={`mx-6 mt-4 p-4 rounded-lg border ${
+            message.type === "success"
+              ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200"
+              : "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200"
+          }`}
+        >
           {message.text}
         </div>
       )}
@@ -107,7 +118,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
             Team Logo
           </h3>
-          
+
           <div className="flex items-center space-x-6">
             {/* Current Logo */}
             <div className="flex-shrink-0">
@@ -123,7 +134,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                 </div>
               )}
             </div>
-            
+
             {/* Upload Button */}
             <div>
               <Button
@@ -145,7 +156,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
             Basic Information
           </h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -203,7 +214,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
             Location Information
           </h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -260,7 +271,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
             Subscription Status
           </h3>
-          
+
           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -271,7 +282,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                   Features: {teamSettings.subscription.features.join(", ")}
                 </p>
               </div>
-              
+
               <Button variant="outline" size="sm">
                 Manage Subscription
               </Button>
@@ -284,12 +295,13 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
             Team Information
           </h3>
-          
+
           <div className="bg-jade-50 dark:bg-navy-900/20 rounded-md p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-gray-900 dark:text-white">
-                  Team ID: <code className="bg-white dark:bg-gray-800 px-2 py-1 rounded-sm text-jade-600 font-mono">
+                  Team ID:{" "}
+                  <code className="bg-white dark:bg-gray-800 px-2 py-1 rounded-sm text-jade-600 font-mono">
                     {teamSettings.id}
                   </code>
                 </p>

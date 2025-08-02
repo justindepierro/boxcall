@@ -1,7 +1,7 @@
-import React from 'react';
-import { useAchievements } from '../../hooks/useAchievements';
-import { Typography } from '../design-system';
-import { Card } from '../ui';
+import React from "react";
+import { useAchievements } from "../../hooks/useAchievements";
+import { Typography } from "../design-system";
+import { Card } from "../ui";
 
 interface PersonalTrophyShelfProps {
   userId: string;
@@ -10,7 +10,7 @@ interface PersonalTrophyShelfProps {
 
 /**
  * Personal Trophy Shelf - MySpace meets Strava achievements
- * 
+ *
  * Features:
  * - Helmet Stickers (team achievements from coaches)
  * - BoxCall Medals (platform-specific achievements)
@@ -19,16 +19,16 @@ interface PersonalTrophyShelfProps {
  */
 export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   userId,
-  userRole
+  userRole,
 }) => {
   // Get real achievement data
-  const { 
-    helmetStickers, 
-    boxcallMedals, 
-    weeklyStreak, 
-    totalPoints, 
-    loading, 
-    error 
+  const {
+    helmetStickers,
+    boxcallMedals,
+    weeklyStreak,
+    totalPoints,
+    loading,
+    error,
   } = useAchievements(userId);
 
   // Show loading state
@@ -46,26 +46,35 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   if (error) {
     return (
       <Card className="p-6 bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-red-200 dark:border-red-800">
-        <Typography variant="body-md" className="text-red-600 dark:text-red-400 text-center">
+        <Typography
+          variant="body-md"
+          className="text-red-600 dark:text-red-400 text-center"
+        >
           Failed to load achievements
         </Typography>
       </Card>
     );
   }
 
-  const isPlayer = userRole === 'player';
+  const isPlayer = userRole === "player";
 
   return (
     <Card className="p-6 bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
       <div className="flex items-center justify-between mb-4">
-        <Typography variant="headline-md" className="text-gray-900 dark:text-white">
+        <Typography
+          variant="headline-md"
+          className="text-gray-900 dark:text-white"
+        >
           🏆 Trophy Shelf
         </Typography>
         <div className="text-right">
           <Typography variant="body-sm" color="muted">
             Total Points
           </Typography>
-          <Typography variant="headline-sm" className="text-jade-600 dark:text-jade-400 font-bold">
+          <Typography
+            variant="headline-sm"
+            className="text-jade-600 dark:text-jade-400 font-bold"
+          >
             {totalPoints}
           </Typography>
         </div>
@@ -76,7 +85,10 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         <div className="flex items-center space-x-3">
           <div className="text-2xl">🔥</div>
           <div>
-            <Typography variant="body-md" className="font-semibold text-gray-900 dark:text-white">
+            <Typography
+              variant="body-md"
+              className="font-semibold text-gray-900 dark:text-white"
+            >
               Weekly Streak
             </Typography>
             <Typography variant="body-sm" color="muted">
@@ -92,7 +104,10 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       {/* Achievement Stats */}
       <div className="grid grid-cols-3 gap-3 mb-6">
         <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-          <Typography variant="body-lg" className="font-bold text-jade-600 dark:text-jade-400">
+          <Typography
+            variant="body-lg"
+            className="font-bold text-jade-600 dark:text-jade-400"
+          >
             {helmetStickers.length}
           </Typography>
           <Typography variant="caption" color="muted">
@@ -100,15 +115,21 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
           </Typography>
         </div>
         <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-          <Typography variant="body-lg" className="font-bold text-blue-600 dark:text-blue-400">
-            {boxcallMedals.filter(m => m.earned).length}
+          <Typography
+            variant="body-lg"
+            className="font-bold text-blue-600 dark:text-blue-400"
+          >
+            {boxcallMedals.filter((m) => m.earned).length}
           </Typography>
           <Typography variant="caption" color="muted">
             BoxCall Medals
           </Typography>
         </div>
         <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-          <Typography variant="body-lg" className="font-bold text-purple-600 dark:text-purple-400">
+          <Typography
+            variant="body-lg"
+            className="font-bold text-purple-600 dark:text-purple-400"
+          >
             {weeklyStreak}
           </Typography>
           <Typography variant="caption" color="muted">
@@ -120,12 +141,18 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       {/* Recent Helmet Stickers */}
       {isPlayer && helmetStickers.length > 0 && (
         <div className="mb-6">
-          <Typography variant="body-md" className="font-semibold mb-3 text-gray-900 dark:text-white">
+          <Typography
+            variant="body-md"
+            className="font-semibold mb-3 text-gray-900 dark:text-white"
+          >
             Recent Helmet Stickers
           </Typography>
           <div className="space-y-2">
             {helmetStickers.slice(0, 3).map((sticker) => (
-              <div key={sticker.id} className="flex items-center space-x-3 p-2 bg-white dark:bg-gray-800 rounded-md">
+              <div
+                key={sticker.id}
+                className="flex items-center space-x-3 p-2 bg-white dark:bg-gray-800 rounded-md"
+              >
                 <div className="text-2xl">{sticker.icon}</div>
                 <div className="flex-1">
                   <Typography variant="body-sm" className="font-semibold">
@@ -146,13 +173,21 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
 
       {/* BoxCall Medals Progress */}
       <div className="mb-6">
-        <Typography variant="body-md" className="font-semibold mb-3 text-gray-900 dark:text-white">
+        <Typography
+          variant="body-md"
+          className="font-semibold mb-3 text-gray-900 dark:text-white"
+        >
           BoxCall Achievements
         </Typography>
         <div className="space-y-2">
           {boxcallMedals.map((medal) => (
-            <div key={medal.id} className="flex items-center space-x-3 p-2 bg-white dark:bg-gray-800 rounded-md">
-              <div className={`text-2xl ${medal.earned ? '' : 'grayscale opacity-50'}`}>
+            <div
+              key={medal.id}
+              className="flex items-center space-x-3 p-2 bg-white dark:bg-gray-800 rounded-md"
+            >
+              <div
+                className={`text-2xl ${medal.earned ? "" : "grayscale opacity-50"}`}
+              >
                 {medal.icon}
               </div>
               <div className="flex-1">
@@ -165,9 +200,11 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
                 {!medal.earned && medal.progress && medal.maxProgress && (
                   <div className="mt-1">
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                      <div 
-                        className="bg-jade-500 h-2 rounded-full transition-all duration-300" 
-                        style={{ width: `${(medal.progress / medal.maxProgress) * 100}%` }}
+                      <div
+                        className="bg-jade-500 h-2 rounded-full transition-all duration-300"
+                        style={{
+                          width: `${(medal.progress / medal.maxProgress) * 100}%`,
+                        }}
                       ></div>
                     </div>
                     <Typography variant="caption" color="muted">

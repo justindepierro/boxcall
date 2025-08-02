@@ -9,24 +9,24 @@ import React from "react";
 
 // Typography variant types - Updated with new display variant
 export type TypographyVariant =
-  | "display-xl"   // NEW: Hero text, team names (Bebas Neue)
-  | "display-lg"   // NEW: Large display text (Bebas Neue)
-  | "display-md"   // NEW: Medium display text (Bebas Neue)
-  | "headline-xl"  // Main headlines (Inter Bold)
-  | "headline-lg"  // Section headers (Inter Bold)
-  | "headline-md"  // Subsection headers (Inter Bold)
-  | "headline-sm"  // Small headers (Inter Bold)
-  | "body-lg"      // Large body text (Inter)
-  | "body-md"      // Standard body text (Inter)
-  | "body-sm"      // Small body text (Inter)
-  | "body-xs"      // Extra small body text (Inter)
-  | "code-lg"      // NEW: Large code/stats (IBM Plex Mono)
-  | "code-md"      // NEW: Standard code/stats (IBM Plex Mono)
-  | "code-sm"      // NEW: Small code/stats (IBM Plex Mono)
-  | "label-lg"     // Large labels (Inter Medium)
-  | "label-md"     // Standard labels (Inter Medium)
-  | "button"       // Button text (Inter Semibold)
-  | "caption";     // Caption text (Inter)
+  | "display-xl" // NEW: Hero text, team names (Bebas Neue)
+  | "display-lg" // NEW: Large display text (Bebas Neue)
+  | "display-md" // NEW: Medium display text (Bebas Neue)
+  | "headline-xl" // Main headlines (Inter Bold)
+  | "headline-lg" // Section headers (Inter Bold)
+  | "headline-md" // Subsection headers (Inter Bold)
+  | "headline-sm" // Small headers (Inter Bold)
+  | "body-lg" // Large body text (Inter)
+  | "body-md" // Standard body text (Inter)
+  | "body-sm" // Small body text (Inter)
+  | "body-xs" // Extra small body text (Inter)
+  | "code-lg" // NEW: Large code/stats (IBM Plex Mono)
+  | "code-md" // NEW: Standard code/stats (IBM Plex Mono)
+  | "code-sm" // NEW: Small code/stats (IBM Plex Mono)
+  | "label-lg" // Large labels (Inter Medium)
+  | "label-md" // Standard labels (Inter Medium)
+  | "button" // Button text (Inter Semibold)
+  | "caption"; // Caption text (Inter)
 
 export type TypographyElement =
   | "h1"
@@ -56,13 +56,13 @@ export interface TypographyProps {
 
   /** Text color override - Updated with jade/navy colors */
   color?:
-    | "primary"    // jade-600
-    | "secondary"  // navy-600  
-    | "success"    // green-600
-    | "warning"    // yellow-600
-    | "error"      // red-600
-    | "muted"      // gray-500
-    | "inverse";   // white/dark mode text
+    | "primary" // jade-600
+    | "secondary" // navy-600
+    | "success" // green-600
+    | "warning" // yellow-600
+    | "error" // red-600
+    | "muted" // gray-500
+    | "inverse"; // white/dark mode text
 
   /** Text alignment */
   align?: "left" | "center" | "right";
@@ -75,8 +75,9 @@ export interface TypographyProps {
 const typographyClasses: Record<TypographyVariant, string> = {
   // Display variants - Bebas Neue for maximum impact
   "display-xl": "font-display text-6xl font-normal leading-none tracking-tight",
-  "display-lg": "font-display text-5xl font-normal leading-none tracking-tight", 
-  "display-md": "font-display text-4xl font-normal leading-tight tracking-tight",
+  "display-lg": "font-display text-5xl font-normal leading-none tracking-tight",
+  "display-md":
+    "font-display text-4xl font-normal leading-tight tracking-tight",
 
   // Headlines - Inter Bold for hierarchy
   "headline-xl": "font-sans text-4xl font-bold leading-tight",
@@ -98,19 +99,19 @@ const typographyClasses: Record<TypographyVariant, string> = {
   // Labels and UI - Inter Medium
   "label-lg": "font-sans text-sm font-semibold uppercase tracking-wide",
   "label-md": "font-sans text-xs font-semibold uppercase tracking-wide",
-  "button": "font-sans text-sm font-semibold",
-  "caption": "font-sans text-xs text-gray-600 dark:text-gray-400",
+  button: "font-sans text-sm font-semibold",
+  caption: "font-sans text-xs text-gray-600 dark:text-gray-400",
 };
 
 // Color class mappings - Updated with jade/navy system
 const colorClasses: Record<string, string> = {
-  primary: "text-jade-600 dark:text-jade-400",      // Jade green for primary
-  secondary: "text-navy-600 dark:text-navy-400",    // Navy blue for secondary
-  success: "text-green-600 dark:text-green-400",    // Success green
-  warning: "text-yellow-600 dark:text-yellow-400",  // Warning yellow
-  error: "text-red-600 dark:text-red-400",          // Error red
-  muted: "text-gray-500 dark:text-gray-400",        // Muted gray
-  inverse: "text-white dark:text-gray-900",         // Inverse colors
+  primary: "text-jade-600 dark:text-jade-400", // Jade green for primary
+  secondary: "text-navy-600 dark:text-navy-400", // Navy blue for secondary
+  success: "text-green-600 dark:text-green-400", // Success green
+  warning: "text-yellow-600 dark:text-yellow-400", // Warning yellow
+  error: "text-red-600 dark:text-red-400", // Error red
+  muted: "text-gray-500 dark:text-gray-400", // Muted gray
+  inverse: "text-white dark:text-gray-900", // Inverse colors
 };
 
 // Text alignment classes
@@ -123,7 +124,7 @@ const alignClasses: Record<string, string> = {
 // Default element mapping for semantic HTML - Updated with new variants
 const defaultElements: Record<TypographyVariant, TypographyElement> = {
   "display-xl": "h1",
-  "display-lg": "h1", 
+  "display-lg": "h1",
   "display-md": "h2",
   "headline-xl": "h1",
   "headline-lg": "h2",
@@ -138,8 +139,8 @@ const defaultElements: Record<TypographyVariant, TypographyElement> = {
   "code-sm": "code",
   "label-lg": "label",
   "label-md": "label",
-  "button": "span",
-  "caption": "span",
+  button: "span",
+  caption: "span",
 };
 
 /**

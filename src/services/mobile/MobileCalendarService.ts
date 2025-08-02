@@ -2,16 +2,22 @@
 // PHASE 4.2: MOBILE OPTIMIZATION - MOBILE CALENDAR SERVICE
 // ============================================================================
 
-import { MobileWebBridgeService, type BridgeConnection } from '../cross-platform/MobileWebBridgeService';
-import { UnifiedApiGateway, type PlatformContext } from '../cross-platform/UnifiedApiGateway';
-import type { CalendarEvent } from '../../types/calendar';
+import type { CalendarEvent } from "../../types/calendar";
+import {
+  MobileWebBridgeService,
+  type BridgeConnection,
+} from "../cross-platform/MobileWebBridgeService";
+import {
+  UnifiedApiGateway,
+  type PlatformContext,
+} from "../cross-platform/UnifiedApiGateway";
 
 // ============================================================================
 // MOBILE CALENDAR TYPES
 // ============================================================================
 
 export interface MobileCalendarView {
-  type: 'day' | 'week' | 'month' | 'agenda';
+  type: "day" | "week" | "month" | "agenda";
   date: Date;
   events: MobileEvent[];
   touchGestures: TouchGesture[];
@@ -23,8 +29,8 @@ export interface MobileEvent {
   title: string;
   startTime: Date;
   endTime: Date;
-  category: 'practice' | 'game' | 'meeting' | 'personal';
-  priority: 'low' | 'normal' | 'high' | 'urgent';
+  category: "practice" | "game" | "meeting" | "personal";
+  priority: "low" | "normal" | "high" | "urgent";
   isAllDay: boolean;
   location?: string;
   description?: string;
@@ -39,17 +45,17 @@ export interface MobileEvent {
 }
 
 export interface TouchGesture {
-  type: 'tap' | 'long-press' | 'swipe' | 'pinch' | 'scroll';
+  type: "tap" | "long-press" | "swipe" | "pinch" | "scroll";
   action: string;
-  target: 'event' | 'calendar' | 'header' | 'navigation';
+  target: "event" | "calendar" | "header" | "navigation";
   enabled: boolean;
 }
 
 export interface MobileRenderConfig {
   compactMode: boolean;
   showTimeSlots: boolean;
-  eventHeight: 'auto' | 'compact' | 'expanded';
-  fontSize: 'small' | 'medium' | 'large';
+  eventHeight: "auto" | "compact" | "expanded";
+  fontSize: "small" | "medium" | "large";
   darkMode: boolean;
   animations: boolean;
   hapticFeedback: boolean;
@@ -65,8 +71,8 @@ export interface TouchTarget {
 }
 
 export interface SwipeAction {
-  direction: 'left' | 'right' | 'up' | 'down';
-  action: 'edit' | 'delete' | 'complete' | 'snooze' | 'details';
+  direction: "left" | "right" | "up" | "down";
+  action: "edit" | "delete" | "complete" | "snooze" | "details";
   icon: string;
   color: string;
   threshold: number; // pixels
@@ -87,7 +93,7 @@ export interface MobilePerformanceMetrics {
   renderTime: number;
   scrollFPS: number;
   memoryUsage: number;
-  batteryImpact: 'low' | 'medium' | 'high';
+  batteryImpact: "low" | "medium" | "high";
   networkUsage: number;
 }
 
@@ -116,13 +122,13 @@ export class MobileCalendarService {
       // Establish bridge connection for sync
       const bridge = await MobileWebBridgeService.establishBridge(
         platformContext,
-        'web',
+        "web",
         {
           autoSync: true,
           syncInterval: 5, // 5 minutes for mobile
-          conflictResolution: 'latest',
-          syncTypes: ['events', 'settings'],
-          platformPriority: 'mobile'
+          conflictResolution: "latest",
+          syncTypes: ["events", "settings"],
+          platformPriority: "mobile",
         }
       );
 
@@ -132,15 +138,19 @@ export class MobileCalendarService {
       const defaultRenderConfig: MobileRenderConfig = {
         compactMode: true,
         showTimeSlots: false,
-        eventHeight: 'compact',
-        fontSize: 'medium',
+        eventHeight: "compact",
+        fontSize: "medium",
         darkMode: false,
         animations: true,
         hapticFeedback: true,
-        ...renderConfig
+        ...renderConfig,
       };
 
-      const initialView = await this.createMobileView('day', new Date(), defaultRenderConfig);
+      const initialView = await this.createMobileView(
+        "day",
+        new Date(),
+        defaultRenderConfig
+      );
 
       this.state = {
         currentView: initialView,
@@ -153,9 +163,9 @@ export class MobileCalendarService {
           renderTime: 0,
           scrollFPS: 60,
           memoryUsage: 0,
-          batteryImpact: 'low',
-          networkUsage: 0
-        }
+          batteryImpact: "low",
+          networkUsage: 0,
+        },
       };
 
       return this.state;
@@ -168,21 +178,25 @@ export class MobileCalendarService {
    * Switch calendar view with mobile optimizations
    */
   static async switchView(
-    viewType: 'day' | 'week' | 'month' | 'agenda',
+    viewType: "day" | "week" | "month" | "agenda",
     date: Date = new Date()
   ): Promise<MobileCalendarView> {
     if (!this.state) {
-      throw new Error('Mobile calendar not initialized');
+      throw new Error("Mobile calendar not initialized");
     }
 
     const startTime = performance.now();
-    
+
     // Check cache first
-    const cacheKey = `${viewType}_${date.toISOString().split('T')[0]}`;
+    const cacheKey = `${viewType}_${date.toISOString().split("T")[0]}`;
     let view = this.viewCache.get(cacheKey);
 
     if (!view) {
-      view = await this.createMobileView(viewType, date, this.state.currentView.renderConfig);
+      view = await this.createMobileView(
+        viewType,
+        date,
+        this.state.currentView.renderConfig
+      );
       this.viewCache.set(cacheKey, view);
     }
 
@@ -205,7 +219,7 @@ export class MobileCalendarService {
     forceRefresh: boolean = false
   ): Promise<MobileEvent[]> {
     if (!this.bridgeConnection) {
-      throw new Error('Bridge connection not available');
+      throw new Error("Bridge connection not available");
     }
 
     try {
@@ -220,7 +234,7 @@ export class MobileCalendarService {
         {
           startDate: startDate.toISOString(),
           endDate: endDate.toISOString(),
-          includeIntelligentData: true
+          includeIntelligentData: true,
         },
         this.bridgeConnection.sourceContext
       );
@@ -230,14 +244,16 @@ export class MobileCalendarService {
       }
 
       // Convert to mobile-optimized events
-      const mobileEvents = response.data.map(event => this.optimizeEventForMobile(event));
-      
+      const mobileEvents = response.data.map((event) =>
+        this.optimizeEventForMobile(event)
+      );
+
       // Cache the results
-      mobileEvents.forEach(event => this.eventCache.set(event.id, event));
+      mobileEvents.forEach((event) => this.eventCache.set(event.id, event));
 
       return mobileEvents;
     } catch (error) {
-      console.error('Failed to load mobile events:', error);
+      console.error("Failed to load mobile events:", error);
       return [];
     }
   }
@@ -254,23 +270,23 @@ export class MobileCalendarService {
     target: MobileEvent | Date | null = null
   ): Promise<{ success: boolean; action?: string; feedback?: string }> {
     if (!this.state) {
-      return { success: false, feedback: 'Calendar not initialized' };
+      return { success: false, feedback: "Calendar not initialized" };
     }
 
     try {
       switch (gesture.type) {
-        case 'tap':
+        case "tap":
           return await this.handleTap(gesture, target);
-        case 'long-press':
+        case "long-press":
           return await this.handleLongPress(gesture, target);
-        case 'swipe':
+        case "swipe":
           return await this.handleSwipe(gesture, target);
-        case 'pinch':
+        case "pinch":
           return await this.handlePinch(gesture);
-        case 'scroll':
+        case "scroll":
           return await this.handleScroll(gesture);
         default:
-          return { success: false, feedback: 'Unknown gesture type' };
+          return { success: false, feedback: "Unknown gesture type" };
       }
     } catch (error) {
       return { success: false, feedback: `Gesture handling failed: ${error}` };
@@ -297,14 +313,14 @@ export class MobileCalendarService {
    */
   static async enableOfflineMode(): Promise<void> {
     if (!this.state) {
-      throw new Error('Calendar not initialized');
+      throw new Error("Calendar not initialized");
     }
 
     this.state.isOffline = true;
-    
+
     // Cache current view and events to local storage
     await this.cacheToLocalStorage();
-    
+
     // Set up periodic sync attempts
     this.startOfflineSyncAttempts();
   }
@@ -312,7 +328,10 @@ export class MobileCalendarService {
   /**
    * Sync pending changes when back online
    */
-  static async syncPendingChanges(): Promise<{ synced: number; failed: number }> {
+  static async syncPendingChanges(): Promise<{
+    synced: number;
+    failed: number;
+  }> {
     if (!this.state || !this.bridgeConnection) {
       return { synced: 0, failed: 0 };
     }
@@ -346,7 +365,7 @@ export class MobileCalendarService {
    */
   static async optimizePerformance(): Promise<MobilePerformanceMetrics> {
     if (!this.state) {
-      throw new Error('Calendar not initialized');
+      throw new Error("Calendar not initialized");
     }
 
     // Clear old cache entries
@@ -367,27 +386,28 @@ export class MobileCalendarService {
    */
   static async monitorResourceUsage(): Promise<{
     memory: number;
-    battery: 'low' | 'medium' | 'high';
+    battery: "low" | "medium" | "high";
     recommendations: string[];
   }> {
     // TODO: Implement actual resource monitoring
     const recommendations: string[] = [];
     const memoryUsage = this.state?.performanceMetrics?.memoryUsage || 0;
-    const batteryImpact = this.state?.performanceMetrics?.batteryImpact || 'low';
+    const batteryImpact =
+      this.state?.performanceMetrics?.batteryImpact || "low";
 
     if (memoryUsage > 50) {
-      recommendations.push('Clear event cache');
+      recommendations.push("Clear event cache");
     }
 
-    if (batteryImpact === 'high') {
-      recommendations.push('Reduce sync frequency');
-      recommendations.push('Disable animations');
+    if (batteryImpact === "high") {
+      recommendations.push("Reduce sync frequency");
+      recommendations.push("Disable animations");
     }
 
     return {
       memory: this.state?.performanceMetrics.memoryUsage || 0,
-      battery: this.state?.performanceMetrics.batteryImpact || 'low',
-      recommendations
+      battery: this.state?.performanceMetrics.batteryImpact || "low",
+      recommendations,
     };
   }
 
@@ -396,7 +416,7 @@ export class MobileCalendarService {
   // ==========================================
 
   private static async createMobileView(
-    type: 'day' | 'week' | 'month' | 'agenda',
+    type: "day" | "week" | "month" | "agenda",
     date: Date,
     renderConfig: MobileRenderConfig
   ): Promise<MobileCalendarView> {
@@ -406,11 +426,21 @@ export class MobileCalendarService {
     );
 
     const touchGestures: TouchGesture[] = [
-      { type: 'tap', action: 'select', target: 'event', enabled: true },
-      { type: 'long-press', action: 'context-menu', target: 'event', enabled: true },
-      { type: 'swipe', action: 'quick-action', target: 'event', enabled: true },
-      { type: 'pinch', action: 'zoom', target: 'calendar', enabled: type !== 'agenda' },
-      { type: 'scroll', action: 'navigate', target: 'calendar', enabled: true }
+      { type: "tap", action: "select", target: "event", enabled: true },
+      {
+        type: "long-press",
+        action: "context-menu",
+        target: "event",
+        enabled: true,
+      },
+      { type: "swipe", action: "quick-action", target: "event", enabled: true },
+      {
+        type: "pinch",
+        action: "zoom",
+        target: "calendar",
+        enabled: type !== "agenda",
+      },
+      { type: "scroll", action: "navigate", target: "calendar", enabled: true },
     ];
 
     return {
@@ -418,18 +448,19 @@ export class MobileCalendarService {
       date,
       events,
       touchGestures,
-      renderConfig
+      renderConfig,
     };
   }
 
   private static optimizeEventForMobile(event: CalendarEvent): MobileEvent {
     // Determine priority based on event type and time
     const priority = this.calculateEventPriority(event);
-    
+
     // Create touch-optimized title
-    const displayTitle = event.title.length > 20 
-      ? `${event.title.substring(0, 17)}...` 
-      : event.title;
+    const displayTitle =
+      event.title.length > 20
+        ? `${event.title.substring(0, 17)}...`
+        : event.title;
 
     // Configure touch target
     const touchTarget: TouchTarget = {
@@ -437,26 +468,26 @@ export class MobileCalendarService {
       padding: 8,
       hitArea: {
         width: Math.max(displayTitle.length * 8, 120),
-        height: 44
-      }
+        height: 44,
+      },
     };
 
     // Default swipe actions
     const swipeActions: SwipeAction[] = [
       {
-        direction: 'left',
-        action: 'edit',
-        icon: 'edit',
-        color: '#007AFF',
-        threshold: 60
+        direction: "left",
+        action: "edit",
+        icon: "edit",
+        color: "#007AFF",
+        threshold: 60,
       },
       {
-        direction: 'right',
-        action: 'complete',
-        icon: 'check',
-        color: '#34C759',
-        threshold: 60
-      }
+        direction: "right",
+        action: "complete",
+        icon: "check",
+        color: "#34C759",
+        threshold: 60,
+      },
     ];
 
     return {
@@ -475,46 +506,53 @@ export class MobileCalendarService {
       mobileOptimizations: {
         displayTitle,
         touchTarget,
-        swipeActions
-      }
+        swipeActions,
+      },
     };
   }
 
-  private static calculateEventPriority(event: CalendarEvent): 'low' | 'normal' | 'high' | 'urgent' {
+  private static calculateEventPriority(
+    event: CalendarEvent
+  ): "low" | "normal" | "high" | "urgent" {
     // Simple priority calculation based on event type
     switch (event.type) {
-      case 'game':
-      case 'tournament':
-        return 'high';
-      case 'practice':
-        return 'normal';
-      case 'meeting':
-        return 'normal';
+      case "game":
+      case "tournament":
+        return "high";
+      case "practice":
+        return "normal";
+      case "meeting":
+        return "normal";
       default:
-        return 'low';
+        return "low";
     }
   }
 
-  private static mapEventCategory(eventType: CalendarEvent['type']): 'practice' | 'game' | 'meeting' | 'personal' {
-    const mapping: Record<CalendarEvent['type'], 'practice' | 'game' | 'meeting' | 'personal'> = {
-      'practice': 'practice',
-      'game': 'game',
-      'tournament': 'game',
-      'meeting': 'meeting',
-      'film': 'meeting',
-      'other': 'personal'
+  private static mapEventCategory(
+    eventType: CalendarEvent["type"]
+  ): "practice" | "game" | "meeting" | "personal" {
+    const mapping: Record<
+      CalendarEvent["type"],
+      "practice" | "game" | "meeting" | "personal"
+    > = {
+      practice: "practice",
+      game: "game",
+      tournament: "game",
+      meeting: "meeting",
+      film: "meeting",
+      other: "personal",
     };
     return mapping[eventType];
   }
 
-  private static getEventColor(eventType: CalendarEvent['type']): string {
-    const colors: Record<CalendarEvent['type'], string> = {
-      'practice': '#FF9500',
-      'game': '#FF2D92',
-      'tournament': '#FF2D92',
-      'meeting': '#007AFF',
-      'film': '#007AFF',
-      'other': '#8E8E93'
+  private static getEventColor(eventType: CalendarEvent["type"]): string {
+    const colors: Record<CalendarEvent["type"], string> = {
+      practice: "#FF9500",
+      game: "#FF2D92",
+      tournament: "#FF2D92",
+      meeting: "#007AFF",
+      film: "#007AFF",
+      other: "#8E8E93",
     };
     return colors[eventType];
   }
@@ -522,13 +560,13 @@ export class MobileCalendarService {
   private static getViewStartDate(type: string, date: Date): Date {
     const start = new Date(date);
     switch (type) {
-      case 'week':
+      case "week":
         start.setDate(date.getDate() - date.getDay());
         break;
-      case 'month':
+      case "month":
         start.setDate(1);
         break;
-      case 'agenda':
+      case "agenda":
         // Start from today for agenda view
         break;
       default: // day
@@ -541,13 +579,13 @@ export class MobileCalendarService {
   private static getViewEndDate(type: string, date: Date): Date {
     const end = new Date(date);
     switch (type) {
-      case 'week':
+      case "week":
         end.setDate(date.getDate() + (6 - date.getDay()));
         break;
-      case 'month':
+      case "month":
         end.setMonth(date.getMonth() + 1, 0);
         break;
-      case 'agenda':
+      case "agenda":
         end.setDate(date.getDate() + 30); // 30 days ahead
         break;
       default: // day
@@ -557,61 +595,92 @@ export class MobileCalendarService {
     return end;
   }
 
-  private static async handleTap(_gesture: TouchGesture, target: MobileEvent | Date | null): Promise<{ success: boolean; action?: string; feedback?: string }> {
-    if (target && typeof target === 'object' && 'id' in target) {
+  private static async handleTap(
+    _gesture: TouchGesture,
+    target: MobileEvent | Date | null
+  ): Promise<{ success: boolean; action?: string; feedback?: string }> {
+    if (target && typeof target === "object" && "id" in target) {
       // Event tap
       this.state!.selectedEvent = target as MobileEvent;
-      return { success: true, action: 'event-selected', feedback: 'Event selected' };
+      return {
+        success: true,
+        action: "event-selected",
+        feedback: "Event selected",
+      };
     } else if (target instanceof Date) {
       // Date tap
       this.state!.selectedDate = target;
-      return { success: true, action: 'date-selected', feedback: 'Date selected' };
+      return {
+        success: true,
+        action: "date-selected",
+        feedback: "Date selected",
+      };
     }
-    return { success: false, feedback: 'Invalid tap target' };
+    return { success: false, feedback: "Invalid tap target" };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private static async handleLongPress(_gesture: TouchGesture, _target: MobileEvent | Date | null): Promise<{ success: boolean; action?: string; feedback?: string }> {
+  private static async handleLongPress(
+    _gesture: TouchGesture,
+    _target: MobileEvent | Date | null
+  ): Promise<{ success: boolean; action?: string; feedback?: string }> {
     if (this.state?.currentView.renderConfig.hapticFeedback) {
       // Trigger haptic feedback
-      this.triggerHapticFeedback('medium');
+      this.triggerHapticFeedback("medium");
     }
-    
-    return { success: true, action: 'context-menu', feedback: 'Context menu opened' };
+
+    return {
+      success: true,
+      action: "context-menu",
+      feedback: "Context menu opened",
+    };
   }
 
-  private static async handleSwipe(_gesture: TouchGesture, target: MobileEvent | Date | null): Promise<{ success: boolean; action?: string; feedback?: string }> {
-    if (target && typeof target === 'object' && 'id' in target) {
+  private static async handleSwipe(
+    _gesture: TouchGesture,
+    target: MobileEvent | Date | null
+  ): Promise<{ success: boolean; action?: string; feedback?: string }> {
+    if (target && typeof target === "object" && "id" in target) {
       const event = target as MobileEvent;
-      const swipeAction = event.mobileOptimizations.swipeActions.find(a => a.direction === 'left'); // Default to left swipe
-      
+      const swipeAction = event.mobileOptimizations.swipeActions.find(
+        (a) => a.direction === "left"
+      ); // Default to left swipe
+
       if (swipeAction) {
-        return { success: true, action: swipeAction.action, feedback: `${swipeAction.action} action triggered` };
+        return {
+          success: true,
+          action: swipeAction.action,
+          feedback: `${swipeAction.action} action triggered`,
+        };
       }
     }
-    
-    return { success: false, feedback: 'No swipe action available' };
+
+    return { success: false, feedback: "No swipe action available" };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private static async handlePinch(_gesture: TouchGesture): Promise<{ success: boolean; action?: string; feedback?: string }> {
+  private static async handlePinch(
+    _gesture: TouchGesture
+  ): Promise<{ success: boolean; action?: string; feedback?: string }> {
     // Zoom in/out calendar view
-    return { success: true, action: 'zoom', feedback: 'Calendar zoomed' };
+    return { success: true, action: "zoom", feedback: "Calendar zoomed" };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private static async handleScroll(_gesture: TouchGesture): Promise<{ success: boolean; action?: string; feedback?: string }> {
+  private static async handleScroll(
+    _gesture: TouchGesture
+  ): Promise<{ success: boolean; action?: string; feedback?: string }> {
     // Update scroll performance metrics
     if (this.state) {
       this.state.performanceMetrics.scrollFPS = 60; // Assume smooth scrolling
     }
-    
-    return { success: true, action: 'scroll', feedback: 'Calendar scrolled' };
+
+    return { success: true, action: "scroll", feedback: "Calendar scrolled" };
   }
 
   private static async cacheToLocalStorage(): Promise<void> {
     // TODO: Implement local storage caching
-    console.log('Caching calendar data to local storage');
+    console.log("Caching calendar data to local storage");
   }
 
   private static startOfflineSyncAttempts(): void {
@@ -642,7 +711,7 @@ export class MobileCalendarService {
 
   private static async optimizeEventRendering(): Promise<void> {
     // TODO: Implement event rendering optimizations
-    console.log('Optimizing event rendering for mobile');
+    console.log("Optimizing event rendering for mobile");
   }
 
   private static async measurePerformance(): Promise<MobilePerformanceMetrics> {
@@ -651,12 +720,14 @@ export class MobileCalendarService {
       renderTime: 16, // 16ms for 60fps
       scrollFPS: 60,
       memoryUsage: 25, // MB
-      batteryImpact: 'low',
-      networkUsage: 1024 // bytes
+      batteryImpact: "low",
+      networkUsage: 1024, // bytes
     };
   }
 
-  private static triggerHapticFeedback(intensity: 'light' | 'medium' | 'heavy'): void {
+  private static triggerHapticFeedback(
+    intensity: "light" | "medium" | "heavy"
+  ): void {
     // TODO: Implement actual haptic feedback
     console.log(`Haptic feedback: ${intensity}`);
   }
@@ -679,7 +750,7 @@ export class MobileCalendarService {
     if (this.state) {
       this.state.currentView.renderConfig = {
         ...this.state.currentView.renderConfig,
-        ...config
+        ...config,
       };
     }
   }
@@ -691,7 +762,7 @@ export class MobileCalendarService {
     if (this.bridgeConnection) {
       await MobileWebBridgeService.disconnectBridge(this.bridgeConnection.id);
     }
-    
+
     this.state = null;
     this.bridgeConnection = null;
     this.eventCache.clear();

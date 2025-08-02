@@ -50,7 +50,8 @@ const buttonVariants: ButtonStylesConfig = {
     hover: "hover:text-jade-700 hover:underline",
     active: "active:text-jade-800",
     disabled: "disabled:text-jade-300 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:rounded-xs",
+    focus:
+      "focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:rounded-xs",
   },
   danger: {
     base: "bg-red-600 text-white border border-red-600",

@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { useIsAuthenticated, useAuthLoading } from "../app/auth-store";
+import { useAuthLoading, useIsAuthenticated } from "../app/auth-store";
 import { supabase } from "../lib/supabase";
-import { useEffect, useState } from "react";
 import type { Database } from "../types/database";
 
 // Subscription tier type
-type SubscriptionTier = Database["public"]["Tables"]["teams"]["Row"]["subscription_tier"];
+type SubscriptionTier =
+  Database["public"]["Tables"]["teams"]["Row"]["subscription_tier"];
 
 interface SubscriptionRouteProps {
   children: React.ReactNode;
@@ -22,10 +22,10 @@ interface TeamSubscription {
 
 /**
  * SubscriptionRoute Component
- * 
+ *
  * Protects routes based on team subscription status.
  * Since teams REQUIRE premium to exist, this mainly checks for active subscriptions.
- * 
+ *
  * @param children - The component(s) to render if subscription is valid
  * @param requiredTiers - Array of subscription tiers that can access this route
  * @param teamId - Team ID (optional, will try to get from URL params)
@@ -40,7 +40,9 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
   const isAuthenticated = useIsAuthenticated();
   const loading = useAuthLoading();
   const params = useParams();
-  const [subscription, setSubscription] = useState<TeamSubscription | null>(null);
+  const [subscription, setSubscription] = useState<TeamSubscription | null>(
+    null
+  );
   const [checkingSubscription, setCheckingSubscription] = useState(true);
 
   // Get team ID from props or URL params
@@ -112,7 +114,7 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
             Unable to verify team subscription status.
           </p>
           <button
-            onClick={() => window.location.href = fallbackTo}
+            onClick={() => (window.location.href = fallbackTo)}
             className="bg-jade-500 text-white px-4 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold"
           >
             Return to Dashboard
@@ -123,7 +125,10 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
   }
 
   // Check subscription tier
-  if (!subscription.subscription_tier || !requiredTiers.includes(subscription.subscription_tier)) {
+  if (
+    !subscription.subscription_tier ||
+    !requiredTiers.includes(subscription.subscription_tier)
+  ) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
@@ -161,15 +166,15 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
               ⏰ Subscription Expired
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Team subscription expired on {expirationDate.toLocaleDateString()}.
-              Please renew to continue using premium features.
+              Team subscription expired on {expirationDate.toLocaleDateString()}
+              . Please renew to continue using premium features.
             </p>
             <div className="space-y-3">
               <button className="w-full bg-jade-500 text-white px-4 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold">
                 Renew Subscription
               </button>
               <button
-                onClick={() => window.location.href = fallbackTo}
+                onClick={() => (window.location.href = fallbackTo)}
                 className="w-full bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
               >
                 Return to Dashboard

@@ -23,7 +23,7 @@ export interface PracticeSchedule {
   title: string;
   description?: string;
   location: string;
-  fieldType: 'indoor' | 'outdoor' | 'gym' | 'field';
+  fieldType: "indoor" | "outdoor" | "gym" | "field";
   startTime: Date;
   endTime: Date;
   isTemplate: boolean;
@@ -44,9 +44,9 @@ export interface PracticeTemplate {
   description?: string;
   teamId: string;
   duration: number; // total template duration in minutes
-  blocks: Omit<PracticeBlock, 'id' | 'startTime' | 'endTime'>[];
+  blocks: Omit<PracticeBlock, "id" | "startTime" | "endTime">[];
   defaultLocation: string;
-  defaultFieldType: 'indoor' | 'outdoor' | 'gym' | 'field';
+  defaultFieldType: "indoor" | "outdoor" | "gym" | "field";
   equipmentRequired: string[];
   isPublic: boolean; // can be shared with other teams
   createdBy: string;
@@ -59,7 +59,12 @@ export interface PracticeScript {
   title: string;
   description?: string;
   teamId: string;
-  category: 'offense' | 'defense' | 'special-teams' | 'conditioning' | 'fundamentals';
+  category:
+    | "offense"
+    | "defense"
+    | "special-teams"
+    | "conditioning"
+    | "fundamentals";
   duration: number; // estimated duration in minutes
   drills: PracticeDrill[];
   equipment: string[];
@@ -77,7 +82,7 @@ export interface PracticeDrill {
   playerCount: number;
   equipment: string[];
   objectives: string[];
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: "beginner" | "intermediate" | "advanced";
   category: string;
 }
 
@@ -85,7 +90,7 @@ export interface PracticeAttendance {
   id: string;
   practiceId: string;
   playerId: string;
-  status: 'present' | 'absent' | 'late' | 'excused';
+  status: "present" | "absent" | "late" | "excused";
   arrivalTime?: Date;
   notes?: string;
   recordedBy: string;
@@ -95,39 +100,49 @@ export interface PracticeAttendance {
 export interface Equipment {
   id: string;
   name: string;
-  category: 'balls' | 'cones' | 'dummies' | 'sleds' | 'protective' | 'other';
+  category: "balls" | "cones" | "dummies" | "sleds" | "protective" | "other";
   quantity: number;
   available: number;
-  condition: 'excellent' | 'good' | 'fair' | 'poor';
+  condition: "excellent" | "good" | "fair" | "poor";
   location: string;
   lastChecked: Date;
 }
 
 // Quick Time Interval Presets
 export const QUICK_TIME_INTERVALS = {
-  FIVE_MIN: { duration: 5, label: '5 min' },
-  TEN_MIN: { duration: 10, label: '10 min' },
-  FIFTEEN_MIN: { duration: 15, label: '15 min' },
-  TWENTY_MIN: { duration: 20, label: '20 min' },
-  THIRTY_MIN: { duration: 30, label: '30 min' },
+  FIVE_MIN: { duration: 5, label: "5 min" },
+  TEN_MIN: { duration: 10, label: "10 min" },
+  FIFTEEN_MIN: { duration: 15, label: "15 min" },
+  TWENTY_MIN: { duration: 20, label: "20 min" },
+  THIRTY_MIN: { duration: 30, label: "30 min" },
 } as const;
 
-export type QuickTimeInterval = typeof QUICK_TIME_INTERVALS[keyof typeof QUICK_TIME_INTERVALS];
+export type QuickTimeInterval =
+  (typeof QUICK_TIME_INTERVALS)[keyof typeof QUICK_TIME_INTERVALS];
 
 // Practice Block Types for Quick Creation
 export const PRACTICE_BLOCK_TYPES = {
-  WARMUP: { title: 'Warm-up', defaultDuration: 15, color: '#10B981' },
-  STRETCH: { title: 'Stretching', defaultDuration: 10, color: '#06B6D4' },
-  DRILLS: { title: 'Skill Drills', defaultDuration: 20, color: '#8B5CF6' },
-  SCRIMMAGE: { title: 'Scrimmage', defaultDuration: 30, color: '#F59E0B' },
-  CONDITIONING: { title: 'Conditioning', defaultDuration: 15, color: '#EF4444' },
-  FILM: { title: 'Film Review', defaultDuration: 20, color: '#6B7280' },
-  COOL_DOWN: { title: 'Cool Down', defaultDuration: 10, color: '#14B8A6' },
-  SPECIAL_TEAMS: { title: 'Special Teams', defaultDuration: 25, color: '#F97316' },
-  CUSTOM: { title: 'Custom Block', defaultDuration: 15, color: '#00A86B' }, // BoxCall jade
+  WARMUP: { title: "Warm-up", defaultDuration: 15, color: "#10B981" },
+  STRETCH: { title: "Stretching", defaultDuration: 10, color: "#06B6D4" },
+  DRILLS: { title: "Skill Drills", defaultDuration: 20, color: "#8B5CF6" },
+  SCRIMMAGE: { title: "Scrimmage", defaultDuration: 30, color: "#F59E0B" },
+  CONDITIONING: {
+    title: "Conditioning",
+    defaultDuration: 15,
+    color: "#EF4444",
+  },
+  FILM: { title: "Film Review", defaultDuration: 20, color: "#6B7280" },
+  COOL_DOWN: { title: "Cool Down", defaultDuration: 10, color: "#14B8A6" },
+  SPECIAL_TEAMS: {
+    title: "Special Teams",
+    defaultDuration: 25,
+    color: "#F97316",
+  },
+  CUSTOM: { title: "Custom Block", defaultDuration: 15, color: "#00A86B" }, // BoxCall jade
 } as const;
 
-export type PracticeBlockType = typeof PRACTICE_BLOCK_TYPES[keyof typeof PRACTICE_BLOCK_TYPES];
+export type PracticeBlockType =
+  (typeof PRACTICE_BLOCK_TYPES)[keyof typeof PRACTICE_BLOCK_TYPES];
 
 // Drag and Drop Types
 export interface DragDropResult {
@@ -149,7 +164,7 @@ export interface CreatePracticeScheduleData {
   title: string;
   description?: string;
   location: string;
-  fieldType: 'indoor' | 'outdoor' | 'gym' | 'field';
+  fieldType: "indoor" | "outdoor" | "gym" | "field";
   startTime: Date;
   endTime: Date;
   templateId?: string; // if creating from template
@@ -191,7 +206,7 @@ export interface PracticeFilters {
     end: Date | null;
   };
   location: string[];
-  fieldType: ('indoor' | 'outdoor' | 'gym' | 'field')[];
+  fieldType: ("indoor" | "outdoor" | "gym" | "field")[];
   templates: boolean;
   weatherDependent: boolean;
 }

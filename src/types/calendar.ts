@@ -10,7 +10,7 @@ export interface CalendarEvent {
   title: string;
   start: string; // ISO date string - standardized property name
   end?: string; // ISO date string - standardized property name
-  type: 'game' | 'practice' | 'meeting' | 'film' | 'other' | 'tournament';
+  type: "game" | "practice" | "meeting" | "film" | "other" | "tournament";
   team_id?: string;
   team_name?: string;
   location?: string;
@@ -30,13 +30,14 @@ export interface CalendarEvent {
 // ============================================================================
 
 // For database operations that expect start_time/end_time
-export interface CalendarEventDB extends Omit<CalendarEvent, 'start' | 'end'> {
+export interface CalendarEventDB extends Omit<CalendarEvent, "start" | "end"> {
   start_time: string;
   end_time?: string;
 }
 
 // For Phase 3 services that expect startTime/endTime
-export interface CalendarEventPhase3 extends Omit<CalendarEvent, 'start' | 'end'> {
+export interface CalendarEventPhase3
+  extends Omit<CalendarEvent, "start" | "end"> {
   startTime: string;
   endTime?: string;
 }
@@ -49,7 +50,7 @@ export interface CalendarEventCreate {
   title: string;
   start: string;
   end?: string;
-  type: 'game' | 'practice' | 'meeting' | 'film' | 'other' | 'tournament';
+  type: "game" | "practice" | "meeting" | "film" | "other" | "tournament";
   team_id?: string;
   location?: string;
   description?: string;
@@ -68,7 +69,9 @@ export interface CalendarEventUpdate extends Partial<CalendarEventCreate> {
 // ============================================================================
 
 // Transform functions to convert between different naming conventions
-export const transformToPhase3Event = (event: CalendarEvent): CalendarEventPhase3 => ({
+export const transformToPhase3Event = (
+  event: CalendarEvent
+): CalendarEventPhase3 => ({
   ...event,
   startTime: event.start,
   endTime: event.end,
@@ -80,13 +83,17 @@ export const transformToDBEvent = (event: CalendarEvent): CalendarEventDB => ({
   end_time: event.end,
 });
 
-export const transformFromPhase3Event = (event: CalendarEventPhase3): CalendarEvent => ({
+export const transformFromPhase3Event = (
+  event: CalendarEventPhase3
+): CalendarEvent => ({
   ...event,
   start: event.startTime,
   end: event.endTime,
 });
 
-export const transformFromDBEvent = (event: CalendarEventDB): CalendarEvent => ({
+export const transformFromDBEvent = (
+  event: CalendarEventDB
+): CalendarEvent => ({
   ...event,
   start: event.start_time,
   end: event.end_time,
@@ -97,22 +104,42 @@ export const transformFromDBEvent = (event: CalendarEventDB): CalendarEvent => (
 // ============================================================================
 
 export const isCalendarEvent = (obj: unknown): obj is CalendarEvent => {
-  return obj !== null && typeof obj === 'object' && 
-    'id' in obj && typeof (obj as Record<string, unknown>).id === 'string' && 
-    'title' in obj && typeof (obj as Record<string, unknown>).title === 'string' && 
-    'start' in obj && typeof (obj as Record<string, unknown>).start === 'string';
+  return (
+    obj !== null &&
+    typeof obj === "object" &&
+    "id" in obj &&
+    typeof (obj as Record<string, unknown>).id === "string" &&
+    "title" in obj &&
+    typeof (obj as Record<string, unknown>).title === "string" &&
+    "start" in obj &&
+    typeof (obj as Record<string, unknown>).start === "string"
+  );
 };
 
-export const isCalendarEventPhase3 = (obj: unknown): obj is CalendarEventPhase3 => {
-  return obj !== null && typeof obj === 'object' && 
-    'id' in obj && typeof (obj as Record<string, unknown>).id === 'string' && 
-    'title' in obj && typeof (obj as Record<string, unknown>).title === 'string' && 
-    'startTime' in obj && typeof (obj as Record<string, unknown>).startTime === 'string';
+export const isCalendarEventPhase3 = (
+  obj: unknown
+): obj is CalendarEventPhase3 => {
+  return (
+    obj !== null &&
+    typeof obj === "object" &&
+    "id" in obj &&
+    typeof (obj as Record<string, unknown>).id === "string" &&
+    "title" in obj &&
+    typeof (obj as Record<string, unknown>).title === "string" &&
+    "startTime" in obj &&
+    typeof (obj as Record<string, unknown>).startTime === "string"
+  );
 };
 
 export const isCalendarEventDB = (obj: unknown): obj is CalendarEventDB => {
-  return obj !== null && typeof obj === 'object' && 
-    'id' in obj && typeof (obj as Record<string, unknown>).id === 'string' && 
-    'title' in obj && typeof (obj as Record<string, unknown>).title === 'string' && 
-    'start_time' in obj && typeof (obj as Record<string, unknown>).start_time === 'string';
+  return (
+    obj !== null &&
+    typeof obj === "object" &&
+    "id" in obj &&
+    typeof (obj as Record<string, unknown>).id === "string" &&
+    "title" in obj &&
+    typeof (obj as Record<string, unknown>).title === "string" &&
+    "start_time" in obj &&
+    typeof (obj as Record<string, unknown>).start_time === "string"
+  );
 };

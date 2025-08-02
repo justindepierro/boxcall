@@ -28,7 +28,7 @@ const inputStyles: InputStylesConfig = {
     email: "",
     password: "",
     number: "font-mono", // Monospace for numerical precision
-    tel: "font-mono",   // Monospace for phone numbers
+    tel: "font-mono", // Monospace for phone numbers
     url: "",
     search: "",
   },

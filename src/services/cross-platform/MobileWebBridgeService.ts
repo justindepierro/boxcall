@@ -1,12 +1,17 @@
 /**
  * Phase 4.1: Cross-Platform Integration - Mobile-Web Bridge Service
- * 
+ *
  * Provides seamless data synchronization and feature adaptation between
  * web and mobile platforms, ensuring consistent user experience.
  */
 
-import { UnifiedApiGateway, type PlatformContext, type SyncResult, type DataConflict } from './UnifiedApiGateway';
-import type { CalendarEvent } from '../../types/calendar';
+import type { CalendarEvent } from "../../types/calendar";
+import {
+  UnifiedApiGateway,
+  type DataConflict,
+  type PlatformContext,
+  type SyncResult,
+} from "./UnifiedApiGateway";
 
 // ============================================================================
 // BRIDGE TYPES
@@ -16,7 +21,7 @@ export interface BridgeConnection {
   id: string;
   sourceContext: PlatformContext;
   targetContext: PlatformContext;
-  status: 'connected' | 'syncing' | 'disconnected' | 'error';
+  status: "connected" | "syncing" | "disconnected" | "error";
   lastSync: string;
   syncConfig: SyncConfiguration;
 }
@@ -24,13 +29,13 @@ export interface BridgeConnection {
 export interface SyncConfiguration {
   autoSync: boolean;
   syncInterval: number; // minutes
-  conflictResolution: 'manual' | 'latest' | 'platform-priority';
-  syncTypes: ('events' | 'teams' | 'users' | 'settings')[];
-  platformPriority?: 'web' | 'mobile';
+  conflictResolution: "manual" | "latest" | "platform-priority";
+  syncTypes: ("events" | "teams" | "users" | "settings")[];
+  platformPriority?: "web" | "mobile";
 }
 
 export interface FeatureCompatibility {
-  platform: 'web' | 'mobile';
+  platform: "web" | "mobile";
   supportedFeatures: string[];
   partialFeatures: string[];
   unsupportedFeatures: string[];
@@ -40,12 +45,12 @@ export interface FeatureCompatibility {
 export interface AdaptedFeature {
   originalFeature: string;
   platformFeature: string;
-  adaptationType: 'downgrade' | 'alternative' | 'split' | 'enhanced';
+  adaptationType: "downgrade" | "alternative" | "split" | "enhanced";
   adaptationNotes: string;
 }
 
 export interface PlatformMetrics {
-  platform: 'web' | 'mobile';
+  platform: "web" | "mobile";
   activeUsers: number;
   syncFrequency: number;
   conflictRate: number;
@@ -73,26 +78,27 @@ export class MobileWebBridgeService {
    */
   static async establishBridge(
     sourceContext: PlatformContext,
-    targetPlatform: 'web' | 'mobile',
+    targetPlatform: "web" | "mobile",
     syncConfig: SyncConfiguration
   ): Promise<BridgeConnection> {
     const bridgeId = `bridge_${sourceContext.sessionId}_${targetPlatform}_${Date.now()}`;
-    
+
     const targetContext: PlatformContext = {
       platform: targetPlatform,
       version: sourceContext.version,
       sessionId: `${targetPlatform}_${Date.now()}`,
-      deviceId: targetPlatform === 'mobile' ? `device_${Date.now()}` : undefined,
-      userAgent: targetPlatform === 'web' ? 'BridgeAgent/1.0' : undefined
+      deviceId:
+        targetPlatform === "mobile" ? `device_${Date.now()}` : undefined,
+      userAgent: targetPlatform === "web" ? "BridgeAgent/1.0" : undefined,
     };
 
     const connection: BridgeConnection = {
       id: bridgeId,
       sourceContext,
       targetContext,
-      status: 'connected',
+      status: "connected",
       lastSync: new Date().toISOString(),
-      syncConfig
+      syncConfig,
     };
 
     this.activeConnections.set(bridgeId, connection);
@@ -108,27 +114,25 @@ export class MobileWebBridgeService {
   /**
    * Synchronize data between platforms
    */
-  static async syncPlatforms(
-    bridgeId: string
-  ): Promise<SyncResult> {
+  static async syncPlatforms(bridgeId: string): Promise<SyncResult> {
     const connection = this.activeConnections.get(bridgeId);
     if (!connection) {
       throw new Error(`Bridge connection ${bridgeId} not found`);
     }
 
-    connection.status = 'syncing';
-    
+    connection.status = "syncing";
+
     try {
       // TODO: Implement actual sync request processing
       // For now, perform basic intelligent sync
       const result = await this.performIntelligentSync(connection);
 
-      connection.status = 'connected';
+      connection.status = "connected";
       connection.lastSync = new Date().toISOString();
-      
+
       return result;
     } catch (error) {
-      connection.status = 'error';
+      connection.status = "error";
       throw error;
     }
   }
@@ -170,7 +174,7 @@ export class MobileWebBridgeService {
    */
   static async adaptFeatures(
     features: string[],
-    targetPlatform: 'web' | 'mobile'
+    targetPlatform: "web" | "mobile"
   ): Promise<AdaptedFeature[]> {
     const adaptations: AdaptedFeature[] = [];
     const compatibility = await this.getPlatformCompatibility(targetPlatform);
@@ -181,20 +185,23 @@ export class MobileWebBridgeService {
         adaptations.push({
           originalFeature: feature,
           platformFeature: feature,
-          adaptationType: 'enhanced',
-          adaptationNotes: 'Fully supported on target platform'
+          adaptationType: "enhanced",
+          adaptationNotes: "Fully supported on target platform",
         });
       } else if (compatibility.partialFeatures.includes(feature)) {
         // Feature needs adaptation
-        const adapted = await this.adaptFeatureForPlatform(feature, targetPlatform);
+        const adapted = await this.adaptFeatureForPlatform(
+          feature,
+          targetPlatform
+        );
         adaptations.push(adapted);
       } else if (compatibility.unsupportedFeatures.includes(feature)) {
         // Feature not available
         adaptations.push({
           originalFeature: feature,
-          platformFeature: 'not_available',
-          adaptationType: 'downgrade',
-          adaptationNotes: 'Feature not supported on target platform'
+          platformFeature: "not_available",
+          adaptationType: "downgrade",
+          adaptationNotes: "Feature not supported on target platform",
         });
       }
     }
@@ -206,7 +213,7 @@ export class MobileWebBridgeService {
    * Validate feature compatibility across platforms
    */
   static async validateCompatibility(
-    platform: 'web' | 'mobile'
+    platform: "web" | "mobile"
   ): Promise<FeatureCompatibility> {
     return await this.getPlatformCompatibility(platform);
   }
@@ -219,7 +226,7 @@ export class MobileWebBridgeService {
    * Get platform-specific metrics
    */
   static async getPlatformMetrics(
-    platform: 'web' | 'mobile'
+    platform: "web" | "mobile"
   ): Promise<PlatformMetrics> {
     // TODO: Implement real metrics collection
     return {
@@ -231,8 +238,8 @@ export class MobileWebBridgeService {
       performanceMetrics: {
         avgSyncTime: 0,
         errorRate: 0,
-        uptime: 100
-      }
+        uptime: 100,
+      },
     };
   }
 
@@ -246,12 +253,13 @@ export class MobileWebBridgeService {
     errorRate: number;
   }> {
     const connections = Array.from(this.activeConnections.values());
-    
+
     return {
       totalConnections: connections.length,
-      activeConnections: connections.filter(c => c.status === 'connected').length,
+      activeConnections: connections.filter((c) => c.status === "connected")
+        .length,
       avgSyncTime: 0, // TODO: Calculate from metrics
-      errorRate: 0 // TODO: Calculate from metrics
+      errorRate: 0, // TODO: Calculate from metrics
     };
   }
 
@@ -264,10 +272,10 @@ export class MobileWebBridgeService {
   ): Promise<SyncResult> {
     // Sync calendar events with intelligent conflict detection
     const eventsSynced = await this.syncCalendarEvents(connection);
-    
+
     // Sync team data
     const teamsSynced = await this.syncTeamData();
-    
+
     // Sync user settings
     const settingsSynced = await this.syncUserSettings();
 
@@ -275,7 +283,7 @@ export class MobileWebBridgeService {
       success: true,
       syncedEntities: eventsSynced + teamsSynced + settingsSynced,
       conflicts: [], // TODO: Collect actual conflicts
-      lastSyncTime: new Date().toISOString()
+      lastSyncTime: new Date().toISOString(),
     };
   }
 
@@ -297,8 +305,10 @@ export class MobileWebBridgeService {
       let syncedCount = 0;
       for (const event of response.data) {
         const adapted = await this.adaptEventForPlatform(
-          event, 
-          connection.targetContext.platform === 'api' ? 'web' : connection.targetContext.platform
+          event,
+          connection.targetContext.platform === "api"
+            ? "web"
+            : connection.targetContext.platform
         );
         if (adapted) {
           syncedCount++;
@@ -307,7 +317,7 @@ export class MobileWebBridgeService {
 
       return syncedCount;
     } catch (error) {
-      console.error('Failed to sync calendar events:', error);
+      console.error("Failed to sync calendar events:", error);
       return 0;
     }
   }
@@ -324,14 +334,14 @@ export class MobileWebBridgeService {
 
   private static async adaptEventForPlatform(
     event: CalendarEvent,
-    targetPlatform: 'web' | 'mobile'
+    targetPlatform: "web" | "mobile"
   ): Promise<CalendarEvent | null> {
     // Adapt event based on platform capabilities
-    if (targetPlatform === 'mobile') {
+    if (targetPlatform === "mobile") {
       // Simplify for mobile
       return {
         ...event,
-        description: event.description?.substring(0, 200) // Truncate for mobile
+        description: event.description?.substring(0, 200), // Truncate for mobile
       };
     } else {
       // Enhanced for web
@@ -342,103 +352,105 @@ export class MobileWebBridgeService {
   private static async resolveDataConflict(
     conflict: DataConflict,
     connection: BridgeConnection
-  ): Promise<'local' | 'remote' | 'merged'> {
+  ): Promise<"local" | "remote" | "merged"> {
     const strategy = connection.syncConfig.conflictResolution;
-    
+
     switch (strategy) {
-      case 'latest': {
+      case "latest": {
         // Use timestamp to determine latest
-        const localTime = new Date(conflict.localData.updated_at as string || '');
-        const remoteTime = new Date(conflict.remoteData.updated_at as string || '');
-        return localTime > remoteTime ? 'local' : 'remote';
+        const localTime = new Date(
+          (conflict.localData.updated_at as string) || ""
+        );
+        const remoteTime = new Date(
+          (conflict.remoteData.updated_at as string) || ""
+        );
+        return localTime > remoteTime ? "local" : "remote";
       }
-      
-      case 'platform-priority': {
+
+      case "platform-priority": {
         const priority = connection.syncConfig.platformPriority;
         if (priority === connection.sourceContext.platform) {
-          return 'local';
+          return "local";
         } else {
-          return 'remote';
+          return "remote";
         }
       }
-      
-      case 'manual':
+
+      case "manual":
       default:
         // Manual resolution required
-        throw new Error(`Manual conflict resolution required for ${conflict.id}`);
+        throw new Error(
+          `Manual conflict resolution required for ${conflict.id}`
+        );
     }
   }
 
   private static async getPlatformCompatibility(
-    platform: 'web' | 'mobile'
+    platform: "web" | "mobile"
   ): Promise<FeatureCompatibility> {
-    if (platform === 'web') {
+    if (platform === "web") {
       return {
-        platform: 'web',
+        platform: "web",
         supportedFeatures: [
-          'intelligent-scheduling',
-          'conflict-detection',
-          'attendance-analytics',
-          'advanced-calendar',
-          'team-management',
-          'real-time-sync'
+          "intelligent-scheduling",
+          "conflict-detection",
+          "attendance-analytics",
+          "advanced-calendar",
+          "team-management",
+          "real-time-sync",
         ],
         partialFeatures: [],
         unsupportedFeatures: [],
-        adaptationRequired: []
+        adaptationRequired: [],
       };
     } else {
       return {
-        platform: 'mobile',
+        platform: "mobile",
         supportedFeatures: [
-          'intelligent-scheduling',
-          'conflict-detection',
-          'basic-calendar',
-          'team-management'
+          "intelligent-scheduling",
+          "conflict-detection",
+          "basic-calendar",
+          "team-management",
         ],
-        partialFeatures: [
-          'attendance-analytics',
-          'advanced-calendar'
-        ],
+        partialFeatures: ["attendance-analytics", "advanced-calendar"],
         unsupportedFeatures: [],
-        adaptationRequired: [
-          'attendance-analytics',
-          'advanced-calendar'
-        ]
+        adaptationRequired: ["attendance-analytics", "advanced-calendar"],
       };
     }
   }
 
   private static async adaptFeatureForPlatform(
     feature: string,
-    targetPlatform: 'web' | 'mobile'
+    targetPlatform: "web" | "mobile"
   ): Promise<AdaptedFeature> {
     // Define feature adaptations based on platform
     const adaptations: Record<string, Record<string, AdaptedFeature>> = {
-      'attendance-analytics': {
+      "attendance-analytics": {
         mobile: {
-          originalFeature: 'attendance-analytics',
-          platformFeature: 'simplified-attendance',
-          adaptationType: 'downgrade',
-          adaptationNotes: 'Simplified charts and metrics for mobile view'
-        }
+          originalFeature: "attendance-analytics",
+          platformFeature: "simplified-attendance",
+          adaptationType: "downgrade",
+          adaptationNotes: "Simplified charts and metrics for mobile view",
+        },
       },
-      'advanced-calendar': {
+      "advanced-calendar": {
         mobile: {
-          originalFeature: 'advanced-calendar',
-          platformFeature: 'mobile-calendar',
-          adaptationType: 'alternative',
-          adaptationNotes: 'Touch-optimized calendar with essential features'
-        }
-      }
+          originalFeature: "advanced-calendar",
+          platformFeature: "mobile-calendar",
+          adaptationType: "alternative",
+          adaptationNotes: "Touch-optimized calendar with essential features",
+        },
+      },
     };
 
-    return adaptations[feature]?.[targetPlatform] || {
-      originalFeature: feature,
-      platformFeature: feature,
-      adaptationType: 'enhanced',
-      adaptationNotes: 'No adaptation required'
-    };
+    return (
+      adaptations[feature]?.[targetPlatform] || {
+        originalFeature: feature,
+        platformFeature: feature,
+        adaptationType: "enhanced",
+        adaptationNotes: "No adaptation required",
+      }
+    );
   }
 
   private static startAutoSync(bridgeId: string): void {
@@ -448,13 +460,16 @@ export class MobileWebBridgeService {
     }
 
     // Set up interval for automatic sync
-    setInterval(async () => {
-      try {
-        await this.syncPlatforms(bridgeId);
-      } catch (error) {
-        console.error(`Auto-sync failed for bridge ${bridgeId}:`, error);
-      }
-    }, connection.syncConfig.syncInterval * 60 * 1000);
+    setInterval(
+      async () => {
+        try {
+          await this.syncPlatforms(bridgeId);
+        } catch (error) {
+          console.error(`Auto-sync failed for bridge ${bridgeId}:`, error);
+        }
+      },
+      connection.syncConfig.syncInterval * 60 * 1000
+    );
   }
 
   /**
@@ -463,7 +478,7 @@ export class MobileWebBridgeService {
   static async disconnectBridge(bridgeId: string): Promise<void> {
     const connection = this.activeConnections.get(bridgeId);
     if (connection) {
-      connection.status = 'disconnected';
+      connection.status = "disconnected";
       this.activeConnections.delete(bridgeId);
     }
   }

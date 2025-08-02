@@ -1,7 +1,7 @@
 # 🏗️ BoxCall Platform Architecture Documentation
 
 > **Professional Football Management Platform**  
-> *Complete System Architecture & Design Specifications*
+> _Complete System Architecture & Design Specifications_
 
 ## 📋 **TABLE OF CONTENTS**
 
@@ -21,6 +21,7 @@
 ## 🎯 **PLATFORM OVERVIEW**
 
 ### **System Architecture Layers**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    USER INTERFACES                         │
@@ -38,6 +39,7 @@
 ```
 
 ### **Technology Stack**
+
 - **Frontend**: React 19.1.0, TypeScript 5.8.3, Tailwind CSS 3.4.14
 - **Mobile**: React Native 0.80.2, React Navigation 7.x
 - **State Management**: Zustand 5.0.2, React Query 5.75.0
@@ -52,34 +54,39 @@
 ### **Core Service Layers**
 
 #### **Phase 4.2: Mobile Optimization Services**
+
 ```typescript
 src/services/mobile/
 ├── MobileCalendarService.ts     # Touch-optimized calendar interactions
-├── MobileUIService.ts           # Responsive design & viewport management  
+├── MobileUIService.ts           # Responsive design & viewport management
 ├── MobilePerformanceService.ts  # Battery, memory, performance optimization
 ├── index.ts                     # MobileOrchestrator central coordination
 └── types/                       # Mobile-specific type definitions
 ```
 
 **MobileCalendarService Capabilities:**
+
 - Touch gesture handling (swipe, pinch, long-press)
 - Mobile-optimized calendar rendering
 - Performance metrics tracking
 - Cross-platform event synchronization
 
 **MobileUIService Capabilities:**
+
 - Viewport detection and adaptation
 - Theme management (light/dark/auto)
 - Mobile interaction patterns
 - Layout recalculation for orientation changes
 
 **MobilePerformanceService Capabilities:**
+
 - Battery level monitoring and optimization
 - Memory pressure detection and cleanup
 - Frame rate optimization (60fps target)
 - Network efficiency management
 
 #### **Phase 4.3: React Native Platform Services**
+
 ```typescript
 src/services/react-native/
 ├── ReactNativePlatformService.ts # Main platform orchestrator
@@ -90,30 +97,35 @@ src/services/react-native/
 ```
 
 **ReactNativePlatformService Capabilities:**
+
 - Native app initialization and lifecycle
 - Cross-platform state coordination
 - Platform-specific optimizations
 - Integration with Phase 4.2 mobile services
 
 **RealTimeService Capabilities:**
+
 - WebSocket/SSE connection management
 - Live calendar updates for coaching
 - Team notification subscriptions
 - Game update streaming for sideline use
 
 **TeamManagementService Capabilities:**
+
 - Role-based dashboard generation (coach/player/family)
 - Permission system management
 - Cross-platform notification delivery
 - Team-specific interface customization
 
 **CoachingAnalyticsService Capabilities:**
+
 - Player performance metrics collection
 - Team engagement analytics
 - Coaching insight generation
 - Predictive analytics for coaching decisions
 
 ### **Cross-Platform Services**
+
 ```typescript
 src/services/cross-platform/
 ├── UnifiedApiGateway.ts         # Platform-agnostic API layer
@@ -128,10 +140,11 @@ src/services/cross-platform/
 ### **Design System Components**
 
 #### **Core UI Components**
+
 ```typescript
 src/components/design-system/
 ├── Typography.tsx               # Bebas Neue + Inter + IBM Plex Mono
-├── Colors.tsx                   # Jade/Navy semantic color system  
+├── Colors.tsx                   # Jade/Navy semantic color system
 ├── Spacing.tsx                  # Consistent spacing standards
 ├── Button/                      # Professional button variants
 │   ├── PrimaryButton.tsx        # Jade primary actions
@@ -156,6 +169,7 @@ src/components/design-system/
 ```
 
 #### **Football-Specific Components**
+
 ```typescript
 src/components/football/
 ├── Statistics/                  # Data-first displays
@@ -177,6 +191,7 @@ src/components/football/
 ```
 
 #### **Mobile-Optimized Components**
+
 ```typescript
 src/components/mobile/
 ├── Calendar/                    # Touch-optimized calendar
@@ -198,6 +213,7 @@ src/components/mobile/
 ```
 
 ### **Page Components**
+
 ```typescript
 src/pages/
 ├── Dashboard/                   # Personal dashboard pages
@@ -229,100 +245,133 @@ src/pages/
 ### **Core Type Hierarchies**
 
 #### **User & Authentication Types**
+
 ```typescript
 interface User {
-  id: string
-  email: string
-  name: string
-  roles: UserRole[]
-  teams: TeamMembership[]
-  preferences: UserPreferences
-  createdAt: Date
-  lastActive: Date
+  id: string;
+  email: string;
+  name: string;
+  roles: UserRole[];
+  teams: TeamMembership[];
+  preferences: UserPreferences;
+  createdAt: Date;
+  lastActive: Date;
 }
 
-type UserRole = 'coach' | 'assistant_coach' | 'player' | 'parent' | 'family' | 'admin'
+type UserRole =
+  | "coach"
+  | "assistant_coach"
+  | "player"
+  | "parent"
+  | "family"
+  | "admin";
 
 interface TeamMembership {
-  teamId: string
-  teamName: string
-  role: UserRole
-  joinedAt: Date
-  isActive: boolean
-  permissions: Permission[]
+  teamId: string;
+  teamName: string;
+  role: UserRole;
+  joinedAt: Date;
+  isActive: boolean;
+  permissions: Permission[];
 }
 ```
 
 #### **Calendar & Event Types**
+
 ```typescript
 interface CalendarEvent {
-  id: string
-  title: string
-  description?: string
-  startTime: Date
-  endTime: Date
-  teamId: string
-  type: EventType
-  location?: string
-  isRecurring: boolean
-  recurrencePattern?: RecurrencePattern
-  participants: Participant[]
-  createdBy: string
-  metadata: EventMetadata
+  id: string;
+  title: string;
+  description?: string;
+  startTime: Date;
+  endTime: Date;
+  teamId: string;
+  type: EventType;
+  location?: string;
+  isRecurring: boolean;
+  recurrencePattern?: RecurrencePattern;
+  participants: Participant[];
+  createdBy: string;
+  metadata: EventMetadata;
 }
 
-type EventType = 'practice' | 'game' | 'meeting' | 'training' | 'other'
+type EventType = "practice" | "game" | "meeting" | "training" | "other";
 ```
 
 #### **Team & Football Types**
+
 ```typescript
 interface Team {
-  id: string
-  name: string
-  sport: 'football'
-  division: string
-  season: string
-  school?: string
-  league?: string
-  coaches: Coach[]
-  players: Player[]
-  settings: TeamSettings
-  statistics: TeamStatistics
+  id: string;
+  name: string;
+  sport: "football";
+  division: string;
+  season: string;
+  school?: string;
+  league?: string;
+  coaches: Coach[];
+  players: Player[];
+  settings: TeamSettings;
+  statistics: TeamStatistics;
 }
 
 interface Player {
-  id: string
-  userId: string
-  teamId: string
-  jerseyNumber: number
-  position: FootballPosition
-  stats: PlayerStatistics
-  eligibility: EligibilityStatus
+  id: string;
+  userId: string;
+  teamId: string;
+  jerseyNumber: number;
+  position: FootballPosition;
+  stats: PlayerStatistics;
+  eligibility: EligibilityStatus;
 }
 
-type FootballPosition = 
-  | 'QB' | 'RB' | 'FB' | 'WR' | 'TE' | 'OL' | 'C' | 'OG' | 'OT'  // Offense
-  | 'DL' | 'DE' | 'DT' | 'NT' | 'LB' | 'MLB' | 'OLB' | 'DB' | 'CB' | 'S' | 'FS' | 'SS'  // Defense
-  | 'K' | 'P' | 'LS' | 'KR' | 'PR'  // Special Teams
+type FootballPosition =
+  | "QB"
+  | "RB"
+  | "FB"
+  | "WR"
+  | "TE"
+  | "OL"
+  | "C"
+  | "OG"
+  | "OT" // Offense
+  | "DL"
+  | "DE"
+  | "DT"
+  | "NT"
+  | "LB"
+  | "MLB"
+  | "OLB"
+  | "DB"
+  | "CB"
+  | "S"
+  | "FS"
+  | "SS" // Defense
+  | "K"
+  | "P"
+  | "LS"
+  | "KR"
+  | "PR"; // Special Teams
 ```
 
 #### **Mobile Platform Types**
+
 ```typescript
 interface MobileViewport {
-  width: number
-  height: number
-  scale: number
-  orientation: 'portrait' | 'landscape'
-  safeArea: SafeAreaInsets
+  width: number;
+  height: number;
+  scale: number;
+  orientation: "portrait" | "landscape";
+  safeArea: SafeAreaInsets;
 }
 
 interface NativeAppState {
-  platform: 'ios' | 'android'
-  isInitialized: boolean
-  syncStatus: 'connected' | 'syncing' | 'offline'
-  userRole: UserRole
-  teams: string[]
-  lastSyncTime: Date
+  platform: "ios" | "android";
+  isInitialized: boolean;
+  syncStatus: "connected" | "syncing" | "offline";
+  userRole: UserRole;
+  teams: string[];
+  lastSyncTime: Date;
 }
 ```
 
@@ -331,6 +380,7 @@ interface NativeAppState {
 ## 📱 **MOBILE PLATFORM ARCHITECTURE**
 
 ### **Phase 4.2: Mobile Optimization Layer**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                 MOBILE ORCHESTRATOR                         │
@@ -344,6 +394,7 @@ interface NativeAppState {
 ```
 
 ### **Phase 4.3: React Native Integration Layer**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │             REACT NATIVE PLATFORM SERVICE                  │
@@ -357,20 +408,21 @@ interface NativeAppState {
 ```
 
 ### **Cross-Platform Coordination**
+
 ```typescript
 // MobileOrchestrator integration with React Native
 class MobileOrchestrator {
   // Phase 4.2 Mobile Foundation
-  static async initializeMobileApp(config: MobileInitializationConfig)
-  static async handleViewportChange(viewport: MobileViewport)
-  static async handleBatteryChange(level: number, lowPowerMode: boolean)
-  static async handleMemoryPressure(severity: 'low' | 'medium' | 'high')
-  
+  static async initializeMobileApp(config: MobileInitializationConfig);
+  static async handleViewportChange(viewport: MobileViewport);
+  static async handleBatteryChange(level: number, lowPowerMode: boolean);
+  static async handleMemoryPressure(severity: "low" | "medium" | "high");
+
   // Phase 4.3 React Native Integration
-  static async initializeReactNativePlatform()
-  static async enableRealTimeSync(teamIds: string[])
-  static async syncCrossPlatformState(userId: string)
-  static getReactNativeStatus()
+  static async initializeReactNativePlatform();
+  static async enableRealTimeSync(teamIds: string[]);
+  static async syncCrossPlatformState(userId: string);
+  static getReactNativeStatus();
 }
 ```
 
@@ -379,55 +431,76 @@ class MobileOrchestrator {
 ## 🎨 **DESIGN SYSTEM SPECIFICATIONS**
 
 ### **Color System Architecture**
+
 ```css
 /* Primary Brand Colors */
---jade-50: #f0fdf4    /* Background tints */
---jade-500: #00A86B   /* Primary jade green */
---jade-600: #059669   /* Hover states */
---jade-900: #064e3b   /* Text on light backgrounds */
-
---navy-50: #eff6ff    /* Background tints */
---navy-500: #1E3A8A   /* Primary navy blue */
---navy-600: #1e40af   /* Hover states */
---navy-900: #1e3a8a   /* Deep navy for text */
-
-/* Semantic Color Mapping */
---primary: var(--jade-500)     /* Call-to-action buttons */
---secondary: var(--navy-500)   /* Secondary actions */
---background: #ffffff          /* Clean white background */
---surface: #f8fafc             /* Card and component surfaces */
+--jade-50: #f0fdf4 /* Background tints */ --jade-500: #00a86b
+  /* Primary jade green */ --jade-600: #059669 /* Hover states */
+  --jade-900: #064e3b /* Text on light backgrounds */ --navy-50: #eff6ff
+  /* Background tints */ --navy-500: #1e3a8a /* Primary navy blue */
+  --navy-600: #1e40af /* Hover states */ --navy-900: #1e3a8a
+  /* Deep navy for text */ /* Semantic Color Mapping */
+  --primary: var(--jade-500) /* Call-to-action buttons */
+  --secondary: var(--navy-500) /* Secondary actions */ --background: #ffffff
+  /* Clean white background */ --surface: #f8fafc
+  /* Card and component surfaces */;
 ```
 
 ### **Typography Hierarchy**
+
 ```css
 /* Display Typography - Bebas Neue */
-.display-xl { font-size: 4.5rem; font-family: 'Bebas Neue'; }
-.display-lg { font-size: 3.75rem; font-family: 'Bebas Neue'; }
-.display-md { font-size: 3rem; font-family: 'Bebas Neue'; }
+.display-xl {
+  font-size: 4.5rem;
+  font-family: "Bebas Neue";
+}
+.display-lg {
+  font-size: 3.75rem;
+  font-family: "Bebas Neue";
+}
+.display-md {
+  font-size: 3rem;
+  font-family: "Bebas Neue";
+}
 
 /* Interface Typography - Inter */
-.text-xl { font-size: 1.25rem; font-family: 'Inter'; }
-.text-lg { font-size: 1.125rem; font-family: 'Inter'; }
-.text-base { font-size: 1rem; font-family: 'Inter'; }
+.text-xl {
+  font-size: 1.25rem;
+  font-family: "Inter";
+}
+.text-lg {
+  font-size: 1.125rem;
+  font-family: "Inter";
+}
+.text-base {
+  font-size: 1rem;
+  font-family: "Inter";
+}
 
 /* Data Typography - IBM Plex Mono */
-.mono-lg { font-size: 1.125rem; font-family: 'IBM Plex Mono'; }
-.mono-base { font-size: 1rem; font-family: 'IBM Plex Mono'; }
-.mono-sm { font-size: 0.875rem; font-family: 'IBM Plex Mono'; }
+.mono-lg {
+  font-size: 1.125rem;
+  font-family: "IBM Plex Mono";
+}
+.mono-base {
+  font-size: 1rem;
+  font-family: "IBM Plex Mono";
+}
+.mono-sm {
+  font-size: 0.875rem;
+  font-family: "IBM Plex Mono";
+}
 ```
 
 ### **Square Design Language**
+
 ```css
 /* Border Radius System */
---radius-none: 0px        /* Completely square */
---radius-sm: 2px          /* Subtle rounding */
---radius-md: 4px          /* Standard components */
---radius-lg: 8px          /* Cards and modals */
-
-/* Component Elevation */
---shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05)
---shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1)
---shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1)
+--radius-none: 0px /* Completely square */ --radius-sm: 2px
+  /* Subtle rounding */ --radius-md: 4px /* Standard components */
+  --radius-lg: 8px /* Cards and modals */ /* Component Elevation */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05) --shadow-md: 0 4px 6px -1px
+  rgb(0 0 0 / 0.1) --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
 ```
 
 ---
@@ -435,46 +508,58 @@ class MobileOrchestrator {
 ## 🔄 **DATA FLOW ARCHITECTURE**
 
 ### **State Management Strategy**
+
 ```typescript
 // Global State (Zustand)
 interface AppState {
-  user: User | null
-  currentTeam: Team | null
-  teams: Team[]
-  ui: UIState
-  mobile: MobileAppState
+  user: User | null;
+  currentTeam: Team | null;
+  teams: Team[];
+  ui: UIState;
+  mobile: MobileAppState;
 }
 
 // Server State (React Query)
-const useTeamData = (teamId: string) => useQuery({
-  queryKey: ['team', teamId],
-  queryFn: () => fetchTeam(teamId)
-})
+const useTeamData = (teamId: string) =>
+  useQuery({
+    queryKey: ["team", teamId],
+    queryFn: () => fetchTeam(teamId),
+  });
 
 // Real-Time State (Socket.IO)
 const useRealTimeUpdates = (teamId: string) => {
   useEffect(() => {
-    const subscription = realTimeService.subscribeToTeamUpdates(teamId, handleUpdate)
-    return () => realTimeService.unsubscribe(subscription)
-  }, [teamId])
-}
+    const subscription = realTimeService.subscribeToTeamUpdates(
+      teamId,
+      handleUpdate
+    );
+    return () => realTimeService.unsubscribe(subscription);
+  }, [teamId]);
+};
 ```
 
 ### **API Architecture**
+
 ```typescript
 // Unified API Gateway
 interface ApiEndpoint {
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE'
-  path: string
-  auth: boolean
-  rateLimit?: number
-  cache?: CacheStrategy
+  method: "GET" | "POST" | "PUT" | "DELETE";
+  path: string;
+  auth: boolean;
+  rateLimit?: number;
+  cache?: CacheStrategy;
 }
 
 // Platform-Specific Adapters
-class WebApiAdapter extends BaseApiAdapter { /* Web-specific optimizations */ }
-class MobileApiAdapter extends BaseApiAdapter { /* Mobile-specific optimizations */ }
-class ReactNativeApiAdapter extends BaseApiAdapter { /* Native app optimizations */ }
+class WebApiAdapter extends BaseApiAdapter {
+  /* Web-specific optimizations */
+}
+class MobileApiAdapter extends BaseApiAdapter {
+  /* Mobile-specific optimizations */
+}
+class ReactNativeApiAdapter extends BaseApiAdapter {
+  /* Native app optimizations */
+}
 ```
 
 ---
@@ -482,42 +567,44 @@ class ReactNativeApiAdapter extends BaseApiAdapter { /* Native app optimizations
 ## ⚡ **PERFORMANCE ARCHITECTURE**
 
 ### **Mobile Performance Optimization**
+
 ```typescript
 // Battery Optimization Strategies
 interface BatteryOptimization {
-  strategy: 'conservative' | 'balanced' | 'aggressive'
-  animationLevel: 'full' | 'reduced' | 'none'
-  syncFrequency: number  // milliseconds
-  backgroundProcessing: boolean
+  strategy: "conservative" | "balanced" | "aggressive";
+  animationLevel: "full" | "reduced" | "none";
+  syncFrequency: number; // milliseconds
+  backgroundProcessing: boolean;
 }
 
 // Memory Management
 interface MemoryOptimization {
-  cacheStrategy: 'aggressive' | 'balanced' | 'minimal'
-  componentLazyLoading: boolean
-  imageOptimization: 'high' | 'medium' | 'low'
-  garbageCollection: 'automatic' | 'manual'
+  cacheStrategy: "aggressive" | "balanced" | "minimal";
+  componentLazyLoading: boolean;
+  imageOptimization: "high" | "medium" | "low";
+  garbageCollection: "automatic" | "manual";
 }
 ```
 
 ### **Performance Monitoring**
+
 ```typescript
 // Performance Metrics Collection
 interface PerformanceMetrics {
-  frameRate: number           // Target: 60fps
-  memoryUsage: number        // MB
-  batteryImpact: number      // Percentage
-  loadTime: number           // Milliseconds
-  apiResponseTime: number    // Milliseconds
+  frameRate: number; // Target: 60fps
+  memoryUsage: number; // MB
+  batteryImpact: number; // Percentage
+  loadTime: number; // Milliseconds
+  apiResponseTime: number; // Milliseconds
 }
 
 // Real-Time Performance Dashboard
 interface PerformanceDashboard {
-  overall: PerformanceStatus
-  rendering: RenderingMetrics
-  network: NetworkMetrics
-  memory: MemoryMetrics
-  battery: BatteryMetrics
+  overall: PerformanceStatus;
+  rendering: RenderingMetrics;
+  network: NetworkMetrics;
+  memory: MemoryMetrics;
+  battery: BatteryMetrics;
 }
 ```
 
@@ -526,44 +613,46 @@ interface PerformanceDashboard {
 ## 🧪 **TESTING STRATEGY**
 
 ### **Testing Architecture**
+
 ```typescript
 // Unit Tests - Component Level
-describe('MobileCalendarService', () => {
-  it('should handle touch gestures correctly')
-  it('should optimize for battery usage')
-  it('should sync events across platforms')
-})
+describe("MobileCalendarService", () => {
+  it("should handle touch gestures correctly");
+  it("should optimize for battery usage");
+  it("should sync events across platforms");
+});
 
-// Integration Tests - Service Level  
-describe('Phase 4.3 React Native Integration', () => {
-  it('should initialize React Native platform')
-  it('should enable real-time synchronization')
-  it('should handle cross-platform state sync')
-})
+// Integration Tests - Service Level
+describe("Phase 4.3 React Native Integration", () => {
+  it("should initialize React Native platform");
+  it("should enable real-time synchronization");
+  it("should handle cross-platform state sync");
+});
 
 // E2E Tests - User Journey Level
-describe('Coach Mobile Workflow', () => {
-  it('should allow sideline game management')
-  it('should sync changes to web dashboard')
-  it('should work offline and sync when reconnected')
-})
+describe("Coach Mobile Workflow", () => {
+  it("should allow sideline game management");
+  it("should sync changes to web dashboard");
+  it("should work offline and sync when reconnected");
+});
 ```
 
 ### **Performance Testing**
+
 ```typescript
 // Load Testing
-describe('Performance Under Load', () => {
-  it('should maintain 60fps with 100+ calendar events')
-  it('should handle 50+ real-time connections')
-  it('should optimize memory with large team rosters')
-})
+describe("Performance Under Load", () => {
+  it("should maintain 60fps with 100+ calendar events");
+  it("should handle 50+ real-time connections");
+  it("should optimize memory with large team rosters");
+});
 
 // Mobile Device Testing
-describe('Cross-Device Compatibility', () => {
-  it('should work on iPhone 12/13/14/15 series')
-  it('should work on Android devices (API 21+)')
-  it('should adapt to different screen sizes')
-})
+describe("Cross-Device Compatibility", () => {
+  it("should work on iPhone 12/13/14/15 series");
+  it("should work on Android devices (API 21+)");
+  it("should adapt to different screen sizes");
+});
 ```
 
 ---
@@ -571,6 +660,7 @@ describe('Cross-Device Compatibility', () => {
 ## 📚 **DOCUMENTATION SYSTEM**
 
 ### **Documentation Architecture**
+
 ```
 docs/
 ├── architecture/                # System architecture documentation
@@ -599,6 +689,7 @@ docs/
 ## 🎯 **NEXT STEPS: STORYBOOK INTEGRATION**
 
 ### **Storybook Setup Recommendation**
+
 ```typescript
 // Storybook Configuration for Design System
 export default {

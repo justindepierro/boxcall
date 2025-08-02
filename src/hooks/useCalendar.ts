@@ -1,10 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
-import { CalendarService } from '../services/calendarService';
-import type { CalendarEvent, CalendarFilters, EventRSVP, CalendarEventCreate } from '../services/calendarService';
+import { useCallback, useEffect, useState } from "react";
+import type {
+  CalendarEvent,
+  CalendarEventCreate,
+  CalendarFilters,
+  EventRSVP,
+} from "../services/calendarService";
+import { CalendarService } from "../services/calendarService";
 
 /**
  * useCalendar Hook
- * 
+ *
  * Manages calendar data fetching, filtering, and state management
  * for both personal and team calendar components
  */
@@ -23,7 +28,7 @@ export const useCalendar = (userId: string, teamId?: string) => {
       setError(null);
 
       let fetchedEvents: CalendarEvent[];
-      
+
       if (teamId) {
         // Fetch team-specific events
         fetchedEvents = await CalendarService.getTeamEvents(teamId, filters);
@@ -34,8 +39,8 @@ export const useCalendar = (userId: string, teamId?: string) => {
 
       setEvents(fetchedEvents);
     } catch (err) {
-      console.error('Error fetching calendar events:', err);
-      setError('Failed to load calendar events');
+      console.error("Error fetching calendar events:", err);
+      setError("Failed to load calendar events");
     } finally {
       setLoading(false);
     }
@@ -48,12 +53,12 @@ export const useCalendar = (userId: string, teamId?: string) => {
     try {
       const newEvent = await CalendarService.createEvent(eventData);
       if (newEvent) {
-        setEvents(prev => [...prev, newEvent]);
+        setEvents((prev) => [...prev, newEvent]);
         return newEvent;
       }
     } catch (err) {
-      console.error('Error creating event:', err);
-      setError('Failed to create event');
+      console.error("Error creating event:", err);
+      setError("Failed to create event");
     }
     return null;
   }, []);
@@ -61,21 +66,27 @@ export const useCalendar = (userId: string, teamId?: string) => {
   /**
    * Update an existing event
    */
-  const updateEvent = useCallback(async (eventId: string, updates: Partial<CalendarEventCreate>) => {
-    try {
-      const updatedEvent = await CalendarService.updateEvent(eventId, updates);
-      if (updatedEvent) {
-        setEvents(prev => 
-          prev.map(event => event.id === eventId ? updatedEvent : event)
+  const updateEvent = useCallback(
+    async (eventId: string, updates: Partial<CalendarEventCreate>) => {
+      try {
+        const updatedEvent = await CalendarService.updateEvent(
+          eventId,
+          updates
         );
-        return updatedEvent;
+        if (updatedEvent) {
+          setEvents((prev) =>
+            prev.map((event) => (event.id === eventId ? updatedEvent : event))
+          );
+          return updatedEvent;
+        }
+      } catch (err) {
+        console.error("Error updating event:", err);
+        setError("Failed to update event");
       }
-    } catch (err) {
-      console.error('Error updating event:', err);
-      setError('Failed to update event');
-    }
-    return null;
-  }, []);
+      return null;
+    },
+    []
+  );
 
   /**
    * Delete an event
@@ -84,12 +95,12 @@ export const useCalendar = (userId: string, teamId?: string) => {
     try {
       const success = await CalendarService.deleteEvent(eventId);
       if (success) {
-        setEvents(prev => prev.filter(event => event.id !== eventId));
+        setEvents((prev) => prev.filter((event) => event.id !== eventId));
         return true;
       }
     } catch (err) {
-      console.error('Error deleting event:', err);
-      setError('Failed to delete event');
+      console.error("Error deleting event:", err);
+      setError("Failed to delete event");
     }
     return false;
   }, []);
@@ -136,7 +147,7 @@ export const useCalendar = (userId: string, teamId?: string) => {
 
 /**
  * useCalendarRSVP Hook
- * 
+ *
  * Manages RSVP functionality for calendar events
  */
 export const useCalendarRSVP = (eventId: string) => {
@@ -154,8 +165,8 @@ export const useCalendarRSVP = (eventId: string) => {
       const fetchedRSVPs = await CalendarService.getEventRSVPs(eventId);
       setRSVPs(fetchedRSVPs);
     } catch (err) {
-      console.error('Error fetching RSVPs:', err);
-      setError('Failed to load RSVP data');
+      console.error("Error fetching RSVPs:", err);
+      setError("Failed to load RSVP data");
     } finally {
       setLoading(false);
     }
@@ -164,40 +175,52 @@ export const useCalendarRSVP = (eventId: string) => {
   /**
    * Update user's RSVP status
    */
-  const updateRSVP = useCallback(async (
-    userId: string, 
-    status: 'attending' | 'not_attending' | 'maybe',
-    note?: string
-  ) => {
-    try {
-      const updatedRSVP = await CalendarService.updateRSVP(eventId, userId, status, note);
-      if (updatedRSVP) {
-        setRSVPs(prev => {
-          const existing = prev.find(rsvp => rsvp.user_id === userId);
-          if (existing) {
-            return prev.map(rsvp => 
-              rsvp.user_id === userId ? updatedRSVP : rsvp
-            );
-          } else {
-            return [...prev, updatedRSVP];
-          }
-        });
-        return updatedRSVP;
+  const updateRSVP = useCallback(
+    async (
+      userId: string,
+      status: "attending" | "not_attending" | "maybe",
+      note?: string
+    ) => {
+      try {
+        const updatedRSVP = await CalendarService.updateRSVP(
+          eventId,
+          userId,
+          status,
+          note
+        );
+        if (updatedRSVP) {
+          setRSVPs((prev) => {
+            const existing = prev.find((rsvp) => rsvp.user_id === userId);
+            if (existing) {
+              return prev.map((rsvp) =>
+                rsvp.user_id === userId ? updatedRSVP : rsvp
+              );
+            } else {
+              return [...prev, updatedRSVP];
+            }
+          });
+          return updatedRSVP;
+        }
+      } catch (err) {
+        console.error("Error updating RSVP:", err);
+        setError("Failed to update RSVP");
       }
-    } catch (err) {
-      console.error('Error updating RSVP:', err);
-      setError('Failed to update RSVP');
-    }
-    return null;
-  }, [eventId]);
+      return null;
+    },
+    [eventId]
+  );
 
   /**
    * Get RSVP summary stats
    */
   const getRSVPSummary = useCallback(() => {
-    const attending = rsvps.filter(rsvp => rsvp.status === 'attending').length;
-    const notAttending = rsvps.filter(rsvp => rsvp.status === 'not_attending').length;
-    const maybe = rsvps.filter(rsvp => rsvp.status === 'maybe').length;
+    const attending = rsvps.filter(
+      (rsvp) => rsvp.status === "attending"
+    ).length;
+    const notAttending = rsvps.filter(
+      (rsvp) => rsvp.status === "not_attending"
+    ).length;
+    const maybe = rsvps.filter((rsvp) => rsvp.status === "maybe").length;
     const total = rsvps.length;
 
     return {
@@ -226,7 +249,7 @@ export const useCalendarRSVP = (eventId: string) => {
 
 /**
  * useUpcomingEvents Hook
- * 
+ *
  * Simplified hook for dashboard widgets showing upcoming events
  */
 export const useUpcomingEvents = (userId: string, limit: number = 5) => {
@@ -241,8 +264,8 @@ export const useUpcomingEvents = (userId: string, limit: number = 5) => {
       const events = await CalendarService.getUpcomingEvents(userId, limit);
       setUpcomingEvents(events);
     } catch (err) {
-      console.error('Error fetching upcoming events:', err);
-      setError('Failed to load upcoming events');
+      console.error("Error fetching upcoming events:", err);
+      setError("Failed to load upcoming events");
     } finally {
       setLoading(false);
     }

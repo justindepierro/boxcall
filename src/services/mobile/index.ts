@@ -3,87 +3,101 @@
 // ============================================================================
 
 // Core Mobile Services
-export { MobileCalendarService } from './MobileCalendarService';
-export { MobileUIService } from './MobileUIService';
-export { MobilePerformanceService } from './MobilePerformanceService';
+export { MobileCalendarService } from "./MobileCalendarService";
+export { MobilePerformanceService } from "./MobilePerformanceService";
+export { MobileUIService } from "./MobileUIService";
 
 // PHASE 4.3: React Native Platform Integration
-export { default as ReactNativePlatformService } from '../react-native/ReactNativePlatformService';
-export { 
+export {
+  CoachingAnalyticsService,
+  default as ReactNativePlatformService,
   RealTimeService,
   TeamManagementService,
-  CoachingAnalyticsService
-} from '../react-native/ReactNativePlatformService';
+} from "../react-native/ReactNativePlatformService";
 
 // Type Exports
 export type {
+  MobileCalendarState,
   // Mobile Calendar Types
   MobileCalendarView,
   MobileEvent,
-  TouchGesture,
+  MobilePerformanceMetrics,
   MobileRenderConfig,
-  TouchTarget,
   SwipeAction,
-  MobileCalendarState,
-  MobilePerformanceMetrics
-} from './MobileCalendarService';
+  TouchGesture,
+  TouchTarget,
+} from "./MobileCalendarService";
 
 export type {
+  MobileAnimation,
+  MobileComponentState,
+  MobileInteraction,
+  MobileLayoutConfig,
+  MobileNavigationState,
   // Mobile UI Types
   MobileUITheme,
   MobileViewport,
-  MobileInteraction,
-  MobileAnimation,
-  MobileLayoutConfig,
-  MobileComponentState,
-  MobileNavigationState
-} from './MobileUIService';
+} from "./MobileUIService";
 
 export type {
-  // Mobile Performance Types
-  PerformanceMetric,
-  BatteryOptimization,
   BatteryAction,
+  BatteryOptimization,
+  MemoryAction,
   MemoryOptimization,
   MemoryWarning,
-  MemoryAction,
   NetworkOptimization,
-  RenderingOptimization,
-  PerformanceProfile,
   PerformanceDashboard,
-  PerformanceRecommendation
-} from './MobilePerformanceService';
+  // Mobile Performance Types
+  PerformanceMetric,
+  PerformanceProfile,
+  PerformanceRecommendation,
+  RenderingOptimization,
+} from "./MobilePerformanceService";
 
 // PHASE 4.3: React Native Platform Types
 export type {
-  NativeAppState,
-  RealTimeSubscription,
-  CrossPlatformSyncConfig,
   CalendarEvent,
-  TeamUpdate,
-  UserState,
-  GameUpdate,
-  PerformanceMetrics,
-  EngagementMetrics,
-  CoachingInsights,
   CoachDashboard,
-  PlayerDashboard,
+  CoachingInsights,
+  CrossPlatformSyncConfig,
+  EngagementMetrics,
   FamilyDashboard,
-  UserRole
-} from '../react-native';
+  GameUpdate,
+  NativeAppState,
+  PerformanceMetrics,
+  PlayerDashboard,
+  RealTimeSubscription,
+  TeamUpdate,
+  UserRole,
+  UserState,
+} from "../react-native";
 
 // ============================================================================
 // MOBILE ORCHESTRATOR SERVICE
 // ============================================================================
 
-import { MobileCalendarService, type MobileCalendarState, type MobilePerformanceMetrics } from './MobileCalendarService';
-import { MobileUIService, type MobileUITheme, type MobileViewport } from './MobileUIService';
-import { MobilePerformanceService, type PerformanceProfile, type PerformanceDashboard } from './MobilePerformanceService';
+import {
+  MobileCalendarService,
+  type MobileCalendarState,
+  type MobilePerformanceMetrics,
+} from "./MobileCalendarService";
+import {
+  MobilePerformanceService,
+  type PerformanceDashboard,
+  type PerformanceProfile,
+} from "./MobilePerformanceService";
+import {
+  MobileUIService,
+  type MobileUITheme,
+  type MobileViewport,
+} from "./MobileUIService";
 // PHASE 4.3: React Native Platform Integration
-import ReactNativePlatformService, { type NativeAppState } from '../react-native/ReactNativePlatformService';
-import type { UserState } from '../react-native';
+import type { UserState } from "../react-native";
+import ReactNativePlatformService, {
+  type NativeAppState,
+} from "../react-native/ReactNativePlatformService";
 // MobileWebBridgeService - available via service imports
-import type { PlatformContext } from '../cross-platform/UnifiedApiGateway';
+import type { PlatformContext } from "../cross-platform/UnifiedApiGateway";
 
 export interface MobileAppState {
   initialized: boolean;
@@ -106,8 +120,8 @@ export interface MobileAppState {
 export interface MobileInitializationConfig {
   viewport: MobileViewport;
   platformContext: PlatformContext;
-  theme?: 'light' | 'dark' | 'auto';
-  performanceProfile?: 'battery-saver' | 'balanced' | 'performance';
+  theme?: "light" | "dark" | "auto";
+  performanceProfile?: "battery-saver" | "balanced" | "performance";
   enableAutoOptimization?: boolean;
 }
 
@@ -126,9 +140,9 @@ export class MobileOrchestrator {
     reactNative: {
       enabled: false,
       state: null,
-      realTimeConnected: false
+      realTimeConnected: false,
     },
-    lastUpdate: new Date()
+    lastUpdate: new Date(),
   };
 
   // ==========================================
@@ -145,7 +159,7 @@ export class MobileOrchestrator {
       // 1. Initialize Mobile UI Service
       const uiResult = await MobileUIService.initialize(
         config.viewport,
-        config.theme || 'auto'
+        config.theme || "auto"
       );
 
       if (!uiResult.success) {
@@ -154,16 +168,18 @@ export class MobileOrchestrator {
 
       this.appState.ui = {
         theme: uiResult.theme,
-        viewport: config.viewport
+        viewport: config.viewport,
       };
 
       // 2. Initialize Mobile Performance Service
       const perfResult = await MobilePerformanceService.initialize(
-        config.performanceProfile || 'balanced'
+        config.performanceProfile || "balanced"
       );
 
       if (!perfResult.success) {
-        throw new Error(`Performance initialization failed: ${perfResult.error}`);
+        throw new Error(
+          `Performance initialization failed: ${perfResult.error}`
+        );
       }
 
       this.appState.performance = perfResult.profile;
@@ -187,14 +203,13 @@ export class MobileOrchestrator {
 
       return {
         success: true,
-        state: this.appState
+        state: this.appState,
       };
-
     } catch (error) {
       return {
         success: false,
         state: this.appState,
-        error: `Mobile app initialization failed: ${error}`
+        error: `Mobile app initialization failed: ${error}`,
       };
     }
   }
@@ -213,7 +228,7 @@ export class MobileOrchestrator {
   }> {
     try {
       if (!this.appState.initialized) {
-        throw new Error('Mobile app must be initialized first');
+        throw new Error("Mobile app must be initialized first");
       }
 
       // Initialize React Native platform service
@@ -224,21 +239,20 @@ export class MobileOrchestrator {
       this.appState.reactNative = {
         enabled: true,
         state: nativeState,
-        realTimeConnected: nativeState.syncStatus === 'connected'
+        realTimeConnected: nativeState.syncStatus === "connected",
       };
 
       this.appState.lastUpdate = new Date();
 
       return {
         success: true,
-        nativeState
+        nativeState,
       };
-
     } catch (error) {
       return {
         success: false,
         nativeState: null,
-        error: `React Native initialization failed: ${error}`
+        error: `React Native initialization failed: ${error}`,
       };
     }
   }
@@ -252,8 +266,11 @@ export class MobileOrchestrator {
     error?: string;
   }> {
     try {
-      if (!this.appState.reactNative.enabled || !this.appState.reactNative.state) {
-        throw new Error('React Native platform must be initialized first');
+      if (
+        !this.appState.reactNative.enabled ||
+        !this.appState.reactNative.state
+      ) {
+        throw new Error("React Native platform must be initialized first");
       }
 
       const rnPlatformService = new ReactNativePlatformService();
@@ -289,14 +306,13 @@ export class MobileOrchestrator {
 
       return {
         success: true,
-        subscriptions
+        subscriptions,
       };
-
     } catch (error) {
       return {
         success: false,
         subscriptions: [],
-        error: `Real-time sync initialization failed: ${error}`
+        error: `Real-time sync initialization failed: ${error}`,
       };
     }
   }
@@ -311,7 +327,7 @@ export class MobileOrchestrator {
   }> {
     try {
       if (!this.appState.reactNative.enabled) {
-        throw new Error('React Native platform must be enabled');
+        throw new Error("React Native platform must be enabled");
       }
 
       const rnPlatformService = new ReactNativePlatformService();
@@ -325,14 +341,13 @@ export class MobileOrchestrator {
 
       return {
         success: true,
-        syncedData: userState
+        syncedData: userState,
       };
-
     } catch (error) {
       return {
         success: false,
         syncedData: null,
-        error: `Cross-platform sync failed: ${error}`
+        error: `Cross-platform sync failed: ${error}`,
       };
     }
   }
@@ -359,11 +374,12 @@ export class MobileOrchestrator {
     try {
       // Update UI service viewport
       await MobileUIService.handleViewportChange(newViewport);
-      adaptations.push('UI layout adapted');
+      adaptations.push("UI layout adapted");
 
       // Switch calendar view if needed (portrait vs landscape)
       if (this.appState.calendar) {
-        const viewType = newViewport.orientation === 'landscape' ? 'week' : 'day';
+        const viewType =
+          newViewport.orientation === "landscape" ? "week" : "day";
         await MobileCalendarService.switchView(viewType);
         adaptations.push(`Calendar switched to ${viewType} view`);
       }
@@ -373,9 +389,8 @@ export class MobileOrchestrator {
       this.appState.lastUpdate = new Date();
 
       return { success: true, adaptations };
-
     } catch (error) {
-      console.error('Failed to handle viewport change:', error);
+      console.error("Failed to handle viewport change:", error);
       return { success: false, adaptations };
     }
   }
@@ -396,33 +411,32 @@ export class MobileOrchestrator {
         isLowPowerMode
       );
 
-      if (batteryOpt.strategy === 'aggressive') {
+      if (batteryOpt.strategy === "aggressive") {
         // Switch to battery saver profile
-        await MobilePerformanceService.switchProfile('battery-saver');
-        optimizations.push('Switched to battery saver mode');
+        await MobilePerformanceService.switchProfile("battery-saver");
+        optimizations.push("Switched to battery saver mode");
 
         // Reduce calendar refresh rate
         if (this.appState.calendar) {
           // TODO: Implement reduced refresh rate in calendar
-          optimizations.push('Reduced calendar sync frequency');
+          optimizations.push("Reduced calendar sync frequency");
         }
 
         // Disable animations in UI
         MobileUIService.updateLayoutConfig({
-          accessibility: { 
+          accessibility: {
             reduceMotion: true,
             highContrast: false,
             largeText: false,
-            voiceOver: false
-          }
+            voiceOver: false,
+          },
         });
-        optimizations.push('Disabled animations');
+        optimizations.push("Disabled animations");
       }
 
       return { success: true, optimizations };
-
     } catch (error) {
-      console.error('Failed to handle battery change:', error);
+      console.error("Failed to handle battery change:", error);
       return { success: false, optimizations: [] };
     }
   }
@@ -431,38 +445,39 @@ export class MobileOrchestrator {
    * Handle memory pressure warnings
    */
   static async handleMemoryPressure(
-    severity: 'low' | 'medium' | 'high'
+    severity: "low" | "medium" | "high"
   ): Promise<{ success: boolean; memoryFreed: number; actions: string[] }> {
     const actions: string[] = [];
     let totalMemoryFreed = 0;
 
     try {
-      if (severity === 'high' || severity === 'medium') {
+      if (severity === "high" || severity === "medium") {
         // Clear performance service caches
         const cleared = await MobilePerformanceService.clearCaches();
         totalMemoryFreed += cleared.freedMemory;
-        actions.push(...cleared.clearedCaches.map(cache => `Cleared ${cache} cache`));
+        actions.push(
+          ...cleared.clearedCaches.map((cache) => `Cleared ${cache} cache`)
+        );
 
         // Optimize memory in performance service
         await MobilePerformanceService.optimizeMemory();
-        actions.push('Applied memory optimizations');
+        actions.push("Applied memory optimizations");
       }
 
-      if (severity === 'high') {
+      if (severity === "high") {
         // Force garbage collection if possible
         // TODO: Implement actual garbage collection
-        actions.push('Triggered garbage collection');
+        actions.push("Triggered garbage collection");
         totalMemoryFreed += 10; // Estimated
       }
 
-      return { 
-        success: true, 
-        memoryFreed: totalMemoryFreed, 
-        actions 
+      return {
+        success: true,
+        memoryFreed: totalMemoryFreed,
+        actions,
       };
-
     } catch (error) {
-      console.error('Failed to handle memory pressure:', error);
+      console.error("Failed to handle memory pressure:", error);
       return { success: false, memoryFreed: 0, actions: [] };
     }
   }
@@ -475,36 +490,37 @@ export class MobileOrchestrator {
    * Get comprehensive mobile app performance status
    */
   static async getPerformanceStatus(): Promise<{
-    overall: 'excellent' | 'good' | 'fair' | 'poor';
+    overall: "excellent" | "good" | "fair" | "poor";
     dashboard: PerformanceDashboard | null;
     calendarMetrics: MobilePerformanceMetrics | null;
     recommendations: string[];
   }> {
     try {
       // Get performance dashboard
-      const dashboard = await MobilePerformanceService.getPerformanceDashboard();
+      const dashboard =
+        await MobilePerformanceService.getPerformanceDashboard();
 
       // Get calendar performance metrics
       const calendarState = MobileCalendarService.getState();
       const calendarMetrics = calendarState?.performanceMetrics || null;
 
       // Generate combined recommendations
-      const recommendations = await this.generateOverallRecommendations(dashboard);
+      const recommendations =
+        await this.generateOverallRecommendations(dashboard);
 
       return {
         overall: dashboard.overall.status,
         dashboard,
         calendarMetrics,
-        recommendations
+        recommendations,
       };
-
     } catch (error) {
-      console.error('Failed to get performance status:', error);
+      console.error("Failed to get performance status:", error);
       return {
-        overall: 'poor',
+        overall: "poor",
         dashboard: null,
         calendarMetrics: null,
-        recommendations: ['Unable to assess performance']
+        recommendations: ["Unable to assess performance"],
       };
     }
   }
@@ -518,7 +534,7 @@ export class MobileOrchestrator {
       try {
         await MobilePerformanceService.autoOptimize();
       } catch (error) {
-        console.error('Auto-optimization failed:', error);
+        console.error("Auto-optimization failed:", error);
       }
     }, 60000); // Every minute
 
@@ -526,13 +542,15 @@ export class MobileOrchestrator {
     setInterval(async () => {
       try {
         const memoryOpt = await MobilePerformanceService.optimizeMemory();
-        const criticalWarnings = memoryOpt.warnings.filter(w => w.severity === 'critical');
-        
+        const criticalWarnings = memoryOpt.warnings.filter(
+          (w) => w.severity === "critical"
+        );
+
         if (criticalWarnings.length > 0) {
-          await this.handleMemoryPressure('high');
+          await this.handleMemoryPressure("high");
         }
       } catch (error) {
-        console.error('Memory monitoring failed:', error);
+        console.error("Memory monitoring failed:", error);
       }
     }, 30000); // Every 30 seconds
   }
@@ -583,13 +601,12 @@ export class MobileOrchestrator {
         reactNative: {
           enabled: false,
           state: null,
-          realTimeConnected: false
+          realTimeConnected: false,
         },
-        lastUpdate: new Date()
+        lastUpdate: new Date(),
       };
-
     } catch (error) {
-      console.error('Failed to cleanup mobile app:', error);
+      console.error("Failed to cleanup mobile app:", error);
     }
   }
 
@@ -603,24 +620,26 @@ export class MobileOrchestrator {
     const recommendations: string[] = [];
 
     if (!dashboard) {
-      recommendations.push('Unable to assess performance - dashboard unavailable');
+      recommendations.push(
+        "Unable to assess performance - dashboard unavailable"
+      );
       return recommendations;
     }
 
     if (dashboard.overall.score < 70) {
-      recommendations.push('Consider switching to performance mode');
+      recommendations.push("Consider switching to performance mode");
     }
 
     if (dashboard.battery.currentLevel < 30) {
-      recommendations.push('Enable battery saver mode to extend usage');
+      recommendations.push("Enable battery saver mode to extend usage");
     }
 
     if (dashboard.memory.usedMemory / dashboard.memory.totalMemory > 0.8) {
-      recommendations.push('Clear caches to free memory');
+      recommendations.push("Clear caches to free memory");
     }
 
     if (dashboard.rendering.frameRate < 30) {
-      recommendations.push('Reduce visual effects for smoother performance');
+      recommendations.push("Reduce visual effects for smoother performance");
     }
 
     return recommendations;
@@ -645,9 +664,13 @@ export function createMobileConfig(
   return {
     viewport,
     platformContext,
-    theme: 'auto',
-    performanceProfile: isLowEnd ? 'battery-saver' : isTablet ? 'performance' : 'balanced',
-    enableAutoOptimization: true
+    theme: "auto",
+    performanceProfile: isLowEnd
+      ? "battery-saver"
+      : isTablet
+        ? "performance"
+        : "balanced",
+    enableAutoOptimization: true,
   };
 }
 
@@ -658,7 +681,7 @@ export function checkMobileCapabilities(viewport: MobileViewport): {
   supportsHapticFeedback: boolean;
   supportsAdvancedAnimations: boolean;
   supportsBackgroundSync: boolean;
-  recommendedQuality: 'high' | 'balanced' | 'performance';
+  recommendedQuality: "high" | "balanced" | "performance";
 } {
   const isHighEnd = viewport.width >= 414 && viewport.height >= 896;
   const isTablet = viewport.width >= 768;
@@ -667,6 +690,10 @@ export function checkMobileCapabilities(viewport: MobileViewport): {
     supportsHapticFeedback: isHighEnd,
     supportsAdvancedAnimations: isHighEnd || isTablet,
     supportsBackgroundSync: true,
-    recommendedQuality: isHighEnd ? 'high' : isTablet ? 'balanced' : 'performance'
+    recommendedQuality: isHighEnd
+      ? "high"
+      : isTablet
+        ? "balanced"
+        : "performance",
   };
 }

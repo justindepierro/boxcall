@@ -4,7 +4,7 @@ import { useAuthProfile } from "../app/auth-store";
 
 /**
  * TeamManagementPage Component
- * 
+ *
  * Team-specific management page.
  * Only accessible to team members with appropriate roles.
  */
@@ -27,11 +27,20 @@ export const TeamManagementPage: React.FC = () => {
 
         {/* User Context */}
         <div className="bg-white dark:bg-gray-800 rounded-md shadow-sm p-6 mb-8">
-          <h2 className="text-xl font-display font-semibold mb-4">Your Access</h2>
+          <h2 className="text-xl font-display font-semibold mb-4">
+            Your Access
+          </h2>
           <div className="space-y-2 font-sans">
-            <p><strong>Email:</strong> {profile?.email}</p>
-            <p><strong>Team Role:</strong> <span className="text-jade-600 font-semibold">Team Member</span></p>
-            <p><strong>Access Level:</strong> Team Management</p>
+            <p>
+              <strong>Email:</strong> {profile?.email}
+            </p>
+            <p>
+              <strong>Team Role:</strong>{" "}
+              <span className="text-jade-600 font-semibold">Team Member</span>
+            </p>
+            <p>
+              <strong>Access Level:</strong> Team Management
+            </p>
           </div>
         </div>
 
@@ -173,7 +182,7 @@ export const TeamManagementPage: React.FC = () => {
             Go Back
           </button>
           <button
-            onClick={() => window.location.href = "/dashboard"}
+            onClick={() => (window.location.href = "/dashboard")}
             className="bg-jade-500 text-white px-6 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold"
           >
             Return to Dashboard

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Typography } from '../design-system';
-import { Card } from '../ui';
+import React from "react";
+import { Typography } from "../design-system";
+import { Card } from "../ui";
 
 interface CrossTeamMessagesProps {
   userId: string;
@@ -8,7 +8,7 @@ interface CrossTeamMessagesProps {
 
 /**
  * Cross-Team Messages - Multi-team communication hub
- * 
+ *
  * Features:
  * - Messages from all teams user belongs to
  * - Important announcements and updates
@@ -28,7 +28,7 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
       preview: "Friday practice moved to 4:00 PM due to weather concerns...",
       timestamp: "2 hours ago",
       isRead: false,
-      priority: "high"
+      priority: "high",
     },
     {
       id: "2",
@@ -39,7 +39,7 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
       preview: "Film from Saturday's games is now available for review...",
       timestamp: "1 day ago",
       isRead: true,
-      priority: "normal"
+      priority: "normal",
     },
     {
       id: "3",
@@ -50,7 +50,7 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
       preview: "Please return all team gear by Friday, August 30th...",
       timestamp: "2 days ago",
       isRead: false,
-      priority: "normal"
+      priority: "normal",
     },
     {
       id: "4",
@@ -61,16 +61,19 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
       preview: "Mandatory parent meeting scheduled for next Tuesday...",
       timestamp: "3 days ago",
       isRead: true,
-      priority: "high"
-    }
+      priority: "high",
+    },
   ];
 
-  const unreadCount = mockMessages.filter(msg => !msg.isRead).length;
+  const unreadCount = mockMessages.filter((msg) => !msg.isRead).length;
 
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
-        <Typography variant="headline-md" className="text-gray-900 dark:text-white">
+        <Typography
+          variant="headline-md"
+          className="text-gray-900 dark:text-white"
+        >
           📬 Team Messages
         </Typography>
         <div className="flex items-center space-x-2">
@@ -88,26 +91,29 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
       {/* Message List */}
       <div className="space-y-3 max-h-96 overflow-y-auto">
         {mockMessages.map((message) => (
-          <div 
+          <div
             key={message.id}
             className={`p-3 rounded-lg border transition-colors cursor-pointer ${
-              message.isRead 
-                ? 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700' 
-                : 'bg-white dark:bg-gray-700 border-jade-200 dark:border-jade-800 shadow-sm'
+              message.isRead
+                ? "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+                : "bg-white dark:bg-gray-700 border-jade-200 dark:border-jade-800 shadow-sm"
             }`}
           >
             <div className="flex items-start space-x-3">
               {/* Team Logo */}
               <div className="text-xl">{message.teamLogo}</div>
-              
+
               {/* Message Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center space-x-2">
-                    <Typography variant="body-sm" className="font-semibold text-gray-900 dark:text-white">
+                    <Typography
+                      variant="body-sm"
+                      className="font-semibold text-gray-900 dark:text-white"
+                    >
                       {message.teamName}
                     </Typography>
-                    {message.priority === 'high' && (
+                    {message.priority === "high" && (
                       <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                     )}
                   </div>
@@ -115,14 +121,21 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
                     {message.timestamp}
                   </Typography>
                 </div>
-                
-                <Typography variant="body-sm" className="font-medium text-gray-900 dark:text-white">
+
+                <Typography
+                  variant="body-sm"
+                  className="font-medium text-gray-900 dark:text-white"
+                >
                   {message.subject}
                 </Typography>
-                <Typography variant="body-sm" color="muted" className="line-clamp-2">
+                <Typography
+                  variant="body-sm"
+                  color="muted"
+                  className="line-clamp-2"
+                >
                   {message.preview}
                 </Typography>
-                
+
                 <div className="flex items-center justify-between mt-2">
                   <Typography variant="caption" color="muted">
                     From: {message.from}

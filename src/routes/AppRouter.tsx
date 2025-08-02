@@ -1,33 +1,31 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../components/auth";
-import { 
-  ProtectedRoute, 
-  PublicRoute, 
-  RoleProtectedRoute,
-  SuperAdminRoute,
-  TeamMemberRoute,
-  SubscriptionRoute 
-} from "../routes";
-import { 
-  TeamManagementRoute
-} from "../routes/PermissionRoute";
-import { 
-  DashboardPage, 
-  LoginPage, 
+import {
   AdminPage,
-  SuperAdminPage,
-  TeamManagementPage,
-  ProfilePage,
-  TeamDashboard,
   CalendarPage,
-  PracticeSchedulePage 
+  DashboardPage,
+  LoginPage,
+  PracticeSchedulePage,
+  ProfilePage,
+  SuperAdminPage,
+  TeamDashboard,
+  TeamManagementPage,
 } from "../pages";
 import AnimationShowcasePage from "../pages/AnimationShowcasePage";
+import {
+  ProtectedRoute,
+  PublicRoute,
+  RoleProtectedRoute,
+  SubscriptionRoute,
+  SuperAdminRoute,
+  TeamMemberRoute,
+} from "../routes";
+import { TeamManagementRoute } from "../routes/PermissionRoute";
 
 /**
  * AppRouter Component
- * 
+ *
  * Main routing configuration for the BoxCall application.
  * Handles protected routes, public routes, and role-based access.
  */
@@ -119,7 +117,15 @@ export const AppRouter: React.FC = () => {
           <Route
             path="/team/:teamId"
             element={
-              <TeamMemberRoute allowedTeamRoles={["head_coach", "coach", "player", "family", "manager"]}>
+              <TeamMemberRoute
+                allowedTeamRoles={[
+                  "head_coach",
+                  "coach",
+                  "player",
+                  "family",
+                  "manager",
+                ]}
+              >
                 <TeamDashboard />
               </TeamMemberRoute>
             }
@@ -129,7 +135,9 @@ export const AppRouter: React.FC = () => {
           <Route
             path="/team/:teamId/practice"
             element={
-              <TeamMemberRoute allowedTeamRoles={["head_coach", "coach", "manager"]}>
+              <TeamMemberRoute
+                allowedTeamRoles={["head_coach", "coach", "manager"]}
+              >
                 <PracticeSchedulePage />
               </TeamMemberRoute>
             }
@@ -142,7 +150,9 @@ export const AppRouter: React.FC = () => {
               <TeamMemberRoute allowedTeamRoles={["head_coach", "coach"]}>
                 <SubscriptionRoute requiredTiers={["team_premium"]}>
                   <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold mb-4">📊 Premium Analytics</h1>
+                    <h1 className="text-2xl font-bold mb-4">
+                      📊 Premium Analytics
+                    </h1>
                     <p>Advanced team analytics and reporting tools.</p>
                   </div>
                 </SubscriptionRoute>
@@ -151,10 +161,7 @@ export const AppRouter: React.FC = () => {
           />
 
           {/* Catch-all Routes */}
-          <Route
-            path="/"
-            element={<Navigate to="/dashboard" replace />}
-          />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route
             path="*"
             element={

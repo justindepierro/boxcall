@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { useIsAuthenticated, useAuthProfile, useAuthLoading } from "../app/auth-store";
+import {
+  useAuthLoading,
+  useAuthProfile,
+  useIsAuthenticated,
+} from "../app/auth-store";
 import { supabase } from "../lib/supabase";
-import { useEffect, useState } from "react";
 
 interface SuperAdminRouteProps {
   children: React.ReactNode;
@@ -11,10 +14,10 @@ interface SuperAdminRouteProps {
 
 /**
  * SuperAdminRoute Component
- * 
+ *
  * Protects routes that require super admin (developer) access.
  * Checks both profile admin role AND super_admins table entry.
- * 
+ *
  * @param children - The component(s) to render if super admin access is granted
  * @param fallbackTo - Where to redirect if access is denied (default: '/dashboard')
  */
@@ -46,7 +49,9 @@ export const SuperAdminRoute: React.FC<SuperAdminRouteProps> = ({
         }
 
         // Check if user has super_admin or admin level
-        setIsSuperAdmin(data.admin_level === "super_admin" || data.admin_level === "admin");
+        setIsSuperAdmin(
+          data.admin_level === "super_admin" || data.admin_level === "admin"
+        );
       } catch (error) {
         console.error("Error checking super admin status:", error);
         setIsSuperAdmin(false);

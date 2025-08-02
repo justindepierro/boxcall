@@ -3,45 +3,45 @@
 // ============================================================================
 
 // Core Cross-Platform Services
-export { UnifiedApiGateway } from './UnifiedApiGateway';
-export { MobileWebBridgeService } from './MobileWebBridgeService';
-export { ExternalIntegrationService } from './ExternalIntegrationService';
-export { RealTimeSyncService } from './RealTimeSyncService';
+export { ExternalIntegrationService } from "./ExternalIntegrationService";
+export { MobileWebBridgeService } from "./MobileWebBridgeService";
+export { RealTimeSyncService } from "./RealTimeSyncService";
+export { UnifiedApiGateway } from "./UnifiedApiGateway";
 
 // Main Type Exports from each service
 export type {
-  UnifiedApiResponse,
+  DataConflict,
   PlatformContext,
   SyncResult,
-  DataConflict
-} from './UnifiedApiGateway';
+  UnifiedApiResponse,
+} from "./UnifiedApiGateway";
 
 export type {
-  BridgeConnection,
-  SyncConfiguration,
-  FeatureCompatibility,
   AdaptedFeature,
-  PlatformMetrics
-} from './MobileWebBridgeService';
+  BridgeConnection,
+  FeatureCompatibility,
+  PlatformMetrics,
+  SyncConfiguration,
+} from "./MobileWebBridgeService";
 
 export type {
+  ApiResponse,
   ExternalProvider,
-  ProviderConfig,
   IntegrationMapping,
-  SyncOperation,
-  SyncError,
   IntegrationStats,
-  ApiResponse
-} from './ExternalIntegrationService';
+  ProviderConfig,
+  SyncError,
+  SyncOperation,
+} from "./ExternalIntegrationService";
 
 export type {
+  ConflictResolution,
+  RealTimeEvent,
   SyncChannel,
   SyncChannelConfig,
-  RealTimeEvent,
+  SyncMetrics,
   SyncState,
-  ConflictResolution,
-  SyncMetrics
-} from './RealTimeSyncService';
+} from "./RealTimeSyncService";
 
 // ============================================================================
 // CROSS-PLATFORM SERVICE ORCHESTRATOR
@@ -52,7 +52,6 @@ export type {
  * Provides a unified interface to manage cross-platform functionality
  */
 export class CrossPlatformOrchestrator {
-  
   /**
    * Initialize all cross-platform services
    */
@@ -63,23 +62,23 @@ export class CrossPlatformOrchestrator {
   }> {
     try {
       const services = [
-        'UnifiedApiGateway',
-        'MobileWebBridgeService', 
-        'ExternalIntegrationService',
-        'RealTimeSyncService'
+        "UnifiedApiGateway",
+        "MobileWebBridgeService",
+        "ExternalIntegrationService",
+        "RealTimeSyncService",
       ];
 
       // TODO: Initialize each service with proper configuration
       // For now, just return success
       return {
         success: true,
-        services
+        services,
       };
     } catch (error) {
       return {
         success: false,
         services: [],
-        error: `Failed to initialize cross-platform services: ${error}`
+        error: `Failed to initialize cross-platform services: ${error}`,
       };
     }
   }
@@ -92,7 +91,7 @@ export class CrossPlatformOrchestrator {
     mobileBridge: boolean;
     externalIntegration: boolean;
     realTimeSync: boolean;
-    overall: 'healthy' | 'degraded' | 'offline';
+    overall: "healthy" | "degraded" | "offline";
   }> {
     try {
       // TODO: Implement actual health checks for each service
@@ -101,7 +100,7 @@ export class CrossPlatformOrchestrator {
         mobileBridge: true,
         externalIntegration: true,
         realTimeSync: true,
-        overall: 'healthy' as const
+        overall: "healthy" as const,
       };
 
       return status;
@@ -111,7 +110,7 @@ export class CrossPlatformOrchestrator {
         mobileBridge: false,
         externalIntegration: false,
         realTimeSync: false,
-        overall: 'offline'
+        overall: "offline",
       };
     }
   }
@@ -130,21 +129,21 @@ export class CrossPlatformOrchestrator {
       // TODO: Implement graceful shutdown for each service
       // For now, just simulate shutdown
       shutdownServices.push(
-        'UnifiedApiGateway',
-        'MobileWebBridgeService',
-        'ExternalIntegrationService', 
-        'RealTimeSyncService'
+        "UnifiedApiGateway",
+        "MobileWebBridgeService",
+        "ExternalIntegrationService",
+        "RealTimeSyncService"
       );
 
       return {
         success: true,
-        shutdownServices
+        shutdownServices,
       };
     } catch (error) {
       return {
         success: false,
         shutdownServices: [],
-        error: `Failed to shutdown cross-platform services: ${error}`
+        error: `Failed to shutdown cross-platform services: ${error}`,
       };
     }
   }

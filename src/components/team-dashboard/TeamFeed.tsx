@@ -1,5 +1,5 @@
-import React from 'react';
-import { Typography } from '../design-system';
+import React from "react";
+import { Typography } from "../design-system";
 
 interface TeamFeedProps {
   teamId: string;
@@ -8,7 +8,7 @@ interface TeamFeedProps {
 
 /**
  * Team Feed - Facebook-style team activity feed
- * 
+ *
  * Features:
  * - Coach announcements and updates
  * - New plays and practice scripts posted
@@ -18,7 +18,7 @@ interface TeamFeedProps {
  */
 export const TeamFeed: React.FC<TeamFeedProps> = () => {
   // TODO: Use teamId and userRole for fetching team-specific feed
-  
+
   // Mock feed data - TODO: Fetch from database
   const mockFeedItems = [
     {
@@ -27,74 +27,91 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
       author: "Coach Johnson",
       authorRole: "head_coach",
       timestamp: "2 hours ago",
-      content: "Great practice today team! 🏈 Special shoutout to @Marcus for leadership and @Tyler for those explosive runs. Friday's game plan is uploaded - study hard! #EaglesStrong",
+      content:
+        "Great practice today team! 🏈 Special shoutout to @Marcus for leadership and @Tyler for those explosive runs. Friday's game plan is uploaded - study hard! #EaglesStrong",
       likes: 12,
       comments: 3,
-      pinned: true
+      pinned: true,
     },
     {
-      id: "2", 
+      id: "2",
       type: "play_upload",
       author: "Coach Williams",
       authorRole: "coach",
       timestamp: "4 hours ago",
-      content: "New red zone package uploaded to playbook! 📋 Three new plays added: Red Zone Slant, Corner Fade, and QB Sweep. Practice these routes tonight.",
+      content:
+        "New red zone package uploaded to playbook! 📋 Three new plays added: Red Zone Slant, Corner Fade, and QB Sweep. Practice these routes tonight.",
       attachments: ["Red Zone Package.pdf"],
       likes: 8,
-      comments: 1
+      comments: 1,
     },
     {
       id: "3",
       type: "achievement",
       author: "System",
       authorRole: "system",
-      timestamp: "1 day ago", 
-      content: "🏆 Team Achievement Unlocked: Perfect Practice Week! Everyone showed up ready to work. Helmet stickers awarded to all players.",
+      timestamp: "1 day ago",
+      content:
+        "🏆 Team Achievement Unlocked: Perfect Practice Week! Everyone showed up ready to work. Helmet stickers awarded to all players.",
       likes: 23,
-      comments: 7
+      comments: 7,
     },
     {
       id: "4",
       type: "practice_script",
-      author: "Coach Johnson", 
+      author: "Coach Johnson",
       authorRole: "head_coach",
       timestamp: "2 days ago",
-      content: "Friday's practice script is live! 📝 Focus areas: Red zone offense, 3rd down defense, and special teams. Weather looks good - outdoor practice confirmed.",
+      content:
+        "Friday's practice script is live! 📝 Focus areas: Red zone offense, 3rd down defense, and special teams. Weather looks good - outdoor practice confirmed.",
       attachments: ["Friday_Practice_Script.pdf"],
       likes: 6,
-      comments: 2
+      comments: 2,
     },
     {
       id: "5",
       type: "player_spotlight",
       author: "Coach Martinez",
-      authorRole: "coach", 
+      authorRole: "coach",
       timestamp: "3 days ago",
-      content: "Player Spotlight: @Devon has been crushing it in the weight room! 💪 Up 15lbs on bench press this month. That dedication shows on the field. #WorkEthic",
+      content:
+        "Player Spotlight: @Devon has been crushing it in the weight room! 💪 Up 15lbs on bench press this month. That dedication shows on the field. #WorkEthic",
       likes: 18,
-      comments: 9
-    }
+      comments: 9,
+    },
   ];
 
   const getPostIcon = (type: string) => {
     switch (type) {
-      case 'announcement': return '📢';
-      case 'play_upload': return '📋';
-      case 'achievement': return '🏆';
-      case 'practice_script': return '📝';
-      case 'player_spotlight': return '⭐';
-      default: return '📄';
+      case "announcement":
+        return "📢";
+      case "play_upload":
+        return "📋";
+      case "achievement":
+        return "🏆";
+      case "practice_script":
+        return "📝";
+      case "player_spotlight":
+        return "⭐";
+      default:
+        return "📄";
     }
   };
 
   const getPostColor = (type: string) => {
     switch (type) {
-      case 'announcement': return 'border-jade-200 dark:border-jade-800';
-      case 'play_upload': return 'border-blue-200 dark:border-blue-800';
-      case 'achievement': return 'border-purple-200 dark:border-purple-800';
-      case 'practice_script': return 'border-orange-200 dark:border-orange-800';
-      case 'player_spotlight': return 'border-yellow-200 dark:border-yellow-800';
-      default: return 'border-gray-200 dark:border-gray-700';
+      case "announcement":
+        return "border-jade-200 dark:border-jade-800";
+      case "play_upload":
+        return "border-blue-200 dark:border-blue-800";
+      case "achievement":
+        return "border-purple-200 dark:border-purple-800";
+      case "practice_script":
+        return "border-orange-200 dark:border-orange-800";
+      case "player_spotlight":
+        return "border-yellow-200 dark:border-yellow-800";
+      default:
+        return "border-gray-200 dark:border-gray-700";
     }
   };
 
@@ -110,10 +127,10 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
       {/* Feed Items */}
       <div className="space-y-4">
         {mockFeedItems.map((item) => (
-          <div 
+          <div
             key={item.id}
             className={`p-4 bg-white dark:bg-gray-800 rounded-lg border ${getPostColor(item.type)} ${
-              item.pinned ? 'ring-2 ring-jade-200 dark:ring-jade-800' : ''
+              item.pinned ? "ring-2 ring-jade-200 dark:ring-jade-800" : ""
             }`}
           >
             {/* Post Header */}
@@ -146,14 +163,20 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
               <Typography variant="body-sm" className="whitespace-pre-wrap">
                 {item.content}
               </Typography>
-              
+
               {/* Attachments */}
               {item.attachments && item.attachments.length > 0 && (
                 <div className="mt-3 space-y-2">
                   {item.attachments.map((attachment, index) => (
-                    <div key={index} className="flex items-center space-x-2 p-2 bg-gray-50 dark:bg-gray-700 rounded-md">
+                    <div
+                      key={index}
+                      className="flex items-center space-x-2 p-2 bg-gray-50 dark:bg-gray-700 rounded-md"
+                    >
                       <span className="text-lg">📎</span>
-                      <Typography variant="body-sm" className="text-jade-600 dark:text-jade-400">
+                      <Typography
+                        variant="body-sm"
+                        className="text-jade-600 dark:text-jade-400"
+                      >
                         {attachment}
                       </Typography>
                     </div>
@@ -167,15 +190,11 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
               <div className="flex items-center space-x-4">
                 <button className="flex items-center space-x-1 text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400">
                   <span>👍</span>
-                  <Typography variant="caption">
-                    {item.likes}
-                  </Typography>
+                  <Typography variant="caption">{item.likes}</Typography>
                 </button>
                 <button className="flex items-center space-x-1 text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400">
                   <span>💬</span>
-                  <Typography variant="caption">
-                    {item.comments}
-                  </Typography>
+                  <Typography variant="caption">{item.comments}</Typography>
                 </button>
               </div>
               <button className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400">
