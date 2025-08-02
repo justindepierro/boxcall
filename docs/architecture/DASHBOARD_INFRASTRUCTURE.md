@@ -9,7 +9,7 @@ BoxCall's dashboard system is built with a **TypeScript-first, service-oriented 
 - **Personal Dashboard** (`/dashboard`) - Individual user space with MySpace meets Strava aesthetic
 - **Team Bulletin** (`/team/:teamId/bulletin`) - Team-specific collaborative dashboard
 
-## 🏗️ **Architecture Layers**
+## 🏗️ **Architecture Layers** (Updated August 2025)
 
 ### **1. Data Services Layer**
 
@@ -25,27 +25,146 @@ export class DashboardService {
 }
 ```
 
-**Key Features**:
-- Real Supabase database queries for team membership
-- Mock data fallbacks during development
-- TypeScript interfaces for type safety
-- Error handling with graceful degradation
+#### **Enhanced Calendar Services** (`src/services/enhancedCalendarService.ts`) ⭐ **NEW**
 
-**Database Integration**:
-- Queries `team_members` table for user's team associations
-- Fetches team details from `teams` table
-- Calculates team activity and status metrics
-
-#### **AchievementService** (`src/services/achievementService.ts`)
-
-**Purpose**: Manages user achievements, helmet stickers, and BoxCall medals
+**Purpose**: Complete Phase 2.3 calendar system with advanced team features
 
 ```typescript
-export class AchievementService {
-  static async getUserAchievements(userId: string): Promise<AchievementData>
-  static async getHelmetStickers(userId: string): Promise<HelmetSticker[]>
-  static async getBoxCallMedals(userId: string): Promise<BoxCallMedal[]>
-  static async getActivityStreak(userId: string): Promise<number>
+export class EnhancedCalendarService {
+  // Event Polling System
+  polling: EventPollingService;
+  
+  // Advanced RSVP Management
+  rsvp: AdvancedRSVPService;
+  
+  // Role-based Permissions
+  permissions: CalendarPermissionsService;
+  
+  // Bulk Operations
+  bulkOperations: BulkOperationsService;
+  
+  // Enhanced Event Queries
+  async queryEnhancedEvents(query: EnhancedCalendarQuery): Promise<EnhancedCalendarEvent[]>
+  async getSystemConfig(): Promise<CalendarSystemConfig>
+  async createWebhook(webhook: CalendarWebhook): Promise<CalendarWebhook>
+}
+```
+
+#### **Practice Management Service** (`src/services/practiceService.ts`) ⭐ **NEW**
+
+**Purpose**: Complete practice scheduling and management system
+
+```typescript
+export class PracticeService {
+  // Practice Schedule CRUD
+  static async createPracticeSchedule(data: CreatePracticeScheduleData): Promise<PracticeSchedule>
+  static async getPracticeSchedules(teamId: string, filters?: PracticeFilters): Promise<PracticeSchedule[]>
+  
+  // Practice Block Management
+  static async addPracticeBlock(scheduleId: string, blockData: CreatePracticeBlockData): Promise<PracticeBlock>
+  static async reorderPracticeBlocks(scheduleId: string, blocks: PracticeBlock[]): Promise<void>
+  
+  // Template System
+  static async createPracticeTemplate(template: PracticeTemplate): Promise<PracticeTemplate>
+  static async createScheduleFromTemplate(templateId: string, scheduleData: CreatePracticeScheduleData): Promise<PracticeSchedule>
+  
+  // Attendance & Equipment
+  static async recordAttendance(practiceId: string, playerId: string, status: AttendanceStatus): Promise<PracticeAttendance>
+  static async getAvailableEquipment(teamId: string): Promise<Equipment[]>
+}
+```
+
+### **2. React Hooks Ecosystem** (Updated August 2025)
+
+#### **Enhanced Calendar Hooks** (`src/hooks/useEnhancedCalendar.ts`) ⭐ **NEW**
+
+**Purpose**: Complete React hook ecosystem for Phase 2.3 calendar features
+
+```typescript
+// Event Polling Hooks
+export function useEventPolls(eventId: string): {
+  polls: EventPoll[];
+  loading: boolean;
+  error: string | null;
+  createPoll: (pollData: Partial<EventPoll>) => Promise<EventPoll>;
+  submitResponse: (pollId: string, userId: string, responseData: Partial<PollResponse>) => Promise<PollResponse>;
+  closePoll: (pollId: string) => Promise<void>;
+}
+
+// Advanced RSVP Hooks
+export function useAdvancedRSVP(eventId: string, userId: string): {
+  rsvp: AdvancedRSVP | null;
+  loading: boolean;
+  error: string | null;
+  updateRSVP: (rsvpData: Partial<AdvancedRSVP>) => Promise<AdvancedRSVP>;
+  sendReminder: () => Promise<void>;
+}
+
+// Calendar Permissions Hooks
+export function useCalendarPermissions(userId: string, teamId: string): {
+  permissions: CalendarPermissions | null;
+  loading: boolean;
+  error: string | null;
+  updatePermissions: (role: CalendarRole, customPermissions?: CalendarPermission[]) => Promise<CalendarPermissions>;
+  revokePermissions: () => Promise<void>;
+}
+
+// Bulk Operations Hooks
+export function useBulkOperations(teamId: string): {
+  operations: BulkOperation[];
+  templates: BulkOperationTemplate[];
+  loading: boolean;
+  error: string | null;
+  executeBulkOperation: (type: BulkOperationType, targetIds: string[], operationData: Record<string, any>) => Promise<BulkOperation>;
+  getOperationStatus: (operationId: string) => Promise<BulkOperation | null>;
+  cancelOperation: (operationId: string) => Promise<boolean>;
+}
+```
+
+#### **Practice Management Hooks** (`src/hooks/usePractice.ts`) ⭐ **NEW**
+
+**Purpose**: Complete practice scheduling and management hooks
+
+```typescript
+// Practice Schedule Management
+export function usePracticeSchedule(teamId: string, filters?: PracticeFilters): {
+  schedules: PracticeSchedule[];
+  loading: boolean;
+  error: string | null;
+  createSchedule: (data: CreatePracticeScheduleData) => Promise<PracticeSchedule>;
+  updateSchedule: (id: string, updates: Partial<PracticeSchedule>) => Promise<PracticeSchedule>;
+  deleteSchedule: (id: string) => Promise<void>;
+}
+
+// Practice Block Management
+export function usePracticeBlocks(scheduleId: string): {
+  loading: boolean;
+  error: string | null;
+  addBlock: (blockData: CreatePracticeBlockData) => Promise<PracticeBlock>;
+  updateBlock: (blockId: string, updates: Partial<PracticeBlock>) => Promise<void>;
+  reorderBlocks: (blocks: PracticeBlock[]) => Promise<void>;
+  deleteBlock: (blockId: string) => Promise<void>;
+}
+
+// Practice Templates
+export function usePracticeTemplates(teamId: string): {
+  templates: PracticeTemplate[];
+  loading: boolean;
+  error: string | null;
+  createTemplate: (template: Omit<PracticeTemplate, 'id' | 'createdAt' | 'usageCount'>) => Promise<PracticeTemplate>;
+  createScheduleFromTemplate: (templateId: string, scheduleData: CreatePracticeScheduleData) => Promise<PracticeSchedule>;
+}
+
+// Practice Timer for Live Sessions
+export function usePracticeTimer(): {
+  currentTime: Date;
+  isRunning: boolean;
+  startTimer: () => void;
+  stopTimer: () => void;
+  resetTimer: () => void;
+  getElapsedTime: () => number;
+  getTimeRemaining: (endTime: Date) => number;
+  formatTime: (seconds: number) => string;
 }
 ```
 
