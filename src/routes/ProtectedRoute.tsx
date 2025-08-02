@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useIsAuthenticated, useAuthLoading } from "../app/auth-store";
+import { Layout } from "../components/layout/Layout";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -49,6 +50,6 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to={from} replace />;
   }
 
-  // Access granted, render the protected content
-  return <>{children}</>;
+  // Access granted, render the protected content with layout
+  return <Layout>{children}</Layout>;
 };
