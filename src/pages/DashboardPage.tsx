@@ -1,159 +1,207 @@
-import React from "react";
-import { useAuthProfile, useAuthUser } from "../app/auth-store";
-import { Typography } from "../components/design-system";
-import { Card } from "../components/ui";
-import { StatsDashboard } from "../components/football/StatsDashboard";
-import { FormationDiagram } from "../components/football/FormationDiagram";
+import React from 'react';
+import { useAuth } from '../components/auth';
+import { PersonalTrophyShelf } from '../components/dashboard/PersonalTrophyShelf';
+import { PersonalProfile } from '../components/dashboard/PersonalProfile';
+import { CrossTeamMessages } from '../components/dashboard/CrossTeamMessages';
+import { PersonalCalendar } from '../components/dashboard/PersonalCalendar';
+import { PlayerQuickActions } from '../components/dashboard/QuickActions/PlayerQuickActions';
+import { CoachQuickActions } from '../components/dashboard/QuickActions/CoachQuickActions';
+import { FamilyQuickActions } from '../components/dashboard/QuickActions/FamilyQuickActions';
+import { Typography } from '../components/design-system';
+import { Card } from '../components/ui';
 
 /**
- * Dashboard Page
+ * Personal Dashboard - Individual user's personal space
+ * Think MySpace profile meets Strava achievements
  * 
- * Main dashboard for authenticated users.
- * Shows different content based on user role.
+ * Features:
+ * - Personal Trophy Shelf (Helmet Stickers + BoxCall Medals)
+ * - Editable Bio & Profile (including GPA, gear showcase)
+ * - Cross-team messages and communications
+ * - Personal calendar with events from all teams
+ * - Role-based quick actions
  */
 export const DashboardPage: React.FC = () => {
-  const user = useAuthUser();
-  const profile = useAuthProfile();
+  const { user, profile } = useAuth();
+
+  if (!user || !profile) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Typography variant="headline-lg" color="muted">
+            Loading your dashboard...
+          </Typography>
+        </div>
+      </div>
+    );
+  }
+
+  // Determine user role for role-based content
+  const userRole = profile.user_type || 'player';
+  const isPlayer = userRole === 'player';
+  const isCoach = userRole === 'coach' || userRole === 'head_coach';
+  const isFamily = userRole === 'family';
+
+  const renderQuickActions = () => {
+    if (isPlayer) return <PlayerQuickActions />;
+    if (isCoach) return <CoachQuickActions />;
+    if (isFamily) return <FamilyQuickActions />;
+    return null;
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <Typography variant="headline-xl" className="mb-2">
-            🏈 Welcome to BoxCall
-          </Typography>
-          <Typography variant="body-lg" color="muted">
-            Your football team management dashboard
-          </Typography>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* User Info Card */}
-          <Card variant="elevated" className="p-6">
-            <Typography variant="headline-md" className="mb-4">
-              👤 Your Profile
-            </Typography>
-            <div className="space-y-2">
-              <div>
-                <strong>Email:</strong> {user?.email}
-              </div>
-              {profile && (
-                <>
-                  <div>
-                    <strong>Name:</strong> {profile.display_name || profile.full_name}
-                  </div>
-                  <div>
-                    <strong>Role:</strong> 
-                    <span className="ml-2 px-2 py-1 bg-jade-100 dark:bg-jade-900 text-jade-800 dark:text-jade-200 rounded-sm text-sm font-sans font-medium">
-                      {profile.role}
-                    </span>
-                  </div>
-                </>
-              )}
-            </div>
-          </Card>
-
-          {/* Quick Actions Card */}
-          <Card variant="elevated" className="p-6">
-            <Typography variant="headline-md" className="mb-4">
-              ⚡ Quick Actions
-            </Typography>
-            <div className="space-y-3">
-              <button className="w-full p-3 bg-jade-500 text-white rounded-sm hover:bg-jade-600 transition-colors font-sans font-semibold">
-                🏈 View Team Roster
-              </button>
-              <button className="w-full p-3 bg-navy-500 text-white rounded-sm hover:bg-navy-600 transition-colors font-sans font-semibold">
-                📋 Create Formation
-              </button>
-              <button className="w-full p-3 bg-gray-600 text-white rounded-sm hover:bg-gray-700 transition-colors font-sans font-semibold">
-                📊 View Statistics
-              </button>
-            </div>
-          </Card>
-
-          {/* Recent Activity Card */}
-          <Card variant="elevated" className="p-6">
-            <Typography variant="headline-md" className="mb-4">
-              📊 Recent Activity
-            </Typography>
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <span>Last login</span>
-                <span className="text-gray-500 dark:text-gray-400">Today</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Profile created</span>
-                <span className="text-gray-500 dark:text-gray-400">Recent</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Role assigned</span>
-                <span className="text-gray-500 dark:text-gray-400">{profile?.role}</span>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Role-specific content */}
-        {profile?.role === "coach" && (
-          <div className="mt-8 space-y-8">
-            <Card variant="outlined" className="p-6">
-              <Typography variant="headline-md" className="mb-4">
-                🏃‍♂️ Coach Dashboard
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Header */}
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <Typography variant="headline-xl" className="text-gray-900 dark:text-white">
+                Welcome back, {profile.first_name || user.email}!
               </Typography>
-              <Typography variant="body-md" className="mb-6">
-                Welcome, Coach! Here you can manage your team, create playbooks, and track player progress.
+              <Typography variant="body-lg" color="muted" className="mt-1">
+                Your personal football command center
               </Typography>
-              
-              {/* Football Components Preview */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <Typography variant="headline-sm" className="font-display">
-                    📊 Team Statistics
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="text-right">
+                <Typography variant="body-sm" color="muted">
+                  Role: {userRole.replace('_', ' ').toUpperCase()}
+                </Typography>
+                <Typography variant="body-sm" color="muted">
+                  Active Teams: 3 {/* TODO: Get from user teams */}
+                </Typography>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Dashboard Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* Left Column - Trophy Shelf & Profile */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Personal Trophy Shelf - Pinned at Top */}
+            <PersonalTrophyShelf userId={user.id} userRole={userRole} />
+            
+            {/* Personal Profile */}
+            <PersonalProfile 
+              profile={profile} 
+              isEditable={true}
+              showGPA={isPlayer}
+              showGearShowcase={isPlayer}
+              showCoachingCredentials={isCoach}
+            />
+          </div>
+
+          {/* Center Column - Communications & Quick Actions */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Role-Based Quick Actions */}
+            <Card className="p-6">
+              <Typography variant="headline-md" className="mb-4 text-gray-900 dark:text-white">
+                Quick Actions
+              </Typography>
+              {renderQuickActions()}
+            </Card>
+
+            {/* Cross-Team Messages */}
+            <CrossTeamMessages userId={user.id} />
+          </div>
+
+          {/* Right Column - Calendar & Activity */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Personal Calendar */}
+            <PersonalCalendar userId={user.id} />
+            
+            {/* Recent Activity */}
+            <Card className="p-6">
+              <Typography variant="headline-md" className="mb-4 text-gray-900 dark:text-white">
+                Recent Activity
+              </Typography>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-jade-500 rounded-full"></div>
+                  <Typography variant="body-sm" color="muted">
+                    New helmet sticker earned - "Touchdown Pass"
                   </Typography>
-                  <div className="h-64 overflow-hidden rounded-md border border-gray-200 dark:border-gray-700">
-                    <StatsDashboard />
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <Typography variant="body-sm" color="muted">
+                    Practice script updated for Friday
+                  </Typography>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <Typography variant="body-sm" color="muted">
+                    New message from Coach Johnson
+                  </Typography>
+                </div>
+              </div>
+            </Card>
+
+            {/* Teams Overview */}
+            <Card className="p-6">
+              <Typography variant="headline-md" className="mb-4 text-gray-900 dark:text-white">
+                Your Teams
+              </Typography>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div>
+                    <Typography variant="body-md" className="font-semibold">
+                      Eastside Eagles
+                    </Typography>
+                    <Typography variant="body-sm" color="muted">
+                      Varsity Football
+                    </Typography>
+                  </div>
+                  <div className="text-right">
+                    <Typography variant="body-sm" className="text-jade-600 dark:text-jade-400">
+                      Active
+                    </Typography>
                   </div>
                 </div>
                 
-                <div className="space-y-4">
-                  <Typography variant="headline-sm" className="font-display">
-                    📋 Formation Diagrams
-                  </Typography>
-                  <div className="h-64 overflow-hidden rounded-md border border-gray-200 dark:border-gray-700">
-                    <FormationDiagram />
+                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div>
+                    <Typography variant="body-md" className="font-semibold">
+                      Elite 7v7
+                    </Typography>
+                    <Typography variant="body-sm" color="muted">
+                      Summer League
+                    </Typography>
+                  </div>
+                  <div className="text-right">
+                    <Typography variant="body-sm" className="text-blue-600 dark:text-blue-400">
+                      In Season
+                    </Typography>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div>
+                    <Typography variant="body-md" className="font-semibold">
+                      Spring Development
+                    </Typography>
+                    <Typography variant="body-sm" color="muted">
+                      Off-Season Training
+                    </Typography>
+                  </div>
+                  <div className="text-right">
+                    <Typography variant="body-sm" className="text-gray-600 dark:text-gray-400">
+                      Off Season
+                    </Typography>
                   </div>
                 </div>
               </div>
             </Card>
           </div>
-        )}
-
-        {profile?.role === "player" && (
-          <div className="mt-8">
-            <Card variant="outlined" className="p-6">
-              <Typography variant="headline-md" className="mb-4">
-                ⭐ Player Dashboard
-              </Typography>
-              <Typography variant="body-md">
-                Welcome, Player! View your stats, study plays, and stay connected with your team.
-              </Typography>
-            </Card>
-          </div>
-        )}
-
-        {profile?.role === "admin" && (
-          <div className="mt-8">
-            <Card variant="outlined" className="p-6 border-red-200 bg-red-50 dark:bg-red-950 dark:border-red-800">
-              <Typography variant="headline-md" className="mb-4">
-                ⚙️ Admin Dashboard
-              </Typography>
-              <Typography variant="body-md">
-                Welcome, Admin! You have full access to manage users, teams, and system settings.
-              </Typography>
-            </Card>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
 };
+
+export default DashboardPage;
