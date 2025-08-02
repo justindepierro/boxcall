@@ -333,7 +333,7 @@ export class CrossPlatformIntelligentCalendarService {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   private getDisplayOptimizations(
     _suggestion: SchedulingSuggestion
   ): Record<string, unknown> {
@@ -456,7 +456,7 @@ export class CrossPlatformIntelligentCalendarService {
     return { calendarContract: suggestion };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   private generateAndroidNotification(
     _suggestion: SchedulingSuggestion
   ): unknown {
@@ -624,7 +624,7 @@ class OfflineManager {
     console.log("Caching analytics:", { teamId, period, analytics });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   async getCachedAnalytics(
     _teamId: string,
     _period: AnalyticsPeriod

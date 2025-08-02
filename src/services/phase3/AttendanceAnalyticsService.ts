@@ -585,14 +585,14 @@ export class AttendanceAnalyticsService {
     return 20; // Mock team size
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async getHistoricalAttendanceData(
     _teamId: string
   ): Promise<AttendanceRecord[]> {
     return []; // Mock historical data
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async analyzePredictionFactors(
     _event: CalendarEvent,
     _historicalData: AttendanceRecord[]
@@ -611,7 +611,7 @@ export class AttendanceAnalyticsService {
     return 15; // Mock average attendance
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static identifyRiskFactors(
     _event: CalendarEvent,
     _factors: PredictionFactor[]
@@ -619,7 +619,7 @@ export class AttendanceAnalyticsService {
     return ["Weather conditions may affect attendance"];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static generatePredictionRecommendations(
     _factors: PredictionFactor[],
     _riskFactors: string[]
@@ -627,7 +627,7 @@ export class AttendanceAnalyticsService {
     return ["Send reminder notifications 24 hours before event"];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async generateRecommendations(
     _records: AttendanceRecord[],
     _events: CalendarEvent[],
@@ -636,7 +636,7 @@ export class AttendanceAnalyticsService {
     return ["Consider scheduling more practices on high-attendance days"];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async getPlayerEventCount(
     _userId: string,
     _teamId: string,
@@ -645,7 +645,7 @@ export class AttendanceAnalyticsService {
     return 10; // Mock event count
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static calculateAttendanceTrend(
     _records: AttendanceRecord[]
   ): "improving" | "declining" | "stable" {
@@ -666,7 +666,7 @@ export class AttendanceAnalyticsService {
     return 0.8; // Mock consistency score
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static analyzeBestWorstDays(
     _events: CalendarEvent[],
     _records: AttendanceRecord[]
@@ -674,7 +674,7 @@ export class AttendanceAnalyticsService {
     return { bestDay: "Tuesday", worstDay: "Friday" };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static analyzeBestWorstTimes(
     _events: CalendarEvent[],
     _records: AttendanceRecord[]
@@ -697,7 +697,7 @@ export class AttendanceAnalyticsService {
     return ["practice", "game"];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async analyzeSeasonalPatterns(
     _teamId: string
   ): Promise<SeasonalPattern[]> {
@@ -711,14 +711,14 @@ export class AttendanceAnalyticsService {
     ];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async generatePlayerEngagementInsights(
     _playerAnalytics: PlayerAttendanceAnalytics[]
   ): Promise<PlayerEngagementInsight[]> {
     return [];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static identifyImprovementOpportunities(
     _analytics: AttendanceAnalytics
   ): ImprovementOpportunity[] {

@@ -619,7 +619,7 @@ export class MobileCalendarService {
     return { success: false, feedback: "Invalid tap target" };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   private static async handleLongPress(
     _gesture: TouchGesture,
     _target: MobileEvent | Date | null
@@ -658,7 +658,7 @@ export class MobileCalendarService {
     return { success: false, feedback: "No swipe action available" };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   private static async handlePinch(
     _gesture: TouchGesture
   ): Promise<{ success: boolean; action?: string; feedback?: string }> {
@@ -666,7 +666,7 @@ export class MobileCalendarService {
     return { success: true, action: "zoom", feedback: "Calendar zoomed" };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   private static async handleScroll(
     _gesture: TouchGesture
   ): Promise<{ success: boolean; action?: string; feedback?: string }> {

@@ -543,7 +543,7 @@ export class SmartSchedulingOptimizer {
     return data || [];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async getAttendancePatterns(
     _teamId: string
   ): Promise<AttendancePattern[]> {
@@ -591,7 +591,7 @@ export class SmartSchedulingOptimizer {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async getConflictAnalysis(
     _teamId: string,
     _constraints: SchedulingConstraints
@@ -682,7 +682,7 @@ export class SmartSchedulingOptimizer {
   }
 
   // Additional helper methods with mock implementations
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async analyzeAttendancePatterns(
     _events: CalendarEvent[]
   ): Promise<AttendancePattern[]> {
@@ -694,7 +694,7 @@ export class SmartSchedulingOptimizer {
     return [];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async analyzePerformanceCorrelations(
     _events: CalendarEvent[]
   ): Promise<PerformanceCorrelation[]> {
@@ -711,7 +711,7 @@ export class SmartSchedulingOptimizer {
     return [16, 17, 18];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static generateMLRecommendations(
     _attendance: AttendancePattern[],
     _seasonal: SeasonalTrend[],
@@ -729,7 +729,7 @@ export class SmartSchedulingOptimizer {
     ];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static generateSeasonFramework(
     _requirements: SeasonRequirements,
     _insights: SchedulingInsights
@@ -737,7 +737,7 @@ export class SmartSchedulingOptimizer {
     return [];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static calculateScheduleAnalytics(
     _events: OptimizedEvent[]
   ): ScheduleAnalytics {
@@ -762,7 +762,7 @@ export class SmartSchedulingOptimizer {
     return new Date();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static calculateMLConfidence(
     _insights: SchedulingInsights,
     _day: string,
@@ -771,7 +771,7 @@ export class SmartSchedulingOptimizer {
     return 0.8;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static generateMLReasons(
     _insights: SchedulingInsights,
     _day: string,
@@ -781,7 +781,7 @@ export class SmartSchedulingOptimizer {
     return ["High historical attendance", "Optimal team performance window"];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static predictAttendance(
     _insights: SchedulingInsights,
     _day: string,
@@ -795,14 +795,14 @@ export class SmartSchedulingOptimizer {
     return ["Team performs best on weekday afternoons"];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static generateSeasonalRecommendations(
     _insights: SchedulingInsights
   ): string[] {
     return ["Move practices earlier during winter months"];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static generateTeamOptimizations(
     _insights: SchedulingInsights,
     _preferences: TeamPreferences
@@ -825,7 +825,7 @@ export class SmartSchedulingOptimizer {
     ];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static isWeatherSuitableForEvent(
     _forecast: WeatherForecast,
     _eventType: string
@@ -833,7 +833,7 @@ export class SmartSchedulingOptimizer {
     return true;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static calculateWeatherConfidence(
     _forecast: WeatherForecast,
     _eventType: string

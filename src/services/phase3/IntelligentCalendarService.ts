@@ -667,7 +667,7 @@ export class IntelligentCalendarService {
     return "15% attendance increase expected";
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static generateScheduleAnalysisRecommendations(
     _analytics: AttendanceAnalytics,
     _insights: SchedulingInsights,
@@ -676,14 +676,14 @@ export class IntelligentCalendarService {
     return ["Consider optimizing practice times for better attendance"];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static generateAttendancePredictionSummary(
     _predictions: AttendancePrediction[]
   ): string {
     return "Overall attendance trend is positive";
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static generateAttendancePredictionRecommendations(
     _predictions: AttendancePrediction[]
   ): string[] {

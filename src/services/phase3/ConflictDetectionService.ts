@@ -741,7 +741,7 @@ export class ConflictDetectionService {
     return data || [];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async checkSiblingConflicts(
     _userId: string,
     _proposedEvent: Partial<CalendarEvent>
