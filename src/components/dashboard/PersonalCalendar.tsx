@@ -67,13 +67,13 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
   if (upcomingLoading && viewMode === "list") {
     return (
-      <Card className="h-full">
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+      <Card className="h-full compact-card">
+        <div className="flex items-center justify-between border-b border-gray-200">
           <Typography variant="headline-lg" className="text-navy-900">
             Personal Calendar
           </Typography>
         </div>
-        <div className="p-6 flex items-center justify-center">
+        <div className="flex items-center justify-center py-4">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
           <span className="ml-3 text-gray-600">Loading your schedule...</span>
         </div>
@@ -82,9 +82,9 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
   }
 
   return (
-    <Card className="h-full flex flex-col">
+    <Card className="h-full flex flex-col compact-card">
       {/* Header with view toggle */}
-      <div className="flex items-center justify-between p-6 border-b border-gray-200 shrink-0">
+      <div className="flex items-center justify-between border-b border-gray-200 shrink-0">
         <Typography variant="headline-lg" className="text-navy-900">
           Personal Calendar
         </Typography>
@@ -126,8 +126,8 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
       <div className="flex-1 overflow-hidden">
         {viewMode === "list" ? (
           /* List View */
-          <div className="p-6 overflow-y-auto">
-            <div className="space-y-4">
+          <div className="overflow-y-auto">
+            <div className="space-y-tight">
               {upcomingEvents.length === 0 ? (
                 <div className="text-center py-8">
                   <Icon name="calendar" size="2xl" className="text-gray-400 mx-auto mb-3" />
@@ -146,13 +146,13 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                     onClick={() => handleEventClick(event)}
                   >
                     {/* Event Icon */}
-                    <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
                       <span className="text-lg">
-                        {event.type === "game" && "🏈"}
-                        {event.type === "practice" && "⚡"}
-                        {event.type === "meeting" && "👥"}
-                        {event.type === "film" && "🎬"}
-                        {event.type === "other" && "📋"}
+                        {event.type === "game" && <Icon name="target" size={14} color="navy" />}
+                        {event.type === "practice" && <Icon name="zap" size={14} color="warning" />}
+                        {event.type === "meeting" && <Icon name="users" size={14} color="navy" />}
+                        {event.type === "film" && <Icon name="play" size={14} color="jade" />}
+                        {event.type === "other" && <Icon name="file" size={14} color="slate" />}
                       </span>
                     </div>
 
@@ -179,7 +179,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
                       <div className="flex items-center space-x-4 text-sm text-gray-600">
                         <span className="flex items-center">
-                          <span className="w-4 h-4 mr-1">📅</span>
+                          <Icon name="calendar" size={14} color="current" className="mr-1" />
                           {format(new Date(event.start), "MMM d, yyyy")}
                         </span>
                         <span className="flex items-center">
@@ -278,7 +278,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
                 <div className="text-sm text-gray-600 space-y-1">
                   <div className="flex items-center">
-                    <span className="w-4 h-4 mr-2">📅</span>
+                    <Icon name="calendar" size={14} color="current" className="mr-2" />
                     {format(
                       new Date(selectedEvent.start),
                       "EEEE, MMMM d, yyyy"
@@ -296,13 +296,13 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                   )}
                   {selectedEvent.team_name && (
                     <div className="flex items-center">
-                      <span className="w-4 h-4 mr-2">👥</span>
+                      <Icon name="users" size={14} color="current" className="mr-2" />
                       {selectedEvent.team_name}
                     </div>
                   )}
                   {selectedEvent.opponent && (
                     <div className="flex items-center">
-                      <span className="w-4 h-4 mr-2">🏈</span>
+                      <Icon name="target" size={14} color="current" className="mr-2" />
                       vs. {selectedEvent.opponent}
                     </div>
                   )}

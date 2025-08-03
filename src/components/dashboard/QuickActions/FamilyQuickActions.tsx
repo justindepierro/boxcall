@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "../../ui";
+import { Icon } from "../../ui/Icon/Icon";
 
 /**
  * Family Quick Actions - Family member-specific dashboard shortcuts
@@ -12,14 +13,14 @@ import { Button } from "../../ui";
  */
 export const FamilyQuickActions: React.FC = () => {
   return (
-    <div className="space-y-3">
+    <div className="space-y-tight">
       <Button
         variant="primary"
         size="sm"
         className="w-full justify-start"
         onClick={() => console.log("Player Progress")}
       >
-        <span className="mr-2">📈</span>
+        <Icon name="trending-up" size={14} className="mr-2" />
         My Player&apos;s Progress
       </Button>
 
@@ -29,7 +30,7 @@ export const FamilyQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Team Schedule")}
       >
-        <span className="mr-2">📅</span>
+        <Icon name="calendar" size={14} className="mr-2" />
         Team Schedule
       </Button>
 
@@ -39,7 +40,7 @@ export const FamilyQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Message Coach")}
       >
-        <span className="mr-2">💬</span>
+        <Icon name="message" size={14} className="mr-2" />
         Message Coach
       </Button>
 
@@ -49,7 +50,7 @@ export const FamilyQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Game Highlights")}
       >
-        <span className="mr-2">🎬</span>
+        <Icon name="play" size={14} className="mr-2" />
         Game Highlights
       </Button>
 
@@ -59,7 +60,7 @@ export const FamilyQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("RSVP Events")}
       >
-        <span className="mr-2">✅</span>
+        <Icon name="check" size={14} className="mr-2" />
         RSVP to Events
       </Button>
 
@@ -69,7 +70,7 @@ export const FamilyQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Team Photos")}
       >
-        <span className="mr-2">📸</span>
+        <Icon name="eye" size={14} className="mr-2" />
         Team Photos
       </Button>
 
@@ -79,7 +80,7 @@ export const FamilyQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Parent Network")}
       >
-        <span className="mr-2">👥</span>
+        <Icon name="users" size={14} className="mr-2" />
         Parent Network
       </Button>
     </div>

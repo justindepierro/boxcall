@@ -170,7 +170,7 @@ export const Typography: React.FC<TypographyProps> = ({
   // Build class string
   const classes = [
     typographyClasses[variant],
-    color && colorClasses[color],
+    color ? colorClasses[color] : "text-gray-900 dark:text-gray-100", // Default text color when no color specified
     align && alignClasses[align],
     truncate && "truncate",
     className,

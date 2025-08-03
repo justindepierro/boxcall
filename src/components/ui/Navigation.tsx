@@ -71,10 +71,12 @@ export const Navigation: React.FC = () => {
 
             <button
               onClick={() => handleNavigation("/dashboard")}
-              className="flex items-center space-x-3 text-xl font-display font-bold text-jade-600 hover:text-jade-700 transition-colors"
+              className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
             >
-              <Icon name="target" size="xl" color="jade" />
-              <span className="font-display text-2xl tracking-wide">
+              <div className="flex items-center justify-center w-8 h-8 bg-jade-500 rounded-full text-white">
+                <Icon name="boxcall" size="sm" color="current" />
+              </div>
+              <span className="font-display text-xl tracking-wide text-jade-600 dark:text-jade-400 font-bold">
                 BoxCall
               </span>
             </button>
@@ -84,9 +86,6 @@ export const Navigation: React.FC = () => {
           <div className="hidden md:flex items-center space-x-4">
             {/* Quick Navigation Shortcuts */}
             <div className="flex items-center space-x-2">
-              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                Quick:
-              </span>
               <button
                 onClick={() => handleNavigation("/dashboard")}
                 className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 text-sm transition-colors"

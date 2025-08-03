@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: "class", // Enable class-based dark mode
   theme: {
     extend: {
       colors: {
@@ -124,7 +125,7 @@ export default {
 
       fontFamily: {
         // BoxCall Typography Hierarchy - "Dependable & Professional"
-        display: ["Inter", "system-ui", "sans-serif"], // Changed from Bebas to Inter for reliability
+        display: ["Bebas Neue", "system-ui", "sans-serif"], // Bebas Neue for display/headlines
         sans: ["Inter", "system-ui", "sans-serif"], // Consistent Inter usage
         mono: ["JetBrains Mono", "Consolas", "monospace"], // Better monospace font
         // Adding weight-specific variants
@@ -156,6 +157,15 @@ export default {
       },
 
       spacing: {
+        // Custom tight spacing for BoxCall
+        0.5: "0.125rem", // 2px - ultra-tight
+        1.5: "0.375rem", // 6px - tight
+        2.5: "0.625rem", // 10px - compact
+        3.5: "0.875rem", // 14px - comfortable
+        4.5: "1.125rem", // 18px - standard
+        5.5: "1.375rem", // 22px - loose
+        
+        // Existing custom spacing
         18: "4.5rem",
         88: "22rem",
         128: "32rem",

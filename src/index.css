@@ -176,6 +176,41 @@ body,
     animation: confidencePulse 2s infinite;
   }
 
+  /* BoxCall Compact Layout System */
+  .compact-layout {
+    @apply space-y-3;
+  }
+  
+  .compact-grid {
+    @apply gap-3;
+  }
+  
+  .compact-card {
+    @apply p-3 space-y-2;
+  }
+  
+  .compact-section {
+    @apply mb-3 space-y-2;
+  }
+  
+  .compact-header {
+    @apply mb-2;
+  }
+  
+  /* Tight spacing utilities */
+  .space-y-tight > * + * {
+    @apply mt-2;
+  }
+  
+  .space-x-tight > * + * {
+    @apply ml-2;
+  }
+  
+  /* Ultra-compact for dense information */
+  .ultra-compact {
+    @apply space-y-1 text-sm;
+  }
+
   /* Grid layouts for different screen sizes */
   .grid-plays {
     @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
@@ -183,5 +218,10 @@ body,
 
   .grid-dashboard {
     @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
+  }
+
+  /* Compact dashboard layout */
+  .grid-dashboard-compact {
+    @apply grid grid-cols-1 lg:grid-cols-3 gap-4;
   }
 }

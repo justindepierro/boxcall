@@ -7,14 +7,15 @@ import { TeamFeeds } from "../components/dashboard/TeamFeeds";
 import { Typography } from "../components/design-system";
 
 /**
- * Personal Dashboard - Simplified 4-Component Layout
- * Based on user's vision: Profile Card, Trophy Shelf, Team Feeds, Calendar
+ * Personal Dashboard - Individual user's personal space
+ * Think MySpace profile meets Strava achievements
  *
  * Features:
- * - Profile Card (left column) - modal-viewable
- * - Trophy Shelf (spanning top middle & right)
- * - Team Feeds (middle column, under trophy shelf)
- * - Calendar (right column, under trophy shelf)
+ * - Personal Trophy Shelf (Helmet Stickers + BoxCall Medals)
+ * - Editable Bio & Profile (including GPA, gear showcase)
+ * - Cross-team messages and communications
+ * - Personal calendar with events from all teams
+ * - Role-based quick actions
  */
 export const DashboardPage: React.FC = () => {
   const { user, profile, loading, error } = useAuth();
@@ -59,20 +60,7 @@ export const DashboardPage: React.FC = () => {
   }
 
   const userRole = profile.role || "player";
-  const totalTeams = 3; // Mock data
-
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between compact-header">
-            <div>
-              <Typography
-                variant="headline-xl"
-                className="text-gray-900 dark:text-white"
-              >
-                Welcome back,{" "}
+  const totalTeams = 3; // Mock data" "}
                 {profile.full_name?.split(" ")[0] ||
                   profile.display_name ||
                   user.email}

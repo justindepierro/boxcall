@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "../../ui";
+import { Icon } from "../../ui/Icon/Icon";
 
 /**
  * Player Quick Actions - Player-specific dashboard shortcuts
@@ -12,14 +13,14 @@ import { Button } from "../../ui";
  */
 export const PlayerQuickActions: React.FC = () => {
   return (
-    <div className="space-y-3">
+    <div className="space-y-tight">
       <Button
         variant="primary"
         size="sm"
         className="w-full justify-start"
         onClick={() => console.log("View Stats")}
       >
-        <span className="mr-2">📊</span>
+        <Icon name="bar-chart" size={14} className="mr-2" />
         View My Stats
       </Button>
 
@@ -29,7 +30,7 @@ export const PlayerQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Study Playbook")}
       >
-        <span className="mr-2">📋</span>
+        <Icon name="book" size={14} className="mr-2" />
         Study Playbook
       </Button>
 
@@ -39,7 +40,7 @@ export const PlayerQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Check Assignments")}
       >
-        <span className="mr-2">📝</span>
+        <Icon name="file" size={14} className="mr-2" />
         Check Assignments
       </Button>
 
@@ -49,7 +50,7 @@ export const PlayerQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Team Chat")}
       >
-        <span className="mr-2">💬</span>
+        <Icon name="message" size={14} className="mr-2" />
         Team Chat
       </Button>
 
@@ -59,7 +60,7 @@ export const PlayerQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Update Gear")}
       >
-        <span className="mr-2">👕</span>
+        <Icon name="shield" size={14} className="mr-2" />
         Update My Gear
       </Button>
 
@@ -69,7 +70,7 @@ export const PlayerQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Training Log")}
       >
-        <span className="mr-2">💪</span>
+        <Icon name="activity" size={14} className="mr-2" />
         Training Log
       </Button>
     </div>

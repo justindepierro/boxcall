@@ -3,9 +3,14 @@ import { useAuthProfile } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
 import type { Database } from "../../types/database";
-import { getNavigationItems, getRoleDisplayInfo, toSidebarItems } from "../../utils/navigation";
+import {
+  getNavigationItems,
+  getRoleDisplayInfo,
+  toSidebarItems,
+} from "../../utils/navigation";
 import { Navigation } from "../ui/Navigation";
 import { Sidebar } from "../ui/Sidebar";
+import { Icon } from "../ui/Icon/Icon";
 
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 
@@ -24,13 +29,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const profile = useAuthProfile();
   const { effectiveUserRole, devMode, isDevMode } = useDevMode();
   const { sidebarOpen, toggleSidebar } = useUI();
-  
+
   // Use effective role from dev mode if in dev mode, otherwise use profile role
   // Cast effectiveUserRole to UserRole since we control the dev mode values
-  const currentRole: UserRole | null = isDevMode 
+  const currentRole: UserRole | null = isDevMode
     ? (effectiveUserRole as UserRole)
     : (profile?.role ?? null);
-  
+
   const navigationItems = getNavigationItems(currentRole);
   const sidebarItems = toSidebarItems(navigationItems, currentRole);
   const roleInfo = getRoleDisplayInfo(currentRole);
@@ -38,19 +43,24 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Navigation />
-      
-      {/* Main content area with sidebar */}
-      <div className="flex">
-        {/* Sidebar */}
+
+      {/* Main content area with overlay sidebar */}
+      <div className="relative">
+        {/* Sidebar - Now overlays instead of pushing content */}
         <Sidebar
           items={sidebarItems}
           isOpen={sidebarOpen}
           onClose={() => toggleSidebar()}
+          showOverlay={true}
           header={
             <div className="flex items-center space-x-3">
-              <span className="text-2xl">🏈</span>
+              <div className="w-8 h-8 flex items-center justify-center bg-jade-100 dark:bg-jade-900/20 rounded-full">
+                <Icon name="boxcall" size="sm" color="jade" />
+              </div>
               <div>
-                <h3 className="font-display font-bold text-lg text-jade-600">BoxCall</h3>
+                <h3 className="font-display font-bold text-lg text-jade-600">
+                  BoxCall
+                </h3>
                 <div className="flex items-center space-x-2">
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     {roleInfo.display}
@@ -75,7 +85,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <p>Football Management</p>
               {isDevMode && (
                 <p className="text-amber-600 dark:text-amber-400 font-medium mt-1">
-                  Dev Mode: {devMode.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                  Dev Mode:{" "}
+                  {devMode
+                    .replace(/_/g, " ")
+                    .replace(/\b\w/g, (l) => l.toUpperCase())}
                 </p>
               )}
             </div>
@@ -84,8 +97,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           position="left"
         />
 
-        {/* Main content with proper margin when sidebar is open */}
-        <main className={`flex-1 transition-all duration-300 ${sidebarOpen ? "lg:ml-80" : ""}`}>
+        {/* Main content - always full width, no margin shifts */}
+        <main className="w-full">
           {children}
         </main>
       </div>

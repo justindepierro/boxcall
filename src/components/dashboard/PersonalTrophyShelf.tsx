@@ -2,27 +2,25 @@ import React from "react";
 import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
-import Icon from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon/Icon";
 
 interface PersonalTrophyShelfProps {
   userId: string;
-  userRole: string;
+  userRole?: string; // Optional for future role-based features
 }
 
 /**
- * Personal Trophy Shelf - MySpace meets Strava achievements
+ * Personal Trophy Shelf - Compact Scrollable Design
  *
  * Features:
- * - Helmet Stickers (team achievements from coaches)
- * - BoxCall Medals (platform-specific achievements)
- * - Achievement progress and streaks
- * - Pinned trophy display at top of personal dashboard
+ * - Compact stats in grid layout
+ * - Scrollable achievements with up/down controls
+ * - Space-efficient design matching user's vision
+ * - Combined helmet stickers and BoxCall medals
  */
 export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   userId,
-  userRole,
 }) => {
-  // Get real achievement data
   const {
     helmetStickers,
     boxcallMedals,
@@ -32,12 +30,142 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
     error,
   } = useAchievements(userId);
 
+  // Combine all achievements for scrolling
+  const allAchievements = [
+    ...helmetStickers.map(sticker => ({
+      id: sticker.id,
+      type: 'sticker',
+      icon: sticker.icon,
+      name: sticker.name,
+      description: `Awarded by ${sticker.awardedByName}`,
+      earned: true,
+      date: sticker.date
+    })),
+    ...boxcallMedals.map(medal => ({
+      id: medal.id,
+      type: 'medal',
+      icon: medal.icon,
+      name: medal.name,
+      description: medal.description,
+      earned: medal.earned,
+      progress: medal.progress,
+      maxProgress: medal.maxProgress
+    })),
+    // Sample achievements for testing scrolling
+    {
+      id: 'sample-1',
+      type: 'sample',
+      icon: 'shield',
+      name: 'Team Captain',
+      description: 'Led your team to 5 victories',
+      earned: true
+    },
+    {
+      id: 'sample-2',
+      type: 'sample',
+      icon: 'trophy',
+      name: 'Championship Winner',
+      description: 'Won the league championship',
+      earned: true
+    },
+    {
+      id: 'sample-3',
+      type: 'sample',
+      icon: 'heart',
+      name: 'Team Spirit',
+      description: 'Supported teammates in 20 games',
+      earned: true
+    },
+    {
+      id: 'sample-4',
+      type: 'sample',
+      icon: 'clock',
+      name: 'Perfect Attendance',
+      description: 'Attended every practice this month',
+      earned: false
+    },
+    {
+      id: 'sample-5',
+      type: 'sample',
+      icon: 'users',
+      name: 'Mentor',
+      description: 'Helped train 3 new team members',
+      earned: true
+    },
+    {
+      id: 'sample-6',
+      type: 'sample',
+      icon: 'bookmark',
+      name: 'Playbook Master',
+      description: 'Memorized all team plays',
+      earned: true
+    },
+    {
+      id: 'sample-7',
+      type: 'sample',
+      icon: 'thumbs-up',
+      name: 'Fan Favorite',
+      description: 'Received 100 fan votes',
+      earned: false
+    },
+    {
+      id: 'sample-8',
+      type: 'sample',
+      icon: 'camera',
+      name: 'Media Star',
+      description: 'Featured in 5 team photos',
+      earned: true
+    },
+    {
+      id: 'sample-9',
+      type: 'sample',
+      icon: 'gift',
+      name: 'Team Builder',
+      description: 'Organized team bonding events',
+      earned: true
+    },
+    {
+      id: 'sample-10',
+      type: 'sample',
+      icon: 'award',
+      name: 'MVP Candidate',
+      description: 'Top performer for 3 consecutive games',
+      earned: false
+    }
+  ];
+
+  // Helper function to render consistent icons
+  const renderAchievementIcon = (iconData: any) => {
+    // If it's already a React element (icon), return it
+    if (React.isValidElement(iconData)) {
+      return iconData;
+    }
+    
+    // If it's text, convert to a proper icon based on the text
+    if (typeof iconData === 'string') {
+      const iconMap: { [key: string]: string } = {
+        'target': 'target',
+        'crown': 'crown',
+        'check': 'check',
+        'zap': 'zap',
+        'message': 'message-circle',
+        'calendar': 'calendar'
+      };
+      
+      const iconName = iconMap[iconData] || 'star';
+      return <Icon name={iconName as any} size={16} className="text-gray-600" />;
+    }
+    
+    // Default fallback icon
+    return <Icon name="star" size={16} className="text-gray-600" />;
+  };
+
   // Show loading state
   if (loading) {
     return (
-      <Card className="p-6 bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
-        <div className="flex items-center justify-center h-32">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
+      <Card className="compact-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
+        <div className="flex items-center justify-center h-24">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-jade-600"></div>
         </div>
       </Card>
     );
@@ -46,9 +174,9 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   // Show error state
   if (error) {
     return (
-      <Card className="p-6 bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-red-200 dark:border-red-800">
+      <Card className="compact-card bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-red-200 dark:border-red-800">
         <Typography
-          variant="body-md"
+          variant="headline-md"
           className="text-red-600 dark:text-red-400 text-center"
         >
           Failed to load achievements
@@ -57,179 +185,92 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
     );
   }
 
-  const isPlayer = userRole === "player";
-
   return (
-    <Card className="p-6 bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2 mb-6">
-          <Icon name="award" size="lg" className="text-yellow-600" />
-          <Typography
-            variant="headline-md"
-            className="text-gray-900 dark:text-white"
-          >
+    <Card className="compact-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Icon name="trophy" size={14} className="text-yellow-600" />
+          <Typography variant="headline-md" className="text-gray-900 dark:text-white">
             Trophy Shelf
           </Typography>
         </div>
+        <div className="flex-1 flex justify-center">
+          <Typography variant="body-sm" className="font-semibold text-gray-900 dark:text-white">
+            BoxCall Achievements
+          </Typography>
+        </div>
         <div className="text-right">
-          <Typography variant="body-sm" color="muted">
-            Total Points
-          </Typography>
-          <Typography
-            variant="headline-sm"
-            className="text-jade-600 dark:text-jade-400 font-bold"
-          >
-            {totalPoints}
+          <Typography variant="body-lg" className="text-jade-600 dark:text-jade-400 font-bold">
+            {totalPoints} points
           </Typography>
         </div>
       </div>
 
-      {/* Weekly Streak */}
-      <div className="flex items-center justify-between mb-6 p-3 bg-white/50 dark:bg-gray-700/50 rounded-lg">
-        <div className="flex items-center space-x-3">
-          <div className="text-2xl">🔥</div>
-          <div>
-            <Typography
-              variant="body-md"
-              className="font-semibold text-gray-900 dark:text-white"
-            >
-              Weekly Streak
-            </Typography>
-            <Typography variant="body-sm" color="muted">
-              Keep it up!
-            </Typography>
+      {/* Main Layout: Left Stats + Right Achievements */}
+      <div className="flex gap-3 h-full">
+        {/* Left: Vertical Stats Stack */}
+        <div className="flex flex-col gap-2 w-20">
+          <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
+            <div className="flex items-center justify-center mb-1">
+              <Icon name="zap" size={14} className="text-orange-500" />
+            </div>
+            <Typography variant="body-sm" className="font-bold text-orange-500 text-center">{weeklyStreak}</Typography>
+            <Typography variant="caption" color="muted" className="text-xs text-center">Streak</Typography>
+          </div>
+          <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
+            <div className="flex items-center justify-center mb-1">
+              <Icon name="star" size={14} className="text-jade-600" />
+            </div>
+            <Typography variant="body-sm" className="font-bold text-jade-600 text-center">{helmetStickers.length}</Typography>
+            <Typography variant="caption" color="muted" className="text-xs text-center">Stickers</Typography>
+          </div>
+          <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
+            <div className="flex items-center justify-center mb-1">
+              <Icon name="medal" size={14} className="text-blue-600" />
+            </div>
+            <Typography variant="body-sm" className="font-bold text-blue-600 text-center">{boxcallMedals.filter(m => m.earned).length}</Typography>
+            <Typography variant="caption" color="muted" className="text-xs text-center">Medals</Typography>
+          </div>
+          <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
+            <div className="flex items-center justify-center mb-1">
+              <Icon name="target" size={14} className="text-purple-600" />
+            </div>
+            <Typography variant="body-sm" className="font-bold text-purple-600 text-center">{boxcallMedals.length}</Typography>
+            <Typography variant="caption" color="muted" className="text-xs text-center">Total</Typography>
           </div>
         </div>
-        <Typography variant="headline-lg" className="text-orange-500 font-bold">
-          {weeklyStreak}
-        </Typography>
-      </div>
 
-      {/* Achievement Stats */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-          <Typography
-            variant="body-lg"
-            className="font-bold text-jade-600 dark:text-jade-400"
-          >
-            {helmetStickers.length}
-          </Typography>
-          <Typography variant="caption" color="muted">
-            Helmet Stickers
-          </Typography>
-        </div>
-        <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-          <Typography
-            variant="body-lg"
-            className="font-bold text-blue-600 dark:text-blue-400"
-          >
-            {boxcallMedals.filter((m) => m.earned).length}
-          </Typography>
-          <Typography variant="caption" color="muted">
-            BoxCall Medals
-          </Typography>
-        </div>
-        <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-          <Typography
-            variant="body-lg"
-            className="font-bold text-purple-600 dark:text-purple-400"
-          >
-            {weeklyStreak}
-          </Typography>
-          <Typography variant="caption" color="muted">
-            Day Streak
-          </Typography>
-        </div>
-      </div>
-
-      {/* Recent Helmet Stickers */}
-      {isPlayer && helmetStickers.length > 0 && (
-        <div className="mb-6">
-          <Typography
-            variant="body-md"
-            className="font-semibold mb-3 text-gray-900 dark:text-white"
-          >
-            Recent Helmet Stickers
-          </Typography>
-          <div className="space-y-2">
-            {helmetStickers.slice(0, 3).map((sticker) => (
-              <div
-                key={sticker.id}
-                className="flex items-center space-x-3 p-2 bg-white dark:bg-gray-800 rounded-md"
-              >
-                <div className="text-2xl">{sticker.icon}</div>
-                <div className="flex-1">
-                  <Typography variant="body-sm" className="font-semibold">
-                    {sticker.name}
-                  </Typography>
-                  <Typography variant="caption" color="muted">
-                    Awarded by {sticker.awardedByName}
-                  </Typography>
-                </div>
-                <Typography variant="caption" color="muted">
-                  {new Date(sticker.date).toLocaleDateString()}
-                </Typography>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* BoxCall Medals Progress */}
-      <div className="mb-6">
-        <Typography
-          variant="body-md"
-          className="font-semibold mb-3 text-gray-900 dark:text-white"
-        >
-          BoxCall Achievements
-        </Typography>
-        <div className="space-y-2">
-          {boxcallMedals.map((medal) => (
-            <div
-              key={medal.id}
-              className="flex items-center space-x-3 p-2 bg-white dark:bg-gray-800 rounded-md"
-            >
-              <div
-                className={`text-2xl ${medal.earned ? "" : "grayscale opacity-50"}`}
-              >
-                {medal.icon}
-              </div>
-              <div className="flex-1">
-                <Typography variant="body-sm" className="font-semibold">
-                  {medal.name}
-                </Typography>
-                <Typography variant="caption" color="muted">
-                  {medal.description}
-                </Typography>
-                {!medal.earned && medal.progress && medal.maxProgress && (
-                  <div className="mt-1">
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                      <div
-                        className="bg-jade-500 h-2 rounded-full transition-all duration-300"
-                        style={{
-                          width: `${(medal.progress / medal.maxProgress) * 100}%`,
-                        }}
-                      ></div>
-                    </div>
-                    <Typography variant="caption" color="muted">
-                      {medal.progress}/{medal.maxProgress}
+        {/* Right: Scrollable Achievements Section */}
+        <div className="flex-1">
+          {/* Container matching the height of the 4 stat boxes */}
+          <div className="flex flex-col gap-2" style={{ height: '176px' }}>
+            {/* Achievement List - Scrollable within the constrained container */}
+            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-jade-300 scrollbar-track-transparent pr-1">
+              {allAchievements.map((achievement) => (
+                <div
+                  key={`${achievement.type}-${achievement.id}`}
+                  className="flex items-center space-x-3 py-2 px-3 h-10 mb-1 bg-white/60 dark:bg-gray-700/40 rounded-lg border border-white/40 dark:border-gray-600/30"
+                >
+                  <div className={`flex-shrink-0 w-4 h-4 flex items-center justify-center ${achievement.earned ? "" : "grayscale opacity-50"}`}>
+                    {renderAchievementIcon(achievement.icon)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <Typography variant="caption" className="font-semibold truncate">
+                      {achievement.name}
+                    </Typography>
+                    <Typography variant="caption" color="muted" className="block truncate">
+                      {achievement.description}
                     </Typography>
                   </div>
-                )}
-              </div>
-              {medal.earned && (
-                <div className="w-2 h-2 bg-jade-500 rounded-full"></div>
-              )}
+                  {achievement.earned && (
+                    <div className="w-1.5 h-1.5 bg-jade-500 rounded-full flex-shrink-0"></div>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="pt-4 border-t border-jade-200 dark:border-jade-700">
-        <button className="w-full py-2 text-jade-600 dark:text-jade-400 hover:bg-jade-100 dark:hover:bg-jade-900/30 rounded-md transition-colors">
-          View All Achievements
-        </button>
       </div>
     </Card>
   );

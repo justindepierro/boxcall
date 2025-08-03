@@ -4,6 +4,7 @@ import { DevModeProvider } from "./app/dev-mode-store";
 import DevModeSwitcher from "./components/dev/DevModeSwitcher";
 import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
+import { useTheme } from "./hooks/useTheme";
 import { testDatabaseConnection } from "./lib/database-helpers";
 import { AppRouter } from "./routes/AppRouter";
 
@@ -14,6 +15,9 @@ import { AppRouter } from "./routes/AppRouter";
  * Now uses React Router for multi-page navigation with authentication.
  */
 function App() {
+  // Initialize theme system
+  useTheme();
+
   // Test database connection on app start
   useEffect(() => {
     const initBoxCall = async () => {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "../../ui";
-import Icon from "../../ui/Icon/Icon";
+import { Icon } from "../../ui/Icon/Icon";
 
 /**
  * Coach Quick Actions - Coach-specific dashboard shortcuts
@@ -13,14 +13,14 @@ import Icon from "../../ui/Icon/Icon";
  */
 export const CoachQuickActions: React.FC = () => {
   return (
-    <div className="space-y-3">
+    <div className="space-y-tight">
       <Button
         variant="primary"
         size="sm"
         className="w-full justify-start"
         onClick={() => console.log("Create Play")}
       >
-        <Icon name="target" size="sm" className="mr-2" />
+        <Icon name="target" size={14} className="mr-2" />
         Create New Play
       </Button>
 
@@ -30,7 +30,7 @@ export const CoachQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Practice Script")}
       >
-        <Icon name="file" size="sm" className="mr-2" />
+        <Icon name="file" size={14} className="mr-2" />
         Build Practice Script
       </Button>
 
@@ -40,7 +40,7 @@ export const CoachQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Playbook Editor")}
       >
-        <Icon name="file" size="sm" className="mr-2" />
+        <Icon name="book" size={14} className="mr-2" />
         Playbook Editor
       </Button>
 
@@ -50,7 +50,7 @@ export const CoachQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Team Analytics")}
       >
-        <Icon name="bar-chart" size="sm" className="mr-2" />
+        <Icon name="bar-chart" size={14} className="mr-2" />
         Team Analytics
       </Button>
 
@@ -60,7 +60,7 @@ export const CoachQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Send Announcement")}
       >
-        <span className="mr-2">📢</span>
+        <Icon name="info" size={14} className="mr-2" />
         Send Announcement
       </Button>
 
@@ -70,7 +70,7 @@ export const CoachQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Award Stickers")}
       >
-        <span className="mr-2">⭐</span>
+        <Icon name="star" size={14} className="mr-2" />
         Award Helmet Stickers
       </Button>
 
@@ -80,7 +80,7 @@ export const CoachQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Game Film")}
       >
-        <span className="mr-2">🎬</span>
+        <Icon name="play" size={14} className="mr-2" />
         Upload Game Film
       </Button>
 
@@ -90,7 +90,7 @@ export const CoachQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Player Progress")}
       >
-        <span className="mr-2">📈</span>
+        <Icon name="trending-up" size={14} className="mr-2" />
         Player Progress
       </Button>
     </div>

@@ -6,9 +6,11 @@ import { Typography } from "../design-system";
 import { Button } from "../ui/Button";
 import { Card } from "../ui/Card";
 import { Icon } from "../ui/Icon/Icon";
+import { useTheme } from "../../hooks/useTheme";
 
 const DevModeSwitcher: React.FC = () => {
   const { devMode, setDevMode, isDevMode } = useDevMode();
+  const { theme, toggleTheme } = useTheme();
   const profile = useAuthProfile();
   const [isCollapsed, setIsCollapsed] = useState(true); // Start collapsed
   const [isGhostMode, setIsGhostMode] = useState(false);
@@ -17,19 +19,25 @@ const DevModeSwitcher: React.FC = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Cmd+Shift+D to toggle dev tools
-      if (e.metaKey && e.shiftKey && e.key === 'D') {
+      if (e.metaKey && e.shiftKey && e.key === "D") {
         e.preventDefault();
         setIsCollapsed(!isCollapsed);
       }
       // Cmd+Shift+G to toggle ghost mode
-      if (e.metaKey && e.shiftKey && e.key === 'G') {
+      if (e.metaKey && e.shiftKey && e.key === "G") {
         e.preventDefault();
         setIsGhostMode(!isGhostMode);
       }
       // Cmd+1-5 for quick navigation when in dev mode
-      if (e.metaKey && isDevMode && ['1', '2', '3', '4', '5'].includes(e.key)) {
+      if (e.metaKey && isDevMode && ["1", "2", "3", "4", "5"].includes(e.key)) {
         e.preventDefault();
-        const routes = ['/dashboard', '/calendar', '/team/1', '/admin', '/super-admin'];
+        const routes = [
+          "/dashboard",
+          "/calendar",
+          "/team/1",
+          "/admin",
+          "/super-admin",
+        ];
         const routeIndex = parseInt(e.key) - 1;
         const route = routes[routeIndex];
         if (route) {
@@ -39,8 +47,8 @@ const DevModeSwitcher: React.FC = () => {
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isCollapsed, isGhostMode, isDevMode]);
 
   // Only show in development environment
@@ -105,9 +113,11 @@ const DevModeSwitcher: React.FC = () => {
   ];
 
   return (
-    <Card className={`fixed bottom-4 right-4 z-50 max-w-sm shadow-2xl bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-2 border-gray-200 dark:border-gray-600 transition-all duration-300 hover:bg-white/95 dark:hover:bg-gray-800/95 ${
-      isGhostMode ? 'opacity-20 hover:opacity-90' : 'opacity-95'
-    }`}>
+    <Card
+      className={`fixed bottom-4 right-4 z-50 max-w-sm shadow-2xl bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-2 border-gray-200 dark:border-gray-600 transition-all duration-300 hover:bg-white/95 dark:hover:bg-gray-800/95 ${
+        isGhostMode ? "opacity-20 hover:opacity-90" : "opacity-95"
+      }`}
+    >
       <div className="p-3">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
@@ -120,16 +130,43 @@ const DevModeSwitcher: React.FC = () => {
             <button
               onClick={() => setIsGhostMode(!isGhostMode)}
               className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-xs p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              title={isGhostMode ? "Exit ghost mode" : "Enter ghost mode (Cmd+Shift+G)"}
+              title={
+                isGhostMode
+                  ? "Exit ghost mode"
+                  : "Enter ghost mode (Cmd+Shift+G)"
+              }
             >
-              <Icon name={isGhostMode ? "eye-off" : "eye"} size="sm" color="current" />
+              <Icon
+                name={isGhostMode ? "eye-off" : "eye"}
+                size="sm"
+                color="current"
+              />
+            </button>
+            <button
+              onClick={toggleTheme}
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-xs p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+            >
+              <Icon
+                name={theme === "light" ? "moon" : "sun"}
+                size="sm"
+                color="current"
+              />
             </button>
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-xs p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              title={isCollapsed ? "Expand dev tools (Cmd+Shift+D)" : "Collapse dev tools (Cmd+Shift+D)"}
+              title={
+                isCollapsed
+                  ? "Expand dev tools (Cmd+Shift+D)"
+                  : "Collapse dev tools (Cmd+Shift+D)"
+              }
             >
-              <Icon name={isCollapsed ? "chevron-up" : "chevron-down"} size="sm" color="current" />
+              <Icon
+                name={isCollapsed ? "chevron-up" : "chevron-down"}
+                size="sm"
+                color="current"
+              />
             </button>
             <div
               className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
@@ -156,7 +193,10 @@ const DevModeSwitcher: React.FC = () => {
 
             {/* Keyboard Shortcuts */}
             <div className="mb-3 p-2 bg-gray-50 dark:bg-gray-700/50 rounded border">
-              <Typography variant="body-sm" className="text-xs font-semibold mb-1">
+              <Typography
+                variant="body-sm"
+                className="text-xs font-semibold mb-1"
+              >
                 ⌨️ Keyboard Shortcuts
               </Typography>
               <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">

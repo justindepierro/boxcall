@@ -48,6 +48,15 @@ import {
   AlertCircle,
   Info,
   
+  // Theme Icons
+  Sun,
+  Moon,
+  
+  // Sports & Achievement Icons
+  Trophy,
+  Medal,
+  Flame,
+  
   // Communication & Data
   MessageSquare,
   Phone,
@@ -210,6 +219,16 @@ const iconMap = {
   'crosshair': Crosshair,
   'eye': Eye,
   'eye-off': EyeOff,
+  
+  // Theme Icons
+  'sun': Sun,
+  'moon': Moon,
+  
+  // Sports & Achievement Icons
+  'trophy': Trophy,
+  'medal': Medal,
+  'flame': Flame,
+  'boxcall': Target, // Use target as BoxCall brand icon
   
   // Data & Analytics
   'database': Database,
