@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuthProfile } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import type { DevMode } from "../../app/dev-mode-types";
@@ -10,7 +10,37 @@ const DevModeSwitcher: React.FC = () => {
   const { devMode, setDevMode, isDevMode } = useDevMode();
   const profile = useAuthProfile();
   const [isCollapsed, setIsCollapsed] = useState(true); // Start collapsed
-  const [isVisible, setIsVisible] = useState(true);
+  const [isGhostMode, setIsGhostMode] = useState(false);
+
+  // Keyboard shortcuts for enhanced developer experience
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Cmd+Shift+D to toggle dev tools
+      if (e.metaKey && e.shiftKey && e.key === 'D') {
+        e.preventDefault();
+        setIsCollapsed(!isCollapsed);
+      }
+      // Cmd+Shift+G to toggle ghost mode
+      if (e.metaKey && e.shiftKey && e.key === 'G') {
+        e.preventDefault();
+        setIsGhostMode(!isGhostMode);
+      }
+      // Cmd+1-5 for quick navigation when in dev mode
+      if (e.metaKey && isDevMode && ['1', '2', '3', '4', '5'].includes(e.key)) {
+        e.preventDefault();
+        const routes = ['/dashboard', '/calendar', '/team/1', '/admin', '/super-admin'];
+        const routeIndex = parseInt(e.key) - 1;
+        const route = routes[routeIndex];
+        if (route) {
+          console.log(`🚀 Dev Navigation: Jumping to ${route}`);
+          window.location.href = route;
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isCollapsed, isGhostMode, isDevMode]);
 
   // Only show in development environment
   if (import.meta.env.PROD) {
@@ -74,7 +104,9 @@ const DevModeSwitcher: React.FC = () => {
   ];
 
   return (
-    <Card className="fixed bottom-4 right-4 z-50 max-w-sm shadow-2xl bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-2 border-gray-200 dark:border-gray-600 transition-all duration-300 hover:bg-white/95 dark:hover:bg-gray-800/95">
+    <Card className={`fixed bottom-4 right-4 z-50 max-w-sm shadow-2xl bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-2 border-gray-200 dark:border-gray-600 transition-all duration-300 hover:bg-white/95 dark:hover:bg-gray-800/95 ${
+      isGhostMode ? 'opacity-20 hover:opacity-90' : 'opacity-95'
+    }`}>
       <div className="p-3">
         <div className="flex items-center justify-between mb-2">
           <Typography variant="headline-sm" className="text-sm font-bold">
@@ -82,9 +114,16 @@ const DevModeSwitcher: React.FC = () => {
           </Typography>
           <div className="flex items-center gap-2">
             <button
+              onClick={() => setIsGhostMode(!isGhostMode)}
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-xs p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              title={isGhostMode ? "Exit ghost mode" : "Enter ghost mode (Cmd+Shift+G)"}
+            >
+              {isGhostMode ? "👻" : "👁️"}
+            </button>
+            <button
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-xs p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              title={isCollapsed ? "Expand dev tools" : "Collapse dev tools"}
+              title={isCollapsed ? "Expand dev tools (Cmd+Shift+D)" : "Collapse dev tools (Cmd+Shift+D)"}
             >
               {isCollapsed ? "🔼" : "🔽"}
             </button>
@@ -109,6 +148,22 @@ const DevModeSwitcher: React.FC = () => {
               <Typography variant="body-sm" color="muted" className="text-xs">
                 Real Role: {profile?.role || "None"}
               </Typography>
+            </div>
+
+            {/* Keyboard Shortcuts */}
+            <div className="mb-3 p-2 bg-gray-50 dark:bg-gray-700/50 rounded border">
+              <Typography variant="body-sm" className="text-xs font-semibold mb-1">
+                ⌨️ Keyboard Shortcuts
+              </Typography>
+              <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
+                <div>⌘+Shift+D - Toggle dev tools</div>
+                <div>⌘+Shift+G - Ghost mode</div>
+                {isDevMode && (
+                  <div className="text-jade-600 dark:text-jade-400 font-medium">
+                    ⌘+1-5 - Quick navigation
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="space-y-2 max-h-64 overflow-y-auto">
