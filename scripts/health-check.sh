@@ -4,6 +4,34 @@ echo "🔍 BoxCall Error Checking System"
 echo "================================"
 echo ""
 
+# Check for empty critical files (prevents the issue you just experienced)
+echo "📄 Checking for empty critical files..."
+CRITICAL_FILES=("src/App.tsx" "src/main.tsx" "src/components/auth/AuthProvider.tsx")
+EMPTY_FILES=0
+
+for file in "${CRITICAL_FILES[@]}"; do
+    if [ -f "$file" ]; then
+        if [ ! -s "$file" ]; then
+            echo "❌ WARNING: $file is empty!"
+            EMPTY_FILES=$((EMPTY_FILES + 1))
+        else
+            echo "✅ $file has content"
+        fi
+    else
+        echo "⚠️  $file does not exist"
+    fi
+done
+
+if [ $EMPTY_FILES -gt 0 ]; then
+    echo ""
+    echo "🚨 CRITICAL: Found $EMPTY_FILES empty critical files!"
+    echo "This usually happens after failed git operations or restructures."
+    echo "Consider restoring from a known good commit:"
+    echo "  git log --oneline -10    # Find a good commit"
+    echo "  git reset --hard <commit>  # Restore to working state"
+    echo ""
+fi
+
 echo "📝 TypeScript Compilation Check..."
 if npm run type-check > /dev/null 2>&1; then
     echo "✅ TypeScript: No errors"
