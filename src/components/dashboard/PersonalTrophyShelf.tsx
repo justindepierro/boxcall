@@ -2,7 +2,7 @@ import React from "react";
 import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon, SmartIconSystem } from "../ui/Icon/Icon";
 
 interface PersonalTrophyShelfProps {
   userId: string;
@@ -54,15 +54,18 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
     }))
   ];
 
-  // Helper function to render consistent icons
-  const renderAchievementIcon = (iconData: any) => {
+  // Helper function to render consistent icons using SmartIconSystem
+  const renderAchievementIcon = (iconData: any, name?: string, description?: string) => {
     // If it's already a React element (icon), return it
     if (React.isValidElement(iconData)) {
       return iconData;
     }
     
-    // If it's text, convert to a proper icon based on the text
+    // Use SmartIconSystem for intelligent icon selection
+    let iconName = 'star'; // fallback
+    
     if (typeof iconData === 'string') {
+      // Try to use the provided icon name directly first
       const iconMap: { [key: string]: string } = {
         'target': 'target',
         'crown': 'crown',
@@ -72,12 +75,14 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         'calendar': 'calendar'
       };
       
-      const iconName = iconMap[iconData] || 'star';
-      return <Icon name={iconName as any} size={16} className="text-gray-600" />;
+      iconName = iconMap[iconData] || iconData;
+    } else {
+      // Use SmartIconSystem to analyze content and pick best icon
+      const content = `${name || ''} ${description || ''}`;
+      iconName = SmartIconSystem.getContextualIcon(content, 'achievement', 'trophy');
     }
     
-    // Default fallback icon
-    return <Icon name="star" size={16} className="text-gray-600" />;
+    return <Icon name={iconName as any} size={16} className="text-gray-600" />;
   };
 
   // Show loading state
@@ -173,7 +178,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
                   className="flex items-center space-x-3 py-2 px-3 h-10 mb-1 bg-white/60 dark:bg-gray-700/40 rounded-lg border border-white/40 dark:border-gray-600/30"
                 >
                   <div className={`flex-shrink-0 w-4 h-4 flex items-center justify-center ${achievement.earned ? "" : "grayscale opacity-50"}`}>
-                    {renderAchievementIcon(achievement.icon)}
+                    {renderAchievementIcon(achievement.icon, achievement.name, achievement.description)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <Typography variant="caption" className="font-semibold truncate">
