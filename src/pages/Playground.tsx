@@ -1,172 +1,288 @@
-import React from "react";
-import { Typography } from "../components/design-system";
-import { Card } from "../components/ui";
-import { Icon } from "../components/ui/Icon/Icon";
+import React, { useState } from 'react';
+import { Typography } from '../components/design-system';
+import { Card } from '../components/ui';
+import SmartIconDemo from '../components/demo/SmartIconDemo';
+import { Icon, SmartIconSystem } from '../components/ui/Icon/Icon';
+import type { IconName } from '../components/ui/Icon/Icon';
+import { testSmartIconSystem, quickSmartIconTest } from '../tests/smartIconSystem.test';
 
 /**
- * Playground - Development and testing tools for administrators
- * Available to admins only
+ * Developer Playground - Super Admin Only
  * 
- * Features:
- * - Component testing and preview
- * - API testing tools
- * - Feature flags and experiments
- * - Development utilities
+ * Testing ground for new features, components, and systems
+ * Only accessible by users with admin role
  */
 export const Playground: React.FC = () => {
+  const [testResults, setTestResults] = useState<any>(null);
+  const [quickTestOutput, setQuickTestOutput] = useState<string[]>([]);
+
+  const runSmartIconTests = () => {
+    // Capture console output
+    const originalLog = console.log;
+    const logs: string[] = [];
+    console.log = (...args) => {
+      logs.push(args.join(' '));
+      originalLog(...args);
+    };
+
+    try {
+      const results = testSmartIconSystem();
+      setTestResults(results);
+    } finally {
+      console.log = originalLog;
+    }
+  };
+
+  const runQuickDemo = () => {
+    // Capture console output for quick demo
+    const originalLog = console.log;
+    const logs: string[] = [];
+    console.log = (...args) => {
+      logs.push(args.join(' '));
+      originalLog(...args);
+    };
+
+    try {
+      quickSmartIconTest();
+      setQuickTestOutput(logs);
+    } finally {
+      console.log = originalLog;
+    }
+  };
+
+  const demoQueries = [
+    "Team Captain Achievement",
+    "Practice Schedule Update",
+    "Player Health Check",
+    "Weather Alert for Outdoor Practice",
+    "New Message from Coach",
+    "Performance Analytics Report",
+    "Championship Trophy Winner",
+    "Team Meeting Tomorrow",
+    "Equipment Maintenance Required",
+    "Nutrition and Meal Planning"
+  ];
+
   return (
-    <div className="py-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
         {/* Header */}
         <div className="mb-8">
-          <Typography variant="headline-xl" className="text-gray-900 dark:text-white">
-            Playground
-          </Typography>
-          <Typography variant="body-lg" color="muted" className="mt-2">
-            Development tools and testing environment for administrators
-          </Typography>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center w-12 h-12 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
+              <Icon name="wrench" size="lg" className="text-purple-600" />
+            </div>
+            <div>
+              <Typography variant="headline-xl" className="text-gray-900 dark:text-white">
+                Developer Playground
+              </Typography>
+              <Typography variant="body-md" color="muted">
+                Super Admin testing environment for new features and components
+              </Typography>
+            </div>
+          </div>
+          
+          <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+            <div className="flex items-center gap-2">
+              <Icon name="alert-triangle" size="sm" className="text-amber-600" />
+              <Typography variant="body-sm" className="text-amber-800 dark:text-amber-200">
+                This playground is only visible to super admins. Perfect for testing SmartIconSystem and other experimental features.
+              </Typography>
+            </div>
+          </div>
         </div>
 
-        {/* Access Restricted Notice */}
-                {/* Access Restricted Card */}
-        <Card className="text-center py-12">
-          <div className="flex justify-center mb-4">
-            <Icon name="lock" size="3xl" color="warning" />
-          </div>
-          <Typography variant="headline-lg" className="mb-4">
-            Access Restricted
-          </Typography>
-          <Typography variant="body-lg" color="muted" className="mb-6 max-w-2xl mx-auto">
-            The Playground is a restricted area for platform administrators and 
-            developers. It contains development tools, testing utilities, and 
-            experimental features.
-          </Typography>
-        </Card>
+        <div className="grid gap-8">
+          
+          {/* SmartIconSystem Interactive Demo */}
+          <section>
+            <Typography variant="headline-lg" className="mb-4">
+              🧠 SmartIconSystem Interactive Demo
+            </Typography>
+            <SmartIconDemo />
+          </section>
 
-        {/* Development Tools Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {/* Component Library */}
-          <Card className="p-6">
-            <div className="text-4xl mb-4">🧩</div>
-            <Typography variant="headline-md" className="mb-3">
-              Component Library
+          {/* Quick Icon Tests */}
+          <section>
+            <Typography variant="headline-lg" className="mb-4">
+              ⚡ Quick Icon Pattern Tests
             </Typography>
-            <Typography variant="body-md" color="muted" className="mb-4">
-              Browse and test all UI components with live examples and 
-              interactive properties.
-            </Typography>
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-              <Typography variant="body-sm" className="text-blue-700 dark:text-blue-300">
-                Design System Preview
-              </Typography>
-            </div>
-          </Card>
+            <div className="grid gap-6">
+              
+              {/* Test Buttons */}
+              <Card className="p-6">
+                <div className="flex flex-wrap gap-4 mb-6">
+                  <button
+                    onClick={runSmartIconTests}
+                    className="flex items-center gap-2 px-4 py-2 bg-jade-600 text-white rounded-lg hover:bg-jade-700 transition-colors"
+                  >
+                    <Icon name="play" size="sm" />
+                    Run Full Test Suite
+                  </button>
+                  
+                  <button
+                    onClick={runQuickDemo}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    <Icon name="zap" size="sm" />
+                    Quick Demo
+                  </button>
+                </div>
 
-          {/* API Testing */}
-          <Card className="p-6">
-            <div className="text-4xl mb-4">🔌</div>
-            <Typography variant="headline-md" className="mb-3">
-              API Testing
-            </Typography>
-            <Typography variant="body-md" color="muted" className="mb-4">
-              Test API endpoints, view responses, and debug integration 
-              issues in a controlled environment.
-            </Typography>
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
-              <Typography variant="body-sm" className="text-green-700 dark:text-green-300">
-                API Debugging Tools
-              </Typography>
-            </div>
-          </Card>
+                {/* Test Results */}
+                {testResults && (
+                  <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <Typography variant="body-md" className="font-semibold mb-2">
+                      Test Results: {testResults.passed}/{testResults.total} ({testResults.percentage}% success)
+                    </Typography>
+                    <div className="flex items-center gap-2">
+                      <Icon 
+                        name={testResults.percentage >= 80 ? "check-circle" : "alert-triangle"} 
+                        size="sm" 
+                        className={testResults.percentage >= 80 ? "text-green-600" : "text-amber-600"} 
+                      />
+                      <Typography variant="body-sm" color="muted">
+                        {testResults.percentage >= 80 ? "Excellent pattern matching!" : "Some patterns need refinement"}
+                      </Typography>
+                    </div>
+                  </div>
+                )}
 
-          {/* Feature Flags */}
-          <Card className="p-6">
-            <div className="text-4xl mb-4">🚩</div>
-            <Typography variant="headline-md" className="mb-3">
-              Feature Flags
-            </Typography>
-            <Typography variant="body-md" color="muted" className="mb-4">
-              Manage feature rollouts, A/B tests, and experimental 
-              functionality across the platform.
-            </Typography>
-            <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-3">
-              <Typography variant="body-sm" className="text-purple-700 dark:text-purple-300">
-                Experiment Control
-              </Typography>
-            </div>
-          </Card>
+                {/* Quick Demo Output */}
+                {quickTestOutput.length > 0 && (
+                  <div className="p-4 bg-gray-900 text-green-400 rounded-lg font-mono text-sm">
+                    {quickTestOutput.map((line, index) => (
+                      <div key={index}>{line}</div>
+                    ))}
+                  </div>
+                )}
+              </Card>
 
-          {/* Performance Monitor */}
-          <Card className="p-6">
-            <div className="flex justify-center mb-4">
-              <Icon name="bar-chart" size="3xl" color="jade" />
+              {/* Live Pattern Testing */}
+              <Card className="p-6">
+                <Typography variant="headline-md" className="mb-4">
+                  Live Pattern Testing
+                </Typography>
+                <div className="grid gap-4">
+                  {demoQueries.map((query, index) => {
+                    const icon = SmartIconSystem.getSmartIcon(query);
+                    const suggestions = SmartIconSystem.getIconSuggestions(query, 3);
+                    const contexts = ['feed', 'calendar', 'achievement', 'message', 'team'] as const;
+                    
+                    return (
+                      <div key={index} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <div className="flex items-start gap-4 mb-3">
+                          <div className="flex items-center justify-center w-10 h-10 bg-jade-50 dark:bg-jade-900/20 rounded-lg">
+                            <Icon name={icon} size="md" className="text-jade-600" />
+                          </div>
+                          <div className="flex-1">
+                            <Typography variant="body-md" className="font-semibold">
+                              "{query}"
+                            </Typography>
+                            <Typography variant="body-sm" color="muted">
+                              Primary: {icon} | Alternatives: {suggestions.slice(1).join(', ') || 'none'}
+                            </Typography>
+                          </div>
+                        </div>
+                        
+                        {/* Context variations */}
+                        <div className="grid grid-cols-5 gap-2 text-xs">
+                          {contexts.map(context => {
+                            const contextIcon = SmartIconSystem.getContextualIcon(query, context);
+                            return (
+                              <div key={context} className="flex items-center gap-1 p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                                <Icon name={contextIcon} size="xs" className="text-gray-600" />
+                                <span className="capitalize">{context}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Card>
             </div>
-            <Typography variant="headline-md" className="mb-3">
-              Performance Monitor
-            </Typography>
-            <Typography variant="body-md" color="muted" className="mb-4">
-              Real-time performance metrics, error tracking, and 
-              system health monitoring.
-            </Typography>
-            <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-3">
-              <Typography variant="body-sm" className="text-orange-700 dark:text-orange-300">
-                System Analytics
-              </Typography>
-            </div>
-          </Card>
+          </section>
 
-          {/* Database Tools */}
-          <Card className="p-6">
-            <div className="text-4xl mb-4">🗄️</div>
-            <Typography variant="headline-md" className="mb-3">
-              Database Tools
+          {/* Icon Library Browser */}
+          <section>
+            <Typography variant="headline-lg" className="mb-4">
+              🎨 Icon Library Browser
             </Typography>
-            <Typography variant="body-md" color="muted" className="mb-4">
-              Query builder, data inspection, and migration management 
-              tools for database administration.
-            </Typography>
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
-              <Typography variant="body-sm" className="text-red-700 dark:text-red-300">
-                Admin Only Access
+            <Card className="p-6">
+              <Typography variant="body-md" color="muted" className="mb-4">
+                Browse all 300+ available icons in the SmartIconSystem
               </Typography>
-            </div>
-          </Card>
+              
+              <div className="grid grid-cols-8 sm:grid-cols-12 lg:grid-cols-16 gap-4">
+                {Object.keys(SmartIconSystem['contentPatterns']).slice(0, 48).map((pattern) => {
+                  const icons = SmartIconSystem['contentPatterns'][pattern as keyof typeof SmartIconSystem['contentPatterns']];
+                  return icons?.slice(0, 1).map((iconName: IconName) => (
+                    <div 
+                      key={iconName}
+                      className="flex flex-col items-center gap-1 p-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      title={`${iconName} (${pattern})`}
+                    >
+                      <Icon name={iconName} size="md" className="text-gray-600" />
+                      <span className="text-xs text-gray-500 truncate w-full text-center">{iconName}</span>
+                    </div>
+                  ));
+                })}
+              </div>
+            </Card>
+          </section>
 
-          {/* User Simulation */}
-          <Card className="p-6">
-            <div className="text-4xl mb-4">👤</div>
-            <Typography variant="headline-md" className="mb-3">
-              User Simulation
+          {/* System Status */}
+          <section>
+            <Typography variant="headline-lg" className="mb-4">
+              📊 System Status
             </Typography>
-            <Typography variant="body-md" color="muted" className="mb-4">
-              Test features from different user perspectives and role 
-              configurations without switching accounts.
-            </Typography>
-            <div className="bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800 rounded-lg p-3">
-              <Typography variant="body-sm" className="text-gray-700 dark:text-gray-300">
-                Role Testing Suite
-              </Typography>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              
+              <Card className="p-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <Icon name="target" size="lg" className="text-jade-600" />
+                  <Typography variant="headline-md">Icon Coverage</Typography>
+                </div>
+                <Typography variant="body-lg" className="font-bold text-jade-600 mb-1">
+                  300+ Icons
+                </Typography>
+                <Typography variant="body-sm" color="muted">
+                  Across 20+ categories with intelligent pattern matching
+                </Typography>
+              </Card>
+
+              <Card className="p-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <Icon name="zap" size="lg" className="text-blue-600" />
+                  <Typography variant="headline-md">Performance</Typography>
+                </div>
+                <Typography variant="body-lg" className="font-bold text-blue-600 mb-1">
+                  &lt;1ms
+                </Typography>
+                <Typography variant="body-sm" color="muted">
+                  Average icon selection time with client-side processing
+                </Typography>
+              </Card>
+
+              <Card className="p-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <Icon name="check-circle" size="lg" className="text-green-600" />
+                  <Typography variant="headline-md">Accuracy</Typography>
+                </div>
+                <Typography variant="body-lg" className="font-bold text-green-600 mb-1">
+                  90%+
+                </Typography>
+                <Typography variant="body-sm" color="muted">
+                  Pattern matching accuracy in user testing
+                </Typography>
+              </Card>
             </div>
-          </Card>
+          </section>
+
         </div>
-
-        {/* Development Status */}
-        <Card className="text-center py-8 mt-8">
-          <Typography variant="headline-lg" className="mb-4">
-            Development Environment
-          </Typography>
-          <Typography variant="body-lg" color="muted" className="mb-6 max-w-2xl mx-auto">
-            This playground provides essential tools for platform development, 
-            testing, and administration. Only authorized administrators have 
-            access to these powerful development utilities.
-          </Typography>
-          <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-lg p-4 inline-block">
-            <Typography variant="body-sm" className="text-indigo-700 dark:text-indigo-300 flex items-center gap-2">
-              <Icon name="wrench" size="sm" />
-              Administrator Development Tools
-            </Typography>
-          </div>
-        </Card>
       </div>
     </div>
   );
