@@ -17,10 +17,8 @@ export const PerformanceMonitor: React.FC = () => {
   const [position, setPosition] = useState({ x: 20, y: 20 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
   const monitorRef = useRef<HTMLDivElement>(null);
 
-  // Performance data collection
   useEffect(() => {
     if (process.env.NODE_ENV !== "development") return;
 
@@ -43,11 +41,24 @@ export const PerformanceMonitor: React.FC = () => {
     };
 
     collectPerformanceData();
-    const interval = setInterval(collectPerformanceData, 5000);
+    const interval = setInterval(collectPerformanceData, 1000);
     return () => clearInterval(interval);
   }, []);
 
-  // Drag functionality
+  // Drag handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest(".controls")) return; // Don't drag when clicking controls
+
+    setIsDragging(true);
+    const rect = monitorRef.current?.getBoundingClientRect();
+    if (rect) {
+      setDragOffset({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
+    }
+  };
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging) return;
@@ -65,54 +76,28 @@ export const PerformanceMonitor: React.FC = () => {
     if (isDragging) {
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
-      document.body.style.cursor = "grabbing";
-    } else {
-      document.body.style.cursor = "";
     }
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
-      document.body.style.cursor = "";
     };
-  }, [isDragging, dragOffset.x, dragOffset.y]);
+  }, [isDragging, dragOffset]);
 
-  // Keyboard shortcut for toggle
+  // Keyboard shortcut to toggle visibility
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === "P") {
-        e.preventDefault();
-        setIsVisible((prev) => !prev);
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === "P" && e.ctrlKey && e.shiftKey) {
+        setIsVisible(!isVisible);
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).closest(".controls")) return;
-
-    setIsDragging(true);
-    const rect = monitorRef.current?.getBoundingClientRect();
-    if (rect) {
-      setDragOffset({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      });
-    }
-  };
-
-  const getOpacity = () => {
-    if (isDragging || isHovering || !isCollapsed) return 0.95;
-    return 0.3;
-  };
-
-  if (!perfData || process.env.NODE_ENV !== "development") {
-    return null;
-  }
+    document.addEventListener("keydown", handleKeyPress);
+    return () => document.removeEventListener("keydown", handleKeyPress);
+  }, [isVisible]);
 
   if (!isVisible) {
+    // Minimized floating button
     return (
       <button
         onClick={() => setIsVisible(true)}
@@ -137,6 +122,10 @@ export const PerformanceMonitor: React.FC = () => {
     );
   }
 
+  if (!perfData || process.env.NODE_ENV !== "development") {
+    return null;
+  }
+
   const loadTime =
     perfData.navigation.loadEventEnd - perfData.navigation.navigationStart;
   const domContentLoaded =
@@ -147,81 +136,89 @@ export const PerformanceMonitor: React.FC = () => {
     <div
       ref={monitorRef}
       onMouseDown={handleMouseDown}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
       style={{
         position: "fixed",
-        left: `${position.x}px`,
-        top: `${position.y}px`,
+        top: position.y,
+        left: position.x,
         background: "rgba(0,0,0,0.9)",
         color: "white",
-        padding: "12px",
+        padding: "8px",
         borderRadius: "8px",
-        fontSize: "12px",
+        fontSize: "11px",
         zIndex: 9999,
-        minWidth: "200px",
+        minWidth: "180px",
         cursor: isDragging ? "grabbing" : "grab",
-        opacity: getOpacity(),
-        transition: isDragging ? "none" : "opacity 0.2s ease",
         userSelect: "none",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+        border: "1px solid rgba(255,255,255,0.1)",
       }}
     >
+      {/* Header with controls */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "8px",
+          marginBottom: isCollapsed ? "0" : "6px",
+          cursor: "grab",
         }}
       >
-        <h4 style={{ margin: 0 }}>⚡ Performance</h4>
+        <span style={{ fontWeight: "bold", fontSize: "10px" }}>
+          ⚡ Performance
+        </span>
         <div className="controls" style={{ display: "flex", gap: "4px" }}>
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             style={{
-              background: "transparent",
+              background: "none",
               border: "none",
               color: "white",
               cursor: "pointer",
-              fontSize: "12px",
+              fontSize: "10px",
               padding: "2px 4px",
             }}
             title={isCollapsed ? "Expand" : "Collapse"}
           >
-            {isCollapsed ? "📈" : "📉"}
+            {isCollapsed ? "▼" : "▲"}
           </button>
           <button
             onClick={() => setIsVisible(false)}
             style={{
-              background: "transparent",
+              background: "none",
               border: "none",
               color: "white",
               cursor: "pointer",
-              fontSize: "12px",
+              fontSize: "10px",
               padding: "2px 4px",
             }}
-            title="Hide (Ctrl+Shift+P to toggle)"
+            title="Hide (Ctrl+Shift+P)"
           >
             ✕
           </button>
         </div>
       </div>
 
+      {/* Content */}
       {!isCollapsed && (
-        <>
-          <div>Load Time: {loadTime}ms</div>
-          <div>DOM Ready: {domContentLoaded}ms</div>
+        <div style={{ fontSize: "10px", lineHeight: "1.3" }}>
+          <div>Load: {loadTime}ms</div>
+          <div>DOM: {domContentLoaded}ms</div>
           <div>Resources: {perfData.resources.length}</div>
           {perfData.memory && (
             <div>
-              Memory:{" "}
-              {(perfData.memory.usedJSHeapSize / 1024 / 1024).toFixed(1)}MB
+              Mem: {(perfData.memory.usedJSHeapSize / 1024 / 1024).toFixed(1)}MB
             </div>
           )}
-          <div style={{ fontSize: "10px", opacity: 0.7, marginTop: "4px" }}>
-            Drag to move • Ctrl+Shift+P to toggle
+          <div
+            style={{
+              fontSize: "8px",
+              marginTop: "4px",
+              opacity: 0.6,
+            }}
+          >
+            Ctrl+Shift+P to toggle
           </div>
-        </>
+        </div>
       )}
     </div>
   );

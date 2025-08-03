@@ -20,12 +20,15 @@ check_vscode() {
 }
 
 # Instructions for manual cleanup
-echo "🔧 To clear stale references, follow these steps:"
+echo "🔧 SAFE ways to clear stale references (won't restore deleted files):"
 echo ""
 echo "1. Open VS Code Command Palette: Cmd+Shift+P"
-echo "2. Run: 'TypeScript: Restart TS Server'"
-echo "3. Run: 'ESLint: Restart ESLint Server'"
-echo "4. If problems persist, run: 'Developer: Reload Window'"
+echo "2. Try: 'ESLint: Restart ESLint Server' (safest option)"
+echo "3. Or close/reopen Problems panel: View → Problems"
+echo "4. Last resort: Close VS Code completely and reopen"
+echo ""
+echo "⚠️  NEVER use 'Developer: Reload Window' - it restores deleted files!"
+echo "💡 Alternative: Just hide the Problems panel if errors aren't blocking work"
 echo ""
 
 # Check if VS Code is running

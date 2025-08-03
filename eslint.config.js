@@ -6,7 +6,19 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config([
-  globalIgnores(["dist"]),
+  {
+    ignores: [
+      "node_modules/",
+      "dist/",
+      "build/",
+      "coverage/",
+      ".vscode/",
+      "*.log",
+      "!shared/",
+      "!shared/**/*.ts",
+      "!shared/**/*.tsx",
+    ],
+  },
   {
     files: ["**/*.{ts,tsx}"],
     extends: [

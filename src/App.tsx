@@ -2,9 +2,11 @@ import { useEffect } from "react";
 import "./App.css";
 import { DevModeProvider } from "./app/dev-mode-store";
 import DevModeSwitcher from "./components/dev/DevModeSwitcher";
-import { PerformanceMonitor } from "./components/dev/PerformanceMonitor";
+import { DevToolsPanel } from "./components/dev/DevToolsPanel";
+import { PerformanceMonitor } from "./components/dev/PerformanceMonitor-Draggable";
 import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
+import { useDevTools } from "./hooks/useDevTools";
 import { useTheme } from "./hooks/useTheme";
 import { testDatabaseConnection } from "./lib/database-helpers";
 import { AppRouter } from "./routes/AppRouter";
@@ -19,6 +21,9 @@ import { initWebVitals } from "./utils/performance/webVitals";
 function App() {
   // Initialize theme system
   useTheme();
+
+  // Initialize dev tools
+  const devTools = useDevTools();
 
   // Test database connection on app start
   useEffect(() => {
@@ -48,7 +53,20 @@ function App() {
           <DevHealthCheck />
           <AppRouter />
           <DevModeSwitcher />
-          <PerformanceMonitor />
+
+          {/* Development Tools - Super Admin Mode */}
+          {process.env.NODE_ENV === "development" && (
+            <>
+              {devTools.showDevPanel && (
+                <DevToolsPanel
+                  onTogglePerformance={devTools.togglePerformanceMonitor}
+                  onOpenStorybook={devTools.openStorybook}
+                  onOpenBundleAnalyzer={devTools.openBundleAnalyzer}
+                />
+              )}
+              {devTools.showPerformanceMonitor && <PerformanceMonitor />}
+            </>
+          )}
         </div>
       </DevModeProvider>
     </ErrorBoundary>
