@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { useAuthProfile, useIsAuthenticated } from "../../app/auth-store";
+import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
+import type { Database } from "../../types/database";
 import { supabase } from "../../lib/supabase";
+
+type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 
 /**
  * Navigation Component
@@ -12,9 +16,15 @@ import { supabase } from "../../lib/supabase";
 export const Navigation: React.FC = () => {
   const isAuthenticated = useIsAuthenticated();
   const profile = useAuthProfile();
+  const { effectiveUserRole, isDevMode } = useDevMode();
   const { toggleSidebar } = useUI();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Use effective role from dev mode if in dev mode, otherwise use profile role
+  const currentRole: UserRole | null = isDevMode 
+    ? (effectiveUserRole as UserRole)
+    : (profile?.role ?? null);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -90,7 +100,7 @@ export const Navigation: React.FC = () => {
               >
                 📅
               </button>
-              {(profile?.role === "admin" || profile?.role === "coach") && (
+              {(currentRole === "admin" || currentRole === "coach") && (
                 <button
                   onClick={() => handleNavigation("/team/1")}
                   className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 text-sm transition-colors"
@@ -145,9 +155,21 @@ export const Navigation: React.FC = () => {
                       <p className="text-sm font-mono text-gray-500 dark:text-gray-400 truncate">
                         {profile?.email}
                       </p>
-                      {profile?.role && (
-                        <p className="text-xs font-display font-bold text-jade-600 dark:text-jade-400 capitalize mt-1 px-2 py-1 bg-jade-50 dark:bg-jade-900/20 rounded-sm inline-block">
-                          {profile.role}
+                      <div className="flex items-center gap-2 mt-1">
+                        {currentRole && (
+                          <p className="text-xs font-display font-bold text-jade-600 dark:text-jade-400 capitalize px-2 py-1 bg-jade-50 dark:bg-jade-900/20 rounded-sm inline-block">
+                            {currentRole}
+                          </p>
+                        )}
+                        {isDevMode && (
+                          <p className="text-xs font-display font-bold text-amber-600 dark:text-amber-400 px-2 py-1 bg-amber-50 dark:bg-amber-900/20 rounded-sm inline-block">
+                            DEV MODE
+                          </p>
+                        )}
+                      </div>
+                      {isDevMode && currentRole !== profile?.role && (
+                        <p className="text-xs text-amber-600 dark:text-amber-400 italic mt-1">
+                          Simulating: {currentRole}
                         </p>
                       )}
                     </div>
