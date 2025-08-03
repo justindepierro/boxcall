@@ -27,6 +27,31 @@ src/components/design-system/
 └── Icon/                     # Icon system
 ```
 
+## 🧠 **SmartIconSystem**
+
+**Purpose**: Intelligent icon selection based on content analysis
+
+**Status**: ✅ Complete
+
+**Features**:
+- 300+ professionally organized Lucide icons
+- Automatic icon selection based on text content
+- Context-aware suggestions for different components
+- Pattern matching for achievements, sports, team management
+- Multiple icon suggestions with ranking
+
+**Usage**:
+```typescript
+// Basic smart selection
+const icon = SmartIconSystem.getSmartIcon("Team Captain Achievement"); // → "trophy"
+
+// Context-aware selection
+const calendarIcon = SmartIconSystem.getContextualIcon("team meeting", "calendar"); // → "calendar"
+
+// Multiple suggestions
+const suggestions = SmartIconSystem.getIconSuggestions("player performance", 3); // → ["user", "chart", "trending-up"]
+```
+
 ## 🏆 **Personal Trophy Shelf**
 
 **Purpose**: Display user achievements in compact, scrollable format
@@ -36,7 +61,7 @@ src/components/design-system/
 **Features**:
 - Horizontal layout with vertical stats
 - Scrollable achievements section
-- Standardized icon system
+- SmartIconSystem integration for intelligent icon selection
 - Achievement status indicators
 
 [**Full Documentation**](./TROPHY_SHELF.md)

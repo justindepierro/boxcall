@@ -1,4 +1,8 @@
-# 📚 BoxCall Documentation
+# 📚 BoxCall Docu### **🎨 Component Documentation**
+
+- [`/components/SMART_ICON_SYSTEM.md`](./components/SMART_ICON_SYSTEM.md) - SmartIconSystem with 300+ intelligent icon selection
+- [`/components/TROPHY_SHELF.md`](./components/TROPHY_SHELF.md) - Personal Trophy Shelf component design and implementation
+- [`/components/DASHBOARD_COMPONENTS.md`](./components/DASHBOARD_COMPONENTS.md) - Dashboard component system overviewation
 
 > **Comprehensive documentation for the BoxCall football management platform**
 
