@@ -13,10 +13,11 @@ interface PersonalTrophyShelfProps {
  * Personal Trophy Shelf - Compact Scrollable Design
  *
  * Features:
- * - Compact stats in grid layout
- * - Scrollable achievements with up/down controls
- * - Space-efficient design matching user's vision
- * - Combined helmet stickers and BoxCall medals
+ * - Compact horizontal layout with vertical stats
+ * - Scrollable achievements with standardized icons
+ * - Achievement status indicators (earned/unearned)
+ * - Integrated helmet stickers and BoxCall medals
+ * - Responsive design with jade/navy color palette
  */
 export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   userId,
@@ -50,88 +51,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       earned: medal.earned,
       progress: medal.progress,
       maxProgress: medal.maxProgress
-    })),
-    // Sample achievements for testing scrolling
-    {
-      id: 'sample-1',
-      type: 'sample',
-      icon: 'shield',
-      name: 'Team Captain',
-      description: 'Led your team to 5 victories',
-      earned: true
-    },
-    {
-      id: 'sample-2',
-      type: 'sample',
-      icon: 'trophy',
-      name: 'Championship Winner',
-      description: 'Won the league championship',
-      earned: true
-    },
-    {
-      id: 'sample-3',
-      type: 'sample',
-      icon: 'heart',
-      name: 'Team Spirit',
-      description: 'Supported teammates in 20 games',
-      earned: true
-    },
-    {
-      id: 'sample-4',
-      type: 'sample',
-      icon: 'clock',
-      name: 'Perfect Attendance',
-      description: 'Attended every practice this month',
-      earned: false
-    },
-    {
-      id: 'sample-5',
-      type: 'sample',
-      icon: 'users',
-      name: 'Mentor',
-      description: 'Helped train 3 new team members',
-      earned: true
-    },
-    {
-      id: 'sample-6',
-      type: 'sample',
-      icon: 'bookmark',
-      name: 'Playbook Master',
-      description: 'Memorized all team plays',
-      earned: true
-    },
-    {
-      id: 'sample-7',
-      type: 'sample',
-      icon: 'thumbs-up',
-      name: 'Fan Favorite',
-      description: 'Received 100 fan votes',
-      earned: false
-    },
-    {
-      id: 'sample-8',
-      type: 'sample',
-      icon: 'camera',
-      name: 'Media Star',
-      description: 'Featured in 5 team photos',
-      earned: true
-    },
-    {
-      id: 'sample-9',
-      type: 'sample',
-      icon: 'gift',
-      name: 'Team Builder',
-      description: 'Organized team bonding events',
-      earned: true
-    },
-    {
-      id: 'sample-10',
-      type: 'sample',
-      icon: 'award',
-      name: 'MVP Candidate',
-      description: 'Top performer for 3 consecutive games',
-      earned: false
-    }
+    }))
   ];
 
   // Helper function to render consistent icons
