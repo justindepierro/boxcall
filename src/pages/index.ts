@@ -1,9 +1,13 @@
-export { AdminPage } from "./AdminPage";
 export { CalendarPage } from "./CalendarPage";
 export { DashboardPage } from "./DashboardPage";
 export { LoginPage } from "./LoginPage";
-export { PracticeSchedulePage } from "./PracticeSchedulePage";
 export { ProfilePage } from "./ProfilePage";
-export { SuperAdminPage } from "./SuperAdminPage";
-export { TeamDashboard } from "./TeamDashboard";
-export { TeamManagementPage } from "./TeamManagementPage";
+export { TeamBulletin } from "./TeamBulletin";
+
+// New navigation pages
+export { default as BoxCall } from "./BoxCall";
+export { default as Playbook } from "./Playbook";
+export { default as TeamSettings } from "./TeamSettings";
+export { default as About } from "./About";
+export { default as Templates } from "./Templates";
+export { default as Playground } from "./Playground";

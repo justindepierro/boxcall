@@ -21,7 +21,7 @@ import type {
 } from "../types/practice";
 import { PRACTICE_BLOCK_TYPES, QUICK_TIME_INTERVALS } from "../types/practice";
 
-export function PracticeSchedulePage() {
+export function PracticePlanner() {
   const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
   const [selectedScheduleId, setSelectedScheduleId] = useState<string>("");
@@ -724,3 +724,5 @@ function TemplatesModal({
     </Modal>
   );
 }
+
+export default PracticePlanner;

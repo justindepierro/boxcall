@@ -5,6 +5,7 @@ import type { BoxCallCalendarRef } from "../components/calendar/BoxCallCalendar"
 import { BoxCallCalendar } from "../components/calendar/BoxCallCalendar";
 import "../components/calendar/BoxCallCalendar.css";
 import { Typography } from "../components/design-system";
+import { PracticePlannerModal } from "../components/practice/PracticePlannerModal";
 import { Button, Card, Input } from "../components/ui";
 import { useCalendar } from "../hooks/useCalendar";
 import type {
@@ -48,6 +49,7 @@ export const CalendarPage: React.FC = () => {
     null
   );
   const [searchQuery, setSearchQuery] = useState("");
+  const [showPracticePlanner, setShowPracticePlanner] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
   const [currentView, setCurrentView] = useState(
@@ -724,6 +726,20 @@ export const CalendarPage: React.FC = () => {
                   )}
 
                   <div className="flex space-x-3 pt-4">
+                    {/* Practice Planning Button - Only for practice events and coaches */}
+                    {selectedEvent.type === "practice" && 
+                     (profile?.role === "coach" || profile?.role === "admin") && (
+                      <Button 
+                        variant="primary" 
+                        size="sm"
+                        onClick={() => {
+                          setShowPracticePlanner(true);
+                          setShowEventModal(false);
+                        }}
+                      >
+                        📝 Plan Practice
+                      </Button>
+                    )}
                     {selectedEvent.rsvp_required && (
                       <Button variant="primary" size="sm">
                         RSVP
@@ -738,6 +754,14 @@ export const CalendarPage: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Practice Planner Modal */}
+      {showPracticePlanner && selectedEvent && selectedEvent.type === "practice" && (
+        <PracticePlannerModal 
+          event={selectedEvent}
+          onClose={() => setShowPracticePlanner(false)}
+        />
       )}
     </div>
   );

@@ -79,7 +79,7 @@ export const Navigation: React.FC = () => {
             </button>
           </div>
 
-          {/* Desktop Quick Actions - Simplified since we have sidebar */}
+          {/* Desktop Quick Actions - Key functions for productivity */}
           <div className="hidden md:flex items-center space-x-4">
             {/* Quick Navigation Shortcuts */}
             <div className="flex items-center space-x-2">
@@ -93,22 +93,22 @@ export const Navigation: React.FC = () => {
               >
                 🏠
               </button>
+              {(currentRole === "admin" || currentRole === "coach") && (
+                <button
+                  onClick={() => handleNavigation("/boxcall")}
+                  className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 text-sm transition-colors"
+                  title="BoxCall (⌘+2)"
+                >
+                  �
+                </button>
+              )}
               <button
                 onClick={() => handleNavigation("/calendar")}
                 className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 text-sm transition-colors"
-                title="Calendar (⌘+2)"
+                title="Calendar (⌘+3)"
               >
                 📅
               </button>
-              {(currentRole === "admin" || currentRole === "coach") && (
-                <button
-                  onClick={() => handleNavigation("/team/1")}
-                  className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 text-sm transition-colors"
-                  title="Team (⌘+3)"
-                >
-                  🏈
-                </button>
-              )}
             </div>
           </div>
 

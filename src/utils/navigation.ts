@@ -11,88 +11,148 @@ export interface NavigationItem {
   roles?: UserRole[];
   children?: NavigationItem[];
   divider?: boolean;
+  badge?: string | number;
+  description?: string;
 }
 
 /**
- * Core navigation structure for the application
- * Used by both sidebar and mobile navigation
+ * Complete navigation structure for BoxCall application
+ * Based on comprehensive requirements with role-based access
  */
 export const getNavigationItems = (userRole?: UserRole | null): NavigationItem[] => {
   const items: NavigationItem[] = [
+    // Dashboard - Available to everyone
     {
       id: "dashboard",
       label: "Dashboard",
       icon: "🏠",
       href: "/dashboard",
+      description: "Personal dashboard with live feed and notifications",
     },
+    
+    // Team Bulletin - Available to everyone (renamed from Team Dashboard)
     {
-      id: "calendar",
-      label: "Calendar",
-      icon: "📅", 
-      href: "/calendar",
+      id: "team-bulletin",
+      label: "Team Bulletin",
+      icon: "�",
+      href: "/team/1/bulletin", // Will need team switching dropdown
+      description: "Team-specific feed, announcements, and quick actions",
     },
   ];
 
-  // Team management for coaches and admins
+  // BoxCall - Coaches only (premium feature)
   if (userRole === "admin" || userRole === "coach") {
     items.push({
-      id: "team-management",
-      label: userRole === "admin" ? "Team Management" : "My Team",
-      icon: "🏈",
-      href: "/team/1",
+      id: "boxcall",
+      label: "BoxCall",
+      icon: "📞",
+      href: "/boxcall",
       roles: ["admin", "coach"],
+      badge: "Pro",
+      description: "Advanced coaching tools and analytics (Premium)",
     });
+  }
 
+  // Playbook - Coaches and players
+  if (userRole === "admin" || userRole === "coach" || userRole === "player") {
     items.push({
-      id: "playbooks",
-      label: "Playbooks",
-      icon: "📋",
-      href: "/playbooks",
-      roles: ["admin", "coach"],
+      id: "playbook",
+      label: "Playbook",
+      icon: "📖",
+      href: "/playbook",
+      roles: ["admin", "coach", "player"],
+      description: "Team plays and strategies",
     });
   }
 
-  // Admin-only items
-  if (userRole === "admin") {
-    items.push(
-      {
-        id: "divider-admin",
-        label: "",
-        href: "",
-        divider: true,
-      },
-      {
-        id: "admin",
-        label: "Admin Panel",
-        icon: "⚙️",
-        href: "/admin",
-        roles: ["admin"],
-      },
-      {
-        id: "super-admin",
-        label: "Super Admin",
-        icon: "🔧",
-        href: "/super-admin",
-        roles: ["admin"],
-      }
-    );
+  // Calendar - Available to everyone
+  items.push({
+    id: "calendar",
+    label: "Calendar",
+    icon: "�",
+    href: "/calendar",
+    description: "Personal and team calendars",
+  });
+
+  // Profile - Available to everyone
+  items.push({
+    id: "profile",
+    label: "Profile",
+    icon: "👤",
+    href: "/profile",
+    description: "Edit user settings and preferences",
+  });
+
+  // Team Settings - Coaches only
+  if (userRole === "admin" || userRole === "coach") {
+    items.push({
+      id: "team-settings",
+      label: "Team Settings",
+      icon: "⚙️",
+      href: "/team/1/settings",
+      roles: ["admin", "coach"],
+      description: "Manage team configuration and roster",
+    });
   }
 
-  // Always include profile at the bottom
-  items.push(
-    {
-      id: "divider-profile",
-      label: "",
-      href: "",
-      divider: true,
-    },
-    {
-      id: "profile",
-      label: "My Profile",
-      icon: "👤",
-      href: "/profile",
-    }
-  );
+  // Divider before utility pages
+  items.push({
+    id: "divider-utility",
+    label: "",
+    href: "",
+    divider: true,
+  });
+
+  // About - Available to everyone
+  items.push({
+    id: "about",
+    label: "About",
+    icon: "ℹ️",
+    href: "/about",
+    description: "Learn about BoxCall",
+  });
+
+  // Templates - Coaches only
+  if (userRole === "admin" || userRole === "coach") {
+    items.push({
+      id: "templates",
+      label: "Templates",
+      icon: "📄",
+      href: "/templates",
+      roles: ["admin", "coach"],
+      description: "Pre-built templates and resources",
+    });
+  }
+
+  // Playground - Developers and Super Admins only
+  if (userRole === "admin") {
+    items.push({
+      id: "playground",
+      label: "Playground",
+      icon: "🧪",
+      href: "/playground",
+      roles: ["admin"],
+      badge: "Dev",
+      description: "Test new features and components",
+    });
+  }
+
+  // Divider before logout
+  items.push({
+    id: "divider-logout",
+    label: "",
+    href: "",
+    divider: true,
+  });
+
+  // Logout - Available to everyone
+  items.push({
+    id: "logout",
+    label: "Log Out",
+    icon: "�",
+    href: "/logout",
+    description: "Sign out of BoxCall",
+  });
 
   return items;
 };
@@ -113,15 +173,39 @@ export const toSidebarItems = (
       id: item.id,
       label: item.label,
       icon: item.icon,
-      onClick: item.divider ? undefined : () => (window.location.href = item.href),
+      onClick: item.divider ? undefined : () => {
+        if (item.id === 'logout') {
+          // Handle logout specially
+          handleLogout();
+        } else {
+          window.location.href = item.href;
+        }
+      },
       divider: item.divider,
+      badge: item.badge,
       children: item.children ? toSidebarItems(item.children, userRole) : undefined,
     }));
 };
 
 /**
+ * Handle logout functionality
+ */
+const handleLogout = async () => {
+  try {
+    // Import supabase dynamically to avoid circular imports
+    const { supabase } = await import("../lib/supabase");
+    await supabase.auth.signOut();
+    window.location.href = "/login";
+  } catch (error) {
+    console.error("Error during logout:", error);
+    // Fallback: force redirect to login
+    window.location.href = "/login";
+  }
+};
+
+/**
  * Get primary navigation items for the top navigation bar
- * These are the most important/frequently used items
+ * These are the most important/frequently used items with quick actions
  */
 export const getPrimaryNavigationItems = (userRole?: UserRole | null): NavigationItem[] => {
   const items: NavigationItem[] = [
@@ -132,25 +216,20 @@ export const getPrimaryNavigationItems = (userRole?: UserRole | null): Navigatio
       href: "/dashboard",
     },
     {
-      id: "calendar",
-      label: "Calendar",
-      icon: "📅",
-      href: "/calendar",
+      id: "boxcall",
+      label: "BoxCall",
+      icon: "�",
+      href: "/boxcall",
     },
   ];
 
-  // Add team item for coaches/admins
-  if (userRole === "admin" || userRole === "coach") {
-    items.push({
-      id: "team",
-      label: userRole === "admin" ? "Team Management" : "My Team",
-      icon: "🏈", 
-      href: "/team/1",
-      roles: ["admin", "coach"],
-    });
-  }
-
-  return items;
+  return items.filter(item => {
+    // Filter based on role permissions
+    if (item.id === 'boxcall' && userRole !== 'admin' && userRole !== 'coach') {
+      return false;
+    }
+    return true;
+  });
 };
 
 /**

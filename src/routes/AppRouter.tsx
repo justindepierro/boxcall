@@ -2,26 +2,25 @@ import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../components/auth";
 import {
-  AdminPage,
   CalendarPage,
   DashboardPage,
   LoginPage,
-  PracticeSchedulePage,
   ProfilePage,
-  SuperAdminPage,
-  TeamDashboard,
-  TeamManagementPage,
+  TeamBulletin,
+  BoxCall,
+  Playbook,
+  TeamSettings,
+  About,
+  Templates,
+  Playground,
 } from "../pages";
-import AnimationShowcasePage from "../pages/AnimationShowcasePage";
 import {
   ProtectedRoute,
   PublicRoute,
   RoleProtectedRoute,
   SubscriptionRoute,
-  SuperAdminRoute,
   TeamMemberRoute,
 } from "../routes";
-import { TeamManagementRoute } from "../routes/PermissionRoute";
 
 /**
  * AppRouter Component
@@ -73,75 +72,13 @@ export const AppRouter: React.FC = () => {
             }
           />
 
-          {/* Role-Protected Routes - Require specific roles */}
+          {/* Team Bulletin - All team members can view */}
           <Route
-            path="/admin"
-            element={
-              <RoleProtectedRoute allowedRoles={["admin"]}>
-                <AdminPage />
-              </RoleProtectedRoute>
-            }
-          />
-
-          {/* Super Admin Routes - Developer access only */}
-          <Route
-            path="/super-admin"
-            element={
-              <SuperAdminRoute>
-                <SuperAdminPage />
-              </SuperAdminRoute>
-            }
-          />
-
-          {/* Animation Showcase - Development route */}
-          <Route
-            path="/animations"
+            path="/team/:teamId/bulletin"
             element={
               <ProtectedRoute>
-                <AnimationShowcasePage />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Team Management Routes - Permission-based access */}
-          <Route
-            path="/team/:teamId/manage"
-            element={
-              <TeamManagementRoute>
-                <TeamManagementPage />
-              </TeamManagementRoute>
-            }
-          />
-
-          {/* Team Dashboard - All team members can view (temporarily reverted) */}
-          <Route
-            path="/team/:teamId"
-            element={
-              <ProtectedRoute>
-                <TeamMemberRoute
-                  allowedTeamRoles={[
-                    "head_coach",
-                    "coach",
-                    "player",
-                    "family",
-                    "manager",
-                  ]}
-                >
-                  <TeamDashboard />
-                </TeamMemberRoute>
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Practice Schedule - Coaches and team management */}
-          <Route
-            path="/team/:teamId/practice"
-            element={
-              <ProtectedRoute>
-                <TeamMemberRoute
-                  allowedTeamRoles={["head_coach", "coach", "manager"]}
-                >
-                  <PracticeSchedulePage />
+                <TeamMemberRoute allowedTeamRoles={["head_coach", "coach", "player", "manager", "family"]}>
+                  <TeamBulletin />
                 </TeamMemberRoute>
               </ProtectedRoute>
             }
@@ -161,6 +98,75 @@ export const AppRouter: React.FC = () => {
                   </div>
                 </SubscriptionRoute>
               </TeamMemberRoute>
+            }
+          />
+
+          {/* New Navigation Routes */}
+          {/* BoxCall - Coaches only */}
+          <Route
+            path="/boxcall"
+            element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={["coach", "admin"]}>
+                  <BoxCall />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Playbook - All authenticated users */}
+          <Route
+            path="/playbook"
+            element={
+              <ProtectedRoute>
+                <Playbook />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Team Settings - Team-specific, coaches only */}
+          <Route
+            path="/team/:teamId/settings"
+            element={
+              <ProtectedRoute>
+                <TeamMemberRoute allowedTeamRoles={["head_coach", "coach", "manager"]}>
+                  <TeamSettings />
+                </TeamMemberRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* About - All authenticated users */}
+          <Route
+            path="/about"
+            element={
+              <ProtectedRoute>
+                <About />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Templates - Coaches only */}
+          <Route
+            path="/templates"
+            element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={["coach", "admin"]}>
+                  <Templates />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Playground - Admins only */}
+          <Route
+            path="/playground"
+            element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={["admin"]}>
+                  <Playground />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
             }
           />
 

@@ -10,7 +10,7 @@ import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
 
 /**
- * Team Dashboard - Team-specific command center
+ * Team Bulletin - Team-specific communication hub
  * Facebook-style team feed with role-based functionality
  *
  * Features:
@@ -19,8 +19,9 @@ import { Card } from "../components/ui";
  * - Team calendar and events
  * - Team roster overview
  * - Role-based quick actions for team management
+ * - Multi-team switching capability
  */
-export const TeamDashboard: React.FC = () => {
+export const TeamBulletin: React.FC = () => {
   const { teamId } = useParams<{ teamId: string }>();
   const { user, profile } = useAuth();
 
@@ -335,4 +336,4 @@ export const TeamDashboard: React.FC = () => {
   );
 };
 
-export default TeamDashboard;
+export default TeamBulletin;
