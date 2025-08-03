@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuthProfile, useIsAuthenticated } from "../../app/auth-store";
+import { useUI } from "../../app/store";
 import { supabase } from "../../lib/supabase";
 
 /**
@@ -11,6 +12,7 @@ import { supabase } from "../../lib/supabase";
 export const Navigation: React.FC = () => {
   const isAuthenticated = useIsAuthenticated();
   const profile = useAuthProfile();
+  const { toggleSidebar } = useUI();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -34,7 +36,28 @@ export const Navigation: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Brand - Display font for impact */}
-          <div className="flex items-center">
+          <div className="flex items-center space-x-4">
+            {/* Sidebar Toggle */}
+            <button
+              onClick={() => toggleSidebar()}
+              className="text-gray-700 dark:text-gray-300 hover:text-jade-600 dark:hover:text-jade-400 hover:bg-jade-50 dark:hover:bg-jade-900/10 p-2 rounded-sm border border-transparent hover:border-jade-200 transition-all duration-200"
+              title="Toggle sidebar"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h7"
+                />
+              </svg>
+            </button>
+
             <button
               onClick={() => handleNavigation("/dashboard")}
               className="flex items-center space-x-3 text-xl font-display font-bold text-jade-600 hover:text-jade-700 transition-colors"
