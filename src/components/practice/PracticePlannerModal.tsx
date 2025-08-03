@@ -731,7 +731,7 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
     const savedPracticeKey = `practice_plan_${event.id || 'default'}`;
     try {
       // Remove startTime and endTime before saving since they'll be recalculated
-      const blocksToSave = finalBlocks.map(({ startTime, endTime, ...block }) => block);
+      const blocksToSave = finalBlocks.map(({ startTime: _startTime, endTime: _endTime, ...block }) => block);
       console.log("Saving practice blocks with groups:", blocksToSave);
       localStorage.setItem(savedPracticeKey, JSON.stringify(blocksToSave));
       console.log("Practice plan saved to localStorage:", finalBlocks);
