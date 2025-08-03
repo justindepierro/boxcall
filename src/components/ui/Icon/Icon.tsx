@@ -17,7 +17,7 @@ import {
   // Practice & Planning
   Calendar, Clock, Play, Pause, Square, SkipForward, SkipBack,
   Timer, MapPin, Users, User, UserCheck, CalendarDays,
-  CalendarClock, CalendarPlus, CalendarX, Stopwatch,
+  CalendarClock, CalendarPlus, CalendarX,
   
   // Actions & Controls
   Plus, Minus, Edit3 as Edit, Trash2 as Delete, Save, Download, Upload, Copy,
@@ -35,18 +35,18 @@ import {
   
   // Business & Team Management
   UserPlus, UserMinus, Briefcase, Building, Building2,
-  Globe, Wifi, WifiOff, Users as Team,
+  Globe, WifiOff, Users as Team,
   
   // Content & Media
   Image, Video, Camera, Mic, MicOff, Volume2, VolumeX,
   Music, Film, FileImage, FileVideo, Headphones, Speaker,
   
   // Weather & Environment
-  Sun, Moon, Cloud, CloudRain, CloudSnow, Thermometer,
+  Cloud, CloudRain, CloudSnow, Thermometer,
   Wind, Umbrella, Sunrise, Sunset, CloudLightning,
   
   // Health & Medical
-  Heart, Pulse, Activity as Heartbeat, Pill, Stethoscope,
+  Heart, Activity as Heartbeat, Pill, Stethoscope,
   Bandage, Cross, Shield as Protection, Zap as Energy,
   
   // Food & Nutrition
@@ -54,7 +54,7 @@ import {
   IceCream2 as IceCream, Salad, Sandwich, Soup, Wine, Beer,
   
   // Transportation
-  Car, Truck, Bus, Train, Plane, Ship, Bike as Bicycle, Motorcycle,
+  Car, Truck, Bus, Train, Plane, Ship, Bike as Bicycle,
   Fuel, Navigation, Compass, Route, Map,
   
   // Technology
@@ -70,7 +70,7 @@ import {
   CalendarHeart, CalendarRange,
   
   // Documents & Files Extended
-  File, Files, FilePlus, FileMinus, FileCheck,
+  Files, FilePlus, FileMinus, FileCheck,
   FileX, FileEdit, FileSearch, FolderPlus, FolderMinus,
   
   // Social & Communication Extended
@@ -82,11 +82,11 @@ import {
   Puzzle, PartyPopper, Clapperboard as Clapper, Theater,
   
   // Nature & Animals
-  Tree, Flower2 as Flower, Leaf, Bug, Fish, Bird, Cat, Dog,
-  Rabbit, Turtle, Butterfly, Snail, Bee as BeeIcon, Feather,
+  Flower2 as Flower, Leaf, Bug, Fish, Bird, Cat, Dog,
+  Rabbit, Turtle, Snail, Feather,
   
   // Tools & Equipment Extended
-  Wrench, Hammer, Screwdriver, Drill, Saw, Ruler,
+  Wrench, Hammer, Drill, Ruler,
   Scissors, PaintBucket, Brush, Pen, Pencil, Eraser,
   
   // Security & Safety
@@ -94,14 +94,14 @@ import {
   
   // Math & Science
   Calculator, Beaker, Microscope, Telescope, Atom,
-  Dna, Magnet, FlashLight as Flashlight, Lightbulb as Bulb,
+  Dna, Magnet, Flashlight, Lightbulb as Bulb,
   
   // Charts & Analytics Extended
   BarChart, LineChart, Database, TrendingUp as TrendingUpIcon,
   BarChart2, BarChart4, Percent, Binary, Code, Terminal, Bug as BugIcon,
   
   // Emotions & Reactions
-  Smile, Frown, Meh, Laugh, Angry, Surprised, Heart as Love,
+  Smile, Frown, Meh, Laugh, Angry, Heart as Love,
   HeartCrack as HeartBroken, ThumbsUp as Like,
   
   // Alerts & Notifications
@@ -120,7 +120,7 @@ import {
   
   // Miscellaneous Popular Icons
   Sparkles, Rainbow, Rocket, Anchor, Tent, Backpack,
-  Glasses, Sunglasses, Magnet as Attraction, Crown as Premium,
+  Glasses, Magnet as Attraction, Crown as Premium,
   Star as Favorite, Flame as Fire, Snowflake, Droplet, Waves, Mountain,
   Settings as Cog,
 } from 'lucide-react';
@@ -308,7 +308,6 @@ const iconMap = {
   'heart': Heart,
   'love': Love,
   'heart-broken': HeartBroken,
-  'pulse': Pulse,
   'heartbeat': Heartbeat,
   'pill': Pill,
   'stethoscope': Stethoscope,
@@ -339,7 +338,6 @@ const iconMap = {
   'plane': Plane,
   'ship': Ship,
   'bicycle': Bicycle,
-  'motorcycle': Motorcycle,
   'fuel': Fuel,
   
   // Technology
@@ -393,7 +391,6 @@ const iconMap = {
   'theater': Theater,
   
   // Nature & Animals
-  'tree': Tree,
   'flower': Flower,
   'leaf': Leaf,
   'bug': Bug,
@@ -403,17 +400,13 @@ const iconMap = {
   'dog': Dog,
   'rabbit': Rabbit,
   'turtle': Turtle,
-  'butterfly': Butterfly,
   'snail': Snail,
-  'bee': BeeIcon,
   'feather': Feather,
   
   // Tools & Equipment
   'wrench': Wrench,
   'hammer': Hammer,
-  'screwdriver': Screwdriver,
   'drill': Drill,
-  'saw': Saw,
   'ruler': Ruler,
   'scissors': Scissors,
   'paint-bucket': PaintBucket,
@@ -469,7 +462,6 @@ const iconMap = {
   'meh': Meh,
   'laugh': Laugh,
   'angry': Angry,
-  'surprised': Surprised,
   
   // PDF & Export
   'pdf': FileDown,
@@ -484,7 +476,6 @@ const iconMap = {
   'tent': Tent,
   'backpack': Backpack,
   'glasses': Glasses,
-  'sunglasses': Sunglasses,
   'snowflake': Snowflake,
   'droplet': Droplet,
   'waves': Waves,
@@ -567,14 +558,14 @@ export class SmartIconSystem {
     share: ['share', 'share-2', 'link'],
     
     // Health & Medical patterns
-    health: ['heart', 'pulse', 'activity'],
+    health: ['heart', 'heartbeat', 'activity'],
     medical: ['cross', 'stethoscope', 'pill'],
     injury: ['bandage', 'cross', 'alert'],
     fitness: ['heart', 'activity', 'trending-up'],
     
     // Weather & Environment patterns
-    weather: ['cloud', 'sun', 'thermometer'],
-    outdoor: ['sun', 'tree', 'mountain'],
+    weather: ['cloud', 'thermometer'],
+    outdoor: ['sunrise', 'mountain'],
     indoor: ['building', 'home', 'users'],
     
     // Technology patterns
@@ -684,7 +675,7 @@ export class SmartIconSystem {
       achievement: 'trophy',
       message: 'message',
       team: 'users',
-      general: 'star'
+      general: fallback
     };
 
     const smartIcon = this.getSmartIcon(content, contextualFallbacks[context]);
