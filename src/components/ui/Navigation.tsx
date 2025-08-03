@@ -69,52 +69,37 @@ export const Navigation: React.FC = () => {
             </button>
           </div>
 
-          {/* Desktop Navigation Links - Square, technical styling */}
-          <div className="hidden md:flex items-center space-x-2">
-            <button
-              onClick={() => handleNavigation("/dashboard")}
-              className="text-gray-700 dark:text-gray-300 hover:text-jade-600 hover:bg-jade-50 dark:hover:text-jade-400 dark:hover:bg-jade-900/10 px-4 py-2 rounded-sm text-sm font-display font-medium transition-all duration-200 border border-transparent hover:border-jade-200"
-            >
-              Dashboard
-            </button>
-
-            {/* Master Calendar - Available to all users */}
-            <button
-              onClick={() => handleNavigation("/calendar")}
-              className="text-gray-700 dark:text-gray-300 hover:text-jade-600 hover:bg-jade-50 dark:hover:text-jade-400 dark:hover:bg-jade-900/10 px-4 py-2 rounded-sm text-sm font-display font-medium transition-all duration-200 border border-transparent hover:border-jade-200"
-            >
-              📅 Calendar
-            </button>
-
-            {/* Team Navigation - Show for different user types */}
-            {(profile?.role === "admin" || profile?.role === "coach") && (
+          {/* Desktop Quick Actions - Simplified since we have sidebar */}
+          <div className="hidden md:flex items-center space-x-4">
+            {/* Quick Navigation Shortcuts */}
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                Quick:
+              </span>
               <button
-                onClick={() => handleNavigation("/team/1")}
-                className="text-gray-700 dark:text-gray-300 hover:text-jade-600 hover:bg-jade-50 dark:hover:text-jade-400 dark:hover:bg-jade-900/10 px-4 py-2 rounded-sm text-sm font-display font-medium transition-all duration-200 border border-transparent hover:border-jade-200"
+                onClick={() => handleNavigation("/dashboard")}
+                className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 text-sm transition-colors"
+                title="Dashboard (⌘+1)"
               >
-                {profile?.role === "admin" ? "Team Management" : "My Team"}
+                🏠
               </button>
-            )}
-
-            {/* Playbook Tools - For coaches and above */}
-            {(profile?.role === "admin" || profile?.role === "coach") && (
               <button
-                onClick={() => handleNavigation("/playbooks")}
-                className="text-gray-700 dark:text-gray-300 hover:text-jade-600 hover:bg-jade-50 dark:hover:text-jade-400 dark:hover:bg-jade-900/10 px-4 py-2 rounded-sm text-sm font-display font-medium transition-all duration-200 border border-transparent hover:border-jade-200"
+                onClick={() => handleNavigation("/calendar")}
+                className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 text-sm transition-colors"
+                title="Calendar (⌘+2)"
               >
-                Playbooks
+                📅
               </button>
-            )}
-
-            {/* Conditional Admin Links */}
-            {profile?.role === "admin" && (
-              <button
-                onClick={() => handleNavigation("/admin")}
-                className="text-gray-700 dark:text-gray-300 hover:text-navy-600 hover:bg-navy-50 dark:hover:text-navy-400 dark:hover:bg-navy-900/10 px-4 py-2 rounded-sm text-sm font-display font-medium transition-all duration-200 border border-transparent hover:border-navy-200"
-              >
-                Admin
-              </button>
-            )}
+              {(profile?.role === "admin" || profile?.role === "coach") && (
+                <button
+                  onClick={() => handleNavigation("/team/1")}
+                  className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 text-sm transition-colors"
+                  title="Team (⌘+3)"
+                >
+                  🏈
+                </button>
+              )}
+            </div>
           </div>
 
           {/* User Menu - Square, professional styling */}
@@ -233,72 +218,33 @@ export const Navigation: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Menu - Enhanced square, technical styling */}
+        {/* Mobile Menu - Simplified, encourage sidebar use */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t-2 border-gray-200 dark:border-gray-700 pt-4 pb-4 bg-gray-50 dark:bg-gray-900/50">
-            <div className="space-y-1">
-              <button
-                onClick={() => handleNavigation("/dashboard")}
-                className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"
-              >
-                🏠 Dashboard
-              </button>
-
-              <button
-                onClick={() => handleNavigation("/calendar")}
-                className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"
-              >
-                📅 Calendar
-              </button>
-
-              {(profile?.role === "admin" || profile?.role === "coach") && (
+            <div className="px-4">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 font-medium">
+                💡 Use the sidebar menu (☰) for full navigation
+              </p>
+              <div className="space-y-2">
                 <button
-                  onClick={() => handleNavigation("/team/1")}
+                  onClick={() => handleNavigation("/dashboard")}
                   className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"
                 >
-                  🏈 {profile?.role === "admin" ? "Team Management" : "My Team"}
+                  � Dashboard
                 </button>
-              )}
 
-              {(profile?.role === "admin" || profile?.role === "coach") && (
                 <button
-                  onClick={() => handleNavigation("/playbooks")}
+                  onClick={() => handleNavigation("/calendar")}
                   className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"
                 >
-                  📋 Playbooks
+                  � Calendar
                 </button>
-              )}
 
-              <button
-                onClick={() => handleNavigation("/profile")}
-                className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"
-              >
-                👤 My Profile
-              </button>
-
-              {profile?.role === "admin" && (
-                <>
-                  <button
-                    onClick={() => handleNavigation("/admin")}
-                    className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-navy-100 hover:text-navy-700 dark:hover:bg-navy-900/20 dark:hover:text-navy-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-navy-500"
-                  >
-                    ⚙️ Admin
-                  </button>
-                  <button
-                    onClick={() => handleNavigation("/super-admin")}
-                    className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-navy-100 hover:text-navy-700 dark:hover:bg-navy-900/20 dark:hover:text-navy-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-navy-500"
-                  >
-                    🔧 Super Admin
-                  </button>
-                </>
-              )}
-
-              <div className="border-t-2 border-gray-200 dark:border-gray-700 pt-2 mt-3">
                 <button
-                  onClick={handleSignOut}
-                  className="block w-full text-left px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-100 hover:text-red-700 dark:hover:bg-red-900/20 dark:hover:text-red-300 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-red-500"
+                  onClick={() => handleNavigation("/profile")}
+                  className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"
                 >
-                  🚪 Sign Out
+                  � My Profile
                 </button>
               </div>
             </div>

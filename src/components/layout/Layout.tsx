@@ -1,9 +1,9 @@
 import React from "react";
 import { useAuthProfile } from "../../app/auth-store";
 import { useUI } from "../../app/store";
+import { getNavigationItems, getRoleDisplayInfo, toSidebarItems } from "../../utils/navigation";
 import { Navigation } from "../ui/Navigation";
 import { Sidebar } from "../ui/Sidebar";
-import type { SidebarItem } from "../ui/Sidebar";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,81 +18,10 @@ interface LayoutProps {
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const profile = useAuthProfile();
   const { sidebarOpen, toggleSidebar } = useUI();
-
-  // Generate sidebar items based on user role
-  const getSidebarItems = (): SidebarItem[] => {
-    const baseItems: SidebarItem[] = [
-      {
-        id: "dashboard",
-        label: "Dashboard",
-        icon: "🏠",
-        onClick: () => (window.location.href = "/dashboard"),
-      },
-      {
-        id: "calendar",
-        label: "Calendar", 
-        icon: "📅",
-        onClick: () => (window.location.href = "/calendar"),
-      },
-    ];
-
-    // Add role-specific items
-    if (profile?.role === "admin" || profile?.role === "coach") {
-      baseItems.push({
-        id: "team-management",
-        label: "Team Management",
-        icon: "🏈",
-        onClick: () => (window.location.href = "/team/1"),
-      });
-
-      baseItems.push({
-        id: "playbooks",
-        label: "Playbooks",
-        icon: "📋", 
-        onClick: () => (window.location.href = "/playbooks"),
-      });
-    }
-
-    // Add admin-specific items
-    if (profile?.role === "admin") {
-      baseItems.push({
-        id: "divider-1",
-        label: "",
-        divider: true,
-      });
-
-      baseItems.push({
-        id: "admin",
-        label: "Admin Panel",
-        icon: "⚙️",
-        onClick: () => (window.location.href = "/admin"),
-      });
-
-      baseItems.push({
-        id: "super-admin",
-        label: "Super Admin",
-        icon: "🔧",
-        onClick: () => (window.location.href = "/super-admin"),
-      });
-    }
-
-    // Always add profile at the bottom
-    baseItems.push(
-      {
-        id: "divider-2", 
-        label: "",
-        divider: true,
-      },
-      {
-        id: "profile",
-        label: "My Profile",
-        icon: "👤",
-        onClick: () => (window.location.href = "/profile"),
-      }
-    );
-
-    return baseItems;
-  };
+  
+  const navigationItems = getNavigationItems(profile?.role);
+  const sidebarItems = toSidebarItems(navigationItems, profile?.role);
+  const roleInfo = getRoleDisplayInfo(profile?.role);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -102,7 +31,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className="flex">
         {/* Sidebar */}
         <Sidebar
-          items={getSidebarItems()}
+          items={sidebarItems}
           isOpen={sidebarOpen}
           onClose={() => toggleSidebar()}
           header={
@@ -111,7 +40,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <div>
                 <h3 className="font-display font-bold text-lg text-jade-600">BoxCall</h3>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {profile?.role && profile.role.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) || "User"}
+                  {roleInfo.display}
                 </p>
               </div>
             </div>
