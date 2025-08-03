@@ -1,0 +1,261 @@
+/**
+ * AddBlockModal Component
+ * 
+ * Modal for adding new practice blocks with:
+ * - Block details (title, category, location, notes)
+ * - Time allocation (start time, duration)
+ * - Coach assignment
+ * - Form validation
+ * 
+ * @component
+ * @example
+ * <AddBlockModal
+ *   isOpen={showAddBlockModal}
+ *   onClose={() => setShowAddBlockModal(false)}
+ *   onAddBlock={handleAddBlock}
+ *   userRole="head_coach"
+ *   timeAllocationMode={true}
+ *   selectedBlock={selectedBlock}
+ * />
+ */
+
+import React, { useState, useEffect } from "react";
+import { Typography } from "../../../design-system";
+import { getCategoryColor } from "../../utils";
+import type { PracticeBlock, SelectedBlock, UserRole } from "../../types";
+
+interface AddBlockModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onAddBlock: (block: Omit<PracticeBlock, 'id'>) => void;
+  userRole: UserRole;
+  timeAllocationMode: boolean;
+  selectedBlock?: SelectedBlock | null;
+}
+
+export const AddBlockModal: React.FC<AddBlockModalProps> = ({
+  isOpen,
+  onClose,
+  onAddBlock,
+  userRole,
+  timeAllocationMode,
+  selectedBlock,
+}) => {
+  const [formData, setFormData] = useState({
+    title: "",
+    category: "offense" as PracticeBlock["category"],
+    location: "",
+    notes: "",
+    assignedCoach: "",
+    startTime: "15:00",
+    duration: 15,
+  });
+
+  // Reset form when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      if (selectedBlock) {
+        setFormData(prev => ({
+          ...prev,
+          category: selectedBlock.category,
+          startTime: `${Math.floor(selectedBlock.start / 60).toString().padStart(2, '0')}:${(selectedBlock.start % 60).toString().padStart(2, '0')}`,
+          duration: selectedBlock.duration,
+        }));
+      } else {
+        setFormData({
+          title: "",
+          category: "offense",
+          location: "",
+          notes: "",
+          assignedCoach: "",
+          startTime: "15:00",
+          duration: 15,
+        });
+      }
+    }
+  }, [isOpen, selectedBlock]);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const [hours, minutes] = formData.startTime.split(':').map(Number);
+    const startTimeInMinutes = hours * 60 + minutes;
+    
+    const newBlock: Omit<PracticeBlock, 'id'> = {
+      startTime: formData.startTime,
+      endTime: `${Math.floor((startTimeInMinutes + formData.duration) / 60).toString().padStart(2, '0')}:${((startTimeInMinutes + formData.duration) % 60).toString().padStart(2, '0')}`,
+      duration: formData.duration,
+      category: formData.category,
+      title: formData.title,
+      location: formData.location,
+      notes: formData.notes,
+      assignedCoach: formData.assignedCoach || undefined,
+      isHeadCoachBlock: userRole === "head_coach",
+      groups: [],
+    };
+
+    onAddBlock(newBlock);
+    onClose();
+  };
+
+  const categoryOptions: Array<{ value: PracticeBlock["category"]; label: string }> = [
+    { value: "offense", label: "🏈 Offense" },
+    { value: "defense", label: "🛡️ Defense" },
+    { value: "special-teams", label: "⚡ Special Teams" },
+    { value: "meeting", label: "📋 Meeting" },
+    { value: "weight-room", label: "🏋️ Weight Room" },
+    { value: "transition", label: "🔄 Transition" },
+    { value: "break", label: "☕ Break" },
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-4">
+          <Typography variant="headline-sm" className="text-navy-900">
+            ➕ Add Practice Block
+          </Typography>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-xl"
+          >
+            ✕
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Title */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Block Title *
+            </label>
+            <input
+              type="text"
+              value={formData.title}
+              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="e.g., Offensive Line Drills"
+              required
+            />
+          </div>
+
+          {/* Category */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Category *
+            </label>
+            <select
+              value={formData.category}
+              onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value as PracticeBlock["category"] }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              {categoryOptions.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <div className={`mt-1 inline-block px-2 py-1 rounded text-xs ${getCategoryColor(formData.category)}`}>
+              Preview: {formData.category.replace("-", " ").toUpperCase()}
+            </div>
+          </div>
+
+          {/* Time and Duration */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Start Time
+              </label>
+              <input
+                type="time"
+                value={formData.startTime}
+                onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={timeAllocationMode && !!selectedBlock}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Duration (minutes)
+              </label>
+              <input
+                type="number"
+                value={formData.duration}
+                onChange={(e) => setFormData(prev => ({ ...prev, duration: parseInt(e.target.value) || 0 }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="5"
+                max="180"
+                step="5"
+                disabled={timeAllocationMode && !!selectedBlock}
+              />
+            </div>
+          </div>
+
+          {/* Location */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Location
+            </label>
+            <input
+              type="text"
+              value={formData.location}
+              onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="e.g., Practice Field A"
+            />
+          </div>
+
+          {/* Assigned Coach */}
+          {userRole === "head_coach" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Assigned Coach
+              </label>
+              <input
+                type="text"
+                value={formData.assignedCoach}
+                onChange={(e) => setFormData(prev => ({ ...prev, assignedCoach: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g., Coach Johnson"
+              />
+            </div>
+          )}
+
+          {/* Notes */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Notes
+            </label>
+            <textarea
+              value={formData.notes}
+              onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows={3}
+              placeholder="Additional notes or instructions..."
+            />
+          </div>
+
+          {/* Submit Buttons */}
+          <div className="flex space-x-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex-1 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Add Block
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
