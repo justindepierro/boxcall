@@ -1,12 +1,12 @@
 /**
  * EditGroupModal Component
- * 
+ *
  * Modal for editing existing groups with:
  * - Pre-populated form data
  * - Group details (name, location, notes)
  * - Script assignment display
  * - Form validation
- * 
+ *
  * @component
  * @example
  * <EditGroupModal
@@ -20,6 +20,7 @@
 import React, { useState, useEffect } from "react";
 import { Typography } from "../../../design-system";
 import type { EditingGroup, PracticeGroup } from "../../types";
+import Icon from "../../../ui/Icon/Icon";
 
 interface EditGroupModalProps {
   isOpen: boolean;
@@ -55,7 +56,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const updatedGroup: PracticeGroup = {
       ...editingGroup.group,
       name: formData.name,
@@ -71,23 +72,35 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <div className="flex items-center justify-between mb-4">
-          <Typography variant="headline-sm" className="text-navy-900">
-            ✏️ Edit Group
-          </Typography>
+          <div className="flex items-center gap-2">
+            <Icon name="edit" size="lg" className="text-navy-700" />
+            <Typography variant="headline-sm" className="text-navy-900">
+              Edit Group
+            </Typography>
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl"
+            className="text-gray-400 hover:text-gray-600"
           >
-            ✕
+            <Icon
+              name="close"
+              size="md"
+              className="text-gray-500 hover:text-gray-700"
+            />
           </button>
         </div>
 
         {/* Script Assignment Display */}
         {editingGroup.group.scriptId && (
           <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-            <Typography variant="body-sm" className="text-blue-800">
-              📋 Script Assigned: {editingGroup.group.scriptTitle || `Script ${editingGroup.group.scriptId}`}
-            </Typography>
+            <div className="flex items-center gap-2">
+              <Icon name="file" size="sm" className="text-blue-600" />
+              <Typography variant="body-sm" className="text-blue-800">
+                Script Assigned:{" "}
+                {editingGroup.group.scriptTitle ||
+                  `Script ${editingGroup.group.scriptId}`}
+              </Typography>
+            </div>
           </div>
         )}
 
@@ -100,7 +113,9 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
             <input
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, name: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="e.g., Offensive Line, Running Backs"
               required
@@ -115,7 +130,9 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
             <input
               type="text"
               value={formData.location}
-              onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, location: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="e.g., Field A, Weight Room"
             />
@@ -128,7 +145,9 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
             </label>
             <textarea
               value={formData.notes}
-              onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, notes: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows={3}
               placeholder="Additional notes or instructions..."

@@ -3,6 +3,7 @@
 
 import React, { useState } from "react";
 import { useBulkOperations } from "../hooks/useEnhancedCalendar";
+import Icon from "./ui/Icon/Icon";
 import type {
   BulkOperation,
   BulkOperationTemplate,
@@ -176,24 +177,24 @@ function QuickActionsPanel({
 }: QuickActionsPanelProps) {
   const quickActions = [
     {
-      type: "send_rsvp_reminders" as BulkOperationType,
+      type: "send_reminders" as BulkOperationType,
       title: "Send RSVP Reminders",
       description: "Send reminder notifications to all invitees",
-      icon: "📧",
+      icon: "mail",
       data: { reminder_type: "rsvp_reminder" as string },
     },
     {
       type: "update_events" as BulkOperationType,
       title: "Update Event Details",
       description: "Bulk update event information",
-      icon: "✏️",
+      icon: "edit",
       data: { update_type: "bulk_edit" as string },
     },
     {
       type: "create_polls_for_events" as BulkOperationType,
       title: "Create Polls",
       description: "Create attendance polls for all events",
-      icon: "📊",
+      icon: "bar-chart",
       data: {
         poll_type: "attendance" as string,
         question: "Can you attend this event?" as string,
@@ -203,7 +204,7 @@ function QuickActionsPanel({
       type: "export_rsvp_data" as BulkOperationType,
       title: "Export RSVP Data",
       description: "Download RSVP responses as spreadsheet",
-      icon: "📥",
+      icon: "download",
       data: { format: "csv" as string },
     },
   ];
@@ -233,7 +234,7 @@ function QuickActionsPanel({
             className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 text-left transition-colors disabled:opacity-50"
           >
             <div className="flex items-center space-x-2 mb-2">
-              <span className="text-lg">{action.icon}</span>
+              <Icon name={action.icon as any} size="lg" className="text-gray-600" />
               <span className="text-sm font-medium text-gray-900">
                 {action.title}
               </span>

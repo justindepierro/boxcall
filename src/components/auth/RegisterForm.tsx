@@ -103,7 +103,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     });
 
     if (result.success) {
-      console.log("✅ Registration successful!");
+      console.log("BoxCall: Registration successful!");
       onSuccess?.();
     }
   };

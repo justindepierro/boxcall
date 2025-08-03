@@ -4,7 +4,7 @@
 import { EnhancedTeamFeaturesPage } from "../pages/EnhancedTeamFeaturesPage";
 // Simple feature validation tests
 export function validatePhase23Features() {
-  console.log("🎉 Phase 2.3 Enhanced Team Features Validation");
+  console.log("Phase 2.3 Enhanced Team Features Validation");
 
   const features = [
     "Event Polling System",
@@ -14,10 +14,10 @@ export function validatePhase23Features() {
   ];
 
   features.forEach((feature, index) => {
-    console.log(`✅ ${index + 1}. ${feature} - Implemented`);
+    console.log(`✓ ${index + 1}. ${feature} - Implemented`);
   });
 
-  console.log("\n📊 Implementation Summary:");
+  console.log("\nImplementation Summary:");
   console.log("- 2,500+ lines of production code");
   console.log("- 6 TypeScript files with complete type safety");
   console.log("- 4 major UI components with professional styling");
@@ -45,7 +45,7 @@ export function testEnhancedTeamFeaturesPage() {
   try {
     // This would normally render the component, but for now just validate props
     const component = EnhancedTeamFeaturesPage;
-    console.log("✅ EnhancedTeamFeaturesPage component loaded successfully");
+    console.log("✓ EnhancedTeamFeaturesPage component loaded successfully");
 
     return {
       component: component.name,
@@ -53,7 +53,7 @@ export function testEnhancedTeamFeaturesPage() {
       status: "valid",
     };
   } catch (error) {
-    console.error("❌ Component validation failed:", error);
+    console.error("✗ Component validation failed:", error);
     return {
       status: "error",
       error: error,

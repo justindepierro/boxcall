@@ -7,6 +7,7 @@
 
 import React from 'react';
 import { Button } from '../ui';
+import Icon from '../ui/Icon/Icon';
 import { usePracticeScriptPDF } from '../../services/pdf/usePracticeScriptPDF';
 import type { PracticeBlock } from './types';
 
@@ -121,7 +122,8 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
           </>
         ) : (
           <>
-            📄 Export PDF
+            <Icon name="pdf" size="sm" className="mr-2" />
+            Export PDF
           </>
         )}
       </Button>

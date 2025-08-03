@@ -147,7 +147,7 @@ export class AchievementService {
       [
         {
           name: "First Touchdown",
-          icon: "🏈",
+          icon: "target",
           awardedBy: "coach-1",
           awardedByName: "Coach Johnson",
         },
@@ -159,7 +159,7 @@ export class AchievementService {
         },
         {
           name: "Team Leader",
-          icon: "👑",
+          icon: "crown",
           awardedBy: "coach-1",
           awardedByName: "Coach Johnson",
         },
@@ -167,13 +167,13 @@ export class AchievementService {
       [
         {
           name: "Defensive Stop",
-          icon: "🛡️",
+          icon: "shield",
           awardedBy: "coach-3",
           awardedByName: "Coach Davis",
         },
         {
           name: "Hustle Award",
-          icon: "🏃",
+          icon: "activity",
           awardedBy: "coach-1",
           awardedByName: "Coach Johnson",
         },
@@ -181,7 +181,7 @@ export class AchievementService {
       [
         {
           name: "Game Winner",
-          icon: "🎯",
+          icon: "award",
           awardedBy: "coach-2",
           awardedByName: "Coach Williams",
         },
@@ -193,13 +193,13 @@ export class AchievementService {
         },
         {
           name: "Study Hall",
-          icon: "📚",
+          icon: "book",
           awardedBy: "coach-3",
           awardedByName: "Coach Davis",
         },
         {
           name: "Community Service",
-          icon: "🌟",
+          icon: "star",
           awardedBy: "coach-1",
           awardedByName: "Coach Johnson",
         },
@@ -225,7 +225,7 @@ export class AchievementService {
       {
         id: "profile-complete",
         name: "Profile Complete",
-        icon: "✅",
+        icon: "check",
         description: "Completed profile setup with photo and info",
         earned: true,
         earnedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
@@ -245,7 +245,7 @@ export class AchievementService {
       {
         id: "week-warrior",
         name: "Week Warrior",
-        icon: "🔥",
+        icon: "zap",
         description: "Active for 7 consecutive days",
         earned: false,
         progress: Math.floor(Math.random() * 7),
@@ -254,7 +254,7 @@ export class AchievementService {
       {
         id: "social-butterfly",
         name: "Social Butterfly",
-        icon: "💬",
+        icon: "message",
         description: "Send 10 team messages",
         earned: Math.random() > 0.5,
         progress: Math.floor(Math.random() * 10),
@@ -263,7 +263,7 @@ export class AchievementService {
       {
         id: "calendar-keeper",
         name: "Calendar Keeper",
-        icon: "📅",
+        icon: "calendar",
         description: "RSVP to 5 team events",
         earned: false,
         progress: Math.floor(Math.random() * 5),

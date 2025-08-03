@@ -5,6 +5,7 @@ import type { DevMode } from "../../app/dev-mode-types";
 import { Typography } from "../design-system";
 import { Button } from "../ui/Button";
 import { Card } from "../ui/Card";
+import { Icon } from "../ui/Icon/Icon";
 
 const DevModeSwitcher: React.FC = () => {
   const { devMode, setDevMode, isDevMode } = useDevMode();
@@ -32,7 +33,7 @@ const DevModeSwitcher: React.FC = () => {
         const routeIndex = parseInt(e.key) - 1;
         const route = routes[routeIndex];
         if (route) {
-          console.log(`🚀 Dev Navigation: Jumping to ${route}`);
+          console.log(`BoxCall Dev: Navigation jump to ${route}`);
           window.location.href = route;
         }
       }
@@ -55,49 +56,49 @@ const DevModeSwitcher: React.FC = () => {
   }> = [
     {
       mode: "production",
-      label: "🏭 Production Mode",
+      label: "Production Mode",
       description: "Normal app behavior - real data only",
       color: "bg-gray-100 dark:bg-gray-800",
     },
     {
       mode: "super_admin_real",
-      label: "👑 Super Admin (Your Team)",
+      label: "Super Admin (Your Team)",
       description: "Super admin access with your real team data",
       color: "bg-jade-100 dark:bg-jade-900",
     },
     {
       mode: "super_admin_mock",
-      label: "🧪 Super Admin (Mock Data)",
+      label: "Super Admin (Mock Data)",
       description: "Super admin access with mock Eastside Eagles team",
       color: "bg-purple-100 dark:bg-purple-900",
     },
     {
       mode: "view_as_head_coach",
-      label: "🏆 View as Head Coach",
+      label: "View as Head Coach",
       description: "Experience the app as a head coach",
       color: "bg-green-100 dark:bg-green-900",
     },
     {
       mode: "view_as_coach",
-      label: "👨‍🏫 View as Assistant Coach",
+      label: "View as Assistant Coach",
       description: "Experience the app as an assistant coach",
       color: "bg-emerald-100 dark:bg-emerald-900",
     },
     {
       mode: "view_as_player",
-      label: "🏃‍♂️ View as Player",
+      label: "View as Player",
       description: "Experience the app as a team player",
       color: "bg-orange-100 dark:bg-orange-900",
     },
     {
       mode: "view_as_manager",
-      label: "📋 View as Team Manager",
+      label: "View as Team Manager",
       description: "Experience the app as a team manager",
       color: "bg-yellow-100 dark:bg-yellow-900",
     },
     {
       mode: "view_as_family",
-      label: "👨‍👩‍👧‍👦 View as Family Member",
+      label: "View as Family Member",
       description: "Experience the app as a parent/family member",
       color: "bg-pink-100 dark:bg-pink-900",
     },
@@ -109,23 +110,26 @@ const DevModeSwitcher: React.FC = () => {
     }`}>
       <div className="p-3">
         <div className="flex items-center justify-between mb-2">
-          <Typography variant="headline-sm" className="text-sm font-bold">
-            🛠️ Dev Tools
-          </Typography>
+          <div className="flex items-center gap-2">
+            <Icon name="wrench" size="sm" color="slate" />
+            <Typography variant="headline-sm" className="text-sm font-bold">
+              Dev Tools
+            </Typography>
+          </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsGhostMode(!isGhostMode)}
               className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-xs p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               title={isGhostMode ? "Exit ghost mode" : "Enter ghost mode (Cmd+Shift+G)"}
             >
-              {isGhostMode ? "👻" : "👁️"}
+              <Icon name={isGhostMode ? "eye-off" : "eye"} size="sm" color="current" />
             </button>
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-xs p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               title={isCollapsed ? "Expand dev tools (Cmd+Shift+D)" : "Collapse dev tools (Cmd+Shift+D)"}
             >
-              {isCollapsed ? "🔼" : "🔽"}
+              <Icon name={isCollapsed ? "chevron-up" : "chevron-down"} size="sm" color="current" />
             </button>
             <div
               className={`px-2 py-1 rounded text-xs font-medium transition-colors ${

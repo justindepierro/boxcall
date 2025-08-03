@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "../../ui";
+import Icon from "../../ui/Icon/Icon";
 
 /**
  * Coach Quick Actions - Coach-specific dashboard shortcuts
@@ -19,7 +20,7 @@ export const CoachQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Create Play")}
       >
-        <span className="mr-2">🎯</span>
+        <Icon name="target" size="sm" className="mr-2" />
         Create New Play
       </Button>
 
@@ -29,7 +30,7 @@ export const CoachQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Practice Script")}
       >
-        <span className="mr-2">📝</span>
+        <Icon name="file" size="sm" className="mr-2" />
         Build Practice Script
       </Button>
 
@@ -39,7 +40,7 @@ export const CoachQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Playbook Editor")}
       >
-        <span className="mr-2">📋</span>
+        <Icon name="file" size="sm" className="mr-2" />
         Playbook Editor
       </Button>
 
@@ -49,7 +50,7 @@ export const CoachQuickActions: React.FC = () => {
         className="w-full justify-start"
         onClick={() => console.log("Team Analytics")}
       >
-        <span className="mr-2">📊</span>
+        <Icon name="bar-chart" size="sm" className="mr-2" />
         Team Analytics
       </Button>
 

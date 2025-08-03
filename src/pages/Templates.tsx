@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
+import { Icon } from "../components/ui/Icon/Icon";
 
 /**
  * Templates - Coach resource hub with downloadable templates and import tools
@@ -34,14 +35,17 @@ export const Templates: React.FC = () => {
 
         {/* Data Import Templates */}
         <div className="mb-8">
-          <Typography variant="headline-lg" className="mb-6">
-            📊 Data Import Templates
-          </Typography>
+          <div className="flex items-center gap-2 mb-6">
+            <Icon name="bar-chart" size="xl" color="jade" />
+            <h3 className="text-2xl font-bold text-jade-600">
+              Data Import Templates
+            </h3>
+          </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Roster Import */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <div className="text-2xl mr-3">👥</div>
+                <Icon name="users" size="xl" color="navy" className="mr-3" />
                 <Typography variant="headline-md">Roster Import</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -59,7 +63,7 @@ export const Templates: React.FC = () => {
             {/* Playbook Import */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <div className="text-2xl mr-3">📖</div>
+                <Icon name="book" size="xl" color="navy" className="mr-3" />
                 <Typography variant="headline-md">Playbook Import</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -77,7 +81,7 @@ export const Templates: React.FC = () => {
             {/* Playscript Import */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <div className="text-2xl mr-3">📝</div>
+                <Icon name="file" size="xl" color="navy" className="mr-3" />
                 <Typography variant="headline-md">Playscript Maker</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -96,14 +100,17 @@ export const Templates: React.FC = () => {
 
         {/* Visual Resources */}
         <div className="mb-8">
-          <Typography variant="headline-lg" className="mb-6">
-            🎨 Visual Resources
-          </Typography>
+          <div className="flex items-center gap-2 mb-6">
+            <Icon name="activity" size="xl" color="jade" />
+            <Typography variant="headline-lg">
+              Visual Resources
+            </Typography>
+          </div>
           <div className="grid gap-6 md:grid-cols-2">
             {/* Playbook Diagrams */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <div className="text-2xl mr-3">🏈</div>
+                <Icon name="target" size="xl" color="navy" className="mr-3" />
                 <Typography variant="headline-md">Playbook Diagrams</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -129,7 +136,9 @@ export const Templates: React.FC = () => {
             {/* Formation Templates */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <div className="text-2xl mr-3">⚡</div>
+                <div className="mr-3">
+                  <Icon name="zap" size="xl" color="jade" />
+                </div>
                 <Typography variant="headline-md">Formation Templates</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -156,14 +165,17 @@ export const Templates: React.FC = () => {
 
         {/* Import Tools */}
         <div className="mb-8">
-          <Typography variant="headline-lg" className="mb-6">
-            🛠️ Coaching Tools
-          </Typography>
+          <div className="flex items-center gap-2 mb-6">
+            <Icon name="wrench" size="xl" color="jade" />
+            <Typography variant="headline-lg">
+              Coaching Tools
+            </Typography>
+          </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Practice Planner */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <div className="text-2xl mr-3">⏱️</div>
+                <Icon name="clock" size="xl" color="navy" className="mr-3" />
                 <Typography variant="headline-md">Practice Planner</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -181,7 +193,7 @@ export const Templates: React.FC = () => {
             {/* Data Import Wizard */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <div className="text-2xl mr-3">⬆️</div>
+                <Icon name="upload" size="xl" color="navy" className="mr-3" />
                 <Typography variant="headline-md">Data Import Wizard</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -189,16 +201,19 @@ export const Templates: React.FC = () => {
                 Validates data and prevents common import errors.
               </Typography>
               <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-                <Typography variant="body-sm" className="text-blue-700 dark:text-blue-300">
-                  🚀 Coming Soon - Smart import wizard
-                </Typography>
+                <div className="flex items-center gap-1">
+                  <Icon name="zap" size="sm" color="info" />
+                  <Typography variant="body-sm" className="text-blue-700 dark:text-blue-300">
+                    Coming Soon - Smart import wizard
+                  </Typography>
+                </div>
               </div>
             </Card>
 
             {/* Bulk Data Export */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <div className="text-2xl mr-3">⬇️</div>
+                <Icon name="download" size="xl" color="navy" className="mr-3" />
                 <Typography variant="headline-md">Bulk Export</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -206,9 +221,12 @@ export const Templates: React.FC = () => {
                 for backup or transfer to other systems.
               </Typography>
               <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
-                <Typography variant="body-sm" className="text-green-700 dark:text-green-300">
-                  🚀 Coming Soon - One-click exports
-                </Typography>
+                <div className="flex items-center gap-1">
+                  <Icon name="zap" size="sm" color="success" />
+                  <Typography variant="body-sm" className="text-green-700 dark:text-green-300">
+                    Coming Soon - One-click exports
+                  </Typography>
+                </div>
               </div>
             </Card>
           </div>
@@ -216,14 +234,17 @@ export const Templates: React.FC = () => {
 
         {/* Advanced Tools */}
         <div className="mb-8">
-          <Typography variant="headline-lg" className="mb-6">
-            🔧 Advanced Tools
-          </Typography>
+          <div className="flex items-center gap-2 mb-6">
+            <Icon name="cog" size="xl" color="jade" />
+            <Typography variant="headline-lg">
+              Advanced Tools
+            </Typography>
+          </div>
           <div className="grid gap-6 md:grid-cols-2">
             {/* Template Builder */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <div className="text-2xl mr-3">🏗️</div>
+                <Icon name="wrench" size="xl" color="navy" className="mr-3" />
                 <Typography variant="headline-md">Template Builder</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -231,16 +252,19 @@ export const Templates: React.FC = () => {
                 needs and data structure requirements.
               </Typography>
               <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-3">
-                <Typography variant="body-sm" className="text-purple-700 dark:text-purple-300">
-                  🚀 Coming Soon - Custom template builder
-                </Typography>
+                <div className="flex items-center gap-1">
+                  <Icon name="zap" size="sm" color="current" />
+                  <Typography variant="body-sm" className="text-purple-700 dark:text-purple-300">
+                    Coming Soon - Custom template builder
+                  </Typography>
+                </div>
               </div>
             </Card>
 
             {/* API Integration */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <div className="text-2xl mr-3">🔗</div>
+                <Icon name="database" size="xl" color="navy" className="mr-3" />
                 <Typography variant="headline-md">API Integration</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -248,9 +272,12 @@ export const Templates: React.FC = () => {
                 Sync data automatically and build custom integrations.
               </Typography>
               <div className="bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800 rounded-lg p-3">
-                <Typography variant="body-sm" className="text-gray-700 dark:text-gray-300">
-                  🚀 Coming Soon - Developer tools
-                </Typography>
+                <div className="flex items-center gap-1">
+                  <Icon name="zap" size="sm" color="current" />
+                  <Typography variant="body-sm" className="text-gray-700 dark:text-gray-300">
+                    Coming Soon - Developer tools
+                  </Typography>
+                </div>
               </div>
             </Card>
           </div>
@@ -258,7 +285,9 @@ export const Templates: React.FC = () => {
 
         {/* Quick Start Guide */}
         <Card className="p-6 text-center">
-          <div className="text-4xl mb-4">📚</div>
+          <div className="flex justify-center mb-4">
+            <Icon name="book" size="3xl" color="jade" />
+          </div>
           <Typography variant="headline-lg" className="mb-4">
             Quick Start Guide
           </Typography>

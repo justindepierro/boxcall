@@ -23,6 +23,7 @@ import React, { useState, useEffect } from "react";
 import { Typography } from "../../../design-system";
 import { getCategoryColor } from "../../utils";
 import type { PracticeBlock, SelectedBlock, UserRole } from "../../types";
+import Icon from "../../../ui/Icon/Icon";
 
 interface AddBlockModalProps {
   isOpen: boolean;
@@ -100,28 +101,31 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
     onClose();
   };
 
-  const categoryOptions: Array<{ value: PracticeBlock["category"]; label: string }> = [
-    { value: "offense", label: "🏈 Offense" },
-    { value: "defense", label: "🛡️ Defense" },
-    { value: "special-teams", label: "⚡ Special Teams" },
-    { value: "meeting", label: "📋 Meeting" },
-    { value: "weight-room", label: "🏋️ Weight Room" },
-    { value: "transition", label: "🔄 Transition" },
-    { value: "break", label: "☕ Break" },
+  const categoryOptions: Array<{ value: PracticeBlock["category"]; label: string; icon: string }> = [
+    { value: "offense", label: "Offense", icon: "trending-up" },
+    { value: "defense", label: "Defense", icon: "shield" },
+    { value: "special-teams", label: "Special Teams", icon: "zap" },
+    { value: "meeting", label: "Meeting", icon: "file" },
+    { value: "weight-room", label: "Weight Room", icon: "activity" },
+    { value: "transition", label: "Transition", icon: "arrow-right" },
+    { value: "break", label: "Break", icon: "pause" },
   ];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
-          <Typography variant="headline-sm" className="text-navy-900">
-            ➕ Add Practice Block
-          </Typography>
+          <div className="flex items-center gap-2">
+            <Icon name="plus" size="lg" className="text-jade-600" />
+            <Typography variant="headline-sm" className="text-navy-900">
+              Add Practice Block
+            </Typography>
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl"
+            className="text-gray-400 hover:text-gray-600 p-1"
           >
-            ✕
+            <Icon name="close" size="lg" />
           </button>
         </div>
 

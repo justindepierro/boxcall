@@ -4,6 +4,7 @@ import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
 import type { Database } from "../../types/database";
 import { supabase } from "../../lib/supabase";
+import { Icon } from "./Icon/Icon";
 
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 
@@ -72,7 +73,7 @@ export const Navigation: React.FC = () => {
               onClick={() => handleNavigation("/dashboard")}
               className="flex items-center space-x-3 text-xl font-display font-bold text-jade-600 hover:text-jade-700 transition-colors"
             >
-              <span className="text-2xl">🏈</span>
+              <Icon name="target" size="xl" color="jade" />
               <span className="font-display text-2xl tracking-wide">
                 BoxCall
               </span>
@@ -91,7 +92,7 @@ export const Navigation: React.FC = () => {
                 className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 text-sm transition-colors"
                 title="Dashboard (⌘+1)"
               >
-                🏠
+                <Icon name="home" size="md" color="current" />
               </button>
               {(currentRole === "admin" || currentRole === "coach") && (
                 <button
@@ -107,7 +108,7 @@ export const Navigation: React.FC = () => {
                 className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 text-sm transition-colors"
                 title="Calendar (⌘+3)"
               >
-                📅
+                <Icon name="calendar" size="md" color="current" />
               </button>
             </div>
           </div>
@@ -177,34 +178,38 @@ export const Navigation: React.FC = () => {
                     {/* Menu Items - Square, confident styling */}
                     <button
                       onClick={() => handleNavigation("/profile")}
-                      className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-gray-700 dark:text-gray-300 hover:bg-jade-50 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 transition-all duration-200 border-l-2 border-transparent hover:border-jade-500"
+                      className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-gray-700 dark:text-gray-300 hover:bg-jade-50 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 transition-all duration-200 border-l-2 border-transparent hover:border-jade-500 flex items-center gap-2"
                     >
-                      👤 My Profile
+                      <Icon name="user" size="sm" color="current" />
+                      My Profile
                     </button>
 
                     <button
                       onClick={() => handleNavigation("/dashboard")}
-                      className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-gray-700 dark:text-gray-300 hover:bg-jade-50 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 transition-all duration-200 border-l-2 border-transparent hover:border-jade-500"
+                      className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-gray-700 dark:text-gray-300 hover:bg-jade-50 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 transition-all duration-200 border-l-2 border-transparent hover:border-jade-500 flex items-center gap-2"
                     >
-                      🏠 Dashboard
+                      <Icon name="home" size="sm" color="current" />
+                      Dashboard
                     </button>
 
                     {/* Conditional Menu Items */}
                     {profile?.role === "admin" && (
                       <button
                         onClick={() => handleNavigation("/super-admin")}
-                        className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-gray-700 dark:text-gray-300 hover:bg-navy-50 hover:text-navy-700 dark:hover:bg-navy-900/20 dark:hover:text-navy-400 transition-all duration-200 border-l-2 border-transparent hover:border-navy-500"
+                        className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-gray-700 dark:text-gray-300 hover:bg-navy-50 hover:text-navy-700 dark:hover:bg-navy-900/20 dark:hover:text-navy-400 transition-all duration-200 border-l-2 border-transparent hover:border-navy-500 flex items-center gap-2"
                       >
-                        🔧 Super Admin
+                        <Icon name="settings" size="sm" color="current" />
+                        Super Admin
                       </button>
                     )}
 
                     <div className="border-t-2 border-gray-200 dark:border-gray-700 mt-2 pt-2">
                       <button
                         onClick={handleSignOut}
-                        className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-red-600 dark:text-red-400 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/20 dark:hover:text-red-300 transition-all duration-200 border-l-2 border-transparent hover:border-red-500"
+                        className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-red-600 dark:text-red-400 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/20 dark:hover:text-red-300 transition-all duration-200 border-l-2 border-transparent hover:border-red-500 flex items-center gap-2"
                       >
-                        🚪 Sign Out
+                        <Icon name="arrow-left" size="sm" color="current" />
+                        Sign Out
                       </button>
                     </div>
                   </div>
@@ -244,9 +249,10 @@ export const Navigation: React.FC = () => {
         {mobileMenuOpen && (
           <div className="md:hidden border-t-2 border-gray-200 dark:border-gray-700 pt-4 pb-4 bg-gray-50 dark:bg-gray-900/50">
             <div className="px-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 font-medium">
-                💡 Use the sidebar menu (☰) for full navigation
-              </p>
+              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-3 font-medium">
+                <Icon name="info" size="sm" color="current" />
+                Use the sidebar menu for full navigation
+              </div>
               <div className="space-y-2">
                 <button
                   onClick={() => handleNavigation("/dashboard")}

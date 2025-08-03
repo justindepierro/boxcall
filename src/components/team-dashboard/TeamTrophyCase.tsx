@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
+import { Icon } from "../ui/Icon/Icon";
 
 interface TeamTrophyCaseProps {
   teamId: string;
@@ -24,7 +25,7 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = () => {
       {
         id: "1",
         name: "Undefeated Season",
-        icon: "🏆",
+        icon: "award",
         progress: 8,
         target: 10,
         completed: false,
@@ -91,9 +92,10 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = () => {
       <div className="flex items-center justify-between mb-4">
         <Typography
           variant="headline-md"
-          className="text-gray-900 dark:text-white"
+          className="text-gray-900 dark:text-white flex items-center gap-2"
         >
-          🏆 Team Trophy Case
+          <Icon name="award" size="md" color="current" />
+          Team Trophy Case
         </Typography>
         <div className="text-right">
           <Typography variant="body-sm" color="muted">

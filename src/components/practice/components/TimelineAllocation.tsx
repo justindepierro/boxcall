@@ -35,6 +35,7 @@ import React from "react";
 import { Typography } from "../../design-system";
 import { Button, Card } from "../../ui";
 import { getCategoryColor } from "../utils";
+import { Icon } from "../../ui/Icon/Icon";
 import type { 
   PracticeBlock, 
   TimelineAllocation as TimelineAllocationType, 
@@ -92,7 +93,10 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <Typography variant="headline-md">⏱️ Allocate Practice Time</Typography>
+          <Typography variant="headline-md" className="flex items-center gap-2">
+            <Icon name="clock" size="md" />
+            Allocate Practice Time
+          </Typography>
           <Typography variant="body-sm" color="muted" className="mt-1">
             Select a category below, then click and drag on the timeline to allocate time blocks
           </Typography>
@@ -114,13 +118,13 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
         </Typography>
         <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
           {[
-            { key: "meeting", label: "Meeting", emoji: "📋" },
-            { key: "weight-room", label: "Weight Room", emoji: "🏋️" },
-            { key: "transition", label: "Transition", emoji: "🚶" },
-            { key: "offense", label: "Offense", emoji: "🏈" },
-            { key: "defense", label: "Defense", emoji: "🛡️" },
-            { key: "special-teams", label: "Special Teams", emoji: "⚡" },
-            { key: "break", label: "Break", emoji: "💧" }
+            { key: "meeting", label: "Meeting", icon: "book" },
+            { key: "weight-room", label: "Weight Room", icon: "activity" },
+            { key: "transition", label: "Transition", icon: "arrow-right" },
+            { key: "offense", label: "Offense", icon: "target" },
+            { key: "defense", label: "Defense", icon: "shield" },
+            { key: "special-teams", label: "Special Teams", icon: "zap" },
+            { key: "break", label: "Break", icon: "pause" }
           ].map(category => (
             <button
               key={category.key}
@@ -131,21 +135,29 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                   : `border-gray-200 ${getCategoryColor(category.key as PracticeBlock["category"])} hover:border-gray-300`
               }`}
             >
-              <div className="text-lg mb-1">{category.emoji}</div>
+              <div className="mb-1">
+                <Icon name={category.icon as any} size="lg" color="current" />
+              </div>
               <div className="text-xs font-medium">{category.label}</div>
             </button>
           ))}
         </div>
         {selectedCategory && (
           <div className="mt-3 p-2 bg-blue-50 rounded-lg">
-            <Typography variant="body-sm" className="text-blue-800">
-              🎯 Selected: <strong>{selectedCategory.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}</strong>
-              {isSelecting && " - Click to finish selection"}
-              {!isSelecting && " - Click timeline to add 5-minute blocks (auto-aligned)"}
-            </Typography>
-            <Typography variant="body-xs" className="text-blue-600 mt-1">
-              💡 Click empty areas to add 5-minute blocks. Click existing blocks to resize with slider.
-            </Typography>
+            <div className="flex items-center gap-1">
+              <Icon name="target" size="sm" color="info" />
+              <Typography variant="body-sm" className="text-blue-800">
+                Selected: <strong>{selectedCategory.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}</strong>
+                {isSelecting && " - Click to finish selection"}
+                {!isSelecting && " - Click timeline to add 5-minute blocks (auto-aligned)"}
+              </Typography>
+            </div>
+            <div className="flex items-center gap-1 mt-1">
+              <Icon name="info" size="xs" color="info" />
+              <Typography variant="body-xs" className="text-blue-600">
+                Click empty areas to add 5-minute blocks. Click existing blocks to resize with slider.
+              </Typography>
+            </div>
           </div>
         )}
       </Card>
@@ -160,15 +172,17 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
             <div className="flex space-x-2">
               <button
                 onClick={onRemoveEmpty}
-                className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200"
+                className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200 flex items-center gap-1"
               >
-                🔄 Remove Empty Time
+                <Icon name="activity" size="sm" color="current" />
+                Remove Empty Time
               </button>
               <button
                 onClick={onClearAll}
-                className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200"
+                className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 flex items-center gap-1"
               >
-                🗑️ Clear All
+                <Icon name="delete" size="sm" color="current" />
+                Clear All
               </button>
             </div>
           </div>
@@ -290,15 +304,21 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
         <div className="mt-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <Typography variant="body-md" className="font-medium text-blue-800">
-                🎯 Resize Block: {selectedBlock.category.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
-              </Typography>
+              <div className="flex items-center gap-2">
+                <Icon name="target" size="sm" color="info" />
+                <Typography variant="body-md" className="font-medium text-blue-800">
+                  Resize Block: {selectedBlock.category.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                </Typography>
+              </div>
               <Typography variant="body-sm" className="text-blue-600">
                 Block starts at minute {selectedBlock.start}, currently {selectedBlock.duration} minutes
               </Typography>
-              <Typography variant="body-xs" className="text-blue-500 mt-1">
-                💡 Press Space/Enter to save, Esc to cancel
-              </Typography>
+              <div className="flex items-center gap-1 mt-1">
+                <Icon name="info" size="xs" color="info" />
+                <Typography variant="body-xs" className="text-blue-500">
+                  Press Space/Enter to save, Esc to cancel
+                </Typography>
+              </div>
             </div>
             <button
               onClick={onClearSelected}
@@ -343,9 +363,12 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
               <Typography variant="body-sm" className="font-medium text-gray-700">
                 Current Allocation (Click time to edit):
               </Typography>
-              <Typography variant="body-xs" color="muted">
-                💡 Click minutes to adjust, press Enter to save
-              </Typography>
+              <div className="flex items-center gap-1">
+                <Icon name="info" size="xs" color="slate" />
+                <Typography variant="body-xs" color="muted">
+                  Click minutes to adjust, press Enter to save
+                </Typography>
+              </div>
             </div>
             <div className="flex flex-wrap gap-3">
               {Object.entries(timelineAllocation).length > 0 && Object.entries(

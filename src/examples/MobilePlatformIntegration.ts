@@ -29,7 +29,7 @@ export async function initializeBoxCallMobile(): Promise<{
   error?: string
 }> {
   try {
-    console.log('🚀 Initializing BoxCall Mobile Platform (Phase 4.2 + 4.3)...')
+    console.log('BoxCall Mobile: Initializing Platform (Phase 4.2 + 4.3)...')
 
     // 1. Detect device capabilities
     const viewport: MobileViewport = {
@@ -51,7 +51,7 @@ export async function initializeBoxCallMobile(): Promise<{
     // 3. Create optimal mobile configuration
     const mobileConfig: MobileInitializationConfig = createMobileConfig(viewport, platformContext)
 
-    console.log('📱 Mobile Configuration:', {
+    console.log('BoxCall Mobile: Configuration -', {
       viewport: `${viewport.width}x${viewport.height}`,
       orientation: viewport.orientation,
       performanceProfile: mobileConfig.performanceProfile,
@@ -66,7 +66,7 @@ export async function initializeBoxCallMobile(): Promise<{
     }
 
     console.log('✅ Phase 4.2 Mobile Optimization Complete')
-    console.log('📊 Mobile Services Status:', {
+    console.log('BoxCall Mobile: Services Status -', {
       calendar: mobileResult.state.calendar ? 'initialized' : 'pending',
       ui: mobileResult.state.ui.theme ? 'themed' : 'default',
       performance: mobileResult.state.performance ? 'optimized' : 'standard',
@@ -88,7 +88,7 @@ export async function initializeBoxCallMobile(): Promise<{
     }
 
     console.log('✅ Phase 4.3 React Native Platform Complete')
-    console.log('📲 React Native Status:', {
+    console.log('BoxCall Mobile: React Native Status -', {
       platform: reactNativeResult.nativeState?.platform,
       syncStatus: reactNativeResult.nativeState?.syncStatus,
       userRole: reactNativeResult.nativeState?.userRole,
@@ -100,7 +100,7 @@ export async function initializeBoxCallMobile(): Promise<{
     const syncResult = await MobileOrchestrator.enableRealTimeSync(demoTeamIds)
 
     if (syncResult.success) {
-      console.log('🔄 Real-time sync enabled:', {
+      console.log('BoxCall Mobile: Real-time sync enabled -', {
         subscriptions: syncResult.subscriptions.length,
         teams: demoTeamIds.length
       })
@@ -111,10 +111,10 @@ export async function initializeBoxCallMobile(): Promise<{
     const syncStateResult = await MobileOrchestrator.syncCrossPlatformState(userId)
     
     if (syncStateResult.success) {
-      console.log('🔄 Cross-platform state synchronized')
+      console.log('BoxCall Mobile: Cross-platform state synchronized')
     }
 
-    console.log('🎉 BoxCall Mobile Platform Fully Initialized!')
+    console.log('BoxCall Mobile: Platform Fully Initialized!')
     return {
       success: true,
       appReady: true,
@@ -140,7 +140,7 @@ export async function initializeBoxCallMobile(): Promise<{
  * Monitor mobile platform performance and status
  */
 export async function monitorMobilePlatform(): Promise<void> {
-  console.log('📊 Starting mobile platform monitoring...')
+  console.log('BoxCall Mobile: Starting platform monitoring...')
 
   // Monitor every 30 seconds
   setInterval(async () => {
@@ -154,7 +154,7 @@ export async function monitorMobilePlatform(): Promise<void> {
       // Get current app state
       const appState = MobileOrchestrator.getAppState()
 
-      console.log('📈 Mobile Platform Status:', {
+      console.log('BoxCall Mobile: Platform Status -', {
         timestamp: new Date().toISOString(),
         overall: perfStatus.overall,
         mobile: {
@@ -178,7 +178,7 @@ export async function monitorMobilePlatform(): Promise<void> {
 
       // Handle performance recommendations
       if (perfStatus.recommendations.length > 0) {
-        console.log('💡 Performance Recommendations:', perfStatus.recommendations)
+        console.log('BoxCall Mobile: Performance Recommendations -', perfStatus.recommendations)
       }
 
     } catch (error) {
@@ -203,7 +203,7 @@ export async function handleOrientationChange(): Promise<void> {
     safeArea: { top: 0, bottom: 0, left: 0, right: 0 }
   }
 
-  console.log('🔄 Handling orientation change:', newViewport.orientation)
+  console.log('BoxCall Mobile: Handling orientation change -', newViewport.orientation)
 
   const result = await MobileOrchestrator.handleViewportChange(newViewport)
   
@@ -218,7 +218,7 @@ export async function handleOrientationChange(): Promise<void> {
  * Handle battery level changes
  */
 export async function handleBatteryChange(batteryLevel: number, isLowPowerMode: boolean = false): Promise<void> {
-  console.log(`🔋 Battery level: ${batteryLevel}% ${isLowPowerMode ? '(Low Power Mode)' : ''}`)
+  console.log(`BoxCall Mobile: Battery level ${batteryLevel}% ${isLowPowerMode ? '(Low Power Mode)' : ''}`)
 
   const result = await MobileOrchestrator.handleBatteryChange(batteryLevel, isLowPowerMode)
   
@@ -303,15 +303,15 @@ export function setupMobilePlatformListeners(): void {
   // Page visibility for background optimization
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
-      console.log('📱 App backgrounded - enabling background optimizations')
+      console.log('BoxCall Mobile: App backgrounded - enabling background optimizations')
       // Could trigger background optimization mode
     } else {
-      console.log('📱 App foregrounded - resuming full performance')
+      console.log('BoxCall Mobile: App foregrounded - resuming full performance')
       // Could restore full performance mode
     }
   })
 
-  console.log('👂 Mobile platform event listeners active')
+  console.log('BoxCall Mobile: Event listeners active')
 }
 
 // ============================================================================
@@ -323,7 +323,7 @@ export function setupMobilePlatformListeners(): void {
  * Call this once when your app starts
  */
 export async function setupBoxCallMobile(): Promise<void> {
-  console.log('🏈 Setting up BoxCall Mobile Platform...')
+  console.log('BoxCall Mobile: Setting up Platform...')
 
   // 1. Initialize platform
   const initResult = await initializeBoxCallMobile()
@@ -338,8 +338,8 @@ export async function setupBoxCallMobile(): Promise<void> {
   // 3. Start monitoring
   await monitorMobilePlatform()
 
-  console.log('🎉 BoxCall Mobile Platform ready for coaching!')
-  console.log('📱 Features available:', {
+  console.log('BoxCall Mobile: Platform ready for coaching!')
+  console.log('BoxCall Mobile: Features available -', {
     mobileOptimization: initResult.appReady,
     reactNative: initResult.nativeReady,
     realTimeSync: initResult.nativeReady,

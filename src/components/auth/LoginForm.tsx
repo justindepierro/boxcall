@@ -73,7 +73,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     const result = await signIn(formData.email, formData.password);
 
     if (result.success) {
-      console.log("✅ Login successful!");
+      console.log("BoxCall: Login successful!");
       onSuccess?.();
     }
   };

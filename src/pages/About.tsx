@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
+import Icon from "../components/ui/Icon/Icon";
 
 /**
  * About - Information about BoxCall platform
@@ -30,7 +31,7 @@ export const About: React.FC = () => {
         <div className="grid gap-6 md:grid-cols-2">
           {/* Platform Overview */}
           <Card className="p-6">
-            <div className="text-4xl mb-4">🏈</div>
+            <Icon name="trending-up" size="3xl" className="text-jade-600 mb-4" />
             <Typography variant="headline-md" className="mb-3">
               Platform Overview
             </Typography>
@@ -43,7 +44,7 @@ export const About: React.FC = () => {
 
           {/* Features */}
           <Card className="p-6">
-            <div className="text-4xl mb-4">✨</div>
+            <Icon name="star" size="3xl" className="text-yellow-500 mb-4" />
             <Typography variant="headline-md" className="mb-3">
               Key Features
             </Typography>
@@ -67,15 +68,18 @@ export const About: React.FC = () => {
               your team's success.
             </Typography>
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-              <Typography variant="body-sm" className="text-blue-700 dark:text-blue-300">
-                📧 Support: help@boxcall.com
+              <Typography variant="body-sm" className="text-blue-700 dark:text-blue-300 flex items-center">
+                <Icon name="mail" size="sm" className="mr-2" />
+                Support: help@boxcall.com
               </Typography>
             </div>
           </Card>
 
           {/* Version Info */}
           <Card className="p-6">
-            <div className="text-4xl mb-4">🚀</div>
+            <div className="mb-4">
+              <Icon name="target" size="3xl" color="jade" />
+            </div>
             <Typography variant="headline-md" className="mb-3">
               Version Information
             </Typography>

@@ -22,7 +22,7 @@ export const Auth: React.FC<AuthProps> = ({
   const [mode, setMode] = useState<AuthMode>(initialMode);
 
   const handleAuthSuccess = () => {
-    console.log("🎉 Authentication successful!");
+    console.log("BoxCall: Authentication successful!");
     onSuccess?.();
   };
 

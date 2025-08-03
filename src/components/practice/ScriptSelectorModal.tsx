@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Typography } from "../../components/design-system";
 import { Button, Card } from "../../components/ui";
+import Icon from "../../components/ui/Icon/Icon";
 
 interface Script {
   id: string;
@@ -67,14 +68,17 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            <Typography variant="headline-lg" className="text-navy-900">
-              📖 Add Practice Script
-            </Typography>
+            <div className="flex items-center gap-2">
+              <Icon name="book" size="lg" className="text-navy-600" />
+              <Typography variant="headline-lg" className="text-navy-900">
+                Add Practice Script
+              </Typography>
+            </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors text-xl"
+              className="text-gray-400 hover:text-gray-600 transition-colors p-1"
             >
-              ✕
+              <Icon name="close" size="lg" />
             </button>
           </div>
 

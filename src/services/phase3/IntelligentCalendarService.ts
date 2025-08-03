@@ -566,7 +566,7 @@ export class IntelligentCalendarService {
     // Analyze conflicts
     if (results.conflicts?.hasConflicts) {
       recommendations.push(
-        "⚠️ Scheduling conflicts detected - consider alternative times"
+        "Scheduling conflicts detected - consider alternative times"
       );
     }
 
@@ -575,7 +575,7 @@ export class IntelligentCalendarService {
       const prediction = results.attendancePrediction;
       if (prediction.confidence > 0.8) {
         recommendations.push(
-          `🎯 High confidence prediction: ${prediction.predictedAttendance} players expected`
+          `High confidence prediction: ${prediction.predictedAttendance} players expected`
         );
       }
     }
@@ -583,7 +583,7 @@ export class IntelligentCalendarService {
     // Analyze optimization opportunities
     if (results.optimizations && results.optimizations.length > 0) {
       recommendations.push(
-        `⚡ ${results.optimizations.length} scheduling optimizations available`
+        `${results.optimizations.length} scheduling optimizations available`
       );
     }
 

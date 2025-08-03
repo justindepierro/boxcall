@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
+import Icon from "../components/ui/Icon/Icon";
 
 /**
  * Playbook - Team plays and strategy management
@@ -28,7 +29,7 @@ export const Playbook: React.FC = () => {
 
         {/* Coming Soon Card */}
         <Card className="text-center py-12">
-          <div className="text-6xl mb-4">📖</div>
+          <Icon name="book" size="3xl" className="text-navy-600 mb-4 mx-auto" />
           <Typography variant="headline-lg" className="mb-4">
             Digital Playbook
           </Typography>
@@ -38,9 +39,12 @@ export const Playbook: React.FC = () => {
             and master your team's game plan.
           </Typography>
           <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 inline-block">
-            <Typography variant="body-sm" className="text-green-700 dark:text-green-300">
-              🎯 Coming Soon - Interactive play diagrams and video analysis
-            </Typography>
+            <div className="flex items-center gap-2 justify-center">
+              <Icon name="target" size="sm" className="text-green-700 dark:text-green-300" />
+              <Typography variant="body-sm" className="text-green-700 dark:text-green-300">
+                Coming Soon - Interactive play diagrams and video analysis
+              </Typography>
+            </div>
           </div>
         </Card>
       </div>

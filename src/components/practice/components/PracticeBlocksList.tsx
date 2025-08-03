@@ -37,6 +37,7 @@ import { Typography } from "../../design-system";
 import { Button, Card } from "../../ui";
 import { getCategoryColor } from "../utils";
 import type { PracticeBlock, PracticeGroup, UserRole } from "../types";
+import Icon from "../../ui/Icon/Icon";
 
 interface PracticeBlocksListProps {
   practiceBlocks: PracticeBlock[];
@@ -92,7 +93,8 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
               size="sm"
               onClick={onScaffoldMode}
             >
-              ⏱️ Allocate Practice Time
+              <Icon name="clock" size="sm" className="mr-1" />
+              Allocate Practice Time
             </Button>
           )}
           <Button
@@ -118,7 +120,9 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
       {/* Empty State */}
       {practiceBlocks.length === 0 ? (
         <Card className="p-8 text-center">
-          <div className="text-4xl mb-4">⏱️</div>
+          <div className="mb-4 flex justify-center">
+            <Icon name="clock" size="lg" className="text-gray-400" />
+          </div>
           <Typography variant="body-lg" color="muted">
             No practice blocks planned yet
           </Typography>
@@ -179,10 +183,16 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                 {/* Location & Coach */}
                                 <div className="flex items-center space-x-4 text-sm text-gray-600">
                                   {block.location && (
-                                    <span>📍 {block.location}</span>
+                                    <div className="flex items-center gap-1">
+                                      <Icon name="location" size="sm" className="text-gray-500" />
+                                      <span>{block.location}</span>
+                                    </div>
                                   )}
                                   {block.assignedCoach && (
-                                    <span>👨‍💼 {block.assignedCoach}</span>
+                                    <div className="flex items-center gap-1">
+                                      <Icon name="user-check" size="sm" className="text-gray-500" />
+                                      <span>{block.assignedCoach}</span>
+                                    </div>
                                   )}
                                 </div>
 
@@ -196,9 +206,12 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                 {/* Block Script */}
                                 {block.scriptId && (
                                   <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
-                                    <Typography variant="body-sm" className="text-blue-800">
-                                      📋 Block Script: {block.scriptTitle || `Script ${block.scriptId}`}
-                                    </Typography>
+                                    <div className="flex items-center gap-2">
+                                      <Icon name="file" size="sm" className="text-blue-600" />
+                                      <Typography variant="body-sm" className="text-blue-800">
+                                        Block Script: {block.scriptTitle || `Script ${block.scriptId}`}
+                                      </Typography>
+                                    </div>
                                   </div>
                                 )}
                               </div>
@@ -211,21 +224,21 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                 className="text-blue-600 hover:text-blue-800 p-1"
                                 title="Edit block"
                               >
-                                ✏️
+                                <Icon name="edit" size="sm" />
                               </button>
                               <button
                                 onClick={() => onAddScriptToBlock(block.id)}
                                 className="text-green-600 hover:text-green-800 p-1"
                                 title="Add script to block"
                               >
-                                📋
+                                <Icon name="file" size="sm" />
                               </button>
                               <button
                                 onClick={() => onRemoveBlock(block.id)}
                                 className="text-red-600 hover:text-red-800 p-1"
                                 title="Delete block"
                               >
-                                🗑️
+                                <Icon name="delete" size="sm" />
                               </button>
                             </div>
                           </div>
@@ -257,32 +270,35 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                           {group.name}
                                         </Typography>
                                         {group.location && (
-                                          <Typography variant="body-xs" color="muted">
-                                            📍 {group.location}
-                                          </Typography>
+                                          <div className="flex items-center gap-1">
+                                            <Icon name="location" size="sm" className="text-gray-400" />
+                                            <Typography variant="body-xs" color="muted">
+                                              {group.location}
+                                            </Typography>
+                                          </div>
                                         )}
                                       </div>
                                       <div className="flex space-x-1 ml-2">
                                         <button
                                           onClick={() => onEditGroup(block.id, group)}
-                                          className="text-blue-600 hover:text-blue-800 text-xs"
+                                          className="text-blue-600 hover:text-blue-800 p-1"
                                           title="Edit group"
                                         >
-                                          ✏️
+                                          <Icon name="edit" size="sm" />
                                         </button>
                                         <button
                                           onClick={() => onAddScriptToGroup(block.id, group.id)}
-                                          className="text-green-600 hover:text-green-800 text-xs"
+                                          className="text-green-600 hover:text-green-800 p-1"
                                           title="Add script to group"
                                         >
-                                          📋
+                                          <Icon name="file" size="sm" />
                                         </button>
                                         <button
                                           onClick={() => onRemoveGroup(block.id, group.id)}
-                                          className="text-red-600 hover:text-red-800 text-xs"
+                                          className="text-red-600 hover:text-red-800 p-1"
                                           title="Remove group"
                                         >
-                                          🗑️
+                                          <Icon name="delete" size="sm" />
                                         </button>
                                       </div>
                                     </div>

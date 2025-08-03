@@ -2,6 +2,7 @@ import React from "react";
 import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
+import Icon from "../ui/Icon/Icon";
 
 interface PersonalTrophyShelfProps {
   userId: string;
@@ -61,12 +62,15 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   return (
     <Card className="p-6 bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
       <div className="flex items-center justify-between mb-4">
-        <Typography
-          variant="headline-md"
-          className="text-gray-900 dark:text-white"
-        >
-          🏆 Trophy Shelf
-        </Typography>
+        <div className="flex items-center gap-2 mb-6">
+          <Icon name="award" size="lg" className="text-yellow-600" />
+          <Typography
+            variant="headline-md"
+            className="text-gray-900 dark:text-white"
+          >
+            Trophy Shelf
+          </Typography>
+        </div>
         <div className="text-right">
           <Typography variant="body-sm" color="muted">
             Total Points

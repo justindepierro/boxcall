@@ -133,7 +133,7 @@ export class DashboardService {
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
         teamId: userTeams[0]?.team?.id,
         teamName: userTeams[0]?.team?.name,
-        icon: "🏆",
+        icon: "award",
         color: "jade",
       },
       {
@@ -144,7 +144,7 @@ export class DashboardService {
         timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(), // 6 hours ago
         teamId: userTeams[0]?.team?.id,
         teamName: userTeams[0]?.team?.name,
-        icon: "📋",
+        icon: "file",
         color: "blue",
       },
       {
@@ -155,7 +155,7 @@ export class DashboardService {
         timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(), // 12 hours ago
         teamId: userTeams[0]?.team?.id,
         teamName: userTeams[0]?.team?.name,
-        icon: "💬",
+        icon: "message",
         color: "purple",
       },
     ];

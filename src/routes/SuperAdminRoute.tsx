@@ -5,6 +5,7 @@ import {
   useAuthProfile,
   useIsAuthenticated,
 } from "../app/auth-store";
+import { Icon } from "../components/ui/Icon/Icon";
 import { supabase } from "../lib/supabase";
 
 interface SuperAdminRouteProps {
@@ -82,8 +83,9 @@ export const SuperAdminRoute: React.FC<SuperAdminRouteProps> = ({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">
-            🚨 Developer Access Only
+          <h1 className="text-2xl font-bold text-red-600 mb-4 flex items-center justify-center">
+            <Icon name="shield" size="lg" className="mr-2" />
+            Developer Access Only
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             This area is restricted to super administrators and developers.

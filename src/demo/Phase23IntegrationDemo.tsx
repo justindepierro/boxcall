@@ -4,6 +4,7 @@
 import React, { useState } from "react";
 import { EnhancedTeamFeaturesPage } from "../pages/EnhancedTeamFeaturesPage";
 import type { CalendarRole } from "../types/enhanced-calendar";
+import { Icon } from "../components/ui/Icon/Icon";
 
 interface DemoUser {
   id: string;
@@ -279,10 +280,10 @@ export function Phase23IntegrationDemo() {
                         }`}
                       >
                         {result.status === "pass"
-                          ? "✓"
+                          ? <Icon name="check" size="sm" color="success" />
                           : result.status === "fail"
-                            ? "✗"
-                            : "⏳"}
+                            ? <Icon name="close" size="sm" color="error" />
+                            : <Icon name="clock" size="sm" color="slate" />}
                       </span>
                     </div>
                   ))}
@@ -296,19 +297,19 @@ export function Phase23IntegrationDemo() {
                 </h4>
                 <div className="space-y-1">
                   <div className="flex items-center text-xs text-green-700">
-                    <span className="mr-2">✅</span>
+                    <Icon name="check" size="sm" color="success" className="mr-2" />
                     Event Polling System
                   </div>
                   <div className="flex items-center text-xs text-green-700">
-                    <span className="mr-2">✅</span>
+                    <Icon name="check" size="sm" color="success" className="mr-2" />
                     Advanced RSVP Features
                   </div>
                   <div className="flex items-center text-xs text-green-700">
-                    <span className="mr-2">✅</span>
+                    <Icon name="check" size="sm" color="success" className="mr-2" />
                     Calendar Permissions
                   </div>
                   <div className="flex items-center text-xs text-green-700">
-                    <span className="mr-2">✅</span>
+                    <Icon name="check" size="sm" color="success" className="mr-2" />
                     Bulk Operations
                   </div>
                 </div>
@@ -336,7 +337,7 @@ export function Phase23IntegrationDemo() {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white p-4 rounded-lg border border-gray-200">
             <div className="flex items-center mb-3">
-              <span className="text-2xl mr-2">📊</span>
+              <Icon name="bar-chart" size="xl" color="jade" className="mr-2" />
               <h3 className="text-sm font-medium text-gray-900">
                 Event Polling
               </h3>

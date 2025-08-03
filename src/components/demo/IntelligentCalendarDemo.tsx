@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 import { useIntelligentCalendar } from "../../hooks/useIntelligentCalendar";
+import { Icon } from "../ui/Icon/Icon";
 
 interface IntelligentCalendarDemoProps {
   teamId?: string;
@@ -113,15 +114,15 @@ export const IntelligentCalendarDemo: React.FC<
         { key: "overview" as const, label: "🧠 Overview", icon: Brain },
         {
           key: "conflicts" as const,
-          label: "⚠️ Conflicts",
+          label: "Conflicts",
           icon: AlertTriangle,
         },
         {
           key: "scheduling" as const,
-          label: "📅 Smart Scheduling",
+          label: "Smart Scheduling",
           icon: Calendar,
         },
-        { key: "analytics" as const, label: "📊 Analytics", icon: TrendingUp },
+        { key: "analytics" as const, label: "Analytics", icon: TrendingUp },
       ].map(({ key, label, icon: Icon }) => (
         <button
           key={key}
@@ -192,9 +193,12 @@ export const IntelligentCalendarDemo: React.FC<
           disabled={isAnyLoading}
         >
           <div className="flex items-center justify-between mb-3">
-            <h4 className="font-semibold text-slate-800">
-              🎯 Complete Analysis
-            </h4>
+            <div className="flex items-center gap-2">
+              <Icon name="target" size="md" color="jade" />
+              <h4 className="font-semibold text-slate-800">
+                Complete Analysis
+              </h4>
+            </div>
             <div className="w-8 h-8 rounded-full bg-jade-100 flex items-center justify-center group-hover:bg-jade-200 transition-colors">
               <CheckCircle className="w-4 h-4 text-jade-600" />
             </div>
@@ -216,7 +220,10 @@ export const IntelligentCalendarDemo: React.FC<
           disabled={isAnyLoading}
         >
           <div className="flex items-center justify-between mb-3">
-            <h4 className="font-semibold text-slate-800">📈 Team Insights</h4>
+            <div className="flex items-center gap-2">
+              <Icon name="trending-up" size="md" color="navy" />
+              <h4 className="font-semibold text-slate-800">Team Insights</h4>
+            </div>
             <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
               <TrendingUp className="w-4 h-4 text-blue-600" />
             </div>
@@ -448,9 +455,12 @@ export const IntelligentCalendarDemo: React.FC<
 
         {hasSuggestions && (
           <div className="mt-6 space-y-4">
-            <h5 className="font-semibold text-slate-800">
-              🎯 Optimization Results
-            </h5>
+            <div className="flex items-center gap-2">
+              <Icon name="target" size="md" color="jade" />
+              <h5 className="font-semibold text-slate-800">
+                Optimization Results
+              </h5>
+            </div>
             <div className="grid gap-4">
               {suggestions.slice(0, 3).map((suggestion, index) => (
                 <div
@@ -653,14 +663,16 @@ export const IntelligentCalendarDemo: React.FC<
           </div>
 
           {hasSuggestions && (
-            <div className="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">
-              🎯 {suggestions.length} Suggestions Available
+            <div className="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800 flex items-center gap-1">
+              <Icon name="target" size="xs" color="current" />
+              {suggestions.length} Suggestions Available
             </div>
           )}
 
           {hasAnalytics && (
-            <div className="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">
-              📊 Analytics Loaded
+            <div className="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800 flex items-center gap-1">
+              <Icon name="bar-chart" size="xs" color="current" />
+              Analytics Loaded
             </div>
           )}
 
@@ -683,10 +695,13 @@ export const IntelligentCalendarDemo: React.FC<
 
       {/* Footer */}
       <div className="bg-slate-50 rounded-lg p-4 text-center">
-        <p className="text-sm text-slate-600">
-          🚀 <strong>Phase 3 Complete!</strong> Intelligent features ready for
-          production use. Next: Phase 4.1 Cross-Platform Integration
-        </p>
+        <div className="flex items-center justify-center gap-2 text-sm text-slate-600">
+          <Icon name="zap" size="sm" color="jade" />
+          <span>
+            <strong>Phase 3 Complete!</strong> Intelligent features ready for
+            production use. Next: Phase 4.1 Cross-Platform Integration
+          </span>
+        </div>
       </div>
     </div>
   );

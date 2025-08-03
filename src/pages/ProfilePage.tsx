@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuthLoading, useAuthProfile } from "../app/auth-store";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
+import { Icon } from "../components/ui/Icon/Icon";
 import { supabase } from "../lib/supabase";
 
 /**
@@ -141,8 +142,9 @@ export const ProfilePage: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            👤 My Profile
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center">
+            <Icon name="user" size="xl" className="mr-3" />
+            My Profile
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
             Manage your account information and preferences

@@ -1,5 +1,6 @@
 import React from "react";
 import { Typography } from "../design-system";
+import { Icon } from "../ui/Icon/Icon";
 
 interface TeamFeedProps {
   teamId: string;
@@ -28,7 +29,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
       authorRole: "head_coach",
       timestamp: "2 hours ago",
       content:
-        "Great practice today team! 🏈 Special shoutout to @Marcus for leadership and @Tyler for those explosive runs. Friday's game plan is uploaded - study hard! #EaglesStrong",
+        "Great practice today team! Special shoutout to @Marcus for leadership and @Tyler for those explosive runs. Friday's game plan is uploaded - study hard! #EaglesStrong",
       likes: 12,
       comments: 3,
       pinned: true,
@@ -40,7 +41,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
       authorRole: "coach",
       timestamp: "4 hours ago",
       content:
-        "New red zone package uploaded to playbook! 📋 Three new plays added: Red Zone Slant, Corner Fade, and QB Sweep. Practice these routes tonight.",
+        "New red zone package uploaded to playbook! Three new plays added: Red Zone Slant, Corner Fade, and QB Sweep. Practice these routes tonight.",
       attachments: ["Red Zone Package.pdf"],
       likes: 8,
       comments: 1,
@@ -52,7 +53,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
       authorRole: "system",
       timestamp: "1 day ago",
       content:
-        "🏆 Team Achievement Unlocked: Perfect Practice Week! Everyone showed up ready to work. Helmet stickers awarded to all players.",
+        "Team Achievement Unlocked: Perfect Practice Week! Everyone showed up ready to work. Helmet stickers awarded to all players.",
       likes: 23,
       comments: 7,
     },
@@ -63,7 +64,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
       authorRole: "head_coach",
       timestamp: "2 days ago",
       content:
-        "Friday's practice script is live! 📝 Focus areas: Red zone offense, 3rd down defense, and special teams. Weather looks good - outdoor practice confirmed.",
+        "Friday's practice script is live! Focus areas: Red zone offense, 3rd down defense, and special teams. Weather looks good - outdoor practice confirmed.",
       attachments: ["Friday_Practice_Script.pdf"],
       likes: 6,
       comments: 2,
@@ -75,7 +76,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
       authorRole: "coach",
       timestamp: "3 days ago",
       content:
-        "Player Spotlight: @Devon has been crushing it in the weight room! 💪 Up 15lbs on bench press this month. That dedication shows on the field. #WorkEthic",
+        "Player Spotlight: @Devon has been crushing it in the weight room! Up 15lbs on bench press this month. That dedication shows on the field. #WorkEthic",
       likes: 18,
       comments: 9,
     },
@@ -84,17 +85,17 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
   const getPostIcon = (type: string) => {
     switch (type) {
       case "announcement":
-        return "📢";
+        return <Icon name="info" size="md" color="jade" />;
       case "play_upload":
-        return "📋";
+        return <Icon name="book" size="md" color="navy" />;
       case "achievement":
-        return "🏆";
+        return <Icon name="award" size="md" color="jade" />;
       case "practice_script":
-        return "📝";
+        return <Icon name="file" size="md" color="navy" />;
       case "player_spotlight":
-        return "⭐";
+        return <Icon name="star" size="md" color="jade" />;
       default:
-        return "📄";
+        return <Icon name="file" size="md" color="slate" />;
     }
   };
 
@@ -144,7 +145,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
                     <Typography variant="body-sm" className="font-semibold">
                       {item.author}
                     </Typography>
-                    <span className="text-lg">{getPostIcon(item.type)}</span>
+                    {getPostIcon(item.type)}
                     {item.pinned && (
                       <div className="px-2 py-1 bg-jade-100 text-jade-800 dark:bg-jade-900 dark:text-jade-200 text-xs rounded-full">
                         PINNED
@@ -172,7 +173,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
                       key={index}
                       className="flex items-center space-x-2 p-2 bg-gray-50 dark:bg-gray-700 rounded-md"
                     >
-                      <span className="text-lg">📎</span>
+                      <Icon name="download" size="md" color="jade" />
                       <Typography
                         variant="body-sm"
                         className="text-jade-600 dark:text-jade-400"
@@ -189,16 +190,16 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
             <div className="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
               <div className="flex items-center space-x-4">
                 <button className="flex items-center space-x-1 text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400">
-                  <span>👍</span>
+                  <Icon name="check" size="sm" color="current" />
                   <Typography variant="caption">{item.likes}</Typography>
                 </button>
                 <button className="flex items-center space-x-1 text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400">
-                  <span>💬</span>
+                  <Icon name="message" size="sm" color="current" />
                   <Typography variant="caption">{item.comments}</Typography>
                 </button>
               </div>
               <button className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400">
-                <span>🔗</span>
+                <Icon name="share" size="sm" color="current" />
               </button>
             </div>
           </div>

@@ -7,6 +7,7 @@ import { BoxCallCalendar } from "../calendar/BoxCallCalendar";
 import "../calendar/BoxCallCalendar.css";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
+import Icon from "../ui/Icon/Icon";
 
 interface PersonalCalendarProps {
   userId: string;
@@ -129,7 +130,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
             <div className="space-y-4">
               {upcomingEvents.length === 0 ? (
                 <div className="text-center py-8">
-                  <div className="text-gray-400 text-lg mb-2">📅</div>
+                  <Icon name="calendar" size="2xl" className="text-gray-400 mx-auto mb-3" />
                   <Typography variant="body-md" className="text-gray-600">
                     No upcoming events scheduled
                   </Typography>

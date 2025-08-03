@@ -7,6 +7,7 @@ import "../components/calendar/BoxCallCalendar.css";
 import { Typography } from "../components/design-system";
 import { PracticePlannerModalNew as PracticePlannerModal } from "../components/practice/PracticePlannerModalNew";
 import { Button, Card, Input } from "../components/ui";
+import Icon from "../components/ui/Icon/Icon";
 import { useCalendar } from "../hooks/useCalendar";
 import type {
   CalendarEvent,
@@ -153,9 +154,12 @@ export const CalendarPage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Typography variant="headline-lg" className="text-red-600 mb-4">
-            ⚠️ Calendar Error
-          </Typography>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Icon name="warning" size="xl" className="text-red-600" />
+            <Typography variant="headline-lg" className="text-red-600">
+              Calendar Error
+            </Typography>
+          </div>
           <Typography variant="body-md" className="text-gray-600 mb-6">
             {error}
           </Typography>
@@ -173,22 +177,26 @@ export const CalendarPage: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
-            <div>
-              <Typography
-                variant="headline-xl"
-                className="text-gray-900 dark:text-white"
-              >
-                📅 Master Calendar
-              </Typography>
-              <Typography variant="body-lg" color="muted" className="mt-1">
-                Your comprehensive schedule across all teams
-              </Typography>
+            <div className="flex items-center gap-3">
+              <Icon name="calendar" size="xl" className="text-navy-600" />
+              <div>
+                <Typography
+                  variant="headline-xl"
+                  className="text-gray-900 dark:text-white"
+                >
+                  Master Calendar
+                </Typography>
+                <Typography variant="body-lg" color="muted" className="mt-1">
+                  Your comprehensive schedule across all teams
+                </Typography>
+              </div>
             </div>
 
             {/* Action Buttons */}
             <div className="flex items-center space-x-3">
               <Button variant="outline" onClick={handleExportCalendar}>
-                📤 Export
+                <Icon name="download" size="sm" className="mr-1" />
+                Export
               </Button>
               {(profile?.role === "coach" || profile?.role === "admin") && (
                 <Button
@@ -205,7 +213,8 @@ export const CalendarPage: React.FC = () => {
                     setShowEventModal(true);
                   }}
                 >
-                  ➕ Add Event
+                  <Icon name="plus" size="sm" className="mr-1" />
+                  Add Event
                 </Button>
               )}
             </div>
@@ -219,12 +228,15 @@ export const CalendarPage: React.FC = () => {
           <div className="lg:col-span-1 space-y-6">
             {/* Universal Search */}
             <Card className="p-6">
-              <Typography
-                variant="headline-md"
-                className="mb-4 text-gray-900 dark:text-white"
-              >
-                🔍 Universal Search
-              </Typography>
+              <div className="flex items-center gap-2 mb-4">
+                <Icon name="search" size="lg" color="navy" />
+                <Typography
+                  variant="headline-md"
+                  className="text-gray-900 dark:text-white"
+                >
+                  Universal Search
+                </Typography>
+              </div>
               <div className="space-y-3">
                 <Input
                   type="text"
@@ -246,12 +258,15 @@ export const CalendarPage: React.FC = () => {
 
             {/* Advanced Filters */}
             <Card className="p-6">
-              <Typography
-                variant="headline-md"
-                className="mb-4 text-gray-900 dark:text-white"
-              >
-                🎯 Filters
-              </Typography>
+              <div className="flex items-center gap-2 mb-4">
+                <Icon name="filter" size="lg" color="navy" />
+                <Typography
+                  variant="headline-md"
+                  className="text-gray-900 dark:text-white"
+                >
+                  Filters
+                </Typography>
+              </div>
               <div className="space-y-4">
                 {/* Event Type Filter */}
                 <div>
@@ -357,12 +372,15 @@ export const CalendarPage: React.FC = () => {
 
             {/* Calendar Stats */}
             <Card className="p-6">
-              <Typography
-                variant="headline-md"
-                className="mb-4 text-gray-900 dark:text-white"
-              >
-                📊 Stats
-              </Typography>
+              <div className="flex items-center gap-2 mb-4">
+                <Icon name="bar-chart" size="lg" color="navy" />
+                <Typography
+                  variant="headline-md"
+                  className="text-gray-900 dark:text-white"
+                >
+                  Stats
+                </Typography>
+              </div>
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">Total Events</span>
@@ -492,9 +510,12 @@ export const CalendarPage: React.FC = () => {
           <div className="bg-white rounded-lg shadow-xl max-w-lg w-full max-h-96 overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <Typography variant="headline-md" className="text-navy-900">
-                  {isCreatingEvent ? "➕ Create Event" : "📅 Event Details"}
-                </Typography>
+                <div className="flex items-center gap-2">
+                  <Icon name={isCreatingEvent ? "plus" : "calendar"} size="lg" color="navy" />
+                  <Typography variant="headline-md" className="text-navy-900">
+                    {isCreatingEvent ? "Create Event" : "Event Details"}
+                  </Typography>
+                </div>
                 <button
                   onClick={() => {
                     setShowEventModal(false);
@@ -503,7 +524,7 @@ export const CalendarPage: React.FC = () => {
                   }}
                   className="text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  ✕
+                  <Icon name="close" size="lg" />
                 </button>
               </div>
 
@@ -663,7 +684,7 @@ export const CalendarPage: React.FC = () => {
 
                   <div className="space-y-2 text-sm text-gray-600">
                     <div className="flex items-center">
-                      <span className="w-4 h-4 mr-2">📅</span>
+                      <Icon name="calendar" size="sm" color="slate" className="mr-2" />
                       {new Date(selectedEvent.start).toLocaleDateString(
                         "en-US",
                         {
@@ -699,19 +720,19 @@ export const CalendarPage: React.FC = () => {
                     </div>
                     {selectedEvent.location && (
                       <div className="flex items-center">
-                        <span className="w-4 h-4 mr-2">📍</span>
+                        <Icon name="location" size="sm" color="slate" className="mr-2" />
                         {selectedEvent.location}
                       </div>
                     )}
                     {selectedEvent.team_name && (
                       <div className="flex items-center">
-                        <span className="w-4 h-4 mr-2">👥</span>
+                        <Icon name="users" size="sm" color="slate" className="mr-2" />
                         {selectedEvent.team_name}
                       </div>
                     )}
                     {selectedEvent.opponent && (
                       <div className="flex items-center">
-                        <span className="w-4 h-4 mr-2">🏈</span>
+                        <Icon name="target" size="sm" color="slate" className="mr-2" />
                         vs. {selectedEvent.opponent}
                       </div>
                     )}
@@ -737,7 +758,8 @@ export const CalendarPage: React.FC = () => {
                           setShowEventModal(false);
                         }}
                       >
-                        📝 Plan Practice
+                        <Icon name="file" size="sm" className="mr-1" />
+                        Plan Practice
                       </Button>
                     )}
                     {selectedEvent.rsvp_required && (

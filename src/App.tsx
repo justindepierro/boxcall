@@ -17,14 +17,14 @@ function App() {
   // Test database connection on app start
   useEffect(() => {
     const initBoxCall = async () => {
-      console.log("🚀 Initializing BoxCall application...");
+      console.log("BoxCall: Initializing application...");
 
       const connectionOk = await testDatabaseConnection();
       if (connectionOk) {
-        console.log("✅ BoxCall database connected successfully!");
+        console.log("BoxCall: Database connected successfully!");
       } else {
         console.log(
-          "❌ Database connection failed - check your .env.local configuration"
+          "BoxCall: Database connection failed - check your .env.local configuration"
         );
       }
     };

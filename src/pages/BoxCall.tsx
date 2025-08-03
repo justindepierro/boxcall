@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
+import { Icon } from "../components/ui/Icon/Icon";
 
 /**
  * BoxCall - Game management and communication platform
@@ -28,17 +29,20 @@ export const BoxCall: React.FC = () => {
 
         {/* Coming Soon Card */}
         <Card className="text-center py-12">
-          <div className="text-6xl mb-4">📱</div>
+          <div className="flex justify-center mb-4">
+            <Icon name="phone" size="3xl" color="jade" />
+          </div>
           <Typography variant="headline-lg" className="mb-4">
-            BoxCall Platform
+            Coming Soon
           </Typography>
           <Typography variant="body-lg" color="muted" className="mb-6 max-w-2xl mx-auto">
             The ultimate game management platform for coaches. Coordinate plays, 
             communicate with your team, and manage game strategy in real-time.
           </Typography>
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 inline-block">
-            <Typography variant="body-sm" className="text-blue-700 dark:text-blue-300">
-              🚀 Coming Soon - Advanced coaching tools for game day
+            <Typography variant="body-sm" className="text-blue-700 dark:text-blue-300 flex items-center gap-2">
+              <Icon name="zap" size="sm" />
+              Coming Soon - Advanced coaching tools for game day
             </Typography>
           </div>
         </Card>

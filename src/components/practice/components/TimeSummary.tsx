@@ -21,6 +21,7 @@ import React from "react";
 import { Typography } from "../../design-system";
 import { getCategoryColor, formatDuration } from "../utils";
 import type { TimeSummaryProps, PracticeBlock } from "../types";
+import Icon from "../../ui/Icon/Icon";
 
 export const TimeSummary: React.FC<TimeSummaryProps> = ({
   scheduledDuration,
@@ -44,9 +45,12 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-      <Typography variant="headline-sm" className="text-navy-900 mb-3">
-        ⏱️ Practice Duration Summary
-      </Typography>
+      <div className="flex items-center gap-2 mb-3">
+        <Icon name="clock" size="lg" className="text-navy-700" />
+        <Typography variant="headline-sm" className="text-navy-900">
+          Practice Duration Summary
+        </Typography>
+      </div>
       
       {/* Time Overview */}
       <div className="grid grid-cols-3 gap-4 mb-4">

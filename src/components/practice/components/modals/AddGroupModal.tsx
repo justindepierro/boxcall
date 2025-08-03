@@ -18,6 +18,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Typography } from "../../../design-system";
+import Icon from "../../../ui/Icon/Icon";
 import type { PracticeGroup } from "../../types";
 
 interface AddGroupModalProps {
@@ -69,14 +70,17 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <div className="flex items-center justify-between mb-4">
-          <Typography variant="headline-sm" className="text-navy-900">
-            👥 Add Group
-          </Typography>
+          <div className="flex items-center gap-2">
+            <Icon name="users" size="lg" className="text-jade-600" />
+            <Typography variant="headline-sm" className="text-navy-900">
+              Add Group
+            </Typography>
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl"
+            className="text-gray-400 hover:text-gray-600 p-1"
           >
-            ✕
+            <Icon name="close" size="lg" />
           </button>
         </div>
 

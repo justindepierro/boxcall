@@ -7,6 +7,7 @@ import { Button } from "../components/ui/Button/Button";
 import Card from "../components/ui/Card/Card";
 import Input from "../components/ui/Input/Input";
 import { Modal } from "../components/ui/Modal/Modal";
+import Icon from "../components/ui/Icon/Icon";
 import { PracticePDFExportDialog } from "../components/practice/PracticePDFExportDialog";
 import {
   usePracticeBlocks,
@@ -275,29 +276,32 @@ export function PracticePlanner() {
                     <Button
                       onClick={() => setIsPDFExportOpen(true)}
                       variant="outline"
-                      className="bg-white border-navy-200 text-navy-700 hover:bg-navy-50"
+                      className="bg-white border-navy-200 text-navy-700 hover:bg-navy-50 flex items-center gap-2"
                       disabled={currentBlocks.length === 0}
                     >
-                      📄 Print Practice to PDF
+                      <Icon name="pdf" size="sm" />
+                      Print Practice to PDF
                     </Button>
 
                     {/* Practice Controls */}
                     {!practiceStarted ? (
                       <Button
                         onClick={handleStartPractice}
-                        className="bg-jade-600 hover:bg-jade-700 text-white"
+                        className="bg-jade-600 hover:bg-jade-700 text-white flex items-center gap-2"
                         disabled={currentBlocks.length === 0}
                       >
-                        🏈 Start Practice
+                        <Icon name="play" size="sm" className="text-white" />
+                        Start Practice
                       </Button>
                     ) : (
                       <div className="flex items-center space-x-2">
                         <Button
                           onClick={handleStopPractice}
                           variant="outline"
-                          className="border-red-300 text-red-700 hover:bg-red-50"
+                          className="border-red-300 text-red-700 hover:bg-red-50 flex items-center gap-2"
                         >
-                          ⏹️ End Practice
+                          <Icon name="stop" size="sm" className="text-red-700" />
+                          End Practice
                         </Button>
 
                         {lockedSchedule && (
@@ -305,9 +309,10 @@ export function PracticePlanner() {
                             onClick={handleUnlockSchedule}
                             variant="outline"
                             size="sm"
-                            className="text-xs"
+                            className="text-xs flex items-center gap-1"
                           >
-                            🔓 Unlock Schedule
+                            <Icon name="unlock" size="xs" />
+                            Unlock Schedule
                           </Button>
                         )}
                       </div>
@@ -385,9 +390,7 @@ export function PracticePlanner() {
                                           </Typography>
 
                                           {block.isLocked && (
-                                            <span className="text-amber-500 text-sm">
-                                              🔒
-                                            </span>
+                                            <Icon name="lock" size="sm" className="text-amber-500" />
                                           )}
 
                                           <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-mono">
@@ -418,9 +421,10 @@ export function PracticePlanner() {
                                             <Button
                                               variant="ghost"
                                               size="sm"
-                                              className="text-jade-600 hover:text-jade-700 p-0 h-auto"
+                                              className="text-jade-600 hover:text-jade-700 p-0 h-auto flex items-center"
                                             >
-                                              📋 Practice Script Attached
+                                              <Icon name="file" size="sm" className="mr-1" />
+                                              Practice Script Attached
                                             </Button>
                                           </div>
                                         )}
@@ -436,7 +440,7 @@ export function PracticePlanner() {
                                         }}
                                         disabled={lockedSchedule}
                                       >
-                                        ✏️
+                                        <Icon name="edit" size="sm" />
                                       </Button>
 
                                       <Button
@@ -448,7 +452,7 @@ export function PracticePlanner() {
                                         disabled={lockedSchedule}
                                         className="text-red-600 hover:text-red-700 hover:bg-red-50"
                                       >
-                                        🗑️
+                                        <Icon name="delete" size="sm" />
                                       </Button>
                                     </div>
                                   </div>
@@ -557,7 +561,8 @@ export function PracticePlanner() {
                         className="w-full justify-start text-left"
                         disabled={lockedSchedule}
                       >
-                        📋 {template.name}
+                        <Icon name="file" size="sm" className="mr-2" />
+                        {template.name}
                       </Button>
                     ))}
 

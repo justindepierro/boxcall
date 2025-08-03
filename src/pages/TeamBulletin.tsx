@@ -8,6 +8,7 @@ import { TeamTrophyCase } from "../components/team-dashboard/TeamTrophyCase";
 // import TeamNavigation from '../components/team-dashboard/TeamNavigation';
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
+import { Icon } from "../components/ui/Icon/Icon";
 
 /**
  * Team Bulletin - Team-specific communication hub
@@ -43,7 +44,7 @@ export const TeamBulletin: React.FC = () => {
     name: "Eastside Eagles",
     season: "2024 Varsity",
     colors: { primary: "#00A86B", secondary: "#1E3A8A" },
-    logo: "🦅",
+    logo: "eagle", // Icon name instead of emoji
     record: { wins: 8, losses: 2 },
     nextGame: "Friday vs. Central Lions",
     memberCount: 35,
@@ -60,7 +61,9 @@ export const TeamBulletin: React.FC = () => {
         <div className="px-6 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="text-4xl">{mockTeam.logo}</div>
+              <div className="flex items-center justify-center w-16 h-16 bg-navy-100 dark:bg-navy-800 rounded-full">
+                <Icon name="target" size="xl" color="navy" />
+              </div>
               <div>
                 <Typography
                   variant="headline-xl"

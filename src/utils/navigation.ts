@@ -1,12 +1,15 @@
 import type { SidebarItem } from "../components/ui/Sidebar";
 import type { Database } from "../types/database";
+import React from "react";
+import { Icon } from "../components/ui/Icon/Icon";
+import type { IconName } from "../components/ui/Icon/Icon";
 
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 
 export interface NavigationItem {
   id: string;
   label: string;
-  icon?: string;
+  icon?: IconName;
   href: string;
   roles?: UserRole[];
   children?: NavigationItem[];
@@ -19,22 +22,24 @@ export interface NavigationItem {
  * Complete navigation structure for BoxCall application
  * Based on comprehensive requirements with role-based access
  */
-export const getNavigationItems = (userRole?: UserRole | null): NavigationItem[] => {
+export const getNavigationItems = (
+  userRole?: UserRole | null
+): NavigationItem[] => {
   const items: NavigationItem[] = [
     // Dashboard - Available to everyone
     {
       id: "dashboard",
       label: "Dashboard",
-      icon: "🏠",
+      icon: "home",
       href: "/dashboard",
       description: "Personal dashboard with live feed and notifications",
     },
-    
+
     // Team Bulletin - Available to everyone (renamed from Team Dashboard)
     {
       id: "team-bulletin",
       label: "Team Bulletin",
-      icon: "�",
+      icon: "users",
       href: "/team/1/bulletin", // Will need team switching dropdown
       description: "Team-specific feed, announcements, and quick actions",
     },
@@ -45,7 +50,7 @@ export const getNavigationItems = (userRole?: UserRole | null): NavigationItem[]
     items.push({
       id: "boxcall",
       label: "BoxCall",
-      icon: "📞",
+      icon: "phone",
       href: "/boxcall",
       roles: ["admin", "coach"],
       badge: "Pro",
@@ -58,7 +63,7 @@ export const getNavigationItems = (userRole?: UserRole | null): NavigationItem[]
     items.push({
       id: "playbook",
       label: "Playbook",
-      icon: "📖",
+      icon: "book",
       href: "/playbook",
       roles: ["admin", "coach", "player"],
       description: "Team plays and strategies",
@@ -69,7 +74,7 @@ export const getNavigationItems = (userRole?: UserRole | null): NavigationItem[]
   items.push({
     id: "calendar",
     label: "Calendar",
-    icon: "�",
+    icon: "calendar",
     href: "/calendar",
     description: "Personal and team calendars",
   });
@@ -78,7 +83,7 @@ export const getNavigationItems = (userRole?: UserRole | null): NavigationItem[]
   items.push({
     id: "profile",
     label: "Profile",
-    icon: "👤",
+    icon: "user",
     href: "/profile",
     description: "Edit user settings and preferences",
   });
@@ -88,7 +93,7 @@ export const getNavigationItems = (userRole?: UserRole | null): NavigationItem[]
     items.push({
       id: "team-settings",
       label: "Team Settings",
-      icon: "⚙️",
+      icon: "settings",
       href: "/team/1/settings",
       roles: ["admin", "coach"],
       description: "Manage team configuration and roster",
@@ -107,7 +112,7 @@ export const getNavigationItems = (userRole?: UserRole | null): NavigationItem[]
   items.push({
     id: "about",
     label: "About",
-    icon: "ℹ️",
+    icon: "info",
     href: "/about",
     description: "Learn about BoxCall",
   });
@@ -117,7 +122,7 @@ export const getNavigationItems = (userRole?: UserRole | null): NavigationItem[]
     items.push({
       id: "templates",
       label: "Templates",
-      icon: "📄",
+      icon: "file",
       href: "/templates",
       roles: ["admin", "coach"],
       description: "Pre-built templates and resources",
@@ -129,7 +134,7 @@ export const getNavigationItems = (userRole?: UserRole | null): NavigationItem[]
     items.push({
       id: "playground",
       label: "Playground",
-      icon: "🧪",
+      icon: "wrench",
       href: "/playground",
       roles: ["admin"],
       badge: "Dev",
@@ -149,7 +154,7 @@ export const getNavigationItems = (userRole?: UserRole | null): NavigationItem[]
   items.push({
     id: "logout",
     label: "Log Out",
-    icon: "�",
+    icon: "arrow-right",
     href: "/logout",
     description: "Sign out of BoxCall",
   });
@@ -165,25 +170,29 @@ export const toSidebarItems = (
   userRole?: UserRole | null
 ): SidebarItem[] => {
   return items
-    .filter(item => {
+    .filter((item) => {
       // Show item if no roles specified or user has required role
       return !item.roles || (userRole && item.roles.includes(userRole));
     })
-    .map(item => ({
+    .map((item) => ({
       id: item.id,
       label: item.label,
-      icon: item.icon,
-      onClick: item.divider ? undefined : () => {
-        if (item.id === 'logout') {
-          // Handle logout specially
-          handleLogout();
-        } else {
-          window.location.href = item.href;
-        }
-      },
+      icon: item.icon ? React.createElement(Icon, { name: item.icon, size: "md", color: "current" }) : undefined,
+      onClick: item.divider
+        ? undefined
+        : () => {
+            if (item.id === "logout") {
+              // Handle logout specially
+              handleLogout();
+            } else {
+              window.location.href = item.href;
+            }
+          },
       divider: item.divider,
       badge: item.badge,
-      children: item.children ? toSidebarItems(item.children, userRole) : undefined,
+      children: item.children
+        ? toSidebarItems(item.children, userRole)
+        : undefined,
     }));
 };
 
@@ -207,25 +216,27 @@ const handleLogout = async () => {
  * Get primary navigation items for the top navigation bar
  * These are the most important/frequently used items with quick actions
  */
-export const getPrimaryNavigationItems = (userRole?: UserRole | null): NavigationItem[] => {
+export const getPrimaryNavigationItems = (
+  userRole?: UserRole | null
+): NavigationItem[] => {
   const items: NavigationItem[] = [
     {
       id: "dashboard",
-      label: "Dashboard", 
-      icon: "🏠",
+      label: "Dashboard",
+      icon: "home",
       href: "/dashboard",
     },
     {
       id: "boxcall",
       label: "BoxCall",
-      icon: "�",
+      icon: "phone",
       href: "/boxcall",
     },
   ];
 
-  return items.filter(item => {
+  return items.filter((item) => {
     // Filter based on role permissions
-    if (item.id === 'boxcall' && userRole !== 'admin' && userRole !== 'coach') {
+    if (item.id === "boxcall" && userRole !== "admin" && userRole !== "coach") {
       return false;
     }
     return true;
@@ -238,7 +249,10 @@ export const getPrimaryNavigationItems = (userRole?: UserRole | null): Navigatio
 export const getRoleDisplayInfo = (role?: UserRole | null) => {
   if (!role) return { display: "User", color: "gray" };
 
-  const roleInfo: Record<NonNullable<UserRole>, { display: string; color: string }> = {
+  const roleInfo: Record<
+    NonNullable<UserRole>,
+    { display: string; color: string }
+  > = {
     admin: { display: "Administrator", color: "red" },
     coach: { display: "Coach", color: "blue" },
     player: { display: "Player", color: "green" },

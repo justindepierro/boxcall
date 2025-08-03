@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
+import { Icon } from "../components/ui/Icon/Icon";
 
 /**
  * Playground - Development and testing tools for administrators
@@ -27,10 +28,13 @@ export const Playground: React.FC = () => {
         </div>
 
         {/* Access Restricted Notice */}
-        <Card className="text-center py-12 mb-8 border-2 border-dashed border-yellow-300 dark:border-yellow-700 bg-yellow-50 dark:bg-yellow-900/20">
-          <div className="text-6xl mb-4">🔒</div>
-          <Typography variant="headline-lg" className="mb-4 text-yellow-800 dark:text-yellow-300">
-            Administrator Access Required
+                {/* Access Restricted Card */}
+        <Card className="text-center py-12">
+          <div className="flex justify-center mb-4">
+            <Icon name="lock" size="3xl" color="warning" />
+          </div>
+          <Typography variant="headline-lg" className="mb-4">
+            Access Restricted
           </Typography>
           <Typography variant="body-lg" color="muted" className="mb-6 max-w-2xl mx-auto">
             The Playground is a restricted area for platform administrators and 
@@ -94,7 +98,9 @@ export const Playground: React.FC = () => {
 
           {/* Performance Monitor */}
           <Card className="p-6">
-            <div className="text-4xl mb-4">📊</div>
+            <div className="flex justify-center mb-4">
+              <Icon name="bar-chart" size="3xl" color="jade" />
+            </div>
             <Typography variant="headline-md" className="mb-3">
               Performance Monitor
             </Typography>
@@ -155,8 +161,9 @@ export const Playground: React.FC = () => {
             access to these powerful development utilities.
           </Typography>
           <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-lg p-4 inline-block">
-            <Typography variant="body-sm" className="text-indigo-700 dark:text-indigo-300">
-              🛠️ Administrator Development Tools
+            <Typography variant="body-sm" className="text-indigo-700 dark:text-indigo-300 flex items-center gap-2">
+              <Icon name="wrench" size="sm" />
+              Administrator Development Tools
             </Typography>
           </div>
         </Card>

@@ -5,6 +5,7 @@ import {
   useAuthProfile,
   useIsAuthenticated,
 } from "../app/auth-store";
+import { Icon } from "../components/ui/Icon/Icon";
 import { supabase } from "../lib/supabase";
 import type { Database } from "../types/database";
 
@@ -118,8 +119,9 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            🏈 Team Access Required
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-center">
+            <Icon name="users" size="lg" className="mr-2" />
+            Team Access Required
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             {!teamMember
@@ -142,8 +144,9 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            🚫 Insufficient Team Permissions
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-center">
+            <Icon name="shield" size="lg" className="mr-2" />
+            Insufficient Team Permissions
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             Your role ({teamMember.role}) doesn't have access to this feature.

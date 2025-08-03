@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("🔐 Auth state changed:", event, session?.user?.email);
+      console.log("BoxCall Auth: State changed:", event, session?.user?.email);
 
       setSession(session);
       setUser(session?.user ?? null);

@@ -3,6 +3,7 @@ import type { TeamPlayer } from "../../types/team-management";
 import { TEAM_LEVELS } from "../../types/team-management";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
+import { Icon } from "../ui/Icon/Icon";
 
 interface PlayerListProps {
   players: TeamPlayer[];
@@ -256,8 +257,9 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                       </div>
                     )}
                     {player.phone && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400">
-                        📱 {player.phone}
+                      <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                        <Icon name="phone" size="xs" />
+                        {player.phone}
                       </div>
                     )}
                   </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Typography } from "../design-system";
 import { Button, Card, Input } from "../ui";
+import Icon from "../ui/Icon/Icon";
 
 interface PersonalProfileProps {
   profile: {
@@ -71,12 +72,15 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
-        <Typography
-          variant="headline-md"
-          className="text-gray-900 dark:text-white"
-        >
-          👤 My Profile
-        </Typography>
+        <div className="flex items-center gap-2 mb-6">
+          <Icon name="user" size="lg" className="text-gray-700 dark:text-gray-300" />
+          <Typography
+            variant="headline-md"
+            className="text-gray-900 dark:text-white"
+          >
+            My Profile
+          </Typography>
+        </div>
         {isEditable && (
           <div className="flex space-x-2">
             {isEditing ? (

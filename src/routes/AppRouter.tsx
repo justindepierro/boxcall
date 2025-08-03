@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../components/auth";
+import { Icon } from "../components/ui/Icon/Icon";
 import {
   CalendarPage,
   DashboardPage,
@@ -77,7 +78,15 @@ export const AppRouter: React.FC = () => {
             path="/team/:teamId/bulletin"
             element={
               <ProtectedRoute>
-                <TeamMemberRoute allowedTeamRoles={["head_coach", "coach", "player", "manager", "family"]}>
+                <TeamMemberRoute
+                  allowedTeamRoles={[
+                    "head_coach",
+                    "coach",
+                    "player",
+                    "manager",
+                    "family",
+                  ]}
+                >
                   <TeamBulletin />
                 </TeamMemberRoute>
               </ProtectedRoute>
@@ -91,8 +100,9 @@ export const AppRouter: React.FC = () => {
               <TeamMemberRoute allowedTeamRoles={["head_coach", "coach"]}>
                 <SubscriptionRoute requiredTiers={["team_premium"]}>
                   <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold mb-4">
-                      📊 Premium Analytics
+                    <h1 className="text-2xl font-bold mb-4 flex items-center justify-center">
+                      <Icon name="bar-chart" size="lg" className="mr-2" />
+                      Premium Analytics
                     </h1>
                     <p>Advanced team analytics and reporting tools.</p>
                   </div>
@@ -129,7 +139,9 @@ export const AppRouter: React.FC = () => {
             path="/team/:teamId/settings"
             element={
               <ProtectedRoute>
-                <TeamMemberRoute allowedTeamRoles={["head_coach", "coach", "manager"]}>
+                <TeamMemberRoute
+                  allowedTeamRoles={["head_coach", "coach", "manager"]}
+                >
                   <TeamSettings />
                 </TeamMemberRoute>
               </ProtectedRoute>

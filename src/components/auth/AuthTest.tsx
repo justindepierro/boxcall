@@ -8,6 +8,7 @@ import {
   useIsAuthenticated,
 } from "../../app/auth-store";
 import { Button } from "../ui";
+import Icon from "../ui/Icon/Icon";
 import { Auth } from "./Auth";
 
 /**
@@ -66,9 +67,12 @@ export const AuthTest: React.FC = () => {
 
   return (
     <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-2xl">
-      <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-        🔐 Auth System Test Panel
-      </h2>
+      <div className="flex items-center gap-2 mb-4">
+        <Icon name="shield" size="lg" className="text-navy-600" />
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+          Auth System Test Panel
+        </h2>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Status Panel */}
