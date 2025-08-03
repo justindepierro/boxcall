@@ -14,7 +14,7 @@ interface ProfileCardProps {
 
 /**
  * Profile Card - Compact personal profile display
- * 
+ *
  * Features:
  * - Essential profile information
  * - Role-specific details
@@ -28,7 +28,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   onEditClick,
 }) => {
   const [showFullBio, setShowFullBio] = useState(false);
-  
+
   const isPlayer = userRole === "player";
   const isCoach = userRole === "coach";
   const isFamily = userRole === "family";
@@ -36,14 +36,14 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   const getInitials = (name: string) => {
     return name
       .split(" ")
-      .map(n => n[0])
+      .map((n) => n[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
   };
 
   const displayName = profile.full_name || profile.display_name || "Player";
-  
+
   return (
     <Card className="compact-card h-full">
       {/* Header */}
@@ -73,7 +73,10 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             </Typography>
           </div>
           <div className="flex-1 min-w-0">
-            <Typography variant="body-lg" className="font-semibold text-gray-900 truncate">
+            <Typography
+              variant="body-lg"
+              className="font-semibold text-gray-900 truncate"
+            >
               {displayName}
             </Typography>
             <Typography variant="body-sm" color="muted">
@@ -114,11 +117,13 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
         {/* Bio */}
         {profile.bio && (
           <div className="pt-1 border-t border-gray-100">
-            <Typography 
-              variant="body-sm" 
+            <Typography
+              variant="body-sm"
               className="text-gray-600 leading-relaxed"
             >
-              {showFullBio ? profile.bio : `${profile.bio.slice(0, 80)}${profile.bio.length > 80 ? '...' : ''}`}
+              {showFullBio
+                ? profile.bio
+                : `${profile.bio.slice(0, 80)}${profile.bio.length > 80 ? "..." : ""}`}
             </Typography>
             {profile.bio.length > 80 && (
               <Button
@@ -127,7 +132,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
                 onClick={() => setShowFullBio(!showFullBio)}
                 className="p-0 h-auto text-xs text-jade-600 hover:text-jade-700 mt-1"
               >
-                {showFullBio ? 'Show less' : 'Show more'}
+                {showFullBio ? "Show less" : "Show more"}
               </Button>
             )}
           </div>

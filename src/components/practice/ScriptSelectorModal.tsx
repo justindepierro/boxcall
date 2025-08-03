@@ -31,34 +31,45 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
       title: "Offensive Warm-up - 5 Plays",
       category: "offense",
       description: "Basic offensive warm-up routine with 5 core plays",
-      plays: ["Play Action Pass", "Quick Slant", "Run Option", "Screen Pass", "Deep Post"]
+      plays: [
+        "Play Action Pass",
+        "Quick Slant",
+        "Run Option",
+        "Screen Pass",
+        "Deep Post",
+      ],
     },
     {
-      id: "2", 
+      id: "2",
       title: "Defensive Drills - Fundamentals",
       category: "defense",
       description: "Core defensive fundamentals and positioning drills",
-      plays: ["Tackling Form", "Coverage Drill", "Pass Rush", "Run Stop"]
+      plays: ["Tackling Form", "Coverage Drill", "Pass Rush", "Run Stop"],
     },
     {
       id: "3",
       title: "Special Teams - Kickoff Coverage",
-      category: "special-teams", 
+      category: "special-teams",
       description: "Kickoff coverage and return formations",
-      plays: ["Kickoff Formation", "Coverage Lanes", "Return Block"]
-    }
+      plays: ["Kickoff Formation", "Coverage Lanes", "Return Block"],
+    },
   ];
 
-  const filteredScripts = selectedCategory === "all" 
-    ? mockScripts 
-    : mockScripts.filter(script => script.category === selectedCategory);
+  const filteredScripts =
+    selectedCategory === "all"
+      ? mockScripts
+      : mockScripts.filter((script) => script.category === selectedCategory);
 
   const getCategoryColor = (category: Script["category"]) => {
     switch (category) {
-      case "offense": return "bg-blue-100 text-blue-800";
-      case "defense": return "bg-red-100 text-red-800";
-      case "special-teams": return "bg-green-100 text-green-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "offense":
+        return "bg-blue-100 text-blue-800";
+      case "defense":
+        return "bg-red-100 text-red-800";
+      case "special-teams":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -91,8 +102,8 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               <button
                 onClick={() => setSelectedCategory("all")}
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  selectedCategory === "all" 
-                    ? "bg-blue-500 text-white" 
+                  selectedCategory === "all"
+                    ? "bg-blue-500 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
@@ -101,8 +112,8 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               <button
                 onClick={() => setSelectedCategory("offense")}
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  selectedCategory === "offense" 
-                    ? "bg-blue-500 text-white" 
+                  selectedCategory === "offense"
+                    ? "bg-blue-500 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
@@ -111,8 +122,8 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               <button
                 onClick={() => setSelectedCategory("defense")}
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  selectedCategory === "defense" 
-                    ? "bg-blue-500 text-white" 
+                  selectedCategory === "defense"
+                    ? "bg-blue-500 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
@@ -121,8 +132,8 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               <button
                 onClick={() => setSelectedCategory("special-teams")}
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  selectedCategory === "special-teams" 
-                    ? "bg-blue-500 text-white" 
+                  selectedCategory === "special-teams"
+                    ? "bg-blue-500 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
@@ -135,15 +146,18 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
           <Card className="p-4 mb-4 border-2 border-dashed border-blue-300 bg-blue-50">
             <div className="flex items-center justify-between">
               <div>
-                <Typography variant="body-md" className="font-medium text-blue-900">
+                <Typography
+                  variant="body-md"
+                  className="font-medium text-blue-900"
+                >
                   Create New Script
                 </Typography>
                 <Typography variant="body-sm" className="text-blue-700 mt-1">
                   Build a custom script in the Playbook editor
                 </Typography>
               </div>
-              <Button 
-                variant="primary" 
+              <Button
+                variant="primary"
                 size="sm"
                 onClick={() => {
                   onCreateNew();
@@ -160,7 +174,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
             <Typography variant="body-md" className="font-medium">
               Existing Scripts ({filteredScripts.length})
             </Typography>
-            
+
             {filteredScripts.length === 0 ? (
               <Card className="p-6 text-center">
                 <div className="text-4xl mb-4">📚</div>
@@ -173,11 +187,16 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               </Card>
             ) : (
               filteredScripts.map((script) => (
-                <Card key={script.id} className="p-4 hover:shadow-md transition-shadow cursor-pointer">
+                <Card
+                  key={script.id}
+                  className="p-4 hover:shadow-md transition-shadow cursor-pointer"
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(script.category)}`}>
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(script.category)}`}
+                        >
                           {script.category.replace("-", " ").toUpperCase()}
                         </span>
                         <Typography variant="body-md" className="font-medium">
@@ -185,14 +204,18 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                         </Typography>
                       </div>
                       {script.description && (
-                        <Typography variant="body-sm" color="muted" className="mb-2">
+                        <Typography
+                          variant="body-sm"
+                          color="muted"
+                          className="mb-2"
+                        >
                           {script.description}
                         </Typography>
                       )}
                       {script.plays && script.plays.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                           {script.plays.slice(0, 3).map((play, index) => (
-                            <span 
+                            <span
                               key={index}
                               className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded"
                             >
@@ -207,8 +230,8 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                         </div>
                       )}
                     </div>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => {
                         onSelectScript(script);

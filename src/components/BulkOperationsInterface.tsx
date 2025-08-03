@@ -234,7 +234,11 @@ function QuickActionsPanel({
             className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 text-left transition-colors disabled:opacity-50"
           >
             <div className="flex items-center space-x-2 mb-2">
-              <Icon name={action.icon as IconName} size="lg" className="text-gray-600" />
+              <Icon
+                name={action.icon as IconName}
+                size="lg"
+                className="text-gray-600"
+              />
               <span className="text-sm font-medium text-gray-900">
                 {action.title}
               </span>

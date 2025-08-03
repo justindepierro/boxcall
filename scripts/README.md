@@ -16,46 +16,51 @@ This will show you a menu of options and guide you through fixing any issues.
 
 ### 🔧 Main Tools
 
-| Script | Purpose | When to Use |
-|--------|---------|-------------|
-| `boxcall-maintenance.sh` | **Master script** - Menu-driven maintenance | Start here for any issues |
-| `daily-checklist.sh` | Quick health check for daily development | Beginning of each coding session |
-| `workspace-doctor.sh` | Comprehensive diagnostic tool | When something seems wrong |
+| Script                   | Purpose                                     | When to Use                      |
+| ------------------------ | ------------------------------------------- | -------------------------------- |
+| `boxcall-maintenance.sh` | **Master script** - Menu-driven maintenance | Start here for any issues        |
+| `daily-checklist.sh`     | Quick health check for daily development    | Beginning of each coding session |
+| `workspace-doctor.sh`    | Comprehensive diagnostic tool               | When something seems wrong       |
 
 ### 🛠️ Specialized Tools
 
-| Script | Purpose | When to Use |
-|--------|---------|-------------|
-| `dependency-manager.sh` | Package and dependency management | npm/package issues |
-| `emergency-reset.sh` | Nuclear option - reset to working state | When everything is broken |
-| `health-check.sh` | Quick file integrity check | After git operations |
+| Script                  | Purpose                                 | When to Use               |
+| ----------------------- | --------------------------------------- | ------------------------- |
+| `dependency-manager.sh` | Package and dependency management       | npm/package issues        |
+| `emergency-reset.sh`    | Nuclear option - reset to working state | When everything is broken |
+| `health-check.sh`       | Quick file integrity check              | After git operations      |
 
 ## 🎯 Common Scenarios
 
 ### "Something is broken, I don't know what"
+
 ```bash
 ./scripts/boxcall-maintenance.sh
 # Choose option 1 (Full Health Check)
 ```
 
 ### "My dependencies are messed up"
+
 ```bash
 ./scripts/dependency-manager.sh fix
 # Or use the master script option 2
 ```
 
 ### "I want to start coding, is everything ready?"
+
 ```bash
 ./scripts/daily-checklist.sh
 ```
 
 ### "Everything is broken, I need to start over"
+
 ```bash
 ./scripts/emergency-reset.sh
 # This will guide you through a safe reset
 ```
 
 ### "I just did a git operation and want to check files"
+
 ```bash
 ./scripts/health-check.sh
 ```
@@ -63,6 +68,7 @@ This will show you a menu of options and guide you through fixing any issues.
 ## 🛡️ Safety Features
 
 All scripts include:
+
 - **Automatic backups** before making changes
 - **Confirmation prompts** for destructive operations
 - **Detailed logging** of what they're doing
@@ -71,9 +77,11 @@ All scripts include:
 ## 🔍 Script Details
 
 ### boxcall-maintenance.sh
+
 Master maintenance script with interactive menu. Coordinates all other scripts.
 
 **Options:**
+
 - Full health check
 - Dependency fixes
 - Quick auto-fixes
@@ -82,7 +90,9 @@ Master maintenance script with interactive menu. Coordinates all other scripts.
 - Complete maintenance cycle
 
 ### workspace-doctor.sh
+
 Comprehensive diagnostic tool that checks:
+
 - Critical file integrity
 - Dependencies and packages
 - TypeScript configuration
@@ -90,15 +100,18 @@ Comprehensive diagnostic tool that checks:
 - Development environment
 
 **Usage:**
+
 ```bash
 ./scripts/workspace-doctor.sh          # Diagnosis only
 ./scripts/workspace-doctor.sh --fix    # Diagnosis + auto-fixes
 ```
 
 ### dependency-manager.sh
+
 Specialized tool for package management issues.
 
 **Commands:**
+
 ```bash
 ./scripts/dependency-manager.sh health      # Show dependency report
 ./scripts/dependency-manager.sh clean       # Clean reinstall
@@ -107,9 +120,11 @@ Specialized tool for package management issues.
 ```
 
 ### daily-checklist.sh
+
 Quick health check designed to run at the start of each development session.
 
 Checks:
+
 - Critical files exist and have content
 - Git repository status
 - Dependencies are installed
@@ -117,9 +132,11 @@ Checks:
 - Build system is ready
 
 ### emergency-reset.sh
+
 Nuclear option for when the workspace is completely broken.
 
 Features:
+
 - Creates automatic backups
 - Resets to known good commits
 - Reinstalls dependencies
@@ -129,6 +146,7 @@ Features:
 ## 🚨 Emergency Procedures
 
 ### If scripts themselves are broken:
+
 ```bash
 # Restore from git
 git checkout HEAD -- scripts/
@@ -136,6 +154,7 @@ chmod +x scripts/*.sh
 ```
 
 ### If you need to start completely over:
+
 ```bash
 # This is the nuclear option
 git stash                    # Save current work
@@ -145,6 +164,7 @@ npm install                  # Reinstall dependencies
 ```
 
 ### If you lost important changes:
+
 ```bash
 git stash list               # See saved changes
 git stash pop                # Restore latest stash

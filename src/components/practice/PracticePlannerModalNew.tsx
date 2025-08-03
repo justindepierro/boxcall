@@ -1,6 +1,6 @@
 /**
  * PracticePlannerModal - Refactored Version
- * 
+ *
  * Main orchestrating component using extracted components and centralized state management.
  * This is the new, modular version that replaces the 2732-line monolithic component.
  */
@@ -9,14 +9,14 @@ import React, { useState } from "react";
 import { ScriptSelectorModal } from "./ScriptSelectorModal";
 import { PracticePDFExportDialog } from "./PracticePDFExportDialog";
 import { usePracticeState } from "./hooks/usePracticeState";
-import { 
-  PracticeHeader, 
-  TimeSummary, 
-  TimelineAllocation, 
+import {
+  PracticeHeader,
+  TimeSummary,
+  TimelineAllocation,
   PracticeBlocksList,
   AddBlockModal,
   AddGroupModal,
-  EditGroupModal 
+  EditGroupModal,
 } from "./components";
 import type { PracticePlannerModalProps, Script } from "./types";
 
@@ -30,23 +30,23 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
   // Prepare practice data for PDF export
   const preparePracticeDataForPDF = () => {
     // Convert practice blocks to PDF format
-    const pdfBlocks = practiceBlocks.map(block => ({
+    const pdfBlocks = practiceBlocks.map((block) => ({
       id: block.id,
       title: block.title,
       category: block.category,
       duration: block.duration,
-      startTime: block.startTime || '',
-      endTime: block.endTime || '',
-      location: block.location || '',
-      notes: block.notes || '',
-      assignedCoach: block.assignedCoach || '',
+      startTime: block.startTime || "",
+      endTime: block.endTime || "",
+      location: block.location || "",
+      notes: block.notes || "",
+      assignedCoach: block.assignedCoach || "",
       scriptId: block.scriptId,
       scriptTitle: block.scriptTitle,
-      groups: block.groups?.map(group => ({
+      groups: block.groups?.map((group) => ({
         id: group.id,
         name: group.name,
-        location: group.location || '',
-        notes: group.notes || '',
+        location: group.location || "",
+        notes: group.notes || "",
         scriptId: group.scriptId,
         scriptTitle: group.scriptTitle,
       })),
@@ -56,44 +56,66 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     const categoryBreakdown: Record<string, number> = {};
     const coachUtilization: Record<string, number> = {};
     let totalMinutes = 0;
-    
-    practiceBlocks.forEach(block => {
-      categoryBreakdown[block.category] = (categoryBreakdown[block.category] || 0) + block.duration;
+
+    practiceBlocks.forEach((block) => {
+      categoryBreakdown[block.category] =
+        (categoryBreakdown[block.category] || 0) + block.duration;
       totalMinutes += block.duration;
-      
+
       if (block.assignedCoach) {
-        coachUtilization[block.assignedCoach] = (coachUtilization[block.assignedCoach] || 0) + block.duration;
+        coachUtilization[block.assignedCoach] =
+          (coachUtilization[block.assignedCoach] || 0) + block.duration;
       }
     });
 
     return {
-      title: event.title || 'Practice Plan',
+      title: event.title || "Practice Plan",
       date: new Date(event.start).toLocaleDateString(),
       duration: totalDuration,
-      location: '', // Could be extracted from event location
+      location: "", // Could be extracted from event location
       weather: undefined,
       blocks: pdfBlocks,
       coaches: [
         // Mock coach data - could be enhanced with real data
-        { id: '1', name: 'Head Coach', role: 'Head Coach', assignments: ['Overall direction'] },
-        { id: '2', name: 'Offensive Coordinator', role: 'OC', assignments: ['Offense blocks'] },
-        { id: '3', name: 'Defensive Coordinator', role: 'DC', assignments: ['Defense blocks'] },
-        { id: '4', name: 'Special Teams Coach', role: 'STC', assignments: ['Special teams'] },
+        {
+          id: "1",
+          name: "Head Coach",
+          role: "Head Coach",
+          assignments: ["Overall direction"],
+        },
+        {
+          id: "2",
+          name: "Offensive Coordinator",
+          role: "OC",
+          assignments: ["Offense blocks"],
+        },
+        {
+          id: "3",
+          name: "Defensive Coordinator",
+          role: "DC",
+          assignments: ["Defense blocks"],
+        },
+        {
+          id: "4",
+          name: "Special Teams Coach",
+          role: "STC",
+          assignments: ["Special teams"],
+        },
       ],
       equipment: [
         // Mock equipment data
-        { item: 'Cones', quantity: 20, location: 'Equipment shed' },
-        { item: 'Footballs', quantity: 10, location: 'Equipment room' },
-        { item: 'Blocking pads', quantity: 8, location: 'Field storage' },
+        { item: "Cones", quantity: 20, location: "Equipment shed" },
+        { item: "Footballs", quantity: 10, location: "Equipment room" },
+        { item: "Blocking pads", quantity: 8, location: "Field storage" },
       ],
       summary: {
         totalMinutes,
         categoryBreakdown,
         coachUtilization,
         objectives: [
-          'Team coordination improvement',
-          'Skill development focus',
-          'Game preparation',
+          "Team coordination improvement",
+          "Skill development focus",
+          "Game preparation",
         ],
       },
     };
@@ -112,7 +134,7 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     showScriptSelector,
     selectedBlockForScript,
     selectedGroupForScript,
-    
+
     // Timeline state
     timelineAllocation,
     selectedCategory,
@@ -120,11 +142,11 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     sliderValue,
     isSelecting,
     selectionStart,
-    
+
     // Computed values
     scheduledDuration,
     totalDuration,
-    
+
     // Event handlers
     setUserRole,
     setTimeAllocationMode,
@@ -134,7 +156,7 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     setSelectedBlockForScript,
     setSelectedGroupForScript,
     setEditingGroup,
-    
+
     // Timeline handlers
     setSelectedCategory,
     setSelectedBlock,
@@ -144,7 +166,7 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     updateSelectedBlockDuration,
     removeEmptyTime,
     saveTimeAllocation,
-    
+
     // Block and group handlers
     handleDragEnd,
     handleAddBlock,
@@ -158,11 +180,11 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     handleAddScriptToGroup,
     handleRemoveScriptFromGroup,
     handleAutoAssignCoaches,
-    
+
     // Script assignment functions
     assignScriptToBlock,
     assignScriptToGroup,
-    
+
     // Modal handlers
     handleCancelScaffold,
   } = usePracticeState(event);
@@ -171,7 +193,6 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
-          
           {/* Header Component */}
           <PracticeHeader
             event={event}
@@ -179,7 +200,9 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
             timeAllocationMode={timeAllocationMode}
             scaffoldMode={scaffoldMode}
             onUserRoleChange={setUserRole}
-            onTimeAllocationModeToggle={() => setTimeAllocationMode(!timeAllocationMode)}
+            onTimeAllocationModeToggle={() =>
+              setTimeAllocationMode(!timeAllocationMode)
+            }
             onScaffoldModeToggle={() => setScaffoldMode(!scaffoldMode)}
             onPDFExport={() => setIsPDFExportOpen(true)}
             onClose={onClose}
@@ -213,7 +236,7 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
                 onClearSelected={() => setSelectedBlock(null)}
                 onClearAll={() => {
                   // This would need to be implemented in the hook
-                  console.log('Clear all timeline allocation');
+                  console.log("Clear all timeline allocation");
                 }}
                 onRemoveEmpty={removeEmptyTime}
                 onCancel={handleCancelScaffold}
@@ -259,7 +282,7 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
       </div>
 
       {/* Modal Components */}
-      
+
       {/* Add Block Modal */}
       <AddBlockModal
         isOpen={showAddBlock}
@@ -273,7 +296,7 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
       {/* Add Group Modal */}
       <AddGroupModal
         isOpen={!!editingGroup && !editingGroup.group.id} // New group (no ID)
-        blockId={editingGroup?.blockId || ''}
+        blockId={editingGroup?.blockId || ""}
         onClose={() => setEditingGroup(null)}
         onAddGroup={handleAddGroup}
       />
@@ -298,7 +321,7 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
             if (selectedGroupForScript) {
               // Assign script to the selected group
               assignScriptToGroup(
-                selectedGroupForScript.blockId, 
+                selectedGroupForScript.blockId,
                 selectedGroupForScript.groupId,
                 script
               );
@@ -311,7 +334,7 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
             setSelectedGroupForScript(null);
           }}
           onCreateNew={() => {
-            console.log('Create new script - TODO: implement');
+            console.log("Create new script - TODO: implement");
           }}
         />
       )}

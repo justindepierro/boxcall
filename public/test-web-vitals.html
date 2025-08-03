@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Vitals Test</title>
+  </head>
+  <body>
+    <h1>Testing Web Vitals Import</h1>
+    <script type="module">
+      try {
+        // Test the web-vitals import
+        const { onCLS, onFCP, onINP, onLCP, onTTFB } = await import(
+          "/node_modules/web-vitals/dist/web-vitals.js"
+        );
+        console.log("✅ Web Vitals imports successful:", {
+          onCLS,
+          onFCP,
+          onINP,
+          onLCP,
+          onTTFB,
+        });
+
+        // Test our web vitals utility
+        const { initWebVitals } = await import(
+          "/src/utils/performance/webVitals.ts"
+        );
+        console.log("✅ WebVitals utility import successful");
+
+        // Initialize web vitals
+        initWebVitals();
+        console.log("✅ Web Vitals initialized successfully");
+
+        document.body.innerHTML +=
+          '<p style="color: green;">✅ Web Vitals working correctly!</p>';
+      } catch (error) {
+        console.error("❌ Web Vitals error:", error);
+        document.body.innerHTML += `<p style="color: red;">❌ Error: ${error.message}</p>`;
+      }
+    </script>
+  </body>
+</html>

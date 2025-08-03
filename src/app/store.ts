@@ -218,7 +218,6 @@ export const useAppStore = create<AppStore>()(
       removePlayer: (playerId) =>
         set(
           (state) => {
-             
             const { [playerId]: _, ...rest } = state.players;
             return { players: rest };
           },

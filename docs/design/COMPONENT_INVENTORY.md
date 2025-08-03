@@ -1,17 +1,19 @@
 # 📦 BoxCall Component Inventory & Storybook Specification
 
 > **Design System Component Library**  
-> *Complete component catalog for professional football coaching platform*
+> _Complete component catalog for professional football coaching platform_
 
 ## 🎯 **STORYBOOK INTEGRATION PLAN**
 
 ### **Recommended Storybook Setup**
+
 ```bash
 npm install --save-dev @storybook/react-vite @storybook/addon-essentials @storybook/addon-docs
 npm install --save-dev @storybook/addon-controls @storybook/addon-viewport @storybook/addon-a11y
 ```
 
 ### **Storybook Configuration Structure**
+
 ```
 .storybook/
 ├── main.ts                     # Core Storybook configuration
@@ -28,6 +30,7 @@ npm install --save-dev @storybook/addon-controls @storybook/addon-viewport @stor
 ### **1. Foundation Stories**
 
 #### **Colors.stories.tsx**
+
 ```typescript
 export default {
   title: 'Foundation/Colors',
@@ -78,6 +81,7 @@ export const ColorPalette = () => (
 ```
 
 #### **Typography.stories.tsx**
+
 ```typescript
 export default {
   title: 'Foundation/Typography',
@@ -119,6 +123,7 @@ export const DataDisplay = () => (
 ### **2. Component Stories**
 
 #### **Button.stories.tsx**
+
 ```typescript
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from '../src/components/ui/Button'
@@ -205,6 +210,7 @@ export const CoachingActions = () => (
 ```
 
 #### **Card.stories.tsx**
+
 ```typescript
 export default {
   title: 'Components/Card',
@@ -278,6 +284,7 @@ export const TeamStatsCard: Story = {
 ### **3. Mobile Component Stories**
 
 #### **MobileCalendar.stories.tsx**
+
 ```typescript
 export default {
   title: 'Mobile/Calendar',
@@ -335,64 +342,66 @@ export const CoachingGestures = () => (
 ### **4. Football-Specific Stories**
 
 #### **FormationDiagram.stories.tsx**
+
 ```typescript
 export default {
-  title: 'Football/Formation',
+  title: "Football/Formation",
   component: FormationDiagram,
   parameters: {
     docs: {
       description: {
-        component: 'Interactive football formation diagrams for tactical planning and coaching.'
-      }
-    }
-  }
-}
+        component:
+          "Interactive football formation diagrams for tactical planning and coaching.",
+      },
+    },
+  },
+};
 
 export const OffensiveFormation: Story = {
   args: {
     formation: {
-      name: 'I-Formation',
+      name: "I-Formation",
       players: [
-        { position: 'QB', x: 50, y: 75 },
-        { position: 'FB', x: 50, y: 65 },
-        { position: 'RB', x: 50, y: 55 },
-        { position: 'WR', x: 20, y: 85 },
-        { position: 'WR', x: 80, y: 85 },
-        { position: 'TE', x: 35, y: 80 },
-        { position: 'LT', x: 35, y: 75 },
-        { position: 'LG', x: 42, y: 75 },
-        { position: 'C', x: 50, y: 75 },
-        { position: 'RG', x: 58, y: 75 },
-        { position: 'RT', x: 65, y: 75 }
-      ]
+        { position: "QB", x: 50, y: 75 },
+        { position: "FB", x: 50, y: 65 },
+        { position: "RB", x: 50, y: 55 },
+        { position: "WR", x: 20, y: 85 },
+        { position: "WR", x: 80, y: 85 },
+        { position: "TE", x: 35, y: 80 },
+        { position: "LT", x: 35, y: 75 },
+        { position: "LG", x: 42, y: 75 },
+        { position: "C", x: 50, y: 75 },
+        { position: "RG", x: 58, y: 75 },
+        { position: "RT", x: 65, y: 75 },
+      ],
     },
     interactive: true,
-    showGrid: true
-  }
-}
+    showGrid: true,
+  },
+};
 
 export const DefensiveFormation: Story = {
   args: {
     formation: {
-      name: '4-3 Defense',
+      name: "4-3 Defense",
       players: [
-        { position: 'DE', x: 30, y: 45 },
-        { position: 'DT', x: 45, y: 45 },
-        { position: 'DT', x: 55, y: 45 },
-        { position: 'DE', x: 70, y: 45 },
-        { position: 'LB', x: 35, y: 35 },
-        { position: 'MLB', x: 50, y: 35 },
-        { position: 'LB', x: 65, y: 35 },
-        { position: 'CB', x: 15, y: 25 },
-        { position: 'S', x: 40, y: 15 },
-        { position: 'S', x: 60, y: 15 },
-        { position: 'CB', x: 85, y: 25 }
-      ]
+        { position: "DE", x: 30, y: 45 },
+        { position: "DT", x: 45, y: 45 },
+        { position: "DT", x: 55, y: 45 },
+        { position: "DE", x: 70, y: 45 },
+        { position: "LB", x: 35, y: 35 },
+        { position: "MLB", x: 50, y: 35 },
+        { position: "LB", x: 65, y: 35 },
+        { position: "CB", x: 15, y: 25 },
+        { position: "S", x: 40, y: 15 },
+        { position: "S", x: 60, y: 15 },
+        { position: "CB", x: 85, y: 25 },
+      ],
     },
-    side: 'defense',
-    interactive: true
-  }
-}
+    side: "defense",
+    interactive: true,
+  },
+};
 ```
 
 ---
@@ -400,52 +409,54 @@ export const DefensiveFormation: Story = {
 ## 📱 **MOBILE STORY CONFIGURATIONS**
 
 ### **Viewport Configurations**
+
 ```typescript
 // .storybook/preview.ts
 export const parameters = {
   viewport: {
     viewports: {
       iphone12: {
-        name: 'iPhone 12/13/14',
+        name: "iPhone 12/13/14",
         styles: {
-          width: '390px',
-          height: '844px'
-        }
+          width: "390px",
+          height: "844px",
+        },
       },
       iphone12mini: {
-        name: 'iPhone 12/13 Mini',
+        name: "iPhone 12/13 Mini",
         styles: {
-          width: '375px',
-          height: '812px'
-        }
+          width: "375px",
+          height: "812px",
+        },
       },
       iphone14plus: {
-        name: 'iPhone 14/15 Plus',
+        name: "iPhone 14/15 Plus",
         styles: {
-          width: '428px',
-          height: '926px'
-        }
+          width: "428px",
+          height: "926px",
+        },
       },
       android: {
-        name: 'Android (Typical)',
+        name: "Android (Typical)",
         styles: {
-          width: '360px',
-          height: '640px'
-        }
+          width: "360px",
+          height: "640px",
+        },
       },
       tablet: {
-        name: 'iPad',
+        name: "iPad",
         styles: {
-          width: '768px',
-          height: '1024px'
-        }
-      }
-    }
-  }
-}
+          width: "768px",
+          height: "1024px",
+        },
+      },
+    },
+  },
+};
 ```
 
 ### **Touch Gesture Documentation**
+
 ```typescript
 // Touch interaction stories
 export const TouchInteractions = () => (
@@ -476,6 +487,7 @@ export const TouchInteractions = () => (
 ## 🎯 **STORYBOOK ORGANIZATION STRUCTURE**
 
 ### **Story Categories**
+
 ```
 Foundation/
 ├── Colors                      # Color system and palettes
@@ -514,28 +526,29 @@ Templates/
 ```
 
 ### **Interactive Story Features**
+
 ```typescript
 // Interactive controls for coaching scenarios
 export const CoachingScenario = {
   args: {
-    gameState: 'in-progress',
-    timeRemaining: '02:47',
+    gameState: "in-progress",
+    timeRemaining: "02:47",
     quarter: 4,
     score: { home: 21, away: 17 },
     down: 3,
     yardsToGo: 7,
-    fieldPosition: 'OWN 35'
+    fieldPosition: "OWN 35",
   },
   argTypes: {
     gameState: {
-      control: 'select',
-      options: ['pre-game', 'in-progress', 'halftime', 'post-game']
+      control: "select",
+      options: ["pre-game", "in-progress", "halftime", "post-game"],
     },
     quarter: {
-      control: { type: 'range', min: 1, max: 4, step: 1 }
-    }
-  }
-}
+      control: { type: "range", min: 1, max: 4, step: 1 },
+    },
+  },
+};
 ```
 
 ---
@@ -543,6 +556,7 @@ export const CoachingScenario = {
 ## 📋 **IMPLEMENTATION CHECKLIST**
 
 ### **Phase 1: Foundation Setup**
+
 - [ ] Initialize Storybook with Vite configuration
 - [ ] Set up BoxCall theme with jade/navy colors
 - [ ] Configure mobile viewports and responsive testing
@@ -550,6 +564,7 @@ export const CoachingScenario = {
 - [ ] Set up accessibility testing addon
 
 ### **Phase 2: Core Components**
+
 - [ ] Button component stories with all variants
 - [ ] Input and form component stories
 - [ ] Card component stories with football examples
@@ -557,6 +572,7 @@ export const CoachingScenario = {
 - [ ] Modal and feedback component stories
 
 ### **Phase 3: Mobile Optimization**
+
 - [ ] Mobile calendar component stories
 - [ ] Touch gesture demonstration stories
 - [ ] Mobile navigation pattern stories
@@ -564,6 +580,7 @@ export const CoachingScenario = {
 - [ ] Cross-device compatibility testing
 
 ### **Phase 4: Football-Specific Components**
+
 - [ ] Formation diagram interactive stories
 - [ ] Statistics display component stories
 - [ ] Team management interface stories
@@ -571,6 +588,7 @@ export const CoachingScenario = {
 - [ ] Game management component stories
 
 ### **Phase 5: Templates & Layouts**
+
 - [ ] Complete dashboard template stories
 - [ ] Mobile page template stories
 - [ ] Coaching workflow template stories
@@ -582,6 +600,7 @@ export const CoachingScenario = {
 ## 🚀 **DEPLOYMENT & INTEGRATION**
 
 ### **Storybook Build & Deploy**
+
 ```bash
 # Build Storybook for production
 npm run build-storybook
@@ -595,15 +614,16 @@ npm run storybook:a11y  # Accessibility testing
 ```
 
 ### **Design System Integration**
+
 ```typescript
 // Export components from Storybook for main application
-export { Button } from './components/Button/Button'
-export { Card } from './components/Card/Card'
-export { MobileCalendar } from './components/Mobile/MobileCalendar'
-export { FormationDiagram } from './components/Football/FormationDiagram'
+export { Button } from "./components/Button/Button";
+export { Card } from "./components/Card/Card";
+export { MobileCalendar } from "./components/Mobile/MobileCalendar";
+export { FormationDiagram } from "./components/Football/FormationDiagram";
 
 // Design tokens integration
-export { colors, typography, spacing, shadows } from './tokens'
+export { colors, typography, spacing, shadows } from "./tokens";
 ```
 
 This comprehensive component inventory provides the foundation for implementing Storybook with all our design system components. Should we proceed with initializing Storybook and creating the foundation stories?

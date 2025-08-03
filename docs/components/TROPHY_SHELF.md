@@ -9,7 +9,7 @@ The Personal Trophy Shelf is a dashboard component that displays user achievemen
 ### **Key Features**
 
 - ✅ **Compact Design**: Horizontal layout optimized for dashboard space
-- ✅ **Scrollable Achievements**: Vertical scroll for browsing all achievements  
+- ✅ **Scrollable Achievements**: Vertical scroll for browsing all achievements
 - ✅ **Vertical Stats Stack**: Key metrics displayed in organized columns
 - ✅ **Standardized Icons**: Consistent Lucide icon system
 - ✅ **Achievement Status**: Visual indicators for earned vs unearned achievements
@@ -41,17 +41,20 @@ The Personal Trophy Shelf is a dashboard component that displays user achievemen
 ## 🛠️ **Implementation Details**
 
 ### **Component Location**
+
 ```
 src/components/dashboard/PersonalTrophyShelf.tsx
 ```
 
 ### **Dependencies**
+
 - `useAchievements` hook for data fetching
 - Typography components from design system
 - Card and Icon components from UI library
 - Tailwind CSS for styling
 
 ### **Props Interface**
+
 ```typescript
 interface PersonalTrophyShelfProps {
   userId: string;
@@ -71,7 +74,7 @@ interface PersonalTrophyShelfProps {
 
 - **Weekly Streak**: Consecutive active days
 - **Stickers**: Total helmet stickers earned
-- **Medals**: Total BoxCall medals earned  
+- **Medals**: Total BoxCall medals earned
 - **Total**: Total achievements available
 
 ## 🎯 **Current Status**

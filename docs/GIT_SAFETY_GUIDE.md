@@ -5,12 +5,14 @@
 ### Before ANY major restructure or operation:
 
 1. **Create a safety branch:**
+
    ```bash
    git checkout -b safety-backup-$(date +%Y%m%d)
    git push origin safety-backup-$(date +%Y%m%d)
    ```
 
 2. **Test the health check:**
+
    ```bash
    ./scripts/health-check.sh
    ```
@@ -23,6 +25,7 @@
 ### Safe Git Operations:
 
 #### For File Moves/Renames:
+
 ```bash
 # DON'T: git mv src/ web/src/  (can break with many files)
 # DO: Move in stages
@@ -34,6 +37,7 @@ git commit -m "Add files to new location"
 ```
 
 #### For Major Restructures:
+
 ```bash
 # 1. Plan the changes
 # 2. Create safety branch
@@ -45,6 +49,7 @@ git commit -m "Add files to new location"
 ### Recovery from Empty Files:
 
 #### If you notice empty files:
+
 ```bash
 # Check what happened
 git status
@@ -61,6 +66,7 @@ git reset --hard <working-commit>
 ```
 
 #### Emergency recovery commands:
+
 ```bash
 # Show content of a file from specific commit
 git show <commit>:path/to/file
@@ -75,6 +81,7 @@ git reset --hard <commit>
 ### Daily Safety Habits:
 
 1. **Run health check regularly:**
+
    ```bash
    ./scripts/health-check.sh
    ```

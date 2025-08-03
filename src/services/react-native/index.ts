@@ -3,18 +3,18 @@
  * Advanced Features & Integration Export Index
  */
 
-export { default as ReactNativePlatformService } from './ReactNativePlatformService'
-export type { 
+export { default as ReactNativePlatformService } from "./ReactNativePlatformService";
+export type {
   NativeAppState,
   RealTimeSubscription,
-  CrossPlatformSyncConfig
-} from './ReactNativePlatformService'
+  CrossPlatformSyncConfig,
+} from "./ReactNativePlatformService";
 
-export { 
+export {
   RealTimeService,
   TeamManagementService,
-  CoachingAnalyticsService
-} from './ReactNativePlatformService'
+  CoachingAnalyticsService,
+} from "./ReactNativePlatformService";
 
 // Re-export Phase 4.3 types for convenience
 export type {
@@ -30,5 +30,5 @@ export type {
   FamilyDashboard,
   UserRole,
   ReactNativeConfig,
-  PlatformCapabilities
-} from '../../types/phase4-3'
+  PlatformCapabilities,
+} from "../../types/phase4-3";

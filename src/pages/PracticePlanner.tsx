@@ -124,29 +124,42 @@ export function PracticePlanner() {
 
   const selectedSchedule = schedules.find((s) => s.id === selectedScheduleId);
 
-    // Prepare practice data for PDF export
+  // Prepare practice data for PDF export
   const preparePracticeDataForPDF = () => {
     if (!selectedSchedule) return null;
 
     // Convert practice blocks to PDF format and categorize them
-    const pdfBlocks = currentBlocks.map(block => {
+    const pdfBlocks = currentBlocks.map((block) => {
       // Infer category from title/description or default to 'meeting'
-      let category: 'offense' | 'defense' | 'special-teams' | 'meeting' | 'weight-room' | 'transition' | 'break' = 'meeting';
-      
+      let category:
+        | "offense"
+        | "defense"
+        | "special-teams"
+        | "meeting"
+        | "weight-room"
+        | "transition"
+        | "break" = "meeting";
+
       const titleLower = block.title.toLowerCase();
-      const descLower = (block.description || '').toLowerCase();
+      const descLower = (block.description || "").toLowerCase();
       const combined = `${titleLower} ${descLower}`;
-      
-      if (combined.includes('offense') || combined.includes('offensive')) {
-        category = 'offense';
-      } else if (combined.includes('defense') || combined.includes('defensive')) {
-        category = 'defense';
-      } else if (combined.includes('special') || combined.includes('st ')) {
-        category = 'special-teams';
-      } else if (combined.includes('weight') || combined.includes('strength')) {
-        category = 'weight-room';
-      } else if (combined.includes('transition') || combined.includes('break')) {
-        category = 'transition';
+
+      if (combined.includes("offense") || combined.includes("offensive")) {
+        category = "offense";
+      } else if (
+        combined.includes("defense") ||
+        combined.includes("defensive")
+      ) {
+        category = "defense";
+      } else if (combined.includes("special") || combined.includes("st ")) {
+        category = "special-teams";
+      } else if (combined.includes("weight") || combined.includes("strength")) {
+        category = "weight-room";
+      } else if (
+        combined.includes("transition") ||
+        combined.includes("break")
+      ) {
+        category = "transition";
       }
 
       return {
@@ -154,48 +167,75 @@ export function PracticePlanner() {
         title: block.title,
         category,
         duration: block.duration,
-        startTime: block.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        endTime: block.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        location: '',
-        notes: block.notes || '',
-        assignedCoach: '',
+        startTime: block.startTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        endTime: block.endTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        location: "",
+        notes: block.notes || "",
+        assignedCoach: "",
         scriptId: block.practiceScriptId,
-        scriptTitle: block.practiceScriptId ? 'Practice Script' : undefined,
+        scriptTitle: block.practiceScriptId ? "Practice Script" : undefined,
       };
     });
 
     // Calculate category breakdown
     const categoryBreakdown: Record<string, number> = {};
-    pdfBlocks.forEach(block => {
-      categoryBreakdown[block.category] = (categoryBreakdown[block.category] || 0) + block.duration;
+    pdfBlocks.forEach((block) => {
+      categoryBreakdown[block.category] =
+        (categoryBreakdown[block.category] || 0) + block.duration;
     });
 
     return {
-      title: selectedSchedule.title || 'Practice Plan',
-      date: format(selectedSchedule.date, 'MMM d, yyyy'),
+      title: selectedSchedule.title || "Practice Plan",
+      date: format(selectedSchedule.date, "MMM d, yyyy"),
       duration: currentBlocks.reduce((sum, block) => sum + block.duration, 0),
       location: selectedSchedule.location,
       weather: undefined, // Could be added from weather data if available
       blocks: pdfBlocks,
       coaches: [
         // Mock coach data - in real app this would come from team data
-        { id: '1', name: 'Head Coach', role: 'Head Coach', assignments: ['Overall direction'] },
-        { id: '2', name: 'Offensive Coordinator', role: 'OC', assignments: ['Offense blocks'] },
-        { id: '3', name: 'Defensive Coordinator', role: 'DC', assignments: ['Defense blocks'] },
-        { id: '4', name: 'Special Teams Coach', role: 'STC', assignments: ['Special teams'] },
+        {
+          id: "1",
+          name: "Head Coach",
+          role: "Head Coach",
+          assignments: ["Overall direction"],
+        },
+        {
+          id: "2",
+          name: "Offensive Coordinator",
+          role: "OC",
+          assignments: ["Offense blocks"],
+        },
+        {
+          id: "3",
+          name: "Defensive Coordinator",
+          role: "DC",
+          assignments: ["Defense blocks"],
+        },
+        {
+          id: "4",
+          name: "Special Teams Coach",
+          role: "STC",
+          assignments: ["Special teams"],
+        },
       ],
       equipment: [
         // Mock equipment data - could be extracted from block notes or separate equipment list
-        { item: 'Cones', quantity: 20, location: 'Equipment shed' },
-        { item: 'Footballs', quantity: 10, location: 'Equipment room' },
-        { item: 'Blocking pads', quantity: 8, location: 'Field storage' },
+        { item: "Cones", quantity: 20, location: "Equipment shed" },
+        { item: "Footballs", quantity: 10, location: "Equipment room" },
+        { item: "Blocking pads", quantity: 8, location: "Field storage" },
       ],
       summary: {
         categoryBreakdown,
         objectives: [
-          'Improve offensive line blocking',
-          'Practice red zone defense',
-          'Special teams coordination',
+          "Improve offensive line blocking",
+          "Practice red zone defense",
+          "Special teams coordination",
         ],
       },
     };
@@ -300,7 +340,11 @@ export function PracticePlanner() {
                           variant="outline"
                           className="border-red-300 text-red-700 hover:bg-red-50 flex items-center gap-2"
                         >
-                          <Icon name="stop" size="sm" className="text-red-700" />
+                          <Icon
+                            name="stop"
+                            size="sm"
+                            className="text-red-700"
+                          />
                           End Practice
                         </Button>
 
@@ -390,7 +434,11 @@ export function PracticePlanner() {
                                           </Typography>
 
                                           {block.isLocked && (
-                                            <Icon name="lock" size="sm" className="text-amber-500" />
+                                            <Icon
+                                              name="lock"
+                                              size="sm"
+                                              className="text-amber-500"
+                                            />
                                           )}
 
                                           <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-mono">
@@ -423,7 +471,11 @@ export function PracticePlanner() {
                                               size="sm"
                                               className="text-jade-600 hover:text-jade-700 p-0 h-auto flex items-center"
                                             >
-                                              <Icon name="file" size="sm" className="mr-1" />
+                                              <Icon
+                                                name="file"
+                                                size="sm"
+                                                className="mr-1"
+                                              />
                                               Practice Script Attached
                                             </Button>
                                           </div>

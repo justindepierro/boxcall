@@ -23,7 +23,7 @@ export const Navigation: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Use effective role from dev mode if in dev mode, otherwise use profile role
-  const currentRole: UserRole | null = isDevMode 
+  const currentRole: UserRole | null = isDevMode
     ? (effectiveUserRole as UserRole)
     : (profile?.role ?? null);
 

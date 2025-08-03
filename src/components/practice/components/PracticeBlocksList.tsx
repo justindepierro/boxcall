@@ -1,6 +1,6 @@
 /**
  * PracticeBlocksList Component (Regular Mode)
- * 
+ *
  * Draggable list of practice blocks with:
  * - Drag and drop reordering
  * - Block editing and deletion
@@ -8,7 +8,7 @@
  * - Script assignment functionality
  * - Coach assignment (head coach mode)
  * - Auto-assign coaches feature
- * 
+ *
  * @component
  * @example
  * <PracticeBlocksList
@@ -88,20 +88,12 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
         </div>
         <div className="flex space-x-2">
           {userRole === "head_coach" && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onScaffoldMode}
-            >
+            <Button variant="outline" size="sm" onClick={onScaffoldMode}>
               <Icon name="clock" size="sm" className="mr-1" />
               Allocate Practice Time
             </Button>
           )}
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={onAddBlock}
-          >
+          <Button variant="primary" size="sm" onClick={onAddBlock}>
             + Add Block
           </Button>
           {userRole === "head_coach" && practiceBlocks.length > 0 && (
@@ -141,7 +133,11 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                 className="space-y-3"
               >
                 {practiceBlocks.map((block, index) => (
-                  <Draggable key={block.id} draggableId={block.id} index={index}>
+                  <Draggable
+                    key={block.id}
+                    draggableId={block.id}
+                    index={index}
+                  >
                     {(provided, snapshot) => (
                       <Card
                         ref={provided.innerRef}
@@ -165,7 +161,10 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                               {/* Block Info */}
                               <div className="flex-1">
                                 <div className="flex items-center space-x-3 mb-2">
-                                  <Typography variant="headline-sm" className="text-navy-900">
+                                  <Typography
+                                    variant="headline-sm"
+                                    className="text-navy-900"
+                                  >
                                     {block.title}
                                   </Typography>
                                   <span
@@ -173,10 +172,13 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                       block.category
                                     )}`}
                                   >
-                                    {block.category.replace("-", " ").toUpperCase()}
+                                    {block.category
+                                      .replace("-", " ")
+                                      .toUpperCase()}
                                   </span>
                                   <span className="text-sm text-gray-600">
-                                    {block.startTime} - {block.endTime} ({block.duration}m)
+                                    {block.startTime} - {block.endTime} (
+                                    {block.duration}m)
                                   </span>
                                 </div>
 
@@ -184,13 +186,21 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                 <div className="flex items-center space-x-4 text-sm text-gray-600">
                                   {block.location && (
                                     <div className="flex items-center gap-1">
-                                      <Icon name="location" size="sm" className="text-gray-500" />
+                                      <Icon
+                                        name="location"
+                                        size="sm"
+                                        className="text-gray-500"
+                                      />
                                       <span>{block.location}</span>
                                     </div>
                                   )}
                                   {block.assignedCoach && (
                                     <div className="flex items-center gap-1">
-                                      <Icon name="user-check" size="sm" className="text-gray-500" />
+                                      <Icon
+                                        name="user-check"
+                                        size="sm"
+                                        className="text-gray-500"
+                                      />
                                       <span>{block.assignedCoach}</span>
                                     </div>
                                   )}
@@ -198,7 +208,11 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
 
                                 {/* Notes */}
                                 {block.notes && (
-                                  <Typography variant="body-sm" color="muted" className="mt-2">
+                                  <Typography
+                                    variant="body-sm"
+                                    color="muted"
+                                    className="mt-2"
+                                  >
                                     {block.notes}
                                   </Typography>
                                 )}
@@ -207,9 +221,18 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                 {block.scriptId && (
                                   <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
                                     <div className="flex items-center gap-2">
-                                      <Icon name="file" size="sm" className="text-blue-600" />
-                                      <Typography variant="body-sm" className="text-blue-800">
-                                        Block Script: {block.scriptTitle || `Script ${block.scriptId}`}
+                                      <Icon
+                                        name="file"
+                                        size="sm"
+                                        className="text-blue-600"
+                                      />
+                                      <Typography
+                                        variant="body-sm"
+                                        className="text-blue-800"
+                                      >
+                                        Block Script:{" "}
+                                        {block.scriptTitle ||
+                                          `Script ${block.scriptId}`}
                                       </Typography>
                                     </div>
                                   </div>
@@ -247,7 +270,10 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                           {block.groups && block.groups.length > 0 && (
                             <div className="mt-4 pt-4 border-t border-gray-200">
                               <div className="flex items-center justify-between mb-3">
-                                <Typography variant="body-md" className="font-medium text-gray-700">
+                                <Typography
+                                  variant="body-md"
+                                  className="font-medium text-gray-700"
+                                >
                                   👥 Groups ({block.groups.length})
                                 </Typography>
                                 <button
@@ -266,13 +292,23 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                   >
                                     <div className="flex items-start justify-between mb-2">
                                       <div className="flex-1">
-                                        <Typography variant="body-sm" className="font-medium text-gray-900">
+                                        <Typography
+                                          variant="body-sm"
+                                          className="font-medium text-gray-900"
+                                        >
                                           {group.name}
                                         </Typography>
                                         {group.location && (
                                           <div className="flex items-center gap-1">
-                                            <Icon name="location" size="sm" className="text-gray-400" />
-                                            <Typography variant="body-xs" color="muted">
+                                            <Icon
+                                              name="location"
+                                              size="sm"
+                                              className="text-gray-400"
+                                            />
+                                            <Typography
+                                              variant="body-xs"
+                                              color="muted"
+                                            >
                                               {group.location}
                                             </Typography>
                                           </div>
@@ -280,21 +316,30 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                       </div>
                                       <div className="flex space-x-1 ml-2">
                                         <button
-                                          onClick={() => onEditGroup(block.id, group)}
+                                          onClick={() =>
+                                            onEditGroup(block.id, group)
+                                          }
                                           className="text-blue-600 hover:text-blue-800 p-1"
                                           title="Edit group"
                                         >
                                           <Icon name="edit" size="sm" />
                                         </button>
                                         <button
-                                          onClick={() => onAddScriptToGroup(block.id, group.id)}
+                                          onClick={() =>
+                                            onAddScriptToGroup(
+                                              block.id,
+                                              group.id
+                                            )
+                                          }
                                           className="text-green-600 hover:text-green-800 p-1"
                                           title="Add script to group"
                                         >
                                           <Icon name="file" size="sm" />
                                         </button>
                                         <button
-                                          onClick={() => onRemoveGroup(block.id, group.id)}
+                                          onClick={() =>
+                                            onRemoveGroup(block.id, group.id)
+                                          }
                                           className="text-red-600 hover:text-red-800 p-1"
                                           title="Remove group"
                                         >
@@ -305,7 +350,11 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
 
                                     {/* Group Notes */}
                                     {group.notes && (
-                                      <Typography variant="body-xs" color="muted" className="mb-2">
+                                      <Typography
+                                        variant="body-xs"
+                                        color="muted"
+                                        className="mb-2"
+                                      >
                                         {group.notes}
                                       </Typography>
                                     )}
@@ -313,11 +362,21 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                     {/* Group Script */}
                                     {group.scriptId ? (
                                       <div className="flex items-center justify-between p-2 bg-green-50 border border-green-200 rounded">
-                                        <Typography variant="body-xs" className="text-green-800">
-                                          📋 {group.scriptTitle || `Script ${group.scriptId}`}
+                                        <Typography
+                                          variant="body-xs"
+                                          className="text-green-800"
+                                        >
+                                          📋{" "}
+                                          {group.scriptTitle ||
+                                            `Script ${group.scriptId}`}
                                         </Typography>
                                         <button
-                                          onClick={() => onRemoveScriptFromGroup(block.id, group.id)}
+                                          onClick={() =>
+                                            onRemoveScriptFromGroup(
+                                              block.id,
+                                              group.id
+                                            )
+                                          }
                                           className="text-green-600 hover:text-green-800 text-xs"
                                           title="Remove script"
                                         >
@@ -326,7 +385,9 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                       </div>
                                     ) : (
                                       <button
-                                        onClick={() => onAddScriptToGroup(block.id, group.id)}
+                                        onClick={() =>
+                                          onAddScriptToGroup(block.id, group.id)
+                                        }
                                         className="w-full p-2 border-2 border-dashed border-gray-300 rounded text-gray-500 hover:border-gray-400 hover:text-gray-600 text-xs"
                                       >
                                         + Add Script to Group

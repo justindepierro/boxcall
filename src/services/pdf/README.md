@@ -20,9 +20,9 @@ The PDF Export Service provides a modular, reusable system for generating profes
 ### Basic Usage
 
 ```typescript
-import { 
-  usePracticeScriptPDF, 
-  convertPracticeStateToPDFData 
+import {
+  usePracticeScriptPDF,
+  convertPracticeStateToPDFData
 } from '@/services/pdf/usePracticeScriptPDF';
 
 function PracticeComponent({ practiceData }) {
@@ -44,23 +44,17 @@ function PracticeComponent({ practiceData }) {
 ### Advanced Usage
 
 ```typescript
-import { 
-  PDFServiceFactory, 
-  PracticeScriptPDFService 
-} from '@/services/pdf';
+import { PDFServiceFactory, PracticeScriptPDFService } from "@/services/pdf";
 
 // Create service with custom branding
-const service = new PracticeScriptPDFService(
-  customTemplate,
-  teamBranding
-);
+const service = new PracticeScriptPDFService(customTemplate, teamBranding);
 
 // Export with custom options
 const blob = await service.exportToPDF(practiceData, {
-  format: 'A4',
-  orientation: 'portrait',
+  format: "A4",
+  orientation: "portrait",
   includeHeader: true,
-  includeFooter: true
+  includeFooter: true,
 });
 ```
 
@@ -127,7 +121,7 @@ function PracticeTimeline({ practiceState }) {
   return (
     <div>
       {/* Your existing timeline component */}
-      <button 
+      <button
         onClick={handleExportPDF}
         disabled={isExporting}
         className="bg-blue-600 text-white px-4 py-2 rounded"
@@ -143,19 +137,19 @@ function PracticeTimeline({ practiceState }) {
 
 ```typescript
 const customOptions: PDFExportOptions = {
-  format: 'Letter',
-  orientation: 'landscape',
+  format: "Letter",
+  orientation: "landscape",
   includeHeader: true,
   includeFooter: true,
   includePageNumbers: true,
   branding: {
-    teamName: 'Eagles Football',
+    teamName: "Eagles Football",
     teamColors: {
-      primary: '#1a472a',
-      secondary: '#16a34a',
-      accent: '#22c55e'
-    }
-  }
+      primary: "#1a472a",
+      secondary: "#16a34a",
+      accent: "#22c55e",
+    },
+  },
 };
 
 await downloadPDF(pdfData, filename, customOptions);
@@ -185,10 +179,13 @@ const { downloadPDF, error, clearError } = usePracticeScriptPDF();
 
 ```typescript
 export class PlaybookPDFService extends BasePDFService {
-  async exportToPDF(data: PlaybookPDFData, options: PDFExportOptions): Promise<Blob> {
+  async exportToPDF(
+    data: PlaybookPDFData,
+    options: PDFExportOptions
+  ): Promise<Blob> {
     // Implementation
   }
-  
+
   // Other required methods...
 }
 ```
@@ -196,27 +193,27 @@ export class PlaybookPDFService extends BasePDFService {
 2. **Register Service**
 
 ```typescript
-PDFServiceFactory.registerService('playbook', PlaybookPDFService);
+PDFServiceFactory.registerService("playbook", PlaybookPDFService);
 ```
 
 3. **Use Service**
 
 ```typescript
-const service = PDFServiceFactory.createService('playbook');
+const service = PDFServiceFactory.createService("playbook");
 const blob = await service.exportToPDF(playbookData, options);
 ```
 
 ### Custom Styling
 
 ```typescript
-import { PDFBaseStyles, PDFColors } from '@/services/pdf/styles';
+import { PDFBaseStyles, PDFColors } from "@/services/pdf/styles";
 
 const customStyles = StyleSheet.create({
   customSection: {
     ...PDFBaseStyles.section,
     backgroundColor: PDFColors.categories.offense,
-    border: `2px solid ${PDFColors.primary}`
-  }
+    border: `2px solid ${PDFColors.primary}`,
+  },
 });
 ```
 

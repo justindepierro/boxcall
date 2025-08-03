@@ -23,13 +23,13 @@ export const useTheme = () => {
 
   useEffect(() => {
     const root = window.document.documentElement;
-    
+
     // Remove previous theme classes
     root.classList.remove("light", "dark");
-    
+
     // Add current theme class
     root.classList.add(theme);
-    
+
     // Save theme preference
     localStorage.setItem("boxcall-theme", theme);
   }, [theme]);

@@ -33,10 +33,10 @@ export interface PracticeBlock {
 }
 
 export interface TimelineAllocation {
-  [key: number]: { 
-    category: PracticeBlock["category"]; 
-    assignedCoach?: string; 
-    title?: string 
+  [key: number]: {
+    category: PracticeBlock["category"];
+    assignedCoach?: string;
+    title?: string;
   };
 }
 

@@ -1,6 +1,6 @@
 /**
  * PDF Generation Types
- * 
+ *
  * Shared types for all PDF generation across the application.
  * This ensures consistency and reusability for different document types.
  */
@@ -10,13 +10,9 @@ export class PDFError extends Error {
   code: string;
   details?: string;
 
-  constructor(
-    message: string,
-    code: string,
-    details?: string
-  ) {
+  constructor(message: string, code: string, details?: string) {
     super(message);
-    this.name = 'PDFError';
+    this.name = "PDFError";
     this.code = code;
     this.details = details;
   }
@@ -55,8 +51,8 @@ export interface PDFTemplate {
   id?: string;
   name?: string;
   description?: string;
-  pageFormat: 'A4' | 'Letter' | 'Legal';
-  pageOrientation: 'portrait' | 'landscape';
+  pageFormat: "A4" | "Letter" | "Legal";
+  pageOrientation: "portrait" | "landscape";
   margins: {
     top: number;
     right: number;
@@ -96,8 +92,8 @@ export interface PDFExportOptions {
   includeFooter?: boolean;
   includePageNumbers?: boolean;
   filename?: string;
-  format?: 'A4' | 'Letter' | 'Legal';
-  orientation?: 'portrait' | 'landscape';
+  format?: "A4" | "Letter" | "Legal";
+  orientation?: "portrait" | "landscape";
   quality?: number;
 }
 
@@ -109,7 +105,7 @@ export interface PracticeScriptPDFData {
   duration: number;
   location: string;
   weather?: string;
-  
+
   // Timeline/Blocks
   practiceBlocks: Array<{
     id: string;
@@ -133,7 +129,7 @@ export interface PracticeScriptPDFData {
       duration?: number;
     }>;
   }>;
-  
+
   // Staff
   coaches: Array<{
     id: string;
@@ -141,14 +137,14 @@ export interface PracticeScriptPDFData {
     role: string;
     assignments?: string[];
   }>;
-  
+
   // Equipment & Setup
   equipment?: Array<{
     item: string;
     quantity?: number;
     location?: string;
   }>;
-  
+
   // Summary Stats
   summary?: {
     totalMinutes: number;

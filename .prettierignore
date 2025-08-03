@@ -1,0 +1,13 @@
+# Dependencies
+node_modules
+dist
+build
+
+# Generated files
+coverage
+.nyc_output
+*.log
+
+# Config files
+package-lock.json
+yarn.lock

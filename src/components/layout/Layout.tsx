@@ -49,8 +49,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     devMode,
     navigationItemsCount: navigationItems.length,
     sidebarItemsCount: sidebarItems.length,
-    hasPlayground: navigationItems.some(item => item.id === "playground"),
-    playgroundInSidebar: sidebarItems.some(item => item.id === "playground")
+    hasPlayground: navigationItems.some((item) => item.id === "playground"),
+    playgroundInSidebar: sidebarItems.some((item) => item.id === "playground"),
   });
 
   return (
@@ -111,9 +111,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         />
 
         {/* Main content - always full width, no margin shifts */}
-        <main className="w-full">
-          {children}
-        </main>
+        <main className="w-full">{children}</main>
       </div>
     </div>
   );

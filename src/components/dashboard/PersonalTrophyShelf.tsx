@@ -33,55 +33,63 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
 
   // Combine all achievements for scrolling
   const allAchievements = [
-    ...helmetStickers.map(sticker => ({
+    ...helmetStickers.map((sticker) => ({
       id: sticker.id,
-      type: 'sticker',
+      type: "sticker",
       icon: sticker.icon,
       name: sticker.name,
       description: `Awarded by ${sticker.awardedByName}`,
       earned: true,
-      date: sticker.date
+      date: sticker.date,
     })),
-    ...boxcallMedals.map(medal => ({
+    ...boxcallMedals.map((medal) => ({
       id: medal.id,
-      type: 'medal',
+      type: "medal",
       icon: medal.icon,
       name: medal.name,
       description: medal.description,
       earned: medal.earned,
       progress: medal.progress,
-      maxProgress: medal.maxProgress
-    }))
+      maxProgress: medal.maxProgress,
+    })),
   ];
 
   // Helper function to render consistent icons using SmartIconSystem
-  const renderAchievementIcon = (iconData: React.ReactElement | string | undefined, name?: string, description?: string) => {
+  const renderAchievementIcon = (
+    iconData: React.ReactElement | string | undefined,
+    name?: string,
+    description?: string
+  ) => {
     // If it's already a React element (icon), return it
     if (React.isValidElement(iconData)) {
       return iconData;
     }
-    
+
     // Use SmartIconSystem for intelligent icon selection
-    let iconName: IconName = 'star'; // fallback
-    
-    if (typeof iconData === 'string') {
+    let iconName: IconName = "star"; // fallback
+
+    if (typeof iconData === "string") {
       // Try to use the provided icon name directly first
       const iconMap: { [key: string]: IconName } = {
-        'target': 'target',
-        'crown': 'crown',
-        'check': 'check',
-        'zap': 'zap',
-        'message': 'message-circle',
-        'calendar': 'calendar'
+        target: "target",
+        crown: "crown",
+        check: "check",
+        zap: "zap",
+        message: "message-circle",
+        calendar: "calendar",
       };
-      
+
       iconName = iconMap[iconData] || (iconData as IconName);
     } else {
       // Use SmartIconSystem to analyze content and pick best icon
-      const content = `${name || ''} ${description || ''}`;
-      iconName = SmartIconSystem.getContextualIcon(content, 'achievement', 'trophy');
+      const content = `${name || ""} ${description || ""}`;
+      iconName = SmartIconSystem.getContextualIcon(
+        content,
+        "achievement",
+        "trophy"
+      );
     }
-    
+
     return <Icon name={iconName} size={16} className="text-gray-600" />;
   };
 
@@ -116,17 +124,26 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Icon name="trophy" size={14} className="text-yellow-600" />
-          <Typography variant="headline-md" className="text-gray-900 dark:text-white">
+          <Typography
+            variant="headline-md"
+            className="text-gray-900 dark:text-white"
+          >
             Trophy Shelf
           </Typography>
         </div>
         <div className="flex-1 flex justify-center">
-          <Typography variant="body-sm" className="font-semibold text-gray-900 dark:text-white">
+          <Typography
+            variant="body-sm"
+            className="font-semibold text-gray-900 dark:text-white"
+          >
             BoxCall Achievements
           </Typography>
         </div>
         <div className="text-right">
-          <Typography variant="body-lg" className="text-jade-600 dark:text-jade-400 font-bold">
+          <Typography
+            variant="body-lg"
+            className="text-jade-600 dark:text-jade-400 font-bold"
+          >
             {totalPoints} points
           </Typography>
         </div>
@@ -140,36 +157,80 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
             <div className="flex items-center justify-center mb-1">
               <Icon name="zap" size={14} className="text-orange-500" />
             </div>
-            <Typography variant="body-sm" className="font-bold text-orange-500 text-center">{weeklyStreak}</Typography>
-            <Typography variant="caption" color="muted" className="text-xs text-center">Streak</Typography>
+            <Typography
+              variant="body-sm"
+              className="font-bold text-orange-500 text-center"
+            >
+              {weeklyStreak}
+            </Typography>
+            <Typography
+              variant="caption"
+              color="muted"
+              className="text-xs text-center"
+            >
+              Streak
+            </Typography>
           </div>
           <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
               <Icon name="star" size={14} className="text-jade-600" />
             </div>
-            <Typography variant="body-sm" className="font-bold text-jade-600 text-center">{helmetStickers.length}</Typography>
-            <Typography variant="caption" color="muted" className="text-xs text-center">Stickers</Typography>
+            <Typography
+              variant="body-sm"
+              className="font-bold text-jade-600 text-center"
+            >
+              {helmetStickers.length}
+            </Typography>
+            <Typography
+              variant="caption"
+              color="muted"
+              className="text-xs text-center"
+            >
+              Stickers
+            </Typography>
           </div>
           <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
               <Icon name="medal" size={14} className="text-blue-600" />
             </div>
-            <Typography variant="body-sm" className="font-bold text-blue-600 text-center">{boxcallMedals.filter(m => m.earned).length}</Typography>
-            <Typography variant="caption" color="muted" className="text-xs text-center">Medals</Typography>
+            <Typography
+              variant="body-sm"
+              className="font-bold text-blue-600 text-center"
+            >
+              {boxcallMedals.filter((m) => m.earned).length}
+            </Typography>
+            <Typography
+              variant="caption"
+              color="muted"
+              className="text-xs text-center"
+            >
+              Medals
+            </Typography>
           </div>
           <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
               <Icon name="target" size={14} className="text-purple-600" />
             </div>
-            <Typography variant="body-sm" className="font-bold text-purple-600 text-center">{boxcallMedals.length}</Typography>
-            <Typography variant="caption" color="muted" className="text-xs text-center">Total</Typography>
+            <Typography
+              variant="body-sm"
+              className="font-bold text-purple-600 text-center"
+            >
+              {boxcallMedals.length}
+            </Typography>
+            <Typography
+              variant="caption"
+              color="muted"
+              className="text-xs text-center"
+            >
+              Total
+            </Typography>
           </div>
         </div>
 
         {/* Right: Scrollable Achievements Section */}
         <div className="flex-1">
           {/* Container matching the height of the 4 stat boxes */}
-          <div className="flex flex-col gap-2" style={{ height: '176px' }}>
+          <div className="flex flex-col gap-2" style={{ height: "176px" }}>
             {/* Achievement List - Scrollable within the constrained container */}
             <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-jade-300 scrollbar-track-transparent pr-1">
               {allAchievements.map((achievement) => (
@@ -177,14 +238,27 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
                   key={`${achievement.type}-${achievement.id}`}
                   className="flex items-center space-x-3 py-2 px-3 h-10 mb-1 bg-white/60 dark:bg-gray-700/40 rounded-lg border border-white/40 dark:border-gray-600/30"
                 >
-                  <div className={`flex-shrink-0 w-4 h-4 flex items-center justify-center ${achievement.earned ? "" : "grayscale opacity-50"}`}>
-                    {renderAchievementIcon(achievement.icon, achievement.name, achievement.description)}
+                  <div
+                    className={`flex-shrink-0 w-4 h-4 flex items-center justify-center ${achievement.earned ? "" : "grayscale opacity-50"}`}
+                  >
+                    {renderAchievementIcon(
+                      achievement.icon,
+                      achievement.name,
+                      achievement.description
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <Typography variant="caption" className="font-semibold truncate">
+                    <Typography
+                      variant="caption"
+                      className="font-semibold truncate"
+                    >
                       {achievement.name}
                     </Typography>
-                    <Typography variant="caption" color="muted" className="block truncate">
+                    <Typography
+                      variant="caption"
+                      color="muted"
+                      className="block truncate"
+                    >
                       {achievement.description}
                     </Typography>
                   </div>

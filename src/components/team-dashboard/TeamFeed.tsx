@@ -142,7 +142,10 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
                 </div>
                 <div>
                   <div className="flex items-center space-x-2">
-                    <Typography variant="body-sm" className="font-semibold text-gray-900 dark:text-white">
+                    <Typography
+                      variant="body-sm"
+                      className="font-semibold text-gray-900 dark:text-white"
+                    >
                       {item.author}
                     </Typography>
                     {getPostIcon(item.type)}
@@ -161,7 +164,10 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
 
             {/* Post Content */}
             <div className="mb-3">
-              <Typography variant="body-sm" className="whitespace-pre-wrap text-gray-900 dark:text-white">
+              <Typography
+                variant="body-sm"
+                className="whitespace-pre-wrap text-gray-900 dark:text-white"
+              >
                 {item.content}
               </Typography>
 
@@ -191,11 +197,21 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
               <div className="flex items-center space-x-4">
                 <button className="flex items-center space-x-1 text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400">
                   <Icon name="check" size="sm" color="current" />
-                  <Typography variant="caption" className="text-gray-600 dark:text-gray-400">{item.likes}</Typography>
+                  <Typography
+                    variant="caption"
+                    className="text-gray-600 dark:text-gray-400"
+                  >
+                    {item.likes}
+                  </Typography>
                 </button>
                 <button className="flex items-center space-x-1 text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400">
                   <Icon name="message" size="sm" color="current" />
-                  <Typography variant="caption" className="text-gray-600 dark:text-gray-400">{item.comments}</Typography>
+                  <Typography
+                    variant="caption"
+                    className="text-gray-600 dark:text-gray-400"
+                  >
+                    {item.comments}
+                  </Typography>
                 </button>
               </div>
               <button className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400">

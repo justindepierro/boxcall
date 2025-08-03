@@ -543,7 +543,6 @@ export class SmartSchedulingOptimizer {
     return data || [];
   }
 
-   
   static async getAttendancePatterns(
     _teamId: string
   ): Promise<AttendancePattern[]> {
@@ -575,12 +574,10 @@ export class SmartSchedulingOptimizer {
     return patterns;
   }
 
-   
   static async getWeatherAnalysis(_eventType: string): Promise<WeatherData> {
     return { favorable: true, temperature: 72, conditions: "clear" };
   }
 
-   
   static async getTeamPreferences(_teamId: string): Promise<TeamPreferences> {
     return {
       optimalPracticeLength: 120,
@@ -591,7 +588,6 @@ export class SmartSchedulingOptimizer {
     };
   }
 
-   
   static async getConflictAnalysis(
     _teamId: string,
     _constraints: SchedulingConstraints
@@ -682,36 +678,31 @@ export class SmartSchedulingOptimizer {
   }
 
   // Additional helper methods with mock implementations
-   
+
   static async analyzeAttendancePatterns(
     _events: CalendarEvent[]
   ): Promise<AttendancePattern[]> {
     return [];
   }
 
-   
   static identifySeasonalTrends(_events: CalendarEvent[]): SeasonalTrend[] {
     return [];
   }
 
-   
   static async analyzePerformanceCorrelations(
     _events: CalendarEvent[]
   ): Promise<PerformanceCorrelation[]> {
     return [];
   }
 
-   
   static extractOptimalDays(_patterns: AttendancePattern[]): string[] {
     return ["Tuesday", "Wednesday", "Thursday"];
   }
 
-   
   static extractOptimalTimes(_patterns: AttendancePattern[]): number[] {
     return [16, 17, 18];
   }
 
-   
   static generateMLRecommendations(
     _attendance: AttendancePattern[],
     _seasonal: SeasonalTrend[],
@@ -720,7 +711,6 @@ export class SmartSchedulingOptimizer {
     return ["Consider afternoon practices for better attendance"];
   }
 
-   
   static convertToTimeSlots(_optimalTimes: number[]): TimeSlot[] {
     return [
       { day: "Tuesday", startHour: 16, endHour: 18, priority: "high" },
@@ -729,7 +719,6 @@ export class SmartSchedulingOptimizer {
     ];
   }
 
-   
   static generateSeasonFramework(
     _requirements: SeasonRequirements,
     _insights: SchedulingInsights
@@ -737,7 +726,6 @@ export class SmartSchedulingOptimizer {
     return [];
   }
 
-   
   static calculateScheduleAnalytics(
     _events: OptimizedEvent[]
   ): ScheduleAnalytics {
@@ -749,7 +737,6 @@ export class SmartSchedulingOptimizer {
     };
   }
 
-   
   static generateImprovementSummary(_events: OptimizedEvent[]): string[] {
     return [
       "Improved overall attendance by 15%",
@@ -757,12 +744,10 @@ export class SmartSchedulingOptimizer {
     ];
   }
 
-   
   static getNextDateForDayAndHour(_day: string, _hour: number): Date {
     return new Date();
   }
 
-   
   static calculateMLConfidence(
     _insights: SchedulingInsights,
     _day: string,
@@ -771,7 +756,6 @@ export class SmartSchedulingOptimizer {
     return 0.8;
   }
 
-   
   static generateMLReasons(
     _insights: SchedulingInsights,
     _day: string,
@@ -781,7 +765,6 @@ export class SmartSchedulingOptimizer {
     return ["High historical attendance", "Optimal team performance window"];
   }
 
-   
   static predictAttendance(
     _insights: SchedulingInsights,
     _day: string,
@@ -790,19 +773,16 @@ export class SmartSchedulingOptimizer {
     return 0.85;
   }
 
-   
   static extractPatternInsights(_insights: SchedulingInsights): string[] {
     return ["Team performs best on weekday afternoons"];
   }
 
-   
   static generateSeasonalRecommendations(
     _insights: SchedulingInsights
   ): string[] {
     return ["Move practices earlier during winter months"];
   }
 
-   
   static generateTeamOptimizations(
     _insights: SchedulingInsights,
     _preferences: TeamPreferences
@@ -810,7 +790,6 @@ export class SmartSchedulingOptimizer {
     return ["Consider 90-minute practices for optimal engagement"];
   }
 
-   
   static async getWeatherForecast(_dateRange: {
     start: Date;
     end: Date;
@@ -825,7 +804,6 @@ export class SmartSchedulingOptimizer {
     ];
   }
 
-   
   static isWeatherSuitableForEvent(
     _forecast: WeatherForecast,
     _eventType: string
@@ -833,7 +811,6 @@ export class SmartSchedulingOptimizer {
     return true;
   }
 
-   
   static calculateWeatherConfidence(
     _forecast: WeatherForecast,
     _eventType: string
@@ -841,7 +818,6 @@ export class SmartSchedulingOptimizer {
     return 0.8;
   }
 
-   
   static isSeasonallyAppropriate(_dateTime: Date, _eventType: string): boolean {
     return true;
   }

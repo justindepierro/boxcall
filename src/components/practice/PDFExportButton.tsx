@@ -1,15 +1,15 @@
 /**
  * PDF Export Button
- * 
+ *
  * Standalone button component for exporting practice data to PDF.
  * Can be used in any practice component where PDF export is needed.
  */
 
-import React from 'react';
-import { Button } from '../ui';
-import Icon from '../ui/Icon/Icon';
-import { usePracticeScriptPDF } from '../../services/pdf/usePracticeScriptPDF';
-import type { PracticeBlock } from './types';
+import React from "react";
+import { Button } from "../ui";
+import Icon from "../ui/Icon/Icon";
+import { usePracticeScriptPDF } from "../../services/pdf/usePracticeScriptPDF";
+import type { PracticeBlock } from "./types";
 
 interface PDFExportButtonProps {
   practiceData: {
@@ -31,70 +31,75 @@ interface PDFExportButtonProps {
       location?: string;
     }>;
   };
-  variant?: 'primary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "outline" | "ghost";
+  size?: "sm" | "md" | "lg";
   className?: string;
   disabled?: boolean;
 }
 
 export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
   practiceData,
-  variant = 'outline',
-  size = 'sm',
-  className = '',
+  variant = "outline",
+  size = "sm",
+  className = "",
   disabled = false,
 }) => {
-  const { downloadPDF, isExporting, error, clearError } = usePracticeScriptPDF();
+  const { downloadPDF, isExporting, error, clearError } =
+    usePracticeScriptPDF();
 
   const handleExportPDF = async () => {
     if (error) clearError();
 
     // Convert practice data to PDF format
     const pdfData = {
-      title: practiceData.title || 'Practice Session',
-      date: practiceData.date || new Date().toISOString().split('T')[0],
+      title: practiceData.title || "Practice Session",
+      date: practiceData.date || new Date().toISOString().split("T")[0],
       duration: practiceData.duration || 120,
-      location: practiceData.location || 'Practice Field',
+      location: practiceData.location || "Practice Field",
       weather: practiceData.weather,
-      
-      practiceBlocks: (practiceData.blocks || []).map(block => ({
+
+      practiceBlocks: (practiceData.blocks || []).map((block) => ({
         id: block.id,
         title: block.title,
         category: block.category,
-        startTime: block.startTime || '',
-        endTime: block.endTime || '',
+        startTime: block.startTime || "",
+        endTime: block.endTime || "",
         duration: block.duration,
         location: block.location,
         notes: block.notes,
         assignedCoach: block.assignedCoach,
         groups: block.groups,
       })),
-      
+
       coaches: practiceData.coaches || [],
       equipment: practiceData.equipment || [],
-      
+
       summary: {
         totalMinutes: practiceData.duration || 120,
-        categoryBreakdown: (practiceData.blocks || []).reduce((acc, block) => {
-          acc[block.category] = (acc[block.category] || 0) + block.duration;
-          return acc;
-        }, {} as Record<string, number>),
+        categoryBreakdown: (practiceData.blocks || []).reduce(
+          (acc, block) => {
+            acc[block.category] = (acc[block.category] || 0) + block.duration;
+            return acc;
+          },
+          {} as Record<string, number>
+        ),
         coachUtilization: {},
         objectives: [],
       },
     };
 
     // Generate filename
-    const safeTitle = (practiceData.title || 'practice')
-      .replace(/[^a-zA-Z0-9]/g, '_')
+    const safeTitle = (practiceData.title || "practice")
+      .replace(/[^a-zA-Z0-9]/g, "_")
       .substring(0, 30);
-    const safeDate = (practiceData.date || new Date().toISOString().split('T')[0])
-      .replace(/[^0-9]/g, '_');
+    const safeDate = (
+      practiceData.date || new Date().toISOString().split("T")[0]
+    ).replace(/[^0-9]/g, "_");
     const filename = `${safeTitle}_${safeDate}.pdf`;
 
     await downloadPDF(pdfData, filename, {
-      format: 'A4',
-      orientation: 'portrait',
+      format: "A4",
+      orientation: "portrait",
       includeHeader: true,
       includeFooter: true,
       includePageNumbers: true,
@@ -110,13 +115,28 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
         size={size}
         onClick={handleExportPDF}
         disabled={disabled || isExporting || !hasValidData}
-        className={`${className} ${!hasValidData ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`${className} ${!hasValidData ? "opacity-50 cursor-not-allowed" : ""}`}
       >
         {isExporting ? (
           <>
-            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-current" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <svg
+              className="animate-spin -ml-1 mr-2 h-4 w-4 text-current"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
             Generating...
           </>

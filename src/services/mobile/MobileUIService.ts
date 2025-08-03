@@ -610,7 +610,7 @@ export class MobileUIService {
 
   private static async animatePageTransition(
     transition: "slide" | "fade" | "modal",
-     
+
     _direction: "forward" | "backward"
   ): Promise<void> {
     const duration = transition === "modal" ? 400 : 300;
@@ -620,9 +620,8 @@ export class MobileUIService {
   }
 
   private static async animateOrientationChange(
-     
     _from: "portrait" | "landscape",
-     
+
     _to: "portrait" | "landscape"
   ): Promise<void> {
     // TODO: Implement orientation change animation

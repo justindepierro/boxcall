@@ -73,7 +73,11 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2 mb-6">
-          <Icon name="user" size="lg" className="text-gray-700 dark:text-gray-300" />
+          <Icon
+            name="user"
+            size="lg"
+            className="text-gray-700 dark:text-gray-300"
+          />
           <Typography
             variant="headline-md"
             className="text-gray-900 dark:text-white"

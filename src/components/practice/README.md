@@ -17,6 +17,7 @@ The Practice Planner is a comprehensive React component system for managing foot
 ## 🏗️ Architecture
 
 ### Core Structure
+
 ```
 src/components/practice/
 ├── PracticePlannerModal.tsx     # Main orchestrating component (2732 lines → being refactored)
@@ -37,14 +38,18 @@ src/components/practice/
 ## 🧩 Component Breakdown
 
 ### 1. PracticePlannerModal (Main Component)
+
 **Status**: 🔄 Refactoring in progress
+
 - **Current**: Original 2732-line monolithic file (PracticePlannerModal.tsx)
 - **New Version**: Modular template created (PracticePlannerModalNew.tsx)
 - **Dependencies**: Uses all extracted components + centralized state management
 - **Integration**: Needs completion of usePracticeState hook event handlers
 
 ### 2. PracticeHeader
+
 **Status**: ✅ Complete and integrated
+
 - **Purpose**: Displays header with title, role switching, and mode toggles
 - **Features**:
   - Event title and date display
@@ -55,7 +60,9 @@ src/components/practice/
 - **Props**: PracticeHeaderProps interface
 
 ### 3. TimeSummary
+
 **Status**: ✅ Complete and integrated
+
 - **Purpose**: Shows practice duration summary and progress visualization
 - **Features**:
   - Total time scheduled vs. allocated
@@ -65,7 +72,9 @@ src/components/practice/
 - **Props**: TimeSummaryProps interface
 
 ### 4. TimelineAllocation
+
 **Status**: ✅ Complete - needs integration testing
+
 - **Purpose**: Interactive timeline interface for scaffold mode practice planning
 - **Features**:
   - Category selector with visual buttons
@@ -76,7 +85,9 @@ src/components/practice/
 - **Props**: Complex interface with timeline state and handlers
 
 ### 5. PracticeBlocksList
+
 **Status**: ✅ Complete - needs integration testing
+
 - **Purpose**: Draggable list interface for regular mode practice planning
 - **Features**:
   - Drag and drop block reordering
@@ -88,17 +99,21 @@ src/components/practice/
 - **Props**: Comprehensive interface with all block and group handlers
 
 ### 6. Modal Components
+
 **Status**: ✅ Complete and tested
 
 #### AddBlockModal
+
 - **Purpose**: Add new practice blocks with full configuration
 - **Features**: Time allocation, category selection, coach assignment, form validation
 
 #### AddGroupModal
+
 - **Purpose**: Add groups to existing practice blocks
 - **Features**: Group name, location, notes configuration
 
 #### EditGroupModal
+
 - **Purpose**: Edit existing groups with script assignment display
 - **Features**: Pre-populated form, script status display, full group editing
 
@@ -121,7 +136,14 @@ interface PracticeBlock {
   startTime: string;
   endTime: string;
   duration: number;
-  category: "offense" | "defense" | "special-teams" | "meeting" | "weight-room" | "transition" | "break";
+  category:
+    | "offense"
+    | "defense"
+    | "special-teams"
+    | "meeting"
+    | "weight-room"
+    | "transition"
+    | "break";
   title: string;
   location: string;
   notes: string;
@@ -136,7 +158,9 @@ interface PracticeBlock {
 ## 🔧 State Management
 
 ### usePracticeState Hook
+
 **Status**: ✅ Complete
+
 - **Purpose**: Centralized state management for all practice planner functionality
 - **Features**:
   - All useState and useEffect logic
@@ -146,6 +170,7 @@ interface PracticeBlock {
   - Group and block management
 
 ### Key State Variables
+
 - `practiceBlocks`: Array of practice blocks
 - `userRole`: "head_coach" | "position_coach"
 - `timeAllocationMode`: Boolean for time allocation UI
@@ -157,6 +182,7 @@ interface PracticeBlock {
 ## 🛠️ Utility Functions
 
 ### Core Utilities (utils.ts)
+
 - `formatDuration(minutes)`: Format duration to hours:minutes
 - `getCategoryColor(category)`: Get Tailwind classes for category styling
 - `recalculateBlockTimes()`: Recalculate chronological block times
@@ -167,6 +193,7 @@ interface PracticeBlock {
 ## 🎨 Styling & Design
 
 ### Color System
+
 - **Offense**: Blue (bg-blue-100 text-blue-800)
 - **Defense**: Red (bg-red-100 text-red-800)
 - **Special Teams**: Green (bg-green-100 text-green-800)
@@ -176,6 +203,7 @@ interface PracticeBlock {
 - **Break**: Yellow (bg-yellow-100 text-yellow-800)
 
 ### Component Styling
+
 - Uses Tailwind CSS for consistent styling
 - Responsive design with mobile considerations
 - Color-coded categories for visual organization
@@ -184,6 +212,7 @@ interface PracticeBlock {
 ## 🔄 User Workflows
 
 ### Head Coach Workflow
+
 1. **Time Allocation Mode**: Allocate time blocks visually on timeline
 2. **Block Creation**: Add practice blocks with categories and durations
 3. **Coach Assignment**: Assign position coaches to specific blocks
@@ -191,6 +220,7 @@ interface PracticeBlock {
 5. **Script Assignment**: Assign scripts to blocks and individual groups
 
 ### Position Coach Workflow
+
 1. **View Assigned Blocks**: See blocks assigned by head coach
 2. **Group Management**: Add/edit groups within assigned blocks
 3. **Script Assignment**: Assign scripts to individual groups
@@ -226,7 +256,7 @@ function MyPracticePlanner() {
         onScaffoldModeToggle={() => setScaffoldMode(!scaffoldMode)}
         onClose={onClose}
       />
-      
+
       <TimeSummary
         scheduledDuration={scheduledDuration}
         totalDuration={totalDuration}
@@ -241,32 +271,37 @@ function MyPracticePlanner() {
 ## 🔮 Refactoring Progress
 
 ### ✅ Completed (Phase 1) - Foundation
+
 - [x] Type definitions extraction (types.ts)
-- [x] Utility functions extraction (utils.ts) 
+- [x] Utility functions extraction (utils.ts)
 - [x] State management hook extraction (usePracticeState.ts)
 - [x] Repository cleanup (removed incomplete files)
 
 ### ✅ Completed (Phase 2) - UI Components
+
 - [x] PracticeHeader component extraction
-- [x] TimeSummary component extraction  
+- [x] TimeSummary component extraction
 - [x] AddBlockModal component extraction
 - [x] AddGroupModal component extraction
 - [x] EditGroupModal component extraction
 - [x] Component index files creation
 
 ### ✅ Completed (Phase 3) - Major Components
+
 - [x] TimelineAllocation component extraction (scaffold mode interface)
 - [x] PracticeBlocksList component extraction (draggable blocks with groups)
 - [x] Complete component architecture with clean imports
 - [x] Comprehensive architecture documentation
 
 ### 🔄 In Progress (Phase 4) - Integration
+
 - [ ] Complete usePracticeState hook with all event handlers
 - [ ] Full integration testing of extracted components
 - [ ] Replace main PracticePlannerModal with modular version
 - [ ] Performance optimization and bundle analysis
 
 ### 🎯 Next Steps (Phase 5) - Finalization
+
 - [ ] End-to-end testing of complete refactored system
 - [ ] Mobile responsiveness validation
 - [ ] Accessibility improvements (ARIA, keyboard navigation)
@@ -275,18 +310,21 @@ function MyPracticePlanner() {
 ## 🧪 Testing Strategy
 
 ### Unit Testing
+
 - Test individual components in isolation
 - Mock state management hook
 - Test user interactions and form submissions
 - Validate prop interfaces and TypeScript compliance
 
 ### Integration Testing
+
 - Test component interactions with state management
 - Validate localStorage persistence
 - Test role-based functionality
 - Verify drag-and-drop functionality
 
 ### E2E Testing
+
 - Complete practice planning workflows
 - Multi-user role scenarios
 - Data persistence across sessions
@@ -295,12 +333,14 @@ function MyPracticePlanner() {
 ## 📈 Performance Considerations
 
 ### Optimization Techniques
+
 - **Memoization**: useMemo for computed values in usePracticeState
 - **Component Memoization**: React.memo for pure components
 - **Event Handler Stability**: useCallback for event handlers
 - **Selective Re-rendering**: Targeted state updates to minimize re-renders
 
 ### Bundle Size Management
+
 - Tree-shaking friendly exports
 - Lazy loading for modal components
 - Optimized dependency imports
@@ -308,6 +348,7 @@ function MyPracticePlanner() {
 ## 🚀 Future Enhancements
 
 ### Planned Features
+
 1. **Real-time Collaboration**: Multiple coaches editing simultaneously
 2. **Template System**: Save and reuse practice templates
 3. **Analytics Dashboard**: Practice efficiency metrics
@@ -315,6 +356,7 @@ function MyPracticePlanner() {
 5. **Integration**: Calendar sync and notification system
 
 ### Technical Improvements
+
 1. **Advanced State Management**: Consider Redux Toolkit for complex state
 2. **Animation System**: Framer Motion for smooth transitions
 3. **Accessibility**: Enhanced ARIA support and keyboard navigation
@@ -326,16 +368,19 @@ function MyPracticePlanner() {
 ## 📝 Development Notes
 
 ### ESLint Configuration
+
 - Unused variables prefixed with underscore (`_onUserRoleChange`)
 - Strict TypeScript checking enabled
 - React Hooks rules enforced
 
 ### Git Strategy
+
 - Feature branch for each component extraction
 - Detailed commit messages with component scope
 - Clean history with squashed commits for major milestones
 
 ### Code Quality
+
 - 100% TypeScript coverage
 - Comprehensive JSDoc documentation
 - Consistent naming conventions

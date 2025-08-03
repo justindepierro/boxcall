@@ -619,12 +619,12 @@ export class MobileCalendarService {
     return { success: false, feedback: "Invalid tap target" };
   }
 
-   
   private static async handleLongPress(
     _gesture: TouchGesture,
     _target: MobileEvent | Date | null
   ): Promise<{ success: boolean; action?: string; feedback?: string }> {
-    void _gesture; void _target; // Parameters reserved for future implementation
+    void _gesture;
+    void _target; // Parameters reserved for future implementation
     if (this.state?.currentView.renderConfig.hapticFeedback) {
       // Trigger haptic feedback
       this.triggerHapticFeedback("medium");
@@ -659,7 +659,6 @@ export class MobileCalendarService {
     return { success: false, feedback: "No swipe action available" };
   }
 
-   
   private static async handlePinch(
     _gesture: TouchGesture
   ): Promise<{ success: boolean; action?: string; feedback?: string }> {
@@ -667,7 +666,6 @@ export class MobileCalendarService {
     return { success: true, action: "zoom", feedback: "Calendar zoomed" };
   }
 
-   
   private static async handleScroll(
     _gesture: TouchGesture
   ): Promise<{ success: boolean; action?: string; feedback?: string }> {

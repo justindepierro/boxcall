@@ -662,12 +662,10 @@ export class IntelligentCalendarService {
     return (end.getTime() - start.getTime()) / (1000 * 60); // minutes
   }
 
-   
   static calculatePredictedImprovement(_suggestion: TimeSuggestion): string {
     return "15% attendance increase expected";
   }
 
-   
   static generateScheduleAnalysisRecommendations(
     _analytics: AttendanceAnalytics,
     _insights: SchedulingInsights,
@@ -676,21 +674,18 @@ export class IntelligentCalendarService {
     return ["Consider optimizing practice times for better attendance"];
   }
 
-   
   static generateAttendancePredictionSummary(
     _predictions: AttendancePrediction[]
   ): string {
     return "Overall attendance trend is positive";
   }
 
-   
   static generateAttendancePredictionRecommendations(
     _predictions: AttendancePrediction[]
   ): string[] {
     return ["Send reminders 24 hours before low-predicted attendance events"];
   }
 
-   
   static async getTeamSpecificInsights(_teamId: string): Promise<string[]> {
     return ["Team performs best with Tuesday/Thursday practices"];
   }

@@ -279,11 +279,13 @@ export function Phase23IntegrationDemo() {
                               : "text-yellow-600"
                         }`}
                       >
-                        {result.status === "pass"
-                          ? <Icon name="check" size="sm" color="success" />
-                          : result.status === "fail"
-                            ? <Icon name="close" size="sm" color="error" />
-                            : <Icon name="clock" size="sm" color="slate" />}
+                        {result.status === "pass" ? (
+                          <Icon name="check" size="sm" color="success" />
+                        ) : result.status === "fail" ? (
+                          <Icon name="close" size="sm" color="error" />
+                        ) : (
+                          <Icon name="clock" size="sm" color="slate" />
+                        )}
                       </span>
                     </div>
                   ))}
@@ -297,19 +299,39 @@ export function Phase23IntegrationDemo() {
                 </h4>
                 <div className="space-y-1">
                   <div className="flex items-center text-xs text-green-700">
-                    <Icon name="check" size="sm" color="success" className="mr-2" />
+                    <Icon
+                      name="check"
+                      size="sm"
+                      color="success"
+                      className="mr-2"
+                    />
                     Event Polling System
                   </div>
                   <div className="flex items-center text-xs text-green-700">
-                    <Icon name="check" size="sm" color="success" className="mr-2" />
+                    <Icon
+                      name="check"
+                      size="sm"
+                      color="success"
+                      className="mr-2"
+                    />
                     Advanced RSVP Features
                   </div>
                   <div className="flex items-center text-xs text-green-700">
-                    <Icon name="check" size="sm" color="success" className="mr-2" />
+                    <Icon
+                      name="check"
+                      size="sm"
+                      color="success"
+                      className="mr-2"
+                    />
                     Calendar Permissions
                   </div>
                   <div className="flex items-center text-xs text-green-700">
-                    <Icon name="check" size="sm" color="success" className="mr-2" />
+                    <Icon
+                      name="check"
+                      size="sm"
+                      color="success"
+                      className="mr-2"
+                    />
                     Bulk Operations
                   </div>
                 </div>

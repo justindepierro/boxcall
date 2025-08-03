@@ -1,12 +1,12 @@
 /**
  * TimeSummary Component
- * 
+ *
  * Displays practice duration summary with:
  * - Total time scheduled vs. allocated
  * - Progress bar visualization
  * - Category breakdown with color coding
  * - Duration formatting (hours:minutes)
- * 
+ *
  * @component
  * @example
  * <TimeSummary
@@ -30,15 +30,19 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
   event,
 }) => {
   // Calculate category breakdown
-  const categoryTotals = practiceBlocks.reduce((acc, block) => {
-    const category = block.category;
-    acc[category] = (acc[category] || 0) + block.duration;
-    return acc;
-  }, {} as Record<string, number>);
+  const categoryTotals = practiceBlocks.reduce(
+    (acc, block) => {
+      const category = block.category;
+      acc[category] = (acc[category] || 0) + block.duration;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
-  const progressPercentage = scheduledDuration > 0 
-    ? Math.min((totalDuration / scheduledDuration) * 100, 100) 
-    : 0;
+  const progressPercentage =
+    scheduledDuration > 0
+      ? Math.min((totalDuration / scheduledDuration) * 100, 100)
+      : 0;
 
   const isOverScheduled = totalDuration > scheduledDuration;
   const remainingTime = scheduledDuration - totalDuration;
@@ -51,7 +55,7 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
           Practice Duration Summary
         </Typography>
       </div>
-      
+
       {/* Time Overview */}
       <div className="grid grid-cols-3 gap-4 mb-4">
         <div className="text-center">
@@ -66,8 +70,8 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
           <Typography variant="body-sm" color="muted">
             Total Allocated
           </Typography>
-          <Typography 
-            variant="headline-sm" 
+          <Typography
+            variant="headline-sm"
             className={isOverScheduled ? "text-red-600" : "text-green-600"}
           >
             {formatDuration(totalDuration)}
@@ -77,8 +81,8 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
           <Typography variant="body-sm" color="muted">
             {remainingTime >= 0 ? "Remaining" : "Over by"}
           </Typography>
-          <Typography 
-            variant="headline-sm" 
+          <Typography
+            variant="headline-sm"
             className={remainingTime >= 0 ? "text-blue-600" : "text-red-600"}
           >
             {formatDuration(Math.abs(remainingTime))}
@@ -99,10 +103,10 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div
             className={`h-2.5 rounded-full transition-all duration-300 ${
-              isOverScheduled 
-                ? "bg-red-500" 
-                : progressPercentage === 100 
-                  ? "bg-green-500" 
+              isOverScheduled
+                ? "bg-red-500"
+                : progressPercentage === 100
+                  ? "bg-green-500"
                   : "bg-blue-500"
             }`}
             style={{ width: `${Math.min(progressPercentage, 100)}%` }}
@@ -124,7 +128,8 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
                   category as PracticeBlock["category"]
                 )}`}
               >
-                {category.replace("-", " ").toUpperCase()}: {formatDuration(duration)}
+                {category.replace("-", " ").toUpperCase()}:{" "}
+                {formatDuration(duration)}
               </div>
             ))}
           </div>
@@ -134,14 +139,17 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
       {/* Event Details */}
       <div className="mt-4 pt-4 border-t border-gray-100">
         <Typography variant="body-sm" color="muted">
-          📅 {event.title} • {new Date(event.start).toLocaleDateString()} • 
-          {new Date(event.start).toLocaleTimeString([], { 
-            hour: '2-digit', 
-            minute: '2-digit' 
-          })}{event.end ? ` - ${new Date(event.end).toLocaleTimeString([], { 
-            hour: '2-digit', 
-            minute: '2-digit' 
-          })}` : ''}
+          📅 {event.title} • {new Date(event.start).toLocaleDateString()} •
+          {new Date(event.start).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+          {event.end
+            ? ` - ${new Date(event.end).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}`
+            : ""}
         </Typography>
       </div>
     </div>

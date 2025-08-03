@@ -180,32 +180,32 @@ body,
   .compact-layout {
     @apply space-y-3;
   }
-  
+
   .compact-grid {
     @apply gap-3;
   }
-  
+
   .compact-card {
     @apply p-3 space-y-2;
   }
-  
+
   .compact-section {
     @apply mb-3 space-y-2;
   }
-  
+
   .compact-header {
     @apply mb-2;
   }
-  
+
   /* Tight spacing utilities */
   .space-y-tight > * + * {
     @apply mt-2;
   }
-  
+
   .space-x-tight > * + * {
     @apply ml-2;
   }
-  
+
   /* Ultra-compact for dense information */
   .ultra-compact {
     @apply space-y-1 text-sm;

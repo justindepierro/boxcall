@@ -333,7 +333,6 @@ export class CrossPlatformIntelligentCalendarService {
     }
   }
 
-   
   private getDisplayOptimizations(
     _suggestion: SchedulingSuggestion
   ): Record<string, unknown> {
@@ -440,7 +439,6 @@ export class CrossPlatformIntelligentCalendarService {
     return { eventKitData: suggestion };
   }
 
-   
   private generateiOSNotification(_suggestion: SchedulingSuggestion): unknown {
     return { iOSNotification: true };
   }
@@ -457,7 +455,6 @@ export class CrossPlatformIntelligentCalendarService {
     return { calendarContract: suggestion };
   }
 
-   
   private generateAndroidNotification(
     _suggestion: SchedulingSuggestion
   ): unknown {
@@ -581,7 +578,8 @@ class OfflineManager {
     _event: Partial<CrossPlatformCalendarEvent>,
     _options: ConflictDetectionOptions
   ): Promise<ConflictDetectionResult> {
-    void _event; void _options; // Parameters reserved for future implementation
+    void _event;
+    void _options; // Parameters reserved for future implementation
     // Mock offline conflict detection
     return {
       conflicts: [],
@@ -628,12 +626,12 @@ class OfflineManager {
     console.log("Caching analytics:", { teamId, period, analytics });
   }
 
-   
   async getCachedAnalytics(
     _teamId: string,
     _period: AnalyticsPeriod
   ): Promise<AnalyticsResult> {
-    void _teamId; void _period; // Parameters reserved for future implementation
+    void _teamId;
+    void _period; // Parameters reserved for future implementation
     return {
       analytics: {} as EventAnalytics,
       platformEnriched: false,

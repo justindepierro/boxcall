@@ -23,7 +23,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   userRole: _userRole,
 }) => {
   const [achievementScrollIndex, setAchievementScrollIndex] = useState(0);
-  
+
   const {
     helmetStickers,
     boxcallMedals,
@@ -35,36 +35,41 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
 
   // Combine all achievements for scrolling
   const allAchievements = [
-    ...helmetStickers.map(sticker => ({
+    ...helmetStickers.map((sticker) => ({
       id: sticker.id,
-      type: 'sticker',
+      type: "sticker",
       icon: sticker.icon,
       name: sticker.name,
       description: `Awarded by ${sticker.awardedByName}`,
       earned: true,
-      date: sticker.date
+      date: sticker.date,
     })),
-    ...boxcallMedals.map(medal => ({
+    ...boxcallMedals.map((medal) => ({
       id: medal.id,
-      type: 'medal',
+      type: "medal",
       icon: medal.icon,
       name: medal.name,
       description: medal.description,
       earned: medal.earned,
       progress: medal.progress,
-      maxProgress: medal.maxProgress
-    }))
+      maxProgress: medal.maxProgress,
+    })),
   ];
 
   const visibleAchievements = 3; // Show 3 achievements at a time
-  const maxScrollIndex = Math.max(0, allAchievements.length - visibleAchievements);
+  const maxScrollIndex = Math.max(
+    0,
+    allAchievements.length - visibleAchievements
+  );
 
   const scrollUp = () => {
     setAchievementScrollIndex(Math.max(0, achievementScrollIndex - 1));
   };
 
   const scrollDown = () => {
-    setAchievementScrollIndex(Math.min(maxScrollIndex, achievementScrollIndex + 1));
+    setAchievementScrollIndex(
+      Math.min(maxScrollIndex, achievementScrollIndex + 1)
+    );
   };
 
   // Show loading state
@@ -98,13 +103,21 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon name="award" size={14} className="text-yellow-600" />
-          <Typography variant="headline-md" className="text-gray-900 dark:text-white">
+          <Typography
+            variant="headline-md"
+            className="text-gray-900 dark:text-white"
+          >
             Trophy Shelf
           </Typography>
         </div>
         <div className="text-right">
-          <Typography variant="caption" color="muted">240 points</Typography>
-          <Typography variant="body-lg" className="text-jade-600 dark:text-jade-400 font-bold">
+          <Typography variant="caption" color="muted">
+            240 points
+          </Typography>
+          <Typography
+            variant="body-lg"
+            className="text-jade-600 dark:text-jade-400 font-bold"
+          >
             {totalPoints}
           </Typography>
         </div>
@@ -116,27 +129,46 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
           <div className="flex items-center justify-center mb-1">
             <Icon name="flame" size={14} color="warning" />
           </div>
-          <Typography variant="body-sm" className="font-bold text-orange-500">{weeklyStreak}</Typography>
-          <Typography variant="caption" color="muted">Streak</Typography>
+          <Typography variant="body-sm" className="font-bold text-orange-500">
+            {weeklyStreak}
+          </Typography>
+          <Typography variant="caption" color="muted">
+            Streak
+          </Typography>
         </div>
         <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded">
-          <Typography variant="body-sm" className="font-bold text-jade-600">{helmetStickers.length}</Typography>
-          <Typography variant="caption" color="muted">Stickers</Typography>
+          <Typography variant="body-sm" className="font-bold text-jade-600">
+            {helmetStickers.length}
+          </Typography>
+          <Typography variant="caption" color="muted">
+            Stickers
+          </Typography>
         </div>
         <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded">
-          <Typography variant="body-sm" className="font-bold text-blue-600">{boxcallMedals.filter(m => m.earned).length}</Typography>
-          <Typography variant="caption" color="muted">Medals</Typography>
+          <Typography variant="body-sm" className="font-bold text-blue-600">
+            {boxcallMedals.filter((m) => m.earned).length}
+          </Typography>
+          <Typography variant="caption" color="muted">
+            Medals
+          </Typography>
         </div>
         <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded">
-          <Typography variant="body-sm" className="font-bold text-purple-600">{boxcallMedals.length}</Typography>
-          <Typography variant="caption" color="muted">Total</Typography>
+          <Typography variant="body-sm" className="font-bold text-purple-600">
+            {boxcallMedals.length}
+          </Typography>
+          <Typography variant="caption" color="muted">
+            Total
+          </Typography>
         </div>
       </div>
 
       {/* Scrollable Achievements Section */}
       <div className="relative">
         <div className="flex items-center justify-between mb-2">
-          <Typography variant="body-sm" className="font-semibold text-gray-900 dark:text-white">
+          <Typography
+            variant="body-sm"
+            className="font-semibold text-gray-900 dark:text-white"
+          >
             BoxCall Achievements
           </Typography>
           <div className="flex items-center space-x-1">
@@ -174,14 +206,23 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
                 key={`${achievement.type}-${achievement.id}`}
                 className="flex items-center space-x-3 py-2 h-10"
               >
-                <div className={`text-lg ${achievement.earned ? "" : "grayscale opacity-50"}`}>
+                <div
+                  className={`text-lg ${achievement.earned ? "" : "grayscale opacity-50"}`}
+                >
                   {achievement.icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <Typography variant="caption" className="font-semibold truncate">
+                  <Typography
+                    variant="caption"
+                    className="font-semibold truncate"
+                  >
                     {achievement.name}
                   </Typography>
-                  <Typography variant="caption" color="muted" className="block truncate">
+                  <Typography
+                    variant="caption"
+                    color="muted"
+                    className="block truncate"
+                  >
                     {achievement.description}
                   </Typography>
                 </div>
@@ -197,13 +238,16 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         {allAchievements.length > visibleAchievements && (
           <div className="flex justify-center mt-2">
             <div className="flex space-x-1">
-              {Array.from({ length: Math.ceil(allAchievements.length / visibleAchievements) }).map((_, index) => (
+              {Array.from({
+                length: Math.ceil(allAchievements.length / visibleAchievements),
+              }).map((_, index) => (
                 <div
                   key={index}
                   className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                    Math.floor(achievementScrollIndex / visibleAchievements) === index
-                      ? 'bg-jade-500'
-                      : 'bg-gray-300'
+                    Math.floor(achievementScrollIndex / visibleAchievements) ===
+                    index
+                      ? "bg-jade-500"
+                      : "bg-gray-300"
                   }`}
                 />
               ))}

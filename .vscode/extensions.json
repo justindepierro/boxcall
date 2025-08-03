@@ -1,37 +1,10 @@
 {
   "recommendations": [
-    // Essential for Real-time Error Detection
-    "ms-vscode.vscode-typescript-next",
-    "dbaeumer.vscode-eslint",
-    "usernamehw.errorlens",
-
-    // TypeScript and React Support
-    "ms-vscode.vscode-json",
-    "bradlc.vscode-tailwindcss",
-    "formulahendry.auto-rename-tag",
-    "christian-kohler.path-intellisense",
-
-    // Code Quality and Formatting
     "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
     "ms-vscode.vscode-typescript-next",
-    "streetsidesoftware.code-spell-checker",
-
-    // Git Integration
-    "eamodio.gitlens",
-    "github.vscode-pull-request-github",
-
-    // Development Tools
-    "ms-vscode.vscode-json",
-    "redhat.vscode-yaml",
-    "ms-vscode.vscode-css-peek",
-
-    // Testing Support
-    "ms-vscode.test-adapter-converter",
-    "hbenl.vscode-test-explorer",
-
-    // Additional Productivity
-    "ms-vscode.vscode-npm-script",
-    "christian-kohler.npm-intellisense",
-    "ms-vscode.vscode-node-debug2"
+    "bradlc.vscode-tailwindcss",
+    "ms-playwright.playwright",
+    "ms-vscode.test-adapter-converter"
   ]
 }

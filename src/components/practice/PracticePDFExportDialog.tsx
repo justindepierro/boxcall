@@ -1,16 +1,16 @@
 /**
  * Practice PDF Export Dialog
- * 
+ *
  * Advanced PDF export dialog with customizable options for practice plans.
  * Includes category filters, content options, and export settings.
  */
 
-import React, { useState } from 'react';
-import { Button } from '../ui/Button/Button';
-import { Modal } from '../ui/Modal/Modal';
-import { Typography } from '../design-system/Typography';
-import { usePracticeScriptPDF } from '../../services/pdf/usePracticeScriptPDF';
-import type { PracticeBlock } from './types';
+import React, { useState } from "react";
+import { Button } from "../ui/Button/Button";
+import { Modal } from "../ui/Modal/Modal";
+import { Typography } from "../design-system/Typography";
+import { usePracticeScriptPDF } from "../../services/pdf/usePracticeScriptPDF";
+import type { PracticeBlock } from "./types";
 
 interface PDFExportOptions {
   includeEverything: boolean;
@@ -49,11 +49,9 @@ interface PracticePDFExportDialogProps {
   };
 }
 
-export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = ({
-  isOpen,
-  onClose,
-  practiceData,
-}) => {
+export const PracticePDFExportDialog: React.FC<
+  PracticePDFExportDialogProps
+> = ({ isOpen, onClose, practiceData }) => {
   const [exportOptions, setExportOptions] = useState<PDFExportOptions>({
     includeEverything: true,
     includeOffense: false,
@@ -74,13 +72,13 @@ export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = (
       return practiceData.blocks;
     }
 
-    return practiceData.blocks.filter(block => {
+    return practiceData.blocks.filter((block) => {
       switch (block.category) {
-        case 'offense':
+        case "offense":
           return exportOptions.includeOffense;
-        case 'defense':
+        case "defense":
           return exportOptions.includeDefense;
-        case 'special-teams':
+        case "special-teams":
           return exportOptions.includeSpecial;
         default:
           // Include non-specific categories like meeting, weight-room, etc.
@@ -92,49 +90,51 @@ export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = (
   // Process blocks for PDF generation
   const processPracticeData = () => {
     const filteredBlocks = getFilteredBlocks();
-    
+
     // Calculate category breakdown for filtered blocks
     const categoryBreakdown: Record<string, number> = {};
     let totalMinutes = 0;
     const coachUtilization: Record<string, number> = {};
-    
-    filteredBlocks.forEach(block => {
-      const category = block.category || 'other';
-      categoryBreakdown[category] = (categoryBreakdown[category] || 0) + block.duration;
+
+    filteredBlocks.forEach((block) => {
+      const category = block.category || "other";
+      categoryBreakdown[category] =
+        (categoryBreakdown[category] || 0) + block.duration;
       totalMinutes += block.duration;
-      
+
       if (block.assignedCoach) {
-        coachUtilization[block.assignedCoach] = (coachUtilization[block.assignedCoach] || 0) + block.duration;
+        coachUtilization[block.assignedCoach] =
+          (coachUtilization[block.assignedCoach] || 0) + block.duration;
       }
     });
 
     // Convert blocks to PDF format
-    const pdfBlocks = filteredBlocks.map(block => ({
+    const pdfBlocks = filteredBlocks.map((block) => ({
       id: block.id,
       title: block.title,
       category: block.category,
       duration: block.duration,
-      startTime: block.startTime || '',
-      endTime: block.endTime || '',
-      location: block.location || '',
-      notes: exportOptions.addNotes ? (block.notes || '') : '',
-      assignedCoach: block.assignedCoach || '',
+      startTime: block.startTime || "",
+      endTime: block.endTime || "",
+      location: block.location || "",
+      notes: exportOptions.addNotes ? block.notes || "" : "",
+      assignedCoach: block.assignedCoach || "",
       scriptId: exportOptions.addScripts ? block.scriptId : undefined,
       scriptTitle: exportOptions.addScripts ? block.scriptTitle : undefined,
-      groups: block.groups?.map(group => ({
+      groups: block.groups?.map((group) => ({
         ...group,
-        notes: exportOptions.addNotes ? (group.notes || '') : '',
+        notes: exportOptions.addNotes ? group.notes || "" : "",
         scriptId: exportOptions.addScripts ? group.scriptId : undefined,
         scriptTitle: exportOptions.addScripts ? group.scriptTitle : undefined,
       })),
     }));
 
     return {
-      title: practiceData.title || 'Practice Plan',
+      title: practiceData.title || "Practice Plan",
       date: practiceData.date || new Date().toLocaleDateString(),
       duration: filteredBlocks.reduce((sum, block) => sum + block.duration, 0),
-      location: practiceData.location || '',
-      weather: practiceData.weather || '',
+      location: practiceData.location || "",
+      weather: practiceData.weather || "",
       practiceBlocks: pdfBlocks,
       coaches: practiceData.coaches || [],
       equipment: practiceData.equipment || [],
@@ -151,48 +151,44 @@ export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = (
     setIsExporting(true);
     try {
       const processedData = processPracticeData();
-      
+
       // Generate filename based on what's included
-      const filenameParts = ['practice'];
+      const filenameParts = ["practice"];
       if (practiceData.title) {
-        filenameParts.push(practiceData.title.replace(/\s+/g, '_'));
+        filenameParts.push(practiceData.title.replace(/\s+/g, "_"));
       }
       if (practiceData.date) {
-        filenameParts.push(practiceData.date.replace(/\//g, '-'));
+        filenameParts.push(practiceData.date.replace(/\//g, "-"));
       }
-      
+
       // Add category filters to filename
       if (!exportOptions.includeEverything) {
         const categories = [];
-        if (exportOptions.includeOffense) categories.push('offense');
-        if (exportOptions.includeDefense) categories.push('defense');
-        if (exportOptions.includeSpecial) categories.push('special');
+        if (exportOptions.includeOffense) categories.push("offense");
+        if (exportOptions.includeDefense) categories.push("defense");
+        if (exportOptions.includeSpecial) categories.push("special");
         if (categories.length > 0) {
-          filenameParts.push(categories.join('_'));
+          filenameParts.push(categories.join("_"));
         }
       }
 
-      const filename = `${filenameParts.join('_')}.pdf`;
+      const filename = `${filenameParts.join("_")}.pdf`;
 
-      await downloadPDF(
-        processedData,
-        filename,
-        {
-          format: 'Letter',
-          orientation: 'portrait',
-          template: {
-            pageFormat: 'Letter',
-            pageOrientation: 'portrait',
-            margins: { top: 40, right: 40, bottom: 40, left: 40 }
-          },
-          includeHeader: true,
-          includeFooter: true,
-        }
-      );
+      await downloadPDF(processedData, filename, {
+        format: "Letter",
+        orientation: "portrait",
+        template: {
+          pageFormat: "Letter",
+          pageOrientation: "portrait",
+          margins: { top: 40, right: 40, bottom: 40, left: 40 },
+        },
+        includeHeader: true,
+        includeFooter: true,
+      });
 
       onClose();
     } catch (error) {
-      console.error('PDF export failed:', error);
+      console.error("PDF export failed:", error);
       // You could add error handling/notification here
     } finally {
       setIsExporting(false);
@@ -200,35 +196,41 @@ export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = (
   };
 
   const handleOptionChange = (option: keyof PDFExportOptions) => {
-    setExportOptions(prev => {
+    setExportOptions((prev) => {
       const newOptions = { ...prev, [option]: !prev[option] };
-      
+
       // If "Everything" is checked, uncheck specific categories
-      if (option === 'includeEverything' && !prev.includeEverything) {
+      if (option === "includeEverything" && !prev.includeEverything) {
         newOptions.includeOffense = false;
         newOptions.includeDefense = false;
         newOptions.includeSpecial = false;
       }
-      
+
       // If any specific category is checked, uncheck "Everything"
-      if (['includeOffense', 'includeDefense', 'includeSpecial'].includes(option) && !prev[option]) {
+      if (
+        ["includeOffense", "includeDefense", "includeSpecial"].includes(
+          option
+        ) &&
+        !prev[option]
+      ) {
         newOptions.includeEverything = false;
       }
-      
+
       return newOptions;
     });
   };
 
   const getSelectedCategoriesText = () => {
-    if (exportOptions.includeEverything) return 'All categories';
-    
+    if (exportOptions.includeEverything) return "All categories";
+
     const categories = [];
-    if (exportOptions.includeOffense) categories.push('Offense');
-    if (exportOptions.includeDefense) categories.push('Defense');
-    if (exportOptions.includeSpecial) categories.push('Special Teams');
-    
-    if (categories.length === 0) return 'Meeting, Weight Room, Transitions only';
-    return categories.join(', ') + ' + General activities';
+    if (exportOptions.includeOffense) categories.push("Offense");
+    if (exportOptions.includeDefense) categories.push("Defense");
+    if (exportOptions.includeSpecial) categories.push("Special Teams");
+
+    if (categories.length === 0)
+      return "Meeting, Weight Room, Transitions only";
+    return categories.join(", ") + " + General activities";
   };
 
   return (
@@ -248,21 +250,28 @@ export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = (
 
         {/* Practice Info Preview */}
         <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <Typography variant="body-sm" className="font-medium text-gray-700 mb-2">
+          <Typography
+            variant="body-sm"
+            className="font-medium text-gray-700 mb-2"
+          >
             Practice Details:
           </Typography>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <span className="font-medium">Title:</span> {practiceData.title || 'Practice Plan'}
+              <span className="font-medium">Title:</span>{" "}
+              {practiceData.title || "Practice Plan"}
             </div>
             <div>
-              <span className="font-medium">Date:</span> {practiceData.date || 'Today'}
+              <span className="font-medium">Date:</span>{" "}
+              {practiceData.date || "Today"}
             </div>
             <div>
-              <span className="font-medium">Duration:</span> {practiceData.duration || 0} minutes
+              <span className="font-medium">Duration:</span>{" "}
+              {practiceData.duration || 0} minutes
             </div>
             <div>
-              <span className="font-medium">Blocks:</span> {practiceData.blocks?.length || 0}
+              <span className="font-medium">Blocks:</span>{" "}
+              {practiceData.blocks?.length || 0}
             </div>
           </div>
         </div>
@@ -271,7 +280,10 @@ export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = (
         <div className="space-y-6">
           {/* Category Selection */}
           <div>
-            <Typography variant="body-md" className="font-medium text-gray-900 mb-3">
+            <Typography
+              variant="body-md"
+              className="font-medium text-gray-900 mb-3"
+            >
               Select Categories to Include:
             </Typography>
             <div className="space-y-3">
@@ -279,11 +291,13 @@ export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = (
                 <input
                   type="checkbox"
                   checked={exportOptions.includeEverything}
-                  onChange={() => handleOptionChange('includeEverything')}
+                  onChange={() => handleOptionChange("includeEverything")}
                   className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-gray-300 rounded"
                 />
                 <span className="text-sm font-medium">Everything</span>
-                <span className="text-xs text-gray-500">(All practice blocks and activities)</span>
+                <span className="text-xs text-gray-500">
+                  (All practice blocks and activities)
+                </span>
               </label>
 
               <div className="ml-4 space-y-2 border-l-2 border-gray-200 pl-4">
@@ -291,7 +305,7 @@ export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = (
                   <input
                     type="checkbox"
                     checked={exportOptions.includeOffense}
-                    onChange={() => handleOptionChange('includeOffense')}
+                    onChange={() => handleOptionChange("includeOffense")}
                     disabled={exportOptions.includeEverything}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded disabled:opacity-50"
                   />
@@ -305,7 +319,7 @@ export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = (
                   <input
                     type="checkbox"
                     checked={exportOptions.includeDefense}
-                    onChange={() => handleOptionChange('includeDefense')}
+                    onChange={() => handleOptionChange("includeDefense")}
                     disabled={exportOptions.includeEverything}
                     className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded disabled:opacity-50"
                   />
@@ -319,7 +333,7 @@ export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = (
                   <input
                     type="checkbox"
                     checked={exportOptions.includeSpecial}
-                    onChange={() => handleOptionChange('includeSpecial')}
+                    onChange={() => handleOptionChange("includeSpecial")}
                     disabled={exportOptions.includeEverything}
                     className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded disabled:opacity-50"
                   />
@@ -334,7 +348,10 @@ export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = (
 
           {/* Content Options */}
           <div>
-            <Typography variant="body-md" className="font-medium text-gray-900 mb-3">
+            <Typography
+              variant="body-md"
+              className="font-medium text-gray-900 mb-3"
+            >
               Additional Content:
             </Typography>
             <div className="space-y-3">
@@ -342,40 +359,51 @@ export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = (
                 <input
                   type="checkbox"
                   checked={exportOptions.addScripts}
-                  onChange={() => handleOptionChange('addScripts')}
+                  onChange={() => handleOptionChange("addScripts")}
                   className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-gray-300 rounded"
                 />
                 <span className="text-sm">Add Scripts</span>
-                <span className="text-xs text-gray-500">(Include attached practice scripts and play sheets)</span>
+                <span className="text-xs text-gray-500">
+                  (Include attached practice scripts and play sheets)
+                </span>
               </label>
 
               <label className="flex items-center space-x-3 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={exportOptions.addNotes}
-                  onChange={() => handleOptionChange('addNotes')}
+                  onChange={() => handleOptionChange("addNotes")}
                   className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-gray-300 rounded"
                 />
                 <span className="text-sm">Add Notes</span>
-                <span className="text-xs text-gray-500">(Include coach notes and block instructions)</span>
+                <span className="text-xs text-gray-500">
+                  (Include coach notes and block instructions)
+                </span>
               </label>
             </div>
           </div>
 
           {/* Preview Summary */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <Typography variant="body-sm" className="font-medium text-blue-900 mb-2">
+            <Typography
+              variant="body-sm"
+              className="font-medium text-blue-900 mb-2"
+            >
               Export Preview:
             </Typography>
             <div className="text-sm text-blue-800">
-              <div>📋 <strong>Categories:</strong> {getSelectedCategoriesText()}</div>
-              <div className="mt-1">
-                📄 <strong>Content:</strong> Basic timeline
-                {exportOptions.addScripts && ', Practice scripts'}
-                {exportOptions.addNotes && ', Coach notes'}
+              <div>
+                📋 <strong>Categories:</strong> {getSelectedCategoriesText()}
               </div>
               <div className="mt-1">
-                🏈 <strong>Blocks to export:</strong> {getFilteredBlocks().length} of {practiceData.blocks?.length || 0}
+                📄 <strong>Content:</strong> Basic timeline
+                {exportOptions.addScripts && ", Practice scripts"}
+                {exportOptions.addNotes && ", Coach notes"}
+              </div>
+              <div className="mt-1">
+                🏈 <strong>Blocks to export:</strong>{" "}
+                {getFilteredBlocks().length} of{" "}
+                {practiceData.blocks?.length || 0}
               </div>
             </div>
           </div>
@@ -386,8 +414,8 @@ export const PracticePDFExportDialog: React.FC<PracticePDFExportDialogProps> = (
           <Button variant="outline" onClick={onClose} disabled={isExporting}>
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleExport}
             disabled={isExporting || getFilteredBlocks().length === 0}
             className="bg-jade-600 hover:bg-jade-700"

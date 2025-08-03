@@ -1,9 +1,9 @@
 // Phase 2.3 Enhanced Team Features - Integration Demo
 // Demonstrates all features working together without Jest dependencies
 
-import React, { useState } from 'react';
-import { EnhancedTeamFeaturesPage } from '../pages/EnhancedTeamFeaturesPage';
-import type { CalendarRole } from '../types/enhanced-calendar';
+import React, { useState } from "react";
+import { EnhancedTeamFeaturesPage } from "../pages/EnhancedTeamFeaturesPage";
+import type { CalendarRole } from "../types/enhanced-calendar";
 
 interface DemoUser {
   id: string;
@@ -20,37 +20,60 @@ interface DemoEvent {
 
 export function Phase23IntegrationDemo() {
   const [currentUser, setCurrentUser] = useState<DemoUser>({
-    id: 'demo_user_123',
-    name: 'Demo Coach',
-    role: 'head_coach'
+    id: "demo_user_123",
+    name: "Demo Coach",
+    role: "head_coach",
   });
 
   const [selectedEvent, setSelectedEvent] = useState<DemoEvent>({
-    id: 'demo_event_123',
-    title: 'Saturday Game vs Eagles',
-    date: '2024-02-10',
-    description: 'Home game at 2:00 PM'
+    id: "demo_event_123",
+    title: "Saturday Game vs Eagles",
+    date: "2024-02-10",
+    description: "Home game at 2:00 PM",
   });
 
-  const demoUsers: DemoUser[] = React.useMemo(() => [
-    { id: 'user_1', name: 'Head Coach Smith', role: 'head_coach' },
-    { id: 'user_2', name: 'Assistant Coach Jones', role: 'assistant_coach' },
-    { id: 'user_3', name: 'Team Captain Mike', role: 'team_captain' },
-    { id: 'user_4', name: 'Player Sarah', role: 'player' },
-    { id: 'user_5', name: 'Parent Admin Lisa', role: 'parent_admin' },
-    { id: 'user_6', name: 'Parent Bob', role: 'parent' },
-    { id: 'user_7', name: 'Team Owner', role: 'owner' }
-  ], []);
+  const demoUsers: DemoUser[] = React.useMemo(
+    () => [
+      { id: "user_1", name: "Head Coach Smith", role: "head_coach" },
+      { id: "user_2", name: "Assistant Coach Jones", role: "assistant_coach" },
+      { id: "user_3", name: "Team Captain Mike", role: "team_captain" },
+      { id: "user_4", name: "Player Sarah", role: "player" },
+      { id: "user_5", name: "Parent Admin Lisa", role: "parent_admin" },
+      { id: "user_6", name: "Parent Bob", role: "parent" },
+      { id: "user_7", name: "Team Owner", role: "owner" },
+    ],
+    []
+  );
 
   const demoEvents: DemoEvent[] = [
-    { id: 'event_1', title: 'Saturday Game vs Eagles', date: '2024-02-10', description: 'Home game at 2:00 PM' },
-    { id: 'event_2', title: 'Wednesday Practice', date: '2024-02-07', description: 'Regular practice session' },
-    { id: 'event_3', title: 'Team Meeting', date: '2024-02-05', description: 'Strategy discussion' },
-    { id: 'event_4', title: 'Tournament Finals', date: '2024-02-15', description: 'Championship game' }
+    {
+      id: "event_1",
+      title: "Saturday Game vs Eagles",
+      date: "2024-02-10",
+      description: "Home game at 2:00 PM",
+    },
+    {
+      id: "event_2",
+      title: "Wednesday Practice",
+      date: "2024-02-07",
+      description: "Regular practice session",
+    },
+    {
+      id: "event_3",
+      title: "Team Meeting",
+      date: "2024-02-05",
+      description: "Strategy discussion",
+    },
+    {
+      id: "event_4",
+      title: "Tournament Finals",
+      date: "2024-02-15",
+      description: "Championship game",
+    },
   ];
 
   const [testResults, setTestResults] = useState<{
-    [key: string]: { status: 'pass' | 'fail' | 'pending'; message: string }
+    [key: string]: { status: "pass" | "fail" | "pending"; message: string };
   }>({});
 
   const runFeatureTests = React.useCallback(async () => {
@@ -58,82 +81,82 @@ export function Phase23IntegrationDemo() {
 
     // Test 1: Role-based access control
     try {
-      const playerUser = demoUsers.find(u => u.role === 'player');
+      const playerUser = demoUsers.find((u) => u.role === "player");
       if (playerUser) {
         // Players should not have access to permissions or bulk operations
         results.roleAccess = {
-          status: 'pass',
-          message: 'Role-based access control working correctly'
+          status: "pass",
+          message: "Role-based access control working correctly",
         };
       }
     } catch (error) {
       results.roleAccess = {
-        status: 'fail',
-        message: `Role access test failed: ${error}`
+        status: "fail",
+        message: `Role access test failed: ${error}`,
       };
     }
 
     // Test 2: Event polling functionality
     try {
       // Simulate poll creation - in real implementation this would call the service
-      console.log('Testing poll creation with sample data');
-      
+      console.log("Testing poll creation with sample data");
+
       results.eventPolling = {
-        status: 'pass',
-        message: 'Event polling interface loaded successfully'
+        status: "pass",
+        message: "Event polling interface loaded successfully",
       };
     } catch (error) {
       results.eventPolling = {
-        status: 'fail',
-        message: `Event polling test failed: ${error}`
+        status: "fail",
+        message: `Event polling test failed: ${error}`,
       };
     }
 
     // Test 3: Advanced RSVP system
     try {
       // Simulate RSVP submission - in real implementation this would call the service
-      console.log('Testing RSVP submission with sample data');
+      console.log("Testing RSVP submission with sample data");
 
       results.advancedRSVP = {
-        status: 'pass',
-        message: 'Advanced RSVP system functioning correctly'
+        status: "pass",
+        message: "Advanced RSVP system functioning correctly",
       };
     } catch (error) {
       results.advancedRSVP = {
-        status: 'fail',
-        message: `Advanced RSVP test failed: ${error}`
+        status: "fail",
+        message: `Advanced RSVP test failed: ${error}`,
       };
     }
 
     // Test 4: Calendar permissions
     try {
       // Simulate permission assignment - in real implementation this would call the service
-      console.log('Testing permission assignment with sample data');
+      console.log("Testing permission assignment with sample data");
 
       results.calendarPermissions = {
-        status: 'pass',
-        message: 'Calendar permissions system operational'
+        status: "pass",
+        message: "Calendar permissions system operational",
       };
     } catch (error) {
       results.calendarPermissions = {
-        status: 'fail',
-        message: `Calendar permissions test failed: ${error}`
+        status: "fail",
+        message: `Calendar permissions test failed: ${error}`,
       };
     }
 
     // Test 5: Bulk operations
     try {
       // Simulate bulk operation - in real implementation this would call the service
-      console.log('Testing bulk operation with sample data');
+      console.log("Testing bulk operation with sample data");
 
       results.bulkOperations = {
-        status: 'pass',
-        message: 'Bulk operations interface working properly'
+        status: "pass",
+        message: "Bulk operations interface working properly",
       };
     } catch (error) {
       results.bulkOperations = {
-        status: 'fail',
-        message: `Bulk operations test failed: ${error}`
+        status: "fail",
+        message: `Bulk operations test failed: ${error}`,
       };
     }
 
@@ -160,7 +183,8 @@ export function Phase23IntegrationDemo() {
                   Phase 2.3 Enhanced Team Features - Integration Demo
                 </h1>
                 <p className="text-sm text-gray-600">
-                  Testing polling, advanced RSVP, permissions, and bulk operations
+                  Testing polling, advanced RSVP, permissions, and bulk
+                  operations
                 </p>
               </div>
               <div className="flex items-center space-x-4">
@@ -181,8 +205,10 @@ export function Phase23IntegrationDemo() {
           {/* Control Panel */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <h3 className="text-sm font-medium text-gray-900 mb-4">Demo Controls</h3>
-              
+              <h3 className="text-sm font-medium text-gray-900 mb-4">
+                Demo Controls
+              </h3>
+
               {/* User Switcher */}
               <div className="mb-4">
                 <label className="block text-xs font-medium text-gray-700 mb-1">
@@ -191,14 +217,14 @@ export function Phase23IntegrationDemo() {
                 <select
                   value={currentUser.id}
                   onChange={(e) => {
-                    const user = demoUsers.find(u => u.id === e.target.value);
+                    const user = demoUsers.find((u) => u.id === e.target.value);
                     if (user) setCurrentUser(user);
                   }}
                   className="w-full text-xs border border-gray-300 rounded-md px-2 py-1"
                 >
-                  {demoUsers.map(user => (
+                  {demoUsers.map((user) => (
                     <option key={user.id} value={user.id}>
-                      {user.name} ({user.role.replace('_', ' ')})
+                      {user.name} ({user.role.replace("_", " ")})
                     </option>
                   ))}
                 </select>
@@ -212,12 +238,14 @@ export function Phase23IntegrationDemo() {
                 <select
                   value={selectedEvent.id}
                   onChange={(e) => {
-                    const event = demoEvents.find(ev => ev.id === e.target.value);
+                    const event = demoEvents.find(
+                      (ev) => ev.id === e.target.value
+                    );
                     if (event) setSelectedEvent(event);
                   }}
                   className="w-full text-xs border border-gray-300 rounded-md px-2 py-1"
                 >
-                  {demoEvents.map(event => (
+                  {demoEvents.map((event) => (
                     <option key={event.id} value={event.id}>
                       {event.title}
                     </option>
@@ -227,19 +255,34 @@ export function Phase23IntegrationDemo() {
 
               {/* Test Results */}
               <div className="mt-6">
-                <h4 className="text-xs font-medium text-gray-900 mb-2">Feature Tests</h4>
+                <h4 className="text-xs font-medium text-gray-900 mb-2">
+                  Feature Tests
+                </h4>
                 <div className="space-y-2">
                   {Object.entries(testResults).map(([test, result]) => (
-                    <div key={test} className="flex items-center justify-between">
+                    <div
+                      key={test}
+                      className="flex items-center justify-between"
+                    >
                       <span className="text-xs text-gray-600">
-                        {test.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                        {test
+                          .replace(/([A-Z])/g, " $1")
+                          .replace(/^./, (str) => str.toUpperCase())}
                       </span>
-                      <span className={`text-xs font-medium ${
-                        result.status === 'pass' ? 'text-green-600' :
-                        result.status === 'fail' ? 'text-red-600' :
-                        'text-yellow-600'
-                      }`}>
-                        {result.status === 'pass' ? '✓' : result.status === 'fail' ? '✗' : '⏳'}
+                      <span
+                        className={`text-xs font-medium ${
+                          result.status === "pass"
+                            ? "text-green-600"
+                            : result.status === "fail"
+                              ? "text-red-600"
+                              : "text-yellow-600"
+                        }`}
+                      >
+                        {result.status === "pass"
+                          ? "✓"
+                          : result.status === "fail"
+                            ? "✗"
+                            : "⏳"}
                       </span>
                     </div>
                   ))}
@@ -248,7 +291,9 @@ export function Phase23IntegrationDemo() {
 
               {/* Phase 2.3 Features Status */}
               <div className="mt-6 p-3 bg-green-50 border border-green-200 rounded-md">
-                <h4 className="text-xs font-medium text-green-800 mb-2">Implementation Status</h4>
+                <h4 className="text-xs font-medium text-green-800 mb-2">
+                  Implementation Status
+                </h4>
                 <div className="space-y-1">
                   <div className="flex items-center text-xs text-green-700">
                     <span className="mr-2">✅</span>
@@ -292,7 +337,9 @@ export function Phase23IntegrationDemo() {
           <div className="bg-white p-4 rounded-lg border border-gray-200">
             <div className="flex items-center mb-3">
               <span className="text-2xl mr-2">📊</span>
-              <h3 className="text-sm font-medium text-gray-900">Event Polling</h3>
+              <h3 className="text-sm font-medium text-gray-900">
+                Event Polling
+              </h3>
             </div>
             <ul className="text-xs text-gray-600 space-y-1">
               <li>• Team-wide decision making</li>
@@ -305,7 +352,9 @@ export function Phase23IntegrationDemo() {
           <div className="bg-white p-4 rounded-lg border border-gray-200">
             <div className="flex items-center mb-3">
               <span className="text-2xl mr-2">✅</span>
-              <h3 className="text-sm font-medium text-gray-900">Advanced RSVP</h3>
+              <h3 className="text-sm font-medium text-gray-900">
+                Advanced RSVP
+              </h3>
             </div>
             <ul className="text-xs text-gray-600 space-y-1">
               <li>• Conditional responses</li>
@@ -331,7 +380,9 @@ export function Phase23IntegrationDemo() {
           <div className="bg-white p-4 rounded-lg border border-gray-200">
             <div className="flex items-center mb-3">
               <span className="text-2xl mr-2">⚡</span>
-              <h3 className="text-sm font-medium text-gray-900">Bulk Operations</h3>
+              <h3 className="text-sm font-medium text-gray-900">
+                Bulk Operations
+              </h3>
             </div>
             <ul className="text-xs text-gray-600 space-y-1">
               <li>• Mass event updates</li>

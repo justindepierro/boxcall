@@ -72,10 +72,12 @@ export const TeamBulletin: React.FC = () => {
                   </div>
                 </div>
                 {isCoach && (
-                  <button 
+                  <button
                     className="absolute -top-2 -right-2 bg-jade-500 hover:bg-jade-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
                     title="Upload team logo (Go to Team Settings)"
-                    onClick={() => window.location.href = `/team/${teamId}/settings`}
+                    onClick={() =>
+                      (window.location.href = `/team/${teamId}/settings`)
+                    }
                   >
                     <Icon name="edit" size="xs" />
                   </button>
@@ -95,7 +97,10 @@ export const TeamBulletin: React.FC = () => {
                 >
                   {mockTeam.name}
                 </Typography>
-                <Typography variant="body-lg" className="mt-1 text-gray-600 dark:text-gray-300">
+                <Typography
+                  variant="body-lg"
+                  className="mt-1 text-gray-600 dark:text-gray-300"
+                >
                   {mockTeam.season} • Record: {mockTeam.record.wins}-
                   {mockTeam.record.losses}
                 </Typography>
@@ -103,18 +108,30 @@ export const TeamBulletin: React.FC = () => {
             </div>
             <div className="flex items-center space-x-6">
               <div className="text-right">
-                <Typography variant="body-sm" className="text-gray-500 dark:text-gray-400">
+                <Typography
+                  variant="body-sm"
+                  className="text-gray-500 dark:text-gray-400"
+                >
                   Next Game
                 </Typography>
-                <Typography variant="body-md" className="font-semibold text-gray-900 dark:text-white">
+                <Typography
+                  variant="body-md"
+                  className="font-semibold text-gray-900 dark:text-white"
+                >
                   {mockTeam.nextGame}
                 </Typography>
               </div>
               <div className="text-right">
-                <Typography variant="body-sm" className="text-gray-500 dark:text-gray-400">
+                <Typography
+                  variant="body-sm"
+                  className="text-gray-500 dark:text-gray-400"
+                >
                   Team Members
                 </Typography>
-                <Typography variant="body-md" className="font-semibold text-gray-900 dark:text-white">
+                <Typography
+                  variant="body-md"
+                  className="font-semibold text-gray-900 dark:text-white"
+                >
                   {mockTeam.memberCount}
                 </Typography>
               </div>
@@ -158,7 +175,10 @@ export const TeamBulletin: React.FC = () => {
                   <Typography variant="body-sm" color="muted">
                     Games Played
                   </Typography>
-                  <Typography variant="body-sm" className="font-semibold text-gray-900 dark:text-white">
+                  <Typography
+                    variant="body-sm"
+                    className="font-semibold text-gray-900 dark:text-white"
+                  >
                     10
                   </Typography>
                 </div>
@@ -166,7 +186,10 @@ export const TeamBulletin: React.FC = () => {
                   <Typography variant="body-sm" color="muted">
                     Points Scored
                   </Typography>
-                  <Typography variant="body-sm" className="font-semibold text-gray-900 dark:text-white">
+                  <Typography
+                    variant="body-sm"
+                    className="font-semibold text-gray-900 dark:text-white"
+                  >
                     284
                   </Typography>
                 </div>
@@ -174,7 +197,10 @@ export const TeamBulletin: React.FC = () => {
                   <Typography variant="body-sm" color="muted">
                     Points Against
                   </Typography>
-                  <Typography variant="body-sm" className="font-semibold text-gray-900 dark:text-white">
+                  <Typography
+                    variant="body-sm"
+                    className="font-semibold text-gray-900 dark:text-white"
+                  >
                     142
                   </Typography>
                 </div>
@@ -282,7 +308,10 @@ export const TeamBulletin: React.FC = () => {
                         {player.number}
                       </div>
                       <div>
-                        <Typography variant="body-sm" className="font-semibold text-gray-900 dark:text-white">
+                        <Typography
+                          variant="body-sm"
+                          className="font-semibold text-gray-900 dark:text-white"
+                        >
                           {player.name}
                         </Typography>
                         <Typography variant="caption" color="muted">
@@ -324,7 +353,10 @@ export const TeamBulletin: React.FC = () => {
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                   <div>
-                    <Typography variant="body-sm" className="font-semibold text-gray-900 dark:text-white">
+                    <Typography
+                      variant="body-sm"
+                      className="font-semibold text-gray-900 dark:text-white"
+                    >
                       Game vs. Central Lions
                     </Typography>
                     <Typography variant="caption" color="muted">
@@ -335,7 +367,10 @@ export const TeamBulletin: React.FC = () => {
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                   <div>
-                    <Typography variant="body-sm" className="font-semibold text-gray-900 dark:text-white">
+                    <Typography
+                      variant="body-sm"
+                      className="font-semibold text-gray-900 dark:text-white"
+                    >
                       Practice
                     </Typography>
                     <Typography variant="caption" color="muted">
@@ -346,7 +381,10 @@ export const TeamBulletin: React.FC = () => {
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-jade-500 rounded-full"></div>
                   <div>
-                    <Typography variant="body-sm" className="font-semibold text-gray-900 dark:text-white">
+                    <Typography
+                      variant="body-sm"
+                      className="font-semibold text-gray-900 dark:text-white"
+                    >
                       Team Meeting
                     </Typography>
                     <Typography variant="caption" color="muted">

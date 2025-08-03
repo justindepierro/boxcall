@@ -9,7 +9,7 @@ interface TeamFeedsProps {
 
 /**
  * Team Feeds - Cross-team activity and updates
- * 
+ *
  * Features:
  * - Recent team announcements
  * - Activity from all teams
@@ -20,27 +20,27 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
   const feeds = [
     {
       id: 1,
-      type: 'announcement',
-      team: 'Varsity Football',
-      title: 'Practice moved to indoor facility',
-      time: '2 hours ago',
-      icon: 'info' as const,
+      type: "announcement",
+      team: "Varsity Football",
+      title: "Practice moved to indoor facility",
+      time: "2 hours ago",
+      icon: "info" as const,
     },
     {
       id: 2,
-      type: 'achievement',
-      team: 'JV Football',
-      title: 'Great practice today! Defense looked sharp.',
-      time: '4 hours ago',
-      icon: 'trophy' as const,
+      type: "achievement",
+      team: "JV Football",
+      title: "Great practice today! Defense looked sharp.",
+      time: "4 hours ago",
+      icon: "trophy" as const,
     },
     {
       id: 3,
-      type: 'schedule',
-      team: 'Varsity Football',
-      title: 'Game film session added for Thursday',
-      time: '1 day ago',
-      icon: 'calendar' as const,
+      type: "schedule",
+      team: "Varsity Football",
+      title: "Game film session added for Thursday",
+      time: "1 day ago",
+      icon: "calendar" as const,
     },
   ];
 
@@ -69,14 +69,20 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
             {/* Feed Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <Typography variant="body-sm" className="font-medium text-navy-800 truncate">
+                <Typography
+                  variant="body-sm"
+                  className="font-medium text-navy-800 truncate"
+                >
                   {feed.team}
                 </Typography>
                 <Typography variant="body-xs" color="muted">
                   {feed.time}
                 </Typography>
               </div>
-              <Typography variant="body-sm" className="text-gray-700 mt-0.5 leading-snug">
+              <Typography
+                variant="body-sm"
+                className="text-gray-700 mt-0.5 leading-snug"
+              >
                 {feed.title}
               </Typography>
             </div>

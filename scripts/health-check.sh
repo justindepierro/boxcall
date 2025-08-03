@@ -1,99 +1,35 @@
 #!/bin/bash
 
-echo "🔍 BoxCall Error Checking System"
-echo "================================"
-echo ""
+echo "🏥 BoxCall Development Health Check"
+echo "================================="
 
-# Check for empty critical files (prevents the issue you just experienced)
-echo "📄 Checking for empty critical files..."
-CRITICAL_FILES=("src/App.tsx" "src/main.tsx" "src/components/auth/AuthProvider.tsx")
-EMPTY_FILES=0
+# Check Node.js version
+echo "Node.js: $(node --version)"
+echo "npm: $(npm --version)"
 
-for file in "${CRITICAL_FILES[@]}"; do
-    if [ -f "$file" ]; then
-        if [ ! -s "$file" ]; then
-            echo "❌ WARNING: $file is empty!"
-            EMPTY_FILES=$((EMPTY_FILES + 1))
-        else
-            echo "✅ $file has content"
-        fi
-    else
-        echo "⚠️  $file does not exist"
-    fi
-done
+# Check TypeScript
+echo "TypeScript: $(npx tsc --version)"
 
-if [ $EMPTY_FILES -gt 0 ]; then
-    echo ""
-    echo "🚨 CRITICAL: Found $EMPTY_FILES empty critical files!"
-    echo "This usually happens after failed git operations or restructures."
-    echo "Consider restoring from a known good commit:"
-    echo "  git log --oneline -10    # Find a good commit"
-    echo "  git reset --hard <commit>  # Restore to working state"
-    echo ""
-fi
-
-echo "📝 TypeScript Compilation Check..."
-if npm run type-check > /dev/null 2>&1; then
-    echo "✅ TypeScript: No errors"
+# Check if all dependencies are installed
+if [ -d "node_modules" ]; then
+  echo "✅ Dependencies installed"
 else
-    echo "❌ TypeScript: Errors found"
-    npm run type-check
+  echo "❌ Dependencies not installed - run 'npm install'"
 fi
 
-echo ""
-echo "🔍 ESLint Code Quality Check..."
-if npm run lint > /dev/null 2>&1; then
-    echo "✅ ESLint: No errors"
+# Check if development server is responsive
+if curl -s http://localhost:5173 > /dev/null; then
+  echo "✅ Development server running"
 else
-    echo "❌ ESLint: Errors found"
-    npm run lint
+  echo "⚠️  Development server not running - run 'npm run dev'"
 fi
 
+# Run quick checks
 echo ""
-echo "📁 Project Structure Check..."
-MISSING_DIRS=()
-
-# Check critical directories exist
-for dir in "src/components" "src/utils" "src/features" "docs"; do
-    if [ ! -d "$dir" ]; then
-        MISSING_DIRS+=("$dir")
-    fi
-done
-
-if [ ${#MISSING_DIRS[@]} -eq 0 ]; then
-    echo "✅ Project Structure: All critical directories present"
-else
-    echo "⚠️  Project Structure: Missing directories: ${MISSING_DIRS[*]}"
-fi
+echo "Running quick quality checks..."
+npm run type-check --silent && echo "✅ TypeScript compilation" || echo "❌ TypeScript errors"
+npm run lint --silent && echo "✅ ESLint passing" || echo "❌ ESLint errors"
+npm run format:check --silent && echo "✅ Code formatting" || echo "❌ Formatting issues"
 
 echo ""
-echo "🔧 Configuration Files Check..."
-CONFIG_FILES=("package.json" "tsconfig.json" "tailwind.config.js" "postcss.config.js" "vite.config.ts")
-MISSING_CONFIGS=()
-
-for file in "${CONFIG_FILES[@]}"; do
-    if [ ! -f "$file" ]; then
-        MISSING_CONFIGS+=("$file")
-    fi
-done
-
-if [ ${#MISSING_CONFIGS[@]} -eq 0 ]; then
-    echo "✅ Configuration: All config files present"
-else
-    echo "❌ Configuration: Missing files: ${MISSING_CONFIGS[*]}"
-fi
-
-echo ""
-echo "📦 Node Modules Check..."
-if [ -d "node_modules" ] && [ -f "package-lock.json" ]; then
-    echo "✅ Dependencies: Installed"
-else
-    echo "❌ Dependencies: Run 'npm install'"
-fi
-
-echo ""
-echo "🎯 Summary"
-echo "=========="
-echo "If all items show ✅, your BoxCall development environment is ready!"
-echo "Any ❌ items need to be fixed before development."
-echo ""
+echo "🎯 Health check complete!"

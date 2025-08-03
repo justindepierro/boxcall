@@ -1,12 +1,12 @@
 /**
  * AddBlockModal Component
- * 
+ *
  * Modal for adding new practice blocks with:
  * - Block details (title, category, location, notes)
  * - Time allocation (start time, duration)
  * - Coach assignment
  * - Form validation
- * 
+ *
  * @component
  * @example
  * <AddBlockModal
@@ -28,7 +28,7 @@ import Icon from "../../../ui/Icon/Icon";
 interface AddBlockModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddBlock: (block: Omit<PracticeBlock, 'id'>) => void;
+  onAddBlock: (block: Omit<PracticeBlock, "id">) => void;
   userRole: UserRole;
   timeAllocationMode: boolean;
   selectedBlock?: SelectedBlock | null;
@@ -56,10 +56,15 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       if (selectedBlock) {
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
           category: selectedBlock.category,
-          startTime: `${Math.floor(selectedBlock.start / 60).toString().padStart(2, '0')}:${(selectedBlock.start % 60).toString().padStart(2, '0')}`,
+          startTime: `${Math.floor(selectedBlock.start / 60)
+            .toString()
+            .padStart(
+              2,
+              "0"
+            )}:${(selectedBlock.start % 60).toString().padStart(2, "0")}`,
           duration: selectedBlock.duration,
         }));
       } else {
@@ -80,13 +85,18 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const [hours, minutes] = formData.startTime.split(':').map(Number);
+
+    const [hours, minutes] = formData.startTime.split(":").map(Number);
     const startTimeInMinutes = hours * 60 + minutes;
-    
-    const newBlock: Omit<PracticeBlock, 'id'> = {
+
+    const newBlock: Omit<PracticeBlock, "id"> = {
       startTime: formData.startTime,
-      endTime: `${Math.floor((startTimeInMinutes + formData.duration) / 60).toString().padStart(2, '0')}:${((startTimeInMinutes + formData.duration) % 60).toString().padStart(2, '0')}`,
+      endTime: `${Math.floor((startTimeInMinutes + formData.duration) / 60)
+        .toString()
+        .padStart(
+          2,
+          "0"
+        )}:${((startTimeInMinutes + formData.duration) % 60).toString().padStart(2, "0")}`,
       duration: formData.duration,
       category: formData.category,
       title: formData.title,
@@ -101,7 +111,11 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
     onClose();
   };
 
-  const categoryOptions: Array<{ value: PracticeBlock["category"]; label: string; icon: string }> = [
+  const categoryOptions: Array<{
+    value: PracticeBlock["category"];
+    label: string;
+    icon: string;
+  }> = [
     { value: "offense", label: "Offense", icon: "trending-up" },
     { value: "defense", label: "Defense", icon: "shield" },
     { value: "special-teams", label: "Special Teams", icon: "zap" },
@@ -138,7 +152,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
             <input
               type="text"
               value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, title: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="e.g., Offensive Line Drills"
               required
@@ -152,17 +168,24 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
             </label>
             <select
               value={formData.category}
-              onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value as PracticeBlock["category"] }))}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  category: e.target.value as PracticeBlock["category"],
+                }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
-              {categoryOptions.map(option => (
+              {categoryOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
             </select>
-            <div className={`mt-1 inline-block px-2 py-1 rounded text-xs ${getCategoryColor(formData.category)}`}>
+            <div
+              className={`mt-1 inline-block px-2 py-1 rounded text-xs ${getCategoryColor(formData.category)}`}
+            >
               Preview: {formData.category.replace("-", " ").toUpperCase()}
             </div>
           </div>
@@ -176,7 +199,12 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               <input
                 type="time"
                 value={formData.startTime}
-                onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    startTime: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 disabled={timeAllocationMode && !!selectedBlock}
               />
@@ -188,7 +216,12 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               <input
                 type="number"
                 value={formData.duration}
-                onChange={(e) => setFormData(prev => ({ ...prev, duration: parseInt(e.target.value) || 0 }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    duration: parseInt(e.target.value) || 0,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 min="5"
                 max="180"
@@ -206,7 +239,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
             <input
               type="text"
               value={formData.location}
-              onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, location: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="e.g., Practice Field A"
             />
@@ -221,7 +256,12 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               <input
                 type="text"
                 value={formData.assignedCoach}
-                onChange={(e) => setFormData(prev => ({ ...prev, assignedCoach: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    assignedCoach: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., Coach Johnson"
               />
@@ -235,7 +275,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
             </label>
             <textarea
               value={formData.notes}
-              onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, notes: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows={3}
               placeholder="Additional notes or instructions..."

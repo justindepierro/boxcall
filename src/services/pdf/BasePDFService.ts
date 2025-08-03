@@ -1,17 +1,13 @@
 /**
  * Base PDF Service
- * 
+ *
  * Abstract base class for all PDF generation services.
  * Provides common functionality and consistent interface.
  */
 
-import type { 
-  PDFExportOptions, 
-  PDFTemplate, 
-  PDFBranding 
-} from './types';
-import { PDFError } from './types';
-import { PDFColors, PDFFonts } from './styles';
+import type { PDFExportOptions, PDFTemplate, PDFBranding } from "./types";
+import { PDFError } from "./types";
+import { PDFColors, PDFFonts } from "./styles";
 
 export abstract class BasePDFService {
   protected template: PDFTemplate;
@@ -27,15 +23,15 @@ export abstract class BasePDFService {
    */
   protected async generateBlob(document: React.ReactElement): Promise<Blob> {
     try {
-      const { pdf } = await import('@react-pdf/renderer');
+      const { pdf } = await import("@react-pdf/renderer");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const instance = pdf(document as any);
       return await instance.toBlob();
     } catch (error) {
       throw new PDFError(
-        'Failed to generate PDF blob',
-        'GENERATION_ERROR',
-        error instanceof Error ? error.message : 'Unknown error'
+        "Failed to generate PDF blob",
+        "GENERATION_ERROR",
+        error instanceof Error ? error.message : "Unknown error"
       );
     }
   }
@@ -46,16 +42,16 @@ export abstract class BasePDFService {
   protected downloadBlob(blob: Blob, filename: string): void {
     try {
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
       link.download = filename;
       link.click();
       URL.revokeObjectURL(url);
     } catch (error) {
       throw new PDFError(
-        'Failed to download PDF',
-        'DOWNLOAD_ERROR',
-        error instanceof Error ? error.message : 'Unknown error'
+        "Failed to download PDF",
+        "DOWNLOAD_ERROR",
+        error instanceof Error ? error.message : "Unknown error"
       );
     }
   }
@@ -63,11 +59,15 @@ export abstract class BasePDFService {
   /**
    * Generate filename with timestamp
    */
-  protected generateFilename(prefix: string, extension: string = 'pdf'): string {
-    const timestamp = new Date().toISOString()
-      .replace(/[:.]/g, '-')
-      .replace('T', '_')
-      .split('.')[0];
+  protected generateFilename(
+    prefix: string,
+    extension: string = "pdf"
+  ): string {
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[:.]/g, "-")
+      .replace("T", "_")
+      .split(".")[0];
     return `${prefix}_${timestamp}.${extension}`;
   }
 
@@ -77,34 +77,34 @@ export abstract class BasePDFService {
   protected validateOptions(options: PDFExportOptions): void {
     // Set default format if not provided
     if (!options.format) {
-      options.format = 'Letter';
+      options.format = "Letter";
     }
-    
-    if (!['A4', 'Letter', 'Legal'].includes(options.format)) {
+
+    if (!["A4", "Letter", "Legal"].includes(options.format)) {
       throw new PDFError(
-        'Invalid page format',
-        'VALIDATION_ERROR',
+        "Invalid page format",
+        "VALIDATION_ERROR",
         `Format must be one of: A4, Letter, Legal. Got: ${options.format}`
       );
     }
 
     // Set default orientation if not provided
     if (!options.orientation) {
-      options.orientation = 'portrait';
+      options.orientation = "portrait";
     }
-    
-    if (!['portrait', 'landscape'].includes(options.orientation)) {
+
+    if (!["portrait", "landscape"].includes(options.orientation)) {
       throw new PDFError(
-        'Invalid page orientation',
-        'VALIDATION_ERROR',
+        "Invalid page orientation",
+        "VALIDATION_ERROR",
         `Orientation must be portrait or landscape. Got: ${options.orientation}`
       );
     }
 
     if (options.quality && (options.quality < 0.1 || options.quality > 1.0)) {
       throw new PDFError(
-        'Invalid quality setting',
-        'VALIDATION_ERROR',
+        "Invalid quality setting",
+        "VALIDATION_ERROR",
         `Quality must be between 0.1 and 1.0. Got: ${options.quality}`
       );
     }
@@ -115,8 +115,8 @@ export abstract class BasePDFService {
    */
   protected getDefaultTemplate(): PDFTemplate {
     return {
-      pageFormat: 'A4',
-      pageOrientation: 'portrait',
+      pageFormat: "A4",
+      pageOrientation: "portrait",
       margins: {
         top: 40,
         right: 40,
@@ -154,17 +154,19 @@ export abstract class BasePDFService {
    * Get branding with fallbacks
    */
   protected getBranding(): PDFBranding {
-    return this.branding || {
-      teamName: '',
-      colors: {
-        primary: PDFColors.primary,
-        secondary: PDFColors.secondary,
-      },
-      fonts: {
-        primary: PDFFonts.primary,
-        secondary: PDFFonts.secondary,
-      },
-    };
+    return (
+      this.branding || {
+        teamName: "",
+        colors: {
+          primary: PDFColors.primary,
+          secondary: PDFColors.secondary,
+        },
+        fonts: {
+          primary: PDFFonts.primary,
+          secondary: PDFFonts.secondary,
+        },
+      }
+    );
   }
 
   /**
@@ -172,17 +174,17 @@ export abstract class BasePDFService {
    */
   protected formatDate(date: Date, includeTime: boolean = false): string {
     const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     };
 
     if (includeTime) {
-      options.hour = '2-digit';
-      options.minute = '2-digit';
+      options.hour = "2-digit";
+      options.minute = "2-digit";
     }
 
-    return date.toLocaleDateString('en-US', options);
+    return date.toLocaleDateString("en-US", options);
   }
 
   /**
@@ -191,13 +193,13 @@ export abstract class BasePDFService {
   protected formatDuration(minutes: number): string {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    
+
     if (hours === 0) {
       return `${mins} min`;
     } else if (mins === 0) {
       return `${hours} hr`;
     } else {
-      return `${hours}:${mins.toString().padStart(2, '0')}`;
+      return `${hours}:${mins.toString().padStart(2, "0")}`;
     }
   }
 
@@ -205,24 +207,32 @@ export abstract class BasePDFService {
    * Abstract methods that must be implemented by subclasses
    */
   abstract exportToPDF(data: unknown, options: PDFExportOptions): Promise<Blob>;
-  abstract downloadPDF(data: unknown, filename: string, options: PDFExportOptions): Promise<void>;
-  abstract previewPDF(data: unknown, options: PDFExportOptions): Promise<string>;
+  abstract downloadPDF(
+    data: unknown,
+    filename: string,
+    options: PDFExportOptions
+  ): Promise<void>;
+  abstract previewPDF(
+    data: unknown,
+    options: PDFExportOptions
+  ): Promise<string>;
 }
 
 /**
  * PDF Service Factory
- * 
+ *
  * Creates appropriate PDF service based on document type
  */
 export class PDFServiceFactory {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private static services: Map<string, new (...args: any[]) => BasePDFService> = new Map();
+  private static services: Map<string, new (...args: any[]) => BasePDFService> =
+    new Map();
 
   /**
    * Register a PDF service for a specific document type
    */
   static registerService(
-    documentType: string, 
+    documentType: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     serviceClass: new (...args: any[]) => BasePDFService
   ): void {
@@ -233,17 +243,17 @@ export class PDFServiceFactory {
    * Create PDF service instance for document type
    */
   static createService(
-    documentType: string, 
-    template?: PDFTemplate, 
+    documentType: string,
+    template?: PDFTemplate,
     branding?: PDFBranding
   ): BasePDFService {
     const ServiceClass = this.services.get(documentType);
-    
+
     if (!ServiceClass) {
       throw new PDFError(
         `No PDF service registered for document type: ${documentType}`,
-        'SERVICE_NOT_FOUND',
-        `Available types: ${Array.from(this.services.keys()).join(', ')}`
+        "SERVICE_NOT_FOUND",
+        `Available types: ${Array.from(this.services.keys()).join(", ")}`
       );
     }
 
@@ -278,8 +288,8 @@ export class PDFUtils {
    * Calculate optimal page margins based on content
    */
   static calculateMargins(
-    contentWidth: number, 
-    contentHeight: number, 
+    contentWidth: number,
+    contentHeight: number,
     pageFormat: string
   ): { top: number; right: number; bottom: number; left: number } {
     // Standard page dimensions in points (72 DPI)
@@ -289,12 +299,20 @@ export class PDFUtils {
       Legal: { width: 612, height: 1008 },
     };
 
-    const page = pageDimensions[pageFormat as keyof typeof pageDimensions] || pageDimensions.A4;
-    
+    const page =
+      pageDimensions[pageFormat as keyof typeof pageDimensions] ||
+      pageDimensions.A4;
+
     // Calculate margins to center content with minimum padding
     const minMargin = 40;
-    const horizontalMargin = Math.max(minMargin, (page.width - contentWidth) / 2);
-    const verticalMargin = Math.max(minMargin, (page.height - contentHeight) / 2);
+    const horizontalMargin = Math.max(
+      minMargin,
+      (page.width - contentWidth) / 2
+    );
+    const verticalMargin = Math.max(
+      minMargin,
+      (page.height - contentHeight) / 2
+    );
 
     return {
       top: verticalMargin,
@@ -321,7 +339,10 @@ export class PDFUtils {
   /**
    * Generate PDF metadata
    */
-  static generateMetadata(title: string, author?: string): {
+  static generateMetadata(
+    title: string,
+    author?: string
+  ): {
     title: string;
     author: string;
     subject: string;
@@ -331,10 +352,10 @@ export class PDFUtils {
   } {
     return {
       title,
-      author: author || 'Practice Planner',
-      subject: 'Generated Practice Document',
-      creator: 'Practice Planner App',
-      producer: 'React-PDF',
+      author: author || "Practice Planner",
+      subject: "Generated Practice Document",
+      creator: "Practice Planner App",
+      producer: "React-PDF",
       creationDate: new Date(),
     };
   }

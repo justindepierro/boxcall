@@ -5,46 +5,46 @@ name: File Integrity Check
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   check-file-integrity:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Check Critical Files Are Not Empty
-      run: |
-        # Define critical files that should never be empty
-        CRITICAL_FILES=(
-          "src/App.tsx"
-          "src/main.tsx"
-          "src/components/auth/AuthProvider.tsx"
-          "package.json"
-          "tsconfig.json"
-        )
-        
-        echo "🔍 Checking critical files for content..."
-        
-        for file in "${CRITICAL_FILES[@]}"; do
-          if [ -f "$file" ]; then
-            if [ ! -s "$file" ]; then
-              echo "❌ ERROR: Critical file $file is empty!"
-              exit 1
+      - uses: actions/checkout@v4
+
+      - name: Check Critical Files Are Not Empty
+        run: |
+          # Define critical files that should never be empty
+          CRITICAL_FILES=(
+            "src/App.tsx"
+            "src/main.tsx"
+            "src/components/auth/AuthProvider.tsx"
+            "package.json"
+            "tsconfig.json"
+          )
+
+          echo "🔍 Checking critical files for content..."
+
+          for file in "${CRITICAL_FILES[@]}"; do
+            if [ -f "$file" ]; then
+              if [ ! -s "$file" ]; then
+                echo "❌ ERROR: Critical file $file is empty!"
+                exit 1
+              else
+                echo "✅ $file has content"
+              fi
             else
-              echo "✅ $file has content"
+              echo "⚠️  WARNING: Critical file $file does not exist"
             fi
-          else
-            echo "⚠️  WARNING: Critical file $file does not exist"
-          fi
-        done
-        
-        echo "🎉 All critical files have content!"
-        
-    - name: Check TypeScript Compilation
-      run: |
-        npm ci
-        npx tsc --noEmit
+          done
+
+          echo "🎉 All critical files have content!"
+
+      - name: Check TypeScript Compilation
+        run: |
+          npm ci
+          npx tsc --noEmit

@@ -1,12 +1,12 @@
 /**
  * PracticeHeader Component
- * 
+ *
  * Displays the practice planner header with:
  * - Title and event information
  * - User role display and switching
  * - Mode toggles (Time Allocation, Scaffold Mode)
  * - Close button
- * 
+ *
  * @component
  * @example
  * <PracticeHeader
@@ -21,10 +21,10 @@
  * />
  */
 
-import React from 'react';
-import type { PracticeHeaderProps } from '../types';
-import { Typography } from '../../design-system/Typography';
-import Icon from '../../ui/Icon/Icon';
+import React from "react";
+import type { PracticeHeaderProps } from "../types";
+import { Typography } from "../../design-system/Typography";
+import Icon from "../../ui/Icon/Icon";
 
 export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
   event,
@@ -52,19 +52,19 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
         <div className="mt-2 flex items-center space-x-4">
           <span
             className={`px-2 py-1 rounded text-xs font-medium flex items-center gap-1 ${
-              userRole === "head_coach" 
-                ? "bg-blue-100 text-blue-800" 
+              userRole === "head_coach"
+                ? "bg-blue-100 text-blue-800"
                 : "bg-green-100 text-green-800"
             }`}
           >
-            <Icon 
-              name={userRole === "head_coach" ? "user-check" : "users"} 
-              size="sm" 
-              className={userRole === "head_coach" ? "text-blue-600" : "text-green-600"}
+            <Icon
+              name={userRole === "head_coach" ? "user-check" : "users"}
+              size="sm"
+              className={
+                userRole === "head_coach" ? "text-blue-600" : "text-green-600"
+              }
             />
-            {userRole === "head_coach"
-              ? "Head Coach"
-              : "Position Coach"}
+            {userRole === "head_coach" ? "Head Coach" : "Position Coach"}
           </span>
           <Typography variant="body-sm" color="muted">
             {userRole === "head_coach"
@@ -81,10 +81,12 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
-                <Icon 
-                  name={timeAllocationMode ? "bar-chart" : "clock"} 
-                  size="sm" 
-                  className={timeAllocationMode ? "text-white" : "text-gray-600"}
+                <Icon
+                  name={timeAllocationMode ? "bar-chart" : "clock"}
+                  size="sm"
+                  className={
+                    timeAllocationMode ? "text-white" : "text-gray-600"
+                  }
                 />
                 {timeAllocationMode
                   ? "Time Allocation Mode"
@@ -98,14 +100,12 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
-                <Icon 
-                  name={scaffoldMode ? "file" : "target"} 
-                  size="sm" 
+                <Icon
+                  name={scaffoldMode ? "file" : "target"}
+                  size="sm"
                   className={scaffoldMode ? "text-white" : "text-gray-600"}
                 />
-                {scaffoldMode
-                  ? "Scaffold Mode"
-                  : "Enable Practice Scaffold"}
+                {scaffoldMode ? "Scaffold Mode" : "Enable Practice Scaffold"}
               </button>
             </div>
           )}
@@ -120,14 +120,18 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
           <Icon name="pdf" size="lg" className="text-white" />
           Print Practice to PDF
         </button>
-        
+
         {/* Close Button */}
         <button
           onClick={onClose}
           className="text-gray-400 hover:text-gray-600 transition-colors p-2"
           aria-label="Close practice planner"
         >
-          <Icon name="close" size="lg" className="text-gray-500 hover:text-gray-700" />
+          <Icon
+            name="close"
+            size="lg"
+            className="text-gray-500 hover:text-gray-700"
+          />
         </button>
       </div>
     </div>

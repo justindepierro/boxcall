@@ -101,10 +101,10 @@ export const DashboardPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-12rem)]">
           {/* Left Column - Profile Card */}
           <div className="lg:col-span-1">
-            <ProfileCard 
+            <ProfileCard
               profile={profile}
               userRole={userRole}
-              onEditClick={() => console.log('Edit profile')}
+              onEditClick={() => console.log("Edit profile")}
             />
           </div>
 

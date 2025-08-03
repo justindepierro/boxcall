@@ -130,7 +130,11 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
             <div className="space-y-tight">
               {upcomingEvents.length === 0 ? (
                 <div className="text-center py-8">
-                  <Icon name="calendar" size="2xl" className="text-gray-400 mx-auto mb-3" />
+                  <Icon
+                    name="calendar"
+                    size="2xl"
+                    className="text-gray-400 mx-auto mb-3"
+                  />
                   <Typography variant="body-md" className="text-gray-600">
                     No upcoming events scheduled
                   </Typography>
@@ -148,11 +152,21 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                     {/* Event Icon */}
                     <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
                       <span className="text-lg">
-                        {event.type === "game" && <Icon name="target" size={14} color="navy" />}
-                        {event.type === "practice" && <Icon name="zap" size={14} color="warning" />}
-                        {event.type === "meeting" && <Icon name="users" size={14} color="navy" />}
-                        {event.type === "film" && <Icon name="play" size={14} color="jade" />}
-                        {event.type === "other" && <Icon name="file" size={14} color="slate" />}
+                        {event.type === "game" && (
+                          <Icon name="target" size={14} color="navy" />
+                        )}
+                        {event.type === "practice" && (
+                          <Icon name="zap" size={14} color="warning" />
+                        )}
+                        {event.type === "meeting" && (
+                          <Icon name="users" size={14} color="navy" />
+                        )}
+                        {event.type === "film" && (
+                          <Icon name="play" size={14} color="jade" />
+                        )}
+                        {event.type === "other" && (
+                          <Icon name="file" size={14} color="slate" />
+                        )}
                       </span>
                     </div>
 
@@ -179,7 +193,12 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
                       <div className="flex items-center space-x-4 text-sm text-gray-600">
                         <span className="flex items-center">
-                          <Icon name="calendar" size={14} color="current" className="mr-1" />
+                          <Icon
+                            name="calendar"
+                            size={14}
+                            color="current"
+                            className="mr-1"
+                          />
                           {format(new Date(event.start), "MMM d, yyyy")}
                         </span>
                         <span className="flex items-center">
@@ -278,7 +297,12 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
                 <div className="text-sm text-gray-600 space-y-1">
                   <div className="flex items-center">
-                    <Icon name="calendar" size={14} color="current" className="mr-2" />
+                    <Icon
+                      name="calendar"
+                      size={14}
+                      color="current"
+                      className="mr-2"
+                    />
                     {format(
                       new Date(selectedEvent.start),
                       "EEEE, MMMM d, yyyy"
@@ -296,13 +320,23 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                   )}
                   {selectedEvent.team_name && (
                     <div className="flex items-center">
-                      <Icon name="users" size={14} color="current" className="mr-2" />
+                      <Icon
+                        name="users"
+                        size={14}
+                        color="current"
+                        className="mr-2"
+                      />
                       {selectedEvent.team_name}
                     </div>
                   )}
                   {selectedEvent.opponent && (
                     <div className="flex items-center">
-                      <Icon name="target" size={14} color="current" className="mr-2" />
+                      <Icon
+                        name="target"
+                        size={14}
+                        color="current"
+                        className="mr-2"
+                      />
                       vs. {selectedEvent.opponent}
                     </div>
                   )}

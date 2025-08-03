@@ -741,7 +741,6 @@ export class ConflictDetectionService {
     return data || [];
   }
 
-   
   static async checkSiblingConflicts(
     _userId: string,
     _proposedEvent: Partial<CalendarEvent>
@@ -750,7 +749,6 @@ export class ConflictDetectionService {
     return [];
   }
 
-   
   static async calculateTravelTime(_origin: string, _destination: string) {
     // Mock implementation - would use Google Maps API
     return { minutes: 30 };

@@ -23,7 +23,7 @@ src/components/dashboard/
 ```
 src/components/design-system/
 ├── Typography/                # Text components
-├── Card/                     # Container components  
+├── Card/                     # Container components
 └── Icon/                     # Icon system
 ```
 
@@ -34,6 +34,7 @@ src/components/design-system/
 **Status**: ✅ Complete
 
 **Features**:
+
 - 300+ professionally organized Lucide icons
 - Automatic icon selection based on text content
 - Context-aware suggestions for different components
@@ -41,12 +42,16 @@ src/components/design-system/
 - Multiple icon suggestions with ranking
 
 **Usage**:
+
 ```typescript
 // Basic smart selection
 const icon = SmartIconSystem.getSmartIcon("Team Captain Achievement"); // → "trophy"
 
 // Context-aware selection
-const calendarIcon = SmartIconSystem.getContextualIcon("team meeting", "calendar"); // → "calendar"
+const calendarIcon = SmartIconSystem.getContextualIcon(
+  "team meeting",
+  "calendar"
+); // → "calendar"
 
 // Multiple suggestions
 const suggestions = SmartIconSystem.getIconSuggestions("player performance", 3); // → ["user", "chart", "trending-up"]
@@ -59,6 +64,7 @@ const suggestions = SmartIconSystem.getIconSuggestions("player performance", 3);
 **Status**: 🔄 In Development - Height alignment refinements
 
 **Features**:
+
 - Horizontal layout with vertical stats
 - Scrollable achievements section
 - SmartIconSystem integration for intelligent icon selection
@@ -73,6 +79,7 @@ const suggestions = SmartIconSystem.getIconSuggestions("player performance", 3);
 **Status**: 📝 Planned
 
 **Features**:
+
 - User avatar and basic info
 - Quick action buttons
 - Role/permission indicators
@@ -85,6 +92,7 @@ const suggestions = SmartIconSystem.getIconSuggestions("player performance", 3);
 **Status**: 📝 Planned
 
 **Features**:
+
 - Recent team activities
 - Announcement feeds
 - Real-time updates
@@ -93,11 +101,13 @@ const suggestions = SmartIconSystem.getIconSuggestions("player performance", 3);
 ## 🎨 **Design System Integration**
 
 ### **Typography Hierarchy**
+
 - **Bebas Neue**: Display headings and titles
 - **Inter**: Interface text and body content
 - **IBM Plex Mono**: Data display and code
 
 ### **Color Palette**
+
 - **Primary**: Jade greens for success/positive actions
 - **Secondary**: Navy blues for structure/navigation
 - **Accents**: Orange for alerts, purple for special features
@@ -113,7 +123,8 @@ interface ComponentProps {
 }
 
 // Common styling patterns
-const containerClasses = "bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20";
+const containerClasses =
+  "bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20";
 const cardClasses = "rounded-lg border border-white/40 dark:border-gray-600/30";
 ```
 
@@ -198,16 +209,19 @@ ComponentName/
 ## 🚀 **Future Roadmap**
 
 ### **Phase 4.3 - Current**
+
 - Complete Trophy Shelf height alignment
 - Add ProfileCard component
 - Implement TeamFeeds basic structure
 
 ### **Phase 4.4 - Next**
+
 - Advanced achievement filtering
 - Real-time team activity feeds
 - Dashboard customization options
 
 ### **Phase 5.0 - Future**
+
 - Widget-based dashboard system
 - Drag-and-drop component arrangement
 - Advanced analytics components

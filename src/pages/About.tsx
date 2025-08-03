@@ -6,7 +6,7 @@ import Icon from "../components/ui/Icon/Icon";
 /**
  * About - Information about BoxCall platform
  * Available to all users
- * 
+ *
  * Features:
  * - Platform overview and features
  * - Help and documentation
@@ -19,7 +19,10 @@ export const About: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <Typography variant="headline-xl" className="text-gray-900 dark:text-white">
+          <Typography
+            variant="headline-xl"
+            className="text-gray-900 dark:text-white"
+          >
             About BoxCall
           </Typography>
           <Typography variant="body-lg" color="muted" className="mt-2">
@@ -31,13 +34,17 @@ export const About: React.FC = () => {
         <div className="grid gap-6 md:grid-cols-2">
           {/* Platform Overview */}
           <Card className="p-6">
-            <Icon name="trending-up" size="3xl" className="text-jade-600 mb-4" />
+            <Icon
+              name="trending-up"
+              size="3xl"
+              className="text-jade-600 mb-4"
+            />
             <Typography variant="headline-md" className="mb-3">
               Platform Overview
             </Typography>
             <Typography variant="body-md" color="muted">
-              BoxCall is a comprehensive team management platform designed for 
-              coaches, players, and families. Streamline communication, organize 
+              BoxCall is a comprehensive team management platform designed for
+              coaches, players, and families. Streamline communication, organize
               plays, manage schedules, and build stronger teams.
             </Typography>
           </Card>
@@ -64,11 +71,14 @@ export const About: React.FC = () => {
               Support & Help
             </Typography>
             <Typography variant="body-md" color="muted" className="mb-4">
-              Need help getting started or have questions? We're here to support 
+              Need help getting started or have questions? We're here to support
               your team's success.
             </Typography>
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-              <Typography variant="body-sm" className="text-blue-700 dark:text-blue-300 flex items-center">
+              <Typography
+                variant="body-sm"
+                className="text-blue-700 dark:text-blue-300 flex items-center"
+              >
                 <Icon name="mail" size="sm" className="mr-2" />
                 Support: help@boxcall.com
               </Typography>
@@ -84,11 +94,14 @@ export const About: React.FC = () => {
               Version Information
             </Typography>
             <Typography variant="body-md" color="muted" className="mb-4">
-              You're using the latest version of BoxCall with all the newest 
+              You're using the latest version of BoxCall with all the newest
               features and improvements.
             </Typography>
             <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
-              <Typography variant="body-sm" className="text-green-700 dark:text-green-300">
+              <Typography
+                variant="body-sm"
+                className="text-green-700 dark:text-green-300"
+              >
                 Version 1.0.0 - Beta Release
               </Typography>
             </div>

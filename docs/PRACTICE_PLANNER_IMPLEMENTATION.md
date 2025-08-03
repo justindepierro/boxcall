@@ -1,11 +1,13 @@
 # Practice Planner Implementation Summary
 
 ## Overview
+
 We've successfully implemented a comprehensive practice planning system integrated with the calendar. When coaches mark a practice event on the calendar, they can now access a sophisticated practice planner that allows them to build detailed, time-blocked practice sessions.
 
 ## Key Features Implemented
 
 ### 🏈 Practice Planning Workflow
+
 1. **Calendar Integration**: Practice events show a "Plan Practice" button
 2. **Time-Blocked Planning**: Coaches create blocks of time with specific durations
 3. **Category-Based Organization**: Offense, Defense, Special Teams, Meeting, Weight Room, Transition
@@ -13,13 +15,16 @@ We've successfully implemented a comprehensive practice planning system integrat
 5. **Role-Based Access**: Head coaches allocate time, position coaches fill details
 
 ### ⏱️ Time Management
+
 - **Duration Tracking**: Shows scheduled vs planned time
 - **Overtime Warnings**: Alerts when practice exceeds scheduled duration
 - **Conflict Detection**: Warns coaches about scheduling conflicts
 - **Category Breakdown**: Visual summary of time allocation by category
 
 ### 📝 Practice Block Details
+
 Each practice block includes:
+
 - **Title**: Descriptive name (e.g., "Offensive line drills")
 - **Duration**: Time in minutes
 - **Category**: Offense, Defense, Special Teams, etc.
@@ -28,7 +33,9 @@ Each practice block includes:
 - **Scripts**: Link to playbook scripts (optional)
 
 ### 🚀 Quick Templates
+
 Pre-built templates for common practice activities:
+
 - Team Meeting (5 min) - Room 1
 - Weight Room (25 min) - Bring sneakers
 - Transition to Field (5 min) - Bring helmets only
@@ -58,12 +65,14 @@ Pre-built templates for common practice activities:
 ## Role-Based Workflow
 
 ### Head Coach
+
 - Allocates time blocks by category (Offense: 40 min, Defense: 30 min, etc.)
 - Sets locations and general notes
 - Assigns position coaches to specific blocks
 - Reviews and approves final practice plan
 
 ### Position Coach
+
 - Fills in detailed drills for assigned time blocks
 - Links specific scripts from the playbook
 - Adds equipment and preparation notes
@@ -72,16 +81,19 @@ Pre-built templates for common practice activities:
 ## Integration Points
 
 ### Calendar System
+
 - Practice events automatically get "Plan Practice" button
 - Only visible to coaches with appropriate permissions
 - Integrates with existing calendar event structure
 
 ### Playbook Integration
+
 - Script Selector Modal allows linking existing scripts
 - "Create New Script" option navigates to playbook builder
 - Scripts are categorized and searchable
 
 ### Time Validation
+
 - Real-time duration calculations
 - Overtime warnings with confirmation dialogs
 - Conflict detection for scheduling issues
@@ -89,35 +101,46 @@ Pre-built templates for common practice activities:
 ## Files Created/Modified
 
 ### New Components
+
 - `src/components/practice/PracticePlannerModal.tsx` - Main practice planning interface
 - `src/components/practice/ScriptSelectorModal.tsx` - Script selection and linking
 
 ### Modified Components
+
 - `src/pages/CalendarPage.tsx` - Added practice planner integration
 - Enhanced calendar event handling for practice-specific features
 
 ## Technical Features
 
 ### State Management
+
 - Real-time duration tracking
 - Category-based time allocation
 - Role-based UI rendering
 - Conflict detection algorithms
 
 ### User Experience
+
 - Drag-and-drop ready structure
 - Quick template buttons for common activities
 - Visual category color coding
 - Responsive design for mobile and desktop
 
 ### Data Structure
+
 ```typescript
 interface PracticeBlock {
   id: string;
   startTime: string;
   endTime: string;
   duration: number;
-  category: "offense" | "defense" | "special-teams" | "meeting" | "weight-room" | "transition";
+  category:
+    | "offense"
+    | "defense"
+    | "special-teams"
+    | "meeting"
+    | "weight-room"
+    | "transition";
   title: string;
   location: string;
   notes: string;

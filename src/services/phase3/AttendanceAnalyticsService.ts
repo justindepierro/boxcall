@@ -580,19 +580,17 @@ export class AttendanceAnalyticsService {
   }
 
   // Mock implementations for data retrieval
-   
+
   static async getTeamSize(_teamId: string): Promise<number> {
     return 20; // Mock team size
   }
 
-   
   static async getHistoricalAttendanceData(
     _teamId: string
   ): Promise<AttendanceRecord[]> {
     return []; // Mock historical data
   }
 
-   
   static async analyzePredictionFactors(
     _event: CalendarEvent,
     _historicalData: AttendanceRecord[]
@@ -606,12 +604,10 @@ export class AttendanceAnalyticsService {
     ];
   }
 
-   
   static getAverageAttendanceForTeam(_teamId: string): number {
     return 15; // Mock average attendance
   }
 
-   
   static identifyRiskFactors(
     _event: CalendarEvent,
     _factors: PredictionFactor[]
@@ -619,7 +615,6 @@ export class AttendanceAnalyticsService {
     return ["Weather conditions may affect attendance"];
   }
 
-   
   static generatePredictionRecommendations(
     _factors: PredictionFactor[],
     _riskFactors: string[]
@@ -627,7 +622,6 @@ export class AttendanceAnalyticsService {
     return ["Send reminder notifications 24 hours before event"];
   }
 
-   
   static async generateRecommendations(
     _records: AttendanceRecord[],
     _events: CalendarEvent[],
@@ -636,7 +630,6 @@ export class AttendanceAnalyticsService {
     return ["Consider scheduling more practices on high-attendance days"];
   }
 
-   
   static async getPlayerEventCount(
     _userId: string,
     _teamId: string,
@@ -645,7 +638,6 @@ export class AttendanceAnalyticsService {
     return 10; // Mock event count
   }
 
-   
   static calculateAttendanceTrend(
     _records: AttendanceRecord[]
   ): "improving" | "declining" | "stable" {
@@ -661,12 +653,10 @@ export class AttendanceAnalyticsService {
     return "low";
   }
 
-   
   static calculateConsistencyScore(_records: AttendanceRecord[]): number {
     return 0.8; // Mock consistency score
   }
 
-   
   static analyzeBestWorstDays(
     _events: CalendarEvent[],
     _records: AttendanceRecord[]
@@ -674,7 +664,6 @@ export class AttendanceAnalyticsService {
     return { bestDay: "Tuesday", worstDay: "Friday" };
   }
 
-   
   static analyzeBestWorstTimes(
     _events: CalendarEvent[],
     _records: AttendanceRecord[]
@@ -682,22 +671,18 @@ export class AttendanceAnalyticsService {
     return { bestTime: 16, worstTime: 19 };
   }
 
-   
   static extractBestDays(_analytics: EventTypeAnalytics[]): string[] {
     return ["Tuesday", "Wednesday", "Thursday"];
   }
 
-   
   static extractBestTimes(_analytics: EventTypeAnalytics[]): number[] {
     return [16, 17, 18];
   }
 
-   
   static extractOptimalEventTypes(_analytics: EventTypeAnalytics[]): string[] {
     return ["practice", "game"];
   }
 
-   
   static async analyzeSeasonalPatterns(
     _teamId: string
   ): Promise<SeasonalPattern[]> {
@@ -711,14 +696,12 @@ export class AttendanceAnalyticsService {
     ];
   }
 
-   
   static async generatePlayerEngagementInsights(
     _playerAnalytics: PlayerAttendanceAnalytics[]
   ): Promise<PlayerEngagementInsight[]> {
     return [];
   }
 
-   
   static identifyImprovementOpportunities(
     _analytics: AttendanceAnalytics
   ): ImprovementOpportunity[] {

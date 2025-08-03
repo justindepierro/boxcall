@@ -511,7 +511,11 @@ export const CalendarPage: React.FC = () => {
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Icon name={isCreatingEvent ? "plus" : "calendar"} size="lg" color="navy" />
+                  <Icon
+                    name={isCreatingEvent ? "plus" : "calendar"}
+                    size="lg"
+                    color="navy"
+                  />
                   <Typography variant="headline-md" className="text-navy-900">
                     {isCreatingEvent ? "Create Event" : "Event Details"}
                   </Typography>
@@ -684,7 +688,12 @@ export const CalendarPage: React.FC = () => {
 
                   <div className="space-y-2 text-sm text-gray-600">
                     <div className="flex items-center">
-                      <Icon name="calendar" size="sm" color="slate" className="mr-2" />
+                      <Icon
+                        name="calendar"
+                        size="sm"
+                        color="slate"
+                        className="mr-2"
+                      />
                       {new Date(selectedEvent.start).toLocaleDateString(
                         "en-US",
                         {
@@ -720,19 +729,34 @@ export const CalendarPage: React.FC = () => {
                     </div>
                     {selectedEvent.location && (
                       <div className="flex items-center">
-                        <Icon name="location" size="sm" color="slate" className="mr-2" />
+                        <Icon
+                          name="location"
+                          size="sm"
+                          color="slate"
+                          className="mr-2"
+                        />
                         {selectedEvent.location}
                       </div>
                     )}
                     {selectedEvent.team_name && (
                       <div className="flex items-center">
-                        <Icon name="users" size="sm" color="slate" className="mr-2" />
+                        <Icon
+                          name="users"
+                          size="sm"
+                          color="slate"
+                          className="mr-2"
+                        />
                         {selectedEvent.team_name}
                       </div>
                     )}
                     {selectedEvent.opponent && (
                       <div className="flex items-center">
-                        <Icon name="target" size="sm" color="slate" className="mr-2" />
+                        <Icon
+                          name="target"
+                          size="sm"
+                          color="slate"
+                          className="mr-2"
+                        />
                         vs. {selectedEvent.opponent}
                       </div>
                     )}
@@ -748,20 +772,21 @@ export const CalendarPage: React.FC = () => {
 
                   <div className="flex space-x-3 pt-4">
                     {/* Practice Planning Button - Only for practice events and coaches */}
-                    {selectedEvent.type === "practice" && 
-                     (profile?.role === "coach" || profile?.role === "admin") && (
-                      <Button 
-                        variant="primary" 
-                        size="sm"
-                        onClick={() => {
-                          setShowPracticePlanner(true);
-                          setShowEventModal(false);
-                        }}
-                      >
-                        <Icon name="file" size="sm" className="mr-1" />
-                        Plan Practice
-                      </Button>
-                    )}
+                    {selectedEvent.type === "practice" &&
+                      (profile?.role === "coach" ||
+                        profile?.role === "admin") && (
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => {
+                            setShowPracticePlanner(true);
+                            setShowEventModal(false);
+                          }}
+                        >
+                          <Icon name="file" size="sm" className="mr-1" />
+                          Plan Practice
+                        </Button>
+                      )}
                     {selectedEvent.rsvp_required && (
                       <Button variant="primary" size="sm">
                         RSVP
@@ -779,12 +804,14 @@ export const CalendarPage: React.FC = () => {
       )}
 
       {/* Practice Planner Modal */}
-      {showPracticePlanner && selectedEvent && selectedEvent.type === "practice" && (
-        <PracticePlannerModal 
-          event={selectedEvent}
-          onClose={() => setShowPracticePlanner(false)}
-        />
-      )}
+      {showPracticePlanner &&
+        selectedEvent &&
+        selectedEvent.type === "practice" && (
+          <PracticePlannerModal
+            event={selectedEvent}
+            onClose={() => setShowPracticePlanner(false)}
+          />
+        )}
     </div>
   );
 };

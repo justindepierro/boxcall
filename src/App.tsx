@@ -2,11 +2,13 @@ import { useEffect } from "react";
 import "./App.css";
 import { DevModeProvider } from "./app/dev-mode-store";
 import DevModeSwitcher from "./components/dev/DevModeSwitcher";
+import { PerformanceMonitor } from "./components/dev/PerformanceMonitor";
 import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { useTheme } from "./hooks/useTheme";
 import { testDatabaseConnection } from "./lib/database-helpers";
 import { AppRouter } from "./routes/AppRouter";
+import { initWebVitals } from "./utils/performance/webVitals";
 
 /**
  * App Component
@@ -22,6 +24,9 @@ function App() {
   useEffect(() => {
     const initBoxCall = async () => {
       console.log("BoxCall: Initializing application...");
+
+      // Initialize performance monitoring
+      initWebVitals();
 
       const connectionOk = await testDatabaseConnection();
       if (connectionOk) {
@@ -43,6 +48,7 @@ function App() {
           <DevHealthCheck />
           <AppRouter />
           <DevModeSwitcher />
+          <PerformanceMonitor />
         </div>
       </DevModeProvider>
     </ErrorBoundary>

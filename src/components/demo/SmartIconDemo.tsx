@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { Icon, SmartIconSystem } from '../ui/Icon/Icon';
-import type { IconName } from '../ui/Icon/Icon';
-import { Typography } from '../design-system';
-import { Card } from '../ui';
+import React, { useState } from "react";
+import { Icon, SmartIconSystem } from "../ui/Icon/Icon";
+import type { IconName } from "../ui/Icon/Icon";
+import { Typography } from "../design-system";
+import { Card } from "../ui";
 
 /**
  * SmartIconDemo - Demonstrates the SmartIconSystem in action
- * 
+ *
  * Shows how the system intelligently selects icons based on content
  */
 export const SmartIconDemo: React.FC = () => {
-  const [inputText, setInputText] = useState('');
-  const [selectedIcon, setSelectedIcon] = useState<IconName>('star');
+  const [inputText, setInputText] = useState("");
+  const [selectedIcon, setSelectedIcon] = useState<IconName>("star");
   const [suggestions, setSuggestions] = useState<IconName[]>([]);
 
   const handleTextChange = (text: string) => {
@@ -22,14 +22,14 @@ export const SmartIconDemo: React.FC = () => {
       setSelectedIcon(smartIcon);
       setSuggestions(iconSuggestions);
     } else {
-      setSelectedIcon('star');
+      setSelectedIcon("star");
       setSuggestions([]);
     }
   };
 
   const demoTexts = [
     "Team Captain Achievement",
-    "Weekly Practice Schedule", 
+    "Weekly Practice Schedule",
     "Championship Trophy Winner",
     "Player Performance Analytics",
     "Coach Message Notification",
@@ -37,7 +37,7 @@ export const SmartIconDemo: React.FC = () => {
     "Health and Fitness Update",
     "Weather Alert for Practice",
     "New Team Member Added",
-    "Equipment Maintenance Required"
+    "Equipment Maintenance Required",
   ];
 
   return (
@@ -97,8 +97,8 @@ export const SmartIconDemo: React.FC = () => {
                     onClick={() => setSelectedIcon(iconName)}
                     className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors ${
                       selectedIcon === iconName
-                        ? 'bg-jade-100 border-jade-300 text-jade-800'
-                        : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                        ? "bg-jade-100 border-jade-300 text-jade-800"
+                        : "bg-gray-50 border-gray-200 hover:bg-gray-100"
                     }`}
                   >
                     <Icon name={iconName} size={16} />
@@ -122,10 +122,10 @@ export const SmartIconDemo: React.FC = () => {
                 onClick={() => handleTextChange(text)}
                 className="flex items-center gap-3 p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <Icon 
-                  name={SmartIconSystem.getSmartIcon(text)} 
-                  size={16} 
-                  className="text-gray-600 flex-shrink-0" 
+                <Icon
+                  name={SmartIconSystem.getSmartIcon(text)}
+                  size={16}
+                  className="text-gray-600 flex-shrink-0"
                 />
                 <Typography variant="caption" className="truncate">
                   {text}
@@ -141,24 +141,39 @@ export const SmartIconDemo: React.FC = () => {
             Context-Aware Selection:
           </Typography>
           <div className="grid grid-cols-2 gap-4">
-            {['feed', 'calendar', 'achievement', 'message'].map((context) => (
+            {["feed", "calendar", "achievement", "message"].map((context) => (
               <div key={context} className="p-3 bg-gray-50 rounded-lg">
-                <Typography variant="caption" className="font-medium block mb-2 capitalize">
+                <Typography
+                  variant="caption"
+                  className="font-medium block mb-2 capitalize"
+                >
                   {context} Context:
                 </Typography>
                 <div className="flex items-center gap-2">
-                  <Icon 
+                  <Icon
                     name={SmartIconSystem.getContextualIcon(
-                      inputText || 'team meeting', 
-                      context as 'feed' | 'calendar' | 'achievement' | 'message' | 'team' | 'general'
-                    )} 
-                    size={16} 
-                    className="text-gray-600" 
+                      inputText || "team meeting",
+                      context as
+                        | "feed"
+                        | "calendar"
+                        | "achievement"
+                        | "message"
+                        | "team"
+                        | "general"
+                    )}
+                    size={16}
+                    className="text-gray-600"
                   />
                   <Typography variant="caption" color="muted">
                     {SmartIconSystem.getContextualIcon(
-                      inputText || 'team meeting', 
-                      context as 'feed' | 'calendar' | 'achievement' | 'message' | 'team' | 'general'
+                      inputText || "team meeting",
+                      context as
+                        | "feed"
+                        | "calendar"
+                        | "achievement"
+                        | "message"
+                        | "team"
+                        | "general"
                     )}
                   </Typography>
                 </div>

@@ -131,10 +131,15 @@ export const getNavigationItems = (
 
   // Playground - Developers and Super Admins only
   // Handle dev mode roles that include "super_admin"
-  if (userRole === "admin" || (userRole && userRole.includes("super_admin")) || userRole === null || userRole === "coach") {
+  if (
+    userRole === "admin" ||
+    (userRole && userRole.includes("super_admin")) ||
+    userRole === null ||
+    userRole === "coach"
+  ) {
     items.push({
       id: "smart-icon-playground",
-      label: "Icon Playground", 
+      label: "Icon Playground",
       icon: "search",
       href: "/playground/smart-icon-system",
       description: "Test and explore the Smart Icon System",
@@ -176,7 +181,13 @@ export const toSidebarItems = (
     .map((item) => ({
       id: item.id,
       label: item.label,
-      icon: item.icon ? React.createElement(Icon, { name: item.icon, size: "md", color: "current" }) : undefined,
+      icon: item.icon
+        ? React.createElement(Icon, {
+            name: item.icon,
+            size: "md",
+            color: "current",
+          })
+        : undefined,
       onClick: item.divider
         ? undefined
         : () => {
