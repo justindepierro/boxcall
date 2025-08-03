@@ -575,12 +575,12 @@ export class SmartSchedulingOptimizer {
     return patterns;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async getWeatherAnalysis(_eventType: string): Promise<WeatherData> {
     return { favorable: true, temperature: 72, conditions: "clear" };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async getTeamPreferences(_teamId: string): Promise<TeamPreferences> {
     return {
       optimalPracticeLength: 120,
@@ -689,7 +689,7 @@ export class SmartSchedulingOptimizer {
     return [];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static identifySeasonalTrends(_events: CalendarEvent[]): SeasonalTrend[] {
     return [];
   }
@@ -701,12 +701,12 @@ export class SmartSchedulingOptimizer {
     return [];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static extractOptimalDays(_patterns: AttendancePattern[]): string[] {
     return ["Tuesday", "Wednesday", "Thursday"];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static extractOptimalTimes(_patterns: AttendancePattern[]): number[] {
     return [16, 17, 18];
   }
@@ -720,7 +720,7 @@ export class SmartSchedulingOptimizer {
     return ["Consider afternoon practices for better attendance"];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static convertToTimeSlots(_optimalTimes: number[]): TimeSlot[] {
     return [
       { day: "Tuesday", startHour: 16, endHour: 18, priority: "high" },
@@ -749,7 +749,7 @@ export class SmartSchedulingOptimizer {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static generateImprovementSummary(_events: OptimizedEvent[]): string[] {
     return [
       "Improved overall attendance by 15%",
@@ -757,7 +757,7 @@ export class SmartSchedulingOptimizer {
     ];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static getNextDateForDayAndHour(_day: string, _hour: number): Date {
     return new Date();
   }
@@ -790,7 +790,7 @@ export class SmartSchedulingOptimizer {
     return 0.85;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static extractPatternInsights(_insights: SchedulingInsights): string[] {
     return ["Team performs best on weekday afternoons"];
   }
@@ -810,7 +810,7 @@ export class SmartSchedulingOptimizer {
     return ["Consider 90-minute practices for optimal engagement"];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async getWeatherForecast(_dateRange: {
     start: Date;
     end: Date;
@@ -841,7 +841,7 @@ export class SmartSchedulingOptimizer {
     return 0.8;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static isSeasonallyAppropriate(_dateTime: Date, _eventType: string): boolean {
     return true;
   }

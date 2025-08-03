@@ -9,7 +9,8 @@ import { Card } from "../ui/Card";
 const DevModeSwitcher: React.FC = () => {
   const { devMode, setDevMode, isDevMode } = useDevMode();
   const profile = useAuthProfile();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true); // Start collapsed
+  const [isVisible, setIsVisible] = useState(true);
 
   // Only show in development environment
   if (import.meta.env.PROD) {
@@ -73,24 +74,24 @@ const DevModeSwitcher: React.FC = () => {
   ];
 
   return (
-    <Card className="fixed bottom-4 right-4 z-50 max-w-sm">
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-3">
+    <Card className="fixed bottom-4 right-4 z-50 max-w-sm shadow-2xl bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-2 border-gray-200 dark:border-gray-600 transition-all duration-300 hover:bg-white/95 dark:hover:bg-gray-800/95">
+      <div className="p-3">
+        <div className="flex items-center justify-between mb-2">
           <Typography variant="headline-sm" className="text-sm font-bold">
-            🛠️ Dev Mode
+            🛠️ Dev Tools
           </Typography>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-xs"
-              title={isCollapsed ? "Expand" : "Collapse"}
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-xs p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              title={isCollapsed ? "Expand dev tools" : "Collapse dev tools"}
             >
               {isCollapsed ? "🔼" : "🔽"}
             </button>
             <div
-              className={`px-2 py-1 rounded text-xs font-medium ${
+              className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
                 isDevMode
-                  ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                  ? "bg-jade-100 text-jade-800 dark:bg-jade-900 dark:text-jade-200"
                   : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200"
               }`}
             >

@@ -610,7 +610,7 @@ export class MobileUIService {
 
   private static async animatePageTransition(
     transition: "slide" | "fade" | "modal",
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     _direction: "forward" | "backward"
   ): Promise<void> {
     const duration = transition === "modal" ? 400 : 300;
@@ -620,9 +620,9 @@ export class MobileUIService {
   }
 
   private static async animateOrientationChange(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     _from: "portrait" | "landscape",
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     _to: "portrait" | "landscape"
   ): Promise<void> {
     // TODO: Implement orientation change animation

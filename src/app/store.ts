@@ -218,7 +218,7 @@ export const useAppStore = create<AppStore>()(
       removePlayer: (playerId) =>
         set(
           (state) => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+             
             const { [playerId]: _, ...rest } = state.players;
             return { players: rest };
           },

@@ -750,7 +750,7 @@ export class ConflictDetectionService {
     return [];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async calculateTravelTime(_origin: string, _destination: string) {
     // Mock implementation - would use Google Maps API
     return { minutes: 30 };

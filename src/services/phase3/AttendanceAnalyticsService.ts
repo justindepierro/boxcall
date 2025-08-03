@@ -580,7 +580,7 @@ export class AttendanceAnalyticsService {
   }
 
   // Mock implementations for data retrieval
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async getTeamSize(_teamId: string): Promise<number> {
     return 20; // Mock team size
   }
@@ -606,7 +606,7 @@ export class AttendanceAnalyticsService {
     ];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static getAverageAttendanceForTeam(_teamId: string): number {
     return 15; // Mock average attendance
   }
@@ -661,7 +661,7 @@ export class AttendanceAnalyticsService {
     return "low";
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static calculateConsistencyScore(_records: AttendanceRecord[]): number {
     return 0.8; // Mock consistency score
   }
@@ -682,17 +682,17 @@ export class AttendanceAnalyticsService {
     return { bestTime: 16, worstTime: 19 };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static extractBestDays(_analytics: EventTypeAnalytics[]): string[] {
     return ["Tuesday", "Wednesday", "Thursday"];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static extractBestTimes(_analytics: EventTypeAnalytics[]): number[] {
     return [16, 17, 18];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static extractOptimalEventTypes(_analytics: EventTypeAnalytics[]): string[] {
     return ["practice", "game"];
   }

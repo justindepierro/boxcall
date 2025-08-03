@@ -624,6 +624,7 @@ export class MobileCalendarService {
     _gesture: TouchGesture,
     _target: MobileEvent | Date | null
   ): Promise<{ success: boolean; action?: string; feedback?: string }> {
+    void _gesture; void _target; // Parameters reserved for future implementation
     if (this.state?.currentView.renderConfig.hapticFeedback) {
       // Trigger haptic feedback
       this.triggerHapticFeedback("medium");

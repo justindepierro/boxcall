@@ -662,7 +662,7 @@ export class IntelligentCalendarService {
     return (end.getTime() - start.getTime()) / (1000 * 60); // minutes
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static calculatePredictedImprovement(_suggestion: TimeSuggestion): string {
     return "15% attendance increase expected";
   }
@@ -690,7 +690,7 @@ export class IntelligentCalendarService {
     return ["Send reminders 24 hours before low-predicted attendance events"];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   static async getTeamSpecificInsights(_teamId: string): Promise<string[]> {
     return ["Team performs best with Tuesday/Thursday practices"];
   }
