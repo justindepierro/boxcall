@@ -1,10 +1,21 @@
 import React, { useState } from "react";
-import { Edit, Copy, Image, Play } from "lucide-react";
+import {
+  Edit,
+  Copy,
+  Image,
+  ChevronDown,
+  ChevronUp,
+  Target,
+  Hash,
+  Clock,
+} from "lucide-react";
 import type { Play as PlayType } from "../../types/play";
 import { VisualPlayBuilder } from "./visual/VisualPlayBuilder";
+import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
 
 interface PlayCardProps {
   play: PlayType;
+  showOneWordCalls?: boolean;
   onEdit?: (play: PlayType) => void;
   onDuplicate?: (play: PlayType) => void;
   onCreateDiagram?: (play: PlayType) => void;
@@ -12,11 +23,13 @@ interface PlayCardProps {
 
 export const PlayCard: React.FC<PlayCardProps> = ({
   play,
+  showOneWordCalls = false,
   onEdit,
   onDuplicate,
   onCreateDiagram,
 }) => {
   const [showVisualBuilder, setShowVisualBuilder] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const getPlayTypeColor = (type: string) => {
     switch (type) {
@@ -26,6 +39,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         return "bg-green-100 text-green-800";
       case "RPO":
         return "bg-purple-100 text-purple-800";
+      case "Play Action":
+        return "bg-orange-100 text-orange-800";
       default:
         return "bg-slate-100 text-slate-800";
     }
@@ -42,7 +57,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   };
 
   const handleSaveDiagram = (updatedPlay: PlayType) => {
-    // In a real implementation, this would save the diagram URL to the play
     console.log("Saving diagram for play:", updatedPlay.play_name);
     setShowVisualBuilder(false);
     if (onCreateDiagram) {
@@ -50,146 +64,278 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     }
   };
 
+  const displayName = getDisplayName(play, showOneWordCalls);
+  const subtitleText = getSubtitleText(play, showOneWordCalls);
+
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-slate-200 hover:shadow-md transition-shadow duration-200">
-      {/* Header */}
-      <div className="p-4 border-b border-slate-200">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <h3 className="font-semibold text-slate-900 text-lg truncate">
-              🏈 {play.play_name}
-            </h3>
-            <p className="text-sm text-slate-600 mt-1">
-              Formation: {play.formation} {play.f_dir && `(${play.f_dir})`}
-            </p>
-            {play.one_word_play && (
-              <p className="text-sm text-emerald-600 font-medium mt-1">
-                Call: "{play.one_word_play}"
-              </p>
-            )}
-          </div>
-          <span
-            className={`px-2 py-1 rounded-full text-xs font-medium ${getPlayTypeColor(play.p_type)}`}
-          >
-            {play.p_type}
-          </span>
-        </div>
-      </div>
+    <>
+      <div className="bg-white rounded-lg border border-slate-200 hover:border-slate-300 transition-colors">
+        <div className="p-4">
+          {/* Collapsed/Skinny Mode */}
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              {/* Play Name with MonoCode Font */}
+              <h3
+                className={`font-mono font-bold text-lg ${
+                  showOneWordCalls && play.one_word_play
+                    ? "text-blue-600"
+                    : "text-slate-900"
+                }`}
+              >
+                {displayName}
+              </h3>
 
-      {/* Preview Area */}
-      <div className="p-4">
-        {play.diagram_url ? (
-          <div className="aspect-video bg-slate-50 rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center mb-4">
-            <img
-              src={play.diagram_url}
-              alt={`${play.play_name} diagram`}
-              className="max-w-full max-h-full object-contain"
-            />
-          </div>
-        ) : (
-          <div className="aspect-video bg-slate-50 rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center mb-4">
-            <div className="text-center">
-              <Play className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-              <p className="text-sm text-slate-500">No diagram available</p>
-            </div>
-          </div>
-        )}
+              {/* Subtitle in italics for one-word plays */}
+              {subtitleText && (
+                <p className="text-xs text-slate-500 mt-1 italic font-light">
+                  {subtitleText}
+                </p>
+              )}
 
-        {/* Play Details */}
-        <div className="space-y-2 text-sm">
-          {play.f_type && (
-            <div className="flex justify-between">
-              <span className="text-slate-600">Type:</span>
-              <span className="font-medium">
-                {play.p_type} | {play.f_type}
-              </span>
-            </div>
-          )}
-
-          {play.protection && (
-            <div className="flex justify-between">
-              <span className="text-slate-600">Protection:</span>
-              <span className="font-medium">{play.protection}</span>
-            </div>
-          )}
-
-          <div className="flex justify-between">
-            <span className="text-slate-600">Confidence:</span>
-            <span
-              className={`font-medium ${getConfidenceColor(play.confidence_base)}`}
-            >
-              {play.confidence_base}%
-            </span>
-          </div>
-
-          {play.times_called > 0 && (
-            <div className="flex justify-between">
-              <span className="text-slate-600">Success:</span>
-              <span className="font-medium">
-                {Math.round((play.times_successful / play.times_called) * 100)}%
-                ({play.times_successful}/{play.times_called})
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Tags */}
-        {play.tags && play.tags.length > 0 && (
-          <div className="mt-3">
-            <div className="flex flex-wrap gap-1">
-              {play.tags.slice(0, 3).map((tag, index) => (
+              {/* Play Type and additional info */}
+              <div className="flex items-center space-x-2 mt-2">
                 <span
-                  key={index}
-                  className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md"
+                  className={`px-2 py-1 rounded-full text-xs font-medium ${getPlayTypeColor(play.p_type)}`}
                 >
-                  {tag}
+                  {play.p_type}
                 </span>
-              ))}
-              {play.tags.length > 3 && (
-                <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md">
-                  +{play.tags.length - 3}
+                {play.f_type && (
+                  <span className="px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs">
+                    {play.f_type}
+                  </span>
+                )}
+                <span
+                  className={`text-xs font-medium ${getConfidenceColor(play.confidence_base)}`}
+                >
+                  {play.confidence_base}%
                 </span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-1 ml-4">
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
+                title={isExpanded ? "Collapse" : "Expand details"}
+              >
+                {isExpanded ? (
+                  <ChevronUp className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+              </button>
+              <button
+                onClick={() => onEdit?.(play)}
+                className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
+                title="Edit play"
+              >
+                <Edit className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => onDuplicate?.(play)}
+                className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
+                title="Duplicate play"
+              >
+                <Copy className="h-4 w-4" />
+              </button>
+              <button
+                onClick={handleCreateDiagram}
+                className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
+                title="Create diagram"
+              >
+                <Image className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Expanded Details */}
+          {isExpanded && (
+            <div className="mt-4 pt-4 border-t border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Formation Details */}
+              <div className="space-y-2">
+                <h4 className="text-sm font-semibold text-slate-700 flex items-center">
+                  <Target className="h-4 w-4 mr-1" />
+                  Formation
+                </h4>
+                <div className="space-y-1 text-sm text-slate-600">
+                  <div>
+                    <span className="font-medium">Base:</span> {play.formation}
+                  </div>
+                  {play.f_dir && (
+                    <div>
+                      <span className="font-medium">Direction:</span>{" "}
+                      {play.f_dir}
+                    </div>
+                  )}
+                  {play.ftag1 && (
+                    <div>
+                      <span className="font-medium">Tag 1:</span> {play.ftag1}
+                    </div>
+                  )}
+                  {play.ftag2 && (
+                    <div>
+                      <span className="font-medium">Tag 2:</span> {play.ftag2}
+                    </div>
+                  )}
+                  {play.back_align && (
+                    <div>
+                      <span className="font-medium">Back Align:</span>{" "}
+                      {play.back_align}
+                    </div>
+                  )}
+                  {play.shift && (
+                    <div>
+                      <span className="font-medium">Shift:</span> {play.shift}
+                    </div>
+                  )}
+                  {play.motion && (
+                    <div>
+                      <span className="font-medium">Motion:</span> {play.motion}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Play Details */}
+              <div className="space-y-2">
+                <h4 className="text-sm font-semibold text-slate-700 flex items-center">
+                  <Hash className="h-4 w-4 mr-1" />
+                  Play Details
+                </h4>
+                <div className="space-y-1 text-sm text-slate-600">
+                  <div>
+                    <span className="font-medium">Core:</span> {play.play_name}
+                  </div>
+                  {play.p_dir && (
+                    <div>
+                      <span className="font-medium">Direction:</span>{" "}
+                      {play.p_dir}
+                    </div>
+                  )}
+                  {play.protection && (
+                    <div>
+                      <span className="font-medium">Protection:</span>{" "}
+                      {play.protection}
+                    </div>
+                  )}
+                  {play.p_tag1 && (
+                    <div>
+                      <span className="font-medium">Tag 1:</span> {play.p_tag1}
+                    </div>
+                  )}
+                  {play.p_tag2 && (
+                    <div>
+                      <span className="font-medium">Tag 2:</span> {play.p_tag2}
+                    </div>
+                  )}
+                  {play.r_str && (
+                    <div>
+                      <span className="font-medium">Run Strength:</span>{" "}
+                      {play.r_str}
+                    </div>
+                  )}
+                  {play.p_str && (
+                    <div>
+                      <span className="font-medium">Pass Strength:</span>{" "}
+                      {play.p_str}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Situational & Stats */}
+              <div className="space-y-2">
+                <h4 className="text-sm font-semibold text-slate-700 flex items-center">
+                  <Clock className="h-4 w-4 mr-1" />
+                  Usage & Stats
+                </h4>
+                <div className="space-y-1 text-sm text-slate-600">
+                  <div>
+                    <span className="font-medium">Success Rate:</span>{" "}
+                    {play.success_rate || "N/A"}%
+                  </div>
+                  <div>
+                    <span className="font-medium">Times Called:</span>{" "}
+                    {play.times_called}
+                  </div>
+                  <div>
+                    <span className="font-medium">Times Successful:</span>{" "}
+                    {play.times_successful}
+                  </div>
+                  {play.pref_down && (
+                    <div>
+                      <span className="font-medium">Pref Down:</span>{" "}
+                      {play.pref_down}
+                    </div>
+                  )}
+                  {play.pref_dis && (
+                    <div>
+                      <span className="font-medium">Pref Distance:</span>{" "}
+                      {play.pref_dis}
+                    </div>
+                  )}
+                  {play.pref_hash && (
+                    <div>
+                      <span className="font-medium">Pref Hash:</span>{" "}
+                      {play.pref_hash}
+                    </div>
+                  )}
+                  {play.pref_cov && (
+                    <div>
+                      <span className="font-medium">Pref Coverage:</span>{" "}
+                      {play.pref_cov}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Notes & Tags */}
+              {(play.notes || play.tags?.length) && (
+                <div className="md:col-span-3 pt-2 border-t border-slate-100">
+                  {play.notes && (
+                    <div className="mb-2">
+                      <span className="text-sm font-medium text-slate-700">
+                        Notes:
+                      </span>
+                      <p className="text-sm text-slate-600 mt-1">
+                        {play.notes}
+                      </p>
+                    </div>
+                  )}
+                  {play.tags?.length && (
+                    <div>
+                      <span className="text-sm font-medium text-slate-700">
+                        Tags:
+                      </span>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {play.tags.map((tag, index) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
-          </div>
-        )}
-      </div>
-
-      {/* Actions */}
-      <div className="px-4 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
-        <div className="flex space-x-2">
-          <button
-            onClick={() => onEdit?.(play)}
-            className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-          >
-            <Edit className="h-3 w-3 mr-1" />
-            Edit
-          </button>
-          <button
-            onClick={() => onDuplicate?.(play)}
-            className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-          >
-            <Copy className="h-3 w-3 mr-1" />
-            Duplicate
-          </button>
+          )}
         </div>
-
-        <button
-          onClick={handleCreateDiagram}
-          className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-        >
-          <Image className="h-3 w-3 mr-1" />
-          Create Diagram
-        </button>
       </div>
 
       {/* Visual Play Builder Modal */}
-      <VisualPlayBuilder
-        isOpen={showVisualBuilder}
-        onClose={() => setShowVisualBuilder(false)}
-        play={play}
-        onSave={handleSaveDiagram}
-      />
-    </div>
+      {showVisualBuilder && (
+        <VisualPlayBuilder
+          isOpen={showVisualBuilder}
+          play={play}
+          onSave={handleSaveDiagram}
+          onClose={() => setShowVisualBuilder(false)}
+        />
+      )}
+    </>
   );
 };

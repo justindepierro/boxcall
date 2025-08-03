@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { ToggleLeft, ToggleRight } from "lucide-react";
 import type { Play } from "../../types/play";
 import { PlayCard } from "./PlayCard";
 import { getDemoPlays } from "../../data/demoPlays";
@@ -15,6 +16,9 @@ interface PlayGridProps {
 }
 
 export const PlayGrid: React.FC<PlayGridProps> = ({ searchQuery, filters }) => {
+  // Toggle for play name display mode (true = one-word calls, false = full names)
+  const [showOneWordCalls, setShowOneWordCalls] = useState(false);
+
   // Use demo data for now - replace with actual API call later
   const plays: Play[] = getDemoPlays({
     formation: filters.formation,
@@ -51,18 +55,35 @@ export const PlayGrid: React.FC<PlayGridProps> = ({ searchQuery, filters }) => {
           {filteredPlays.length} {filteredPlays.length === 1 ? "Play" : "Plays"}
         </h2>
 
-        {/* View Toggle - Future enhancement */}
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-slate-500">Grid view</span>
+        {/* Play Name Display Toggle */}
+        <div className="flex items-center space-x-3">
+          <span className="text-sm text-slate-600">One-word calls</span>
+          <button
+            onClick={() => setShowOneWordCalls(!showOneWordCalls)}
+            className="inline-flex items-center p-1 rounded-md hover:bg-slate-100 transition-colors"
+            title={
+              showOneWordCalls
+                ? "Switch to full play names"
+                : "Switch to one-word calls"
+            }
+          >
+            {showOneWordCalls ? (
+              <ToggleRight className="h-5 w-5 text-blue-600" />
+            ) : (
+              <ToggleLeft className="h-5 w-5 text-slate-400" />
+            )}
+          </button>
+          <span className="text-sm text-slate-600">Full names</span>
         </div>
       </div>
 
-      {/* Play Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {/* Play Grid - Changed to single column vertical layout */}
+      <div className="space-y-4">
         {filteredPlays.map((play) => (
           <PlayCard
             key={play.id}
             play={play}
+            showOneWordCalls={showOneWordCalls}
             onEdit={(play: Play) => console.log("Edit play:", play.play_name)}
             onDuplicate={(play: Play) =>
               console.log("Duplicate play:", play.play_name)

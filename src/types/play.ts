@@ -42,7 +42,7 @@ export interface Play {
 }
 
 // Play type enumeration matching database constraint
-export type PlayType = "Pass" | "Run" | "RPO";
+export type PlayType = "Pass" | "Run" | "RPO" | "Play Action";
 
 // Formation types commonly used in football
 export interface FormationOption {

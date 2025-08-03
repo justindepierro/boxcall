@@ -1,25 +1,42 @@
-# 🏈 BoxCall ## ⚡ **CURRENT STATUS: PLAYBOOK FOUNDATION COMPLETE**
-
-✅ **Latest**: **Professional Playbook page with Builder Mode and CSV Import**
-🎯 **Achieved**: Step-by-step play creation, visual play cards, coaching workflows
-🔧 **Active**: Phase 1 complete - ready for visual play builder integrationfessional Football Team Management
+# 🏈 BoxCall - Professional Football Team Management
 
 > **Elite football coaching platform** with intelligent scheduling, advanced team management, comprehensive design system, and enterprise-grade development tools.
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.3.1-61dafb)](https://reactjs.org/)
+[![Fabric.js](https://img.shields.io/badge/Fabric.js-6.7.1-orange)](https://fabricjs.com/)
 [![Storybook](https://img.shields.io/badge/Storybook-9.1.0-ff4785)](https://storybook.js.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.7-38b2ac)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-7.0.6-646cff)](https://vitejs.dev/)
-[![Web Vitals](https://img.shields.io/badge/Web_Vitals-5.1.0-success)](https://github.com/GoogleChrome/web-vitals)
-[![Husky](https://img.shields.io/badge/Husky-9.1.7-dog)](https://typicode.github.io/husky/)
-[![Prettier](https://img.shields.io/badge/Prettier-3.4.2-ff69b4)](https://prettier.io/)
 
-## � **CURRENT STATUS: PRODUCTION-READY WORKSPACE**
+## ⚡ **CURRENT STATUS: PHASE 2 COMPLETE + ADVANCED PLAY MANAGEMENT**
 
-✅ **Latest**: **Complete workspace optimization with industry-leading development practices**
-🎯 **Achieved**: Performance monitoring, automated quality gates, enterprise dev tools
-🔧 **Active**: Trophy Shelf UI refinements and dashboard component integration
+✅ **Latest**: **Enhanced Play Cards with Custom Name Generation & Professional Display**
+🎯 **Achieved**: MonoCode fonts, expand/collapse functionality, intelligent play naming system
+🔧 **Active**: Phase 3 preparation - advanced coaching features and integrations
+
+### 🏆 **Completed Phases**
+
+- **Phase 1** ✅ **Playbook Foundation**: Complete playbook management with step-by-step builder
+- **Phase 2** ✅ **Visual Play Builder**: Professional drawing tools with Fabric.js integration
+- **Phase 2.5** ✅ **Advanced Play Cards**: Custom name generation, expandable UI, MonoCode aesthetics
+
+### 🎨 **Professional Visual Features**
+
+- **NFHS-Compliant Field Canvas**: Accurate 53⅓ yard field dimensions
+- **6 Background Modes**: Football field, red zone, blank, engineering paper styles
+- **Professional Drawing Tools**: Route styles, player positioning, annotations
+- **Interactive Canvas**: Zoom controls (0.5x-3.0x), drag-and-drop players
+- **Coaching-Grade Diagrams**: Based on real coaching standards
+
+### 🏈 **Advanced Play Management**
+
+- **Custom Play Name Generation**: Intelligent concatenation from formation parts
+- **One-Word Call System**: Toggle between full names and coaching calls
+- **MonoCode Typography**: Technical, coaching-friendly font design
+- **Expandable Play Cards**: Skinny mode for scanning, detailed view for analysis
+- **Color-Coded Play Types**: Visual identification (Pass, Run, RPO, Play Action)
+- **Comprehensive Stats Display**: Success rates, usage tracking, situational data
 
 ## 🚀 Quick Start
 
@@ -83,15 +100,17 @@ npm run analyze
 - **Tailwind CSS integration** with custom BoxCall design tokens
 - **Performance monitoring** with real-time Web Vitals tracking
 
-### 🏈 **Playbook Management** (NEW)
+### 🏈 **Playbook Management** (ENHANCED)
 
 - **Builder Mode**: Step-by-step play creation wizard for coaches
 - **CSV Import**: Bulk import existing playbooks and data
-- **Visual Play Cards**: Rich play previews with formation and success data
+- **Advanced Play Cards**: MonoCode typography with expand/collapse functionality
+- **Custom Play Naming**: Intelligent concatenation from formation components
 - **Smart Filtering**: Search by formation, down, distance, play type, and tags
-- **One-Word Calls**: Audible system for game-time communication
-- **Play Diagram Integration**: Scaffold for future visual play editor
-- **Professional Coaching UX**: Designed for actual coaching workflows
+- **One-Word Call Toggle**: Switch between full names and coaching audibles
+- **Professional Visual Builder**: NFHS-compliant field with drawing tools
+- **Color-Coded Organization**: Visual play type identification and confidence tracking
+- **Comprehensive Stats**: Success rates, usage tracking, and situational preferences
 
 ### 🔍 **Performance & Monitoring**
 
@@ -129,11 +148,15 @@ npm run analyze
 
 ### 🎉 **Recently Completed**
 
+- **✅ Enhanced Play Cards** with MonoCode fonts and expand/collapse functionality
+- **✅ Custom Play Name Generation** with intelligent field concatenation
+- **✅ One-Word Call Toggle System** for coaching-friendly display modes
+- **✅ Professional Visual Play Builder** with NFHS-compliant field canvas
+- **✅ Advanced Typography** with coaching-grade font design
+- **✅ Comprehensive Play Statistics** with color-coded confidence tracking
 - **✅ Complete workspace optimization** with enterprise-grade development tools
 - **✅ Core Web Vitals monitoring** with real-time performance tracking
 - **✅ Automated quality gates** with pre-commit hooks and conventional commits
-- **✅ Performance monitoring dashboard** component implementation
-- **✅ Bundle analysis integration** with Vite tooling
 - **✅ Development environment automation** with health checks and setup scripts
 - **✅ VS Code workspace optimization** with recommended extensions and settings
 - **✅ Git workflow enhancement** with Husky, lint-staged, and commitlint
