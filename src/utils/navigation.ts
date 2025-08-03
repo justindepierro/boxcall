@@ -137,7 +137,7 @@ export const getNavigationItems = (
       label: "Playground",
       icon: "wrench",
       href: "/playground",
-      roles: ["admin"],
+      // roles: ["admin", "coach"], // Temporarily removed for debugging
       badge: "Dev",
       description: "Test new features and components",
     });

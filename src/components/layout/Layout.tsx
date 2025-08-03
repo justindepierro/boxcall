@@ -40,6 +40,19 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const sidebarItems = toSidebarItems(navigationItems, currentRole);
   const roleInfo = getRoleDisplayInfo(currentRole);
 
+  // Debug logging for playground visibility
+  console.log("Layout Debug:", {
+    currentRole,
+    profileRole: profile?.role,
+    effectiveUserRole,
+    isDevMode,
+    devMode,
+    navigationItemsCount: navigationItems.length,
+    sidebarItemsCount: sidebarItems.length,
+    hasPlayground: navigationItems.some(item => item.id === "playground"),
+    playgroundInSidebar: sidebarItems.some(item => item.id === "playground")
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Navigation />
