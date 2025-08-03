@@ -130,16 +130,14 @@ export const getNavigationItems = (
   }
 
   // Playground - Developers and Super Admins only
-  // Temporarily more permissive for development
-  if (userRole === "admin" || userRole === null || userRole === "coach") {
+  // Handle dev mode roles that include "super_admin"
+  if (userRole === "admin" || (userRole && userRole.includes("super_admin")) || userRole === null || userRole === "coach") {
     items.push({
-      id: "playground",
-      label: "Playground",
-      icon: "wrench",
-      href: "/playground",
-      // roles: ["admin", "coach"], // Temporarily removed for debugging
-      badge: "Dev",
-      description: "Test new features and components",
+      id: "smart-icon-playground",
+      label: "Icon Playground", 
+      icon: "search",
+      href: "/playground/smart-icon-system",
+      description: "Test and explore the Smart Icon System",
     });
   }
 

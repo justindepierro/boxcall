@@ -20,7 +20,7 @@ interface PersonalTrophyShelfProps {
  */
 export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   userId,
-  userRole,
+  userRole: _userRole,
 }) => {
   const [achievementScrollIndex, setAchievementScrollIndex] = useState(0);
   

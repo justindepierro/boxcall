@@ -3,7 +3,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
 import { Typography } from "../../components/design-system";
 import { Button, Card } from "../../components/ui";
-import { Icon } from "../../components/ui/Icon/Icon";
+import { Icon, type IconName } from "../../components/ui/Icon/Icon";
 import type { CalendarEvent } from "../../services/calendarService";
 import { ScriptSelectorModal } from "./ScriptSelectorModal";
 import { PracticePDFExportDialog } from "./PracticePDFExportDialog";
@@ -1115,7 +1115,7 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
                 </Typography>
                 {isOvertime && (
                   <Typography variant="body-sm" className="text-red-600 flex items-center">
-                    <Icon name="warning" size="xs" className="mr-1" />
+                    <Icon name="alert-triangle" size="xs" className="mr-1" />
                     {totalDuration - scheduledDuration} minutes overtime
                   </Typography>
                 )}
@@ -1223,7 +1223,7 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
                         }`}
                       >
                         <div className="mb-1">
-                          <Icon name={category.icon as any} size="lg" />
+                          <Icon name={category.icon as IconName} size="lg" />
                         </div>
                         <div className="text-xs font-medium">{category.label}</div>
                       </button>
@@ -2657,7 +2657,7 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
             <div>
               {isOvertime && (
                 <Typography variant="body-sm" className="text-red-600">
-                  <Icon name="warning" size="xs" className="mr-1" />
+                  <Icon name="alert-triangle" size="xs" className="mr-1" />
                   Warning: Practice is {totalDuration - scheduledDuration}{" "}
                   minutes over scheduled time
                 </Typography>
@@ -2865,7 +2865,7 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
             <div className="p-6">
               <div className="flex items-center mb-4">
                 <div className="mr-3">
-                  <Icon name="warning" size="xl" color="warning" />
+                  <Icon name="alert-triangle" size="xl" color="warning" />
                 </div>
                 <Typography variant="headline-md" className="text-red-600">
                   Practice Overtime Warning

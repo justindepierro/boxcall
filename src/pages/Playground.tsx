@@ -6,6 +6,12 @@ import { Icon, SmartIconSystem } from '../components/ui/Icon/Icon';
 import type { IconName } from '../components/ui/Icon/Icon';
 import { testSmartIconSystem, quickSmartIconTest } from '../tests/smartIconSystem.test';
 
+interface TestResults {
+  passed: number;
+  total: number;
+  percentage: number;
+}
+
 /**
  * Developer Playground - Super Admin Only
  * 
@@ -13,7 +19,7 @@ import { testSmartIconSystem, quickSmartIconTest } from '../tests/smartIconSyste
  * Only accessible by users with admin role
  */
 export const Playground: React.FC = () => {
-  const [testResults, setTestResults] = useState<any>(null);
+  const [testResults, setTestResults] = useState<TestResults | null>(null);
   const [quickTestOutput, setQuickTestOutput] = useState<string[]>([]);
 
   const runSmartIconTests = () => {

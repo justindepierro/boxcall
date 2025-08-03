@@ -47,7 +47,7 @@ export const testSmartIconSystem = () => {
   ];
 
   let passed = 0;
-  let total = testCases.length;
+  const total = testCases.length;
 
   testCases.forEach(({ text, expected }, index) => {
     const result = SmartIconSystem.getSmartIcon(text);

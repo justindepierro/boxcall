@@ -2,7 +2,7 @@ import React from "react";
 import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
-import { Icon, SmartIconSystem } from "../ui/Icon/Icon";
+import { Icon, SmartIconSystem, type IconName } from "../ui/Icon/Icon";
 
 interface PersonalTrophyShelfProps {
   userId: string;
@@ -55,18 +55,18 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   ];
 
   // Helper function to render consistent icons using SmartIconSystem
-  const renderAchievementIcon = (iconData: any, name?: string, description?: string) => {
+  const renderAchievementIcon = (iconData: React.ReactElement | string | undefined, name?: string, description?: string) => {
     // If it's already a React element (icon), return it
     if (React.isValidElement(iconData)) {
       return iconData;
     }
     
     // Use SmartIconSystem for intelligent icon selection
-    let iconName = 'star'; // fallback
+    let iconName: IconName = 'star'; // fallback
     
     if (typeof iconData === 'string') {
       // Try to use the provided icon name directly first
-      const iconMap: { [key: string]: string } = {
+      const iconMap: { [key: string]: IconName } = {
         'target': 'target',
         'crown': 'crown',
         'check': 'check',
@@ -75,14 +75,14 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         'calendar': 'calendar'
       };
       
-      iconName = iconMap[iconData] || iconData;
+      iconName = iconMap[iconData] || (iconData as IconName);
     } else {
       // Use SmartIconSystem to analyze content and pick best icon
       const content = `${name || ''} ${description || ''}`;
       iconName = SmartIconSystem.getContextualIcon(content, 'achievement', 'trophy');
     }
     
-    return <Icon name={iconName as any} size={16} className="text-gray-600" />;
+    return <Icon name={iconName} size={16} className="text-gray-600" />;
   };
 
   // Show loading state

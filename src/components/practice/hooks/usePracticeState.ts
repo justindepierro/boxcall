@@ -371,14 +371,14 @@ export const usePracticeState = (event: CalendarEvent) => {
   const handleRemoveBlock = useCallback((id: string) => {
     setPracticeBlocks(prevBlocks => {
       const updatedBlocks = prevBlocks.filter(block => block.id !== id);
-      const blocksWithTimes = recalculateBlockTimes(updatedBlocks, event.start);
+      const blocksWithTimes = memoizedRecalculateBlockTimes(updatedBlocks);
       
       // Save to localStorage
       savePracticeToStorage(blocksWithTimes, event.id || '');
       
       return blocksWithTimes;
     });
-  }, [event.id, event.start, recalculateBlockTimes]);
+  }, [event.id, memoizedRecalculateBlockTimes]);
 
   const handleAddGroup = useCallback((blockId: string) => {
     // Open the Add Group modal for the specified block
@@ -413,14 +413,14 @@ export const usePracticeState = (event: CalendarEvent) => {
         return block;
       });
       
-      const blocksWithTimes = recalculateBlockTimes(updatedBlocks, event.start);
+      const blocksWithTimes = memoizedRecalculateBlockTimes(updatedBlocks);
       
       // Save to localStorage
       savePracticeToStorage(blocksWithTimes, event.id || '');
       
       return blocksWithTimes;
     });
-  }, [event.id, event.start, recalculateBlockTimes]);
+  }, [event.id, memoizedRecalculateBlockTimes]);
 
   const handleAddScriptToBlock = useCallback((blockId: string) => {
     // Set the selected block and open script selector
@@ -455,14 +455,14 @@ export const usePracticeState = (event: CalendarEvent) => {
         return block;
       });
       
-      const blocksWithTimes = recalculateBlockTimes(updatedBlocks, event.start);
+      const blocksWithTimes = memoizedRecalculateBlockTimes(updatedBlocks);
       
       // Save to localStorage
       savePracticeToStorage(blocksWithTimes, event.id || '');
       
       return blocksWithTimes;
     });
-  }, [event.id, event.start, recalculateBlockTimes]);
+  }, [event.id, memoizedRecalculateBlockTimes]);
 
   const handleAutoAssignCoaches = useCallback(() => {
     setPracticeBlocks(prevBlocks => {
@@ -495,14 +495,14 @@ export const usePracticeState = (event: CalendarEvent) => {
         };
       });
       
-      const blocksWithTimes = recalculateBlockTimes(updatedBlocks, event.start);
+      const blocksWithTimes = memoizedRecalculateBlockTimes(updatedBlocks);
       
       // Save to localStorage
       savePracticeToStorage(blocksWithTimes, event.id || '');
       
       return blocksWithTimes;
     });
-  }, [event.id, event.start, recalculateBlockTimes]);
+  }, [event.id, memoizedRecalculateBlockTimes]);
 
   // Script assignment functions
   const assignScriptToBlock = useCallback((blockId: string, script: { id: string; title: string }) => {
@@ -518,14 +518,14 @@ export const usePracticeState = (event: CalendarEvent) => {
         return block;
       });
       
-      const blocksWithTimes = recalculateBlockTimes(updatedBlocks, event.start);
+      const blocksWithTimes = memoizedRecalculateBlockTimes(updatedBlocks);
       
       // Save to localStorage
       savePracticeToStorage(blocksWithTimes, event.id || '');
       
       return blocksWithTimes;
     });
-  }, [event.id, event.start, recalculateBlockTimes]);
+  }, [event.id, memoizedRecalculateBlockTimes]);
 
   const assignScriptToGroup = useCallback((blockId: string, groupId: string, script: { id: string; title: string }) => {
     setPracticeBlocks(prevBlocks => {
@@ -548,14 +548,14 @@ export const usePracticeState = (event: CalendarEvent) => {
         return block;
       });
       
-      const blocksWithTimes = recalculateBlockTimes(updatedBlocks, event.start);
+      const blocksWithTimes = memoizedRecalculateBlockTimes(updatedBlocks);
       
       // Save to localStorage
       savePracticeToStorage(blocksWithTimes, event.id || '');
       
       return blocksWithTimes;
     });
-  }, [event.id, event.start, recalculateBlockTimes]);
+  }, [event.id, memoizedRecalculateBlockTimes]);
 
   return {
     // Core state

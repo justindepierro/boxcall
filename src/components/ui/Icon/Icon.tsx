@@ -200,6 +200,7 @@ const iconMap = {
   'alert': AlertCircle,
   'alert-triangle': AlertTriangle,
   'alert-octagon': AlertOctagon,
+  'warning': AlertTriangle,
   'info': Info,
   'info-circle': InfoIcon,
   'help': HelpCircle,

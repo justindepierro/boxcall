@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";
-import { Card, Button } from "../ui";
+import { Card } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 
 interface PersonalTrophyShelfProps {

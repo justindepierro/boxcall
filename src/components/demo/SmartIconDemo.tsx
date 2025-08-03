@@ -150,7 +150,7 @@ export const SmartIconDemo: React.FC = () => {
                   <Icon 
                     name={SmartIconSystem.getContextualIcon(
                       inputText || 'team meeting', 
-                      context as any
+                      context as 'feed' | 'calendar' | 'achievement' | 'message' | 'team' | 'general'
                     )} 
                     size={16} 
                     className="text-gray-600" 
@@ -158,7 +158,7 @@ export const SmartIconDemo: React.FC = () => {
                   <Typography variant="caption" color="muted">
                     {SmartIconSystem.getContextualIcon(
                       inputText || 'team meeting', 
-                      context as any
+                      context as 'feed' | 'calendar' | 'achievement' | 'message' | 'team' | 'general'
                     )}
                   </Typography>
                 </div>

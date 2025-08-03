@@ -35,7 +35,7 @@ import React from "react";
 import { Typography } from "../../design-system";
 import { Button, Card } from "../../ui";
 import { getCategoryColor } from "../utils";
-import { Icon } from "../../ui/Icon/Icon";
+import { Icon, type IconName } from "../../ui/Icon/Icon";
 import type { 
   PracticeBlock, 
   TimelineAllocation as TimelineAllocationType, 
@@ -136,7 +136,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
               }`}
             >
               <div className="mb-1">
-                <Icon name={category.icon as any} size="lg" color="current" />
+                <Icon name={category.icon as IconName} size="lg" color="current" />
               </div>
               <div className="text-xs font-medium">{category.label}</div>
             </button>
