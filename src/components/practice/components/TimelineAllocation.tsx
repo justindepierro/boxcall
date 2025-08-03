@@ -1,0 +1,390 @@
+/**
+ * TimelineAllocation Component (Scaffold Mode)
+ * 
+ * Interactive timeline interface for practice time allocation with:
+ * - Category selector buttons
+ * - Visual timeline with clickable blocks
+ * - Duration slider for block resizing
+ * - Real-time allocation summary
+ * - Save/Cancel functionality
+ * 
+ * @component
+ * @example
+ * <TimelineAllocation
+ *   scheduledDuration={120}
+ *   timelineAllocation={timelineAllocation}
+ *   selectedCategory={selectedCategory}
+ *   selectedBlock={selectedBlock}
+ *   sliderValue={sliderValue}
+ *   isSelecting={isSelecting}
+ *   selectionStart={selectionStart}
+ *   onCategorySelect={setSelectedCategory}
+ *   onTimelineClick={handleTimelineClick}
+ *   onBlockClick={handleBlockClick}
+ *   onSliderChange={setSliderValue}
+ *   onUpdateBlockDuration={updateSelectedBlockDuration}
+ *   onClearSelected={() => setSelectedBlock(null)}
+ *   onClearAll={() => setTimelineAllocation({})}
+ *   onRemoveEmpty={removeEmptyTime}
+ *   onCancel={handleCancelScaffold}
+ *   onSave={saveTimeAllocation}
+ * />
+ */
+
+import React from "react";
+import { Typography } from "../../design-system";
+import { Button, Card } from "../../ui";
+import { getCategoryColor } from "../utils";
+import type { 
+  PracticeBlock, 
+  TimelineAllocation as TimelineAllocationType, 
+  SelectedBlock 
+} from "../types";
+
+interface TimelineAllocationProps {
+  scheduledDuration: number;
+  timelineAllocation: TimelineAllocationType;
+  selectedCategory: PracticeBlock["category"] | null;
+  selectedBlock: SelectedBlock | null;
+  sliderValue: number;
+  isSelecting: boolean;
+  selectionStart: number | null;
+  onCategorySelect: (category: PracticeBlock["category"]) => void;
+  onTimelineClick: (minute: number) => void;
+  onBlockClick: (minute: number) => void;
+  onSliderChange: (value: number) => void;
+  onUpdateBlockDuration: (duration: number) => void;
+  onClearSelected: () => void;
+  onClearAll: () => void;
+  onRemoveEmpty: () => void;
+  onCancel: () => void;
+  onSave: () => void;
+}
+
+export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
+  scheduledDuration,
+  timelineAllocation,
+  selectedCategory,
+  selectedBlock,
+  sliderValue,
+  isSelecting,
+  selectionStart,
+  onCategorySelect,
+  onTimelineClick,
+  onBlockClick,
+  onSliderChange,
+  onUpdateBlockDuration,
+  onClearSelected,
+  onClearAll,
+  onRemoveEmpty,
+  onCancel,
+  onSave,
+}) => {
+  
+  const updateBlockDuration = (category: string, _oldDuration: number, newDuration: number) => {
+    // This function would be passed down from parent or implemented here
+    // Implementation details would depend on the parent component's state management
+    console.log('updateBlockDuration', category, newDuration);
+  };
+
+  return (
+    <div>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <Typography variant="headline-md">⏱️ Allocate Practice Time</Typography>
+          <Typography variant="body-sm" color="muted" className="mt-1">
+            Select a category below, then click and drag on the timeline to allocate time blocks
+          </Typography>
+        </div>
+        <div className="flex space-x-2">
+          <Button variant="outline" size="sm" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button variant="primary" size="sm" onClick={onSave}>
+            Save Time Allocation
+          </Button>
+        </div>
+      </div>
+
+      {/* Category Selector */}
+      <Card className="p-4 mb-4">
+        <Typography variant="body-md" className="font-medium mb-3">
+          Select Category to Allocate:
+        </Typography>
+        <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
+          {[
+            { key: "meeting", label: "Meeting", emoji: "📋" },
+            { key: "weight-room", label: "Weight Room", emoji: "🏋️" },
+            { key: "transition", label: "Transition", emoji: "🚶" },
+            { key: "offense", label: "Offense", emoji: "🏈" },
+            { key: "defense", label: "Defense", emoji: "🛡️" },
+            { key: "special-teams", label: "Special Teams", emoji: "⚡" },
+            { key: "break", label: "Break", emoji: "💧" }
+          ].map(category => (
+            <button
+              key={category.key}
+              onClick={() => onCategorySelect(category.key as PracticeBlock["category"])}
+              className={`p-3 rounded-lg border-2 transition-all text-center ${
+                selectedCategory === category.key
+                  ? `border-blue-500 ${getCategoryColor(category.key as PracticeBlock["category"])} shadow-md`
+                  : `border-gray-200 ${getCategoryColor(category.key as PracticeBlock["category"])} hover:border-gray-300`
+              }`}
+            >
+              <div className="text-lg mb-1">{category.emoji}</div>
+              <div className="text-xs font-medium">{category.label}</div>
+            </button>
+          ))}
+        </div>
+        {selectedCategory && (
+          <div className="mt-3 p-2 bg-blue-50 rounded-lg">
+            <Typography variant="body-sm" className="text-blue-800">
+              🎯 Selected: <strong>{selectedCategory.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}</strong>
+              {isSelecting && " - Click to finish selection"}
+              {!isSelecting && " - Click timeline to add 5-minute blocks (auto-aligned)"}
+            </Typography>
+            <Typography variant="body-xs" className="text-blue-600 mt-1">
+              💡 Click empty areas to add 5-minute blocks. Click existing blocks to resize with slider.
+            </Typography>
+          </div>
+        )}
+      </Card>
+
+      {/* Timeline Visualization */}
+      <Card className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <Typography variant="body-md" className="font-medium">
+            Practice Timeline ({scheduledDuration} minutes)
+          </Typography>
+          <div className="flex space-x-2">
+            <button
+              onClick={onRemoveEmpty}
+              className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200"
+            >
+              🔄 Remove Empty Time
+            </button>
+            <button
+              onClick={onClearAll}
+              className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200"
+            >
+              🗑️ Clear All
+            </button>
+          </div>
+        </div>
+        
+        <div className="space-y-2">
+          {/* Time markers - every 5 minutes */}
+          <div className="flex text-xs text-gray-500 mb-2">
+            {Array.from({ length: Math.ceil(scheduledDuration / 5) }, (_, i) => (
+              <div key={i} className="flex-1 text-center border-r border-gray-200 last:border-r-0" style={{ flexBasis: '5%' }}>
+                {i * 5}min
+              </div>
+            ))}
+          </div>
+          
+          {/* Timeline blocks */}
+          <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+            {Array.from({ length: scheduledDuration }, (_, minute) => {
+              const allocation = timelineAllocation[minute];
+              const isSelected = isSelecting && selectionStart !== null && 
+                Math.min(selectionStart, minute) <= minute && 
+                minute <= Math.max(selectionStart, minute);
+              
+              // Add visual separators every 5 minutes
+              const is5MinuteBoundary = minute % 5 === 0 && minute > 0;
+              
+              return (
+                <button
+                  key={minute}
+                  onClick={() => {
+                    if (allocation) {
+                      // Block exists - select it for editing
+                      onBlockClick(minute);
+                    } else {
+                      // No block - add new block
+                      onTimelineClick(minute);
+                    }
+                  }}
+                  className={`flex-1 h-12 border-r border-gray-200 transition-all hover:scale-105 relative ${
+                    selectedBlock && minute >= selectedBlock.start && minute < selectedBlock.start + selectedBlock.duration
+                      ? 'ring-2 ring-blue-500 bg-blue-100 border-t-4 border-t-blue-600'
+                      : allocation 
+                      ? getCategoryColor(allocation.category).replace('text-', 'border-t-4 border-t-').split(' ')[0] + ' ' + getCategoryColor(allocation.category)
+                      : isSelected
+                      ? 'bg-blue-200 border-t-4 border-t-blue-500'
+                      : 'bg-gray-50 hover:bg-gray-100'
+                  } ${is5MinuteBoundary ? 'border-l-2 border-l-gray-400' : ''}`}
+                  style={{ minWidth: '3px' }}
+                  title={`Minute ${minute}${allocation ? ` - ${allocation.category} (click to resize)` : ' (click to add block)'}`}
+                >
+                  {minute % 5 === 0 && minute > 0 && (
+                    <div className="absolute -top-4 left-0 text-xs text-gray-600 font-medium">
+                      {minute}
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+          
+          {/* Expandable Slider for Selected Block */}
+          {selectedBlock && (
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <Typography variant="body-md" className="font-medium text-blue-800">
+                    🎯 Resize Block: {selectedBlock.category.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                  </Typography>
+                  <Typography variant="body-sm" className="text-blue-600">
+                    Block starts at minute {selectedBlock.start}, currently {selectedBlock.duration} minutes
+                  </Typography>
+                  <Typography variant="body-xs" className="text-blue-500 mt-1">
+                    💡 Press Space/Enter to save, Esc to cancel
+                  </Typography>
+                </div>
+                <button
+                  onClick={onClearSelected}
+                  className="text-blue-600 hover:text-blue-800 p-1"
+                >
+                  ✕
+                </button>
+              </div>
+              
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-blue-700 mb-2">
+                    Duration: {sliderValue} minutes
+                  </label>
+                  <input
+                    type="range"
+                    min="1"
+                    max={Math.min(50, scheduledDuration - selectedBlock.start)}
+                    value={sliderValue}
+                    onChange={(e) => {
+                      const newValue = parseInt(e.target.value);
+                      onSliderChange(newValue);
+                      onUpdateBlockDuration(newValue);
+                    }}
+                    className="w-full h-3 bg-blue-200 rounded-lg appearance-none cursor-pointer slider"
+                    style={{
+                      background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(sliderValue / Math.min(50, scheduledDuration - selectedBlock.start)) * 100}%, #e5e7eb ${(sliderValue / Math.min(50, scheduledDuration - selectedBlock.start)) * 100}%, #e5e7eb 100%)`
+                    }}
+                  />
+                  <div className="flex justify-between text-xs text-blue-600 mt-1">
+                    <span>1 min</span>
+                    <span>{Math.min(50, scheduledDuration - selectedBlock.start)} min max</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Current Allocation Summary */}
+          <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-between mb-2">
+              <Typography variant="body-sm" className="font-medium text-gray-700">
+                Current Allocation (Click time to edit):
+              </Typography>
+              <Typography variant="body-xs" color="muted">
+                💡 Click minutes to adjust, press Enter to save
+              </Typography>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {Object.entries(timelineAllocation).length > 0 && Object.entries(
+                Object.values(timelineAllocation).reduce((acc: Record<string, { count: number; blocks: { start: number; duration: number }[] }>, allocation: any) => {
+                  const key = allocation.category;
+                  if (!acc[key]) {
+                    acc[key] = { count: 0, blocks: [] };
+                  }
+                  acc[key].count += 1;
+                  
+                  // Group consecutive minutes into blocks
+                  const minutes = Object.entries(timelineAllocation)
+                    .filter(([_, a]: [string, any]) => a.category === allocation.category)
+                    .map(([minute]) => parseInt(minute))
+                    .sort((a, b) => a - b);
+                  
+                  // Find block boundaries
+                  const blocks: { start: number; duration: number }[] = [];
+                  let currentBlock: { start: number; duration: number } | null = null;
+                  
+                  minutes.forEach(minute => {
+                    if (!currentBlock || minute !== currentBlock.start + currentBlock.duration) {
+                      if (currentBlock) blocks.push(currentBlock);
+                      currentBlock = { start: minute, duration: 1 };
+                    } else {
+                      currentBlock.duration++;
+                    }
+                  });
+                  if (currentBlock) blocks.push(currentBlock);
+                  
+                  acc[key].blocks = blocks;
+                  return acc;
+                }, {})
+              ).map(([category, data]: [string, any]) => 
+                data.blocks.map((block: any, blockIndex: number) => (
+                  <div key={`${category}-${blockIndex}`} className={`px-3 py-2 rounded-lg border-2 ${getCategoryColor(category as PracticeBlock["category"])} border-opacity-50`}>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-medium capitalize">
+                        {category.replace('-', ' ')}
+                        {data.blocks.length > 1 && ` #${blockIndex + 1}`}
+                      </span>
+                      <div className="flex items-center space-x-1">
+                        <input
+                          type="number"
+                          value={block.duration}
+                          onChange={(e) => {
+                            const newDuration = parseInt(e.target.value) || 0;
+                            updateBlockDuration(category, block.duration, newDuration);
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.currentTarget.blur();
+                            }
+                          }}
+                          className="w-12 px-1 py-0.5 text-xs border border-gray-300 rounded text-center"
+                          min="1"
+                          max={scheduledDuration}
+                        />
+                        <span className="text-xs">min</span>
+                      </div>
+                      <span className="text-xs text-gray-600">
+                        ({block.start}-{block.start + block.duration - 1})
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ).flat()}
+              
+              {/* Add new block button */}
+              {selectedCategory && (
+                <button
+                  onClick={() => {
+                    // Find next available spot for new block
+                    let nextSpot = 0;
+                    while (timelineAllocation[nextSpot] && nextSpot < scheduledDuration) {
+                      nextSpot++;
+                    }
+                    
+                    // This would trigger a callback to add the block in parent
+                    console.log('Add new block at', nextSpot);
+                  }}
+                  className={`px-3 py-2 rounded-lg border-2 border-dashed transition-colors ${
+                    getCategoryColor(selectedCategory).replace('bg-', 'border-').replace('text-', 'text-')
+                  } hover:bg-opacity-20`}
+                >
+                  <div className="flex items-center space-x-1">
+                    <span className="text-lg">+</span>
+                    <span className="text-xs font-medium">
+                      Add {selectedCategory.replace('-', ' ')}
+                    </span>
+                  </div>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};

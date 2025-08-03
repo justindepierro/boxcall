@@ -5,6 +5,15 @@ import { Typography } from "../../components/design-system";
 import { Button, Card } from "../../components/ui";
 import type { CalendarEvent } from "../../services/calendarService";
 import { ScriptSelectorModal } from "./ScriptSelectorModal";
+import { 
+  PracticeHeader, 
+  TimeSummary, 
+  TimelineAllocation, 
+  PracticeBlocksList,
+  AddBlockModal,
+  AddGroupModal,
+  EditGroupModal 
+} from "./components";
 
 interface PracticeGroup {
   id: string;
