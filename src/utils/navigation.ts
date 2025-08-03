@@ -130,7 +130,8 @@ export const getNavigationItems = (
   }
 
   // Playground - Developers and Super Admins only
-  if (userRole === "admin") {
+  // Temporarily more permissive for development
+  if (userRole === "admin" || userRole === null || userRole === "coach") {
     items.push({
       id: "playground",
       label: "Playground",

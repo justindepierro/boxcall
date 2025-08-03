@@ -122,7 +122,7 @@ import {
   Sparkles, Rainbow, Rocket, Anchor, Tent, Backpack,
   Glasses, Magnet as Attraction, Crown as Premium,
   Star as Favorite, Flame as Fire, Snowflake, Droplet, Waves, Mountain,
-  Settings as Cog,
+  Handshake, Settings as Cog,
 } from 'lucide-react';
 
 // Icon name mapping for easy usage - Expanded to 100+ icons
@@ -480,6 +480,7 @@ const iconMap = {
   'droplet': Droplet,
   'waves': Waves,
   'mountain': Mountain,
+  'handshake': Handshake,
   
   // BoxCall Specific
   'boxcall': Target, // Use target as BoxCall brand icon
