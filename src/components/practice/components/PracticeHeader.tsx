@@ -33,6 +33,7 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
   onUserRoleChange: _onUserRoleChange,
   onTimeAllocationModeToggle,
   onScaffoldModeToggle,
+  onPDFExport,
   onClose,
 }) => {
   return (
@@ -91,13 +92,24 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
           )}
         </div>
       </div>
-      <button
-        onClick={onClose}
-        className="text-gray-400 hover:text-gray-600 transition-colors text-xl"
-        aria-label="Close practice planner"
-      >
-        ✕
-      </button>
+      <div className="flex items-center space-x-3">
+        {/* PDF Export Button */}
+        <button
+          onClick={onPDFExport}
+          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors shadow-lg"
+        >
+          📄 Print Practice to PDF
+        </button>
+        
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="text-gray-400 hover:text-gray-600 transition-colors text-xl"
+          aria-label="Close practice planner"
+        >
+          ✕
+        </button>
+      </div>
     </div>
   );
 };

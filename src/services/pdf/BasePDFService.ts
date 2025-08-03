@@ -72,10 +72,15 @@ export abstract class BasePDFService {
   }
 
   /**
-   * Validate export options
+   * Validate export options and set defaults
    */
   protected validateOptions(options: PDFExportOptions): void {
-    if (!options.format || !['A4', 'Letter', 'Legal'].includes(options.format)) {
+    // Set default format if not provided
+    if (!options.format) {
+      options.format = 'Letter';
+    }
+    
+    if (!['A4', 'Letter', 'Legal'].includes(options.format)) {
       throw new PDFError(
         'Invalid page format',
         'VALIDATION_ERROR',
@@ -83,7 +88,12 @@ export abstract class BasePDFService {
       );
     }
 
-    if (!options.orientation || !['portrait', 'landscape'].includes(options.orientation)) {
+    // Set default orientation if not provided
+    if (!options.orientation) {
+      options.orientation = 'portrait';
+    }
+    
+    if (!['portrait', 'landscape'].includes(options.orientation)) {
       throw new PDFError(
         'Invalid page orientation',
         'VALIDATION_ERROR',

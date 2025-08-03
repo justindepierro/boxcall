@@ -12,7 +12,8 @@ import {
   recalculateBlockTimes, 
   calculateScheduledDuration, 
   getSamplePracticeBlocks,
-  loadPracticeFromStorage
+  loadPracticeFromStorage,
+  savePracticeToStorage
 } from '../utils';
 import type { CalendarEvent } from '../../../services/calendarService';
 
@@ -360,16 +361,36 @@ export const usePracticeState = (event: CalendarEvent) => {
     console.log('handleAddBlock - TODO: implement');
   }, []);
 
-  const handleEditBlock = useCallback(() => {
-    console.log('handleEditBlock - TODO: implement');
+  const handleEditBlock = useCallback((block: PracticeBlock) => {
+    // This opens a modal or form to edit the block
+    // For now, we'll just log it - the actual editing happens in modals
+    console.log('Edit block:', block);
+    // TODO: Implement block editing modal or inline editing
   }, []);
 
-  const handleRemoveBlock = useCallback(() => {
-    console.log('handleRemoveBlock - TODO: implement');
-  }, []);
+  const handleRemoveBlock = useCallback((id: string) => {
+    setPracticeBlocks(prevBlocks => {
+      const updatedBlocks = prevBlocks.filter(block => block.id !== id);
+      const blocksWithTimes = recalculateBlockTimes(updatedBlocks, event.start);
+      
+      // Save to localStorage
+      savePracticeToStorage(blocksWithTimes, event.id || '');
+      
+      return blocksWithTimes;
+    });
+  }, [event.id, event.start, recalculateBlockTimes]);
 
-  const handleAddGroup = useCallback(() => {
-    console.log('handleAddGroup - TODO: implement');
+  const handleAddGroup = useCallback((blockId: string) => {
+    // Open the Add Group modal for the specified block
+    setEditingGroup({
+      blockId,
+      group: {
+        id: '', // Empty ID indicates new group
+        name: '',
+        location: '',
+        notes: '',
+      }
+    });
   }, []);
 
   const handleEditGroup = useCallback(() => {
@@ -380,25 +401,161 @@ export const usePracticeState = (event: CalendarEvent) => {
     console.log('handleUpdateGroup - TODO: implement');
   }, []);
 
-  const handleRemoveGroup = useCallback(() => {
-    console.log('handleRemoveGroup - TODO: implement');
+  const handleRemoveGroup = useCallback((blockId: string, groupId: string) => {
+    setPracticeBlocks(prevBlocks => {
+      const updatedBlocks = prevBlocks.map(block => {
+        if (block.id === blockId) {
+          return {
+            ...block,
+            groups: block.groups?.filter(group => group.id !== groupId) || []
+          };
+        }
+        return block;
+      });
+      
+      const blocksWithTimes = recalculateBlockTimes(updatedBlocks, event.start);
+      
+      // Save to localStorage
+      savePracticeToStorage(blocksWithTimes, event.id || '');
+      
+      return blocksWithTimes;
+    });
+  }, [event.id, event.start, recalculateBlockTimes]);
+
+  const handleAddScriptToBlock = useCallback((blockId: string) => {
+    // Set the selected block and open script selector
+    setSelectedBlockForScript(blockId);
+    setShowScriptSelector(true);
   }, []);
 
-  const handleAddScriptToBlock = useCallback(() => {
-    console.log('handleAddScriptToBlock - TODO: implement');
+  const handleAddScriptToGroup = useCallback((blockId: string, groupId: string) => {
+    // Set the selected group and open script selector
+    setSelectedGroupForScript({ blockId, groupId });
+    setShowScriptSelector(true);
   }, []);
 
-  const handleAddScriptToGroup = useCallback(() => {
-    console.log('handleAddScriptToGroup - TODO: implement');
-  }, []);
-
-  const handleRemoveScriptFromGroup = useCallback(() => {
-    console.log('handleRemoveScriptFromGroup - TODO: implement');
-  }, []);
+  const handleRemoveScriptFromGroup = useCallback((blockId: string, groupId: string) => {
+    setPracticeBlocks(prevBlocks => {
+      const updatedBlocks = prevBlocks.map(block => {
+        if (block.id === blockId) {
+          return {
+            ...block,
+            groups: block.groups?.map(group => {
+              if (group.id === groupId) {
+                return {
+                  ...group,
+                  scriptId: undefined,
+                  scriptTitle: undefined
+                };
+              }
+              return group;
+            }) || []
+          };
+        }
+        return block;
+      });
+      
+      const blocksWithTimes = recalculateBlockTimes(updatedBlocks, event.start);
+      
+      // Save to localStorage
+      savePracticeToStorage(blocksWithTimes, event.id || '');
+      
+      return blocksWithTimes;
+    });
+  }, [event.id, event.start, recalculateBlockTimes]);
 
   const handleAutoAssignCoaches = useCallback(() => {
-    console.log('handleAutoAssignCoaches - TODO: implement');
-  }, []);
+    setPracticeBlocks(prevBlocks => {
+      const updatedBlocks = prevBlocks.map(block => {
+        // Auto-assign coaches based on block category
+        let assignedCoach = '';
+        switch (block.category) {
+          case 'offense':
+            assignedCoach = 'Offensive Coordinator';
+            break;
+          case 'defense':
+            assignedCoach = 'Defensive Coordinator';
+            break;
+          case 'special-teams':
+            assignedCoach = 'Special Teams Coach';
+            break;
+          case 'meeting':
+            assignedCoach = 'Head Coach';
+            break;
+          case 'weight-room':
+            assignedCoach = 'Strength Coach';
+            break;
+          default:
+            assignedCoach = 'Head Coach';
+        }
+        
+        return {
+          ...block,
+          assignedCoach
+        };
+      });
+      
+      const blocksWithTimes = recalculateBlockTimes(updatedBlocks, event.start);
+      
+      // Save to localStorage
+      savePracticeToStorage(blocksWithTimes, event.id || '');
+      
+      return blocksWithTimes;
+    });
+  }, [event.id, event.start, recalculateBlockTimes]);
+
+  // Script assignment functions
+  const assignScriptToBlock = useCallback((blockId: string, script: { id: string; title: string }) => {
+    setPracticeBlocks(prevBlocks => {
+      const updatedBlocks = prevBlocks.map(block => {
+        if (block.id === blockId) {
+          return {
+            ...block,
+            scriptId: script.id,
+            scriptTitle: script.title
+          };
+        }
+        return block;
+      });
+      
+      const blocksWithTimes = recalculateBlockTimes(updatedBlocks, event.start);
+      
+      // Save to localStorage
+      savePracticeToStorage(blocksWithTimes, event.id || '');
+      
+      return blocksWithTimes;
+    });
+  }, [event.id, event.start, recalculateBlockTimes]);
+
+  const assignScriptToGroup = useCallback((blockId: string, groupId: string, script: { id: string; title: string }) => {
+    setPracticeBlocks(prevBlocks => {
+      const updatedBlocks = prevBlocks.map(block => {
+        if (block.id === blockId) {
+          return {
+            ...block,
+            groups: block.groups?.map(group => {
+              if (group.id === groupId) {
+                return {
+                  ...group,
+                  scriptId: script.id,
+                  scriptTitle: script.title
+                };
+              }
+              return group;
+            }) || []
+          };
+        }
+        return block;
+      });
+      
+      const blocksWithTimes = recalculateBlockTimes(updatedBlocks, event.start);
+      
+      // Save to localStorage
+      savePracticeToStorage(blocksWithTimes, event.id || '');
+      
+      return blocksWithTimes;
+    });
+  }, [event.id, event.start, recalculateBlockTimes]);
 
   return {
     // Core state
@@ -475,6 +632,10 @@ export const usePracticeState = (event: CalendarEvent) => {
     handleAddScriptToGroup,
     handleRemoveScriptFromGroup,
     handleAutoAssignCoaches,
+    
+    // Script assignment functions
+    assignScriptToBlock,
+    assignScriptToGroup,
     
     // Group management
     showAddGroup,

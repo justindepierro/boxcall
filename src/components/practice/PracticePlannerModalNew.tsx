@@ -5,8 +5,9 @@
  * This is the new, modular version that replaces the 2732-line monolithic component.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import { ScriptSelectorModal } from "./ScriptSelectorModal";
+import { PracticePDFExportDialog } from "./PracticePDFExportDialog";
 import { usePracticeState } from "./hooks/usePracticeState";
 import { 
   PracticeHeader, 
@@ -17,12 +18,87 @@ import {
   AddGroupModal,
   EditGroupModal 
 } from "./components";
-import type { PracticePlannerModalProps } from "./types";
+import type { PracticePlannerModalProps, Script } from "./types";
 
 export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
   event,
   onClose,
 }) => {
+  // PDF Export state
+  const [isPDFExportOpen, setIsPDFExportOpen] = useState(false);
+
+  // Prepare practice data for PDF export
+  const preparePracticeDataForPDF = () => {
+    // Convert practice blocks to PDF format
+    const pdfBlocks = practiceBlocks.map(block => ({
+      id: block.id,
+      title: block.title,
+      category: block.category,
+      duration: block.duration,
+      startTime: block.startTime || '',
+      endTime: block.endTime || '',
+      location: block.location || '',
+      notes: block.notes || '',
+      assignedCoach: block.assignedCoach || '',
+      scriptId: block.scriptId,
+      scriptTitle: block.scriptTitle,
+      groups: block.groups?.map(group => ({
+        id: group.id,
+        name: group.name,
+        location: group.location || '',
+        notes: group.notes || '',
+        scriptId: group.scriptId,
+        scriptTitle: group.scriptTitle,
+      })),
+    }));
+
+    // Calculate category breakdown
+    const categoryBreakdown: Record<string, number> = {};
+    const coachUtilization: Record<string, number> = {};
+    let totalMinutes = 0;
+    
+    practiceBlocks.forEach(block => {
+      categoryBreakdown[block.category] = (categoryBreakdown[block.category] || 0) + block.duration;
+      totalMinutes += block.duration;
+      
+      if (block.assignedCoach) {
+        coachUtilization[block.assignedCoach] = (coachUtilization[block.assignedCoach] || 0) + block.duration;
+      }
+    });
+
+    return {
+      title: event.title || 'Practice Plan',
+      date: new Date(event.start).toLocaleDateString(),
+      duration: totalDuration,
+      location: '', // Could be extracted from event location
+      weather: undefined,
+      blocks: pdfBlocks,
+      coaches: [
+        // Mock coach data - could be enhanced with real data
+        { id: '1', name: 'Head Coach', role: 'Head Coach', assignments: ['Overall direction'] },
+        { id: '2', name: 'Offensive Coordinator', role: 'OC', assignments: ['Offense blocks'] },
+        { id: '3', name: 'Defensive Coordinator', role: 'DC', assignments: ['Defense blocks'] },
+        { id: '4', name: 'Special Teams Coach', role: 'STC', assignments: ['Special teams'] },
+      ],
+      equipment: [
+        // Mock equipment data
+        { item: 'Cones', quantity: 20, location: 'Equipment shed' },
+        { item: 'Footballs', quantity: 10, location: 'Equipment room' },
+        { item: 'Blocking pads', quantity: 8, location: 'Field storage' },
+      ],
+      summary: {
+        totalMinutes,
+        categoryBreakdown,
+        coachUtilization,
+        objectives: [
+          'Team coordination improvement',
+          'Skill development focus',
+          'Game preparation',
+        ],
+      },
+    };
+  };
+
   // Use centralized state management hook
   const {
     // State
@@ -83,6 +159,10 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     handleRemoveScriptFromGroup,
     handleAutoAssignCoaches,
     
+    // Script assignment functions
+    assignScriptToBlock,
+    assignScriptToGroup,
+    
     // Modal handlers
     handleCancelScaffold,
   } = usePracticeState(event);
@@ -101,6 +181,7 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
             onUserRoleChange={setUserRole}
             onTimeAllocationModeToggle={() => setTimeAllocationMode(!timeAllocationMode)}
             onScaffoldModeToggle={() => setScaffoldMode(!scaffoldMode)}
+            onPDFExport={() => setIsPDFExportOpen(true)}
             onClose={onClose}
           />
 
@@ -208,30 +289,39 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
       {/* Script Selector Modal */}
       {showScriptSelector && (
         <ScriptSelectorModal
-          isOpen={showScriptSelector}
           onClose={() => {
             setShowScriptSelector(false);
             setSelectedBlockForScript(null);
             setSelectedGroupForScript(null);
           }}
-          onSelectScript={(scriptId: string, scriptTitle: string) => {
+          onSelectScript={(script: Script) => {
             if (selectedGroupForScript) {
-              handleAddScriptToGroup(
+              // Assign script to the selected group
+              assignScriptToGroup(
                 selectedGroupForScript.blockId, 
-                selectedGroupForScript.groupId, 
-                scriptId, 
-                scriptTitle
+                selectedGroupForScript.groupId,
+                script
               );
             } else if (selectedBlockForScript) {
-              // Handle block script assignment
-              console.log('Assign script to block:', selectedBlockForScript, scriptId);
+              // Assign script to the selected block
+              assignScriptToBlock(selectedBlockForScript, script);
             }
             setShowScriptSelector(false);
             setSelectedBlockForScript(null);
             setSelectedGroupForScript(null);
           }}
+          onCreateNew={() => {
+            console.log('Create new script - TODO: implement');
+          }}
         />
       )}
+
+      {/* PDF Export Dialog */}
+      <PracticePDFExportDialog
+        isOpen={isPDFExportOpen}
+        practiceData={preparePracticeDataForPDF()}
+        onClose={() => setIsPDFExportOpen(false)}
+      />
     </div>
   );
 };

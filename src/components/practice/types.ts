@@ -77,6 +77,7 @@ export interface PracticeHeaderProps {
   onUserRoleChange: (role: UserRole) => void;
   onTimeAllocationModeToggle: () => void;
   onScaffoldModeToggle: () => void;
+  onPDFExport: () => void;
   onClose: () => void;
 }
 
