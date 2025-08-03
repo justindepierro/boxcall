@@ -6,7 +6,6 @@
  */
 
 import React from "react";
-import type { CalendarEvent } from "../../services/calendarService";
 import { ScriptSelectorModal } from "./ScriptSelectorModal";
 import { usePracticeState } from "./hooks/usePracticeState";
 import { 
@@ -31,7 +30,7 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     userRole,
     timeAllocationMode,
     scaffoldMode,
-    editingBlock,
+    editingBlock: _editingBlock,
     editingGroup,
     showAddBlock,
     showScriptSelector,

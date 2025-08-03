@@ -5,7 +5,7 @@ import type { BoxCallCalendarRef } from "../components/calendar/BoxCallCalendar"
 import { BoxCallCalendar } from "../components/calendar/BoxCallCalendar";
 import "../components/calendar/BoxCallCalendar.css";
 import { Typography } from "../components/design-system";
-import { PracticePlannerModal } from "../components/practice/PracticePlannerModal";
+import { PracticePlannerModalNew as PracticePlannerModal } from "../components/practice/PracticePlannerModalNew";
 import { Button, Card, Input } from "../components/ui";
 import { useCalendar } from "../hooks/useCalendar";
 import type {

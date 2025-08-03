@@ -150,137 +150,195 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
         )}
       </Card>
 
-      {/* Timeline Visualization */}
-      <Card className="p-4">
-        <div className="flex items-center justify-between mb-4">
-          <Typography variant="body-md" className="font-medium">
-            Practice Timeline ({scheduledDuration} minutes)
-          </Typography>
-          <div className="flex space-x-2">
-            <button
-              onClick={onRemoveEmpty}
-              className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200"
-            >
-              🔄 Remove Empty Time
-            </button>
-            <button
-              onClick={onClearAll}
-              className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200"
-            >
-              🗑️ Clear All
-            </button>
-          </div>
-        </div>
-        
-        <div className="space-y-2">
-          {/* Time markers - every 5 minutes */}
-          <div className="flex text-xs text-gray-500 mb-2">
-            {Array.from({ length: Math.ceil(scheduledDuration / 5) }, (_, i) => (
-              <div key={i} className="flex-1 text-center border-r border-gray-200 last:border-r-0" style={{ flexBasis: '5%' }}>
-                {i * 5}min
-              </div>
-            ))}
+      {/* Timeline Visualization - Multiple Hour-Based Timelines */}
+      <div className="relative">
+        <Card className="p-4 ml-20">
+          <div className="flex items-center justify-between mb-4">
+            <Typography variant="body-md" className="font-medium">
+              Practice Timeline ({scheduledDuration} minutes)
+            </Typography>
+            <div className="flex space-x-2">
+              <button
+                onClick={onRemoveEmpty}
+                className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200"
+              >
+                🔄 Remove Empty Time
+              </button>
+              <button
+                onClick={onClearAll}
+                className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200"
+              >
+                🗑️ Clear All
+              </button>
+            </div>
           </div>
           
-          {/* Timeline blocks */}
-          <div className="flex border border-gray-300 rounded-lg overflow-hidden">
-            {Array.from({ length: scheduledDuration }, (_, minute) => {
-              const allocation = timelineAllocation[minute];
-              const isSelected = isSelecting && selectionStart !== null && 
-                Math.min(selectionStart, minute) <= minute && 
-                minute <= Math.max(selectionStart, minute);
+          <div className="space-y-6">
+            {/* Multiple Timeline Sections - One per hour */}
+            {Array.from({ length: Math.ceil(scheduledDuration / 60) }, (_, hourIndex) => {
+              const hourStart = hourIndex * 60;
+              const hourEnd = Math.min((hourIndex + 1) * 60, scheduledDuration);
               
-              // Add visual separators every 5 minutes
-              const is5MinuteBoundary = minute % 5 === 0 && minute > 0;
+              // Get dominant category for this hour for vertical label
+              const hourCategories: { [key: string]: number } = {};
+              for (let minute = hourStart; minute < hourEnd; minute++) {
+                const allocation = timelineAllocation[minute];
+                if (allocation) {
+                  hourCategories[allocation.category] = (hourCategories[allocation.category] || 0) + 1;
+                }
+              }
+              const dominantCategory = Object.keys(hourCategories).length > 0 
+                ? Object.keys(hourCategories).reduce((a, b) => 
+                    hourCategories[a] > hourCategories[b] ? a : b
+                  )
+                : 'unallocated';
               
               return (
-                <button
-                  key={minute}
-                  onClick={() => {
-                    if (allocation) {
-                      // Block exists - select it for editing
-                      onBlockClick(minute);
-                    } else {
-                      // No block - add new block
-                      onTimelineClick(minute);
-                    }
-                  }}
-                  className={`flex-1 h-12 border-r border-gray-200 transition-all hover:scale-105 relative ${
-                    selectedBlock && minute >= selectedBlock.start && minute < selectedBlock.start + selectedBlock.duration
-                      ? 'ring-2 ring-blue-500 bg-blue-100 border-t-4 border-t-blue-600'
-                      : allocation 
-                      ? getCategoryColor(allocation.category).replace('text-', 'border-t-4 border-t-').split(' ')[0] + ' ' + getCategoryColor(allocation.category)
-                      : isSelected
-                      ? 'bg-blue-200 border-t-4 border-t-blue-500'
-                      : 'bg-gray-50 hover:bg-gray-100'
-                  } ${is5MinuteBoundary ? 'border-l-2 border-l-gray-400' : ''}`}
-                  style={{ minWidth: '3px' }}
-                  title={`Minute ${minute}${allocation ? ` - ${allocation.category} (click to resize)` : ' (click to add block)'}`}
-                >
-                  {minute % 5 === 0 && minute > 0 && (
-                    <div className="absolute -top-4 left-0 text-xs text-gray-600 font-medium">
-                      {minute}
+                <div key={hourIndex} className="relative">
+                  {/* Vertical Category Label */}
+                  <div className="absolute -left-20 top-0 h-full flex items-center">
+                    <div className="transform -rotate-90 origin-center whitespace-nowrap">
+                      <div className={`px-2 py-1 rounded text-xs font-medium ${
+                        dominantCategory !== 'unallocated' 
+                          ? getCategoryColor(dominantCategory as PracticeBlock["category"])
+                          : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        Hour {hourIndex + 1}
+                        {dominantCategory !== 'unallocated' && (
+                          <span className="ml-1">
+                            ({dominantCategory.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())})
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </button>
+                  </div>
+                  
+                  {/* Time markers for this hour - every 10 minutes */}
+                  <div className="flex text-xs text-gray-500 mb-2">
+                    {Array.from({ length: 7 }, (_, i) => {
+                      const totalMinute = hourStart + (i * 10);
+                      if (totalMinute > scheduledDuration) return null;
+                      return (
+                        <div key={i} className="flex-[10] text-center border-r border-gray-200 last:border-r-0">
+                          {totalMinute}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  {/* Timeline blocks for this hour */}
+                  <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+                    {Array.from({ length: 60 }, (_, relativeMinute) => {
+                      const absoluteMinute = hourStart + relativeMinute;
+                      
+                      // If this minute is beyond the scheduled duration, show as disabled
+                      if (absoluteMinute >= scheduledDuration) {
+                        return (
+                          <div
+                            key={absoluteMinute}
+                            className="flex-1 h-16 bg-gray-200 border-r border-gray-300 opacity-50"
+                            style={{ minWidth: '8px' }}
+                          />
+                        );
+                      }
+                      
+                      const allocation = timelineAllocation[absoluteMinute];
+                      const isSelected = isSelecting && selectionStart !== null && 
+                        Math.min(selectionStart, absoluteMinute) <= absoluteMinute && 
+                        absoluteMinute <= Math.max(selectionStart, absoluteMinute);
+                      
+                      // Add visual separators every 10 minutes
+                      const is10MinuteBoundary = relativeMinute % 10 === 0 && relativeMinute > 0;
+                      
+                      return (
+                        <button
+                          key={absoluteMinute}
+                          onClick={() => {
+                            if (allocation) {
+                              // Block exists - select it for editing
+                              onBlockClick(absoluteMinute);
+                            } else {
+                              // No block - add new block
+                              onTimelineClick(absoluteMinute);
+                            }
+                          }}
+                          className={`flex-1 h-16 border-r border-gray-200 transition-all hover:scale-105 relative ${
+                            selectedBlock && absoluteMinute >= selectedBlock.start && absoluteMinute < selectedBlock.start + selectedBlock.duration
+                              ? 'ring-2 ring-blue-500 bg-blue-100 border-t-4 border-t-blue-600'
+                              : allocation 
+                              ? getCategoryColor(allocation.category).replace('text-', 'border-t-4 border-t-').split(' ')[0] + ' ' + getCategoryColor(allocation.category)
+                              : isSelected
+                              ? 'bg-blue-200 border-t-4 border-t-blue-500'
+                              : 'bg-gray-50 hover:bg-gray-100'
+                          } ${is10MinuteBoundary ? 'border-l-2 border-l-gray-400' : ''}`}
+                          style={{ minWidth: '8px' }}
+                          title={`Minute ${absoluteMinute}${allocation ? ` - ${allocation.category} (click to resize)` : ' (click to add block)'}`}
+                        >
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
           </div>
+        </Card>
+      </div>
+      
+      {/* Expandable Slider for Selected Block */}
+      {selectedBlock && (
+        <div className="mt-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <Typography variant="body-md" className="font-medium text-blue-800">
+                🎯 Resize Block: {selectedBlock.category.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+              </Typography>
+              <Typography variant="body-sm" className="text-blue-600">
+                Block starts at minute {selectedBlock.start}, currently {selectedBlock.duration} minutes
+              </Typography>
+              <Typography variant="body-xs" className="text-blue-500 mt-1">
+                💡 Press Space/Enter to save, Esc to cancel
+              </Typography>
+            </div>
+            <button
+              onClick={onClearSelected}
+              className="text-blue-600 hover:text-blue-800 p-1"
+            >
+              ✕
+            </button>
+          </div>
           
-          {/* Expandable Slider for Selected Block */}
-          {selectedBlock && (
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <Typography variant="body-md" className="font-medium text-blue-800">
-                    🎯 Resize Block: {selectedBlock.category.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
-                  </Typography>
-                  <Typography variant="body-sm" className="text-blue-600">
-                    Block starts at minute {selectedBlock.start}, currently {selectedBlock.duration} minutes
-                  </Typography>
-                  <Typography variant="body-xs" className="text-blue-500 mt-1">
-                    💡 Press Space/Enter to save, Esc to cancel
-                  </Typography>
-                </div>
-                <button
-                  onClick={onClearSelected}
-                  className="text-blue-600 hover:text-blue-800 p-1"
-                >
-                  ✕
-                </button>
-              </div>
-              
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm font-medium text-blue-700 mb-2">
-                    Duration: {sliderValue} minutes
-                  </label>
-                  <input
-                    type="range"
-                    min="1"
-                    max={Math.min(50, scheduledDuration - selectedBlock.start)}
-                    value={sliderValue}
-                    onChange={(e) => {
-                      const newValue = parseInt(e.target.value);
-                      onSliderChange(newValue);
-                      onUpdateBlockDuration(newValue);
-                    }}
-                    className="w-full h-3 bg-blue-200 rounded-lg appearance-none cursor-pointer slider"
-                    style={{
-                      background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(sliderValue / Math.min(50, scheduledDuration - selectedBlock.start)) * 100}%, #e5e7eb ${(sliderValue / Math.min(50, scheduledDuration - selectedBlock.start)) * 100}%, #e5e7eb 100%)`
-                    }}
-                  />
-                  <div className="flex justify-between text-xs text-blue-600 mt-1">
-                    <span>1 min</span>
-                    <span>{Math.min(50, scheduledDuration - selectedBlock.start)} min max</span>
-                  </div>
-                </div>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm font-medium text-blue-700 mb-2">
+                Duration: {sliderValue} minutes
+              </label>
+              <input
+                type="range"
+                min="1"
+                max={Math.min(50, scheduledDuration - selectedBlock.start)}
+                value={sliderValue}
+                onChange={(e) => {
+                  const newValue = parseInt(e.target.value);
+                  onSliderChange(newValue);
+                  onUpdateBlockDuration(newValue);
+                }}
+                className="w-full h-3 bg-blue-200 rounded-lg appearance-none cursor-pointer slider"
+                style={{
+                  background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(sliderValue / Math.min(50, scheduledDuration - selectedBlock.start)) * 100}%, #e5e7eb ${(sliderValue / Math.min(50, scheduledDuration - selectedBlock.start)) * 100}%, #e5e7eb 100%)`
+                }}
+              />
+              <div className="flex justify-between text-xs text-blue-600 mt-1">
+                <span>1 min</span>
+                <span>{Math.min(50, scheduledDuration - selectedBlock.start)} min max</span>
               </div>
             </div>
-          )}
-          
-          {/* Current Allocation Summary */}
-          <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+          </div>
+        </div>
+      )}
+      
+      {/* Current Allocation Summary */}
+      <div className="mt-4 p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center justify-between mb-2">
               <Typography variant="body-sm" className="font-medium text-gray-700">
                 Current Allocation (Click time to edit):
@@ -291,7 +349,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
             </div>
             <div className="flex flex-wrap gap-3">
               {Object.entries(timelineAllocation).length > 0 && Object.entries(
-                Object.values(timelineAllocation).reduce((acc: Record<string, { count: number; blocks: { start: number; duration: number }[] }>, allocation: any) => {
+                Object.values(timelineAllocation).reduce((acc: Record<string, { count: number; blocks: { start: number; duration: number }[] }>, allocation) => {
                   const key = allocation.category;
                   if (!acc[key]) {
                     acc[key] = { count: 0, blocks: [] };
@@ -300,7 +358,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                   
                   // Group consecutive minutes into blocks
                   const minutes = Object.entries(timelineAllocation)
-                    .filter(([_, a]: [string, any]) => a.category === allocation.category)
+                    .filter(([_, a]) => a.category === allocation.category)
                     .map(([minute]) => parseInt(minute))
                     .sort((a, b) => a - b);
                   
@@ -321,8 +379,8 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                   acc[key].blocks = blocks;
                   return acc;
                 }, {})
-              ).map(([category, data]: [string, any]) => 
-                data.blocks.map((block: any, blockIndex: number) => (
+              ).map(([category, data]: [string, { count: number; blocks: { start: number; duration: number }[] }]) => 
+                data.blocks.map((block: { start: number; duration: number }, blockIndex: number) => (
                   <div key={`${category}-${blockIndex}`} className={`px-3 py-2 rounded-lg border-2 ${getCategoryColor(category as PracticeBlock["category"])} border-opacity-50`}>
                     <div className="flex items-center space-x-2">
                       <span className="text-sm font-medium capitalize">
@@ -383,8 +441,6 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
               )}
             </div>
           </div>
-        </div>
-      </Card>
     </div>
   );
 };

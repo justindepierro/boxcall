@@ -20,7 +20,7 @@
 import React from "react";
 import { Typography } from "../../design-system";
 import { getCategoryColor, formatDuration } from "../utils";
-import type { TimeSummaryProps } from "../types";
+import type { TimeSummaryProps, PracticeBlock } from "../types";
 
 export const TimeSummary: React.FC<TimeSummaryProps> = ({
   scheduledDuration,
@@ -117,7 +117,7 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
               <div
                 key={category}
                 className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(
-                  category as any
+                  category as PracticeBlock["category"]
                 )}`}
               >
                 {category.replace("-", " ").toUpperCase()}: {formatDuration(duration)}

@@ -101,6 +101,305 @@ export const usePracticeState = (event: CalendarEvent) => {
   // Computed values
   const isOvertime = totalDuration > scheduledDuration;
 
+  // Enhanced scaffold mode setter with block-to-timeline conversion
+  const setScaffoldModeWithConversion = useCallback((newScaffoldMode: boolean) => {
+    if (newScaffoldMode && !scaffoldMode) {
+      // Entering scaffold mode - convert existing blocks to timeline allocation
+      console.log('🎯 ENTERING SCAFFOLD MODE - Converting blocks to timeline!');
+      console.log('📦 Current practice blocks:', practiceBlocks);
+      
+      // Store current blocks as backup for cancel functionality
+      setOriginalBlocksBeforeScaffold([...practiceBlocks]);
+      
+      // Convert blocks to timeline allocation
+      const allocation: TimelineAllocation = {};
+      let currentMinute = 0;
+      
+      practiceBlocks.forEach(block => {
+        console.log(`🕒 Converting block "${block.title}" (${block.duration} mins, ${block.category})`);
+        for (let i = 0; i < block.duration; i++) {
+          allocation[currentMinute + i] = {
+            category: block.category,
+            assignedCoach: block.assignedCoach,
+            title: block.title
+          };
+        }
+        currentMinute += block.duration;
+      });
+      
+      console.log('✨ Created timeline allocation from existing blocks:', allocation);
+      console.log('📊 Total minutes allocated:', Object.keys(allocation).length);
+      setTimelineAllocation(allocation);
+    } else if (!newScaffoldMode && scaffoldMode) {
+      // Exiting scaffold mode - clear timeline allocation
+      console.log('🚪 EXITING SCAFFOLD MODE - Clearing timeline');
+      setTimelineAllocation({});
+      setSelectedCategory(null);
+      setSelectedBlock(null);
+      setOriginalBlocksBeforeScaffold([]);
+    }
+    
+    setScaffoldMode(newScaffoldMode);
+  }, [scaffoldMode, practiceBlocks]);
+
+  // Timeline handlers
+  const handleTimelineClick = useCallback((minute: number) => {
+    if (!selectedCategory) return;
+    
+    if (!isSelecting) {
+      // Start selection with 5-minute default block
+      setIsSelecting(true);
+      setSelectionStart(minute);
+      
+      // Default to 5-minute block, expand to align with 5-minute intervals
+      const blockStart = Math.floor(minute / 5) * 5;
+      const blockEnd = blockStart + 4; // 5 minutes (0-4 = 5 minutes)
+      
+      const newAllocation = { ...timelineAllocation };
+      for (let i = blockStart; i <= blockEnd && i < scheduledDuration; i++) {
+        newAllocation[i] = { category: selectedCategory };
+      }
+      
+      setTimelineAllocation(newAllocation);
+      setIsSelecting(false);
+      setSelectionStart(null);
+    } else {
+      // End selection - fill in between start and current, aligned to 5-minute intervals
+      const rawStart = Math.min(selectionStart!, minute);
+      const rawEnd = Math.max(selectionStart!, minute);
+      
+      // Align to 5-minute boundaries
+      const blockStart = Math.floor(rawStart / 5) * 5;
+      const blockEnd = Math.ceil((rawEnd + 1) / 5) * 5 - 1;
+      
+      const newAllocation = { ...timelineAllocation };
+      for (let i = blockStart; i <= blockEnd && i < scheduledDuration; i++) {
+        newAllocation[i] = { category: selectedCategory };
+      }
+      
+      setTimelineAllocation(newAllocation);
+      setIsSelecting(false);
+      setSelectionStart(null);
+    }
+  }, [selectedCategory, isSelecting, selectionStart, timelineAllocation, scheduledDuration]);
+
+  const handleBlockClick = useCallback((minute: number) => {
+    // Find the block that contains this minute
+    const allocation = timelineAllocation[minute];
+    if (!allocation) return;
+    
+    // Find the start and duration of this block
+    let blockStart = minute;
+    let blockEnd = minute;
+    
+    // Find block start
+    while (blockStart > 0 && timelineAllocation[blockStart - 1]?.category === allocation.category) {
+      blockStart--;
+    }
+    
+    // Find block end
+    while (blockEnd < scheduledDuration - 1 && timelineAllocation[blockEnd + 1]?.category === allocation.category) {
+      blockEnd++;
+    }
+    
+    const blockDuration = blockEnd - blockStart + 1;
+    
+    setSelectedBlock({
+      start: blockStart,
+      duration: blockDuration,
+      category: allocation.category
+    });
+    setSliderValue(blockDuration);
+  }, [timelineAllocation, scheduledDuration]);
+
+  const updateSelectedBlockDuration = useCallback((newDuration: number) => {
+    if (!selectedBlock) return;
+    
+    // Remove the old block
+    const newAllocation = { ...timelineAllocation };
+    for (let i = selectedBlock.start; i < selectedBlock.start + selectedBlock.duration; i++) {
+      delete newAllocation[i];
+    }
+    
+    // Add the new block with updated duration
+    for (let i = 0; i < newDuration && (selectedBlock.start + i) < scheduledDuration; i++) {
+      newAllocation[selectedBlock.start + i] = { category: selectedBlock.category };
+    }
+    
+    setTimelineAllocation(newAllocation);
+    
+    // Update selected block duration
+    setSelectedBlock({
+      ...selectedBlock,
+      duration: newDuration
+    });
+  }, [selectedBlock, timelineAllocation, scheduledDuration]);
+
+  const removeEmptyTime = useCallback(() => {
+    // Find all allocated minutes and compress to the left
+    const allocatedMinutes = Object.entries(timelineAllocation)
+      .filter(([_, allocation]) => allocation)
+      .sort(([a], [b]) => parseInt(a) - parseInt(b));
+    
+    const newAllocation: TimelineAllocation = {};
+    allocatedMinutes.forEach(([_, allocation], index) => {
+      newAllocation[index] = allocation;
+    });
+    
+    setTimelineAllocation(newAllocation);
+  }, [timelineAllocation]);
+
+  const handleCancelScaffold = useCallback(() => {
+    // Restore original blocks and exit scaffold mode
+    setPracticeBlocks(originalBlocksBeforeScaffold);
+    setScaffoldMode(false);
+    setTimelineAllocation({});
+    setSelectedCategory(null);
+    setSelectedBlock(null);
+    setOriginalBlocksBeforeScaffold([]);
+  }, [originalBlocksBeforeScaffold]);
+
+  const saveTimeAllocation = useCallback(() => {
+    // Convert timeline allocation to practice blocks
+    const newBlocks: PracticeBlock[] = [];
+    let currentBlock: Partial<PracticeBlock> | null = null;
+    
+    for (let minute = 0; minute < scheduledDuration; minute++) {
+      const allocation = timelineAllocation[minute];
+      
+      if (allocation) {
+        if (!currentBlock || currentBlock.category !== allocation.category) {
+          // Start new block
+          if (currentBlock) {
+            newBlocks.push({
+              id: Date.now().toString() + Math.random(),
+              startTime: "",
+              endTime: "",
+              duration: currentBlock.duration || 0,
+              category: currentBlock.category!,
+              title: `${currentBlock.category?.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())} Time`,
+              location: "",
+              notes: "",
+              assignedCoach: currentBlock.assignedCoach
+            });
+          }
+          
+          currentBlock = {
+            category: allocation.category,
+            duration: 1,
+            assignedCoach: allocation.assignedCoach
+          };
+        } else {
+          // Continue current block
+          currentBlock.duration = (currentBlock.duration || 0) + 1;
+        }
+      } else {
+        // No allocation - finish current block if exists
+        if (currentBlock) {
+          newBlocks.push({
+            id: Date.now().toString() + Math.random(),
+            startTime: "",
+            endTime: "",
+            duration: currentBlock.duration || 0,
+            category: currentBlock.category!,
+            title: `${currentBlock.category?.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())} Time`,
+            location: "",
+            notes: "",
+            assignedCoach: currentBlock.assignedCoach
+          });
+          currentBlock = null;
+        }
+      }
+    }
+    
+    // Don't forget the last block
+    if (currentBlock) {
+      newBlocks.push({
+        id: Date.now().toString() + Math.random(),
+        startTime: "",
+        endTime: "",
+        duration: currentBlock.duration || 0,
+        category: currentBlock.category!,
+        title: `${currentBlock.category?.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())} Time`,
+        location: "",
+        notes: "",
+        assignedCoach: currentBlock.assignedCoach
+      });
+    }
+    
+    const blocksWithTimes = memoizedRecalculateBlockTimes(newBlocks);
+    setPracticeBlocks(blocksWithTimes);
+    
+    // Save to localStorage
+    const savedPracticeKey = `practice_plan_${event.id || 'default'}`;
+    try {
+      const blocksToSave = blocksWithTimes.map(block => ({
+        ...block,
+        startTime: "",
+        endTime: ""
+      }));
+      localStorage.setItem(savedPracticeKey, JSON.stringify(blocksToSave));
+      console.log("Time allocation saved to localStorage");
+    } catch (error) {
+      console.error("Error saving time allocation:", error);
+    }
+    
+    setScaffoldMode(false);
+    setTimelineAllocation({});
+    setSelectedCategory(null);
+    setSelectedBlock(null);
+    setOriginalBlocksBeforeScaffold([]);
+  }, [timelineAllocation, scheduledDuration, memoizedRecalculateBlockTimes, event.id]);
+
+  // TODO: Implement remaining handlers for full integration
+  const handleDragEnd = useCallback(() => {
+    console.log('handleDragEnd - TODO: implement');
+  }, []);
+
+  const handleAddBlock = useCallback(() => {
+    console.log('handleAddBlock - TODO: implement');
+  }, []);
+
+  const handleEditBlock = useCallback(() => {
+    console.log('handleEditBlock - TODO: implement');
+  }, []);
+
+  const handleRemoveBlock = useCallback(() => {
+    console.log('handleRemoveBlock - TODO: implement');
+  }, []);
+
+  const handleAddGroup = useCallback(() => {
+    console.log('handleAddGroup - TODO: implement');
+  }, []);
+
+  const handleEditGroup = useCallback(() => {
+    console.log('handleEditGroup - TODO: implement');
+  }, []);
+
+  const handleUpdateGroup = useCallback(() => {
+    console.log('handleUpdateGroup - TODO: implement');
+  }, []);
+
+  const handleRemoveGroup = useCallback(() => {
+    console.log('handleRemoveGroup - TODO: implement');
+  }, []);
+
+  const handleAddScriptToBlock = useCallback(() => {
+    console.log('handleAddScriptToBlock - TODO: implement');
+  }, []);
+
+  const handleAddScriptToGroup = useCallback(() => {
+    console.log('handleAddScriptToGroup - TODO: implement');
+  }, []);
+
+  const handleRemoveScriptFromGroup = useCallback(() => {
+    console.log('handleRemoveScriptFromGroup - TODO: implement');
+  }, []);
+
+  const handleAutoAssignCoaches = useCallback(() => {
+    console.log('handleAutoAssignCoaches - TODO: implement');
+  }, []);
+
   return {
     // Core state
     practiceBlocks,
@@ -139,7 +438,7 @@ export const usePracticeState = (event: CalendarEvent) => {
     timeAllocationMode,
     setTimeAllocationMode,
     scaffoldMode,
-    setScaffoldMode,
+    setScaffoldMode: setScaffoldModeWithConversion,
     selectedCategory,
     setSelectedCategory,
     timelineAllocation,
@@ -154,6 +453,28 @@ export const usePracticeState = (event: CalendarEvent) => {
     setSliderValue,
     originalBlocksBeforeScaffold,
     setOriginalBlocksBeforeScaffold,
+    
+    // Timeline handlers
+    handleTimelineClick,
+    handleBlockClick,
+    updateSelectedBlockDuration,
+    removeEmptyTime,
+    saveTimeAllocation,
+    handleCancelScaffold,
+    
+    // Block and group handlers
+    handleDragEnd,
+    handleAddBlock,
+    handleEditBlock,
+    handleRemoveBlock,
+    handleAddGroup,
+    handleEditGroup,
+    handleUpdateGroup,
+    handleRemoveGroup,
+    handleAddScriptToBlock,
+    handleAddScriptToGroup,
+    handleRemoveScriptFromGroup,
+    handleAutoAssignCoaches,
     
     // Group management
     showAddGroup,
