@@ -117,17 +117,19 @@ export const AppRouter: React.FC = () => {
           <Route
             path="/team/:teamId"
             element={
-              <TeamMemberRoute
-                allowedTeamRoles={[
-                  "head_coach",
-                  "coach",
-                  "player",
-                  "family",
-                  "manager",
-                ]}
-              >
-                <TeamDashboard />
-              </TeamMemberRoute>
+              <ProtectedRoute>
+                <TeamMemberRoute
+                  allowedTeamRoles={[
+                    "head_coach",
+                    "coach",
+                    "player",
+                    "family",
+                    "manager",
+                  ]}
+                >
+                  <TeamDashboard />
+                </TeamMemberRoute>
+              </ProtectedRoute>
             }
           />
 
@@ -135,11 +137,13 @@ export const AppRouter: React.FC = () => {
           <Route
             path="/team/:teamId/practice"
             element={
-              <TeamMemberRoute
-                allowedTeamRoles={["head_coach", "coach", "manager"]}
-              >
-                <PracticeSchedulePage />
-              </TeamMemberRoute>
+              <ProtectedRoute>
+                <TeamMemberRoute
+                  allowedTeamRoles={["head_coach", "coach", "manager"]}
+                >
+                  <PracticeSchedulePage />
+                </TeamMemberRoute>
+              </ProtectedRoute>
             }
           />
 
