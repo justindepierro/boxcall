@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Edit, Copy, Image, Play } from "lucide-react";
 import type { Play as PlayType } from "../../types/play";
+import { VisualPlayBuilder } from "./visual/VisualPlayBuilder";
 
 interface PlayCardProps {
   play: PlayType;
@@ -15,6 +16,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   onDuplicate,
   onCreateDiagram,
 }) => {
+  const [showVisualBuilder, setShowVisualBuilder] = useState(false);
+
   const getPlayTypeColor = (type: string) => {
     switch (type) {
       case "Pass":
@@ -32,6 +35,19 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     if (confidence >= 80) return "text-green-600";
     if (confidence >= 60) return "text-yellow-600";
     return "text-red-600";
+  };
+
+  const handleCreateDiagram = () => {
+    setShowVisualBuilder(true);
+  };
+
+  const handleSaveDiagram = (updatedPlay: PlayType) => {
+    // In a real implementation, this would save the diagram URL to the play
+    console.log("Saving diagram for play:", updatedPlay.play_name);
+    setShowVisualBuilder(false);
+    if (onCreateDiagram) {
+      onCreateDiagram(updatedPlay);
+    }
   };
 
   return (
@@ -159,13 +175,21 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         </div>
 
         <button
-          onClick={() => onCreateDiagram?.(play)}
+          onClick={handleCreateDiagram}
           className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
         >
           <Image className="h-3 w-3 mr-1" />
           Create Diagram
         </button>
       </div>
+
+      {/* Visual Play Builder Modal */}
+      <VisualPlayBuilder
+        isOpen={showVisualBuilder}
+        onClose={() => setShowVisualBuilder(false)}
+        play={play}
+        onSave={handleSaveDiagram}
+      />
     </div>
   );
 };

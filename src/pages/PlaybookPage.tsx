@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { Search, Plus, FileText, Upload } from "lucide-react";
 import { PlayGrid } from "../components/playbook/PlayGrid";
-import { PlayFilters } from "../components/playbook/PlayFilters";
+import { PlayFilters } from "../components/playbook/PlayFilters.tsx";
 import { PlayBuilderWizard } from "../components/playbook/PlayBuilder/PlayBuilderWizard";
 import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal";
+import { InteractivePlayBuilder } from "../components/playbook/visual/InteractivePlayBuilder";
 
 interface PlaybookPageState {
   searchQuery: string;
   showBuilder: boolean;
   showImport: boolean;
+  showInteractiveBuilder: boolean;
   selectedFilters: {
     formation?: string;
     playType?: string;
@@ -23,6 +25,7 @@ export const PlaybookPage: React.FC = () => {
     searchQuery: "",
     showBuilder: false,
     showImport: false,
+    showInteractiveBuilder: false,
     selectedFilters: {},
   });
 
@@ -44,6 +47,14 @@ export const PlaybookPage: React.FC = () => {
 
   const handleCloseImport = () => {
     setState((prev) => ({ ...prev, showImport: false }));
+  };
+
+  const handleOpenInteractiveBuilder = () => {
+    setState((prev) => ({ ...prev, showInteractiveBuilder: true }));
+  };
+
+  const handleCloseInteractiveBuilder = () => {
+    setState((prev) => ({ ...prev, showInteractiveBuilder: false }));
   };
 
   const handleFilterChange = (filters: typeof state.selectedFilters) => {
@@ -91,6 +102,13 @@ export const PlaybookPage: React.FC = () => {
                 <Plus className="h-4 w-4 mr-2" />
                 New Play
               </button>
+              <button
+                onClick={handleOpenInteractiveBuilder}
+                className="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Interactive Builder
+              </button>
             </div>
           </div>
         </div>
@@ -127,6 +145,13 @@ export const PlaybookPage: React.FC = () => {
 
       {state.showImport && (
         <CSVImportModal isOpen={state.showImport} onClose={handleCloseImport} />
+      )}
+
+      {state.showInteractiveBuilder && (
+        <InteractivePlayBuilder
+          isOpen={state.showInteractiveBuilder}
+          onClose={handleCloseInteractiveBuilder}
+        />
       )}
     </div>
   );
