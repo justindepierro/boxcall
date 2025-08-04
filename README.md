@@ -75,7 +75,8 @@ Consolidated development tools, professional branding integration, navigation fi
 
 > **Vision**: Transform BoxCall from advanced playbook tool to comprehensive football team management platform
 
-📋 **[Complete MVP Roadmap](MVP_ROADMAP.md)** - Detailed 8-milestone plan to v1.0.0
+📋 **[Complete MVP Roadmap](MVP_ROADMAP.md)** - Detailed 8-milestone plan to v1.0.0  
+📝 **[TODO & Maintenance Tasks](TODO.md)** - Performance optimization and cleanup tracking
 
 ### **Key Upcoming Milestones**
 
