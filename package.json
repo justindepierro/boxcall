@@ -38,7 +38,11 @@
     "perf:lighthouse": "npm run build && npx serve -s dist -p 3000 & sleep 5 && lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html",
     "quality:check": "npm run type-check && npm run lint && npm run format:check",
     "clean": "rm -rf node_modules dist build coverage .nyc_output",
-    "clean:install": "npm run clean && npm install"
+    "clean:install": "npm run clean && npm install",
+    "tokens:verify": "node scripts/phase5-final-verification.cjs",
+    "tokens:audit": "node scripts/phase5-final-verification.cjs",
+    "design-system:check": "node scripts/phase5-final-verification.cjs",
+    "design-system:docs": "echo 'Opening design system documentation...' && open docs/design/DESIGN_SYSTEM_USAGE.md"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.18",

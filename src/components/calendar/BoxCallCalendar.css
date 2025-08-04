@@ -1,6 +1,6 @@
 /* BoxCall Calendar Styling */
 .boxcall-calendar {
-  --fc-border-color: #e5e7eb;
+  --fc-border-color: var(--color-border);
   --fc-button-bg-color: var(--color-brand-jade);
   --fc-button-border-color: var(--color-brand-jade);
   --fc-button-hover-bg-color: var(--color-interaction-jade);
@@ -10,7 +10,7 @@
   --fc-today-bg-color: var(--color-surface-jade);
   --fc-neutral-bg-color: #f9fafb;
   --fc-page-bg-color: #ffffff;
-  --fc-text-color: #374151;
+  --fc-text-color: var(--color-text-primary);
 }
 
 /* Typography */
@@ -54,8 +54,8 @@
 
 /* Event Type Colors */
 .boxcall-calendar .event-game {
-  background-color: #1e3a8a !important;
-  border-color: #1e3a8a !important;
+  background-color: var(--color-brand-navy-dark) !important;
+  border-color: var(--color-brand-navy-dark) !important;
 }
 
 .boxcall-calendar .event-practice {
@@ -64,18 +64,18 @@
 }
 
 .boxcall-calendar .event-meeting {
-  background-color: #f59e0b !important;
-  border-color: #f59e0b !important;
+  background-color: var(--color-warning) !important;
+  border-color: var(--color-warning) !important;
 }
 
 .boxcall-calendar .event-film {
-  background-color: #8b5cf6 !important;
-  border-color: #8b5cf6 !important;
+  background-color: var(--color-purple) !important;
+  border-color: var(--color-purple) !important;
 }
 
 .boxcall-calendar .event-other {
-  background-color: #6b7280 !important;
-  border-color: #6b7280 !important;
+  background-color: var(--color-secondary) !important;
+  border-color: var(--color-secondary) !important;
 }
 
 /* Day Grid Styling */
@@ -91,7 +91,7 @@
 .boxcall-calendar .fc-day-header {
   font-family: "Inter", sans-serif;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-text-primary);
   text-transform: uppercase;
   letter-spacing: 0.025em;
   font-size: 0.75rem;
@@ -100,13 +100,13 @@
 
 /* Time Grid Styling */
 .boxcall-calendar .fc-timegrid-slot {
-  border-color: #f3f4f6;
+  border-color: var(--color-bg-muted);
 }
 
 .boxcall-calendar .fc-timegrid-axis {
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-secondary);
 }
 
 /* Responsive Design */
@@ -178,7 +178,7 @@
   width: 32px;
   height: 32px;
   margin: -16px 0 0 -16px;
-  border: 3px solid #e5e7eb;
+  border: 3px solid var(--color-border);
   border-top-color: var(--color-brand-jade);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -196,15 +196,15 @@
 }
 
 .boxcall-calendar .fc-scroller::-webkit-scrollbar-track {
-  background: #f3f4f6;
+  background: var(--color-bg-muted);
   border-radius: 4px;
 }
 
 .boxcall-calendar .fc-scroller::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--color-border-strong);
   border-radius: 4px;
 }
 
 .boxcall-calendar .fc-scroller::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: var(--color-text-muted);
 }

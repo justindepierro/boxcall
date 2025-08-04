@@ -27,8 +27,8 @@ body {
     "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #fafafa;
-  color: #333333;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
 }
 
 /* Custom CSS variables for football theme */
