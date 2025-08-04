@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import type { DevMode } from "../../app/dev-mode-types";
@@ -23,7 +24,7 @@ const DEV_MODES = [
   {
     mode: "super_admin_mock",
     label: "🧪 Super Admin (Mock)",
-    description: "Mock Eagles team",
+    description: "Mock Dev team",
   },
   {
     mode: "view_as_head_coach",
@@ -53,6 +54,7 @@ export const QuickDevPanel: React.FC<QuickDevPanelProps> = ({
 }) => {
   const { user, profile, signOut } = useAuth();
   const { devMode, setDevMode, isDevMode } = useDevMode();
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleSignOut = async () => {
@@ -164,7 +166,7 @@ export const QuickDevPanel: React.FC<QuickDevPanelProps> = ({
                   ].map(({ label, href }) => (
                     <button
                       key={label}
-                      onClick={() => (window.location.href = href)}
+                      onClick={() => navigate(href)}
                       className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 rounded text-gray-700 dark:text-gray-300 transition-colors"
                     >
                       {label}
@@ -183,7 +185,7 @@ export const QuickDevPanel: React.FC<QuickDevPanelProps> = ({
                   : isDevMode &&
                       (devMode === "super_admin_mock" ||
                         devMode.startsWith("view_as_"))
-                    ? "Mock Data (Eastside Eagles)"
+                    ? "Mock Data (Dev Team)"
                     : "Real Database"}
               </div>
               <div>

@@ -443,7 +443,7 @@ export class DevProfileRepository implements IDevProfileRepository {
         teamMemberships: [],
         dataScope: {
           dataSource: "legacy_mock",
-          teamIds: ["mock-team-eagles"],
+          teamIds: ["mock-team-dev"],
           hasAchievements: true,
           hasCalendarEvents: true,
           hasTeamActivity: true,
@@ -463,7 +463,7 @@ export class DevProfileRepository implements IDevProfileRepository {
         teamMemberships: [],
         dataScope: {
           dataSource: "legacy_mock",
-          teamIds: ["mock-team-eagles"],
+          teamIds: ["mock-team-dev"],
           hasAchievements: true,
           hasCalendarEvents: true,
           hasTeamActivity: true,
@@ -483,7 +483,7 @@ export class DevProfileRepository implements IDevProfileRepository {
         teamMemberships: [],
         dataScope: {
           dataSource: "legacy_mock",
-          teamIds: ["mock-team-eagles"],
+          teamIds: ["mock-team-dev"],
           hasAchievements: true,
           hasCalendarEvents: true,
           hasTeamActivity: true,
@@ -503,7 +503,7 @@ export class DevProfileRepository implements IDevProfileRepository {
         teamMemberships: [],
         dataScope: {
           dataSource: "legacy_mock",
-          teamIds: ["mock-team-eagles"],
+          teamIds: ["mock-team-dev"],
           hasAchievements: true,
           hasCalendarEvents: true,
           hasTeamActivity: true,
@@ -523,7 +523,7 @@ export class DevProfileRepository implements IDevProfileRepository {
         teamMemberships: [],
         dataScope: {
           dataSource: "legacy_mock",
-          teamIds: ["mock-team-eagles"],
+          teamIds: ["mock-team-dev"],
           hasAchievements: false,
           hasCalendarEvents: true,
           hasTeamActivity: true,
@@ -543,7 +543,7 @@ export class DevProfileRepository implements IDevProfileRepository {
         teamMemberships: [],
         dataScope: {
           dataSource: "legacy_mock",
-          teamIds: ["mock-team-eagles"],
+          teamIds: ["mock-team-dev"],
           hasAchievements: false,
           hasCalendarEvents: true,
           hasTeamActivity: true,

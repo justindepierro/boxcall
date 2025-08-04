@@ -13,9 +13,15 @@ export function DevModeProvider({ children }: { children: React.ReactNode }) {
       setDevMode(savedMode);
     }
   }, []);
-  // Save dev mode to localStorage
+  // Save dev mode to localStorage and force re-render
   useEffect(() => {
     localStorage.setItem("boxcall-dev-mode", devMode);
+    // Force a small delay to ensure state propagation
+    setTimeout(() => {
+      window.dispatchEvent(
+        new CustomEvent("devModeChanged", { detail: devMode })
+      );
+    }, 10);
   }, [devMode]);
   // Determine if we're in any dev mode
   const isDevMode = devMode !== "production";

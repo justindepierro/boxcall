@@ -125,13 +125,33 @@ export class DashboardService {
       return [];
     }
 
-    // For dev modes that need activity, check if user has teams
+    // For production/real modes, try to get real data
+    if (devMode === "production" || devMode === "super_admin_real") {
+      try {
+        // TODO: Implement real activity feed from Supabase
+        console.log(
+          "🔍 Dashboard Service: Attempting to fetch real activity..."
+        );
+
+        // For now, return empty until real implementation
+        // In the future, this will fetch from activity/notifications tables
+        return [];
+      } catch (error) {
+        console.warn(
+          "Dashboard Service: Could not fetch real activity:",
+          error
+        );
+        return [];
+      }
+    }
+
+    // For dev modes that need mock activity, check if user has teams
     if (!userTeams || userTeams.length === 0) {
       return [];
     }
 
-    // TODO: Implement real activity feed from Supabase
-    // For now, return mock data only for non-blank-slate modes
+    // Return mock data only for dev mock modes
+    console.log("🧪 Dashboard Service: Returning mock activity for dev mode");
     const mockActivity: ActivityItem[] = [
       {
         id: "1",

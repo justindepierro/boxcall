@@ -1,6 +1,8 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../app/auth-store";
+import { useDevMode } from "../app/dev-mode-hooks";
+import { usePermissions } from "../hooks/usePermissions";
 import { TeamCalendar } from "../components/team-dashboard/TeamCalendar";
 import { TeamFeed } from "../components/team-dashboard/TeamFeed";
 import { TeamQuickActions } from "../components/team-dashboard/TeamQuickActions";
@@ -24,6 +26,10 @@ import { Icon } from "../components/ui/Icon/Icon";
 export const TeamBulletin: React.FC = () => {
   const { teamId } = useParams<{ teamId: string }>();
   const { user, profile } = useAuth();
+  const { devMode, isDevMode } = useDevMode();
+  const { isSuperAdmin, canCreateTeamUnlimited } = usePermissions();
+  const navigate = useNavigate();
+
   if (!user || !profile || !teamId) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -35,17 +41,105 @@ export const TeamBulletin: React.FC = () => {
       </div>
     );
   }
-  // Mock team data - TODO: Fetch from database
-  const mockTeam = {
-    id: teamId,
-    name: "Eastside Eagles",
-    season: "2024 Varsity",
-    colors: { primary: "#00A86B", secondary: "#1E3A8A" },
-    logo: "eagle", // Icon name instead of emoji
-    record: { wins: 8, losses: 2 },
-    nextGame: "Friday vs. Central Lions",
-    memberCount: 35,
+
+  const handleCreateTeam = () => {
+    // TODO: Implement team creation flow
+    console.log("🎯 Creating team...", {
+      isSuperAdmin,
+      canCreateTeamUnlimited,
+    });
+    // For now, navigate to a team creation page (to be implemented)
+    navigate("/create-team");
   };
+
+  const handleJoinTeam = () => {
+    // TODO: Implement team joining flow
+    console.log("🤝 Joining team...");
+    navigate("/join-team");
+  };
+
+  // Get team data based on dev mode
+  const getTeamData = () => {
+    if (devMode === "blank_slate") {
+      // New user experience - no team data
+      return null;
+    }
+
+    if (devMode === "production" || devMode === "super_admin_real") {
+      // Production/real modes - try to fetch real team data
+      // TODO: Implement real team data fetching from Supabase
+      // For now, return null to show "no team" state until real implementation
+      console.log(
+        "🔍 TeamBulletin: Production/Real mode - would fetch real team data"
+      );
+      return null;
+    }
+
+    if (isDevMode) {
+      // Dev mock modes - show mock team data
+      return {
+        id: teamId,
+        name: "BoxCall Dev Team",
+        season: "2024 Varsity",
+        colors: { primary: "#00A86B", secondary: "#1E3A8A" },
+        logo: "eagle",
+        record: { wins: 8, losses: 2 },
+        nextGame: "Friday vs. Central Lions",
+        memberCount: 35,
+      };
+    }
+
+    // Fallback - return null
+    return null;
+  };
+
+  const teamData = getTeamData();
+
+  // Show team creation/joining flow for blank slate or no team data
+  if (!teamData) {
+    return (
+      <div className="py-6">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-8">
+            <Icon
+              name="boxcall"
+              size="xl"
+              color="slate"
+              className="mx-auto mb-4"
+            />
+            <Typography variant="headline-lg" className="mb-2">
+              No Team Found
+            </Typography>
+            <Typography variant="body-lg" color="muted" className="mb-6">
+              {devMode === "blank_slate"
+                ? "Create your first team or join an existing one to get started."
+                : "This team doesn't exist or you don't have access to it."}
+            </Typography>
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={handleCreateTeam}
+                className="bg-jade-500 hover:bg-jade-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+              >
+                Create Team {isSuperAdmin && "🔓"}
+              </button>
+              <button
+                onClick={handleJoinTeam}
+                className="border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 px-6 py-2 rounded-lg font-medium transition-colors"
+              >
+                Join Team
+              </button>
+            </div>
+            {isSuperAdmin && (
+              <div className="mt-2 text-xs text-jade-600 dark:text-jade-400">
+                Super Admin: Unlimited team creation access
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Determine user role for team-specific content
   const userRole = profile.role || "player";
   const isCoach = userRole === "coach";
@@ -60,7 +154,7 @@ export const TeamBulletin: React.FC = () => {
               <div className="relative group">
                 <div className="flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-gray-400 dark:hover:border-gray-500 transition-colors cursor-pointer">
                   <div className="text-center">
-                    <Icon name="target" size="md" color="slate" />
+                    <Icon name="boxcall" size="md" color="slate" />
                     <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium">
                       Team Logo
                     </div>
@@ -90,14 +184,14 @@ export const TeamBulletin: React.FC = () => {
                   variant="headline-xl"
                   className="text-gray-900 dark:text-white"
                 >
-                  {mockTeam.name}
+                  {teamData.name}
                 </Typography>
                 <Typography
                   variant="body-lg"
                   className="mt-1 text-gray-600 dark:text-gray-300"
                 >
-                  {mockTeam.season} • Record: {mockTeam.record.wins}-
-                  {mockTeam.record.losses}
+                  {teamData.season} • Record: {teamData.record.wins}-
+                  {teamData.record.losses}
                 </Typography>
               </div>
             </div>
@@ -113,7 +207,7 @@ export const TeamBulletin: React.FC = () => {
                   variant="body-md"
                   className="font-semibold text-gray-900 dark:text-white"
                 >
-                  {mockTeam.nextGame}
+                  {teamData.nextGame}
                 </Typography>
               </div>
               <div className="text-right">
@@ -127,7 +221,7 @@ export const TeamBulletin: React.FC = () => {
                   variant="body-md"
                   className="font-semibold text-gray-900 dark:text-white"
                 >
-                  {mockTeam.memberCount}
+                  {teamData.memberCount}
                 </Typography>
               </div>
             </div>
@@ -243,7 +337,7 @@ export const TeamBulletin: React.FC = () => {
                   Roster
                 </Typography>
                 <Typography variant="body-sm" color="muted">
-                  {mockTeam.memberCount} members
+                  {teamData.memberCount} members
                 </Typography>
               </div>
               <div className="space-y-2 max-h-64 overflow-y-auto">

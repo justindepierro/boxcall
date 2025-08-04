@@ -145,7 +145,7 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
     {
       mode: "super_admin_mock",
       label: "Super Admin (Mock)",
-      description: "Mock Eastside Eagles",
+      description: "Mock Dev Team",
       color: "bg-purple-100 text-purple-800",
     },
     {

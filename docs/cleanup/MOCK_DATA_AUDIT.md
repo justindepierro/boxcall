@@ -1,14 +1,39 @@
-# Mock Data Audit - Complete Inventory
+# Mock Data Audit - MOVED TO MASTER PLAN
 
-> **Generated**: August 4, 2025  
-> **Status**: Phase 1 of Mock Data Cleanup Roadmap  
-> **Purpose**: Complete catalog of all mock data in the codebase
+> **⚠️ DEPRECATED**: This file has been combined with the roadmap  
+> **📍 NEW LOCATION**: [MOCK_DATA_MASTER_PLAN.md](./MOCK_DATA_MASTER_PLAN.md)  
+> **📅 Updated**: August 4, 2025
 
-## 🔍 **Executive Summary**
+---
 
-**Total Mock Data Locations Found**: 10+ files with significant mock data  
-**Impact Level**: High - affects dashboard, achievements, teams, calendar, and user experience  
-**Priority**: High - blocking true blank slate and realistic dev testing
+## 🎯 **Current Status**
+
+This audit has been **merged** with the implementation roadmap to create a single source of truth for all mock data cleanup efforts.
+
+### **What Moved Where:**
+
+- **Complete inventory** → Master Plan Section: "Complete Mock Data Inventory"
+- **Impact analysis** → Master Plan Section: "Component Impact Map"
+- **Priority assessment** → Master Plan Section: "Critical Action Items"
+- **Recommendations** → Master Plan Section: "Implementation Roadmap"
+
+---
+
+## 📍 **Find Current Information At:**
+
+**[📋 MOCK_DATA_MASTER_PLAN.md](./MOCK_DATA_MASTER_PLAN.md)**
+
+This master plan includes:
+
+- ✅ Complete audit findings (from this file)
+- ✅ Implementation roadmap
+- ✅ Progress tracking
+- ✅ Success criteria
+- ✅ Action items
+
+---
+
+_Please use the Master Plan for all future mock data cleanup work._
 
 ---
 

@@ -143,7 +143,7 @@ const customOptions: PDFExportOptions = {
   includeFooter: true,
   includePageNumbers: true,
   branding: {
-    teamName: "Eagles Football",
+    teamName: "BoxCall Dev Team",
     teamColors: {
       primary: "#1a472a",
       secondary: "#16a34a",

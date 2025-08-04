@@ -1,8 +1,39 @@
-# Mock Data Cleanup & Dev Profile System Roadmap
+# Mock Data Cleanup Roadmap - MOVED TO MASTER PLAN
 
-## 🎯 **Objective**
+> **⚠️ DEPRECATED**: This roadmap has been combined with the audit  
+> **📍 NEW LOCATION**: [docs/cleanup/MOCK_DATA_MASTER_PLAN.md](./docs/cleanup/MOCK_DATA_MASTER_PLAN.md)  
+> **📅 Updated**: August 4, 2025
 
-Transform the current mock data system into a proper dev environment with real Supabase profiles and data, while maintaining a true "blank slate" experience for new coach testing.
+---
+
+## 🎯 **Current Status**
+
+This roadmap has been **merged** with the mock data audit to create a comprehensive master plan for all cleanup efforts.
+
+### **What Moved Where:**
+
+- **Phase structure** → Master Plan Section: "Implementation Roadmap"
+- **Dev profile strategy** → Master Plan Section: "Dev Profile Infrastructure"
+- **Success criteria** → Master Plan Section: "Success Criteria & Testing"
+- **Implementation steps** → Master Plan Section: "Critical Action Items"
+
+---
+
+## 📍 **Find Current Information At:**
+
+**[📋 docs/cleanup/MOCK_DATA_MASTER_PLAN.md](./docs/cleanup/MOCK_DATA_MASTER_PLAN.md)**
+
+This master plan includes:
+
+- ✅ Complete audit findings
+- ✅ Implementation roadmap (from this file)
+- ✅ Progress tracking
+- ✅ Combined strategy
+- ✅ Single source of truth
+
+---
+
+_Please use the Master Plan for all future mock data cleanup work._
 
 ## 🔍 **Current State Analysis**
 

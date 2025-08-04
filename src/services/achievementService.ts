@@ -388,7 +388,7 @@ export class AchievementService {
         .toISOString()
         .split("T")[0],
       teamId: "team-1",
-      teamName: "Eastside Eagles",
+      teamName: "BoxCall Dev Team",
     }));
   }
 
@@ -488,8 +488,8 @@ export class AchievementService {
               date: new Date(
                 Date.now() - 7 * 24 * 60 * 60 * 1000
               ).toISOString(),
-              teamId: "dev-eagles",
-              teamName: "Eagles Varsity (Dev)",
+              teamId: "dev-team",
+              teamName: "BoxCall Dev Team",
             },
             {
               id: "dev-coaching-1",
@@ -500,8 +500,8 @@ export class AchievementService {
               date: new Date(
                 Date.now() - 14 * 24 * 60 * 60 * 1000
               ).toISOString(),
-              teamId: "dev-eagles",
-              teamName: "Eagles Varsity (Dev)",
+              teamId: "dev-team",
+              teamName: "BoxCall Dev Team",
             },
           ],
           boxcallMedals: [
@@ -532,8 +532,8 @@ export class AchievementService {
               date: new Date(
                 Date.now() - 5 * 24 * 60 * 60 * 1000
               ).toISOString(),
-              teamId: "dev-eagles",
-              teamName: "Eagles Varsity (Dev)",
+              teamId: "dev-team",
+              teamName: "BoxCall Dev Team",
             },
           ],
           boxcallMedals: [
@@ -565,8 +565,8 @@ export class AchievementService {
               date: new Date(
                 Date.now() - 3 * 24 * 60 * 60 * 1000
               ).toISOString(),
-              teamId: "dev-eagles",
-              teamName: "Eagles Varsity (Dev)",
+              teamId: "dev-team",
+              teamName: "BoxCall Dev Team",
             },
             {
               id: "dev-leadership-player",
@@ -577,8 +577,8 @@ export class AchievementService {
               date: new Date(
                 Date.now() - 10 * 24 * 60 * 60 * 1000
               ).toISOString(),
-              teamId: "dev-eagles",
-              teamName: "Eagles Varsity (Dev)",
+              teamId: "dev-team",
+              teamName: "BoxCall Dev Team",
             },
           ],
           boxcallMedals: [
@@ -610,8 +610,8 @@ export class AchievementService {
               date: new Date(
                 Date.now() - 1 * 24 * 60 * 60 * 1000
               ).toISOString(),
-              teamId: "dev-eagles",
-              teamName: "Eagles Varsity (Dev)",
+              teamId: "dev-team",
+              teamName: "BoxCall Dev Team",
             },
           ],
           boxcallMedals: [

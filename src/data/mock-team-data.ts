@@ -1,12 +1,12 @@
 // Mock team data for development mode
 export const MOCK_TEAM_DATA = {
   id: "mock-team-id",
-  name: "Eastside Eagles",
-  school_name: "Eastside High School",
-  mascot: "Eagles",
+  name: "BoxCall Dev Team",
+  school_name: "BoxCall High School",
+  mascot: "Developers",
   colors_primary: "#1B4332",
   colors_secondary: "#FFD700",
-  team_code: "EAGLES",
+  team_code: "DEVTEAM",
   season_year: 2024,
   league_division: "Division 1A",
   created_by: "mock-coach-id",

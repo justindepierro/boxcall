@@ -57,10 +57,10 @@ export interface DevModeContextType {
 // Legacy mock team data - kept for backward compatibility during transition
 // TODO: Remove this once all services are migrated to new dev profile system
 export const mockTeamData: MockTeamData = {
-  id: "mock-team-eagles",
-  name: "Eastside Eagles",
+  id: "mock-team-dev",
+  name: "BoxCall Dev Team",
   description: "High School Varsity Football - Mock Development Team",
-  team_code: "EAGLES",
+  team_code: "DEVTEAM",
   subscription_type: "team_premium",
   players: [
     {

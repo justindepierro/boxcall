@@ -42,10 +42,10 @@ export interface DevModeContextType {
 }
 // Mock team data for development
 export const mockTeamData: MockTeamData = {
-  id: "mock-team-eagles",
-  name: "Eastside Eagles",
+  id: "mock-team-dev",
+  name: "BoxCall Dev Team",
   description: "High School Varsity Football - Mock Development Team",
-  team_code: "EAGLES",
+  team_code: "DEVTEAM",
   subscription_type: "team_premium",
   players: [
     {

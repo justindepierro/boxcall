@@ -26,7 +26,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
       authorRole: "head_coach",
       timestamp: "2 hours ago",
       content:
-        "Great practice today team! Special shoutout to @Marcus for leadership and @Tyler for those explosive runs. Friday's game plan is uploaded - study hard! #EaglesStrong",
+        "Great practice today team! Special shoutout to @Marcus for leadership and @Tyler for those explosive runs. Friday's game plan is uploaded - study hard! #TeamStrong",
       likes: 12,
       comments: 3,
       pinned: true,

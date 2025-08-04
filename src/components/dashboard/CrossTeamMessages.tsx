@@ -19,7 +19,7 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
   const mockMessages = [
     {
       id: "1",
-      teamName: "Eastside Eagles",
+      teamName: "Dev Varsity Team",
       teamLogo: "🦅",
       from: "Coach Johnson",
       subject: "Practice Schedule Update",
@@ -52,7 +52,7 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
     },
     {
       id: "4",
-      teamName: "Eastside Eagles",
+      teamName: "Dev Varsity Team",
       teamLogo: "🦅",
       from: "Athletic Director",
       subject: "Parent Meeting",

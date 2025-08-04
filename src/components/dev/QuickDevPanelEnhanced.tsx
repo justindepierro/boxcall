@@ -72,7 +72,7 @@ const LEGACY_FALLBACK_MODES = [
   {
     mode: "super_admin_mock",
     label: "🧪 Super Admin (Mock)",
-    description: "Mock Eagles team",
+    description: "Mock Dev team",
   },
   {
     mode: "view_as_head_coach",
