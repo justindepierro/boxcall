@@ -45,8 +45,12 @@ export const getNavigationItems = (
     },
   ];
 
-  // BoxCall - Coaches only (premium feature)
-  if (userRole === "admin" || userRole === "coach") {
+  // BoxCall - Coaches and super_admin only (premium feature)
+  if (
+    userRole === "admin" ||
+    userRole === "coach" ||
+    (userRole as string) === "super_admin"
+  ) {
     items.push({
       id: "boxcall",
       label: "BoxCall",
@@ -58,8 +62,13 @@ export const getNavigationItems = (
     });
   }
 
-  // Playbook - Coaches and players
-  if (userRole === "admin" || userRole === "coach" || userRole === "player") {
+  // Playbook - Coaches, players, and super_admin
+  if (
+    userRole === "admin" ||
+    userRole === "coach" ||
+    userRole === "player" ||
+    (userRole as string) === "super_admin"
+  ) {
     items.push({
       id: "playbook",
       label: "Playbook",
@@ -88,8 +97,12 @@ export const getNavigationItems = (
     description: "Edit user settings and preferences",
   });
 
-  // Team Settings - Coaches only
-  if (userRole === "admin" || userRole === "coach") {
+  // Team Settings - Coaches and super_admin only
+  if (
+    userRole === "admin" ||
+    userRole === "coach" ||
+    (userRole as string) === "super_admin"
+  ) {
     items.push({
       id: "team-settings",
       label: "Team Settings",
@@ -117,8 +130,12 @@ export const getNavigationItems = (
     description: "Learn about BoxCall",
   });
 
-  // Templates - Coaches only
-  if (userRole === "admin" || userRole === "coach") {
+  // Templates - Coaches and super_admin only
+  if (
+    userRole === "admin" ||
+    userRole === "coach" ||
+    (userRole as string) === "super_admin"
+  ) {
     items.push({
       id: "templates",
       label: "Templates",
