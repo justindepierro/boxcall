@@ -4,11 +4,14 @@ import {
   type DashboardData,
   type UserTeamData,
 } from "../services/dashboardService";
+import { useDevMode } from "../app/dev-mode-hooks";
+
 /**
  * Hook for dashboard data management
  * Provides data for Personal Dashboard components
  */
 export const useDashboardData = (userId: string | undefined) => {
+  const { devMode } = useDevMode();
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(
     null
   );
@@ -25,7 +28,7 @@ export const useDashboardData = (userId: string | undefined) => {
       setLoading(true);
       setError(null);
       try {
-        const data = await DashboardService.getDashboardData(userId);
+        const data = await DashboardService.getDashboardData(userId, devMode);
         if (!isCancelled) {
           setDashboardData(data);
           setError(null);
@@ -47,13 +50,13 @@ export const useDashboardData = (userId: string | undefined) => {
     return () => {
       isCancelled = true;
     };
-  }, [userId]);
+  }, [userId, devMode]);
   const refreshDashboard = async () => {
     if (!userId) return;
     setLoading(true);
     setError(null);
     try {
-      const data = await DashboardService.getDashboardData(userId);
+      const data = await DashboardService.getDashboardData(userId, devMode);
       setDashboardData(data);
       setError(null);
     } catch (err) {

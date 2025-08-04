@@ -119,8 +119,11 @@ const SidebarItem: React.FC<{
   return (
     <div>
       <div className={getSidebarItemStyles(item, level)} onClick={handleClick}>
-        {item.icon && <span className="mr-3 flex-shrink-0">{item.icon}</span>}
-        <span className="flex-1">{item.label}</span>
+        {/* Icon area with fixed width for alignment */}
+        <div className="flex items-center justify-start w-9 flex-shrink-0">
+          {item.icon && item.icon}
+        </div>
+        <span className="flex-1 text-left">{item.label}</span>
         {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
         {hasChildren && (
           <svg

@@ -34,6 +34,11 @@
 
 ### **High Priority**
 
+- [ ] **Daily Quote of the Day System**
+  - Design quote database with inspirational football/leadership quotes
+  - Create daily rotation system with cache
+  - Add quote display to dashboard header
+  - Include quote attribution and sharing functionality
 - [ ] **Remove unused imports** across codebase
 - [ ] **Standardize error handling** patterns
 - [ ] **Consolidate duplicate utility functions**
@@ -95,6 +100,28 @@
 - [ ] **Dependency vulnerability scanning**
 
 ## 🎯 **UPCOMING FEATURES (Prep Work)**
+
+### **Achievement System - BoxCall Medals & Rewards**
+
+- [ ] **Achievement Database Design**
+  - Design Supabase schema for BoxCall-specific achievements
+  - Create achievement categories (seasonal, milestone, behavioral)
+  - Define tracking mechanisms for user progress
+- [ ] **Achievement Types Planning**
+  - Helmet stickers (coach-awarded, manual)
+  - BoxCall medals (automatic, task-based)
+  - Team trophies (collaborative achievements)
+  - Seasonal challenges and goals
+- [ ] **Progress Tracking System**
+  - Xbox-style achievement tracking
+  - User activity monitoring hooks
+  - Achievement unlock notifications
+  - Progress visualization components
+- [ ] **Content Creation**
+  - Define initial achievement set
+  - Create achievement descriptions and rewards
+  - Design achievement icons and assets
+  - Seasonal achievement calendar planning
 
 ### **Phase 5: Advanced Features**
 

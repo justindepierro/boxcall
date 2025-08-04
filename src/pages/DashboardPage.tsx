@@ -54,39 +54,25 @@ export const DashboardPage: React.FC = () => {
     );
   }
   const userRole = profile.role || "player";
-  const totalTeams = 3; // Mock data
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between compact-header">
-            <div>
-              <Typography
-                variant="headline-xl"
-                className="text-gray-900 dark:text-white"
-              >
-                Welcome back,{" "}
-                {profile.full_name?.split(" ")[0] ||
-                  profile.display_name ||
-                  user.email}
-                !
-              </Typography>
-              <Typography variant="body-lg" color="muted" className="mt-1">
-                Your personal football command center
-              </Typography>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="text-right">
-                <Typography variant="body-sm" color="muted">
-                  Role: {userRole.replace("_", " ").toUpperCase()}
-                </Typography>
-                <Typography variant="body-sm" color="muted">
-                  Active Teams: {totalTeams}
-                </Typography>
-              </div>
-            </div>
-          </div>
+      {/* Welcome Section - Subtle, Left-aligned */}
+      <div className="bg-gradient-to-r from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-b border-jade-200 dark:border-jade-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-left">
+          <Typography
+            variant="headline-md"
+            className="text-jade-800 dark:text-jade-200"
+          >
+            Welcome back,{" "}
+            {profile.full_name?.split(" ")[0] ||
+              profile.display_name ||
+              user.email}
+            !
+          </Typography>
+          <Typography variant="body-sm" color="muted" className="mt-1">
+            Your command center awaits • Quote of the day coming soon
+          </Typography>
         </div>
       </div>
       {/* Main Dashboard Content - New 4-Component Layout */}

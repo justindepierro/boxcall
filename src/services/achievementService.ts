@@ -44,19 +44,34 @@ export class AchievementService {
     devMode?: string
   ): Promise<AchievementData> {
     try {
+      console.log(
+        `🏆 Getting achievements for user ${userId} in dev mode: ${devMode}`
+      );
+
       // Check if we're in blank slate mode
       if (devMode === "blank_slate") {
+        console.log("🆕 Returning empty achievements for blank slate mode");
         return this.getEmptyAchievements();
       }
 
       // For production/real modes, get real data
       if (devMode === "production" || devMode === "super_admin_real") {
         try {
-          const realAchievements = await this.getRealAchievements(userId);
+          console.log("🔍 Attempting to fetch real achievements...");
+          const realAchievements = await Promise.race([
+            this.getRealAchievements(userId),
+            new Promise<never>((_, reject) =>
+              setTimeout(
+                () => reject(new Error("Achievement fetch timeout")),
+                5000
+              )
+            ),
+          ]);
+          console.log("✅ Real achievements fetched successfully");
           return realAchievements;
         } catch (error) {
           console.warn(
-            "Could not fetch real achievements, returning empty:",
+            "⚠️ Could not fetch real achievements, returning empty:",
             error
           );
           return this.getEmptyAchievements();
@@ -66,6 +81,14 @@ export class AchievementService {
       // For professional dev profiles, get dev profile data
       if (devMode?.startsWith("dev_")) {
         return this.getProfessionalDevAchievements(userId, devMode);
+      }
+
+      // For blank slate mode, return empty achievements
+      if (devMode === "blank_slate") {
+        console.log(
+          "🆕 Achievement Service: Blank slate mode - returning empty achievements"
+        );
+        return this.getEmptyAchievements();
       }
 
       // For legacy mock dev modes, return mock data
@@ -96,64 +119,78 @@ export class AchievementService {
   private static async getRealAchievements(
     userId: string
   ): Promise<AchievementData> {
-    // Try to get real helmet stickers
-    const { data: stickers } = await supabase
-      .from("helmet_stickers")
-      .select(
+    try {
+      // Try to get real helmet stickers with error handling
+      const stickersResult = await supabase
+        .from("helmet_stickers")
+        .select(
+          `
+          *,
+          teams (name),
+          awarded_by_profile:profiles!awarded_by (display_name)
         `
-        *,
-        teams (name),
-        awarded_by_profile:profiles!awarded_by (display_name)
-      `
-      )
-      .eq("user_id", userId)
-      .order("awarded_at", { ascending: false });
+        )
+        .eq("user_id", userId)
+        .order("awarded_at", { ascending: false });
 
-    // Try to get real achievements
-    const { data: achievements } = await supabase
-      .from("achievements")
-      .select("*")
-      .eq("user_id", userId)
-      .order("earned_at", { ascending: false });
+      if (stickersResult.error) {
+        console.warn("Error fetching helmet stickers:", stickersResult.error);
+      }
 
-    const helmetStickers: HelmetSticker[] = (stickers || []).map((sticker) => ({
-      id: sticker.id,
-      name: sticker.reason,
-      icon: this.getStickerIcon(sticker.sticker_type),
-      awardedBy: sticker.awarded_by,
-      awardedByName: sticker.awarded_by_profile?.display_name || "Coach",
-      date: sticker.awarded_at || new Date().toISOString(),
-      teamId: sticker.team_id,
-      teamName: sticker.teams?.name || "Team",
-    }));
+      // Try to get real achievements with error handling
+      const achievementsResult = await supabase
+        .from("achievements")
+        .select("*")
+        .eq("user_id", userId)
+        .order("earned_at", { ascending: false });
 
-    const boxcallMedals: BoxCallMedal[] = (achievements || []).map(
-      (achievement) => ({
+      if (achievementsResult.error) {
+        console.warn("Error fetching achievements:", achievementsResult.error);
+      }
+
+      const stickers = stickersResult.data || [];
+      const achievements = achievementsResult.data || [];
+
+      const helmetStickers: HelmetSticker[] = stickers.map((sticker) => ({
+        id: sticker.id,
+        name: sticker.reason,
+        icon: this.getStickerIcon(sticker.sticker_type),
+        awardedBy: sticker.awarded_by,
+        awardedByName: sticker.awarded_by_profile?.display_name || "Coach",
+        date: sticker.awarded_at || new Date().toISOString(),
+        teamId: sticker.team_id,
+        teamName: sticker.teams?.name || "Team",
+      }));
+
+      const boxcallMedals: BoxCallMedal[] = achievements.map((achievement) => ({
         id: achievement.id,
         name: achievement.title || "Achievement",
         icon: achievement.icon_name || "award",
         description: achievement.description || "",
         earned: true,
         earnedDate: achievement.earned_at || new Date().toISOString(),
-      })
-    );
+      }));
 
-    return {
-      helmetStickers,
-      boxcallMedals,
-      weeklyStreak: 0, // Calculate real streak later
-      totalPoints: this.calculateTotalPoints({
+      return {
         helmetStickers,
         boxcallMedals,
-        weeklyStreak: 0,
-        totalPoints: 0,
-        recentAchievements: [],
-      }),
-      recentAchievements: [
-        ...helmetStickers.slice(0, 2),
-        ...boxcallMedals.slice(0, 1),
-      ],
-    };
+        weeklyStreak: 0, // Calculate real streak later
+        totalPoints: this.calculateTotalPoints({
+          helmetStickers,
+          boxcallMedals,
+          weeklyStreak: 0,
+          totalPoints: 0,
+          recentAchievements: [],
+        }),
+        recentAchievements: [
+          ...helmetStickers.slice(0, 2),
+          ...boxcallMedals.slice(0, 1),
+        ],
+      };
+    } catch (error) {
+      console.error("Error in getRealAchievements:", error);
+      throw error; // Re-throw to be caught by calling function
+    }
   }
 
   /**

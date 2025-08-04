@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuthProfile, useIsAuthenticated } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
@@ -17,8 +17,46 @@ export const Navigation: React.FC = () => {
   const profile = useAuthProfile();
   const { effectiveUserRole, isDevMode } = useDevMode();
   const { toggleSidebar } = useUI();
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Auto-hide navigation on scroll and mouse behavior
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY < 10) {
+        setIsVisible(true);
+      } else if (currentScrollY < lastScrollY) {
+        setIsVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setIsVisible(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    let hideTimeout: NodeJS.Timeout;
+    const handleMouseMove = (e: MouseEvent) => {
+      if (e.clientY < 80) {
+        setIsVisible(true);
+        if (hideTimeout) clearTimeout(hideTimeout);
+      } else if (window.scrollY > 50) {
+        if (hideTimeout) clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(() => setIsVisible(false), 1000);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (hideTimeout) clearTimeout(hideTimeout);
+    };
+  }, [lastScrollY]);
   // Use effective role from dev mode if in dev mode, otherwise use profile role
   const currentRole: UserRole | null = isDevMode
     ? (effectiveUserRole as UserRole)
@@ -29,18 +67,21 @@ export const Navigation: React.FC = () => {
   };
   const handleNavigation = (path: string) => {
     window.location.href = path;
-    setUserMenuOpen(false);
     setMobileMenuOpen(false);
   };
   if (!isAuthenticated) {
     return null; // Don't show navigation for unauthenticated users
   }
   return (
-    <nav className="bg-white dark:bg-gray-800 shadow-md border-b-2 border-gray-200 dark:border-gray-700">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 shadow-md border-b-2 border-gray-200 dark:border-gray-700 transition-transform duration-300 ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex items-center h-16">
           {/* Logo and Brand - Display font for impact */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 flex-1">
             {/* Sidebar Toggle */}
             <button
               onClick={() => toggleSidebar()}
@@ -80,140 +121,79 @@ export const Navigation: React.FC = () => {
           {/* Desktop Quick Actions - Key functions for productivity */}
           <div className="hidden md:flex items-center space-x-4">
             {/* Quick Navigation Shortcuts */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3">
               <button
                 onClick={() => handleNavigation("/dashboard")}
-                className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 text-sm transition-colors"
+                className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 p-2 rounded-md hover:bg-jade-50 dark:hover:bg-jade-900/10 transition-all duration-200"
                 title="Dashboard (⌘+1)"
               >
                 <Icon name="home" size="md" color="current" />
               </button>
-              {(currentRole === "admin" || currentRole === "coach") && (
-                <button
-                  onClick={() => handleNavigation("/boxcall")}
-                  className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 text-sm transition-colors"
-                  title="BoxCall (⌘+2)"
-                >
-                  �
-                </button>
-              )}
+              <button
+                onClick={() => handleNavigation("/team/1/bulletin")}
+                className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 p-2 rounded-md hover:bg-jade-50 dark:hover:bg-jade-900/10 transition-all duration-200"
+                title="Team Bulletin (⌘+2)"
+              >
+                <Icon name="grid" size="md" color="current" />
+              </button>
               <button
                 onClick={() => handleNavigation("/calendar")}
-                className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 text-sm transition-colors"
+                className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 p-2 rounded-md hover:bg-jade-50 dark:hover:bg-jade-900/10 transition-all duration-200"
                 title="Calendar (⌘+3)"
               >
                 <Icon name="calendar" size="md" color="current" />
               </button>
-              {/* Quick Sign Out for Dev Mode */}
-              {isDevMode && (
+              <button
+                onClick={() => handleNavigation("/playbook")}
+                className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 p-2 rounded-md hover:bg-jade-50 dark:hover:bg-jade-900/10 transition-all duration-200"
+                title="Playbook (⌘+4)"
+              >
+                <Icon name="book" size="md" color="current" />
+              </button>
+              {(currentRole === "admin" || currentRole === "coach") && (
                 <button
-                  onClick={handleSignOut}
-                  className="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 text-sm transition-colors ml-2 pl-2 border-l border-gray-300 dark:border-gray-600"
-                  title="Quick Sign Out (Dev Mode)"
+                  onClick={() => handleNavigation("/boxcall")}
+                  className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 p-2 rounded-md hover:bg-jade-50 dark:hover:bg-jade-900/10 transition-all duration-200"
+                  title="BoxCall (⌘+5)"
                 >
-                  <Icon name="arrow-left" size="md" color="current" />
+                  <div className="w-4 h-4">
+                    <img
+                      src="/assets/boxcall-logo.svg"
+                      alt="BoxCall"
+                      className="w-4 h-4"
+                    />
+                  </div>
                 </button>
               )}
             </div>
           </div>
-          {/* User Menu - Square, professional styling */}
-          <div className="flex items-center space-x-4">
-            {/* User Profile Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-jade-600 dark:hover:text-jade-400 px-3 py-2 rounded-sm text-sm font-medium transition-all duration-200 border border-transparent hover:border-jade-200 hover:bg-jade-50 dark:hover:bg-jade-900/10"
-              >
-                <div className="w-8 h-8 bg-jade-600 rounded-sm flex items-center justify-center text-white text-sm font-display font-bold shadow-sm">
-                  {profile?.display_name?.[0] || profile?.email?.[0] || "U"}
-                </div>
-                <span className="hidden sm:block font-sans font-medium">
-                  {profile?.display_name ||
-                    profile?.email?.split("@")[0] ||
-                    "User"}
-                </span>
-                <svg
-                  className={`w-4 h-4 transition-transform ${userMenuOpen ? "rotate-180" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              {/* Dropdown Menu - Square, technical styling */}
-              {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-gray-800 rounded-md shadow-lg border-2 border-gray-200 dark:border-gray-700 z-50">
-                  <div className="py-2">
-                    {/* Profile Info - Enhanced with display font */}
-                    <div className="px-4 py-3 border-b-2 border-gray-200 dark:border-gray-700">
-                      <p className="text-sm font-display font-semibold text-gray-900 dark:text-white">
-                        {profile?.display_name || "User"}
-                      </p>
-                      <p className="text-sm font-mono text-gray-500 dark:text-gray-400 truncate">
-                        {profile?.email}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        {currentRole && (
-                          <p className="text-xs font-display font-bold text-jade-600 dark:text-jade-400 capitalize px-2 py-1 bg-jade-50 dark:bg-jade-900/20 rounded-sm inline-block">
-                            {currentRole}
-                          </p>
-                        )}
-                        {isDevMode && (
-                          <p className="text-xs font-display font-bold text-amber-600 dark:text-amber-400 px-2 py-1 bg-amber-50 dark:bg-amber-900/20 rounded-sm inline-block">
-                            DEV MODE
-                          </p>
-                        )}
-                      </div>
-                      {isDevMode && currentRole !== profile?.role && (
-                        <p className="text-xs text-amber-600 dark:text-amber-400 italic mt-1">
-                          Simulating: {currentRole}
-                        </p>
-                      )}
-                    </div>
-                    {/* Menu Items - Square, confident styling */}
-                    <button
-                      onClick={() => handleNavigation("/profile")}
-                      className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-gray-700 dark:text-gray-300 hover:bg-jade-50 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 transition-all duration-200 border-l-2 border-transparent hover:border-jade-500 flex items-center gap-2"
-                    >
-                      <Icon name="user" size="sm" color="current" />
-                      My Profile
-                    </button>
-                    <button
-                      onClick={() => handleNavigation("/dashboard")}
-                      className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-gray-700 dark:text-gray-300 hover:bg-jade-50 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 transition-all duration-200 border-l-2 border-transparent hover:border-jade-500 flex items-center gap-2"
-                    >
-                      <Icon name="home" size="sm" color="current" />
-                      Dashboard
-                    </button>
-                    {/* Conditional Menu Items */}
-                    {profile?.role === "admin" && (
-                      <button
-                        onClick={() => handleNavigation("/super-admin")}
-                        className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-gray-700 dark:text-gray-300 hover:bg-navy-50 hover:text-navy-700 dark:hover:bg-navy-900/20 dark:hover:text-navy-400 transition-all duration-200 border-l-2 border-transparent hover:border-navy-500 flex items-center gap-2"
-                      >
-                        <Icon name="settings" size="sm" color="current" />
-                        Super Admin
-                      </button>
-                    )}
-                    <div className="border-t-2 border-gray-200 dark:border-gray-700 mt-2 pt-2">
-                      <button
-                        onClick={handleSignOut}
-                        className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-red-600 dark:text-red-400 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/20 dark:hover:text-red-300 transition-all duration-200 border-l-2 border-transparent hover:border-red-500 flex items-center gap-2"
-                      >
-                        <Icon name="arrow-left" size="sm" color="current" />
-                        Sign Out
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+          {/* Right side - Settings and Logout */}
+          <div className="flex items-center space-x-3">
+            {/* Settings Gear - Link to Profile */}
+            <button
+              onClick={() => handleNavigation("/profile")}
+              className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 p-2 rounded-md hover:bg-jade-50 dark:hover:bg-jade-900/10 transition-all duration-200"
+              title="Settings & Profile"
+            >
+              <Icon name="settings" size="md" color="current" />
+            </button>
+
+            {/* Sign Out Button */}
+            <button
+              onClick={handleSignOut}
+              className="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 p-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900/10 transition-all duration-200"
+              title="Sign Out"
+            >
+              <Icon name="power" size="md" color="current" />
+            </button>
+
+            {/* Dev mode indicator */}
+            {isDevMode && (
+              <span className="text-xs bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 px-2 py-1 rounded font-medium">
+                DEV
+              </span>
+            )}
+
             {/* Mobile Menu Button - Square styling */}
             <div className="md:hidden">
               <button
@@ -274,11 +254,10 @@ export const Navigation: React.FC = () => {
         )}
       </div>
       {/* Backdrop for mobile menu */}
-      {(userMenuOpen || mobileMenuOpen) && (
+      {mobileMenuOpen && (
         <div
           className="fixed inset-0 z-40"
           onClick={() => {
-            setUserMenuOpen(false);
             setMobileMenuOpen(false);
           }}
         />

@@ -37,8 +37,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Navigation />
-      {/* Main content area with overlay sidebar */}
-      <div className="relative">
+      {/* Main content area with overlay sidebar and top padding for fixed nav */}
+      <div className="relative pt-16">
         {/* Sidebar - Now overlays instead of pushing content */}
         <Sidebar
           items={sidebarItems}

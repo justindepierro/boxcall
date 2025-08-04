@@ -51,13 +51,13 @@ Transform the current mock data system into a proper dev environment with real S
 
 ### 1.2 Service Layer Refactoring
 
-- [ ] **Update `dashboardService.ts`:**
+- [x] **Update `dashboardService.ts`:**
   - Remove hardcoded mock activity
   - Add dev mode awareness
   - Return empty arrays for blank slate mode
   - Return real data for production mode
 
-- [ ] **Update `achievementService.ts`:**
+- [x] **Update `achievementService.ts`:**
   - Remove hardcoded mock achievements
   - Implement real Supabase queries
   - Add dev mode support for different data sources

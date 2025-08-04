@@ -115,7 +115,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
           <Icon name="trophy" size={14} className="text-yellow-600" />
           <Typography
             variant="headline-md"
-            className="text-gray-900 dark:text-white"
+            className="text-gray-800 dark:text-white"
           >
             Trophy Shelf
           </Typography>
@@ -123,7 +123,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         <div className="flex-1 flex justify-center">
           <Typography
             variant="body-sm"
-            className="font-semibold text-gray-900 dark:text-white"
+            className="font-semibold text-gray-800 dark:text-white"
           >
             BoxCall Achievements
           </Typography>
@@ -220,40 +220,69 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
           <div className="flex flex-col gap-2" style={{ height: "176px" }}>
             {/* Achievement List - Scrollable within the constrained container */}
             <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-jade-300 scrollbar-track-transparent pr-1">
-              {allAchievements.map((achievement) => (
-                <div
-                  key={`${achievement.type}-${achievement.id}`}
-                  className="flex items-center space-x-3 py-2 px-3 h-10 mb-1 bg-white/60 dark:bg-gray-700/40 rounded-lg border border-white/40 dark:border-gray-600/30"
-                >
+              {allAchievements.length > 0 ? (
+                allAchievements.map((achievement) => (
                   <div
-                    className={`flex-shrink-0 w-4 h-4 flex items-center justify-center ${achievement.earned ? "" : "grayscale opacity-50"}`}
+                    key={`${achievement.type}-${achievement.id}`}
+                    className="flex items-center space-x-3 py-2 px-3 h-10 mb-1 bg-white/60 dark:bg-gray-700/40 rounded-lg border border-white/40 dark:border-gray-600/30"
                   >
-                    {renderAchievementIcon(
-                      achievement.icon,
-                      achievement.name,
-                      achievement.description
+                    <div
+                      className={`flex-shrink-0 w-4 h-4 flex items-center justify-center ${achievement.earned ? "" : "grayscale opacity-50"}`}
+                    >
+                      {renderAchievementIcon(
+                        achievement.icon,
+                        achievement.name,
+                        achievement.description
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <Typography
+                        variant="caption"
+                        className="font-semibold truncate"
+                      >
+                        {achievement.name}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        color="muted"
+                        className="block truncate"
+                      >
+                        {achievement.description}
+                      </Typography>
+                    </div>
+                    {achievement.earned && (
+                      <div className="w-1.5 h-1.5 bg-jade-500 rounded-full flex-shrink-0"></div>
                     )}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <Typography
-                      variant="caption"
-                      className="font-semibold truncate"
-                    >
-                      {achievement.name}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      color="muted"
-                      className="block truncate"
-                    >
-                      {achievement.description}
-                    </Typography>
-                  </div>
-                  {achievement.earned && (
-                    <div className="w-1.5 h-1.5 bg-jade-500 rounded-full flex-shrink-0"></div>
-                  )}
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full text-center px-4 py-6">
+                  <Icon
+                    name="trophy"
+                    size={24}
+                    className="text-jade-400 mb-3 opacity-60"
+                  />
+                  <Typography
+                    variant="body-sm"
+                    className="font-semibold text-jade-700 dark:text-jade-300 mb-2"
+                  >
+                    Ready to Fill Your Trophy Shelf?
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    color="muted"
+                    className="text-xs leading-relaxed"
+                  >
+                    There's nothing like goals to chase! BoxCall creates
+                    seasonal achievements so you can stay on track. Earn medals
+                    by completing tasks like studying your playbook, creating
+                    calendar events, connecting with your team and more. Your
+                    coach can award helmet stickers, and you can all work
+                    together to add trophies to your team trophy case. Let's
+                    help you reach your dreams and fill your trophy shelf!
+                  </Typography>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>

@@ -75,7 +75,10 @@ export class DashboardService {
   /**
    * Get comprehensive dashboard data for a user
    */
-  static async getDashboardData(userId: string): Promise<DashboardData> {
+  static async getDashboardData(
+    userId: string,
+    devMode?: string
+  ): Promise<DashboardData> {
     try {
       const userTeams = await this.getUserTeams(userId);
       // Filter active teams (in season)
@@ -83,8 +86,12 @@ export class DashboardService {
         // TODO: Add season logic - for now, all teams are considered active
         return true;
       });
-      // Get recent activity (mock for now - TODO: implement real activity feed)
-      const recentActivity = await this.getRecentActivity(userId, userTeams);
+      // Get recent activity with dev mode awareness
+      const recentActivity = await this.getRecentActivity(
+        userId,
+        userTeams,
+        devMode
+      );
       return {
         userTeams,
         totalTeams: userTeams.length,
@@ -107,9 +114,24 @@ export class DashboardService {
    */
   static async getRecentActivity(
     _userId: string,
-    userTeams: UserTeamData[]
+    userTeams: UserTeamData[],
+    devMode?: string
   ): Promise<ActivityItem[]> {
-    // Mock activity data for now
+    // For blank slate mode, return empty activity
+    if (devMode === "blank_slate") {
+      console.log(
+        "🆕 Dashboard Service: Blank slate mode - returning empty activity"
+      );
+      return [];
+    }
+
+    // For dev modes that need activity, check if user has teams
+    if (!userTeams || userTeams.length === 0) {
+      return [];
+    }
+
+    // TODO: Implement real activity feed from Supabase
+    // For now, return mock data only for non-blank-slate modes
     const mockActivity: ActivityItem[] = [
       {
         id: "1",

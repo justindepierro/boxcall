@@ -42,7 +42,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
     <Card className="compact-card h-full">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-gray-200 pb-2">
-        <Typography variant="headline-md" className="text-navy-900">
+        <Typography variant="headline-md" className="text-navy-800">
           Profile
         </Typography>
         {!isViewMode && (
@@ -68,7 +68,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
           <div className="flex-1 min-w-0">
             <Typography
               variant="body-lg"
-              className="font-semibold text-gray-900 truncate"
+              className="font-semibold text-gray-800 truncate"
             >
               {displayName}
             </Typography>

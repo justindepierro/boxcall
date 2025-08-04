@@ -84,22 +84,22 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
     <>
       <Card className="compact-card h-full">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-3">
-          <Typography variant="headline-md" className="text-navy-800">
+        <div className="flex items-center justify-between border-b border-gray-200 pb-2">
+          <Typography variant="headline-md" className="text-navy-900">
             Personal Calendar
           </Typography>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-4">
             <button
               onClick={() => navigate("/calendar")}
-              className="text-jade-600 hover:text-jade-700 text-xs font-medium transition-colors"
+              className="text-jade-600 hover:text-jade-700 text-sm font-medium transition-colors"
             >
-              View Full Calendar
+              View Full Calendar →
             </button>
             <button
               onClick={() => setShowQuickAdd(!showQuickAdd)}
-              className="px-2 py-1 text-xs font-medium text-jade-600 hover:text-jade-700 border border-jade-200 rounded-md transition-colors"
+              className="px-3 py-1 text-sm font-medium text-jade-600 hover:text-jade-700 border border-jade-200 rounded-md transition-colors"
             >
-              + Add
+              + Quick Add
             </button>
           </div>
         </div>
