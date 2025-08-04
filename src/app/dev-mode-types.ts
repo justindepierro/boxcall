@@ -1,6 +1,7 @@
 // Development mode types and utilities
 export type DevMode =
   | "production" // Normal production mode
+  | "blank_slate" // Blank slate - no preloaded data, new user experience
   | "super_admin_real" // Super admin with your real team
   | "super_admin_mock" // Super admin with mock data
   | "view_as_head_coach" // View as head coach

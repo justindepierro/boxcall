@@ -1,6 +1,6 @@
 # New Coach Experience Roadmap 🏈
 
-_Comprehensive testing plan for tomorrow's "brand new head coach" user experience session_
+_Comprehensive testing plan for today's "brand new head coach" user experience session_
 
 ## 🎯 Session Objectives
 
@@ -32,9 +32,11 @@ VITE_SUPABASE_ANON_KEY=[configured]
 
 ### Build Status Check ✅ READY
 
-- [x] Development server running (`http://localhost:5175/`) ✅
+- [x] Development server running (`http://localhost:5173/`) ✅
 - [x] TypeScript compilation clean ✅
-- [ ] No critical console errors (verify tomorrow)
+- [x] Quick sign-out functionality added ✅
+- [x] Enhanced dev mode switcher for testing ✅
+- [ ] No critical console errors (verify today)
 
 ---
 
@@ -319,16 +321,16 @@ _Coach needs to plan 2-week practice cycle_
 
 ### 📍 Starting Point
 
-1. Open `http://localhost:5175/`
+1. Open `http://localhost:5173/`
 2. Navigate to login page
 3. Begin new coach signup flow
 
 ---
 
-_Generated for tomorrow's new coach experience testing session_
-_Last updated: August 3, 2025_
+_Generated for today's new coach experience testing session_
+_Last updated: August 4, 2025_
 _Status: Ready for execution_ ✅
 
-Roster CSV Template ( I will put in assets tomorrow (its the same as maxpreps so people dont need to keep making the same file over and over again.... we can add our own data later...))
-
-iscaptain jersey firstname lastname position1 position2 position3 bio classyear heightfeet heightinches weight
+Roster CSV Template ✅ CREATED
+Location: `/public/assets/roster-template.csv`
+(MaxPreps compatible format with sample data)

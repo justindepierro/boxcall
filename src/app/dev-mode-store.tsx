@@ -22,6 +22,8 @@ export function DevModeProvider({ children }: { children: React.ReactNode }) {
   // Determine effective user role based on dev mode
   const effectiveUserRole = React.useMemo(() => {
     switch (devMode) {
+      case "blank_slate":
+        return "new_user"; // Fresh user with no teams/data
       case "view_as_head_coach":
         return "head_coach";
       case "view_as_coach":
@@ -41,6 +43,9 @@ export function DevModeProvider({ children }: { children: React.ReactNode }) {
   }, [devMode, profile?.role]);
   // Determine effective team data
   const effectiveTeamData = React.useMemo(() => {
+    if (devMode === "blank_slate") {
+      return null; // No team data for blank slate
+    }
     return devMode === "super_admin_mock" || devMode.startsWith("view_as_")
       ? mockTeamData
       : null;

@@ -27,12 +27,22 @@ export const useEffectiveTeamRole = () => {
 // Hook to determine if we should use mock data or real database data
 export const useTeamDataSource = () => {
   const { devMode, effectiveTeamData } = useDevMode();
+
   const shouldUseMockData =
     devMode === "super_admin_mock" || devMode.startsWith("view_as_");
+
+  const shouldUseBlankSlate = devMode === "blank_slate";
+
   const teamData = effectiveTeamData;
+
   return {
     shouldUseMockData,
+    shouldUseBlankSlate,
     mockTeamData: teamData,
-    dataSource: shouldUseMockData ? "mock" : ("database" as const),
+    dataSource: shouldUseBlankSlate
+      ? ("blank" as const)
+      : shouldUseMockData
+        ? ("mock" as const)
+        : ("database" as const),
   };
 };

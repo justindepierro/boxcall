@@ -10,6 +10,7 @@ import {
 } from "../../utils/navigation";
 import { Navigation } from "../ui/Navigation";
 import { Sidebar } from "../ui/Sidebar";
+import { QuickDevPanel } from "../dev/QuickDevPanel";
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 interface LayoutProps {
   children: React.ReactNode;
@@ -94,6 +95,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         />
         {/* Main content - always full width, no margin shifts */}
         <main className="w-full">{children}</main>
+
+        {/* Development Tools Panel */}
+        <QuickDevPanel />
       </div>
     </div>
   );

@@ -104,6 +104,16 @@ export const Navigation: React.FC = () => {
               >
                 <Icon name="calendar" size="md" color="current" />
               </button>
+              {/* Quick Sign Out for Dev Mode */}
+              {isDevMode && (
+                <button
+                  onClick={handleSignOut}
+                  className="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 text-sm transition-colors ml-2 pl-2 border-l border-gray-300 dark:border-gray-600"
+                  title="Quick Sign Out (Dev Mode)"
+                >
+                  <Icon name="arrow-left" size="md" color="current" />
+                </button>
+              )}
             </div>
           </div>
           {/* User Menu - Square, professional styling */}

@@ -20,14 +20,14 @@ interface PersonalTrophyShelfProps {
 export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   userId,
 }) => {
-  const {
-    helmetStickers,
-    boxcallMedals,
-    weeklyStreak,
-    totalPoints,
-    loading,
-    error,
-  } = useAchievements(userId);
+  const { achievements, loading, error } = useAchievements(userId);
+
+  // Extract properties from achievements with defaults
+  const helmetStickers = achievements?.helmetStickers || [];
+  const boxcallMedals = achievements?.boxcallMedals || [];
+  const weeklyStreak = achievements?.weeklyStreak || 0;
+  const totalPoints = achievements?.totalPoints || 0;
+
   // Combine all achievements for scrolling
   const allAchievements = [
     ...helmetStickers.map((sticker) => ({

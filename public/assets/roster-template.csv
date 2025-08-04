@@ -1,0 +1,11 @@
+iscaptain,jersey,firstname,lastname,position1,position2,position3,bio,classyear,heightfeet,heightinches,weight
+false,1,John,Smith,QB,,,"Senior quarterback with strong arm and leadership skills",2025,6,2,185
+true,12,Mike,Johnson,RB,KR,,"Team captain, versatile running back",2025,5,10,175
+false,88,David,Williams,WR,PR,,"Fast receiver with excellent hands",2026,6,0,170
+false,77,Chris,Brown,OL,DL,,"Versatile lineman, plays both sides",2025,6,4,250
+false,99,Alex,Davis,DL,,,"Defensive end with good pass rush",2025,6,3,240
+false,21,Ryan,Miller,DB,WR,,"Corner back with good coverage skills",2026,5,11,180
+false,5,Josh,Wilson,K,P,,"Reliable kicker and punter",2024,5,9,160
+false,44,Tyler,Moore,LB,,,"Middle linebacker, good tackler",2025,6,1,210
+false,33,Brandon,Taylor,RB,LB,,"Backup running back, special teams",2026,5,8,185
+false,18,Kevin,Anderson,QB,WR,,"Backup quarterback, can play receiver",2026,6,1,190

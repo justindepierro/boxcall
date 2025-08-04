@@ -1,19 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import {
   AchievementService,
   type AchievementData,
 } from "../services/achievementService";
+import { useDevMode } from "../app/dev-mode-hooks";
 /**
  * Hook for managing user achievements
  */
-export const useAchievements = (userId: string | undefined) => {
+export function useAchievements(userId?: string) {
   const [achievements, setAchievements] = useState<AchievementData | null>(
     null
   );
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { devMode } = useDevMode();
+
   useEffect(() => {
     let isCancelled = false;
+
     const fetchAchievements = async () => {
       if (!userId) {
         setAchievements(null);
@@ -23,7 +27,10 @@ export const useAchievements = (userId: string | undefined) => {
       setLoading(true);
       setError(null);
       try {
-        const data = await AchievementService.getUserAchievements(userId);
+        const data = await AchievementService.getUserAchievements(
+          userId,
+          devMode
+        );
         if (!isCancelled) {
           setAchievements(data);
           setError(null);
@@ -33,7 +40,6 @@ export const useAchievements = (userId: string | undefined) => {
           setError(
             err instanceof Error ? err.message : "Failed to load achievements"
           );
-          setAchievements(null);
         }
       } finally {
         if (!isCancelled) {
@@ -41,19 +47,13 @@ export const useAchievements = (userId: string | undefined) => {
         }
       }
     };
+
     fetchAchievements();
+
     return () => {
       isCancelled = true;
     };
-  }, [userId]);
-  return {
-    achievements,
-    helmetStickers: achievements?.helmetStickers || [],
-    boxcallMedals: achievements?.boxcallMedals || [],
-    weeklyStreak: achievements?.weeklyStreak || 0,
-    totalPoints: achievements?.totalPoints || 0,
-    recentAchievements: achievements?.recentAchievements || [],
-    loading,
-    error,
-  };
-};
+  }, [userId, devMode]);
+
+  return { achievements, loading, error };
+}

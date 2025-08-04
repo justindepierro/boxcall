@@ -6,6 +6,7 @@ import type {
   EventRSVP,
 } from "../services/calendarService";
 import { CalendarService } from "../services/calendarService";
+import { useDevMode } from "../app/dev-mode-hooks";
 /**
  * useCalendar Hook
  *
@@ -17,6 +18,7 @@ export const useCalendar = (userId: string, teamId?: string) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<CalendarFilters>({});
+  const { devMode } = useDevMode();
   /**
    * Fetch calendar events
    */
@@ -30,7 +32,11 @@ export const useCalendar = (userId: string, teamId?: string) => {
         fetchedEvents = await CalendarService.getTeamEvents(teamId, filters);
       } else {
         // Fetch user events across all teams
-        fetchedEvents = await CalendarService.getUserEvents(userId, filters);
+        fetchedEvents = await CalendarService.getUserEvents(
+          userId,
+          filters,
+          devMode
+        );
       }
       setEvents(fetchedEvents);
     } catch (err) {
@@ -39,7 +45,7 @@ export const useCalendar = (userId: string, teamId?: string) => {
     } finally {
       setLoading(false);
     }
-  }, [userId, teamId, filters]);
+  }, [userId, teamId, filters, devMode]);
   /**
    * Create a new event
    */

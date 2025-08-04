@@ -65,12 +65,43 @@ export class CalendarService {
    */
   static async getUserEvents(
     userId: string,
-    filters?: CalendarFilters
+    filters?: CalendarFilters,
+    devMode?: string
   ): Promise<CalendarEvent[]> {
     try {
-      // TODO: Implement real database query
-      // For now, return comprehensive mock data
-      return this.getMockUserEvents(userId, filters);
+      // Check if we're in blank slate mode
+      if (devMode === "blank_slate") {
+        return [];
+      }
+
+      // For professional dev profiles, get realistic dev data
+      if (devMode?.startsWith("dev_")) {
+        return this.getProfessionalDevEvents(userId, devMode, filters);
+      }
+
+      // For production/real modes, try to get real data
+      if (devMode === "production" || devMode === "super_admin_real") {
+        try {
+          const realEvents = await this.getRealUserEvents(userId, filters);
+          return realEvents;
+        } catch (error) {
+          console.warn("Could not fetch real events, returning empty:", error);
+          return [];
+        }
+      }
+
+      // For legacy mock modes, return mock data
+      if (devMode === "super_admin_mock" || devMode?.startsWith("view_as_")) {
+        return this.getMockUserEvents(userId, filters);
+      }
+
+      // Default: try real data first, fallback to empty
+      try {
+        return await this.getRealUserEvents(userId, filters);
+      } catch (error) {
+        console.warn("Could not fetch real events, returning empty:", error);
+        return [];
+      }
     } catch (error) {
       console.error("Error fetching user events:", error);
       return [];
@@ -464,5 +495,124 @@ export class CalendarService {
     }
 
     return filtered;
+  }
+
+  /**
+   * Get real user events from Supabase
+   */
+  private static async getRealUserEvents(
+    userId: string,
+    filters?: CalendarFilters
+  ): Promise<CalendarEvent[]> {
+    // TODO: Implement real Supabase query
+    console.log(`Getting real events for user ${userId}`, filters);
+
+    // For now, return empty array - this will be implemented when you have real calendar data
+    return [];
+  }
+
+  /**
+   * Get professional dev profile events
+   */
+  private static getProfessionalDevEvents(
+    userId: string,
+    devMode: string,
+    filters?: CalendarFilters
+  ): CalendarEvent[] {
+    // Professional dev profiles have realistic calendar events
+    const baseEvents: CalendarEvent[] = [];
+
+    // Common development events for all profiles
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const nextWeek = new Date(today);
+    nextWeek.setDate(nextWeek.getDate() + 7);
+
+    switch (devMode) {
+      case "dev_head_coach":
+      case "dev_assistant_coach":
+        baseEvents.push(
+          {
+            id: "dev-practice-tomorrow",
+            title: "Team Practice",
+            description: "Regular practice session - offensive strategies",
+            type: "practice",
+            start: new Date(tomorrow.setHours(16, 0, 0, 0)).toISOString(),
+            end: new Date(tomorrow.setHours(18, 0, 0, 0)).toISOString(),
+            location: "Main Practice Field",
+            team_id: "dev-eagles",
+            team_name: "Eagles Varsity (Dev)",
+            created_by: userId,
+            created_at: new Date().toISOString(),
+          },
+          {
+            id: "dev-game-nextweek",
+            title: "vs. Tigers",
+            description: "Away game against Tigers High School",
+            type: "game",
+            start: new Date(nextWeek.setHours(19, 0, 0, 0)).toISOString(),
+            end: new Date(nextWeek.setHours(21, 30, 0, 0)).toISOString(),
+            location: "Tigers Stadium",
+            team_id: "dev-eagles",
+            team_name: "Eagles Varsity (Dev)",
+            created_by: userId,
+            created_at: new Date().toISOString(),
+            is_home: false,
+            opponent: "Tigers High School",
+          }
+        );
+        break;
+
+      case "dev_player":
+        baseEvents.push(
+          {
+            id: "dev-practice-player",
+            title: "Team Practice",
+            description: "QB skills and team drills",
+            type: "practice",
+            start: new Date(tomorrow.setHours(16, 0, 0, 0)).toISOString(),
+            end: new Date(tomorrow.setHours(18, 0, 0, 0)).toISOString(),
+            location: "Main Practice Field",
+            team_id: "dev-eagles",
+            team_name: "Eagles Varsity (Dev)",
+            created_by: "dev-coach",
+            created_at: new Date().toISOString(),
+          },
+          {
+            id: "dev-film-session",
+            title: "Film Session",
+            description: "Review last game footage and prepare for Tigers",
+            type: "film",
+            start: new Date(today.setHours(15, 0, 0, 0)).toISOString(),
+            end: new Date(today.setHours(16, 30, 0, 0)).toISOString(),
+            location: "Team Meeting Room",
+            team_id: "dev-eagles",
+            team_name: "Eagles Varsity (Dev)",
+            created_by: "dev-coach",
+            created_at: new Date().toISOString(),
+          }
+        );
+        break;
+
+      case "dev_super_admin":
+        baseEvents.push({
+          id: "dev-admin-review",
+          title: "Platform Review Meeting",
+          description: "Review system performance and user feedback",
+          type: "meeting",
+          start: new Date(tomorrow.setHours(10, 0, 0, 0)).toISOString(),
+          end: new Date(tomorrow.setHours(11, 0, 0, 0)).toISOString(),
+          location: "BoxCall HQ",
+          team_id: "dev-admin",
+          team_name: "BoxCall Development",
+          created_by: userId,
+          created_at: new Date().toISOString(),
+        });
+        break;
+    }
+
+    return filters ? this.applyFilters(baseEvents, filters) : baseEvents;
   }
 }

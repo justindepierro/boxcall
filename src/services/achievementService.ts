@@ -1,4 +1,4 @@
-// import { supabase } from '../lib/supabase'; // TODO: Use when implementing real database queries
+import { supabase } from "../lib/supabase";
 
 // Achievement types
 export interface HelmetSticker {
@@ -39,15 +39,150 @@ export class AchievementService {
   /**
    * Get all achievements for a user
    */
-  static async getUserAchievements(userId: string): Promise<AchievementData> {
+  static async getUserAchievements(
+    userId: string,
+    devMode?: string
+  ): Promise<AchievementData> {
     try {
-      // For now, return mock data while we build the achievement system
-      // TODO: Implement real database queries for achievements
-      const mockAchievements = this.getMockAchievements(userId);
-      return mockAchievements;
+      // Check if we're in blank slate mode
+      if (devMode === "blank_slate") {
+        return this.getEmptyAchievements();
+      }
+
+      // For production/real modes, get real data
+      if (devMode === "production" || devMode === "super_admin_real") {
+        try {
+          const realAchievements = await this.getRealAchievements(userId);
+          return realAchievements;
+        } catch (error) {
+          console.warn(
+            "Could not fetch real achievements, returning empty:",
+            error
+          );
+          return this.getEmptyAchievements();
+        }
+      }
+
+      // For professional dev profiles, get dev profile data
+      if (devMode?.startsWith("dev_")) {
+        return this.getProfessionalDevAchievements(userId, devMode);
+      }
+
+      // For legacy mock dev modes, return mock data
+      if (devMode === "super_admin_mock" || devMode?.startsWith("view_as_")) {
+        return this.getMockAchievements(userId);
+      }
+
+      // Default fallback - try real data first
+      try {
+        const realAchievements = await this.getRealAchievements(userId);
+        return realAchievements;
+      } catch (error) {
+        console.warn(
+          "Could not fetch real achievements, returning empty:",
+          error
+        );
+        return this.getEmptyAchievements();
+      }
     } catch (error) {
       console.error("Error fetching user achievements:", error);
       return this.getEmptyAchievements();
+    }
+  }
+
+  /**
+   * Get real achievements from database
+   */
+  private static async getRealAchievements(
+    userId: string
+  ): Promise<AchievementData> {
+    // Try to get real helmet stickers
+    const { data: stickers } = await supabase
+      .from("helmet_stickers")
+      .select(
+        `
+        *,
+        teams (name),
+        awarded_by_profile:profiles!awarded_by (display_name)
+      `
+      )
+      .eq("user_id", userId)
+      .order("awarded_at", { ascending: false });
+
+    // Try to get real achievements
+    const { data: achievements } = await supabase
+      .from("achievements")
+      .select("*")
+      .eq("user_id", userId)
+      .order("earned_at", { ascending: false });
+
+    const helmetStickers: HelmetSticker[] = (stickers || []).map((sticker) => ({
+      id: sticker.id,
+      name: sticker.reason,
+      icon: this.getStickerIcon(sticker.sticker_type),
+      awardedBy: sticker.awarded_by,
+      awardedByName: sticker.awarded_by_profile?.display_name || "Coach",
+      date: sticker.awarded_at || new Date().toISOString(),
+      teamId: sticker.team_id,
+      teamName: sticker.teams?.name || "Team",
+    }));
+
+    const boxcallMedals: BoxCallMedal[] = (achievements || []).map(
+      (achievement) => ({
+        id: achievement.id,
+        name: achievement.title || "Achievement",
+        icon: achievement.icon_name || "award",
+        description: achievement.description || "",
+        earned: true,
+        earnedDate: achievement.earned_at || new Date().toISOString(),
+      })
+    );
+
+    return {
+      helmetStickers,
+      boxcallMedals,
+      weeklyStreak: 0, // Calculate real streak later
+      totalPoints: this.calculateTotalPoints({
+        helmetStickers,
+        boxcallMedals,
+        weeklyStreak: 0,
+        totalPoints: 0,
+        recentAchievements: [],
+      }),
+      recentAchievements: [
+        ...helmetStickers.slice(0, 2),
+        ...boxcallMedals.slice(0, 1),
+      ],
+    };
+  }
+
+  /**
+   * Get empty achievements for blank slate mode
+   */
+  private static getEmptyAchievements(): AchievementData {
+    return {
+      helmetStickers: [],
+      boxcallMedals: [],
+      weeklyStreak: 0,
+      totalPoints: 0,
+      recentAchievements: [],
+    };
+  }
+
+  private static getStickerIcon(stickerType: string | null): string {
+    switch (stickerType) {
+      case "star":
+        return "⭐";
+      case "flame":
+        return "🔥";
+      case "lightning":
+        return "⚡";
+      case "crown":
+        return "👑";
+      case "diamond":
+        return "💎";
+      default:
+        return "award";
     }
   }
 
@@ -288,13 +423,176 @@ export class AchievementService {
     return medals;
   }
 
-  private static getEmptyAchievements(): AchievementData {
-    return {
-      helmetStickers: [],
-      boxcallMedals: [],
-      weeklyStreak: 0,
-      totalPoints: 0,
+  /**
+   * Get professional dev profile achievements
+   */
+  private static getProfessionalDevAchievements(
+    _userId: string,
+    devMode: string
+  ): AchievementData {
+    // Professional dev profiles have realistic achievements based on their role
+    const baseAchievements = {
+      weeklyStreak: 3,
+      totalPoints: 850,
       recentAchievements: [],
     };
+
+    switch (devMode) {
+      case "dev_head_coach":
+        return {
+          ...baseAchievements,
+          helmetStickers: [
+            {
+              id: "dev-leadership-1",
+              name: "Leadership Excellence",
+              icon: "⭐",
+              awardedBy: "dev-system",
+              awardedByName: "Development System",
+              date: new Date(
+                Date.now() - 7 * 24 * 60 * 60 * 1000
+              ).toISOString(),
+              teamId: "dev-eagles",
+              teamName: "Eagles Varsity (Dev)",
+            },
+            {
+              id: "dev-coaching-1",
+              name: "Outstanding Coaching",
+              icon: "🏆",
+              awardedBy: "dev-system",
+              awardedByName: "Development System",
+              date: new Date(
+                Date.now() - 14 * 24 * 60 * 60 * 1000
+              ).toISOString(),
+              teamId: "dev-eagles",
+              teamName: "Eagles Varsity (Dev)",
+            },
+          ],
+          boxcallMedals: [
+            {
+              id: "dev-season-excellence",
+              name: "Season Excellence",
+              description: "Led team to outstanding season performance",
+              icon: "🥇",
+              earned: true,
+              earnedDate: new Date(
+                Date.now() - 30 * 24 * 60 * 60 * 1000
+              ).toISOString(),
+            },
+          ],
+        };
+
+      case "dev_assistant_coach":
+        return {
+          ...baseAchievements,
+          totalPoints: 620,
+          helmetStickers: [
+            {
+              id: "dev-defensive-1",
+              name: "Defensive Coordinator",
+              icon: "🛡️",
+              awardedBy: "dev-system",
+              awardedByName: "Development System",
+              date: new Date(
+                Date.now() - 5 * 24 * 60 * 60 * 1000
+              ).toISOString(),
+              teamId: "dev-eagles",
+              teamName: "Eagles Varsity (Dev)",
+            },
+          ],
+          boxcallMedals: [
+            {
+              id: "dev-player-development",
+              name: "Player Development",
+              description: "Exceptional player mentoring and development",
+              icon: "🎖️",
+              earned: true,
+              earnedDate: new Date(
+                Date.now() - 21 * 24 * 60 * 60 * 1000
+              ).toISOString(),
+            },
+          ],
+        };
+
+      case "dev_player":
+        return {
+          ...baseAchievements,
+          totalPoints: 1250,
+          weeklyStreak: 5,
+          helmetStickers: [
+            {
+              id: "dev-touchdown-1",
+              name: "Touchdown Pass",
+              icon: "🏈",
+              awardedBy: "dev-coach",
+              awardedByName: "Coach Martinez",
+              date: new Date(
+                Date.now() - 3 * 24 * 60 * 60 * 1000
+              ).toISOString(),
+              teamId: "dev-eagles",
+              teamName: "Eagles Varsity (Dev)",
+            },
+            {
+              id: "dev-leadership-player",
+              name: "Team Captain",
+              icon: "⭐",
+              awardedBy: "dev-coach",
+              awardedByName: "Coach Martinez",
+              date: new Date(
+                Date.now() - 10 * 24 * 60 * 60 * 1000
+              ).toISOString(),
+              teamId: "dev-eagles",
+              teamName: "Eagles Varsity (Dev)",
+            },
+          ],
+          boxcallMedals: [
+            {
+              id: "dev-player-of-week",
+              name: "Player of the Week",
+              description: "Outstanding performance in last game",
+              icon: "🏆",
+              earned: true,
+              earnedDate: new Date(
+                Date.now() - 7 * 24 * 60 * 60 * 1000
+              ).toISOString(),
+            },
+          ],
+        };
+
+      case "dev_super_admin":
+        return {
+          ...baseAchievements,
+          totalPoints: 2000,
+          weeklyStreak: 10,
+          helmetStickers: [
+            {
+              id: "dev-admin-excellence",
+              name: "Platform Excellence",
+              icon: "👑",
+              awardedBy: "dev-system",
+              awardedByName: "BoxCall System",
+              date: new Date(
+                Date.now() - 1 * 24 * 60 * 60 * 1000
+              ).toISOString(),
+              teamId: "dev-eagles",
+              teamName: "Eagles Varsity (Dev)",
+            },
+          ],
+          boxcallMedals: [
+            {
+              id: "dev-system-admin",
+              name: "System Administrator",
+              description: "Excellence in platform management",
+              icon: "🎯",
+              earned: true,
+              earnedDate: new Date(
+                Date.now() - 14 * 24 * 60 * 60 * 1000
+              ).toISOString(),
+            },
+          ],
+        };
+
+      default:
+        return this.getEmptyAchievements();
+    }
   }
 }
