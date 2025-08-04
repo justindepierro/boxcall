@@ -10,12 +10,16 @@ import {
   TeamBulletin,
   CreateTeam,
   JoinTeam,
+  CreateCoachAccount,
   BoxCall,
   Playbook,
   TeamSettings,
-  About,
   Templates,
   Playground,
+  AboutPage,
+  PrivacyPolicyPage,
+  TermsOfServicePage,
+  ContactPage,
 } from "../pages";
 import {
   ProtectedRoute,
@@ -158,12 +162,12 @@ export const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
-          {/* About - All authenticated users */}
+          {/* Create Coach Account - All authenticated users */}
           <Route
-            path="/about"
+            path="/create-coach-account"
             element={
               <ProtectedRoute>
-                <About />
+                <CreateCoachAccount />
               </ProtectedRoute>
             }
           />
@@ -191,6 +195,40 @@ export const AppRouter: React.FC = () => {
           />
           {/* Catch-all Routes */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          {/* Legal Pages - Public access within authenticated area */}
+          <Route
+            path="/about"
+            element={
+              <ProtectedRoute>
+                <AboutPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/privacy-policy"
+            element={
+              <ProtectedRoute>
+                <PrivacyPolicyPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/terms-of-service"
+            element={
+              <ProtectedRoute>
+                <TermsOfServicePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/contact"
+            element={
+              <ProtectedRoute>
+                <ContactPage />
+              </ProtectedRoute>
+            }
+          />
+          {/* 404 Route */}
           <Route
             path="*"
             element={

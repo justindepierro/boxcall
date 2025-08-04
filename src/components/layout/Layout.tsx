@@ -11,6 +11,7 @@ import {
 import { Navigation } from "../ui/Navigation";
 import { Sidebar } from "../ui/Sidebar";
 import { QuickDevPanel } from "../dev/QuickDevPanel";
+import { Footer } from "./Footer";
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 interface LayoutProps {
   children: React.ReactNode;
@@ -94,7 +95,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           position="left"
         />
         {/* Main content - always full width, no margin shifts */}
-        <main className="w-full">{children}</main>
+        <main className="w-full">
+          <div className="min-h-screen flex flex-col">
+            <div className="flex-1">{children}</div>
+            <Footer />
+          </div>
+        </main>
 
         {/* Development Tools Panel */}
         <QuickDevPanel />

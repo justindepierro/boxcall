@@ -34,10 +34,20 @@
 
 ### **High Priority**
 
+- [ ] **Coach Account System (NEW)**
+  - ✅ Create Coach Account page ($9.99 one-time purchase)
+  - ✅ Personal coaching profile setup
+  - ✅ Team connection via school codes
+  - [ ] Payment integration for coach accounts
+  - [ ] Personal playbook library system
+  - [ ] Practice planning tools for individual coaches
+  - [ ] Team linking approval workflow
+  - [ ] Content import/export between personal and team accounts
+  - [ ] Coach account upgrade path from existing users
 - [ ] **Payment/Subscription System (FUTURE - NOT NOW)**
   - ⚠️ **NOTE: Justin doesn't pay** - this is for future enterprise customers
   - Research school/team payment processing (Stripe for Education?)
-  - Design subscription tiers (Team vs School vs District)
+  - Design subscription tiers (Team vs School vs District vs Individual Coach)
   - Implement payment flow in Create Team process
   - Add billing management dashboard
   - Consider school purchasing department workflows
