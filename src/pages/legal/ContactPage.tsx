@@ -24,7 +24,7 @@ export const ContactPage: React.FC = () => {
           <div className="space-y-6">
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
-                <div className="w-10 h-10 bg-jade-100 dark:bg-jade-900 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                   <Icon name="mail" size="sm" color="jade" />
                 </div>
               </div>
@@ -37,7 +37,7 @@ export const ContactPage: React.FC = () => {
                 </p>
                 <a
                   href="mailto:support@boxcall.com"
-                  className="text-jade-600 hover:text-jade-700 font-medium"
+                  className="text-interaction-jade hover:text-brand-jade-dark font-medium"
                 >
                   support@boxcall.com
                 </a>
@@ -46,7 +46,7 @@ export const ContactPage: React.FC = () => {
 
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
-                <div className="w-10 h-10 bg-jade-100 dark:bg-jade-900 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                   <Icon name="phone" size="sm" color="jade" />
                 </div>
               </div>
@@ -57,14 +57,16 @@ export const ContactPage: React.FC = () => {
                 <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
                   Speak directly with our coaching support team
                 </p>
-                <p className="text-jade-600 font-medium">1-800-BOXCALL</p>
+                <p className="text-interaction-jade font-medium">
+                  1-800-BOXCALL
+                </p>
                 <p className="text-gray-500 text-sm">Mon-Fri 9AM-6PM EST</p>
               </div>
             </div>
 
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
-                <div className="w-10 h-10 bg-jade-100 dark:bg-jade-900 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                   <Icon name="map" size="sm" color="jade" />
                 </div>
               </div>
@@ -133,7 +135,7 @@ export const ContactPage: React.FC = () => {
                 type="text"
                 id="name"
                 name="name"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-gray-700 dark:text-white"
                 placeholder="Your full name"
               />
             </div>
@@ -149,7 +151,7 @@ export const ContactPage: React.FC = () => {
                 type="email"
                 id="email"
                 name="email"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-gray-700 dark:text-white"
                 placeholder="your.email@example.com"
               />
             </div>
@@ -164,7 +166,7 @@ export const ContactPage: React.FC = () => {
               <select
                 id="subject"
                 name="subject"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-gray-700 dark:text-white"
               >
                 <option value="">Select a topic</option>
                 <option value="support">Technical Support</option>
@@ -186,14 +188,14 @@ export const ContactPage: React.FC = () => {
                 id="message"
                 name="message"
                 rows={6}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-gray-700 dark:text-white"
                 placeholder="Tell us how we can help..."
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-jade-600 text-white py-2 px-4 rounded-md hover:bg-jade-700 focus:outline-none focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 transition-colors"
+              className="w-full bg-interaction-jade text-white py-2 px-4 rounded-md hover:bg-brand-jade-dark focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2 transition-colors"
             >
               Send Message
             </button>
@@ -213,7 +215,7 @@ export const ContactPage: React.FC = () => {
           </p>
           <a
             href="/faq"
-            className="inline-flex items-center justify-center px-4 py-2 border border-jade-300 text-jade-700 bg-jade-50 hover:bg-jade-100 rounded-md transition-colors"
+            className="inline-flex items-center justify-center px-4 py-2 border border-surface-jade-dark text-brand-jade-dark bg-surface-jade hover:bg-surface-jade rounded-md transition-colors"
           >
             View FAQ
           </a>

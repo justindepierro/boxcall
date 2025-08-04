@@ -8,7 +8,7 @@ export const AboutPage: React.FC = () => {
       <div className="text-center mb-12">
         <div className="flex items-center justify-center gap-3 mb-4">
           <Icon name="boxcall" size="lg" color="jade" />
-          <h1 className="text-4xl font-bold text-jade-600 font-display">
+          <h1 className="text-4xl font-bold text-interaction-jade font-display">
             About BoxCall
           </h1>
         </div>
@@ -44,7 +44,7 @@ export const AboutPage: React.FC = () => {
         <div className="grid md:grid-cols-2 gap-8">
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 bg-jade-100 dark:bg-jade-900 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                 <Icon name="file" size="sm" color="jade" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -59,7 +59,7 @@ export const AboutPage: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 bg-jade-100 dark:bg-jade-900 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                 <Icon name="calendar" size="sm" color="jade" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -73,7 +73,7 @@ export const AboutPage: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 bg-jade-100 dark:bg-jade-900 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                 <Icon name="users" size="sm" color="jade" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -88,7 +88,7 @@ export const AboutPage: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 bg-jade-100 dark:bg-jade-900 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                 <Icon name="chart" size="sm" color="jade" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -133,7 +133,7 @@ export const AboutPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href="/create-team"
-            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-jade-600 hover:bg-jade-700 transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-interaction-jade hover:bg-brand-jade-dark transition-colors"
           >
             Start Your Team
           </a>

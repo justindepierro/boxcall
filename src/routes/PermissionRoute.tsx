@@ -157,7 +157,7 @@ export const PermissionRoute: React.FC<PermissionRouteProps> = ({
   if (loading || checkingAccess) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-jade"></div>
       </div>
     );
   }
@@ -191,7 +191,7 @@ export const PermissionRoute: React.FC<PermissionRouteProps> = ({
             </button>
             <button
               onClick={() => (window.location.href = fallbackTo)}
-              className="bg-jade-500 text-white px-4 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold"
+              className="bg-brand-jade text-white px-4 py-2 rounded-sm hover:bg-interaction-jade font-sans font-semibold"
             >
               Dashboard
             </button>

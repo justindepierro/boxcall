@@ -121,7 +121,7 @@ export const Playground: React.FC = () => {
                 <div className="flex flex-wrap gap-4 mb-6">
                   <button
                     onClick={runSmartIconTests}
-                    className="flex items-center gap-2 px-4 py-2 bg-jade-600 text-white rounded-lg hover:bg-jade-700 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-interaction-jade text-white rounded-lg hover:bg-brand-jade-dark transition-colors"
                   >
                     <Icon name="play" size="sm" />
                     Run Full Test Suite
@@ -200,11 +200,11 @@ export const Playground: React.FC = () => {
                         className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
                       >
                         <div className="flex items-start gap-4 mb-3">
-                          <div className="flex items-center justify-center w-10 h-10 bg-jade-50 dark:bg-jade-900/20 rounded-lg">
+                          <div className="flex items-center justify-center w-10 h-10 bg-surface-jade dark:bg-jade-900/20 rounded-lg">
                             <Icon
                               name={icon}
                               size="md"
-                              className="text-jade-600"
+                              className="text-interaction-jade"
                             />
                           </div>
                           <div className="flex-1">
@@ -292,12 +292,16 @@ export const Playground: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="p-6">
                 <div className="flex items-center gap-3 mb-2">
-                  <Icon name="target" size="lg" className="text-jade-600" />
+                  <Icon
+                    name="target"
+                    size="lg"
+                    className="text-interaction-jade"
+                  />
                   <Typography variant="headline-md">Icon Coverage</Typography>
                 </div>
                 <Typography
                   variant="body-lg"
-                  className="font-bold text-jade-600 mb-1"
+                  className="font-bold text-interaction-jade mb-1"
                 >
                   300+ Icons
                 </Typography>

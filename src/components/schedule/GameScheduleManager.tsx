@@ -143,13 +143,13 @@ export function GameScheduleManager() {
       <div className="flex items-center justify-between">
         <Typography
           variant="headline-lg"
-          className="text-navy-900 font-display"
+          className="text-brand-navy-dark font-display"
         >
           Game Schedule
         </Typography>
         <Button
           onClick={() => setIsCreateModalOpen(true)}
-          className="bg-jade-600 hover:bg-jade-700 text-white"
+          className="bg-interaction-jade hover:bg-brand-jade-dark text-white"
         >
           + Add Game
         </Button>
@@ -157,29 +157,32 @@ export function GameScheduleManager() {
       {/* Schedule Overview */}
       <Card>
         <div className="p-6">
-          <Typography variant="headline-md" className="text-navy-900 mb-4">
+          <Typography
+            variant="headline-md"
+            className="text-brand-navy-dark mb-4"
+          >
             2025 Fall Season
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div className="text-center p-4 bg-jade-50 rounded-lg">
+            <div className="text-center p-4 bg-surface-jade rounded-lg">
               <Typography
                 variant="headline-sm"
-                className="text-jade-800 font-display"
+                className="text-brand-jade-dark font-display"
               >
                 {games.length}
               </Typography>
-              <Typography variant="body-sm" className="text-jade-600">
+              <Typography variant="body-sm" className="text-interaction-jade">
                 Total Games
               </Typography>
             </div>
-            <div className="text-center p-4 bg-navy-50 rounded-lg">
+            <div className="text-center p-4 bg-surface-navy rounded-lg">
               <Typography
                 variant="headline-sm"
-                className="text-navy-800 font-display"
+                className="text-brand-navy font-display"
               >
                 {games.filter((g) => g.homeAway === "home").length}
               </Typography>
-              <Typography variant="body-sm" className="text-navy-600">
+              <Typography variant="body-sm" className="text-interaction-navy">
                 Home Games
               </Typography>
             </div>
@@ -214,7 +217,7 @@ export function GameScheduleManager() {
                     </Typography>
                     <Typography
                       variant="headline-sm"
-                      className="text-navy-900 font-display"
+                      className="text-brand-navy-dark font-display"
                     >
                       {game.week}
                     </Typography>
@@ -224,14 +227,14 @@ export function GameScheduleManager() {
                     <div className="flex items-center space-x-4 mb-2">
                       <Typography
                         variant="headline-md"
-                        className="text-navy-900"
+                        className="text-brand-navy-dark"
                       >
                         vs {game.opponent}
                       </Typography>
                       <span
                         className={`px-2 py-1 rounded text-sm font-semibold ${
                           game.homeAway === "home"
-                            ? "bg-jade-100 text-jade-800"
+                            ? "bg-surface-jade text-brand-jade-dark"
                             : "bg-gray-100 text-gray-800"
                         }`}
                       >
@@ -298,7 +301,7 @@ export function GameScheduleManager() {
               </Typography>
               <Button
                 onClick={() => setIsCreateModalOpen(true)}
-                className="bg-jade-600 hover:bg-jade-700 text-white"
+                className="bg-interaction-jade hover:bg-brand-jade-dark text-white"
               >
                 + Add First Game
               </Button>
@@ -388,7 +391,7 @@ function GameModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-6">
-        <Typography variant="headline-md" className="text-navy-900 mb-6">
+        <Typography variant="headline-md" className="text-brand-navy-dark mb-6">
           {title}
         </Typography>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -449,7 +452,7 @@ function GameModal({
               <select
                 value={homeAway}
                 onChange={(e) => setHomeAway(e.target.value as "home" | "away")}
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-jade-500 focus:border-jade-500"
+                className="w-full p-3 border border-gray-300 rounded-md focus:ring-brand-jade focus:border-brand-jade"
               >
                 <option value="home">🏠 Home</option>
                 <option value="away">✈️ Away</option>
@@ -489,7 +492,7 @@ function GameModal({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Additional notes about this game..."
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-jade-500 focus:border-jade-500"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-brand-jade focus:border-brand-jade"
               rows={3}
             />
           </div>
@@ -499,7 +502,7 @@ function GameModal({
             </Button>
             <Button
               type="submit"
-              className="bg-jade-600 hover:bg-jade-700 text-white"
+              className="bg-interaction-jade hover:bg-brand-jade-dark text-white"
               disabled={loading}
             >
               {loading ? "Saving..." : initialData ? "Update Game" : "Add Game"}

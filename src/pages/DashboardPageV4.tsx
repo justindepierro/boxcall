@@ -44,7 +44,7 @@ export const DashboardPageV4: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-jade mx-auto mb-4"></div>
           <Typography variant="body-lg" color="muted">
             Loading dashboard data...
           </Typography>
@@ -79,7 +79,7 @@ export const DashboardPageV4: React.FC = () => {
         <div className="flex items-center justify-center min-h-[80vh]">
           <div className="text-center max-w-md">
             <div className="mb-6">
-              <div className="w-16 h-16 bg-jade-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-surface-jade rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🏆</span>
               </div>
             </div>
@@ -90,7 +90,7 @@ export const DashboardPageV4: React.FC = () => {
               Ready to get started? Create or join a team to begin your journey.
             </Typography>
             <div className="space-x-4">
-              <button className="px-6 py-3 bg-jade-600 text-white rounded-lg hover:bg-jade-700 transition-colors">
+              <button className="px-6 py-3 bg-interaction-jade text-white rounded-lg hover:bg-brand-jade-dark transition-colors">
                 Create Team
               </button>
               <button className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
@@ -116,13 +116,13 @@ export const DashboardPageV4: React.FC = () => {
       <CleanDataIndicator />
 
       {/* Welcome Section - Enhanced with data awareness */}
-      <div className="bg-gradient-to-r from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-b border-jade-200 dark:border-jade-800">
+      <div className="bg-gradient-to-r from-surface-jade to-surface-jade dark:from-surface-jade-dark dark:to-surface-jade-dark border-b border-surface-jade-dark dark:border-brand-jade-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-left">
           <div className="flex items-center justify-between">
             <div>
               <Typography
                 variant="headline-md"
-                className="text-jade-800 dark:text-jade-200"
+                className="text-brand-jade-dark dark:text-brand-jade-light"
               >
                 {React.createElement(
                   "span",
@@ -210,7 +210,7 @@ export const DashboardPageV4: React.FC = () => {
                   {teams.map((team) => (
                     <div
                       key={team.id}
-                      className="border-l-4 border-jade-200 pl-4"
+                      className="border-l-4 border-surface-jade-dark pl-4"
                     >
                       <Typography variant="headline-sm" className="mb-1">
                         {team.name}
@@ -244,7 +244,7 @@ export const DashboardPageV4: React.FC = () => {
                       key={activity.id}
                       className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg"
                     >
-                      <div className="flex-shrink-0 w-8 h-8 bg-jade-100 rounded-full flex items-center justify-center">
+                      <div className="flex-shrink-0 w-8 h-8 bg-surface-jade rounded-full flex items-center justify-center">
                         <span className="text-xs">🏆</span>
                       </div>
                       <div className="flex-1">
@@ -284,7 +284,7 @@ export const DashboardPageV4: React.FC = () => {
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-lg p-6 shadow-sm border">
-                <div className="w-12 h-12 bg-jade-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <div className="w-12 h-12 bg-surface-jade rounded-lg flex items-center justify-center mx-auto mb-4">
                   <span className="text-xl">🏆</span>
                 </div>
                 <Typography variant="headline-sm" className="mb-3">
@@ -293,7 +293,7 @@ export const DashboardPageV4: React.FC = () => {
                 <Typography variant="body-sm" color="muted" className="mb-4">
                   Start your own team and invite players, coaches, and families.
                 </Typography>
-                <button className="w-full px-4 py-2 bg-jade-600 text-white rounded-lg hover:bg-jade-700 transition-colors">
+                <button className="w-full px-4 py-2 bg-interaction-jade text-white rounded-lg hover:bg-brand-jade-dark transition-colors">
                   Create Team
                 </button>
               </div>

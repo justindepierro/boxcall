@@ -85,7 +85,7 @@ export const Navigation: React.FC = () => {
             {/* Sidebar Toggle */}
             <button
               onClick={() => toggleSidebar()}
-              className="text-gray-700 dark:text-gray-300 hover:text-jade-600 dark:hover:text-jade-400 hover:bg-jade-50 dark:hover:bg-jade-900/10 p-2 rounded-sm border border-transparent hover:border-jade-200 transition-all duration-200"
+              className="text-gray-700 dark:text-gray-300 hover:text-interaction-jade dark:hover:text-brand-jade hover:bg-surface-jade dark:hover:bg-surface-jade-dark p-2 rounded-sm border border-transparent hover:border-surface-jade-dark transition-all duration-200"
               title="Toggle sidebar"
             >
               <svg
@@ -113,7 +113,7 @@ export const Navigation: React.FC = () => {
                   className="w-8 h-8"
                 />
               </div>
-              <span className="font-display text-xl tracking-wide text-jade-600 dark:text-jade-400 font-bold">
+              <span className="font-display text-xl tracking-wide text-interaction-jade dark:text-brand-jade font-bold">
                 BoxCall
               </span>
             </button>
@@ -124,28 +124,28 @@ export const Navigation: React.FC = () => {
             <div className="flex items-center space-x-3">
               <button
                 onClick={() => handleNavigation("/dashboard")}
-                className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 p-2 rounded-md hover:bg-jade-50 dark:hover:bg-jade-900/10 transition-all duration-200"
+                className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
                 title="Dashboard (⌘+1)"
               >
                 <Icon name="home" size="md" color="current" />
               </button>
               <button
                 onClick={() => handleNavigation("/team/1/bulletin")}
-                className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 p-2 rounded-md hover:bg-jade-50 dark:hover:bg-jade-900/10 transition-all duration-200"
+                className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
                 title="Team Bulletin (⌘+2)"
               >
                 <Icon name="grid" size="md" color="current" />
               </button>
               <button
                 onClick={() => handleNavigation("/calendar")}
-                className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 p-2 rounded-md hover:bg-jade-50 dark:hover:bg-jade-900/10 transition-all duration-200"
+                className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
                 title="Calendar (⌘+3)"
               >
                 <Icon name="calendar" size="md" color="current" />
               </button>
               <button
                 onClick={() => handleNavigation("/playbook")}
-                className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 p-2 rounded-md hover:bg-jade-50 dark:hover:bg-jade-900/10 transition-all duration-200"
+                className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
                 title="Playbook (⌘+4)"
               >
                 <Icon name="book" size="md" color="current" />
@@ -153,7 +153,7 @@ export const Navigation: React.FC = () => {
               {(currentRole === "admin" || currentRole === "coach") && (
                 <button
                   onClick={() => handleNavigation("/boxcall")}
-                  className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 p-2 rounded-md hover:bg-jade-50 dark:hover:bg-jade-900/10 transition-all duration-200"
+                  className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
                   title="BoxCall (⌘+5)"
                 >
                   <div className="w-4 h-4">
@@ -172,7 +172,7 @@ export const Navigation: React.FC = () => {
             {/* Settings Gear - Link to Profile */}
             <button
               onClick={() => handleNavigation("/profile")}
-              className="text-gray-600 dark:text-gray-400 hover:text-jade-600 dark:hover:text-jade-400 p-2 rounded-md hover:bg-jade-50 dark:hover:bg-jade-900/10 transition-all duration-200"
+              className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
               title="Settings & Profile"
             >
               <Icon name="settings" size="md" color="current" />
@@ -198,7 +198,7 @@ export const Navigation: React.FC = () => {
             <div className="md:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-gray-700 dark:text-gray-300 hover:text-jade-600 dark:hover:text-jade-400 hover:bg-jade-50 dark:hover:bg-jade-900/10 p-2 rounded-sm border border-transparent hover:border-jade-200 transition-all duration-200"
+                className="text-gray-700 dark:text-gray-300 hover:text-interaction-jade dark:hover:text-brand-jade hover:bg-surface-jade dark:hover:bg-surface-jade-dark p-2 rounded-sm border border-transparent hover:border-surface-jade-dark transition-all duration-200"
               >
                 <svg
                   className="w-6 h-6"
@@ -232,19 +232,19 @@ export const Navigation: React.FC = () => {
               <div className="space-y-2">
                 <button
                   onClick={() => handleNavigation("/dashboard")}
-                  className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"
+                  className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-surface-jade hover:text-interaction-jade dark:hover:bg-surface-jade-dark dark:hover:text-brand-jade rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-brand-jade"
                 >
                   � Dashboard
                 </button>
                 <button
                   onClick={() => handleNavigation("/calendar")}
-                  className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"
+                  className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-surface-jade hover:text-interaction-jade dark:hover:bg-surface-jade-dark dark:hover:text-brand-jade rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-brand-jade"
                 >
                   � Calendar
                 </button>
                 <button
                   onClick={() => handleNavigation("/profile")}
-                  className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"
+                  className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-surface-jade hover:text-interaction-jade dark:hover:bg-surface-jade-dark dark:hover:text-brand-jade rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-brand-jade"
                 >
                   � My Profile
                 </button>

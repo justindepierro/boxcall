@@ -596,8 +596,8 @@ export const CreateCoachAccount: React.FC = () => {
             </div>
 
             {isSuperAdmin && (
-              <div className="bg-jade-50 dark:bg-jade-900/20 border border-jade-200 dark:border-jade-800 rounded-lg p-4 mb-6">
-                <div className="flex items-center gap-2 text-jade-700 dark:text-jade-300">
+              <div className="bg-surface-jade dark:bg-surface-jade-dark border border-surface-jade-dark dark:border-brand-jade-dark rounded-lg p-4 mb-6">
+                <div className="flex items-center gap-2 text-brand-jade-dark dark:text-brand-jade-light">
                   <Icon name="unlock" size="sm" />
                   <Typography variant="body-sm" className="font-medium">
                     Super Admin: Payment bypassed - coach account access granted

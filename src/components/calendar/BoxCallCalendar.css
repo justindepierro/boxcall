@@ -1,13 +1,13 @@
 /* BoxCall Calendar Styling */
 .boxcall-calendar {
   --fc-border-color: #e5e7eb;
-  --fc-button-bg-color: #00a86b;
-  --fc-button-border-color: #00a86b;
-  --fc-button-hover-bg-color: #008f5a;
-  --fc-button-hover-border-color: #008f5a;
-  --fc-button-active-bg-color: #007a4d;
-  --fc-button-active-border-color: #007a4d;
-  --fc-today-bg-color: rgba(0, 168, 107, 0.1);
+  --fc-button-bg-color: var(--color-brand-jade);
+  --fc-button-border-color: var(--color-brand-jade);
+  --fc-button-hover-bg-color: var(--color-interaction-jade);
+  --fc-button-hover-border-color: var(--color-interaction-jade);
+  --fc-button-active-bg-color: var(--color-brand-jade-dark);
+  --fc-button-active-border-color: var(--color-brand-jade-dark);
+  --fc-today-bg-color: var(--color-surface-jade);
   --fc-neutral-bg-color: #f9fafb;
   --fc-page-bg-color: #ffffff;
   --fc-text-color: #374151;
@@ -17,7 +17,7 @@
 .boxcall-calendar .fc-toolbar-title {
   font-family: "Bebas Neue", sans-serif;
   font-size: 1.5rem;
-  color: #1e3a8a;
+  color: var(--color-brand-navy);
   letter-spacing: 0.05em;
   font-weight: 400;
 }
@@ -59,8 +59,8 @@
 }
 
 .boxcall-calendar .event-practice {
-  background-color: #00a86b !important;
-  border-color: #00a86b !important;
+  background-color: var(--color-brand-jade) !important;
+  border-color: var(--color-brand-jade) !important;
 }
 
 .boxcall-calendar .event-meeting {
@@ -161,7 +161,7 @@
 }
 
 .boxcall-calendar .fc-event.fc-event-selected {
-  box-shadow: 0 0 0 2px #00a86b;
+  box-shadow: 0 0 0 2px var(--color-brand-jade);
 }
 
 /* Loading State */
@@ -179,7 +179,7 @@
   height: 32px;
   margin: -16px 0 0 -16px;
   border: 3px solid #e5e7eb;
-  border-top-color: #00a86b;
+  border-top-color: var(--color-brand-jade);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

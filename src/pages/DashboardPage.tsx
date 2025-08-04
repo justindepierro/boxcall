@@ -21,7 +21,7 @@ export const DashboardPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-jade"></div>
       </div>
     );
   }
@@ -58,11 +58,11 @@ export const DashboardPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Welcome Section - Subtle, Left-aligned */}
-      <div className="bg-gradient-to-r from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-b border-jade-200 dark:border-jade-800">
+      <div className="bg-gradient-to-r from-surface-jade to-surface-jade dark:from-surface-jade-dark dark:to-surface-jade-dark border-b border-surface-jade-dark dark:border-brand-jade-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-left">
           <Typography
             variant="headline-md"
-            className="text-jade-800 dark:text-jade-200"
+            className="text-brand-jade-dark dark:text-brand-jade-light"
           >
             Welcome back,{" "}
             {profile.full_name?.split(" ")[0] ||

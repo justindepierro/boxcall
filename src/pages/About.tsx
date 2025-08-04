@@ -35,7 +35,7 @@ export const About: React.FC = () => {
             <Icon
               name="trending-up"
               size="3xl"
-              className="text-jade-600 mb-4"
+              className="text-interaction-jade mb-4"
             />
             <Typography variant="headline-md" className="mb-3">
               Platform Overview

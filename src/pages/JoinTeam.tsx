@@ -212,9 +212,9 @@ export const JoinTeam: React.FC = () => {
                 <button
                   key={method.id}
                   onClick={() => handleMethodSelect(method.id)}
-                  className={`p-6 border rounded-lg text-left transition-all hover:border-jade-500 hover:shadow-md ${
+                  className={`p-6 border rounded-lg text-left transition-all hover:border-brand-jade hover:shadow-md ${
                     method.primary
-                      ? "border-jade-500 bg-jade-50 dark:bg-jade-900/10"
+                      ? "border-brand-jade bg-surface-jade dark:bg-surface-jade-dark"
                       : "border-gray-200 dark:border-gray-700"
                   }`}
                 >
@@ -230,7 +230,7 @@ export const JoinTeam: React.FC = () => {
                       <Typography variant="headline-sm" className="mb-2">
                         {method.title}
                         {method.primary && (
-                          <span className="ml-2 bg-jade-500 text-white text-xs px-2 py-1 rounded-full">
+                          <span className="ml-2 bg-surface-jade0 text-white text-xs px-2 py-1 rounded-full">
                             Most Common
                           </span>
                         )}
@@ -265,7 +265,7 @@ export const JoinTeam: React.FC = () => {
                 onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
                 placeholder="ABC123"
                 maxLength={6}
-                className="w-full px-4 py-3 text-center text-2xl font-mono border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500 tracking-widest"
+                className="w-full px-4 py-3 text-center text-2xl font-mono border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-brand-jade tracking-widest"
               />
               <Typography variant="body-sm" color="muted" className="mt-2">
                 Enter the 6-character code exactly as provided
@@ -275,7 +275,7 @@ export const JoinTeam: React.FC = () => {
             <button
               onClick={handleInviteCodeSubmit}
               disabled={inviteCode.length !== 6 || isLoading}
-              className="w-full bg-jade-500 hover:bg-jade-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-colors mb-4"
+              className="w-full bg-surface-jade0 hover:bg-jade-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-colors mb-4"
             >
               {isLoading ? "Verifying..." : "Join Team"}
             </button>
@@ -286,7 +286,7 @@ export const JoinTeam: React.FC = () => {
               </Typography>
               <button
                 onClick={() => setCurrentStep("search")}
-                className="text-jade-600 hover:text-jade-700 text-sm font-medium"
+                className="text-jade-600 hover:text-brand-jade-dark text-sm font-medium"
               >
                 Search for your team instead
               </button>
@@ -319,13 +319,13 @@ export const JoinTeam: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by school or team name..."
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-brand-jade"
                   onKeyPress={(e) => e.key === "Enter" && handleTeamSearch()}
                 />
                 <button
                   onClick={handleTeamSearch}
                   disabled={!searchQuery.trim() || isLoading}
-                  className="bg-jade-500 hover:bg-jade-600 disabled:bg-gray-300 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                  className="bg-surface-jade0 hover:bg-jade-600 disabled:bg-gray-300 text-white px-6 py-3 rounded-lg font-medium transition-colors"
                 >
                   {isLoading ? "Searching..." : "Search"}
                 </button>
@@ -371,7 +371,7 @@ export const JoinTeam: React.FC = () => {
                         </div>
                         <button
                           onClick={() => handleJoinTeam(team)}
-                          className="bg-jade-500 hover:bg-jade-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                          className="bg-surface-jade0 hover:bg-jade-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
                         >
                           {team.requiresApproval
                             ? "Request to Join"
@@ -402,7 +402,7 @@ export const JoinTeam: React.FC = () => {
                 </Typography>
                 <button
                   onClick={() => setCurrentStep("invite-code")}
-                  className="text-jade-600 hover:text-jade-700 font-medium"
+                  className="text-jade-600 hover:text-brand-jade-dark font-medium"
                 >
                   Use an invite code instead
                 </button>
@@ -445,7 +445,7 @@ export const JoinTeam: React.FC = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => navigate("/dashboard")}
-                className="flex-1 bg-jade-500 hover:bg-jade-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                className="flex-1 bg-surface-jade0 hover:bg-jade-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
               >
                 Go to Dashboard
               </button>
@@ -489,7 +489,7 @@ export const JoinTeam: React.FC = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => navigate("/team/new-team-id/bulletin")}
-                className="flex-1 bg-jade-500 hover:bg-jade-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                className="flex-1 bg-surface-jade0 hover:bg-jade-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
               >
                 Go to Team
               </button>
@@ -545,13 +545,13 @@ export const JoinTeam: React.FC = () => {
               Need help joining your team?
             </Typography>
             <div className="space-x-4">
-              <button className="text-jade-600 hover:text-jade-700 text-sm font-medium">
+              <button className="text-jade-600 hover:text-brand-jade-dark text-sm font-medium">
                 Contact Support
               </button>
               <span className="text-gray-300">•</span>
               <button
                 onClick={() => navigate("/create-team")}
-                className="text-jade-600 hover:text-jade-700 text-sm font-medium"
+                className="text-jade-600 hover:text-brand-jade-dark text-sm font-medium"
               >
                 Create a New Team Instead
               </button>

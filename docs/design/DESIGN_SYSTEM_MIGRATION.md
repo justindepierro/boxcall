@@ -63,20 +63,25 @@ const iconColor = getComponentColor("icon", "jade");
 - [x] Modal component - Updated backdrop and close button
 - [x] Icon component - Fully migrated to token system
 
-### **Phase 3: Navigation Components 🚧 IN PROGRESS**
+### **Phase 3: Navigation Components ✅ COMPLETE**
 
 - [x] Navigation brand logo and text colors
 - [x] Mobile menu toggle button
-- [ ] Desktop navigation hover states (15+ instances)
-- [ ] Mobile menu items (4+ instances)
+- [x] Desktop navigation hover states (8 instances)
+- [x] Mobile menu items (3 instances)
+- [x] Settings button and mobile menu button
+- [x] All jade/navy hardcoded colors replaced with tokens (25 total replacements)
 
-### **Phase 4: Feature Components ⏳ PENDING**
+### **Phase 4: Feature Components ✅ COMPLETE**
 
-- [ ] Calendar components (BoxCallCalendar.css)
-- [ ] Dashboard components
-- [ ] Practice Planner components
-- [ ] Schedule Manager (20+ hardcoded instances)
-- [ ] Route protection components (PermissionRoute, RoleProtectedRoute, etc.)
+- [x] Calendar components (BoxCallCalendar.css) - 4 CSS variable replacements
+- [x] Dashboard components (DashboardPage.tsx, DashboardPageV4.tsx) - 26 replacements
+- [x] Practice Planner components (Playground.tsx) - 6 replacements
+- [x] Schedule Manager (GameScheduleManager.tsx) - 23 replacements
+- [x] Route protection components (PermissionRoute, RoleProtectedRoute, etc.) - 24 replacements
+- [x] Legal pages (AboutPage.tsx, ContactPage.tsx) - 35 replacements
+- [x] Edge case cleanup (CreateCoachAccount.tsx, JoinTeam.tsx) - 25 replacements
+- [x] **Total: 143 hardcoded color references replaced with centralized tokens**
 
 ### **Phase 5: Global Cleanup ⏳ PENDING**
 
@@ -84,35 +89,6 @@ const iconColor = getComponentColor("icon", "jade");
 - [ ] Update remaining CSS files
 - [ ] Clean up hardcoded values in component styles
 - [ ] Verify consistent color usage across all components
-- [x] Update Tailwind config to import tokens
-- [x] Fix navigation utilities
-
-### **Phase 2: Core Components (Next)**
-
-- [ ] Update Button component
-- [ ] Update Card component
-- [ ] Update Form components
-- [ ] Update Modal components
-
-### **Phase 3: Feature Components**
-
-- [ ] Update Calendar components (replace hardcoded event colors)
-- [ ] Update Dashboard components
-- [ ] Update Practice Planner components
-- [ ] Update Team management components
-
-### **Phase 4: CSS Files**
-
-- [ ] Replace CSS custom properties with token values
-- [ ] Update component-specific CSS files
-- [ ] Remove legacy color definitions
-
-### **Phase 5: Cleanup**
-
-- [ ] Remove duplicate color definitions
-- [ ] Delete legacy `/src/components/design-system/Colors.tsx`
-- [ ] Update Storybook to use new tokens
-- [ ] Add design token documentation
 
 ## 🛠️ **Implementation Examples**
 

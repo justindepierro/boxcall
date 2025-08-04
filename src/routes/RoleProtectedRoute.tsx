@@ -35,7 +35,7 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-jade"></div>
       </div>
     );
   }
@@ -60,7 +60,7 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
           </p>
           <button
             onClick={() => window.history.back()}
-            className="bg-jade-500 text-white px-4 py-2 rounded-sm hover:bg-jade-600 font-sans font-semibold"
+            className="bg-brand-jade text-white px-4 py-2 rounded-sm hover:bg-interaction-jade font-sans font-semibold"
           >
             Go Back
           </button>
