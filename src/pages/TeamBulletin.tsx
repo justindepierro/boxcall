@@ -104,7 +104,7 @@ export const TeamBulletin: React.FC = () => {
             <Icon
               name="boxcall"
               size="xl"
-              color="slate"
+              color="jade"
               className="mx-auto mb-4"
             />
             <Typography variant="headline-lg" className="mb-2">
@@ -118,9 +118,12 @@ export const TeamBulletin: React.FC = () => {
             <div className="flex gap-3 justify-center">
               <button
                 onClick={handleCreateTeam}
-                className="bg-jade-500 hover:bg-jade-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                className="bg-jade-500 hover:bg-jade-600 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
               >
-                Create Team {isSuperAdmin && "🔓"}
+                Create Team
+                {isSuperAdmin && (
+                  <Icon name="unlock" size="sm" className="text-white" />
+                )}
               </button>
               <button
                 onClick={handleJoinTeam}

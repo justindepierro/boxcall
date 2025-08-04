@@ -34,6 +34,20 @@
 
 ### **High Priority**
 
+- [ ] **Payment/Subscription System (FUTURE - NOT NOW)**
+  - ⚠️ **NOTE: Justin doesn't pay** - this is for future enterprise customers
+  - Research school/team payment processing (Stripe for Education?)
+  - Design subscription tiers (Team vs School vs District)
+  - Implement payment flow in Create Team process
+  - Add billing management dashboard
+  - Consider school purchasing department workflows
+- [ ] **Team Creation & Management System**
+  - ✅ Create Team page scaffold with step-by-step flow
+  - ✅ Join Team page scaffold
+  - [ ] School verification system integration
+  - [ ] Team ownership transfer functionality
+  - [ ] Head coach role management
+  - [ ] Primary contact information validation
 - [ ] **Daily Quote of the Day System**
   - Design quote database with inspirational football/leadership quotes
   - Create daily rotation system with cache

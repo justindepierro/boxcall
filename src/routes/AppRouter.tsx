@@ -8,6 +8,8 @@ import {
   LoginPage,
   ProfilePage,
   TeamBulletin,
+  CreateTeam,
+  JoinTeam,
   BoxCall,
   Playbook,
   TeamSettings,
@@ -135,6 +137,24 @@ export const AppRouter: React.FC = () => {
                 >
                   <TeamSettings />
                 </TeamMemberRoute>
+              </ProtectedRoute>
+            }
+          />
+          {/* Create Team - Protected route with permission check */}
+          <Route
+            path="/create-team"
+            element={
+              <ProtectedRoute>
+                <CreateTeam />
+              </ProtectedRoute>
+            }
+          />
+          {/* Join Team - All authenticated users */}
+          <Route
+            path="/join-team"
+            element={
+              <ProtectedRoute>
+                <JoinTeam />
               </ProtectedRoute>
             }
           />
