@@ -34,6 +34,16 @@
 
 ### **High Priority**
 
+- [ ] **Mobile Responsiveness Issues (URGENT)**
+  - [ ] Fix mobile layout inconsistencies across pages
+  - [ ] Responsive design audit for all components
+  - [ ] Touch-friendly UI elements and spacing
+  - [ ] Mobile navigation improvements
+  - [ ] Form usability on small screens
+  - [ ] Legal pages mobile formatting
+  - [ ] Footer and header mobile optimization
+  - [ ] Performance testing on mobile devices
+
 - [ ] **Coach Account System (NEW)**
   - ✅ Create Coach Account page ($9.99 one-time purchase)
   - ✅ Personal coaching profile setup

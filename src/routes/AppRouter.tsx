@@ -21,6 +21,7 @@ import {
   TermsOfServicePage,
   ContactPage,
 } from "../pages";
+import Phase4DemoPage from "../pages/Phase4DemoPage";
 import {
   ProtectedRoute,
   PublicRoute,
@@ -57,6 +58,17 @@ export const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
+
+          {/* Phase 4 Demo Route - Data Resolution Testing */}
+          <Route
+            path="/phase4-demo"
+            element={
+              <ProtectedRoute>
+                <Phase4DemoPage />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/profile"
             element={

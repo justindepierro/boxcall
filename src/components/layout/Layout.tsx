@@ -10,7 +10,7 @@ import {
 } from "../../utils/navigation";
 import { Navigation } from "../ui/Navigation";
 import { Sidebar } from "../ui/Sidebar";
-import { QuickDevPanel } from "../dev/QuickDevPanel";
+import { CleanDevPanel } from "../dev/CleanDevPanel";
 import { Footer } from "./Footer";
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 interface LayoutProps {
@@ -103,7 +103,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </main>
 
         {/* Development Tools Panel */}
-        <QuickDevPanel />
+        <CleanDevPanel />
       </div>
     </div>
   );
