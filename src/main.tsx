@@ -6,12 +6,12 @@ import "./index.css";
 
 // Web Vitals monitoring for production
 if (process.env.NODE_ENV === "production") {
-  import("web-vitals").then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-    getCLS(console.log);
-    getFID(console.log);
-    getFCP(console.log);
-    getLCP(console.log);
-    getTTFB(console.log);
+  import("web-vitals").then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
+    onCLS(console.log);
+    onINP(console.log);
+    onFCP(console.log);
+    onLCP(console.log);
+    onTTFB(console.log);
   });
 }
 

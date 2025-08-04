@@ -70,10 +70,7 @@ export const CalendarPage: React.FC = () => {
   const handleSearch = async () => {
     if (searchQuery.trim()) {
       try {
-        const _searchResults = await CalendarService.searchEvents(
-          searchQuery,
-          filters
-        );
+        await CalendarService.searchEvents(searchQuery, filters);
         // TODO: Update events with search results
       } catch (error) {
         console.error("Search failed:", error);

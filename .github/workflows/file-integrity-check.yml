@@ -1,6 +1,3 @@
-# File Integrity Check
-# Prevents commits that would result in empty critical files
-
 name: File Integrity Check
 
 on:
