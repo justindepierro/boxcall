@@ -47,7 +47,7 @@ export const DevHealthCheck: React.FC = () => {
     status.errors.length === 0;
 
   // Don't render anything if healthy (development only)
-  if (isHealthy && process.env.NODE_ENV === "production") {
+  if (isHealthy) {
     return null;
   }
 

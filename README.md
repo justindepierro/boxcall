@@ -1,6 +1,6 @@
 # 🏈 BoxCall - Professional Football Team Management
 
-> **Elite football coaching platform** with intelligent scheduling, advanced team management, comprehensive design system, and enterprise-grade development tools.
+> **Elite football coaching platform** with intelligent playbook management, visual play builder, and comprehensive team management tools.
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.3.1-61dafb)](https://reactjs.org/)
@@ -9,19 +9,45 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.7-38b2ac)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-7.0.6-646cff)](https://vitejs.dev/)
 
-## ⚡ **CURRENT STATUS: PHASE 2 COMPLETE + ADVANCED PLAY MANAGEMENT**
+<div align="center">
+  <img src="/public/assets/boxcall-logo-text.svg" alt="BoxCall" width="300"/>
+  
+  **Professional football management platform built for coaches, by coaches**
+</div>
 
-✅ **Latest**: **Enhanced Play Cards with Custom Name Generation & Professional Display**
-🎯 **Achieved**: MonoCode fonts, expand/collapse functionality, intelligent play naming system
-🔧 **Active**: Phase 3 preparation - advanced coaching features and integrations
+## ⚡ **CURRENT STATUS: v0.1.5**
 
-### 🏆 **Completed Phases**
+🎯 **Latest Achievement**: **Consolidated Dev Tools & Professional Branding**
+✨ **Recent Updates**:
 
-- **Phase 1** ✅ **Playbook Foundation**: Complete playbook management with step-by-step builder
-- **Phase 2** ✅ **Visual Play Builder**: Professional drawing tools with Fabric.js integration
-- **Phase 2.5** ✅ **Advanced Play Cards**: Custom name generation, expandable UI, MonoCode aesthetics
+- ✅ **Unified Development Tools** - Consolidated, collapsible dev panel with enhanced opacity
+- ✅ **Professional BoxCall Branding** - Custom SVG logos in jade green across all interfaces
+- ✅ **Enhanced Super Admin Navigation** - Fixed role-based navigation for complete platform access
+- ✅ **Advanced Play Cards** - MonoCode fonts, expand/collapse, intelligent naming system
 
-### 🎨 **Professional Visual Features**
+🔧 **Active Work**: Phase 3 preparation - Calendar system and team management features
+
+## 🏆 **COMPLETED PHASES**
+
+### **Phase 1** ✅ **Playbook Foundation**
+
+Complete playbook management with step-by-step builder, play categorization, and professional data structure.
+
+### **Phase 2** ✅ **Visual Play Builder**
+
+Professional drawing tools with Fabric.js integration, NFHS-compliant field dimensions, and coaching-grade diagrams.
+
+### **Phase 2.5** ✅ **Enhanced Play Experience**
+
+Custom name generation, expandable UI components, MonoCode typography, and intelligent play organization.
+
+### **Phase 2.7** ✅ **Platform Polish**
+
+Consolidated development tools, professional branding integration, navigation fixes, and enhanced user experience.
+
+## 🎨 **Professional Features**
+
+### **📐 Visual Play Builder**
 
 - **NFHS-Compliant Field Canvas**: Accurate 53⅓ yard field dimensions
 - **6 Background Modes**: Football field, red zone, blank, engineering paper styles
@@ -29,14 +55,35 @@
 - **Interactive Canvas**: Zoom controls (0.5x-3.0x), drag-and-drop players
 - **Coaching-Grade Diagrams**: Based on real coaching standards
 
-### 🏈 **Advanced Play Management**
+### **🏈 Advanced Playbook Management**
 
-- **Custom Play Name Generation**: Intelligent concatenation from formation parts
-- **One-Word Call System**: Toggle between full names and coaching calls
+- **Custom Play Name Generation**: Intelligent concatenation from formation components
+- **One-Word Call System**: Toggle between full names and sideline calls
 - **MonoCode Typography**: Technical, coaching-friendly font design
-- **Expandable Play Cards**: Skinny mode for scanning, detailed view for analysis
-- **Color-Coded Play Types**: Visual identification (Pass, Run, RPO, Play Action)
-- **Comprehensive Stats Display**: Success rates, usage tracking, situational data
+- **Expandable Play Cards**: Skinny scanning mode + detailed analysis view
+- **Color-Coded Organization**: Visual play type identification
+- **Comprehensive Statistics**: Success rates, usage tracking, situational analysis
+
+### **🛠️ Development Experience**
+
+- **Consolidated Dev Tools**: Unified, draggable panel with enhanced opacity control
+- **Role Switching System**: Test all user experiences (Coach, Player, Admin, Super Admin)
+- **Live Development**: Hot reloading, TypeScript checking, ESLint validation
+- **Professional Debugging**: Comprehensive logging and error tracking
+
+## 🎯 **MVP Roadmap to v1.0**
+
+> **Vision**: Transform BoxCall from advanced playbook tool to comprehensive football team management platform
+
+📋 **[Complete MVP Roadmap](MVP_ROADMAP.md)** - Detailed 8-milestone plan to v1.0.0
+
+### **Key Upcoming Milestones**
+
+- **v0.2.0** - Core Platform Foundation (User roles, team management)
+- **v0.3.0** - Enhanced Playbook System (Collections, import/export)
+- **v0.4.0** - Intelligent Calendar & Scheduling (Multi-team, conflicts)
+- **v0.5.0** - Team Performance Analytics (Player tracking, insights)
+- **v1.0.0** - Complete Football Management Platform (100+ teams target)
 
 ## 🚀 Quick Start
 

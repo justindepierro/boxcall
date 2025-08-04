@@ -1,9 +1,7 @@
 import { useEffect } from "react";
 import "./App.css";
 import { DevModeProvider } from "./app/dev-mode-store";
-import DevModeSwitcher from "./components/dev/DevModeSwitcher";
-import { DevToolsPanel } from "./components/dev/DevToolsPanel";
-import { PerformanceMonitor } from "./components/dev/PerformanceMonitor-Draggable";
+import { ConsolidatedDevTools } from "./components/dev/ConsolidatedDevTools";
 import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { useDevTools } from "./hooks/useDevTools";
@@ -52,20 +50,14 @@ function App() {
         <div className="App">
           <DevHealthCheck />
           <AppRouter />
-          <DevModeSwitcher />
 
-          {/* Development Tools - Super Admin Mode */}
+          {/* Development Tools - Consolidated */}
           {process.env.NODE_ENV === "development" && (
-            <>
-              {devTools.showDevPanel && (
-                <DevToolsPanel
-                  onTogglePerformance={devTools.togglePerformanceMonitor}
-                  onOpenStorybook={devTools.openStorybook}
-                  onOpenBundleAnalyzer={devTools.openBundleAnalyzer}
-                />
-              )}
-              {devTools.showPerformanceMonitor && <PerformanceMonitor />}
-            </>
+            <ConsolidatedDevTools
+              onTogglePerformance={devTools.togglePerformanceMonitor}
+              onOpenStorybook={devTools.openStorybook}
+              onOpenBundleAnalyzer={devTools.openBundleAnalyzer}
+            />
           )}
         </div>
       </DevModeProvider>

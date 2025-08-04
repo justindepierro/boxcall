@@ -5,13 +5,14 @@ import { Icon } from "../components/ui/Icon/Icon";
 import type { IconName } from "../components/ui/Icon/Icon";
 
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
+type ExtendedUserRole = UserRole | "super_admin";
 
 export interface NavigationItem {
   id: string;
   label: string;
   icon?: IconName;
   href: string;
-  roles?: UserRole[];
+  roles?: ExtendedUserRole[];
   children?: NavigationItem[];
   divider?: boolean;
   badge?: string | number;
@@ -23,8 +24,14 @@ export interface NavigationItem {
  * Based on comprehensive requirements with role-based access
  */
 export const getNavigationItems = (
-  userRole?: UserRole | null
+  userRole?: UserRole | null | string
 ): NavigationItem[] => {
+  console.log(
+    "getNavigationItems called with userRole:",
+    userRole,
+    typeof userRole
+  );
+
   const items: NavigationItem[] = [
     // Dashboard - Available to everyone
     {
@@ -56,25 +63,36 @@ export const getNavigationItems = (
       label: "BoxCall",
       icon: "phone",
       href: "/boxcall",
-      roles: ["admin", "coach"],
+      roles: ["admin", "coach", "super_admin"],
       badge: "Pro",
       description: "Advanced coaching tools and analytics (Premium)",
     });
   }
 
   // Playbook - Coaches, players, and super_admin
-  if (
+  const shouldShowPlaybook =
     userRole === "admin" ||
     userRole === "coach" ||
     userRole === "player" ||
-    (userRole as string) === "super_admin"
-  ) {
+    (userRole as string) === "super_admin";
+
+  console.log("Playbook check:", {
+    userRole,
+    userRoleType: typeof userRole,
+    isAdmin: userRole === "admin",
+    isCoach: userRole === "coach",
+    isPlayer: userRole === "player",
+    isSuperAdmin: (userRole as string) === "super_admin",
+    shouldShowPlaybook,
+  });
+
+  if (shouldShowPlaybook) {
     items.push({
       id: "playbook",
       label: "Playbook",
       icon: "book",
       href: "/playbook",
-      roles: ["admin", "coach", "player"],
+      roles: ["admin", "coach", "player", "super_admin"],
       description: "Team plays and strategies",
     });
   }
@@ -108,7 +126,7 @@ export const getNavigationItems = (
       label: "Team Settings",
       icon: "settings",
       href: "/team/1/settings",
-      roles: ["admin", "coach"],
+      roles: ["admin", "coach", "super_admin"],
       description: "Manage team configuration and roster",
     });
   }
@@ -188,12 +206,15 @@ export const getNavigationItems = (
  */
 export const toSidebarItems = (
   items: NavigationItem[],
-  userRole?: UserRole | null
+  userRole?: UserRole | null | string
 ): SidebarItem[] => {
   return items
     .filter((item) => {
       // Show item if no roles specified or user has required role
-      return !item.roles || (userRole && item.roles.includes(userRole));
+      return (
+        !item.roles ||
+        (userRole && item.roles.includes(userRole as ExtendedUserRole))
+      );
     })
     .map((item) => ({
       id: item.id,

@@ -82,8 +82,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     <Card className="w-full max-w-md mx-auto">
       <div className="p-6">
         <div className="text-center mb-6">
+          <div className="flex items-center justify-center mb-4">
+            <img
+              src="/assets/boxcall-logo-text.svg"
+              alt="BoxCall"
+              className="h-12"
+            />
+          </div>
           <Typography variant="headline-lg" as="h2" className="mb-2">
-            🏈 Welcome Back
+            Welcome Back
           </Typography>
           <Typography variant="body-md" color="muted">
             Sign in to your BoxCall account

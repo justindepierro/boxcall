@@ -10,7 +10,6 @@ import {
 } from "../../utils/navigation";
 import { Navigation } from "../ui/Navigation";
 import { Sidebar } from "../ui/Sidebar";
-import { Icon } from "../ui/Icon/Icon";
 
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 
@@ -51,6 +50,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     sidebarItemsCount: sidebarItems.length,
     hasPlayground: navigationItems.some((item) => item.id === "playground"),
     playgroundInSidebar: sidebarItems.some((item) => item.id === "playground"),
+    hasPlaybook: navigationItems.some((item) => item.id === "playbook"),
+    playbookInSidebar: sidebarItems.some((item) => item.id === "playbook"),
+    allNavigationIds: navigationItems.map((item) => item.id),
+    allSidebarIds: sidebarItems.map((item) => item.id),
   });
 
   return (
@@ -67,8 +70,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           showOverlay={true}
           header={
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 flex items-center justify-center bg-jade-100 dark:bg-jade-900/20 rounded-full">
-                <Icon name="boxcall" size="sm" color="jade" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <img
+                  src="/assets/boxcall-logo.svg"
+                  alt="BoxCall"
+                  className="w-8 h-8"
+                />
               </div>
               <div>
                 <h3 className="font-display font-bold text-lg text-jade-600">
@@ -94,7 +101,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           }
           footer={
             <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
-              <p>BoxCall v1.0</p>
+              <p>BoxCall v0.1.5</p>
               <p>Football Management</p>
               {isDevMode && (
                 <p className="text-amber-600 dark:text-amber-400 font-medium mt-1">

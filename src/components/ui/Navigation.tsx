@@ -73,8 +73,12 @@ export const Navigation: React.FC = () => {
               onClick={() => handleNavigation("/dashboard")}
               className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
             >
-              <div className="flex items-center justify-center w-8 h-8 bg-jade-500 rounded-full text-white">
-                <Icon name="boxcall" size="sm" color="current" />
+              <div className="flex items-center justify-center w-8 h-8">
+                <img
+                  src="/assets/boxcall-logo.svg"
+                  alt="BoxCall"
+                  className="w-8 h-8"
+                />
               </div>
               <span className="font-display text-xl tracking-wide text-jade-600 dark:text-jade-400 font-bold">
                 BoxCall
