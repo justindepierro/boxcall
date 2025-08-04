@@ -10,13 +10,10 @@ import {
 } from "../../utils/navigation";
 import { Navigation } from "../ui/Navigation";
 import { Sidebar } from "../ui/Sidebar";
-
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
-
 interface LayoutProps {
   children: React.ReactNode;
 }
-
 /**
  * Layout Component
  *
@@ -28,38 +25,17 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const profile = useAuthProfile();
   const { effectiveUserRole, devMode, isDevMode } = useDevMode();
   const { sidebarOpen, toggleSidebar } = useUI();
-
   // Use effective role from dev mode if in dev mode, otherwise use profile role
   // Cast effectiveUserRole to UserRole since we control the dev mode values
   const currentRole: UserRole | null = isDevMode
     ? (effectiveUserRole as UserRole)
     : (profile?.role ?? null);
-
   const navigationItems = getNavigationItems(currentRole);
   const sidebarItems = toSidebarItems(navigationItems, currentRole);
   const roleInfo = getRoleDisplayInfo(currentRole);
-
-  // Debug logging for playground visibility
-  console.log("Layout Debug:", {
-    currentRole,
-    profileRole: profile?.role,
-    effectiveUserRole,
-    isDevMode,
-    devMode,
-    navigationItemsCount: navigationItems.length,
-    sidebarItemsCount: sidebarItems.length,
-    hasPlayground: navigationItems.some((item) => item.id === "playground"),
-    playgroundInSidebar: sidebarItems.some((item) => item.id === "playground"),
-    hasPlaybook: navigationItems.some((item) => item.id === "playbook"),
-    playbookInSidebar: sidebarItems.some((item) => item.id === "playbook"),
-    allNavigationIds: navigationItems.map((item) => item.id),
-    allSidebarIds: sidebarItems.map((item) => item.id),
-  });
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Navigation />
-
       {/* Main content area with overlay sidebar */}
       <div className="relative">
         {/* Sidebar - Now overlays instead of pushing content */}
@@ -116,7 +92,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           width="md"
           position="left"
         />
-
         {/* Main content - always full width, no margin shifts */}
         <main className="w-full">{children}</main>
       </div>

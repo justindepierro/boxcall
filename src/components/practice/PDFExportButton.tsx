@@ -4,13 +4,11 @@
  * Standalone button component for exporting practice data to PDF.
  * Can be used in any practice component where PDF export is needed.
  */
-
 import React from "react";
 import { Button } from "../ui";
 import Icon from "../ui/Icon/Icon";
 import { usePracticeScriptPDF } from "../../services/pdf/usePracticeScriptPDF";
 import type { PracticeBlock } from "./types";
-
 interface PDFExportButtonProps {
   practiceData: {
     title?: string;
@@ -36,7 +34,6 @@ interface PDFExportButtonProps {
   className?: string;
   disabled?: boolean;
 }
-
 export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
   practiceData,
   variant = "outline",
@@ -46,10 +43,8 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
 }) => {
   const { downloadPDF, isExporting, error, clearError } =
     usePracticeScriptPDF();
-
   const handleExportPDF = async () => {
     if (error) clearError();
-
     // Convert practice data to PDF format
     const pdfData = {
       title: practiceData.title || "Practice Session",
@@ -57,7 +52,6 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
       duration: practiceData.duration || 120,
       location: practiceData.location || "Practice Field",
       weather: practiceData.weather,
-
       practiceBlocks: (practiceData.blocks || []).map((block) => ({
         id: block.id,
         title: block.title,
@@ -70,10 +64,8 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
         assignedCoach: block.assignedCoach,
         groups: block.groups,
       })),
-
       coaches: practiceData.coaches || [],
       equipment: practiceData.equipment || [],
-
       summary: {
         totalMinutes: practiceData.duration || 120,
         categoryBreakdown: (practiceData.blocks || []).reduce(
@@ -87,7 +79,6 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
         objectives: [],
       },
     };
-
     // Generate filename
     const safeTitle = (practiceData.title || "practice")
       .replace(/[^a-zA-Z0-9]/g, "_")
@@ -96,7 +87,6 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
       practiceData.date || new Date().toISOString().split("T")[0]
     ).replace(/[^0-9]/g, "_");
     const filename = `${safeTitle}_${safeDate}.pdf`;
-
     await downloadPDF(pdfData, filename, {
       format: "A4",
       orientation: "portrait",
@@ -105,9 +95,7 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
       includePageNumbers: true,
     });
   };
-
   const hasValidData = practiceData.blocks && practiceData.blocks.length > 0;
-
   return (
     <div className="relative">
       <Button
@@ -147,7 +135,6 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
           </>
         )}
       </Button>
-
       {/* Error Tooltip */}
       {error && (
         <div className="absolute top-full left-0 mt-1 p-2 bg-red-50 border border-red-200 rounded-md shadow-sm z-10 min-w-max max-w-xs">
@@ -161,7 +148,6 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
           </button>
         </div>
       )}
-
       {/* No Data Tooltip */}
       {!hasValidData && !isExporting && (
         <div className="absolute top-full left-0 mt-1 p-2 bg-gray-50 border border-gray-200 rounded-md shadow-sm z-10 min-w-max">

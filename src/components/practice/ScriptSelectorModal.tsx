@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Typography } from "../../components/design-system";
 import { Button, Card } from "../../components/ui";
 import Icon from "../../components/ui/Icon/Icon";
-
 interface Script {
   id: string;
   title: string;
@@ -10,20 +9,17 @@ interface Script {
   description?: string;
   plays?: string[];
 }
-
 interface ScriptSelectorModalProps {
   onClose: () => void;
   onSelectScript: (script: Script) => void;
   onCreateNew: () => void;
 }
-
 export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
   onClose,
   onSelectScript,
   onCreateNew,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-
   // Mock scripts data - would come from API
   const mockScripts: Script[] = [
     {
@@ -54,12 +50,10 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
       plays: ["Kickoff Formation", "Coverage Lanes", "Return Block"],
     },
   ];
-
   const filteredScripts =
     selectedCategory === "all"
       ? mockScripts
       : mockScripts.filter((script) => script.category === selectedCategory);
-
   const getCategoryColor = (category: Script["category"]) => {
     switch (category) {
       case "offense":
@@ -72,7 +66,6 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
         return "bg-gray-100 text-gray-800";
     }
   };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
@@ -92,7 +85,6 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               <Icon name="close" size="lg" />
             </button>
           </div>
-
           {/* Category Filter */}
           <div className="mb-6">
             <Typography variant="body-md" className="mb-3 font-medium">
@@ -141,7 +133,6 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               </button>
             </div>
           </div>
-
           {/* Create New Script Option */}
           <Card className="p-4 mb-4 border-2 border-dashed border-blue-300 bg-blue-50">
             <div className="flex items-center justify-between">
@@ -168,13 +159,11 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               </Button>
             </div>
           </Card>
-
           {/* Existing Scripts */}
           <div className="space-y-3">
             <Typography variant="body-md" className="font-medium">
               Existing Scripts ({filteredScripts.length})
             </Typography>
-
             {filteredScripts.length === 0 ? (
               <Card className="p-6 text-center">
                 <div className="text-4xl mb-4">📚</div>
@@ -245,7 +234,6 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               ))
             )}
           </div>
-
           {/* Action Buttons */}
           <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200 mt-6">
             <Button variant="outline" onClick={onClose}>

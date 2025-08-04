@@ -29,7 +29,6 @@
  *   onAutoAssignCoaches={handleAutoAssignCoaches}
  * />
  */
-
 import React from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
@@ -38,7 +37,6 @@ import { Button, Card } from "../../ui";
 import { getCategoryColor } from "../utils";
 import type { PracticeBlock, PracticeGroup, UserRole } from "../types";
 import Icon from "../../ui/Icon/Icon";
-
 interface PracticeBlocksListProps {
   practiceBlocks: PracticeBlock[];
   userRole: UserRole;
@@ -56,7 +54,6 @@ interface PracticeBlocksListProps {
   onScaffoldMode: () => void;
   onAutoAssignCoaches: () => void;
 }
-
 export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
   practiceBlocks,
   userRole,
@@ -108,7 +105,6 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
           )}
         </div>
       </div>
-
       {/* Empty State */}
       {practiceBlocks.length === 0 ? (
         <Card className="p-8 text-center">
@@ -157,7 +153,6 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                               >
                                 ⋮⋮
                               </div>
-
                               {/* Block Info */}
                               <div className="flex-1">
                                 <div className="flex items-center space-x-3 mb-2">
@@ -181,7 +176,6 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                     {block.duration}m)
                                   </span>
                                 </div>
-
                                 {/* Location & Coach */}
                                 <div className="flex items-center space-x-4 text-sm text-gray-600">
                                   {block.location && (
@@ -205,7 +199,6 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                     </div>
                                   )}
                                 </div>
-
                                 {/* Notes */}
                                 {block.notes && (
                                   <Typography
@@ -216,7 +209,6 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                     {block.notes}
                                   </Typography>
                                 )}
-
                                 {/* Block Script */}
                                 {block.scriptId && (
                                   <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
@@ -239,7 +231,6 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                 )}
                               </div>
                             </div>
-
                             {/* Block Actions */}
                             <div className="flex space-x-2 ml-4">
                               <button
@@ -265,7 +256,6 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                               </button>
                             </div>
                           </div>
-
                           {/* Groups Section */}
                           {block.groups && block.groups.length > 0 && (
                             <div className="mt-4 pt-4 border-t border-gray-200">
@@ -283,7 +273,6 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                   + Add Group
                                 </button>
                               </div>
-
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {block.groups.map((group) => (
                                   <div
@@ -347,7 +336,6 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                         </button>
                                       </div>
                                     </div>
-
                                     {/* Group Notes */}
                                     {group.notes && (
                                       <Typography
@@ -358,7 +346,6 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                         {group.notes}
                                       </Typography>
                                     )}
-
                                     {/* Group Script */}
                                     {group.scriptId ? (
                                       <div className="flex items-center justify-between p-2 bg-green-50 border border-green-200 rounded">
@@ -398,7 +385,6 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                               </div>
                             </div>
                           )}
-
                           {/* Add Group Button (when no groups exist) */}
                           {(!block.groups || block.groups.length === 0) && (
                             <div className="mt-4 pt-4 border-t border-gray-200">

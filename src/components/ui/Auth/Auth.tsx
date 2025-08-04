@@ -3,7 +3,6 @@ import { Typography } from "../../design-system";
 import { Button } from "../Button";
 import { Form, FormActions, FormField } from "../Form";
 import { Input } from "../Input";
-
 export interface User {
   id: string;
   email: string;
@@ -14,20 +13,17 @@ export interface User {
   position?: string;
   jerseyNumber?: number;
 }
-
 export interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
 }
-
 export interface LoginCredentials {
   email: string;
   password: string;
   rememberMe?: boolean;
 }
-
 export interface SignupData {
   email: string;
   password: string;
@@ -36,11 +32,9 @@ export interface SignupData {
   role: "player" | "coach" | "admin" | "parent";
   acceptTerms: boolean;
 }
-
 export interface ResetPasswordData {
   email: string;
 }
-
 export interface AuthFormProps<T = unknown> {
   onSubmit: (data: T) => void | Promise<void>;
   loading?: boolean;
@@ -48,23 +42,19 @@ export interface AuthFormProps<T = unknown> {
   variant?: "card" | "modal" | "inline";
   className?: string;
 }
-
 export interface LoginFormProps extends AuthFormProps<LoginCredentials> {
   onForgotPassword?: () => void;
   onSignUp?: () => void;
   showSocialLogin?: boolean;
 }
-
 export interface SignupFormProps extends AuthFormProps<SignupData> {
   onLogin?: () => void;
   showSocialSignup?: boolean;
 }
-
 export interface ResetPasswordFormProps
   extends AuthFormProps<ResetPasswordData> {
   onBackToLogin?: () => void;
 }
-
 /**
  * LoginForm - Professional login form with validation
  */
@@ -83,35 +73,28 @@ export function LoginForm({
     password: "",
     rememberMe: false,
   });
-
   const [validationErrors, setValidationErrors] = useState<
     Partial<LoginCredentials>
   >({});
-
   const validateForm = (): boolean => {
     const errors: Partial<LoginCredentials> = {};
-
     if (!formData.email) {
       errors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       errors.email = "Please enter a valid email address";
     }
-
     if (!formData.password) {
       errors.password = "Password is required";
     } else if (formData.password.length < 8) {
       errors.password = "Password must be at least 8 characters";
     }
-
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
   const handleSubmit = async () => {
     if (!validateForm()) return;
     await onSubmit(formData);
   };
-
   const handleInputChange = (
     field: keyof LoginCredentials,
     value: string | boolean
@@ -122,7 +105,6 @@ export function LoginForm({
       setValidationErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
-
   return (
     <Form
       variant={variant}
@@ -167,7 +149,6 @@ export function LoginForm({
           </Typography>
         </div>
       )}
-
       {/* Social Login */}
       {showSocialLogin && (
         <div className="space-y-3">
@@ -187,7 +168,6 @@ export function LoginForm({
           </div>
         </div>
       )}
-
       {/* Email Field */}
       <FormField label="Email" required error={validationErrors.email}>
         <Input
@@ -200,7 +180,6 @@ export function LoginForm({
           fullWidth
         />
       </FormField>
-
       {/* Password Field */}
       <FormField label="Password" required error={validationErrors.password}>
         <Input
@@ -214,7 +193,6 @@ export function LoginForm({
           fullWidth
         />
       </FormField>
-
       {/* Remember Me */}
       <div className="flex items-center">
         <input
@@ -235,7 +213,6 @@ export function LoginForm({
     </Form>
   );
 }
-
 /**
  * SignupForm - Professional signup form with validation
  */
@@ -256,24 +233,19 @@ export function SignupForm({
     role: "player",
     acceptTerms: false,
   });
-
   const [validationErrors, setValidationErrors] = useState<Partial<SignupData>>(
     {}
   );
-
   const validateForm = (): boolean => {
     const errors: Partial<SignupData> = {};
-
     if (!formData.name.trim()) {
       errors.name = "Name is required";
     }
-
     if (!formData.email) {
       errors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       errors.email = "Please enter a valid email address";
     }
-
     if (!formData.password) {
       errors.password = "Password is required";
     } else if (formData.password.length < 8) {
@@ -282,24 +254,19 @@ export function SignupForm({
       errors.password =
         "Password must contain uppercase, lowercase, and number";
     }
-
     if (formData.password !== formData.confirmPassword) {
       errors.confirmPassword = "Passwords do not match";
     }
-
     if (!formData.acceptTerms) {
       errors.acceptTerms = "You must accept the terms and conditions" as never;
     }
-
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
   const handleSubmit = async () => {
     if (!validateForm()) return;
     await onSubmit(formData);
   };
-
   const handleInputChange = (
     field: keyof SignupData,
     value: string | boolean
@@ -310,7 +277,6 @@ export function SignupForm({
       setValidationErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
-
   return (
     <Form
       variant={variant}
@@ -348,7 +314,6 @@ export function SignupForm({
           </Typography>
         </div>
       )}
-
       {/* Social Signup */}
       {showSocialSignup && (
         <div className="space-y-3">
@@ -368,7 +333,6 @@ export function SignupForm({
           </div>
         </div>
       )}
-
       {/* Name Field */}
       <FormField label="Full Name" required error={validationErrors.name}>
         <Input
@@ -381,7 +345,6 @@ export function SignupForm({
           fullWidth
         />
       </FormField>
-
       {/* Email Field */}
       <FormField label="Email" required error={validationErrors.email}>
         <Input
@@ -394,7 +357,6 @@ export function SignupForm({
           fullWidth
         />
       </FormField>
-
       {/* Role Selection */}
       <FormField
         label="Role"
@@ -415,7 +377,6 @@ export function SignupForm({
           <option value="parent">Parent/Guardian</option>
         </select>
       </FormField>
-
       {/* Password Field */}
       <FormField
         label="Password"
@@ -434,7 +395,6 @@ export function SignupForm({
           fullWidth
         />
       </FormField>
-
       {/* Confirm Password Field */}
       <FormField
         label="Confirm Password"
@@ -451,7 +411,6 @@ export function SignupForm({
           fullWidth
         />
       </FormField>
-
       {/* Terms Acceptance */}
       <div className="space-y-2">
         <div className="flex items-start">
@@ -489,7 +448,6 @@ export function SignupForm({
     </Form>
   );
 }
-
 /**
  * ResetPasswordForm - Password reset form
  */
@@ -504,38 +462,31 @@ export function ResetPasswordForm({
   const [formData, setFormData] = useState<ResetPasswordData>({
     email: "",
   });
-
   const [validationErrors, setValidationErrors] = useState<
     Partial<ResetPasswordData>
   >({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-
   const validateForm = (): boolean => {
     const errors: Partial<ResetPasswordData> = {};
-
     if (!formData.email) {
       errors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       errors.email = "Please enter a valid email address";
     }
-
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
   const handleSubmit = async () => {
     if (!validateForm()) return;
     await onSubmit(formData);
     setIsSubmitted(true);
   };
-
   const handleInputChange = (field: keyof ResetPasswordData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (validationErrors[field]) {
       setValidationErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
-
   if (isSubmitted && !error) {
     return (
       <Form
@@ -565,7 +516,6 @@ export function ResetPasswordForm({
       </Form>
     );
   }
-
   return (
     <Form
       variant={variant}
@@ -598,7 +548,6 @@ export function ResetPasswordForm({
           </Typography>
         </div>
       )}
-
       {/* Email Field */}
       <FormField
         label="Email"
@@ -619,7 +568,6 @@ export function ResetPasswordForm({
     </Form>
   );
 }
-
 // Main Auth component that can render different auth forms
 export interface AuthProps {
   /** Auth mode to display */
@@ -643,7 +591,6 @@ export interface AuthProps {
   /** Additional CSS classes */
   className?: string;
 }
-
 export function Auth({
   mode = "login",
   onModeChange,
@@ -662,7 +609,6 @@ export function Auth({
   const handleModeChange = (newMode: "login" | "signup" | "reset") => {
     onModeChange?.(newMode);
   };
-
   const renderForm = () => {
     switch (mode) {
       case "login":
@@ -700,8 +646,6 @@ export function Auth({
         return null;
     }
   };
-
   return <div className={className}>{renderForm()}</div>;
 }
-
 export default Auth;

@@ -2,7 +2,6 @@
  * BoxCall Phase 4.3 Advanced Features Type Definitions
  * Supporting React Native platform and real-time synchronization
  */
-
 // Core data types
 export interface CalendarEvent {
   id: string;
@@ -20,7 +19,6 @@ export interface CalendarEvent {
   createdAt: Date;
   updatedAt: Date;
 }
-
 export interface TeamUpdate {
   id: string;
   type:
@@ -37,7 +35,6 @@ export interface TeamUpdate {
   urgency: "low" | "medium" | "high";
   targetRoles: UserRole[];
 }
-
 export interface UserState {
   userId: string;
   teams: TeamMembership[];
@@ -47,7 +44,6 @@ export interface UserState {
   notificationSettings: NotificationSettings;
   deviceInfo: DeviceInfo;
 }
-
 export interface GameUpdate {
   id: string;
   gameId: string;
@@ -59,7 +55,6 @@ export interface GameUpdate {
   homeScore: number;
   awayScore: number;
 }
-
 // Performance and analytics types
 export interface PerformanceMetrics {
   playerId: string;
@@ -70,7 +65,6 @@ export interface PerformanceMetrics {
   recommendations: string[];
   lastUpdated: Date;
 }
-
 export interface EngagementMetrics {
   teamId: string;
   period: "day" | "week" | "month";
@@ -81,7 +75,6 @@ export interface EngagementMetrics {
   retentionRate: number;
   communicationMetrics: CommunicationMetrics;
 }
-
 export interface CoachingInsights {
   coachId: string;
   teamPerformance: TeamPerformanceInsight[];
@@ -91,7 +84,6 @@ export interface CoachingInsights {
   recommendedActions: RecommendedAction[];
   generatedAt: Date;
 }
-
 // Supporting types
 export interface RecurrencePattern {
   type: "daily" | "weekly" | "monthly" | "custom";
@@ -101,7 +93,6 @@ export interface RecurrencePattern {
   occurrences?: number;
   exceptions: Date[];
 }
-
 export type UserRole =
   | "coach"
   | "assistant_coach"
@@ -109,7 +100,6 @@ export type UserRole =
   | "parent"
   | "family"
   | "admin";
-
 export interface TeamMembership {
   teamId: string;
   teamName: string;
@@ -118,7 +108,6 @@ export interface TeamMembership {
   isActive: boolean;
   permissions: string[];
 }
-
 export interface UserPreferences {
   theme: "light" | "dark" | "auto";
   language: string;
@@ -127,7 +116,6 @@ export interface UserPreferences {
   notifications: boolean;
   calendarView: "month" | "week" | "day" | "list";
 }
-
 export interface UserPermissions {
   canEditCalendar: boolean;
   canManageRoster: boolean;
@@ -136,7 +124,6 @@ export interface UserPermissions {
   canManageTeam: boolean;
   customPermissions: string[];
 }
-
 export interface NotificationSettings {
   email: boolean;
   push: boolean;
@@ -151,7 +138,6 @@ export interface NotificationSettings {
     end: string;
   };
 }
-
 export interface DeviceInfo {
   platform: "web" | "ios" | "android";
   deviceId: string;
@@ -159,7 +145,6 @@ export interface DeviceInfo {
   osVersion: string;
   lastSeen: Date;
 }
-
 export interface PlayerStatistics {
   gamesPlayed: number;
   practicesAttended: number;
@@ -169,14 +154,12 @@ export interface PlayerStatistics {
   weight: number;
   customStats: Record<string, number>;
 }
-
 export interface PerformanceTrend {
   metric: string;
   direction: "up" | "down" | "stable";
   changePercentage: number;
   timeframe: string;
 }
-
 export interface PlayerComparison {
   metric: string;
   playerValue: number;
@@ -184,21 +167,18 @@ export interface PlayerComparison {
   positionAverage: number;
   rank: number;
 }
-
 export interface FeatureUsage {
   feature: string;
   usageCount: number;
   uniqueUsers: number;
   averageSessionTime: number;
 }
-
 export interface CommunicationMetrics {
   messagesExchanged: number;
   averageResponseTime: number;
   participationRate: number;
   announcementEngagement: number;
 }
-
 export interface TeamPerformanceInsight {
   category: string;
   metric: string;
@@ -206,7 +186,6 @@ export interface TeamPerformanceInsight {
   trend: "improving" | "declining" | "stable";
   recommendation: string;
 }
-
 export interface PlayerDevelopmentInsight {
   playerId: string;
   playerName: string;
@@ -215,7 +194,6 @@ export interface PlayerDevelopmentInsight {
   developmentPlan: string[];
   progressRating: number;
 }
-
 export interface FormationInsight {
   formation: string;
   successRate: number;
@@ -223,7 +201,6 @@ export interface FormationInsight {
   effectiveness: "high" | "medium" | "low";
   recommendedSituations: string[];
 }
-
 export interface StrategyInsight {
   strategy: string;
   winRate: number;
@@ -231,7 +208,6 @@ export interface StrategyInsight {
   playerRequirements: string[];
   recommendation: string;
 }
-
 export interface RecommendedAction {
   type: "training" | "strategy" | "roster" | "communication";
   priority: "high" | "medium" | "low";
@@ -240,7 +216,6 @@ export interface RecommendedAction {
   expectedImpact: string;
   timeframe: string;
 }
-
 // Dashboard specific types
 export interface CoachDashboard {
   teams: TeamSummary[];
@@ -250,7 +225,6 @@ export interface CoachDashboard {
   quickActions: QuickAction[];
   notifications: DashboardNotification[];
 }
-
 export interface PlayerDashboard {
   teams: TeamSummary[];
   schedule: CalendarEvent[];
@@ -259,7 +233,6 @@ export interface PlayerDashboard {
   achievements: Achievement[];
   quickActions: QuickAction[];
 }
-
 export interface FamilyDashboard {
   children: PlayerSummary[];
   familySchedule: CalendarEvent[];
@@ -268,7 +241,6 @@ export interface FamilyDashboard {
   paymentStatus: PaymentStatus[];
   quickActions: QuickAction[];
 }
-
 export interface TeamSummary {
   id: string;
   name: string;
@@ -280,14 +252,12 @@ export interface TeamSummary {
   memberCount: number;
   userRole: UserRole;
 }
-
 export interface PerformanceOverview {
   teamStats: TeamStatistics;
   playerHighlights: PlayerHighlight[];
   recentGames: GameSummary[];
   upcomingChallenges: string[];
 }
-
 export interface QuickAction {
   id: string;
   title: string;
@@ -297,7 +267,6 @@ export interface QuickAction {
   requiresConfirmation: boolean;
   roles: UserRole[];
 }
-
 export interface DashboardNotification {
   id: string;
   type: "info" | "warning" | "success" | "error";
@@ -307,7 +276,6 @@ export interface DashboardNotification {
   isRead: boolean;
   actions: NotificationAction[];
 }
-
 export interface Assignment {
   id: string;
   title: string;
@@ -316,7 +284,6 @@ export interface Assignment {
   status: "pending" | "completed" | "overdue";
   type: "training" | "academic" | "team_responsibility";
 }
-
 export interface Achievement {
   id: string;
   title: string;
@@ -325,7 +292,6 @@ export interface Achievement {
   earnedDate: Date;
   category: "athletic" | "academic" | "leadership" | "team";
 }
-
 export interface PlayerSummary {
   id: string;
   name: string;
@@ -334,7 +300,6 @@ export interface PlayerSummary {
   jerseyNumber: number;
   currentStatus: "active" | "injured" | "suspended" | "inactive";
 }
-
 export interface TransportationInfo {
   eventId: string;
   eventTitle: string;
@@ -346,7 +311,6 @@ export interface TransportationInfo {
   driver: string;
   contact: string;
 }
-
 export interface PaymentStatus {
   id: string;
   description: string;
@@ -355,14 +319,12 @@ export interface PaymentStatus {
   status: "paid" | "pending" | "overdue";
   paymentMethod: string;
 }
-
 export interface GameRecord {
   wins: number;
   losses: number;
   ties: number;
   gamesPlayed: number;
 }
-
 export interface TeamStatistics {
   totalGames: number;
   winPercentage: number;
@@ -370,7 +332,6 @@ export interface TeamStatistics {
   topPerformers: string[];
   recentTrends: string[];
 }
-
 export interface PlayerHighlight {
   playerId: string;
   playerName: string;
@@ -378,7 +339,6 @@ export interface PlayerHighlight {
   value: string;
   context: string;
 }
-
 export interface GameSummary {
   id: string;
   opponent: string;
@@ -387,14 +347,12 @@ export interface GameSummary {
   score: string;
   highlights: string[];
 }
-
 export interface NotificationAction {
   id: string;
   label: string;
   action: string;
   style: "primary" | "secondary" | "danger";
 }
-
 // React Native specific types
 export interface ReactNativeConfig {
   apiBaseUrl: string;
@@ -404,7 +362,6 @@ export interface ReactNativeConfig {
   biometricAuth: boolean;
   cacheTimeout: number;
 }
-
 export interface PlatformCapabilities {
   hasCamera: boolean;
   hasGPS: boolean;
@@ -414,13 +371,11 @@ export interface PlatformCapabilities {
   hasFaceId: boolean;
   supportsPushNotifications: boolean;
 }
-
 // Error types
 export class BoxCallError extends Error {
   public code: string;
   public status?: number;
   public details?: Record<string, unknown>;
-
   constructor(
     message: string,
     code: string,
@@ -434,21 +389,18 @@ export class BoxCallError extends Error {
     this.details = details;
   }
 }
-
 export class SyncError extends BoxCallError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, "SYNC_ERROR", 500, details);
     this.name = "SyncError";
   }
 }
-
 export class AuthenticationError extends BoxCallError {
   constructor(message: string) {
     super(message, "AUTH_ERROR", 401);
     this.name = "AuthenticationError";
   }
 }
-
 export class PermissionError extends BoxCallError {
   constructor(message: string) {
     super(message, "PERMISSION_ERROR", 403);

@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { X, Upload, FileText, AlertCircle, CheckCircle } from "lucide-react";
-
 interface CSVImportModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
 export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   isOpen,
   onClose,
@@ -14,9 +12,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     "upload" | "mapping" | "preview" | "complete"
   >("upload");
   const [dragActive, setDragActive] = useState(false);
-
   if (!isOpen) return null;
-
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -26,19 +22,15 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       setDragActive(false);
     }
   };
-
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       // TODO: Handle file upload
-      console.log("File dropped:", e.dataTransfer.files[0]);
       setStep("mapping");
     }
   };
-
   const renderUploadStep = () => (
     <div className="space-y-6">
       <div className="text-center">
@@ -49,7 +41,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           Upload your existing playbook data to get started quickly
         </p>
       </div>
-
       {/* Upload Area */}
       <div
         className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
@@ -78,7 +69,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           </div>
         </div>
       </div>
-
       {/* CSV Format Info */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <div className="flex items-start">
@@ -99,7 +89,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       </div>
     </div>
   );
-
   const renderMappingStep = () => (
     <div className="space-y-6">
       <div className="text-center">
@@ -110,13 +99,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           Match your CSV columns to the correct play fields
         </p>
       </div>
-
       <div className="bg-slate-50 rounded-lg p-4">
         <p className="text-sm text-slate-600 mb-4">
           <FileText className="h-4 w-4 inline mr-1" />
           File: sample_plays.csv (23 rows detected)
         </p>
-
         {/* Column Mapping */}
         <div className="space-y-3">
           {[
@@ -142,7 +129,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           ))}
         </div>
       </div>
-
       <div className="flex justify-between">
         <button
           onClick={() => setStep("upload")}
@@ -159,7 +145,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       </div>
     </div>
   );
-
   const renderPreviewStep = () => (
     <div className="space-y-6">
       <div className="text-center">
@@ -170,7 +155,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           Review the plays before importing to your playbook
         </p>
       </div>
-
       <div className="bg-green-50 border border-green-200 rounded-lg p-4">
         <div className="flex items-center">
           <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
@@ -184,7 +168,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           </div>
         </div>
       </div>
-
       {/* Sample Preview */}
       <div className="border border-slate-200 rounded-lg overflow-hidden">
         <div className="bg-slate-50 px-4 py-3 border-b border-slate-200">
@@ -232,7 +215,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           ))}
         </div>
       </div>
-
       <div className="flex justify-between">
         <button
           onClick={() => setStep("mapping")}
@@ -249,7 +231,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       </div>
     </div>
   );
-
   const renderCompleteStep = () => (
     <div className="text-center space-y-6">
       <div>
@@ -261,7 +242,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           Successfully imported 21 plays to your playbook
         </p>
       </div>
-
       <div className="bg-slate-50 rounded-lg p-4">
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
@@ -278,7 +258,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           </div>
         </div>
       </div>
-
       <button
         onClick={onClose}
         className="px-6 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md hover:bg-emerald-700"
@@ -287,7 +266,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       </button>
     </div>
   );
-
   const renderStep = () => {
     switch (step) {
       case "upload":
@@ -302,7 +280,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         return renderUploadStep();
     }
   };
-
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -311,7 +288,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           className="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity"
           onClick={onClose}
         />
-
         {/* Modal */}
         <div className="inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
           {/* Header */}
@@ -324,7 +300,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               <X className="h-6 w-6" />
             </button>
           </div>
-
           {/* Content */}
           <div className="bg-white px-6 py-8">{renderStep()}</div>
         </div>

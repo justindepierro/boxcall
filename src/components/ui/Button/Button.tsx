@@ -4,14 +4,12 @@
  * Masculine, square button component with jade/navy theme
  * Professional, confident design for football team management
  */
-
 import React, { forwardRef } from "react";
 import type {
   ButtonProps,
   ButtonSizeConfig,
   ButtonStylesConfig,
 } from "./Button.types";
-
 // Button variant styles configuration - Updated with jade/navy theme
 const buttonVariants: ButtonStylesConfig = {
   primary: {
@@ -78,7 +76,6 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2",
   },
 };
-
 // Button size styles configuration - Enhanced for masculine, substantial feel
 const buttonSizes: ButtonSizeConfig = {
   xs: {
@@ -112,7 +109,6 @@ const buttonSizes: ButtonSizeConfig = {
     height: "h-16",
   },
 };
-
 // Loading spinner component
 const LoadingSpinner: React.FC<{ size: string }> = ({ size }) => (
   <svg
@@ -136,7 +132,6 @@ const LoadingSpinner: React.FC<{ size: string }> = ({ size }) => (
     />
   </svg>
 );
-
 /**
  * Button component with comprehensive styling and functionality
  *
@@ -171,10 +166,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     // Get variant styles
     const variantStyles = buttonVariants[variant];
     const sizeStyles = buttonSizes[size];
-
     // Determine if button should be disabled
     const isDisabled = disabled || loading;
-
     // Build class string - Square, masculine styling with enhanced animations
     const baseClasses = [
       // Base button styles - square, confident
@@ -183,33 +176,27 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       "transition-square hover-lift active-press focus-square",
       "focus:outline-none",
       "shadow-sm hover:shadow-md", // Stronger shadows for depth
-
       // Variant styles
       variantStyles.base,
       !isDisabled && variantStyles.hover,
       !isDisabled && variantStyles.active,
       variantStyles.focus,
       isDisabled && variantStyles.disabled,
-
       // Size styles (skip for link variant)
       variant !== "link" && sizeStyles.padding,
       variant !== "link" && sizeStyles.height,
       sizeStyles.fontSize,
-
       // Width
       fullWidth && "w-full",
-
       // Custom classes
       className,
     ]
       .filter(Boolean)
       .join(" ");
-
     // Render icon
     const renderIcon = (position: "left" | "right") => {
       if (!icon || iconPosition === "only" || iconPosition !== position)
         return null;
-
       return (
         <span
           className={`${sizeStyles.iconSize} ${
@@ -224,18 +211,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         </span>
       );
     };
-
     // Render loading spinner
     const renderLoadingSpinner = () => {
       if (!loading) return null;
-
       return (
         <LoadingSpinner
           size={`${sizeStyles.iconSize} ${children ? "mr-2" : ""}`}
         />
       );
     };
-
     return (
       <button
         ref={ref}
@@ -246,20 +230,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {renderLoadingSpinner()}
         {renderIcon("left")}
-
         {iconPosition === "only" ? (
           <span className={sizeStyles.iconSize}>{icon}</span>
         ) : (
           children
         )}
-
         {renderIcon("right")}
       </button>
     );
   }
 );
-
 // Set display name for debugging
 Button.displayName = "Button";
-
 export default Button;

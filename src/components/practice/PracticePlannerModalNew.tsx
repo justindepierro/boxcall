@@ -4,7 +4,6 @@
  * Main orchestrating component using extracted components and centralized state management.
  * This is the new, modular version that replaces the 2732-line monolithic component.
  */
-
 import React, { useState } from "react";
 import { ScriptSelectorModal } from "./ScriptSelectorModal";
 import { PracticePDFExportDialog } from "./PracticePDFExportDialog";
@@ -19,14 +18,12 @@ import {
   EditGroupModal,
 } from "./components";
 import type { PracticePlannerModalProps, Script } from "./types";
-
 export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
   event,
   onClose,
 }) => {
   // PDF Export state
   const [isPDFExportOpen, setIsPDFExportOpen] = useState(false);
-
   // Prepare practice data for PDF export
   const preparePracticeDataForPDF = () => {
     // Convert practice blocks to PDF format
@@ -51,23 +48,19 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
         scriptTitle: group.scriptTitle,
       })),
     }));
-
     // Calculate category breakdown
     const categoryBreakdown: Record<string, number> = {};
     const coachUtilization: Record<string, number> = {};
     let totalMinutes = 0;
-
     practiceBlocks.forEach((block) => {
       categoryBreakdown[block.category] =
         (categoryBreakdown[block.category] || 0) + block.duration;
       totalMinutes += block.duration;
-
       if (block.assignedCoach) {
         coachUtilization[block.assignedCoach] =
           (coachUtilization[block.assignedCoach] || 0) + block.duration;
       }
     });
-
     return {
       title: event.title || "Practice Plan",
       date: new Date(event.start).toLocaleDateString(),
@@ -120,7 +113,6 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
       },
     };
   };
-
   // Use centralized state management hook
   const {
     // State
@@ -134,7 +126,6 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     showScriptSelector,
     selectedBlockForScript,
     selectedGroupForScript,
-
     // Timeline state
     timelineAllocation,
     selectedCategory,
@@ -142,11 +133,9 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     sliderValue,
     isSelecting,
     selectionStart,
-
     // Computed values
     scheduledDuration,
     totalDuration,
-
     // Event handlers
     setUserRole,
     setTimeAllocationMode,
@@ -156,7 +145,6 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     setSelectedBlockForScript,
     setSelectedGroupForScript,
     setEditingGroup,
-
     // Timeline handlers
     setSelectedCategory,
     setSelectedBlock,
@@ -166,7 +154,6 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     updateSelectedBlockDuration,
     removeEmptyTime,
     saveTimeAllocation,
-
     // Block and group handlers
     handleDragEnd,
     handleAddBlock,
@@ -180,15 +167,12 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
     handleAddScriptToGroup,
     handleRemoveScriptFromGroup,
     handleAutoAssignCoaches,
-
     // Script assignment functions
     assignScriptToBlock,
     assignScriptToGroup,
-
     // Modal handlers
     handleCancelScaffold,
   } = usePracticeState(event);
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -207,7 +191,6 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
             onPDFExport={() => setIsPDFExportOpen(true)}
             onClose={onClose}
           />
-
           {/* Time Summary Component */}
           <TimeSummary
             scheduledDuration={scheduledDuration}
@@ -215,7 +198,6 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
             practiceBlocks={practiceBlocks}
             event={event}
           />
-
           {/* Main Content - Timeline or Blocks */}
           <div className="mb-6">
             {scaffoldMode ? (
@@ -236,7 +218,6 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
                 onClearSelected={() => setSelectedBlock(null)}
                 onClearAll={() => {
                   // This would need to be implemented in the hook
-                  console.log("Clear all timeline allocation");
                 }}
                 onRemoveEmpty={removeEmptyTime}
                 onCancel={handleCancelScaffold}
@@ -263,7 +244,6 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
               />
             )}
           </div>
-
           {/* Footer Actions */}
           <div className="flex justify-between items-center pt-4 border-t border-gray-200">
             <div className="text-sm text-gray-500">
@@ -280,9 +260,7 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
           </div>
         </div>
       </div>
-
       {/* Modal Components */}
-
       {/* Add Block Modal */}
       <AddBlockModal
         isOpen={showAddBlock}
@@ -292,7 +270,6 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
         timeAllocationMode={timeAllocationMode}
         selectedBlock={selectedBlock}
       />
-
       {/* Add Group Modal */}
       <AddGroupModal
         isOpen={!!editingGroup && !editingGroup.group.id} // New group (no ID)
@@ -300,7 +277,6 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
         onClose={() => setEditingGroup(null)}
         onAddGroup={handleAddGroup}
       />
-
       {/* Edit Group Modal */}
       <EditGroupModal
         isOpen={!!editingGroup && !!editingGroup.group.id} // Existing group (has ID)
@@ -308,7 +284,6 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
         onClose={() => setEditingGroup(null)}
         onUpdateGroup={handleUpdateGroup}
       />
-
       {/* Script Selector Modal */}
       {showScriptSelector && (
         <ScriptSelectorModal
@@ -333,12 +308,9 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
             setSelectedBlockForScript(null);
             setSelectedGroupForScript(null);
           }}
-          onCreateNew={() => {
-            console.log("Create new script - TODO: implement");
-          }}
+          onCreateNew={() => {}}
         />
       )}
-
       {/* PDF Export Dialog */}
       <PracticePDFExportDialog
         isOpen={isPDFExportOpen}

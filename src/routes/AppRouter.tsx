@@ -22,7 +22,6 @@ import {
   SubscriptionRoute,
   TeamMemberRoute,
 } from "../routes";
-
 /**
  * AppRouter Component
  *
@@ -43,7 +42,6 @@ export const AppRouter: React.FC = () => {
               </PublicRoute>
             }
           />
-
           {/* Protected Routes - Require authentication */}
           <Route
             path="/dashboard"
@@ -53,7 +51,6 @@ export const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/profile"
             element={
@@ -62,7 +59,6 @@ export const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           {/* Master Calendar - Available to all authenticated users */}
           <Route
             path="/calendar"
@@ -72,7 +68,6 @@ export const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           {/* Team Bulletin - All team members can view */}
           <Route
             path="/team/:teamId/bulletin"
@@ -92,7 +87,6 @@ export const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           {/* Premium Feature Example - Requires subscription */}
           <Route
             path="/team/:teamId/analytics"
@@ -110,7 +104,6 @@ export const AppRouter: React.FC = () => {
               </TeamMemberRoute>
             }
           />
-
           {/* New Navigation Routes */}
           {/* BoxCall - Coaches only */}
           <Route
@@ -123,7 +116,6 @@ export const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           {/* Playbook - All authenticated users */}
           <Route
             path="/playbook"
@@ -133,7 +125,6 @@ export const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           {/* Team Settings - Team-specific, coaches only */}
           <Route
             path="/team/:teamId/settings"
@@ -147,7 +138,6 @@ export const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           {/* About - All authenticated users */}
           <Route
             path="/about"
@@ -157,7 +147,6 @@ export const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           {/* Templates - Coaches only */}
           <Route
             path="/templates"
@@ -169,7 +158,6 @@ export const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           {/* Playground - Admins only */}
           <Route
             path="/playground"
@@ -181,7 +169,6 @@ export const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
-
           {/* Catch-all Routes */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route

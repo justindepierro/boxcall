@@ -12,7 +12,6 @@ import {
 import type { Play as PlayType } from "../../types/play";
 import { VisualPlayBuilder } from "./visual/VisualPlayBuilder";
 import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
-
 interface PlayCardProps {
   play: PlayType;
   showOneWordCalls?: boolean;
@@ -20,7 +19,6 @@ interface PlayCardProps {
   onDuplicate?: (play: PlayType) => void;
   onCreateDiagram?: (play: PlayType) => void;
 }
-
 export const PlayCard: React.FC<PlayCardProps> = ({
   play,
   showOneWordCalls = false,
@@ -30,7 +28,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
 }) => {
   const [showVisualBuilder, setShowVisualBuilder] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-
   const getPlayTypeColor = (type: string) => {
     switch (type) {
       case "Pass":
@@ -45,28 +42,22 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         return "bg-slate-100 text-slate-800";
     }
   };
-
   const getConfidenceColor = (confidence: number) => {
     if (confidence >= 80) return "text-green-600";
     if (confidence >= 60) return "text-yellow-600";
     return "text-red-600";
   };
-
   const handleCreateDiagram = () => {
     setShowVisualBuilder(true);
   };
-
   const handleSaveDiagram = (updatedPlay: PlayType) => {
-    console.log("Saving diagram for play:", updatedPlay.play_name);
     setShowVisualBuilder(false);
     if (onCreateDiagram) {
       onCreateDiagram(updatedPlay);
     }
   };
-
   const displayName = getDisplayName(play, showOneWordCalls);
   const subtitleText = getSubtitleText(play, showOneWordCalls);
-
   return (
     <>
       <div className="bg-white rounded-lg border border-slate-200 hover:border-slate-300 transition-colors">
@@ -84,14 +75,12 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               >
                 {displayName}
               </h3>
-
               {/* Subtitle in italics for one-word plays */}
               {subtitleText && (
                 <p className="text-xs text-slate-500 mt-1 italic font-light">
                   {subtitleText}
                 </p>
               )}
-
               {/* Play Type and additional info */}
               <div className="flex items-center space-x-2 mt-2">
                 <span
@@ -111,7 +100,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 </span>
               </div>
             </div>
-
             {/* Action Buttons */}
             <div className="flex items-center space-x-1 ml-4">
               <button
@@ -148,7 +136,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               </button>
             </div>
           </div>
-
           {/* Expanded Details */}
           {isExpanded && (
             <div className="mt-4 pt-4 border-t border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -196,7 +183,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   )}
                 </div>
               </div>
-
               {/* Play Details */}
               <div className="space-y-2">
                 <h4 className="text-sm font-semibold text-slate-700 flex items-center">
@@ -243,7 +229,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   )}
                 </div>
               </div>
-
               {/* Situational & Stats */}
               <div className="space-y-2">
                 <h4 className="text-sm font-semibold text-slate-700 flex items-center">
@@ -289,7 +274,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   )}
                 </div>
               </div>
-
               {/* Notes & Tags */}
               {(play.notes || play.tags?.length) && (
                 <div className="md:col-span-3 pt-2 border-t border-slate-100">
@@ -326,7 +310,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
           )}
         </div>
       </div>
-
       {/* Visual Play Builder Modal */}
       {showVisualBuilder && (
         <VisualPlayBuilder

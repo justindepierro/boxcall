@@ -14,13 +14,11 @@ import type {
   CalendarFilters,
 } from "../services/calendarService";
 import { CalendarService } from "../services/calendarService";
-
 interface CalendarPageState {
   userTeamsFilter?: string[];
   teamFilter?: string;
   defaultView?: "dayGridMonth" | "timeGridWeek" | "timeGridDay";
 }
-
 /**
  * Master Calendar Page - Comprehensive calendar management interface
  *
@@ -41,10 +39,8 @@ export const CalendarPage: React.FC = () => {
   const location = useLocation();
   const { user, profile } = useAuth();
   const calendarRef = useRef<BoxCallCalendarRef>(null);
-
   // Get state from navigation
   const state = location.state as CalendarPageState;
-
   // State management
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
     null
@@ -68,32 +64,27 @@ export const CalendarPage: React.FC = () => {
         .split("T")[0],
     },
   });
-
   // Use calendar hook with filters
   const { events, loading, error } = useCalendar(user?.id || "");
-
   // Handle search
   const handleSearch = async () => {
     if (searchQuery.trim()) {
       try {
-        const searchResults = await CalendarService.searchEvents(
+        const _searchResults = await CalendarService.searchEvents(
           searchQuery,
           filters
         );
         // TODO: Update events with search results
-        console.log("Search results:", searchResults);
       } catch (error) {
         console.error("Search failed:", error);
       }
     }
   };
-
   // Handle event click
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
     setShowEventModal(true);
   };
-
   // Handle date selection for creating events
   const handleDateSelect = (selectInfo: {
     startStr: string;
@@ -112,7 +103,6 @@ export const CalendarPage: React.FC = () => {
       setShowEventModal(true);
     }
   };
-
   // Handle view change
   const handleViewChange = (
     view: "dayGridMonth" | "timeGridWeek" | "timeGridDay"
@@ -120,23 +110,19 @@ export const CalendarPage: React.FC = () => {
     setCurrentView(view);
     calendarRef.current?.changeView(view);
   };
-
   // Handle filter changes
   const handleFilterChange = (newFilters: Partial<CalendarFilters>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
   };
-
   // Export calendar functionality
   const handleExportCalendar = async () => {
     try {
       // TODO: Implement calendar export
-      console.log("Exporting calendar with events:", events);
       alert("Calendar export functionality coming soon!");
     } catch (error) {
       console.error("Export failed:", error);
     }
   };
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -149,7 +135,6 @@ export const CalendarPage: React.FC = () => {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -170,7 +155,6 @@ export const CalendarPage: React.FC = () => {
       </div>
     );
   }
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
@@ -191,7 +175,6 @@ export const CalendarPage: React.FC = () => {
                 </Typography>
               </div>
             </div>
-
             {/* Action Buttons */}
             <div className="flex items-center space-x-3">
               <Button variant="outline" onClick={handleExportCalendar}>
@@ -221,7 +204,6 @@ export const CalendarPage: React.FC = () => {
           </div>
         </div>
       </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Left Sidebar - Search & Filters */}
@@ -255,7 +237,6 @@ export const CalendarPage: React.FC = () => {
                 </Button>
               </div>
             </Card>
-
             {/* Advanced Filters */}
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-4">
@@ -300,7 +281,6 @@ export const CalendarPage: React.FC = () => {
                     )}
                   </div>
                 </div>
-
                 {/* Date Range Filter */}
                 <div>
                   <Typography variant="body-sm" className="font-semibold mb-2">
@@ -333,7 +313,6 @@ export const CalendarPage: React.FC = () => {
                     />
                   </div>
                 </div>
-
                 {/* Quick Filters */}
                 <div>
                   <Typography variant="body-sm" className="font-semibold mb-2">
@@ -369,7 +348,6 @@ export const CalendarPage: React.FC = () => {
                 </div>
               </div>
             </Card>
-
             {/* Calendar Stats */}
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-4">
@@ -416,7 +394,6 @@ export const CalendarPage: React.FC = () => {
               </div>
             </Card>
           </div>
-
           {/* Main Calendar */}
           <div className="lg:col-span-3">
             <Card className="p-6">
@@ -445,7 +422,6 @@ export const CalendarPage: React.FC = () => {
                     Next ›
                   </Button>
                 </div>
-
                 {/* View Switcher */}
                 <div className="flex rounded-lg bg-gray-100 p-1">
                   <button
@@ -480,7 +456,6 @@ export const CalendarPage: React.FC = () => {
                   </button>
                 </div>
               </div>
-
               {/* FullCalendar Component */}
               <div className="h-[600px]">
                 <BoxCallCalendar
@@ -503,7 +478,6 @@ export const CalendarPage: React.FC = () => {
           </div>
         </div>
       </div>
-
       {/* Event Detail/Edit Modal */}
       {showEventModal && selectedEvent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -531,7 +505,6 @@ export const CalendarPage: React.FC = () => {
                   <Icon name="close" size="lg" />
                 </button>
               </div>
-
               {isCreatingEvent ? (
                 /* Event Creation Form */
                 <div className="space-y-4">
@@ -546,7 +519,6 @@ export const CalendarPage: React.FC = () => {
                     }
                     placeholder="Practice, Game vs. Team Name, etc."
                   />
-
                   <div className="grid grid-cols-2 gap-4">
                     <Input
                       label="Start Date"
@@ -571,7 +543,6 @@ export const CalendarPage: React.FC = () => {
                       }
                     />
                   </div>
-
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -606,7 +577,6 @@ export const CalendarPage: React.FC = () => {
                       placeholder="Field, Stadium, etc."
                     />
                   </div>
-
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Description
@@ -624,7 +594,6 @@ export const CalendarPage: React.FC = () => {
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
                     />
                   </div>
-
                   <div className="flex space-x-3 pt-4">
                     <Button
                       variant="primary"
@@ -685,7 +654,6 @@ export const CalendarPage: React.FC = () => {
                       </span>
                     )}
                   </div>
-
                   <div className="space-y-2 text-sm text-gray-600">
                     <div className="flex items-center">
                       <Icon
@@ -761,7 +729,6 @@ export const CalendarPage: React.FC = () => {
                       </div>
                     )}
                   </div>
-
                   {selectedEvent.description && (
                     <div className="pt-3 border-t border-gray-200">
                       <Typography variant="body-md" className="text-gray-700">
@@ -769,7 +736,6 @@ export const CalendarPage: React.FC = () => {
                       </Typography>
                     </div>
                   )}
-
                   <div className="flex space-x-3 pt-4">
                     {/* Practice Planning Button - Only for practice events and coaches */}
                     {selectedEvent.type === "practice" &&
@@ -802,7 +768,6 @@ export const CalendarPage: React.FC = () => {
           </div>
         </div>
       )}
-
       {/* Practice Planner Modal */}
       {showPracticePlanner &&
         selectedEvent &&
@@ -815,5 +780,4 @@ export const CalendarPage: React.FC = () => {
     </div>
   );
 };
-
 export default CalendarPage;

@@ -2,13 +2,11 @@ import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuthLoading, useIsAuthenticated } from "../app/auth-store";
 import { Layout } from "../components/layout/Layout";
-
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requireAuth?: boolean;
   redirectTo?: string;
 }
-
 /**
  * ProtectedRoute Component
  *
@@ -27,7 +25,6 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const isAuthenticated = useIsAuthenticated();
   const loading = useAuthLoading();
   const location = useLocation();
-
   // Show loading spinner while checking authentication
   if (loading) {
     return (
@@ -36,20 +33,17 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       </div>
     );
   }
-
   // If route requires auth and user is not authenticated
   if (requireAuth && !isAuthenticated) {
     // Save the attempted location for redirect after login
     return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }
-
   // If route requires NO auth (login page) and user IS authenticated
   if (!requireAuth && isAuthenticated) {
     // Get the intended destination from state, or default to dashboard
     const from = location.state?.from?.pathname || "/dashboard";
     return <Navigate to={from} replace />;
   }
-
   // Access granted, render the protected content with layout
   return <Layout>{children}</Layout>;
 };

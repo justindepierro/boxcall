@@ -3,7 +3,6 @@ import { ZoomIn, ZoomOut, RotateCcw, Move } from "lucide-react";
 import type { Play } from "../../../types/play";
 import { PlayerPositionSystem } from "./PlayerPositionSystem";
 import { RouteDrawingSystem } from "./RouteDrawingSystem";
-
 interface FieldCanvasProps {
   play?: Play; // Play data to visualize
   onPlayerMove?: (playerId: string, x: number, y: number) => void;
@@ -11,7 +10,6 @@ interface FieldCanvasProps {
   readOnly?: boolean;
   className?: string;
 }
-
 interface FieldDimensions {
   width: number;
   height: number;
@@ -19,7 +17,6 @@ interface FieldDimensions {
   fieldWidth: number;
   fieldHeight: number;
 }
-
 export const FieldCanvas: React.FC<FieldCanvasProps> = ({
   play,
   onPlayerMove: _onPlayerMove,
@@ -39,7 +36,6 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-
   // Calculate responsive dimensions
   useEffect(() => {
     const updateDimensions = () => {
@@ -49,7 +45,6 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
         const width = Math.min(containerWidth - 32, 800); // 32px for padding
         const height = width / aspectRatio;
         const yardWidth = width / 120; // 120 yards including end zones
-
         setDimensions({
           width,
           height,
@@ -59,12 +54,10 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
         });
       }
     };
-
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
-
   // Generate yard lines
   const generateYardLines = () => {
     const lines = [];
@@ -72,7 +65,6 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
       const x = (yard / 120) * dimensions.fieldWidth;
       const isMainLine = yard % 10 === 0;
       const isMidfield = yard === 60;
-
       lines.push(
         <line
           key={`yard-${yard}`}
@@ -84,7 +76,6 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
           strokeWidth={isMidfield ? 2 : isMainLine ? 1.5 : 1}
         />
       );
-
       // Add yard numbers for main lines
       if (isMainLine && yard > 0 && yard < 120) {
         const yardNumber = yard <= 60 ? yard : 120 - yard;
@@ -107,16 +98,13 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
     }
     return lines;
   };
-
   // Generate hash marks
   const generateHashMarks = () => {
     const hashMarks = [];
     const hashY1 = dimensions.fieldHeight * 0.3; // Left hash
     const hashY2 = dimensions.fieldHeight * 0.7; // Right hash
-
     for (let yard = 1; yard < 120; yard++) {
       const x = (yard / 120) * dimensions.fieldWidth;
-
       hashMarks.push(
         <g key={`hash-${yard}`}>
           <line
@@ -140,20 +128,17 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
     }
     return hashMarks;
   };
-
   const handleZoomIn = () => setZoom((prev) => Math.min(prev * 1.2, 3));
   const handleZoomOut = () => setZoom((prev) => Math.max(prev / 1.2, 0.5));
   const handleResetView = () => {
     setZoom(1);
     setPan({ x: 0, y: 0 });
   };
-
   const handleMouseDown = (e: React.MouseEvent) => {
     if (readOnly) return;
     setIsDragging(true);
     setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
   };
-
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || readOnly) return;
     setPan({
@@ -161,11 +146,9 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
       y: e.clientY - dragStart.y,
     });
   };
-
   const handleMouseUp = () => {
     setIsDragging(false);
   };
-
   return (
     <div
       className={`relative bg-white rounded-lg border border-slate-200 overflow-hidden ${className}`}
@@ -199,7 +182,6 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
           <span className="text-xs text-slate-500">Drag to pan</span>
         </div>
       )}
-
       {/* Field Container */}
       <div
         ref={containerRef}
@@ -223,7 +205,6 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
             fill="#22c55e" // Football field green
             rx={8}
           />
-
           {/* End Zones */}
           <rect
             x={0}
@@ -241,15 +222,12 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
             fill="#16a34a"
             opacity={0.8}
           />
-
           {/* Transform group for zoom and pan */}
           <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
             {/* Yard Lines */}
             <g>{generateYardLines()}</g>
-
             {/* Hash Marks */}
             <g>{generateHashMarks()}</g>
-
             {/* Midfield Logo Area */}
             <circle
               cx={dimensions.fieldWidth / 2}
@@ -269,7 +247,6 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
             >
               50
             </text>
-
             {/* Players and Routes */}
             {play && (
               <g>
@@ -281,7 +258,6 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
                   readOnly={readOnly}
                   showLabels={true}
                 />
-
                 {/* Render Routes */}
                 <RouteDrawingSystem
                   players={[]} // Will be populated with formation players
@@ -290,7 +266,6 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
                   fieldHeight={dimensions.fieldHeight}
                   isDrawing={false}
                 />
-
                 {/* Play Name */}
                 <text
                   x={dimensions.fieldWidth / 2}
@@ -308,7 +283,6 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
           </g>
         </svg>
       </div>
-
       {/* Field Info */}
       <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-sm border border-slate-200 p-3">
         <div className="text-xs text-slate-600 space-y-1">

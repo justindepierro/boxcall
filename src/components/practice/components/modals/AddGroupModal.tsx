@@ -15,19 +15,16 @@
  *   onAddGroup={handleAddGroup}
  * />
  */
-
 import React, { useState, useEffect } from "react";
 import { Typography } from "../../../design-system";
 import Icon from "../../../ui/Icon/Icon";
 import type { PracticeGroup } from "../../types";
-
 interface AddGroupModalProps {
   isOpen: boolean;
   blockId: string;
   onClose: () => void;
   onAddGroup: (blockId: string, group: Omit<PracticeGroup, "id">) => void;
 }
-
 export const AddGroupModal: React.FC<AddGroupModalProps> = ({
   isOpen,
   blockId,
@@ -39,7 +36,6 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
     location: "",
     notes: "",
   });
-
   // Reset form when modal opens
   useEffect(() => {
     if (isOpen) {
@@ -50,22 +46,17 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
       });
     }
   }, [isOpen]);
-
   if (!isOpen) return null;
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     const newGroup: Omit<PracticeGroup, "id"> = {
       name: formData.name,
       location: formData.location,
       notes: formData.notes,
     };
-
     onAddGroup(blockId, newGroup);
     onClose();
   };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -83,7 +74,6 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
             <Icon name="close" size="lg" />
           </button>
         </div>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Group Name */}
           <div>
@@ -101,7 +91,6 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
               required
             />
           </div>
-
           {/* Location */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -117,7 +106,6 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
               placeholder="e.g., Field A, Weight Room"
             />
           </div>
-
           {/* Notes */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -133,7 +121,6 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
               placeholder="Additional notes or instructions..."
             />
           </div>
-
           {/* Submit Buttons */}
           <div className="flex space-x-3 pt-4">
             <button

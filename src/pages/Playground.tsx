@@ -8,13 +8,11 @@ import {
   testSmartIconSystem,
   quickSmartIconTest,
 } from "../tests/smartIconSystem.test";
-
 interface TestResults {
   passed: number;
   total: number;
   percentage: number;
 }
-
 /**
  * Developer Playground - Super Admin Only
  *
@@ -24,7 +22,6 @@ interface TestResults {
 export const Playground: React.FC = () => {
   const [testResults, setTestResults] = useState<TestResults | null>(null);
   const [quickTestOutput, setQuickTestOutput] = useState<string[]>([]);
-
   const runSmartIconTests = () => {
     // Capture console output
     const originalLog = console.log;
@@ -33,7 +30,6 @@ export const Playground: React.FC = () => {
       logs.push(args.join(" "));
       originalLog(...args);
     };
-
     try {
       const results = testSmartIconSystem();
       setTestResults(results);
@@ -41,7 +37,6 @@ export const Playground: React.FC = () => {
       console.log = originalLog;
     }
   };
-
   const runQuickDemo = () => {
     // Capture console output for quick demo
     const originalLog = console.log;
@@ -50,7 +45,6 @@ export const Playground: React.FC = () => {
       logs.push(args.join(" "));
       originalLog(...args);
     };
-
     try {
       quickSmartIconTest();
       setQuickTestOutput(logs);
@@ -58,7 +52,6 @@ export const Playground: React.FC = () => {
       console.log = originalLog;
     }
   };
-
   const demoQueries = [
     "Team Captain Achievement",
     "Practice Schedule Update",
@@ -71,7 +64,6 @@ export const Playground: React.FC = () => {
     "Equipment Maintenance Required",
     "Nutrition and Meal Planning",
   ];
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -93,7 +85,6 @@ export const Playground: React.FC = () => {
               </Typography>
             </div>
           </div>
-
           <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
             <div className="flex items-center gap-2">
               <Icon
@@ -111,7 +102,6 @@ export const Playground: React.FC = () => {
             </div>
           </div>
         </div>
-
         <div className="grid gap-8">
           {/* SmartIconSystem Interactive Demo */}
           <section>
@@ -120,7 +110,6 @@ export const Playground: React.FC = () => {
             </Typography>
             <SmartIconDemo />
           </section>
-
           {/* Quick Icon Tests */}
           <section>
             <Typography variant="headline-lg" className="mb-4">
@@ -137,7 +126,6 @@ export const Playground: React.FC = () => {
                     <Icon name="play" size="sm" />
                     Run Full Test Suite
                   </button>
-
                   <button
                     onClick={runQuickDemo}
                     className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -146,7 +134,6 @@ export const Playground: React.FC = () => {
                     Quick Demo
                   </button>
                 </div>
-
                 {/* Test Results */}
                 {testResults && (
                   <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -179,7 +166,6 @@ export const Playground: React.FC = () => {
                     </div>
                   </div>
                 )}
-
                 {/* Quick Demo Output */}
                 {quickTestOutput.length > 0 && (
                   <div className="p-4 bg-gray-900 text-green-400 rounded-lg font-mono text-sm">
@@ -189,7 +175,6 @@ export const Playground: React.FC = () => {
                   </div>
                 )}
               </Card>
-
               {/* Live Pattern Testing */}
               <Card className="p-6">
                 <Typography variant="headline-md" className="mb-4">
@@ -209,7 +194,6 @@ export const Playground: React.FC = () => {
                       "message",
                       "team",
                     ] as const;
-
                     return (
                       <div
                         key={index}
@@ -236,7 +220,6 @@ export const Playground: React.FC = () => {
                             </Typography>
                           </div>
                         </div>
-
                         {/* Context variations */}
                         <div className="grid grid-cols-5 gap-2 text-xs">
                           {contexts.map((context) => {
@@ -264,7 +247,6 @@ export const Playground: React.FC = () => {
               </Card>
             </div>
           </section>
-
           {/* Icon Library Browser */}
           <section>
             <Typography variant="headline-lg" className="mb-4">
@@ -274,7 +256,6 @@ export const Playground: React.FC = () => {
               <Typography variant="body-md" color="muted" className="mb-4">
                 Browse all 300+ available icons in the SmartIconSystem
               </Typography>
-
               <div className="grid grid-cols-8 sm:grid-cols-12 lg:grid-cols-16 gap-4">
                 {Object.keys(SmartIconSystem["contentPatterns"])
                   .slice(0, 48)
@@ -303,7 +284,6 @@ export const Playground: React.FC = () => {
               </div>
             </Card>
           </section>
-
           {/* System Status */}
           <section>
             <Typography variant="headline-lg" className="mb-4">
@@ -325,7 +305,6 @@ export const Playground: React.FC = () => {
                   Across 20+ categories with intelligent pattern matching
                 </Typography>
               </Card>
-
               <Card className="p-6">
                 <div className="flex items-center gap-3 mb-2">
                   <Icon name="zap" size="lg" className="text-blue-600" />
@@ -341,7 +320,6 @@ export const Playground: React.FC = () => {
                   Average icon selection time with client-side processing
                 </Typography>
               </Card>
-
               <Card className="p-6">
                 <div className="flex items-center gap-3 mb-2">
                   <Icon
@@ -368,5 +346,4 @@ export const Playground: React.FC = () => {
     </div>
   );
 };
-
 export default Playground;

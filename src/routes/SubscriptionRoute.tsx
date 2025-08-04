@@ -4,23 +4,19 @@ import { useAuthLoading, useIsAuthenticated } from "../app/auth-store";
 import { Icon } from "../components/ui/Icon/Icon";
 import { supabase } from "../lib/supabase";
 import type { Database } from "../types/database";
-
 // Subscription tier type
 type SubscriptionTier =
   Database["public"]["Tables"]["teams"]["Row"]["subscription_tier"];
-
 interface SubscriptionRouteProps {
   children: React.ReactNode;
   requiredTiers: NonNullable<SubscriptionTier>[];
   teamId?: string;
   fallbackTo?: string;
 }
-
 interface TeamSubscription {
   subscription_tier: SubscriptionTier;
   subscription_expires_at: string | null;
 }
-
 /**
  * SubscriptionRoute Component
  *
@@ -45,10 +41,8 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
     null
   );
   const [checkingSubscription, setCheckingSubscription] = useState(true);
-
   // Get team ID from props or URL params
   const currentTeamId = teamId || params.teamId;
-
   useEffect(() => {
     const checkTeamSubscription = async () => {
       if (!currentTeamId) {
@@ -56,14 +50,12 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
         setCheckingSubscription(false);
         return;
       }
-
       try {
         const { data, error } = await supabase
           .from("teams")
           .select("subscription_tier, subscription_expires_at")
           .eq("id", currentTeamId)
           .single();
-
         if (error || !data) {
           setSubscription(null);
         } else {
@@ -76,14 +68,12 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
         setCheckingSubscription(false);
       }
     };
-
     if (currentTeamId) {
       checkTeamSubscription();
     } else {
       setCheckingSubscription(false);
     }
   }, [currentTeamId]);
-
   // Show loading spinner while checking
   if (loading || checkingSubscription) {
     return (
@@ -92,17 +82,14 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
       </div>
     );
   }
-
   // Not authenticated
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-
   // No team ID
   if (!currentTeamId) {
     return <Navigate to={fallbackTo} replace />;
   }
-
   // No subscription data found
   if (!subscription) {
     return (
@@ -125,7 +112,6 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
       </div>
     );
   }
-
   // Check subscription tier
   if (
     !subscription.subscription_tier ||
@@ -156,7 +142,6 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
       </div>
     );
   }
-
   // Check if subscription is expired
   if (subscription.subscription_expires_at) {
     const expirationDate = new Date(subscription.subscription_expires_at);
@@ -187,7 +172,6 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
       );
     }
   }
-
   // Access granted, render the protected content
   return <>{children}</>;
 };

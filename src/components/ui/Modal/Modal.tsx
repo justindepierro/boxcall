@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-
 export interface ModalProps {
   /** Whether the modal is open */
   isOpen: boolean;
@@ -26,7 +25,6 @@ export interface ModalProps {
   /** Custom z-index */
   zIndex?: number;
 }
-
 const getModalSizeStyles = (size: ModalProps["size"]) => {
   switch (size) {
     case "sm":
@@ -41,10 +39,8 @@ const getModalSizeStyles = (size: ModalProps["size"]) => {
       return "max-w-md";
   }
 };
-
 const getModalTypeStyles = (type: ModalProps["type"]) => {
   const baseStyles = "rounded-lg shadow-xl border-2"; // Square corners, stronger shadows
-
   switch (type) {
     case "alert":
       return `${baseStyles} bg-red-50 dark:bg-red-900/20 border-red-400 dark:border-red-500`;
@@ -54,11 +50,9 @@ const getModalTypeStyles = (type: ModalProps["type"]) => {
       return `${baseStyles} bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600`;
   }
 };
-
 const getBackdropStyles = () => {
   return "bg-navy-900/60 dark:bg-navy-950/80"; // Navy-tinted backdrop instead of gray
 };
-
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
@@ -74,18 +68,15 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
-
   // Focus management
   useEffect(() => {
     if (isOpen) {
       // Store the currently focused element
       previousActiveElement.current = document.activeElement as HTMLElement;
-
       // Focus the modal
       if (modalRef.current) {
         modalRef.current.focus();
       }
-
       // Prevent body scroll
       document.body.style.overflow = "hidden";
     } else {
@@ -93,47 +84,37 @@ export const Modal: React.FC<ModalProps> = ({
       if (previousActiveElement.current) {
         previousActiveElement.current.focus();
       }
-
       // Restore body scroll
       document.body.style.overflow = "";
     }
-
     return () => {
       // Cleanup on unmount
       document.body.style.overflow = "";
     };
   }, [isOpen]);
-
   // Escape key handler
   useEffect(() => {
     if (!isOpen || !closeOnEscape) return;
-
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
       }
     };
-
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, closeOnEscape, onClose]);
-
   // Focus trap
   useEffect(() => {
     if (!isOpen) return;
-
     const handleTab = (event: KeyboardEvent) => {
       if (event.key !== "Tab" || !modalRef.current) return;
-
       const focusableElements = modalRef.current.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
-
       const firstElement = focusableElements[0] as HTMLElement;
       const lastElement = focusableElements[
         focusableElements.length - 1
       ] as HTMLElement;
-
       if (event.shiftKey) {
         if (document.activeElement === firstElement) {
           lastElement?.focus();
@@ -146,19 +127,15 @@ export const Modal: React.FC<ModalProps> = ({
         }
       }
     };
-
     document.addEventListener("keydown", handleTab);
     return () => document.removeEventListener("keydown", handleTab);
   }, [isOpen]);
-
   const handleBackdropClick = (event: React.MouseEvent) => {
     if (closeOnBackdropClick && event.target === event.currentTarget) {
       onClose();
     }
   };
-
   if (!isOpen) return null;
-
   const modalContent = (
     <div
       className={`fixed inset-0 z-${zIndex} flex items-center justify-center p-4`}
@@ -170,7 +147,6 @@ export const Modal: React.FC<ModalProps> = ({
         onClick={handleBackdropClick}
         aria-hidden="true"
       />
-
       {/* Modal */}
       <div
         ref={modalRef}
@@ -199,7 +175,6 @@ export const Modal: React.FC<ModalProps> = ({
               >
                 {title}
               </h3>
-
               <button
                 onClick={onClose}
                 className="ml-4 p-2 rounded-sm transition-all duration-200 text-gray-600 hover:text-jade-700 hover:bg-jade-50 dark:text-gray-400 dark:hover:text-jade-300 dark:hover:bg-jade-900/20 border border-transparent hover:border-jade-200"
@@ -222,10 +197,8 @@ export const Modal: React.FC<ModalProps> = ({
             </div>
           </div>
         )}
-
         {/* Content - More substantial padding */}
         <div className="px-8 py-6">{children}</div>
-
         {/* Footer - Enhanced styling */}
         {footer && (
           <div className="px-8 py-6 border-t-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
@@ -235,7 +208,6 @@ export const Modal: React.FC<ModalProps> = ({
       </div>
     </div>
   );
-
   // Render in portal
   return createPortal(modalContent, document.body);
 };

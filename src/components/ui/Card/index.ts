@@ -1,7 +1,6 @@
 /**
  * BoxCall Card Component - Exports
  */
-
 export { default as Card } from "./Card";
 export type {
   CardProps,
@@ -9,5 +8,4 @@ export type {
   CardStylesConfig,
   CardVariant,
 } from "./Card.types";
-
 export { default } from "./Card";

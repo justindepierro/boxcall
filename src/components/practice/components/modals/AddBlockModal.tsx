@@ -18,13 +18,11 @@
  *   selectedBlock={selectedBlock}
  * />
  */
-
 import React, { useState, useEffect } from "react";
 import { Typography } from "../../../design-system";
 import { getCategoryColor } from "../../utils";
 import type { PracticeBlock, SelectedBlock, UserRole } from "../../types";
 import Icon from "../../../ui/Icon/Icon";
-
 interface AddBlockModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -33,7 +31,6 @@ interface AddBlockModalProps {
   timeAllocationMode: boolean;
   selectedBlock?: SelectedBlock | null;
 }
-
 export const AddBlockModal: React.FC<AddBlockModalProps> = ({
   isOpen,
   onClose,
@@ -51,7 +48,6 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
     startTime: "15:00",
     duration: 15,
   });
-
   // Reset form when modal opens
   useEffect(() => {
     if (isOpen) {
@@ -80,15 +76,11 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
       }
     }
   }, [isOpen, selectedBlock]);
-
   if (!isOpen) return null;
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     const [hours, minutes] = formData.startTime.split(":").map(Number);
     const startTimeInMinutes = hours * 60 + minutes;
-
     const newBlock: Omit<PracticeBlock, "id"> = {
       startTime: formData.startTime,
       endTime: `${Math.floor((startTimeInMinutes + formData.duration) / 60)
@@ -106,11 +98,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
       isHeadCoachBlock: userRole === "head_coach",
       groups: [],
     };
-
     onAddBlock(newBlock);
     onClose();
   };
-
   const categoryOptions: Array<{
     value: PracticeBlock["category"];
     label: string;
@@ -124,7 +114,6 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
     { value: "transition", label: "Transition", icon: "arrow-right" },
     { value: "break", label: "Break", icon: "pause" },
   ];
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
@@ -142,7 +131,6 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
             <Icon name="close" size="lg" />
           </button>
         </div>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
           <div>
@@ -160,7 +148,6 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               required
             />
           </div>
-
           {/* Category */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -189,7 +176,6 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               Preview: {formData.category.replace("-", " ").toUpperCase()}
             </div>
           </div>
-
           {/* Time and Duration */}
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -230,7 +216,6 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               />
             </div>
           </div>
-
           {/* Location */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -246,7 +231,6 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               placeholder="e.g., Practice Field A"
             />
           </div>
-
           {/* Assigned Coach */}
           {userRole === "head_coach" && (
             <div>
@@ -267,7 +251,6 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               />
             </div>
           )}
-
           {/* Notes */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -283,7 +266,6 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               placeholder="Additional notes or instructions..."
             />
           </div>
-
           {/* Submit Buttons */}
           <div className="flex space-x-3 pt-4">
             <button

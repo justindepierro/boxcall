@@ -9,7 +9,6 @@ import { useTheme } from "./hooks/useTheme";
 import { testDatabaseConnection } from "./lib/database-helpers";
 import { AppRouter } from "./routes/AppRouter";
 import { initWebVitals } from "./utils/performance/webVitals";
-
 /**
  * App Component
  *
@@ -19,38 +18,30 @@ import { initWebVitals } from "./utils/performance/webVitals";
 function App() {
   // Initialize theme system
   useTheme();
-
   // Initialize dev tools
   const devTools = useDevTools();
-
   // Test database connection on app start
   useEffect(() => {
     const initBoxCall = async () => {
-      console.log("BoxCall: Initializing application...");
-
       // Initialize performance monitoring
       initWebVitals();
-
       const connectionOk = await testDatabaseConnection();
       if (connectionOk) {
-        console.log("BoxCall: Database connected successfully!");
+        // Connection successful
       } else {
-        console.log(
+        console.error(
           "BoxCall: Database connection failed - check your .env.local configuration"
         );
       }
     };
-
     initBoxCall();
   }, []);
-
   return (
     <ErrorBoundary>
       <DevModeProvider>
         <div className="App">
           <DevHealthCheck />
           <AppRouter />
-
           {/* Development Tools - Consolidated */}
           {process.env.NODE_ENV === "development" && (
             <ConsolidatedDevTools
@@ -64,5 +55,4 @@ function App() {
     </ErrorBoundary>
   );
 }
-
 export default App;

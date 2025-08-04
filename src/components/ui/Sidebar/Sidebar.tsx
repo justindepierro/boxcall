@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import React, { useEffect, useRef } from "react";
 import { Button } from "../Button";
-
 export interface SidebarItem {
   /** Unique identifier for the sidebar item */
   id: string;
@@ -22,7 +21,6 @@ export interface SidebarItem {
   /** Whether to show as a divider */
   divider?: boolean;
 }
-
 export interface SidebarProps {
   /** Sidebar items */
   items: SidebarItem[];
@@ -43,7 +41,6 @@ export interface SidebarProps {
   /** Position of the sidebar */
   position?: "left" | "right";
 }
-
 const getSidebarWidth = (width: SidebarProps["width"]) => {
   switch (width) {
     case "sm":
@@ -56,7 +53,6 @@ const getSidebarWidth = (width: SidebarProps["width"]) => {
       return "w-64";
   }
 };
-
 const getSidebarPosition = (
   position: SidebarProps["position"],
   isOpen: boolean
@@ -64,14 +60,12 @@ const getSidebarPosition = (
   const baseTransform =
     position === "right" ? "translate-x-full" : "-translate-x-full";
   const openTransform = "translate-x-0";
-
   return `
     ${position === "right" ? "right-0" : "left-0"}
     transform transition-transform duration-300 ease-in-out
     ${isOpen ? openTransform : baseTransform}
   `;
 };
-
 const getSidebarStyles = () => {
   return `
     fixed top-0 bottom-0 z-50 flex flex-col
@@ -79,7 +73,6 @@ const getSidebarStyles = () => {
     border-r shadow-lg
   `;
 };
-
 const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
   const paddingLeft = level > 0 ? `pl-${4 + level * 4}` : "pl-4";
   const baseStyles = `
@@ -87,43 +80,34 @@ const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
     transition-colors duration-200 ease-in-out
     ${paddingLeft}
   `;
-
   if (item.divider) {
     return `border-t border-gray-200 dark:border-gray-700 my-2`;
   }
-
   if (item.disabled) {
     return `${baseStyles} text-gray-400 dark:text-gray-500 cursor-not-allowed`;
   }
-
   if (item.active) {
     return `${baseStyles} bg-blue-50 dark:bg-gray-700 text-blue-700 dark:text-white border-r-2 border-blue-500`;
   }
-
   return `${baseStyles} text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white`;
 };
-
 const getBadgeStyles = () => {
   return `
     ml-auto px-2 py-0.5 text-xs font-medium rounded-full
     bg-blue-500 dark:bg-blue-600 text-white
   `;
 };
-
 const SidebarItem: React.FC<{
   item: SidebarItem;
   level?: number;
   onItemClick?: (item: SidebarItem) => void;
 }> = ({ item, level = 0, onItemClick }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
-
   if (item.divider) {
     return <div className={getSidebarItemStyles(item, level)} />;
   }
-
   const handleClick = () => {
     if (item.disabled) return;
-
     if (item.children && item.children.length > 0) {
       setIsExpanded(!isExpanded);
     } else {
@@ -131,17 +115,13 @@ const SidebarItem: React.FC<{
       onItemClick?.(item);
     }
   };
-
   const hasChildren = item.children && item.children.length > 0;
-
   return (
     <div>
       <div className={getSidebarItemStyles(item, level)} onClick={handleClick}>
         {item.icon && <span className="mr-3 flex-shrink-0">{item.icon}</span>}
         <span className="flex-1">{item.label}</span>
-
         {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
-
         {hasChildren && (
           <svg
             className={`ml-2 h-4 w-4 transition-transform duration-200 ${
@@ -160,7 +140,6 @@ const SidebarItem: React.FC<{
           </svg>
         )}
       </div>
-
       {/* Children */}
       {hasChildren && isExpanded && (
         <div>
@@ -177,7 +156,6 @@ const SidebarItem: React.FC<{
     </div>
   );
 };
-
 export const Sidebar: React.FC<SidebarProps> = ({
   items,
   isOpen,
@@ -190,11 +168,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   position = "left",
 }) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
-
   // Close sidebar when clicking outside
   useEffect(() => {
     if (!isOpen) return;
-
     const handleClickOutside = (event: MouseEvent) => {
       if (
         sidebarRef.current &&
@@ -203,25 +179,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
         onClose?.();
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen, onClose]);
-
   // Close sidebar on Escape key
   useEffect(() => {
     if (!isOpen) return;
-
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose?.();
       }
     };
-
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
-
   // Prevent body scroll when sidebar is open
   useEffect(() => {
     if (isOpen) {
@@ -229,21 +200,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
     } else {
       document.body.style.overflow = "";
     }
-
     return () => {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
-
   const handleItemClick = () => {
     // Close sidebar when item is clicked (for mobile)
     if (window.innerWidth < 768) {
       onClose?.();
     }
   };
-
   if (!isOpen) return null;
-
   return (
     <>
       {/* Overlay */}
@@ -253,7 +220,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onClick={onClose}
         />
       )}
-
       {/* Sidebar */}
       <div
         ref={sidebarRef}
@@ -269,7 +235,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="px-4 py-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <div className="flex-1">{header}</div>
-
               <Button
                 variant="ghost"
                 size="sm"
@@ -294,7 +259,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           </div>
         )}
-
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
           <nav className="py-4">
@@ -307,7 +271,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             ))}
           </nav>
         </div>
-
         {/* Footer */}
         {footer && (
           <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700">

@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { footballAPI, type PlayerResponse } from "./football";
-
 // Query keys for consistent cache management
 export const queryKeys = {
   teams: ["teams"] as const,
@@ -10,7 +9,6 @@ export const queryKeys = {
   games: (teamId: string) => ["games", teamId] as const,
   game: (id: string) => ["games", "detail", id] as const,
 };
-
 // Team Queries
 export const useTeams = () => {
   return useQuery({
@@ -20,7 +18,6 @@ export const useTeams = () => {
     gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
   });
 };
-
 export const useTeam = (teamId: string) => {
   return useQuery({
     queryKey: queryKeys.team(teamId),
@@ -29,7 +26,6 @@ export const useTeam = (teamId: string) => {
     staleTime: 5 * 60 * 1000,
   });
 };
-
 // Player Queries
 export const usePlayers = (teamId: string) => {
   return useQuery({
@@ -39,7 +35,6 @@ export const usePlayers = (teamId: string) => {
     staleTime: 2 * 60 * 1000, // 2 minutes (player data changes more frequently)
   });
 };
-
 export const usePlayer = (playerId: string) => {
   return useQuery({
     queryKey: queryKeys.player(playerId),
@@ -48,7 +43,6 @@ export const usePlayer = (playerId: string) => {
     staleTime: 1 * 60 * 1000, // 1 minute
   });
 };
-
 // Game Queries
 export const useGames = (teamId: string) => {
   return useQuery({
@@ -58,7 +52,6 @@ export const useGames = (teamId: string) => {
     staleTime: 10 * 60 * 1000, // 10 minutes (game schedule doesn't change often)
   });
 };
-
 export const useGame = (gameId: string) => {
   return useQuery({
     queryKey: queryKeys.game(gameId),
@@ -67,11 +60,9 @@ export const useGame = (gameId: string) => {
     staleTime: 30 * 1000, // 30 seconds (game data updates frequently)
   });
 };
-
 // Mutations
 export const useUpdatePlayerStats = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({
       playerId,
@@ -86,7 +77,6 @@ export const useUpdatePlayerStats = () => {
         queryKeys.player(updatedPlayer.id),
         updatedPlayer
       );
-
       // Invalidate players list to trigger refetch
       queryClient.invalidateQueries({ queryKey: ["players"] });
     },
@@ -95,11 +85,9 @@ export const useUpdatePlayerStats = () => {
     },
   });
 };
-
 // Prefetch utilities for better UX
 export const usePrefetchTeam = () => {
   const queryClient = useQueryClient();
-
   return (teamId: string) => {
     queryClient.prefetchQuery({
       queryKey: queryKeys.team(teamId),
@@ -108,10 +96,8 @@ export const usePrefetchTeam = () => {
     });
   };
 };
-
 export const usePrefetchPlayers = () => {
   const queryClient = useQueryClient();
-
   return (teamId: string) => {
     queryClient.prefetchQuery({
       queryKey: queryKeys.players(teamId),
@@ -120,13 +106,11 @@ export const usePrefetchPlayers = () => {
     });
   };
 };
-
 // Football-specific data transformations
 export const useTeamStats = (teamId: string) => {
   const { data: team } = useTeam(teamId);
   const { data: players } = usePlayers(teamId);
   const { data: games } = useGames(teamId);
-
   // Transform raw data into useful stats
   return {
     team,

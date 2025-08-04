@@ -1,12 +1,10 @@
 import React from "react";
 import { Typography } from "../design-system";
 import { Icon } from "../ui/Icon/Icon";
-
 interface TeamFeedProps {
   teamId: string;
   userRole: string;
 }
-
 /**
  * Team Feed - Facebook-style team activity feed
  *
@@ -19,7 +17,6 @@ interface TeamFeedProps {
  */
 export const TeamFeed: React.FC<TeamFeedProps> = () => {
   // TODO: Use teamId and userRole for fetching team-specific feed
-
   // Mock feed data - TODO: Fetch from database
   const mockFeedItems = [
     {
@@ -81,7 +78,6 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
       comments: 9,
     },
   ];
-
   const getPostIcon = (type: string) => {
     switch (type) {
       case "announcement":
@@ -98,7 +94,6 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
         return <Icon name="file" size="md" color="slate" />;
     }
   };
-
   const getPostColor = (type: string) => {
     switch (type) {
       case "announcement":
@@ -115,7 +110,6 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
         return "border-gray-200 dark:border-gray-700";
     }
   };
-
   return (
     <div className="space-y-4">
       {/* Create Post Section - TODO: Add based on role permissions */}
@@ -124,7 +118,6 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
           Share an update with the team...
         </Typography>
       </div>
-
       {/* Feed Items */}
       <div className="space-y-4">
         {mockFeedItems.map((item) => (
@@ -161,7 +154,6 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
                 </div>
               </div>
             </div>
-
             {/* Post Content */}
             <div className="mb-3">
               <Typography
@@ -170,7 +162,6 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
               >
                 {item.content}
               </Typography>
-
               {/* Attachments */}
               {item.attachments && item.attachments.length > 0 && (
                 <div className="mt-3 space-y-2">
@@ -191,7 +182,6 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
                 </div>
               )}
             </div>
-
             {/* Post Actions */}
             <div className="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
               <div className="flex items-center space-x-4">
@@ -221,7 +211,6 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
           </div>
         ))}
       </div>
-
       {/* Load More */}
       <div className="text-center py-4">
         <button className="text-jade-600 dark:text-jade-400 hover:text-jade-700 dark:hover:text-jade-300">

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 // Football Formation Types
 interface PlayerPosition {
   id: string;
@@ -9,7 +8,6 @@ interface PlayerPosition {
   x: number; // 0-100 (percentage of field width)
   y: number; // 0-100 (percentage of field height)
 }
-
 interface Formation {
   id: string;
   name: string;
@@ -17,7 +15,6 @@ interface Formation {
   category: "offense" | "defense" | "special";
   positions: PlayerPosition[];
 }
-
 // Mock Formation Data
 const mockFormations: Formation[] = [
   {
@@ -213,7 +210,6 @@ const mockFormations: Formation[] = [
     ],
   },
 ];
-
 const PlayerDot: React.FC<{
   player: PlayerPosition;
   isSelected: boolean;
@@ -234,7 +230,6 @@ const PlayerDot: React.FC<{
       return "bg-navy-500 border-navy-600";
     return "bg-jade-500 border-jade-600";
   };
-
   return (
     <div
       className="absolute cursor-pointer transition-transform hover:scale-110"
@@ -258,10 +253,8 @@ const PlayerDot: React.FC<{
     </div>
   );
 };
-
 const FormationField: React.FC<{ formation: Formation }> = ({ formation }) => {
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
-
   return (
     <div className="bg-green-100 dark:bg-green-900/20 rounded-md p-4 relative border-2 border-green-300 dark:border-green-700">
       {/* Field Markings */}
@@ -274,13 +267,11 @@ const FormationField: React.FC<{ formation: Formation }> = ({ formation }) => {
             style={{ left: `${yard}%` }}
           />
         ))}
-
         {/* 50 Yard Line */}
         <div
           className="absolute h-full border-l-2 border-white dark:border-green-600"
           style={{ left: "50%" }}
         />
-
         {/* Hash Marks */}
         <div
           className="absolute w-full border-t border-white/30 dark:border-green-600/30"
@@ -291,7 +282,6 @@ const FormationField: React.FC<{ formation: Formation }> = ({ formation }) => {
           style={{ top: "75%" }}
         />
       </div>
-
       {/* Player Positions */}
       <div className="relative h-64">
         {formation.positions.map((player) => (
@@ -305,7 +295,6 @@ const FormationField: React.FC<{ formation: Formation }> = ({ formation }) => {
           />
         ))}
       </div>
-
       {/* Selected Player Info */}
       {selectedPlayer && (
         <div className="mt-4 p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
@@ -335,7 +324,6 @@ const FormationField: React.FC<{ formation: Formation }> = ({ formation }) => {
     </div>
   );
 };
-
 export const FormationDiagram: React.FC = () => {
   const [activeFormation, setActiveFormation] = useState<Formation>(
     mockFormations[0]
@@ -343,11 +331,9 @@ export const FormationDiagram: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<
     "offense" | "defense" | "special"
   >("offense");
-
   const filteredFormations = mockFormations.filter(
     (f) => f.category === activeCategory
   );
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -359,7 +345,6 @@ export const FormationDiagram: React.FC = () => {
           Interactive formation diagrams and player positioning
         </p>
       </div>
-
       {/* Category Tabs */}
       <div className="bg-white dark:bg-gray-800 rounded-md shadow-sm">
         <div className="border-b border-gray-200 dark:border-gray-700">
@@ -382,7 +367,6 @@ export const FormationDiagram: React.FC = () => {
             ))}
           </nav>
         </div>
-
         {/* Formation Selector */}
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -408,10 +392,8 @@ export const FormationDiagram: React.FC = () => {
               </button>
             ))}
           </div>
-
           {/* Formation Display */}
           <FormationField formation={activeFormation} />
-
           {/* Formation Info */}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-gray-50 dark:bg-gray-700 rounded-md p-4">
@@ -434,7 +416,6 @@ export const FormationDiagram: React.FC = () => {
                 </div>
               </div>
             </div>
-
             <div className="bg-gray-50 dark:bg-gray-700 rounded-md p-4">
               <h3 className="font-display font-semibold text-gray-900 dark:text-white mb-3">
                 Position Breakdown
@@ -459,7 +440,6 @@ export const FormationDiagram: React.FC = () => {
           </div>
         </div>
       </div>
-
       {/* Action Buttons */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <button className="bg-jade-500 hover:bg-jade-600 text-white font-sans font-semibold py-3 px-4 rounded-sm transition-colors">
@@ -475,5 +455,4 @@ export const FormationDiagram: React.FC = () => {
     </div>
   );
 };
-
 export default FormationDiagram;

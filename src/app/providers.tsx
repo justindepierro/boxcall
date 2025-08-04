@@ -2,11 +2,9 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 import { queryClient } from "./queryClient";
-
 interface AppProvidersProps {
   children: ReactNode;
 }
-
 /**
  * AppProviders wraps the entire application with necessary providers
  * - React Query for server state management

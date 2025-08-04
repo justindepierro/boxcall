@@ -3,7 +3,6 @@
  *
  * Professional select/dropdown component with search, multi-select, and validation
  */
-
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { Typography } from "../../design-system";
 import type {
@@ -11,7 +10,6 @@ import type {
   SelectProps,
   SelectStylesConfig,
 } from "./Select.types";
-
 // Select styles configuration using only Tailwind dark mode classes
 const selectStyles: SelectStylesConfig = {
   container: {
@@ -23,7 +21,6 @@ const selectStyles: SelectStylesConfig = {
     },
     fullWidth: "w-full",
   },
-
   trigger: {
     base: "relative flex items-center justify-between w-full rounded-md border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400",
     variants: {
@@ -51,7 +48,6 @@ const selectStyles: SelectStylesConfig = {
       open: "ring-2 ring-offset-2",
     },
   },
-
   menu: {
     base: "absolute z-50 w-full mt-1 rounded-md border shadow-lg overflow-hidden bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600",
     positions: {
@@ -60,7 +56,6 @@ const selectStyles: SelectStylesConfig = {
     },
     maxHeight: "max-h-60 overflow-y-auto",
   },
-
   option: {
     base: "flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700",
     states: {
@@ -73,7 +68,6 @@ const selectStyles: SelectStylesConfig = {
     },
     withIcon: "pl-10",
   },
-
   input: {
     base: "flex-1 bg-transparent border-none outline-none placeholder-gray-500 dark:placeholder-gray-400",
     sizes: {
@@ -82,12 +76,10 @@ const selectStyles: SelectStylesConfig = {
       lg: "text-base",
     },
   },
-
   placeholder: "text-gray-500 dark:text-gray-400",
   noOptions: "px-3 py-2 text-gray-500 dark:text-gray-400 text-center italic",
   loading: "px-3 py-2 text-center text-gray-500 dark:text-gray-400",
 };
-
 /**
  * Select Component
  *
@@ -145,26 +137,21 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
     const [internalValue, setInternalValue] = useState(
       value || defaultValue || (multiple ? [] : "")
     );
-
     // Refs
     const containerRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
-
     // Generate unique ID if not provided
     const selectId = id || `select-${Math.random().toString(36).substr(2, 9)}`;
-
     // Sync internal value with prop value
     useEffect(() => {
       if (value !== undefined) {
         setInternalValue(value);
       }
     }, [value]);
-
     // Filter options based on search term
     const filteredOptions = useMemo(() => {
       if (!searchTerm) return options;
-
       return options.filter(
         (option) =>
           option.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -174,7 +161,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
             .includes(searchTerm.toLowerCase())
       );
     }, [options, searchTerm]);
-
     // Get selected option(s) for display
     const selectedOptions = useMemo(() => {
       if (multiple && Array.isArray(internalValue)) {
@@ -184,13 +170,10 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
       }
       return multiple ? [] : null;
     }, [options, internalValue, multiple]);
-
     // Handle option selection
     const handleOptionSelect = (option: SelectOption) => {
       if (option.disabled) return;
-
       let newValue;
-
       if (multiple && Array.isArray(internalValue)) {
         if (internalValue.includes(option.value)) {
           newValue = internalValue.filter((v) => v !== option.value);
@@ -201,15 +184,12 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
         newValue = option.value;
         setIsOpen(false);
       }
-
       setInternalValue(newValue);
       onChange?.(newValue);
-
       if (!multiple) {
         setSearchTerm("");
       }
     };
-
     // Handle search input
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const term = e.target.value;
@@ -217,11 +197,9 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
       setHighlightedIndex(-1);
       onSearch?.(term);
     };
-
     // Handle keyboard navigation
     const handleKeyDown = (e: React.KeyboardEvent) => {
       if (disabled) return;
-
       switch (e.key) {
         case "Enter":
           e.preventDefault();
@@ -235,12 +213,10 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
             setIsOpen(true);
           }
           break;
-
         case "Escape":
           setIsOpen(false);
           setSearchTerm("");
           break;
-
         case "ArrowDown":
           e.preventDefault();
           if (!isOpen) {
@@ -251,7 +227,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
             );
           }
           break;
-
         case "ArrowUp":
           e.preventDefault();
           if (isOpen) {
@@ -260,13 +235,11 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
             );
           }
           break;
-
         case "Tab":
           setIsOpen(false);
           break;
       }
     };
-
     // Close dropdown when clicking outside
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
@@ -278,12 +251,10 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
           setSearchTerm("");
         }
       };
-
       document.addEventListener("mousedown", handleClickOutside);
       return () =>
         document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-
     // Auto-scroll highlighted option into view
     useEffect(() => {
       if (isOpen && highlightedIndex >= 0 && menuRef.current) {
@@ -295,7 +266,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
         }
       }
     }, [highlightedIndex, isOpen]);
-
     // Get status message
     const getStatusMessage = () => {
       if (status === "error" && errorMessage) return errorMessage;
@@ -303,7 +273,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
       if (status === "warning" && warningMessage) return warningMessage;
       return helperText;
     };
-
     // Get status message color
     const getStatusMessageColor = () => {
       switch (status) {
@@ -317,7 +286,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
           return "muted";
       }
     };
-
     // Build component classes
     const containerClasses = [
       selectStyles.container.base,
@@ -327,7 +295,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
     ]
       .filter(Boolean)
       .join(" ");
-
     const triggerClasses = [
       selectStyles.trigger.base,
       selectStyles.trigger.statuses[status],
@@ -339,7 +306,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
     ]
       .filter(Boolean)
       .join(" ");
-
     const menuClasses = [
       selectStyles.menu.base,
       selectStyles.menu.maxHeight,
@@ -347,13 +313,11 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
     ]
       .filter(Boolean)
       .join(" ");
-
     // Render selected value display
     const renderSelectedValue = () => {
       if (loading) {
         return <span className={selectStyles.placeholder}>Loading...</span>;
       }
-
       if (
         multiple &&
         Array.isArray(selectedOptions) &&
@@ -368,17 +332,14 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
       } else if (searchable && isOpen && searchTerm) {
         return null; // Input will show the search term
       }
-
       return <span className={selectStyles.placeholder}>{placeholder}</span>;
     };
-
     // Render option with proper styling
     const renderOption = (option: SelectOption, index: number) => {
       const isSelected = multiple
         ? Array.isArray(internalValue) && internalValue.includes(option.value)
         : internalValue === option.value;
       const isHighlighted = index === highlightedIndex;
-
       const optionClasses = [
         selectStyles.option.base,
         isHighlighted ? selectStyles.option.states.highlighted : "",
@@ -389,7 +350,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
       ]
         .filter(Boolean)
         .join(" ");
-
       return (
         <div
           key={option.value}
@@ -426,7 +386,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
         </div>
       );
     };
-
     return (
       <div className={containerClasses} ref={containerRef}>
         {label && (
@@ -440,7 +399,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
             </Typography>
           </label>
         )}
-
         <div
           ref={ref}
           className={triggerClasses}
@@ -472,7 +430,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
               <div className="truncate">{renderSelectedValue()}</div>
             )}
           </div>
-
           <div className="flex items-center space-x-1 ml-2">
             {clearable && internalValue && !disabled && (
               <button
@@ -500,7 +457,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                 </svg>
               </button>
             )}
-
             {loading ? (
               <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent" />
             ) : (
@@ -520,7 +476,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
             )}
           </div>
         </div>
-
         {isOpen && (
           <div
             ref={menuRef}
@@ -540,7 +495,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                   : noOptionsMessage}
               </div>
             )}
-
             {createOption &&
               searchTerm &&
               !filteredOptions.some(
@@ -555,7 +509,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
               )}
           </div>
         )}
-
         {getStatusMessage() && (
           <div id={`${selectId}-helper`} className="mt-1">
             <Typography variant="body-xs" color={getStatusMessageColor()}>
@@ -567,7 +520,5 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
     );
   }
 );
-
 Select.displayName = "Select";
-
 export default Select;

@@ -3,10 +3,8 @@
  *
  * Example implementation showing how to integrate Phase 3 intelligent calendar features
  */
-
 import React from "react";
 import { IntelligentCalendarDemo } from "../components/demo";
-
 /**
  * Example usage of Phase 3 Intelligent Calendar System
  *
@@ -29,16 +27,13 @@ export const Phase3Example: React.FC = () => {
             AI-powered intelligence
           </p>
         </div>
-
         {/* Intelligent Calendar Demo */}
         <IntelligentCalendarDemo teamId="demo-team-1" className="mb-8" />
-
         {/* Integration Notes */}
         <div className="bg-white rounded-lg border border-slate-200 p-6">
           <h2 className="text-2xl font-bold text-slate-800 mb-4">
             📋 Integration Guide
           </h2>
-
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h3 className="text-lg font-semibold text-slate-800 mb-3">
@@ -67,7 +62,6 @@ export const Phase3Example: React.FC = () => {
                 </li>
               </ul>
             </div>
-
             <div>
               <h3 className="text-lg font-semibold text-slate-800 mb-3">
                 🔧 Implementation
@@ -75,7 +69,6 @@ export const Phase3Example: React.FC = () => {
               <div className="bg-slate-50 rounded-lg p-4">
                 <pre className="text-xs text-slate-600 overflow-x-auto">
                   {`import { useIntelligentCalendar } from './hooks/useIntelligentCalendar';
-
 const { 
   detectConflicts, 
   generateSuggestions, 
@@ -84,14 +77,12 @@ const {
   teamId: 'your-team-id',
   autoLoadAnalytics: true
 });
-
 // Detect conflicts
 await detectConflicts({
   startTime: eventStartTime,
   endTime: eventEndTime,
   location: venue
 });
-
 // Get AI suggestions
 await generateSuggestions({
   eventType: 'practice',
@@ -103,7 +94,6 @@ await generateSuggestions({
               </div>
             </div>
           </div>
-
           <div className="mt-6 pt-6 border-t border-slate-200">
             <h3 className="text-lg font-semibold text-slate-800 mb-3">
               🚀 Next Steps
@@ -130,5 +120,4 @@ await generateSuggestions({
     </div>
   );
 };
-
 export default Phase3Example;

@@ -3,7 +3,6 @@ import { ToggleLeft, ToggleRight } from "lucide-react";
 import type { Play } from "../../types/play";
 import { PlayCard } from "./PlayCard";
 import { getDemoPlays } from "../../data/demoPlays";
-
 interface PlayGridProps {
   searchQuery: string;
   filters: {
@@ -14,11 +13,9 @@ interface PlayGridProps {
     tags?: string[];
   };
 }
-
 export const PlayGrid: React.FC<PlayGridProps> = ({ searchQuery, filters }) => {
   // Toggle for play name display mode (true = one-word calls, false = full names)
   const [showOneWordCalls, setShowOneWordCalls] = useState(false);
-
   // Use demo data for now - replace with actual API call later
   const plays: Play[] = getDemoPlays({
     formation: filters.formation,
@@ -27,9 +24,7 @@ export const PlayGrid: React.FC<PlayGridProps> = ({ searchQuery, filters }) => {
     distance: filters.distance,
     search: searchQuery,
   });
-
   const filteredPlays = plays; // Filtering is now done in getDemoPlays()
-
   if (filteredPlays.length === 0) {
     return (
       <div className="text-center py-16">
@@ -46,7 +41,6 @@ export const PlayGrid: React.FC<PlayGridProps> = ({ searchQuery, filters }) => {
       </div>
     );
   }
-
   return (
     <div className="space-y-6">
       {/* Results Header */}
@@ -54,7 +48,6 @@ export const PlayGrid: React.FC<PlayGridProps> = ({ searchQuery, filters }) => {
         <h2 className="text-lg font-semibold text-slate-900">
           {filteredPlays.length} {filteredPlays.length === 1 ? "Play" : "Plays"}
         </h2>
-
         {/* Play Name Display Toggle */}
         <div className="flex items-center space-x-3">
           <span className="text-sm text-slate-600">One-word calls</span>
@@ -76,7 +69,6 @@ export const PlayGrid: React.FC<PlayGridProps> = ({ searchQuery, filters }) => {
           <span className="text-sm text-slate-600">Full names</span>
         </div>
       </div>
-
       {/* Play Grid - Changed to single column vertical layout */}
       <div className="space-y-4">
         {filteredPlays.map((play) => (
@@ -84,13 +76,15 @@ export const PlayGrid: React.FC<PlayGridProps> = ({ searchQuery, filters }) => {
             key={play.id}
             play={play}
             showOneWordCalls={showOneWordCalls}
-            onEdit={(play: Play) => console.log("Edit play:", play.play_name)}
-            onDuplicate={(play: Play) =>
-              console.log("Duplicate play:", play.play_name)
-            }
-            onCreateDiagram={(play: Play) =>
-              console.log("Create diagram for:", play.play_name)
-            }
+            onEdit={(_play: Play) => {
+              // TODO: Implement edit functionality
+            }}
+            onDuplicate={(_play: Play) => {
+              // TODO: Implement duplicate functionality
+            }}
+            onCreateDiagram={(_play: Play) => {
+              // TODO: Implement create diagram functionality
+            }}
           />
         ))}
       </div>

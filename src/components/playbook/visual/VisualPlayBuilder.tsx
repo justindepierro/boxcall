@@ -3,16 +3,13 @@ import { X, Save, Eye, Users, Route, Palette } from "lucide-react";
 import type { Play } from "../../../types/play";
 import { FieldCanvas } from "./FieldCanvas";
 import { getDemoPlays } from "../../../data/demoPlays";
-
 interface VisualPlayBuilderProps {
   isOpen: boolean;
   onClose: () => void;
   play?: Play;
   onSave?: (play: Play) => void;
 }
-
 type ViewMode = "field" | "players" | "routes" | "settings";
-
 export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
   isOpen,
   onClose,
@@ -23,23 +20,19 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
   const [selectedPlay, setSelectedPlay] = useState<Play | undefined>(
     play || getDemoPlays({})[0] // Use first demo play if no play provided
   );
-
   if (!isOpen) return null;
-
   const handleSave = () => {
     if (selectedPlay && onSave) {
       onSave(selectedPlay);
     }
     onClose();
   };
-
   const viewModeButtons = [
     { id: "field" as const, label: "Field View", icon: Eye },
     { id: "players" as const, label: "Players", icon: Users },
     { id: "routes" as const, label: "Routes", icon: Route },
     { id: "settings" as const, label: "Settings", icon: Palette },
   ];
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-7xl h-full max-h-[90vh] flex flex-col">
@@ -70,7 +63,6 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             <X className="h-6 w-6" />
           </button>
         </div>
-
         {/* View Mode Tabs */}
         <div className="flex items-center border-b border-slate-200 px-6">
           {viewModeButtons.map((button) => {
@@ -91,7 +83,6 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             );
           })}
         </div>
-
         {/* Content */}
         <div className="flex-1 flex overflow-hidden">
           {/* Sidebar */}
@@ -124,7 +115,6 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                         ))}
                       </select>
                     </div>
-
                     <div>
                       <label className="flex items-center">
                         <input
@@ -137,7 +127,6 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                         </span>
                       </label>
                     </div>
-
                     <div>
                       <label className="flex items-center">
                         <input
@@ -150,7 +139,6 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                         </span>
                       </label>
                     </div>
-
                     <div>
                       <label className="flex items-center">
                         <input
@@ -165,7 +153,6 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                     </div>
                   </div>
                 </div>
-
                 <div className="bg-white rounded-lg p-4 border border-slate-200">
                   <h4 className="font-medium text-slate-900 mb-2">Play Info</h4>
                   {selectedPlay && (
@@ -201,7 +188,6 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                 </div>
               </div>
             )}
-
             {viewMode === "players" && (
               <div className="space-y-6">
                 <div>
@@ -221,7 +207,6 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                 </div>
               </div>
             )}
-
             {viewMode === "routes" && (
               <div className="space-y-6">
                 <div>
@@ -240,7 +225,6 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                 </div>
               </div>
             )}
-
             {viewMode === "settings" && (
               <div className="space-y-6">
                 <div>
@@ -272,7 +256,6 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
               </div>
             )}
           </div>
-
           {/* Main Field Canvas */}
           <div className="flex-1 p-6">
             <FieldCanvas
@@ -282,7 +265,6 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             />
           </div>
         </div>
-
         {/* Footer */}
         <div className="border-t border-slate-200 px-6 py-4 flex items-center justify-between">
           <div className="text-sm text-slate-600">

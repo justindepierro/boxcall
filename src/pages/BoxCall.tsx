@@ -2,7 +2,6 @@ import React from "react";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
-
 /**
  * BoxCall - Game management and communication platform
  * Available to coaches only
@@ -29,7 +28,6 @@ export const BoxCall: React.FC = () => {
             Game management and live communication platform
           </Typography>
         </div>
-
         {/* Coming Soon Card */}
         <Card className="text-center py-12">
           <div className="flex justify-center mb-4">
@@ -60,5 +58,4 @@ export const BoxCall: React.FC = () => {
     </div>
   );
 };
-
 export default BoxCall;

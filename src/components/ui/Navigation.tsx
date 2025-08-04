@@ -5,9 +5,7 @@ import { useUI } from "../../app/store";
 import type { Database } from "../../types/database";
 import { supabase } from "../../lib/supabase";
 import { Icon } from "./Icon/Icon";
-
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
-
 /**
  * Navigation Component
  *
@@ -21,27 +19,22 @@ export const Navigation: React.FC = () => {
   const { toggleSidebar } = useUI();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   // Use effective role from dev mode if in dev mode, otherwise use profile role
   const currentRole: UserRole | null = isDevMode
     ? (effectiveUserRole as UserRole)
     : (profile?.role ?? null);
-
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     window.location.href = "/login";
   };
-
   const handleNavigation = (path: string) => {
     window.location.href = path;
     setUserMenuOpen(false);
     setMobileMenuOpen(false);
   };
-
   if (!isAuthenticated) {
     return null; // Don't show navigation for unauthenticated users
   }
-
   return (
     <nav className="bg-white dark:bg-gray-800 shadow-md border-b-2 border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,7 +61,6 @@ export const Navigation: React.FC = () => {
                 />
               </svg>
             </button>
-
             <button
               onClick={() => handleNavigation("/dashboard")}
               className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
@@ -85,7 +77,6 @@ export const Navigation: React.FC = () => {
               </span>
             </button>
           </div>
-
           {/* Desktop Quick Actions - Key functions for productivity */}
           <div className="hidden md:flex items-center space-x-4">
             {/* Quick Navigation Shortcuts */}
@@ -115,7 +106,6 @@ export const Navigation: React.FC = () => {
               </button>
             </div>
           </div>
-
           {/* User Menu - Square, professional styling */}
           <div className="flex items-center space-x-4">
             {/* User Profile Dropdown */}
@@ -146,7 +136,6 @@ export const Navigation: React.FC = () => {
                   />
                 </svg>
               </button>
-
               {/* Dropdown Menu - Square, technical styling */}
               {userMenuOpen && (
                 <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-gray-800 rounded-md shadow-lg border-2 border-gray-200 dark:border-gray-700 z-50">
@@ -177,7 +166,6 @@ export const Navigation: React.FC = () => {
                         </p>
                       )}
                     </div>
-
                     {/* Menu Items - Square, confident styling */}
                     <button
                       onClick={() => handleNavigation("/profile")}
@@ -186,7 +174,6 @@ export const Navigation: React.FC = () => {
                       <Icon name="user" size="sm" color="current" />
                       My Profile
                     </button>
-
                     <button
                       onClick={() => handleNavigation("/dashboard")}
                       className="w-full text-left px-4 py-3 text-sm font-sans font-medium text-gray-700 dark:text-gray-300 hover:bg-jade-50 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 transition-all duration-200 border-l-2 border-transparent hover:border-jade-500 flex items-center gap-2"
@@ -194,7 +181,6 @@ export const Navigation: React.FC = () => {
                       <Icon name="home" size="sm" color="current" />
                       Dashboard
                     </button>
-
                     {/* Conditional Menu Items */}
                     {profile?.role === "admin" && (
                       <button
@@ -205,7 +191,6 @@ export const Navigation: React.FC = () => {
                         Super Admin
                       </button>
                     )}
-
                     <div className="border-t-2 border-gray-200 dark:border-gray-700 mt-2 pt-2">
                       <button
                         onClick={handleSignOut}
@@ -219,7 +204,6 @@ export const Navigation: React.FC = () => {
                 </div>
               )}
             </div>
-
             {/* Mobile Menu Button - Square styling */}
             <div className="md:hidden">
               <button
@@ -247,7 +231,6 @@ export const Navigation: React.FC = () => {
             </div>
           </div>
         </div>
-
         {/* Mobile Menu - Simplified, encourage sidebar use */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t-2 border-gray-200 dark:border-gray-700 pt-4 pb-4 bg-gray-50 dark:bg-gray-900/50">
@@ -263,14 +246,12 @@ export const Navigation: React.FC = () => {
                 >
                   � Dashboard
                 </button>
-
                 <button
                   onClick={() => handleNavigation("/calendar")}
                   className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"
                 >
                   � Calendar
                 </button>
-
                 <button
                   onClick={() => handleNavigation("/profile")}
                   className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-jade-100 hover:text-jade-700 dark:hover:bg-jade-900/20 dark:hover:text-jade-400 rounded-sm transition-all duration-200 font-display font-medium border-l-4 border-transparent hover:border-jade-500"
@@ -282,7 +263,6 @@ export const Navigation: React.FC = () => {
           </div>
         )}
       </div>
-
       {/* Backdrop for mobile menu */}
       {(userMenuOpen || mobileMenuOpen) && (
         <div

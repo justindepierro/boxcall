@@ -1,11 +1,9 @@
 // ============================================================================
 // PHASE 4.2: MOBILE OPTIMIZATION - MOBILE UI SERVICE
 // ============================================================================
-
 // ============================================================================
 // MOBILE UI TYPES
 // ============================================================================
-
 export interface MobileUITheme {
   id: string;
   name: string;
@@ -56,7 +54,6 @@ export interface MobileUITheme {
     full: number;
   };
 }
-
 export interface MobileViewport {
   width: number;
   height: number;
@@ -69,7 +66,6 @@ export interface MobileViewport {
     right: number;
   };
 }
-
 export interface MobileInteraction {
   type: "tap" | "swipe" | "pinch" | "pan" | "long-press";
   target: string;
@@ -78,7 +74,6 @@ export interface MobileInteraction {
   force?: number;
   velocity?: { x: number; y: number };
 }
-
 export interface MobileAnimation {
   id: string;
   type: "slide" | "fade" | "scale" | "rotate" | "bounce";
@@ -87,7 +82,6 @@ export interface MobileAnimation {
   delay?: number;
   loop?: boolean | number;
 }
-
 export interface MobileLayoutConfig {
   density: "compact" | "comfortable" | "spacious";
   orientation: "auto" | "portrait" | "landscape";
@@ -100,7 +94,6 @@ export interface MobileLayoutConfig {
     voiceOver: boolean;
   };
 }
-
 export interface MobileComponentState {
   id: string;
   type: "button" | "input" | "card" | "list" | "modal" | "sheet";
@@ -116,7 +109,6 @@ export interface MobileComponentState {
   animations: MobileAnimation[];
   interactions: MobileInteraction[];
 }
-
 export interface MobileNavigationState {
   currentRoute: string;
   history: string[];
@@ -133,11 +125,9 @@ export interface MobileNavigationState {
     }>;
   };
 }
-
 // ============================================================================
 // MOBILE UI SERVICE
 // ============================================================================
-
 export class MobileUIService {
   private static theme: MobileUITheme | null = null;
   private static viewport: MobileViewport | null = null;
@@ -145,11 +135,9 @@ export class MobileUIService {
   private static componentStates = new Map<string, MobileComponentState>();
   private static navigationState: MobileNavigationState | null = null;
   private static animationQueue: MobileAnimation[] = [];
-
   // ==========================================
   // Theme Management
   // ==========================================
-
   /**
    * Initialize mobile UI with theme and layout configuration
    */
@@ -161,11 +149,9 @@ export class MobileUIService {
     try {
       // Set viewport
       this.viewport = viewport;
-
       // Determine theme
       const selectedTheme = await this.getTheme(themeId);
       this.theme = selectedTheme;
-
       // Configure layout
       this.layoutConfig = {
         density: "comfortable",
@@ -180,7 +166,6 @@ export class MobileUIService {
         },
         ...layoutConfig,
       };
-
       // Initialize navigation
       this.navigationState = {
         currentRoute: "/",
@@ -198,7 +183,6 @@ export class MobileUIService {
           ],
         },
       };
-
       return {
         success: true,
         theme: selectedTheme,
@@ -211,7 +195,6 @@ export class MobileUIService {
       };
     }
   }
-
   /**
    * Switch between light and dark themes
    */
@@ -220,13 +203,10 @@ export class MobileUIService {
   ): Promise<MobileUITheme> {
     const newTheme = await this.getTheme(themeId);
     this.theme = newTheme;
-
     // Animate theme transition
     await this.animateThemeTransition();
-
     return newTheme;
   }
-
   /**
    * Update layout configuration
    */
@@ -236,22 +216,17 @@ export class MobileUIService {
     if (!this.layoutConfig) {
       throw new Error("Mobile UI not initialized");
     }
-
     this.layoutConfig = {
       ...this.layoutConfig,
       ...config,
     };
-
     // Trigger layout recalculation
     this.recalculateLayout();
-
     return this.layoutConfig;
   }
-
   // ==========================================
   // Component Management
   // ==========================================
-
   /**
    * Register a mobile UI component
    */
@@ -271,11 +246,9 @@ export class MobileUIService {
       interactions: [],
       ...initialState,
     };
-
     this.componentStates.set(id, component);
     return component;
   }
-
   /**
    * Update component state
    */
@@ -287,13 +260,10 @@ export class MobileUIService {
     if (!component) {
       return null;
     }
-
     const updatedComponent = { ...component, ...updates };
     this.componentStates.set(id, updatedComponent);
-
     return updatedComponent;
   }
-
   /**
    * Animate component with mobile-optimized animations
    */
@@ -305,29 +275,22 @@ export class MobileUIService {
     if (!component) {
       return { success: false };
     }
-
     const fullAnimation: MobileAnimation = {
       id: `anim_${componentId}_${Date.now()}`,
       ...animation,
     };
-
     // Add to component animations
     component.animations.push(fullAnimation);
     this.componentStates.set(componentId, component);
-
     // Add to animation queue
     this.animationQueue.push(fullAnimation);
-
     // Process animation
     await this.processAnimation(fullAnimation);
-
     return { success: true, animationId: fullAnimation.id };
   }
-
   // ==========================================
   // Navigation Management
   // ==========================================
-
   /**
    * Navigate to a new route with mobile-optimized transitions
    */
@@ -338,22 +301,17 @@ export class MobileUIService {
     if (!this.navigationState) {
       return { success: false };
     }
-
     const previousRoute = this.navigationState.currentRoute;
-
     // Update navigation state
     this.navigationState.history.push(route);
     this.navigationState.currentRoute = route;
     this.navigationState.canGoBack = this.navigationState.history.length > 1;
-
     // Animate transition
     if (transition !== "none") {
       await this.animatePageTransition(transition, "forward");
     }
-
     return { success: true, previousRoute };
   }
-
   /**
    * Go back in navigation history
    */
@@ -363,23 +321,18 @@ export class MobileUIService {
     if (!this.navigationState || !this.navigationState.canGoBack) {
       return { success: false };
     }
-
     // Remove current route from history
     this.navigationState.history.pop();
     const previousRoute =
       this.navigationState.history[this.navigationState.history.length - 1];
-
     this.navigationState.currentRoute = previousRoute;
     this.navigationState.canGoBack = this.navigationState.history.length > 1;
-
     // Animate transition
     if (transition !== "none") {
       await this.animatePageTransition(transition, "backward");
     }
-
     return { success: true, currentRoute: previousRoute };
   }
-
   /**
    * Switch active tab
    */
@@ -390,31 +343,25 @@ export class MobileUIService {
     if (!this.navigationState) {
       return { success: false };
     }
-
     const previousTab = this.navigationState.tabState.activeTab;
     this.navigationState.tabState.activeTab = tabIndex;
-
     return { success: true, previousTab };
   }
-
   // ==========================================
   // Responsive Design
   // ==========================================
-
   /**
    * Handle viewport changes (rotation, resize)
    */
   static handleViewportChange(newViewport: MobileViewport): Promise<void> {
     const previousViewport = this.viewport;
     this.viewport = newViewport;
-
     // Update tablet mode
     if (this.layoutConfig) {
       this.layoutConfig.tabletMode = newViewport.width >= 768;
       this.layoutConfig.oneHandedMode =
         newViewport.height > 700 && newViewport.width < 768;
     }
-
     // Animate orientation change if needed
     if (
       previousViewport &&
@@ -425,10 +372,8 @@ export class MobileUIService {
         newViewport.orientation
       );
     }
-
     return Promise.resolve();
   }
-
   /**
    * Calculate responsive dimensions
    */
@@ -440,7 +385,6 @@ export class MobileUIService {
     if (!this.viewport) {
       return { width: baseWidth, height: baseHeight, scale: 1 };
     }
-
     const scale = this.calculateScale(breakpoint);
     return {
       width: baseWidth * scale,
@@ -448,11 +392,9 @@ export class MobileUIService {
       scale,
     };
   }
-
   // ==========================================
   // Performance Optimization
   // ==========================================
-
   /**
    * Optimize UI performance for mobile
    */
@@ -465,27 +407,21 @@ export class MobileUIService {
     };
   }> {
     const optimizations: string[] = [];
-
     // Clean up old component states
     this.cleanupInactiveComponents();
     optimizations.push("Cleaned inactive components");
-
     // Optimize animations
     this.optimizeAnimations();
     optimizations.push("Optimized animations");
-
     // Reduce rendering complexity
     if (this.layoutConfig?.accessibility.reduceMotion) {
       this.disableNonEssentialAnimations();
       optimizations.push("Disabled non-essential animations");
     }
-
     // Measure performance
     const metrics = await this.measureUIPerformance();
-
     return { optimizations, metrics };
   }
-
   /**
    * Monitor UI performance metrics
    */
@@ -501,26 +437,21 @@ export class MobileUIService {
       memoryUsage: this.componentStates.size * 0.5, // Estimated KB per component
     };
   }
-
   // ==========================================
   // Private Helper Methods
   // ==========================================
-
   private static async getTheme(
     themeId: "light" | "dark" | "auto"
   ): Promise<MobileUITheme> {
     let selectedThemeId = themeId;
-
     if (themeId === "auto") {
       // TODO: Detect system theme preference
       selectedThemeId = "light";
     }
-
     return selectedThemeId === "dark"
       ? this.getDarkTheme()
       : this.getLightTheme();
   }
-
   private static getLightTheme(): MobileUITheme {
     return {
       id: "light",
@@ -550,7 +481,6 @@ export class MobileUIService {
       borderRadius: { sm: 4, md: 8, lg: 12, full: 9999 },
     };
   }
-
   private static getDarkTheme(): MobileUITheme {
     return {
       id: "dark",
@@ -580,69 +510,54 @@ export class MobileUIService {
       borderRadius: { sm: 4, md: 8, lg: 12, full: 9999 },
     };
   }
-
   private static getDefaultTheme(): MobileUITheme {
     return this.getLightTheme();
   }
-
   private static async animateThemeTransition(): Promise<void> {
     // TODO: Implement smooth theme transition animation
     await new Promise((resolve) => setTimeout(resolve, 300));
   }
-
   private static recalculateLayout(): void {
     // TODO: Trigger layout recalculation for all components
-    console.log("Recalculating layout for mobile UI");
   }
-
   private static async processAnimation(
     animation: MobileAnimation
   ): Promise<void> {
     // TODO: Implement actual animation processing
     await new Promise((resolve) => setTimeout(resolve, animation.duration));
-
     // Remove from animation queue when complete
     const index = this.animationQueue.findIndex((a) => a.id === animation.id);
     if (index !== -1) {
       this.animationQueue.splice(index, 1);
     }
   }
-
   private static async animatePageTransition(
     transition: "slide" | "fade" | "modal",
-
     _direction: "forward" | "backward"
   ): Promise<void> {
     const duration = transition === "modal" ? 400 : 300;
-
     // TODO: Implement actual page transition animations
     await new Promise((resolve) => setTimeout(resolve, duration));
   }
-
   private static async animateOrientationChange(
     _from: "portrait" | "landscape",
-
     _to: "portrait" | "landscape"
   ): Promise<void> {
     // TODO: Implement orientation change animation
     await new Promise((resolve) => setTimeout(resolve, 200));
   }
-
   private static calculateScale(
     breakpoint: "mobile" | "tablet" | "desktop"
   ): number {
     if (!this.viewport) return 1;
-
     const baseWidth =
       breakpoint === "mobile" ? 375 : breakpoint === "tablet" ? 768 : 1024;
     return Math.min(this.viewport.width / baseWidth, 1.2); // Max scale of 1.2x
   }
-
   private static cleanupInactiveComponents(): void {
     // Remove components that haven't been accessed recently
     const now = Date.now();
     const maxAge = 5 * 60 * 1000; // 5 minutes
-
     for (const [id, component] of this.componentStates) {
       const lastInteraction =
         component.interactions[component.interactions.length - 1];
@@ -651,7 +566,6 @@ export class MobileUIService {
       }
     }
   }
-
   private static optimizeAnimations(): void {
     // Remove completed animations
     this.animationQueue = this.animationQueue.filter(() => {
@@ -659,51 +573,42 @@ export class MobileUIService {
       return true;
     });
   }
-
   private static disableNonEssentialAnimations(): void {
     // TODO: Disable decorative animations for accessibility
-    console.log("Disabling non-essential animations");
   }
-
   // ==========================================
   // Public State Access
   // ==========================================
-
   /**
    * Get current theme
    */
   static getCurrentTheme(): MobileUITheme | null {
     return this.theme;
   }
-
   /**
    * Get current viewport
    */
   static getCurrentViewport(): MobileViewport | null {
     return this.viewport;
   }
-
   /**
    * Get layout configuration
    */
   static getLayoutConfig(): MobileLayoutConfig | null {
     return this.layoutConfig;
   }
-
   /**
    * Get navigation state
    */
   static getNavigationState(): MobileNavigationState | null {
     return this.navigationState;
   }
-
   /**
    * Get component state
    */
   static getComponentState(id: string): MobileComponentState | null {
     return this.componentStates.get(id) || null;
   }
-
   /**
    * Cleanup and reset
    */

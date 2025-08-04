@@ -4,7 +4,6 @@
  * Specialized PDF service for generating practice script documents.
  * Handles practice planning exports with timeline visualization.
  */
-
 import React from "react";
 import { Document, Page, Text, View } from "@react-pdf/renderer";
 import { BasePDFService, PDFServiceFactory } from "./BasePDFService";
@@ -20,7 +19,6 @@ import {
   getCategoryColor,
   formatTimeForPDF,
 } from "./styles";
-
 export class PracticeScriptPDFService extends BasePDFService {
   /**
    * Export practice script to PDF blob
@@ -31,11 +29,9 @@ export class PracticeScriptPDFService extends BasePDFService {
   ): Promise<Blob> {
     this.validateOptions(options);
     this.validatePracticeData(data);
-
     const document = this.createPracticeDocument(data, options);
     return await this.generateBlob(document);
   }
-
   /**
    * Download practice script as PDF file
    */
@@ -50,7 +46,6 @@ export class PracticeScriptPDFService extends BasePDFService {
       this.generateFilename(`practice_${data.title.replace(/\s+/g, "_")}`);
     this.downloadBlob(blob, finalFilename);
   }
-
   /**
    * Generate preview URL for practice script PDF
    */
@@ -61,7 +56,6 @@ export class PracticeScriptPDFService extends BasePDFService {
     const blob = await this.exportToPDF(data, options);
     return URL.createObjectURL(blob);
   }
-
   /**
    * Validate practice script data
    */
@@ -73,7 +67,6 @@ export class PracticeScriptPDFService extends BasePDFService {
         "Title cannot be empty"
       );
     }
-
     if (!data.practiceBlocks || data.practiceBlocks.length === 0) {
       throw new PDFError(
         "Practice blocks are required",
@@ -81,7 +74,6 @@ export class PracticeScriptPDFService extends BasePDFService {
         "At least one practice block must be provided"
       );
     }
-
     if (!data.date) {
       throw new PDFError(
         "Practice date is required",
@@ -90,7 +82,6 @@ export class PracticeScriptPDFService extends BasePDFService {
       );
     }
   }
-
   /**
    * Create the complete practice document
    */
@@ -100,7 +91,6 @@ export class PracticeScriptPDFService extends BasePDFService {
   ): React.ReactElement {
     const branding = this.getBranding();
     const template = options.template || this.template;
-
     return React.createElement(
       Document,
       {
@@ -127,7 +117,6 @@ export class PracticeScriptPDFService extends BasePDFService {
         },
         // Header
         options.includeHeader !== false && this.createHeader(data, branding),
-
         // Main Content
         React.createElement(
           View,
@@ -138,13 +127,11 @@ export class PracticeScriptPDFService extends BasePDFService {
           this.createEquipmentList(data),
           this.createSummaryStats(data)
         ),
-
         // Footer
         options.includeFooter !== false && this.createFooter(data)
       )
     );
   }
-
   /**
    * Create document header
    */
@@ -182,7 +169,6 @@ export class PracticeScriptPDFService extends BasePDFService {
       )
     );
   }
-
   /**
    * Create document footer
    */
@@ -206,7 +192,6 @@ export class PracticeScriptPDFService extends BasePDFService {
       })
     );
   }
-
   /**
    * Create practice information section
    */
@@ -254,7 +239,6 @@ export class PracticeScriptPDFService extends BasePDFService {
       )
     );
   }
-
   /**
    * Create timeline section with practice blocks
    */
@@ -300,7 +284,6 @@ export class PracticeScriptPDFService extends BasePDFService {
             "Coach"
           )
         ),
-
         // Table Rows
         ...data.practiceBlocks.map((block, index) =>
           React.createElement(
@@ -355,13 +338,11 @@ export class PracticeScriptPDFService extends BasePDFService {
       )
     );
   }
-
   /**
    * Create coach assignments section
    */
   private createCoachAssignments(data: PracticeScriptPDFData) {
     if (!data.coaches || data.coaches.length === 0) return null;
-
     return React.createElement(
       View,
       { style: PDFBaseStyles.section },
@@ -422,13 +403,11 @@ export class PracticeScriptPDFService extends BasePDFService {
       )
     );
   }
-
   /**
    * Create equipment list section
    */
   private createEquipmentList(data: PracticeScriptPDFData) {
     if (!data.equipment || data.equipment.length === 0) return null;
-
     return React.createElement(
       View,
       { style: PDFBaseStyles.section },
@@ -455,13 +434,11 @@ export class PracticeScriptPDFService extends BasePDFService {
       )
     );
   }
-
   /**
    * Create summary statistics section
    */
   private createSummaryStats(data: PracticeScriptPDFData) {
     if (!data.summary) return null;
-
     return React.createElement(
       View,
       { style: PDFBaseStyles.section },
@@ -470,7 +447,6 @@ export class PracticeScriptPDFService extends BasePDFService {
         { style: PDFBaseStyles.h3 },
         "Practice Summary"
       ),
-
       React.createElement(
         View,
         { style: PDFBaseStyles.row },
@@ -500,7 +476,6 @@ export class PracticeScriptPDFService extends BasePDFService {
               )
           )
         ),
-
         data.summary.objectives &&
           React.createElement(
             View,
@@ -535,6 +510,5 @@ export class PracticeScriptPDFService extends BasePDFService {
     );
   }
 }
-
 // Register the service with the factory
 PDFServiceFactory.registerService("practice-script", PracticeScriptPDFService);

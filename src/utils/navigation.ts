@@ -3,10 +3,8 @@ import type { Database } from "../types/database";
 import React from "react";
 import { Icon } from "../components/ui/Icon/Icon";
 import type { IconName } from "../components/ui/Icon/Icon";
-
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 type ExtendedUserRole = UserRole | "super_admin";
-
 export interface NavigationItem {
   id: string;
   label: string;
@@ -18,7 +16,6 @@ export interface NavigationItem {
   badge?: string | number;
   description?: string;
 }
-
 /**
  * Complete navigation structure for BoxCall application
  * Based on comprehensive requirements with role-based access
@@ -31,7 +28,6 @@ export const getNavigationItems = (
     userRole,
     typeof userRole
   );
-
   const items: NavigationItem[] = [
     // Dashboard - Available to everyone
     {
@@ -41,7 +37,6 @@ export const getNavigationItems = (
       href: "/dashboard",
       description: "Personal dashboard with live feed and notifications",
     },
-
     // Team Bulletin - Available to everyone (renamed from Team Dashboard)
     {
       id: "team-bulletin",
@@ -51,7 +46,6 @@ export const getNavigationItems = (
       description: "Team-specific feed, announcements, and quick actions",
     },
   ];
-
   // BoxCall - Coaches and super_admin only (premium feature)
   if (
     userRole === "admin" ||
@@ -68,14 +62,12 @@ export const getNavigationItems = (
       description: "Advanced coaching tools and analytics (Premium)",
     });
   }
-
   // Playbook - Coaches, players, and super_admin
   const shouldShowPlaybook =
     userRole === "admin" ||
     userRole === "coach" ||
     userRole === "player" ||
     (userRole as string) === "super_admin";
-
   console.log("Playbook check:", {
     userRole,
     userRoleType: typeof userRole,
@@ -85,7 +77,6 @@ export const getNavigationItems = (
     isSuperAdmin: (userRole as string) === "super_admin",
     shouldShowPlaybook,
   });
-
   if (shouldShowPlaybook) {
     items.push({
       id: "playbook",
@@ -96,7 +87,6 @@ export const getNavigationItems = (
       description: "Team plays and strategies",
     });
   }
-
   // Calendar - Available to everyone
   items.push({
     id: "calendar",
@@ -105,7 +95,6 @@ export const getNavigationItems = (
     href: "/calendar",
     description: "Personal and team calendars",
   });
-
   // Profile - Available to everyone
   items.push({
     id: "profile",
@@ -114,7 +103,6 @@ export const getNavigationItems = (
     href: "/profile",
     description: "Edit user settings and preferences",
   });
-
   // Team Settings - Coaches and super_admin only
   if (
     userRole === "admin" ||
@@ -130,7 +118,6 @@ export const getNavigationItems = (
       description: "Manage team configuration and roster",
     });
   }
-
   // Divider before utility pages
   items.push({
     id: "divider-utility",
@@ -138,7 +125,6 @@ export const getNavigationItems = (
     href: "",
     divider: true,
   });
-
   // About - Available to everyone
   items.push({
     id: "about",
@@ -147,7 +133,6 @@ export const getNavigationItems = (
     href: "/about",
     description: "Learn about BoxCall",
   });
-
   // Templates - Coaches and super_admin only
   if (
     userRole === "admin" ||
@@ -163,7 +148,6 @@ export const getNavigationItems = (
       description: "Pre-built templates and resources",
     });
   }
-
   // Playground - Developers and Super Admins only
   // Handle dev mode roles that include "super_admin"
   if (
@@ -180,7 +164,6 @@ export const getNavigationItems = (
       description: "Test and explore the Smart Icon System",
     });
   }
-
   // Divider before logout
   items.push({
     id: "divider-logout",
@@ -188,7 +171,6 @@ export const getNavigationItems = (
     href: "",
     divider: true,
   });
-
   // Logout - Available to everyone
   items.push({
     id: "logout",
@@ -197,10 +179,8 @@ export const getNavigationItems = (
     href: "/logout",
     description: "Sign out of BoxCall",
   });
-
   return items;
 };
-
 /**
  * Convert NavigationItem to SidebarItem format
  */
@@ -243,7 +223,6 @@ export const toSidebarItems = (
         : undefined,
     }));
 };
-
 /**
  * Handle logout functionality
  */
@@ -259,7 +238,6 @@ const handleLogout = async () => {
     window.location.href = "/login";
   }
 };
-
 /**
  * Get primary navigation items for the top navigation bar
  * These are the most important/frequently used items with quick actions
@@ -281,7 +259,6 @@ export const getPrimaryNavigationItems = (
       href: "/boxcall",
     },
   ];
-
   return items.filter((item) => {
     // Filter based on role permissions
     if (item.id === "boxcall" && userRole !== "admin" && userRole !== "coach") {
@@ -290,13 +267,11 @@ export const getPrimaryNavigationItems = (
     return true;
   });
 };
-
 /**
  * Get role-based display information
  */
 export const getRoleDisplayInfo = (role?: UserRole | null) => {
   if (!role) return { display: "User", color: "gray" };
-
   const roleInfo: Record<
     NonNullable<UserRole>,
     { display: string; color: string }
@@ -306,6 +281,5 @@ export const getRoleDisplayInfo = (role?: UserRole | null) => {
     player: { display: "Player", color: "green" },
     family: { display: "Family", color: "purple" },
   };
-
   return roleInfo[role] || { display: role, color: "gray" };
 };

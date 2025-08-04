@@ -9,7 +9,6 @@ import { TeamTrophyCase } from "../components/team-dashboard/TeamTrophyCase";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
-
 /**
  * Team Bulletin - Team-specific communication hub
  * Facebook-style team feed with role-based functionality
@@ -25,7 +24,6 @@ import { Icon } from "../components/ui/Icon/Icon";
 export const TeamBulletin: React.FC = () => {
   const { teamId } = useParams<{ teamId: string }>();
   const { user, profile } = useAuth();
-
   if (!user || !profile || !teamId) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -37,7 +35,6 @@ export const TeamBulletin: React.FC = () => {
       </div>
     );
   }
-
   // Mock team data - TODO: Fetch from database
   const mockTeam = {
     id: teamId,
@@ -49,11 +46,9 @@ export const TeamBulletin: React.FC = () => {
     nextGame: "Friday vs. Central Lions",
     memberCount: 35,
   };
-
   // Determine user role for team-specific content
   const userRole = profile.role || "player";
   const isCoach = userRole === "coach";
-
   return (
     <div className="py-6">
       {/* Team Header */}
@@ -139,10 +134,8 @@ export const TeamBulletin: React.FC = () => {
           </div>
         </div>
       </div>
-
       {/* Team Navigation */}
       {/* <TeamNavigation teamId={teamId} userRole={userRole} /> */}
-
       {/* Main Team Dashboard Content */}
       <div className="px-6">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -150,7 +143,6 @@ export const TeamBulletin: React.FC = () => {
           <div className="lg:col-span-1 space-y-6">
             {/* Team Trophy Case */}
             <TeamTrophyCase teamId={teamId} />
-
             {/* Role-Based Quick Actions */}
             <Card className="p-6">
               <Typography
@@ -161,7 +153,6 @@ export const TeamBulletin: React.FC = () => {
               </Typography>
               <TeamQuickActions teamId={teamId} userRole={userRole} />
             </Card>
-
             {/* Team Stats Summary */}
             <Card className="p-6">
               <Typography
@@ -218,7 +209,6 @@ export const TeamBulletin: React.FC = () => {
               </div>
             </Card>
           </div>
-
           {/* Center Column - Team Feed (Facebook Style) */}
           <div className="lg:col-span-2 space-y-6">
             {/* Team Feed */}
@@ -239,12 +229,10 @@ export const TeamBulletin: React.FC = () => {
               <TeamFeed teamId={teamId} userRole={userRole} />
             </Card>
           </div>
-
           {/* Right Column - Calendar & Roster */}
           <div className="lg:col-span-1 space-y-6">
             {/* Team Calendar */}
             <TeamCalendar teamId={teamId} />
-
             {/* Quick Roster View */}
             <Card className="p-6">
               <div className="flex items-center justify-between mb-4">
@@ -258,7 +246,6 @@ export const TeamBulletin: React.FC = () => {
                   {mockTeam.memberCount} members
                 </Typography>
               </div>
-
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {/* Mock roster data */}
                 {[
@@ -333,14 +320,12 @@ export const TeamBulletin: React.FC = () => {
                   </div>
                 ))}
               </div>
-
               <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
                 <button className="w-full py-2 text-jade-600 dark:text-jade-400 hover:bg-jade-50 dark:hover:bg-jade-900/20 rounded-md transition-colors">
                   View Full Roster
                 </button>
               </div>
             </Card>
-
             {/* Upcoming Events */}
             <Card className="p-6">
               <Typography
@@ -400,5 +385,4 @@ export const TeamBulletin: React.FC = () => {
     </div>
   );
 };
-
 export default TeamBulletin;

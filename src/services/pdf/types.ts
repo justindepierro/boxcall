@@ -4,12 +4,10 @@
  * Shared types for all PDF generation across the application.
  * This ensures consistency and reusability for different document types.
  */
-
 // Error handling
 export class PDFError extends Error {
   code: string;
   details?: string;
-
   constructor(message: string, code: string, details?: string) {
     super(message);
     this.name = "PDFError";
@@ -17,7 +15,6 @@ export class PDFError extends Error {
     this.details = details;
   }
 }
-
 export interface PDFDocument {
   title: string;
   author?: string;
@@ -27,7 +24,6 @@ export interface PDFDocument {
   creationDate?: Date;
   modificationDate?: Date;
 }
-
 export interface PDFBranding {
   teamName?: string;
   teamLogo?: string;
@@ -46,7 +42,6 @@ export interface PDFBranding {
     secondary: string;
   };
 }
-
 export interface PDFTemplate {
   id?: string;
   name?: string;
@@ -84,7 +79,6 @@ export interface PDFTemplate {
     includeGeneratedTime?: boolean;
   };
 }
-
 export interface PDFExportOptions {
   template?: PDFTemplate;
   branding?: PDFBranding;
@@ -96,7 +90,6 @@ export interface PDFExportOptions {
   orientation?: "portrait" | "landscape";
   quality?: number;
 }
-
 // Practice Script Specific Types
 export interface PracticeScriptPDFData {
   // Basic Info
@@ -105,7 +98,6 @@ export interface PracticeScriptPDFData {
   duration: number;
   location: string;
   weather?: string;
-
   // Timeline/Blocks
   practiceBlocks: Array<{
     id: string;
@@ -129,7 +121,6 @@ export interface PracticeScriptPDFData {
       duration?: number;
     }>;
   }>;
-
   // Staff
   coaches: Array<{
     id: string;
@@ -137,14 +128,12 @@ export interface PracticeScriptPDFData {
     role: string;
     assignments?: string[];
   }>;
-
   // Equipment & Setup
   equipment?: Array<{
     item: string;
     quantity?: number;
     location?: string;
   }>;
-
   // Summary Stats
   summary?: {
     totalMinutes: number;
@@ -153,7 +142,6 @@ export interface PracticeScriptPDFData {
     objectives?: string[];
   };
 }
-
 // Playbook/Script Specific Types (for future use)
 export interface PlaybookPDFData {
   title: string;
@@ -166,7 +154,6 @@ export interface PlaybookPDFData {
     tags?: string[];
   }>;
 }
-
 // Game Plan Specific Types (for future use)
 export interface GamePlanPDFData {
   opponent: string;

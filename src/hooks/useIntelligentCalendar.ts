@@ -4,7 +4,6 @@
  * Main React hook for accessing Phase 3 intelligent calendar features.
  * Provides smart scheduling, conflict detection, and attendance analytics.
  */
-
 import { useCallback, useEffect, useState } from "react";
 import {
   AttendanceAnalyticsService,
@@ -27,7 +26,6 @@ import {
   type SchedulingInsights,
   type TimeSuggestion,
 } from "../services/phase3/SmartSchedulingOptimizer";
-
 // Hook state interfaces
 export interface IntelligentCalendarState {
   // Loading states
@@ -36,26 +34,22 @@ export interface IntelligentCalendarState {
   isGeneratingSuggestions: boolean;
   isAnalyzingAttendance: boolean;
   isOptimizingSchedule: boolean;
-
   // Data states
   conflicts: ConflictDetectionResult | null;
   suggestions: TimeSuggestion[];
   analytics: AttendanceAnalytics | null;
   insights: SchedulingInsights | null;
   predictions: AttendancePrediction[];
-
   // Error states
   error: string | null;
   conflictError: string | null;
   suggestionError: string | null;
   analyticsError: string | null;
-
   // UI states
   showConflictDetails: boolean;
   showOptimizationSuggestions: boolean;
   showAnalyticsDashboard: boolean;
 }
-
 export interface IntelligentCalendarHookOptions {
   teamId: string;
   autoLoadAnalytics?: boolean;
@@ -63,14 +57,12 @@ export interface IntelligentCalendarHookOptions {
   enableRealTimeUpdates?: boolean;
   cacheTimeout?: number; // minutes
 }
-
 export interface ConflictCheckOptions {
   checkAcademicCalendar?: boolean;
   checkVenueConflicts?: boolean;
   checkFamilySchedules?: boolean;
   checkTravelTime?: boolean;
 }
-
 export interface SchedulingOptions {
   preferredDays?: string[];
   preferredTimes?: number[];
@@ -80,7 +72,6 @@ export interface SchedulingOptions {
   weatherSensitive?: boolean;
   minimumNotice?: number;
 }
-
 /**
  * Main hook for Phase 3 intelligent calendar features
  */
@@ -90,7 +81,6 @@ export const useIntelligentCalendar = (
   // ==========================================
   // State Management
   // ==========================================
-
   const [state, setState] = useState<IntelligentCalendarState>({
     isLoading: false,
     isDetectingConflicts: false,
@@ -110,11 +100,9 @@ export const useIntelligentCalendar = (
     showOptimizationSuggestions: false,
     showAnalyticsDashboard: false,
   });
-
   // ==========================================
   // Core Intelligent Functions
   // ==========================================
-
   /**
    * Detect conflicts for a proposed event
    */
@@ -132,7 +120,6 @@ export const useIntelligentCalendar = (
         isDetectingConflicts: true,
         conflictError: null,
       }));
-
       try {
         const request: ConflictDetectionRequest = {
           proposedEvent,
@@ -141,16 +128,13 @@ export const useIntelligentCalendar = (
           checkVenueConflicts: checkOptions.checkVenueConflicts ?? true,
           checkFamilySchedules: checkOptions.checkFamilySchedules ?? false,
         };
-
         const result = await ConflictDetectionService.detectConflicts(request);
-
         setState((prev) => ({
           ...prev,
           conflicts: result,
           showConflictDetails: result.hasConflicts,
           isDetectingConflicts: false,
         }));
-
         return result;
       } catch (error) {
         const errorMessage =
@@ -165,7 +149,6 @@ export const useIntelligentCalendar = (
     },
     [options.teamId]
   );
-
   /**
    * Generate smart scheduling suggestions
    */
@@ -178,7 +161,6 @@ export const useIntelligentCalendar = (
         isGeneratingSuggestions: true,
         suggestionError: null,
       }));
-
       try {
         const constraints: SchedulingConstraints = {
           teamId: options.teamId,
@@ -201,20 +183,17 @@ export const useIntelligentCalendar = (
           weatherSensitive: schedulingOptions.weatherSensitive ?? false,
           academicCalendarRespect: true,
         };
-
         const suggestions =
           await SmartSchedulingOptimizer.suggestOptimalPracticeTime(
             options.teamId,
             constraints
           );
-
         setState((prev) => ({
           ...prev,
           suggestions,
           showOptimizationSuggestions: suggestions.length > 0,
           isGeneratingSuggestions: false,
         }));
-
         return suggestions;
       } catch (error) {
         const errorMessage =
@@ -231,7 +210,6 @@ export const useIntelligentCalendar = (
     },
     [options.teamId]
   );
-
   /**
    * Get attendance analytics
    */
@@ -244,21 +222,18 @@ export const useIntelligentCalendar = (
         isAnalyzingAttendance: true,
         analyticsError: null,
       }));
-
       try {
         const analytics =
           await AttendanceAnalyticsService.getAttendanceAnalytics(
             options.teamId,
             period
           );
-
         setState((prev) => ({
           ...prev,
           analytics,
           showAnalyticsDashboard: true,
           isAnalyzingAttendance: false,
         }));
-
         return analytics;
       } catch (error) {
         const errorMessage =
@@ -273,25 +248,21 @@ export const useIntelligentCalendar = (
     },
     [options.teamId]
   );
-
   /**
    * Get scheduling insights from historical data
    */
   const loadInsights =
     useCallback(async (): Promise<SchedulingInsights | null> => {
       setState((prev) => ({ ...prev, isLoading: true, error: null }));
-
       try {
         const insights = await SmartSchedulingOptimizer.learnFromHistoricalData(
           options.teamId
         );
-
         setState((prev) => ({
           ...prev,
           insights,
           isLoading: false,
         }));
-
         return insights;
       } catch (error) {
         const errorMessage =
@@ -304,20 +275,17 @@ export const useIntelligentCalendar = (
         return null;
       }
     }, [options.teamId]);
-
   /**
    * Predict attendance for upcoming events
    */
   const predictAttendance = useCallback(
     async (eventId: string): Promise<AttendancePrediction | null> => {
       setState((prev) => ({ ...prev, isLoading: true, error: null }));
-
       try {
         const prediction = await AttendanceAnalyticsService.predictAttendance(
           options.teamId,
           eventId
         );
-
         setState((prev) => ({
           ...prev,
           predictions: [
@@ -326,7 +294,6 @@ export const useIntelligentCalendar = (
           ],
           isLoading: false,
         }));
-
         return prediction;
       } catch (error) {
         const errorMessage =
@@ -343,7 +310,6 @@ export const useIntelligentCalendar = (
     },
     [options.teamId]
   );
-
   /**
    * Process intelligent calendar request (unified operation)
    */
@@ -352,11 +318,9 @@ export const useIntelligentCalendar = (
       request: IntelligentCalendarRequest
     ): Promise<IntelligentCalendarResponse | null> => {
       setState((prev) => ({ ...prev, isLoading: true, error: null }));
-
       try {
         const response =
           await IntelligentCalendarService.processIntelligentRequest(request);
-
         // Update state based on the response
         if (response.results.conflicts) {
           setState((prev) => ({
@@ -364,30 +328,25 @@ export const useIntelligentCalendar = (
             conflicts: response.results.conflicts!,
           }));
         }
-
         if (response.results.suggestions) {
           setState((prev) => ({
             ...prev,
             suggestions: response.results.suggestions!,
           }));
         }
-
         if (response.results.analytics) {
           setState((prev) => ({
             ...prev,
             analytics: response.results.analytics!,
           }));
         }
-
         if (response.results.predictions) {
           setState((prev) => ({
             ...prev,
             predictions: response.results.predictions!,
           }));
         }
-
         setState((prev) => ({ ...prev, isLoading: false }));
-
         return response;
       } catch (error) {
         const errorMessage =
@@ -402,11 +361,9 @@ export const useIntelligentCalendar = (
     },
     []
   );
-
   // ==========================================
   // Convenience Functions
   // ==========================================
-
   /**
    * Quick conflict check and suggestion generation for event creation
    */
@@ -422,7 +379,6 @@ export const useIntelligentCalendar = (
     ) => {
       // First detect conflicts
       const conflicts = await detectConflicts(proposedEvent, options);
-
       // If conflicts exist, generate suggestions
       if (conflicts?.hasConflicts) {
         await generateSuggestions({
@@ -435,25 +391,21 @@ export const useIntelligentCalendar = (
           ...options,
         });
       }
-
       return { conflicts, suggestions: state.suggestions };
     },
     [detectConflicts, generateSuggestions, state.suggestions]
   );
-
   /**
    * Get comprehensive team insights
    */
   const getTeamInsights = useCallback(async () => {
     setState((prev) => ({ ...prev, isLoading: true }));
-
     try {
       const [analytics, insights, attendanceInsights] = await Promise.all([
         loadAnalytics("season"),
         loadInsights(),
         AttendanceAnalyticsService.getAttendanceInsights(options.teamId),
       ]);
-
       return { analytics, insights, attendanceInsights };
     } catch (error) {
       const errorMessage =
@@ -462,32 +414,27 @@ export const useIntelligentCalendar = (
       return null;
     }
   }, [loadAnalytics, loadInsights, options.teamId]);
-
   // ==========================================
   // UI State Management
   // ==========================================
-
   const toggleConflictDetails = useCallback(() => {
     setState((prev) => ({
       ...prev,
       showConflictDetails: !prev.showConflictDetails,
     }));
   }, []);
-
   const toggleOptimizationSuggestions = useCallback(() => {
     setState((prev) => ({
       ...prev,
       showOptimizationSuggestions: !prev.showOptimizationSuggestions,
     }));
   }, []);
-
   const toggleAnalyticsDashboard = useCallback(() => {
     setState((prev) => ({
       ...prev,
       showAnalyticsDashboard: !prev.showAnalyticsDashboard,
     }));
   }, []);
-
   const clearErrors = useCallback(() => {
     setState((prev) => ({
       ...prev,
@@ -497,7 +444,6 @@ export const useIntelligentCalendar = (
       analyticsError: null,
     }));
   }, []);
-
   const resetState = useCallback(() => {
     setState({
       isLoading: false,
@@ -519,31 +465,25 @@ export const useIntelligentCalendar = (
       showAnalyticsDashboard: false,
     });
   }, []);
-
   // ==========================================
   // Auto-loading Effects
   // ==========================================
-
   useEffect(() => {
     if (options.autoLoadAnalytics) {
       loadAnalytics();
     }
   }, [options.autoLoadAnalytics, loadAnalytics]);
-
   useEffect(() => {
     if (options.autoLoadInsights) {
       loadInsights();
     }
   }, [options.autoLoadInsights, loadInsights]);
-
   // ==========================================
   // Return Hook Interface
   // ==========================================
-
   return {
     // State
     ...state,
-
     // Core Functions
     detectConflicts,
     generateSuggestions,
@@ -551,18 +491,15 @@ export const useIntelligentCalendar = (
     loadInsights,
     predictAttendance,
     processIntelligentRequest,
-
     // Convenience Functions
     checkEventAndSuggest,
     getTeamInsights,
-
     // UI State Management
     toggleConflictDetails,
     toggleOptimizationSuggestions,
     toggleAnalyticsDashboard,
     clearErrors,
     resetState,
-
     // Computed Properties
     hasConflicts: state.conflicts?.hasConflicts || false,
     hasSuggestions: state.suggestions.length > 0,
@@ -583,5 +520,4 @@ export const useIntelligentCalendar = (
       state.isOptimizingSchedule,
   };
 };
-
 export default useIntelligentCalendar;

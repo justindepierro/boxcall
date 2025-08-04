@@ -3,9 +3,7 @@
  *
  * TypeScript definitions for the Select component
  */
-
 import type { ReactNode } from "react";
-
 export interface SelectOption {
   value: string | number;
   label: string;
@@ -14,7 +12,6 @@ export interface SelectOption {
   icon?: ReactNode;
   description?: string;
 }
-
 export interface SelectProps {
   // Core functionality
   options: SelectOption[];
@@ -22,7 +19,6 @@ export interface SelectProps {
   defaultValue?: string | number | (string | number)[];
   onChange?: (value: string | number | (string | number)[]) => void;
   onSearch?: (searchTerm: string) => void;
-
   // Component configuration
   placeholder?: string;
   multiple?: boolean;
@@ -30,40 +26,33 @@ export interface SelectProps {
   clearable?: boolean;
   disabled?: boolean;
   loading?: boolean;
-
   // Validation and status
   status?: "default" | "error" | "success" | "warning";
   required?: boolean;
-
   // Layout and styling
   size?: "sm" | "md" | "lg";
   variant?: "default" | "filled" | "outlined";
   fullWidth?: boolean;
-
   // Labels and messages
   label?: string;
   helperText?: string;
   errorMessage?: string;
   successMessage?: string;
   warningMessage?: string;
-
   // Dropdown behavior
   maxHeight?: number;
   position?: "auto" | "top" | "bottom";
-
   // Advanced features
   createOption?: boolean;
   onCreateOption?: (inputValue: string) => void;
   noOptionsMessage?: string;
   maxMenuHeight?: number;
   menuPortalTarget?: HTMLElement;
-
   // Accessibility
   id?: string;
   name?: string;
   "aria-label"?: string;
   "aria-describedby"?: string;
-
   // Custom styling
   className?: string;
   containerClassName?: string;
@@ -71,7 +60,6 @@ export interface SelectProps {
   menuClassName?: string;
   optionClassName?: string;
 }
-
 export interface SelectStylesConfig {
   container: {
     base: string;
@@ -82,7 +70,6 @@ export interface SelectStylesConfig {
     };
     fullWidth: string;
   };
-
   trigger: {
     base: string;
     variants: {
@@ -107,7 +94,6 @@ export interface SelectStylesConfig {
       open: string;
     };
   };
-
   menu: {
     base: string;
     positions: {
@@ -116,7 +102,6 @@ export interface SelectStylesConfig {
     };
     maxHeight: string;
   };
-
   option: {
     base: string;
     states: {
@@ -127,7 +112,6 @@ export interface SelectStylesConfig {
     };
     withIcon: string;
   };
-
   input: {
     base: string;
     sizes: {
@@ -136,7 +120,6 @@ export interface SelectStylesConfig {
       lg: string;
     };
   };
-
   placeholder: string;
   noOptions: string;
   loading: string;

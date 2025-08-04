@@ -1,6 +1,5 @@
 // Bulk Operations Interface for Phase 2.3
 // Mass operations on calendar events, RSVPs, and polls
-
 import React, { useState } from "react";
 import { useBulkOperations } from "../hooks/useEnhancedCalendar";
 import Icon, { type IconName } from "./ui/Icon/Icon";
@@ -9,13 +8,11 @@ import type {
   BulkOperationTemplate,
   BulkOperationType,
 } from "../types/enhanced-calendar";
-
 interface BulkOperationsInterfaceProps {
   teamId: string;
   selectedEventIds: string[];
   userRole: "coach" | "player" | "parent";
 }
-
 export function BulkOperationsInterface({
   teamId,
   selectedEventIds,
@@ -34,9 +31,7 @@ export function BulkOperationsInterface({
   const [activeOperation, setActiveOperation] = useState<BulkOperation | null>(
     null
   );
-
   const canPerformBulkOperations = userRole === "coach";
-
   if (!canPerformBulkOperations) {
     return (
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -61,7 +56,6 @@ export function BulkOperationsInterface({
       </div>
     );
   }
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -98,7 +92,6 @@ export function BulkOperationsInterface({
           </button>
         )}
       </div>
-
       {/* Quick Actions */}
       {selectedEventIds.length > 0 && (
         <QuickActionsPanel
@@ -107,7 +100,6 @@ export function BulkOperationsInterface({
           loading={loading}
         />
       )}
-
       {/* Templates */}
       <BulkOperationTemplates
         templates={templates}
@@ -116,7 +108,6 @@ export function BulkOperationsInterface({
         onCreateTemplate={createTemplate}
         loading={loading}
       />
-
       {/* Active Operations */}
       <ActiveOperations
         operations={operations}
@@ -124,7 +115,6 @@ export function BulkOperationsInterface({
         onCancelOperation={cancelOperation}
         onRefreshStatus={getOperationStatus}
       />
-
       {/* Create Operation Modal */}
       {showCreateOperation && (
         <CreateBulkOperationModal
@@ -143,7 +133,6 @@ export function BulkOperationsInterface({
           loading={loading}
         />
       )}
-
       {/* Operation Details Modal */}
       {activeOperation && (
         <OperationDetailsModal
@@ -155,11 +144,9 @@ export function BulkOperationsInterface({
     </div>
   );
 }
-
 // ============================================================================
 // QUICK ACTIONS PANEL
 // ============================================================================
-
 interface QuickActionsPanelProps {
   selectedEventIds: string[];
   onExecute: (
@@ -169,7 +156,6 @@ interface QuickActionsPanelProps {
   ) => Promise<BulkOperation>;
   loading: boolean;
 }
-
 function QuickActionsPanel({
   selectedEventIds,
   onExecute,
@@ -208,20 +194,17 @@ function QuickActionsPanel({
       data: { format: "csv" as string },
     },
   ];
-
   const handleQuickAction = async (action: (typeof quickActions)[0]) => {
     try {
       // Filter out undefined values to match the expected Record type
       const cleanData = Object.fromEntries(
         Object.entries(action.data).filter(([, value]) => value !== undefined)
       ) as Record<string, string | number | boolean | string[]>;
-
       await onExecute(action.type, selectedEventIds, cleanData);
     } catch (error) {
       console.error("Quick action failed:", error);
     }
   };
-
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4">
       <h4 className="text-md font-medium text-gray-900 mb-3">Quick Actions</h4>
@@ -250,11 +233,9 @@ function QuickActionsPanel({
     </div>
   );
 }
-
 // ============================================================================
 // BULK OPERATION TEMPLATES
 // ============================================================================
-
 interface BulkOperationTemplatesProps {
   templates: BulkOperationTemplate[];
   selectedEventIds: string[];
@@ -268,7 +249,6 @@ interface BulkOperationTemplatesProps {
   ) => Promise<BulkOperationTemplate>;
   loading: boolean;
 }
-
 function BulkOperationTemplates({
   templates,
   selectedEventIds,
@@ -286,7 +266,6 @@ function BulkOperationTemplates({
       console.error("Template execution failed:", error);
     }
   };
-
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4">
       <div className="flex items-center justify-between mb-3">
@@ -294,13 +273,14 @@ function BulkOperationTemplates({
           Operation Templates
         </h4>
         <button
-          onClick={() => console.log("Create template feature coming soon")}
+          onClick={() => {
+            // TODO: Implement create template functionality
+          }}
           className="text-sm text-blue-600 hover:text-blue-800"
         >
           Create Template
         </button>
       </div>
-
       {templates.length === 0 ? (
         <div className="text-center py-6 text-gray-500">
           <svg
@@ -356,18 +336,15 @@ function BulkOperationTemplates({
     </div>
   );
 }
-
 // ============================================================================
 // ACTIVE OPERATIONS
 // ============================================================================
-
 interface ActiveOperationsProps {
   operations: BulkOperation[];
   onViewOperation: (operation: BulkOperation) => void;
   onCancelOperation: (operationId: string) => Promise<boolean>;
   onRefreshStatus: (operationId: string) => Promise<BulkOperation | null>;
 }
-
 function ActiveOperations({
   operations,
   onViewOperation,
@@ -377,7 +354,6 @@ function ActiveOperations({
   if (operations.length === 0) {
     return null;
   }
-
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4">
       <h4 className="text-md font-medium text-gray-900 mb-3">
@@ -458,15 +434,12 @@ function ActiveOperations({
     </div>
   );
 }
-
 // ============================================================================
 // OPERATION STATUS BADGE
 // ============================================================================
-
 interface OperationStatusBadgeProps {
   status: BulkOperation["status"];
 }
-
 function OperationStatusBadge({ status }: OperationStatusBadgeProps) {
   const config = {
     pending: { bg: "bg-yellow-100", text: "text-yellow-800", label: "Pending" },
@@ -483,9 +456,7 @@ function OperationStatusBadge({ status }: OperationStatusBadgeProps) {
     failed: { bg: "bg-red-100", text: "text-red-800", label: "Failed" },
     cancelled: { bg: "bg-gray-100", text: "text-gray-800", label: "Cancelled" },
   };
-
   const { bg, text, label } = config[status] || config.pending;
-
   return (
     <span
       className={`px-2 py-1 text-xs font-medium rounded-full ${bg} ${text}`}
@@ -494,11 +465,9 @@ function OperationStatusBadge({ status }: OperationStatusBadgeProps) {
     </span>
   );
 }
-
 // ============================================================================
 // CREATE BULK OPERATION MODAL
 // ============================================================================
-
 interface CreateBulkOperationModalProps {
   selectedEventIds: string[];
   teamId: string;
@@ -509,7 +478,6 @@ interface CreateBulkOperationModalProps {
   ) => Promise<void>;
   loading: boolean;
 }
-
 function CreateBulkOperationModal({
   selectedEventIds,
   onClose,
@@ -521,7 +489,6 @@ function CreateBulkOperationModal({
   const [operationData, setOperationData] = useState<
     Record<string, string | number | boolean | string[]>
   >({});
-
   const operationTypes: Array<{
     type: BulkOperationType;
     title: string;
@@ -578,11 +545,9 @@ function CreateBulkOperationModal({
       ],
     },
   ];
-
   const currentOperation = operationTypes.find(
     (op) => op.type === operationType
   )!;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -591,21 +556,18 @@ function CreateBulkOperationModal({
       console.error("Failed to execute bulk operation:", error);
     }
   };
-
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
-
         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           <form onSubmit={handleSubmit}>
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
                 Create Bulk Operation
               </h3>
-
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -629,14 +591,12 @@ function CreateBulkOperationModal({
                     {currentOperation.description}
                   </p>
                 </div>
-
                 <div className="bg-gray-50 rounded-lg p-3">
                   <p className="text-sm text-gray-700">
                     This operation will affect{" "}
                     <strong>{selectedEventIds.length}</strong> selected events.
                   </p>
                 </div>
-
                 {currentOperation.fields.map((field) => (
                   <div key={field.key}>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -699,7 +659,6 @@ function CreateBulkOperationModal({
                 ))}
               </div>
             </div>
-
             <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
               <button
                 type="submit"
@@ -722,24 +681,20 @@ function CreateBulkOperationModal({
     </div>
   );
 }
-
 // ============================================================================
 // OPERATION DETAILS MODAL
 // ============================================================================
-
 interface OperationDetailsModalProps {
   operation: BulkOperation;
   onClose: () => void;
   onCancel: () => Promise<boolean>;
 }
-
 function OperationDetailsModal({
   operation,
   onClose,
   onCancel,
 }: OperationDetailsModalProps) {
   const [cancelling, setCancelling] = useState(false);
-
   const handleCancel = async () => {
     setCancelling(true);
     try {
@@ -751,14 +706,12 @@ function OperationDetailsModal({
       setCancelling(false);
     }
   };
-
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
-
         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="flex items-center justify-between mb-4">
@@ -767,7 +720,6 @@ function OperationDetailsModal({
               </h3>
               <OperationStatusBadge status={operation.status} />
             </div>
-
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -808,7 +760,6 @@ function OperationDetailsModal({
                   </p>
                 </div>
               </div>
-
               {operation.status === "in_progress" && (
                 <div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
@@ -821,7 +772,6 @@ function OperationDetailsModal({
                   </div>
                 </div>
               )}
-
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
@@ -840,7 +790,6 @@ function OperationDetailsModal({
                   </p>
                 </div>
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Started
@@ -849,7 +798,6 @@ function OperationDetailsModal({
                   {new Date(operation.initiated_at).toLocaleString()}
                 </p>
               </div>
-
               {operation.completed_at && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
@@ -860,7 +808,6 @@ function OperationDetailsModal({
                   </p>
                 </div>
               )}
-
               {operation.summary && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
@@ -869,7 +816,6 @@ function OperationDetailsModal({
                   <p className="text-sm text-gray-900">{operation.summary}</p>
                 </div>
               )}
-
               {operation.error_log && operation.error_log.length > 0 && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -889,7 +835,6 @@ function OperationDetailsModal({
               )}
             </div>
           </div>
-
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             {operation.status === "in_progress" && (
               <button

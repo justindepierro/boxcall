@@ -4,7 +4,6 @@
  * Masculine, professional color system with jade/navy theme
  * Square, confident aesthetic for football team management
  */
-
 // BoxCall Professional Color Palette
 export const colors = {
   // Primary Brand - Jade Green System
@@ -20,7 +19,6 @@ export const colors = {
     800: "#065F46", // Deep jade for dark mode
     900: "#064E3B", // Darkest jade for text
   },
-
   // Secondary Brand - Navy Blue System
   navy: {
     50: "#EFF6FF", // Very light navy
@@ -34,7 +32,6 @@ export const colors = {
     800: "#1E3A8A", // Deep navy
     900: "#1E3A8A", // Darkest navy for text
   },
-
   // Legacy Primary Brand Colors (DEPRECATED - use jade)
   primary: {
     50: "#ECFDF5", // Map to jade for backward compatibility
@@ -48,7 +45,6 @@ export const colors = {
     800: "#065F46",
     900: "#064E3B",
   },
-
   // Football Field Green (Legacy)
   field: {
     50: "#f0fdf4",
@@ -62,7 +58,6 @@ export const colors = {
     800: "#166534",
     900: "#14532d",
   },
-
   // Warning/Alert Colors (Complementary to jade/navy)
   warning: {
     50: "#fffbeb",
@@ -76,7 +71,6 @@ export const colors = {
     800: "#92400e",
     900: "#78350f",
   },
-
   // Error/Penalty Colors
   error: {
     50: "#fef2f2",
@@ -90,7 +84,6 @@ export const colors = {
     800: "#991b1b",
     900: "#7f1d1d",
   },
-
   // Success Colors (Touchdowns, wins)
   success: {
     50: "#f0fdf4",
@@ -104,7 +97,6 @@ export const colors = {
     800: "#166534",
     900: "#14532d",
   },
-
   // Neutral Colors
   gray: {
     50: "#f9fafb",
@@ -119,7 +111,6 @@ export const colors = {
     900: "#111827", // darkest text
   },
 } as const;
-
 // Semantic color mappings for component usage - Updated with jade/navy
 export const semanticColors = {
   // Text colors
@@ -131,7 +122,6 @@ export const semanticColors = {
     brand: colors.jade[600], // Jade for brand text
     accent: colors.navy[600], // Navy for accent text
   },
-
   // Background colors
   background: {
     primary: "#ffffff",
@@ -141,7 +131,6 @@ export const semanticColors = {
     brand: colors.jade[50], // Light jade backgrounds
     accent: colors.navy[50], // Light navy backgrounds
   },
-
   // Border colors
   border: {
     primary: colors.gray[200],
@@ -151,7 +140,6 @@ export const semanticColors = {
     brand: colors.jade[300], // Jade brand borders
     accent: colors.navy[300], // Navy accent borders
   },
-
   // Interactive colors - Updated with jade/navy
   interactive: {
     primary: colors.jade[500], // Jade primary actions
@@ -164,7 +152,6 @@ export const semanticColors = {
     outlineHover: colors.gray[200], // Outline button hover
     outlineActive: colors.gray[300], // Outline button active
   },
-
   // Status colors - Enhanced with jade/navy
   status: {
     success: colors.success[500],
@@ -178,7 +165,6 @@ export const semanticColors = {
     accent: colors.navy[500], // Navy for accent status
     accentLight: colors.navy[100], // Light navy for accent backgrounds
   },
-
   // Football-specific colors
   football: {
     field: colors.field[500],
@@ -189,7 +175,6 @@ export const semanticColors = {
     touchdownLight: colors.success[100],
   },
 } as const;
-
 // Color utility functions
 export const colorUtils = {
   /**
@@ -198,7 +183,6 @@ export const colorUtils = {
   getColor: (path: string): string => {
     const keys = path.split(".");
     let value: Record<string, unknown> | string = colors;
-
     for (const key of keys) {
       if (typeof value === "object" && value !== null && key in value) {
         value = (value as Record<string, unknown>)[key] as
@@ -208,10 +192,8 @@ export const colorUtils = {
         return path;
       }
     }
-
     return typeof value === "string" ? value : path;
   },
-
   /**
    * Get semantic color value
    */
@@ -222,17 +204,14 @@ export const colorUtils = {
     const categoryColors = semanticColors[category] as Record<string, string>;
     return categoryColors?.[variant] || variant;
   },
-
   /**
    * Generate CSS custom properties for colors
    */
   toCSSCustomProperties: (): Record<string, string> => {
     const cssVars: Record<string, string> = {};
-
     const flattenColors = (obj: Record<string, unknown>, prefix = ""): void => {
       Object.entries(obj).forEach(([key, value]) => {
         const varName = prefix ? `${prefix}-${key}` : key;
-
         if (typeof value === "string") {
           cssVars[`--color-${varName}`] = value;
         } else if (typeof value === "object" && value !== null) {
@@ -240,12 +219,10 @@ export const colorUtils = {
         }
       });
     };
-
     flattenColors({ ...colors, ...semanticColors });
     return cssVars;
   },
 };
-
 // Tailwind CSS class utilities for common color patterns
 export const colorClasses = {
   // Text color classes
@@ -260,7 +237,6 @@ export const colorClasses = {
     error: "text-red-600",
     field: "text-green-600",
   },
-
   // Background color classes
   bg: {
     primary: "bg-white",
@@ -278,7 +254,6 @@ export const colorClasses = {
     field: "bg-green-600",
     fieldLight: "bg-green-50",
   },
-
   // Border color classes
   border: {
     primary: "border-gray-200",
@@ -289,7 +264,6 @@ export const colorClasses = {
     error: "border-red-500",
     field: "border-green-500",
   },
-
   // Ring color classes (for focus states)
   ring: {
     primary: "ring-jade-500",
@@ -299,5 +273,4 @@ export const colorClasses = {
     field: "ring-green-500",
   },
 } as const;
-
 export default colors;

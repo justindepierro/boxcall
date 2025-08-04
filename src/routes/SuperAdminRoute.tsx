@@ -7,12 +7,10 @@ import {
 } from "../app/auth-store";
 import { Icon } from "../components/ui/Icon/Icon";
 import { supabase } from "../lib/supabase";
-
 interface SuperAdminRouteProps {
   children: React.ReactNode;
   fallbackTo?: string;
 }
-
 /**
  * SuperAdminRoute Component
  *
@@ -29,26 +27,22 @@ export const SuperAdminRoute: React.FC<SuperAdminRouteProps> = ({
   const profile = useAuthProfile();
   const loading = useAuthLoading();
   const [isSuperAdmin, setIsSuperAdmin] = useState<boolean | null>(null);
-
   useEffect(() => {
     const checkSuperAdminStatus = async () => {
       if (!profile?.id || profile.role !== "admin") {
         setIsSuperAdmin(false);
         return;
       }
-
       try {
         const { data, error } = await supabase
           .from("super_admins")
           .select("admin_level")
           .eq("user_id", profile.id)
           .single();
-
         if (error || !data) {
           setIsSuperAdmin(false);
           return;
         }
-
         // Check if user has super_admin or admin level
         setIsSuperAdmin(
           data.admin_level === "super_admin" || data.admin_level === "admin"
@@ -58,12 +52,10 @@ export const SuperAdminRoute: React.FC<SuperAdminRouteProps> = ({
         setIsSuperAdmin(false);
       }
     };
-
     if (profile) {
       checkSuperAdminStatus();
     }
   }, [profile]);
-
   // Show loading spinner while checking authentication and super admin status
   if (loading || isSuperAdmin === null) {
     return (
@@ -72,12 +64,10 @@ export const SuperAdminRoute: React.FC<SuperAdminRouteProps> = ({
       </div>
     );
   }
-
   // Not authenticated - redirect to login
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-
   // Not a super admin - show access denied
   if (!isSuperAdmin) {
     return (
@@ -100,7 +90,6 @@ export const SuperAdminRoute: React.FC<SuperAdminRouteProps> = ({
       </div>
     );
   }
-
   // Access granted, render the protected content
   return <>{children}</>;
 };

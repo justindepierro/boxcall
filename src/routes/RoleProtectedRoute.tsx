@@ -6,16 +6,13 @@ import {
   useIsAuthenticated,
 } from "../app/auth-store";
 import type { Database } from "../types/database";
-
 // User role type from database
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
-
 interface RoleProtectedRouteProps {
   children: React.ReactNode;
   allowedRoles: NonNullable<UserRole>[];
   fallbackTo?: string;
 }
-
 /**
  * RoleProtectedRoute Component
  *
@@ -34,7 +31,6 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
   const isAuthenticated = useIsAuthenticated();
   const profile = useAuthProfile();
   const loading = useAuthLoading();
-
   // Show loading spinner while checking authentication and profile
   if (loading) {
     return (
@@ -43,17 +39,14 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
       </div>
     );
   }
-
   // Not authenticated - redirect to login
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-
   // No profile data yet - redirect to dashboard (shouldn't happen normally)
   if (!profile) {
     return <Navigate to={fallbackTo} replace />;
   }
-
   // Check if user's role is in the allowed roles
   if (!profile.role || !allowedRoles.includes(profile.role)) {
     return (
@@ -75,7 +68,6 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
       </div>
     );
   }
-
   // Access granted, render the protected content
   return <>{children}</>;
 };

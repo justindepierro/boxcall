@@ -8,23 +8,19 @@ import {
 import { Icon } from "../components/ui/Icon/Icon";
 import { supabase } from "../lib/supabase";
 import type { Database } from "../types/database";
-
 // Team member role type
 type TeamMemberRole =
   Database["public"]["Tables"]["team_members"]["Row"]["role"];
-
 interface TeamMemberRouteProps {
   children: React.ReactNode;
   allowedTeamRoles: TeamMemberRole[];
   teamId?: string; // Optional, can be passed from URL params
   fallbackTo?: string;
 }
-
 interface TeamMemberData {
   role: TeamMemberRole;
   status: "active" | "inactive" | "pending" | null;
 }
-
 /**
  * TeamMemberRoute Component
  *
@@ -48,27 +44,22 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
   const params = useParams();
   const [teamMember, setTeamMember] = useState<TeamMemberData | null>(null);
   const [checkingMembership, setCheckingMembership] = useState(true);
-
   // Get team ID from props or URL params
   const currentTeamId = teamId || params.teamId;
-
   // IMMEDIATE ADMIN BYPASS - Don't even check membership for admins
   const isAdmin = profile?.role === "admin";
-
   useEffect(() => {
     // Skip all checks for admin users
     if (isAdmin) {
       setCheckingMembership(false);
       return;
     }
-
     const checkTeamMembership = async () => {
       if (!profile?.id || !currentTeamId) {
         setTeamMember(null);
         setCheckingMembership(false);
         return;
       }
-
       try {
         const { data, error } = await supabase
           .from("team_members")
@@ -76,7 +67,6 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
           .eq("user_id", profile.id)
           .eq("team_id", currentTeamId)
           .single();
-
         if (error || !data) {
           setTeamMember(null);
         } else {
@@ -89,12 +79,10 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
         setCheckingMembership(false);
       }
     };
-
     // Reset checking state and run the membership check for non-admin users
     setCheckingMembership(true);
     checkTeamMembership();
   }, [profile?.id, profile?.role, currentTeamId, isAdmin]);
-
   // Show loading spinner while checking authentication and membership (but not for admins)
   if (loading || (!isAdmin && checkingMembership)) {
     return (
@@ -103,17 +91,14 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
       </div>
     );
   }
-
   // Not authenticated - redirect to login
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-
   // No team ID provided
   if (!currentTeamId) {
     return <Navigate to={fallbackTo} replace />;
   }
-
   // Not a team member or inactive (admins bypass this check completely)
   if (!isAdmin && (!teamMember || teamMember.status !== "active")) {
     return (
@@ -138,7 +123,6 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
       </div>
     );
   }
-
   // Check if user's team role is allowed (admins bypass this check completely)
   if (!isAdmin && teamMember && !allowedTeamRoles.includes(teamMember.role)) {
     return (
@@ -161,7 +145,6 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
       </div>
     );
   }
-
   // Access granted, render the protected content
   return <>{children}</>;
 };

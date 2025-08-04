@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-
 // Types for our football application state
 export interface User {
   id: string;
@@ -10,7 +9,6 @@ export interface User {
   avatar?: string;
   teamIds: string[];
 }
-
 export interface Team {
   id: string;
   name: string;
@@ -22,7 +20,6 @@ export interface Team {
   players: string[];
   settings: TeamSettings;
 }
-
 export interface TeamSettings {
   theme: "light" | "dark";
   primaryColor: string;
@@ -31,7 +28,6 @@ export interface TeamSettings {
   enableAI: boolean;
   enableRealTime: boolean;
 }
-
 export interface Player {
   id: string;
   name: string;
@@ -43,14 +39,12 @@ export interface Player {
   parentEmails: string[];
   stats: PlayerStats;
 }
-
 export interface PlayerStats {
   gamesPlayed: number;
   touchdowns: number;
   yards: number;
   tackles: number;
 }
-
 export interface Notification {
   id: string;
   type: "success" | "error" | "warning" | "info";
@@ -59,49 +53,40 @@ export interface Notification {
   timestamp: Date;
   read: boolean;
 }
-
 // Global Application State
 interface AppState {
   // Authentication
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-
   // Current Context
   currentTeamId: string | null;
   currentTeam: Team | null;
-
   // Teams & Players
   teams: Team[];
   players: Record<string, Player>;
-
   // UI State
   theme: "light" | "dark";
   sidebarOpen: boolean;
   notifications: Notification[];
-
   // Error Handling
   error: string | null;
 }
-
 interface AppActions {
   // Authentication actions
   setUser: (user: User | null) => void;
   setAuthenticated: (authenticated: boolean) => void;
   setLoading: (loading: boolean) => void;
   logout: () => void;
-
   // Team management
   setCurrentTeam: (teamId: string | null) => void;
   addTeam: (team: Team) => void;
   updateTeam: (teamId: string, updates: Partial<Team>) => void;
   removeTeam: (teamId: string) => void;
-
   // Player management
   addPlayer: (player: Player) => void;
   updatePlayer: (playerId: string, updates: Partial<Player>) => void;
   removePlayer: (playerId: string) => void;
-
   // UI actions
   setTheme: (theme: "light" | "dark") => void;
   toggleSidebar: () => void;
@@ -109,14 +94,11 @@ interface AppActions {
     notification: Pick<Notification, "type" | "title" | "message">
   ) => void;
   removeNotification: (id: string) => void;
-
   // Error handling
   setError: (error: string | null) => void;
   clearError: () => void;
 }
-
 type AppStore = AppState & AppActions;
-
 // Create the Zustand store with devtools for debugging
 export const useAppStore = create<AppStore>()(
   devtools(
@@ -133,7 +115,6 @@ export const useAppStore = create<AppStore>()(
       sidebarOpen: false,
       notifications: [],
       error: null,
-
       // Authentication actions
       setUser: (user) => set({ user }, false, "setUser"),
       setAuthenticated: (isAuthenticated) =>
@@ -150,7 +131,6 @@ export const useAppStore = create<AppStore>()(
           false,
           "logout"
         ),
-
       // Team management
       setCurrentTeam: (teamId) => {
         const teams = get().teams;
@@ -159,7 +139,6 @@ export const useAppStore = create<AppStore>()(
           : null;
         set({ currentTeamId: teamId, currentTeam }, false, "setCurrentTeam");
       },
-
       addTeam: (team) =>
         set(
           (state) => ({
@@ -168,7 +147,6 @@ export const useAppStore = create<AppStore>()(
           false,
           "addTeam"
         ),
-
       updateTeam: (teamId, updates) =>
         set(
           (state) => ({
@@ -179,7 +157,6 @@ export const useAppStore = create<AppStore>()(
           false,
           "updateTeam"
         ),
-
       removeTeam: (teamId) =>
         set(
           (state) => ({
@@ -192,7 +169,6 @@ export const useAppStore = create<AppStore>()(
           false,
           "removeTeam"
         ),
-
       // Player management
       addPlayer: (player) =>
         set(
@@ -202,7 +178,6 @@ export const useAppStore = create<AppStore>()(
           false,
           "addPlayer"
         ),
-
       updatePlayer: (playerId, updates) =>
         set(
           (state) => ({
@@ -214,7 +189,6 @@ export const useAppStore = create<AppStore>()(
           false,
           "updatePlayer"
         ),
-
       removePlayer: (playerId) =>
         set(
           (state) => {
@@ -224,7 +198,6 @@ export const useAppStore = create<AppStore>()(
           false,
           "removePlayer"
         ),
-
       // UI actions
       setTheme: (theme) => set({ theme }, false, "setTheme"),
       toggleSidebar: () =>
@@ -233,7 +206,6 @@ export const useAppStore = create<AppStore>()(
           false,
           "toggleSidebar"
         ),
-
       addNotification: (notification) =>
         set(
           (state) => ({
@@ -250,7 +222,6 @@ export const useAppStore = create<AppStore>()(
           false,
           "addNotification"
         ),
-
       removeNotification: (id) =>
         set(
           (state) => ({
@@ -259,7 +230,6 @@ export const useAppStore = create<AppStore>()(
           false,
           "removeNotification"
         ),
-
       // Error handling
       setError: (error) => set({ error }, false, "setError"),
       clearError: () => set({ error: null }, false, "clearError"),
@@ -267,7 +237,6 @@ export const useAppStore = create<AppStore>()(
     { name: "boxcall-store" }
   )
 );
-
 // Simple selectors that don't create new objects
 export const useAuth = () => {
   const user = useAppStore((state) => state.user);
@@ -277,7 +246,6 @@ export const useAuth = () => {
   const setAuthenticated = useAppStore((state) => state.setAuthenticated);
   const setLoading = useAppStore((state) => state.setLoading);
   const logout = useAppStore((state) => state.logout);
-
   return {
     user,
     isAuthenticated,
@@ -288,10 +256,8 @@ export const useAuth = () => {
     logout,
   };
 };
-
 export const useTeams = () => useAppStore((state) => state.teams);
 export const usePlayers = () => useAppStore((state) => state.players);
-
 export const useUI = () => {
   const theme = useAppStore((state) => state.theme);
   const sidebarOpen = useAppStore((state) => state.sidebarOpen);
@@ -300,7 +266,6 @@ export const useUI = () => {
   const toggleSidebar = useAppStore((state) => state.toggleSidebar);
   const addNotification = useAppStore((state) => state.addNotification);
   const removeNotification = useAppStore((state) => state.removeNotification);
-
   return {
     theme,
     sidebarOpen,
@@ -311,11 +276,9 @@ export const useUI = () => {
     removeNotification,
   };
 };
-
 export const useError = () => {
   const error = useAppStore((state) => state.error);
   const setError = useAppStore((state) => state.setError);
   const clearError = useAppStore((state) => state.clearError);
-
   return { error, setError, clearError };
 };

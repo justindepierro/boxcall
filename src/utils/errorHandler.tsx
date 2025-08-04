@@ -1,20 +1,16 @@
 import { useCallback } from "react";
 import { useUI } from "../app/store";
-
 /**
  * Error handler hook for consistent error handling across the application
  */
 export function useErrorHandler() {
   const { addNotification } = useUI();
-
   const handleError = useCallback(
     (error: Error | string, context?: string) => {
       const errorMessage = typeof error === "string" ? error : error.message;
       const title = context ? `Error in ${context}` : "Application Error";
-
       // Log error to console for debugging
       console.error("Error handled:", { error, context });
-
       // Add error notification to the UI
       addNotification({
         type: "error",
@@ -24,13 +20,10 @@ export function useErrorHandler() {
     },
     [addNotification]
   );
-
   const handleWarning = useCallback(
     (warning: string, context?: string) => {
       const title = context ? `Warning in ${context}` : "Warning";
-
       console.warn("Warning handled:", { warning, context });
-
       addNotification({
         type: "warning",
         title,
@@ -39,11 +32,9 @@ export function useErrorHandler() {
     },
     [addNotification]
   );
-
   const handleSuccess = useCallback(
     (message: string, context?: string) => {
       const title = context ? `Success in ${context}` : "Success";
-
       addNotification({
         type: "success",
         title,
@@ -52,7 +43,6 @@ export function useErrorHandler() {
     },
     [addNotification]
   );
-
   return {
     handleError,
     handleWarning,

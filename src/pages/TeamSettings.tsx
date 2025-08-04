@@ -1,7 +1,6 @@
 import React from "react";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
-
 /**
  * TeamSettings - Team configuration and management
  * Available to coaches and managers only
@@ -28,7 +27,6 @@ export const TeamSettings: React.FC = () => {
             Configure your team's profile, members, and preferences
           </Typography>
         </div>
-
         {/* Coming Soon Card */}
         <Card className="text-center py-12">
           <div className="text-6xl mb-4">⚙️</div>
@@ -57,5 +55,4 @@ export const TeamSettings: React.FC = () => {
     </div>
   );
 };
-
 export default TeamSettings;

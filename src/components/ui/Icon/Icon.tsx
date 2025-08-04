@@ -6,7 +6,6 @@
  *
  * Design Philosophy: "Carhartt Reliability" - functional, clear, dependable icons
  */
-
 import React from "react";
 import {
   // Navigation & Layout
@@ -27,7 +26,6 @@ import {
   List,
   MoreHorizontal,
   MoreVertical,
-
   // Practice & Planning
   Calendar,
   Clock,
@@ -45,7 +43,6 @@ import {
   CalendarClock,
   CalendarPlus,
   CalendarX,
-
   // Actions & Controls
   Plus,
   Minus,
@@ -65,7 +62,6 @@ import {
   Redo,
   RefreshCw,
   Power,
-
   // Communication & Data
   MessageSquare,
   Phone,
@@ -86,7 +82,6 @@ import {
   Hash,
   Link,
   Paperclip,
-
   // Sports Specific
   Target,
   Flag,
@@ -108,7 +103,6 @@ import {
   Eye,
   EyeOff,
   Crosshair,
-
   // Business & Team Management
   UserPlus,
   UserMinus,
@@ -118,7 +112,6 @@ import {
   Globe,
   WifiOff,
   Users as Team,
-
   // Content & Media
   Image,
   Video,
@@ -133,7 +126,6 @@ import {
   FileVideo,
   Headphones,
   Speaker,
-
   // Weather & Environment
   Cloud,
   CloudRain,
@@ -144,7 +136,6 @@ import {
   Sunrise,
   Sunset,
   CloudLightning,
-
   // Health & Medical
   Heart,
   Activity as Heartbeat,
@@ -154,7 +145,6 @@ import {
   Cross,
   Shield as Protection,
   Zap as Energy,
-
   // Food & Nutrition
   Coffee,
   Pizza,
@@ -168,7 +158,6 @@ import {
   Soup,
   Wine,
   Beer,
-
   // Transportation
   Car,
   Truck,
@@ -182,7 +171,6 @@ import {
   Compass,
   Route,
   Map,
-
   // Technology
   Smartphone,
   Laptop,
@@ -196,7 +184,6 @@ import {
   BatteryLow,
   Cpu,
   HardDrive,
-
   // Shopping & Commerce
   ShoppingCart,
   ShoppingBag,
@@ -208,7 +195,6 @@ import {
   Tag,
   Gift,
   Store,
-
   // Time & Calendar Extended
   AlarmClock,
   Hourglass,
@@ -216,7 +202,6 @@ import {
   CalendarCheck,
   CalendarHeart,
   CalendarRange,
-
   // Documents & Files Extended
   Files,
   FilePlus,
@@ -227,7 +212,6 @@ import {
   FileSearch,
   FolderPlus,
   FolderMinus,
-
   // Social & Communication Extended
   ThumbsUp,
   ThumbsDown,
@@ -239,7 +223,6 @@ import {
   Bell,
   BellOff,
   BellRing,
-
   // Games & Entertainment
   Gamepad2 as Gamepad,
   Dice1,
@@ -252,7 +235,6 @@ import {
   PartyPopper,
   Clapperboard as Clapper,
   Theater,
-
   // Nature & Animals
   Flower2 as Flower,
   Leaf,
@@ -265,7 +247,6 @@ import {
   Turtle,
   Snail,
   Feather,
-
   // Tools & Equipment Extended
   Wrench,
   Hammer,
@@ -277,7 +258,6 @@ import {
   Pen,
   Pencil,
   Eraser,
-
   // Security & Safety
   Key,
   ShieldCheck,
@@ -286,7 +266,6 @@ import {
   Fingerprint,
   Scan,
   QrCode,
-
   // Math & Science
   Calculator,
   Beaker,
@@ -297,7 +276,6 @@ import {
   Magnet,
   Flashlight,
   Lightbulb as Bulb,
-
   // Charts & Analytics Extended
   BarChart,
   LineChart,
@@ -310,7 +288,6 @@ import {
   Code,
   Terminal,
   Bug as BugIcon,
-
   // Emotions & Reactions
   Smile,
   Frown,
@@ -320,7 +297,6 @@ import {
   Heart as Love,
   HeartCrack as HeartBroken,
   ThumbsUp as Like,
-
   // Alerts & Notifications
   AlertTriangle,
   AlertOctagon,
@@ -330,7 +306,6 @@ import {
   HelpCircle,
   MinusCircle,
   PlusCircle,
-
   // Movement & Direction Extended
   MoveUp,
   MoveDown,
@@ -343,16 +318,13 @@ import {
   ChevronsDown,
   ChevronsLeft,
   ChevronsRight,
-
   // PDF & Export
   FileDown,
   Printer,
   Share as ShareIcon,
-
   // Theme Icons
   Sun as SunIcon,
   Moon as MoonIcon,
-
   // Miscellaneous Popular Icons
   Sparkles,
   Rainbow,
@@ -372,7 +344,6 @@ import {
   Handshake,
   Settings as Cog,
 } from "lucide-react";
-
 // Icon name mapping for easy usage - Expanded to 100+ icons
 const iconMap = {
   // Navigation & Layout
@@ -404,7 +375,6 @@ const iconMap = {
   list: List,
   "more-horizontal": MoreHorizontal,
   "more-vertical": MoreVertical,
-
   // Practice & Planning
   calendar: Calendar,
   "calendar-days": CalendarDays,
@@ -430,7 +400,6 @@ const iconMap = {
   "user-check": UserCheck,
   "user-plus": UserPlus,
   "user-minus": UserMinus,
-
   // Actions & Controls
   plus: Plus,
   "plus-circle": PlusCircle,
@@ -459,7 +428,6 @@ const iconMap = {
   redo: Redo,
   refresh: RefreshCw,
   power: Power,
-
   // Communication & Data
   message: MessageSquare,
   "message-circle": MessageCircle,
@@ -491,7 +459,6 @@ const iconMap = {
   "sort-asc": SortAsc,
   "sort-desc": SortDesc,
   book: Book,
-
   // Sports Specific
   target: Target,
   flag: Flag,
@@ -517,7 +484,6 @@ const iconMap = {
   route: Route,
   map: Map,
   navigation: Navigation,
-
   // Team Management
   team: Team,
   briefcase: Briefcase,
@@ -526,7 +492,6 @@ const iconMap = {
   globe: Globe,
   wifi: WifiIcon,
   "wifi-off": WifiOff,
-
   // Content & Media
   image: Image,
   video: Video,
@@ -539,7 +504,6 @@ const iconMap = {
   film: Film,
   headphones: Headphones,
   speaker: Speaker,
-
   // Weather & Environment
   sun: SunIcon,
   moon: MoonIcon,
@@ -552,7 +516,6 @@ const iconMap = {
   umbrella: Umbrella,
   sunrise: Sunrise,
   sunset: Sunset,
-
   // Health & Medical
   heart: Heart,
   love: Love,
@@ -564,7 +527,6 @@ const iconMap = {
   cross: Cross,
   protection: Protection,
   energy: Energy,
-
   // Food & Nutrition
   coffee: Coffee,
   pizza: Pizza,
@@ -578,7 +540,6 @@ const iconMap = {
   soup: Soup,
   wine: Wine,
   beer: Beer,
-
   // Transportation
   car: Car,
   truck: Truck,
@@ -588,7 +549,6 @@ const iconMap = {
   ship: Ship,
   bicycle: Bicycle,
   fuel: Fuel,
-
   // Technology
   smartphone: Smartphone,
   laptop: Laptop,
@@ -601,7 +561,6 @@ const iconMap = {
   "battery-low": BatteryLow,
   cpu: Cpu,
   "hard-drive": HardDrive,
-
   // Shopping & Commerce
   "shopping-cart": ShoppingCart,
   "shopping-bag": ShoppingBag,
@@ -613,7 +572,6 @@ const iconMap = {
   tag: Tag,
   gift: Gift,
   store: Store,
-
   // Social & Communication
   "thumbs-up": ThumbsUp,
   like: Like,
@@ -625,7 +583,6 @@ const iconMap = {
   bell: Bell,
   "bell-off": BellOff,
   "bell-ring": BellRing,
-
   // Games & Entertainment
   gamepad: Gamepad,
   "dice-1": Dice1,
@@ -638,7 +595,6 @@ const iconMap = {
   "party-popper": PartyPopper,
   clapper: Clapper,
   theater: Theater,
-
   // Nature & Animals
   flower: Flower,
   leaf: Leaf,
@@ -651,7 +607,6 @@ const iconMap = {
   turtle: Turtle,
   snail: Snail,
   feather: Feather,
-
   // Tools & Equipment
   wrench: Wrench,
   hammer: Hammer,
@@ -664,7 +619,6 @@ const iconMap = {
   pencil: Pencil,
   eraser: Eraser,
   cog: Cog,
-
   // Security & Safety
   lock: Lock,
   unlock: Unlock,
@@ -676,7 +630,6 @@ const iconMap = {
   fingerprint: Fingerprint,
   scan: Scan,
   "qr-code": QrCode,
-
   // Math & Science
   calculator: Calculator,
   beaker: Beaker,
@@ -692,7 +645,6 @@ const iconMap = {
   lightning: Zap,
   eye: Eye,
   "eye-off": EyeOff,
-
   // Charts & Analytics
   database: Database,
   chart: BarChart,
@@ -704,19 +656,16 @@ const iconMap = {
   code: Code,
   terminal: Terminal,
   "bug-icon": BugIcon,
-
   // Emotions & Reactions
   smile: Smile,
   frown: Frown,
   meh: Meh,
   laugh: Laugh,
   angry: Angry,
-
   // PDF & Export
   pdf: FileDown,
   print: Printer,
   export: ShareIcon,
-
   // Miscellaneous Popular Icons
   sparkles: Sparkles,
   rainbow: Rainbow,
@@ -730,13 +679,10 @@ const iconMap = {
   waves: Waves,
   mountain: Mountain,
   handshake: Handshake,
-
   // BoxCall Specific
   boxcall: Target, // Use target as BoxCall brand icon
 } as const;
-
 export type IconName = keyof typeof iconMap;
-
 /**
  * SmartIconSystem - Intelligent Icon Selection
  *
@@ -753,7 +699,6 @@ export class SmartIconSystem {
     trophy: ["trophy", "crown", "award"],
     winner: ["crown", "trophy", "star"],
     champion: ["crown", "trophy", "medal"],
-
     // Team & People patterns
     team: ["team", "users", "user-plus", "briefcase"],
     player: ["user", "user-check", "star"],
@@ -761,7 +706,6 @@ export class SmartIconSystem {
     captain: ["crown", "user", "star"],
     roster: ["users", "list", "file"],
     member: ["user", "user-plus", "team"],
-
     // Calendar & Time patterns
     schedule: ["calendar", "clock", "calendar-clock"],
     event: ["calendar", "calendar-plus", "clock"],
@@ -771,7 +715,6 @@ export class SmartIconSystem {
     deadline: ["calendar-x", "clock", "alert"],
     time: ["clock", "timer", "watch"],
     date: ["calendar", "calendar-days"],
-
     // Communication patterns
     message: ["message", "message-circle", "mail"],
     chat: ["message-circle", "comment", "users"],
@@ -779,7 +722,6 @@ export class SmartIconSystem {
     announcement: ["bell", "bell-ring", "message"],
     email: ["mail", "send", "message"],
     call: ["phone", "mic", "users"],
-
     // Sports & Activities patterns
     football: ["target", "activity", "trophy"],
     sport: ["activity", "target", "trophy"],
@@ -788,7 +730,6 @@ export class SmartIconSystem {
     drill: ["target", "crosshair", "activity"],
     play: ["play", "activity", "target"],
     strategy: ["target", "route", "compass"],
-
     // Performance & Analytics patterns
     stats: ["chart", "bar-chart", "analytics"],
     performance: ["trending-up", "chart", "activity"],
@@ -796,7 +737,6 @@ export class SmartIconSystem {
     analytics: ["analytics", "chart", "database"],
     report: ["file", "chart", "bar-chart"],
     data: ["database", "chart", "analytics"],
-
     // Actions & Status patterns
     add: ["plus", "plus-circle", "user-plus"],
     create: ["plus", "edit", "file-plus"],
@@ -806,49 +746,40 @@ export class SmartIconSystem {
     export: ["export", "download", "share"],
     import: ["upload", "file-plus", "download"],
     share: ["share", "share-2", "link"],
-
     // Health & Medical patterns
     health: ["heart", "heartbeat", "activity"],
     medical: ["cross", "stethoscope", "pill"],
     injury: ["bandage", "cross", "alert"],
     fitness: ["heart", "activity", "trending-up"],
-
     // Weather & Environment patterns
     weather: ["cloud", "thermometer"],
     outdoor: ["sunrise", "mountain"],
     indoor: ["building", "home", "users"],
-
     // Technology patterns
     app: ["smartphone", "monitor", "grid"],
     software: ["monitor", "code", "cpu"],
     device: ["smartphone", "laptop", "tablet"],
     digital: ["monitor", "smartphone", "wifi"],
-
     // Security & Privacy patterns
     security: ["shield", "lock", "key"],
     private: ["lock", "shield", "eye-off"],
     public: ["globe", "eye", "share"],
     password: ["key", "lock", "shield"],
-
     // Food & Nutrition patterns
     food: ["utensils", "apple", "chef-hat"],
     meal: ["utensils", "pizza", "coffee"],
     nutrition: ["apple", "heart", "utensils"],
-
     // Transportation patterns
     travel: ["plane", "car", "map"],
     location: ["location", "map", "navigation"],
-
     // Emotions & Reactions patterns
     happy: ["smile", "laugh", "thumbs-up"],
     sad: ["frown", "heart-broken"],
     excited: ["party-popper", "fire", "sparkles"],
     angry: ["angry", "alert", "x-circle"],
-
     // Default fallbacks for common words
     default: ["star", "info", "info-circle"],
   };
-
   /**
    * Analyzes text content and returns the most appropriate icon
    */
@@ -856,16 +787,13 @@ export class SmartIconSystem {
     if (!content || typeof content !== "string") {
       return fallback;
     }
-
     const normalizedContent = content.toLowerCase().trim();
-
     // Direct matches first (highest priority)
     for (const [pattern, icons] of Object.entries(this.contentPatterns)) {
       if (normalizedContent.includes(pattern)) {
         return icons[0]; // Return the primary icon for this pattern
       }
     }
-
     // Word boundary matches (medium priority)
     const words = normalizedContent.split(/\s+/);
     for (const word of words) {
@@ -875,7 +803,6 @@ export class SmartIconSystem {
         }
       }
     }
-
     // Partial matches (lower priority)
     for (const word of words) {
       for (const [pattern, icons] of Object.entries(this.contentPatterns)) {
@@ -884,10 +811,8 @@ export class SmartIconSystem {
         }
       }
     }
-
     return fallback;
   }
-
   /**
    * Gets multiple icon suggestions for content
    */
@@ -898,22 +823,18 @@ export class SmartIconSystem {
     if (!content || typeof content !== "string") {
       return ["star", "info", "info-circle"];
     }
-
     const normalizedContent = content.toLowerCase().trim();
     const suggestions: IconName[] = [];
-
     // Collect all matching patterns
     for (const [pattern, icons] of Object.entries(this.contentPatterns)) {
       if (normalizedContent.includes(pattern)) {
         suggestions.push(...icons.slice(0, 2)); // Take top 2 from each pattern
       }
     }
-
     // Remove duplicates and limit results
     const uniqueSuggestions = [...new Set(suggestions)];
     return uniqueSuggestions.slice(0, maxSuggestions);
   }
-
   /**
    * Contextual icon selection for specific components
    */
@@ -936,9 +857,7 @@ export class SmartIconSystem {
       team: "users",
       general: fallback,
     };
-
     const smartIcon = this.getSmartIcon(content, contextualFallbacks[context]);
-
     // Context-specific overrides
     if (
       context === "achievement" &&
@@ -947,18 +866,15 @@ export class SmartIconSystem {
       const achievementIcons = this.contentPatterns.achievement || ["trophy"];
       return achievementIcons[0];
     }
-
     if (
       context === "calendar" &&
       !["calendar", "clock", "timer"].includes(smartIcon)
     ) {
       return "calendar";
     }
-
     return smartIcon;
   }
 }
-
 interface IconProps {
   name: IconName;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "touch" | number;
@@ -974,7 +890,6 @@ interface IconProps {
     | "info";
   strokeWidth?: number;
 }
-
 const sizeMap = {
   xs: 12, // Tight UI elements
   sm: 16, // Default small buttons
@@ -985,7 +900,6 @@ const sizeMap = {
   "3xl": 48, // Extra large for accessibility
   touch: 44, // Minimum touch target (44px recommended)
 };
-
 const colorMap = {
   current: "currentColor",
   jade: "#047857",
@@ -996,7 +910,6 @@ const colorMap = {
   error: "#DC2626",
   info: "#0369A1",
 };
-
 export const Icon: React.FC<IconProps> = ({
   name,
   size = "md",
@@ -1007,12 +920,10 @@ export const Icon: React.FC<IconProps> = ({
   const IconComponent = iconMap[name];
   const iconSize = typeof size === "number" ? size : sizeMap[size];
   const iconColor = colorMap[color];
-
   if (!IconComponent) {
     console.warn(`Icon "${name}" not found`);
     return null;
   }
-
   return (
     <IconComponent
       size={iconSize}
@@ -1022,7 +933,6 @@ export const Icon: React.FC<IconProps> = ({
     />
   );
 };
-
 // Convenience components for common use cases
 export const PlayIcon = () => <Icon name="play" color="jade" />;
 export const PauseIcon = () => <Icon name="pause" color="slate" />;
@@ -1034,7 +944,6 @@ export const CalendarIcon = () => <Icon name="calendar" color="navy" />;
 export const ClockIcon = () => <Icon name="clock" color="slate" />;
 export const TeamIcon = () => <Icon name="team" color="navy" />;
 export const SettingsIcon = () => <Icon name="settings" color="slate" />;
-
 // Coach-friendly accessibility components
 export const CoachActionIcon = ({
   name,
@@ -1043,7 +952,6 @@ export const CoachActionIcon = ({
   name: IconName;
   color?: IconProps["color"];
 }) => <Icon name={name} size="lg" color={color} />;
-
 export const HeaderIcon = ({
   name,
   color = "navy",
@@ -1051,7 +959,6 @@ export const HeaderIcon = ({
   name: IconName;
   color?: IconProps["color"];
 }) => <Icon name={name} size="xl" color={color} />;
-
 export const TouchTargetIcon = ({
   name,
   color = "current",
@@ -1059,7 +966,6 @@ export const TouchTargetIcon = ({
   name: IconName;
   color?: IconProps["color"];
 }) => <Icon name={name} size="touch" color={color} />;
-
 // Quick access for common coach actions
 export const CoachEditIcon = () => (
   <CoachActionIcon name="edit" color="slate" />
@@ -1071,5 +977,4 @@ export const CoachPDFIcon = () => <CoachActionIcon name="pdf" color="jade" />;
 export const CoachCloseIcon = () => (
   <TouchTargetIcon name="close" color="slate" />
 );
-
 export default Icon;

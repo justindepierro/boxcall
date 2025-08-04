@@ -16,13 +16,11 @@
  *   event={event}
  * />
  */
-
 import React from "react";
 import { Typography } from "../../design-system";
 import { getCategoryColor, formatDuration } from "../utils";
 import type { TimeSummaryProps, PracticeBlock } from "../types";
 import Icon from "../../ui/Icon/Icon";
-
 export const TimeSummary: React.FC<TimeSummaryProps> = ({
   scheduledDuration,
   totalDuration,
@@ -38,15 +36,12 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
     },
     {} as Record<string, number>
   );
-
   const progressPercentage =
     scheduledDuration > 0
       ? Math.min((totalDuration / scheduledDuration) * 100, 100)
       : 0;
-
   const isOverScheduled = totalDuration > scheduledDuration;
   const remainingTime = scheduledDuration - totalDuration;
-
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
       <div className="flex items-center gap-2 mb-3">
@@ -55,7 +50,6 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
           Practice Duration Summary
         </Typography>
       </div>
-
       {/* Time Overview */}
       <div className="grid grid-cols-3 gap-4 mb-4">
         <div className="text-center">
@@ -89,7 +83,6 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
           </Typography>
         </div>
       </div>
-
       {/* Progress Bar */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
@@ -113,7 +106,6 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
           />
         </div>
       </div>
-
       {/* Category Breakdown */}
       {Object.keys(categoryTotals).length > 0 && (
         <div>
@@ -135,7 +127,6 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
           </div>
         </div>
       )}
-
       {/* Event Details */}
       <div className="mt-4 pt-4 border-t border-gray-100">
         <Typography variant="body-sm" color="muted">

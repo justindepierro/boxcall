@@ -39,7 +39,6 @@ export interface CSVPlayData {
   diagramPath: string;
   conf: string; // Confidence
 }
-
 // Mapping configuration for CSV import
 export interface CSVColumnMapping {
   csvColumn: string;
@@ -47,7 +46,6 @@ export interface CSVColumnMapping {
   transform?: (value: string) => string | number | boolean;
   required?: boolean;
 }
-
 // Default mapping based on CSV structure
 export const DEFAULT_CSV_MAPPING: CSVColumnMapping[] = [
   { csvColumn: "personnel", dbField: "personnel" },
@@ -84,7 +82,6 @@ export const DEFAULT_CSV_MAPPING: CSVColumnMapping[] = [
   { csvColumn: "diagramPath", dbField: "diagram_url" },
   { csvColumn: "conf", dbField: "confidence_base", transform: parseFloat },
 ];
-
 // Transform functions for CSV data
 function mapPlayType(value: string): "Pass" | "Run" | "RPO" {
   const normalized = value.toLowerCase().trim();
@@ -98,14 +95,12 @@ function mapPlayType(value: string): "Pass" | "Run" | "RPO" {
   if (normalized.includes("rpo")) return "RPO";
   return "Pass"; // Default fallback
 }
-
 // CSV import validation rules
 export interface CSVValidationRule {
   field: string;
   validate: (value: unknown) => boolean;
   message: string;
 }
-
 export const CSV_VALIDATION_RULES: CSVValidationRule[] = [
   {
     field: "play_name",
@@ -130,7 +125,6 @@ export const CSV_VALIDATION_RULES: CSVValidationRule[] = [
     message: "Confidence must be a number between 0 and 100",
   },
 ];
-
 // Import result tracking
 export interface CSVImportResult {
   totalRows: number;
@@ -139,14 +133,12 @@ export interface CSVImportResult {
   errors: CSVImportError[];
   warnings: CSVImportWarning[];
 }
-
 export interface CSVImportError {
   row: number;
   field?: string;
   message: string;
   data?: Record<string, unknown>;
 }
-
 export interface CSVImportWarning {
   row: number;
   field?: string;

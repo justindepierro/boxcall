@@ -2,12 +2,10 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "../design-system";
 import { Button } from "../ui";
-
 interface TeamQuickActionsProps {
   teamId: string;
   userRole: string;
 }
-
 /**
  * Team Quick Actions - Role-based team management shortcuts
  *
@@ -22,11 +20,9 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
   userRole,
 }) => {
   const navigate = useNavigate();
-
   const isCoach = userRole === "coach" || userRole === "head_coach";
   const isPlayer = userRole === "player";
   const isFamily = userRole === "family";
-
   if (isCoach) {
     return (
       <div className="space-y-3">
@@ -39,7 +35,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           <span className="mr-2">📢</span>
           Send Announcement
         </Button>
-
         <Button
           variant="outline"
           size="sm"
@@ -49,7 +44,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           <span className="mr-2">⭐</span>
           Award Helmet Stickers
         </Button>
-
         <Button
           variant="outline"
           size="sm"
@@ -59,7 +53,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           <span className="mr-2">🏈</span>
           Practice Schedule
         </Button>
-
         <Button
           variant="outline"
           size="sm"
@@ -69,7 +62,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           <span className="mr-2">🎬</span>
           Upload Game Film
         </Button>
-
         <Button
           variant="outline"
           size="sm"
@@ -79,7 +71,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           <span className="mr-2">👥</span>
           Manage Roster
         </Button>
-
         <Button
           variant="ghost"
           size="sm"
@@ -92,7 +83,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
       </div>
     );
   }
-
   if (isPlayer) {
     return (
       <div className="space-y-3">
@@ -105,7 +95,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           <span className="mr-2">📊</span>
           My Team Stats
         </Button>
-
         <Button
           variant="outline"
           size="sm"
@@ -115,7 +104,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           <span className="mr-2">📋</span>
           Study Team Plays
         </Button>
-
         <Button
           variant="outline"
           size="sm"
@@ -125,7 +113,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           <span className="mr-2">✅</span>
           RSVP to Events
         </Button>
-
         <Button
           variant="ghost"
           size="sm"
@@ -138,7 +125,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
       </div>
     );
   }
-
   if (isFamily) {
     return (
       <div className="space-y-3">
@@ -151,7 +137,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           <span className="mr-2">📈</span>
           Player Progress
         </Button>
-
         <Button
           variant="outline"
           size="sm"
@@ -161,7 +146,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           <span className="mr-2">✅</span>
           RSVP to Events
         </Button>
-
         <Button
           variant="outline"
           size="sm"
@@ -171,7 +155,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           <span className="mr-2">💬</span>
           Message Coach
         </Button>
-
         <Button
           variant="ghost"
           size="sm"
@@ -184,7 +167,6 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
       </div>
     );
   }
-
   return (
     <div className="text-center py-4">
       <Typography variant="body-sm" color="muted">

@@ -3,14 +3,12 @@ import type { TeamPlayer, TeamPlayerInsert } from "../../types/team-management";
 import { FOOTBALL_POSITIONS, TEAM_LEVELS } from "../../types/team-management";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
-
 interface PlayerFormProps {
   player?: TeamPlayer | null;
   teamId: string;
   onSave: (player: TeamPlayer) => void;
   onCancel: () => void;
 }
-
 /**
  * PlayerForm Component
  *
@@ -37,10 +35,8 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
     graduation_year: undefined,
     team_level: "varsity",
   });
-
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
-
   // Load player data if editing
   useEffect(() => {
     if (player) {
@@ -50,7 +46,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
       });
     }
   }, [player, teamId]);
-
   // Handle input changes
   const handleInputChange = (
     field: keyof TeamPlayerInsert,
@@ -60,7 +55,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
       ...prev,
       [field]: value,
     }));
-
     // Clear error for this field
     if (errors[field]) {
       setErrors((prev) => ({
@@ -69,54 +63,43 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
       }));
     }
   };
-
   // Handle position selection
   const handlePositionToggle = (position: string) => {
     const currentPositions = formData.positions || [];
     const newPositions = currentPositions.includes(position)
       ? currentPositions.filter((p) => p !== position)
       : [...currentPositions, position];
-
     handleInputChange("positions", newPositions);
   };
-
   // Validate form
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
-
     if (!formData.first_name?.trim()) {
       newErrors.first_name = "First name is required";
     }
-
     if (!formData.last_name?.trim()) {
       newErrors.last_name = "Last name is required";
     }
-
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Please enter a valid email address";
     }
-
     if (
       formData.parent_email &&
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.parent_email)
     ) {
       newErrors.parent_email = "Please enter a valid parent email address";
     }
-
     if (!formData.positions || formData.positions.length === 0) {
       newErrors.positions = "Please select at least one position";
     }
-
     if (formData.jersey_number !== undefined) {
       if (formData.jersey_number < 0 || formData.jersey_number > 99) {
         newErrors.jersey_number = "Jersey number must be between 0 and 99";
       }
     }
-
     if (formData.weight !== undefined && formData.weight <= 0) {
       newErrors.weight = "Weight must be a positive number";
     }
-
     if (formData.graduation_year !== undefined) {
       const currentYear = new Date().getFullYear();
       if (
@@ -126,21 +109,16 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
         newErrors.graduation_year = `Graduation year must be between ${currentYear} and ${currentYear + 10}`;
       }
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) {
       return;
     }
-
     setSaving(true);
-
     try {
       const playerData: TeamPlayer = {
         id: player?.id || Date.now().toString(),
@@ -159,7 +137,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
         created_at: player?.created_at || new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
-
       onSave(playerData);
     } catch (error) {
       console.error("Error saving player:", error);
@@ -167,7 +144,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
       setSaving(false);
     }
   };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -177,7 +153,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             {player ? "Edit Player" : "Add New Player"}
           </h2>
         </div>
-
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Basic Information */}
@@ -185,7 +160,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
               Basic Information
             </h3>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -205,7 +179,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   </p>
                 )}
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Last Name *
@@ -224,7 +197,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   </p>
                 )}
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Email
@@ -239,7 +211,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   <p className="text-red-600 text-sm mt-1">{errors.email}</p>
                 )}
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Phone Number
@@ -251,7 +222,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   placeholder="(555) 123-4567"
                 />
               </div>
-
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Parent Email
@@ -272,13 +242,11 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
               </div>
             </div>
           </div>
-
           {/* Positions */}
           <div>
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
               Positions *
             </h3>
-
             <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
               {FOOTBALL_POSITIONS.map((position) => (
                 <button
@@ -295,18 +263,15 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 </button>
               ))}
             </div>
-
             {errors.positions && (
               <p className="text-red-600 text-sm mt-2">{errors.positions}</p>
             )}
           </div>
-
           {/* Physical Information */}
           <div>
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
               Physical Information
             </h3>
-
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -331,7 +296,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   </p>
                 )}
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Height
@@ -343,7 +307,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   placeholder="6'2&quot;"
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Weight (lbs)
@@ -364,7 +327,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   <p className="text-red-600 text-sm mt-1">{errors.weight}</p>
                 )}
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Graduation Year
@@ -390,13 +352,11 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
               </div>
             </div>
           </div>
-
           {/* Team Level */}
           <div>
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
               Team Level
             </h3>
-
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {TEAM_LEVELS.map((level) => (
                 <button
@@ -414,7 +374,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
               ))}
             </div>
           </div>
-
           {/* Actions */}
           <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
             <Button
@@ -425,7 +384,6 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             >
               Cancel
             </Button>
-
             <Button
               type="submit"
               variant="primary"

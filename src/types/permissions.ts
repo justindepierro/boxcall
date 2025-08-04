@@ -4,7 +4,6 @@
  * Defines the hierarchical access control system for BoxCall.
  * Handles both app-level subscriptions and team-level roles.
  */
-
 // App-Level User Types (Subscription-based)
 export type AppUserType =
   | "super_admin" // Full system access (developers)
@@ -13,7 +12,6 @@ export type AppUserType =
   | "coach" // $9.99 one-time + playbook tools
   | "player" // Free tier
   | "family"; // Free tier with limited access
-
 // Team-Level Roles (Within a specific team)
 export type TeamRole =
   | "head_coach" // Team owner, full team control
@@ -21,14 +19,12 @@ export type TeamRole =
   | "manager" // Limited admin (stats, scheduling, practice)
   | "player" // Team members
   | "family"; // Parent/guardian view
-
 // Subscription Tiers
 export type SubscriptionTier =
   | "free" // Players, Family
   | "coach_tools" // $9.99 - Playbook maker
   | "team_premium" // $199 - Head Coach with team
   | "staff_addon"; // $8 each (5 for $40) - Additional coaching staff
-
 // Permission Categories
 export type PermissionCategory =
   | "system_admin" // Super admin/Admin only
@@ -36,14 +32,12 @@ export type PermissionCategory =
   | "playbook_tools" // Coaches and above
   | "team_dashboard" // Team members
   | "family_view"; // Limited family access
-
 // Specific Permissions
 export type Permission =
   // System Administration
   | "system.full_access"
   | "system.user_management"
   | "system.team_oversight"
-
   // Team Management (Head Coach)
   | "team.create"
   | "team.delete"
@@ -52,32 +46,27 @@ export type Permission =
   | "team.invite_coaches"
   | "team.subscription_management"
   | "team.family_permissions"
-
   // Playbook & Strategy Tools
   | "playbook.create"
   | "playbook.edit"
   | "playbook.export_pdf"
   | "playbook.practice_mode"
   | "playbook.share_team"
-
   // Team Dashboard Access
   | "dashboard.view_team"
   | "dashboard.view_roster"
   | "dashboard.view_schedule"
   | "dashboard.view_playbooks"
-
   // Manager Permissions
   | "stats.live_game"
   | "practice.scripts"
   | "practice.mode"
   | "schedule.manage"
-
   // Family Permissions (Configurable by Head Coach)
   | "family.view_calendar"
   | "family.rsvp_events"
   | "family.fundraising"
   | "family.limited_dashboard";
-
 // Permission Matrix
 export interface PermissionMatrix {
   [key: string]: {
@@ -88,7 +77,6 @@ export interface PermissionMatrix {
     description: string;
   };
 }
-
 // Default Permission Mapping
 export const PERMISSION_MATRIX: PermissionMatrix = {
   // Super Admin - Full System Access
@@ -126,7 +114,6 @@ export const PERMISSION_MATRIX: PermissionMatrix = {
     ],
     description: "Full system access for developers",
   },
-
   // Admin - Testing/GM Access
   admin: {
     appUserType: "admin",
@@ -149,7 +136,6 @@ export const PERMISSION_MATRIX: PermissionMatrix = {
     ],
     description: "Testing access for additional developers and smart friends",
   },
-
   // Head Coach - Team Owner ($199 subscription)
   head_coach_team_owner: {
     appUserType: "head_coach",
@@ -178,7 +164,6 @@ export const PERMISSION_MATRIX: PermissionMatrix = {
     ],
     description: "Team owner with full team management and playbook tools",
   },
-
   // Coach - Staff Member (Staff addon or individual subscription)
   coach_team_staff: {
     appUserType: "coach",
@@ -200,7 +185,6 @@ export const PERMISSION_MATRIX: PermissionMatrix = {
     ],
     description: "Coaching staff with playbook and team access",
   },
-
   // Independent Coach - Playbook Tools Only ($9.99)
   coach_independent: {
     appUserType: "coach",
@@ -213,7 +197,6 @@ export const PERMISSION_MATRIX: PermissionMatrix = {
     ],
     description: "Independent coach with playbook maker tools",
   },
-
   // Manager - Team Helper
   manager: {
     appUserType: "player", // App-level is still player/free
@@ -230,7 +213,6 @@ export const PERMISSION_MATRIX: PermissionMatrix = {
     ],
     description: "Team manager with limited admin access",
   },
-
   // Player - Team Member
   player: {
     appUserType: "player",
@@ -244,7 +226,6 @@ export const PERMISSION_MATRIX: PermissionMatrix = {
     ],
     description: "Team player with dashboard access",
   },
-
   // Family - Parent/Guardian View
   family: {
     appUserType: "family",
@@ -259,7 +240,6 @@ export const PERMISSION_MATRIX: PermissionMatrix = {
     description: "Parent/guardian with limited team access",
   },
 };
-
 // Helper Functions
 export function hasPermission(
   userType: AppUserType,
@@ -269,7 +249,6 @@ export function hasPermission(
 ): boolean {
   // Super admin always has access
   if (userType === "super_admin") return true;
-
   // Find matching permission profile
   for (const profile of Object.values(PERMISSION_MATRIX)) {
     if (
@@ -280,10 +259,8 @@ export function hasPermission(
       return profile.permissions.includes(requiredPermission);
     }
   }
-
   return false;
 }
-
 export function getUserPermissions(
   userType: AppUserType,
   teamRole: TeamRole | undefined,
@@ -293,7 +270,6 @@ export function getUserPermissions(
   if (userType === "super_admin") {
     return PERMISSION_MATRIX.super_admin.permissions;
   }
-
   // Find matching permission profile
   for (const profile of Object.values(PERMISSION_MATRIX)) {
     if (
@@ -304,10 +280,8 @@ export function getUserPermissions(
       return profile.permissions;
     }
   }
-
   return [];
 }
-
 export function canAccessTeamFeature(
   userType: AppUserType,
   teamRole: TeamRole | undefined,

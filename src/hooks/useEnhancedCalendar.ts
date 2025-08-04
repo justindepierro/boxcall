@@ -1,6 +1,5 @@
 // Enhanced Calendar Hooks for Phase 2.3 Features
 // React hooks for polling, advanced RSVP, permissions, and bulk operations
-
 import { useCallback, useEffect, useState } from "react";
 import { enhancedCalendarService } from "../services/enhancedCalendarService";
 import type {
@@ -22,16 +21,13 @@ import type {
   PollResults,
   RSVPAnalytics,
 } from "../types/enhanced-calendar";
-
 // ============================================================================
 // EVENT POLLING HOOKS
 // ============================================================================
-
 export function useEventPolls(eventId: string) {
   const [polls, setPolls] = useState<EventPoll[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const fetchPolls = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -45,7 +41,6 @@ export function useEventPolls(eventId: string) {
       setLoading(false);
     }
   }, [eventId]);
-
   const createPoll = useCallback(
     async (pollData: Partial<EventPoll>) => {
       setLoading(true);
@@ -66,7 +61,6 @@ export function useEventPolls(eventId: string) {
     },
     [eventId]
   );
-
   const submitResponse = useCallback(
     async (
       pollId: string,
@@ -94,7 +88,6 @@ export function useEventPolls(eventId: string) {
     },
     []
   );
-
   const closePoll = useCallback(async (pollId: string) => {
     setLoading(true);
     setError(null);
@@ -112,13 +105,11 @@ export function useEventPolls(eventId: string) {
       setLoading(false);
     }
   }, []);
-
   useEffect(() => {
     if (eventId) {
       fetchPolls();
     }
   }, [eventId, fetchPolls]);
-
   return {
     polls,
     loading,
@@ -129,15 +120,12 @@ export function useEventPolls(eventId: string) {
     closePoll,
   };
 }
-
 export function usePollResults(pollId: string) {
   const [results, setResults] = useState<PollResults | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const fetchResults = useCallback(async () => {
     if (!pollId) return;
-
     setLoading(true);
     setError(null);
     try {
@@ -152,11 +140,9 @@ export function usePollResults(pollId: string) {
       setLoading(false);
     }
   }, [pollId]);
-
   useEffect(() => {
     fetchResults();
   }, [fetchResults]);
-
   return {
     results,
     loading,
@@ -164,16 +150,13 @@ export function usePollResults(pollId: string) {
     refetch: fetchResults,
   };
 }
-
 // ============================================================================
 // ADVANCED RSVP HOOKS
 // ============================================================================
-
 export function useAdvancedRSVP(eventId: string, userId: string) {
   const [rsvp, setRsvp] = useState<AdvancedRSVP | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const updateRSVP = useCallback(
     async (rsvpData: Partial<AdvancedRSVP>) => {
       setLoading(true);
@@ -195,7 +178,6 @@ export function useAdvancedRSVP(eventId: string, userId: string) {
     },
     [eventId, userId]
   );
-
   const sendReminder = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -208,7 +190,6 @@ export function useAdvancedRSVP(eventId: string, userId: string) {
       setLoading(false);
     }
   }, [eventId, userId]);
-
   return {
     rsvp,
     loading,
@@ -217,12 +198,10 @@ export function useAdvancedRSVP(eventId: string, userId: string) {
     sendReminder,
   };
 }
-
 export function useRSVPAnalytics(eventId: string) {
   const [analytics, setAnalytics] = useState<RSVPAnalytics | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const fetchAnalytics = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -238,7 +217,6 @@ export function useRSVPAnalytics(eventId: string) {
       setLoading(false);
     }
   }, [eventId]);
-
   const sendBulkReminders = useCallback(
     async (userIds?: string[]) => {
       setLoading(true);
@@ -257,7 +235,6 @@ export function useRSVPAnalytics(eventId: string) {
     },
     [eventId, fetchAnalytics]
   );
-
   const exportData = useCallback(
     async (format: "csv" | "excel" | "json") => {
       setLoading(true);
@@ -277,13 +254,11 @@ export function useRSVPAnalytics(eventId: string) {
     },
     [eventId]
   );
-
   useEffect(() => {
     if (eventId) {
       fetchAnalytics();
     }
   }, [eventId, fetchAnalytics]);
-
   return {
     analytics,
     loading,
@@ -293,18 +268,15 @@ export function useRSVPAnalytics(eventId: string) {
     exportData,
   };
 }
-
 // ============================================================================
 // PERMISSIONS HOOKS
 // ============================================================================
-
 export function useCalendarPermissions(userId: string, teamId: string) {
   const [permissions, setPermissions] = useState<CalendarPermissions | null>(
     null
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const fetchPermissions = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -323,7 +295,6 @@ export function useCalendarPermissions(userId: string, teamId: string) {
       setLoading(false);
     }
   }, [userId, teamId]);
-
   const updatePermissions = useCallback(
     async (role: CalendarRole, customPermissions?: CalendarPermission[]) => {
       setLoading(true);
@@ -349,7 +320,6 @@ export function useCalendarPermissions(userId: string, teamId: string) {
     },
     [userId, teamId]
   );
-
   const revokePermissions = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -368,13 +338,11 @@ export function useCalendarPermissions(userId: string, teamId: string) {
       setLoading(false);
     }
   }, [userId, teamId]);
-
   useEffect(() => {
     if (userId && teamId) {
       fetchPermissions();
     }
   }, [userId, teamId, fetchPermissions]);
-
   return {
     permissions,
     loading,
@@ -384,11 +352,9 @@ export function useCalendarPermissions(userId: string, teamId: string) {
     revokePermissions,
   };
 }
-
 export function usePermissionCheck() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const checkPermission = useCallback(
     async (check: PermissionCheck): Promise<PermissionResult> => {
       setLoading(true);
@@ -408,24 +374,20 @@ export function usePermissionCheck() {
     },
     []
   );
-
   return {
     loading,
     error,
     checkPermission,
   };
 }
-
 // ============================================================================
 // BULK OPERATIONS HOOKS
 // ============================================================================
-
 export function useBulkOperations(teamId: string) {
   const [operations, setOperations] = useState<BulkOperation[]>([]);
   const [templates, setTemplates] = useState<BulkOperationTemplate[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const fetchTemplates = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -443,7 +405,6 @@ export function useBulkOperations(teamId: string) {
       setLoading(false);
     }
   }, [teamId]);
-
   const executeBulkOperation = useCallback(
     async (
       type: BulkOperationType,
@@ -467,7 +428,6 @@ export function useBulkOperations(teamId: string) {
             successful_items: 0,
             failed_items: 0,
           });
-
         setOperations((prev) => [...prev, operation]);
         return operation;
       } catch (err) {
@@ -483,7 +443,6 @@ export function useBulkOperations(teamId: string) {
     },
     [teamId]
   );
-
   const getOperationStatus = useCallback(async (operationId: string) => {
     setLoading(true);
     setError(null);
@@ -507,7 +466,6 @@ export function useBulkOperations(teamId: string) {
       setLoading(false);
     }
   }, []);
-
   const cancelOperation = useCallback(async (operationId: string) => {
     setLoading(true);
     setError(null);
@@ -533,7 +491,6 @@ export function useBulkOperations(teamId: string) {
       setLoading(false);
     }
   }, []);
-
   const createTemplate = useCallback(
     async (
       template: Omit<BulkOperationTemplate, "id" | "created_at" | "usage_count">
@@ -558,13 +515,11 @@ export function useBulkOperations(teamId: string) {
     },
     []
   );
-
   useEffect(() => {
     if (teamId) {
       fetchTemplates();
     }
   }, [teamId, fetchTemplates]);
-
   return {
     operations,
     templates,
@@ -577,11 +532,9 @@ export function useBulkOperations(teamId: string) {
     createTemplate,
   };
 }
-
 // ============================================================================
 // ENHANCED CALENDAR HOOKS
 // ============================================================================
-
 export function useEnhancedCalendar(teamId?: string) {
   const [events, setEvents] = useState<EnhancedCalendarEvent[]>([]);
   const [systemConfig, setSystemConfig] = useState<CalendarSystemConfig | null>(
@@ -590,7 +543,6 @@ export function useEnhancedCalendar(teamId?: string) {
   const [webhooks, setWebhooks] = useState<CalendarWebhook[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const queryEvents = useCallback(async (query: EnhancedCalendarQuery) => {
     setLoading(true);
     setError(null);
@@ -604,7 +556,6 @@ export function useEnhancedCalendar(teamId?: string) {
       setLoading(false);
     }
   }, []);
-
   const fetchSystemConfig = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -619,10 +570,8 @@ export function useEnhancedCalendar(teamId?: string) {
       setLoading(false);
     }
   }, []);
-
   const fetchWebhooks = useCallback(async () => {
     if (!teamId) return;
-
     setLoading(true);
     setError(null);
     try {
@@ -635,7 +584,6 @@ export function useEnhancedCalendar(teamId?: string) {
       setLoading(false);
     }
   }, [teamId]);
-
   const createWebhook = useCallback(
     async (webhookData: Omit<CalendarWebhook, "id" | "created_at">) => {
       setLoading(true);
@@ -656,7 +604,6 @@ export function useEnhancedCalendar(teamId?: string) {
     },
     []
   );
-
   const deleteWebhook = useCallback(async (webhookId: string) => {
     setLoading(true);
     setError(null);
@@ -670,17 +617,14 @@ export function useEnhancedCalendar(teamId?: string) {
       setLoading(false);
     }
   }, []);
-
   useEffect(() => {
     fetchSystemConfig();
   }, [fetchSystemConfig]);
-
   useEffect(() => {
     if (teamId) {
       fetchWebhooks();
     }
   }, [teamId, fetchWebhooks]);
-
   return {
     events,
     systemConfig,
@@ -694,11 +638,9 @@ export function useEnhancedCalendar(teamId?: string) {
     deleteWebhook,
   };
 }
-
 // ============================================================================
 // UTILITY HOOKS
 // ============================================================================
-
 // Hook for managing multiple poll responses in a single form
 export function usePollResponseForm(polls: EventPoll[]) {
   const [responses, setResponses] = useState<
@@ -706,7 +648,6 @@ export function usePollResponseForm(polls: EventPoll[]) {
   >({});
   const [submitting, setSubmitting] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
-
   // Initialize responses for all polls
   useEffect(() => {
     const initialResponses: Record<string, Partial<PollResponse>> = {};
@@ -719,7 +660,6 @@ export function usePollResponseForm(polls: EventPoll[]) {
       setResponses((prev) => ({ ...prev, ...initialResponses }));
     }
   }, [polls, responses]);
-
   const updateResponse = useCallback(
     (pollId: string, responseData: Partial<PollResponse>) => {
       setResponses((prev) => ({
@@ -729,15 +669,12 @@ export function usePollResponseForm(polls: EventPoll[]) {
     },
     []
   );
-
   const submitResponse = useCallback(
     async (pollId: string, userId: string) => {
       const responseData = responses[pollId];
       if (!responseData) return;
-
       setSubmitting((prev) => ({ ...prev, [pollId]: true }));
       setErrors((prev) => ({ ...prev, [pollId]: "" }));
-
       try {
         await enhancedCalendarService.polling.submitPollResponse(
           pollId,
@@ -759,14 +696,12 @@ export function usePollResponseForm(polls: EventPoll[]) {
     },
     [responses]
   );
-
   const submitAllResponses = useCallback(
     async (userId: string) => {
       const pollIds = Object.keys(responses);
       const results = await Promise.allSettled(
         pollIds.map((pollId) => submitResponse(pollId, userId))
       );
-
       return results.map((result, index) => ({
         pollId: pollIds[index],
         success: result.status === "fulfilled",
@@ -775,7 +710,6 @@ export function usePollResponseForm(polls: EventPoll[]) {
     },
     [responses, submitResponse]
   );
-
   return {
     responses,
     submitting,

@@ -3,7 +3,6 @@ import { Icon, SmartIconSystem } from "../ui/Icon/Icon";
 import type { IconName } from "../ui/Icon/Icon";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
-
 /**
  * SmartIconDemo - Demonstrates the SmartIconSystem in action
  *
@@ -13,7 +12,6 @@ export const SmartIconDemo: React.FC = () => {
   const [inputText, setInputText] = useState("");
   const [selectedIcon, setSelectedIcon] = useState<IconName>("star");
   const [suggestions, setSuggestions] = useState<IconName[]>([]);
-
   const handleTextChange = (text: string) => {
     setInputText(text);
     if (text.trim()) {
@@ -26,7 +24,6 @@ export const SmartIconDemo: React.FC = () => {
       setSuggestions([]);
     }
   };
-
   const demoTexts = [
     "Team Captain Achievement",
     "Weekly Practice Schedule",
@@ -39,7 +36,6 @@ export const SmartIconDemo: React.FC = () => {
     "New Team Member Added",
     "Equipment Maintenance Required",
   ];
-
   return (
     <Card className="p-6 max-w-2xl mx-auto">
       <div className="space-y-6">
@@ -51,7 +47,6 @@ export const SmartIconDemo: React.FC = () => {
             Watch how the system intelligently selects icons based on content
           </Typography>
         </div>
-
         {/* Input Section */}
         <div className="space-y-4">
           <div>
@@ -66,7 +61,6 @@ export const SmartIconDemo: React.FC = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-jade-500"
             />
           </div>
-
           {/* Selected Icon Display */}
           {inputText && (
             <div className="flex items-center gap-4 p-4 bg-jade-50 rounded-lg">
@@ -83,7 +77,6 @@ export const SmartIconDemo: React.FC = () => {
               </div>
             </div>
           )}
-
           {/* Icon Suggestions */}
           {suggestions.length > 0 && (
             <div className="space-y-2">
@@ -109,7 +102,6 @@ export const SmartIconDemo: React.FC = () => {
             </div>
           )}
         </div>
-
         {/* Demo Examples */}
         <div className="space-y-4">
           <Typography variant="body-md" className="font-medium">
@@ -134,7 +126,6 @@ export const SmartIconDemo: React.FC = () => {
             ))}
           </div>
         </div>
-
         {/* Context Examples */}
         <div className="space-y-4">
           <Typography variant="body-md" className="font-medium">
@@ -185,5 +176,4 @@ export const SmartIconDemo: React.FC = () => {
     </Card>
   );
 };
-
 export default SmartIconDemo;

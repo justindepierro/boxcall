@@ -1,17 +1,14 @@
 import React from "react";
 import { X, ArrowLeft, ArrowRight, Save } from "lucide-react";
-
 interface PlayBuilderWizardProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
 export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
   isOpen,
   onClose,
 }) => {
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -20,7 +17,6 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
           className="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity"
           onClick={onClose}
         />
-
         {/* Modal */}
         <div className="inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full">
           {/* Header */}
@@ -45,7 +41,6 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
               <X className="h-6 w-6" />
             </button>
           </div>
-
           {/* Content */}
           <div className="bg-white px-6 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -54,7 +49,6 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                 <h3 className="text-lg font-medium text-slate-900 mb-6">
                   Basic Play Information
                 </h3>
-
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -66,7 +60,6 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                       className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     />
                   </div>
-
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
                       Play Type *
@@ -90,7 +83,6 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                       ))}
                     </div>
                   </div>
-
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
                       One-Word Call (Audible)
@@ -106,13 +98,11 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                   </div>
                 </div>
               </div>
-
               {/* Preview Section */}
               <div>
                 <h3 className="text-lg font-medium text-slate-900 mb-6">
                   Live Preview
                 </h3>
-
                 <div className="bg-slate-50 rounded-lg p-6 border-2 border-dashed border-slate-300">
                   <div className="text-center">
                     <div className="text-slate-400 mb-4">
@@ -139,7 +129,6 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
               </div>
             </div>
           </div>
-
           {/* Footer */}
           <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
             <button
@@ -149,7 +138,6 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
               <ArrowLeft className="h-4 w-4 mr-2" />
               Previous
             </button>
-
             <div className="flex space-x-3">
               <button
                 onClick={onClose}

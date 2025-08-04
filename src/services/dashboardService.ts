@@ -1,24 +1,20 @@
 import { supabase } from "../lib/supabase";
 import type { Database } from "../types/database";
-
 // Type definitions
 export type TeamMember = Database["public"]["Tables"]["team_members"]["Row"];
 export type Team = Database["public"]["Tables"]["teams"]["Row"];
 export type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
-
 export interface UserTeamData {
   team: Team;
   membership: TeamMember;
   memberCount?: number;
 }
-
 export interface DashboardData {
   userTeams: UserTeamData[];
   totalTeams: number;
   activeTeams: UserTeamData[];
   recentActivity?: ActivityItem[];
 }
-
 export interface ActivityItem {
   id: string;
   type: "achievement" | "message" | "event" | "practice" | "game";
@@ -30,7 +26,6 @@ export interface ActivityItem {
   icon: string;
   color: string;
 }
-
 /**
  * Dashboard Data Service
  * Provides centralized data fetching for dashboard components
@@ -51,12 +46,10 @@ export class DashboardService {
         )
         .eq("user_id", userId)
         .eq("status", "active");
-
       if (error) {
         console.error("Error fetching user teams:", error);
         return [];
       }
-
       // Transform data and get member counts
       const userTeams = await Promise.all(
         (memberships || []).map(async (membership) => {
@@ -66,7 +59,6 @@ export class DashboardService {
             .select("*", { count: "exact", head: true })
             .eq("team_id", membership.team_id)
             .eq("status", "active");
-
           return {
             team: membership.teams as Team,
             membership: membership as TeamMember,
@@ -74,30 +66,25 @@ export class DashboardService {
           };
         })
       );
-
       return userTeams;
     } catch (error) {
       console.error("Error in getUserTeams:", error);
       return [];
     }
   }
-
   /**
    * Get comprehensive dashboard data for a user
    */
   static async getDashboardData(userId: string): Promise<DashboardData> {
     try {
       const userTeams = await this.getUserTeams(userId);
-
       // Filter active teams (in season)
       const activeTeams = userTeams.filter(() => {
         // TODO: Add season logic - for now, all teams are considered active
         return true;
       });
-
       // Get recent activity (mock for now - TODO: implement real activity feed)
       const recentActivity = await this.getRecentActivity(userId, userTeams);
-
       return {
         userTeams,
         totalTeams: userTeams.length,
@@ -114,7 +101,6 @@ export class DashboardService {
       };
     }
   }
-
   /**
    * Get recent activity for dashboard
    * TODO: Implement real activity feed from events, messages, achievements
@@ -159,10 +145,8 @@ export class DashboardService {
         color: "purple",
       },
     ];
-
     return mockActivity;
   }
-
   /**
    * Get team status for display
    */
@@ -170,7 +154,6 @@ export class DashboardService {
     // TODO: Implement real season/status logic
     // For now, simple mock logic based on current date
     const currentMonth = new Date().getMonth(); // 0-11
-
     if (currentMonth >= 7 && currentMonth <= 11) {
       // Aug-Dec
       return { status: "Active", color: "jade" };
@@ -181,20 +164,17 @@ export class DashboardService {
       return { status: "Off Season", color: "gray" };
     }
   }
-
   /**
    * Get user's primary team (most recent active membership)
    */
   static getPrimaryTeam(userTeams: UserTeamData[]): UserTeamData | null {
     if (userTeams.length === 0) return null;
-
     // Sort by joined date and return most recent
     const sorted = [...userTeams].sort(
       (a, b) =>
         new Date(b.membership.joined_at || "").getTime() -
         new Date(a.membership.joined_at || "").getTime()
     );
-
     return sorted[0];
   }
 }

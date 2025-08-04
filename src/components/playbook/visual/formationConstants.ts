@@ -1,5 +1,4 @@
 // Formation templates and position-related constants for the visual play builder
-
 export interface PlayerPosition {
   id: string;
   position: string; // QB, RB, WR1, WR2, WR3, TE, FB, etc.
@@ -8,7 +7,6 @@ export interface PlayerPosition {
   number?: string; // Jersey number
   isKeyPlayer?: boolean;
 }
-
 // Standard position colors for visual distinction
 export const POSITION_COLORS = {
   QB: "#ef4444", // Red
@@ -26,7 +24,6 @@ export const POSITION_COLORS = {
   RT: "#6b7280", // Gray
   default: "#64748b", // Slate
 } as const;
-
 // Standard formation templates
 export const FORMATION_TEMPLATES: Record<string, PlayerPosition[]> = {
   "I-Formation": [
@@ -95,12 +92,10 @@ export const FORMATION_TEMPLATES: Record<string, PlayerPosition[]> = {
     { id: "RT", position: "RT", x: 60, y: 85, number: "76" },
   ],
 };
-
 // Utility function to get formation template
 export const getFormationTemplate = (formation: string): PlayerPosition[] => {
   return FORMATION_TEMPLATES[formation] || [];
 };
-
 // Utility function to create custom player position
 export const createPlayerPosition = (
   id: string,
@@ -117,12 +112,10 @@ export const createPlayerPosition = (
   number,
   isKeyPlayer,
 });
-
 // Utility function to check if position is offensive line
 export const isOffensiveLine = (position: string): boolean => {
   return ["LT", "LG", "C", "RG", "RT"].includes(position);
 };
-
 // Utility function to get position color
 export const getPositionColor = (position: string): string => {
   return (

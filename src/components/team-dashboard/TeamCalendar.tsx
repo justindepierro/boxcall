@@ -1,11 +1,9 @@
 import React from "react";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
-
 interface TeamCalendarProps {
   teamId: string;
 }
-
 /**
  * Team Calendar - Team-specific events and schedule
  *
@@ -17,7 +15,6 @@ interface TeamCalendarProps {
  */
 export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
   // TODO: Use teamId for fetching team-specific calendar events
-
   // Mock team calendar data - TODO: Fetch from database
   const mockTeamEvents = [
     {
@@ -54,7 +51,6 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
       location: "Classroom A",
     },
   ];
-
   const getEventColor = (type: string) => {
     switch (type) {
       case "game":
@@ -69,7 +65,6 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
         return "bg-gray-500";
     }
   };
-
   const getEventIcon = (type: string) => {
     switch (type) {
       case "game":
@@ -84,13 +79,11 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
         return "📅";
     }
   };
-
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-
     if (date.toDateString() === today.toDateString()) {
       return "Today";
     } else if (date.toDateString() === tomorrow.toDateString()) {
@@ -103,7 +96,6 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
       });
     }
   };
-
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
@@ -117,7 +109,6 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
           View Full Calendar
         </button>
       </div>
-
       {/* Upcoming Events */}
       <div className="space-y-3">
         {mockTeamEvents.map((event) => (
@@ -133,7 +124,6 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
                   {getEventIcon(event.type)}
                 </div>
               </div>
-
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1">
                   <Typography
@@ -150,7 +140,6 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
                       </div>
                     )}
                 </div>
-
                 <div className="flex items-center justify-between text-sm">
                   <Typography variant="body-sm" color="muted">
                     📍 {event.location}
@@ -169,7 +158,6 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
           </div>
         ))}
       </div>
-
       {/* Calendar Actions */}
       <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
         <div className="grid grid-cols-2 gap-3">

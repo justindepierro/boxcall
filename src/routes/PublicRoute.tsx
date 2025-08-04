@@ -1,11 +1,9 @@
 import React from "react";
 import { ProtectedRoute } from "./ProtectedRoute";
-
 interface PublicRouteProps {
   children: React.ReactNode;
   redirectTo?: string;
 }
-
 /**
  * PublicRoute Component
  *

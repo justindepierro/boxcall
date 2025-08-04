@@ -4,7 +4,6 @@ import {
   type DashboardData,
   type UserTeamData,
 } from "../services/dashboardService";
-
 /**
  * Hook for dashboard data management
  * Provides data for Personal Dashboard components
@@ -15,23 +14,18 @@ export const useDashboardData = (userId: string | undefined) => {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     let isCancelled = false;
-
     const fetchDashboardData = async () => {
       if (!userId) {
         setDashboardData(null);
         setLoading(false);
         return;
       }
-
       setLoading(true);
       setError(null);
-
       try {
         const data = await DashboardService.getDashboardData(userId);
-
         if (!isCancelled) {
           setDashboardData(data);
           setError(null);
@@ -49,20 +43,15 @@ export const useDashboardData = (userId: string | undefined) => {
         }
       }
     };
-
     fetchDashboardData();
-
     return () => {
       isCancelled = true;
     };
   }, [userId]);
-
   const refreshDashboard = async () => {
     if (!userId) return;
-
     setLoading(true);
     setError(null);
-
     try {
       const data = await DashboardService.getDashboardData(userId);
       setDashboardData(data);
@@ -75,7 +64,6 @@ export const useDashboardData = (userId: string | undefined) => {
       setLoading(false);
     }
   };
-
   return {
     dashboardData,
     userTeams: dashboardData?.userTeams || [],
@@ -87,7 +75,6 @@ export const useDashboardData = (userId: string | undefined) => {
     refreshDashboard,
   };
 };
-
 /**
  * Hook for getting user's team memberships
  */
@@ -95,23 +82,18 @@ export const useUserTeams = (userId: string | undefined) => {
   const [userTeams, setUserTeams] = useState<UserTeamData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     let isCancelled = false;
-
     const fetchUserTeams = async () => {
       if (!userId) {
         setUserTeams([]);
         setLoading(false);
         return;
       }
-
       setLoading(true);
       setError(null);
-
       try {
         const teams = await DashboardService.getUserTeams(userId);
-
         if (!isCancelled) {
           setUserTeams(teams);
           setError(null);
@@ -127,17 +109,13 @@ export const useUserTeams = (userId: string | undefined) => {
         }
       }
     };
-
     fetchUserTeams();
-
     return () => {
       isCancelled = true;
     };
   }, [userId]);
-
   const primaryTeam =
     userTeams.length > 0 ? DashboardService.getPrimaryTeam(userTeams) : null;
-
   return {
     userTeams,
     primaryTeam,

@@ -2,7 +2,6 @@ import React from "react";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
 import Icon from "../components/ui/Icon/Icon";
-
 /**
  * About - Information about BoxCall platform
  * Available to all users
@@ -29,7 +28,6 @@ export const About: React.FC = () => {
             Learn more about the BoxCall platform and get help
           </Typography>
         </div>
-
         {/* About Content */}
         <div className="grid gap-6 md:grid-cols-2">
           {/* Platform Overview */}
@@ -48,7 +46,6 @@ export const About: React.FC = () => {
               plays, manage schedules, and build stronger teams.
             </Typography>
           </Card>
-
           {/* Features */}
           <Card className="p-6">
             <Icon name="star" size="3xl" className="text-yellow-500 mb-4" />
@@ -63,7 +60,6 @@ export const About: React.FC = () => {
               <li>• Role-based access and permissions</li>
             </ul>
           </Card>
-
           {/* Support */}
           <Card className="p-6">
             <div className="text-4xl mb-4">🤝</div>
@@ -84,7 +80,6 @@ export const About: React.FC = () => {
               </Typography>
             </div>
           </Card>
-
           {/* Version Info */}
           <Card className="p-6">
             <div className="mb-4">
@@ -111,5 +106,4 @@ export const About: React.FC = () => {
     </div>
   );
 };
-
 export default About;

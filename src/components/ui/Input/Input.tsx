@@ -4,7 +4,6 @@
  * Masculine, technical input component with jade/navy theme
  * Square, confident design for football team management
  */
-
 import { forwardRef, useState } from "react";
 import { Typography } from "../../design-system";
 import type {
@@ -12,17 +11,14 @@ import type {
   InputSizeConfig,
   InputStylesConfig,
 } from "./Input.types";
-
 // Input base styles configuration - Square, technical styling with jade/navy theme
 const inputStyles: InputStylesConfig = {
   base: "block w-full rounded-xs border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 font-sans",
-
   sizes: {
     sm: "px-3 py-2 text-sm",
     md: "px-4 py-3 text-sm",
     lg: "px-5 py-4 text-base",
   },
-
   variants: {
     text: "",
     email: "",
@@ -32,7 +28,6 @@ const inputStyles: InputStylesConfig = {
     url: "",
     search: "",
   },
-
   statuses: {
     default:
       "border-gray-300 dark:border-gray-600 focus:border-jade-500 dark:focus:border-jade-400 focus:ring-jade-500 dark:focus:ring-jade-400",
@@ -43,12 +38,10 @@ const inputStyles: InputStylesConfig = {
     warning:
       "border-yellow-400 dark:border-yellow-500 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-yellow-50 dark:bg-yellow-900/20",
   },
-
   focus: "focus:ring-2 focus:ring-offset-1",
   disabled:
     "disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 dark:disabled:border-gray-600",
 };
-
 // Size configuration
 const sizeConfig: InputSizeConfig = {
   container: "space-y-1",
@@ -57,7 +50,6 @@ const sizeConfig: InputSizeConfig = {
   helper: "block",
   icon: "absolute top-1/2 transform -translate-y-1/2",
 };
-
 /**
  * Input Component
  *
@@ -97,13 +89,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     const [showPassword, setShowPassword] = useState(false);
-
     // Generate unique ID if not provided
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
-
     // Determine the actual input type
     const inputType = variant === "password" && showPassword ? "text" : variant;
-
     // Get status message
     const getStatusMessage = () => {
       if (status === "error" && errorMessage) return errorMessage;
@@ -111,7 +100,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       if (status === "warning" && warningMessage) return warningMessage;
       return helperText;
     };
-
     // Get status message color
     const getStatusMessageColor = () => {
       switch (status) {
@@ -125,7 +113,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           return "muted";
       }
     };
-
     // Build input classes with theme awareness
     const inputClasses = [
       inputStyles.base,
@@ -142,7 +129,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     ]
       .filter(Boolean)
       .join(" ");
-
     // Container classes
     const containerClasses = [
       sizeConfig.container,
@@ -151,7 +137,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     ]
       .filter(Boolean)
       .join(" ");
-
     // Label classes with display font for masculine impact
     const labelClasses = [
       sizeConfig.label,
@@ -161,12 +146,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     ]
       .filter(Boolean)
       .join(" ");
-
     // Toggle password visibility
     const togglePasswordVisibility = () => {
       setShowPassword(!showPassword);
     };
-
     return (
       <div className={containerClasses}>
         {label && (
@@ -177,7 +160,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             </Typography>
           </label>
         )}
-
         <div className="relative">
           {leftIcon && (
             <div
@@ -186,7 +168,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               {leftIcon}
             </div>
           )}
-
           <input
             ref={ref}
             id={inputId}
@@ -199,7 +180,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             aria-invalid={status === "error"}
             {...props}
           />
-
           {(rightIcon || (variant === "password" && showPasswordToggle)) && (
             <div className={`${sizeConfig.icon} right-3`}>
               {variant === "password" && showPasswordToggle ? (
@@ -252,14 +232,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               ) : null}
             </div>
           )}
-
           {loading && (
             <div className={`${sizeConfig.icon} right-3`}>
               <div className="animate-spin rounded-full h-4 w-4 border-2 border-jade-500 border-t-transparent"></div>
             </div>
           )}
         </div>
-
         {getStatusMessage() && (
           <div id={`${inputId}-helper`} className={sizeConfig.helper}>
             <Typography variant="body-xs" color={getStatusMessageColor()}>
@@ -271,7 +249,5 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     );
   }
 );
-
 Input.displayName = "Input";
-
 export default Input;

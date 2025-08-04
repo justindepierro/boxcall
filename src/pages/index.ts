@@ -3,7 +3,6 @@ export { DashboardPage } from "./DashboardPage";
 export { LoginPage } from "./LoginPage";
 export { ProfilePage } from "./ProfilePage";
 export { TeamBulletin } from "./TeamBulletin";
-
 // New navigation pages
 export { default as BoxCall } from "./BoxCall";
 export { default as Playbook } from "./Playbook";

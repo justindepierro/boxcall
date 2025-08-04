@@ -4,9 +4,7 @@
  * Professional typography system with masculine, square aesthetic
  * Features Bebas Neue (display) + Inter (body) + IBM Plex Mono (code)
  */
-
 import React from "react";
-
 // Typography variant types - Updated with new display variant
 export type TypographyVariant =
   | "display-xl" // NEW: Hero text, team names (Bebas Neue)
@@ -27,7 +25,6 @@ export type TypographyVariant =
   | "label-md" // Standard labels (Inter Medium)
   | "button" // Button text (Inter Semibold)
   | "caption"; // Caption text (Inter)
-
 export type TypographyElement =
   | "h1"
   | "h2"
@@ -40,20 +37,15 @@ export type TypographyElement =
   | "div"
   | "label"
   | "code";
-
 export interface TypographyProps {
   /** Typography variant for consistent styling */
   variant: TypographyVariant;
-
   /** HTML element to render */
   as?: TypographyElement;
-
   /** Text content */
   children: React.ReactNode;
-
   /** Additional CSS classes */
   className?: string;
-
   /** Text color override - Updated with jade/navy colors */
   color?:
     | "primary" // jade-600
@@ -63,14 +55,11 @@ export interface TypographyProps {
     | "error" // red-600
     | "muted" // gray-500
     | "inverse"; // white/dark mode text
-
   /** Text alignment */
   align?: "left" | "center" | "right";
-
   /** Truncate text with ellipsis */
   truncate?: boolean;
 }
-
 // Typography variant class mappings - Updated with new font families and square aesthetic
 const typographyClasses: Record<TypographyVariant, string> = {
   // Display variants - Bebas Neue for maximum impact
@@ -78,31 +67,26 @@ const typographyClasses: Record<TypographyVariant, string> = {
   "display-lg": "font-display text-5xl font-normal leading-none tracking-tight",
   "display-md":
     "font-display text-4xl font-normal leading-tight tracking-tight",
-
   // Headlines - Inter Bold for hierarchy
   "headline-xl": "font-sans text-4xl font-bold leading-tight",
   "headline-lg": "font-sans text-3xl font-bold leading-tight",
   "headline-md": "font-sans text-2xl font-bold leading-tight",
   "headline-sm": "font-sans text-xl font-bold leading-tight",
-
   // Body text - Inter for readability
   "body-lg": "font-sans text-lg leading-relaxed",
   "body-md": "font-sans text-base leading-relaxed",
   "body-sm": "font-sans text-sm leading-relaxed",
   "body-xs": "font-sans text-xs leading-relaxed",
-
   // Code/Stats - IBM Plex Mono for technical data
   "code-lg": "font-mono text-lg leading-normal",
   "code-md": "font-mono text-base leading-normal",
   "code-sm": "font-mono text-sm leading-normal",
-
   // Labels and UI - Inter Medium
   "label-lg": "font-sans text-sm font-semibold uppercase tracking-wide",
   "label-md": "font-sans text-xs font-semibold uppercase tracking-wide",
   button: "font-sans text-sm font-semibold",
   caption: "font-sans text-xs text-gray-600 dark:text-gray-400",
 };
-
 // Color class mappings - Updated with jade/navy system
 const colorClasses: Record<string, string> = {
   primary: "text-jade-600 dark:text-jade-400", // Jade green for primary
@@ -113,14 +97,12 @@ const colorClasses: Record<string, string> = {
   muted: "text-gray-500 dark:text-gray-400", // Muted gray
   inverse: "text-white dark:text-gray-900", // Inverse colors
 };
-
 // Text alignment classes
 const alignClasses: Record<string, string> = {
   left: "text-left",
   center: "text-center",
   right: "text-right",
 };
-
 // Default element mapping for semantic HTML - Updated with new variants
 const defaultElements: Record<TypographyVariant, TypographyElement> = {
   "display-xl": "h1",
@@ -142,7 +124,6 @@ const defaultElements: Record<TypographyVariant, TypographyElement> = {
   button: "span",
   caption: "span",
 };
-
 /**
  * Typography component for consistent text styling across BoxCall
  *
@@ -166,7 +147,6 @@ export const Typography: React.FC<TypographyProps> = ({
 }) => {
   // Determine the HTML element to render
   const Element = as || defaultElements[variant];
-
   // Build class string
   const classes = [
     typographyClasses[variant],
@@ -177,15 +157,12 @@ export const Typography: React.FC<TypographyProps> = ({
   ]
     .filter(Boolean)
     .join(" ");
-
   return (
     <Element className={classes} {...restProps}>
       {children}
     </Element>
   );
 };
-
 // Set display name for debugging
 Typography.displayName = "Typography";
-
 export default Typography;

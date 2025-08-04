@@ -1,6 +1,5 @@
 // Complete BoxCall Database Types
 // Generated from actual schema on 2025-08-01
-
 export type Json =
   | string
   | number
@@ -8,7 +7,6 @@ export type Json =
   | null
   | { [key: string]: Json | undefined }
   | Json[];
-
 export interface Database {
   public: {
     Tables: {
@@ -1002,7 +1000,6 @@ export interface Database {
     };
   };
 }
-
 // Convenience type exports
 export type Tables<T extends keyof Database["public"]["Tables"]> =
   Database["public"]["Tables"][T]["Row"];
@@ -1010,7 +1007,6 @@ export type Inserts<T extends keyof Database["public"]["Tables"]> =
   Database["public"]["Tables"][T]["Insert"];
 export type Updates<T extends keyof Database["public"]["Tables"]> =
   Database["public"]["Tables"][T]["Update"];
-
 // Individual table types for easy importing
 export type Achievement = Tables<"achievements">;
 export type Game = Tables<"games">;
@@ -1033,7 +1029,6 @@ export type TeamMembership = Tables<"team_memberships">;
 export type TeamPost = Tables<"team_posts">;
 export type Team = Tables<"teams">;
 export type UserProfile = Tables<"user_profiles">;
-
 // Insert types
 export type AchievementInsert = Inserts<"achievements">;
 export type GameInsert = Inserts<"games">;
@@ -1056,7 +1051,6 @@ export type TeamMembershipInsert = Inserts<"team_memberships">;
 export type TeamPostInsert = Inserts<"team_posts">;
 export type TeamInsert = Inserts<"teams">;
 export type UserProfileInsert = Inserts<"user_profiles">;
-
 // Update types
 export type AchievementUpdate = Updates<"achievements">;
 export type GameUpdate = Updates<"games">;

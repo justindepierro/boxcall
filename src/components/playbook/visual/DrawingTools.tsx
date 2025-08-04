@@ -1,19 +1,16 @@
 import React, { useState } from "react";
 import * as fabric from "fabric";
-
 interface DrawingToolsProps {
   canvas: fabric.Canvas | null;
   selectedTool: string;
   onToolChange: (tool: string) => void;
 }
-
 interface TextStyle {
   fontSize: number;
   fill: string;
   fontWeight: string;
   backgroundColor?: string;
 }
-
 const TEXT_STYLES: Record<string, TextStyle> = {
   "route-label": { fontSize: 12, fill: "#000000", fontWeight: "bold" },
   "yard-marker": { fontSize: 10, fill: "#dc2626", fontWeight: "bold" },
@@ -25,7 +22,6 @@ const TEXT_STYLES: Record<string, TextStyle> = {
     backgroundColor: "#fee2e2",
   },
 };
-
 export const DrawingTools: React.FC<DrawingToolsProps> = ({
   canvas,
   selectedTool,
@@ -33,14 +29,11 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
 }) => {
   const [selectedColor, setSelectedColor] = useState("#000000");
   const [selectedRouteStyle, setSelectedRouteStyle] = useState("route-solid");
-
   // Add text annotation to canvas center
   const addTextAnnotation = (text: string, style: string) => {
     if (!canvas) return;
-
     const textStyle = TEXT_STYLES[style] || TEXT_STYLES["route-label"];
     const center = canvas.getCenterPoint();
-
     const textObj = new fabric.Text(text, {
       left: center.x,
       top: center.y,
@@ -48,14 +41,11 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
       originX: "center",
       originY: "center",
     });
-
     textObj.set("isAnnotation", true);
     textObj.set("annotationType", style);
-
     canvas.add(textObj);
     canvas.renderAll();
   };
-
   const tools = [
     { id: "select", label: "Select", icon: "↖️" },
     { id: "route-solid", label: "Solid Route", icon: "━" },
@@ -67,11 +57,9 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
     { id: "player-WR", label: "WR", icon: "🟢" },
     { id: "player-TE", label: "TE", icon: "🟠" },
   ];
-
   return (
     <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-3 space-y-3">
       <div className="text-sm font-medium text-slate-700">Drawing Tools</div>
-
       {/* Tool Selection */}
       <div className="grid grid-cols-3 gap-1">
         {tools.map((tool) => (
@@ -92,7 +80,6 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
           </button>
         ))}
       </div>
-
       {/* Route Style Options */}
       {selectedTool.startsWith("route") && (
         <div className="space-y-2">
@@ -110,7 +97,6 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
           </select>
         </div>
       )}
-
       {/* Color Picker */}
       <div className="space-y-2">
         <div className="text-xs font-medium text-slate-600">Color</div>
@@ -136,7 +122,6 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
           ))}
         </div>
       </div>
-
       {/* Quick Add Annotations */}
       <div className="space-y-2">
         <div className="text-xs font-medium text-slate-600">

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Typography } from "../design-system";
 import { Button, Card, Input } from "../ui";
 import Icon from "../ui/Icon/Icon";
-
 interface PersonalProfileProps {
   profile: {
     bio?: string | null;
@@ -19,7 +18,6 @@ interface PersonalProfileProps {
   showGearShowcase?: boolean;
   showCoachingCredentials?: boolean;
 }
-
 /**
  * Personal Profile - MySpace-style editable profile
  *
@@ -48,13 +46,10 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
       cleats: profile?.gear?.cleats || "",
     },
   });
-
   const handleSave = () => {
     // TODO: Save to database
-    console.log("Saving profile:", editedProfile);
     setIsEditing(false);
   };
-
   const handleCancel = () => {
     setEditedProfile({
       bio: profile?.bio || "",
@@ -68,7 +63,6 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
     });
     setIsEditing(false);
   };
-
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
@@ -108,7 +102,6 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
           </div>
         )}
       </div>
-
       {/* Basic Info */}
       <div className="space-y-4">
         <div>
@@ -134,7 +127,6 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             </Typography>
           )}
         </div>
-
         {/* Player-specific fields */}
         {showGPA && (
           <div className="grid grid-cols-2 gap-4">
@@ -195,7 +187,6 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             </div>
           </div>
         )}
-
         {/* Gear Showcase for Players */}
         {showGearShowcase && (
           <div>
@@ -271,7 +262,6 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             )}
           </div>
         )}
-
         {/* Coaching Credentials */}
         {showCoachingCredentials && (
           <div>
@@ -304,7 +294,6 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
           </div>
         )}
       </div>
-
       {/* Profile Stats */}
       <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600">
         <Typography

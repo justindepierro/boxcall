@@ -1,12 +1,10 @@
 import React from "react";
-
 interface FieldBackgroundProps {
   width: number;
   height: number;
   mode: "football" | "redzone" | "blank" | "lines" | "grid" | "dots";
   lineOfScrimmage?: number; // Yard line position (0-100)
 }
-
 export const FieldBackground: React.FC<FieldBackgroundProps> = ({
   width,
   height,
@@ -17,14 +15,11 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
   // 53.33 yards wide, showing 40 yards total (10 behind LOS, 30 ahead)
   const FIELD_WIDTH_YARDS = 53.33;
   const FIELD_LENGTH_YARDS = 40; // 10 behind + 30 ahead of LOS
-
   // Calculate scale
   const yardToPixelX = width / FIELD_WIDTH_YARDS;
-
   // Hash mark positions (18'6" from sidelines = 18.5 feet = 6.17 yards)
   const leftHashX = 6.17 * yardToPixelX;
   const rightHashX = (FIELD_WIDTH_YARDS - 6.17) * yardToPixelX;
-
   const renderFootballField = () => (
     <g>
       {/* Field background */}
@@ -35,7 +30,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
         stroke="#ffffff"
         strokeWidth={2}
       />
-
       {/* Sidelines */}
       <line x1={0} y1={0} x2={0} y2={height} stroke="#ffffff" strokeWidth={3} />
       <line
@@ -46,13 +40,11 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
         stroke="#ffffff"
         strokeWidth={3}
       />
-
       {/* Yard lines - every 5 yards */}
       {Array.from({ length: 9 }, (_, i) => {
         const yardFromBack = (i + 1) * 5; // 5, 10, 15, 20, 25, 30, 35, 40
         const y = (yardFromBack / FIELD_LENGTH_YARDS) * height;
         const isMainYard = yardFromBack % 10 === 0;
-
         return (
           <g key={`yard-${yardFromBack}`}>
             <line
@@ -63,7 +55,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
               stroke="#ffffff"
               strokeWidth={isMainYard ? 2 : 1}
             />
-
             {/* Yard numbers on main lines */}
             {isMainYard && (
               <>
@@ -92,7 +83,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
           </g>
         );
       })}
-
       {/* Line of Scrimmage (highlighted) */}
       <line
         x1={0}
@@ -102,7 +92,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
         stroke="#fbbf24"
         strokeWidth={3}
       />
-
       {/* Hash marks */}
       {Array.from({ length: 41 }, (_, i) => {
         const y = (i / 40) * height;
@@ -129,7 +118,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
           </g>
         );
       })}
-
       {/* Goal line indicator (if in view) */}
       {lineOfScrimmage <= 40 && (
         <line
@@ -143,7 +131,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
       )}
     </g>
   );
-
   const renderRedZone = () => (
     <g>
       {/* Red zone background */}
@@ -154,12 +141,10 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
         stroke="#dc2626"
         strokeWidth={3}
       />
-
       {/* Yard lines in red zone (25, 20, 15, 10, 5, Goal) */}
       {Array.from({ length: 6 }, (_, i) => {
         const yardLine = 25 - i * 5;
         const y = (i / 5) * height * 0.85; // Leave space for end zone
-
         return (
           <g key={`redzone-${yardLine}`}>
             <line
@@ -170,7 +155,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
               stroke="#dc2626"
               strokeWidth={yardLine === 0 ? 4 : 2}
             />
-
             {/* Yard numbers */}
             <text
               x={width * 0.1}
@@ -185,7 +169,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
           </g>
         );
       })}
-
       {/* End zone */}
       <rect
         x={0}
@@ -195,7 +178,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
         fill="#dc2626"
         opacity={0.2}
       />
-
       {/* Hash marks */}
       {Array.from({ length: 26 }, (_, i) => {
         const y = (i / 25) * height * 0.85;
@@ -222,12 +204,10 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
       })}
     </g>
   );
-
   const renderLines = () => (
     <g>
       {/* Lined paper background */}
       <rect width={width} height={height} fill="#ffffff" />
-
       {/* Horizontal lines every 20 pixels */}
       {Array.from({ length: Math.floor(height / 20) }, (_, i) => (
         <line
@@ -240,7 +220,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
           strokeWidth={1}
         />
       ))}
-
       {/* Red margin line */}
       <line
         x1={width * 0.1}
@@ -252,12 +231,10 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
       />
     </g>
   );
-
   const renderGrid = () => (
     <g>
       {/* Grid paper background */}
       <rect width={width} height={height} fill="#ffffff" />
-
       {/* Horizontal grid lines */}
       {Array.from({ length: Math.floor(height / 15) }, (_, i) => (
         <line
@@ -270,7 +247,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
           strokeWidth={0.5}
         />
       ))}
-
       {/* Vertical grid lines */}
       {Array.from({ length: Math.floor(width / 15) }, (_, i) => (
         <line
@@ -283,7 +259,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
           strokeWidth={0.5}
         />
       ))}
-
       {/* Heavier lines every 5th line */}
       {Array.from({ length: Math.floor(height / 75) }, (_, i) => (
         <line
@@ -296,7 +271,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
           strokeWidth={1}
         />
       ))}
-
       {Array.from({ length: Math.floor(width / 75) }, (_, i) => (
         <line
           key={`grid-v-heavy-${i}`}
@@ -310,12 +284,10 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
       ))}
     </g>
   );
-
   const renderDots = () => (
     <g>
       {/* Dot paper background */}
       <rect width={width} height={height} fill="#ffffff" />
-
       {/* Dot grid */}
       {Array.from({ length: Math.floor(height / 20) }, (_, row) =>
         Array.from({ length: Math.floor(width / 20) }, (_, col) => (
@@ -330,7 +302,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
       )}
     </g>
   );
-
   const renderBlank = () => (
     <rect
       width={width}
@@ -340,7 +311,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
       strokeWidth={1}
     />
   );
-
   const renderBackground = () => {
     switch (mode) {
       case "football":
@@ -358,7 +328,6 @@ export const FieldBackground: React.FC<FieldBackgroundProps> = ({
         return renderBlank();
     }
   };
-
   return (
     <svg width={width} height={height} className="absolute inset-0">
       {renderBackground()}

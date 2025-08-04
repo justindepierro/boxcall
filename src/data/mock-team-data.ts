@@ -14,7 +14,6 @@ export const MOCK_TEAM_DATA = {
   created_at: "2024-08-01T00:00:00Z",
   updated_at: "2024-08-01T00:00:00Z",
 };
-
 export const MOCK_TEAM_MEMBERS = [
   // Head Coach
   {
@@ -116,7 +115,6 @@ export const MOCK_TEAM_MEMBERS = [
     joined_at: "2024-08-01T00:00:00Z",
   },
 ];
-
 export const MOCK_USER_PROFILES = [
   // Coaches
   {

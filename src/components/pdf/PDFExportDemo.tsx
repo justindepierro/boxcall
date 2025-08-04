@@ -4,7 +4,6 @@
  * Simple demonstration component showing how to integrate
  * PDF export functionality with the practice planner.
  */
-
 import React from "react";
 import {
   usePracticeScriptPDF,
@@ -12,7 +11,6 @@ import {
   generatePracticeScriptFilename,
   getDefaultPracticeScriptPDFOptions,
 } from "../../services/pdf/usePracticeScriptPDF";
-
 interface PDFExportDemoProps {
   practiceData?: {
     title?: string;
@@ -52,14 +50,12 @@ interface PDFExportDemoProps {
   };
   className?: string;
 }
-
 export const PDFExportDemo: React.FC<PDFExportDemoProps> = ({
   practiceData,
   className = "",
 }) => {
   const { isExporting, error, downloadPDF, previewPDF, clearError } =
     usePracticeScriptPDF();
-
   // Sample practice data for demo purposes
   const samplePracticeData = practiceData || {
     title: "Game Week Practice",
@@ -151,7 +147,6 @@ export const PDFExportDemo: React.FC<PDFExportDemoProps> = ({
       ],
     },
   };
-
   const handleDownloadPDF = async () => {
     const pdfData = convertPracticeStateToPDFData(
       samplePracticeData as Parameters<typeof convertPracticeStateToPDFData>[0]
@@ -161,23 +156,19 @@ export const PDFExportDemo: React.FC<PDFExportDemoProps> = ({
       samplePracticeData.title || "Practice",
       samplePracticeData.date || new Date().toISOString().split("T")[0]
     );
-
     await downloadPDF(pdfData, filename, options);
   };
-
   const handlePreviewPDF = async () => {
     const pdfData = convertPracticeStateToPDFData(
       samplePracticeData as Parameters<typeof convertPracticeStateToPDFData>[0]
     );
     const options = getDefaultPracticeScriptPDFOptions();
-
     const previewUrl = await previewPDF(pdfData, options);
     if (previewUrl) {
       // Open preview in a new window
       window.open(previewUrl, "_blank");
     }
   };
-
   return (
     <div
       className={`pdf-export-demo space-y-4 p-4 border rounded-lg bg-white ${className}`}
@@ -188,7 +179,6 @@ export const PDFExportDemo: React.FC<PDFExportDemoProps> = ({
           Export practice scripts as professional PDF documents
         </p>
       </div>
-
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-md p-3">
           <div className="flex justify-between items-start">
@@ -203,7 +193,6 @@ export const PDFExportDemo: React.FC<PDFExportDemoProps> = ({
           </div>
         </div>
       )}
-
       <div className="space-y-3">
         <div className="bg-gray-50 p-3 rounded-md">
           <h4 className="font-medium text-gray-900 mb-2">
@@ -216,7 +205,6 @@ export const PDFExportDemo: React.FC<PDFExportDemoProps> = ({
             <div>Coaches: {samplePracticeData.coaches?.length || 0}</div>
           </div>
         </div>
-
         <div className="flex space-x-3">
           <button
             onClick={handleDownloadPDF}
@@ -225,7 +213,6 @@ export const PDFExportDemo: React.FC<PDFExportDemoProps> = ({
           >
             {isExporting ? "Generating..." : "Download PDF"}
           </button>
-
           <button
             onClick={handlePreviewPDF}
             disabled={isExporting}
@@ -235,7 +222,6 @@ export const PDFExportDemo: React.FC<PDFExportDemoProps> = ({
           </button>
         </div>
       </div>
-
       <div className="text-xs text-gray-500 mt-4">
         <p>📄 PDF Features:</p>
         <ul className="list-disc list-inside ml-2 space-y-1">

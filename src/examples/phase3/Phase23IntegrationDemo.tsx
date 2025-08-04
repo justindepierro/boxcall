@@ -1,37 +1,31 @@
 // Phase 2.3 Enhanced Team Features - Integration Demo
 // Demonstrates all features working together without Jest dependencies
-
 import React, { useState } from "react";
 import { EnhancedTeamFeaturesPage } from "../pages/EnhancedTeamFeaturesPage";
 import type { CalendarRole } from "../types/enhanced-calendar";
-
 interface DemoUser {
   id: string;
   name: string;
   role: CalendarRole;
 }
-
 interface DemoEvent {
   id: string;
   title: string;
   date: string;
   description: string;
 }
-
 export function Phase23IntegrationDemo() {
   const [currentUser, setCurrentUser] = useState<DemoUser>({
     id: "demo_user_123",
     name: "Demo Coach",
     role: "head_coach",
   });
-
   const [selectedEvent, setSelectedEvent] = useState<DemoEvent>({
     id: "demo_event_123",
     title: "Saturday Game vs Eagles",
     date: "2024-02-10",
     description: "Home game at 2:00 PM",
   });
-
   const demoUsers: DemoUser[] = React.useMemo(
     () => [
       { id: "user_1", name: "Head Coach Smith", role: "head_coach" },
@@ -44,7 +38,6 @@ export function Phase23IntegrationDemo() {
     ],
     []
   );
-
   const demoEvents: DemoEvent[] = [
     {
       id: "event_1",
@@ -71,14 +64,11 @@ export function Phase23IntegrationDemo() {
       description: "Championship game",
     },
   ];
-
   const [testResults, setTestResults] = useState<{
     [key: string]: { status: "pass" | "fail" | "pending"; message: string };
   }>({});
-
   const runFeatureTests = React.useCallback(async () => {
     const results: typeof testResults = {};
-
     // Test 1: Role-based access control
     try {
       const playerUser = demoUsers.find((u) => u.role === "player");
@@ -95,12 +85,9 @@ export function Phase23IntegrationDemo() {
         message: `Role access test failed: ${error}`,
       };
     }
-
     // Test 2: Event polling functionality
     try {
       // Simulate poll creation - in real implementation this would call the service
-      console.log("Testing poll creation with sample data");
-
       results.eventPolling = {
         status: "pass",
         message: "Event polling interface loaded successfully",
@@ -111,12 +98,9 @@ export function Phase23IntegrationDemo() {
         message: `Event polling test failed: ${error}`,
       };
     }
-
     // Test 3: Advanced RSVP system
     try {
       // Simulate RSVP submission - in real implementation this would call the service
-      console.log("Testing RSVP submission with sample data");
-
       results.advancedRSVP = {
         status: "pass",
         message: "Advanced RSVP system functioning correctly",
@@ -127,12 +111,9 @@ export function Phase23IntegrationDemo() {
         message: `Advanced RSVP test failed: ${error}`,
       };
     }
-
     // Test 4: Calendar permissions
     try {
       // Simulate permission assignment - in real implementation this would call the service
-      console.log("Testing permission assignment with sample data");
-
       results.calendarPermissions = {
         status: "pass",
         message: "Calendar permissions system operational",
@@ -143,12 +124,9 @@ export function Phase23IntegrationDemo() {
         message: `Calendar permissions test failed: ${error}`,
       };
     }
-
     // Test 5: Bulk operations
     try {
       // Simulate bulk operation - in real implementation this would call the service
-      console.log("Testing bulk operation with sample data");
-
       results.bulkOperations = {
         status: "pass",
         message: "Bulk operations interface working properly",
@@ -159,10 +137,8 @@ export function Phase23IntegrationDemo() {
         message: `Bulk operations test failed: ${error}`,
       };
     }
-
     setTestResults(results);
   }, [demoUsers]);
-
   React.useEffect(() => {
     // Auto-run tests on component mount
     const timer = setTimeout(() => {
@@ -170,7 +146,6 @@ export function Phase23IntegrationDemo() {
     }, 1000);
     return () => clearTimeout(timer);
   }, [runFeatureTests]);
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Demo Header */}
@@ -199,7 +174,6 @@ export function Phase23IntegrationDemo() {
           </div>
         </div>
       </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Control Panel */}
@@ -208,7 +182,6 @@ export function Phase23IntegrationDemo() {
               <h3 className="text-sm font-medium text-gray-900 mb-4">
                 Demo Controls
               </h3>
-
               {/* User Switcher */}
               <div className="mb-4">
                 <label className="block text-xs font-medium text-gray-700 mb-1">
@@ -229,7 +202,6 @@ export function Phase23IntegrationDemo() {
                   ))}
                 </select>
               </div>
-
               {/* Event Switcher */}
               <div className="mb-4">
                 <label className="block text-xs font-medium text-gray-700 mb-1">
@@ -252,7 +224,6 @@ export function Phase23IntegrationDemo() {
                   ))}
                 </select>
               </div>
-
               {/* Test Results */}
               <div className="mt-6">
                 <h4 className="text-xs font-medium text-gray-900 mb-2">
@@ -288,7 +259,6 @@ export function Phase23IntegrationDemo() {
                   ))}
                 </div>
               </div>
-
               {/* Phase 2.3 Features Status */}
               <div className="mt-6 p-3 bg-green-50 border border-green-200 rounded-md">
                 <h4 className="text-xs font-medium text-green-800 mb-2">
@@ -318,7 +288,6 @@ export function Phase23IntegrationDemo() {
               </div>
             </div>
           </div>
-
           {/* Main Demo Interface */}
           <div className="lg:col-span-3">
             <div className="bg-white rounded-lg border border-gray-200">
@@ -331,7 +300,6 @@ export function Phase23IntegrationDemo() {
             </div>
           </div>
         </div>
-
         {/* Feature Overview */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white p-4 rounded-lg border border-gray-200">
@@ -348,7 +316,6 @@ export function Phase23IntegrationDemo() {
               <li>• Multiple choice support</li>
             </ul>
           </div>
-
           <div className="bg-white p-4 rounded-lg border border-gray-200">
             <div className="flex items-center mb-3">
               <span className="text-2xl mr-2">✅</span>
@@ -363,7 +330,6 @@ export function Phase23IntegrationDemo() {
               <li>• Group responses</li>
             </ul>
           </div>
-
           <div className="bg-white p-4 rounded-lg border border-gray-200">
             <div className="flex items-center mb-3">
               <span className="text-2xl mr-2">🔐</span>
@@ -376,7 +342,6 @@ export function Phase23IntegrationDemo() {
               <li>• Access control</li>
             </ul>
           </div>
-
           <div className="bg-white p-4 rounded-lg border border-gray-200">
             <div className="flex items-center mb-3">
               <span className="text-2xl mr-2">⚡</span>
@@ -396,5 +361,4 @@ export function Phase23IntegrationDemo() {
     </div>
   );
 }
-
 export default Phase23IntegrationDemo;

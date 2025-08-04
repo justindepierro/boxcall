@@ -4,7 +4,6 @@
  * React hook and component for integrating PDF export functionality
  * with the practice planner components.
  */
-
 import { useState, useCallback } from "react";
 import type { PracticeScriptPDFData, PDFExportOptions } from "./types";
 import {
@@ -13,7 +12,6 @@ import {
   previewPracticeScriptPDF,
   PDFError,
 } from "./index";
-
 export interface UsePracticeScriptPDFReturn {
   isExporting: boolean;
   error: string | null;
@@ -32,18 +30,15 @@ export interface UsePracticeScriptPDFReturn {
   ) => Promise<string | null>;
   clearError: () => void;
 }
-
 /**
  * Hook for managing practice script PDF operations
  */
 export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const clearError = useCallback(() => {
     setError(null);
   }, []);
-
   const exportToPDF = useCallback(
     async (
       data: PracticeScriptPDFData,
@@ -52,7 +47,6 @@ export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
       try {
         setIsExporting(true);
         setError(null);
-
         const blob = await exportPracticeScriptToPDF(data, options);
         return blob;
       } catch (err) {
@@ -69,7 +63,6 @@ export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
     },
     []
   );
-
   const downloadPDF = useCallback(
     async (
       data: PracticeScriptPDFData,
@@ -79,7 +72,6 @@ export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
       try {
         setIsExporting(true);
         setError(null);
-
         await downloadPracticeScriptPDF(data, filename, options);
       } catch (err) {
         const errorMessage =
@@ -94,7 +86,6 @@ export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
     },
     []
   );
-
   const previewPDF = useCallback(
     async (
       data: PracticeScriptPDFData,
@@ -103,7 +94,6 @@ export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
       try {
         setIsExporting(true);
         setError(null);
-
         const previewUrl = await previewPracticeScriptPDF(data, options);
         return previewUrl;
       } catch (err) {
@@ -120,7 +110,6 @@ export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
     },
     []
   );
-
   return {
     isExporting,
     error,
@@ -130,7 +119,6 @@ export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
     clearError,
   };
 };
-
 /**
  * Helper function to convert practice state to PDF data format
  */
@@ -173,14 +161,12 @@ export const convertPracticeStateToPDFData = (practiceState: {
 }): PracticeScriptPDFData => {
   // This would be implemented based on your practice state structure
   // For now, returning a basic structure as an example
-
   return {
     title: practiceState.title || "Practice Session",
     date: practiceState.date || new Date().toISOString().split("T")[0],
     duration: practiceState.duration || 120, // Default 2 hours
     location: practiceState.location || "Practice Field",
     weather: practiceState.weather,
-
     practiceBlocks: (practiceState.blocks || []).map((block) => ({
       id: block.id,
       title: block.title,
@@ -195,10 +181,8 @@ export const convertPracticeStateToPDFData = (practiceState: {
         (block.groups as Array<{ id: string; name: string; notes?: string }>) ||
         [],
     })),
-
     coaches: practiceState.coaches || [],
     equipment: practiceState.equipment || [],
-
     summary: practiceState.summary
       ? {
           totalMinutes: practiceState.summary.totalMinutes,
@@ -209,7 +193,6 @@ export const convertPracticeStateToPDFData = (practiceState: {
       : undefined,
   };
 };
-
 /**
  * Default PDF export options for practice scripts
  */
@@ -220,7 +203,6 @@ export const getDefaultPracticeScriptPDFOptions = (): PDFExportOptions => ({
   format: "A4",
   orientation: "portrait",
 });
-
 /**
  * Generate a filename for practice script PDF
  */

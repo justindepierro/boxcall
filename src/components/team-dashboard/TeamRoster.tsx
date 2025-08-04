@@ -1,10 +1,8 @@
 import React from "react";
 import { Typography } from "../design-system";
-
 interface TeamRosterProps {
   teamId: string;
 }
-
 /**
  * Team Roster - Team member overview
  *
@@ -16,7 +14,6 @@ interface TeamRosterProps {
  */
 export const TeamRoster: React.FC<TeamRosterProps> = () => {
   // TODO: Use teamId for fetching team-specific roster
-
   return (
     <div className="p-6">
       <Typography variant="headline-md" className="mb-4">

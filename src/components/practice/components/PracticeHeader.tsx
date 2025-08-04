@@ -20,12 +20,10 @@
  *   onClose={onClose}
  * />
  */
-
 import React from "react";
 import type { PracticeHeaderProps } from "../types";
 import { Typography } from "../../design-system/Typography";
 import Icon from "../../ui/Icon/Icon";
-
 export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
   event,
   userRole,
@@ -120,7 +118,6 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
           <Icon name="pdf" size="lg" className="text-white" />
           Print Practice to PDF
         </button>
-
         {/* Close Button */}
         <button
           onClick={onClose}

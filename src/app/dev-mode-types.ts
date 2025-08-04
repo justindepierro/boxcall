@@ -8,7 +8,6 @@ export type DevMode =
   | "view_as_player" // View as player
   | "view_as_manager" // View as team manager
   | "view_as_family"; // View as family member
-
 export type MockTeamData = {
   id: string;
   name: string;
@@ -32,7 +31,6 @@ export type MockTeamData = {
     role: "head_coach" | "assistant_coach" | "coordinator" | "manager";
   }>;
 };
-
 export interface DevModeContextType {
   devMode: DevMode;
   setDevMode: (mode: DevMode) => void;
@@ -41,7 +39,6 @@ export interface DevModeContextType {
   effectiveUserRole: string;
   effectiveTeamData: MockTeamData | null;
 }
-
 // Mock team data for development
 export const mockTeamData: MockTeamData = {
   id: "mock-team-eagles",

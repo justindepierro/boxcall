@@ -2,7 +2,6 @@ import React from "react";
 import { Auth } from "../components/auth";
 import { Typography } from "../components/design-system";
 import { Icon } from "../components/ui/Icon/Icon";
-
 /**
  * Login Page
  *
@@ -25,7 +24,6 @@ export const LoginPage: React.FC = () => {
             Sign in to your football management platform
           </Typography>
         </div>
-
         <Auth />
       </div>
     </div>

@@ -1,6 +1,5 @@
 // Event Polling Interface for Phase 2.3
 // Team-wide polling system with real-time results
-
 import React, { useState } from "react";
 import { useEventPolls, usePollResults } from "../hooks/useEnhancedCalendar";
 import type {
@@ -11,14 +10,12 @@ import type {
   PollResponse,
   PollResults,
 } from "../types/enhanced-calendar";
-
 interface EventPollingInterfaceProps {
   eventId: string;
   userId: string;
   userRole: "coach" | "player" | "parent";
   canCreatePolls?: boolean;
 }
-
 export function EventPollingInterface({
   eventId,
   userId,
@@ -28,15 +25,12 @@ export function EventPollingInterface({
   const { polls, loading, error, createPoll, submitResponse, closePoll } =
     useEventPolls(eventId);
   const [showCreateForm, setShowCreateForm] = useState(false);
-
   const handleCreatePoll = () => {
     setShowCreateForm(true);
   };
-
   const handlePollCreated = () => {
     setShowCreateForm(false);
   };
-
   if (loading && polls.length === 0) {
     return (
       <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -50,7 +44,6 @@ export function EventPollingInterface({
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -78,7 +71,6 @@ export function EventPollingInterface({
       </div>
     );
   }
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -113,7 +105,6 @@ export function EventPollingInterface({
           </button>
         )}
       </div>
-
       {/* Create Poll Form */}
       {showCreateForm && (
         <CreatePollForm
@@ -123,7 +114,6 @@ export function EventPollingInterface({
           createPoll={createPoll}
         />
       )}
-
       {/* Polls List */}
       {polls.length > 0 && (
         <div className="space-y-4">
@@ -140,7 +130,6 @@ export function EventPollingInterface({
           ))}
         </div>
       )}
-
       {polls.length === 0 && !showCreateForm && (
         <div className="text-center py-12">
           <svg
@@ -169,18 +158,15 @@ export function EventPollingInterface({
     </div>
   );
 }
-
 // ============================================================================
 // CREATE POLL FORM
 // ============================================================================
-
 interface CreatePollFormProps {
   eventId: string;
   onCancel: () => void;
   onCreate: () => void;
   createPoll: (pollData: Partial<EventPoll>) => Promise<EventPoll>;
 }
-
 function CreatePollForm({
   eventId,
   onCancel,
@@ -207,11 +193,9 @@ function CreatePollForm({
     { text: "", order_index: 1 },
   ]);
   const [loading, setLoading] = useState(false);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const validOptions = options.filter((opt) => opt.text.trim() !== "");
       await createPoll({
@@ -227,29 +211,24 @@ function CreatePollForm({
       setLoading(false);
     }
   };
-
   const addOption = () => {
     setOptions((prev) => [...prev, { text: "", order_index: prev.length }]);
   };
-
   const updateOption = (index: number, text: string) => {
     setOptions((prev) =>
       prev.map((opt, i) => (i === index ? { ...opt, text } : opt))
     );
   };
-
   const removeOption = (index: number) => {
     if (options.length > 2) {
       setOptions((prev) => prev.filter((_, i) => i !== index));
     }
   };
-
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <h4 className="text-lg font-medium text-gray-900 mb-4">
         Create New Poll
       </h4>
-
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Title */}
         <div>
@@ -271,7 +250,6 @@ function CreatePollForm({
             required
           />
         </div>
-
         {/* Question */}
         <div>
           <label
@@ -292,7 +270,6 @@ function CreatePollForm({
             required
           />
         </div>
-
         {/* Poll Type */}
         <div>
           <label
@@ -319,7 +296,6 @@ function CreatePollForm({
             <option value="text_response">Text Response</option>
           </select>
         </div>
-
         {/* Options (for choice-based polls) */}
         {["single_choice", "multiple_choice"].includes(formData.poll_type) && (
           <div>
@@ -370,7 +346,6 @@ function CreatePollForm({
             </div>
           </div>
         )}
-
         {/* Settings */}
         <div className="space-y-3">
           <div className="flex items-center">
@@ -390,7 +365,6 @@ function CreatePollForm({
               Anonymous responses
             </label>
           </div>
-
           <div className="flex items-center">
             <input
               id="comments"
@@ -409,7 +383,6 @@ function CreatePollForm({
             </label>
           </div>
         </div>
-
         {/* Deadline */}
         <div>
           <label
@@ -428,7 +401,6 @@ function CreatePollForm({
             className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           />
         </div>
-
         {/* Actions */}
         <div className="flex items-center justify-end space-x-3 pt-4">
           <button
@@ -450,11 +422,9 @@ function CreatePollForm({
     </div>
   );
 }
-
 // ============================================================================
 // POLL CARD
 // ============================================================================
-
 interface PollCardProps {
   poll: EventPoll;
   userId: string;
@@ -467,7 +437,6 @@ interface PollCardProps {
   ) => Promise<PollResponse>;
   onClosePoll: (pollId: string) => Promise<void>;
 }
-
 function PollCard({
   poll,
   userId,
@@ -481,7 +450,6 @@ function PollCard({
   const [textResponse, setTextResponse] = useState("");
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
@@ -501,7 +469,6 @@ function PollCard({
       setSubmitting(false);
     }
   };
-
   const handleOptionSelect = (optionId: string) => {
     if (poll.poll_type === "single_choice" || poll.poll_type === "yes_no") {
       setSelectedOptions([optionId]);
@@ -513,11 +480,9 @@ function PollCard({
       );
     }
   };
-
   const isDeadlinePassed =
     poll.deadline && new Date(poll.deadline) < new Date();
   const canRespond = poll.is_active && !isDeadlinePassed;
-
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       {/* Poll Header */}
@@ -535,7 +500,6 @@ function PollCard({
             </p>
           )}
         </div>
-
         <div className="flex items-center space-x-2">
           <span
             className={`px-2 py-1 text-xs font-medium rounded-full ${
@@ -546,7 +510,6 @@ function PollCard({
           >
             {poll.is_active ? "Active" : "Closed"}
           </span>
-
           {canManagePolls && (
             <div className="flex items-center space-x-1">
               <button
@@ -567,7 +530,6 @@ function PollCard({
           )}
         </div>
       </div>
-
       {/* Poll Response Form */}
       {canRespond && !showResults && (
         <div className="mb-4">
@@ -596,7 +558,6 @@ function PollCard({
               ))}
             </div>
           )}
-
           {/* Text response */}
           {poll.poll_type === "text_response" && (
             <textarea
@@ -607,7 +568,6 @@ function PollCard({
               className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
           )}
-
           {/* Comments */}
           {poll.allow_comments && (
             <div className="mt-3">
@@ -620,7 +580,6 @@ function PollCard({
               />
             </div>
           )}
-
           {/* Submit Button */}
           <div className="mt-4">
             <button
@@ -637,7 +596,6 @@ function PollCard({
           </div>
         </div>
       )}
-
       {/* Poll Results */}
       {showResults && (
         <PollResults
@@ -647,7 +605,6 @@ function PollCard({
           isAnonymous={poll.is_anonymous}
         />
       )}
-
       {!canRespond && !showResults && (
         <div className="text-center py-4 text-gray-500">
           {isDeadlinePassed ? "This poll has expired" : "This poll is closed"}
@@ -656,18 +613,15 @@ function PollCard({
     </div>
   );
 }
-
 // ============================================================================
 // POLL RESULTS
 // ============================================================================
-
 interface PollResultsProps {
   pollId: string;
   results: PollResults | null;
   loading: boolean;
   isAnonymous: boolean;
 }
-
 function PollResults({ results, loading, isAnonymous }: PollResultsProps) {
   if (loading) {
     return (
@@ -681,9 +635,7 @@ function PollResults({ results, loading, isAnonymous }: PollResultsProps) {
       </div>
     );
   }
-
   if (!results) return null;
-
   return (
     <div className="border-t border-gray-200 pt-4">
       <div className="flex items-center justify-between mb-4">
@@ -693,7 +645,6 @@ function PollResults({ results, loading, isAnonymous }: PollResultsProps) {
           {results.response_rate.toFixed(1)}%)
         </span>
       </div>
-
       {/* Option Results */}
       {results.option_results && results.option_results.length > 0 && (
         <div className="space-y-3 mb-4">
@@ -715,7 +666,6 @@ function PollResults({ results, loading, isAnonymous }: PollResultsProps) {
           ))}
         </div>
       )}
-
       {/* Text Responses */}
       {results.text_responses && results.text_responses.length > 0 && (
         <div className="mb-4">
@@ -734,7 +684,6 @@ function PollResults({ results, loading, isAnonymous }: PollResultsProps) {
           </div>
         </div>
       )}
-
       {/* Comments */}
       {results.comments && results.comments.length > 0 && (
         <div>

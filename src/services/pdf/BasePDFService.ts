@@ -4,20 +4,16 @@
  * Abstract base class for all PDF generation services.
  * Provides common functionality and consistent interface.
  */
-
 import type { PDFExportOptions, PDFTemplate, PDFBranding } from "./types";
 import { PDFError } from "./types";
 import { PDFColors, PDFFonts } from "./styles";
-
 export abstract class BasePDFService {
   protected template: PDFTemplate;
   protected branding?: PDFBranding;
-
   constructor(template?: PDFTemplate, branding?: PDFBranding) {
     this.template = template || this.getDefaultTemplate();
     this.branding = branding;
   }
-
   /**
    * Generate PDF blob from document
    */
@@ -35,7 +31,6 @@ export abstract class BasePDFService {
       );
     }
   }
-
   /**
    * Download PDF file
    */
@@ -55,7 +50,6 @@ export abstract class BasePDFService {
       );
     }
   }
-
   /**
    * Generate filename with timestamp
    */
@@ -70,7 +64,6 @@ export abstract class BasePDFService {
       .split(".")[0];
     return `${prefix}_${timestamp}.${extension}`;
   }
-
   /**
    * Validate export options and set defaults
    */
@@ -79,7 +72,6 @@ export abstract class BasePDFService {
     if (!options.format) {
       options.format = "Letter";
     }
-
     if (!["A4", "Letter", "Legal"].includes(options.format)) {
       throw new PDFError(
         "Invalid page format",
@@ -87,12 +79,10 @@ export abstract class BasePDFService {
         `Format must be one of: A4, Letter, Legal. Got: ${options.format}`
       );
     }
-
     // Set default orientation if not provided
     if (!options.orientation) {
       options.orientation = "portrait";
     }
-
     if (!["portrait", "landscape"].includes(options.orientation)) {
       throw new PDFError(
         "Invalid page orientation",
@@ -100,7 +90,6 @@ export abstract class BasePDFService {
         `Orientation must be portrait or landscape. Got: ${options.orientation}`
       );
     }
-
     if (options.quality && (options.quality < 0.1 || options.quality > 1.0)) {
       throw new PDFError(
         "Invalid quality setting",
@@ -109,7 +98,6 @@ export abstract class BasePDFService {
       );
     }
   }
-
   /**
    * Get default template settings
    */
@@ -149,7 +137,6 @@ export abstract class BasePDFService {
       },
     };
   }
-
   /**
    * Get branding with fallbacks
    */
@@ -168,7 +155,6 @@ export abstract class BasePDFService {
       }
     );
   }
-
   /**
    * Format date for PDF display
    */
@@ -178,22 +164,18 @@ export abstract class BasePDFService {
       month: "long",
       day: "numeric",
     };
-
     if (includeTime) {
       options.hour = "2-digit";
       options.minute = "2-digit";
     }
-
     return date.toLocaleDateString("en-US", options);
   }
-
   /**
    * Format time duration in minutes to readable string
    */
   protected formatDuration(minutes: number): string {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-
     if (hours === 0) {
       return `${mins} min`;
     } else if (mins === 0) {
@@ -202,7 +184,6 @@ export abstract class BasePDFService {
       return `${hours}:${mins.toString().padStart(2, "0")}`;
     }
   }
-
   /**
    * Abstract methods that must be implemented by subclasses
    */
@@ -217,7 +198,6 @@ export abstract class BasePDFService {
     options: PDFExportOptions
   ): Promise<string>;
 }
-
 /**
  * PDF Service Factory
  *
@@ -227,7 +207,6 @@ export class PDFServiceFactory {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private static services: Map<string, new (...args: any[]) => BasePDFService> =
     new Map();
-
   /**
    * Register a PDF service for a specific document type
    */
@@ -238,7 +217,6 @@ export class PDFServiceFactory {
   ): void {
     this.services.set(documentType, serviceClass);
   }
-
   /**
    * Create PDF service instance for document type
    */
@@ -248,7 +226,6 @@ export class PDFServiceFactory {
     branding?: PDFBranding
   ): BasePDFService {
     const ServiceClass = this.services.get(documentType);
-
     if (!ServiceClass) {
       throw new PDFError(
         `No PDF service registered for document type: ${documentType}`,
@@ -256,10 +233,8 @@ export class PDFServiceFactory {
         `Available types: ${Array.from(this.services.keys()).join(", ")}`
       );
     }
-
     return new ServiceClass(template, branding);
   }
-
   /**
    * Get all registered document types
    */
@@ -267,7 +242,6 @@ export class PDFServiceFactory {
     return Array.from(this.services.keys());
   }
 }
-
 /**
  * PDF Utility Functions
  */
@@ -283,7 +257,6 @@ export class PDFUtils {
       reader.readAsDataURL(blob);
     });
   }
-
   /**
    * Calculate optimal page margins based on content
    */
@@ -298,11 +271,9 @@ export class PDFUtils {
       Letter: { width: 612, height: 792 },
       Legal: { width: 612, height: 1008 },
     };
-
     const page =
       pageDimensions[pageFormat as keyof typeof pageDimensions] ||
       pageDimensions.A4;
-
     // Calculate margins to center content with minimum padding
     const minMargin = 40;
     const horizontalMargin = Math.max(
@@ -313,7 +284,6 @@ export class PDFUtils {
       minMargin,
       (page.height - contentHeight) / 2
     );
-
     return {
       top: verticalMargin,
       right: horizontalMargin,
@@ -321,7 +291,6 @@ export class PDFUtils {
       left: horizontalMargin,
     };
   }
-
   /**
    * Estimate page count based on content length
    */
@@ -335,7 +304,6 @@ export class PDFUtils {
     const totalContentHeight = contentBlocks * averageBlockHeight;
     return Math.ceil(totalContentHeight / usableHeight);
   }
-
   /**
    * Generate PDF metadata
    */

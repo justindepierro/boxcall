@@ -1,5 +1,4 @@
 import type { Play } from "../types/play";
-
 // Sample plays for demo purposes
 export const DEMO_PLAYS: Play[] = [
   {
@@ -186,7 +185,6 @@ export const DEMO_PLAYS: Play[] = [
     updated_at: new Date("2024-01-22"),
   },
 ];
-
 // Helper function to get demo plays with optional filtering
 export const getDemoPlays = (filters?: {
   formation?: string;
@@ -196,23 +194,18 @@ export const getDemoPlays = (filters?: {
   search?: string;
 }): Play[] => {
   let plays = [...DEMO_PLAYS];
-
   if (filters?.formation) {
     plays = plays.filter((play) => play.formation === filters.formation);
   }
-
   if (filters?.playType) {
     plays = plays.filter((play) => play.p_type === filters.playType);
   }
-
   if (filters?.down) {
     plays = plays.filter((play) => play.pref_down === filters.down);
   }
-
   if (filters?.distance) {
     plays = plays.filter((play) => play.pref_dis === filters.distance);
   }
-
   if (filters?.search) {
     const searchLower = filters.search.toLowerCase();
     plays = plays.filter(
@@ -223,6 +216,5 @@ export const getDemoPlays = (filters?: {
         play.tags?.some((tag) => tag.toLowerCase().includes(searchLower))
     );
   }
-
   return plays;
 };

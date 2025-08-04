@@ -1,6 +1,5 @@
 import React from "react";
 import { PlaybookPage } from "./PlaybookPage";
-
 /**
  * Playbook - Team plays and strategy management
  * Available to all team members with role-based permissions
@@ -16,5 +15,4 @@ import { PlaybookPage } from "./PlaybookPage";
 export const Playbook: React.FC = () => {
   return <PlaybookPage />;
 };
-
 export default Playbook;

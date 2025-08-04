@@ -40,10 +40,8 @@ export interface Play {
   created_at: Date;
   updated_at: Date;
 }
-
 // Play type enumeration matching database constraint
 export type PlayType = "Pass" | "Run" | "RPO" | "Play Action";
-
 // Formation types commonly used in football
 export interface FormationOption {
   name: string;
@@ -51,14 +49,12 @@ export interface FormationOption {
   personnel: string;
   description: string;
 }
-
 // Builder wizard step data
 export interface PlayBuilderData {
   // Step 1: Basic Info
   play_name: string;
   p_type: PlayType;
   one_word_play?: string;
-
   // Step 2: Formation
   formation: string;
   f_dir?: string;
@@ -67,12 +63,10 @@ export interface PlayBuilderData {
   f_type?: string;
   personnel?: string;
   back_align?: string;
-
   // Step 3: Protection & Motion
   protection?: string;
   shift?: string;
   motion?: string;
-
   // Step 4: Play Details
   p_dir?: string;
   p_tag1?: string;
@@ -82,20 +76,17 @@ export interface PlayBuilderData {
   check_into?: string;
   r_str?: string;
   p_str?: string;
-
   // Step 5: Preferences
   pref_down?: string;
   pref_dis?: string;
   pref_hash?: string;
   pref_cov?: string;
   pref_front?: string;
-
   // Step 6: Additional
   notes?: string;
   tags?: string[];
   confidence_base: number;
 }
-
 // Common formation options
 export const FORMATION_OPTIONS: FormationOption[] = [
   {
@@ -177,10 +168,8 @@ export const FORMATION_OPTIONS: FormationOption[] = [
     description: "Tight receiver bunch",
   },
 ];
-
 // Direction options
 export const DIRECTION_OPTIONS = ["Left", "Right", "Middle"] as const;
-
 // Formation tags
 export const FORMATION_TAGS = [
   "Far",
@@ -194,7 +183,6 @@ export const FORMATION_TAGS = [
   "Wide",
   "Next",
 ] as const;
-
 // Back alignment options
 export const BACK_ALIGN_OPTIONS = [
   "Default",
@@ -204,7 +192,6 @@ export const BACK_ALIGN_OPTIONS = [
   "Tight",
   "Offset",
 ] as const;
-
 // Protection schemes
 export const PROTECTION_OPTIONS = [
   "Half",
@@ -216,10 +203,8 @@ export const PROTECTION_OPTIONS = [
   "Seven",
   "Hot",
 ] as const;
-
 // Down preferences
 export const DOWN_OPTIONS = ["Any", "1", "2", "3", "4"] as const;
-
 // Distance preferences
 export const DISTANCE_OPTIONS = [
   "Any",
@@ -231,10 +216,8 @@ export const DISTANCE_OPTIONS = [
   "7-10",
   "11+",
 ] as const;
-
 // Hash preferences
 export const HASH_OPTIONS = ["Any", "Left", "Right", "Middle"] as const;
-
 // Play type options for filtering
 export const PLAY_TYPE_OPTIONS: {
   value: PlayType;

@@ -4,7 +4,6 @@ import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Icon } from "../components/ui/Icon/Icon";
 import { supabase } from "../lib/supabase";
-
 /**
  * ProfilePage Component
  *
@@ -19,7 +18,6 @@ export const ProfilePage: React.FC = () => {
     type: "success" | "error";
     text: string;
   } | null>(null);
-
   // Form state
   const [formData, setFormData] = useState({
     display_name: "",
@@ -28,7 +26,6 @@ export const ProfilePage: React.FC = () => {
     bio: "",
     address: "",
   });
-
   // Load profile data
   useEffect(() => {
     if (profile) {
@@ -41,7 +38,6 @@ export const ProfilePage: React.FC = () => {
       });
     }
   }, [profile]);
-
   // Handle form input changes
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -49,15 +45,12 @@ export const ProfilePage: React.FC = () => {
       [field]: value,
     }));
   };
-
   // Save profile changes
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!profile) return;
-
     setSaving(true);
     setMessage(null);
-
     try {
       const { error } = await supabase
         .from("profiles")
@@ -70,7 +63,6 @@ export const ProfilePage: React.FC = () => {
           updated_at: new Date().toISOString(),
         })
         .eq("id", profile.id);
-
       if (error) {
         setMessage({
           type: "error",
@@ -85,11 +77,9 @@ export const ProfilePage: React.FC = () => {
       setSaving(false);
     }
   };
-
   // Handle password change
   const handlePasswordChange = async () => {
     if (!profile?.email) return;
-
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(
         profile.email,
@@ -97,7 +87,6 @@ export const ProfilePage: React.FC = () => {
           redirectTo: `${window.location.origin}/reset-password`,
         }
       );
-
       if (error) {
         setMessage({
           type: "error",
@@ -113,7 +102,6 @@ export const ProfilePage: React.FC = () => {
       setMessage({ type: "error", text: "An unexpected error occurred" });
     }
   };
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -121,7 +109,6 @@ export const ProfilePage: React.FC = () => {
       </div>
     );
   }
-
   if (!profile) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -136,7 +123,6 @@ export const ProfilePage: React.FC = () => {
       </div>
     );
   }
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -150,7 +136,6 @@ export const ProfilePage: React.FC = () => {
             Manage your account information and preferences
           </p>
         </div>
-
         {/* Message Display */}
         {message && (
           <div
@@ -163,13 +148,11 @@ export const ProfilePage: React.FC = () => {
             {message.text}
           </div>
         )}
-
         {/* Profile Form */}
         <form onSubmit={handleSaveProfile} className="space-y-6">
           {/* Basic Information */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -185,7 +168,6 @@ export const ProfilePage: React.FC = () => {
                   Email cannot be changed
                 </p>
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Display Name
@@ -199,7 +181,6 @@ export const ProfilePage: React.FC = () => {
                   }
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Full Name
@@ -213,7 +194,6 @@ export const ProfilePage: React.FC = () => {
                   }
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Phone Number
@@ -225,7 +205,6 @@ export const ProfilePage: React.FC = () => {
                   onChange={(e) => handleInputChange("phone", e.target.value)}
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Role
@@ -240,7 +219,6 @@ export const ProfilePage: React.FC = () => {
                   Role is set by team administrators
                 </p>
               </div>
-
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Address
@@ -253,7 +231,6 @@ export const ProfilePage: React.FC = () => {
                 />
               </div>
             </div>
-
             <div className="mt-6">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Bio
@@ -267,11 +244,9 @@ export const ProfilePage: React.FC = () => {
               />
             </div>
           </div>
-
           {/* Account Security */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold mb-4">Account Security</h2>
-
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -298,7 +273,6 @@ export const ProfilePage: React.FC = () => {
               </div>
             </div>
           </div>
-
           {/* Actions */}
           <div className="flex justify-between items-center">
             <Button
@@ -308,7 +282,6 @@ export const ProfilePage: React.FC = () => {
             >
               Cancel
             </Button>
-
             <Button
               type="submit"
               variant="primary"
@@ -319,7 +292,6 @@ export const ProfilePage: React.FC = () => {
             </Button>
           </div>
         </form>
-
         {/* Account Info */}
         <div className="mt-8 bg-gray-50 dark:bg-gray-800/50 rounded-lg p-6">
           <h3 className="text-lg font-semibold mb-3">Account Information</h3>

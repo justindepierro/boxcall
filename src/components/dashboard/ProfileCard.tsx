@@ -4,14 +4,12 @@ import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 import type { Profile } from "../../types/database";
 import type { UserRole } from "../../types/phase4-3";
-
 interface ProfileCardProps {
   profile: Profile;
   userRole: UserRole;
   isViewMode?: boolean; // When viewed in modal by other users
   onEditClick?: () => void;
 }
-
 /**
  * Profile Card - Compact personal profile display
  *
@@ -28,11 +26,9 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   onEditClick,
 }) => {
   const [showFullBio, setShowFullBio] = useState(false);
-
   const isPlayer = userRole === "player";
   const isCoach = userRole === "coach";
   const isFamily = userRole === "family";
-
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -41,9 +37,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
       .toUpperCase()
       .slice(0, 2);
   };
-
   const displayName = profile.full_name || profile.display_name || "Player";
-
   return (
     <Card className="compact-card h-full">
       {/* Header */}
@@ -62,7 +56,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
           </Button>
         )}
       </div>
-
       {/* Profile Content */}
       <div className="space-y-tight">
         {/* Avatar & Name */}
@@ -84,7 +77,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             </Typography>
           </div>
         </div>
-
         {/* Role-Specific Info */}
         {isPlayer && (
           <div className="text-xs text-gray-600">
@@ -93,7 +85,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             </Typography>
           </div>
         )}
-
         {isCoach && (
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
@@ -104,7 +95,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             </div>
           </div>
         )}
-
         {isFamily && (
           <div className="flex items-center space-x-2">
             <Icon name="users" size={14} color="jade" />
@@ -113,7 +103,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             </Typography>
           </div>
         )}
-
         {/* Bio */}
         {profile.bio && (
           <div className="pt-1 border-t border-gray-100">
@@ -137,7 +126,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             )}
           </div>
         )}
-
         {/* Contact Info */}
         {profile.phone && !isViewMode && (
           <div className="flex items-center space-x-2 pt-1 border-t border-gray-100">

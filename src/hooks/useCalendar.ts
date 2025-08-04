@@ -6,7 +6,6 @@ import type {
   EventRSVP,
 } from "../services/calendarService";
 import { CalendarService } from "../services/calendarService";
-
 /**
  * useCalendar Hook
  *
@@ -18,7 +17,6 @@ export const useCalendar = (userId: string, teamId?: string) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<CalendarFilters>({});
-
   /**
    * Fetch calendar events
    */
@@ -26,9 +24,7 @@ export const useCalendar = (userId: string, teamId?: string) => {
     try {
       setLoading(true);
       setError(null);
-
       let fetchedEvents: CalendarEvent[];
-
       if (teamId) {
         // Fetch team-specific events
         fetchedEvents = await CalendarService.getTeamEvents(teamId, filters);
@@ -36,7 +32,6 @@ export const useCalendar = (userId: string, teamId?: string) => {
         // Fetch user events across all teams
         fetchedEvents = await CalendarService.getUserEvents(userId, filters);
       }
-
       setEvents(fetchedEvents);
     } catch (err) {
       console.error("Error fetching calendar events:", err);
@@ -45,7 +40,6 @@ export const useCalendar = (userId: string, teamId?: string) => {
       setLoading(false);
     }
   }, [userId, teamId, filters]);
-
   /**
    * Create a new event
    */
@@ -62,7 +56,6 @@ export const useCalendar = (userId: string, teamId?: string) => {
     }
     return null;
   }, []);
-
   /**
    * Update an existing event
    */
@@ -87,7 +80,6 @@ export const useCalendar = (userId: string, teamId?: string) => {
     },
     []
   );
-
   /**
    * Delete an event
    */
@@ -104,33 +96,28 @@ export const useCalendar = (userId: string, teamId?: string) => {
     }
     return false;
   }, []);
-
   /**
    * Apply filters to calendar view
    */
   const applyFilters = useCallback((newFilters: CalendarFilters) => {
     setFilters(newFilters);
   }, []);
-
   /**
    * Clear all filters
    */
   const clearFilters = useCallback(() => {
     setFilters({});
   }, []);
-
   /**
    * Refresh calendar data
    */
   const refreshCalendar = useCallback(() => {
     fetchEvents();
   }, [fetchEvents]);
-
   // Initial load
   useEffect(() => {
     fetchEvents();
   }, [fetchEvents]);
-
   return {
     events,
     loading,
@@ -144,7 +131,6 @@ export const useCalendar = (userId: string, teamId?: string) => {
     refreshCalendar,
   };
 };
-
 /**
  * useCalendarRSVP Hook
  *
@@ -154,7 +140,6 @@ export const useCalendarRSVP = (eventId: string) => {
   const [rsvps, setRSVPs] = useState<EventRSVP[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
   /**
    * Fetch RSVP data for event
    */
@@ -171,7 +156,6 @@ export const useCalendarRSVP = (eventId: string) => {
       setLoading(false);
     }
   }, [eventId]);
-
   /**
    * Update user's RSVP status
    */
@@ -209,7 +193,6 @@ export const useCalendarRSVP = (eventId: string) => {
     },
     [eventId]
   );
-
   /**
    * Get RSVP summary stats
    */
@@ -222,7 +205,6 @@ export const useCalendarRSVP = (eventId: string) => {
     ).length;
     const maybe = rsvps.filter((rsvp) => rsvp.status === "maybe").length;
     const total = rsvps.length;
-
     return {
       attending,
       notAttending,
@@ -231,12 +213,10 @@ export const useCalendarRSVP = (eventId: string) => {
       attendanceRate: total > 0 ? (attending / total) * 100 : 0,
     };
   }, [rsvps]);
-
   // Initial load
   useEffect(() => {
     fetchRSVPs();
   }, [fetchRSVPs]);
-
   return {
     rsvps,
     loading,
@@ -246,7 +226,6 @@ export const useCalendarRSVP = (eventId: string) => {
     refreshRSVPs: fetchRSVPs,
   };
 };
-
 /**
  * useUpcomingEvents Hook
  *
@@ -256,7 +235,6 @@ export const useUpcomingEvents = (userId: string, limit: number = 5) => {
   const [upcomingEvents, setUpcomingEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
   const fetchUpcomingEvents = useCallback(async () => {
     try {
       setLoading(true);
@@ -270,11 +248,9 @@ export const useUpcomingEvents = (userId: string, limit: number = 5) => {
       setLoading(false);
     }
   }, [userId, limit]);
-
   useEffect(() => {
     fetchUpcomingEvents();
   }, [fetchUpcomingEvents]);
-
   return {
     upcomingEvents,
     loading,

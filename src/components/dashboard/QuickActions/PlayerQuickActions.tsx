@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
-
 /**
  * Player Quick Actions - Player-specific dashboard shortcuts
  *
@@ -23,7 +22,6 @@ export const PlayerQuickActions: React.FC = () => {
         <Icon name="bar-chart" size={14} className="mr-2" />
         View My Stats
       </Button>
-
       <Button
         variant="outline"
         size="sm"
@@ -33,7 +31,6 @@ export const PlayerQuickActions: React.FC = () => {
         <Icon name="book" size={14} className="mr-2" />
         Study Playbook
       </Button>
-
       <Button
         variant="outline"
         size="sm"
@@ -43,7 +40,6 @@ export const PlayerQuickActions: React.FC = () => {
         <Icon name="file" size={14} className="mr-2" />
         Check Assignments
       </Button>
-
       <Button
         variant="outline"
         size="sm"
@@ -53,7 +49,6 @@ export const PlayerQuickActions: React.FC = () => {
         <Icon name="message" size={14} className="mr-2" />
         Team Chat
       </Button>
-
       <Button
         variant="ghost"
         size="sm"
@@ -63,7 +58,6 @@ export const PlayerQuickActions: React.FC = () => {
         <Icon name="shield" size={14} className="mr-2" />
         Update My Gear
       </Button>
-
       <Button
         variant="ghost"
         size="sm"

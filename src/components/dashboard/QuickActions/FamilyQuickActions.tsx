@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
-
 /**
  * Family Quick Actions - Family member-specific dashboard shortcuts
  *
@@ -23,7 +22,6 @@ export const FamilyQuickActions: React.FC = () => {
         <Icon name="trending-up" size={14} className="mr-2" />
         My Player&apos;s Progress
       </Button>
-
       <Button
         variant="outline"
         size="sm"
@@ -33,7 +31,6 @@ export const FamilyQuickActions: React.FC = () => {
         <Icon name="calendar" size={14} className="mr-2" />
         Team Schedule
       </Button>
-
       <Button
         variant="outline"
         size="sm"
@@ -43,7 +40,6 @@ export const FamilyQuickActions: React.FC = () => {
         <Icon name="message" size={14} className="mr-2" />
         Message Coach
       </Button>
-
       <Button
         variant="outline"
         size="sm"
@@ -53,7 +49,6 @@ export const FamilyQuickActions: React.FC = () => {
         <Icon name="play" size={14} className="mr-2" />
         Game Highlights
       </Button>
-
       <Button
         variant="ghost"
         size="sm"
@@ -63,7 +58,6 @@ export const FamilyQuickActions: React.FC = () => {
         <Icon name="check" size={14} className="mr-2" />
         RSVP to Events
       </Button>
-
       <Button
         variant="ghost"
         size="sm"
@@ -73,7 +67,6 @@ export const FamilyQuickActions: React.FC = () => {
         <Icon name="eye" size={14} className="mr-2" />
         Team Photos
       </Button>
-
       <Button
         variant="ghost"
         size="sm"

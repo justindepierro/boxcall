@@ -1,21 +1,17 @@
 import type { PracticeBlock } from "./types";
-
 /**
  * Format duration in minutes to hours:minutes format
  */
 export const formatDuration = (minutes: number): string => {
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
-
   if (hours === 0) {
     return `${remainingMinutes}m`;
   }
-
   return remainingMinutes === 0
     ? `${hours}h`
     : `${hours}h ${remainingMinutes}m`;
 };
-
 /**
  * Get category color classes for styling
  */
@@ -39,7 +35,6 @@ export const getCategoryColor = (category: PracticeBlock["category"]) => {
       return "bg-gray-100 text-gray-800";
   }
 };
-
 /**
  * Recalculate start/end times for blocks in chronological order
  */
@@ -48,15 +43,12 @@ export const recalculateBlockTimes = (
   eventStart: string | Date
 ): PracticeBlock[] => {
   if (!eventStart || blocks.length === 0) return blocks;
-
   const startTime = new Date(eventStart);
   let currentMinutes = 0;
-
   return blocks.map((block) => {
     const blockStart = new Date(startTime.getTime() + currentMinutes * 60000);
     currentMinutes += block.duration;
     const blockEnd = new Date(startTime.getTime() + currentMinutes * 60000);
-
     return {
       ...block,
       startTime: blockStart.toLocaleTimeString([], {
@@ -70,7 +62,6 @@ export const recalculateBlockTimes = (
     };
   });
 };
-
 /**
  * Check if adding a new block would cause scheduling conflicts
  */
@@ -84,7 +75,6 @@ export const checkForConflicts = (
     newBlock.duration;
   return totalWithNew > scheduledDuration;
 };
-
 /**
  * Calculate practice duration from event start/end times
  */
@@ -97,7 +87,6 @@ export const calculateScheduledDuration = (
   const endTime = new Date(end);
   return (endTime.getTime() - startTime.getTime()) / (1000 * 60); // Convert to minutes
 };
-
 /**
  * Get sample practice blocks for demonstration
  */
@@ -187,7 +176,6 @@ export const getSamplePracticeBlocks = (): PracticeBlock[] => [
     ],
   },
 ];
-
 /**
  * Save practice plan to localStorage
  */
@@ -201,7 +189,6 @@ export const savePracticeToStorage = (
   );
   localStorage.setItem(savedPracticeKey, JSON.stringify(blocksToSave));
 };
-
 /**
  * Load practice plan from localStorage
  */
@@ -210,7 +197,6 @@ export const loadPracticeFromStorage = (
 ): PracticeBlock[] | null => {
   const savedPracticeKey = `practice_plan_${eventId || "default"}`;
   const savedPractice = localStorage.getItem(savedPracticeKey);
-
   if (savedPractice) {
     try {
       return JSON.parse(savedPractice);

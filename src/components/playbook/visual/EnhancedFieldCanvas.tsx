@@ -9,7 +9,6 @@ import {
 } from "./formationConstants";
 import { FieldBackground } from "./FieldBackgrounds";
 import { DrawingTools } from "./DrawingTools";
-
 interface EnhancedFieldCanvasProps {
   play?: Play;
   onPlayerMove?: (playerId: string, x: number, y: number) => void;
@@ -18,9 +17,7 @@ interface EnhancedFieldCanvasProps {
   className?: string;
   lineOfScrimmage?: number; // Yard line (0-100)
 }
-
 type FieldMode = "football" | "redzone" | "blank" | "lines" | "grid" | "dots";
-
 export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
   play,
   onPlayerMove,
@@ -31,25 +28,21 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
-
   const [fieldMode, setFieldMode] = useState<FieldMode>("football");
   const [zoom, setZoom] = useState(1);
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
   const [isDrawingRoute, setIsDrawingRoute] = useState(false);
   const [selectedTool, setSelectedTool] = useState("select");
-
   // Canvas dimensions - proper football field aspect ratio
   // 53.33 yards wide, 40 yards visible (10 behind LOS + 30 ahead)
   const FIELD_WIDTH = 800;
   const FIELD_HEIGHT = 600; // 800 * (40/53.33) ≈ 600
   const MIN_ZOOM = 0.5;
   const MAX_ZOOM = 3.0;
-
   // Setup players based on formation with proper field orientation
   const setupPlayers = useCallback(
     (canvas: fabric.Canvas, playData: Play) => {
       if (!canvas) return;
-
       // Clear existing players
       const objects = canvas.getObjects();
       objects.forEach((obj) => {
@@ -57,10 +50,8 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
           canvas.remove(obj);
         }
       });
-
       const formation = playData.formation || "Shotgun";
       const players = FORMATION_TEMPLATES[formation] || [];
-
       players.forEach((player) => {
         // Convert formation coordinates to field coordinates
         // Formation X (0-100) maps to field width (sideline to sideline)
@@ -69,11 +60,9 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
         // Y coordinate: 25% of field = Line of Scrimmage
         // Player Y of 50 = at LOS, 0 = 10 yards behind, 100 = 30 yards ahead
         const y = FIELD_HEIGHT * (0.25 + ((player.y - 50) / 100) * 0.75);
-
         const color = getPositionColor(player.position);
         const isOLine = isOffensiveLine(player.position);
         const radius = isOLine ? 8 : 12;
-
         // Create player circle
         const playerCircle = new fabric.Circle({
           left: x,
@@ -87,16 +76,13 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
           selectable: !readOnly,
           moveCursor: readOnly ? "default" : "move",
         });
-
         // Add custom properties
         playerCircle.set("playerId", player.id);
         playerCircle.set("playerPosition", player.position);
         playerCircle.set("isPlayer", true);
         playerCircle.set("originalX", x);
         playerCircle.set("originalY", y);
-
         canvas.add(playerCircle);
-
         // Player number
         if (player.number) {
           const playerNumber = new fabric.Text(player.number.toString(), {
@@ -110,13 +96,11 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
             selectable: false,
             evented: false,
           });
-
           playerNumber.set("playerId", player.id);
           playerNumber.set("isPlayerLabel", true);
           playerNumber.set("labelType", "number");
           canvas.add(playerNumber);
         }
-
         // Position label
         const positionLabel = new fabric.Text(player.position, {
           left: x,
@@ -129,22 +113,18 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
           selectable: false,
           evented: false,
         });
-
         positionLabel.set("playerId", player.id);
         positionLabel.set("isPlayerLabel", true);
         positionLabel.set("labelType", "position");
         canvas.add(positionLabel);
       });
-
       canvas.renderAll();
     },
     [readOnly, fieldMode]
   );
-
   // Initialize canvas
   useEffect(() => {
     if (!canvasRef.current) return;
-
     const canvas = new fabric.Canvas(canvasRef.current, {
       width: FIELD_WIDTH,
       height: FIELD_HEIGHT,
@@ -153,20 +133,16 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
       interactive: !readOnly,
       preserveObjectStacking: true,
     });
-
     fabricCanvasRef.current = canvas;
-
     // Set up players if play is provided
     if (play) {
       setupPlayers(canvas, play);
     }
-
     // Event handlers for player movement
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     canvas.on("object:moving", (e: any) => {
       const obj = e.target;
       if (!obj || !obj.get("isPlayer")) return;
-
       // Constrain movement to field bounds with padding
       const bounds = {
         left: 15,
@@ -174,18 +150,15 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
         right: FIELD_WIDTH - 15,
         bottom: FIELD_HEIGHT - 15,
       };
-
       if (obj.left! < bounds.left) obj.left = bounds.left;
       if (obj.top! < bounds.top) obj.top = bounds.top;
       if (obj.left! > bounds.right) obj.left = bounds.right;
       if (obj.top! > bounds.bottom) obj.top = bounds.bottom;
     });
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     canvas.on("object:modified", (e: any) => {
       const obj = e.target;
       if (!obj || !obj.get("isPlayer") || !obj.get("playerId")) return;
-
       // Update related objects (number and label)
       const playerId = obj.get("playerId");
       const relatedObjects = canvas
@@ -194,7 +167,6 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
           (o: fabric.FabricObject) =>
             o.get("playerId") === playerId && o !== obj
         );
-
       relatedObjects.forEach((related: fabric.FabricObject) => {
         related.left = obj.left;
         if (
@@ -206,32 +178,26 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
           related.top = obj.top; // Number
         }
       });
-
       canvas.renderAll();
-
       // Notify parent
       if (onPlayerMove && playerId) {
         onPlayerMove(playerId, obj.left!, obj.top!);
       }
     });
-
     canvas.on("selection:created", (e) => {
       const obj = e.selected[0];
       if (obj && obj.get("isPlayer") && obj.get("playerId")) {
         setSelectedPlayer(obj.get("playerId"));
       }
     });
-
     canvas.on("selection:cleared", () => {
       setSelectedPlayer(null);
       setIsDrawingRoute(false);
     });
-
     return () => {
       canvas.dispose();
     };
   }, [play, readOnly, onPlayerMove, setupPlayers]);
-
   // Handle zoom changes
   const handleZoomIn = () => {
     const newZoom = Math.min(zoom * 1.2, MAX_ZOOM);
@@ -241,7 +207,6 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
       fabricCanvasRef.current.renderAll();
     }
   };
-
   const handleZoomOut = () => {
     const newZoom = Math.max(zoom / 1.2, MIN_ZOOM);
     setZoom(newZoom);
@@ -250,7 +215,6 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
       fabricCanvasRef.current.renderAll();
     }
   };
-
   const handleResetView = () => {
     setZoom(1);
     if (fabricCanvasRef.current) {
@@ -259,16 +223,13 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
       fabricCanvasRef.current.renderAll();
     }
   };
-
   const resetPlayers = () => {
     if (!fabricCanvasRef.current || !play) return;
     setupPlayers(fabricCanvasRef.current, play);
   };
-
   const toggleRouteDrawing = () => {
     setIsDrawingRoute((prev) => !prev);
   };
-
   const fieldModeOptions: { value: FieldMode; label: string; icon: string }[] =
     [
       { value: "football", label: "Football Field", icon: "🏈" },
@@ -278,7 +239,6 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
       { value: "grid", label: "Grid Paper", icon: "📊" },
       { value: "dots", label: "Dot Paper", icon: "⚫" },
     ];
-
   return (
     <div
       className={`relative bg-white rounded-lg border border-slate-200 overflow-hidden ${className}`}
@@ -295,7 +255,6 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
           mode={fieldMode}
           lineOfScrimmage={lineOfScrimmage}
         />
-
         {/* Fabric Canvas Overlay */}
         <canvas
           ref={canvasRef}
@@ -303,7 +262,6 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
           style={{ zIndex: 10 }}
         />
       </div>
-
       {/* Controls */}
       {!readOnly && (
         <div className="absolute top-4 right-4 z-20 space-y-2">
@@ -324,7 +282,6 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
               ))}
             </select>
           </div>
-
           {/* Zoom Controls */}
           <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-2">
             <div className="flex items-center space-x-1">
@@ -354,7 +311,6 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
               </button>
             </div>
           </div>
-
           {/* Player Controls */}
           <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-2 space-y-2">
             <button
@@ -368,7 +324,6 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
             >
               {isDrawingRoute ? "Stop Drawing" : "Draw Route"}
             </button>
-
             <button
               onClick={resetPlayers}
               className="w-full px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
@@ -378,7 +333,6 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
           </div>
         </div>
       )}
-
       {/* Drawing Tools */}
       {!readOnly && (
         <div className="absolute top-4 right-4 z-20">
@@ -389,7 +343,6 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
           />
         </div>
       )}
-
       {/* Status Display */}
       {selectedPlayer && (
         <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-sm border border-slate-200 p-3 z-20">
@@ -404,7 +357,6 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
           </div>
         </div>
       )}
-
       {/* Field Info */}
       <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-sm border border-slate-200 p-3 z-20">
         <div className="text-xs text-gray-600 space-y-1">

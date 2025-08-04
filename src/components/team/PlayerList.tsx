@@ -4,14 +4,12 @@ import { TEAM_LEVELS } from "../../types/team-management";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { Icon } from "../ui/Icon/Icon";
-
 interface PlayerListProps {
   players: TeamPlayer[];
   onEditPlayer: (player: TeamPlayer) => void;
   onDeletePlayer: (playerId: string) => void;
   onAddPlayer: () => void;
 }
-
 /**
  * PlayerList Component
  *
@@ -26,10 +24,8 @@ export const PlayerList: React.FC<PlayerListProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [filterLevel, setFilterLevel] = useState<string>("all");
   const [filterPosition, setFilterPosition] = useState<string>("all");
-
   // Get unique positions from all players
   const allPositions = [...new Set(players.flatMap((p) => p.positions))].sort();
-
   // Filter players based on search and filters
   const filteredPlayers = players.filter((player) => {
     const matchesSearch =
@@ -40,25 +36,20 @@ export const PlayerList: React.FC<PlayerListProps> = ({
       ) ||
       (player.jersey_number &&
         player.jersey_number.toString().includes(searchTerm));
-
     const matchesLevel =
       filterLevel === "all" || player.team_level === filterLevel;
     const matchesPosition =
       filterPosition === "all" || player.positions.includes(filterPosition);
-
     return matchesSearch && matchesLevel && matchesPosition;
   });
-
   const getTeamLevelColor = (level: string) => {
     const teamLevel = TEAM_LEVELS.find((tl) => tl.value === level);
     return teamLevel?.color || "gray";
   };
-
   const getTeamLevelLabel = (level: string) => {
     const teamLevel = TEAM_LEVELS.find((tl) => tl.value === level);
     return teamLevel?.label || level;
   };
-
   if (players.length === 0) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
@@ -87,7 +78,6 @@ export const PlayerList: React.FC<PlayerListProps> = ({
       </div>
     );
   }
-
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
       {/* Search and Filters */}
@@ -103,7 +93,6 @@ export const PlayerList: React.FC<PlayerListProps> = ({
               className="w-full"
             />
           </div>
-
           {/* Team Level Filter */}
           <div>
             <select
@@ -119,7 +108,6 @@ export const PlayerList: React.FC<PlayerListProps> = ({
               ))}
             </select>
           </div>
-
           {/* Position Filter */}
           <div>
             <select
@@ -136,13 +124,11 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             </select>
           </div>
         </div>
-
         {/* Results Summary */}
         <div className="mt-4 flex items-center justify-between">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             Showing {filteredPlayers.length} of {players.length} players
           </p>
-
           <div className="space-x-2">
             <Button onClick={onAddPlayer} variant="primary" size="sm">
               👤 Add Player
@@ -156,7 +142,6 @@ export const PlayerList: React.FC<PlayerListProps> = ({
           </div>
         </div>
       </div>
-
       {/* Player Grid */}
       <div className="p-6">
         {filteredPlayers.length === 0 ? (
@@ -179,7 +164,6 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     <div className="w-12 h-12 bg-jade-500 rounded-md flex items-center justify-center text-white font-display font-bold">
                       {player.jersey_number || "?"}
                     </div>
-
                     {/* Name and Level */}
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white">
@@ -192,7 +176,6 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                       </span>
                     </div>
                   </div>
-
                   {/* Actions Menu */}
                   <div className="flex space-x-1">
                     <button
@@ -211,7 +194,6 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     </button>
                   </div>
                 </div>
-
                 {/* Positions */}
                 <div className="mb-3">
                   <div className="flex flex-wrap gap-1">
@@ -225,7 +207,6 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     ))}
                   </div>
                 </div>
-
                 {/* Physical Stats */}
                 <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 dark:text-gray-400">
                   {player.height && (
@@ -247,7 +228,6 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     </div>
                   )}
                 </div>
-
                 {/* Contact Info */}
                 {(player.email || player.phone) && (
                   <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">

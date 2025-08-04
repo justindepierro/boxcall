@@ -1,6 +1,5 @@
 import { useState, useCallback } from "react";
 import type { Play, PlayType } from "../types/play";
-
 interface UsePlaybookState {
   plays: Play[];
   loading: boolean;
@@ -14,7 +13,6 @@ interface UsePlaybookState {
     tags?: string[];
   };
 }
-
 interface UsePlaybookActions {
   setSearchQuery: (query: string) => void;
   setFilters: (filters: UsePlaybookState["filters"]) => void;
@@ -26,7 +24,6 @@ interface UsePlaybookActions {
   duplicatePlay: (id: string) => Promise<void>;
   loadPlays: () => Promise<void>;
 }
-
 export const usePlaybook = (): UsePlaybookState & UsePlaybookActions => {
   const [state, setState] = useState<UsePlaybookState>({
     plays: [],
@@ -35,23 +32,17 @@ export const usePlaybook = (): UsePlaybookState & UsePlaybookActions => {
     searchQuery: "",
     filters: {},
   });
-
   const setSearchQuery = useCallback((query: string) => {
     setState((prev) => ({ ...prev, searchQuery: query }));
   }, []);
-
   const setFilters = useCallback((filters: UsePlaybookState["filters"]) => {
     setState((prev) => ({ ...prev, filters }));
   }, []);
-
   const createPlay = useCallback(
     async (playData: Omit<Play, "id" | "created_at" | "updated_at">) => {
       setState((prev) => ({ ...prev, loading: true, error: null }));
-
       try {
         // TODO: Implement API call to create play
-        console.log("Creating play:", playData);
-
         // Simulate API response
         const newPlay: Play = {
           ...playData,
@@ -59,7 +50,6 @@ export const usePlaybook = (): UsePlaybookState & UsePlaybookActions => {
           created_at: new Date(),
           updated_at: new Date(),
         };
-
         setState((prev) => ({
           ...prev,
           plays: [...prev.plays, newPlay],
@@ -76,14 +66,10 @@ export const usePlaybook = (): UsePlaybookState & UsePlaybookActions => {
     },
     []
   );
-
   const updatePlay = useCallback(async (id: string, updates: Partial<Play>) => {
     setState((prev) => ({ ...prev, loading: true, error: null }));
-
     try {
       // TODO: Implement API call to update play
-      console.log("Updating play:", id, updates);
-
       setState((prev) => ({
         ...prev,
         plays: prev.plays.map((play) =>
@@ -101,14 +87,10 @@ export const usePlaybook = (): UsePlaybookState & UsePlaybookActions => {
       }));
     }
   }, []);
-
   const deletePlay = useCallback(async (id: string) => {
     setState((prev) => ({ ...prev, loading: true, error: null }));
-
     try {
       // TODO: Implement API call to delete play
-      console.log("Deleting play:", id);
-
       setState((prev) => ({
         ...prev,
         plays: prev.plays.filter((play) => play.id !== id),
@@ -122,7 +104,6 @@ export const usePlaybook = (): UsePlaybookState & UsePlaybookActions => {
       }));
     }
   }, []);
-
   const duplicatePlay = useCallback(
     async (id: string) => {
       const playToDuplicate = state.plays.find((play) => play.id === id);
@@ -130,7 +111,6 @@ export const usePlaybook = (): UsePlaybookState & UsePlaybookActions => {
         setState((prev) => ({ ...prev, error: "Play not found" }));
         return;
       }
-
       // Create a new play without the ID and timestamps
       const {
         id: _,
@@ -138,7 +118,6 @@ export const usePlaybook = (): UsePlaybookState & UsePlaybookActions => {
         updated_at: ___,
         ...playData
       } = playToDuplicate;
-
       await createPlay({
         ...playData,
         play_name: `${playToDuplicate.play_name} (Copy)`,
@@ -146,14 +125,10 @@ export const usePlaybook = (): UsePlaybookState & UsePlaybookActions => {
     },
     [state.plays, createPlay]
   );
-
   const loadPlays = useCallback(async () => {
     setState((prev) => ({ ...prev, loading: true, error: null }));
-
     try {
       // TODO: Implement API call to load plays
-      console.log("Loading plays...");
-
       // For now, return empty array - will be populated by CSV import or manual creation
       setState((prev) => ({
         ...prev,
@@ -168,7 +143,6 @@ export const usePlaybook = (): UsePlaybookState & UsePlaybookActions => {
       }));
     }
   }, []);
-
   return {
     ...state,
     setSearchQuery,

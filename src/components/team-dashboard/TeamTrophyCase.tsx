@@ -2,11 +2,9 @@ import React from "react";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
-
 interface TeamTrophyCaseProps {
   teamId: string;
 }
-
 /**
  * Team Trophy Case - Collective team achievements
  *
@@ -18,7 +16,6 @@ interface TeamTrophyCaseProps {
  */
 export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = () => {
   // TODO: Use teamId for fetching team-specific achievements
-
   // Mock team achievement data - TODO: Fetch from database
   const mockTeamAchievements = {
     teamGoals: [
@@ -86,7 +83,6 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = () => {
       streak: 5,
     },
   };
-
   return (
     <Card className="p-6 bg-gradient-to-br from-navy-50 to-navy-100 dark:from-navy-900/20 dark:to-navy-800/20 border-navy-200 dark:border-navy-800">
       <div className="flex items-center justify-between mb-4">
@@ -109,7 +105,6 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = () => {
           </Typography>
         </div>
       </div>
-
       {/* Team Stats Overview */}
       <div className="grid grid-cols-3 gap-3 mb-6">
         <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
@@ -146,7 +141,6 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = () => {
           </Typography>
         </div>
       </div>
-
       {/* Team Goals Progress */}
       <div className="mb-6">
         <Typography
@@ -191,7 +185,6 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = () => {
           ))}
         </div>
       </div>
-
       {/* Helmet Sticker Categories */}
       <div className="mb-6">
         <Typography
@@ -222,7 +215,6 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = () => {
           )}
         </div>
       </div>
-
       {/* Recent Team Medals */}
       <div className="mb-6">
         <Typography
@@ -268,7 +260,6 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = () => {
           ))}
         </div>
       </div>
-
       {/* Quick Actions */}
       <div className="pt-4 border-t border-navy-200 dark:border-navy-700">
         <button className="w-full py-2 text-navy-600 dark:text-navy-400 hover:bg-navy-100 dark:hover:bg-navy-900/30 rounded-md transition-colors">

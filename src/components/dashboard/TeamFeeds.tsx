@@ -2,11 +2,9 @@ import React from "react";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
-
 interface TeamFeedsProps {
   userId: string;
 }
-
 /**
  * Team Feeds - Cross-team activity and updates
  *
@@ -43,7 +41,6 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
       icon: "calendar" as const,
     },
   ];
-
   return (
     <Card className="compact-card h-full">
       {/* Header */}
@@ -53,7 +50,6 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
         </Typography>
         <Icon name="users" size={14} color="slate" />
       </div>
-
       {/* Feed Content */}
       <div className="space-y-tight">
         {feeds.map((feed) => (
@@ -65,7 +61,6 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
             <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-jade-100 flex items-center justify-center mt-0.5">
               <Icon name={feed.icon} size={14} color="jade" />
             </div>
-
             {/* Feed Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
@@ -88,7 +83,6 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
             </div>
           </div>
         ))}
-
         {/* Show More */}
         <div className="pt-2 border-t border-gray-100">
           <button className="w-full text-center py-2 text-sm text-jade-600 hover:text-jade-700 font-medium transition-colors">

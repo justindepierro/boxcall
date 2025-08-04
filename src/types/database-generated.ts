@@ -1,6 +1,5 @@
 // Auto-generated types from your Supabase database
 // Generated on 2025-08-01T17:46:32.802Z
-
 export interface Database {
   public: {
     Tables: {
@@ -67,11 +66,9 @@ export interface Database {
     };
   };
 }
-
 // Helper types
 export type Profiles = Database["public"]["Tables"]["profiles"]["Row"];
 export type Games = Database["public"]["Tables"]["games"]["Row"];
-
 // Known tables that exist but require authentication (RLS enabled)
 export const PROTECTED_TABLES = [
   "teams",

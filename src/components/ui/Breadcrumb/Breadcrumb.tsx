@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import React from "react";
-
 export interface BreadcrumbItem {
   /** Unique identifier for the breadcrumb item */
   id: string;
@@ -15,7 +14,6 @@ export interface BreadcrumbItem {
   /** URL href for the breadcrumb item */
   href?: string;
 }
-
 export interface BreadcrumbProps {
   /** Breadcrumb items */
   items: BreadcrumbItem[];
@@ -30,44 +28,36 @@ export interface BreadcrumbProps {
   /** Whether to show icons */
   showIcons?: boolean;
 }
-
 const getBreadcrumbStyles = (size: BreadcrumbProps["size"]) => {
   const sizeStyles = {
     sm: "text-sm",
     md: "text-base",
     lg: "text-lg",
   };
-
   return `
     flex items-center space-x-1
     ${sizeStyles[size || "md"]}
     text-gray-600 dark:text-gray-300
   `;
 };
-
 const getBreadcrumbItemStyles = (item: BreadcrumbItem) => {
   const baseStyles = `
     flex items-center transition-colors duration-200 ease-in-out
   `;
-
   if (item.current) {
     return `${baseStyles} text-gray-900 dark:text-white font-medium cursor-default`;
   }
-
   if (item.onClick || item.href) {
     return `${baseStyles} text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white cursor-pointer hover:underline`;
   }
-
   return `${baseStyles} text-gray-400 dark:text-gray-500`;
 };
-
 const getSeparatorStyles = () => {
   return `
     mx-2 flex-shrink-0
     text-gray-400 dark:text-gray-600
   `;
 };
-
 const DefaultSeparator: React.FC = () => (
   <svg
     className={`w-4 h-4 ${getSeparatorStyles()}`}
@@ -83,13 +73,11 @@ const DefaultSeparator: React.FC = () => (
     />
   </svg>
 );
-
 const CollapsedIndicator: React.FC<{
   hiddenItems: BreadcrumbItem[];
   onItemClick: (item: BreadcrumbItem) => void;
 }> = ({ hiddenItems, onItemClick }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
-
   return (
     <div className="relative">
       <button
@@ -99,7 +87,6 @@ const CollapsedIndicator: React.FC<{
       >
         ...
       </button>
-
       {isExpanded && (
         <div className="absolute top-full left-0 mt-1 py-1 z-10 min-w-48 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 border rounded-md shadow-lg">
           {hiddenItems.map((item) => (
@@ -124,7 +111,6 @@ const CollapsedIndicator: React.FC<{
     </div>
   );
 };
-
 const BreadcrumbItem: React.FC<{
   item: BreadcrumbItem;
   showIcon: boolean;
@@ -134,7 +120,6 @@ const BreadcrumbItem: React.FC<{
     if (item.current) return;
     onItemClick(item);
   };
-
   const content = (
     <>
       {showIcon && item.icon && (
@@ -143,7 +128,6 @@ const BreadcrumbItem: React.FC<{
       <span>{item.label}</span>
     </>
   );
-
   if (item.href && !item.current) {
     return (
       <a
@@ -160,7 +144,6 @@ const BreadcrumbItem: React.FC<{
       </a>
     );
   }
-
   if (!item.current && item.onClick) {
     return (
       <button className={getBreadcrumbItemStyles(item)} onClick={handleClick}>
@@ -168,10 +151,8 @@ const BreadcrumbItem: React.FC<{
       </button>
     );
   }
-
   return <span className={getBreadcrumbItemStyles(item)}>{content}</span>;
 };
-
 export const Breadcrumb: React.FC<BreadcrumbProps> = ({
   items,
   separator,
@@ -183,24 +164,20 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
   const handleItemClick = (item: BreadcrumbItem) => {
     item.onClick?.();
   };
-
   // Handle item collapsing
   const shouldCollapse = items.length > maxItems;
   let displayItems = items;
   let hiddenItems: BreadcrumbItem[] = [];
-
   if (shouldCollapse) {
     // Always show first item, last item, and current item
     const firstItem = items[0];
     const lastItem = items[items.length - 1];
     const remainingSlots = maxItems - 2; // Reserve slots for first and last
-
     if (remainingSlots > 0) {
       // Show first item, some middle items, and last item
       const middleItems = items.slice(1, -1);
       const visibleMiddleItems = middleItems.slice(-remainingSlots);
       hiddenItems = middleItems.slice(0, middleItems.length - remainingSlots);
-
       displayItems = [firstItem, ...visibleMiddleItems, lastItem];
     } else {
       // Only show first and last
@@ -208,11 +185,9 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
       displayItems = [firstItem, lastItem];
     }
   }
-
   const renderSeparator = () => {
     return separator || <DefaultSeparator />;
   };
-
   return (
     <nav
       className={`${getBreadcrumbStyles(size)} ${className}`}
@@ -228,12 +203,10 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
                 onItemClick={handleItemClick}
               />
             </li>
-
             {/* Show separator if not last item */}
             {index < displayItems.length - 1 && (
               <li className="flex items-center">{renderSeparator()}</li>
             )}
-
             {/* Show collapsed indicator after first item if there are hidden items */}
             {index === 0 && hiddenItems.length > 0 && (
               <>

@@ -4,14 +4,11 @@
  * Masculine, square card component with jade/navy accents
  * Professional, confident design for football team management
  */
-
 import { forwardRef } from "react";
 import type { CardProps, CardStylesConfig } from "./Card.types";
-
 // Card styles configuration - Square, substantial styling with jade/navy theme
 const cardStyles: CardStylesConfig = {
   base: "rounded-md transition-all duration-200 shadow-sm", // More square corners, stronger shadows
-
   variants: {
     default:
       "bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 hover:shadow-md",
@@ -24,37 +21,31 @@ const cardStyles: CardStylesConfig = {
     accent:
       "bg-navy-50 border-2 border-navy-500 dark:bg-navy-900/20 dark:border-navy-400", // New navy accent variant
   },
-
   sizes: {
     sm: "p-4", // More substantial padding
     md: "p-6", // Increased from p-4
     lg: "p-8", // Increased from p-6
     xl: "p-10", // Increased from p-8
   },
-
   interactive:
     "cursor-pointer hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0", // Subtle lift effect, no scale
   disabled: "opacity-50 cursor-not-allowed",
   loading: "animate-pulse",
 };
-
 // Header and footer styles with theme awareness
 const getSectionStyles = (type: "header" | "footer", size: string) => {
   const base =
     type === "header"
       ? "border-b border-gray-200 dark:border-gray-700"
       : "border-t border-gray-200 dark:border-gray-700";
-
   const sizes = {
     sm: type === "header" ? "pb-2 mb-3" : "pt-2 mt-3",
     md: type === "header" ? "pb-3 mb-4" : "pt-3 mt-4",
     lg: type === "header" ? "pb-4 mb-6" : "pt-4 mt-6",
     xl: type === "header" ? "pb-6 mb-8" : "pt-6 mt-8",
   };
-
   return `${base} ${sizes[size as keyof typeof sizes]}`;
 };
-
 /**
  * Card Component
  *
@@ -98,22 +89,18 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     ]
       .filter(Boolean)
       .join(" ");
-
     // Header classes with theme awareness
     const headerClasses = [getSectionStyles("header", size), headerClassName]
       .filter(Boolean)
       .join(" ");
-
     // Footer classes with theme awareness
     const footerClasses = [getSectionStyles("footer", size), footerClassName]
       .filter(Boolean)
       .join(" ");
-
     // Content classes
     const contentClasses = ["flex-1", contentClassName]
       .filter(Boolean)
       .join(" ");
-
     return (
       <div
         ref={ref}
@@ -125,7 +112,6 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         {...props}
       >
         {header && <div className={headerClasses}>{header}</div>}
-
         <div className={contentClasses}>
           {loading ? (
             <div className="space-y-3">
@@ -137,13 +123,10 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
             children
           )}
         </div>
-
         {footer && <div className={footerClasses}>{footer}</div>}
       </div>
     );
   }
 );
-
 Card.displayName = "Card";
-
 export default Card;

@@ -1,6 +1,5 @@
 import type { FormEvent, ReactNode } from "react";
 import { Typography } from "../../design-system";
-
 export interface FormProps {
   /** Form children - FormField components */
   children: ReactNode;
@@ -27,7 +26,6 @@ export interface FormProps {
   /** Whether to show required field indicators */
   showRequiredIndicator?: boolean;
 }
-
 export interface FormFieldProps {
   /** Field children - Input, TextArea, Select components */
   children: ReactNode;
@@ -48,7 +46,6 @@ export interface FormFieldProps {
   /** Field layout orientation */
   orientation?: "vertical" | "horizontal";
 }
-
 export interface FormGroupProps {
   /** Group children - FormField components */
   children: ReactNode;
@@ -63,7 +60,6 @@ export interface FormGroupProps {
   /** Additional CSS classes */
   className?: string;
 }
-
 export interface FormActionsProps {
   /** Action children - Button components */
   children: ReactNode;
@@ -74,7 +70,6 @@ export interface FormActionsProps {
   /** Additional CSS classes */
   className?: string;
 }
-
 /**
  * Form - Professional form container with validation support
  */
@@ -98,20 +93,17 @@ export function Form({
       onSubmit(event);
     }
   };
-
   const sizeClasses = {
     sm: "max-w-md",
     md: "max-w-lg",
     lg: "max-w-2xl",
   };
-
   const variantClasses = {
     default: "space-y-6",
     card: "bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-6",
     inline: "space-y-4",
     modal: "space-y-4",
   };
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -147,7 +139,6 @@ export function Form({
           )}
         </div>
       )}
-
       {/* Form Content */}
       <div className={loading ? "relative" : ""}>
         {loading && (
@@ -162,7 +153,6 @@ export function Form({
         )}
         {children}
       </div>
-
       {/* Form Footer */}
       {footer && (
         <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
@@ -172,7 +162,6 @@ export function Form({
     </form>
   );
 }
-
 /**
  * FormField - Individual form field wrapper with label and validation
  */
@@ -214,11 +203,9 @@ export function FormField({
           )}
         </div>
       )}
-
       {/* Field Input */}
       <div className={orientation === "horizontal" ? "min-w-0 flex-1" : ""}>
         {children}
-
         {/* Validation Messages */}
         {(error || success || warning) && (
           <div className="mt-1">
@@ -252,7 +239,6 @@ export function FormField({
     </div>
   );
 }
-
 /**
  * FormGroup - Group related form fields together
  */
@@ -269,7 +255,6 @@ export function FormGroup({
     horizontal: "space-y-4",
     grid: `grid grid-cols-1 md:grid-cols-${columns} gap-4`,
   };
-
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Group Header */}
@@ -290,13 +275,11 @@ export function FormGroup({
           )}
         </div>
       )}
-
       {/* Group Fields */}
       <div className={layoutClasses[layout]}>{children}</div>
     </div>
   );
 }
-
 /**
  * FormActions - Form action buttons container
  */
@@ -312,13 +295,11 @@ export function FormActions({
     right: "justify-end",
     between: "justify-between",
   };
-
   const spacingClasses = {
     sm: "space-x-2",
     md: "space-x-3",
     lg: "space-x-4",
   };
-
   return (
     <div
       className={`

@@ -4,7 +4,6 @@
  * Comprehensive demonstration of Phase 3 intelligent calendar features.
  * Shows conflict detection, smart scheduling, and attendance analytics.
  */
-
 import {
   AlertTriangle,
   Brain,
@@ -16,19 +15,16 @@ import {
 import React, { useState } from "react";
 import { useIntelligentCalendar } from "../../hooks/useIntelligentCalendar";
 import { Icon } from "../ui/Icon/Icon";
-
 interface IntelligentCalendarDemoProps {
   teamId?: string;
   className?: string;
 }
-
 export const IntelligentCalendarDemo: React.FC<
   IntelligentCalendarDemoProps
 > = ({ teamId = "demo-team-1", className = "" }) => {
   // ==========================================
   // State Management
   // ==========================================
-
   const [selectedFeature, setSelectedFeature] = useState<
     "conflicts" | "scheduling" | "analytics" | "overview"
   >("overview");
@@ -39,7 +35,6 @@ export const IntelligentCalendarDemo: React.FC<
     eventType: "practice" as const,
     location: "Main Field",
   });
-
   // Initialize intelligent calendar hook
   const {
     // State
@@ -48,14 +43,12 @@ export const IntelligentCalendarDemo: React.FC<
     hasConflicts,
     hasSuggestions,
     hasAnalytics,
-
     // Functions
     detectConflicts,
     generateSuggestions,
     loadAnalytics,
     checkEventAndSuggest,
     getTeamInsights,
-
     // Errors
     hasErrors,
     clearErrors,
@@ -64,11 +57,9 @@ export const IntelligentCalendarDemo: React.FC<
     autoLoadAnalytics: true,
     autoLoadInsights: true,
   });
-
   // ==========================================
   // Demo Functions
   // ==========================================
-
   const handleConflictDemo = async () => {
     await detectConflicts({
       startTime: demoEvent.startTime,
@@ -76,7 +67,6 @@ export const IntelligentCalendarDemo: React.FC<
       location: demoEvent.location,
     });
   };
-
   const handleSchedulingDemo = async () => {
     await generateSuggestions({
       eventType: demoEvent.eventType,
@@ -86,11 +76,9 @@ export const IntelligentCalendarDemo: React.FC<
       weatherSensitive: true,
     });
   };
-
   const handleAnalyticsDemo = async () => {
     await loadAnalytics("season");
   };
-
   const handleFullIntelligentDemo = async () => {
     await checkEventAndSuggest(demoEvent, {
       checkAcademicCalendar: true,
@@ -99,15 +87,12 @@ export const IntelligentCalendarDemo: React.FC<
       preferredTimes: [16, 17, 18],
     });
   };
-
   const handleComprehensiveInsights = async () => {
     await getTeamInsights();
   };
-
   // ==========================================
   // Render Helpers
   // ==========================================
-
   const renderFeatureNav = () => (
     <div className="flex flex-wrap gap-2 mb-6">
       {[
@@ -139,7 +124,6 @@ export const IntelligentCalendarDemo: React.FC<
       ))}
     </div>
   );
-
   const renderOverview = () => (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-jade-50 to-emerald-50 rounded-xl p-6 border border-jade-200">
@@ -152,7 +136,6 @@ export const IntelligentCalendarDemo: React.FC<
           AI-powered conflict detection, optimized timing suggestions, and
           predictive attendance analytics.
         </p>
-
         <div className="grid md:grid-cols-3 gap-4">
           <div className="bg-white rounded-lg p-4 border border-jade-200">
             <AlertTriangle className="w-8 h-8 text-amber-500 mb-2" />
@@ -163,7 +146,6 @@ export const IntelligentCalendarDemo: React.FC<
               AI-powered detection across teams, venues, and schedules
             </p>
           </div>
-
           <div className="bg-white rounded-lg p-4 border border-jade-200">
             <Target className="w-8 h-8 text-blue-500 mb-2" />
             <h4 className="font-semibold text-slate-800 mb-1">
@@ -173,7 +155,6 @@ export const IntelligentCalendarDemo: React.FC<
               ML-optimized time suggestions for maximum attendance
             </p>
           </div>
-
           <div className="bg-white rounded-lg p-4 border border-jade-200">
             <TrendingUp className="w-8 h-8 text-green-500 mb-2" />
             <h4 className="font-semibold text-slate-800 mb-1">
@@ -185,7 +166,6 @@ export const IntelligentCalendarDemo: React.FC<
           </div>
         </div>
       </div>
-
       <div className="grid md:grid-cols-2 gap-6">
         <button
           onClick={handleFullIntelligentDemo}
@@ -213,7 +193,6 @@ export const IntelligentCalendarDemo: React.FC<
             </div>
           )}
         </button>
-
         <button
           onClick={handleComprehensiveInsights}
           className="bg-white rounded-lg p-6 border border-slate-200 hover:border-jade-300 hover:shadow-lg transition-all text-left group"
@@ -240,7 +219,6 @@ export const IntelligentCalendarDemo: React.FC<
       </div>
     </div>
   );
-
   const renderConflictsDemo = () => (
     <div className="space-y-6">
       <div className="bg-white rounded-lg border border-slate-200 p-6">
@@ -248,7 +226,6 @@ export const IntelligentCalendarDemo: React.FC<
           <AlertTriangle className="w-6 h-6 text-amber-500" />
           Conflict Detection Engine
         </h3>
-
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <h4 className="font-semibold text-slate-700">Demo Event Details</h4>
@@ -275,7 +252,6 @@ export const IntelligentCalendarDemo: React.FC<
                 <span className="font-medium">{demoEvent.location}</span>
               </div>
             </div>
-
             <button
               onClick={handleConflictDemo}
               className="w-full px-4 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50 flex items-center justify-center gap-2"
@@ -285,7 +261,6 @@ export const IntelligentCalendarDemo: React.FC<
               {isAnyLoading ? "Detecting Conflicts..." : "Check for Conflicts"}
             </button>
           </div>
-
           <div className="space-y-4">
             <h4 className="font-semibold text-slate-700">
               Conflict Types Checked
@@ -327,7 +302,6 @@ export const IntelligentCalendarDemo: React.FC<
             </div>
           </div>
         </div>
-
         {hasConflicts && (
           <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
             <h5 className="font-semibold text-red-800 mb-2">
@@ -339,7 +313,6 @@ export const IntelligentCalendarDemo: React.FC<
             </p>
           </div>
         )}
-
         {!hasConflicts && !isAnyLoading && (
           <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
             <h5 className="font-semibold text-green-800 mb-2">
@@ -354,7 +327,6 @@ export const IntelligentCalendarDemo: React.FC<
       </div>
     </div>
   );
-
   const renderSchedulingDemo = () => (
     <div className="space-y-6">
       <div className="bg-white rounded-lg border border-slate-200 p-6">
@@ -362,7 +334,6 @@ export const IntelligentCalendarDemo: React.FC<
           <Target className="w-6 h-6 text-blue-500" />
           Smart Scheduling Optimizer
         </h3>
-
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <h4 className="font-semibold text-slate-700">
@@ -389,7 +360,6 @@ export const IntelligentCalendarDemo: React.FC<
                 </div>
               ))}
             </div>
-
             <button
               onClick={handleSchedulingDemo}
               className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2"
@@ -401,7 +371,6 @@ export const IntelligentCalendarDemo: React.FC<
                 : "Generate Smart Suggestions"}
             </button>
           </div>
-
           <div className="space-y-4">
             <h4 className="font-semibold text-slate-700">
               AI Optimization Factors
@@ -452,7 +421,6 @@ export const IntelligentCalendarDemo: React.FC<
             </div>
           </div>
         </div>
-
         {hasSuggestions && (
           <div className="mt-6 space-y-4">
             <div className="flex items-center gap-2">
@@ -487,7 +455,6 @@ export const IntelligentCalendarDemo: React.FC<
       </div>
     </div>
   );
-
   const renderAnalyticsDemo = () => (
     <div className="space-y-6">
       <div className="bg-white rounded-lg border border-slate-200 p-6">
@@ -495,7 +462,6 @@ export const IntelligentCalendarDemo: React.FC<
           <TrendingUp className="w-6 h-6 text-green-500" />
           Attendance Analytics & Insights
         </h3>
-
         <div className="grid md:grid-cols-3 gap-6 mb-6">
           <div className="bg-green-50 rounded-lg p-4 border border-green-200">
             <div className="text-2xl font-bold text-green-800 mb-1">87.3%</div>
@@ -506,7 +472,6 @@ export const IntelligentCalendarDemo: React.FC<
               ↑ 5.2% from last season
             </div>
           </div>
-
           <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
             <div className="text-2xl font-bold text-blue-800 mb-1">92.1%</div>
             <div className="text-sm text-blue-600 font-medium">
@@ -516,7 +481,6 @@ export const IntelligentCalendarDemo: React.FC<
               Based on 12 factors
             </div>
           </div>
-
           <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
             <div className="text-2xl font-bold text-amber-800 mb-1">4.3/5</div>
             <div className="text-sm text-amber-600 font-medium">
@@ -525,7 +489,6 @@ export const IntelligentCalendarDemo: React.FC<
             <div className="text-xs text-amber-600 mt-1">Team satisfaction</div>
           </div>
         </div>
-
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <h4 className="font-semibold text-slate-700">
@@ -560,7 +523,6 @@ export const IntelligentCalendarDemo: React.FC<
               ))}
             </div>
           </div>
-
           <div className="space-y-4">
             <h4 className="font-semibold text-slate-700">Key Insights</h4>
             <div className="space-y-3">
@@ -605,7 +567,6 @@ export const IntelligentCalendarDemo: React.FC<
             </div>
           </div>
         </div>
-
         <div className="mt-6 pt-6 border-t border-slate-200">
           <button
             onClick={handleAnalyticsDemo}
@@ -619,11 +580,9 @@ export const IntelligentCalendarDemo: React.FC<
       </div>
     </div>
   );
-
   // ==========================================
   // Main Render
   // ==========================================
-
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Header */}
@@ -639,7 +598,6 @@ export const IntelligentCalendarDemo: React.FC<
               optimization, and analytics
             </p>
           </div>
-
           {hasErrors && (
             <button
               onClick={clearErrors}
@@ -649,7 +607,6 @@ export const IntelligentCalendarDemo: React.FC<
             </button>
           )}
         </div>
-
         {/* Status Indicators */}
         <div className="flex flex-wrap gap-2">
           <div
@@ -661,21 +618,18 @@ export const IntelligentCalendarDemo: React.FC<
           >
             {hasConflicts ? "⚠️ Conflicts Detected" : "✅ No Conflicts"}
           </div>
-
           {hasSuggestions && (
             <div className="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800 flex items-center gap-1">
               <Icon name="target" size="xs" color="current" />
               {suggestions.length} Suggestions Available
             </div>
           )}
-
           {hasAnalytics && (
             <div className="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800 flex items-center gap-1">
               <Icon name="bar-chart" size="xs" color="current" />
               Analytics Loaded
             </div>
           )}
-
           {isAnyLoading && (
             <div className="px-2 py-1 rounded text-xs font-medium bg-amber-100 text-amber-800">
               ⏳ Processing...
@@ -683,16 +637,13 @@ export const IntelligentCalendarDemo: React.FC<
           )}
         </div>
       </div>
-
       {/* Feature Navigation */}
       {renderFeatureNav()}
-
       {/* Feature Content */}
       {selectedFeature === "overview" && renderOverview()}
       {selectedFeature === "conflicts" && renderConflictsDemo()}
       {selectedFeature === "scheduling" && renderSchedulingDemo()}
       {selectedFeature === "analytics" && renderAnalyticsDemo()}
-
       {/* Footer */}
       <div className="bg-slate-50 rounded-lg p-4 text-center">
         <div className="flex items-center justify-center gap-2 text-sm text-slate-600">
@@ -706,5 +657,4 @@ export const IntelligentCalendarDemo: React.FC<
     </div>
   );
 };
-
 export default IntelligentCalendarDemo;

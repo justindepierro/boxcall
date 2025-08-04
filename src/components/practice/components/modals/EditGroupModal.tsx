@@ -16,19 +16,16 @@
  *   onUpdateGroup={handleUpdateGroup}
  * />
  */
-
 import React, { useState, useEffect } from "react";
 import { Typography } from "../../../design-system";
 import type { EditingGroup, PracticeGroup } from "../../types";
 import Icon from "../../../ui/Icon/Icon";
-
 interface EditGroupModalProps {
   isOpen: boolean;
   editingGroup: EditingGroup | null;
   onClose: () => void;
   onUpdateGroup: (blockId: string, updatedGroup: PracticeGroup) => void;
 }
-
 export const EditGroupModal: React.FC<EditGroupModalProps> = ({
   isOpen,
   editingGroup,
@@ -40,7 +37,6 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
     location: "",
     notes: "",
   });
-
   // Populate form when editing group changes
   useEffect(() => {
     if (isOpen && editingGroup) {
@@ -51,23 +47,18 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
       });
     }
   }, [isOpen, editingGroup]);
-
   if (!isOpen || !editingGroup) return null;
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     const updatedGroup: PracticeGroup = {
       ...editingGroup.group,
       name: formData.name,
       location: formData.location,
       notes: formData.notes,
     };
-
     onUpdateGroup(editingGroup.blockId, updatedGroup);
     onClose();
   };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -89,7 +80,6 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
             />
           </button>
         </div>
-
         {/* Script Assignment Display */}
         {editingGroup.group.scriptId && (
           <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
@@ -103,7 +93,6 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
             </div>
           </div>
         )}
-
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Group Name */}
           <div>
@@ -121,7 +110,6 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
               required
             />
           </div>
-
           {/* Location */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -137,7 +125,6 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
               placeholder="e.g., Field A, Weight Room"
             />
           </div>
-
           {/* Notes */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -153,7 +140,6 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
               placeholder="Additional notes or instructions..."
             />
           </div>
-
           {/* Submit Buttons */}
           <div className="flex space-x-3 pt-4">
             <button

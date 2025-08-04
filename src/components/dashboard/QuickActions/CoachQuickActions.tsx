@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
-
 /**
  * Coach Quick Actions - Coach-specific dashboard shortcuts
  *
@@ -23,7 +22,6 @@ export const CoachQuickActions: React.FC = () => {
         <Icon name="target" size={14} className="mr-2" />
         Create New Play
       </Button>
-
       <Button
         variant="primary"
         size="sm"
@@ -33,7 +31,6 @@ export const CoachQuickActions: React.FC = () => {
         <Icon name="file" size={14} className="mr-2" />
         Build Practice Script
       </Button>
-
       <Button
         variant="outline"
         size="sm"
@@ -43,7 +40,6 @@ export const CoachQuickActions: React.FC = () => {
         <Icon name="book" size={14} className="mr-2" />
         Playbook Editor
       </Button>
-
       <Button
         variant="outline"
         size="sm"
@@ -53,7 +49,6 @@ export const CoachQuickActions: React.FC = () => {
         <Icon name="bar-chart" size={14} className="mr-2" />
         Team Analytics
       </Button>
-
       <Button
         variant="outline"
         size="sm"
@@ -63,7 +58,6 @@ export const CoachQuickActions: React.FC = () => {
         <Icon name="info" size={14} className="mr-2" />
         Send Announcement
       </Button>
-
       <Button
         variant="ghost"
         size="sm"
@@ -73,7 +67,6 @@ export const CoachQuickActions: React.FC = () => {
         <Icon name="star" size={14} className="mr-2" />
         Award Helmet Stickers
       </Button>
-
       <Button
         variant="ghost"
         size="sm"
@@ -83,7 +76,6 @@ export const CoachQuickActions: React.FC = () => {
         <Icon name="play" size={14} className="mr-2" />
         Upload Game Film
       </Button>
-
       <Button
         variant="ghost"
         size="sm"

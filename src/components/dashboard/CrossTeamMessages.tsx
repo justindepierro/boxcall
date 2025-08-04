@@ -1,11 +1,9 @@
 import React from "react";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
-
 interface CrossTeamMessagesProps {
   userId: string;
 }
-
 /**
  * Cross-Team Messages - Multi-team communication hub
  *
@@ -64,9 +62,7 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
       priority: "high",
     },
   ];
-
   const unreadCount = mockMessages.filter((msg) => !msg.isRead).length;
-
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
@@ -87,7 +83,6 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
           </button>
         </div>
       </div>
-
       {/* Message List */}
       <div className="space-y-3 max-h-96 overflow-y-auto">
         {mockMessages.map((message) => (
@@ -102,7 +97,6 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
             <div className="flex items-start space-x-3">
               {/* Team Logo */}
               <div className="text-xl">{message.teamLogo}</div>
-
               {/* Message Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1">
@@ -121,7 +115,6 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
                     {message.timestamp}
                   </Typography>
                 </div>
-
                 <Typography
                   variant="body-sm"
                   className="font-medium text-gray-900 dark:text-white"
@@ -135,7 +128,6 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
                 >
                   {message.preview}
                 </Typography>
-
                 <div className="flex items-center justify-between mt-2">
                   <Typography variant="caption" color="muted">
                     From: {message.from}
@@ -149,7 +141,6 @@ export const CrossTeamMessages: React.FC<CrossTeamMessagesProps> = () => {
           </div>
         ))}
       </div>
-
       {/* Quick Actions */}
       <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
         <div className="grid grid-cols-2 gap-3">

@@ -22,7 +22,6 @@ import type {
   PracticeTemplate,
 } from "../types/practice";
 import { PRACTICE_BLOCK_TYPES, QUICK_TIME_INTERVALS } from "../types/practice";
-
 export function PracticePlanner() {
   const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
@@ -33,7 +32,6 @@ export function PracticePlanner() {
   const [currentBlocks, setCurrentBlocks] = useState<PracticeBlock[]>([]);
   const [practiceStarted, setPracticeStarted] = useState(false);
   const [lockedSchedule, setLockedSchedule] = useState(false);
-
   // Hooks
   const { schedules, loading } = usePracticeSchedule(teamId || "");
   const { addBlock, reorderBlocks, deleteBlock } =
@@ -41,7 +39,6 @@ export function PracticePlanner() {
   const { templates } = usePracticeTemplates(teamId || "");
   const { startTimer, stopTimer, getTimeRemaining, formatTime } =
     usePracticeTimer();
-
   // Select the first schedule if available
   useEffect(() => {
     if (schedules.length > 0 && !selectedScheduleId) {
@@ -49,7 +46,6 @@ export function PracticePlanner() {
       setCurrentBlocks(schedules[0].blocks);
     }
   }, [schedules, selectedScheduleId]);
-
   // Update blocks when schedule changes
   useEffect(() => {
     const selectedSchedule = schedules.find((s) => s.id === selectedScheduleId);
@@ -57,17 +53,13 @@ export function PracticePlanner() {
       setCurrentBlocks(selectedSchedule.blocks);
     }
   }, [selectedScheduleId, schedules]);
-
   const handleDragEnd = async (result: DragDropResult) => {
     if (!result.destination || lockedSchedule) return;
-
     const reorderedBlocks = Array.from(currentBlocks);
     const [removed] = reorderedBlocks.splice(result.source.index, 1);
     reorderedBlocks.splice(result.destination.index, 0, removed);
-
     // Update local state immediately for UI responsiveness
     setCurrentBlocks(reorderedBlocks);
-
     try {
       await reorderBlocks(reorderedBlocks);
     } catch (err) {
@@ -76,7 +68,6 @@ export function PracticePlanner() {
       console.error("Failed to reorder blocks:", err);
     }
   };
-
   const handleQuickAddBlock = async (
     blockType: keyof typeof PRACTICE_BLOCK_TYPES,
     duration?: number
@@ -87,7 +78,6 @@ export function PracticePlanner() {
       duration: duration || blockConfig.defaultDuration,
       description: `${blockConfig.title} - ${duration || blockConfig.defaultDuration} minutes`,
     };
-
     try {
       const newBlock = await addBlock(blockData);
       setCurrentBlocks((prev) => [...prev, newBlock]);
@@ -95,10 +85,8 @@ export function PracticePlanner() {
       console.error("Failed to add block:", err);
     }
   };
-
   const handleDeleteBlock = async (blockId: string) => {
     if (lockedSchedule) return;
-
     try {
       await deleteBlock(blockId);
       setCurrentBlocks((prev) => prev.filter((block) => block.id !== blockId));
@@ -106,28 +94,22 @@ export function PracticePlanner() {
       console.error("Failed to delete block:", error);
     }
   };
-
   const handleStartPractice = () => {
     setPracticeStarted(true);
     setLockedSchedule(true);
     startTimer();
   };
-
   const handleStopPractice = () => {
     setPracticeStarted(false);
     stopTimer();
   };
-
   const handleUnlockSchedule = () => {
     setLockedSchedule(false);
   };
-
   const selectedSchedule = schedules.find((s) => s.id === selectedScheduleId);
-
   // Prepare practice data for PDF export
   const preparePracticeDataForPDF = () => {
     if (!selectedSchedule) return null;
-
     // Convert practice blocks to PDF format and categorize them
     const pdfBlocks = currentBlocks.map((block) => {
       // Infer category from title/description or default to 'meeting'
@@ -139,11 +121,9 @@ export function PracticePlanner() {
         | "weight-room"
         | "transition"
         | "break" = "meeting";
-
       const titleLower = block.title.toLowerCase();
       const descLower = (block.description || "").toLowerCase();
       const combined = `${titleLower} ${descLower}`;
-
       if (combined.includes("offense") || combined.includes("offensive")) {
         category = "offense";
       } else if (
@@ -161,7 +141,6 @@ export function PracticePlanner() {
       ) {
         category = "transition";
       }
-
       return {
         id: block.id,
         title: block.title,
@@ -182,14 +161,12 @@ export function PracticePlanner() {
         scriptTitle: block.practiceScriptId ? "Practice Script" : undefined,
       };
     });
-
     // Calculate category breakdown
     const categoryBreakdown: Record<string, number> = {};
     pdfBlocks.forEach((block) => {
       categoryBreakdown[block.category] =
         (categoryBreakdown[block.category] || 0) + block.duration;
     });
-
     return {
       title: selectedSchedule.title || "Practice Plan",
       date: format(selectedSchedule.date, "MMM d, yyyy"),
@@ -240,7 +217,6 @@ export function PracticePlanner() {
       },
     };
   };
-
   if (!teamId) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -250,7 +226,6 @@ export function PracticePlanner() {
       </div>
     );
   }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -258,7 +233,6 @@ export function PracticePlanner() {
       </div>
     );
   }
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -280,7 +254,6 @@ export function PracticePlanner() {
                 Practice Schedule
               </Typography>
             </div>
-
             <div className="flex items-center space-x-4">
               {selectedSchedule && (
                 <div className="text-sm text-gray-600">
@@ -288,7 +261,6 @@ export function PracticePlanner() {
                   {selectedSchedule.location}
                 </div>
               )}
-
               {practiceStarted && (
                 <div className="flex items-center space-x-2 px-3 py-1 bg-jade-100 text-jade-800 rounded-md">
                   <div className="w-2 h-2 bg-jade-600 rounded-full animate-pulse"></div>
@@ -299,7 +271,6 @@ export function PracticePlanner() {
           </div>
         </div>
       </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Practice Schedule */}
@@ -310,7 +281,6 @@ export function PracticePlanner() {
                   <Typography variant="headline-md" className="text-navy-900">
                     Practice Blocks
                   </Typography>
-
                   <div className="flex items-center space-x-4">
                     {/* PDF Export Button */}
                     <Button
@@ -322,7 +292,6 @@ export function PracticePlanner() {
                       <Icon name="pdf" size="sm" />
                       Print Practice to PDF
                     </Button>
-
                     {/* Practice Controls */}
                     {!practiceStarted ? (
                       <Button
@@ -347,7 +316,6 @@ export function PracticePlanner() {
                           />
                           End Practice
                         </Button>
-
                         {lockedSchedule && (
                           <Button
                             onClick={handleUnlockSchedule}
@@ -363,7 +331,6 @@ export function PracticePlanner() {
                     )}
                   </div>
                 </div>
-
                 {/* Practice Schedule Timeline */}
                 <DragDropContext onDragEnd={handleDragEnd}>
                   <Droppable droppableId="practice-blocks" direction="vertical">
@@ -423,7 +390,6 @@ export function PracticePlanner() {
                                       >
                                         ⋮⋮
                                       </div>
-
                                       <div className="flex-1">
                                         <div className="flex items-center space-x-3">
                                           <Typography
@@ -432,7 +398,6 @@ export function PracticePlanner() {
                                           >
                                             {block.title}
                                           </Typography>
-
                                           {block.isLocked && (
                                             <Icon
                                               name="lock"
@@ -440,11 +405,9 @@ export function PracticePlanner() {
                                               className="text-amber-500"
                                             />
                                           )}
-
                                           <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-mono">
                                             {block.duration}min
                                           </span>
-
                                           {practiceStarted && (
                                             <span className="px-2 py-1 bg-jade-100 text-jade-800 rounded text-sm font-mono">
                                               {formatTime(
@@ -454,7 +417,6 @@ export function PracticePlanner() {
                                             </span>
                                           )}
                                         </div>
-
                                         {block.description && (
                                           <Typography
                                             variant="body-sm"
@@ -463,7 +425,6 @@ export function PracticePlanner() {
                                             {block.description}
                                           </Typography>
                                         )}
-
                                         {block.practiceScriptId && (
                                           <div className="mt-2">
                                             <Button
@@ -482,7 +443,6 @@ export function PracticePlanner() {
                                         )}
                                       </div>
                                     </div>
-
                                     <div className="flex items-center space-x-2">
                                       <Button
                                         variant="ghost"
@@ -494,7 +454,6 @@ export function PracticePlanner() {
                                       >
                                         <Icon name="edit" size="sm" />
                                       </Button>
-
                                       <Button
                                         variant="ghost"
                                         size="sm"
@@ -521,7 +480,6 @@ export function PracticePlanner() {
               </div>
             </Card>
           </div>
-
           {/* Sidebar - Quick Actions */}
           <div className="lg:col-span-1">
             <div className="space-y-6">
@@ -534,7 +492,6 @@ export function PracticePlanner() {
                   >
                     Quick Add Blocks
                   </Typography>
-
                   <div className="space-y-3">
                     {Object.entries(PRACTICE_BLOCK_TYPES).map(
                       ([key, config]) => (
@@ -545,7 +502,6 @@ export function PracticePlanner() {
                           >
                             {config.title}
                           </Typography>
-
                           <div className="flex flex-wrap gap-1">
                             {Object.values(QUICK_TIME_INTERVALS).map(
                               (interval) => (
@@ -573,7 +529,6 @@ export function PracticePlanner() {
                   </div>
                 </div>
               </Card>
-
               {/* Custom Block */}
               <Card>
                 <div className="p-4">
@@ -583,7 +538,6 @@ export function PracticePlanner() {
                   >
                     Custom Block
                   </Typography>
-
                   <Button
                     onClick={() => setIsCreateBlockModalOpen(true)}
                     className="w-full bg-jade-600 hover:bg-jade-700 text-white"
@@ -593,7 +547,6 @@ export function PracticePlanner() {
                   </Button>
                 </div>
               </Card>
-
               {/* Templates */}
               <Card>
                 <div className="p-4">
@@ -603,7 +556,6 @@ export function PracticePlanner() {
                   >
                     Practice Templates
                   </Typography>
-
                   <div className="space-y-2">
                     {templates.slice(0, 3).map((template) => (
                       <Button
@@ -617,7 +569,6 @@ export function PracticePlanner() {
                         {template.name}
                       </Button>
                     ))}
-
                     <Button
                       variant="ghost"
                       size="sm"
@@ -629,7 +580,6 @@ export function PracticePlanner() {
                   </div>
                 </div>
               </Card>
-
               {/* Practice Info */}
               {selectedSchedule && (
                 <Card>
@@ -640,7 +590,6 @@ export function PracticePlanner() {
                     >
                       Practice Info
                     </Typography>
-
                     <div className="space-y-3 text-sm">
                       <div>
                         <span className="font-medium text-gray-700">Date:</span>
@@ -648,7 +597,6 @@ export function PracticePlanner() {
                           {format(selectedSchedule.date, "MMM d, yyyy")}
                         </span>
                       </div>
-
                       <div>
                         <span className="font-medium text-gray-700">Time:</span>
                         <span className="ml-2">
@@ -656,7 +604,6 @@ export function PracticePlanner() {
                           {format(selectedSchedule.endTime, "h:mm a")}
                         </span>
                       </div>
-
                       <div>
                         <span className="font-medium text-gray-700">
                           Location:
@@ -665,7 +612,6 @@ export function PracticePlanner() {
                           {selectedSchedule.location}
                         </span>
                       </div>
-
                       <div>
                         <span className="font-medium text-gray-700">
                           Field:
@@ -674,7 +620,6 @@ export function PracticePlanner() {
                           {selectedSchedule.fieldType}
                         </span>
                       </div>
-
                       <div>
                         <span className="font-medium text-gray-700">
                           Total Duration:
@@ -695,7 +640,6 @@ export function PracticePlanner() {
           </div>
         </div>
       </div>
-
       {/* Create Block Modal */}
       <CreateBlockModal
         isOpen={isCreateBlockModalOpen}
@@ -705,7 +649,6 @@ export function PracticePlanner() {
           setIsCreateBlockModalOpen(false);
         }}
       />
-
       {/* Templates Modal */}
       <TemplatesModal
         isOpen={isTemplateModalOpen}
@@ -716,7 +659,6 @@ export function PracticePlanner() {
           setIsTemplateModalOpen(false);
         }}
       />
-
       {/* PDF Export Dialog */}
       {selectedSchedule && (
         <PracticePDFExportDialog
@@ -728,41 +670,34 @@ export function PracticePlanner() {
     </div>
   );
 }
-
 // Create Block Modal Component
 interface CreateBlockModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (blockData: CreatePracticeBlockData) => Promise<void>;
 }
-
 function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState(15);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     await onSave({
       title,
       description,
       duration,
     });
-
     // Reset form
     setTitle("");
     setDescription("");
     setDuration(15);
   };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-6">
         <Typography variant="headline-md" className="text-navy-900 mb-6">
           Create Custom Practice Block
         </Typography>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -776,7 +711,6 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
               required
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Description
@@ -789,7 +723,6 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
               rows={3}
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Duration (minutes)
@@ -803,7 +736,6 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
               required
             />
           </div>
-
           <div className="flex justify-end space-x-3 pt-4">
             <Button variant="outline" onClick={onClose}>
               Cancel
@@ -820,7 +752,6 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
     </Modal>
   );
 }
-
 // Templates Modal Component
 interface TemplatesModalProps {
   isOpen: boolean;
@@ -828,7 +759,6 @@ interface TemplatesModalProps {
   templates: PracticeTemplate[];
   onSelectTemplate: (templateId: string) => Promise<void>;
 }
-
 function TemplatesModal({
   isOpen,
   onClose,
@@ -841,7 +771,6 @@ function TemplatesModal({
         <Typography variant="headline-md" className="text-navy-900 mb-6">
           Practice Templates
         </Typography>
-
         <div className="space-y-3">
           {templates.map((template) => (
             <div
@@ -857,7 +786,6 @@ function TemplatesModal({
                     {template.duration} min • {template.blocks.length} blocks
                   </Typography>
                 </div>
-
                 <Button
                   size="sm"
                   onClick={() => onSelectTemplate(template.id)}
@@ -869,7 +797,6 @@ function TemplatesModal({
             </div>
           ))}
         </div>
-
         <div className="flex justify-end pt-4">
           <Button variant="outline" onClick={onClose}>
             Close
@@ -879,5 +806,4 @@ function TemplatesModal({
     </Modal>
   );
 }
-
 export default PracticePlanner;

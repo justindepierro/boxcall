@@ -10,16 +10,13 @@ import type {
   PracticeSchedule,
   PracticeTemplate,
 } from "../types/practice";
-
 // Practice Schedule Hook
 export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
   const [schedules, setSchedules] = useState<PracticeSchedule[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const fetchSchedules = useCallback(async () => {
     if (!teamId) return;
-
     try {
       setLoading(true);
       setError(null);
@@ -35,11 +32,9 @@ export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
       setLoading(false);
     }
   }, [teamId, filters]);
-
   useEffect(() => {
     fetchSchedules();
   }, [fetchSchedules]);
-
   const createSchedule = async (data: CreatePracticeScheduleData) => {
     try {
       const newSchedule = await PracticeService.createPracticeSchedule(data);
@@ -54,7 +49,6 @@ export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
       throw err;
     }
   };
-
   const updateSchedule = async (
     id: string,
     updates: Partial<PracticeSchedule>
@@ -79,7 +73,6 @@ export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
       throw err;
     }
   };
-
   const deleteSchedule = async (id: string) => {
     try {
       await PracticeService.deletePracticeSchedule(id);
@@ -93,7 +86,6 @@ export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
       throw err;
     }
   };
-
   return {
     schedules,
     loading,
@@ -104,12 +96,10 @@ export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
     refetch: fetchSchedules,
   };
 }
-
 // Practice Block Management Hook
 export function usePracticeBlocks(scheduleId: string) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const addBlock = async (blockData: CreatePracticeBlockData) => {
     try {
       setLoading(true);
@@ -128,7 +118,6 @@ export function usePracticeBlocks(scheduleId: string) {
       setLoading(false);
     }
   };
-
   const updateBlock = async (
     blockId: string,
     updates: Partial<PracticeBlock>
@@ -146,7 +135,6 @@ export function usePracticeBlocks(scheduleId: string) {
       setLoading(false);
     }
   };
-
   const reorderBlocks = async (blocks: PracticeBlock[]) => {
     try {
       setLoading(true);
@@ -161,7 +149,6 @@ export function usePracticeBlocks(scheduleId: string) {
       setLoading(false);
     }
   };
-
   const deleteBlock = async (blockId: string) => {
     try {
       setLoading(true);
@@ -176,7 +163,6 @@ export function usePracticeBlocks(scheduleId: string) {
       setLoading(false);
     }
   };
-
   return {
     loading,
     error,
@@ -186,16 +172,13 @@ export function usePracticeBlocks(scheduleId: string) {
     deleteBlock,
   };
 }
-
 // Practice Templates Hook
 export function usePracticeTemplates(teamId: string) {
   const [templates, setTemplates] = useState<PracticeTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const fetchTemplates = useCallback(async () => {
     if (!teamId) return;
-
     try {
       setLoading(true);
       setError(null);
@@ -211,11 +194,9 @@ export function usePracticeTemplates(teamId: string) {
       setLoading(false);
     }
   }, [teamId]);
-
   useEffect(() => {
     fetchTemplates();
   }, [fetchTemplates]);
-
   const createTemplate = async (
     template: Omit<PracticeTemplate, "id" | "createdAt" | "usageCount">
   ) => {
@@ -233,7 +214,6 @@ export function usePracticeTemplates(teamId: string) {
       throw err;
     }
   };
-
   const createScheduleFromTemplate = async (
     templateId: string,
     scheduleData: CreatePracticeScheduleData
@@ -253,7 +233,6 @@ export function usePracticeTemplates(teamId: string) {
       throw err;
     }
   };
-
   return {
     templates,
     loading,
@@ -263,16 +242,13 @@ export function usePracticeTemplates(teamId: string) {
     refetch: fetchTemplates,
   };
 }
-
 // Practice Attendance Hook
 export function usePracticeAttendance(practiceId: string) {
   const [attendance, setAttendance] = useState<PracticeAttendance[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const fetchAttendance = useCallback(async () => {
     if (!practiceId) return;
-
     try {
       setLoading(true);
       setError(null);
@@ -288,11 +264,9 @@ export function usePracticeAttendance(practiceId: string) {
       setLoading(false);
     }
   }, [practiceId]);
-
   useEffect(() => {
     fetchAttendance();
   }, [fetchAttendance]);
-
   const recordAttendance = async (
     playerId: string,
     status: "present" | "absent" | "late" | "excused",
@@ -321,7 +295,6 @@ export function usePracticeAttendance(practiceId: string) {
       throw err;
     }
   };
-
   return {
     attendance,
     loading,
@@ -330,16 +303,13 @@ export function usePracticeAttendance(practiceId: string) {
     refetch: fetchAttendance,
   };
 }
-
 // Equipment Hook
 export function useEquipment(teamId: string) {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const fetchEquipment = useCallback(async () => {
     if (!teamId) return;
-
     try {
       setLoading(true);
       setError(null);
@@ -353,11 +323,9 @@ export function useEquipment(teamId: string) {
       setLoading(false);
     }
   }, [teamId]);
-
   useEffect(() => {
     fetchEquipment();
   }, [fetchEquipment]);
-
   return {
     equipment,
     loading,
@@ -365,12 +333,10 @@ export function useEquipment(teamId: string) {
     refetch: fetchEquipment,
   };
 }
-
 // Practice Search Hook
 export function usePracticeSearch() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const searchPractices = async (query: string, teamId: string) => {
     try {
       setLoading(true);
@@ -384,69 +350,57 @@ export function usePracticeSearch() {
       setLoading(false);
     }
   };
-
   return {
     searchPractices,
     loading,
     error,
   };
 }
-
 // Time Management Hook for Practice Blocks
 export function usePracticeTimer() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isRunning, setIsRunning] = useState(false);
   const [startTime, setStartTime] = useState<Date | null>(null);
-
   useEffect(() => {
     let interval: NodeJS.Timeout;
-
     if (isRunning) {
       interval = setInterval(() => {
         setCurrentTime(new Date());
       }, 1000);
     }
-
     return () => {
       if (interval) {
         clearInterval(interval);
       }
     };
   }, [isRunning]);
-
   const startTimer = () => {
     setStartTime(new Date());
     setIsRunning(true);
   };
-
   const stopTimer = () => {
     setIsRunning(false);
   };
-
   const resetTimer = () => {
     setStartTime(null);
     setCurrentTime(new Date());
     setIsRunning(false);
   };
-
   const getElapsedTime = () => {
     if (!startTime) return 0;
     return Math.floor((currentTime.getTime() - startTime.getTime()) / 1000);
   };
-
   const getTimeRemaining = (endTime: Date) => {
     const remaining = Math.floor(
       (endTime.getTime() - currentTime.getTime()) / 1000
     );
     return Math.max(0, remaining);
   };
-
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
-
   return {
     currentTime,
     isRunning,

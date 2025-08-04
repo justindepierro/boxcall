@@ -1,8 +1,6 @@
 import type { PlayBuilderData, PlayType } from "./play";
-
 // Builder wizard step definitions
 export type BuilderStep = 1 | 2 | 3 | 4 | 5 | 6;
-
 export interface BuilderStepInfo {
   step: BuilderStep;
   title: string;
@@ -10,7 +8,6 @@ export interface BuilderStepInfo {
   component: string;
   isComplete: (data: PlayBuilderData) => boolean;
 }
-
 // Builder wizard configuration
 export const BUILDER_STEPS: BuilderStepInfo[] = [
   {
@@ -56,7 +53,6 @@ export const BUILDER_STEPS: BuilderStepInfo[] = [
     isComplete: () => true, // Always complete
   },
 ];
-
 // Builder state management
 export interface BuilderState {
   currentStep: BuilderStep;
@@ -65,7 +61,6 @@ export interface BuilderState {
   isDirty: boolean;
   errors: Record<string, string>;
 }
-
 // Builder actions
 export type BuilderAction =
   | { type: "SET_STEP"; step: BuilderStep }
@@ -75,14 +70,12 @@ export type BuilderAction =
   | { type: "RESET" }
   | { type: "SET_ERROR"; field: string; error: string }
   | { type: "CLEAR_ERROR"; field: string };
-
 // Step validation helpers
 export interface StepValidation {
   isValid: boolean;
   errors: Record<string, string>;
   warnings: Record<string, string>;
 }
-
 // Default play builder data
 export const DEFAULT_BUILDER_DATA: PlayBuilderData = {
   play_name: "",
@@ -91,18 +84,15 @@ export const DEFAULT_BUILDER_DATA: PlayBuilderData = {
   confidence_base: 70,
   tags: [],
 };
-
 // Helper functions for step navigation
 export const getNextStep = (currentStep: BuilderStep): BuilderStep | null => {
   return currentStep < 6 ? ((currentStep + 1) as BuilderStep) : null;
 };
-
 export const getPreviousStep = (
   currentStep: BuilderStep
 ): BuilderStep | null => {
   return currentStep > 1 ? ((currentStep - 1) as BuilderStep) : null;
 };
-
 export const canAdvanceToStep = (
   targetStep: BuilderStep,
   data: PlayBuilderData
@@ -116,7 +106,6 @@ export const canAdvanceToStep = (
   }
   return true;
 };
-
 // Progress calculation
 export const calculateProgress = (currentStep: BuilderStep): number => {
   return (currentStep / BUILDER_STEPS.length) * 100;

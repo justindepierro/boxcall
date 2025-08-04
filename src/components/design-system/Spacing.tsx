@@ -4,7 +4,6 @@
  * Professional spacing system for football management platform
  * Provides consistent spacing tokens and utilities
  */
-
 // Spacing scale (based on Tailwind CSS with 4px base unit)
 export const spacing = {
   // Micro spacing
@@ -13,20 +12,17 @@ export const spacing = {
   md: "0.75rem", // 12px
   lg: "1rem", // 16px
   xl: "1.25rem", // 20px
-
   // Component spacing
   "2xl": "1.5rem", // 24px
   "3xl": "2rem", // 32px
   "4xl": "2.5rem", // 40px
   "5xl": "3rem", // 48px
   "6xl": "4rem", // 64px
-
   // Layout spacing
   "7xl": "5rem", // 80px
   "8xl": "6rem", // 96px
   "9xl": "8rem", // 128px
 } as const;
-
 // Semantic spacing mappings for component usage
 export const semanticSpacing = {
   // Component internal spacing
@@ -53,7 +49,6 @@ export const semanticSpacing = {
       xl: spacing.xl, // 20px
     },
   },
-
   // Layout spacing
   layout: {
     section: spacing["6xl"], // 64px between major sections
@@ -62,7 +57,6 @@ export const semanticSpacing = {
     header: spacing["2xl"], // 24px header padding
     footer: spacing["2xl"], // 24px footer padding
   },
-
   // Form spacing
   form: {
     fieldGap: spacing.lg, // 16px between form fields
@@ -70,14 +64,12 @@ export const semanticSpacing = {
     buttonGap: spacing.md, // 12px between buttons
     labelGap: spacing.sm, // 8px between label and input
   },
-
   // Card spacing
   card: {
     padding: spacing.lg, // 16px card internal padding
     gap: spacing.md, // 12px between card elements
     margin: spacing.lg, // 16px between cards
   },
-
   // Football-specific spacing
   football: {
     playerGap: spacing.md, // 12px between player elements
@@ -86,7 +78,6 @@ export const semanticSpacing = {
     teamGap: spacing.xl, // 20px between team sections
   },
 } as const;
-
 // Tailwind CSS spacing classes for common patterns
 export const spacingClasses = {
   // Padding classes
@@ -103,7 +94,6 @@ export const spacingClasses = {
     "5xl": "p-12", // 48px
     "6xl": "p-16", // 64px
   },
-
   // Margin classes
   margin: {
     none: "m-0",
@@ -118,7 +108,6 @@ export const spacingClasses = {
     "5xl": "m-12", // 48px
     "6xl": "m-16", // 64px
   },
-
   // Gap classes (for flexbox/grid)
   gap: {
     none: "gap-0",
@@ -133,7 +122,6 @@ export const spacingClasses = {
     "5xl": "gap-12", // 48px
     "6xl": "gap-16", // 64px
   },
-
   // Space between classes
   space: {
     xs: "space-y-1 space-x-1", // 4px
@@ -145,7 +133,6 @@ export const spacingClasses = {
     "3xl": "space-y-8 space-x-8", // 32px
   },
 } as const;
-
 // Spacing utility functions
 export const spacingUtils = {
   /**
@@ -154,7 +141,6 @@ export const spacingUtils = {
   getSpacing: (key: keyof typeof spacing): string => {
     return spacing[key];
   },
-
   /**
    * Get semantic spacing value
    */
@@ -167,7 +153,6 @@ export const spacingUtils = {
       string,
       unknown
     >;
-
     if (variant && typeof categorySpacing[subcategory] === "object") {
       const subcategorySpacing = categorySpacing[subcategory] as Record<
         string,
@@ -175,10 +160,8 @@ export const spacingUtils = {
       >;
       return subcategorySpacing[variant] || spacing.md;
     }
-
     return (categorySpacing[subcategory] as string) || spacing.md;
   },
-
   /**
    * Generate responsive spacing classes
    */
@@ -190,26 +173,21 @@ export const spacingUtils = {
     xl?: string
   ): string => {
     const classes = [base];
-
     if (sm) classes.push(`sm:${sm}`);
     if (md) classes.push(`md:${md}`);
     if (lg) classes.push(`lg:${lg}`);
     if (xl) classes.push(`xl:${xl}`);
-
     return classes.join(" ");
   },
-
   /**
    * Generate CSS custom properties for spacing
    */
   toCSSCustomProperties: (): Record<string, string> => {
     const cssVars: Record<string, string> = {};
-
     // Add base spacing
     Object.entries(spacing).forEach(([key, value]) => {
       cssVars[`--spacing-${key}`] = value;
     });
-
     // Add semantic spacing
     const flattenSpacing = (
       obj: Record<string, unknown>,
@@ -217,7 +195,6 @@ export const spacingUtils = {
     ): void => {
       Object.entries(obj).forEach(([key, value]) => {
         const varName = `${prefix}-${key}`;
-
         if (typeof value === "string") {
           cssVars[`--spacing-${varName}`] = value;
         } else if (typeof value === "object" && value !== null) {
@@ -225,11 +202,8 @@ export const spacingUtils = {
         }
       });
     };
-
     flattenSpacing(semanticSpacing, "semantic");
-
     return cssVars;
   },
 };
-
 export default spacing;

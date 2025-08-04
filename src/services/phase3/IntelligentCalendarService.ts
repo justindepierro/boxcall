@@ -4,7 +4,6 @@
  * Main orchestration service that provides intelligent calendar features
  * by coordinating conflict detection, smart scheduling, and attendance analytics.
  */
-
 import { supabase } from "../../lib/supabase";
 import {
   AttendanceAnalyticsService,
@@ -22,7 +21,6 @@ import {
   type SchedulingInsights,
   type TimeSuggestion,
 } from "./SmartSchedulingOptimizer";
-
 // Types for intelligent calendar system
 export interface IntelligentCalendarRequest {
   teamId: string;
@@ -46,7 +44,6 @@ export interface IntelligentCalendarRequest {
     timeframe: "week" | "month" | "season";
   };
 }
-
 export interface IntelligentCalendarResponse {
   success: boolean;
   operation: string;
@@ -67,7 +64,6 @@ export interface IntelligentCalendarResponse {
     confidence: number;
   };
 }
-
 export interface SchedulingRecommendation {
   type:
     | "time_optimization"
@@ -81,7 +77,6 @@ export interface SchedulingRecommendation {
   actionItems: string[];
   estimatedImprovement: string;
 }
-
 export interface IntelligentSchedulingSession {
   sessionId: string;
   teamId: string;
@@ -92,7 +87,6 @@ export interface IntelligentSchedulingSession {
   userFeedback: UserFeedback[];
   finalSelection?: TimeSuggestion;
 }
-
 export interface UserFeedback {
   suggestionId: string;
   rating: number; // 1-5
@@ -100,7 +94,6 @@ export interface UserFeedback {
   selectedFactors: string[];
   timestamp: Date;
 }
-
 export interface SeasonOptimizationRequest {
   teamId: string;
   seasonStart: Date;
@@ -110,12 +103,10 @@ export interface SeasonOptimizationRequest {
   constraints: SchedulingConstraints;
   priorities: OptimizationPriority[];
 }
-
 export interface OptimizationPriority {
   factor: "attendance" | "performance" | "convenience" | "weather" | "academic";
   weight: number; // 0-1
 }
-
 export interface SeasonOptimizationResult {
   optimizedSchedule: OptimizedEvent[];
   improvements: {
@@ -126,7 +117,6 @@ export interface SeasonOptimizationResult {
   alternatives: OptimizedEvent[][];
   seasonInsights: string[];
 }
-
 // Result types for intelligent operations
 export interface EventCreationResult {
   conflicts?: ConflictDetectionResult;
@@ -134,21 +124,18 @@ export interface EventCreationResult {
   attendancePrediction?: AttendancePrediction;
   recommendations: string[];
 }
-
 export interface ScheduleAnalysisResult {
   analytics: AttendanceAnalytics;
   insights: SchedulingInsights;
   attendanceInsights: Record<string, unknown>; // Would be properly typed based on AttendanceInsights
   recommendations: string[];
 }
-
 export interface TimingOptimizationResult {
   optimizations: OptimizationItem[];
   totalEvents: number;
   optimizableEvents: number;
   recommendations: string[];
 }
-
 export interface OptimizationItem {
   eventId: string;
   currentTime: Date;
@@ -157,19 +144,16 @@ export interface OptimizationItem {
   reasons: string[];
   predictedImprovement: string;
 }
-
 export interface AttendancePredictionResult {
   predictions: AttendancePrediction[];
   summary: string;
   recommendations: string[];
 }
-
 export interface IntelligentResults {
   recommendations: string[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
-
 export interface OptimizedEvent {
   originalDate?: Date;
   suggestedDate: Date;
@@ -179,7 +163,6 @@ export interface OptimizedEvent {
   predictedAttendance: number;
   conflictRisk: "low" | "medium" | "high";
 }
-
 /**
  * Intelligent Calendar Service
  * Orchestrates all Phase 3 intelligent features
@@ -188,7 +171,6 @@ export class IntelligentCalendarService {
   // ==========================================
   // Core Intelligent Operations
   // ==========================================
-
   /**
    * Main entry point for intelligent calendar operations
    */
@@ -196,11 +178,9 @@ export class IntelligentCalendarService {
     request: IntelligentCalendarRequest
   ): Promise<IntelligentCalendarResponse> {
     const startTime = Date.now();
-
     try {
       let results: IntelligentResults = { recommendations: [] };
       const warnings: string[] = [];
-
       switch (request.operation) {
         case "create_event":
           results = await this.handleIntelligentEventCreation(request);
@@ -217,17 +197,13 @@ export class IntelligentCalendarService {
         default:
           throw new Error(`Unknown operation: ${request.operation}`);
       }
-
       // Add intelligent recommendations
       const intelligentRecommendations =
         await this.generateIntelligentRecommendations(request.teamId, results);
       results.recommendations.push(...intelligentRecommendations);
-
       // Calculate confidence score
       const confidence = this.calculateOverallConfidence(results);
-
       const processingTime = Date.now() - startTime;
-
       return {
         success: true,
         operation: request.operation,
@@ -242,7 +218,6 @@ export class IntelligentCalendarService {
       };
     } catch (error) {
       console.error("Error processing intelligent request:", error);
-
       return {
         success: false,
         operation: request.operation,
@@ -257,7 +232,6 @@ export class IntelligentCalendarService {
       };
     }
   }
-
   /**
    * Intelligent event creation with conflict detection and optimization
    */
@@ -267,9 +241,7 @@ export class IntelligentCalendarService {
     if (!request.eventDetails) {
       throw new Error("Event details required for event creation");
     }
-
     const { eventDetails } = request;
-
     // Step 1: Detect conflicts
     const conflictRequest: ConflictDetectionRequest = {
       proposedEvent: {
@@ -282,10 +254,8 @@ export class IntelligentCalendarService {
       checkVenueConflicts: true,
       checkFamilySchedules: true,
     };
-
     const conflicts =
       await ConflictDetectionService.detectConflicts(conflictRequest);
-
     // Step 2: Get optimization suggestions if conflicts exist
     let suggestions: TimeSuggestion[] = [];
     if (conflicts.hasConflicts) {
@@ -305,13 +275,11 @@ export class IntelligentCalendarService {
         weatherSensitive: eventDetails.eventType === "practice",
         academicCalendarRespect: true,
       };
-
       suggestions = await SmartSchedulingOptimizer.suggestOptimalPracticeTime(
         request.teamId,
         constraints
       );
     }
-
     // Step 3: Predict attendance for the proposed time
     let attendancePrediction: AttendancePrediction | undefined;
     if (request.analysisOptions?.includePredictions) {
@@ -322,7 +290,6 @@ export class IntelligentCalendarService {
         tempEventId
       );
     }
-
     return {
       conflicts,
       suggestions,
@@ -340,7 +307,6 @@ export class IntelligentCalendarService {
       ],
     };
   }
-
   /**
    * Comprehensive schedule analysis with insights
    */
@@ -348,29 +314,24 @@ export class IntelligentCalendarService {
     request: IntelligentCalendarRequest
   ): Promise<ScheduleAnalysisResult> {
     const timeframe = request.analysisOptions?.timeframe || "month";
-
     // Get attendance analytics
     const analytics = await AttendanceAnalyticsService.getAttendanceAnalytics(
       request.teamId,
       timeframe
     );
-
     // Get scheduling insights
     const insights = await SmartSchedulingOptimizer.learnFromHistoricalData(
       request.teamId
     );
-
     // Get attendance insights
     const attendanceInsights =
       await AttendanceAnalyticsService.getAttendanceInsights(request.teamId);
-
     // Generate comprehensive recommendations
     const recommendations = this.generateScheduleAnalysisRecommendations(
       analytics,
       insights,
       attendanceInsights as unknown as Record<string, unknown>
     );
-
     return {
       analytics,
       insights,
@@ -381,7 +342,6 @@ export class IntelligentCalendarService {
       recommendations,
     };
   }
-
   /**
    * Timing optimization for existing events
    */
@@ -396,9 +356,7 @@ export class IntelligentCalendarService {
       .gte("start_time", new Date().toISOString())
       .order("start_time")
       .limit(10);
-
     const optimizations: OptimizationItem[] = [];
-
     if (upcomingEvents) {
       for (const event of upcomingEvents) {
         const constraints: SchedulingConstraints = {
@@ -417,13 +375,11 @@ export class IntelligentCalendarService {
           weatherSensitive: event.event_type === "practice",
           academicCalendarRespect: true,
         };
-
         const suggestions =
           await SmartSchedulingOptimizer.suggestOptimalPracticeTime(
             request.teamId,
             constraints
           );
-
         if (suggestions.length > 0 && suggestions[0].confidence > 0.7) {
           optimizations.push({
             eventId: event.id,
@@ -438,7 +394,6 @@ export class IntelligentCalendarService {
         }
       }
     }
-
     return {
       optimizations,
       totalEvents: upcomingEvents?.length || 0,
@@ -451,7 +406,6 @@ export class IntelligentCalendarService {
           : ["Current schedule is well-optimized"],
     };
   }
-
   /**
    * Attendance prediction for upcoming events
    */
@@ -466,9 +420,7 @@ export class IntelligentCalendarService {
       .gte("start_time", new Date().toISOString())
       .order("start_time")
       .limit(5);
-
     const predictions: AttendancePrediction[] = [];
-
     if (upcomingEvents) {
       for (const event of upcomingEvents) {
         try {
@@ -485,7 +437,6 @@ export class IntelligentCalendarService {
         }
       }
     }
-
     return {
       predictions,
       summary: this.generateAttendancePredictionSummary(predictions),
@@ -493,11 +444,9 @@ export class IntelligentCalendarService {
         this.generateAttendancePredictionRecommendations(predictions),
     };
   }
-
   // ==========================================
   // Season-Level Optimization
   // ==========================================
-
   /**
    * Optimize an entire season schedule
    */
@@ -514,13 +463,11 @@ export class IntelligentCalendarService {
         blackoutDates: [], // Would be provided
         specialEvents: [], // Would be provided
       };
-
       const optimizedSchedule =
         await SmartSchedulingOptimizer.optimizeSeasonSchedule(
           request.teamId,
           seasonRequirements
         );
-
       // Convert to our response format
       const optimizedEvents: OptimizedEvent[] = optimizedSchedule.events.map(
         (event) => ({
@@ -533,7 +480,6 @@ export class IntelligentCalendarService {
           conflictRisk: event.conflictRisk,
         })
       );
-
       return {
         optimizedSchedule: optimizedEvents,
         improvements: {
@@ -549,11 +495,9 @@ export class IntelligentCalendarService {
       throw new Error("Failed to optimize season schedule");
     }
   }
-
   // ==========================================
   // Helper Methods
   // ==========================================
-
   /**
    * Generate intelligent recommendations based on all available data
    */
@@ -562,14 +506,12 @@ export class IntelligentCalendarService {
     results: IntelligentResults
   ): Promise<string[]> {
     const recommendations: string[] = [];
-
     // Analyze conflicts
     if (results.conflicts?.hasConflicts) {
       recommendations.push(
         "Scheduling conflicts detected - consider alternative times"
       );
     }
-
     // Analyze attendance predictions
     if (results.attendancePrediction) {
       const prediction = results.attendancePrediction;
@@ -579,14 +521,12 @@ export class IntelligentCalendarService {
         );
       }
     }
-
     // Analyze optimization opportunities
     if (results.optimizations && results.optimizations.length > 0) {
       recommendations.push(
         `${results.optimizations.length} scheduling optimizations available`
       );
     }
-
     // Add team-specific insights
     try {
       const teamInsights = await this.getTeamSpecificInsights(teamId);
@@ -594,23 +534,19 @@ export class IntelligentCalendarService {
     } catch (error) {
       console.error("Error getting team insights:", error);
     }
-
     return recommendations;
   }
-
   /**
    * Calculate overall confidence score for the response
    */
   static calculateOverallConfidence(results: IntelligentResults): number {
     let totalConfidence = 0;
     let factorCount = 0;
-
     // Factor in conflict detection confidence
     if (results.conflicts) {
       totalConfidence += results.conflicts.hasConflicts ? 0.9 : 1.0;
       factorCount++;
     }
-
     // Factor in suggestion confidence
     if (results.suggestions && results.suggestions.length > 0) {
       const avgSuggestionConfidence =
@@ -621,16 +557,13 @@ export class IntelligentCalendarService {
       totalConfidence += avgSuggestionConfidence;
       factorCount++;
     }
-
     // Factor in prediction confidence
     if (results.attendancePrediction) {
       totalConfidence += results.attendancePrediction.confidence;
       factorCount++;
     }
-
     return factorCount > 0 ? totalConfidence / factorCount : 0.5;
   }
-
   // Helper methods with mock implementations
   static extractPreferredDays(date: Date): string[] {
     const dayIndex = date.getDay();
@@ -645,7 +578,6 @@ export class IntelligentCalendarService {
     ];
     return [days[dayIndex]];
   }
-
   static extractPreferredTimeSlots(date: Date) {
     const hour = date.getHours();
     return [
@@ -657,15 +589,12 @@ export class IntelligentCalendarService {
       },
     ];
   }
-
   static calculateDuration(start: Date, end: Date): number {
     return (end.getTime() - start.getTime()) / (1000 * 60); // minutes
   }
-
   static calculatePredictedImprovement(_suggestion: TimeSuggestion): string {
     return "15% attendance increase expected";
   }
-
   static generateScheduleAnalysisRecommendations(
     _analytics: AttendanceAnalytics,
     _insights: SchedulingInsights,
@@ -673,22 +602,18 @@ export class IntelligentCalendarService {
   ): string[] {
     return ["Consider optimizing practice times for better attendance"];
   }
-
   static generateAttendancePredictionSummary(
     _predictions: AttendancePrediction[]
   ): string {
     return "Overall attendance trend is positive";
   }
-
   static generateAttendancePredictionRecommendations(
     _predictions: AttendancePrediction[]
   ): string[] {
     return ["Send reminders 24 hours before low-predicted attendance events"];
   }
-
   static async getTeamSpecificInsights(_teamId: string): Promise<string[]> {
     return ["Team performs best with Tuesday/Thursday practices"];
   }
 }
-
 export default IntelligentCalendarService;

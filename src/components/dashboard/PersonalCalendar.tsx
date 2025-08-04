@@ -8,11 +8,9 @@ import "../calendar/BoxCallCalendar.css";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import Icon from "../ui/Icon/Icon";
-
 interface PersonalCalendarProps {
   userId: string;
 }
-
 /**
  * Personal Calendar - Cross-team events and schedule
  *
@@ -30,19 +28,16 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
     null
   );
-
   // Use calendar hooks
   const { upcomingEvents, loading: upcomingLoading } = useUpcomingEvents(
     userId,
     8
   );
   const { events, loading: calendarLoading } = useCalendar(userId);
-
   // Handle event click
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
   };
-
   // Get event type badge color
   const getEventTypeBadge = (type: string) => {
     const colors = {
@@ -54,7 +49,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
     };
     return colors[type as keyof typeof colors] || colors.other;
   };
-
   // Format event time
   const formatEventTime = (start: string, end?: string) => {
     const startTime = format(new Date(start), "h:mm a");
@@ -64,7 +58,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
     }
     return startTime;
   };
-
   if (upcomingLoading && viewMode === "list") {
     return (
       <Card className="h-full compact-card">
@@ -80,7 +73,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
       </Card>
     );
   }
-
   return (
     <Card className="h-full flex flex-col compact-card">
       {/* Header with view toggle */}
@@ -88,7 +80,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
         <Typography variant="headline-lg" className="text-navy-900">
           Personal Calendar
         </Typography>
-
         <div className="flex items-center space-x-4">
           <button
             onClick={() => navigate("/calendar")}
@@ -96,7 +87,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
           >
             View Full Calendar →
           </button>
-
           <div className="flex rounded-lg bg-gray-100 p-1">
             <button
               onClick={() => setViewMode("list")}
@@ -121,7 +111,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
           </div>
         </div>
       </div>
-
       {/* Content */}
       <div className="flex-1 overflow-hidden">
         {viewMode === "list" ? (
@@ -169,7 +158,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                         )}
                       </span>
                     </div>
-
                     {/* Event Details */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
@@ -190,7 +178,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                           </span>
                         )}
                       </div>
-
                       <div className="flex items-center space-x-4 text-sm text-gray-600">
                         <span className="flex items-center">
                           <Icon
@@ -212,7 +199,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                           </span>
                         )}
                       </div>
-
                       {event.team_name && (
                         <div className="mt-2">
                           <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-navy-100 text-navy-800">
@@ -220,7 +206,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                           </span>
                         </div>
                       )}
-
                       {event.opponent && (
                         <Typography
                           variant="caption"
@@ -230,7 +215,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                         </Typography>
                       )}
                     </div>
-
                     {/* RSVP Status */}
                     {event.rsvp_required && (
                       <div className="flex-shrink-0">
@@ -263,7 +247,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
           </div>
         )}
       </div>
-
       {/* Event Detail Modal */}
       {selectedEvent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -280,7 +263,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                   ✕
                 </button>
               </div>
-
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
                   <span
@@ -294,7 +276,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                     </span>
                   )}
                 </div>
-
                 <div className="text-sm text-gray-600 space-y-1">
                   <div className="flex items-center">
                     <Icon
@@ -341,7 +322,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                     </div>
                   )}
                 </div>
-
                 {selectedEvent.description && (
                   <div className="pt-3 border-t border-gray-200">
                     <Typography variant="body-md" className="text-gray-700">
@@ -349,7 +329,6 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                     </Typography>
                   </div>
                 )}
-
                 {selectedEvent.rsvp_required && (
                   <div className="pt-3 border-t border-gray-200">
                     <Typography

@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import { useAuth } from "../../app/auth-store";
 import { Typography } from "../design-system";
 import { Button, Card, Input, Select } from "../ui";
-
 interface RegisterFormProps {
   onSuccess?: () => void;
   onSwitchToLogin?: () => void;
 }
-
 /**
  * RegisterForm Component
  *
@@ -19,7 +17,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   onSwitchToLogin,
 }) => {
   const { signUp, loading, error, clearError } = useAuth();
-
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -28,7 +25,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     confirmPassword: "",
     role: "coach" as "coach" | "player" | "family" | "admin",
   });
-
   const [validationErrors, setValidationErrors] = useState<{
     firstName?: string;
     lastName?: string;
@@ -37,84 +33,66 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     confirmPassword?: string;
     role?: string;
   }>({});
-
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-
     // Clear validation error when user starts typing
     if (validationErrors[field as keyof typeof validationErrors]) {
       setValidationErrors((prev) => ({ ...prev, [field]: undefined }));
     }
-
     // Clear auth error
     if (error) {
       clearError();
     }
   };
-
   const validateForm = () => {
     const errors: typeof validationErrors = {};
-
     if (!formData.firstName.trim()) {
       errors.firstName = "First name is required";
     }
-
     if (!formData.lastName.trim()) {
       errors.lastName = "Last name is required";
     }
-
     if (!formData.email) {
       errors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.email = "Please enter a valid email address";
     }
-
     if (!formData.password) {
       errors.password = "Password is required";
     } else if (formData.password.length < 6) {
       errors.password = "Password must be at least 6 characters";
     }
-
     if (!formData.confirmPassword) {
       errors.confirmPassword = "Please confirm your password";
     } else if (formData.password !== formData.confirmPassword) {
       errors.confirmPassword = "Passwords do not match";
     }
-
     if (!formData.role) {
       errors.role = "Please select your role";
     }
-
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) {
       return;
     }
-
     const result = await signUp(formData.email, formData.password, {
       firstName: formData.firstName.trim(),
       lastName: formData.lastName.trim(),
       role: formData.role,
     });
-
     if (result.success) {
-      console.log("BoxCall: Registration successful!");
       onSuccess?.();
     }
   };
-
   const roleOptions = [
     { value: "coach", label: "👨‍🏫 Coach" },
     { value: "player", label: "🏃‍♂️ Player" },
     { value: "family", label: "👨‍👩‍👧‍👦 Family Member" },
     { value: "admin", label: "⚙️ Administrator" },
   ];
-
   return (
     <Card className="w-full max-w-md mx-auto">
       <div className="p-6">
@@ -133,7 +111,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             Create your account to get started
           </Typography>
         </div>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <Input
@@ -147,7 +124,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
               required
               fullWidth
             />
-
             <Input
               type="text"
               label="Last Name"
@@ -160,7 +136,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
               fullWidth
             />
           </div>
-
           <Input
             type="email"
             label="Email"
@@ -172,7 +147,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             required
             fullWidth
           />
-
           <Select
             label="Role"
             value={formData.role}
@@ -183,7 +157,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             required
             fullWidth
           />
-
           <Input
             type="password"
             label="Password"
@@ -196,7 +169,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             required
             fullWidth
           />
-
           <Input
             type="password"
             label="Confirm Password"
@@ -211,7 +183,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             required
             fullWidth
           />
-
           {error && (
             <div className="p-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-md">
               <Typography
@@ -222,7 +193,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
               </Typography>
             </div>
           )}
-
           <Button
             type="submit"
             variant="primary"
@@ -234,7 +204,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             {loading ? "Creating Account..." : "Create Account"}
           </Button>
         </form>
-
         <div className="mt-6 text-center">
           <Typography variant="body-sm" color="muted">
             Already have an account?{" "}

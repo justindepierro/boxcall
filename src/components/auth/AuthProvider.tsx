@@ -2,11 +2,9 @@ import type { ReactNode } from "react";
 import React, { useEffect } from "react";
 import { useAuth } from "../../app/auth-store";
 import { supabase } from "../../lib/supabase";
-
 interface AuthProviderProps {
   children: ReactNode;
 }
-
 /**
  * AuthProvider Component
  *
@@ -15,27 +13,21 @@ interface AuthProviderProps {
  */
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { setUser, setSession, setProfile, fetchUserProfile } = useAuth();
-
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-
       if (session?.user) {
         fetchUserProfile(session.user.id);
       }
     });
-
     // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("BoxCall Auth: State changed:", event, session?.user?.email);
-
       setSession(session);
       setUser(session?.user ?? null);
-
       if (session?.user) {
         // Fetch user profile when user signs in
         await fetchUserProfile(session.user.id);
@@ -44,10 +36,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setProfile(null);
       }
     });
-
     // Cleanup subscription on unmount
     return () => subscription.unsubscribe();
   }, [setUser, setSession, setProfile, fetchUserProfile]);
-
   return <>{children}</>;
 };

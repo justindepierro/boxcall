@@ -5,7 +5,6 @@ import { PlayFilters } from "../components/playbook/PlayFilters.tsx";
 import { PlayBuilderWizard } from "../components/playbook/PlayBuilder/PlayBuilderWizard";
 import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal";
 import { InteractivePlayBuilder } from "../components/playbook/visual/InteractivePlayBuilder";
-
 interface PlaybookPageState {
   searchQuery: string;
   showBuilder: boolean;
@@ -19,7 +18,6 @@ interface PlaybookPageState {
     tags?: string[];
   };
 }
-
 export const PlaybookPage: React.FC = () => {
   const [state, setState] = useState<PlaybookPageState>({
     searchQuery: "",
@@ -28,39 +26,30 @@ export const PlaybookPage: React.FC = () => {
     showInteractiveBuilder: false,
     selectedFilters: {},
   });
-
   const handleSearch = (query: string) => {
     setState((prev) => ({ ...prev, searchQuery: query }));
   };
-
   const handleOpenBuilder = () => {
     setState((prev) => ({ ...prev, showBuilder: true }));
   };
-
   const handleCloseBuilder = () => {
     setState((prev) => ({ ...prev, showBuilder: false }));
   };
-
   const handleOpenImport = () => {
     setState((prev) => ({ ...prev, showImport: true }));
   };
-
   const handleCloseImport = () => {
     setState((prev) => ({ ...prev, showImport: false }));
   };
-
   const handleOpenInteractiveBuilder = () => {
     setState((prev) => ({ ...prev, showInteractiveBuilder: true }));
   };
-
   const handleCloseInteractiveBuilder = () => {
     setState((prev) => ({ ...prev, showInteractiveBuilder: false }));
   };
-
   const handleFilterChange = (filters: typeof state.selectedFilters) => {
     setState((prev) => ({ ...prev, selectedFilters: filters }));
   };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
@@ -71,7 +60,6 @@ export const PlaybookPage: React.FC = () => {
               <FileText className="h-8 w-8 text-emerald-600 mr-3" />
               <h1 className="text-2xl font-bold text-slate-900">Playbook</h1>
             </div>
-
             {/* Search Bar */}
             <div className="flex-1 max-w-lg mx-8">
               <div className="relative">
@@ -85,7 +73,6 @@ export const PlaybookPage: React.FC = () => {
                 />
               </div>
             </div>
-
             {/* Action Buttons */}
             <div className="flex items-center space-x-3">
               <button
@@ -113,7 +100,6 @@ export const PlaybookPage: React.FC = () => {
           </div>
         </div>
       </header>
-
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8">
@@ -124,7 +110,6 @@ export const PlaybookPage: React.FC = () => {
               selectedFilters={state.selectedFilters}
             />
           </aside>
-
           {/* Play Grid */}
           <main className="flex-1">
             <PlayGrid
@@ -134,7 +119,6 @@ export const PlaybookPage: React.FC = () => {
           </main>
         </div>
       </div>
-
       {/* Modals */}
       {state.showBuilder && (
         <PlayBuilderWizard
@@ -142,11 +126,9 @@ export const PlaybookPage: React.FC = () => {
           onClose={handleCloseBuilder}
         />
       )}
-
       {state.showImport && (
         <CSVImportModal isOpen={state.showImport} onClose={handleCloseImport} />
       )}
-
       {state.showInteractiveBuilder && (
         <InteractivePlayBuilder
           isOpen={state.showInteractiveBuilder}

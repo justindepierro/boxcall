@@ -4,7 +4,6 @@
  * Central API service that provides platform-agnostic access to all BoxCall features,
  * ensuring consistent behavior across web, mobile, and external integrations.
  */
-
 import { supabase } from "../../lib/supabase";
 import type {
   CalendarEvent,
@@ -30,11 +29,9 @@ import {
   type SchedulingConstraints,
   type TimeSuggestion,
 } from "../phase3/SmartSchedulingOptimizer";
-
 // ============================================================================
 // UNIFIED API TYPES
 // ============================================================================
-
 export interface UnifiedApiResponse<T = unknown> {
   success: boolean;
   data?: T;
@@ -44,7 +41,6 @@ export interface UnifiedApiResponse<T = unknown> {
   platform?: "web" | "mobile" | "api";
   version: string;
 }
-
 export interface PlatformContext {
   platform: "web" | "mobile" | "api";
   version: string;
@@ -52,14 +48,12 @@ export interface PlatformContext {
   deviceId?: string;
   sessionId: string;
 }
-
 export interface SyncRequest {
   sourceData: Record<string, unknown>;
   targetPlatform: "web" | "mobile" | "all";
   syncType: "full" | "incremental" | "intelligent";
   conflictResolution: "merge" | "overwrite" | "prompt";
 }
-
 export interface SyncResult {
   success: boolean;
   syncedEntities: number;
@@ -67,7 +61,6 @@ export interface SyncResult {
   lastSyncTime: string;
   nextSyncScheduled?: string;
 }
-
 export interface DataConflict {
   id: string;
   type: "event" | "team" | "user" | "settings";
@@ -76,18 +69,14 @@ export interface DataConflict {
   conflictFields: string[];
   resolution?: "local" | "remote" | "merged";
 }
-
 // ============================================================================
 // UNIFIED API GATEWAY SERVICE
 // ============================================================================
-
 export class UnifiedApiGateway {
   private static readonly API_VERSION = "4.1.0";
-
   // ==========================================
   // Intelligent Calendar APIs
   // ==========================================
-
   /**
    * Unified intelligent scheduling endpoint
    */
@@ -98,7 +87,6 @@ export class UnifiedApiGateway {
     try {
       const result =
         await IntelligentCalendarService.handleScheduleAnalysis(request);
-
       return this.createSuccessResponse(
         result,
         context,
@@ -111,7 +99,6 @@ export class UnifiedApiGateway {
       ) as UnifiedApiResponse<ScheduleAnalysisResult>;
     }
   }
-
   /**
    * Unified conflict detection endpoint
    */
@@ -121,7 +108,6 @@ export class UnifiedApiGateway {
   ): Promise<UnifiedApiResponse<ConflictDetectionResult>> {
     try {
       const result = await ConflictDetectionService.detectConflicts(request);
-
       return this.createSuccessResponse(
         result,
         context,
@@ -134,7 +120,6 @@ export class UnifiedApiGateway {
       ) as UnifiedApiResponse<ConflictDetectionResult>;
     }
   }
-
   /**
    * Unified smart scheduling optimization endpoint
    */
@@ -149,7 +134,6 @@ export class UnifiedApiGateway {
           teamId,
           constraints
         );
-
       return this.createSuccessResponse(
         suggestions,
         context,
@@ -162,7 +146,6 @@ export class UnifiedApiGateway {
       ) as UnifiedApiResponse<TimeSuggestion[]>;
     }
   }
-
   /**
    * Unified attendance analytics endpoint
    */
@@ -176,7 +159,6 @@ export class UnifiedApiGateway {
         teamId,
         period
       );
-
       return this.createSuccessResponse(
         analytics,
         context,
@@ -189,11 +171,9 @@ export class UnifiedApiGateway {
       ) as UnifiedApiResponse<AttendanceAnalytics>;
     }
   }
-
   // ==========================================
   // Calendar Management APIs
   // ==========================================
-
   /**
    * Unified calendar event creation
    */
@@ -212,14 +192,11 @@ export class UnifiedApiGateway {
         })
         .select()
         .single();
-
       if (error) throw error;
-
       // Trigger intelligent analysis for the new event
       if (data.team_id) {
         await this.triggerIntelligentAnalysis(data);
       }
-
       return this.createSuccessResponse(
         data,
         context,
@@ -232,7 +209,6 @@ export class UnifiedApiGateway {
       ) as UnifiedApiResponse<CalendarEvent>;
     }
   }
-
   /**
    * Unified calendar event update
    */
@@ -250,14 +226,11 @@ export class UnifiedApiGateway {
         .eq("id", updateData.id)
         .select()
         .single();
-
       if (error) throw error;
-
       // Trigger conflict re-analysis if time/location changed
       if (updateData.start || updateData.location) {
         await this.triggerConflictReanalysis(data);
       }
-
       return this.createSuccessResponse(
         data,
         context,
@@ -270,7 +243,6 @@ export class UnifiedApiGateway {
       ) as UnifiedApiResponse<CalendarEvent>;
     }
   }
-
   /**
    * Unified calendar event retrieval
    */
@@ -286,7 +258,6 @@ export class UnifiedApiGateway {
   ): Promise<UnifiedApiResponse<CalendarEvent[]>> {
     try {
       let query = supabase.from("calendar_events").select("*");
-
       // Apply filters
       if (filters.teamId) {
         query = query.eq("team_id", filters.teamId);
@@ -300,17 +271,13 @@ export class UnifiedApiGateway {
       if (filters.eventType) {
         query = query.eq("type", filters.eventType);
       }
-
       const { data, error } = await query.order("start", { ascending: true });
-
       if (error) throw error;
-
       // Enhance with intelligent data if requested
       let enhancedData = data;
       if (filters.includeIntelligentData && filters.teamId) {
         enhancedData = await this.enhanceEventsWithIntelligentData(data);
       }
-
       return this.createSuccessResponse(
         enhancedData,
         context,
@@ -323,11 +290,9 @@ export class UnifiedApiGateway {
       ) as UnifiedApiResponse<CalendarEvent[]>;
     }
   }
-
   // ==========================================
   // Cross-Platform Synchronization APIs
   // ==========================================
-
   /**
    * Synchronize data across platforms
    */
@@ -337,7 +302,6 @@ export class UnifiedApiGateway {
   ): Promise<UnifiedApiResponse<SyncResult>> {
     try {
       const syncResult = await this.performPlatformSync();
-
       return this.createSuccessResponse(
         syncResult,
         context,
@@ -350,7 +314,6 @@ export class UnifiedApiGateway {
       ) as UnifiedApiResponse<SyncResult>;
     }
   }
-
   /**
    * Establish real-time synchronization connection
    */
@@ -363,10 +326,8 @@ export class UnifiedApiGateway {
       const channels = platforms.map(
         (platform) => `boxcall-sync-${platform}-${context.sessionId}`
       );
-
       // TODO: Implement WebSocket connection establishment
       const connectionId = `conn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
       return this.createSuccessResponse(
         { connectionId, channels },
         context,
@@ -379,16 +340,13 @@ export class UnifiedApiGateway {
       ) as UnifiedApiResponse<{ connectionId: string; channels: string[] }>;
     }
   }
-
   // ==========================================
   // Helper Methods
   // ==========================================
-
   private static async triggerIntelligentAnalysis(
     event: CalendarEvent
   ): Promise<void> {
     if (!event.team_id) return;
-
     try {
       // Run background intelligent analysis
       const conflictRequest: ConflictDetectionRequest = {
@@ -398,30 +356,25 @@ export class UnifiedApiGateway {
         checkVenueConflicts: true,
         checkFamilySchedules: true,
       };
-
       await ConflictDetectionService.detectConflicts(conflictRequest);
-
       // Store analysis results for future reference
       // TODO: Implement intelligent analysis storage
     } catch (error) {
       console.error("Failed to trigger intelligent analysis:", error);
     }
   }
-
   private static async triggerConflictReanalysis(
     event: CalendarEvent
   ): Promise<void> {
     // Similar to triggerIntelligentAnalysis but for updates
     await this.triggerIntelligentAnalysis(event);
   }
-
   private static async enhanceEventsWithIntelligentData(
     events: CalendarEvent[]
   ): Promise<CalendarEvent[]> {
     // TODO: Enhance events with conflict detection, attendance predictions, etc.
     return events;
   }
-
   private static async performPlatformSync(): Promise<SyncResult> {
     // TODO: Implement cross-platform synchronization logic
     return {
@@ -431,7 +384,6 @@ export class UnifiedApiGateway {
       lastSyncTime: new Date().toISOString(),
     };
   }
-
   private static createSuccessResponse<T>(
     data: T,
     context: PlatformContext,
@@ -446,7 +398,6 @@ export class UnifiedApiGateway {
       version: this.API_VERSION,
     };
   }
-
   private static createErrorResponse(
     error: Error,
     context: PlatformContext
@@ -461,11 +412,9 @@ export class UnifiedApiGateway {
     };
   }
 }
-
 // ============================================================================
 // PLATFORM-SPECIFIC ADAPTERS
 // ============================================================================
-
 /**
  * Web platform adapter
  */
@@ -478,7 +427,6 @@ export class WebPlatformAdapter {
       sessionId,
     };
   }
-
   static async handleApiCall<T>(
     apiCall: (context: PlatformContext) => Promise<UnifiedApiResponse<T>>,
     sessionId: string,
@@ -486,15 +434,12 @@ export class WebPlatformAdapter {
   ): Promise<T> {
     const context = this.createContext(sessionId, userAgent);
     const response = await apiCall(context);
-
     if (!response.success) {
       throw new Error(response.error || "API call failed");
     }
-
     return response.data!;
   }
 }
-
 /**
  * Mobile platform adapter
  */
@@ -507,7 +452,6 @@ export class MobilePlatformAdapter {
       sessionId,
     };
   }
-
   static async handleApiCall<T>(
     apiCall: (context: PlatformContext) => Promise<UnifiedApiResponse<T>>,
     sessionId: string,
@@ -515,13 +459,10 @@ export class MobilePlatformAdapter {
   ): Promise<T> {
     const context = this.createContext(sessionId, deviceId);
     const response = await apiCall(context);
-
     if (!response.success) {
       throw new Error(response.error || "API call failed");
     }
-
     return response.data!;
   }
 }
-
 export default UnifiedApiGateway;

@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import type { TeamSettings as TeamSettingsType } from "../../types/team-management";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
-
 interface TeamSettingsProps {
   teamSettings: TeamSettingsType;
   onUpdate: (settings: TeamSettingsType) => void;
 }
-
 /**
  * TeamSettings Component
  *
@@ -27,13 +25,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
     address: teamSettings.location?.address || "",
     zipCode: teamSettings.location?.zipCode || "",
   });
-
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
-
   // Handle input changes
   const handleInputChange = (field: string, value: string | number) => {
     setFormData((prev) => ({
@@ -41,13 +37,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
       [field]: value,
     }));
   };
-
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setMessage(null);
-
     try {
       const updatedSettings: TeamSettingsType = {
         ...teamSettings,
@@ -62,7 +56,6 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           zipCode: formData.zipCode,
         },
       };
-
       // TODO: Save to database
       onUpdate(updatedSettings);
       setMessage({
@@ -79,13 +72,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
       setSaving(false);
     }
   };
-
   // Handle logo upload
   const handleLogoUpload = () => {
     // TODO: Implement file upload
     setMessage({ type: "success", text: "Logo upload feature coming soon!" });
   };
-
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
       {/* Header */}
@@ -97,7 +88,6 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           Configure your team information and preferences
         </p>
       </div>
-
       {/* Message Display */}
       {message && (
         <div
@@ -110,7 +100,6 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           {message.text}
         </div>
       )}
-
       {/* Form */}
       <form onSubmit={handleSubmit} className="p-6 space-y-8">
         {/* Team Logo */}
@@ -118,7 +107,6 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
             Team Logo
           </h3>
-
           <div className="flex items-center space-x-6">
             {/* Current Logo */}
             <div className="flex-shrink-0">
@@ -134,7 +122,6 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                 </div>
               )}
             </div>
-
             {/* Upload Button */}
             <div>
               <Button
@@ -150,13 +137,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
             </div>
           </div>
         </div>
-
         {/* Basic Information */}
         <div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
             Basic Information
           </h3>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -170,7 +155,6 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                 required
               />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 School/Organization
@@ -182,7 +166,6 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                 placeholder="Lincoln High School"
               />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Season
@@ -194,7 +177,6 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                 placeholder="2025"
               />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Logo URL
@@ -208,13 +190,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
             </div>
           </div>
         </div>
-
         {/* Location Information */}
         <div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
             Location Information
           </h3>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -227,7 +207,6 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                 placeholder="123 Main Street"
               />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 City
@@ -239,7 +218,6 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                 placeholder="Lincoln"
               />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 State
@@ -251,7 +229,6 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                 placeholder="Nebraska"
               />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 ZIP Code
@@ -265,13 +242,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
             </div>
           </div>
         </div>
-
         {/* Subscription Information */}
         <div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
             Subscription Status
           </h3>
-
           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -282,20 +257,17 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                   Features: {teamSettings.subscription.features.join(", ")}
                 </p>
               </div>
-
               <Button variant="outline" size="sm">
                 Manage Subscription
               </Button>
             </div>
           </div>
         </div>
-
         {/* Team ID */}
         <div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
             Team Information
           </h3>
-
           <div className="bg-jade-50 dark:bg-navy-900/20 rounded-md p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -312,7 +284,6 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
             </div>
           </div>
         </div>
-
         {/* Actions */}
         <div className="flex justify-end pt-6 border-t border-gray-200 dark:border-gray-700">
           <Button

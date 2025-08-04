@@ -6,7 +6,6 @@ import {
   getPositionColor,
   isOffensiveLine,
 } from "./formationConstants";
-
 interface PlayerPositionSystemProps {
   play?: Play;
   players?: PlayerPosition[];
@@ -16,7 +15,6 @@ interface PlayerPositionSystemProps {
   fieldHeight: number;
   showLabels?: boolean;
 }
-
 export const PlayerPositionSystem: React.FC<PlayerPositionSystemProps> = ({
   play,
   players,
@@ -31,7 +29,6 @@ export const PlayerPositionSystem: React.FC<PlayerPositionSystemProps> = ({
   const [playerPositions, setPlayerPositions] = useState<{
     [id: string]: { x: number; y: number };
   }>({});
-
   // Use formation template if no custom players provided
   const currentPlayers = useMemo(() => {
     return (
@@ -40,28 +37,21 @@ export const PlayerPositionSystem: React.FC<PlayerPositionSystemProps> = ({
       []
     );
   }, [players, play?.formation]);
-
   const handleMouseDown = useCallback(
     (e: React.MouseEvent, playerId: string) => {
       if (readOnly) return;
-
       e.preventDefault();
       e.stopPropagation();
-
       const svgElement = e.currentTarget.closest("svg");
       if (!svgElement) return;
-
       const rect = svgElement.getBoundingClientRect();
       const player = currentPlayers.find((p) => p.id === playerId);
       if (!player) return;
-
       const playerPos = playerPositions[playerId];
       const currentX = playerPos ? playerPos.x : (player.x / 100) * fieldWidth;
       const currentY = playerPos ? playerPos.y : (player.y / 100) * fieldHeight;
-
       const clientX = e.clientX - rect.left;
       const clientY = e.clientY - rect.top;
-
       setDraggedPlayer(playerId);
       setDragOffset({
         x: clientX - currentX,
@@ -70,36 +60,28 @@ export const PlayerPositionSystem: React.FC<PlayerPositionSystemProps> = ({
     },
     [readOnly, currentPlayers, fieldWidth, fieldHeight, playerPositions]
   );
-
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
       if (!draggedPlayer || readOnly) return;
-
       const svgElement = e.currentTarget;
       const rect = svgElement.getBoundingClientRect();
-
       const newX = e.clientX - rect.left - dragOffset.x;
       const newY = e.clientY - rect.top - dragOffset.y;
-
       // Constrain to field bounds
       const constrainedX = Math.max(15, Math.min(fieldWidth - 15, newX));
       const constrainedY = Math.max(15, Math.min(fieldHeight - 15, newY));
-
       setPlayerPositions((prev) => ({
         ...prev,
         [draggedPlayer]: { x: constrainedX, y: constrainedY },
       }));
-
       onPlayerMove?.(draggedPlayer, constrainedX, constrainedY);
     },
     [draggedPlayer, readOnly, dragOffset, fieldWidth, fieldHeight, onPlayerMove]
   );
-
   const handleMouseUp = useCallback(() => {
     setDraggedPlayer(null);
     setDragOffset({ x: 0, y: 0 });
   }, []);
-
   return (
     <g
       className="player-positions"
@@ -114,7 +96,6 @@ export const PlayerPositionSystem: React.FC<PlayerPositionSystemProps> = ({
         const color = getPositionColor(player.position);
         const isOLine = isOffensiveLine(player.position);
         const isDragging = draggedPlayer === player.id;
-
         return (
           <g key={player.id} className="player">
             {/* Player Circle */}
@@ -135,7 +116,6 @@ export const PlayerPositionSystem: React.FC<PlayerPositionSystemProps> = ({
                   : undefined,
               }}
             />
-
             {/* Player Number */}
             {player.number && (
               <text
@@ -149,7 +129,6 @@ export const PlayerPositionSystem: React.FC<PlayerPositionSystemProps> = ({
                 {player.number}
               </text>
             )}
-
             {/* Position Label */}
             {showLabels && (
               <text
@@ -163,7 +142,6 @@ export const PlayerPositionSystem: React.FC<PlayerPositionSystemProps> = ({
                 {player.position}
               </text>
             )}
-
             {/* Key Player Indicator */}
             {player.isKeyPlayer && (
               <circle
@@ -180,7 +158,6 @@ export const PlayerPositionSystem: React.FC<PlayerPositionSystemProps> = ({
           </g>
         );
       })}
-
       {/* Formation Label */}
       {play?.formation && (
         <text

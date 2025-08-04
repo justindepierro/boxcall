@@ -1,11 +1,9 @@
 import React from "react";
 import { Typography } from "../design-system";
-
 interface TeamNavigationProps {
   teamId: string;
   userRole: string;
 }
-
 /**
  * Team Navigation - Team-specific navigation tabs
  *
@@ -47,11 +45,9 @@ export const TeamNavigation: React.FC<TeamNavigationProps> = ({
     { id: "stats", label: "Stats", icon: "📊", href: `/team/${teamId}/stats` },
     { id: "media", label: "Media", icon: "📸", href: `/team/${teamId}/media` },
   ];
-
   const visibleItems = navigationItems.filter(
     (item) => !item.roles || item.roles.includes(userRole)
   );
-
   return (
     <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -72,5 +68,4 @@ export const TeamNavigation: React.FC<TeamNavigationProps> = ({
     </div>
   );
 };
-
 export default TeamNavigation;

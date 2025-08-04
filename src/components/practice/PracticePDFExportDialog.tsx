@@ -4,14 +4,12 @@
  * Advanced PDF export dialog with customizable options for practice plans.
  * Includes category filters, content options, and export settings.
  */
-
 import React, { useState } from "react";
 import { Button } from "../ui/Button/Button";
 import { Modal } from "../ui/Modal/Modal";
 import { Typography } from "../design-system/Typography";
 import { usePracticeScriptPDF } from "../../services/pdf/usePracticeScriptPDF";
 import type { PracticeBlock } from "./types";
-
 interface PDFExportOptions {
   includeEverything: boolean;
   includeOffense: boolean;
@@ -20,7 +18,6 @@ interface PDFExportOptions {
   addScripts: boolean;
   addNotes: boolean;
 }
-
 interface PracticePDFExportDialogProps {
   isOpen: boolean;
   onClose: () => void;
@@ -48,7 +45,6 @@ interface PracticePDFExportDialogProps {
     };
   };
 }
-
 export const PracticePDFExportDialog: React.FC<
   PracticePDFExportDialogProps
 > = ({ isOpen, onClose, practiceData }) => {
@@ -60,18 +56,14 @@ export const PracticePDFExportDialog: React.FC<
     addScripts: true,
     addNotes: true,
   });
-
   const [isExporting, setIsExporting] = useState(false);
   const { downloadPDF } = usePracticeScriptPDF();
-
   // Filter practice blocks based on selected options
   const getFilteredBlocks = (): PracticeBlock[] => {
     if (!practiceData.blocks) return [];
-
     if (exportOptions.includeEverything) {
       return practiceData.blocks;
     }
-
     return practiceData.blocks.filter((block) => {
       switch (block.category) {
         case "offense":
@@ -86,28 +78,23 @@ export const PracticePDFExportDialog: React.FC<
       }
     });
   };
-
   // Process blocks for PDF generation
   const processPracticeData = () => {
     const filteredBlocks = getFilteredBlocks();
-
     // Calculate category breakdown for filtered blocks
     const categoryBreakdown: Record<string, number> = {};
     let totalMinutes = 0;
     const coachUtilization: Record<string, number> = {};
-
     filteredBlocks.forEach((block) => {
       const category = block.category || "other";
       categoryBreakdown[category] =
         (categoryBreakdown[category] || 0) + block.duration;
       totalMinutes += block.duration;
-
       if (block.assignedCoach) {
         coachUtilization[block.assignedCoach] =
           (coachUtilization[block.assignedCoach] || 0) + block.duration;
       }
     });
-
     // Convert blocks to PDF format
     const pdfBlocks = filteredBlocks.map((block) => ({
       id: block.id,
@@ -128,7 +115,6 @@ export const PracticePDFExportDialog: React.FC<
         scriptTitle: exportOptions.addScripts ? group.scriptTitle : undefined,
       })),
     }));
-
     return {
       title: practiceData.title || "Practice Plan",
       date: practiceData.date || new Date().toLocaleDateString(),
@@ -146,12 +132,10 @@ export const PracticePDFExportDialog: React.FC<
       },
     };
   };
-
   const handleExport = async () => {
     setIsExporting(true);
     try {
       const processedData = processPracticeData();
-
       // Generate filename based on what's included
       const filenameParts = ["practice"];
       if (practiceData.title) {
@@ -160,7 +144,6 @@ export const PracticePDFExportDialog: React.FC<
       if (practiceData.date) {
         filenameParts.push(practiceData.date.replace(/\//g, "-"));
       }
-
       // Add category filters to filename
       if (!exportOptions.includeEverything) {
         const categories = [];
@@ -171,9 +154,7 @@ export const PracticePDFExportDialog: React.FC<
           filenameParts.push(categories.join("_"));
         }
       }
-
       const filename = `${filenameParts.join("_")}.pdf`;
-
       await downloadPDF(processedData, filename, {
         format: "Letter",
         orientation: "portrait",
@@ -185,7 +166,6 @@ export const PracticePDFExportDialog: React.FC<
         includeHeader: true,
         includeFooter: true,
       });
-
       onClose();
     } catch (error) {
       console.error("PDF export failed:", error);
@@ -194,18 +174,15 @@ export const PracticePDFExportDialog: React.FC<
       setIsExporting(false);
     }
   };
-
   const handleOptionChange = (option: keyof PDFExportOptions) => {
     setExportOptions((prev) => {
       const newOptions = { ...prev, [option]: !prev[option] };
-
       // If "Everything" is checked, uncheck specific categories
       if (option === "includeEverything" && !prev.includeEverything) {
         newOptions.includeOffense = false;
         newOptions.includeDefense = false;
         newOptions.includeSpecial = false;
       }
-
       // If any specific category is checked, uncheck "Everything"
       if (
         ["includeOffense", "includeDefense", "includeSpecial"].includes(
@@ -215,24 +192,19 @@ export const PracticePDFExportDialog: React.FC<
       ) {
         newOptions.includeEverything = false;
       }
-
       return newOptions;
     });
   };
-
   const getSelectedCategoriesText = () => {
     if (exportOptions.includeEverything) return "All categories";
-
     const categories = [];
     if (exportOptions.includeOffense) categories.push("Offense");
     if (exportOptions.includeDefense) categories.push("Defense");
     if (exportOptions.includeSpecial) categories.push("Special Teams");
-
     if (categories.length === 0)
       return "Meeting, Weight Room, Transitions only";
     return categories.join(", ") + " + General activities";
   };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md">
       <div className="p-6">
@@ -247,7 +219,6 @@ export const PracticePDFExportDialog: React.FC<
             </Typography>
           </div>
         </div>
-
         {/* Practice Info Preview */}
         <div className="bg-gray-50 rounded-lg p-4 mb-6">
           <Typography
@@ -275,7 +246,6 @@ export const PracticePDFExportDialog: React.FC<
             </div>
           </div>
         </div>
-
         {/* Export Options */}
         <div className="space-y-6">
           {/* Category Selection */}
@@ -299,7 +269,6 @@ export const PracticePDFExportDialog: React.FC<
                   (All practice blocks and activities)
                 </span>
               </label>
-
               <div className="ml-4 space-y-2 border-l-2 border-gray-200 pl-4">
                 <label className="flex items-center space-x-3 cursor-pointer">
                   <input
@@ -314,7 +283,6 @@ export const PracticePDFExportDialog: React.FC<
                     🏈 Offensive drills and plays
                   </span>
                 </label>
-
                 <label className="flex items-center space-x-3 cursor-pointer">
                   <input
                     type="checkbox"
@@ -328,7 +296,6 @@ export const PracticePDFExportDialog: React.FC<
                     🛡️ Defensive drills and schemes
                   </span>
                 </label>
-
                 <label className="flex items-center space-x-3 cursor-pointer">
                   <input
                     type="checkbox"
@@ -345,7 +312,6 @@ export const PracticePDFExportDialog: React.FC<
               </div>
             </div>
           </div>
-
           {/* Content Options */}
           <div>
             <Typography
@@ -367,7 +333,6 @@ export const PracticePDFExportDialog: React.FC<
                   (Include attached practice scripts and play sheets)
                 </span>
               </label>
-
               <label className="flex items-center space-x-3 cursor-pointer">
                 <input
                   type="checkbox"
@@ -382,7 +347,6 @@ export const PracticePDFExportDialog: React.FC<
               </label>
             </div>
           </div>
-
           {/* Preview Summary */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <Typography
@@ -408,7 +372,6 @@ export const PracticePDFExportDialog: React.FC<
             </div>
           </div>
         </div>
-
         {/* Action Buttons */}
         <div className="flex justify-end space-x-3 mt-8">
           <Button variant="outline" onClick={onClose} disabled={isExporting}>

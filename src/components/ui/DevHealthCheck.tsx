@@ -3,11 +3,9 @@
  *
  * Monitors development environment health and displays status
  */
-
 import React, { useState } from "react";
 import { Typography } from "../design-system";
 import { Icon } from "./Icon/Icon";
-
 interface HealthStatus {
   react: boolean;
   typescript: boolean;
@@ -15,21 +13,17 @@ interface HealthStatus {
   store: boolean;
   errors: string[];
 }
-
 export const DevHealthCheck: React.FC = () => {
   const [status] = useState<HealthStatus>(() => {
     // Initialize health check status
     const errors: string[] = [];
-
     // Check basic environment
     const react = typeof React !== "undefined";
     const typescript = true; // If this compiles, TypeScript is working
     const vite = import.meta.env !== undefined;
     const store = true; // Assume store is available
-
     if (!react) errors.push("React not available");
     if (!vite) errors.push("Vite environment not detected");
-
     return {
       react,
       typescript,
@@ -38,19 +32,16 @@ export const DevHealthCheck: React.FC = () => {
       errors,
     };
   });
-
   const isHealthy =
     status.react &&
     status.typescript &&
     status.vite &&
     status.store &&
     status.errors.length === 0;
-
   // Don't render anything if healthy (development only)
   if (isHealthy) {
     return null;
   }
-
   return (
     <div className="fixed top-4 right-4 z-50 max-w-sm">
       {status.errors.length > 0 ? (

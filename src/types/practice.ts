@@ -1,6 +1,5 @@
 // Practice Schedule System Types
 // Phase 2.2 Implementation
-
 export interface PracticeBlock {
   id: string;
   title: string;
@@ -15,7 +14,6 @@ export interface PracticeBlock {
   notes?: string;
   equipmentIds?: string[];
 }
-
 export interface PracticeSchedule {
   id: string;
   teamId: string;
@@ -37,7 +35,6 @@ export interface PracticeSchedule {
   createdAt: Date;
   updatedAt: Date;
 }
-
 export interface PracticeTemplate {
   id: string;
   name: string;
@@ -53,7 +50,6 @@ export interface PracticeTemplate {
   createdAt: Date;
   usageCount: number;
 }
-
 export interface PracticeScript {
   id: string;
   title: string;
@@ -73,7 +69,6 @@ export interface PracticeScript {
   createdBy: string;
   createdAt: Date;
 }
-
 export interface PracticeDrill {
   id: string;
   name: string;
@@ -85,7 +80,6 @@ export interface PracticeDrill {
   difficulty: "beginner" | "intermediate" | "advanced";
   category: string;
 }
-
 export interface PracticeAttendance {
   id: string;
   practiceId: string;
@@ -96,7 +90,6 @@ export interface PracticeAttendance {
   recordedBy: string;
   recordedAt: Date;
 }
-
 export interface Equipment {
   id: string;
   name: string;
@@ -107,7 +100,6 @@ export interface Equipment {
   location: string;
   lastChecked: Date;
 }
-
 // Quick Time Interval Presets
 export const QUICK_TIME_INTERVALS = {
   FIVE_MIN: { duration: 5, label: "5 min" },
@@ -116,10 +108,8 @@ export const QUICK_TIME_INTERVALS = {
   TWENTY_MIN: { duration: 20, label: "20 min" },
   THIRTY_MIN: { duration: 30, label: "30 min" },
 } as const;
-
 export type QuickTimeInterval =
   (typeof QUICK_TIME_INTERVALS)[keyof typeof QUICK_TIME_INTERVALS];
-
 // Practice Block Types for Quick Creation
 export const PRACTICE_BLOCK_TYPES = {
   WARMUP: { title: "Warm-up", defaultDuration: 15, color: "#10B981" },
@@ -140,10 +130,8 @@ export const PRACTICE_BLOCK_TYPES = {
   },
   CUSTOM: { title: "Custom Block", defaultDuration: 15, color: "#00A86B" }, // BoxCall jade
 } as const;
-
 export type PracticeBlockType =
   (typeof PRACTICE_BLOCK_TYPES)[keyof typeof PRACTICE_BLOCK_TYPES];
-
 // Drag and Drop Types
 export interface DragDropResult {
   source: {
@@ -156,7 +144,6 @@ export interface DragDropResult {
   } | null;
   draggableId: string;
 }
-
 // Practice Schedule Form Data
 export interface CreatePracticeScheduleData {
   teamId: string;
@@ -173,7 +160,6 @@ export interface CreatePracticeScheduleData {
   equipmentRequired: string[];
   coachNotes?: string;
 }
-
 export interface CreatePracticeBlockData {
   title: string;
   description?: string;
@@ -182,14 +168,12 @@ export interface CreatePracticeBlockData {
   equipmentIds?: string[];
   notes?: string;
 }
-
 // API Response Types
 export interface PracticeScheduleResponse {
   schedule: PracticeSchedule;
   attendance: PracticeAttendance[];
   weather?: WeatherInfo;
 }
-
 export interface WeatherInfo {
   temperature: number;
   condition: string;
@@ -198,7 +182,6 @@ export interface WeatherInfo {
   precipitation: number;
   isOutdoorSafe: boolean;
 }
-
 // Filter and Search Types
 export interface PracticeFilters {
   dateRange: {
@@ -210,7 +193,6 @@ export interface PracticeFilters {
   templates: boolean;
   weatherDependent: boolean;
 }
-
 export interface PracticeSearchResult {
   schedules: PracticeSchedule[];
   templates: PracticeTemplate[];

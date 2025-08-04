@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import React, { useMemo, useState } from "react";
 import { Button } from "../Button";
 import { Input } from "../Input";
-
 export interface TableColumn<T = Record<string, unknown>> {
   /** Unique identifier for the column */
   id: string;
@@ -23,20 +22,16 @@ export interface TableColumn<T = Record<string, unknown>> {
   /** Sticky column position */
   sticky?: "left" | "right";
 }
-
 export interface TableRow {
   /** Unique identifier for the row */
   id: string;
   [key: string]: unknown;
 }
-
 export type SortDirection = "asc" | "desc" | null;
-
 export interface SortState {
   columnId: string;
   direction: SortDirection;
 }
-
 export interface TableProps<T extends TableRow = TableRow> {
   /** Column definitions */
   columns: TableColumn<T>[];
@@ -85,7 +80,6 @@ export interface TableProps<T extends TableRow = TableRow> {
   /** Custom CSS classes */
   className?: string;
 }
-
 // Style functions converted to use Tailwind dark mode classes
 const getTableStyles = (size?: "sm" | "md" | "lg", bordered?: boolean) => {
   const sizeStyles = {
@@ -93,7 +87,6 @@ const getTableStyles = (size?: "sm" | "md" | "lg", bordered?: boolean) => {
     md: "text-sm",
     lg: "text-base",
   };
-
   return [
     "w-full table-auto",
     "bg-white dark:bg-gray-800",
@@ -104,14 +97,12 @@ const getTableStyles = (size?: "sm" | "md" | "lg", bordered?: boolean) => {
     .filter(Boolean)
     .join(" ");
 };
-
 const getHeaderStyles = (size?: "sm" | "md" | "lg") => {
   const sizeStyles = {
     sm: "px-2 py-1",
     md: "px-4 py-2",
     lg: "px-6 py-3",
   };
-
   return [
     "border-b border-gray-200 dark:border-gray-700",
     "bg-gray-50 dark:bg-gray-900",
@@ -120,7 +111,6 @@ const getHeaderStyles = (size?: "sm" | "md" | "lg") => {
     sizeStyles[size || "md"],
   ].join(" ");
 };
-
 const getCellStyles = (
   size?: "sm" | "md" | "lg",
   align?: "left" | "center" | "right"
@@ -130,13 +120,11 @@ const getCellStyles = (
     md: "px-4 py-2",
     lg: "px-6 py-3",
   };
-
   const alignStyles = {
     left: "text-left",
     center: "text-center",
     right: "text-right",
   };
-
   return [
     "border-b border-gray-100 dark:border-gray-700",
     "text-gray-900 dark:text-gray-100",
@@ -144,7 +132,6 @@ const getCellStyles = (
     alignStyles[align || "left"],
   ].join(" ");
 };
-
 const getRowStyles = (
   isSelected?: boolean,
   isEven?: boolean,
@@ -160,7 +147,6 @@ const getRowStyles = (
     .filter(Boolean)
     .join(" ");
 };
-
 // Helper components
 const SortIcon: React.FC<{ direction: SortDirection }> = ({ direction }) => {
   if (!direction) {
@@ -174,7 +160,6 @@ const SortIcon: React.FC<{ direction: SortDirection }> = ({ direction }) => {
       </svg>
     );
   }
-
   return direction === "asc" ? (
     <svg
       className="w-4 h-4 text-jade-600 dark:text-jade-400"
@@ -193,13 +178,11 @@ const SortIcon: React.FC<{ direction: SortDirection }> = ({ direction }) => {
     </svg>
   );
 };
-
 const LoadingSpinner: React.FC = () => (
   <div className="flex justify-center items-center py-8">
     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600 dark:border-jade-400" />
   </div>
 );
-
 const EmptyState: React.FC<{ message: string }> = ({ message }) => (
   <div className="flex flex-col items-center justify-center py-12">
     <svg
@@ -218,7 +201,6 @@ const EmptyState: React.FC<{ message: string }> = ({ message }) => (
     <p className="text-sm text-gray-500 dark:text-gray-400">{message}</p>
   </div>
 );
-
 export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
   const {
     columns,
@@ -249,16 +231,12 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
     columnId: "",
     direction: null,
   });
-
   const [internalGlobalFilter, setInternalGlobalFilter] = useState("");
-
   const currentSortState = sortState || internalSortState;
   const currentGlobalFilter = globalFilter || internalGlobalFilter;
-
   const handleSort = (columnId: string) => {
     const column = columns.find((col) => col.id === columnId);
     if (!column?.sortable) return;
-
     const newDirection: SortDirection =
       currentSortState.columnId === columnId
         ? currentSortState.direction === "asc"
@@ -267,16 +245,13 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
             ? null
             : "asc"
         : "asc";
-
     const newSortState = { columnId, direction: newDirection };
-
     if (onSortChange) {
       onSortChange(newSortState);
     } else {
       setInternalSortState(newSortState);
     }
   };
-
   const handleGlobalFilterChange = (value: string) => {
     if (onGlobalFilterChange) {
       onGlobalFilterChange(value);
@@ -284,10 +259,8 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
       setInternalGlobalFilter(value);
     }
   };
-
   const filteredAndSortedData = useMemo(() => {
     let result = [...data];
-
     // Apply global filter
     if (currentGlobalFilter) {
       result = result.filter((row) =>
@@ -299,7 +272,6 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
         })
       );
     }
-
     // Apply sorting
     if (currentSortState.direction && currentSortState.columnId) {
       const column = columns.find(
@@ -309,9 +281,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
         result.sort((a, b) => {
           const aValue = a[column.accessorKey!];
           const bValue = b[column.accessorKey!];
-
           if (aValue === bValue) return 0;
-
           const comparison = aValue < bValue ? -1 : 1;
           return currentSortState.direction === "asc"
             ? comparison
@@ -319,43 +289,33 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
         });
       }
     }
-
     return result;
   }, [data, columns, currentGlobalFilter, currentSortState]);
-
   const paginatedData = useMemo(() => {
     if (!pagination) return filteredAndSortedData;
-
     const startIndex = currentPage * pageSize;
     return filteredAndSortedData.slice(startIndex, startIndex + pageSize);
   }, [filteredAndSortedData, pagination, currentPage, pageSize]);
-
   const handleSelectAll = (checked: boolean) => {
     if (!onSelectionChange) return;
-
     const newSelection = checked ? paginatedData.map((row) => row.id) : [];
     onSelectionChange(newSelection);
   };
-
   const handleSelectRow = (rowId: string, checked: boolean) => {
     if (!onSelectionChange) return;
-
     const newSelection = checked
       ? [...selectedRows, rowId]
       : selectedRows.filter((id) => id !== rowId);
     onSelectionChange(newSelection);
   };
-
   const isAllSelected =
     paginatedData.length > 0 &&
     paginatedData.every((row) => selectedRows.includes(row.id));
   const isIndeterminate =
     paginatedData.some((row) => selectedRows.includes(row.id)) &&
     !isAllSelected;
-
   const totalPages =
     pagination && totalItems ? Math.ceil(totalItems / pageSize) : 0;
-
   return (
     <div className={["space-y-4", className].filter(Boolean).join(" ")}>
       {searchable && (
@@ -368,7 +328,6 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
           />
         </div>
       )}
-
       <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
         <table className={getTableStyles(size, bordered)}>
           <thead>
@@ -426,7 +385,6 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
               paginatedData.map((row, rowIndex) => {
                 const isSelected = selectedRows.includes(row.id);
                 const isEven = rowIndex % 2 === 0;
-
                 return (
                   <tr
                     key={row.id}
@@ -448,7 +406,6 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
                       const value = column.accessorKey
                         ? row[column.accessorKey]
                         : undefined;
-
                       return (
                         <td
                           key={column.id}
@@ -467,7 +424,6 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
           </tbody>
         </table>
       </div>
-
       {pagination && (
         <div className="flex items-center justify-between">
           <div className="text-sm text-gray-700 dark:text-gray-300">

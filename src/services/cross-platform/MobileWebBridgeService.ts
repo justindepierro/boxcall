@@ -4,7 +4,6 @@
  * Provides seamless data synchronization and feature adaptation between
  * web and mobile platforms, ensuring consistent user experience.
  */
-
 import type { CalendarEvent } from "../../types/calendar";
 import {
   UnifiedApiGateway,
@@ -12,11 +11,9 @@ import {
   type PlatformContext,
   type SyncResult,
 } from "./UnifiedApiGateway";
-
 // ============================================================================
 // BRIDGE TYPES
 // ============================================================================
-
 export interface BridgeConnection {
   id: string;
   sourceContext: PlatformContext;
@@ -25,7 +22,6 @@ export interface BridgeConnection {
   lastSync: string;
   syncConfig: SyncConfiguration;
 }
-
 export interface SyncConfiguration {
   autoSync: boolean;
   syncInterval: number; // minutes
@@ -33,7 +29,6 @@ export interface SyncConfiguration {
   syncTypes: ("events" | "teams" | "users" | "settings")[];
   platformPriority?: "web" | "mobile";
 }
-
 export interface FeatureCompatibility {
   platform: "web" | "mobile";
   supportedFeatures: string[];
@@ -41,14 +36,12 @@ export interface FeatureCompatibility {
   unsupportedFeatures: string[];
   adaptationRequired: string[];
 }
-
 export interface AdaptedFeature {
   originalFeature: string;
   platformFeature: string;
   adaptationType: "downgrade" | "alternative" | "split" | "enhanced";
   adaptationNotes: string;
 }
-
 export interface PlatformMetrics {
   platform: "web" | "mobile";
   activeUsers: number;
@@ -61,18 +54,14 @@ export interface PlatformMetrics {
     uptime: number;
   };
 }
-
 // ============================================================================
 // MOBILE-WEB BRIDGE SERVICE
 // ============================================================================
-
 export class MobileWebBridgeService {
   private static activeConnections = new Map<string, BridgeConnection>();
-
   // ==========================================
   // Connection Management
   // ==========================================
-
   /**
    * Establish bridge connection between platforms
    */
@@ -82,7 +71,6 @@ export class MobileWebBridgeService {
     syncConfig: SyncConfiguration
   ): Promise<BridgeConnection> {
     const bridgeId = `bridge_${sourceContext.sessionId}_${targetPlatform}_${Date.now()}`;
-
     const targetContext: PlatformContext = {
       platform: targetPlatform,
       version: sourceContext.version,
@@ -91,7 +79,6 @@ export class MobileWebBridgeService {
         targetPlatform === "mobile" ? `device_${Date.now()}` : undefined,
       userAgent: targetPlatform === "web" ? "BridgeAgent/1.0" : undefined,
     };
-
     const connection: BridgeConnection = {
       id: bridgeId,
       sourceContext,
@@ -100,17 +87,13 @@ export class MobileWebBridgeService {
       lastSync: new Date().toISOString(),
       syncConfig,
     };
-
     this.activeConnections.set(bridgeId, connection);
-
     // Start automatic sync if enabled
     if (syncConfig.autoSync) {
       this.startAutoSync(bridgeId);
     }
-
     return connection;
   }
-
   /**
    * Synchronize data between platforms
    */
@@ -119,24 +102,19 @@ export class MobileWebBridgeService {
     if (!connection) {
       throw new Error(`Bridge connection ${bridgeId} not found`);
     }
-
     connection.status = "syncing";
-
     try {
       // TODO: Implement actual sync request processing
       // For now, perform basic intelligent sync
       const result = await this.performIntelligentSync(connection);
-
       connection.status = "connected";
       connection.lastSync = new Date().toISOString();
-
       return result;
     } catch (error) {
       connection.status = "error";
       throw error;
     }
   }
-
   /**
    * Resolve data conflicts between platforms
    */
@@ -148,10 +126,8 @@ export class MobileWebBridgeService {
     if (!connection) {
       throw new Error(`Bridge connection ${bridgeId} not found`);
     }
-
     const resolved: DataConflict[] = [];
     const pending: DataConflict[] = [];
-
     for (const conflict of conflicts) {
       try {
         const resolution = await this.resolveDataConflict(conflict, connection);
@@ -161,14 +137,11 @@ export class MobileWebBridgeService {
         pending.push(conflict);
       }
     }
-
     return { resolved, pending };
   }
-
   // ==========================================
   // Feature Adaptation
   // ==========================================
-
   /**
    * Adapt features for target platform capabilities
    */
@@ -178,7 +151,6 @@ export class MobileWebBridgeService {
   ): Promise<AdaptedFeature[]> {
     const adaptations: AdaptedFeature[] = [];
     const compatibility = await this.getPlatformCompatibility(targetPlatform);
-
     for (const feature of features) {
       if (compatibility.supportedFeatures.includes(feature)) {
         // Feature fully supported
@@ -205,10 +177,8 @@ export class MobileWebBridgeService {
         });
       }
     }
-
     return adaptations;
   }
-
   /**
    * Validate feature compatibility across platforms
    */
@@ -217,11 +187,9 @@ export class MobileWebBridgeService {
   ): Promise<FeatureCompatibility> {
     return await this.getPlatformCompatibility(platform);
   }
-
   // ==========================================
   // Platform Metrics & Analytics
   // ==========================================
-
   /**
    * Get platform-specific metrics
    */
@@ -242,7 +210,6 @@ export class MobileWebBridgeService {
       },
     };
   }
-
   /**
    * Monitor bridge performance
    */
@@ -253,7 +220,6 @@ export class MobileWebBridgeService {
     errorRate: number;
   }> {
     const connections = Array.from(this.activeConnections.values());
-
     return {
       totalConnections: connections.length,
       activeConnections: connections.filter((c) => c.status === "connected")
@@ -262,23 +228,18 @@ export class MobileWebBridgeService {
       errorRate: 0, // TODO: Calculate from metrics
     };
   }
-
   // ==========================================
   // Private Helper Methods
   // ==========================================
-
   private static async performIntelligentSync(
     connection: BridgeConnection
   ): Promise<SyncResult> {
     // Sync calendar events with intelligent conflict detection
     const eventsSynced = await this.syncCalendarEvents(connection);
-
     // Sync team data
     const teamsSynced = await this.syncTeamData();
-
     // Sync user settings
     const settingsSynced = await this.syncUserSettings();
-
     return {
       success: true,
       syncedEntities: eventsSynced + teamsSynced + settingsSynced,
@@ -286,7 +247,6 @@ export class MobileWebBridgeService {
       lastSyncTime: new Date().toISOString(),
     };
   }
-
   private static async syncCalendarEvents(
     connection: BridgeConnection
   ): Promise<number> {
@@ -296,11 +256,9 @@ export class MobileWebBridgeService {
         { includeIntelligentData: true },
         connection.sourceContext
       );
-
       if (!response.success || !response.data) {
         return 0;
       }
-
       // Apply intelligent sync logic
       let syncedCount = 0;
       for (const event of response.data) {
@@ -314,24 +272,20 @@ export class MobileWebBridgeService {
           syncedCount++;
         }
       }
-
       return syncedCount;
     } catch (error) {
       console.error("Failed to sync calendar events:", error);
       return 0;
     }
   }
-
   private static async syncTeamData(): Promise<number> {
     // TODO: Implement team data synchronization
     return 0;
   }
-
   private static async syncUserSettings(): Promise<number> {
     // TODO: Implement user settings synchronization
     return 0;
   }
-
   private static async adaptEventForPlatform(
     event: CalendarEvent,
     targetPlatform: "web" | "mobile"
@@ -348,13 +302,11 @@ export class MobileWebBridgeService {
       return event;
     }
   }
-
   private static async resolveDataConflict(
     conflict: DataConflict,
     connection: BridgeConnection
   ): Promise<"local" | "remote" | "merged"> {
     const strategy = connection.syncConfig.conflictResolution;
-
     switch (strategy) {
       case "latest": {
         // Use timestamp to determine latest
@@ -366,7 +318,6 @@ export class MobileWebBridgeService {
         );
         return localTime > remoteTime ? "local" : "remote";
       }
-
       case "platform-priority": {
         const priority = connection.syncConfig.platformPriority;
         if (priority === connection.sourceContext.platform) {
@@ -375,7 +326,6 @@ export class MobileWebBridgeService {
           return "remote";
         }
       }
-
       case "manual":
       default:
         // Manual resolution required
@@ -384,7 +334,6 @@ export class MobileWebBridgeService {
         );
     }
   }
-
   private static async getPlatformCompatibility(
     platform: "web" | "mobile"
   ): Promise<FeatureCompatibility> {
@@ -418,7 +367,6 @@ export class MobileWebBridgeService {
       };
     }
   }
-
   private static async adaptFeatureForPlatform(
     feature: string,
     targetPlatform: "web" | "mobile"
@@ -442,7 +390,6 @@ export class MobileWebBridgeService {
         },
       },
     };
-
     return (
       adaptations[feature]?.[targetPlatform] || {
         originalFeature: feature,
@@ -452,13 +399,11 @@ export class MobileWebBridgeService {
       }
     );
   }
-
   private static startAutoSync(bridgeId: string): void {
     const connection = this.activeConnections.get(bridgeId);
     if (!connection || !connection.syncConfig.autoSync) {
       return;
     }
-
     // Set up interval for automatic sync
     setInterval(
       async () => {
@@ -471,7 +416,6 @@ export class MobileWebBridgeService {
       connection.syncConfig.syncInterval * 60 * 1000
     );
   }
-
   /**
    * Disconnect and cleanup bridge
    */
@@ -482,7 +426,6 @@ export class MobileWebBridgeService {
       this.activeConnections.delete(bridgeId);
     }
   }
-
   /**
    * Get all active bridge connections
    */
@@ -490,5 +433,4 @@ export class MobileWebBridgeService {
     return Array.from(this.activeConnections.values());
   }
 }
-
 export default MobileWebBridgeService;

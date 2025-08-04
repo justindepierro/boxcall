@@ -6,7 +6,6 @@ import { Button } from "../ui/Button/Button";
 import Card from "../ui/Card/Card";
 import Input from "../ui/Input/Input";
 import { Modal } from "../ui/Modal/Modal";
-
 // Game Schedule Types
 export interface Game {
   id: string;
@@ -22,7 +21,6 @@ export interface Game {
   createdBy: string;
   createdAt: Date;
 }
-
 export interface CreateGameData {
   date: Date;
   time: string;
@@ -33,7 +31,6 @@ export interface CreateGameData {
   week?: number;
   notes?: string;
 }
-
 export function GameScheduleManager() {
   const { teamId } = useParams<{ teamId: string }>();
   const [games, setGames] = useState<Game[]>([]);
@@ -41,7 +38,6 @@ export function GameScheduleManager() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(false);
-
   // Mock data for demonstration
   useEffect(() => {
     if (teamId) {
@@ -93,7 +89,6 @@ export function GameScheduleManager() {
       setGames(mockGames);
     }
   }, [teamId]);
-
   const handleCreateGame = async (gameData: CreateGameData) => {
     setLoading(true);
     try {
@@ -105,7 +100,6 @@ export function GameScheduleManager() {
         createdBy: "current-user",
         createdAt: new Date(),
       };
-
       setGames((prev) =>
         [...prev, newGame].sort((a, b) => a.date.getTime() - b.date.getTime())
       );
@@ -116,7 +110,6 @@ export function GameScheduleManager() {
       setLoading(false);
     }
   };
-
   const handleUpdateGame = async (gameId: string, updates: Partial<Game>) => {
     setLoading(true);
     try {
@@ -133,10 +126,8 @@ export function GameScheduleManager() {
       setLoading(false);
     }
   };
-
   const handleDeleteGame = async (gameId: string) => {
     if (!confirm("Are you sure you want to delete this game?")) return;
-
     setLoading(true);
     try {
       setGames((prev) => prev.filter((game) => game.id !== gameId));
@@ -146,7 +137,6 @@ export function GameScheduleManager() {
       setLoading(false);
     }
   };
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -157,7 +147,6 @@ export function GameScheduleManager() {
         >
           Game Schedule
         </Typography>
-
         <Button
           onClick={() => setIsCreateModalOpen(true)}
           className="bg-jade-600 hover:bg-jade-700 text-white"
@@ -165,14 +154,12 @@ export function GameScheduleManager() {
           + Add Game
         </Button>
       </div>
-
       {/* Schedule Overview */}
       <Card>
         <div className="p-6">
           <Typography variant="headline-md" className="text-navy-900 mb-4">
             2025 Fall Season
           </Typography>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="text-center p-4 bg-jade-50 rounded-lg">
               <Typography
@@ -185,7 +172,6 @@ export function GameScheduleManager() {
                 Total Games
               </Typography>
             </div>
-
             <div className="text-center p-4 bg-navy-50 rounded-lg">
               <Typography
                 variant="headline-sm"
@@ -197,7 +183,6 @@ export function GameScheduleManager() {
                 Home Games
               </Typography>
             </div>
-
             <div className="text-center p-4 bg-gray-50 rounded-lg">
               <Typography
                 variant="headline-sm"
@@ -212,7 +197,6 @@ export function GameScheduleManager() {
           </div>
         </div>
       </Card>
-
       {/* Games List */}
       <div className="space-y-4">
         {games.map((game) => (
@@ -235,7 +219,6 @@ export function GameScheduleManager() {
                       {game.week}
                     </Typography>
                   </div>
-
                   {/* Game Details */}
                   <div className="flex-1">
                     <div className="flex items-center space-x-4 mb-2">
@@ -245,7 +228,6 @@ export function GameScheduleManager() {
                       >
                         vs {game.opponent}
                       </Typography>
-
                       <span
                         className={`px-2 py-1 rounded text-sm font-semibold ${
                           game.homeAway === "home"
@@ -256,24 +238,20 @@ export function GameScheduleManager() {
                         {game.homeAway === "home" ? "🏠 HOME" : "✈️ AWAY"}
                       </span>
                     </div>
-
                     <div className="flex items-center space-x-6 text-sm text-gray-600">
                       <div className="flex items-center space-x-1">
                         <span>📅</span>
                         <span>{format(game.date, "MMM d, yyyy")}</span>
                       </div>
-
                       <div className="flex items-center space-x-1">
                         <span>🕐</span>
                         <span>{game.time}</span>
                       </div>
-
                       <div className="flex items-center space-x-1">
                         <span>📍</span>
                         <span>{game.location}</span>
                       </div>
                     </div>
-
                     {game.notes && (
                       <Typography
                         variant="body-sm"
@@ -284,7 +262,6 @@ export function GameScheduleManager() {
                     )}
                   </div>
                 </div>
-
                 {/* Actions */}
                 <div className="flex items-center space-x-2">
                   <Button
@@ -297,7 +274,6 @@ export function GameScheduleManager() {
                   >
                     ✏️ Edit
                   </Button>
-
                   <Button
                     variant="ghost"
                     size="sm"
@@ -311,7 +287,6 @@ export function GameScheduleManager() {
             </div>
           </Card>
         ))}
-
         {games.length === 0 && (
           <Card>
             <div className="p-12 text-center">
@@ -331,7 +306,6 @@ export function GameScheduleManager() {
           </Card>
         )}
       </div>
-
       {/* Create Game Modal */}
       <GameModal
         isOpen={isCreateModalOpen}
@@ -340,7 +314,6 @@ export function GameScheduleManager() {
         loading={loading}
         title="Add New Game"
       />
-
       {/* Edit Game Modal */}
       {selectedGame && (
         <GameModal
@@ -358,7 +331,6 @@ export function GameScheduleManager() {
     </div>
   );
 }
-
 // Game Modal Component
 interface GameModalProps {
   isOpen: boolean;
@@ -368,7 +340,6 @@ interface GameModalProps {
   title: string;
   initialData?: Game;
 }
-
 function GameModal({
   isOpen,
   onClose,
@@ -389,10 +360,8 @@ function GameModal({
   const [season, setSeason] = useState(initialData?.season || "2025 Fall");
   const [week, setWeek] = useState(initialData?.week?.toString() || "");
   const [notes, setNotes] = useState(initialData?.notes || "");
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const gameData: CreateGameData = {
       date: new Date(date),
       time,
@@ -403,9 +372,7 @@ function GameModal({
       week: week ? parseInt(week) : undefined,
       notes,
     };
-
     await onSave(gameData);
-
     // Reset form if creating new
     if (!initialData) {
       setDate("");
@@ -418,14 +385,12 @@ function GameModal({
       setNotes("");
     }
   };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-6">
         <Typography variant="headline-md" className="text-navy-900 mb-6">
           {title}
         </Typography>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -439,7 +404,6 @@ function GameModal({
                 required
               />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Time
@@ -453,7 +417,6 @@ function GameModal({
               />
             </div>
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Opponent
@@ -466,7 +429,6 @@ function GameModal({
               required
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Location
@@ -479,7 +441,6 @@ function GameModal({
               required
             />
           </div>
-
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -494,7 +455,6 @@ function GameModal({
                 <option value="away">✈️ Away</option>
               </select>
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Week
@@ -509,7 +469,6 @@ function GameModal({
               />
             </div>
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Season
@@ -522,7 +481,6 @@ function GameModal({
               required
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Notes (Optional)
@@ -535,7 +493,6 @@ function GameModal({
               rows={3}
             />
           </div>
-
           <div className="flex justify-end space-x-3 pt-4">
             <Button variant="outline" onClick={onClose} disabled={loading}>
               Cancel

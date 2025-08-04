@@ -6,7 +6,6 @@ import {
   DOWN_OPTIONS,
   DISTANCE_OPTIONS,
 } from "../../types/play";
-
 interface PlayFiltersProps {
   selectedFilters: {
     formation?: string;
@@ -17,7 +16,6 @@ interface PlayFiltersProps {
   };
   onFilterChange: (filters: PlayFiltersProps["selectedFilters"]) => void;
 }
-
 export const PlayFilters: React.FC<PlayFiltersProps> = ({
   selectedFilters,
   onFilterChange,
@@ -31,15 +29,12 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
       [key]: value,
     });
   };
-
   const clearAllFilters = () => {
     onFilterChange({});
   };
-
   const hasActiveFilters = Object.values(selectedFilters).some(
     (filter) => filter && (Array.isArray(filter) ? filter.length > 0 : true)
   );
-
   return (
     <div className="bg-white rounded-lg shadow-sm border border-slate-200">
       {/* Header */}
@@ -59,7 +54,6 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
           )}
         </div>
       </div>
-
       <div className="p-4 space-y-6">
         {/* Quick Access */}
         <div>
@@ -78,7 +72,6 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
             </button>
           </div>
         </div>
-
         {/* Play Type Filter */}
         <div>
           <h4 className="text-sm font-medium text-slate-900 mb-3">Play Type</h4>
@@ -110,7 +103,6 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
             )}
           </div>
         </div>
-
         {/* Formation Filter */}
         <div>
           <h4 className="text-sm font-medium text-slate-900 mb-3">Formation</h4>
@@ -129,7 +121,6 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
             ))}
           </select>
         </div>
-
         {/* Down & Distance */}
         <div>
           <h4 className="text-sm font-medium text-slate-900 mb-3">Situation</h4>
@@ -151,7 +142,6 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
                 ))}
               </select>
             </div>
-
             <div>
               <label className="block text-xs text-slate-600 mb-1">
                 Distance
@@ -173,7 +163,6 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
             </div>
           </div>
         </div>
-
         {/* Tags */}
         <div>
           <h4 className="text-sm font-medium text-slate-900 mb-3">

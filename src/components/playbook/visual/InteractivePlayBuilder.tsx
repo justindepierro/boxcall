@@ -10,16 +10,13 @@ import {
 } from "lucide-react";
 import { EnhancedFieldCanvas } from "./EnhancedFieldCanvas";
 import type { Play } from "../../../types/play";
-
 interface InteractivePlayBuilderProps {
   isOpen: boolean;
   onClose: () => void;
   play?: Play;
   onSave?: (play: Play) => void;
 }
-
 type EditMode = "view" | "move" | "draw";
-
 export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
   isOpen,
   onClose,
@@ -31,7 +28,6 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [showYardLines, setShowYardLines] = useState(true);
   const [showLabels, setShowLabels] = useState(true);
-
   // Demo play data if none provided
   const currentPlay: Play = useMemo(
     () =>
@@ -55,44 +51,34 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
       },
     [play]
   );
-
   const handlePlayerMove = useCallback(
-    (playerId: string, x: number, y: number) => {
-      console.log(`Player ${playerId} moved to (${x}, ${y})`);
+    (_playerId: string, _x: number, _y: number) => {
       // In a real implementation, this would update the play data
     },
     []
   );
-
   const handleModeChange = useCallback((mode: EditMode) => {
     setEditMode(mode);
     if (mode !== "draw") {
       setSelectedPlayerId(null);
     }
   }, []);
-
   const handlePlayAnimation = useCallback(() => {
     setIsPlaying(!isPlaying);
     // In a real implementation, this would animate the play execution
-    console.log(isPlaying ? "Pausing animation" : "Starting animation");
   }, [isPlaying]);
-
   const handleReset = useCallback(() => {
     setEditMode("view");
     setSelectedPlayerId(null);
     setIsPlaying(false);
-    console.log("Resetting play to default positions");
   }, []);
-
   const handleSave = useCallback(() => {
     if (onSave) {
       onSave(currentPlay);
     }
     onClose();
   }, [currentPlay, onSave, onClose]);
-
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl w-[95vw] h-[90vh] flex flex-col">
@@ -113,7 +99,6 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
             <X className="w-5 h-5" />
           </button>
         </div>
-
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar */}
           <div className="w-64 bg-gray-50 border-r border-gray-200 flex flex-col">
@@ -158,7 +143,6 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
                 </button>
               </div>
             </div>
-
             {/* Animation Controls */}
             <div className="p-4 border-b border-gray-200">
               <h3 className="text-sm font-medium text-gray-900 mb-3">
@@ -185,7 +169,6 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
                 </button>
               </div>
             </div>
-
             {/* Display Options */}
             <div className="p-4 border-b border-gray-200">
               <h3 className="text-sm font-medium text-gray-900 mb-3">
@@ -212,7 +195,6 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
                 </label>
               </div>
             </div>
-
             {/* Play Information */}
             <div className="p-4">
               <h3 className="text-sm font-medium text-gray-900 mb-3">
@@ -239,7 +221,6 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
                 )}
               </div>
             </div>
-
             {/* Instructions */}
             <div className="mt-auto p-4 border-t border-gray-200">
               <div className="text-xs text-gray-600 space-y-1">
@@ -260,7 +241,6 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
               </div>
             </div>
           </div>
-
           {/* Main Content */}
           <div className="flex-1 flex flex-col">
             {/* Field Canvas */}
@@ -279,7 +259,6 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
                 />
               </div>
             </div>
-
             {/* Status Bar */}
             <div className="p-4 border-t border-gray-200 bg-gray-50">
               <div className="flex items-center justify-between text-sm">

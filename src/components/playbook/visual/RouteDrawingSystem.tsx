@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import type { PlayerPosition } from "./formationConstants";
-
 interface RoutePoint {
   x: number;
   y: number;
   timing?: number; // Timing in seconds
   type?: "straight" | "curve" | "cut" | "break";
 }
-
 interface Route {
   id: string;
   playerId: string;
@@ -17,7 +15,6 @@ interface Route {
   timing: number; // Total route timing
   color: string;
 }
-
 interface RouteDrawingSystemProps {
   players: PlayerPosition[];
   routes?: Route[];
@@ -27,7 +24,6 @@ interface RouteDrawingSystemProps {
   isDrawing?: boolean;
   selectedPlayerId?: string;
 }
-
 // Common route types with default patterns
 const ROUTE_TYPES = {
   Slant: { depth: 5, timing: 1.5, color: "#3b82f6" },
@@ -41,7 +37,6 @@ const ROUTE_TYPES = {
   Hitch: { depth: 6, timing: 1.8, color: "#ec4899" },
   Fade: { depth: 18, timing: 3.2, color: "#6366f1" },
 } as const;
-
 export const RouteDrawingSystem: React.FC<RouteDrawingSystemProps> = ({
   players: _players,
   routes = [],
@@ -54,13 +49,10 @@ export const RouteDrawingSystem: React.FC<RouteDrawingSystemProps> = ({
   const [_drawingRoute, _setDrawingRoute] = useState<RoutePoint[]>([]);
   const [selectedRouteType, _setSelectedRouteType] =
     useState<keyof typeof ROUTE_TYPES>("Slant");
-
   // Generate route path SVG
   const generateRoutePath = (points: RoutePoint[]): string => {
     if (points.length < 2) return "";
-
     let path = `M ${points[0].x} ${points[0].y}`;
-
     for (let i = 1; i < points.length; i++) {
       const point = points[i];
       if (point.type === "curve" && i > 0 && i < points.length - 1) {
@@ -73,20 +65,16 @@ export const RouteDrawingSystem: React.FC<RouteDrawingSystemProps> = ({
         path += ` L ${point.x} ${point.y}`;
       }
     }
-
     return path;
   };
-
   // Get route color based on type
   const getRouteColor = (routeType: string): string => {
     return (
       ROUTE_TYPES[routeType as keyof typeof ROUTE_TYPES]?.color || "#64748b"
     );
   };
-
   // Use provided routes or empty array for demo
   const currentRoutes = routes;
-
   return (
     <g className="route-drawing-system">
       {/* Route paths */}
@@ -103,7 +91,6 @@ export const RouteDrawingSystem: React.FC<RouteDrawingSystemProps> = ({
             }
             className="transition-all duration-200"
           />
-
           {/* Route points */}
           {route.points.map((point: RoutePoint, index: number) => (
             <circle
@@ -119,7 +106,6 @@ export const RouteDrawingSystem: React.FC<RouteDrawingSystemProps> = ({
               }`}
             />
           ))}
-
           {/* Route direction arrow */}
           {route.points.length >= 2 && (
             <g>
@@ -132,7 +118,6 @@ export const RouteDrawingSystem: React.FC<RouteDrawingSystemProps> = ({
                 );
                 const arrowLength = 8;
                 const arrowAngle = Math.PI / 6;
-
                 return (
                   <g transform={`translate(${lastPoint.x}, ${lastPoint.y})`}>
                     <path
@@ -146,7 +131,6 @@ export const RouteDrawingSystem: React.FC<RouteDrawingSystemProps> = ({
               })()}
             </g>
           )}
-
           {/* Route label */}
           {route.points.length > 0 && (
             <text
@@ -162,7 +146,6 @@ export const RouteDrawingSystem: React.FC<RouteDrawingSystemProps> = ({
           )}
         </g>
       ))}
-
       {/* Drawing route preview */}
       {isDrawing && _drawingRoute.length > 0 && (
         <g className="drawing-route">

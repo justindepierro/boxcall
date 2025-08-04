@@ -3,13 +3,11 @@ import { useAuthProfile } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import type { DevMode } from "../../app/dev-mode-types";
 import { useTheme } from "../../hooks/useTheme";
-
 interface ConsolidatedDevToolsProps {
   onTogglePerformance?: () => void;
   onOpenStorybook?: () => void;
   onOpenBundleAnalyzer?: () => void;
 }
-
 interface PerformanceData {
   navigation: PerformanceTiming;
   resources: PerformanceResourceTiming[];
@@ -19,9 +17,7 @@ interface PerformanceData {
     jsHeapSizeLimit: number;
   };
 }
-
 type TabType = "dev-mode" | "performance" | "tools";
-
 export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
   onTogglePerformance,
   onOpenStorybook,
@@ -39,11 +35,9 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
   const [isActive, setIsActive] = useState(false);
   const [perfData, setPerfData] = useState<PerformanceData | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-
   // Performance data collection
   useEffect(() => {
     if (import.meta.env.PROD) return;
-
     const collectPerformanceData = () => {
       const navigation = performance.timing;
       const resources = performance.getEntriesByType(
@@ -58,15 +52,12 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
           };
         }
       ).memory;
-
       setPerfData({ navigation, resources, memory });
     };
-
     collectPerformanceData();
     const interval = setInterval(collectPerformanceData, 5000);
     return () => clearInterval(interval);
   }, []);
-
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -86,7 +77,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
         const routeIndex = parseInt(e.key) - 1;
         const route = routes[routeIndex];
         if (route) {
-          console.log(`BoxCall Dev: Navigation jump to ${route}`);
           window.location.href = route;
         }
       }
@@ -94,7 +84,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isCollapsed, isDevMode]);
-
   // Drag handlers
   const handleMouseDown = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest(".controls")) return;
@@ -105,7 +94,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
       y: e.clientY - position.y,
     });
   };
-
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging) return;
@@ -114,34 +102,28 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
         y: e.clientY - dragOffset.y,
       });
     };
-
     const handleMouseUp = () => {
       setIsDragging(false);
       setTimeout(() => setIsActive(false), 1000);
     };
-
     if (isDragging) {
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
     }
-
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isDragging, dragOffset]);
-
   // Only show in development environment
   if (import.meta.env.PROD) {
     return null;
   }
-
   const getOpacity = () => {
     if (isActive || isHovered || !isCollapsed) return 0.95;
     if (isCollapsed) return 0.25;
     return 0.65;
   };
-
   const devModes: Array<{
     mode: DevMode;
     label: string;
@@ -185,7 +167,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
       color: "bg-orange-100 text-orange-800",
     },
   ];
-
   // Collapsed floating button
   if (isCollapsed) {
     return (
@@ -220,7 +201,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
       </div>
     );
   }
-
   // Expanded panel
   return (
     <div
@@ -254,7 +234,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
           ✕
         </button>
       </div>
-
       {/* Tabs */}
       <div className="border-b border-gray-200">
         <div className="flex">
@@ -278,7 +257,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
           ))}
         </div>
       </div>
-
       {/* Tab Content */}
       <div className="p-4 space-y-4 max-h-80 overflow-y-auto">
         {activeTab === "dev-mode" && (
@@ -304,7 +282,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
                 </div>
               )}
             </div>
-
             {isDevMode && (
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-2">
@@ -329,7 +306,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
                 </div>
               </div>
             )}
-
             <div className="text-xs text-gray-500 border-t pt-2">
               <div>User: {profile?.full_name || "Unknown"}</div>
               <div>Real Role: {profile?.role || "none"}</div>
@@ -342,7 +318,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
             </div>
           </>
         )}
-
         {activeTab === "performance" && (
           <>
             <div>
@@ -399,7 +374,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
                 </div>
               )}
             </div>
-
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-2">
                 Load Times
@@ -427,7 +401,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
                 )}
               </div>
             </div>
-
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-2">
                 Resources
@@ -443,7 +416,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
             </div>
           </>
         )}
-
         {activeTab === "tools" && (
           <>
             <div>
@@ -483,7 +455,6 @@ export const ConsolidatedDevTools: React.FC<ConsolidatedDevToolsProps> = ({
                 )}
               </div>
             </div>
-
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-2">
                 Developer Actions

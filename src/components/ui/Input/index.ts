@@ -3,7 +3,6 @@
  *
  * Centralized exports for the Input component system
  */
-
 export { default as Input } from "./Input";
 export type {
   InputProps,
@@ -13,6 +12,5 @@ export type {
   InputStylesConfig,
   InputVariant,
 } from "./Input.types";
-
 // Default export for convenience
 export { default } from "./Input";

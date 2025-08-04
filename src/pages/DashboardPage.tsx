@@ -5,7 +5,6 @@ import { PersonalTrophyShelf } from "../components/dashboard/PersonalTrophyShelf
 import { ProfileCard } from "../components/dashboard/ProfileCard";
 import { TeamFeeds } from "../components/dashboard/TeamFeeds";
 import { Typography } from "../components/design-system";
-
 /**
  * Personal Dashboard - Simplified 4-Component Layout
  * Based on user's vision: Profile Card, Trophy Shelf, Team Feeds, Calendar
@@ -18,7 +17,6 @@ import { Typography } from "../components/design-system";
  */
 export const DashboardPage: React.FC = () => {
   const { user, profile, loading, error } = useAuth();
-
   // Early returns for loading and error states
   if (loading) {
     return (
@@ -27,7 +25,6 @@ export const DashboardPage: React.FC = () => {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -42,7 +39,6 @@ export const DashboardPage: React.FC = () => {
       </div>
     );
   }
-
   if (!user || !profile) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -57,10 +53,8 @@ export const DashboardPage: React.FC = () => {
       </div>
     );
   }
-
   const userRole = profile.role || "player";
   const totalTeams = 3; // Mock data
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
@@ -95,7 +89,6 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
       </div>
-
       {/* Main Dashboard Content - New 4-Component Layout */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-12rem)]">
@@ -104,22 +97,21 @@ export const DashboardPage: React.FC = () => {
             <ProfileCard
               profile={profile}
               userRole={userRole}
-              onEditClick={() => console.log("Edit profile")}
+              onEditClick={() => {
+                // TODO: Implement edit functionality
+              }}
             />
           </div>
-
           {/* Middle & Right Columns */}
           <div className="lg:col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Trophy Shelf spanning both middle and right */}
             <div className="lg:col-span-2">
               <PersonalTrophyShelf userId={user.id} userRole={userRole} />
             </div>
-
             {/* Team Feeds - Middle Column */}
             <div className="lg:col-span-1">
               <TeamFeeds userId={user.id} />
             </div>
-
             {/* Calendar - Right Column */}
             <div className="lg:col-span-1">
               <PersonalCalendar userId={user.id} />
@@ -130,5 +122,4 @@ export const DashboardPage: React.FC = () => {
     </div>
   );
 };
-
 export default DashboardPage;

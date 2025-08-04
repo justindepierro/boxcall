@@ -1,5 +1,4 @@
 import React from "react";
-
 // Football Statistics Interface
 interface PlayerStats {
   playerId: string;
@@ -21,7 +20,6 @@ interface PlayerStats {
   interceptions?: number;
   forcedFumbles?: number;
 }
-
 interface TeamStats {
   totalPlayers: number;
   gamesPlayed: number;
@@ -32,7 +30,6 @@ interface TeamStats {
   totalYards: number;
   turnovers: number;
 }
-
 // Mock data for demonstration
 const mockTeamStats: TeamStats = {
   totalPlayers: 45,
@@ -44,7 +41,6 @@ const mockTeamStats: TeamStats = {
   totalYards: 4250,
   turnovers: 18,
 };
-
 const mockPlayerStats: PlayerStats[] = [
   {
     playerId: "1",
@@ -91,7 +87,6 @@ const mockPlayerStats: PlayerStats[] = [
     forcedFumbles: 3,
   },
 ];
-
 const StatCard: React.FC<{
   title: string;
   value: string | number;
@@ -120,7 +115,6 @@ const StatCard: React.FC<{
     )}
   </div>
 );
-
 const PlayerStatsRow: React.FC<{ player: PlayerStats }> = ({ player }) => {
   const getPositionColor = (position: string) => {
     if (["QB"].includes(position)) return "text-red-600 bg-red-50";
@@ -137,7 +131,6 @@ const PlayerStatsRow: React.FC<{ player: PlayerStats }> = ({ player }) => {
       return "text-navy-600 bg-navy-50";
     return "text-gray-600 bg-gray-50";
   };
-
   return (
     <tr className="hover:bg-jade-50 dark:hover:bg-navy-900/20 transition-colors">
       <td className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
@@ -175,7 +168,6 @@ const PlayerStatsRow: React.FC<{ player: PlayerStats }> = ({ player }) => {
     </tr>
   );
 };
-
 export const StatsDashboard: React.FC = () => {
   const winPercentage = (
     (mockTeamStats.wins / mockTeamStats.gamesPlayed) *
@@ -187,7 +179,6 @@ export const StatsDashboard: React.FC = () => {
   const avgPointsAgainst = (
     mockTeamStats.pointsAgainst / mockTeamStats.gamesPlayed
   ).toFixed(1);
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -199,7 +190,6 @@ export const StatsDashboard: React.FC = () => {
           Season performance metrics and player statistics
         </p>
       </div>
-
       {/* Team Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
@@ -224,7 +214,6 @@ export const StatsDashboard: React.FC = () => {
           subtitle="Season Total"
         />
       </div>
-
       {/* Player Statistics Table */}
       <div className="bg-white dark:bg-gray-800 rounded-md shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
@@ -235,7 +224,6 @@ export const StatsDashboard: React.FC = () => {
             Key performance metrics by player
           </p>
         </div>
-
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-700">
@@ -268,7 +256,6 @@ export const StatsDashboard: React.FC = () => {
           </table>
         </div>
       </div>
-
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <button className="bg-jade-500 hover:bg-jade-600 text-white font-sans font-semibold py-3 px-4 rounded-sm transition-colors">
@@ -284,5 +271,4 @@ export const StatsDashboard: React.FC = () => {
     </div>
   );
 };
-
 export default StatsDashboard;

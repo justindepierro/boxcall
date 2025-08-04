@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
-
 type AuthMode = "login" | "register";
-
 interface AuthProps {
   initialMode?: AuthMode;
   onSuccess?: () => void;
 }
-
 /**
  * Auth Component
  *
@@ -20,12 +17,9 @@ export const Auth: React.FC<AuthProps> = ({
   onSuccess,
 }) => {
   const [mode, setMode] = useState<AuthMode>(initialMode);
-
   const handleAuthSuccess = () => {
-    console.log("BoxCall: Authentication successful!");
     onSuccess?.();
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">

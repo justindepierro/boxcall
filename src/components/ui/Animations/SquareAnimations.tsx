@@ -1,5 +1,4 @@
 import React from "react";
-
 // Square Progress Bar Component
 interface ProgressBarProps {
   value: number; // 0-100
@@ -9,7 +8,6 @@ interface ProgressBarProps {
   showPercentage?: boolean;
   animated?: boolean;
 }
-
 export const SquareProgressBar: React.FC<ProgressBarProps> = ({
   value,
   label,
@@ -30,7 +28,6 @@ export const SquareProgressBar: React.FC<ProgressBarProps> = ({
         return "bg-jade-500";
     }
   };
-
   const getBackgroundColors = () => {
     switch (variant) {
       case "jade":
@@ -43,7 +40,6 @@ export const SquareProgressBar: React.FC<ProgressBarProps> = ({
         return "bg-jade-100 dark:bg-jade-900/20";
     }
   };
-
   const getHeight = () => {
     switch (size) {
       case "sm":
@@ -56,10 +52,8 @@ export const SquareProgressBar: React.FC<ProgressBarProps> = ({
         return "h-3";
     }
   };
-
   // Clamp value between 0 and 100
   const clampedValue = Math.max(0, Math.min(100, value));
-
   return (
     <div className="w-full">
       {(label || showPercentage) && (
@@ -76,7 +70,6 @@ export const SquareProgressBar: React.FC<ProgressBarProps> = ({
           )}
         </div>
       )}
-
       <div
         className={`w-full ${getHeight()} ${getBackgroundColors()} rounded-sm overflow-hidden`}
       >
@@ -90,14 +83,12 @@ export const SquareProgressBar: React.FC<ProgressBarProps> = ({
     </div>
   );
 };
-
 // Square Loading Spinner Component
 interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg" | "xl";
   variant?: "jade" | "navy" | "gray";
   label?: string;
 }
-
 export const SquareLoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = "md",
   variant = "jade",
@@ -117,7 +108,6 @@ export const SquareLoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         return "w-6 h-6";
     }
   };
-
   const getBorderColor = () => {
     switch (variant) {
       case "jade":
@@ -130,7 +120,6 @@ export const SquareLoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         return "border-jade-500";
     }
   };
-
   return (
     <div className="flex flex-col items-center space-y-2">
       <div
@@ -144,7 +133,6 @@ export const SquareLoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     </div>
   );
 };
-
 // Square Skeleton Loader Component
 interface SkeletonProps {
   lines?: number;
@@ -152,7 +140,6 @@ interface SkeletonProps {
   height?: string;
   className?: string;
 }
-
 export const SquareSkeleton: React.FC<SkeletonProps> = ({
   lines = 3,
   width = "w-full",
@@ -174,14 +161,12 @@ export const SquareSkeleton: React.FC<SkeletonProps> = ({
     </div>
   );
 };
-
 // Square Pulse Animation Component
 interface PulseIndicatorProps {
   variant?: "jade" | "navy" | "red";
   size?: "sm" | "md" | "lg";
   label?: string;
 }
-
 export const SquarePulseIndicator: React.FC<PulseIndicatorProps> = ({
   variant = "jade",
   size = "md",
@@ -199,7 +184,6 @@ export const SquarePulseIndicator: React.FC<PulseIndicatorProps> = ({
         return "w-3 h-3";
     }
   };
-
   const getColors = () => {
     switch (variant) {
       case "jade":
@@ -212,7 +196,6 @@ export const SquarePulseIndicator: React.FC<PulseIndicatorProps> = ({
         return "bg-jade-500";
     }
   };
-
   return (
     <div className="flex items-center space-x-2">
       <div className={`${getSize()} ${getColors()} rounded-sm animate-pulse`} />
@@ -224,7 +207,6 @@ export const SquarePulseIndicator: React.FC<PulseIndicatorProps> = ({
     </div>
   );
 };
-
 // Football-Specific Loading Component
 export const FootballLoadingSpinner: React.FC<{ message?: string }> = ({
   message = "Loading team data...",
@@ -238,13 +220,11 @@ export const FootballLoadingSpinner: React.FC<{ message?: string }> = ({
             <span className="text-2xl">🏈</span>
           </div>
         </div>
-
         {/* Pulsing yard lines */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-12 h-0.5 bg-jade-500 animate-pulse" />
         </div>
       </div>
-
       <div className="text-center">
         <p className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-1">
           {message}
@@ -260,13 +240,11 @@ export const FootballLoadingSpinner: React.FC<{ message?: string }> = ({
     </div>
   );
 };
-
 // Page Transition Wrapper
 interface PageTransitionProps {
   children: React.ReactNode;
   direction?: "left" | "right" | "up" | "down";
 }
-
 export const SquarePageTransition: React.FC<PageTransitionProps> = ({
   children,
   direction = "right",
@@ -285,10 +263,8 @@ export const SquarePageTransition: React.FC<PageTransitionProps> = ({
         return "animate-slideInRight";
     }
   };
-
   return <div className={`${getTransitionClass()}`}>{children}</div>;
 };
-
 export default {
   SquareProgressBar,
   SquareLoadingSpinner,

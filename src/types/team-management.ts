@@ -1,37 +1,29 @@
 // Team Management Types
 // Player and team management specific types
-
 export interface TeamPlayer {
   id: string;
   team_id: string;
   user_id?: string; // Optional - links to profiles table if user has account
-
   // Basic Information
   first_name: string;
   last_name: string;
   email?: string;
-
   // Contact Information
   phone?: string;
   parent_email?: string;
-
   // Physical Information
   positions: string[]; // Array of positions like ["QB", "WR", "Safety"]
   jersey_number?: number;
   height?: string; // Format: "6'2\"" or "6 feet 2 inches"
   weight?: number; // In pounds
-
   // Academic Information
   graduation_year?: number;
-
   // Team Information
   team_level: "varsity" | "jv" | "middle_school" | "freshman";
-
   // System Fields
   created_at: string;
   updated_at: string;
 }
-
 export interface TeamPlayerInsert {
   id?: string;
   team_id: string;
@@ -50,7 +42,6 @@ export interface TeamPlayerInsert {
   created_at?: string;
   updated_at?: string;
 }
-
 export interface TeamPlayerUpdate {
   id?: string;
   team_id?: string;
@@ -68,10 +59,8 @@ export interface TeamPlayerUpdate {
   team_level?: "varsity" | "jv" | "middle_school" | "freshman";
   updated_at?: string;
 }
-
 // Team Configuration Types
 import type { SubscriptionTier } from "./permissions";
-
 // Team Settings
 export interface TeamSettings {
   id: string;
@@ -101,25 +90,21 @@ export interface TeamSettings {
     canFundraise: boolean;
   };
 }
-
 // Coach Invitation Types
 export interface CoachInvitation {
   id: string;
   team_id: string;
   email: string;
   role: "head_coach" | "coach" | "assistant_coach" | "manager";
-
   // Invitation Details
   invite_token: string;
   status: "pending" | "accepted" | "expired" | "cancelled";
   expires_at: string;
-
   // Tracking
   invited_by: string;
   accepted_at?: string;
   created_at: string;
 }
-
 export interface CoachInvitationInsert {
   id?: string;
   team_id: string;
@@ -132,13 +117,11 @@ export interface CoachInvitationInsert {
   accepted_at?: string;
   created_at?: string;
 }
-
 // CSV Import Types
 export interface CSVImportRow {
   // Raw CSV data
   [key: string]: string | undefined;
 }
-
 export interface ParsedPlayerData {
   // Mapped player data from CSV
   first_name: string;
@@ -152,13 +135,11 @@ export interface ParsedPlayerData {
   weight?: number;
   graduation_year?: number;
   team_level: "varsity" | "jv" | "middle_school" | "freshman";
-
   // Import metadata
   row_index: number;
   has_errors: boolean;
   errors: string[];
 }
-
 export interface CSVImportResult {
   total_rows: number;
   valid_rows: number;
@@ -166,7 +147,6 @@ export interface CSVImportResult {
   parsed_data: ParsedPlayerData[];
   errors: string[];
 }
-
 // Position Constants
 export const FOOTBALL_POSITIONS = [
   // Offense
@@ -192,7 +172,6 @@ export const FOOTBALL_POSITIONS = [
   "RG",
   "RT",
   "OL",
-
   // Defense
   "DE",
   "DT",
@@ -209,7 +188,6 @@ export const FOOTBALL_POSITIONS = [
   "SS",
   "S",
   "DB",
-
   // Special Teams
   "K",
   "P",
@@ -217,16 +195,13 @@ export const FOOTBALL_POSITIONS = [
   "KR",
   "PR",
   "ST",
-
   // Common Combinations
   "RB/WR",
   "WR/DB",
   "LB/DE",
   "OL/DL",
 ] as const;
-
 export type FootballPosition = (typeof FOOTBALL_POSITIONS)[number];
-
 // Team Level Constants
 export const TEAM_LEVELS = [
   { value: "varsity", label: "Varsity", color: "red" },
@@ -234,5 +209,4 @@ export const TEAM_LEVELS = [
   { value: "freshman", label: "Freshman", color: "green" },
   { value: "middle_school", label: "Middle School", color: "purple" },
 ] as const;
-
 export type TeamLevel = (typeof TEAM_LEVELS)[number]["value"];

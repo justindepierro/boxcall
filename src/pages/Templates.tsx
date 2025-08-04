@@ -2,7 +2,6 @@ import React from "react";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
-
 /**
  * Templates - Coach resource hub with downloadable templates and import tools
  * Available to coaches only
@@ -14,12 +13,10 @@ import { Icon } from "../components/ui/Icon/Icon";
  * - Data import/export utilities
  */
 export const Templates: React.FC = () => {
-  const downloadTemplate = (templateName: string) => {
+  const downloadTemplate = (_templateName: string) => {
     // Mock download functionality - would implement actual file download
-    console.log(`Downloading template: ${templateName}`);
     // In real implementation: trigger file download
   };
-
   return (
     <div className="py-6">
       <div className="max-w-7xl mx-auto">
@@ -36,7 +33,6 @@ export const Templates: React.FC = () => {
             workflow
           </Typography>
         </div>
-
         {/* Data Import Templates */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-6">
@@ -57,13 +53,14 @@ export const Templates: React.FC = () => {
                 positions, and contact information.
               </Typography>
               <button
-                onClick={() => downloadTemplate("roster-import.csv")}
+                onClick={() => {
+                  // TODO: Implement template action
+                }}
                 className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 text-sm font-medium"
               >
                 Download CSV Template
               </button>
             </Card>
-
             {/* Playbook Import */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
@@ -81,7 +78,6 @@ export const Templates: React.FC = () => {
                 Download CSV Template
               </button>
             </Card>
-
             {/* Playscript Import */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
@@ -101,7 +97,6 @@ export const Templates: React.FC = () => {
             </Card>
           </div>
         </div>
-
         {/* Visual Resources */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-6">
@@ -135,7 +130,6 @@ export const Templates: React.FC = () => {
                 </button>
               </div>
             </Card>
-
             {/* Formation Templates */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
@@ -167,7 +161,6 @@ export const Templates: React.FC = () => {
             </Card>
           </div>
         </div>
-
         {/* Import Tools */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-6">
@@ -186,13 +179,14 @@ export const Templates: React.FC = () => {
                 timing controls, and drill management for efficient practices.
               </Typography>
               <button
-                onClick={() => console.log("Navigate to practice planner")}
+                onClick={() => {
+                  // TODO: Open practice planner
+                }}
                 className="w-full bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 text-sm font-medium"
               >
                 Open Practice Planner
               </button>
             </Card>
-
             {/* Data Import Wizard */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
@@ -217,7 +211,6 @@ export const Templates: React.FC = () => {
                 </div>
               </div>
             </Card>
-
             {/* Bulk Data Export */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
@@ -242,7 +235,6 @@ export const Templates: React.FC = () => {
             </Card>
           </div>
         </div>
-
         {/* Advanced Tools */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-6">
@@ -272,7 +264,6 @@ export const Templates: React.FC = () => {
                 </div>
               </div>
             </Card>
-
             {/* API Integration */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
@@ -297,7 +288,6 @@ export const Templates: React.FC = () => {
             </Card>
           </div>
         </div>
-
         {/* Quick Start Guide */}
         <Card className="p-6 text-center">
           <div className="flex justify-center mb-4">
@@ -327,7 +317,6 @@ export const Templates: React.FC = () => {
             </div>
           </div>
         </Card>
-
         {/* Help Section */}
         <div className="mt-8 bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
           <Typography variant="headline-md" className="mb-4">
@@ -354,5 +343,4 @@ export const Templates: React.FC = () => {
     </div>
   );
 };
-
 export default Templates;

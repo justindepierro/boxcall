@@ -3,12 +3,10 @@ import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
-
 interface PersonalTrophyShelfProps {
   userId: string;
   userRole: string;
 }
-
 /**
  * Personal Trophy Shelf - Compact Scrollable Design
  *
@@ -23,7 +21,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   userRole: _userRole,
 }) => {
   const [achievementScrollIndex, setAchievementScrollIndex] = useState(0);
-
   const {
     helmetStickers,
     boxcallMedals,
@@ -32,7 +29,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
     loading,
     error,
   } = useAchievements(userId);
-
   // Combine all achievements for scrolling
   const allAchievements = [
     ...helmetStickers.map((sticker) => ({
@@ -55,23 +51,19 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       maxProgress: medal.maxProgress,
     })),
   ];
-
   const visibleAchievements = 3; // Show 3 achievements at a time
   const maxScrollIndex = Math.max(
     0,
     allAchievements.length - visibleAchievements
   );
-
   const scrollUp = () => {
     setAchievementScrollIndex(Math.max(0, achievementScrollIndex - 1));
   };
-
   const scrollDown = () => {
     setAchievementScrollIndex(
       Math.min(maxScrollIndex, achievementScrollIndex + 1)
     );
   };
-
   // Show loading state
   if (loading) {
     return (
@@ -82,7 +74,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       </Card>
     );
   }
-
   // Show error state
   if (error) {
     return (
@@ -96,7 +87,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       </Card>
     );
   }
-
   return (
     <Card className="compact-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
       {/* Compact Header */}
@@ -122,7 +112,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
           </Typography>
         </div>
       </div>
-
       {/* Compact Stats Row */}
       <div className="grid grid-cols-4 gap-2 my-3">
         <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded">
@@ -161,7 +150,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
           </Typography>
         </div>
       </div>
-
       {/* Scrollable Achievements Section */}
       <div className="relative">
         <div className="flex items-center justify-between mb-2">
@@ -192,7 +180,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
             </Button>
           </div>
         </div>
-
         {/* Achievement List - Fixed Height with Scroll */}
         <div className="h-[120px] overflow-hidden">
           <div
@@ -233,7 +220,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
             ))}
           </div>
         </div>
-
         {/* Scroll Indicator */}
         {allAchievements.length > visibleAchievements && (
           <div className="flex justify-center mt-2">

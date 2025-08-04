@@ -1,6 +1,5 @@
 // Advanced RSVP Interface for Phase 2.3
 // Enhanced RSVP system with conditional responses and detailed information
-
 import React, { useState } from "react";
 import {
   useAdvancedRSVP,
@@ -12,7 +11,6 @@ import type {
   RSVPCondition,
   RSVPStatus,
 } from "../types/enhanced-calendar";
-
 interface AdvancedRSVPInterfaceProps {
   eventId: string;
   userId: string;
@@ -24,7 +22,6 @@ interface AdvancedRSVPInterfaceProps {
   allowGroupResponses?: boolean;
   deadline?: string;
 }
-
 export function AdvancedRSVPInterface({
   eventId,
   userId,
@@ -42,10 +39,8 @@ export function AdvancedRSVPInterface({
   );
   const [showAnalytics, setShowAnalytics] = useState(false);
   const canViewAnalytics = userRole === "coach";
-
   const isDeadlinePassed = deadline && new Date(deadline) < new Date();
   const canRespond = !isDeadlinePassed;
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -73,7 +68,6 @@ export function AdvancedRSVPInterface({
           </button>
         )}
       </div>
-
       {/* Error Display */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -95,7 +89,6 @@ export function AdvancedRSVPInterface({
           </div>
         </div>
       )}
-
       {/* RSVP Form */}
       {canRespond && (
         <RSVPForm
@@ -110,15 +103,12 @@ export function AdvancedRSVPInterface({
           loading={loading}
         />
       )}
-
       {/* Current RSVP Display */}
       {rsvp && !canRespond && <RSVPDisplay rsvp={rsvp} />}
-
       {/* Analytics Panel */}
       {showAnalytics && canViewAnalytics && (
         <RSVPAnalyticsPanel eventId={eventId} />
       )}
-
       {/* Reminder Controls */}
       {userRole === "coach" && (
         <div className="bg-gray-50 rounded-lg p-4">
@@ -134,7 +124,6 @@ export function AdvancedRSVPInterface({
           </button>
         </div>
       )}
-
       {!canRespond && !rsvp && (
         <div className="text-center py-8 text-gray-500">
           {isDeadlinePassed
@@ -145,11 +134,9 @@ export function AdvancedRSVPInterface({
     </div>
   );
 }
-
 // ============================================================================
 // RSVP FORM
 // ============================================================================
-
 interface RSVPFormProps {
   eventId: string;
   userId: string;
@@ -161,7 +148,6 @@ interface RSVPFormProps {
   onUpdate: (rsvpData: Partial<AdvancedRSVP>) => Promise<AdvancedRSVP>;
   loading: boolean;
 }
-
 function RSVPForm({
   currentRSVP,
   allowConditional,
@@ -177,32 +163,26 @@ function RSVPForm({
     confidence_level: 3,
     ...currentRSVP,
   });
-
   const [conditions, setConditions] = useState<RSVPCondition[]>(
     currentRSVP?.conditions || []
   );
-
   const [emergencyContact, setEmergencyContact] = useState<
     EmergencyContact | undefined
   >(currentRSVP?.emergency_contact);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const rsvpData: Partial<AdvancedRSVP> = {
       ...formData,
       conditions:
         formData.response_type === "conditional" ? conditions : undefined,
       emergency_contact: requireEmergencyContact ? emergencyContact : undefined,
     };
-
     try {
       await onUpdate(rsvpData);
     } catch (error) {
       console.error("Failed to update RSVP:", error);
     }
   };
-
   const addCondition = () => {
     const newCondition: RSVPCondition = {
       id: `condition_${Date.now()}`,
@@ -213,17 +193,14 @@ function RSVPForm({
     };
     setConditions([...conditions, newCondition]);
   };
-
   const updateCondition = (index: number, updates: Partial<RSVPCondition>) => {
     setConditions((prev) =>
       prev.map((cond, i) => (i === index ? { ...cond, ...updates } : cond))
     );
   };
-
   const removeCondition = (index: number) => {
     setConditions((prev) => prev.filter((_, i) => i !== index));
   };
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -265,7 +242,6 @@ function RSVPForm({
           ))}
         </div>
       </div>
-
       {/* Response Type */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-3">
@@ -329,7 +305,6 @@ function RSVPForm({
           )}
         </div>
       </div>
-
       {/* Conditional Responses */}
       {formData.response_type === "conditional" && (
         <div>
@@ -345,7 +320,6 @@ function RSVPForm({
               + Add Condition
             </button>
           </div>
-
           <div className="space-y-4">
             {conditions.map((condition, index) => (
               <div
@@ -364,7 +338,6 @@ function RSVPForm({
                     Remove
                   </button>
                 </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1">
@@ -380,7 +353,6 @@ function RSVPForm({
                       className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
                     />
                   </div>
-
                   <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1">
                       Then I will
@@ -405,7 +377,6 @@ function RSVPForm({
           </div>
         </div>
       )}
-
       {/* Detailed Response Fields */}
       {formData.response_type === "detailed" && (
         <div className="space-y-4">
@@ -426,7 +397,6 @@ function RSVPForm({
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
               />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Departure Time
@@ -444,7 +414,6 @@ function RSVPForm({
               />
             </div>
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Transportation
@@ -468,7 +437,6 @@ function RSVPForm({
               <option value="other">Other</option>
             </select>
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Special Requests or Dietary Restrictions
@@ -488,7 +456,6 @@ function RSVPForm({
           </div>
         </div>
       )}
-
       {/* Group Responses */}
       {allowGroupResponses && (
         <div className="space-y-4">
@@ -509,7 +476,6 @@ function RSVPForm({
               className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
             />
           </div>
-
           {(formData.group_size || 0) > 1 && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -534,7 +500,6 @@ function RSVPForm({
           )}
         </div>
       )}
-
       {/* Emergency Contact */}
       {requireEmergencyContact && (
         <div>
@@ -559,7 +524,6 @@ function RSVPForm({
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
               />
             </div>
-
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">
                 Relationship
@@ -580,7 +544,6 @@ function RSVPForm({
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
               />
             </div>
-
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">
                 Phone <span className="text-red-500">*</span>
@@ -598,7 +561,6 @@ function RSVPForm({
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
               />
             </div>
-
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">
                 Email
@@ -618,7 +580,6 @@ function RSVPForm({
           </div>
         </div>
       )}
-
       {/* Confidence Level */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-3">
@@ -643,7 +604,6 @@ function RSVPForm({
           <span>Completely sure</span>
         </div>
       </div>
-
       {/* Notes */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -659,7 +619,6 @@ function RSVPForm({
           className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
         />
       </div>
-
       {/* Submit Button */}
       <div className="flex justify-end">
         <button
@@ -673,22 +632,18 @@ function RSVPForm({
     </form>
   );
 }
-
 // ============================================================================
 // RSVP DISPLAY
 // ============================================================================
-
 interface RSVPDisplayProps {
   rsvp: AdvancedRSVP;
 }
-
 function RSVPDisplay({ rsvp }: RSVPDisplayProps) {
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
       <h4 className="text-md font-medium text-gray-900 mb-4">
         Your RSVP Response
       </h4>
-
       <div className="space-y-3">
         <div>
           <span className="text-sm font-medium text-gray-700">Status: </span>
@@ -704,14 +659,12 @@ function RSVPDisplay({ rsvp }: RSVPDisplayProps) {
             {rsvp.status.replace("_", " ")}
           </span>
         </div>
-
         {rsvp.arrival_time && (
           <div>
             <span className="text-sm font-medium text-gray-700">Arrival: </span>
             <span className="text-sm text-gray-600">{rsvp.arrival_time}</span>
           </div>
         )}
-
         {rsvp.departure_time && (
           <div>
             <span className="text-sm font-medium text-gray-700">
@@ -720,7 +673,6 @@ function RSVPDisplay({ rsvp }: RSVPDisplayProps) {
             <span className="text-sm text-gray-600">{rsvp.departure_time}</span>
           </div>
         )}
-
         {rsvp.transportation && (
           <div>
             <span className="text-sm font-medium text-gray-700">
@@ -731,14 +683,12 @@ function RSVPDisplay({ rsvp }: RSVPDisplayProps) {
             </span>
           </div>
         )}
-
         {rsvp.notes && (
           <div>
             <span className="text-sm font-medium text-gray-700">Notes: </span>
             <span className="text-sm text-gray-600">{rsvp.notes}</span>
           </div>
         )}
-
         {rsvp.confidence_level && (
           <div>
             <span className="text-sm font-medium text-gray-700">
@@ -749,7 +699,6 @@ function RSVPDisplay({ rsvp }: RSVPDisplayProps) {
             </span>
           </div>
         )}
-
         <div className="text-xs text-gray-500 pt-2">
           Last updated: {new Date(rsvp.updated_at).toLocaleString()}
         </div>
@@ -757,20 +706,16 @@ function RSVPDisplay({ rsvp }: RSVPDisplayProps) {
     </div>
   );
 }
-
 // ============================================================================
 // RSVP ANALYTICS PANEL
 // ============================================================================
-
 interface RSVPAnalyticsPanelProps {
   eventId: string;
 }
-
 function RSVPAnalyticsPanel({ eventId }: RSVPAnalyticsPanelProps) {
   const { analytics, loading, error, sendBulkReminders, exportData } =
     useRSVPAnalytics(eventId);
   const [exporting, setExporting] = useState(false);
-
   const handleExport = async (format: "csv" | "excel" | "json") => {
     setExporting(true);
     try {
@@ -782,7 +727,6 @@ function RSVPAnalyticsPanel({ eventId }: RSVPAnalyticsPanelProps) {
       setExporting(false);
     }
   };
-
   if (loading) {
     return (
       <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -797,7 +741,6 @@ function RSVPAnalyticsPanel({ eventId }: RSVPAnalyticsPanelProps) {
       </div>
     );
   }
-
   if (error || !analytics) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -805,7 +748,6 @@ function RSVPAnalyticsPanel({ eventId }: RSVPAnalyticsPanelProps) {
       </div>
     );
   }
-
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
@@ -826,7 +768,6 @@ function RSVPAnalyticsPanel({ eventId }: RSVPAnalyticsPanelProps) {
           </button>
         </div>
       </div>
-
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-blue-50 rounded-lg p-4">
@@ -854,7 +795,6 @@ function RSVPAnalyticsPanel({ eventId }: RSVPAnalyticsPanelProps) {
           <div className="text-sm text-yellow-700">Response Rate</div>
         </div>
       </div>
-
       {/* Status Breakdown */}
       <div className="mb-6">
         <h5 className="text-md font-medium text-gray-900 mb-3">
@@ -887,7 +827,6 @@ function RSVPAnalyticsPanel({ eventId }: RSVPAnalyticsPanelProps) {
           })}
         </div>
       </div>
-
       {/* Average Confidence */}
       <div className="mb-6">
         <h5 className="text-md font-medium text-gray-900 mb-2">
@@ -905,7 +844,6 @@ function RSVPAnalyticsPanel({ eventId }: RSVPAnalyticsPanelProps) {
           </span>
         </div>
       </div>
-
       {/* Late Responders */}
       {analytics.late_responders.length > 0 && (
         <div>

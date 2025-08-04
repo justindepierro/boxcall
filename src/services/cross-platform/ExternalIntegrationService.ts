@@ -1,18 +1,15 @@
 // ============================================================================
 // EXTERNAL INTEGRATION SERVICE
 // ============================================================================
-
 // ============================================================================
 // INTEGRATION TYPES & INTERFACES
 // ============================================================================
-
 export interface ApiResponse<T> {
   success: boolean;
   data: T | null;
   error?: string;
   metadata?: Record<string, unknown>;
 }
-
 export interface ExternalProvider {
   id: string;
   name: string;
@@ -22,7 +19,6 @@ export interface ExternalProvider {
   lastSync?: Date;
   syncInterval?: number;
 }
-
 export interface ProviderConfig {
   apiKey?: string;
   clientId?: string;
@@ -33,7 +29,6 @@ export interface ProviderConfig {
   scopes?: string[];
   customFields?: Record<string, unknown>;
 }
-
 export interface IntegrationMapping {
   providerId: string;
   fieldMappings: Record<string, string>;
@@ -41,14 +36,12 @@ export interface IntegrationMapping {
   syncDirection: "bidirectional" | "inbound" | "outbound";
   conflictResolution: "provider-wins" | "boxcall-wins" | "manual";
 }
-
 export interface TransformRule {
   field: string;
   type: "format" | "filter" | "calculate" | "lookup";
   rule: string;
   parameters?: Record<string, unknown>;
 }
-
 export interface SyncOperation {
   id: string;
   providerId: string;
@@ -61,14 +54,12 @@ export interface SyncOperation {
   recordsFailed: number;
   errors: SyncError[];
 }
-
 export interface SyncError {
   recordId?: string;
   errorType: "auth" | "validation" | "transform" | "conflict" | "network";
   message: string;
   details?: Record<string, unknown>;
 }
-
 export interface IntegrationStats {
   totalProviders: number;
   activeProviders: number;
@@ -81,20 +72,16 @@ export interface IntegrationStats {
     organizations: number;
   };
 }
-
 // ============================================================================
 // EXTERNAL INTEGRATION SERVICE CLASS
 // ============================================================================
-
 export class ExternalIntegrationService {
   private static providers = new Map<string, ExternalProvider>();
   private static mappings = new Map<string, IntegrationMapping>();
   private static activeSyncs = new Map<string, SyncOperation>();
-
   // ==========================================
   // Provider Management
   // ==========================================
-
   /**
    * Register a new external provider
    */
@@ -106,7 +93,6 @@ export class ExternalIntegrationService {
         ...provider,
         status: "pending",
       };
-
       // Validate provider configuration
       const validation = await this.validateProviderConfig(fullProvider);
       if (!validation.success) {
@@ -116,13 +102,10 @@ export class ExternalIntegrationService {
           data: null,
         };
       }
-
       // Test connection
       const connectionTest = await this.testProviderConnection();
       fullProvider.status = connectionTest.success ? "connected" : "error";
-
       this.providers.set(provider.id, fullProvider);
-
       return {
         success: true,
         data: fullProvider,
@@ -139,7 +122,6 @@ export class ExternalIntegrationService {
       };
     }
   }
-
   /**
    * Update provider configuration
    */
@@ -156,9 +138,7 @@ export class ExternalIntegrationService {
           data: null,
         };
       }
-
       const updatedProvider = { ...provider, ...updates };
-
       // Re-validate if config changed
       if (updates.config) {
         const validation = await this.validateProviderConfig(updatedProvider);
@@ -170,9 +150,7 @@ export class ExternalIntegrationService {
           };
         }
       }
-
       this.providers.set(providerId, updatedProvider);
-
       return {
         success: true,
         data: updatedProvider,
@@ -189,7 +167,6 @@ export class ExternalIntegrationService {
       };
     }
   }
-
   /**
    * Remove a provider and all its mappings
    */
@@ -205,24 +182,20 @@ export class ExternalIntegrationService {
           data: null,
         };
       }
-
       // Stop any active syncs
       for (const [syncId, sync] of this.activeSyncs) {
         if (sync.providerId === providerId) {
           await this.cancelSync(syncId);
         }
       }
-
       // Remove mappings
       for (const [mappingId, mapping] of this.mappings) {
         if (mapping.providerId === providerId) {
           this.mappings.delete(mappingId);
         }
       }
-
       // Remove provider
       this.providers.delete(providerId);
-
       return {
         success: true,
         data: true,
@@ -239,14 +212,12 @@ export class ExternalIntegrationService {
       };
     }
   }
-
   /**
    * Get all registered providers
    */
   static async getProviders(): Promise<ApiResponse<ExternalProvider[]>> {
     try {
       const providers = Array.from(this.providers.values());
-
       return {
         success: true,
         data: providers,
@@ -264,11 +235,9 @@ export class ExternalIntegrationService {
       };
     }
   }
-
   // ==========================================
   // Data Synchronization
   // ==========================================
-
   /**
    * Start synchronization with an external provider
    */
@@ -285,7 +254,6 @@ export class ExternalIntegrationService {
           data: null,
         };
       }
-
       if (provider.status !== "connected") {
         return {
           success: false,
@@ -293,7 +261,6 @@ export class ExternalIntegrationService {
           data: null,
         };
       }
-
       const syncId = `sync_${providerId}_${Date.now()}`;
       const syncOperation: SyncOperation = {
         id: syncId,
@@ -306,9 +273,7 @@ export class ExternalIntegrationService {
         recordsFailed: 0,
         errors: [],
       };
-
       this.activeSyncs.set(syncId, syncOperation);
-
       // Start the sync process asynchronously
       this.performSync(syncOperation).catch((error) => {
         console.error(`Sync ${syncId} failed:`, error);
@@ -320,7 +285,6 @@ export class ExternalIntegrationService {
           details: { error: error.toString() },
         });
       });
-
       return {
         success: true,
         data: syncOperation,
@@ -338,7 +302,6 @@ export class ExternalIntegrationService {
       };
     }
   }
-
   /**
    * Get sync operation status
    */
@@ -354,7 +317,6 @@ export class ExternalIntegrationService {
           data: null,
         };
       }
-
       return {
         success: true,
         data: syncOp,
@@ -374,7 +336,6 @@ export class ExternalIntegrationService {
       };
     }
   }
-
   /**
    * Cancel an active sync operation
    */
@@ -388,7 +349,6 @@ export class ExternalIntegrationService {
           data: null,
         };
       }
-
       if (syncOp.status === "completed" || syncOp.status === "failed") {
         return {
           success: false,
@@ -396,7 +356,6 @@ export class ExternalIntegrationService {
           data: null,
         };
       }
-
       syncOp.status = "failed";
       syncOp.endTime = new Date();
       syncOp.errors.push({
@@ -404,7 +363,6 @@ export class ExternalIntegrationService {
         message: "Sync operation was cancelled",
         details: { reason: "user_cancelled" },
       });
-
       return {
         success: true,
         data: true,
@@ -422,11 +380,9 @@ export class ExternalIntegrationService {
       };
     }
   }
-
   // ==========================================
   // Integration Mapping
   // ==========================================
-
   /**
    * Create or update integration mapping
    */
@@ -443,15 +399,12 @@ export class ExternalIntegrationService {
           data: null,
         };
       }
-
       const fullMapping: IntegrationMapping = {
         ...mapping,
         providerId,
       };
-
       const mappingId = `mapping_${providerId}`;
       this.mappings.set(mappingId, fullMapping);
-
       return {
         success: true,
         data: fullMapping,
@@ -469,7 +422,6 @@ export class ExternalIntegrationService {
       };
     }
   }
-
   /**
    * Get integration statistics
    */
@@ -477,16 +429,13 @@ export class ExternalIntegrationService {
     try {
       const providers = Array.from(this.providers.values());
       const syncs = Array.from(this.activeSyncs.values());
-
       const completedSyncs = syncs.filter((s) => s.status === "completed");
       const successRate =
         syncs.length > 0 ? (completedSyncs.length / syncs.length) * 100 : 0;
-
       const lastSyncTime =
         syncs.length > 0
           ? new Date(Math.max(...syncs.map((s) => s.startTime.getTime())))
           : undefined;
-
       const stats: IntegrationStats = {
         totalProviders: providers.length,
         activeProviders: providers.filter((p) => p.status === "connected")
@@ -503,7 +452,6 @@ export class ExternalIntegrationService {
           organizations: 0, // TODO: Implement organization sync
         },
       };
-
       return {
         success: true,
         data: stats,
@@ -521,11 +469,9 @@ export class ExternalIntegrationService {
       };
     }
   }
-
   // ==========================================
   // Private Helper Methods
   // ==========================================
-
   private static async validateProviderConfig(
     provider: ExternalProvider
   ): Promise<{ success: boolean; error?: string }> {
@@ -534,7 +480,6 @@ export class ExternalIntegrationService {
       if (!provider.id || !provider.name || !provider.type) {
         return { success: false, error: "Missing required provider fields" };
       }
-
       // Type-specific validation
       switch (provider.type) {
         case "calendar":
@@ -562,13 +507,11 @@ export class ExternalIntegrationService {
             };
           }
       }
-
       return { success: true };
     } catch (error) {
       return { success: false, error: `Validation error: ${error}` };
     }
   }
-
   private static async testProviderConnection(): Promise<{
     success: boolean;
     error?: string;
@@ -577,41 +520,32 @@ export class ExternalIntegrationService {
       // TODO: Implement actual connection testing based on provider type
       // For now, simulate connection test
       await new Promise((resolve) => setTimeout(resolve, 100));
-
       // Simulate 90% success rate for testing
       const isSuccessful = Math.random() > 0.1;
-
       if (!isSuccessful) {
         return { success: false, error: "Connection test failed" };
       }
-
       return { success: true };
     } catch (error) {
       return { success: false, error: `Connection test failed: ${error}` };
     }
   }
-
   private static async performSync(
     syncOperation: SyncOperation
   ): Promise<void> {
     try {
       syncOperation.status = "running";
-
       const provider = this.providers.get(syncOperation.providerId);
       if (!provider) {
         throw new Error(`Provider ${syncOperation.providerId} not found`);
       }
-
       // TODO: Implement actual sync logic based on provider type
       // For now, simulate sync process
       const recordsToSync = Math.floor(Math.random() * 100) + 1;
-
       for (let i = 0; i < recordsToSync; i++) {
         // Simulate processing each record
         await new Promise((resolve) => setTimeout(resolve, 10));
-
         syncOperation.recordsProcessed++;
-
         // Simulate 95% success rate
         if (Math.random() > 0.05) {
           syncOperation.recordsSucceeded++;
@@ -625,10 +559,8 @@ export class ExternalIntegrationService {
           });
         }
       }
-
       syncOperation.status = "completed";
       syncOperation.endTime = new Date();
-
       // Update provider last sync time
       provider.lastSync = new Date();
     } catch (error) {

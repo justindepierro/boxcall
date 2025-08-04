@@ -3,10 +3,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { supabase } from "../lib/supabase";
 import type { Database } from "../types/database";
-
 // User profile type from our database (main profiles table with role)
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
-
 interface AuthState {
   // Authentication state
   user: User | null;
@@ -14,14 +12,12 @@ interface AuthState {
   profile: UserProfile | null;
   loading: boolean;
   error: string | null;
-
   // Authentication actions
   setUser: (user: User | null) => void;
   setSession: (session: Session | null) => void;
   setProfile: (profile: UserProfile | null) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
-
   // Auth lifecycle actions
   signIn: (
     email: string,
@@ -40,15 +36,12 @@ interface AuthState {
   resetPassword: (
     email: string
   ) => Promise<{ success: boolean; error?: string }>;
-
   // Utility actions
   clearError: () => void;
   reset: () => void;
-
   // Profile fetching
   fetchUserProfile: (userId: string) => Promise<void>;
 }
-
 const initialState = {
   user: null,
   session: null,
@@ -56,47 +49,38 @@ const initialState = {
   loading: false,
   error: null,
 };
-
 export const useAuth = create<AuthState>()(
   persist(
     (set, get) => ({
       ...initialState,
-
       // Basic state setters
       setUser: (user) => set({ user }),
       setSession: (session) => set({ session }),
       setProfile: (profile) => set({ profile }),
       setLoading: (loading) => set({ loading }),
       setError: (error) => set({ error }),
-
       // Authentication methods - Real Supabase implementation
       signIn: async (email: string, password: string) => {
         set({ loading: true, error: null });
-
         try {
           const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password,
           });
-
           if (error) {
             set({ error: error.message, loading: false });
             return { success: false, error: error.message };
           }
-
           if (data.user && data.session) {
             set({
               user: data.user,
               session: data.session,
               loading: false,
             });
-
             // Fetch user profile
             await get().fetchUserProfile(data.user.id);
-
             return { success: true };
           }
-
           set({ loading: false });
           return { success: false, error: "No user data returned" };
         } catch (error) {
@@ -106,10 +90,8 @@ export const useAuth = create<AuthState>()(
           return { success: false, error: errorMessage };
         }
       },
-
       signUp: async (email: string, password: string, userData) => {
         set({ loading: true, error: null });
-
         try {
           // Step 1: Create auth user
           const { data: authData, error: authError } =
@@ -117,17 +99,14 @@ export const useAuth = create<AuthState>()(
               email,
               password,
             });
-
           if (authError) {
             set({ error: authError.message, loading: false });
             return { success: false, error: authError.message };
           }
-
           if (!authData.user) {
             set({ error: "Failed to create user account", loading: false });
             return { success: false, error: "Failed to create user account" };
           }
-
           // Step 2: Create user profile in our database
           const { error: profileError } = await supabase
             .from("profiles")
@@ -138,23 +117,19 @@ export const useAuth = create<AuthState>()(
               email: email,
               role: userData.role,
             });
-
           if (profileError) {
             set({ error: profileError.message, loading: false });
             return { success: false, error: profileError.message };
           }
-
           set({
             user: authData.user,
             session: authData.session,
             loading: false,
           });
-
           // Fetch the created profile
           if (authData.session) {
             await get().fetchUserProfile(authData.user.id);
           }
-
           return { success: true };
         } catch (error) {
           const errorMessage =
@@ -163,18 +138,14 @@ export const useAuth = create<AuthState>()(
           return { success: false, error: errorMessage };
         }
       },
-
       signOut: async () => {
         set({ loading: true, error: null });
-
         try {
           const { error } = await supabase.auth.signOut();
-
           if (error) {
             set({ error: error.message, loading: false });
             return;
           }
-
           // Clear all auth state
           set({
             user: null,
@@ -188,20 +159,16 @@ export const useAuth = create<AuthState>()(
           set({ error: errorMessage, loading: false });
         }
       },
-
       resetPassword: async (email: string) => {
         set({ loading: true, error: null });
-
         try {
           const { error } = await supabase.auth.resetPasswordForEmail(email, {
             redirectTo: `${window.location.origin}/reset-password`,
           });
-
           if (error) {
             set({ error: error.message, loading: false });
             return { success: false, error: error.message };
           }
-
           set({ loading: false });
           return { success: true };
         } catch (error) {
@@ -211,7 +178,6 @@ export const useAuth = create<AuthState>()(
           return { success: false, error: errorMessage };
         }
       },
-
       // Profile fetching method
       fetchUserProfile: async (userId: string) => {
         try {
@@ -220,18 +186,15 @@ export const useAuth = create<AuthState>()(
             .select("*")
             .eq("id", userId)
             .single();
-
           if (error) {
             console.error("Error fetching user profile:", error);
             return;
           }
-
           set({ profile: data });
         } catch (error) {
           console.error("Error fetching user profile:", error);
         }
       },
-
       // Utility methods
       clearError: () => set({ error: null }),
       reset: () => set(initialState),
@@ -246,13 +209,11 @@ export const useAuth = create<AuthState>()(
     }
   )
 );
-
 // Selector hooks for convenience
 export const useAuthUser = () => useAuth((state) => state.user);
 export const useAuthProfile = () => useAuth((state) => state.profile);
 export const useAuthLoading = () => useAuth((state) => state.loading);
 export const useAuthError = () => useAuth((state) => state.error);
-
 // Authentication status selectors
 export const useIsAuthenticated = () => useAuth((state) => !!state.user);
 export const useIsCoach = () =>

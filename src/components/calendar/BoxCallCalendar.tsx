@@ -10,7 +10,6 @@ import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import type { CalendarEvent } from "../../services/calendarService";
-
 interface BoxCallCalendarProps {
   events: CalendarEvent[];
   onEventClick?: (event: CalendarEvent) => void;
@@ -22,7 +21,6 @@ interface BoxCallCalendarProps {
   initialView?: "dayGridMonth" | "timeGridWeek" | "timeGridDay";
   className?: string;
 }
-
 export interface BoxCallCalendarRef {
   getApi: () => CalendarApi | null;
   changeView: (viewName: string) => void;
@@ -30,7 +28,6 @@ export interface BoxCallCalendarRef {
   prev: () => void;
   next: () => void;
 }
-
 /**
  * BoxCallCalendar Component
  *
@@ -56,7 +53,6 @@ export const BoxCallCalendar = forwardRef<
     ref
   ) => {
     const calendarRef = useRef<FullCalendar>(null);
-
     // Expose calendar API methods through ref
     useImperativeHandle(ref, () => ({
       getApi: () => calendarRef.current?.getApi() || null,
@@ -77,7 +73,6 @@ export const BoxCallCalendar = forwardRef<
         if (api) api.next();
       },
     }));
-
     // Convert CalendarEvent to FullCalendar format
     const fullCalendarEvents = events.map((event) => ({
       id: event.id,
@@ -99,7 +94,6 @@ export const BoxCallCalendar = forwardRef<
         tags: event.tags,
       },
     }));
-
     // Handle event click
     const handleEventClick = (clickInfo: EventClickArg) => {
       if (onEventClick) {
@@ -109,21 +103,18 @@ export const BoxCallCalendar = forwardRef<
         }
       }
     };
-
     // Handle date selection
     const handleDateSelect = (selectInfo: DateSelectArg) => {
       if (onDateSelect) {
         onDateSelect(selectInfo);
       }
     };
-
     // Handle event drop (drag and drop)
     const handleEventDrop = (dropInfo: EventDropArg) => {
       if (onEventDrop) {
         onEventDrop(dropInfo);
       }
     };
-
     return (
       <div className={`boxcall-calendar ${className}`}>
         <FullCalendar
@@ -171,7 +162,6 @@ export const BoxCallCalendar = forwardRef<
     );
   }
 );
-
 /**
  * Get event color based on event type
  */
@@ -189,5 +179,4 @@ function getEventColor(type: string): string {
       return "#6B7280"; // Gray
   }
 }
-
 BoxCallCalendar.displayName = "BoxCallCalendar";

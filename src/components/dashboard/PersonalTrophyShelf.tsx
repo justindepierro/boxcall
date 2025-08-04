@@ -3,12 +3,10 @@ import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Icon, SmartIconSystem, type IconName } from "../ui/Icon/Icon";
-
 interface PersonalTrophyShelfProps {
   userId: string;
   userRole?: string; // Optional for future role-based features
 }
-
 /**
  * Personal Trophy Shelf - Compact Scrollable Design
  *
@@ -30,7 +28,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
     loading,
     error,
   } = useAchievements(userId);
-
   // Combine all achievements for scrolling
   const allAchievements = [
     ...helmetStickers.map((sticker) => ({
@@ -53,7 +50,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       maxProgress: medal.maxProgress,
     })),
   ];
-
   // Helper function to render consistent icons using SmartIconSystem
   const renderAchievementIcon = (
     iconData: React.ReactElement | string | undefined,
@@ -64,10 +60,8 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
     if (React.isValidElement(iconData)) {
       return iconData;
     }
-
     // Use SmartIconSystem for intelligent icon selection
     let iconName: IconName = "star"; // fallback
-
     if (typeof iconData === "string") {
       // Try to use the provided icon name directly first
       const iconMap: { [key: string]: IconName } = {
@@ -78,7 +72,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         message: "message-circle",
         calendar: "calendar",
       };
-
       iconName = iconMap[iconData] || (iconData as IconName);
     } else {
       // Use SmartIconSystem to analyze content and pick best icon
@@ -89,10 +82,8 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         "trophy"
       );
     }
-
     return <Icon name={iconName} size={16} className="text-gray-600" />;
   };
-
   // Show loading state
   if (loading) {
     return (
@@ -103,7 +94,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       </Card>
     );
   }
-
   // Show error state
   if (error) {
     return (
@@ -117,7 +107,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       </Card>
     );
   }
-
   return (
     <Card className="compact-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
       {/* Header */}
@@ -148,7 +137,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
           </Typography>
         </div>
       </div>
-
       {/* Main Layout: Left Stats + Right Achievements */}
       <div className="flex gap-3 h-full">
         {/* Left: Vertical Stats Stack */}
@@ -226,7 +214,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
             </Typography>
           </div>
         </div>
-
         {/* Right: Scrollable Achievements Section */}
         <div className="flex-1">
           {/* Container matching the height of the 4 stat boxes */}
