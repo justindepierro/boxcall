@@ -23,6 +23,14 @@ dist-ssr
 *.sln
 *.sw?
 
+# VS Code cache and build artifacts
+*.tsbuildinfo
+.cache/
+*.tmp
+
+# GitHub Copilot cache
+~/.cache/github-copilot/
+
 # Auto-generated scripts and temporary files
 **/analyze-bundle.sh
 **/audit-icon-sizes.js
@@ -43,3 +51,29 @@ temp-*.sh
 temp-*.js
 auto-*.sh
 auto-*.js
+
+# Copilot and AI-generated files (prevent chaos)
+*-original.tsx
+*-old.tsx
+*-new.tsx
+*_clean.tsx
+*_new.tsx
+*-backup.*
+*.backup
+**/demo/
+**/tests/performance/
+**/tests/unit/
+**/*Test.test.ts
+**/*Tests.test.ts
+PDF_IMPLEMENTATION_*.md
+IMPLEMENTATION_*.md
+
+# VS Code and development session artifacts
+.github/workflows/file-integrity-check.yml
+src/pages/PlaygroundPage.tsx
+src/pages/TeamDashboard.tsx
+src/pages/*-New.tsx
+src/pages/*-old.tsx
+src/components/dashboard/*-original.tsx
+src/components/practice/GroupManagementModal.tsx
+src/components/playbook/visual/FabricFieldCanvas.tsx
