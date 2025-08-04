@@ -51,7 +51,7 @@ const getModalTypeStyles = (type: ModalProps["type"]) => {
   }
 };
 const getBackdropStyles = () => {
-  return "bg-navy-900/60 dark:bg-navy-950/80"; // Navy-tinted backdrop instead of gray
+  return "bg-brand-navy/60 dark:bg-brand-navy-dark/80"; // Navy-tinted backdrop instead of gray
 };
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
@@ -177,7 +177,7 @@ export const Modal: React.FC<ModalProps> = ({
               </h3>
               <button
                 onClick={onClose}
-                className="ml-4 p-2 rounded-sm transition-all duration-200 text-gray-600 hover:text-jade-700 hover:bg-jade-50 dark:text-gray-400 dark:hover:text-jade-300 dark:hover:bg-jade-900/20 border border-transparent hover:border-jade-200"
+                className="ml-4 p-2 rounded-sm transition-all duration-200 text-gray-600 hover:text-interaction-jade hover:bg-surface-jade dark:text-gray-400 dark:hover:text-brand-jade dark:hover:bg-surface-jade-dark border border-transparent hover:border-surface-jade-dark"
                 aria-label="Close modal"
               >
                 <svg

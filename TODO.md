@@ -34,6 +34,14 @@
 
 ### **High Priority**
 
+- [ ] **Phase 5: Component Migration (NEXT PRIORITY)**
+  - [ ] Migrate main DashboardPage to use DataResolutionService
+  - [ ] Update team management pages (CreateTeam, JoinTeam)
+  - [ ] Convert user profile components to new data hooks
+  - [ ] Prepare calendar system for clean data integration
+  - [ ] Remove legacy data loading patterns
+  - [ ] Update component documentation
+
 - [ ] **Mobile Responsiveness Issues (URGENT)**
   - [ ] Fix mobile layout inconsistencies across pages
   - [ ] Responsive design audit for all components
@@ -44,7 +52,7 @@
   - [ ] Footer and header mobile optimization
   - [ ] Performance testing on mobile devices
 
-- [ ] **Coach Account System (NEW)**
+- [ ] **Coach Account System (ONGOING)**
   - ✅ Create Coach Account page ($9.99 one-time purchase)
   - ✅ Personal coaching profile setup
   - ✅ Team connection via school codes
@@ -214,6 +222,6 @@
 
 ---
 
-**Last Updated**: August 3, 2025  
-**Priority**: High for performance, Medium for cleanup  
+**Last Updated**: August 4, 2025  
+**Priority**: High for Phase 5 migration, Medium for cleanup  
 **Owner**: Development Team

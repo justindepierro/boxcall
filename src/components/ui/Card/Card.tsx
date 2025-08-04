@@ -15,11 +15,11 @@ const cardStyles: CardStylesConfig = {
     elevated:
       "bg-white shadow-lg border border-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-900/20 hover:shadow-xl",
     outlined:
-      "bg-transparent border-2 border-jade-500 dark:border-jade-400 hover:bg-jade-50 dark:hover:bg-jade-900/10", // Jade outlined variant
+      "bg-transparent border-2 border-brand-jade dark:border-brand-jade hover:bg-surface-jade dark:hover:bg-surface-jade-dark", // Jade outlined variant
     filled:
       "bg-gray-50 border border-gray-200 dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800",
     accent:
-      "bg-navy-50 border-2 border-navy-500 dark:bg-navy-900/20 dark:border-navy-400", // New navy accent variant
+      "bg-surface-navy border-2 border-brand-navy dark:bg-surface-navy-dark dark:border-brand-navy", // New navy accent variant
   },
   sizes: {
     sm: "p-4", // More substantial padding

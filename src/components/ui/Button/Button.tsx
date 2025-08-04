@@ -13,43 +13,46 @@ import type {
 // Button variant styles configuration - Updated with jade/navy theme
 const buttonVariants: ButtonStylesConfig = {
   primary: {
-    base: "bg-jade-500 text-white border border-jade-500",
-    hover: "hover:bg-jade-600 hover:border-jade-600",
-    active: "active:bg-jade-700 active:border-jade-700",
+    base: "bg-brand-jade text-white border border-brand-jade",
+    hover: "hover:bg-interaction-jade hover:border-interaction-jade",
+    active: "active:bg-brand-jade-dark active:border-brand-jade-dark",
     disabled:
-      "disabled:bg-jade-300 disabled:border-jade-300 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-jade-500 focus:ring-offset-2",
+      "disabled:bg-brand-jade-light disabled:border-brand-jade-light disabled:cursor-not-allowed",
+    focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
   },
   secondary: {
-    base: "bg-transparent text-navy-600 border-2 border-navy-500",
-    hover: "hover:bg-navy-500 hover:text-white hover:border-navy-500",
-    active: "active:bg-navy-600 active:text-white active:border-navy-600",
+    base: "bg-transparent text-brand-navy border-2 border-brand-navy",
+    hover: "hover:bg-brand-navy hover:text-white hover:border-brand-navy",
+    active:
+      "active:bg-brand-navy-dark active:text-white active:border-brand-navy-dark",
     disabled:
-      "disabled:text-navy-300 disabled:border-navy-300 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-navy-500 focus:ring-offset-2",
+      "disabled:text-brand-navy-light disabled:border-brand-navy-light disabled:cursor-not-allowed",
+    focus: "focus:ring-2 focus:ring-brand-navy focus:ring-offset-2",
   },
   outline: {
-    base: "bg-transparent text-jade-600 border border-jade-500",
-    hover: "hover:bg-jade-50 hover:text-jade-700 hover:border-jade-600",
-    active: "active:bg-jade-100 active:text-jade-800 active:border-jade-700",
+    base: "bg-transparent text-interaction-jade border border-brand-jade",
+    hover:
+      "hover:bg-surface-jade hover:text-interaction-jade hover:border-interaction-jade",
+    active:
+      "active:bg-surface-jade-dark active:text-brand-jade-dark active:border-brand-jade-dark",
     disabled:
-      "disabled:text-jade-300 disabled:border-jade-300 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-jade-500 focus:ring-offset-2",
+      "disabled:text-brand-jade-light disabled:border-brand-jade-light disabled:cursor-not-allowed",
+    focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
   },
   ghost: {
-    base: "bg-transparent text-gray-600 border border-transparent",
-    hover: "hover:bg-gray-100 hover:text-gray-900",
-    active: "active:bg-gray-200 active:text-gray-900",
-    disabled: "disabled:text-gray-400 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-jade-500 focus:ring-offset-2",
+    base: "bg-transparent text-text-secondary border border-transparent",
+    hover: "hover:bg-surface-neutral hover:text-text-primary",
+    active: "active:bg-surface-neutral-dark active:text-text-primary",
+    disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
+    focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
   },
   link: {
-    base: "bg-transparent text-jade-600 border border-transparent p-0 h-auto",
-    hover: "hover:text-jade-700 hover:underline",
-    active: "active:text-jade-800",
-    disabled: "disabled:text-jade-300 disabled:cursor-not-allowed",
+    base: "bg-transparent text-interaction-jade border border-transparent p-0 h-auto",
+    hover: "hover:text-brand-jade-dark hover:underline",
+    active: "active:text-brand-jade-dark",
+    disabled: "disabled:text-brand-jade-light disabled:cursor-not-allowed",
     focus:
-      "focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 focus:rounded-xs",
+      "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2 focus:rounded-xs",
   },
   danger: {
     base: "bg-red-600 text-white border border-red-600",
@@ -60,12 +63,12 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus:ring-2 focus:ring-red-500 focus:ring-offset-2",
   },
   success: {
-    base: "bg-jade-600 text-white border border-jade-600",
-    hover: "hover:bg-jade-700 hover:border-jade-700",
-    active: "active:bg-jade-800 active:border-jade-800",
+    base: "bg-interaction-jade text-white border border-interaction-jade",
+    hover: "hover:bg-brand-jade-dark hover:border-brand-jade-dark",
+    active: "active:bg-brand-jade-darker active:border-brand-jade-darker",
     disabled:
-      "disabled:bg-jade-300 disabled:border-jade-300 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-jade-500 focus:ring-offset-2",
+      "disabled:bg-brand-jade-light disabled:border-brand-jade-light disabled:cursor-not-allowed",
+    focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
   },
   warning: {
     base: "bg-yellow-600 text-white border border-yellow-600",

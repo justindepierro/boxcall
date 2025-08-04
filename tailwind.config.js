@@ -1,39 +1,72 @@
 /** @type {import('tailwindcss').Config} */
+// Import design tokens for centralized color management
+const designTokens = {
+  jade: {
+    50: "#ECFDF5",
+    100: "#D1FAE5",
+    200: "#A7F3D0",
+    300: "#6EE7B7",
+    400: "#34D399",
+    500: "#00A86B", // PRIMARY brand color
+    600: "#047857", // MAIN interaction color (hover, focus, icons)
+    700: "#065F46",
+    800: "#064E3B",
+    900: "#052E16",
+  },
+  navy: {
+    50: "#F8FAFC",
+    100: "#F1F5F9",
+    200: "#E2E8F0",
+    300: "#CBD5E1",
+    400: "#94A3B8",
+    500: "#64748B",
+    600: "#475569",
+    700: "#334155",
+    800: "#1E293B",
+    900: "#0F172A",
+  },
+  gray: {
+    50: "#F9FAFB",
+    100: "#F3F4F6",
+    200: "#E5E7EB",
+    300: "#D1D5DB",
+    400: "#9CA3AF",
+    500: "#6B7280",
+    600: "#4B5563",
+    700: "#374151",
+    800: "#1F2937",
+    900: "#111827",
+  },
+  success: {
+    50: "#F0FDF4",
+    500: "#22C55E",
+    600: "#16A34A",
+  },
+  warning: {
+    50: "#FFFBEB",
+    500: "#F59E0B",
+    600: "#D97706",
+  },
+  error: {
+    50: "#FEF2F2",
+    500: "#EF4444",
+    600: "#DC2626",
+  },
+};
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "class", // Enable class-based dark mode
   theme: {
     extend: {
       colors: {
-        // BoxCall Primary - Enhanced Jade Green System (More Contrast)
-        jade: {
-          50: "#ECFDF5", // Very light jade for backgrounds
-          100: "#D1FAE5", // Light jade for hover states
-          200: "#A7F3D0", // Soft jade for disabled states
-          300: "#6EE7B7", // Medium jade for borders
-          400: "#34D399", // Bright jade for active states
-          500: "#00A86B", // PRIMARY - Main brand color (unchanged)
-          600: "#047857", // DARKER - Better contrast for hover/focus
-          700: "#065F46", // Much darker jade for pressed states
-          800: "#064E3B", // Deep jade for dark mode backgrounds
-          900: "#1F2937", // Near black with jade tint for text
-          950: "#111827", // Ultra dark jade for maximum contrast
-        },
-
-        // BoxCall Secondary - Enhanced Navy Blue System (Lighter Options)
-        navy: {
-          50: "#F8FAFC", // Almost white with navy tint
-          100: "#F1F5F9", // Very light navy for backgrounds
-          200: "#E2E8F0", // Light navy for subtle backgrounds
-          300: "#CBD5E1", // Medium navy for borders
-          400: "#94A3B8", // Muted navy for disabled text
-          500: "#64748B", // Medium navy for secondary text
-          600: "#475569", // Dark navy for body text
-          700: "#334155", // Darker navy for headings
-          800: "#1E293B", // Deep navy for emphasis
-          900: "#0F172A", // Primary navy - main dark color
-          950: "#020617", // Ultra dark navy for maximum contrast
-        },
+        // Centralized design tokens - single source of truth
+        jade: designTokens.jade,
+        navy: designTokens.navy,
+        gray: designTokens.gray,
+        success: designTokens.success,
+        warning: designTokens.warning,
+        error: designTokens.error,
 
         // Enhanced Contrast System - "Carhartt Reliability"
         contrast: {

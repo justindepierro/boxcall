@@ -7,6 +7,7 @@
  * Design Philosophy: "Carhartt Reliability" - functional, clear, dependable icons
  */
 import React from "react";
+import { getComponentColor } from "../../../design-system/tokens";
 import {
   // Navigation & Layout
   Menu,
@@ -919,13 +920,13 @@ const sizeMap = {
 };
 const colorMap = {
   current: "currentColor",
-  jade: "#047857",
-  navy: "#0F172A",
-  slate: "#64748B",
-  success: "#047857",
-  warning: "#D97706",
-  error: "#DC2626",
-  info: "#0369A1",
+  jade: getComponentColor("icon", "jade"),
+  navy: getComponentColor("icon", "navy"),
+  slate: getComponentColor("icon", "slate"),
+  success: getComponentColor("icon", "success"),
+  warning: getComponentColor("icon", "warning"),
+  error: getComponentColor("icon", "error"),
+  info: "#0369A1", // TODO: Add to design tokens
 };
 export const Icon: React.FC<IconProps> = ({
   name,

@@ -1,0 +1,92 @@
+/* 
+ * BoxCall Design Tokens - CSS Custom Properties
+ * Auto-generated from centralized design tokens
+ * DO NOT EDIT MANUALLY - Update tokens.ts instead
+ */
+
+:root {
+  /* Color Tokens - Semantic */
+  --color-primary: #00a86b;
+  --color-primaryHover: #047857;
+  --color-primaryActive: #065f46;
+
+  --color-secondary: #64748b;
+  --color-secondaryHover: #475569;
+  --color-secondaryActive: #334155;
+
+  /* Text Colors */
+  --color-textPrimary: #111827;
+  --color-textSecondary: #4b5563;
+  --color-textMuted: #6b7280;
+  --color-textInverse: #ffffff;
+  --color-textBrand: #047857;
+
+  /* Background Colors */
+  --color-bgPrimary: #ffffff;
+  --color-bgSecondary: #f9fafb;
+  --color-bgMuted: #f3f4f6;
+  --color-bgBrand: #ecfdf5;
+  --color-bgNavy: #f8fafc;
+
+  /* Border & Focus */
+  --color-border: #e5e7eb;
+  --color-borderFocus: #00a86b;
+  --color-borderError: #ef4444;
+
+  /* Status Colors */
+  --color-success: #22c55e;
+  --color-successBg: #f0fdf4;
+  --color-warning: #f59e0b;
+  --color-warningBg: #fffbeb;
+  --color-error: #ef4444;
+  --color-errorBg: #fef2f2;
+
+  /* BoxCall Specific */
+  --color-boxcallBrand: #047857;
+  --color-coachAuthority: #475569;
+
+  /* Component Tokens */
+  --icon-default: currentColor;
+  --icon-jade: #047857;
+  --icon-navy: #475569;
+  --icon-slate: #6b7280;
+  --icon-success: #22c55e;
+  --icon-warning: #f59e0b;
+  --icon-error: #ef4444;
+
+  --button-primaryBg: #00a86b;
+  --button-primaryBgHover: #047857;
+  --button-primaryText: #ffffff;
+  --button-secondaryBg: transparent;
+  --button-secondaryBorder: #64748b;
+  --button-secondaryText: #64748b;
+  --button-secondaryBgHover: #f8fafc;
+
+  --card-background: #ffffff;
+  --card-border: #e5e7eb;
+  --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+
+  --navigation-background: #ffffff;
+  --navigation-border: #e5e7eb;
+  --navigation-linkHover: #ecfdf5;
+
+  /* Legacy CSS Variables for Backwards Compatibility */
+  --primary-color: var(--color-primary);
+  --secondary-color: var(--color-secondary);
+  --text-primary: var(--color-textPrimary);
+  --text-secondary: var(--color-textSecondary);
+  --border-color: var(--color-border);
+  --success-color: var(--color-success);
+  --warning-color: var(--color-warning);
+  --error-color: var(--color-error);
+  --info-color: var(--color-primary);
+}
+
+/* Dark mode variables (future enhancement) */
+:root.dark {
+  --color-bgPrimary: #111827;
+  --color-bgSecondary: #1f2937;
+  --color-textPrimary: #f9fafb;
+  --color-textSecondary: #d1d5db;
+  --color-border: #374151;
+}

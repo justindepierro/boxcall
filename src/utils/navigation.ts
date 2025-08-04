@@ -183,6 +183,7 @@ export const getNavigationItems = (
 };
 /**
  * Convert NavigationItem to SidebarItem format
+ * BoxCall icons are styled with jade color for brand consistency
  */
 export const toSidebarItems = (
   items: NavigationItem[],
@@ -203,7 +204,7 @@ export const toSidebarItems = (
         ? React.createElement(Icon, {
             name: item.icon,
             size: "md",
-            color: "current",
+            color: item.id === "boxcall" ? "jade" : "current",
           })
         : undefined,
       onClick: item.divider

@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import centralized design tokens */
+@import "./styles/tokens.css";
+
 /* Universal reset for borders */
 *,
 *::before,
