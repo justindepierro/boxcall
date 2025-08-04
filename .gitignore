@@ -54,7 +54,6 @@ auto-*.js
 
 # Copilot and AI-generated files (prevent chaos)
 *-original.tsx
-*-old.tsx
 *-new.tsx
 *_clean.tsx
 *_new.tsx
