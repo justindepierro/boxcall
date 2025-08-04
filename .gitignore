@@ -76,3 +76,6 @@ src/pages/*-old.tsx
 src/components/dashboard/*-original.tsx
 src/components/practice/GroupManagementModal.tsx
 src/components/playbook/visual/FabricFieldCanvas.tsx
+
+# Local Netlify folder
+.netlify
