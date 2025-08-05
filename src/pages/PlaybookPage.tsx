@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Search, Plus, FileText, Upload } from "lucide-react";
+import { Search, Plus, FileText, Upload, Download } from "lucide-react";
 import { PlayGrid } from "../components/playbook/PlayGrid";
 import { PlayFilters } from "../components/playbook/PlayFilters.tsx";
 import { PlayBuilderWizard } from "../components/playbook/PlayBuilder/PlayBuilderWizard";
 import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal";
-import { InteractivePlayBuilder } from "../components/playbook/visual/InteractivePlayBuilder";
+import { PracticeScriptService } from "../services/practiceScriptService";
+import { CSVService } from "../services/csvService";
+import { getDemoPlays } from "../data/demoPlays";
 import type { Play } from "../types/play";
 import {
   Badge,
@@ -16,7 +18,6 @@ interface PlaybookPageState {
   searchQuery: string;
   showBuilder: boolean;
   showImport: boolean;
-  showInteractiveBuilder: boolean;
   selectedFilters: {
     formation?: string;
     playType?: string;
@@ -36,7 +37,6 @@ export const PlaybookPage: React.FC = () => {
     searchQuery: "",
     showBuilder: false,
     showImport: false,
-    showInteractiveBuilder: false,
     selectedFilters: {},
     // Reward Loop Initial State
     playsCreated: 23, // Mock current count
@@ -105,11 +105,38 @@ export const PlaybookPage: React.FC = () => {
   };
 
   // 3-Part Workflow Handlers - Week 3 Feature
-  const handleAddToPracticeScript = (play: Play) => {
-    // TODO: Implement practice script integration
-    console.log("Adding play to practice script:", play.play_name);
-    // For now, just show a success message
-    alert(`"${play.play_name}" added to practice script!`);
+  const handleAddToPracticeScript = async (play: Play) => {
+    try {
+      // For demo purposes, use a mock team ID
+      const teamId = "demo-team-1";
+
+      // Get or create the "Quick Adds" script for easy workflow
+      const script =
+        await PracticeScriptService.getOrCreateQuickAddsScript(teamId);
+
+      // Add the play to the script
+      await PracticeScriptService.addPlayToScript(
+        {
+          scriptId: script.id,
+          playId: play.id,
+          notes: `Added from playbook workflow`,
+          repetitions: 5,
+          estimatedTime: 3,
+        },
+        play
+      );
+
+      // Show success message with workflow context
+      alert(
+        `"${play.play_name}" added to practice script "${script.name}"!\n\nNavigate to Calendar > Practice Planning to build your full practice session.`
+      );
+
+      // Trigger achievement for workflow completion
+      handlePlayCreated();
+    } catch (error) {
+      console.error("Error adding play to practice script:", error);
+      alert("Failed to add play to practice script. Please try again.");
+    }
   };
 
   const handleAddToGamePlan = (play: Play) => {
@@ -117,6 +144,29 @@ export const PlaybookPage: React.FC = () => {
     console.log("Adding play to game plan:", play.play_name);
     // For now, just show a success message
     alert(`"${play.play_name}" added to game plan!`);
+  };
+
+  const handleExportCSV = () => {
+    try {
+      // Get current plays (using demo data for now)
+      const plays = getDemoPlays({});
+
+      // Export to CSV
+      const csvContent = CSVService.exportPlaysToCSV(plays, {
+        includePrivateNotes: true,
+        formatForCoach: true,
+      });
+
+      // Download the file
+      const timestamp = new Date().toISOString().split("T")[0];
+      CSVService.downloadCSV(csvContent, `playbook-export-${timestamp}.csv`);
+
+      // Trigger achievement for workflow completion
+      handlePlayCreated();
+    } catch (error) {
+      console.error("Error exporting CSV:", error);
+      alert("Failed to export playbook. Please try again.");
+    }
   };
   const handleSearch = (query: string) => {
     setState((prev) => ({ ...prev, searchQuery: query }));
@@ -132,12 +182,6 @@ export const PlaybookPage: React.FC = () => {
   };
   const handleCloseImport = () => {
     setState((prev) => ({ ...prev, showImport: false }));
-  };
-  const handleOpenInteractiveBuilder = () => {
-    setState((prev) => ({ ...prev, showInteractiveBuilder: true }));
-  };
-  const handleCloseInteractiveBuilder = () => {
-    setState((prev) => ({ ...prev, showInteractiveBuilder: false }));
   };
   const handleFilterChange = (filters: typeof state.selectedFilters) => {
     setState((prev) => ({ ...prev, selectedFilters: filters }));
@@ -182,6 +226,15 @@ export const PlaybookPage: React.FC = () => {
             </div>
             {/* Action Buttons with Reward Loop Psychology */}
             <div className="flex items-center space-x-3">
+              {/* Export button */}
+              <button
+                onClick={handleExportCSV}
+                className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-200"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export CSV
+              </button>
+
               {/* Import button with subtle enhancement */}
               <button
                 onClick={handleOpenImport}
@@ -214,19 +267,6 @@ export const PlaybookPage: React.FC = () => {
                   </div>
                 )}
               </div>
-
-              {/* Interactive Builder with enhanced visual feedback */}
-              <button
-                onClick={() => {
-                  handleOpenInteractiveBuilder();
-                  // Demo: Trigger reward celebration for testing
-                  handlePlayCreated();
-                }}
-                className="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
-              >
-                <FileText className="h-4 w-4 mr-2" />
-                Interactive Builder
-              </button>
             </div>
           </div>
         </div>
@@ -318,12 +358,6 @@ export const PlaybookPage: React.FC = () => {
       )}
       {state.showImport && (
         <CSVImportModal isOpen={state.showImport} onClose={handleCloseImport} />
-      )}
-      {state.showInteractiveBuilder && (
-        <InteractivePlayBuilder
-          isOpen={state.showInteractiveBuilder}
-          onClose={handleCloseInteractiveBuilder}
-        />
       )}
 
       {/* Achievement Celebration Overlay - The reward loop climax */}
