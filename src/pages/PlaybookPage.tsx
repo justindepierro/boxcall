@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Search, Plus, FileText, Upload, Download } from "lucide-react";
+import {
+  FileText,
+  Plus,
+  Search,
+  Upload,
+  Download,
+  Clock,
+  Users,
+} from "lucide-react";
 import { PlayGrid } from "../components/playbook/PlayGrid";
 import { PlayFilters } from "../components/playbook/PlayFilters.tsx";
 import { PlayBuilderWizard } from "../components/playbook/PlayBuilder/PlayBuilderWizard";
@@ -14,10 +22,13 @@ import {
   ProgressBadge,
   ComplexityBadge,
 } from "../components/ui/Badge";
+type CoachingView = "playbook" | "practice-script" | "game-plan";
+
 interface PlaybookPageState {
   searchQuery: string;
   showBuilder: boolean;
   showImport: boolean;
+  currentView: CoachingView;
   selectedFilters: {
     formation?: string;
     playType?: string;
@@ -37,6 +48,7 @@ export const PlaybookPage: React.FC = () => {
     searchQuery: "",
     showBuilder: false,
     showImport: false,
+    currentView: "playbook",
     selectedFilters: {},
     // Reward Loop Initial State
     playsCreated: 23, // Mock current count
@@ -185,6 +197,10 @@ export const PlaybookPage: React.FC = () => {
   };
   const handleFilterChange = (filters: typeof state.selectedFilters) => {
     setState((prev) => ({ ...prev, selectedFilters: filters }));
+  };
+
+  const handleViewChange = (view: CoachingView) => {
+    setState((prev) => ({ ...prev, currentView: view }));
   };
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -340,12 +356,91 @@ export const PlaybookPage: React.FC = () => {
           </aside>
           {/* Play Grid */}
           <main className="flex-1">
-            <PlayGrid
-              searchQuery={state.searchQuery}
-              filters={state.selectedFilters}
-              onAddToPracticeScript={handleAddToPracticeScript}
-              onAddToGamePlan={handleAddToGamePlan}
-            />
+            {/* 3-View System Toggle */}
+            <div className="mb-6 bg-white rounded-lg shadow-sm border border-slate-200 p-1">
+              <div className="flex space-x-1">
+                <button
+                  onClick={() => handleViewChange("playbook")}
+                  className={`flex-1 flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    state.currentView === "playbook"
+                      ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  }`}
+                >
+                  <FileText className="h-4 w-4 mr-2" />
+                  Playbook View
+                </button>
+                <button
+                  onClick={() => handleViewChange("practice-script")}
+                  className={`flex-1 flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    state.currentView === "practice-script"
+                      ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  }`}
+                >
+                  <Clock className="h-4 w-4 mr-2" />
+                  Practice Script View
+                </button>
+                <button
+                  onClick={() => handleViewChange("game-plan")}
+                  className={`flex-1 flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    state.currentView === "game-plan"
+                      ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  }`}
+                >
+                  <Users className="h-4 w-4 mr-2" />
+                  Game Plan View
+                </button>
+              </div>
+            </div>
+
+            {/* Conditional View Rendering */}
+            {state.currentView === "playbook" && (
+              <PlayGrid
+                searchQuery={state.searchQuery}
+                filters={state.selectedFilters}
+                onAddToPracticeScript={handleAddToPracticeScript}
+                onAddToGamePlan={handleAddToGamePlan}
+              />
+            )}
+
+            {state.currentView === "practice-script" && (
+              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+                <div className="text-center py-12">
+                  <Clock className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                    Practice Script Builder
+                  </h3>
+                  <p className="text-slate-600 mb-6">
+                    Build practice sessions with plays from your playbook.
+                    Create timelines, add repetitions, and export professional
+                    practice scripts.
+                  </p>
+                  <button className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors">
+                    Create New Practice Script
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {state.currentView === "game-plan" && (
+              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+                <div className="text-center py-12">
+                  <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                    Game Plan Organization
+                  </h3>
+                  <p className="text-slate-600 mb-6">
+                    Organize plays by game situations using Brian Billick
+                    methodology. Down & Distance, Red Zone, Goal Line, and more.
+                  </p>
+                  <button className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors">
+                    Create New Game Plan
+                  </button>
+                </div>
+              </div>
+            )}
           </main>
         </div>
       </div>
