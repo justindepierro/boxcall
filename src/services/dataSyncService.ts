@@ -1,6 +1,6 @@
 /**
  * DataSyncService - Performance-optimized Supabase integration
- * 
+ *
  * Provides bulletproof data management with:
  * - Sub-100ms response times through smart caching
  * - Automatic local backups every 5 minutes
@@ -9,13 +9,13 @@
  * - Zero data loss tolerance
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import type { Play } from '../types/play';
-import type { PracticeScript } from './practiceScriptService';
-import type { GamePlan } from './gamePlanService';
-import { CSVService } from './csvService';
+import { SupabaseClient } from "@supabase/supabase-js";
+import type { Play } from "../types/play";
+import type { PracticeScript } from "./practiceScriptService";
+import type { GamePlan } from "./gamePlanService";
+import { CSVService } from "./csvService";
 
-interface CachedData<T = any> {
+interface CachedData<T = unknown> {
   data: T;
   timestamp: number;
   version: number;
@@ -50,26 +50,18 @@ export class DataSyncService {
     queryTime: 0,
     cacheHitRate: 0,
     backupFrequency: 0,
-    offlineCapability: 95
+    offlineCapability: 95,
   };
 
   /**
    * Initialize the data sync service
    */
   static async initialize() {
-    // Initialize Supabase
+    // Initialize Supabase - Use existing client
     if (!this.supabase) {
-      this.supabase = createClient(
-        process.env.REACT_APP_SUPABASE_URL!,
-        process.env.REACT_APP_SUPABASE_ANON_KEY!,
-        {
-          realtime: {
-            params: {
-              eventsPerSecond: 10 // Optimize for performance
-            }
-          }
-        }
-      );
+      // Import your existing Supabase client
+      const { supabase: existingClient } = await import("../lib/supabase");
+      this.supabase = existingClient;
     }
 
     // Initialize IndexedDB for local caching
@@ -81,7 +73,7 @@ export class DataSyncService {
     // Setup real-time subscriptions
     this.setupRealtimeSync();
 
-    console.log('✅ DataSyncService initialized with bulletproof architecture');
+    console.log("✅ DataSyncService initialized with bulletproof architecture");
   }
 
   /**
@@ -99,10 +91,11 @@ export class DataSyncService {
     if (useCache && this.cache.has(cacheKey)) {
       const cached = this.cache.get(cacheKey)!;
       const age = Date.now() - cached.timestamp;
-      
-      if (age < 5 * 60 * 1000) { // 5 minutes fresh
-        this.updateMetrics('cache_hit', performance.now() - startTime);
-        return cached.data;
+
+      if (age < 5 * 60 * 1000) {
+        // 5 minutes fresh
+        this.updateMetrics("cache_hit", performance.now() - startTime);
+        return cached.data as Play[];
       }
     }
 
@@ -111,17 +104,16 @@ export class DataSyncService {
       const indexedData = await this.getFromIndexedDB(cacheKey);
       if (indexedData && useCache) {
         this.cache.set(cacheKey, indexedData);
-        this.updateMetrics('indexeddb_hit', performance.now() - startTime);
-        return indexedData.data;
+        this.updateMetrics("indexeddb_hit", performance.now() - startTime);
+        return indexedData.data as Play[];
       }
 
       // Level 3: Query Supabase (reliable)
-      const { data, error } = await this.supabase!
-        .from('plays')
-        .select('*')
-        .eq('playbook_id', playbookId)
-        .eq('is_archived', false)
-        .order('updated_at', { ascending: false });
+      const { data, error } = await this.supabase!.from("plays")
+        .select("*")
+        .eq("playbook_id", playbookId)
+        .eq("is_archived", false)
+        .order("updated_at", { ascending: false });
 
       if (error) throw error;
 
@@ -131,25 +123,24 @@ export class DataSyncService {
       const cacheData: CachedData<Play[]> = {
         data: plays,
         timestamp: Date.now(),
-        version: 1
+        version: 1,
       };
 
       this.cache.set(cacheKey, cacheData);
       await this.saveToIndexedDB(cacheKey, cacheData);
 
-      this.updateMetrics('database_hit', performance.now() - startTime);
+      this.updateMetrics("database_hit", performance.now() - startTime);
       return plays;
-
     } catch (error) {
-      console.error('Database query failed, using cached data:', error);
-      
+      console.error("Database query failed, using cached data:", error);
+
       // Fallback to any cached data available
       const fallbackData = await this.getFromIndexedDB(cacheKey);
       if (fallbackData) {
-        return fallbackData.data;
+        return fallbackData.data as Play[];
       }
-      
-      throw new Error('No data available offline');
+
+      throw new Error("No data available offline");
     }
   }
 
@@ -160,28 +151,29 @@ export class DataSyncService {
   /**
    * Update play with optimistic UI updates
    */
-  static async updatePlay(playId: string, updates: Partial<Play>): Promise<void> {
+  static async updatePlay(
+    playId: string,
+    updates: Partial<Play>
+  ): Promise<void> {
     // 1. Update local cache immediately for instant UI response
-    this.updateLocalCache('play', playId, updates);
+    this.updateLocalCache("play", playId, updates);
 
     try {
       // 2. Sync to Supabase in background
-      const { error } = await this.supabase!
-        .from('plays')
+      const { error } = await this.supabase!.from("plays")
         .update({
           ...updates,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
-        .eq('id', playId);
+        .eq("id", playId);
 
       if (error) throw error;
 
       // 3. Trigger local backup
       this.triggerBackup();
-
     } catch (error) {
       // 4. Rollback local changes if sync fails
-      this.rollbackLocalCache('play', playId);
+      this.rollbackLocalCache("play", playId);
       throw new Error(`Failed to sync play update: ${error}`);
     }
   }
@@ -189,22 +181,23 @@ export class DataSyncService {
   /**
    * Create play with optimistic creation
    */
-  static async createPlay(play: Omit<Play, 'id' | 'created_at' | 'updated_at'>): Promise<Play> {
+  static async createPlay(
+    play: Omit<Play, "id" | "created_at" | "updated_at">
+  ): Promise<Play> {
     const tempId = `temp_${Date.now()}`;
     const optimisticPlay: Play = {
       ...play,
       id: tempId,
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
     };
 
     // 1. Add to local cache immediately
-    this.addToLocalCache('play', optimisticPlay);
+    this.addToLocalCache("play", optimisticPlay);
 
     try {
       // 2. Create in Supabase
-      const { data, error } = await this.supabase!
-        .from('plays')
+      const { data, error } = await this.supabase!.from("plays")
         .insert(play)
         .select()
         .single();
@@ -214,13 +207,12 @@ export class DataSyncService {
       const createdPlay = data as Play;
 
       // 3. Replace temp data with real data
-      this.replaceInLocalCache('play', tempId, createdPlay);
+      this.replaceInLocalCache("play", tempId, createdPlay);
 
       return createdPlay;
-
     } catch (error) {
       // 4. Remove temp data if creation fails
-      this.removeFromLocalCache('play', tempId);
+      this.removeFromLocalCache("play", tempId);
       throw new Error(`Failed to create play: ${error}`);
     }
   }
@@ -237,14 +229,17 @@ export class DataSyncService {
       clearInterval(this.backupInterval);
     }
 
-    this.backupInterval = setInterval(async () => {
-      try {
-        await this.createAutomaticBackup();
-        console.log('✅ Automatic backup completed');
-      } catch (error) {
-        console.error('❌ Automatic backup failed:', error);
-      }
-    }, 5 * 60 * 1000); // Every 5 minutes
+    this.backupInterval = setInterval(
+      async () => {
+        try {
+          await this.createAutomaticBackup();
+          console.log("✅ Automatic backup completed");
+        } catch (error) {
+          console.error("❌ Automatic backup failed:", error);
+        }
+      },
+      5 * 60 * 1000
+    ); // Every 5 minutes
   }
 
   /**
@@ -253,13 +248,13 @@ export class DataSyncService {
   private static async createAutomaticBackup(): Promise<void> {
     try {
       // Get current team data (replace with actual team ID)
-      const teamId = 'current-team-id'; // TODO: Get from auth context
+      const teamId = "current-team-id"; // TODO: Get from auth context
 
       // Gather all data
       const [plays, practiceScripts, gamePlans] = await Promise.all([
         this.getAllPlays(teamId),
         this.getAllPracticeScripts(teamId),
-        this.getAllGamePlans(teamId)
+        this.getAllGamePlans(teamId),
       ]);
 
       const backupData: BackupData = {
@@ -271,24 +266,23 @@ export class DataSyncService {
         metadata: {
           teamId,
           playCount: plays.length,
-          lastModified: new Date().toISOString()
-        }
+          lastModified: new Date().toISOString(),
+        },
       };
 
       // Save to IndexedDB
       await this.saveToIndexedDB(`backup_${Date.now()}`, {
         data: backupData,
         timestamp: Date.now(),
-        version: 1
+        version: 1,
       });
 
       // Clean up old backups (keep last 50)
       await this.cleanupOldBackups(50);
 
       this.metrics.backupFrequency++;
-
     } catch (error) {
-      console.error('Backup creation failed:', error);
+      console.error("Backup creation failed:", error);
       throw error;
     }
   }
@@ -298,50 +292,62 @@ export class DataSyncService {
    */
   static async exportComprehensiveBackup(teamId: string): Promise<void> {
     try {
-      const timestamp = new Date().toISOString().split('T')[0];
-      
+      const timestamp = new Date().toISOString().split("T")[0];
+
       // Get all data
       const [plays, practiceScripts, gamePlans] = await Promise.all([
         this.getAllPlays(teamId),
         this.getAllPracticeScripts(teamId),
-        this.getAllGamePlans(teamId)
+        this.getAllGamePlans(teamId),
       ]);
 
       // Create CSV exports
-      const playsCSV = CSVService.exportPlaysToCSV(plays, { 
+      const playsCSV = CSVService.exportPlaysToCSV(plays, {
         includePrivateNotes: true,
-        formatForCoach: true 
+        formatForCoach: true,
       });
 
       // Download as zip file
-      const JSZip = (await import('jszip')).default;
+      const JSZip = (await import("jszip")).default;
       const zip = new JSZip();
-      
-      zip.file(`plays-${timestamp}.csv`, playsCSV);
-      zip.file(`practice-scripts-${timestamp}.csv`, this.exportPracticeScriptsCSV(practiceScripts));
-      zip.file(`game-plans-${timestamp}.csv`, this.exportGamePlansCSV(gamePlans));
-      zip.file('backup-info.json', JSON.stringify({
-        timestamp,
-        version: Date.now(),
-        playCount: plays.length,
-        scriptCount: practiceScripts.length,
-        gamePlanCount: gamePlans.length
-      }, null, 2));
 
-      const zipBlob = await zip.generateAsync({ type: 'blob' });
-      
+      zip.file(`plays-${timestamp}.csv`, playsCSV);
+      zip.file(
+        `practice-scripts-${timestamp}.csv`,
+        this.exportPracticeScriptsCSV(practiceScripts)
+      );
+      zip.file(
+        `game-plans-${timestamp}.csv`,
+        this.exportGamePlansCSV(gamePlans)
+      );
+      zip.file(
+        "backup-info.json",
+        JSON.stringify(
+          {
+            timestamp,
+            version: Date.now(),
+            playCount: plays.length,
+            scriptCount: practiceScripts.length,
+            gamePlanCount: gamePlans.length,
+          },
+          null,
+          2
+        )
+      );
+
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+
       // Download the backup
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = URL.createObjectURL(zipBlob);
       link.download = `playbook-backup-${timestamp}.zip`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
 
-      console.log('✅ Comprehensive backup exported successfully');
-
+      console.log("✅ Comprehensive backup exported successfully");
     } catch (error) {
-      console.error('Export backup failed:', error);
+      console.error("Export backup failed:", error);
       throw error;
     }
   }
@@ -358,47 +364,54 @@ export class DataSyncService {
 
     // Subscribe to play changes
     this.supabase
-      .channel('plays-changes')
-      .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'plays' },
+      .channel("plays-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "plays" },
         (payload) => {
-          this.handleRealtimeUpdate('plays', payload);
+          this.handleRealtimeUpdate("plays", payload);
         }
       )
       .subscribe();
 
     // Subscribe to practice script changes
     this.supabase
-      .channel('practice-scripts-changes')
-      .on('postgres_changes',
-        { event: '*', schema: 'public', table: 'practice_scripts' },
+      .channel("practice-scripts-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "practice_scripts" },
         (payload) => {
-          this.handleRealtimeUpdate('practice_scripts', payload);
+          this.handleRealtimeUpdate("practice_scripts", payload);
         }
       )
       .subscribe();
 
-    console.log('✅ Real-time sync enabled');
+    console.log("✅ Real-time sync enabled");
   }
 
   /**
    * Handle real-time updates from other devices
    */
-  private static handleRealtimeUpdate(table: string, payload: any): void {
+  private static handleRealtimeUpdate(
+    table: string,
+    payload: { eventType: string; new: unknown; old: unknown }
+  ): void {
     const { eventType, new: newRecord, old: oldRecord } = payload;
 
     switch (eventType) {
-      case 'INSERT':
+      case "INSERT":
         this.addToLocalCache(table, newRecord);
-        this.showSyncNotification(`New ${table.slice(0, -1)} added by teammate`);
+        this.showSyncNotification(
+          `New ${table.slice(0, -1)} added by teammate`
+        );
         break;
-      
-      case 'UPDATE':
+
+      case "UPDATE":
         this.updateLocalCache(table, newRecord.id, newRecord);
         this.showSyncNotification(`${table.slice(0, -1)} updated by teammate`);
         break;
-      
-      case 'DELETE':
+
+      case "DELETE":
         this.removeFromLocalCache(table, oldRecord.id);
         this.showSyncNotification(`${table.slice(0, -1)} deleted by teammate`);
         break;
@@ -417,7 +430,7 @@ export class DataSyncService {
    */
   private static async initializeIndexedDB(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open('BoxCallCache', 1);
+      const request = indexedDB.open("BoxCallCache", 1);
 
       request.onerror = () => reject(request.error);
       request.onsuccess = () => {
@@ -427,13 +440,13 @@ export class DataSyncService {
 
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        
+
         // Create object stores
-        if (!db.objectStoreNames.contains('cache')) {
-          db.createObjectStore('cache', { keyPath: 'key' });
+        if (!db.objectStoreNames.contains("cache")) {
+          db.createObjectStore("cache", { keyPath: "key" });
         }
-        if (!db.objectStoreNames.contains('backups')) {
-          db.createObjectStore('backups', { keyPath: 'key' });
+        if (!db.objectStoreNames.contains("backups")) {
+          db.createObjectStore("backups", { keyPath: "key" });
         }
       };
     });
@@ -442,24 +455,29 @@ export class DataSyncService {
   /**
    * Save data to IndexedDB
    */
-  private static async saveToIndexedDB(key: string, data: CachedData): Promise<void> {
+  private static async saveToIndexedDB(
+    key: string,
+    data: CachedData
+  ): Promise<void> {
     if (!this.indexedDB) return;
 
-    const transaction = this.indexedDB.transaction(['cache'], 'readwrite');
-    const store = transaction.objectStore('cache');
-    
+    const transaction = this.indexedDB.transaction(["cache"], "readwrite");
+    const store = transaction.objectStore("cache");
+
     await store.put({ key, ...data });
   }
 
   /**
    * Get data from IndexedDB
    */
-  private static async getFromIndexedDB(key: string): Promise<CachedData | null> {
+  private static async getFromIndexedDB(
+    key: string
+  ): Promise<CachedData | null> {
     if (!this.indexedDB) return null;
 
-    const transaction = this.indexedDB.transaction(['cache'], 'readonly');
-    const store = transaction.objectStore('cache');
-    
+    const transaction = this.indexedDB.transaction(["cache"], "readonly");
+    const store = transaction.objectStore("cache");
+
     return new Promise((resolve) => {
       const request = store.get(key);
       request.onsuccess = () => {
@@ -481,13 +499,17 @@ export class DataSyncService {
 
   private static updateMetrics(type: string, duration: number): void {
     this.metrics.queryTime = duration;
-    
-    if (type.includes('cache')) {
+
+    if (type.includes("cache")) {
       this.metrics.cacheHitRate = Math.min(this.metrics.cacheHitRate + 0.1, 1);
     }
   }
 
-  private static updateLocalCache(type: string, id: string, updates: any): void {
+  private static updateLocalCache(
+    type: string,
+    id: string,
+    _updates: unknown
+  ): void {
     // Implementation for updating local cache
     console.log(`Updated local cache: ${type}:${id}`);
   }
@@ -497,12 +519,16 @@ export class DataSyncService {
     console.log(`Rolled back local cache: ${type}:${id}`);
   }
 
-  private static addToLocalCache(type: string, item: any): void {
+  private static addToLocalCache(type: string, _item: unknown): void {
     // Implementation for adding to local cache
     console.log(`Added to local cache: ${type}`);
   }
 
-  private static replaceInLocalCache(type: string, tempId: string, realItem: any): void {
+  private static replaceInLocalCache(
+    type: string,
+    tempId: string,
+    _realItem: unknown
+  ): void {
     // Implementation for replacing temp data with real data
     console.log(`Replaced in local cache: ${type}:${tempId}`);
   }
@@ -519,32 +545,34 @@ export class DataSyncService {
 
   private static triggerBackup(): void {
     // Implementation for triggering backup
-    console.log('Backup triggered');
+    console.log("Backup triggered");
   }
 
-  private static async getAllPlays(teamId: string): Promise<Play[]> {
+  private static async getAllPlays(_teamId: string): Promise<Play[]> {
     // Implementation for getting all plays
     return [];
   }
 
-  private static async getAllPracticeScripts(teamId: string): Promise<PracticeScript[]> {
+  private static async getAllPracticeScripts(
+    _teamId: string
+  ): Promise<PracticeScript[]> {
     // Implementation for getting all practice scripts
     return [];
   }
 
-  private static async getAllGamePlans(teamId: string): Promise<GamePlan[]> {
+  private static async getAllGamePlans(_teamId: string): Promise<GamePlan[]> {
     // Implementation for getting all game plans
     return [];
   }
 
-  private static exportPracticeScriptsCSV(scripts: PracticeScript[]): string {
+  private static exportPracticeScriptsCSV(_scripts: PracticeScript[]): string {
     // Implementation for exporting practice scripts to CSV
-    return '';
+    return "";
   }
 
-  private static exportGamePlansCSV(gamePlans: GamePlan[]): string {
+  private static exportGamePlansCSV(_gamePlans: GamePlan[]): string {
     // Implementation for exporting game plans to CSV
-    return '';
+    return "";
   }
 
   private static async cleanupOldBackups(keepCount: number): Promise<void> {
@@ -574,6 +602,6 @@ export class DataSyncService {
     }
 
     this.cache.clear();
-    console.log('✅ DataSyncService cleaned up');
+    console.log("✅ DataSyncService cleaned up");
   }
 }

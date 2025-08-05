@@ -114,7 +114,7 @@
 
 - [ ] **3-View System Enhancement (CURRENT PRIORITY)**
   - [ ] Complete Practice Script Builder interface
-  - [ ] Complete Game Plan Builder interface  
+  - [ ] Complete Game Plan Builder interface
   - [ ] Implement PDF export system for both views
   - [ ] Add visual timeline builder for practice scripts
   - [ ] Create coach card layout for game plans

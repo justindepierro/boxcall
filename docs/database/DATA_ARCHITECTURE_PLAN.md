@@ -1,6 +1,7 @@
 # 🏗️ **DATA ARCHITECTURE PLAN - 3-VIEW COACHING SYSTEM**
 
 ## 🎯 **OBJECTIVES**
+
 - **Performance**: Sub-100ms response times for all operations
 - **Security**: Multi-layer backup system with zero data loss tolerance
 - **Scalability**: Handle 10,000+ plays per team without performance degradation
@@ -44,37 +45,37 @@ CREATE TABLE playbooks (
 CREATE TABLE plays (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   playbook_id UUID REFERENCES playbooks(id) ON DELETE CASCADE,
-  
+
   -- Core play data
   formation TEXT NOT NULL,
   play_name TEXT NOT NULL,
   one_word_play TEXT,
   p_type TEXT NOT NULL CHECK (p_type IN ('Pass', 'Run', 'RPO', 'Play Action')),
-  
+
   -- Formation details
   personnel TEXT,
   f_type TEXT,
   f_dir TEXT,
-  
+
   -- Play details
   protection TEXT,
   p_dir TEXT,
   r_str TEXT,
   p_str TEXT,
-  
+
   -- Preferences
   pref_down TEXT,
   pref_dis TEXT,
   pref_hash TEXT,
   pref_cov TEXT,
   pref_front TEXT,
-  
+
   -- Tags and categorization
   ftag1 TEXT,
   ftag2 TEXT,
   p_tag1 TEXT,
   p_tag2 TEXT,
-  
+
   -- Additional data
   back_align TEXT,
   shift TEXT,
@@ -83,27 +84,27 @@ CREATE TABLE plays (
   key_player2 TEXT,
   check_into TEXT,
   notes TEXT,
-  
+
   -- Performance metrics
   confidence_base INTEGER DEFAULT 70,
   times_called INTEGER DEFAULT 0,
   times_successful INTEGER DEFAULT 0,
-  
+
   -- Metadata
   created_by TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
-  
+
   -- Performance optimization
   is_archived BOOLEAN DEFAULT false,
   last_used_at TIMESTAMPTZ,
   complexity_score INTEGER,
-  
+
   -- Full-text search optimization
   search_vector tsvector GENERATED ALWAYS AS (
-    to_tsvector('english', 
-      COALESCE(play_name, '') || ' ' || 
-      COALESCE(formation, '') || ' ' || 
+    to_tsvector('english',
+      COALESCE(play_name, '') || ' ' ||
+      COALESCE(formation, '') || ' ' ||
       COALESCE(p_type, '') || ' ' ||
       COALESCE(notes, '')
     )
@@ -137,7 +138,7 @@ CREATE TABLE practice_script_plays (
   estimated_time INTEGER DEFAULT 4, -- in minutes
   notes TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  
+
   UNIQUE(script_id, order_number)
 );
 
@@ -179,7 +180,7 @@ CREATE TABLE game_plan_plays (
   notes TEXT,
   times_used INTEGER DEFAULT 0,
   added_at TIMESTAMPTZ DEFAULT NOW(),
-  
+
   UNIQUE(situation_id, play_id)
 );
 ```
@@ -213,10 +214,10 @@ CREATE INDEX idx_situation_plays_priority ON game_plan_plays(situation_id, prior
 interface CacheStrategy {
   // Level 1: In-memory cache (instant)
   inMemory: Map<string, CachedData>;
-  
+
   // Level 2: IndexedDB cache (fast)
   indexedDB: IDBDatabase;
-  
+
   // Level 3: Supabase with optimized queries
   supabase: SupabaseClient;
 }
@@ -229,10 +230,10 @@ interface CacheStrategy {
 const updatePlay = async (playId: string, updates: Partial<Play>) => {
   // 1. Update UI immediately
   updateLocalCache(playId, updates);
-  
+
   // 2. Sync to Supabase in background
   try {
-    await supabase.from('plays').update(updates).eq('id', playId);
+    await supabase.from("plays").update(updates).eq("id", playId);
   } catch (error) {
     // 3. Rollback and show error if sync fails
     rollbackLocalCache(playId);
@@ -248,10 +249,10 @@ const updatePlay = async (playId: string, updates: Partial<Play>) => {
 const loadPlaybook = async (playbookId: string) => {
   // 1. Load basic play list first (fast)
   const playHeaders = await loadPlayHeaders(playbookId);
-  
+
   // 2. Load full play details on demand
   const fullPlay = await loadPlayDetails(playId); // when user clicks
-  
+
   // 3. Preload likely-needed plays in background
   preloadRelatedPlays(currentPlay);
 };
@@ -270,13 +271,13 @@ const createLocalBackup = async () => {
     data: {
       plays: await getAllPlays(),
       practiceScripts: await getAllPracticeScripts(),
-      gamePlans: await getAllGamePlans()
-    }
+      gamePlans: await getAllGamePlans(),
+    },
   };
-  
+
   // Store in IndexedDB (works offline)
-  await saveToIndexedDB('backups', backup);
-  
+  await saveToIndexedDB("backups", backup);
+
   // Keep last 50 backups (rolling)
   await cleanupOldBackups(50);
 };
@@ -287,21 +288,21 @@ const createLocalBackup = async () => {
 ```typescript
 // Enhanced CSV exports with metadata
 const exportComprehensiveBackup = async (teamId: string) => {
-  const timestamp = new Date().toISOString().split('T')[0];
-  
+  const timestamp = new Date().toISOString().split("T")[0];
+
   // Export all data types
   const playsCSV = await CSVService.exportPlaysToCSV(plays);
   const scriptsCSV = await CSVService.exportPracticeScriptsToCSV(scripts);
   const gamePlansCSV = await CSVService.exportGamePlansToCSV(gamePlans);
-  
+
   // Create zip file with all exports
   const zip = new JSZip();
   zip.file(`plays-${timestamp}.csv`, playsCSV);
   zip.file(`practice-scripts-${timestamp}.csv`, scriptsCSV);
   zip.file(`game-plans-${timestamp}.csv`, gamePlansCSV);
-  zip.file('backup-info.json', JSON.stringify({ timestamp, version }));
-  
-  const zipBlob = await zip.generateAsync({ type: 'blob' });
+  zip.file("backup-info.json", JSON.stringify({ timestamp, version }));
+
+  const zipBlob = await zip.generateAsync({ type: "blob" });
   downloadBlob(zipBlob, `playbook-backup-${timestamp}.zip`);
 };
 ```
@@ -310,18 +311,18 @@ const exportComprehensiveBackup = async (teamId: string) => {
 
 ```typescript
 // Capacitor-based mobile backup
-import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Filesystem, Directory } from "@capacitor/filesystem";
 
 const saveMobileBackup = async (data: BackupData) => {
   // Save to device storage
   await Filesystem.writeFile({
     path: `backups/playbook-${Date.now()}.json`,
     data: JSON.stringify(data),
-    directory: Directory.Documents
+    directory: Directory.Documents,
   });
-  
+
   // Notify user of backup location
-  showToast('Backup saved to Documents/backups/');
+  showToast("Backup saved to Documents/backups/");
 };
 ```
 
@@ -334,15 +335,16 @@ const saveMobileBackup = async (data: BackupData) => {
 const setupRealtimeSync = (teamId: string) => {
   supabase
     .channel(`team-${teamId}`)
-    .on('postgres_changes', 
-      { event: '*', schema: 'public', table: 'plays' },
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "plays" },
       (payload) => {
         // Update local cache with remote changes
         updateLocalCache(payload.new);
-        
+
         // Show notification if change from another user
         if (payload.new.updated_by !== currentUser.id) {
-          showSyncNotification('Playbook updated by teammate');
+          showSyncNotification("Playbook updated by teammate");
         }
       }
     )
@@ -353,21 +355,25 @@ const setupRealtimeSync = (teamId: string) => {
 ## 🎯 **IMPLEMENTATION PHASES**
 
 ### **Phase 1: Database Setup** (Week 1)
+
 - [ ] Create Supabase tables and indexes
 - [ ] Set up RLS (Row Level Security) policies
 - [ ] Create performance monitoring
 
 ### **Phase 2: Caching Layer** (Week 2)
+
 - [ ] Implement IndexedDB caching
 - [ ] Add optimistic updates
 - [ ] Create offline-first architecture
 
 ### **Phase 3: Backup System** (Week 3)
+
 - [ ] Automatic local backups
 - [ ] Enhanced CSV exports
 - [ ] Mobile backup integration
 
 ### **Phase 4: Real-time Sync** (Week 4)
+
 - [ ] Supabase realtime setup
 - [ ] Conflict resolution
 - [ ] Performance monitoring
@@ -378,16 +384,17 @@ const setupRealtimeSync = (teamId: string) => {
 // Performance monitoring
 const trackPerformance = () => {
   // Track key metrics
-  analytics.track('query_performance', {
-    operation: 'load_playbook',
+  analytics.track("query_performance", {
+    operation: "load_playbook",
     duration: performanceTimer.end(),
     cacheHit: wasCacheHit,
-    recordCount: results.length
+    recordCount: results.length,
   });
 };
 ```
 
 **Success Metrics:**
+
 - Query response time < 100ms (cached)
 - Query response time < 500ms (database)
 - Backup frequency: every 5 minutes

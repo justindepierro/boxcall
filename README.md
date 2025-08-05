@@ -47,6 +47,7 @@
 ## 🏆 **REVOLUTIONARY 3-VIEW COACHING SYSTEM**
 
 ### **📚 Playbook View** - Play Creation & Management
+
 - Interactive play builder with professional data structure
 - CSV import/export for team collaboration
 - Achievement system with complexity analysis
@@ -54,6 +55,7 @@
 - Professional filtering and search capabilities
 
 ### **⏱️ Practice Script View** - Session Planning & Timeline Building
+
 - Visual timeline builder with 8-box 2x4 layout for PDF export
 - Integration with playbook plays for seamless workflow
 - Repetition tracking and time estimation
@@ -61,6 +63,7 @@
 - Professional practice script PDF generation
 
 ### **🎯 Game Plan View** - Situational Organization (Brian Billick Methodology)
+
 - Down & Distance situational categories
 - Red Zone, Goal Line, Third Down, Two Minute organization
 - Coach lamination card format for sideline use
@@ -68,6 +71,7 @@
 - Professional game plan PDF export for coaching staff
 
 ### **🔄 Seamless Workflow Integration**
+
 ```
 Playbook View → Practice Script View → Game Plan View
      ↓               ↓                     ↓
@@ -79,10 +83,11 @@ Playbook View → Practice Script View → Game Plan View
 ## 🛠️ **TECHNICAL ARCHITECTURE**
 
 ### **Service Layer Architecture**
+
 ```typescript
 // PracticeScriptService - Timeline-based session builder
 - getOrCreateQuickAddsScript(teamId: string)
-- addPlayToScript(data: AddPlayToScriptData) 
+- addPlayToScript(data: AddPlayToScriptData)
 - exportPracticeScriptToCSV(script: PracticeScript)
 - generateTimelineLayout(plays: ScriptPlay[])
 
@@ -100,8 +105,9 @@ Playbook View → Practice Script View → Game Plan View
 ```
 
 ### **3-View State Management**
+
 ```typescript
-type CoachingView = 'playbook' | 'practice-script' | 'game-plan';
+type CoachingView = "playbook" | "practice-script" | "game-plan";
 
 interface PlaybookPageState {
   currentView: CoachingView;
@@ -112,10 +118,11 @@ interface PlaybookPageState {
 ```
 
 ### **Brian Billick Situational Categories**
+
 ```typescript
 // Game planning organized by football situations
 - Down & Distance: "1st & 10", "2nd & Long", "3rd & Short"
-- Red Zone: "Red Zone", "Goal Line", "+10 Territory"  
+- Red Zone: "Red Zone", "Goal Line", "+10 Territory"
 - Special Situations: "Two Minute", "Third Down", "Short Yardage"
 // Priority-based play assignment for each situation
 // Automatic practice script generation from game plan priorities
