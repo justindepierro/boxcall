@@ -43,18 +43,21 @@ export const colorTokens = {
     50: "#F0FDF4",
     500: "#22C55E",
     600: "#16A34A",
+    700: "#15803D", // Added missing 700 shade
   },
 
   warning: {
     50: "#FFFBEB",
     500: "#F59E0B",
     600: "#D97706",
+    700: "#B45309", // Added missing 700 shade
   },
 
   error: {
     50: "#FEF2F2",
     500: "#EF4444",
     600: "#DC2626",
+    700: "#B91C1C", // Added missing 700 shade
   },
 
   // Neutral System
@@ -69,6 +72,13 @@ export const colorTokens = {
     700: "#374151",
     800: "#1F2937",
     900: "#111827",
+  },
+
+  // Text colors
+  text: {
+    primary: "#111827", // gray-900
+    secondary: "#6B7280", // gray-500
+    muted: "#9CA3AF", // gray-400
   },
 } as const;
 
@@ -167,6 +177,119 @@ export const spacingTokens = {
 } as const;
 
 // ============================================================================
+// ELEVATION & SHADOW SYSTEM - "Professional Depth"
+// ============================================================================
+
+export const elevationTokens = {
+  // Minimal shadows for subtle depth
+  none: "none",
+
+  // Card elevations - increasing depth
+  card: {
+    resting: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+    hover: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+    active: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+  },
+
+  // Button elevations
+  button: {
+    resting: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+    hover: "0 2px 4px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+    active: "inset 0 1px 2px 0 rgb(0 0 0 / 0.1)",
+  },
+
+  // Modal and overlay elevations
+  modal: "0 25px 50px -12px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(0 0 0 / 0.05)",
+  dropdown:
+    "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+
+  // Focus rings for accessibility
+  focus: "0 0 0 2px rgb(4 120 87 / 0.2)", // Jade focus ring
+} as const;
+
+// ============================================================================
+// ENHANCED CONTRAST SYSTEM - "Industry-Leading Accessibility"
+// ============================================================================
+
+export const contrastTokens = {
+  // High contrast text combinations for maximum readability
+  text: {
+    // Primary text (AAA compliance)
+    onLight: colorTokens.gray[900], // #111827 on light backgrounds
+    onDark: "#FFFFFF", // White on dark backgrounds
+    onBrand: "#FFFFFF", // White on jade/navy
+
+    // Secondary text (AA+ compliance)
+    secondaryOnLight: colorTokens.gray[700], // #374151
+    secondaryOnDark: colorTokens.gray[300], // #D1D5DB
+
+    // Muted text (AA compliance)
+    mutedOnLight: colorTokens.gray[600], // #4B5563
+    mutedOnDark: colorTokens.gray[400], // #9CA3AF
+  },
+
+  // Interactive element contrast
+  interactive: {
+    // Brand interactions with guaranteed contrast
+    brandOnLight: colorTokens.jade[600], // #047857 - Strong contrast
+    brandOnDark: colorTokens.jade[400], // #34D399 - Enhanced for dark mode
+
+    // Hover states with enhanced visibility
+    hoverOnLight: colorTokens.jade[700], // #065F46 - Darker for better contrast
+    hoverOnDark: colorTokens.jade[300], // #6EE7B7 - Lighter for dark mode
+  },
+
+  // Status colors with enhanced contrast
+  status: {
+    success: colorTokens.success[700], // #15803D - Darker green
+    warning: colorTokens.warning[700], // #B45309 - Darker amber
+    error: colorTokens.error[700], // #B91C1C - Darker red
+    info: colorTokens.jade[700], // #065F46 - Brand-aligned info
+  },
+
+  // Psychological color system for badges and UI states
+  psychology: {
+    // 🔴 RED = URGENCY - Immediate attention required
+    urgency: {
+      background: "#FEF2F2", // red-50
+      text: "#991B1B", // red-800
+      border: "#FECACA", // red-200
+      hover: "#FEE2E2", // red-100
+    },
+
+    // 🟢 GREEN = ACHIEVEMENT - Success and accomplishment
+    achievement: {
+      background: "#F0FDF4", // green-50
+      text: "#166534", // green-800
+      border: "#BBF7D0", // green-200
+      hover: "#DCFCE7", // green-100
+    },
+
+    // 🔵 BLUE = INFORMATION - Neutral, informative content
+    information: {
+      background: "#EFF6FF", // blue-50
+      text: "#1E40AF", // blue-800
+      border: "#BFDBFE", // blue-200
+      hover: "#DBEAFE", // blue-100
+    },
+
+    // 🟡 YELLOW = ATTENTION - Important but not urgent
+    attention: {
+      background: "#FFFBEB", // amber-50
+      text: "#92400E", // amber-800
+      border: "#FDE68A", // amber-200
+      hover: "#FEF3C7", // amber-100
+    },
+
+    // 🟣 PURPLE = PREMIUM - Special, elite, exclusive
+    premium: {
+      background: "#F5F3FF", // violet-50
+      text: "#5B21B6", // violet-800
+      border: "#C4B5FD", // violet-200
+      hover: "#EDE9FE", // violet-100
+    },
+  },
+} as const; // ============================================================================
 // COMPONENT TOKENS - Specific Use Cases
 // ============================================================================
 
@@ -180,6 +303,7 @@ export const componentTokens = {
     success: semanticTokens.success, // #22C55E
     warning: semanticTokens.warning, // #F59E0B
     error: semanticTokens.error, // #EF4444
+    info: colorTokens.jade[500], // #00A86B - Using brand jade for info
   },
 
   // Button variants

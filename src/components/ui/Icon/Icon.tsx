@@ -926,7 +926,7 @@ const colorMap = {
   success: getComponentColor("icon", "success"),
   warning: getComponentColor("icon", "warning"),
   error: getComponentColor("icon", "error"),
-  info: "#0369A1", // TODO: Add to design tokens
+  info: getComponentColor("icon", "info"),
 };
 export const Icon: React.FC<IconProps> = ({
   name,

@@ -5,29 +5,31 @@
  * Uses React-PDF StyleSheet API for consistent design.
  */
 import { StyleSheet } from "@react-pdf/renderer";
+import { semantic, colorTokens } from "../../design-system/tokens";
+
 // Color palette - matches the app's design system
 export const PDFColors = {
-  // Primary brand colors
-  primary: "#2563eb",
-  secondary: "#64748b",
-  accent: "#059669",
-  // Semantic colors
-  success: "#16a34a",
-  warning: "#d97706",
-  error: "#dc2626",
-  info: "#0284c7",
+  // Primary brand colors - using design system tokens
+  primary: semantic.primary, // "#00A86B" - brand jade
+  secondary: colorTokens.navy[600], // "#475569" - consistent navy
+  accent: semantic.primary, // Unified with brand color
+  // Semantic colors - using consistent system colors
+  success: colorTokens.success[600], // "#16a34a"
+  warning: colorTokens.warning[600], // "#d97706"
+  error: colorTokens.error[600], // "#dc2626"
+  info: semantic.primary, // Use brand color for info
   // Neutral colors
   white: "#ffffff",
   black: "#000000",
   gray: {
-    50: "#f8fafc",
-    100: "#f1f5f9",
-    200: "#e2e8f0",
-    300: "#cbd5e1",
-    400: "#94a3b8",
-    500: "#64748b",
-    600: "#475569",
-    700: "#334155",
+    50: colorTokens.navy[50], // "#f8fafc"
+    100: colorTokens.navy[100], // "#f1f5f9"
+    200: colorTokens.navy[200], // "#e2e8f0"
+    300: colorTokens.navy[300], // "#cbd5e1"
+    400: colorTokens.navy[400], // "#94a3b8"
+    500: colorTokens.navy[500], // "#64748b"
+    600: colorTokens.navy[600], // "#475569"
+    700: colorTokens.navy[700], // "#334155"
     800: "#1e293b",
     900: "#0f172a",
   },

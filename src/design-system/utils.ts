@@ -3,7 +3,13 @@
  * Helper functions for working with design tokens
  */
 
-import { colorTokens, semantic, component } from "./tokens";
+import {
+  colorTokens,
+  semanticTokens,
+  componentTokens,
+  elevationTokens,
+  contrastTokens,
+} from "./tokens";
 
 /**
  * Get a color value by token path
@@ -11,7 +17,11 @@ import { colorTokens, semantic, component } from "./tokens";
  */
 export function getTokenColor(path: string): string {
   const parts = path.split(".");
-  let current: unknown = { ...colorTokens, semantic, component };
+  let current: unknown = {
+    ...colorTokens,
+    ...semanticTokens,
+    ...componentTokens,
+  };
 
   for (const part of parts) {
     if (
@@ -23,11 +33,11 @@ export function getTokenColor(path: string): string {
       current = (current as Record<string, unknown>)[part];
     } else {
       console.warn(`Design token path "${path}" not found`);
-      return semantic.primary; // Fallback to primary color
+      return semanticTokens.primary; // Fallback to primary color
     }
   }
 
-  return typeof current === "string" ? current : semantic.primary;
+  return typeof current === "string" ? current : semanticTokens.primary;
 }
 
 /**
@@ -71,6 +81,30 @@ export const tokenClasses = {
   success: "bg-green-50 text-green-800 border border-green-200",
   warning: "bg-yellow-50 text-yellow-800 border border-yellow-200",
   error: "bg-red-50 text-red-800 border border-red-200",
+
+  // Icon color standardization - Professional consistency
+  iconBrand: `text-[${componentTokens.icon.jade}]`,
+  iconPrimary: `text-[${colorTokens.text.primary}]`,
+  iconSecondary: `text-[${colorTokens.text.secondary}]`,
+  iconSuccess: `text-[${contrastTokens.status.success}]`,
+  iconWarning: `text-[${contrastTokens.status.warning}]`,
+  iconError: `text-[${contrastTokens.status.error}]`,
+  iconInfo: `text-[${contrastTokens.status.info}]`,
+  iconMuted: `text-[${colorTokens.text.muted}]`,
+  iconInverted: `text-[${contrastTokens.text.onDark}]`,
+
+  // Enhanced elevation classes
+  elevationCard: `shadow-[${elevationTokens.card.resting}]`,
+  elevationCardHover: `shadow-[${elevationTokens.card.hover}]`,
+  elevationButton: `shadow-[${elevationTokens.button.resting}]`,
+  elevationButtonHover: `shadow-[${elevationTokens.button.hover}]`,
+  elevationModal: `shadow-[${elevationTokens.modal}]`,
+  elevationDropdown: `shadow-[${elevationTokens.dropdown}]`,
+
+  // Enhanced contrast classes
+  textHighContrast: `text-[${contrastTokens.text.onLight}]`,
+  textBrandContrast: `text-[${contrastTokens.interactive.brandOnLight}]`,
+  textHoverContrast: `hover:text-[${contrastTokens.interactive.hoverOnLight}]`,
 } as const;
 
 /**
@@ -106,7 +140,7 @@ export function getAllTokenPaths(): string[] {
     }
   }
 
-  traverse({ ...colorTokens, semantic, component });
+  traverse({ ...colorTokens, ...semanticTokens, ...componentTokens });
   return paths.sort();
 }
 

@@ -137,13 +137,7 @@ export const Navigation: React.FC = () => {
                 className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
                 title="BoxCall (⌘+3)"
               >
-                <div className="w-6 h-5">
-                  <img
-                    src="/assets/boxcall-logo.svg"
-                    alt="BoxCall"
-                    className="w-6 h-5"
-                  />
-                </div>
+                <Icon name="zap" size="md" color="current" />
               </button>
               <button
                 onClick={() => handleNavigation("/playbook")}

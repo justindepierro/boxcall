@@ -11,6 +11,7 @@ import {
   UnifiedApiGateway,
   type PlatformContext,
 } from "../cross-platform/UnifiedApiGateway";
+import { semantic, colorTokens } from "../../design-system/tokens";
 
 // ============================================================================
 // MOBILE CALENDAR TYPES
@@ -547,12 +548,14 @@ export class MobileCalendarService {
 
   private static getEventColor(eventType: CalendarEvent["type"]): string {
     const colors: Record<CalendarEvent["type"], string> = {
-      practice: "#FF9500",
-      game: "#FF2D92",
-      tournament: "#FF2D92",
-      meeting: "#007AFF",
-      film: "#007AFF",
-      other: "#8E8E93",
+      // BoxCall-specific event colors using design system tokens
+      practice: colorTokens.warning[500], // "#f59e0b" - practice orange
+      game: semantic.primary, // "#00A86B" - brand jade for important events
+      tournament: semantic.primary, // "#00A86B" - same as games (important)
+      // iOS system colors for meetings/info (platform consistency)
+      meeting: "#007AFF", // iOS system blue
+      film: "#007AFF", // iOS system blue
+      other: "#8E8E93", // iOS system gray
     };
     return colors[eventType];
   }
