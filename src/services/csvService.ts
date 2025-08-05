@@ -6,6 +6,7 @@
 
 import type { Play } from "../types/play";
 import type { PracticeScript } from "./practiceScriptService";
+import { UserPreferencesService } from "./userPreferencesService";
 
 export interface CSVPlayData {
   formation: string;
@@ -29,7 +30,10 @@ export interface CSVImportResult {
   errors: string[];
   warnings: string[];
   plays: Play[];
-  parsedPlays: CSVPlayPreview[]; // Add parsed plays for preview
+  parsedPlays: CSVPlayPreview[];
+  needsConfirmation?: boolean;
+  confirmationMessage?: string;
+  qualityWarning?: string;
 }
 
 export interface CSVPlayPreview {
@@ -58,6 +62,9 @@ export interface CSVParseResult {
     warnings: number;
     detectedColumns: string[];
     suggestedMappings: Record<string, string>;
+    needsConfirmation?: boolean;
+    confirmationMessage?: string;
+    qualityWarning?: string;
   };
 }
 
@@ -73,7 +80,15 @@ export class CSVService {
    */
   private static getColumnMappings(): Record<string, string[]> {
     return {
-      formation: ["formation", "form", "format", "alignment"],
+      // Core required fields
+      formation: [
+        "formation",
+        "form",
+        "format",
+        "alignment",
+        "formation_name",
+        "formation name",
+      ],
       play_name: [
         "play_name",
         "play name",
@@ -82,6 +97,38 @@ export class CSVService {
         "play",
         "title",
       ],
+      p_type: [
+        "p_type",
+        "p_Type",
+        "play_type",
+        "type",
+        "category",
+        "kind",
+        "play type",
+        "playtype",
+      ],
+
+      // Personnel and formation details
+      personnel: [
+        "personnel",
+        "package",
+        "grouping",
+        "formation_personnel",
+        "personnel group",
+        "personnel_group",
+      ],
+      f_type: ["f_type", "formation_type", "form_type", "formtype", "formType"],
+      f_dir: ["f_dir", "formation_direction", "form_dir", "direction"],
+
+      // Tags and alignment
+      ftag1: ["ftag1", "formation_tag1", "form_tag1"],
+      ftag2: ["ftag2", "formation_tag2", "form_tag2"],
+      ftag3: ["ftag3", "fTag3", "formation_tag3", "form_tag3"],
+      back_align: ["back_align", "backfield_alignment", "back_alignment"],
+      shift: ["shift", "formation_shift"],
+      motion: ["motion", "pre_snap_motion"],
+
+      // Play details
       one_word_play: [
         "one_word_play",
         "audible",
@@ -89,17 +136,121 @@ export class CSVService {
         "quick_call",
         "signal",
         "code",
+        "one word",
       ],
-      p_type: ["p_type", "play_type", "type", "category", "kind"],
-      personnel: ["personnel", "package", "grouping", "formation_personnel"],
-      f_type: ["f_type", "formation_type", "form_type"],
+      p_tag1: ["p_tag1", "play_tag1"],
+      p_tag2: ["p_tag2", "play_tag2"],
+      play_dir: ["play_dir", "p_dir", "play_direction", "direction", "dir"],
+
+      // Protection and blocking
       protection: ["protection", "prot", "pass_pro", "pass_protection"],
-      p_dir: ["p_dir", "play_direction", "direction", "dir"],
-      pref_down: ["pref_down", "preferred_down", "down", "situation"],
-      pref_dis: ["pref_dis", "preferred_distance", "distance", "yardage"],
+      p_str: [
+        "p_str",
+        "protection_strength",
+        "blocking",
+        "passStr",
+        "pass_str",
+      ],
+      r_str: [
+        "r_str",
+        "route_strength",
+        "route",
+        "receiver_strength",
+        "runStr",
+        "run_str",
+      ],
+
+      // Key players
+      key_player1: [
+        "key_player1",
+        "keyPlayer1",
+        "key_player_1",
+        "primary_player",
+      ],
+      key_player2: [
+        "key_player2",
+        "keyPlayer2",
+        "key_player_2",
+        "secondary_player",
+      ],
+
+      // Alignment details
+      h_align: ["h_align", "hAlign", "h_alignment", "hot_receiver_align"],
+      z_align: ["z_align", "zAlign", "z_alignment", "z_receiver_align"],
+
+      // Route and concept details
+      back_route: ["back_route", "backRoute", "running_back_route"],
+      check_into: ["check_into", "check", "audible_to", "hot_route"],
+
+      // Preferences
+      pref_down: [
+        "pref_down",
+        "preferred_down",
+        "down",
+        "situation",
+        "preferred down",
+        "prefDown",
+      ],
+      pref_dis: [
+        "pref_dis",
+        "preferred_distance",
+        "distance",
+        "yardage",
+        "preferred distance",
+        "prefDis",
+      ],
+      pref_hash: [
+        "pref_hash",
+        "preferred_hash",
+        "hash",
+        "field_position",
+        "prefHash",
+      ],
+      pref_cov: [
+        "pref_cov",
+        "preferred_coverage",
+        "coverage",
+        "prefDCov",
+        "prefCov",
+      ],
+      pref_front: [
+        "pref_front",
+        "preferred_front",
+        "front",
+        "prefDFront",
+        "prefFront",
+      ],
+      pref_blitz: [
+        "pref_blitz",
+        "preferred_blitz",
+        "blitz",
+        "PrefDBlitz",
+        "prefBlitz",
+      ],
+      pref_situation: [
+        "pref_situation",
+        "preferred_situation",
+        "prefSituation",
+      ],
+      pref_field_pos: [
+        "pref_field_pos",
+        "preferred_field_position",
+        "prefFieldPos",
+      ],
+
+      // Success metrics
+      confidence_base: ["confidence_base", "confidence", "base_confidence"],
+      success_rate: ["success_rate", "success", "completion_rate"],
+      times_called: ["times_called", "called", "usage_count"],
+      times_successful: ["times_successful", "successful", "success_count"],
+
+      // Media and metadata
+      diagram_url: ["diagram_url", "diagram", "play_diagram"],
+      video_url: ["video_url", "video", "play_video"],
+      tags: ["tags", "labels", "categories"],
+
+      // General notes
       notes: ["notes", "description", "details", "comments"],
-      r_str: ["r_str", "route_strength", "route", "receiver_strength"],
-      p_str: ["p_str", "protection_strength", "blocking"],
     };
   }
 
@@ -113,39 +264,62 @@ export class CSVService {
     const detected: Record<string, string> = {};
 
     headers.forEach((header) => {
+      const originalHeader = header.trim();
       const cleanHeader = header
         .toLowerCase()
         .trim()
         .replace(/[_\s-]+/g, "_");
 
-      // Look for exact matches first
+      let bestMatch = null;
+      let bestScore = 0;
+
+      // First, check for exact case-sensitive matches (for database field names)
       for (const [fieldName, variants] of Object.entries(mappings)) {
-        if (
-          variants.some(
-            (variant) =>
-              cleanHeader === variant.replace(/[_\s-]+/g, "_") ||
-              cleanHeader.includes(variant.replace(/[_\s-]+/g, "_"))
-          )
-        ) {
+        if (variants.includes(originalHeader)) {
           detected[header] = fieldName;
-          break;
+          return; // Perfect match, no need to continue
         }
       }
 
-      // If no exact match, try partial matches
-      if (!detected[header]) {
-        for (const [fieldName, variants] of Object.entries(mappings)) {
-          if (
-            variants.some(
-              (variant) =>
-                cleanHeader.includes(variant.split("_")[0]) ||
-                variant.split("_")[0].includes(cleanHeader)
-            )
+      // Then find the best match based on specificity
+      for (const [fieldName, variants] of Object.entries(mappings)) {
+        for (const variant of variants) {
+          const cleanVariant = variant.toLowerCase().replace(/[_\s-]+/g, "_");
+          let score = 0;
+
+          // Exact case-insensitive match gets highest score
+          if (cleanHeader === cleanVariant) {
+            score = 100;
+          }
+          // Exact substring match
+          else if (cleanHeader.includes(cleanVariant)) {
+            score = 80 - (cleanHeader.length - cleanVariant.length);
+          }
+          // Variant is substring of header
+          else if (cleanVariant.includes(cleanHeader)) {
+            score = 60 - (cleanVariant.length - cleanHeader.length);
+          }
+          // Partial word match
+          else if (
+            cleanHeader
+              .split("_")
+              .some(
+                (part) =>
+                  cleanVariant.split("_").includes(part) && part.length > 2
+              )
           ) {
-            detected[header] = fieldName;
-            break;
+            score = 40;
+          }
+
+          if (score > bestScore) {
+            bestScore = score;
+            bestMatch = fieldName;
           }
         }
+      }
+
+      if (bestMatch && bestScore >= 40) {
+        detected[header] = bestMatch;
       }
     });
 
@@ -180,7 +354,8 @@ export class CSVService {
     const columnMapping = this.detectColumnMapping(rawHeaders);
 
     const previews: CSVPlayPreview[] = [];
-    const requiredFields = ["formation", "play_name", "p_type"];
+    let playsNeedingConfirmation = 0;
+    let lowQualityPlays = 0;
 
     // Process each data row
     for (let i = 1; i < lines.length; i++) {
@@ -196,19 +371,46 @@ export class CSVService {
         rowData[fieldName] = value;
       });
 
-      // Validate required fields
-      requiredFields.forEach((field) => {
-        if (!rowData[field]) {
-          errors.push(`Missing required field: ${field}`);
-        }
-      });
+      // Check for required fields (only play_name causes error)
+      if (!rowData.play_name || rowData.play_name.trim() === "") {
+        errors.push("Missing required field: play_name");
+      }
+
+      // Check for confirmation-requiring scenarios
+      const missingFormation =
+        !rowData.formation || rowData.formation.trim() === "";
+      const missingPlayType = !rowData.p_type || rowData.p_type.trim() === "";
+
+      if (missingFormation || missingPlayType) {
+        playsNeedingConfirmation++;
+        const missingFields = [];
+        if (missingFormation) missingFields.push("formation");
+        if (missingPlayType) missingFields.push("play type");
+        warnings.push(`Missing ${missingFields.join(" and ")}`);
+      }
+
+      // Count fields filled for quality assessment
+      const importantFields = [
+        "formation",
+        "play_name",
+        "p_type",
+        "personnel",
+        "protection",
+      ];
+      const filledFields = importantFields.filter(
+        (field) => rowData[field] && rowData[field].trim() !== ""
+      );
+
+      if (filledFields.length < 5) {
+        lowQualityPlays++;
+      }
 
       // Smart validation and suggestions
       this.validateAndWarn(rowData, warnings);
 
       previews.push({
         rowNumber: i + 1,
-        isValid: errors.length === 0,
+        isValid: errors.length === 0, // Only fails if missing play_name
         errors,
         warnings,
         data: {
@@ -230,6 +432,31 @@ export class CSVService {
       0
     );
 
+    // Generate confirmation message if needed
+    let needsConfirmation = false;
+    let confirmationMessage = "";
+
+    if (
+      playsNeedingConfirmation > 0 &&
+      !UserPreferencesService.shouldSkipCSVMissingFieldsConfirmation()
+    ) {
+      needsConfirmation = true;
+      confirmationMessage = `I see ${playsNeedingConfirmation} play${playsNeedingConfirmation > 1 ? "s are" : " is"} missing formation and/or play type. Are you sure you wish to continue?`;
+    }
+
+    // Generate quality warning if needed
+    let qualityWarning = "";
+    const lowQualityThreshold = Math.ceil(previews.length * 0.5); // 50% of plays
+
+    if (
+      lowQualityPlays >= lowQualityThreshold &&
+      previews.length >= 3 &&
+      !UserPreferencesService.shouldSkipCSVQualityWarnings()
+    ) {
+      qualityWarning =
+        "To get the best experience of BoxCall, it is recommended to fill out as much information about your plays as possible. For examples please visit the templates page.";
+    }
+
     return {
       previews,
       summary: {
@@ -239,82 +466,180 @@ export class CSVService {
         warnings: totalWarnings,
         detectedColumns: rawHeaders,
         suggestedMappings: columnMapping,
+        needsConfirmation,
+        confirmationMessage,
+        qualityWarning,
       },
     };
   }
 
   /**
    * Enhanced CSV line parsing that handles quotes and commas properly
+   * Supports: "value with, comma", unquoted values, mixed quotes
    */
   private static parseCSVLine(line: string): string[] {
     const result: string[] = [];
     let current = "";
     let inQuotes = false;
+    let i = 0;
 
-    for (let i = 0; i < line.length; i++) {
+    while (i < line.length) {
       const char = line[i];
+      const nextChar = line[i + 1];
 
       if (char === '"') {
-        inQuotes = !inQuotes;
+        if (inQuotes && nextChar === '"') {
+          // Handle escaped quotes ""
+          current += '"';
+          i += 2;
+          continue;
+        } else {
+          // Toggle quote state
+          inQuotes = !inQuotes;
+        }
       } else if (char === "," && !inQuotes) {
-        result.push(current);
+        // Field separator outside quotes
+        result.push(current.trim());
         current = "";
       } else {
         current += char;
       }
+      i++;
     }
 
-    result.push(current);
-    return result.map((field) => field.replace(/^"(.*)"$/, "$1").trim());
+    // Add the last field
+    result.push(current.trim());
+
+    // Clean up quotes from field values
+    return result.map((field) => {
+      // Remove surrounding quotes and trim
+      let cleaned = field.trim();
+      if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
+        cleaned = cleaned.slice(1, -1);
+      }
+      return cleaned.trim();
+    });
   }
 
   /**
-   * Smart validation with helpful warnings
+   * Smart validation with helpful warnings and auto-corrections
    */
   private static validateAndWarn(
     rowData: Record<string, string>,
     warnings: string[]
   ): void {
-    // Play type validation
+    // Play type validation and auto-correction
     const validPlayTypes = [
-      "Pass",
-      "Run",
-      "RPO",
-      "Play Action",
-      "Special",
-      "Punt",
-      "FG",
-      "PAT",
+      { canonical: "Pass", variants: ["pass", "passing", "throw"] },
+      { canonical: "Run", variants: ["run", "running", "rush", "rushing"] },
+      {
+        canonical: "RPO",
+        variants: ["rpo", "run-pass-option", "run pass option"],
+      },
+      {
+        canonical: "Play Action",
+        variants: ["play action", "playaction", "pa", "play-action"],
+      },
+      { canonical: "Special", variants: ["special", "special teams", "st"] },
+      { canonical: "Punt", variants: ["punt", "punting"] },
+      { canonical: "FG", variants: ["fg", "field goal", "fieldgoal", "kick"] },
+      { canonical: "PAT", variants: ["pat", "extra point", "xp"] },
     ];
-    if (
-      rowData.p_type &&
-      !validPlayTypes.some(
-        (type) => type.toLowerCase() === rowData.p_type.toLowerCase()
-      )
-    ) {
-      warnings.push(
-        `Play type "${rowData.p_type}" may not be recognized. Suggested: ${validPlayTypes.join(", ")}`
+
+    if (rowData.p_type) {
+      const lowerType = rowData.p_type.toLowerCase().trim();
+      const matchedType = validPlayTypes.find(
+        (type) =>
+          type.canonical.toLowerCase() === lowerType ||
+          type.variants.some((variant) => variant === lowerType)
       );
+
+      if (!matchedType) {
+        warnings.push(
+          `Play type "${rowData.p_type}" may not be recognized. Suggested: Pass, Run, RPO, Play Action`
+        );
+      } else if (matchedType.canonical.toLowerCase() !== lowerType) {
+        // Auto-correct the play type
+        rowData.p_type = matchedType.canonical;
+        warnings.push(`Auto-corrected play type to "${matchedType.canonical}"`);
+      }
     }
 
     // Formation validation
-    if (rowData.formation && rowData.formation.length < 2) {
-      warnings.push(
-        "Formation name seems very short. Consider using more descriptive names."
-      );
+    if (rowData.formation) {
+      if (rowData.formation.length < 2) {
+        warnings.push(
+          "Formation name seems very short. Consider using more descriptive names."
+        );
+      }
+      // Common formation corrections
+      const formationCorrections = {
+        gun: "Shotgun",
+        "i-form": "I-Formation",
+        i: "I-Formation",
+        pistol: "Pistol",
+        "wing-t": "Wing-T",
+        spread: "Spread",
+      };
+
+      const lowerFormation = rowData.formation.toLowerCase();
+      if (formationCorrections[lowerFormation]) {
+        rowData.formation = formationCorrections[lowerFormation];
+        warnings.push(
+          `Auto-corrected formation to "${formationCorrections[lowerFormation]}"`
+        );
+      }
     }
 
-    // Personnel validation
-    if (rowData.personnel && !/^\d+/.test(rowData.personnel)) {
-      warnings.push(
-        "Personnel should typically start with numbers (e.g., '11', '12', '21')"
-      );
+    // Personnel validation and correction
+    if (rowData.personnel) {
+      const personnel = rowData.personnel.trim();
+      if (!/^\d/.test(personnel)) {
+        warnings.push(
+          "Personnel should typically start with numbers (e.g., '11', '12', '21')"
+        );
+      } else if (personnel.length === 1) {
+        // Auto-correct single digit personnel
+        const corrected = personnel + "1";
+        rowData.personnel = corrected;
+        warnings.push(
+          `Auto-corrected personnel "${personnel}" to "${corrected}"`
+        );
+      }
     }
 
     // Play name validation
-    if (rowData.play_name && rowData.play_name.length < 3) {
+    if (rowData.play_name) {
+      if (rowData.play_name.length < 2) {
+        warnings.push(
+          "Play name seems very short. Consider using more descriptive names."
+        );
+      }
+      // Auto-capitalize common play names
+      const commonPlays = {
+        dive: "Dive",
+        sweep: "Sweep",
+        slant: "Slant",
+        out: "Out",
+        comeback: "Comeback",
+        post: "Post",
+        go: "Go Route",
+        bubble: "Bubble Screen",
+      };
+
+      const lowerPlay = rowData.play_name.toLowerCase();
+      if (commonPlays[lowerPlay]) {
+        rowData.play_name = commonPlays[lowerPlay];
+        warnings.push(
+          `Auto-corrected play name to "${commonPlays[lowerPlay]}"`
+        );
+      }
+    }
+
+    // One word play validation
+    if (rowData.one_word_play && rowData.one_word_play.length > 8) {
       warnings.push(
-        "Play name seems very short. Consider using more descriptive names."
+        "Audible/one-word play should be short and easy to call (8 characters or less)"
       );
     }
   }
@@ -324,19 +649,48 @@ export class CSVService {
    */
   static convertPreviewsToPlays(
     previews: CSVPlayPreview[],
-    playbookId: string
+    playbookId: string,
+    forceImport: boolean = false
   ): CSVImportResult {
     const plays: Play[] = [];
     const errors: string[] = [];
     const warnings: string[] = [];
 
     const validPreviews = previews.filter((p) => p.isValid);
+    let playsNeedingConfirmation = 0;
+    let lowQualityPlays = 0;
 
     validPreviews.forEach((preview, index) => {
       try {
         const playData = preview.data;
 
-        // Normalize play type
+        // Check for confirmation-requiring scenarios
+        const missingFormation =
+          !playData.formation || playData.formation.trim() === "";
+        const missingPlayType =
+          !playData.p_type || playData.p_type.trim() === "";
+
+        if (missingFormation || missingPlayType) {
+          playsNeedingConfirmation++;
+        }
+
+        // Count quality for warning
+        const importantFields = [
+          "formation",
+          "play_name",
+          "p_type",
+          "personnel",
+          "protection",
+        ];
+        const filledFields = importantFields.filter(
+          (field) => playData[field] && playData[field].trim() !== ""
+        );
+
+        if (filledFields.length < 5) {
+          lowQualityPlays++;
+        }
+
+        // Normalize play type with defaults
         let normalizedPlayType = "Run"; // default
         if (playData.p_type) {
           const lowerType = playData.p_type.toLowerCase();
@@ -350,7 +704,7 @@ export class CSVService {
         const play: Play = {
           id: `csv-import-${Date.now()}-${index}`,
           playbook_id: playbookId,
-          formation: playData.formation,
+          formation: playData.formation || "Unknown Formation",
           play_name: playData.play_name,
           one_word_play: playData.one_word_play || "",
           p_type: normalizedPlayType as "Pass" | "Run" | "RPO" | "Play Action",
@@ -407,6 +761,32 @@ export class CSVService {
       errors.push(`Row ${preview.rowNumber}: ${preview.errors.join(", ")}`);
     });
 
+    // Generate confirmation message if needed and not forcing import
+    let needsConfirmation = false;
+    let confirmationMessage = "";
+
+    if (
+      playsNeedingConfirmation > 0 &&
+      !forceImport &&
+      !UserPreferencesService.shouldSkipCSVMissingFieldsConfirmation()
+    ) {
+      needsConfirmation = true;
+      confirmationMessage = `I see ${playsNeedingConfirmation} play${playsNeedingConfirmation > 1 ? "s are" : " is"} missing formation and/or play type. Are you sure you wish to continue?`;
+    }
+
+    // Generate quality warning if needed
+    let qualityWarning = "";
+    const lowQualityThreshold = Math.ceil(validPreviews.length * 0.5); // 50% of plays
+
+    if (
+      lowQualityPlays >= lowQualityThreshold &&
+      validPreviews.length >= 3 &&
+      !UserPreferencesService.shouldSkipCSVQualityWarnings()
+    ) {
+      qualityWarning =
+        "To get the best experience of BoxCall, it is recommended to fill out as much information about your plays as possible. For examples please visit the templates page.";
+    }
+
     return {
       success: plays.length > 0,
       totalRows: previews.length,
@@ -415,6 +795,9 @@ export class CSVService {
       warnings,
       plays,
       parsedPlays: previews,
+      needsConfirmation,
+      confirmationMessage,
+      qualityWarning,
     };
   }
 

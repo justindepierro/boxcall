@@ -329,7 +329,11 @@ export class DataSyncService {
 
     // Convert previews to actual plays
     const validPreviews = parseResult.previews.filter((p) => p.isValid);
-    const plays = CSVService.convertPreviewsToPlays(validPreviews);
+    const convertResult = CSVService.convertPreviewsToPlays(
+      validPreviews,
+      playbookId
+    );
+    const plays = convertResult.plays;
 
     console.log(`📋 Parsed ${plays.length} valid plays from CSV`);
 
