@@ -4,6 +4,7 @@ import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
 import { supabase } from "../../lib/supabase";
 import { Icon } from "./Icon/Icon";
+import { NotificationBadge, Badge } from "./Badge";
 
 /**
  * Navigation Component
@@ -18,6 +19,19 @@ export const Navigation: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Mock data for reward loop demonstration
+  const [notifications] = useState({
+    dashboard: 2, // New team updates
+    bulletin: 5, // Unread announcements
+    playbook: 1, // New play suggestions
+    calendar: 3, // Upcoming events
+  });
+
+  const [achievements] = useState({
+    hasNewAchievement: true, // Show premium badge for recent milestone
+    playbookProgress: 67, // Progress toward season goal
+  });
 
   // Auto-hide navigation on scroll and mouse behavior
   useEffect(() => {
@@ -116,43 +130,98 @@ export const Navigation: React.FC = () => {
 
           {/* Desktop Quick Actions - Centered */}
           <div className="hidden md:flex items-center space-x-4 flex-1 justify-center">
-            {/* Quick Navigation Shortcuts */}
+            {/* Quick Navigation Shortcuts with Reward Loop Psychology */}
             <div className="flex items-center space-x-3">
-              <button
-                onClick={() => handleNavigation("/dashboard")}
-                className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
-                title="Dashboard (⌘+1)"
-              >
-                <Icon name="home" size="md" color="current" />
-              </button>
-              <button
-                onClick={() => handleNavigation("/team/1/bulletin")}
-                className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
-                title="Team Bulletin (⌘+2)"
-              >
-                <Icon name="grid" size="md" color="current" />
-              </button>
-              <button
-                onClick={() => handleNavigation("/boxcall")}
-                className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
-                title="BoxCall (⌘+3)"
-              >
-                <Icon name="zap" size="md" color="current" />
-              </button>
-              <button
-                onClick={() => handleNavigation("/playbook")}
-                className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
-                title="Playbook (⌘+4)"
-              >
-                <Icon name="book" size="md" color="current" />
-              </button>
-              <button
-                onClick={() => handleNavigation("/calendar")}
-                className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
-                title="Calendar (⌘+5)"
-              >
-                <Icon name="calendar" size="md" color="current" />
-              </button>
+              {/* Dashboard with notification badge */}
+              <div className="relative">
+                <button
+                  onClick={() => handleNavigation("/dashboard")}
+                  className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
+                  title="Dashboard (⌘+1)"
+                >
+                  <Icon name="home" size="md" color="current" />
+                </button>
+                {notifications.dashboard > 0 && (
+                  <div className="absolute -top-1 -right-1">
+                    <NotificationBadge count={notifications.dashboard} />
+                  </div>
+                )}
+              </div>
+
+              {/* Team Bulletin with notification badge */}
+              <div className="relative">
+                <button
+                  onClick={() => handleNavigation("/team/1/bulletin")}
+                  className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
+                  title="Team Bulletin (⌘+2)"
+                >
+                  <Icon name="grid" size="md" color="current" />
+                </button>
+                {notifications.bulletin > 0 && (
+                  <div className="absolute -top-1 -right-1">
+                    <NotificationBadge count={notifications.bulletin} />
+                  </div>
+                )}
+              </div>
+
+              {/* BoxCall with premium achievement indicator */}
+              <div className="relative">
+                <button
+                  onClick={() => handleNavigation("/boxcall")}
+                  className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
+                  title="BoxCall (⌘+3)"
+                >
+                  <Icon name="zap" size="md" color="current" />
+                </button>
+                {achievements.hasNewAchievement && (
+                  <div className="absolute -top-2 -right-2">
+                    <Badge variant="premium" size="sm">
+                      NEW
+                    </Badge>
+                  </div>
+                )}
+              </div>
+
+              {/* Playbook with progress badge */}
+              <div className="relative">
+                <button
+                  onClick={() => handleNavigation("/playbook")}
+                  className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
+                  title="Playbook (⌘+4)"
+                >
+                  <Icon name="book" size="md" color="current" />
+                </button>
+                {notifications.playbook > 0 && (
+                  <div className="absolute -top-1 -right-1">
+                    <NotificationBadge count={notifications.playbook} />
+                  </div>
+                )}
+                {/* Progress indicator for playbook completion */}
+                <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2">
+                  <div className="w-6 h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-green-500 transition-all duration-500"
+                      style={{ width: `${achievements.playbookProgress}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Calendar with notification badge */}
+              <div className="relative">
+                <button
+                  onClick={() => handleNavigation("/calendar")}
+                  className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
+                  title="Calendar (⌘+5)"
+                >
+                  <Icon name="calendar" size="md" color="current" />
+                </button>
+                {notifications.calendar > 0 && (
+                  <div className="absolute -top-1 -right-1">
+                    <NotificationBadge count={notifications.calendar} />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           {/* Right side - Settings and Logout */}
