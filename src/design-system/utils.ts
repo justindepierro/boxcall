@@ -5,22 +5,22 @@
 
 import { colorTokens, semantic, component } from "./tokens";
 
-// Interface for nested token structure
-interface TokenObject {
-  [key: string]: string | TokenObject;
-}
-
 /**
  * Get a color value by token path
  * Provides type-safe access to design tokens
  */
 export function getTokenColor(path: string): string {
   const parts = path.split(".");
-  let current: string | TokenObject = { ...colorTokens, semantic, component };
+  let current: unknown = { ...colorTokens, semantic, component };
 
   for (const part of parts) {
-    if (current && typeof current === "object" && part in current) {
-      current = current[part];
+    if (
+      current &&
+      typeof current === "object" &&
+      current !== null &&
+      part in current
+    ) {
+      current = (current as Record<string, unknown>)[part];
     } else {
       console.warn(`Design token path "${path}" not found`);
       return semantic.primary; // Fallback to primary color
@@ -92,14 +92,16 @@ export function isValidToken(path: string): boolean {
 export function getAllTokenPaths(): string[] {
   const paths: string[] = [];
 
-  function traverse(obj: TokenObject, prefix = ""): void {
-    for (const [key, value] of Object.entries(obj)) {
-      const currentPath = prefix ? `${prefix}.${key}` : key;
+  function traverse(obj: unknown, prefix = ""): void {
+    if (obj && typeof obj === "object" && obj !== null) {
+      for (const [key, value] of Object.entries(obj)) {
+        const currentPath = prefix ? `${prefix}.${key}` : key;
 
-      if (typeof value === "string") {
-        paths.push(currentPath);
-      } else if (typeof value === "object" && value !== null) {
-        traverse(value, currentPath);
+        if (typeof value === "string") {
+          paths.push(currentPath);
+        } else if (typeof value === "object" && value !== null) {
+          traverse(value, currentPath);
+        }
       }
     }
   }
@@ -113,7 +115,7 @@ export function getAllTokenPaths(): string[] {
  */
 export function printTokens(): void {
   if (process.env.NODE_ENV === "development") {
-    console.group("[Design/Colorful] Available Design Tokens:");
+    console.group("🎨 Available Design Tokens:");
     getAllTokenPaths().forEach((path) => {
       console.log(`${path}: ${getTokenColor(path)}`);
     });

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useAuthProfile, useIsAuthenticated } from "../../app/auth-store";
+import { useIsAuthenticated } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
-import type { Database } from "../../types/database";
 import { supabase } from "../../lib/supabase";
 import { Icon } from "./Icon/Icon";
-type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
+
 /**
  * Navigation Component
  *
@@ -14,8 +13,7 @@ type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
  */
 export const Navigation: React.FC = () => {
   const isAuthenticated = useIsAuthenticated();
-  const profile = useAuthProfile();
-  const { effectiveUserRole, isDevMode } = useDevMode();
+  const { isDevMode } = useDevMode();
   const { toggleSidebar } = useUI();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -57,10 +55,7 @@ export const Navigation: React.FC = () => {
       if (hideTimeout) clearTimeout(hideTimeout);
     };
   }, [lastScrollY]);
-  // Use effective role from dev mode if in dev mode, otherwise use profile role
-  const currentRole: UserRole | null = isDevMode
-    ? (effectiveUserRole as UserRole)
-    : (profile?.role ?? null);
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     window.location.href = "/login";
@@ -81,7 +76,7 @@ export const Navigation: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-16">
           {/* Logo and Brand - Display font for impact */}
-          <div className="flex items-center space-x-4 flex-1">
+          <div className="flex items-center space-x-4">
             {/* Sidebar Toggle */}
             <button
               onClick={() => toggleSidebar()}
@@ -118,8 +113,9 @@ export const Navigation: React.FC = () => {
               </span>
             </button>
           </div>
-          {/* Desktop Quick Actions - Key functions for productivity */}
-          <div className="hidden md:flex items-center space-x-4">
+
+          {/* Desktop Quick Actions - Centered */}
+          <div className="hidden md:flex items-center space-x-4 flex-1 justify-center">
             {/* Quick Navigation Shortcuts */}
             <div className="flex items-center space-x-3">
               <button
@@ -137,11 +133,17 @@ export const Navigation: React.FC = () => {
                 <Icon name="grid" size="md" color="current" />
               </button>
               <button
-                onClick={() => handleNavigation("/calendar")}
+                onClick={() => handleNavigation("/boxcall")}
                 className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
-                title="Calendar (⌘+3)"
+                title="BoxCall (⌘+3)"
               >
-                <Icon name="calendar" size="md" color="current" />
+                <div className="w-6 h-5">
+                  <img
+                    src="/assets/boxcall-logo.svg"
+                    alt="BoxCall"
+                    className="w-6 h-5"
+                  />
+                </div>
               </button>
               <button
                 onClick={() => handleNavigation("/playbook")}
@@ -150,21 +152,13 @@ export const Navigation: React.FC = () => {
               >
                 <Icon name="book" size="md" color="current" />
               </button>
-              {(currentRole === "admin" || currentRole === "coach") && (
-                <button
-                  onClick={() => handleNavigation("/boxcall")}
-                  className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
-                  title="BoxCall (⌘+5)"
-                >
-                  <div className="w-4 h-4">
-                    <img
-                      src="/assets/boxcall-logo.svg"
-                      alt="BoxCall"
-                      className="w-4 h-4"
-                    />
-                  </div>
-                </button>
-              )}
+              <button
+                onClick={() => handleNavigation("/calendar")}
+                className="text-gray-600 dark:text-gray-400 hover:text-interaction-jade dark:hover:text-brand-jade p-2 rounded-md hover:bg-surface-jade dark:hover:bg-surface-jade-dark transition-all duration-200"
+                title="Calendar (⌘+5)"
+              >
+                <Icon name="calendar" size="md" color="current" />
+              </button>
             </div>
           </div>
           {/* Right side - Settings and Logout */}
