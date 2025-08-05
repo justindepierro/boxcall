@@ -218,6 +218,134 @@ export class DataSyncService {
   }
 
   /**
+   * Bulk create plays from CSV import (for 300+ play testing)
+   */
+  static async bulkCreatePlays(
+    playbookId: string,
+    plays: Omit<Play, "id" | "created_at" | "updated_at">[]
+  ): Promise<{
+    success: boolean;
+    created: Play[];
+    errors: string[];
+    totalProcessed: number;
+  }> {
+    const startTime = performance.now();
+    const created: Play[] = [];
+    const errors: string[] = [];
+
+    console.log(`🚀 Starting bulk import of ${plays.length} plays...`);
+
+    try {
+      // Prepare plays for insertion
+      const playsToInsert = plays.map((play) => ({
+        ...play,
+        playbook_id: playbookId,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }));
+
+      // Bulk insert to Supabase (batch size 100 for reliability)
+      const batchSize = 100;
+      for (let i = 0; i < playsToInsert.length; i += batchSize) {
+        const batch = playsToInsert.slice(i, i + batchSize);
+
+        console.log(
+          `📦 Processing batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(playsToInsert.length / batchSize)}...`
+        );
+
+        const { data, error } = await this.supabase!.from("plays")
+          .insert(batch)
+          .select();
+
+        if (error) {
+          errors.push(
+            `Batch ${Math.floor(i / batchSize) + 1} failed: ${error.message}`
+          );
+          continue;
+        }
+
+        const batchCreated = data as Play[];
+        created.push(...batchCreated);
+
+        // Update cache with new plays
+        batchCreated.forEach((play) => {
+          this.addToLocalCache("play", play);
+        });
+      }
+
+      // Clear playbook cache to force refresh
+      const cacheKey = `plays_${playbookId}`;
+      this.cache.delete(cacheKey);
+
+      const duration = performance.now() - startTime;
+      console.log(
+        `✅ Bulk import complete: ${created.length}/${plays.length} plays created in ${duration.toFixed(2)}ms`
+      );
+
+      return {
+        success: errors.length === 0,
+        created,
+        errors,
+        totalProcessed: plays.length,
+      };
+    } catch (error) {
+      console.error("❌ Bulk import failed:", error);
+      return {
+        success: false,
+        created,
+        errors: [error instanceof Error ? error.message : "Unknown error"],
+        totalProcessed: plays.length,
+      };
+    }
+  }
+
+  /**
+   * Import plays from CSV content
+   */
+  static async importFromCSV(
+    playbookId: string,
+    csvContent: string
+  ): Promise<{
+    success: boolean;
+    totalRows: number;
+    importedPlays: number;
+    errors: string[];
+    created: Play[];
+  }> {
+    console.log("📊 Parsing CSV content...");
+
+    // Parse CSV using existing CSV service
+    const parseResult = CSVService.parseCSVForPreview(csvContent);
+
+    if (parseResult.previews.length === 0) {
+      return {
+        success: false,
+        totalRows: parseResult.summary.totalRows,
+        importedPlays: 0,
+        errors: ["No valid plays found in CSV"],
+        created: [],
+      };
+    }
+
+    // Convert previews to actual plays
+    const validPreviews = parseResult.previews.filter((p) => p.isValid);
+    const plays = CSVService.convertPreviewsToPlays(validPreviews);
+
+    console.log(`📋 Parsed ${plays.length} valid plays from CSV`);
+
+    // Bulk create the parsed plays
+    const bulkResult = await this.bulkCreatePlays(playbookId, plays);
+
+    return {
+      success: bulkResult.success,
+      totalRows: parseResult.summary.totalRows,
+      importedPlays: bulkResult.created.length,
+      errors: bulkResult.errors,
+      created: bulkResult.created,
+    };
+  }
+
+  /**
    * BULLETPROOF BACKUP SYSTEM
    */
 
@@ -407,12 +535,19 @@ export class DataSyncService {
         break;
 
       case "UPDATE":
-        this.updateLocalCache(table, newRecord.id, newRecord);
+        this.updateLocalCache(
+          table,
+          (newRecord as Record<string, unknown>).id as string,
+          newRecord
+        );
         this.showSyncNotification(`${table.slice(0, -1)} updated by teammate`);
         break;
 
       case "DELETE":
-        this.removeFromLocalCache(table, oldRecord.id);
+        this.removeFromLocalCache(
+          table,
+          (oldRecord as Record<string, unknown>).id as string
+        );
         this.showSyncNotification(`${table.slice(0, -1)} deleted by teammate`);
         break;
     }

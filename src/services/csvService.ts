@@ -27,7 +27,38 @@ export interface CSVImportResult {
   totalRows: number;
   importedPlays: number;
   errors: string[];
+  warnings: string[];
   plays: Play[];
+  parsedPlays: CSVPlayPreview[]; // Add parsed plays for preview
+}
+
+export interface CSVPlayPreview {
+  rowNumber: number;
+  isValid: boolean;
+  errors: string[];
+  warnings: string[];
+  data: {
+    formation: string;
+    play_name: string;
+    p_type: string;
+    personnel?: string;
+    one_word_play?: string;
+    protection?: string;
+    notes?: string;
+    [key: string]: string | undefined;
+  };
+}
+
+export interface CSVParseResult {
+  previews: CSVPlayPreview[];
+  summary: {
+    totalRows: number;
+    validPlays: number;
+    invalidPlays: number;
+    warnings: number;
+    detectedColumns: string[];
+    suggestedMappings: Record<string, string>;
+  };
 }
 
 export interface CSVExportOptions {
@@ -38,88 +69,296 @@ export interface CSVExportOptions {
 
 export class CSVService {
   /**
-   * Parse CSV content and convert to play data
+   * Intelligent column mapping - maps various column names to our standard fields
    */
-  static parsePlaysFromCSV(csvContent: string): CSVImportResult {
-    const lines = csvContent.trim().split("\n");
-    const headers = lines[0].split(",").map((h) => h.trim().toLowerCase());
+  private static getColumnMappings(): Record<string, string[]> {
+    return {
+      formation: ["formation", "form", "format", "alignment"],
+      play_name: [
+        "play_name",
+        "play name",
+        "playname",
+        "name",
+        "play",
+        "title",
+      ],
+      one_word_play: [
+        "one_word_play",
+        "audible",
+        "call",
+        "quick_call",
+        "signal",
+        "code",
+      ],
+      p_type: ["p_type", "play_type", "type", "category", "kind"],
+      personnel: ["personnel", "package", "grouping", "formation_personnel"],
+      f_type: ["f_type", "formation_type", "form_type"],
+      protection: ["protection", "prot", "pass_pro", "pass_protection"],
+      p_dir: ["p_dir", "play_direction", "direction", "dir"],
+      pref_down: ["pref_down", "preferred_down", "down", "situation"],
+      pref_dis: ["pref_dis", "preferred_distance", "distance", "yardage"],
+      notes: ["notes", "description", "details", "comments"],
+      r_str: ["r_str", "route_strength", "route", "receiver_strength"],
+      p_str: ["p_str", "protection_strength", "blocking"],
+    };
+  }
 
-    const plays: Play[] = [];
-    const errors: string[] = [];
+  /**
+   * Smart column detection - finds the best match for each column
+   */
+  private static detectColumnMapping(
+    headers: string[]
+  ): Record<string, string> {
+    const mappings = this.getColumnMappings();
+    const detected: Record<string, string> = {};
 
-    // Required fields for a valid play
+    headers.forEach((header) => {
+      const cleanHeader = header
+        .toLowerCase()
+        .trim()
+        .replace(/[_\s-]+/g, "_");
+
+      // Look for exact matches first
+      for (const [fieldName, variants] of Object.entries(mappings)) {
+        if (
+          variants.some(
+            (variant) =>
+              cleanHeader === variant.replace(/[_\s-]+/g, "_") ||
+              cleanHeader.includes(variant.replace(/[_\s-]+/g, "_"))
+          )
+        ) {
+          detected[header] = fieldName;
+          break;
+        }
+      }
+
+      // If no exact match, try partial matches
+      if (!detected[header]) {
+        for (const [fieldName, variants] of Object.entries(mappings)) {
+          if (
+            variants.some(
+              (variant) =>
+                cleanHeader.includes(variant.split("_")[0]) ||
+                variant.split("_")[0].includes(cleanHeader)
+            )
+          ) {
+            detected[header] = fieldName;
+            break;
+          }
+        }
+      }
+    });
+
+    return detected;
+  }
+
+  /**
+   * Enhanced CSV parsing with intelligence and validation
+   */
+  static parseCSVForPreview(csvContent: string): CSVParseResult {
+    const lines = csvContent
+      .trim()
+      .split("\n")
+      .filter((line) => line.trim());
+
+    if (lines.length < 2) {
+      return {
+        previews: [],
+        summary: {
+          totalRows: 0,
+          validPlays: 0,
+          invalidPlays: 0,
+          warnings: 0,
+          detectedColumns: [],
+          suggestedMappings: {},
+        },
+      };
+    }
+
+    // Parse headers with intelligent mapping
+    const rawHeaders = this.parseCSVLine(lines[0]);
+    const columnMapping = this.detectColumnMapping(rawHeaders);
+
+    const previews: CSVPlayPreview[] = [];
     const requiredFields = ["formation", "play_name", "p_type"];
 
+    // Process each data row
     for (let i = 1; i < lines.length; i++) {
+      const values = this.parseCSVLine(lines[i]);
+      const rowData: Record<string, string> = {};
+      const errors: string[] = [];
+      const warnings: string[] = [];
+
+      // Map values to fields
+      rawHeaders.forEach((header, index) => {
+        const fieldName = columnMapping[header] || header.toLowerCase().trim();
+        const value = values[index]?.trim() || "";
+        rowData[fieldName] = value;
+      });
+
+      // Validate required fields
+      requiredFields.forEach((field) => {
+        if (!rowData[field]) {
+          errors.push(`Missing required field: ${field}`);
+        }
+      });
+
+      // Smart validation and suggestions
+      this.validateAndWarn(rowData, warnings);
+
+      previews.push({
+        rowNumber: i + 1,
+        isValid: errors.length === 0,
+        errors,
+        warnings,
+        data: {
+          formation: rowData.formation || "",
+          play_name: rowData.play_name || "",
+          p_type: rowData.p_type || "",
+          personnel: rowData.personnel,
+          one_word_play: rowData.one_word_play,
+          protection: rowData.protection,
+          notes: rowData.notes,
+          ...rowData,
+        },
+      });
+    }
+
+    const validPlays = previews.filter((p) => p.isValid).length;
+    const totalWarnings = previews.reduce(
+      (sum, p) => sum + p.warnings.length,
+      0
+    );
+
+    return {
+      previews,
+      summary: {
+        totalRows: previews.length,
+        validPlays,
+        invalidPlays: previews.length - validPlays,
+        warnings: totalWarnings,
+        detectedColumns: rawHeaders,
+        suggestedMappings: columnMapping,
+      },
+    };
+  }
+
+  /**
+   * Enhanced CSV line parsing that handles quotes and commas properly
+   */
+  private static parseCSVLine(line: string): string[] {
+    const result: string[] = [];
+    let current = "";
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      } else if (char === "," && !inQuotes) {
+        result.push(current);
+        current = "";
+      } else {
+        current += char;
+      }
+    }
+
+    result.push(current);
+    return result.map((field) => field.replace(/^"(.*)"$/, "$1").trim());
+  }
+
+  /**
+   * Smart validation with helpful warnings
+   */
+  private static validateAndWarn(
+    rowData: Record<string, string>,
+    warnings: string[]
+  ): void {
+    // Play type validation
+    const validPlayTypes = [
+      "Pass",
+      "Run",
+      "RPO",
+      "Play Action",
+      "Special",
+      "Punt",
+      "FG",
+      "PAT",
+    ];
+    if (
+      rowData.p_type &&
+      !validPlayTypes.some(
+        (type) => type.toLowerCase() === rowData.p_type.toLowerCase()
+      )
+    ) {
+      warnings.push(
+        `Play type "${rowData.p_type}" may not be recognized. Suggested: ${validPlayTypes.join(", ")}`
+      );
+    }
+
+    // Formation validation
+    if (rowData.formation && rowData.formation.length < 2) {
+      warnings.push(
+        "Formation name seems very short. Consider using more descriptive names."
+      );
+    }
+
+    // Personnel validation
+    if (rowData.personnel && !/^\d+/.test(rowData.personnel)) {
+      warnings.push(
+        "Personnel should typically start with numbers (e.g., '11', '12', '21')"
+      );
+    }
+
+    // Play name validation
+    if (rowData.play_name && rowData.play_name.length < 3) {
+      warnings.push(
+        "Play name seems very short. Consider using more descriptive names."
+      );
+    }
+  }
+
+  /**
+   * Convert validated preview data to Play objects
+   */
+  static convertPreviewsToPlays(
+    previews: CSVPlayPreview[],
+    playbookId: string
+  ): CSVImportResult {
+    const plays: Play[] = [];
+    const errors: string[] = [];
+    const warnings: string[] = [];
+
+    const validPreviews = previews.filter((p) => p.isValid);
+
+    validPreviews.forEach((preview, index) => {
       try {
-        const values = lines[i].split(",").map((v) => v.trim());
-        const playData: Record<string, string> = {};
+        const playData = preview.data;
 
-        // Map CSV columns to play fields
-        headers.forEach((header, index) => {
-          const value = values[index] || "";
-          switch (header) {
-            case "formation":
-              playData.formation = value;
-              break;
-            case "play_name":
-            case "play name":
-            case "playname":
-              playData.play_name = value;
-              break;
-            case "one_word_play":
-            case "audible":
-            case "call":
-              playData.one_word_play = value;
-              break;
-            case "p_type":
-            case "play_type":
-            case "type":
-              playData.p_type = value;
-              break;
-            case "personnel":
-              playData.personnel = value;
-              break;
-            case "f_type":
-            case "formation_type":
-              playData.f_type = value;
-              break;
-            case "protection":
-              playData.protection = value;
-              break;
-            case "notes":
-              playData.notes = value;
-              break;
-            default:
-              // Store any additional fields
-              playData[header] = value;
-          }
-        });
-
-        // Validate required fields
-        const missingFields = requiredFields.filter(
-          (field) => !playData[field]
-        );
-        if (missingFields.length > 0) {
-          errors.push(
-            `Row ${i + 1}: Missing required fields: ${missingFields.join(", ")}`
-          );
-          continue;
+        // Normalize play type
+        let normalizedPlayType = "Run"; // default
+        if (playData.p_type) {
+          const lowerType = playData.p_type.toLowerCase();
+          if (lowerType.includes("pass")) normalizedPlayType = "Pass";
+          else if (lowerType.includes("rpo")) normalizedPlayType = "RPO";
+          else if (lowerType.includes("action") || lowerType.includes("pa"))
+            normalizedPlayType = "Play Action";
+          else if (lowerType.includes("run")) normalizedPlayType = "Run";
         }
 
-        // Create play object
         const play: Play = {
-          id: `imported-${Date.now()}-${i}`,
-          playbook_id: "default-playbook", // Replace with actual playbook ID
+          id: `csv-import-${Date.now()}-${index}`,
+          playbook_id: playbookId,
           formation: playData.formation,
           play_name: playData.play_name,
-          one_word_play: playData.one_word_play,
-          p_type: playData.p_type as "Pass" | "Run" | "RPO" | "Play Action", // Will be validated by the importing system
-          personnel: playData.personnel,
-          f_type: playData.f_type,
-          protection: playData.protection,
-          notes: playData.notes,
-          // Set default values for other fields
+          one_word_play: playData.one_word_play || "",
+          p_type: normalizedPlayType as "Pass" | "Run" | "RPO" | "Play Action",
+          personnel: playData.personnel || "",
+          f_type: playData.f_type || "",
+          protection: playData.protection || "",
+          notes: playData.notes || "",
+          // Set defaults for other required fields
           f_dir: playData.f_dir || "",
           ftag1: playData.ftag1 || "",
           ftag2: playData.ftag2 || "",
@@ -139,7 +378,6 @@ export class CSVService {
           check_into: playData.check_into || "",
           r_str: playData.r_str || "",
           p_str: playData.p_str || "",
-          // Required fields with defaults
           confidence_base: 70,
           times_called: 0,
           times_successful: 0,
@@ -149,19 +387,34 @@ export class CSVService {
         };
 
         plays.push(play);
+
+        // Collect warnings for this play
+        if (preview.warnings.length > 0) {
+          warnings.push(
+            `Row ${preview.rowNumber}: ${preview.warnings.join(", ")}`
+          );
+        }
       } catch (error) {
         errors.push(
-          `Row ${i + 1}: ${error instanceof Error ? error.message : "Unknown error"}`
+          `Row ${preview.rowNumber}: Failed to create play - ${error instanceof Error ? error.message : "Unknown error"}`
         );
       }
-    }
+    });
+
+    // Collect errors from invalid previews
+    const invalidPreviews = previews.filter((p) => !p.isValid);
+    invalidPreviews.forEach((preview) => {
+      errors.push(`Row ${preview.rowNumber}: ${preview.errors.join(", ")}`);
+    });
 
     return {
-      success: errors.length === 0,
-      totalRows: lines.length - 1,
+      success: plays.length > 0,
+      totalRows: previews.length,
       importedPlays: plays.length,
       errors,
+      warnings,
       plays,
+      parsedPlays: previews,
     };
   }
 

@@ -6,7 +6,25 @@
  *
  * Key principles:
  * - Single source of truth for data loading decisions
- * - Clear separation between real and mock data
+ * - Clear separ      if (!teams) return [];
+
+      // Type guard for valid team data
+      const isValidTeam = (team: unknown): team is Record<string, unknown> => {
+        return !!(team && typeof team === "object" && "id" in team && "name" in team);
+      };
+
+      const validTeams = teams.filter(isValidTeam);
+
+      // Return teams with proper typing
+      return validTeams.map((team) => ({
+        id: team.id as string,
+        name: team.name as string,
+        description: (team.description as string) || "",
+        teamCode: (team.team_code as string) || "",
+        subscriptionType: (team.subscription_type as string) || "free",
+        season: (team.season as string) || "",
+        school: (team.school as string) || "",
+        mascot: (team.mascot as string) || "",n real and mock data
  * - Easy testing and maintenance
  * - Super admin override for system owner (justindepierro@gmail.com)
  *
@@ -237,48 +255,70 @@ export class DataResolutionService {
     if (!userId) return [];
 
     try {
-      // Load user's team memberships and team data
-      const { data, error } = await supabase
+      // First, get user's team memberships
+      const { data: memberships, error: membershipError } = await supabase
         .from("team_members")
-        .select(
-          `
-          team_id,
-          role,
-          teams (
-            id,
-            name,
-            description,
-            team_code,
-            subscription_type
-          )
-        `
-        )
-        .eq("user_id", userId);
+        .select("team_id, role")
+        .eq("user_id", userId)
+        .eq("status", "active");
 
-      if (error) throw error;
-
-      if (!data) return [];
-
-      // Extract teams and handle the nested structure properly
-      const teams: TeamDataResponse[] = [];
-
-      for (const membership of data) {
-        if (membership.teams && typeof membership.teams === "object") {
-          // Handle both single team object and array of teams
-          const teamData = membership.teams as unknown as
-            | TeamDataResponse
-            | TeamDataResponse[];
-          if (Array.isArray(teamData)) {
-            // If it's an array, add all teams
-            teams.push(...teamData.filter((t) => t?.id && t?.name));
-          } else if (teamData.id && teamData.name) {
-            // If it's a single object, add it
-            teams.push(teamData);
-          }
-        }
+      if (membershipError) {
+        console.error("❌ Error loading team memberships:", membershipError);
+        return [];
       }
 
-      return teams;
+      if (!memberships || memberships.length === 0) {
+        return [];
+      }
+
+      // Type guard to ensure membership data is valid
+      const isValidMembership = (
+        m: unknown
+      ): m is { team_id: string; role: string } => {
+        return m && typeof m === "object" && "team_id" in m;
+      };
+
+      const validMemberships = memberships.filter(isValidMembership);
+      if (validMemberships.length === 0) {
+        return [];
+      }
+
+      // Then, get the actual team data for those team IDs
+      const teamIds = validMemberships.map((m) => m.team_id);
+      const { data: teams, error: teamsError } = await supabase
+        .from("teams")
+        .select(
+          `
+          id,
+          name,
+          description,
+          team_code,
+          subscription_type,
+          season,
+          school,
+          mascot
+        `
+        )
+        .in("id", teamIds);
+
+      if (teamsError) {
+        console.error("❌ Error loading teams:", teamsError);
+        return [];
+      }
+
+      if (!teams) return [];
+
+      // Return teams with proper typing
+      return teams.map((team) => ({
+        id: team.id,
+        name: team.name,
+        description: team.description || "",
+        team_code: team.team_code || "",
+        subscription_type: team.subscription_type || "",
+        season: team.season || "",
+        school: team.school || "",
+        mascot: team.mascot || "",
+      }));
     } catch (error) {
       console.error("Error loading real team data:", error);
       return [];

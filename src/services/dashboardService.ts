@@ -36,37 +36,120 @@ export class DashboardService {
    */
   static async getUserTeams(userId: string): Promise<UserTeamData[]> {
     try {
+      // Get user's team memberships first
       const { data: memberships, error } = await supabase
         .from("team_members")
-        .select(
-          `
-          *,
-          teams (*)
-        `
-        )
+        .select("*")
         .eq("user_id", userId)
         .eq("status", "active");
+
       if (error) {
         console.error("Error fetching user teams:", error);
         return [];
       }
+
+      if (!memberships || memberships.length === 0) {
+        return [];
+      }
+
+      // Type guard for valid membership
+      const isValidMembership = (
+        membership: unknown
+      ): membership is Record<string, unknown> => {
+        return !!(
+          membership &&
+          typeof membership === "object" &&
+          "team_id" in membership
+        );
+      };
+
+      // Filter and get valid memberships
+      const validMemberships = memberships.filter(isValidMembership);
+
+      if (validMemberships.length === 0) {
+        return [];
+      }
+
+      // Get team data separately
+      const teamIds = validMemberships.map((m) => m.team_id);
+      const { data: teams, error: teamsError } = await supabase
+        .from("teams")
+        .select("*")
+        .in("id", teamIds);
+
+      if (teamsError) {
+        console.error("Error fetching teams:", teamsError);
+        return [];
+      }
+
+      // Type guard for valid team
+      const isValidTeam = (team: unknown): team is Record<string, unknown> => {
+        return !!(team && typeof team === "object" && "id" in team);
+      };
+
+      const validTeams = teams?.filter(isValidTeam) || [];
+
       // Transform data and get member counts
       const userTeams = await Promise.all(
-        (memberships || []).map(async (membership) => {
+        validMemberships.map(async (membership) => {
+          // Find the corresponding team
+          const team = validTeams.find((t) => t.id === membership.team_id);
+
+          if (!team) return null;
+
           // Get member count for each team
           const { count } = await supabase
             .from("team_members")
             .select("*", { count: "exact", head: true })
             .eq("team_id", membership.team_id)
             .eq("status", "active");
+
           return {
-            team: membership.teams as Team,
-            membership: membership as TeamMember,
+            team: {
+              id: team.id as string,
+              name: team.name as string,
+              school_name: (team.school_name as string) || null,
+              mascot: (team.mascot as string) || null,
+              colors_primary: (team.colors_primary as string) || null,
+              colors_secondary: (team.colors_secondary as string) || null,
+              logo_url: (team.logo_url as string) || null,
+              created_by: team.created_by as string,
+              team_code: (team.team_code as string) || null,
+              subscription_type: (team.subscription_type as string) || "free",
+              season: (team.season as string) || null,
+              league: (team.league as string) || null,
+              division: (team.division as string) || null,
+              status: (team.status as string) || "active",
+              created_at: team.created_at as string,
+              updated_at: (team.updated_at as string) || null,
+            },
+            membership: {
+              id: membership.id as string,
+              user_id: membership.user_id as string,
+              team_id: membership.team_id as string,
+              role: membership.role as
+                | "head_coach"
+                | "assistant_coach"
+                | "coordinator"
+                | "manager",
+              permissions: membership.permissions as Record<string, unknown>,
+              status:
+                (membership.status as "active" | "inactive" | "pending") ||
+                null,
+              joined_at: (membership.joined_at as string) || null,
+              invited_by: (membership.invited_by as string) || null,
+            },
             memberCount: count || 0,
           };
         })
       );
-      return userTeams;
+
+      // Filter out null results
+      return userTeams.filter(Boolean) as Array<{
+        team: Team;
+        membership: TeamMember;
+        memberCount: number;
+      }>;
     } catch (error) {
       console.error("Error in getUserTeams:", error);
       return [];

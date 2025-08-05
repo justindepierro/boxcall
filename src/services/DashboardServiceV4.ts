@@ -92,10 +92,37 @@ export class DashboardServiceV4 {
       );
 
       // Load teams and achievements in parallel
-      const [teams, achievements] = await Promise.all([
+      const [teams, achievementsResult] = await Promise.all([
         this.dataResolver.getTeamData(context, userId),
         this.dataResolver.getAchievements(context),
       ]);
+
+      // Type guard for achievements
+      const isValidAchievementArray = (
+        data: unknown
+      ): data is Array<{
+        id: string;
+        title: string;
+        description?: string;
+        date: string;
+        [key: string]: unknown;
+      }> => {
+        return (
+          Array.isArray(data) &&
+          data.every(
+            (item) =>
+              item &&
+              typeof item === "object" &&
+              "id" in item &&
+              "title" in item &&
+              "date" in item
+          )
+        );
+      };
+
+      const achievements = isValidAchievementArray(achievementsResult)
+        ? achievementsResult
+        : [];
 
       // Transform teams into user team data
       const userTeams: UserTeamData[] = (teams || []).map((team) => ({
@@ -110,7 +137,7 @@ export class DashboardServiceV4 {
 
       // Generate recent activity from achievements
       const recentActivity = this.generateRecentActivity(
-        achievements || [],
+        achievements,
         userTeams
       );
 

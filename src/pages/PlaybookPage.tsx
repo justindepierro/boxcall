@@ -452,7 +452,16 @@ export const PlaybookPage: React.FC = () => {
         />
       )}
       {state.showImport && (
-        <CSVImportModal isOpen={state.showImport} onClose={handleCloseImport} />
+        <CSVImportModal
+          isOpen={state.showImport}
+          onClose={handleCloseImport}
+          playbookId="demo-playbook-id" // TODO: Get from props or context
+          onImportComplete={(result) => {
+            console.log("Import completed:", result);
+            // TODO: Refresh the plays list
+            handleCloseImport();
+          }}
+        />
       )}
 
       {/* Achievement Celebration Overlay - The reward loop climax */}

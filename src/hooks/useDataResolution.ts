@@ -113,22 +113,43 @@ export const useDataResolution = () => {
       );
 
       // Load all data in parallel
-      const [userProfile, teamsData, achievements, calendarEvents] =
-        await Promise.all([
-          dataService.getUserProfile(context, user.id),
-          dataService.getTeamData(context, user.id),
-          dataService.getAchievements(context),
-          dataService.getCalendarEvents(context),
-        ]);
+      const [
+        userProfileResult,
+        teamsDataResult,
+        achievementsResult,
+        calendarEventsResult,
+      ] = await Promise.all([
+        dataService.getUserProfile(context, user.id),
+        dataService.getTeamData(context, user.id),
+        dataService.getAchievements(context),
+        dataService.getCalendarEvents(context),
+      ]);
 
-      // Teams should now be properly typed from DataResolutionService
-      const teams = Array.isArray(teamsData) ? teamsData : [];
+      // Handle potential error responses and type guard the results
+      const userProfile =
+        userProfileResult &&
+        typeof userProfileResult === "object" &&
+        "id" in userProfileResult
+          ? (userProfileResult as UserProfileData)
+          : null;
+
+      const teams = Array.isArray(teamsDataResult)
+        ? (teamsDataResult as TeamData[])
+        : [];
+
+      const achievements = Array.isArray(achievementsResult)
+        ? (achievementsResult as AchievementData[])
+        : [];
+
+      const calendarEvents = Array.isArray(calendarEventsResult)
+        ? (calendarEventsResult as CalendarEventData[])
+        : [];
 
       setResolvedData({
         userProfile,
         teams,
-        achievements: achievements || [],
-        calendarEvents: calendarEvents || [],
+        achievements,
+        calendarEvents,
         isLoading: false,
         error: null,
         context,

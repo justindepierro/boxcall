@@ -124,16 +124,10 @@ export class AchievementService {
     userId: string
   ): Promise<AchievementData> {
     try {
-      // Try to get real helmet stickers with error handling
+      // Get helmet stickers without joins first
       const stickersResult = await supabase
         .from("helmet_stickers")
-        .select(
-          `
-          *,
-          teams (name),
-          awarded_by_profile:profiles!awarded_by (display_name)
-        `
-        )
+        .select("*")
         .eq("user_id", userId)
         .order("awarded_at", { ascending: false });
 
@@ -155,25 +149,47 @@ export class AchievementService {
       const stickers = stickersResult.data || [];
       const achievements = achievementsResult.data || [];
 
-      const helmetStickers: HelmetSticker[] = stickers.map((sticker) => ({
-        id: sticker.id,
-        name: sticker.reason,
-        icon: this.getStickerIcon(sticker.sticker_type),
-        awardedBy: sticker.awarded_by,
-        awardedByName: sticker.awarded_by_profile?.display_name || "Coach",
-        date: sticker.awarded_at || new Date().toISOString(),
-        teamId: sticker.team_id,
-        teamName: sticker.teams?.name || "Team",
-      }));
+      // Type guard function to ensure we have valid data
+      const isValidSticker = (
+        sticker: unknown
+      ): sticker is Record<string, unknown> => {
+        return !!(sticker && typeof sticker === "object" && "id" in sticker);
+      };
 
-      const boxcallMedals: BoxCallMedal[] = achievements.map((achievement) => ({
-        id: achievement.id,
-        name: achievement.title || "Achievement",
-        icon: achievement.icon_name || "award",
-        description: achievement.description || "",
-        earned: true,
-        earnedDate: achievement.earned_at || new Date().toISOString(),
-      }));
+      const isValidAchievement = (
+        achievement: unknown
+      ): achievement is Record<string, unknown> => {
+        return !!(
+          achievement &&
+          typeof achievement === "object" &&
+          "id" in achievement
+        );
+      };
+
+      const helmetStickers: HelmetSticker[] = stickers
+        .filter(isValidSticker)
+        .map((sticker) => ({
+          id: sticker.id as string,
+          name: (sticker.reason as string) || "Sticker",
+          icon: this.getStickerIcon(sticker.sticker_type as string),
+          awardedBy: (sticker.awarded_by as string) || "",
+          awardedByName: "Coach", // Simplified for now
+          date: (sticker.awarded_at as string) || new Date().toISOString(),
+          teamId: (sticker.team_id as string) || "",
+          teamName: "Team", // Simplified for now
+        }));
+
+      const boxcallMedals: BoxCallMedal[] = achievements
+        .filter(isValidAchievement)
+        .map((achievement) => ({
+          id: achievement.id as string,
+          name: (achievement.title as string) || "Achievement",
+          icon: (achievement.icon_name as string) || "award",
+          description: (achievement.description as string) || "",
+          earned: true,
+          earnedDate:
+            (achievement.earned_at as string) || new Date().toISOString(),
+        }));
 
       return {
         helmetStickers,

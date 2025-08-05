@@ -1,18 +1,51 @@
 import React, { useState } from "react";
-import { X, Upload, FileText, AlertCircle, CheckCircle } from "lucide-react";
+import {
+  X,
+  Upload,
+  AlertCircle,
+  CheckCircle,
+  Loader2,
+  ChevronDown,
+  ChevronRight,
+  Info,
+  AlertTriangle,
+} from "lucide-react";
+import { DataSyncService } from "../../../services/dataSyncService";
+import { CSVService, type CSVParseResult } from "../../../services/csvService";
+
 interface CSVImportModalProps {
   isOpen: boolean;
   onClose: () => void;
+  playbookId: string;
+  onImportComplete?: (result: ImportResult) => void;
 }
+
+interface ImportResult {
+  success: boolean;
+  totalRows: number;
+  importedPlays: number;
+  errors: string[];
+  warnings: string[];
+}
+
 export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   isOpen,
   onClose,
+  playbookId,
+  onImportComplete,
 }) => {
   const [step, setStep] = useState<
-    "upload" | "mapping" | "preview" | "complete"
+    "upload" | "preview" | "importing" | "complete"
   >("upload");
   const [dragActive, setDragActive] = useState(false);
+  const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [parseResult, setParseResult] = useState<CSVParseResult | null>(null);
+  const [importResult, setImportResult] = useState<ImportResult | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
+
   if (!isOpen) return null;
+
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -22,15 +55,117 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       setDragActive(false);
     }
   };
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
+
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      // TODO: Handle file upload
-      setStep("mapping");
+      handleFileUpload(e.dataTransfer.files[0]);
     }
   };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      handleFileUpload(e.target.files[0]);
+    }
+  };
+
+  const handleFileUpload = async (file: File) => {
+    if (!file.name.toLowerCase().endsWith(".csv")) {
+      alert("Please upload a CSV file");
+      return;
+    }
+
+    setIsProcessing(true);
+    setCsvFile(file);
+
+    try {
+      const content = await file.text();
+
+      // Parse the CSV content for preview
+      const result = CSVService.parseCSVForPreview(content);
+      setParseResult(result);
+      setStep("preview");
+    } catch (error) {
+      console.error("Error reading file:", error);
+      alert("Error reading file. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleImport = async () => {
+    if (!parseResult || !playbookId) return;
+
+    setStep("importing");
+    setIsProcessing(true);
+
+    try {
+      console.log("🚀 Starting CSV import...");
+
+      // Convert previews to plays and import
+      const conversionResult = CSVService.convertPreviewsToPlays(
+        parseResult.previews,
+        playbookId
+      );
+
+      if (conversionResult.plays.length === 0) {
+        throw new Error("No valid plays to import");
+      }
+
+      // Prepare plays for bulk import (remove generated IDs and timestamps)
+      const playsForImport = conversionResult.plays.map((play) => {
+        const {
+          id: _id,
+          created_at: _createdAt,
+          updated_at: _updatedAt,
+          ...playData
+        } = play;
+        return playData;
+      });
+
+      // Use DataSync service to bulk import the converted plays
+      const result = await DataSyncService.bulkCreatePlays(
+        playbookId,
+        playsForImport
+      );
+
+      const importResult: ImportResult = {
+        success: result.success,
+        totalRows: conversionResult.totalRows,
+        importedPlays: result.success ? conversionResult.plays.length : 0,
+        errors: [...conversionResult.errors, ...(result.errors || [])],
+        warnings: conversionResult.warnings,
+      };
+
+      setImportResult(importResult);
+      setStep("complete");
+
+      if (onImportComplete) {
+        onImportComplete(importResult);
+      }
+    } catch (error) {
+      console.error("❌ Import failed:", error);
+      setImportResult({
+        success: false,
+        totalRows: 0,
+        importedPlays: 0,
+        errors: [error instanceof Error ? error.message : "Unknown error"],
+        warnings: [],
+      });
+      setStep("complete");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const downloadSampleCSV = () => {
+    const sampleCSV = CSVService.generateSampleCSV();
+    CSVService.downloadCSV(sampleCSV, "boxcall-sample-plays.csv");
+  };
+
   const renderUploadStep = () => (
     <div className="space-y-6">
       <div className="text-center">
@@ -41,7 +176,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           Upload your existing playbook data to get started quickly
         </p>
       </div>
-      {/* Upload Area */}
+
       <div
         className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
           dragActive
@@ -53,23 +188,35 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         onDragOver={handleDrag}
         onDrop={handleDrop}
       >
-        <div className="space-y-4">
-          <Upload className="h-12 w-12 text-slate-400 mx-auto" />
-          <div>
-            <p className="text-slate-600">
-              Drag and drop your CSV file here, or{" "}
-              <label className="text-emerald-600 hover:text-emerald-700 cursor-pointer font-medium">
-                browse to upload
-                <input type="file" accept=".csv" className="hidden" />
-              </label>
-            </p>
-            <p className="text-xs text-slate-500 mt-2">
-              Supports CSV files up to 10MB
-            </p>
+        {isProcessing ? (
+          <div className="space-y-4">
+            <Loader2 className="h-12 w-12 text-emerald-600 mx-auto animate-spin" />
+            <p className="text-slate-600">Processing your CSV file...</p>
           </div>
-        </div>
+        ) : (
+          <div className="space-y-4">
+            <Upload className="h-12 w-12 text-slate-400 mx-auto" />
+            <div>
+              <p className="text-slate-600">
+                Drag and drop your CSV file here, or{" "}
+                <label className="text-emerald-600 hover:text-emerald-700 cursor-pointer font-medium">
+                  browse to upload
+                  <input
+                    type="file"
+                    accept=".csv"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                </label>
+              </p>
+              <p className="text-xs text-slate-500 mt-2">
+                Supports CSV files up to 10MB
+              </p>
+            </div>
+          </div>
+        )}
       </div>
-      {/* CSV Format Info */}
+
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <div className="flex items-start">
           <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
@@ -78,186 +225,430 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               Expected CSV Format
             </h4>
             <p className="text-sm text-blue-800 mb-2">
-              Your CSV should include columns for: personnel, formation, play,
-              playType, oneWordPlay, etc.
+              Your CSV should include columns for: formation, play_name, p_type,
+              personnel, one_word_play, etc.
             </p>
-            <button className="text-xs text-blue-700 hover:text-blue-800 font-medium">
+            <button
+              onClick={downloadSampleCSV}
+              className="text-xs text-blue-700 hover:text-blue-800 font-medium"
+            >
               Download sample CSV template →
             </button>
           </div>
         </div>
       </div>
-    </div>
-  );
-  const renderMappingStep = () => (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h3 className="text-lg font-medium text-slate-900 mb-2">
-          Map CSV Columns
-        </h3>
-        <p className="text-sm text-slate-600">
-          Match your CSV columns to the correct play fields
-        </p>
-      </div>
-      <div className="bg-slate-50 rounded-lg p-4">
-        <p className="text-sm text-slate-600 mb-4">
-          <FileText className="h-4 w-4 inline mr-1" />
-          File: sample_plays.csv (23 rows detected)
-        </p>
-        {/* Column Mapping */}
-        <div className="space-y-3">
-          {[
-            { csv: "play", db: "play_name", required: true },
-            { csv: "formation", db: "formation", required: true },
-            { csv: "playType", db: "p_type", required: true },
-            { csv: "oneWordPlay", db: "one_word_play", required: false },
-            { csv: "protection", db: "protection", required: false },
-          ].map((mapping, index) => (
-            <div key={index} className="grid grid-cols-3 gap-4 items-center">
-              <div className="text-sm font-medium text-slate-700">
-                {mapping.csv}
-                {mapping.required && (
-                  <span className="text-red-500 ml-1">*</span>
-                )}
-              </div>
-              <div className="text-center text-slate-400">→</div>
-              <select className="text-sm border border-slate-300 rounded-md px-3 py-2">
-                <option value={mapping.db}>{mapping.db}</option>
-                <option value="">Skip this column</option>
-              </select>
+
+      {csvFile && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div className="flex items-center">
+            <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
+            <div>
+              <p className="text-sm font-medium text-green-900">
+                File uploaded: {csvFile.name}
+              </p>
+              <p className="text-sm text-green-800">
+                Ready to preview and import
+              </p>
             </div>
-          ))}
-        </div>
-      </div>
-      <div className="flex justify-between">
-        <button
-          onClick={() => setStep("upload")}
-          className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50"
-        >
-          Back
-        </button>
-        <button
-          onClick={() => setStep("preview")}
-          className="px-4 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md hover:bg-emerald-700"
-        >
-          Preview Import
-        </button>
-      </div>
-    </div>
-  );
-  const renderPreviewStep = () => (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h3 className="text-lg font-medium text-slate-900 mb-2">
-          Preview Import
-        </h3>
-        <p className="text-sm text-slate-600">
-          Review the plays before importing to your playbook
-        </p>
-      </div>
-      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-        <div className="flex items-center">
-          <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
-          <div>
-            <p className="text-sm font-medium text-green-900">
-              Ready to import 21 plays
-            </p>
-            <p className="text-sm text-green-800">
-              2 rows had warnings but can still be imported
-            </p>
           </div>
         </div>
-      </div>
-      {/* Sample Preview */}
-      <div className="border border-slate-200 rounded-lg overflow-hidden">
-        <div className="bg-slate-50 px-4 py-3 border-b border-slate-200">
-          <p className="text-sm font-medium text-slate-900">
-            Preview (showing first 5 plays)
+      )}
+    </div>
+  );
+
+  const toggleRowExpansion = (rowNumber: number) => {
+    const newExpanded = new Set(expandedRows);
+    if (newExpanded.has(rowNumber)) {
+      newExpanded.delete(rowNumber);
+    } else {
+      newExpanded.add(rowNumber);
+    }
+    setExpandedRows(newExpanded);
+  };
+
+  const renderPreviewStep = () => {
+    if (!parseResult) {
+      return (
+        <div className="text-center py-8">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <p className="text-slate-600">No data to preview</p>
+        </div>
+      );
+    }
+
+    const { previews, summary } = parseResult;
+
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <h3 className="text-lg font-medium text-slate-900 mb-2">
+            Review Your Plays
+          </h3>
+          <p className="text-sm text-slate-600">
+            Verify the imported data before adding to your playbook
           </p>
         </div>
-        <div className="divide-y divide-slate-200">
-          {[
-            {
-              name: "Sooners",
-              formation: "Empty Left",
-              type: "Pass",
-              oneWord: "Sooners",
-            },
-            {
-              name: "Traffic",
-              formation: "Trio Right",
-              type: "Pass",
-              oneWord: "Traffic",
-            },
-            {
-              name: "Honolulu",
-              formation: "Deuce Left",
-              type: "RPO",
-              oneWord: "Hawaii",
-            },
-          ].map((play, index) => (
-            <div
-              key={index}
-              className="px-4 py-3 flex items-center justify-between"
-            >
+
+        {/* Summary Stats */}
+        <div className="grid grid-cols-4 gap-4 bg-slate-50 rounded-lg p-4">
+          <div className="text-center">
+            <p className="text-2xl font-bold text-slate-900">
+              {summary.totalRows}
+            </p>
+            <p className="text-xs text-slate-600">Total Rows</p>
+          </div>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-green-600">
+              {summary.validPlays}
+            </p>
+            <p className="text-xs text-slate-600">Valid Plays</p>
+          </div>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-red-600">
+              {summary.invalidPlays}
+            </p>
+            <p className="text-xs text-slate-600">Invalid Plays</p>
+          </div>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-amber-600">
+              {summary.warnings}
+            </p>
+            <p className="text-xs text-slate-600">Warnings</p>
+          </div>
+        </div>
+
+        {/* Column Mapping Info */}
+        {Object.keys(summary.suggestedMappings).length > 0 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="flex items-start">
+              <Info className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
               <div>
-                <p className="text-sm font-medium text-slate-900">
-                  {play.name}
+                <h4 className="text-sm font-medium text-blue-900 mb-1">
+                  Smart Column Mapping Applied
+                </h4>
+                <p className="text-sm text-blue-800 mb-2">
+                  We automatically detected and mapped your columns:
                 </p>
-                <p className="text-sm text-slate-600">
-                  {play.formation} • {play.type}
-                </p>
-              </div>
-              <div className="text-sm text-slate-500">
-                Call: "{play.oneWord}"
+                <div className="text-xs text-blue-700 space-y-1">
+                  {Object.entries(summary.suggestedMappings).map(
+                    ([original, mapped]) => (
+                      <div key={original}>
+                        <span className="font-mono bg-blue-100 px-1 rounded">
+                          {original}
+                        </span>
+                        {" → "}
+                        <span className="font-mono bg-blue-100 px-1 rounded">
+                          {mapped}
+                        </span>
+                      </div>
+                    )
+                  )}
+                </div>
               </div>
             </div>
-          ))}
+          </div>
+        )}
+
+        {/* Plays Table */}
+        <div className="border border-slate-200 rounded-lg overflow-hidden">
+          <div className="bg-slate-50 px-4 py-2 border-b border-slate-200">
+            <h4 className="text-sm font-medium text-slate-900">Play Details</h4>
+          </div>
+
+          <div className="max-h-80 overflow-y-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 sticky top-0">
+                <tr>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 w-8"></th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500">
+                    Personnel
+                  </th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500">
+                    Formation
+                  </th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500">
+                    Play Name
+                  </th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500">
+                    Type
+                  </th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500">
+                    Status
+                  </th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 w-8">
+                    ...
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {previews.map((preview) => (
+                  <React.Fragment key={preview.rowNumber}>
+                    <tr
+                      className={`${preview.isValid ? "bg-white" : "bg-red-50"} hover:bg-slate-50`}
+                    >
+                      <td className="px-3 py-2 text-xs text-slate-500">
+                        {preview.rowNumber}
+                      </td>
+                      <td className="px-3 py-2 font-mono text-xs">
+                        {preview.data.personnel || "-"}
+                      </td>
+                      <td className="px-3 py-2 font-medium text-xs">
+                        {preview.data.formation}
+                      </td>
+                      <td className="px-3 py-2 text-xs">
+                        {preview.data.play_name}
+                      </td>
+                      <td className="px-3 py-2 text-xs">
+                        <span
+                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            preview.data.p_type === "Pass"
+                              ? "bg-blue-100 text-blue-800"
+                              : preview.data.p_type === "Run"
+                                ? "bg-green-100 text-green-800"
+                                : preview.data.p_type === "RPO"
+                                  ? "bg-purple-100 text-purple-800"
+                                  : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
+                          {preview.data.p_type || "Unknown"}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2">
+                        <div className="flex items-center space-x-1">
+                          {preview.isValid ? (
+                            <CheckCircle className="h-4 w-4 text-green-500" />
+                          ) : (
+                            <AlertCircle className="h-4 w-4 text-red-500" />
+                          )}
+                          {preview.warnings.length > 0 && (
+                            <AlertTriangle className="h-4 w-4 text-amber-500" />
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-3 py-2">
+                        <button
+                          onClick={() => toggleRowExpansion(preview.rowNumber)}
+                          className="text-slate-400 hover:text-slate-600"
+                        >
+                          {expandedRows.has(preview.rowNumber) ? (
+                            <ChevronDown className="h-4 w-4" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4" />
+                          )}
+                        </button>
+                      </td>
+                    </tr>
+
+                    {/* Expanded Details */}
+                    {expandedRows.has(preview.rowNumber) && (
+                      <tr className="bg-slate-50">
+                        <td colSpan={7} className="px-3 py-4">
+                          <div className="space-y-3">
+                            {/* Additional Play Details */}
+                            <div className="grid grid-cols-3 gap-4 text-xs">
+                              <div>
+                                <span className="font-medium text-slate-600">
+                                  Audible:
+                                </span>
+                                <span className="ml-1 font-mono">
+                                  {preview.data.one_word_play || "-"}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="font-medium text-slate-600">
+                                  Protection:
+                                </span>
+                                <span className="ml-1 font-mono">
+                                  {preview.data.protection || "-"}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="font-medium text-slate-600">
+                                  Notes:
+                                </span>
+                                <span className="ml-1">
+                                  {preview.data.notes || "-"}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Errors */}
+                            {preview.errors.length > 0 && (
+                              <div className="bg-red-100 border border-red-200 rounded p-2">
+                                <p className="text-xs font-medium text-red-800 mb-1">
+                                  Errors:
+                                </p>
+                                <ul className="text-xs text-red-700 space-y-1">
+                                  {preview.errors.map((error, idx) => (
+                                    <li key={idx}>• {error}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {/* Warnings */}
+                            {preview.warnings.length > 0 && (
+                              <div className="bg-amber-100 border border-amber-200 rounded p-2">
+                                <p className="text-xs font-medium text-amber-800 mb-1">
+                                  Warnings:
+                                </p>
+                                <ul className="text-xs text-amber-700 space-y-1">
+                                  {preview.warnings.map((warning, idx) => (
+                                    <li key={idx}>• {warning}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex justify-between">
+          <button
+            onClick={() => setStep("upload")}
+            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50"
+          >
+            Back
+          </button>
+          <button
+            onClick={handleImport}
+            disabled={summary.validPlays === 0}
+            className={`px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md ${
+              summary.validPlays > 0
+                ? "bg-emerald-600 hover:bg-emerald-700"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
+          >
+            Import {summary.validPlays} Valid Plays
+          </button>
         </div>
       </div>
-      <div className="flex justify-between">
-        <button
-          onClick={() => setStep("mapping")}
-          className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50"
-        >
-          Back
-        </button>
-        <button
-          onClick={() => setStep("complete")}
-          className="px-4 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md hover:bg-emerald-700"
-        >
-          Import Plays
-        </button>
+    );
+  };
+
+  const renderImportingStep = () => (
+    <div className="text-center space-y-6">
+      <div>
+        <Loader2 className="h-16 w-16 text-emerald-600 mx-auto mb-4 animate-spin" />
+        <h3 className="text-lg font-medium text-slate-900 mb-2">
+          Importing Plays...
+        </h3>
+        <p className="text-sm text-slate-600">
+          Processing your CSV file and adding plays to the database
+        </p>
+      </div>
+      <div className="bg-blue-50 rounded-lg p-4">
+        <p className="text-sm text-blue-800">
+          Please wait while we process your plays. This may take a moment for
+          large files.
+        </p>
       </div>
     </div>
   );
+
   const renderCompleteStep = () => (
     <div className="text-center space-y-6">
       <div>
-        <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-slate-900 mb-2">
-          Import Complete!
-        </h3>
-        <p className="text-sm text-slate-600">
-          Successfully imported 21 plays to your playbook
-        </p>
+        {importResult?.success ? (
+          <>
+            <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-slate-900 mb-2">
+              Import Complete!
+            </h3>
+            <p className="text-sm text-slate-600">
+              Successfully imported {importResult.importedPlays} plays to your
+              playbook
+            </p>
+          </>
+        ) : (
+          <>
+            <AlertCircle className="h-16 w-16 text-red-600 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-slate-900 mb-2">
+              Import Had Issues
+            </h3>
+            <p className="text-sm text-slate-600">
+              {importResult?.importedPlays || 0} plays imported, but some errors
+              occurred
+            </p>
+          </>
+        )}
       </div>
-      <div className="bg-slate-50 rounded-lg p-4">
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div>
-            <p className="text-2xl font-bold text-green-600">21</p>
-            <p className="text-sm text-slate-600">Plays Added</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-blue-600">8</p>
-            <p className="text-sm text-slate-600">Formations</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-purple-600">3</p>
-            <p className="text-sm text-slate-600">Play Types</p>
+
+      {importResult && (
+        <div className="bg-slate-50 rounded-lg p-4">
+          <div className="grid grid-cols-4 gap-4 text-center">
+            <div>
+              <p className="text-2xl font-bold text-green-600">
+                {importResult.importedPlays}
+              </p>
+              <p className="text-sm text-slate-600">Plays Added</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-blue-600">
+                {importResult.totalRows}
+              </p>
+              <p className="text-sm text-slate-600">Total Rows</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-red-600">
+                {importResult.errors.length}
+              </p>
+              <p className="text-sm text-slate-600">Errors</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-amber-600">
+                {importResult.warnings?.length || 0}
+              </p>
+              <p className="text-sm text-slate-600">Warnings</p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {importResult?.warnings && importResult.warnings.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-left">
+          <h4 className="text-sm font-medium text-amber-900 mb-2">
+            Import Warnings:
+          </h4>
+          <ul className="text-sm text-amber-800 list-disc list-inside space-y-1">
+            {importResult.warnings
+              .slice(0, 5)
+              .map((warning: string, index: number) => (
+                <li key={index}>{warning}</li>
+              ))}
+            {importResult.warnings.length > 5 && (
+              <li>... and {importResult.warnings.length - 5} more warnings</li>
+            )}
+          </ul>
+        </div>
+      )}
+
+      {importResult?.errors && importResult.errors.length > 0 && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-left">
+          <h4 className="text-sm font-medium text-red-900 mb-2">
+            Import Errors:
+          </h4>
+          <ul className="text-sm text-red-800 list-disc list-inside space-y-1">
+            {importResult.errors
+              .slice(0, 5)
+              .map((error: string, index: number) => (
+                <li key={index}>{error}</li>
+              ))}
+            {importResult.errors.length > 5 && (
+              <li>... and {importResult.errors.length - 5} more errors</li>
+            )}
+          </ul>
+        </div>
+      )}
+
       <button
         onClick={onClose}
         className="px-6 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md hover:bg-emerald-700"
@@ -266,31 +657,30 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       </button>
     </div>
   );
+
   const renderStep = () => {
     switch (step) {
       case "upload":
         return renderUploadStep();
-      case "mapping":
-        return renderMappingStep();
       case "preview":
         return renderPreviewStep();
+      case "importing":
+        return renderImportingStep();
       case "complete":
         return renderCompleteStep();
       default:
         return renderUploadStep();
     }
   };
+
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        {/* Backdrop */}
         <div
           className="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity"
           onClick={onClose}
         />
-        {/* Modal */}
         <div className="inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-          {/* Header */}
           <div className="bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-slate-900">CSV Import</h2>
             <button
@@ -300,7 +690,6 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               <X className="h-6 w-6" />
             </button>
           </div>
-          {/* Content */}
           <div className="bg-white px-6 py-8">{renderStep()}</div>
         </div>
       </div>
