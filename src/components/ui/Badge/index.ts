@@ -10,6 +10,7 @@ export {
   ProgressBadge,
   NotificationBadge,
 } from "./Badge";
+export { ComplexityBadge } from "./ComplexityBadge";
 export type { BadgeProps } from "./Badge";
 
 // Import the CSS animations

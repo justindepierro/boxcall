@@ -82,6 +82,31 @@
     forwards;
 }
 
+/* === CELEBRATION ANIMATIONS === */
+/* Achievement moments - Satisfying micro-celebrations */
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3) rotate(-10deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) rotate(5deg);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(0.98) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.animate-bounce-in {
+  animation: bounceIn var(--duration-confident) var(--timing-square-bounce)
+    forwards;
+}
+
 /* === SQUARE SCALE ANIMATIONS === */
 /* Technical scaling - No overshoot */
 @keyframes scaleSquareIn {

@@ -12,8 +12,15 @@ interface PlayGridProps {
     distance?: string;
     tags?: string[];
   };
+  onAddToPracticeScript?: (play: Play) => void;
+  onAddToGamePlan?: (play: Play) => void;
 }
-export const PlayGrid: React.FC<PlayGridProps> = ({ searchQuery, filters }) => {
+export const PlayGrid: React.FC<PlayGridProps> = ({
+  searchQuery,
+  filters,
+  onAddToPracticeScript,
+  onAddToGamePlan,
+}) => {
   // Toggle for play name display mode (true = one-word calls, false = full names)
   const [showOneWordCalls, setShowOneWordCalls] = useState(false);
   // Use demo data for now - replace with actual API call later
@@ -85,6 +92,8 @@ export const PlayGrid: React.FC<PlayGridProps> = ({ searchQuery, filters }) => {
             onCreateDiagram={(_play: Play) => {
               // TODO: Implement create diagram functionality
             }}
+            onAddToPracticeScript={onAddToPracticeScript}
+            onAddToGamePlan={onAddToGamePlan}
           />
         ))}
       </div>

@@ -64,7 +64,7 @@ export const Badge: React.FC<BadgeProps> = ({
   onClick,
 }) => {
   // Base styles - the foundation of luxury
-  const baseStyles = cn(
+  const baseStyles = clsx(
     // Shape and positioning
     "inline-flex items-center justify-center",
     "font-medium tracking-wide",
@@ -196,10 +196,14 @@ export const AchievementBadge: React.FC<Omit<BadgeProps, "variant">> = (
  * Perfect for tracking practice attendance, skill development, etc.
  */
 export const ProgressBadge: React.FC<
-  BadgeProps & { progress: number; label?: string }
-> = ({ progress, label, ...props }) => (
+  Omit<BadgeProps, "children"> & {
+    progress: number;
+    label?: string;
+    children?: React.ReactNode;
+  }
+> = ({ progress, label, children, ...props }) => (
   <Badge {...props} variant="information" progress={progress}>
-    {label || `${progress}%`}
+    {children || label || `${progress}%`}
   </Badge>
 );
 

@@ -8,16 +8,21 @@ import {
   Target,
   Hash,
   Clock,
+  Calendar,
+  Gamepad2,
 } from "lucide-react";
 import type { Play as PlayType } from "../../types/play";
 import { VisualPlayBuilder } from "./visual/VisualPlayBuilder";
 import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
+import { Badge } from "../ui/Badge";
 interface PlayCardProps {
   play: PlayType;
   showOneWordCalls?: boolean;
   onEdit?: (play: PlayType) => void;
   onDuplicate?: (play: PlayType) => void;
   onCreateDiagram?: (play: PlayType) => void;
+  onAddToPracticeScript?: (play: PlayType) => void;
+  onAddToGamePlan?: (play: PlayType) => void;
 }
 export const PlayCard: React.FC<PlayCardProps> = ({
   play,
@@ -25,6 +30,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   onEdit,
   onDuplicate,
   onCreateDiagram,
+  onAddToPracticeScript,
+  onAddToGamePlan,
 }) => {
   const [showVisualBuilder, setShowVisualBuilder] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -306,6 +313,41 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   )}
                 </div>
               )}
+
+              {/* 3-Part Workflow Actions - Week 3 Feature */}
+              <div className="md:col-span-3 pt-4 border-t border-slate-100">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-semibold text-slate-700 mb-1">
+                      Add to Workflow
+                    </h4>
+                    <p className="text-xs text-slate-500">
+                      Build practice scripts and game plans from this play
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => onAddToPracticeScript?.(play)}
+                      className="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-xs font-medium transition-colors"
+                      title="Add this play to a practice script"
+                    >
+                      <Calendar className="h-3 w-3 mr-1" />
+                      Practice Script
+                    </button>
+                    <button
+                      onClick={() => onAddToGamePlan?.(play)}
+                      className="inline-flex items-center px-3 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-lg text-xs font-medium transition-colors"
+                      title="Add this play to a game plan"
+                    >
+                      <Gamepad2 className="h-3 w-3 mr-1" />
+                      Game Plan
+                    </button>
+                    <Badge variant="premium" size="sm">
+                      Week 3
+                    </Badge>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>
