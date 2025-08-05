@@ -573,7 +573,7 @@ export class CSVService {
         );
       }
       // Common formation corrections
-      const formationCorrections = {
+      const formationCorrections: Record<string, string> = {
         gun: "Shotgun",
         "i-form": "I-Formation",
         i: "I-Formation",
@@ -616,7 +616,7 @@ export class CSVService {
         );
       }
       // Auto-capitalize common play names
-      const commonPlays = {
+      const commonPlays: Record<string, string> = {
         dive: "Dive",
         sweep: "Sweep",
         slant: "Slant",
