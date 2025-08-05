@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Icon } from "../ui/Icon/Icon";
 import type { TeamSettings as TeamSettingsType } from "../../types/team-management";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -118,7 +119,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                 />
               ) : (
                 <div className="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center border border-gray-300 dark:border-gray-600">
-                  <span className="text-3xl text-gray-400">🏈</span>
+                  <Icon name="award" className="w-5 h-5" />
                 </div>
               )}
             </div>

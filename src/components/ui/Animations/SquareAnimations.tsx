@@ -1,4 +1,5 @@
 import React from "react";
+import { Icon } from "../ui/Icon/Icon";
 // Square Progress Bar Component
 interface ProgressBarProps {
   value: number; // 0-100
@@ -217,7 +218,7 @@ export const FootballLoadingSpinner: React.FC<{ message?: string }> = ({
         {/* Spinning football field */}
         <div className="w-16 h-16 border-4 border-jade-200 dark:border-jade-800 rounded-sm animate-spin">
           <div className="absolute inset-2 bg-green-100 dark:bg-green-900/20 rounded-sm flex items-center justify-center">
-            <span className="text-2xl">🏈</span>
+            <Icon name="award" className="w-5 h-5" />
           </div>
         </div>
         {/* Pulsing yard lines */}

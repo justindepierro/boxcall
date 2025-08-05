@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system";
 import { Button, Card, Input } from "../ui";
 import Icon from "../ui/Icon/Icon";
@@ -135,7 +136,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                 variant="body-sm"
                 className="font-semibold mb-2 text-gray-900 dark:text-white"
               >
-                📊 GPA
+                <Icon name="bar-chart" className="w-4 h-4 inline" /> GPA
               </Typography>
               {isEditing ? (
                 <Input
@@ -166,7 +167,8 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                 variant="body-sm"
                 className="font-semibold mb-2 text-gray-900 dark:text-white"
               >
-                🏈 Favorite Position
+                <Icon name="award" className="w-4 h-4 inline" /> Favorite
+                Position
               </Typography>
               {isEditing ? (
                 <Input
@@ -300,7 +302,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
           variant="body-sm"
           className="font-semibold mb-3 text-gray-900 dark:text-white"
         >
-          📈 Profile Stats
+          <Icon name="trending-up" className="w-4 h-4 inline" /> Profile Stats
         </Typography>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>

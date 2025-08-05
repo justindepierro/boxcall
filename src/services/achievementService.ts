@@ -45,7 +45,7 @@ export class AchievementService {
   ): Promise<AchievementData> {
     try {
       console.log(
-        `🏆 Getting achievements for user ${userId} in dev mode: ${devMode}`
+        `[Trophy/Achievement] Getting achievements for user ${userId} in dev mode: ${devMode}`
       );
 
       // Check if we're in blank slate mode
@@ -57,7 +57,9 @@ export class AchievementService {
       // For production/real modes, get real data
       if (devMode === "production" || devMode === "super_admin_real") {
         try {
-          console.log("🔍 Attempting to fetch real achievements...");
+          console.log(
+            "[Search/Investigate] Attempting to fetch real achievements..."
+          );
           const realAchievements = await Promise.race([
             this.getRealAchievements(userId),
             new Promise<never>((_, reject) =>
@@ -67,11 +69,13 @@ export class AchievementService {
               )
             ),
           ]);
-          console.log("✅ Real achievements fetched successfully");
+          console.log(
+            "[Success/Complete] Real achievements fetched successfully"
+          );
           return realAchievements;
         } catch (error) {
           console.warn(
-            "⚠️ Could not fetch real achievements, returning empty:",
+            "[Warning] Could not fetch real achievements, returning empty:",
             error
           );
           return this.getEmptyAchievements();
@@ -211,13 +215,13 @@ export class AchievementService {
       case "star":
         return "⭐";
       case "flame":
-        return "🔥";
+        return "[Fire/Hot streak]";
       case "lightning":
-        return "⚡";
+        return "[Lightning/Power]";
       case "crown":
-        return "👑";
+        return "[Crown/Leadership]";
       case "diamond":
-        return "💎";
+        return "[Diamond/Premium]";
       default:
         return "award";
     }
@@ -494,7 +498,7 @@ export class AchievementService {
             {
               id: "dev-coaching-1",
               name: "Outstanding Coaching",
-              icon: "🏆",
+              icon: "[Trophy/Achievement]",
               awardedBy: "dev-system",
               awardedByName: "Development System",
               date: new Date(
@@ -509,7 +513,7 @@ export class AchievementService {
               id: "dev-season-excellence",
               name: "Season Excellence",
               description: "Led team to outstanding season performance",
-              icon: "🥇",
+              icon: "[Gold Medal]",
               earned: true,
               earnedDate: new Date(
                 Date.now() - 30 * 24 * 60 * 60 * 1000
@@ -526,7 +530,7 @@ export class AchievementService {
             {
               id: "dev-defensive-1",
               name: "Defensive Coordinator",
-              icon: "🛡️",
+              icon: "[Shield/Defense]",
               awardedBy: "dev-system",
               awardedByName: "Development System",
               date: new Date(
@@ -541,7 +545,7 @@ export class AchievementService {
               id: "dev-player-development",
               name: "Player Development",
               description: "Exceptional player mentoring and development",
-              icon: "🎖️",
+              icon: "[Medal]",
               earned: true,
               earnedDate: new Date(
                 Date.now() - 21 * 24 * 60 * 60 * 1000
@@ -559,7 +563,7 @@ export class AchievementService {
             {
               id: "dev-touchdown-1",
               name: "Touchdown Pass",
-              icon: "🏈",
+              icon: "[Football]",
               awardedBy: "dev-coach",
               awardedByName: "Coach Martinez",
               date: new Date(
@@ -586,7 +590,7 @@ export class AchievementService {
               id: "dev-player-of-week",
               name: "Player of the Week",
               description: "Outstanding performance in last game",
-              icon: "🏆",
+              icon: "[Trophy/Achievement]",
               earned: true,
               earnedDate: new Date(
                 Date.now() - 7 * 24 * 60 * 60 * 1000
@@ -604,7 +608,7 @@ export class AchievementService {
             {
               id: "dev-admin-excellence",
               name: "Platform Excellence",
-              icon: "👑",
+              icon: "[Crown/Leadership]",
               awardedBy: "dev-system",
               awardedByName: "BoxCall System",
               date: new Date(
@@ -619,7 +623,7 @@ export class AchievementService {
               id: "dev-system-admin",
               name: "System Administrator",
               description: "Excellence in platform management",
-              icon: "🎯",
+              icon: "[Target]",
               earned: true,
               earnedDate: new Date(
                 Date.now() - 14 * 24 * 60 * 60 * 1000

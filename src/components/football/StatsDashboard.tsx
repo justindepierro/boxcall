@@ -1,4 +1,5 @@
 import React from "react";
+import { Icon } from "../ui/Icon/Icon";
 // Football Statistics Interface
 interface PlayerStats {
   playerId: string;
@@ -184,7 +185,8 @@ export const StatsDashboard: React.FC = () => {
       {/* Header */}
       <div className="bg-gradient-to-r from-jade-500 to-jade-600 rounded-md p-6 text-white">
         <h1 className="text-3xl font-display font-bold mb-2">
-          🏈 Team Statistics Dashboard
+          <Icon name="award" className="w-4 h-4 inline" /> Team Statistics
+          Dashboard
         </h1>
         <p className="font-sans text-jade-100">
           Season performance metrics and player statistics
@@ -218,7 +220,8 @@ export const StatsDashboard: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 rounded-md shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white">
-            📊 Player Statistics
+            <Icon name="bar-chart" className="w-4 h-4 inline" /> Player
+            Statistics
           </h2>
           <p className="text-sm font-sans text-gray-600 dark:text-gray-400 mt-1">
             Key performance metrics by player
@@ -259,10 +262,12 @@ export const StatsDashboard: React.FC = () => {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <button className="bg-jade-500 hover:bg-jade-600 text-white font-sans font-semibold py-3 px-4 rounded-sm transition-colors">
-          📈 Export Stats Report
+          <Icon name="trending-up" className="w-4 h-4 inline" /> Export Stats
+          Report
         </button>
         <button className="bg-navy-500 hover:bg-navy-600 text-white font-sans font-semibold py-3 px-4 rounded-sm transition-colors">
-          📋 Generate Game Plan
+          <Icon name="clipboard" className="w-4 h-4 inline" /> Generate Game
+          Plan
         </button>
         <button className="border-2 border-jade-500 text-jade-600 hover:bg-jade-50 dark:hover:bg-jade-900/20 font-sans font-semibold py-3 px-4 rounded-sm transition-colors">
           ⚙️ Stat Settings

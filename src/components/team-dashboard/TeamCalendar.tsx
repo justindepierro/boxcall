@@ -1,4 +1,5 @@
 import React from "react";
+import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 interface TeamCalendarProps {
@@ -68,7 +69,7 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
   const getEventIcon = (type: string) => {
     switch (type) {
       case "game":
-        return "🏈";
+        return <Icon name="award" className="w-4 h-4" />;
       case "practice":
         return "🏃‍♂️";
       case "meeting":

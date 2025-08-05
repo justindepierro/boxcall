@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Icon } from "../ui/Icon/Icon";
 import { useAuth } from "../../app/auth-store";
 import {
   useDevMode,
@@ -15,13 +16,13 @@ interface QuickDevPanelProps {
 const REAL_WORLD_DEV_MODES = [
   {
     mode: "production",
-    label: "🌍 My Real Team",
+    label: "� My Real Team",
     description: "Your actual team and data",
     category: "Real World",
   },
   {
     mode: "real_world_dev",
-    label: "🔧 My Team (Dev Mode)",
+    label: "� My Team (Dev Mode)",
     description: "Your team with dev tools active",
     category: "Real World",
   },
@@ -31,70 +32,65 @@ const REAL_WORLD_DEV_MODES = [
 const PROFESSIONAL_DEV_MODES = [
   {
     mode: "blank_slate",
-    label: "🆕 Blank Slate",
-    description: "New coach experience - no data",
-    category: "Testing",
+    label: "Blank Slate",
+    description: "User profile",
   },
   {
     mode: "dev_head_coach",
-    label: "🏆 Dev Head Coach",
-    description: "Professional head coach profile",
-    category: "Professional",
+    label: "Dev Head Coach",
+    description: "Coach profile",
   },
   {
     mode: "dev_assistant_coach",
-    label: "👨‍🏫 Dev Assistant Coach",
-    description: "Professional assistant coach profile",
-    category: "Professional",
+    label: "Dev Assistant Coach",
+    description: "Coach profile",
   },
   {
     mode: "dev_player",
-    label: "🏃‍♂️ Dev Player",
-    description: "Professional player profile",
-    category: "Professional",
+    label: "Dev Player",
+    description: "User profile",
   },
   {
     mode: "dev_super_admin",
-    label: "👑 Dev Super Admin",
-    description: "Professional super admin profile",
-    category: "Professional",
+    label: "Dev Super Admin",
+    description: "Admin profile",
   },
 ] as const;
 
 // Legacy fallback modes for backward compatibility
 const LEGACY_FALLBACK_MODES = [
-  { mode: "production", label: "🏭 Production", description: "Real user data" },
+  { mode: "production", label: "� Production", description: "Real user data" },
   {
     mode: "super_admin_real",
-    label: "👑 Super Admin (Real)",
+    label: "Super Admin (Real)",
     description: "Your team data",
   },
   {
     mode: "super_admin_mock",
-    label: "🧪 Super Admin (Mock)",
+    label: "Super Admin (Mock)",
     description: "Mock Dev team",
   },
   {
     mode: "view_as_head_coach",
-    label: "🏆 Head Coach",
+    label: "Head Coach",
     description: "Coach permissions",
   },
   {
     mode: "view_as_coach",
-    label: "👨‍🏫 Assistant Coach",
+    label: "Assistant Coach",
     description: "Limited coach access",
   },
   {
     mode: "view_as_player",
-    label: "🏃‍♂️ Player",
+    label: "Player",
     description: "Player perspective",
   },
   {
     mode: "view_as_manager",
-    label: "📋 Manager",
+    label: "Manager",
     description: "Team manager view",
   },
-  { mode: "view_as_family", label: "👨‍👩‍👧‍👦 Family", description: "Parent portal" },
+  { mode: "view_as_family", label: "Family", description: "Parent portal" },
 ] as const;
 
 export const QuickDevPanelEnhanced: React.FC<QuickDevPanelProps> = ({
@@ -139,7 +135,7 @@ export const QuickDevPanelEnhanced: React.FC<QuickDevPanelProps> = ({
         <div className="p-3 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <span className="text-lg">🛠️</span>
+              <Icon name="settings" className="w-5 h-5" />
               <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Professional Dev Tools
               </span>
@@ -192,7 +188,7 @@ export const QuickDevPanelEnhanced: React.FC<QuickDevPanelProps> = ({
             )}
             {isDevMode && (
               <div className="text-orange-600 dark:text-orange-400 font-medium">
-                🚨 DEV MODE ACTIVE
+                ⚠ DEV MODE ACTIVE
               </div>
             )}
           </div>
@@ -316,7 +312,7 @@ export const QuickDevPanelEnhanced: React.FC<QuickDevPanelProps> = ({
                   onClick={() => handleDevModeChange("dev_head_coach")}
                   className="text-xs flex-1"
                 >
-                  🏆 Head Coach
+                  <Icon name="trophy" className="w-4 h-4 inline" /> Head Coach
                 </Button>
                 <Button
                   size="sm"

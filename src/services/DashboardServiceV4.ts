@@ -79,7 +79,7 @@ export class DashboardServiceV4 {
     devMode: CleanDevMode
   ): Promise<DashboardData> {
     try {
-      console.log("📊 Dashboard V4: Loading dashboard data", {
+      console.log("[Statistics/Chart] Dashboard V4: Loading dashboard data", {
         userId,
         devMode,
       });
@@ -121,7 +121,7 @@ export class DashboardServiceV4 {
         recentActivity,
       };
 
-      console.log("✅ Dashboard V4: Successfully loaded data", {
+      console.log("[Success/Complete] Dashboard V4: Successfully loaded data", {
         teamsCount: userTeams.length,
         activitiesCount: recentActivity.length,
         dataSource: context.dataSource,
@@ -129,7 +129,10 @@ export class DashboardServiceV4 {
 
       return dashboardData;
     } catch (error) {
-      console.error("❌ Dashboard V4: Error loading dashboard data", error);
+      console.error(
+        "[Error/Failed] Dashboard V4: Error loading dashboard data",
+        error
+      );
       return {
         userTeams: [],
         totalTeams: 0,

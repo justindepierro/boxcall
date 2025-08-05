@@ -29,10 +29,10 @@ export class RBACService {
   ): boolean {
     if (!user) return false;
 
-    // 🎯 SUPER ADMIN OVERRIDE - You get unlimited access
+    // [Target] SUPER ADMIN OVERRIDE - You get unlimited access
     if (user.email === SUPER_ADMIN_EMAIL) {
       console.log(
-        `🔓 Super admin override: ${user.email} granted ${permission}`
+        `[Unlocked/Access] Super admin override: ${user.email} granted ${permission}`
       );
       return true;
     }

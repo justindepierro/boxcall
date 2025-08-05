@@ -130,7 +130,7 @@ export class DashboardService {
       try {
         // TODO: Implement real activity feed from Supabase
         console.log(
-          "🔍 Dashboard Service: Attempting to fetch real activity..."
+          "[Search/Investigate] Dashboard Service: Attempting to fetch real activity..."
         );
 
         // For now, return empty until real implementation

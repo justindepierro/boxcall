@@ -1,4 +1,5 @@
 import React from "react";
+import { Icon } from "../ui/Icon/Icon";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "../design-system";
 import { Button } from "../ui";
@@ -50,7 +51,7 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           className="w-full justify-start"
           onClick={() => navigate(`/team/${teamId}/practice`)}
         >
-          <span className="mr-2">🏈</span>
+          <Icon name="award" className="w-5 h-5" />
           Practice Schedule
         </Button>
         <Button
@@ -92,7 +93,7 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           className="w-full justify-start"
           onClick={() => console.log("View Stats")}
         >
-          <span className="mr-2">📊</span>
+          <Icon name="bar-chart" className="w-5 h-5" />
           My Team Stats
         </Button>
         <Button
@@ -101,7 +102,7 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           className="w-full justify-start"
           onClick={() => console.log("Study Plays")}
         >
-          <span className="mr-2">📋</span>
+          <Icon name="clipboard" className="w-5 h-5" />
           Study Team Plays
         </Button>
         <Button
@@ -110,7 +111,7 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           className="w-full justify-start"
           onClick={() => console.log("RSVP Events")}
         >
-          <span className="mr-2">✅</span>
+          <Icon name="check-circle" className="w-5 h-5" />
           RSVP to Events
         </Button>
         <Button
@@ -134,7 +135,7 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           className="w-full justify-start"
           onClick={() => console.log("Player Progress")}
         >
-          <span className="mr-2">📈</span>
+          <Icon name="trending-up" className="w-5 h-5" />
           Player Progress
         </Button>
         <Button
@@ -143,7 +144,7 @@ export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
           className="w-full justify-start"
           onClick={() => console.log("RSVP Events")}
         >
-          <span className="mr-2">✅</span>
+          <Icon name="check-circle" className="w-5 h-5" />
           RSVP to Events
         </Button>
         <Button

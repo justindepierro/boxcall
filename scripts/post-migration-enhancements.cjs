@@ -5,14 +5,14 @@
  * Implement professional design system improvements
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-console.log('🚀 POST-MIGRATION ENHANCEMENTS');
-console.log('================================\n');
+console.log("🚀 POST-MIGRATION ENHANCEMENTS");
+console.log("================================\n");
 
 // Step 1: Create TypeScript types for design tokens
-console.log('📝 Step 1: Adding TypeScript types for design tokens...');
+console.log("📝 Step 1: Adding TypeScript types for design tokens...");
 
 const typesContent = `/**
  * Design Token Types
@@ -136,12 +136,12 @@ export interface DesignTokens {
 export type ValidTokenPath = keyof BrandColorTokens | keyof SemanticColorTokens | keyof ComponentColorTokens;
 `;
 
-const typesPath = path.join(__dirname, '..', 'src/design-system/types.ts');
+const typesPath = path.join(__dirname, "..", "src/design-system/types.ts");
 fs.writeFileSync(typesPath, typesContent);
-console.log('  ✅ Created TypeScript types (/src/design-system/types.ts)');
+console.log("  ✅ Created TypeScript types (/src/design-system/types.ts)");
 
 // Step 2: Create design system documentation
-console.log('\n📝 Step 2: Creating design system documentation...');
+console.log("\n📝 Step 2: Creating design system documentation...");
 
 const docsContent = `# BoxCall Design System Documentation
 
@@ -326,32 +326,39 @@ npm run verify-tokens
 **🏈 Professional • Consistent • Maintainable**
 `;
 
-const docsPath = path.join(__dirname, '..', 'docs/design/DESIGN_SYSTEM_USAGE.md');
+const docsPath = path.join(
+  __dirname,
+  "..",
+  "docs/design/DESIGN_SYSTEM_USAGE.md"
+);
 fs.writeFileSync(docsPath, docsContent);
-console.log('  ✅ Created design system documentation (/docs/design/DESIGN_SYSTEM_USAGE.md)');
+console.log(
+  "  ✅ Created design system documentation (/docs/design/DESIGN_SYSTEM_USAGE.md)"
+);
 
 // Step 3: Add npm scripts for token management
-console.log('\n📝 Step 3: Adding token management scripts...');
+console.log("\n📝 Step 3: Adding token management scripts...");
 
-const packageJsonPath = path.join(__dirname, '..', 'package.json');
+const packageJsonPath = path.join(__dirname, "..", "package.json");
 if (fs.existsSync(packageJsonPath)) {
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-  
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+
   // Add design system scripts
   packageJson.scripts = {
     ...packageJson.scripts,
     "tokens:verify": "node scripts/phase5-final-verification.cjs",
     "tokens:audit": "node scripts/phase5-final-verification.cjs",
     "design-system:check": "node scripts/phase5-final-verification.cjs",
-    "design-system:docs": "echo 'Opening design system documentation...' && open docs/design/DESIGN_SYSTEM_USAGE.md"
+    "design-system:docs":
+      "echo 'Opening design system documentation...' && open docs/design/DESIGN_SYSTEM_USAGE.md",
   };
 
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-  console.log('  ✅ Added npm scripts for token management');
+  console.log("  ✅ Added npm scripts for token management");
 }
 
 // Step 4: Create design system utility functions
-console.log('\n📝 Step 4: Creating utility functions...');
+console.log("\n📝 Step 4: Creating utility functions...");
 
 const utilsContent = `/**
  * Design System Utilities
@@ -466,26 +473,26 @@ export function printTokens(): void {
 }
 `;
 
-const utilsPath = path.join(__dirname, '..', 'src/design-system/utils.ts');
+const utilsPath = path.join(__dirname, "..", "src/design-system/utils.ts");
 fs.writeFileSync(utilsPath, utilsContent);
-console.log('  ✅ Created utility functions (/src/design-system/utils.ts)');
+console.log("  ✅ Created utility functions (/src/design-system/utils.ts)");
 
-console.log('\n🎉 POST-MIGRATION ENHANCEMENTS COMPLETE!');
-console.log('=========================================');
-console.log('📊 Summary:');
-console.log('  • ✅ TypeScript types for design tokens');
-console.log('  • ✅ Comprehensive documentation');
-console.log('  • ✅ npm scripts for token management');
-console.log('  • ✅ Utility functions for development');
-console.log('');
-console.log('🚀 Available Commands:');
-console.log('  • npm run tokens:verify     - Verify token usage');
-console.log('  • npm run tokens:audit      - Audit hardcoded colors');
-console.log('  • npm run design-system:check - Check system health');
-console.log('');
-console.log('📚 Documentation:');
-console.log('  • /docs/design/DESIGN_SYSTEM_USAGE.md - Usage guidelines');
-console.log('  • /src/design-system/types.ts - TypeScript definitions');
-console.log('  • /src/design-system/utils.ts - Helper functions');
-console.log('');
-console.log('🎨 Your design system is now enterprise-ready! 🏆');
+console.log("\n🎉 POST-MIGRATION ENHANCEMENTS COMPLETE!");
+console.log("=========================================");
+console.log("📊 Summary:");
+console.log("  • ✅ TypeScript types for design tokens");
+console.log("  • ✅ Comprehensive documentation");
+console.log("  • ✅ npm scripts for token management");
+console.log("  • ✅ Utility functions for development");
+console.log("");
+console.log("🚀 Available Commands:");
+console.log("  • npm run tokens:verify     - Verify token usage");
+console.log("  • npm run tokens:audit      - Audit hardcoded colors");
+console.log("  • npm run design-system:check - Check system health");
+console.log("");
+console.log("📚 Documentation:");
+console.log("  • /docs/design/DESIGN_SYSTEM_USAGE.md - Usage guidelines");
+console.log("  • /src/design-system/types.ts - TypeScript definitions");
+console.log("  • /src/design-system/utils.ts - Helper functions");
+console.log("");
+console.log("🎨 Your design system is now enterprise-ready! 🏆");

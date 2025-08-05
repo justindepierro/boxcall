@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Icon } from "../ui/Icon/Icon";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
@@ -12,41 +13,41 @@ interface QuickDevPanelProps {
 const DEV_MODES = [
   {
     mode: "blank_slate",
-    label: "🆕 Blank Slate",
+    label: "Blank Slate",
     description: "New user - no data",
   },
-  { mode: "production", label: "🏭 Production", description: "Real user data" },
+  { mode: "production", label: "� Production", description: "Real user data" },
   {
     mode: "super_admin_real",
-    label: "👑 Super Admin (Real)",
+    label: "Super Admin (Real)",
     description: "Your team data",
   },
   {
     mode: "super_admin_mock",
-    label: "🧪 Super Admin (Mock)",
+    label: "Super Admin (Mock)",
     description: "Mock Dev team",
   },
   {
     mode: "view_as_head_coach",
-    label: "🏆 Head Coach",
+    label: "Head Coach",
     description: "Coach permissions",
   },
   {
     mode: "view_as_coach",
-    label: "👨‍🏫 Assistant Coach",
+    label: "Assistant Coach",
     description: "Limited coach access",
   },
   {
     mode: "view_as_player",
-    label: "🏃‍♂️ Player",
+    label: "Player",
     description: "Player perspective",
   },
   {
     mode: "view_as_manager",
-    label: "📋 Manager",
+    label: "Manager",
     description: "Team manager view",
   },
-  { mode: "view_as_family", label: "👨‍👩‍👧‍👦 Family", description: "Parent portal" },
+  { mode: "view_as_family", label: "Family", description: "Parent portal" },
 ] as const;
 
 export const QuickDevPanel: React.FC<QuickDevPanelProps> = ({
@@ -79,7 +80,7 @@ export const QuickDevPanel: React.FC<QuickDevPanelProps> = ({
         <div className="p-3 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <span className="text-lg">🛠️</span>
+              <Icon name="settings" className="w-5 h-5" />
               <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Dev Tools
               </span>
@@ -122,7 +123,7 @@ export const QuickDevPanel: React.FC<QuickDevPanelProps> = ({
             </div>
             {isDevMode && (
               <div className="text-orange-600 dark:text-orange-400 font-medium">
-                🚨 DEV MODE ACTIVE
+                ⚠ DEV MODE ACTIVE
               </div>
             )}
           </div>

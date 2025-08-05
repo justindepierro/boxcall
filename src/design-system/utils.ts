@@ -113,7 +113,7 @@ export function getAllTokenPaths(): string[] {
  */
 export function printTokens(): void {
   if (process.env.NODE_ENV === "development") {
-    console.group("🎨 Available Design Tokens:");
+    console.group("[Design/Colorful] Available Design Tokens:");
     getAllTokenPaths().forEach((path) => {
       console.log(`${path}: ${getTokenColor(path)}`);
     });

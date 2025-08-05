@@ -1,4 +1,5 @@
 import React from "react";
+import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system";
 interface TeamRosterProps {
   teamId: string;
@@ -17,7 +18,7 @@ export const TeamRoster: React.FC<TeamRosterProps> = () => {
   return (
     <div className="p-6">
       <Typography variant="headline-md" className="mb-4">
-        🏈 Team Roster
+        <Icon name="award" className="w-4 h-4 inline" /> Team Roster
       </Typography>
       <Typography variant="body-sm" color="muted">
         Team roster component - Coming soon!

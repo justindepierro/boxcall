@@ -5,6 +5,7 @@
  * Includes category filters, content options, and export settings.
  */
 import React, { useState } from "react";
+import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import { Modal } from "../ui/Modal/Modal";
 import { Typography } from "../design-system/Typography";
@@ -280,7 +281,8 @@ export const PracticePDFExportDialog: React.FC<
                   />
                   <span className="text-sm">Offense</span>
                   <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
-                    🏈 Offensive drills and plays
+                    <Icon name="award" className="w-4 h-4 inline" /> Offensive
+                    drills and plays
                   </span>
                 </label>
                 <label className="flex items-center space-x-3 cursor-pointer">
@@ -293,7 +295,8 @@ export const PracticePDFExportDialog: React.FC<
                   />
                   <span className="text-sm">Defense</span>
                   <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded">
-                    🛡️ Defensive drills and schemes
+                    <Icon name="shield" className="w-4 h-4 inline" /> Defensive
+                    drills and schemes
                   </span>
                 </label>
                 <label className="flex items-center space-x-3 cursor-pointer">
@@ -306,7 +309,8 @@ export const PracticePDFExportDialog: React.FC<
                   />
                   <span className="text-sm">Special Teams</span>
                   <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">
-                    ⚡ Special teams plays
+                    <Icon name="zap" className="w-4 h-4 inline" /> Special teams
+                    plays
                   </span>
                 </label>
               </div>
@@ -357,7 +361,8 @@ export const PracticePDFExportDialog: React.FC<
             </Typography>
             <div className="text-sm text-blue-800">
               <div>
-                📋 <strong>Categories:</strong> {getSelectedCategoriesText()}
+                <Icon name="clipboard" className="w-4 h-4 inline" />{" "}
+                <strong>Categories:</strong> {getSelectedCategoriesText()}
               </div>
               <div className="mt-1">
                 📄 <strong>Content:</strong> Basic timeline
@@ -365,9 +370,9 @@ export const PracticePDFExportDialog: React.FC<
                 {exportOptions.addNotes && ", Coach notes"}
               </div>
               <div className="mt-1">
-                🏈 <strong>Blocks to export:</strong>{" "}
-                {getFilteredBlocks().length} of{" "}
-                {practiceData.blocks?.length || 0}
+                <Icon name="award" className="w-4 h-4 inline" />{" "}
+                <strong>Blocks to export:</strong> {getFilteredBlocks().length}{" "}
+                of {practiceData.blocks?.length || 0}
               </div>
             </div>
           </div>

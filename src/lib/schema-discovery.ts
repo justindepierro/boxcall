@@ -3,7 +3,9 @@ import { supabase } from "../lib/supabase";
 // Comprehensive database discovery - finds ALL tables automatically
 export async function discoverAllTables() {
   try {
-    console.log("🔍 Discovering ALL tables in your database...");
+    console.log(
+      "[Search/Investigate] Discovering ALL tables in your database..."
+    );
 
     // Get all table names from information_schema
     const { data: tableList, error: tableError } = await supabase
@@ -14,14 +16,16 @@ export async function discoverAllTables() {
 
     if (tableError) {
       console.log(
-        "⚠️ Could not access information_schema, trying manual discovery..."
+        "[Warning] Could not access information_schema, trying manual discovery..."
       );
       return await manualTableDiscovery();
     }
 
     const allTables = [];
 
-    console.log(`📊 Found ${tableList?.length || 0} tables in your database`);
+    console.log(
+      `[Statistics/Chart] Found ${tableList?.length || 0} tables in your database`
+    );
 
     // For each table, get structure and sample data
     for (const tableInfo of tableList || []) {
@@ -44,16 +48,18 @@ export async function discoverAllTables() {
             hasData: sampleData && sampleData.length > 0,
           });
 
-          console.log(`✅ ${tableName}: [${columns.join(", ")}]`);
+          console.log(
+            `[Success/Complete] ${tableName}: [${columns.join(", ")}]`
+          );
         } else {
-          console.log(`⚠️ ${tableName}: Access restricted`);
+          console.log(`[Warning] ${tableName}: Access restricted`);
         }
       } catch {
-        console.log(`❌ ${tableName}: Not accessible`);
+        console.log(`[Error/Failed] ${tableName}: Not accessible`);
       }
     }
 
-    console.log("🎯 COMPLETE TABLE DISCOVERY:", allTables);
+    console.log("[Target] COMPLETE TABLE DISCOVERY:", allTables);
     return allTables;
   } catch (error) {
     console.error("Error in comprehensive discovery:", error);
@@ -136,7 +142,7 @@ async function manualTableDiscovery() {
           hasData: data && data.length > 0,
         });
 
-        console.log(`✅ ${tableName}: [${columns.join(", ")}]`);
+        console.log(`[Success/Complete] ${tableName}: [${columns.join(", ")}]`);
       }
     } catch {
       // Table doesn't exist
@@ -144,7 +150,7 @@ async function manualTableDiscovery() {
   }
 
   console.log(
-    `🎯 MANUAL DISCOVERY FOUND ${existingTables.length} TABLES:`,
+    `[Target] MANUAL DISCOVERY FOUND ${existingTables.length} TABLES:`,
     existingTables
   );
   return existingTables;
@@ -264,7 +270,7 @@ export async function checkFootballTables() {
 
   const existingTables = [];
 
-  console.log("🏈 Checking for football-specific tables...");
+  console.log("[Football] Checking for football-specific tables...");
 
   for (const tableName of footballTables) {
     try {
@@ -283,7 +289,7 @@ export async function checkFootballTables() {
         });
 
         console.log(
-          `✅ ${tableName}:`,
+          `[Success/Complete] ${tableName}:`,
           sampleRow ? Object.keys(sampleRow).join(", ") : "Empty table"
         );
       }

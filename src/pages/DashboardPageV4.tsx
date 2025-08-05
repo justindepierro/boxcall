@@ -9,6 +9,7 @@
  */
 
 import React from "react";
+import { Icon } from "../components/ui/Icon/Icon";
 import { useDashboardData } from "../hooks/useDataResolution";
 import { Typography } from "../components/design-system";
 import { CleanDataIndicator } from "../components/dev/CleanDataIndicator";
@@ -80,7 +81,7 @@ export const DashboardPageV4: React.FC = () => {
           <div className="text-center max-w-md">
             <div className="mb-6">
               <div className="w-16 h-16 bg-surface-jade rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🏆</span>
+                <Icon name="trophy" className="w-5 h-5" />
               </div>
             </div>
             <Typography variant="headline-lg" className="mb-4">
@@ -145,7 +146,12 @@ export const DashboardPageV4: React.FC = () => {
             {/* Data Source Indicator */}
             <div className="hidden md:block">
               <div className="text-xs text-gray-500 bg-white/50 px-2 py-1 rounded">
-                {isRealData && "📊 Live Data"}
+                {isRealData && (
+                  <>
+                    <Icon name="bar-chart" className="w-4 h-4 inline mr-1" />
+                    Live Data
+                  </>
+                )}
                 {isDevData && "🧪 Dev Data"}
                 {context?.dataSource === "legacy_mock" && "🔧 Legacy Mock"}
               </div>
@@ -245,7 +251,7 @@ export const DashboardPageV4: React.FC = () => {
                       className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg"
                     >
                       <div className="flex-shrink-0 w-8 h-8 bg-surface-jade rounded-full flex items-center justify-center">
-                        <span className="text-xs">🏆</span>
+                        <Icon name="trophy" className="w-5 h-5" />
                       </div>
                       <div className="flex-1">
                         <Typography variant="body-md" className="font-medium">
@@ -285,7 +291,7 @@ export const DashboardPageV4: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-lg p-6 shadow-sm border">
                 <div className="w-12 h-12 bg-surface-jade rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <span className="text-xl">🏆</span>
+                  <Icon name="trophy" className="w-5 h-5" />
                 </div>
                 <Typography variant="headline-sm" className="mb-3">
                   Create Team

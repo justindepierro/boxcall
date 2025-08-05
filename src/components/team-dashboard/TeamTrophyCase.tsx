@@ -30,7 +30,7 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = () => {
       {
         id: "2",
         name: "League Championship",
-        icon: "👑",
+        icon: <Icon name="crown" className="w-4 h-4" />,
         progress: 1,
         target: 1,
         completed: true,

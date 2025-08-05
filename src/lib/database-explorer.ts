@@ -3,18 +3,21 @@ import { supabase } from "../lib/supabase";
 // Test Supabase connection and explore existing database structure
 export async function testSupabaseConnection() {
   try {
-    console.log("🔍 Testing Supabase connection...");
+    console.log("[Search/Investigate] Testing Supabase connection...");
 
     // Test basic connection by checking auth
     const { data: authData, error: authError } =
       await supabase.auth.getSession();
 
     if (authError) {
-      console.error("❌ Auth connection failed:", authError.message);
+      console.error(
+        "[Error/Failed] Auth connection failed:",
+        authError.message
+      );
       return false;
     }
 
-    console.log("✅ Supabase connection successful!");
+    console.log("[Success/Complete] Supabase connection successful!");
     console.log(
       " Current auth state:",
       authData?.session ? "Session exists" : "No session"
@@ -22,7 +25,7 @@ export async function testSupabaseConnection() {
 
     return true;
   } catch (error) {
-    console.error("❌ Connection test failed:", error);
+    console.error("[Error/Failed] Connection test failed:", error);
     return false;
   }
 }
@@ -44,22 +47,24 @@ export async function checkExistingTables() {
 
       if (!error) {
         existingTables.push(tableName);
-        console.log(`✅ Table "${tableName}" exists and accessible`);
+        console.log(
+          `[Success/Complete] Table "${tableName}" exists and accessible`
+        );
       } else if (!error.message.includes("does not exist")) {
         console.log(
-          `⚠️ Table "${tableName}" exists but has access issues:`,
+          `[Warning] Table "${tableName}" exists but has access issues:`,
           error.message
         );
         existingTables.push(`${tableName} (restricted)`);
       }
     } catch {
       console.log(
-        `❌ Table "${tableName}" does not exist or is not accessible`
+        `[Error/Failed] Table "${tableName}" does not exist or is not accessible`
       );
     }
   }
 
-  console.log("📋 Existing tables found:", existingTables);
+  console.log("[Clipboard/List] Existing tables found:", existingTables);
 
   // Test sample data
   if (existingTables.includes("teams")) {
@@ -68,7 +73,7 @@ export async function checkExistingTables() {
       .select("*")
       .limit(3);
     if (!error && teams) {
-      console.log("🏈 Sample teams:", teams);
+      console.log("[Football] Sample teams:", teams);
     }
   }
 

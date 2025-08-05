@@ -1,4 +1,19 @@
-/**
+#!/usr/bin/env node
+
+const fs = require("fs");
+const path = require("path");
+
+console.log("🔄 CLEAN FILE REWRITE: Completely rewriting CleanDevPanel.tsx...");
+console.log(
+  "======================================================================\n"
+);
+
+const filePath = path.join(
+  process.cwd(),
+  "src/components/dev/CleanDevPanel.tsx"
+);
+
+const cleanContent = `/**
  * Clean Dev Mode Switcher - Phase 3 Implementation
  *
  * Modern React component with clean dev mode names and clear indicators.
@@ -9,7 +24,7 @@
  */
 
 import React, { useState } from "react";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from '../ui/Icon/Icon';
 import { useAuth } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import type { DevMode } from "../../app/dev-mode-types";
@@ -94,7 +109,7 @@ export const CleanDevPanel: React.FC<CleanDevPanelProps> = ({
   const isSuperAdminUser = user?.email === "justindepierro@gmail.com";
 
   return (
-    <div className={`fixed bottom-4 right-4 z-50 ${className}`}>
+    <div className={\`fixed bottom-4 right-4 z-50 \${className}\`}>
       {/* Main Panel */}
       <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-w-sm">
         {/* Header */}
@@ -208,11 +223,11 @@ export const CleanDevPanel: React.FC<CleanDevPanelProps> = ({
                         <button
                           key={mode.mode}
                           onClick={() => setDevMode(mode.mode as DevMode)}
-                          className={`w-full text-left p-2 text-xs rounded border transition-colors ${
+                          className={\`w-full text-left p-2 text-xs rounded border transition-colors \${
                             devMode === mode.mode
                               ? "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300"
                               : "bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
-                          }`}
+                          }\`}
                         >
                           <div className="font-medium">{mode.label}</div>
                           <div className="text-gray-500 dark:text-gray-400 mt-1">
@@ -245,3 +260,11 @@ export const CleanDevPanel: React.FC<CleanDevPanelProps> = ({
     </div>
   );
 };
+`;
+
+// Write the clean content
+fs.writeFileSync(filePath, cleanContent, "utf8");
+
+console.log("✅ File completely rewritten with clean content!");
+console.log("🔄 This should resolve any hidden character or encoding issues.");
+console.log("💡 TypeScript errors should now be resolved.");
