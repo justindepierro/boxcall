@@ -1,9 +1,9 @@
 /**
  * Mobile Performance Service - Professional Orchestrator
- * 
+ *
  * Clean orchestration service that coordinates all mobile performance optimization services.
  * Implements modular architecture with clear separation of concerns.
- * 
+ *
  * @author BoxCall Development Team
  * @version 3.0.0
  */
@@ -82,10 +82,18 @@ export class MobilePerformanceService {
     await this.updateAllMetrics();
 
     // Get optimizations from each service
-    const battery = BatteryOptimizationService.getCurrentOptimization() || await BatteryOptimizationService.optimizeBattery(75);
-    const memory = MemoryOptimizationService.getCurrentOptimization() || await MemoryOptimizationService.optimizeMemory();
-    const network = NetworkOptimizationService.getCurrentOptimization() || await NetworkOptimizationService.optimizeNetwork("wifi");
-    const rendering = RenderingOptimizationService.getCurrentOptimization() || await RenderingOptimizationService.optimizeRendering();
+    const battery =
+      BatteryOptimizationService.getCurrentOptimization() ||
+      (await BatteryOptimizationService.optimizeBattery(75));
+    const memory =
+      MemoryOptimizationService.getCurrentOptimization() ||
+      (await MemoryOptimizationService.optimizeMemory());
+    const network =
+      NetworkOptimizationService.getCurrentOptimization() ||
+      (await NetworkOptimizationService.optimizeNetwork("wifi"));
+    const rendering =
+      RenderingOptimizationService.getCurrentOptimization() ||
+      (await RenderingOptimizationService.optimizeRendering());
 
     // Calculate overall score
     const overallScore = this.calculateOverallScore();
@@ -143,17 +151,21 @@ export class MobilePerformanceService {
 
     // Get device state
     const deviceState = await this.getDeviceState();
-    
+
     // Determine optimal profile
     const optimalProfile = getOptimalProfile(deviceState);
     if (optimalProfile.id !== this.currentProfile?.id) {
-      await this.switchProfile(optimalProfile.id as "battery-saver" | "balanced" | "performance");
+      await this.switchProfile(
+        optimalProfile.id as "battery-saver" | "balanced" | "performance"
+      );
       optimizations.push(`Switched to ${optimalProfile.name} profile`);
     }
 
     // Run optimization services
     if (deviceState.batteryLevel < 50) {
-      await BatteryOptimizationService.optimizeBattery(deviceState.batteryLevel);
+      await BatteryOptimizationService.optimizeBattery(
+        deviceState.batteryLevel
+      );
       optimizations.push("Battery optimization applied");
     }
 
@@ -163,7 +175,10 @@ export class MobilePerformanceService {
     }
 
     const renderingOpt = await RenderingOptimizationService.optimizeRendering();
-    if (renderingOpt.quality === "choppy" || renderingOpt.quality === "acceptable") {
+    if (
+      renderingOpt.quality === "choppy" ||
+      renderingOpt.quality === "acceptable"
+    ) {
       optimizations.push("Rendering optimization applied");
     }
 
@@ -203,7 +218,9 @@ export class MobilePerformanceService {
   // PRIVATE HELPER METHODS
   // ==========================================
 
-  private static async applyPerformanceProfile(profile: PerformanceProfile): Promise<void> {
+  private static async applyPerformanceProfile(
+    profile: PerformanceProfile
+  ): Promise<void> {
     const { settings } = profile;
 
     // Apply battery settings
@@ -251,9 +268,27 @@ export class MobilePerformanceService {
     const rendering = RenderingOptimizationService.getCurrentOptimization();
 
     // Update metrics
-    this.updateMetric("battery-level", battery?.currentLevel || 75, "percent", { good: 50, fair: 20, poor: 10 }, timestamp);
-    this.updateMetric("memory-usage", memory?.usedMemory || 128, "mb", { good: 256, fair: 512, poor: 768 }, timestamp);
-    this.updateMetric("frame-rate", rendering?.frameRate || 60, "fps", { good: 55, fair: 30, poor: 15 }, timestamp);
+    this.updateMetric(
+      "battery-level",
+      battery?.currentLevel || 75,
+      "percent",
+      { good: 50, fair: 20, poor: 10 },
+      timestamp
+    );
+    this.updateMetric(
+      "memory-usage",
+      memory?.usedMemory || 128,
+      "mb",
+      { good: 256, fair: 512, poor: 768 },
+      timestamp
+    );
+    this.updateMetric(
+      "frame-rate",
+      rendering?.frameRate || 60,
+      "fps",
+      { good: 55, fair: 30, poor: 15 },
+      timestamp
+    );
   }
 
   private static updateMetric(
@@ -263,7 +298,12 @@ export class MobilePerformanceService {
     threshold: PerformanceMetric["threshold"],
     timestamp: Date
   ): void {
-    const status = value >= threshold.good ? "good" : value >= threshold.fair ? "fair" : "poor";
+    const status =
+      value >= threshold.good
+        ? "good"
+        : value >= threshold.fair
+          ? "fair"
+          : "poor";
 
     const metric: PerformanceMetric = {
       name,
@@ -293,24 +333,34 @@ export class MobilePerformanceService {
 
     const scores = this.metrics.map((metric) => {
       switch (metric.status) {
-        case "good": return 100;
-        case "fair": return 60;
-        case "poor": return 20;
-        default: return 75;
+        case "good":
+          return 100;
+        case "fair":
+          return 60;
+        case "poor":
+          return 20;
+        default:
+          return 75;
       }
     });
 
-    return Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length);
+    return Math.round(
+      scores.reduce((sum, score) => sum + score, 0) / scores.length
+    );
   }
 
-  private static getPerformanceStatus(score: number): "excellent" | "good" | "fair" | "poor" {
+  private static getPerformanceStatus(
+    score: number
+  ): "excellent" | "good" | "fair" | "poor" {
     if (score >= 90) return "excellent";
     if (score >= 70) return "good";
     if (score >= 50) return "fair";
     return "poor";
   }
 
-  private static async generateRecommendations(): Promise<PerformanceRecommendation[]> {
+  private static async generateRecommendations(): Promise<
+    PerformanceRecommendation[]
+  > {
     const recommendations: PerformanceRecommendation[] = [];
     const overallScore = this.calculateOverallScore();
 
@@ -320,7 +370,8 @@ export class MobilePerformanceService {
         type: "battery",
         priority: "high",
         title: "Auto-optimize performance",
-        description: "Let the system automatically optimize for current conditions",
+        description:
+          "Let the system automatically optimize for current conditions",
         action: "Run auto-optimization",
         estimatedImpact: 30,
         autoApply: false,

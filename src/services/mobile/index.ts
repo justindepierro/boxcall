@@ -7,6 +7,17 @@ export { MobileCalendarService } from "./MobileCalendarService";
 export { MobilePerformanceService } from "./MobilePerformanceService";
 export { MobileUIService } from "./MobileUIService";
 
+// Mobile Optimization Services (Modular Architecture)
+export {
+  BatteryOptimizationService,
+  MemoryOptimizationService,
+  NetworkOptimizationService,
+  RenderingOptimizationService,
+  getPerformanceProfile,
+  getAllPerformanceProfiles,
+  getOptimalProfile,
+} from "./optimizations";
+
 // PHASE 4.3: React Native Platform Integration
 export {
   CoachingAnalyticsService,
@@ -47,12 +58,11 @@ export type {
   MemoryWarning,
   NetworkOptimization,
   PerformanceDashboard,
-  // Mobile Performance Types
   PerformanceMetric,
   PerformanceProfile,
   PerformanceRecommendation,
   RenderingOptimization,
-} from "./MobilePerformanceService";
+} from "./types/PerformanceTypes";
 
 // PHASE 4.3: React Native Platform Types
 export type {
