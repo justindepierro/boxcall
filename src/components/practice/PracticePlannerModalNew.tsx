@@ -6,7 +6,7 @@
  */
 import React, { useState } from "react";
 import { ScriptSelectorModal } from "./ScriptSelectorModal";
-import { PracticePDFExportDialog } from "./PracticePDFExportDialog";
+import { PDFExportTrigger } from "./LazyPDFExport";
 import { usePracticeState } from "./hooks/usePracticeState";
 import {
   PracticeHeader,

@@ -1,27 +1,27 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../components/auth";
 import { Icon } from "../components/ui/Icon/Icon";
 import {
-  CalendarPage,
-  DashboardPage,
-  LoginPage,
-  ProfilePage,
-  TeamBulletin,
-  CreateTeam,
-  JoinTeam,
-  CreateCoachAccount,
-  BoxCall,
-  Playbook,
-  TeamSettings,
-  Templates,
-  Playground,
-  AboutPage,
-  PrivacyPolicyPage,
-  TermsOfServicePage,
-  ContactPage,
-} from "../pages";
-import Phase4DemoPage from "../pages/Phase4DemoPage";
+  LazyCalendarPage,
+  LazyDashboardPage,
+  LazyLoginPage,
+  LazyProfilePage,
+  LazyTeamBulletin,
+  LazyCreateTeam,
+  LazyJoinTeam,
+  LazyCreateCoachAccount,
+  LazyBoxCall,
+  LazyPlaybookPage,
+  LazyTeamSettings,
+  LazyTemplates,
+  LazyPlayground,
+  LazyAboutPage,
+  LazyPrivacyPolicyPage,
+  LazyTermsOfServicePage,
+  LazyContactPage,
+  LazyPhase4DemoPage,
+} from "../components/lazy/LazyRoutes";
 import {
   ProtectedRoute,
   PublicRoute,
@@ -29,6 +29,19 @@ import {
   SubscriptionRoute,
   TeamMemberRoute,
 } from "../routes";
+
+// Route loading fallback
+const RouteLoadingSpinner: React.FC = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
+    <span className="ml-3 text-gray-600">Loading page...</span>
+  </div>
+);
+
+// Helper component to wrap lazy routes with Suspense
+const LazyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <Suspense fallback={<RouteLoadingSpinner />}>{children}</Suspense>
+);
 /**
  * AppRouter Component
  *
@@ -45,7 +58,9 @@ export const AppRouter: React.FC = () => {
             path="/login"
             element={
               <PublicRoute>
-                <LoginPage />
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyLoginPage />
+                </Suspense>
               </PublicRoute>
             }
           />
@@ -54,7 +69,9 @@ export const AppRouter: React.FC = () => {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <DashboardPage />
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyDashboardPage />
+                </Suspense>
               </ProtectedRoute>
             }
           />
@@ -64,7 +81,9 @@ export const AppRouter: React.FC = () => {
             path="/phase4-demo"
             element={
               <ProtectedRoute>
-                <Phase4DemoPage />
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyPhase4DemoPage />
+                </Suspense>
               </ProtectedRoute>
             }
           />

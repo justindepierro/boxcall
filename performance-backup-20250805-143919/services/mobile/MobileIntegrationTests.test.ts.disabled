@@ -1,0 +1,678 @@
+// ============================================================================
+// PHASE 4.2: MOBILE OPTIMIZATION - INTEGRATION TEST SPECIFICATION
+// ============================================================================
+
+/**
+ * This file contains test specifications for the Mobile Optimization suite.
+ * Tests can be implemented using Jest, Mocha, or similar testing frameworks.
+ */
+
+import type { MobileViewport } from './MobileUIService';
+import type { PlatformContext } from '../cross-platform/UnifiedApiGateway';
+
+// ==========================================
+// Test Configuration
+// ==========================================
+
+export const mockViewport: MobileViewport = {
+  width: 375,
+  height: 812,
+  orientation: 'portrait',
+  safeArea: { top: 44, bottom: 34, left: 0, right: 0 }
+};
+
+export const mockPlatformContext: PlatformContext = {
+  platform: 'mobile',
+  deviceId: 'test-device-123',
+  version: '1.0.0',
+  capabilities: {
+    calendar: true,
+    notifications: true,
+    offline: true,
+    sync: true
+  }
+};
+
+// ==========================================
+// Test Specifications
+// ==========================================
+
+export const mobileIntegrationTestSpecs = {
+  // Mobile App Initialization Tests
+  initialization: {
+    'should initialize mobile app with all services': {
+      description: 'Test complete mobile app initialization with all services',
+      setup: 'Create mock viewport and platform context',
+      action: 'Call MobileOrchestrator.initializeMobileApp(config)',
+      assertions: [
+        'result.success should be true',
+        'result.state.initialized should be true',
+        'result.state.calendar should be truthy',
+        'result.state.ui.theme should be truthy',
+        'result.state.performance should be truthy'
+      ]
+    },
+    
+    'should handle initialization failure gracefully': {
+      description: 'Test graceful handling of initialization failures',
+      setup: 'Create invalid configuration (e.g., width: 0)',
+      action: 'Call MobileOrchestrator.initializeMobileApp(invalidConfig)',
+      assertions: [
+        'result.success should be false',
+        'result.error should contain "initialization failed"'
+      ]
+    },
+    
+    'should create optimal config based on device capabilities': {
+      description: 'Test device-specific configuration creation',
+      setup: 'Use various device viewport configurations',
+      action: 'Call createMobileConfig(viewport, platformContext)',
+      assertions: [
+        'config.viewport should equal mockViewport',
+        'config.platformContext should equal mockPlatformContext',
+        'config.theme should be "auto"',
+        'config.enableAutoOptimization should be true'
+      ]
+    }
+  },
+
+  // Viewport Change Handling Tests
+  viewportHandling: {
+    'should handle orientation change from portrait to landscape': {
+      description: 'Test orientation change handling and UI adaptation',
+      setup: 'Initialize app in portrait mode',
+      action: 'Change viewport to landscape orientation',
+      assertions: [
+        'result.success should be true',
+        'result.adaptations should contain "UI layout adapted"',
+        'result.adaptations should contain "Calendar switched to week view"'
+      ]
+    },
+    
+    'should handle viewport resize correctly': {
+      description: 'Test viewport size changes and responsive adaptation',
+      setup: 'Initialize app with standard viewport',
+      action: 'Change viewport dimensions',
+      assertions: [
+        'result.success should be true',
+        'result.adaptations.length should be greater than 0'
+      ]
+    }
+  },
+
+  // Battery Optimization Tests
+  batteryOptimization: {
+    'should handle low battery level correctly': {
+      description: 'Test battery-saving optimizations when battery is low',
+      setup: 'Initialize app normally',
+      action: 'Call handleBatteryChange(15, true)',
+      assertions: [
+        'result.success should be true',
+        'result.optimizations should contain "Switched to battery saver mode"',
+        'result.optimizations should contain "Disabled animations"'
+      ]
+    },
+    
+    'should not over-optimize with normal battery level': {
+      description: 'Test minimal optimizations with adequate battery',
+      setup: 'Initialize app normally',
+      action: 'Call handleBatteryChange(80, false)',
+      assertions: [
+        'result.success should be true',
+        'result.optimizations.length should be less than 3'
+      ]
+    }
+  },
+
+  // Memory Management Tests
+  memoryManagement: {
+    'should handle high memory pressure appropriately': {
+      description: 'Test aggressive memory cleanup under high pressure',
+      setup: 'Initialize app and simulate memory usage',
+      action: 'Call handleMemoryPressure("high")',
+      assertions: [
+        'result.success should be true',
+        'result.memoryFreed should be greater than 0',
+        'result.actions should contain "Applied memory optimizations"'
+      ]
+    },
+    
+    'should handle medium memory pressure with moderate actions': {
+      description: 'Test moderate memory cleanup under medium pressure',
+      setup: 'Initialize app normally',
+      action: 'Call handleMemoryPressure("medium")',
+      assertions: [
+        'result.success should be true',
+        'result.actions.length should be greater than 0'
+      ]
+    }
+  },
+
+  // Performance Monitoring Tests
+  performanceMonitoring: {
+    'should provide comprehensive performance status': {
+      description: 'Test performance dashboard and metrics collection',
+      setup: 'Initialize app and run for some time',
+      action: 'Call getPerformanceStatus()',
+      assertions: [
+        'status.overall should be one of ["excellent", "good", "fair", "poor"]',
+        'status.dashboard should be truthy',
+        'status.recommendations should be an array'
+      ]
+    },
+    
+    'should generate appropriate recommendations': {
+      description: 'Test performance recommendation generation',
+      setup: 'Simulate poor performance conditions',
+      action: 'Call getPerformanceStatus()',
+      assertions: [
+        'if status.overall is "poor" or "fair", recommendations.length should be > 0'
+      ]
+    }
+  },
+
+  // Device Capability Tests
+  deviceCapabilities: {
+    'should detect high-end device capabilities correctly': {
+      description: 'Test capability detection for high-end devices',
+      setup: 'Create high-end device viewport (width: 428, height: 926)',
+      action: 'Call checkMobileCapabilities(highEndViewport)',
+      assertions: [
+        'capabilities.supportsHapticFeedback should be true',
+        'capabilities.supportsAdvancedAnimations should be true',
+        'capabilities.recommendedQuality should be "high"'
+      ]
+    },
+    
+    'should detect low-end device capabilities correctly': {
+      description: 'Test capability detection for low-end devices',
+      setup: 'Create low-end device viewport (width: 320, height: 568)',
+      action: 'Call checkMobileCapabilities(lowEndViewport)',
+      assertions: [
+        'capabilities.supportsHapticFeedback should be false',
+        'capabilities.supportsAdvancedAnimations should be false',
+        'capabilities.recommendedQuality should be "performance"'
+      ]
+    }
+  },
+
+  // Performance Benchmarks
+  performanceBenchmarks: {
+    'mobile app initialization should complete within acceptable time': {
+      description: 'Test initialization performance',
+      setup: 'Prepare timing measurement',
+      action: 'Initialize mobile app and measure time',
+      assertions: [
+        'initialization time should be less than 1000ms',
+        'result.success should be true'
+      ]
+    },
+    
+    'viewport changes should be handled efficiently': {
+      description: 'Test viewport change performance',
+      setup: 'Initialize app and prepare timing',
+      action: 'Handle viewport change and measure time',
+      assertions: [
+        'change time should be less than 200ms',
+        'result.success should be true'
+      ]
+    }
+  }
+};
+
+// ==========================================
+// Test Implementation Examples
+// ==========================================
+
+/**
+ * Example Jest test implementation:
+ * 
+ * ```typescript
+ * import { MobileOrchestrator, createMobileConfig } from '../mobile';
+ * import { mockViewport, mockPlatformContext } from './MobileIntegrationTests';
+ * 
+ * describe('Mobile App Initialization', () => {
+ *   beforeEach(async () => {
+ *     await MobileOrchestrator.cleanup();
+ *   });
+ * 
+ *   test('should initialize mobile app with all services', async () => {
+ *     const config = createMobileConfig(mockViewport, mockPlatformContext);
+ *     const result = await MobileOrchestrator.initializeMobileApp(config);
+ * 
+ *     expect(result.success).toBe(true);
+ *     expect(result.state.initialized).toBe(true);
+ *     expect(result.state.calendar).toBeTruthy();
+ *   });
+ * });
+ * ```
+ */
+
+/**
+ * Example Mocha test implementation:
+ * 
+ * ```typescript
+ * import { expect } from 'chai';
+ * import { MobileOrchestrator } from '../mobile';
+ * 
+ * describe('Mobile Optimization', function() {
+ *   this.timeout(5000);
+ * 
+ *   it('should initialize correctly', async () => {
+ *     const config = createMobileConfig(mockViewport, mockPlatformContext);
+ *     const result = await MobileOrchestrator.initializeMobileApp(config);
+ * 
+ *     expect(result.success).to.be.true;
+ *     expect(result.state.initialized).to.be.true;
+ *   });
+ * });
+ * ```
+ */
+
+// ==========================================
+// Test Data Generators
+// ==========================================
+
+export function generateTestViewports(): MobileViewport[] {
+  return [
+    // iPhone SE
+    { width: 375, height: 667, orientation: 'portrait', safeArea: { top: 20, bottom: 0, left: 0, right: 0 } },
+    // iPhone 12/13/14
+    { width: 390, height: 844, orientation: 'portrait', safeArea: { top: 47, bottom: 34, left: 0, right: 0 } },
+    // iPhone 12/13/14 Pro Max
+    { width: 428, height: 926, orientation: 'portrait', safeArea: { top: 47, bottom: 34, left: 0, right: 0 } },
+    // iPad
+    { width: 768, height: 1024, orientation: 'portrait', safeArea: { top: 20, bottom: 0, left: 0, right: 0 } },
+    // iPad Pro
+    { width: 1024, height: 1366, orientation: 'portrait', safeArea: { top: 20, bottom: 0, left: 0, right: 0 } }
+  ];
+}
+
+export function generateBatteryLevels(): number[] {
+  return [0, 5, 15, 25, 50, 75, 90, 100];
+}
+
+export function generateMemoryPressureScenarios(): Array<'low' | 'medium' | 'high'> {
+  return ['low', 'medium', 'high'];
+}
+
+  // ==========================================
+  // Mobile App Initialization Tests
+  // ==========================================
+
+  describe('Mobile App Initialization', () => {
+    beforeEach(async () => {
+      await MobileOrchestrator.cleanup();
+    });
+
+    test('should initialize mobile app with all services', async () => {
+      const config = createMobileConfig(mockViewport, mockPlatformContext);
+      const result = await MobileOrchestrator.initializeMobileApp(config);
+
+      expect(result.success).toBe(true);
+      expect(result.state.initialized).toBe(true);
+      expect(result.state.calendar).toBeTruthy();
+      expect(result.state.ui.theme).toBeTruthy();
+      expect(result.state.performance).toBeTruthy();
+    });
+
+    test('should handle initialization failure gracefully', async () => {
+      // Create invalid config
+      const invalidConfig = {
+        viewport: { ...mockViewport, width: 0 }, // Invalid width
+        platformContext: mockPlatformContext
+      };
+
+      const result = await MobileOrchestrator.initializeMobileApp(invalidConfig);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('initialization failed');
+    });
+
+    test('should create optimal config based on device capabilities', () => {
+      const config = createMobileConfig(mockViewport, mockPlatformContext);
+
+      expect(config.viewport).toEqual(mockViewport);
+      expect(config.platformContext).toEqual(mockPlatformContext);
+      expect(config.theme).toBe('auto');
+      expect(config.enableAutoOptimization).toBe(true);
+    });
+  });
+
+  // ==========================================
+  // Viewport Change Handling Tests
+  // ==========================================
+
+  describe('Viewport Change Handling', () => {
+    beforeEach(async () => {
+      const config = createMobileConfig(mockViewport, mockPlatformContext);
+      await MobileOrchestrator.initializeMobileApp(config);
+    });
+
+    test('should handle orientation change from portrait to landscape', async () => {
+      const landscapeViewport: MobileViewport = {
+        ...mockViewport,
+        width: 812,
+        height: 375,
+        orientation: 'landscape'
+      };
+
+      const result = await MobileOrchestrator.handleViewportChange(landscapeViewport);
+
+      expect(result.success).toBe(true);
+      expect(result.adaptations).toContain('UI layout adapted');
+      expect(result.adaptations).toContain('Calendar switched to week view');
+    });
+
+    test('should handle viewport resize correctly', async () => {
+      const resizedViewport: MobileViewport = {
+        ...mockViewport,
+        width: 414,
+        height: 896
+      };
+
+      const result = await MobileOrchestrator.handleViewportChange(resizedViewport);
+
+      expect(result.success).toBe(true);
+      expect(result.adaptations.length).toBeGreaterThan(0);
+    });
+  });
+
+  // ==========================================
+  // Battery Optimization Tests
+  // ==========================================
+
+  describe('Battery Optimization', () => {
+    beforeEach(async () => {
+      const config = createMobileConfig(mockViewport, mockPlatformContext);
+      await MobileOrchestrator.initializeMobileApp(config);
+    });
+
+    test('should handle low battery level correctly', async () => {
+      const result = await MobileOrchestrator.handleBatteryChange(15, true);
+
+      expect(result.success).toBe(true);
+      expect(result.optimizations).toContain('Switched to battery saver mode');
+      expect(result.optimizations).toContain('Disabled animations');
+    });
+
+    test('should not over-optimize with normal battery level', async () => {
+      const result = await MobileOrchestrator.handleBatteryChange(80, false);
+
+      expect(result.success).toBe(true);
+      expect(result.optimizations.length).toBeLessThan(3); // Should be minimal optimizations
+    });
+  });
+
+  // ==========================================
+  // Memory Management Tests
+  // ==========================================
+
+  describe('Memory Management', () => {
+    beforeEach(async () => {
+      const config = createMobileConfig(mockViewport, mockPlatformContext);
+      await MobileOrchestrator.initializeMobileApp(config);
+    });
+
+    test('should handle high memory pressure appropriately', async () => {
+      const result = await MobileOrchestrator.handleMemoryPressure('high');
+
+      expect(result.success).toBe(true);
+      expect(result.memoryFreed).toBeGreaterThan(0);
+      expect(result.actions).toContain('Applied memory optimizations');
+    });
+
+    test('should handle medium memory pressure with moderate actions', async () => {
+      const result = await MobileOrchestrator.handleMemoryPressure('medium');
+
+      expect(result.success).toBe(true);
+      expect(result.actions.length).toBeGreaterThan(0);
+    });
+
+    test('should handle low memory pressure with minimal actions', async () => {
+      const result = await MobileOrchestrator.handleMemoryPressure('low');
+
+      expect(result.success).toBe(true);
+      // Should have minimal or no actions for low pressure
+    });
+  });
+
+  // ==========================================
+  // Performance Monitoring Tests
+  // ==========================================
+
+  describe('Performance Monitoring', () => {
+    beforeEach(async () => {
+      const config = createMobileConfig(mockViewport, mockPlatformContext);
+      await MobileOrchestrator.initializeMobileApp(config);
+    });
+
+    test('should provide comprehensive performance status', async () => {
+      const status = await MobileOrchestrator.getPerformanceStatus();
+
+      expect(['excellent', 'good', 'fair', 'poor']).toContain(status.overall);
+      expect(status.dashboard).toBeTruthy();
+      expect(Array.isArray(status.recommendations)).toBe(true);
+    });
+
+    test('should generate appropriate recommendations', async () => {
+      const status = await MobileOrchestrator.getPerformanceStatus();
+
+      if (status.overall === 'poor' || status.overall === 'fair') {
+        expect(status.recommendations.length).toBeGreaterThan(0);
+      }
+    });
+  });
+
+  // ==========================================
+  // Device Capability Tests
+  // ==========================================
+
+  describe('Device Capability Detection', () => {
+    test('should detect high-end device capabilities correctly', () => {
+      const highEndViewport: MobileViewport = {
+        width: 428,
+        height: 926,
+        devicePixelRatio: 3,
+        orientation: 'portrait',
+        safeArea: { top: 47, bottom: 34, left: 0, right: 0 }
+      };
+
+      const capabilities = checkMobileCapabilities(highEndViewport);
+
+      expect(capabilities.supportsHapticFeedback).toBe(true);
+      expect(capabilities.supportsAdvancedAnimations).toBe(true);
+      expect(capabilities.recommendedQuality).toBe('high');
+    });
+
+    test('should detect low-end device capabilities correctly', () => {
+      const lowEndViewport: MobileViewport = {
+        width: 320,
+        height: 568,
+        devicePixelRatio: 2,
+        orientation: 'portrait',
+        safeArea: { top: 20, bottom: 0, left: 0, right: 0 }
+      };
+
+      const capabilities = checkMobileCapabilities(lowEndViewport);
+
+      expect(capabilities.supportsHapticFeedback).toBe(false);
+      expect(capabilities.supportsAdvancedAnimations).toBe(false);
+      expect(capabilities.recommendedQuality).toBe('performance');
+    });
+
+    test('should detect tablet capabilities correctly', () => {
+      const tabletViewport: MobileViewport = {
+        width: 1024,
+        height: 768,
+        devicePixelRatio: 2,
+        orientation: 'landscape',
+        safeArea: { top: 20, bottom: 0, left: 0, right: 0 }
+      };
+
+      const capabilities = checkMobileCapabilities(tabletViewport);
+
+      expect(capabilities.supportsAdvancedAnimations).toBe(true);
+      expect(capabilities.recommendedQuality).toBe('balanced');
+    });
+  });
+
+  // ==========================================
+  // App State Management Tests
+  // ==========================================
+
+  describe('App State Management', () => {
+    test('should track app state correctly', async () => {
+      expect(MobileOrchestrator.isInitialized()).toBe(false);
+
+      const config = createMobileConfig(mockViewport, mockPlatformContext);
+      await MobileOrchestrator.initializeMobileApp(config);
+
+      expect(MobileOrchestrator.isInitialized()).toBe(true);
+
+      const appState = MobileOrchestrator.getAppState();
+      expect(appState.initialized).toBe(true);
+      expect(appState.lastUpdate).toBeInstanceOf(Date);
+    });
+
+    test('should cleanup app state correctly', async () => {
+      const config = createMobileConfig(mockViewport, mockPlatformContext);
+      await MobileOrchestrator.initializeMobileApp(config);
+
+      expect(MobileOrchestrator.isInitialized()).toBe(true);
+
+      await MobileOrchestrator.cleanup();
+
+      expect(MobileOrchestrator.isInitialized()).toBe(false);
+      
+      const appState = MobileOrchestrator.getAppState();
+      expect(appState.initialized).toBe(false);
+      expect(appState.calendar).toBe(null);
+    });
+  });
+
+  // ==========================================
+  // Auto-Optimization Tests
+  // ==========================================
+
+  describe('Auto-Optimization', () => {
+    test('should enable auto-optimization without errors', async () => {
+      const config = {
+        ...createMobileConfig(mockViewport, mockPlatformContext),
+        enableAutoOptimization: true
+      };
+
+      const result = await MobileOrchestrator.initializeMobileApp(config);
+
+      expect(result.success).toBe(true);
+      // Auto-optimization should be running in background
+    });
+  });
+
+  // ==========================================
+  // Edge Case Tests
+  // ==========================================
+
+  describe('Edge Cases', () => {
+    test('should handle uninitialized app gracefully', async () => {
+      // Try operations before initialization
+      const viewportResult = await MobileOrchestrator.handleViewportChange(mockViewport);
+      expect(viewportResult.success).toBe(true); // Should not crash
+
+      const batteryResult = await MobileOrchestrator.handleBatteryChange(50);
+      expect(batteryResult.success).toBe(true); // Should not crash
+    });
+
+    test('should handle invalid viewport gracefully', async () => {
+      const invalidViewport: MobileViewport = {
+        width: 0,
+        height: 0,
+        devicePixelRatio: 0,
+        orientation: 'portrait',
+        safeArea: { top: 0, bottom: 0, left: 0, right: 0 }
+      };
+
+      const result = await MobileOrchestrator.handleViewportChange(invalidViewport);
+      // Should handle gracefully without crashing
+    });
+
+    test('should handle extreme battery levels', async () => {
+      const lowResult = await MobileOrchestrator.handleBatteryChange(0, true);
+      expect(lowResult.success).toBe(true);
+
+      const highResult = await MobileOrchestrator.handleBatteryChange(100, false);
+      expect(highResult.success).toBe(true);
+    });
+  });
+});
+
+// ============================================================================
+// PERFORMANCE BENCHMARKS
+// ============================================================================
+
+/*
+// TODO: Fix missing imports and implementations
+describe('Phase 4.2 Performance Benchmarks', () => {
+  test('mobile app initialization should complete within acceptable time', async () => {
+    const startTime = performance.now();
+    
+    const config = createMobileConfig(mockViewport, mockPlatformContext);
+    const result = await MobileOrchestrator.initializeMobileApp(config);
+    
+    const endTime = performance.now();
+    const initializationTime = endTime - startTime;
+
+    expect(result.success).toBe(true);
+    expect(initializationTime).toBeLessThan(1000); // Should initialize within 1 second
+  });
+
+  test('viewport changes should be handled efficiently', async () => {
+    const config = createMobileConfig(mockViewport, mockPlatformContext);
+    await MobileOrchestrator.initializeMobileApp(config);
+
+    const startTime = performance.now();
+    
+    const landscapeViewport: MobileViewport = {
+      ...mockViewport,
+      width: 812,
+      height: 375,
+      orientation: 'landscape'
+    };
+    
+    const result = await MobileOrchestrator.handleViewportChange(landscapeViewport);
+    
+    const endTime = performance.now();
+    const changeTime = endTime - startTime;
+
+    expect(result.success).toBe(true);
+    expect(changeTime).toBeLessThan(200); // Should handle changes within 200ms
+  });
+});
+
+// Mock global variables for test environment
+declare global {
+  var performance: {
+    now(): number;
+  };
+  var setInterval: (callback: () => void, ms: number) => NodeJS.Timeout;
+}
+
+const mockViewport: MobileViewport = {
+  width: 375,
+  height: 812,
+  devicePixelRatio: 3,
+  orientation: 'portrait',
+  safeArea: { top: 44, bottom: 34, left: 0, right: 0 }
+};
+
+const mockPlatformContext: PlatformContext = {
+  platform: 'mobile',
+  deviceId: 'test-device-123',
+  appVersion: '1.0.0',
+  capabilities: {
+    calendar: true,
+    notifications: true,
+    offline: true,
+    sync: true
+  }
+};

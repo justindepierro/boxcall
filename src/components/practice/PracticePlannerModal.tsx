@@ -6,7 +6,7 @@ import { Button, Card } from "../../components/ui";
 import { Icon, type IconName } from "../../components/ui/Icon/Icon";
 import type { CalendarEvent } from "../../services/calendarService";
 import { ScriptSelectorModal } from "./ScriptSelectorModal";
-import { PracticePDFExportDialog } from "./PracticePDFExportDialog";
+import { PDFExportTrigger } from "./LazyPDFExport";
 
 interface PracticeGroup {
   id: string;
@@ -75,7 +75,6 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
   ); // Mock role
   const [timeAllocationMode, setTimeAllocationMode] = useState(false); // Head coach time allocation mode
   const [scaffoldMode, setScaffoldMode] = useState(false); // Head coach scaffold/timeline mode
-  const [isPDFExportOpen, setIsPDFExportOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<
     PracticeBlock["category"] | null
   >(null);
@@ -1173,17 +1172,22 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              {/* PDF Export Button - Made more visible */}
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => setIsPDFExportOpen(true)}
-                className="bg-jade-600 hover:bg-jade-700 text-white font-medium flex items-center"
-                disabled={false} // Always enabled for testing
-              >
-                <Icon name="pdf" size="sm" className="mr-1" />
-                Print Practice to PDF
-              </Button>
+              {/* PDF Export Button - Lazy Loading */}
+              <PDFExportTrigger
+                practiceData={{
+                  practiceBlocks: practiceBlocks,
+                  metadata: {
+                    title: eventData?.title || "Practice Plan",
+                    date: eventData?.date || new Date().toISOString(),
+                    duration: totalDuration,
+                    coach: "Head Coach",
+                    team: "Team",
+                  },
+                }}
+                buttonClassName="bg-jade-600 hover:bg-jade-700 text-white font-medium flex items-center"
+                buttonText="Print Practice to PDF"
+                iconName="pdf"
+              />
 
               {/* Close Button */}
               <button
@@ -1844,21 +1848,22 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
                     </Button>
 
                     {/* PDF Export Button - Main Location */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log("PDF button clicked!");
-                        setIsPDFExportOpen(true);
+                    <PDFExportTrigger
+                      practiceData={{
+                        practiceBlocks: practiceBlocks,
+                        metadata: {
+                          title: eventData?.title || "Practice Plan",
+                          date: eventData?.date || new Date().toISOString(),
+                          duration: totalDuration,
+                          coach: "Head Coach",
+                          team: "Team",
+                        },
                       }}
-                      className="bg-green-600 hover:bg-green-700 text-white border-green-600 font-medium shadow-lg flex items-center"
-                      style={{ zIndex: 1000 }}
-                    >
-                      <Icon name="pdf" size="sm" className="mr-1" />
-                      Export Practice PDF
-                    </Button>
+                      buttonClassName="bg-green-600 hover:bg-green-700 text-white border-green-600 font-medium shadow-lg flex items-center"
+                      buttonText="Export Practice PDF"
+                      iconName="pdf"
+                      size="sm"
+                    />
                     {userRole === "head_coach" && practiceBlocks.length > 0 && (
                       <Button
                         variant="outline"
@@ -3341,13 +3346,6 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
           </div>
         </div>
       )}
-
-      {/* PDF Export Dialog */}
-      <PracticePDFExportDialog
-        isOpen={isPDFExportOpen}
-        onClose={() => setIsPDFExportOpen(false)}
-        practiceData={preparePracticeDataForPDF()}
-      />
     </div>
   );
 };
