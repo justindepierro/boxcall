@@ -1,14 +1,19 @@
-import React from 'react';
-import { Typography } from '../../../../components/design-system';
-import { Button } from '../../../../components/ui';
-import { Icon } from '../../../../components/ui/Icon/Icon';
-import type { CalendarEvent } from '../../../../services/calendarService';
-import { PDFExportTrigger } from '../../LazyPDFExport';
-import type { PracticeBlock, TimelineAllocation, SelectedBlock, EventData } from '../types';
+import React from "react";
+import { Typography } from "../../../../components/design-system";
+import { Button } from "../../../../components/ui";
+import { Icon } from "../../../../components/ui/Icon/Icon";
+import type { CalendarEvent } from "../../../../services/calendarService";
+import { PDFExportTrigger } from "../../LazyPDFExport";
+import type {
+  PracticeBlock,
+  TimelineAllocation,
+  SelectedBlock,
+  EventData,
+} from "../types";
 
 interface PracticePlannerHeaderProps {
   event: CalendarEvent;
-  userRole: 'head_coach' | 'position_coach';
+  userRole: "head_coach" | "position_coach";
   timeAllocationMode: boolean;
   scaffoldMode: boolean;
   practiceBlocks: PracticeBlock[];
@@ -19,7 +24,9 @@ interface PracticePlannerHeaderProps {
   onPracticeBlocksChange: (blocks: PracticeBlock[]) => void;
   onOriginalBlocksChange: (blocks: PracticeBlock[]) => void;
   onTimelineAllocationChange: (allocation: TimelineAllocation) => void;
-  onSelectedCategoryChange: (category: PracticeBlock["category"] | null) => void;
+  onSelectedCategoryChange: (
+    category: PracticeBlock["category"] | null
+  ) => void;
   onSelectedBlockChange: (block: SelectedBlock | null) => void;
   eventData?: EventData;
 }
@@ -48,15 +55,23 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
         (sum, prevBlock) => sum + prevBlock.duration,
         0
       );
-      
+
       const eventStart = new Date(event.start);
-      const blockStart = new Date(eventStart.getTime() + totalPreviousDuration * 60000);
+      const blockStart = new Date(
+        eventStart.getTime() + totalPreviousDuration * 60000
+      );
       const blockEnd = new Date(blockStart.getTime() + block.duration * 60000);
-      
+
       return {
         ...block,
-        startTime: blockStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        endTime: blockEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        startTime: blockStart.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        endTime: blockEnd.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
       };
     });
   };
@@ -65,7 +80,10 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
     if (!scaffoldMode) {
       // Entering scaffold mode - store original blocks and convert to timeline allocation
       let blocksToConvert = practiceBlocks;
-      console.log("Entering scaffold mode with current blocks:", practiceBlocks);
+      console.log(
+        "Entering scaffold mode with current blocks:",
+        practiceBlocks
+      );
 
       // Store current blocks as backup for cancel functionality
       onOriginalBlocksChange([...practiceBlocks]);
@@ -80,12 +98,18 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
           try {
             const savedBlocks = JSON.parse(savedPractice);
             const blocksWithTimes = recalculateBlockTimes(savedBlocks);
-            console.log("Loaded saved blocks for scaffold mode:", blocksWithTimes);
+            console.log(
+              "Loaded saved blocks for scaffold mode:",
+              blocksWithTimes
+            );
             onPracticeBlocksChange(blocksWithTimes);
             onOriginalBlocksChange([...blocksWithTimes]);
             blocksToConvert = blocksWithTimes;
           } catch (error) {
-            console.error("Error loading saved practice plan for scaffold mode:", error);
+            console.error(
+              "Error loading saved practice plan for scaffold mode:",
+              error
+            );
           }
         } else {
           console.log("No saved practice data found in localStorage");
@@ -133,8 +157,8 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
         <div className="mt-2 flex items-center space-x-4">
           <span
             className={`px-2 py-1 rounded text-xs font-medium flex items-center ${
-              userRole === "head_coach" 
-                ? "bg-blue-100 text-blue-800" 
+              userRole === "head_coach"
+                ? "bg-blue-100 text-blue-800"
                 : "bg-green-100 text-green-800"
             }`}
           >
@@ -164,7 +188,9 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
                 className="flex items-center"
               >
                 <Icon name="bar-chart" size="xs" className="mr-1" />
-                {timeAllocationMode ? "Time Allocation Mode" : "Enable Time Allocation"}
+                {timeAllocationMode
+                  ? "Time Allocation Mode"
+                  : "Enable Time Allocation"}
               </Button>
               <Button
                 onClick={handleScaffoldModeToggle}

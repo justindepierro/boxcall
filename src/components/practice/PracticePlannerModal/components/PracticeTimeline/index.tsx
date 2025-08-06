@@ -1,16 +1,16 @@
-import React from 'react';
-import { Typography } from '../../../../../components/design-system';
-import { Button } from '../../../../../components/ui';
-import { Icon } from '../../../../../components/ui/Icon/Icon';
-import { CategorySelector } from './CategorySelector';
-import { TimelineContainer } from './TimelineContainer';
-import { TimelineSlider } from './TimelineSlider';
-import { TimelineLegend } from './TimelineLegend';
-import type { 
-  PracticeBlock, 
-  TimelineAllocation, 
-  SelectedBlock 
-} from '../../types';
+import React from "react";
+import { Typography } from "../../../../../components/design-system";
+import { Button } from "../../../../../components/ui";
+import { Icon } from "../../../../../components/ui/Icon/Icon";
+import { CategorySelector } from "./CategorySelector";
+import { TimelineContainer } from "./TimelineContainer";
+import { TimelineSlider } from "./TimelineSlider";
+import { TimelineLegend } from "./TimelineLegend";
+import type {
+  PracticeBlock,
+  TimelineAllocation,
+  SelectedBlock,
+} from "../../types";
 
 interface PracticeTimelineProps {
   // Timeline state
@@ -19,7 +19,7 @@ interface PracticeTimelineProps {
   selectedBlock: SelectedBlock | null;
   sliderValue: number;
   scheduledDuration: number;
-  
+
   // Event handlers
   onCategorySelect: (category: PracticeBlock["category"]) => void;
   onTimelineClick: (minute: number) => void;
@@ -31,7 +31,7 @@ interface PracticeTimelineProps {
   onCancelBlock: () => void;
   onSaveTimeAllocation: () => void;
   onCancelScaffold: () => void;
-  
+
   // Utils
   getCategoryColor: (category: PracticeBlock["category"]) => string;
 }
@@ -59,35 +59,20 @@ export const PracticeTimeline: React.FC<PracticeTimelineProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <Typography
-            variant="headline-md"
-            className="flex items-center gap-2"
-          >
+          <Typography variant="headline-md" className="flex items-center gap-2">
             <Icon name="clock" size="md" />
             Allocate Practice Time
           </Typography>
-          <Typography
-            variant="body-sm"
-            color="muted"
-            className="mt-1"
-          >
-            Select a category below, then click and drag on the
-            timeline to allocate time blocks
+          <Typography variant="body-sm" color="muted" className="mt-1">
+            Select a category below, then click and drag on the timeline to
+            allocate time blocks
           </Typography>
         </div>
         <div className="flex space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onCancelScaffold}
-          >
+          <Button variant="outline" size="sm" onClick={onCancelScaffold}>
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={onSaveTimeAllocation}
-          >
+          <Button variant="primary" size="sm" onClick={onSaveTimeAllocation}>
             Save Time Allocation
           </Button>
         </div>

@@ -1,6 +1,6 @@
 export { CalendarPage } from "./CalendarPage";
 export { DashboardPage } from "./DashboardPage";
-export { LoginPage } from "./LoginPage";
+export { default as LoginPage } from "./LoginPage";
 export { ProfilePage } from "./ProfilePage";
 export { TeamBulletin } from "./TeamBulletin";
 export { CreateTeam } from "./CreateTeam";

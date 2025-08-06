@@ -6,6 +6,7 @@
  */
 import React, { Suspense, lazy } from "react";
 import { Icon } from "../ui/Icon/Icon";
+import type { IconName } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import type { PracticeBlock } from "./types";
 
@@ -118,27 +119,32 @@ export const PDFExportTrigger: React.FC<PDFExportTriggerProps> = ({
   size = "md",
 }) => {
   const [internalIsOpen, setInternalIsOpen] = React.useState(false);
-  
+
   // Use external control if provided, otherwise use internal state
   const isControlledExternally = externalIsOpen !== undefined;
-  const showPDFDialog = isControlledExternally ? externalIsOpen : internalIsOpen;
-  const handleClose = isControlledExternally ? externalOnClose : () => setInternalIsOpen(false);
+  const showPDFDialog = isControlledExternally
+    ? externalIsOpen
+    : internalIsOpen;
+  const handleClose = isControlledExternally
+    ? externalOnClose
+    : () => setInternalIsOpen(false);
 
   return (
     <>
-      {triggerElement !== null && (
-        triggerElement || (
+      {triggerElement !== null &&
+        (triggerElement || (
           <Button
             variant="outline"
-            onClick={() => isControlledExternally ? undefined : setInternalIsOpen(true)}
+            onClick={() =>
+              isControlledExternally ? undefined : setInternalIsOpen(true)
+            }
             className={buttonClassName || "gap-2"}
             size={size}
           >
-            <Icon name={iconName as any} size={size === "sm" ? 14 : 16} />
+            <Icon name={iconName as IconName} size={size === "sm" ? 14 : 16} />
             {children || buttonText || "Export PDF"}
           </Button>
-        )
-      )}
+        ))}
 
       <LazyPDFExport
         isOpen={showPDFDialog}

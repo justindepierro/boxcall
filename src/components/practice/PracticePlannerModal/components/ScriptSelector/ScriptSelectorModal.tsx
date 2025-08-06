@@ -1,7 +1,7 @@
-import React from 'react';
-import { Typography } from '../../../../../components/design-system';
-import { Button } from '../../../../../components/ui';
-import { Icon } from '../../../../../components/ui/Icon/Icon';
+import React from "react";
+import { Typography } from "../../../../../components/design-system";
+import { Button } from "../../../../../components/ui";
+import { Icon } from "../../../../../components/ui/Icon/Icon";
 
 interface ScriptSelectorModalProps {
   isOpen: boolean;
@@ -18,29 +18,29 @@ const MOCK_SCRIPTS = [
     title: "Offensive Line Warm-up",
     description: "Basic footwork and stance drills",
     duration: 10,
-    category: "offense"
+    category: "offense",
   },
   {
-    id: "script_2", 
+    id: "script_2",
     title: "Defensive Back Coverage",
     description: "Man and zone coverage techniques",
     duration: 15,
-    category: "defense"
+    category: "defense",
   },
   {
     id: "script_3",
     title: "Special Teams Kickoff",
     description: "Kickoff return and coverage",
     duration: 12,
-    category: "special-teams"
+    category: "special-teams",
   },
   {
     id: "script_4",
     title: "Team Meeting - Game Plan",
     description: "Review opponent tendencies",
     duration: 8,
-    category: "meeting"
-  }
+    category: "meeting",
+  },
 ];
 
 export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
@@ -52,7 +52,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const handleScriptSelect = (script: typeof MOCK_SCRIPTS[0]) => {
+  const handleScriptSelect = (script: (typeof MOCK_SCRIPTS)[0]) => {
     onScriptSelect(script.id, script.title);
     onClose();
   };
@@ -67,10 +67,9 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                 Select Practice Script
               </Typography>
               <Typography variant="body-md" color="muted" className="mt-1">
-                {selectedGroupId 
+                {selectedGroupId
                   ? `Adding script to group in block ${selectedBlockId}`
-                  : `Adding script to block ${selectedBlockId}`
-                }
+                  : `Adding script to block ${selectedBlockId}`}
               </Typography>
             </div>
             <Button
@@ -95,7 +94,11 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                     <Typography variant="body-md" className="font-medium mb-1">
                       {script.title}
                     </Typography>
-                    <Typography variant="body-sm" color="muted" className="mb-2">
+                    <Typography
+                      variant="body-sm"
+                      color="muted"
+                      className="mb-2"
+                    >
                       {script.description}
                     </Typography>
                     <div className="flex items-center space-x-4 text-sm">
@@ -103,16 +106,18 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                         <Icon name="clock" size="xs" className="mr-1" />
                         {script.duration} min
                       </span>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        script.category === 'offense' 
-                          ? 'bg-blue-100 text-blue-800'
-                          : script.category === 'defense'
-                          ? 'bg-red-100 text-red-800'
-                          : script.category === 'special-teams'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-purple-100 text-purple-800'
-                      }`}>
-                        {script.category.replace('-', ' ')}
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          script.category === "offense"
+                            ? "bg-blue-100 text-blue-800"
+                            : script.category === "defense"
+                              ? "bg-red-100 text-red-800"
+                              : script.category === "special-teams"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-purple-100 text-purple-800"
+                        }`}
+                      >
+                        {script.category.replace("-", " ")}
                       </span>
                     </div>
                   </div>

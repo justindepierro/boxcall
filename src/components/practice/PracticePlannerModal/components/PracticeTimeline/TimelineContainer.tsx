@@ -1,7 +1,11 @@
-import React from 'react';
-import { Typography } from '../../../../../components/design-system';
-import { Icon } from '../../../../../components/ui/Icon/Icon';
-import type { TimelineAllocation, SelectedBlock, PracticeBlock } from '../../types';
+import React from "react";
+import { Typography } from "../../../../../components/design-system";
+import { Icon } from "../../../../../components/ui/Icon/Icon";
+import type {
+  TimelineAllocation,
+  SelectedBlock,
+  PracticeBlock,
+} from "../../types";
 
 interface TimelineContainerProps {
   scheduledDuration: number;
@@ -39,7 +43,7 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
           Click and drag to allocate time blocks
         </Typography>
       </div>
-      
+
       <div
         className="flex border border-gray-300 rounded-lg overflow-hidden relative cursor-crosshair"
         onMouseUp={onMouseUp}
@@ -48,7 +52,8 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
         {Array.from({ length: scheduledDuration }, (_, minute) => {
           const allocation = timelineAllocation[minute];
           const is5MinuteBoundary = minute % 5 === 0;
-          const isSelected = selectedBlock &&
+          const isSelected =
+            selectedBlock &&
             minute >= selectedBlock.start &&
             minute < selectedBlock.start + selectedBlock.duration;
 

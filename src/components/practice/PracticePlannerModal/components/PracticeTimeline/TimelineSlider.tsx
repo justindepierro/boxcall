@@ -1,7 +1,7 @@
-import React from 'react';
-import { Typography } from '../../../../../components/design-system';
-import { Icon } from '../../../../../components/ui/Icon/Icon';
-import type { SelectedBlock } from '../../types';
+import React from "react";
+import { Typography } from "../../../../../components/design-system";
+import { Icon } from "../../../../../components/ui/Icon/Icon";
+import type { SelectedBlock } from "../../types";
 
 interface TimelineSliderProps {
   selectedBlock: SelectedBlock;
@@ -36,12 +36,9 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
               .replace("-", " ")
               .replace(/\b\w/g, (l) => l.toUpperCase())}
           </Typography>
-          <Typography
-            variant="body-sm"
-            className="text-blue-600"
-          >
-            Block starts at minute {selectedBlock.start},
-            currently {selectedBlock.duration} minutes
+          <Typography variant="body-sm" className="text-blue-600">
+            Block starts at minute {selectedBlock.start}, currently{" "}
+            {selectedBlock.duration} minutes
           </Typography>
           <Typography
             variant="body-xs"

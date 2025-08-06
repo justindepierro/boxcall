@@ -8,7 +8,7 @@ import { Icon } from "../components/ui/Icon/Icon";
  * Public route for user authentication.
  * Redirects authenticated users to dashboard.
  */
-export const LoginPage: React.FC = () => {
+const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
@@ -29,3 +29,5 @@ export const LoginPage: React.FC = () => {
     </div>
   );
 };
+
+export default LoginPage;

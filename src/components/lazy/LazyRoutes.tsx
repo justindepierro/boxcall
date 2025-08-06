@@ -4,7 +4,7 @@
  * Implements route-based code splitting to dramatically reduce initial bundle size
  * Each page component is loaded only when the user navigates to it
  */
-import { lazy } from "react";
+import React, { lazy } from "react";
 
 // Lazy load all major page components
 export const LazyDashboardPage = lazy(

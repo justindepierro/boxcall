@@ -3,23 +3,8 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../components/auth";
 import { Icon } from "../components/ui/Icon/Icon";
 import {
-  LazyCalendarPage,
   LazyDashboardPage,
   LazyLoginPage,
-  LazyProfilePage,
-  LazyTeamBulletin,
-  LazyCreateTeam,
-  LazyJoinTeam,
-  LazyCreateCoachAccount,
-  LazyBoxCall,
-  LazyPlaybookPage,
-  LazyTeamSettings,
-  LazyTemplates,
-  LazyPlayground,
-  LazyAboutPage,
-  LazyPrivacyPolicyPage,
-  LazyTermsOfServicePage,
-  LazyContactPage,
   LazyPhase4DemoPage,
 } from "../components/lazy/LazyRoutes";
 import {
@@ -38,10 +23,6 @@ const RouteLoadingSpinner: React.FC = () => (
   </div>
 );
 
-// Helper component to wrap lazy routes with Suspense
-const LazyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <Suspense fallback={<RouteLoadingSpinner />}>{children}</Suspense>
-);
 /**
  * AppRouter Component
  *

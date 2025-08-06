@@ -1,8 +1,8 @@
-import React from 'react';
-import { Typography } from '../../../../../components/design-system';
-import { Card } from '../../../../../components/ui';
-import { Icon, type IconName } from '../../../../../components/ui/Icon/Icon';
-import type { PracticeBlock } from '../../types';
+import React from "react";
+import { Typography } from "../../../../../components/design-system";
+import { Card } from "../../../../../components/ui";
+import { Icon, type IconName } from "../../../../../components/ui/Icon/Icon";
+import type { PracticeBlock } from "../../types";
 
 interface CategorySelectorProps {
   selectedCategory: PracticeBlock["category"] | null;
@@ -34,7 +34,9 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
         {CATEGORIES.map((category) => (
           <button
             key={category.key}
-            onClick={() => onCategorySelect(category.key as PracticeBlock["category"])}
+            onClick={() =>
+              onCategorySelect(category.key as PracticeBlock["category"])
+            }
             className={`p-3 rounded-lg border-2 transition-all text-center ${
               selectedCategory === category.key
                 ? `border-blue-500 ${getCategoryColor(category.key as PracticeBlock["category"])} shadow-md`
@@ -44,9 +46,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
             <div className="mb-1">
               <Icon name={category.icon as IconName} size="lg" />
             </div>
-            <div className="text-xs font-medium">
-              {category.label}
-            </div>
+            <div className="text-xs font-medium">{category.label}</div>
           </button>
         ))}
       </div>
@@ -57,8 +57,9 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
             className="text-blue-800 flex items-center"
           >
             <Icon name="target" size="xs" className="mr-1" />
-            Selected: {CATEGORIES.find(c => c.key === selectedCategory)?.label}
-            - Click and drag on the timeline to allocate
+            Selected:{" "}
+            {CATEGORIES.find((c) => c.key === selectedCategory)?.label}- Click
+            and drag on the timeline to allocate
           </Typography>
         </div>
       )}

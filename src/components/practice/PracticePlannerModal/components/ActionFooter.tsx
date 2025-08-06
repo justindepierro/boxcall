@@ -1,7 +1,7 @@
-import React from 'react';
-import { Typography } from '../../../../components/design-system';
-import { Button } from '../../../../components/ui';
-import { Icon } from '../../../../components/ui/Icon/Icon';
+import React from "react";
+import { Typography } from "../../../../components/design-system";
+import { Button } from "../../../../components/ui";
+import { Icon } from "../../../../components/ui/Icon/Icon";
 
 interface ActionFooterProps {
   isOvertime: boolean;
@@ -36,7 +36,8 @@ export const ActionFooter: React.FC<ActionFooterProps> = ({
         {isOvertime && (
           <Typography variant="body-sm" className="text-red-600">
             <Icon name="alert-triangle" size="xs" className="mr-1" />
-            Warning: Practice is {totalDuration - scheduledDuration} minutes over scheduled time
+            Warning: Practice is {totalDuration - scheduledDuration} minutes
+            over scheduled time
           </Typography>
         )}
       </div>
@@ -54,14 +55,19 @@ export const ActionFooter: React.FC<ActionFooterProps> = ({
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
             <div className="flex items-center mb-4">
-              <Icon name="alert-triangle" size="lg" className="text-red-500 mr-3" />
+              <Icon
+                name="alert-triangle"
+                size="lg"
+                className="text-red-500 mr-3"
+              />
               <Typography variant="headline-md" className="text-red-800">
                 Practice Overtime Warning
               </Typography>
             </div>
             <Typography variant="body-md" className="mb-4">
-              Your practice plan is {totalDuration - scheduledDuration} minutes longer than the scheduled time.
-              This may cause conflicts with other activities or facilities.
+              Your practice plan is {totalDuration - scheduledDuration} minutes
+              longer than the scheduled time. This may cause conflicts with
+              other activities or facilities.
             </Typography>
             <div className="flex space-x-3">
               <Button

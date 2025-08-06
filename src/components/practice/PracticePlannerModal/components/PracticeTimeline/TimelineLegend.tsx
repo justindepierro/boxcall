@@ -1,7 +1,7 @@
-import React from 'react';
-import { Typography } from '../../../../../components/design-system';
-import { Icon } from '../../../../../components/ui/Icon/Icon';
-import type { TimelineAllocation, PracticeBlock } from '../../types';
+import React from "react";
+import { Typography } from "../../../../../components/design-system";
+import { Icon } from "../../../../../components/ui/Icon/Icon";
+import type { TimelineAllocation, PracticeBlock } from "../../types";
 
 interface TimelineLegendProps {
   timelineAllocation: TimelineAllocation;
@@ -32,7 +32,10 @@ export const TimelineLegend: React.FC<TimelineLegendProps> = ({
       let currentBlock: { start: number; duration: number } | null = null;
 
       minutes.forEach((minute) => {
-        if (!currentBlock || minute !== currentBlock.start + currentBlock.duration) {
+        if (
+          !currentBlock ||
+          minute !== currentBlock.start + currentBlock.duration
+        ) {
           // Start new block
           if (currentBlock) {
             blocks.push(currentBlock);
@@ -51,14 +54,18 @@ export const TimelineLegend: React.FC<TimelineLegendProps> = ({
       acc[key].blocks = blocks;
       return acc;
     },
-    {} as Record<string, { count: number; blocks: { start: number; duration: number }[] }>
+    {} as Record<
+      string,
+      { count: number; blocks: { start: number; duration: number }[] }
+    >
   );
 
   if (Object.keys(categoryBlocks).length === 0) {
     return (
       <div className="mt-4 p-4 bg-gray-50 rounded-lg text-center">
         <Typography variant="body-sm" color="muted">
-          No time blocks allocated yet. Select a category above and click on the timeline to start.
+          No time blocks allocated yet. Select a category above and click on the
+          timeline to start.
         </Typography>
       </div>
     );
@@ -79,7 +86,7 @@ export const TimelineLegend: React.FC<TimelineLegendProps> = ({
           Click minutes to adjust, press Enter to save
         </Typography>
       </div>
-      
+
       <div className="flex flex-wrap gap-3">
         {Object.entries(categoryBlocks).map(([category, data]) => (
           <div
@@ -89,19 +96,19 @@ export const TimelineLegend: React.FC<TimelineLegendProps> = ({
             <div className="flex items-center space-x-1">
               <Icon name="clock" size="xs" />
               <span className="font-medium text-sm">
-                {category.replace("-", " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                {category
+                  .replace("-", " ")
+                  .replace(/\b\w/g, (l) => l.toUpperCase())}
               </span>
             </div>
-            <div className="text-xs opacity-75">
-              {data.count}min
-            </div>
+            <div className="text-xs opacity-75">{data.count}min</div>
             <div className="text-xs opacity-60">
-              ({data.blocks.length} block{data.blocks.length !== 1 ? 's' : ''})
+              ({data.blocks.length} block{data.blocks.length !== 1 ? "s" : ""})
             </div>
           </div>
         ))}
       </div>
-      
+
       <div className="mt-3 text-xs text-gray-500">
         Total allocated: {Object.keys(timelineAllocation).length} minutes
       </div>

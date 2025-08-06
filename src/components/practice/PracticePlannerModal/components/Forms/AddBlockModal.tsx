@@ -1,12 +1,12 @@
-import React from 'react';
-import { Typography } from '../../../../../components/design-system';
-import { Button, Card } from '../../../../../components/ui';
-import { Icon, type IconName } from '../../../../../components/ui/Icon/Icon';
-import type { PracticeBlock } from '../../types';
+import React from "react";
+import { Typography } from "../../../../../components/design-system";
+import { Button, Card } from "../../../../../components/ui";
+import { Icon, type IconName } from "../../../../../components/ui/Icon/Icon";
+import type { PracticeBlock } from "../../types";
 
 interface AddBlockModalProps {
   newBlock: Partial<PracticeBlock>;
-  userRole: 'head_coach' | 'position_coach';
+  userRole: "head_coach" | "position_coach";
   onBlockChange: (block: Partial<PracticeBlock>) => void;
   onAddBlock: () => void;
   onCancel: () => void;
@@ -21,7 +21,7 @@ const QUICK_TEMPLATES = [
     location: "Room 1",
     notes: "Review practice plan and objectives",
     icon: "file" as IconName,
-    color: "purple"
+    color: "purple",
   },
   {
     title: "Weight Room",
@@ -30,7 +30,7 @@ const QUICK_TEMPLATES = [
     location: "Weight Room",
     notes: "Bring sneakers and water bottles",
     icon: "activity" as IconName,
-    color: "orange"
+    color: "orange",
   },
   {
     title: "Transition to Field",
@@ -39,7 +39,7 @@ const QUICK_TEMPLATES = [
     location: "Field",
     notes: "Bring helmets only",
     icon: "arrow-right" as IconName,
-    color: "gray"
+    color: "gray",
   },
   {
     title: "Offense - Warm up on air",
@@ -48,7 +48,7 @@ const QUICK_TEMPLATES = [
     location: "Field",
     notes: "5 plays, no contact",
     icon: "target" as IconName,
-    color: "blue"
+    color: "blue",
   },
   {
     title: "Water Break",
@@ -57,7 +57,7 @@ const QUICK_TEMPLATES = [
     location: "Sideline",
     notes: "Hydration and equipment check",
     icon: "pause" as IconName,
-    color: "yellow"
+    color: "yellow",
   },
   {
     title: "Equipment Change",
@@ -66,8 +66,8 @@ const QUICK_TEMPLATES = [
     location: "Locker Room",
     notes: "Change from weight room to field gear",
     icon: "pause" as IconName,
-    color: "yellow"
-  }
+    color: "yellow",
+  },
 ];
 
 const CATEGORY_OPTIONS = [
@@ -77,7 +77,7 @@ const CATEGORY_OPTIONS = [
   { value: "meeting", label: "Meeting" },
   { value: "weight-room", label: "Weight Room" },
   { value: "transition", label: "Transition" },
-  { value: "break", label: "Break" }
+  { value: "break", label: "Break" },
 ];
 
 export const AddBlockModal: React.FC<AddBlockModalProps> = ({
@@ -88,7 +88,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
   onCancel,
   onRoleSwitch,
 }) => {
-  const handleTemplateSelect = (template: typeof QUICK_TEMPLATES[0]) => {
+  const handleTemplateSelect = (template: (typeof QUICK_TEMPLATES)[0]) => {
     onBlockChange({
       title: template.title,
       category: template.category,
@@ -134,8 +134,10 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               className={`px-3 py-1 bg-${template.color}-100 text-${template.color}-800 rounded-md text-sm hover:bg-${template.color}-200 flex items-center transition-colors`}
             >
               <Icon name={template.icon} size="xs" className="mr-1" />
-              {template.title.includes('Equipment') ? '🥿 ' : ''}{template.title}
-              {template.title !== 'Equipment Change' && ` (${template.duration} min)`}
+              {template.title.includes("Equipment") ? "🥿 " : ""}
+              {template.title}
+              {template.title !== "Equipment Change" &&
+                ` (${template.duration} min)`}
             </button>
           ))}
         </div>
@@ -150,7 +152,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           <input
             type="text"
             value={newBlock.title || ""}
-            onChange={(e) => onBlockChange({ ...newBlock, title: e.target.value })}
+            onChange={(e) =>
+              onBlockChange({ ...newBlock, title: e.target.value })
+            }
             placeholder="e.g., Offensive line drills"
             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
@@ -162,10 +166,12 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           <input
             type="number"
             value={newBlock.duration || ""}
-            onChange={(e) => onBlockChange({
-              ...newBlock,
-              duration: parseInt(e.target.value) || 0,
-            })}
+            onChange={(e) =>
+              onBlockChange({
+                ...newBlock,
+                duration: parseInt(e.target.value) || 0,
+              })
+            }
             placeholder="15"
             min="1"
             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -180,10 +186,12 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           </label>
           <select
             value={newBlock.category || ""}
-            onChange={(e) => onBlockChange({
-              ...newBlock,
-              category: e.target.value as PracticeBlock["category"],
-            })}
+            onChange={(e) =>
+              onBlockChange({
+                ...newBlock,
+                category: e.target.value as PracticeBlock["category"],
+              })
+            }
             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select category</option>
@@ -201,7 +209,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           <input
             type="text"
             value={newBlock.location || ""}
-            onChange={(e) => onBlockChange({ ...newBlock, location: e.target.value })}
+            onChange={(e) =>
+              onBlockChange({ ...newBlock, location: e.target.value })
+            }
             placeholder="Field, Weight Room, etc."
             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
@@ -214,7 +224,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
         </label>
         <textarea
           value={newBlock.notes || ""}
-          onChange={(e) => onBlockChange({ ...newBlock, notes: e.target.value })}
+          onChange={(e) =>
+            onBlockChange({ ...newBlock, notes: e.target.value })
+          }
           placeholder="Special instructions, equipment needed, etc."
           rows={2}
           className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -230,11 +242,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           Cancel
         </Button>
         {userRole === "head_coach" && (
-          <Button
-            variant="outline"
-            onClick={onRoleSwitch}
-            className="text-xs"
-          >
+          <Button variant="outline" onClick={onRoleSwitch} className="text-xs">
             <Icon name="eye" size="sm" className="mr-1" />
             Switch to Position Coach View
           </Button>

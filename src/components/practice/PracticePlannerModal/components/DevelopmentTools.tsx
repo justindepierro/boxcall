@@ -1,12 +1,14 @@
-import React from 'react';
-import { Typography } from '../../../../components/design-system';
-import { Icon } from '../../../../components/ui/Icon/Icon';
+import React from "react";
+import { Typography } from "../../../../components/design-system";
+import { Icon } from "../../../../components/ui/Icon/Icon";
 
 interface DevelopmentToolsProps {
   eventId: string;
 }
 
-export const DevelopmentTools: React.FC<DevelopmentToolsProps> = ({ eventId }) => {
+export const DevelopmentTools: React.FC<DevelopmentToolsProps> = ({
+  eventId,
+}) => {
   const resetToSampleData = () => {
     const savedPracticeKey = `practice_plan_${eventId || "default"}`;
     localStorage.removeItem(savedPracticeKey);
