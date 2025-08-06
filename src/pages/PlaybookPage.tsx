@@ -13,7 +13,7 @@ import { PlayFilters } from "../components/playbook/PlayFilters.tsx";
 import { PlayBuilderWizard } from "../components/playbook/PlayBuilder/PlayBuilderWizard";
 import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal";
 import { PracticeScriptService } from "../services/practiceScriptService";
-import { CSVService } from "../services/csvService";
+import { CSVService } from "../services/csv";
 import { getDemoPlays } from "../data/demoPlays";
 import type { Play } from "../types/play";
 import {

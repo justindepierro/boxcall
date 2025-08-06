@@ -11,7 +11,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { DataSyncService } from "../../../services/dataSyncService";
-import { CSVService, type CSVParseResult } from "../../../services/csvService";
+import { CSVService, type CSVParseResult } from "../../../services/csv";
 
 interface CSVImportModalProps {
   isOpen: boolean;

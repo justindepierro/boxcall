@@ -13,7 +13,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import type { Play } from "../types/play";
 import type { PracticeScript } from "./practiceScriptService";
 import type { GamePlan } from "./gamePlanService";
-import { CSVService } from "./csvService";
+import { CSVService } from "./csv";
 
 interface CachedData<T = unknown> {
   data: T;
