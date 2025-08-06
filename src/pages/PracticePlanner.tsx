@@ -659,12 +659,13 @@ export function PracticePlanner() {
           setIsTemplateModalOpen(false);
         }}
       />
-      {/* PDF Export Dialog */}
+      {/* PDF Export with Lazy Loading */}
       {selectedSchedule && (
-        <PracticePDFExportDialog
+        <PDFExportTrigger
           isOpen={isPDFExportOpen}
           onClose={() => setIsPDFExportOpen(false)}
           practiceData={preparePracticeDataForPDF() || {}}
+          triggerElement={null} // Programmatically controlled
         />
       )}
     </div>

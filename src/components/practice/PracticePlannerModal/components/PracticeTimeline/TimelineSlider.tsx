@@ -1,0 +1,103 @@
+import React from 'react';
+import { Typography } from '../../../../../components/design-system';
+import { Icon } from '../../../../../components/ui/Icon/Icon';
+import type { SelectedBlock } from '../../types';
+
+interface TimelineSliderProps {
+  selectedBlock: SelectedBlock;
+  sliderValue: number;
+  scheduledDuration: number;
+  onSliderChange: (value: number) => void;
+  onSaveBlock: () => void;
+  onCancelBlock: () => void;
+}
+
+export const TimelineSlider: React.FC<TimelineSliderProps> = ({
+  selectedBlock,
+  sliderValue,
+  scheduledDuration,
+  onSliderChange,
+  onSaveBlock,
+  onCancelBlock,
+}) => {
+  const maxDuration = Math.min(50, scheduledDuration - selectedBlock.start);
+
+  return (
+    <div className="mt-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <Typography
+            variant="body-md"
+            className="font-medium text-blue-800 flex items-center"
+          >
+            <Icon name="target" size="sm" className="mr-2" />
+            Resize Block:{" "}
+            {selectedBlock.category
+              .replace("-", " ")
+              .replace(/\b\w/g, (l) => l.toUpperCase())}
+          </Typography>
+          <Typography
+            variant="body-sm"
+            className="text-blue-600"
+          >
+            Block starts at minute {selectedBlock.start},
+            currently {selectedBlock.duration} minutes
+          </Typography>
+          <Typography
+            variant="body-xs"
+            className="text-blue-500 mt-1 flex items-center"
+          >
+            <Icon name="info" size="xs" className="mr-1" />
+            Press Space/Enter to save, Esc to cancel
+          </Typography>
+        </div>
+        <button
+          onClick={onCancelBlock}
+          className="text-blue-600 hover:text-blue-800 p-1"
+        >
+          <Icon name="close" size="sm" />
+        </button>
+      </div>
+
+      <div className="space-y-3">
+        <div>
+          <label className="block text-sm font-medium text-blue-700 mb-2">
+            Duration: {sliderValue} minutes
+          </label>
+          <input
+            type="range"
+            min="1"
+            max={maxDuration}
+            value={sliderValue}
+            onChange={(e) => onSliderChange(parseInt(e.target.value))}
+            className="w-full h-3 bg-blue-200 rounded-lg appearance-none cursor-pointer slider"
+            style={{
+              background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(sliderValue / maxDuration) * 100}%, #e5e7eb ${(sliderValue / maxDuration) * 100}%, #e5e7eb 100%)`,
+            }}
+          />
+          <div className="flex justify-between text-xs text-blue-600 mt-1">
+            <span>1 min</span>
+            <span>{maxDuration} min max</span>
+          </div>
+        </div>
+
+        <div className="flex space-x-2">
+          <button
+            onClick={onSaveBlock}
+            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+          >
+            <Icon name="check" size="sm" className="mr-2" />
+            Save Block
+          </button>
+          <button
+            onClick={onCancelBlock}
+            className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors flex items-center justify-center"
+          >
+            <Icon name="close" size="sm" className="mr-2" />
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

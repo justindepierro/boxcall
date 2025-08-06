@@ -311,11 +311,12 @@ export const PracticePlannerModalNew: React.FC<PracticePlannerModalProps> = ({
           onCreateNew={() => {}}
         />
       )}
-      {/* PDF Export Dialog */}
-      <PracticePDFExportDialog
-        isOpen={isPDFExportOpen}
+      {/* PDF Export with Lazy Loading */}
+      <PDFExportTrigger
         practiceData={preparePracticeDataForPDF()}
+        isOpen={isPDFExportOpen}
         onClose={() => setIsPDFExportOpen(false)}
+        triggerElement={null} // Programmatically controlled
       />
     </div>
   );
