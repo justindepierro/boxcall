@@ -1,6 +1,6 @@
 /**
  * Calendar Icons Category
- * 
+ *
  * Icons for calendar, time, and scheduling functionality
  * Tree-shakeable icon category - only loads when calendar icons are used
  */

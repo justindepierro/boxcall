@@ -1,6 +1,6 @@
 /**
  * System Icons Category
- * 
+ *
  * Icons for system functions, files, and miscellaneous functionality
  * Tree-shakeable icon category - default category for uncategorized icons
  */

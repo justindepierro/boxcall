@@ -1,6 +1,6 @@
 /**
  * Action Icons Category
- * 
+ *
  * Icons for user actions, controls, and status indicators
  * Tree-shakeable icon category - only loads when action icons are used
  */

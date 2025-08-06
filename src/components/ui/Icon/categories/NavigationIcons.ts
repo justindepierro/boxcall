@@ -1,6 +1,6 @@
 /**
  * Navigation Icons Category
- * 
+ *
  * Icons for navigation, layout, and directional controls
  * Tree-shakeable icon category - only loads when navigation icons are used
  */

@@ -1,6 +1,6 @@
 /**
  * Business Icons Category
- * 
+ *
  * Icons for business, team management, and organization
  * Tree-shakeable icon category - only loads when business icons are used
  */

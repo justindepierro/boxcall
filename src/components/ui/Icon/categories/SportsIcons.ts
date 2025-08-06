@@ -1,6 +1,6 @@
 /**
  * Sports Icons Category
- * 
+ *
  * Icons for sports, achievements, and athletic activities
  * Tree-shakeable icon category - only loads when sports icons are used
  */

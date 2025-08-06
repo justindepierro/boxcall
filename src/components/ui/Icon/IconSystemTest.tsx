@@ -1,6 +1,6 @@
 /**
  * Icon System Test
- * 
+ *
  * Quick test component to verify both icon systems work correctly
  */
 
@@ -12,30 +12,38 @@ export const IconSystemTest: React.FC = () => {
   return (
     <div className="p-6 space-y-6 max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold">Icon System Test</h2>
-      
+
       {/* Original Icon System */}
       <div className="border p-4 rounded-lg">
-        <h3 className="text-lg font-semibold mb-3">Original Icon System (Icon.tsx)</h3>
+        <h3 className="text-lg font-semibold mb-3">
+          Original Icon System (Icon.tsx)
+        </h3>
         <div className="flex gap-3 items-center">
           <Icon name="play" size="md" color="jade" />
           <Icon name="edit" size="md" color="slate" />
           <Icon name="delete" size="md" color="error" />
           <Icon name="check" size="md" color="success" />
           <Icon name="calendar" size="md" color="navy" />
-          <span className="text-sm text-gray-600">✅ Instant render (pre-loaded)</span>
+          <span className="text-sm text-gray-600">
+            ✅ Instant render (pre-loaded)
+          </span>
         </div>
       </div>
 
       {/* Modular Icon System */}
       <div className="border p-4 rounded-lg">
-        <h3 className="text-lg font-semibold mb-3">Modular Icon System (ModularIcon.tsx)</h3>
+        <h3 className="text-lg font-semibold mb-3">
+          Modular Icon System (ModularIcon.tsx)
+        </h3>
         <div className="flex gap-3 items-center">
           <ModularIcon name="play" size="md" color="jade" />
           <ModularIcon name="edit" size="md" color="slate" />
           <ModularIcon name="delete" size="md" color="error" />
           <ModularIcon name="check" size="md" color="success" />
           <ModularIcon name="calendar" size="md" color="navy" />
-          <span className="text-sm text-gray-600">⚡ Dynamic load (tree-shakeable)</span>
+          <span className="text-sm text-gray-600">
+            ⚡ Dynamic load (tree-shakeable)
+          </span>
         </div>
       </div>
 

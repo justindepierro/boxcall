@@ -1,6 +1,6 @@
 /**
  * Media Icons Category
- * 
+ *
  * Icons for media, content, and communication
  * Tree-shakeable icon category - only loads when media icons are used
  */
