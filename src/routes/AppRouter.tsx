@@ -30,11 +30,13 @@ import {
   TeamMemberRoute,
 } from "../routes";
 
-// Route loading fallback
+// Route loading fallback with better UX
 const RouteLoadingSpinner: React.FC = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
-    <span className="ml-3 text-gray-600">Loading page...</span>
+  <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
+      <p className="text-gray-600 dark:text-gray-400 font-medium">Loading page...</p>
+    </div>
   </div>
 );
 
@@ -42,14 +44,21 @@ const RouteLoadingSpinner: React.FC = () => (
  * AppRouter Component
  *
  * Main routing configuration for the BoxCall application.
- * Handles protected routes, public routes, and role-based access.
+ * Features:
+ * - Route-based code splitting with Suspense
+ * - Protected routes with authentication checks
+ * - Role-based access control (RBAC)
+ * - Team membership validation
+ * - Subscription tier protection
+ * - Clean 404 handling
  */
 export const AppRouter: React.FC = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          {/* Public Routes - Only accessible when NOT authenticated */}
+          {/* ==================== PUBLIC ROUTES ==================== */}
+          {/* Only accessible when NOT authenticated */}
           <Route
             path="/login"
             element={
@@ -60,7 +69,9 @@ export const AppRouter: React.FC = () => {
               </PublicRoute>
             }
           />
-          {/* Protected Routes - Require authentication */}
+
+          {/* ==================== CORE PROTECTED ROUTES ==================== */}
+          {/* Dashboard - Landing page for authenticated users */}
           <Route
             path="/dashboard"
             element={
@@ -72,6 +83,184 @@ export const AppRouter: React.FC = () => {
             }
           />
 
+          {/* User Profile Management */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyProfilePage />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Master Calendar - Available to all authenticated users */}
+          <Route
+            path="/calendar"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyCalendarPage />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* ==================== TEAM-SPECIFIC ROUTES ==================== */}
+          {/* ==================== TEAM-SPECIFIC ROUTES ==================== */}
+          {/* Team Bulletin - All team members can view */}
+          <Route
+            path="/team/:teamId/bulletin"
+            element={
+              <ProtectedRoute>
+                <TeamMemberRoute
+                  allowedTeamRoles={[
+                    "coach",
+                    "player",
+                    "family",
+                    "admin",
+                  ]}
+                >
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyTeamBulletin />
+                  </Suspense>
+                </TeamMemberRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Team Settings - Coaches and admins only */}
+          <Route
+            path="/team/:teamId/settings"
+            element={
+              <ProtectedRoute>
+                <TeamMemberRoute
+                  allowedTeamRoles={["coach", "admin"]}
+                >
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyTeamSettings />
+                  </Suspense>
+                </TeamMemberRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* ==================== PREMIUM FEATURES ==================== */}
+          {/* Premium Analytics - Requires subscription */}
+          <Route
+            path="/team/:teamId/analytics"
+            element={
+              <TeamMemberRoute allowedTeamRoles={["coach", "admin"]}>
+                <SubscriptionRoute requiredTiers={["team_premium"]}>
+                  <div className="p-8 text-center">
+                    <h1 className="text-2xl font-bold mb-4 flex items-center justify-center">
+                      <Icon name="bar-chart" size="lg" className="mr-2" />
+                      Premium Analytics
+                    </h1>
+                    <p className="text-gray-600">Advanced team analytics and reporting tools.</p>
+                  </div>
+                </SubscriptionRoute>
+              </TeamMemberRoute>
+            }
+          />
+
+          {/* ==================== COACH & ADMIN TOOLS ==================== */}
+          {/* ==================== COACH & ADMIN TOOLS ==================== */}
+          {/* BoxCall - Coaches and admins only */}
+          <Route
+            path="/boxcall"
+            element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={["coach", "admin"]}>
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyBoxCall />
+                  </Suspense>
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Templates - Coaches and admins only */}
+          <Route
+            path="/templates"
+            element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={["coach", "admin"]}>
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyTemplates />
+                  </Suspense>
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Playground - Admins only */}
+          <Route
+            path="/playground"
+            element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={["admin"]}>
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyPlayground />
+                  </Suspense>
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* ==================== GENERAL ACCESS ROUTES ==================== */}
+          {/* Playbook - All authenticated users */}
+          <Route
+            path="/playbook"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyPlaybookPage />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* ==================== TEAM MANAGEMENT ==================== */}
+          {/* ==================== TEAM MANAGEMENT ==================== */}
+          {/* Create Team - Protected route with permission check */}
+          <Route
+            path="/create-team"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyCreateTeam />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Join Team - All authenticated users */}
+          <Route
+            path="/join-team"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyJoinTeam />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Create Coach Account - All authenticated users */}
+          <Route
+            path="/create-coach-account"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyCreateCoachAccount />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* ==================== DEVELOPMENT & TESTING ==================== */}
           {/* Phase 4 Demo Route - Data Resolution Testing */}
           <Route
             path="/phase4-demo"
@@ -84,150 +273,15 @@ export const AppRouter: React.FC = () => {
             }
           />
 
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <LazyProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          {/* Master Calendar - Available to all authenticated users */}
-          <Route
-            path="/calendar"
-            element={
-              <ProtectedRoute>
-                <LazyCalendarPage />
-              </ProtectedRoute>
-            }
-          />
-          {/* Team Bulletin - All team members can view */}
-          <Route
-            path="/team/:teamId/bulletin"
-            element={
-              <ProtectedRoute>
-                <TeamMemberRoute
-                  allowedTeamRoles={[
-                    "head_coach",
-                    "coach",
-                    "player",
-                    "manager",
-                    "family",
-                  ]}
-                >
-                  <LazyTeamBulletin />
-                </TeamMemberRoute>
-              </ProtectedRoute>
-            }
-          />
-          {/* Premium Feature Example - Requires subscription */}
-          <Route
-            path="/team/:teamId/analytics"
-            element={
-              <TeamMemberRoute allowedTeamRoles={["head_coach", "coach"]}>
-                <SubscriptionRoute requiredTiers={["team_premium"]}>
-                  <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold mb-4 flex items-center justify-center">
-                      <Icon name="bar-chart" size="lg" className="mr-2" />
-                      Premium Analytics
-                    </h1>
-                    <p>Advanced team analytics and reporting tools.</p>
-                  </div>
-                </SubscriptionRoute>
-              </TeamMemberRoute>
-            }
-          />
-          {/* New Navigation Routes */}
-          {/* BoxCall - Coaches only */}
-          <Route
-            path="/boxcall"
-            element={
-              <ProtectedRoute>
-                <RoleProtectedRoute allowedRoles={["coach", "admin"]}>
-                  <LazyBoxCall />
-                </RoleProtectedRoute>
-              </ProtectedRoute>
-            }
-          />
-          {/* Playbook - All authenticated users */}
-          <Route
-            path="/playbook"
-            element={
-              <ProtectedRoute>
-                <LazyPlaybookPage />
-              </ProtectedRoute>
-            }
-          />
-          {/* Team Settings - Team-specific, coaches only */}
-          <Route
-            path="/team/:teamId/settings"
-            element={
-              <ProtectedRoute>
-                <TeamMemberRoute
-                  allowedTeamRoles={["head_coach", "coach", "manager"]}
-                >
-                  <LazyTeamSettings />
-                </TeamMemberRoute>
-              </ProtectedRoute>
-            }
-          />
-          {/* Create Team - Protected route with permission check */}
-          <Route
-            path="/create-team"
-            element={
-              <ProtectedRoute>
-                <LazyCreateTeam />
-              </ProtectedRoute>
-            }
-          />
-          {/* Join Team - All authenticated users */}
-          <Route
-            path="/join-team"
-            element={
-              <ProtectedRoute>
-                <LazyJoinTeam />
-              </ProtectedRoute>
-            }
-          />
-          {/* Create Coach Account - All authenticated users */}
-          <Route
-            path="/create-coach-account"
-            element={
-              <ProtectedRoute>
-                <LazyCreateCoachAccount />
-              </ProtectedRoute>
-            }
-          />
-          {/* Templates - Coaches only */}
-          <Route
-            path="/templates"
-            element={
-              <ProtectedRoute>
-                <RoleProtectedRoute allowedRoles={["coach", "admin"]}>
-                  <LazyTemplates />
-                </RoleProtectedRoute>
-              </ProtectedRoute>
-            }
-          />
-          {/* Playground - Admins only */}
-          <Route
-            path="/playground"
-            element={
-              <ProtectedRoute>
-                <RoleProtectedRoute allowedRoles={["admin"]}>
-                  <LazyPlayground />
-                </RoleProtectedRoute>
-              </ProtectedRoute>
-            }
-          />
-          {/* Catch-all Routes */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          {/* Legal Pages - Public access within authenticated area */}
+          {/* ==================== LEGAL & INFO PAGES ==================== */}
+          {/* ==================== LEGAL & INFO PAGES ==================== */}
           <Route
             path="/about"
             element={
               <ProtectedRoute>
-                <LazyAboutPage />
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyAboutPage />
+                </Suspense>
               </ProtectedRoute>
             }
           />
@@ -235,7 +289,9 @@ export const AppRouter: React.FC = () => {
             path="/privacy-policy"
             element={
               <ProtectedRoute>
-                <LazyPrivacyPolicyPage />
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyPrivacyPolicyPage />
+                </Suspense>
               </ProtectedRoute>
             }
           />
@@ -243,7 +299,9 @@ export const AppRouter: React.FC = () => {
             path="/terms-of-service"
             element={
               <ProtectedRoute>
-                <LazyTermsOfServicePage />
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyTermsOfServicePage />
+                </Suspense>
               </ProtectedRoute>
             }
           />
@@ -251,28 +309,49 @@ export const AppRouter: React.FC = () => {
             path="/contact"
             element={
               <ProtectedRoute>
-                <LazyContactPage />
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyContactPage />
+                </Suspense>
               </ProtectedRoute>
             }
           />
+
+          {/* ==================== NAVIGATION & FALLBACKS ==================== */}
+          {/* Root redirect to dashboard */}
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+          {/* 404 Route */}
           {/* 404 Route */}
           <Route
             path="*"
             element={
-              <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+                <div className="text-center max-w-md mx-auto p-6">
+                  <div className="mb-6">
+                    <Icon name="alert" size="3xl" color="slate" />
+                  </div>
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                     404 - Page Not Found
                   </h1>
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    The page you're looking for doesn't exist.
+                  <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+                    The page you're looking for doesn't exist or has been moved.
                   </p>
-                  <button
-                    onClick={() => window.history.back()}
-                    className="bg-brand-jade text-white px-4 py-2 rounded-sm hover:bg-interaction-jade font-sans font-semibold"
-                  >
-                    Go Back
-                  </button>
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => window.history.back()}
+                      className="w-full bg-brand-jade text-white px-6 py-3 rounded-sm hover:bg-interaction-jade font-sans font-semibold transition-colors"
+                    >
+                      <Icon name="arrow-left" size="sm" className="mr-2 inline" />
+                      Go Back
+                    </button>
+                    <button
+                      onClick={() => window.location.href = '/dashboard'}
+                      className="w-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-sm hover:bg-gray-50 dark:hover:bg-gray-800 font-sans font-semibold transition-colors"
+                    >
+                      <Icon name="home" size="sm" className="mr-2 inline" />
+                      Go to Dashboard
+                    </button>
+                  </div>
                 </div>
               </div>
             }
