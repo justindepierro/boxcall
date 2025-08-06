@@ -35,7 +35,9 @@ const RouteLoadingSpinner: React.FC = () => (
   <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
     <div className="text-center">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
-      <p className="text-gray-600 dark:text-gray-400 font-medium">Loading page...</p>
+      <p className="text-gray-600 dark:text-gray-400 font-medium">
+        Loading page...
+      </p>
     </div>
   </div>
 );
@@ -115,12 +117,7 @@ export const AppRouter: React.FC = () => {
             element={
               <ProtectedRoute>
                 <TeamMemberRoute
-                  allowedTeamRoles={[
-                    "coach",
-                    "player",
-                    "family",
-                    "admin",
-                  ]}
+                  allowedTeamRoles={["coach", "player", "family", "admin"]}
                 >
                   <Suspense fallback={<RouteLoadingSpinner />}>
                     <LazyTeamBulletin />
@@ -135,9 +132,7 @@ export const AppRouter: React.FC = () => {
             path="/team/:teamId/settings"
             element={
               <ProtectedRoute>
-                <TeamMemberRoute
-                  allowedTeamRoles={["coach", "admin"]}
-                >
+                <TeamMemberRoute allowedTeamRoles={["coach", "admin"]}>
                   <Suspense fallback={<RouteLoadingSpinner />}>
                     <LazyTeamSettings />
                   </Suspense>
@@ -158,7 +153,9 @@ export const AppRouter: React.FC = () => {
                       <Icon name="bar-chart" size="lg" className="mr-2" />
                       Premium Analytics
                     </h1>
-                    <p className="text-gray-600">Advanced team analytics and reporting tools.</p>
+                    <p className="text-gray-600">
+                      Advanced team analytics and reporting tools.
+                    </p>
                   </div>
                 </SubscriptionRoute>
               </TeamMemberRoute>
@@ -341,11 +338,15 @@ export const AppRouter: React.FC = () => {
                       onClick={() => window.history.back()}
                       className="w-full bg-brand-jade text-white px-6 py-3 rounded-sm hover:bg-interaction-jade font-sans font-semibold transition-colors"
                     >
-                      <Icon name="arrow-left" size="sm" className="mr-2 inline" />
+                      <Icon
+                        name="arrow-left"
+                        size="sm"
+                        className="mr-2 inline"
+                      />
                       Go Back
                     </button>
                     <button
-                      onClick={() => window.location.href = '/dashboard'}
+                      onClick={() => (window.location.href = "/dashboard")}
                       className="w-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-sm hover:bg-gray-50 dark:hover:bg-gray-800 font-sans font-semibold transition-colors"
                     >
                       <Icon name="home" size="sm" className="mr-2 inline" />
