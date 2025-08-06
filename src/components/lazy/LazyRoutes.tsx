@@ -85,7 +85,7 @@ export const LazyPracticePlanner = lazy(
 
 // Heavy component lazy loading
 export const LazyPracticePlannerModal = lazy(() =>
-  import("../practice/PracticePlannerModal").then((module) => ({
+  import("../practice/PracticePlannerModal/index").then((module) => ({
     default: module.PracticePlannerModal,
   }))
 );
