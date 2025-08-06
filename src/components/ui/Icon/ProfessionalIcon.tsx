@@ -251,7 +251,4 @@ export const ClockIcon = () => <Icon name="clock" color="slate" />;
 export const TeamIcon = () => <Icon name="users" color="navy" />;
 export const SettingsIcon = () => <Icon name="settings" color="slate" />;
 
-// Export SmartIconSystem for backward compatibility
-export { SmartIconSystem } from "./SmartIconSystem";
-
 export default Icon;
