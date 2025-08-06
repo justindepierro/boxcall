@@ -115,11 +115,15 @@ export class NetworkOptimizationService {
   > {
     // Try to get network usage from browser APIs
     if ("connection" in navigator) {
-      const connection = (navigator as unknown as { connection?: any })
-        .connection;
+      const connection = (navigator as unknown as { connection?: {
+        downlink?: number;
+        effectiveType?: string;
+        rtt?: number;
+        saveData?: boolean;
+      } }).connection;
       return {
-        sent: connection.downlink || 0,
-        received: connection.effectiveType || 0,
+        sent: connection?.downlink || 0,
+        received: connection?.effectiveType === "4g" ? 100 : connection?.effectiveType === "3g" ? 50 : 0,
         requests: 0, // Would need to track this
       };
     }

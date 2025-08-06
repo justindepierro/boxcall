@@ -9,6 +9,7 @@
 
 import { MobilePerformanceService } from "../MobilePerformanceService";
 import { MobileCalendarService } from "../MobileCalendarService";
+import type { PerformanceDashboard } from "../types/PerformanceTypes";
 
 /**
  * Service for monitoring mobile app performance
@@ -41,16 +42,16 @@ export class MobilePerformanceMonitor {
 
       // Create structured dashboard data
       const dashboard = {
-        renderTime: performanceDashboard?.rendering?.averageFrameTime || 16.7,
+        renderTime: performanceDashboard?.rendering?.renderTime || 16.7,
         memoryUsage: performanceDashboard?.memory?.usedMemory || 0,
         batteryImpact: performanceDashboard?.battery?.currentLevel || 100,
       };
 
       // Create structured calendar metrics
       const metrics = {
-        loadTime: calendarMetrics?.averageLoadTime || 0,
-        scrollPerformance: calendarMetrics?.scrollPerformance || 100,
-        renderEfficiency: calendarMetrics?.renderEfficiency || 100,
+        loadTime: calendarMetrics?.renderTime || 0,
+        scrollPerformance: calendarMetrics?.scrollFPS || 60,
+        renderEfficiency: calendarMetrics?.memoryUsage || 0,
       };
 
       // Generate recommendations
@@ -85,7 +86,7 @@ export class MobilePerformanceMonitor {
    * Generate overall performance recommendations
    */
   private static async generateOverallRecommendations(
-    dashboard: any
+    dashboard: PerformanceDashboard | null
   ): Promise<string[]> {
     const recommendations: string[] = [];
 

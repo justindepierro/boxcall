@@ -146,7 +146,11 @@ export class MemoryOptimizationService {
   }> {
     // Try to get actual memory info if available
     if (typeof window !== "undefined" && "performance" in window) {
-      const memory = (performance as unknown as { memory?: any }).memory;
+      const memory = (performance as unknown as { memory?: {
+        totalJSHeapSize: number;
+        usedJSHeapSize: number;
+        jsHeapSizeLimit: number;
+      } }).memory;
       if (memory) {
         return {
           total: memory.totalJSHeapSize / 1024 / 1024, // Convert to MB

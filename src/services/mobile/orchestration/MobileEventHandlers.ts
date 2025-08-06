@@ -11,6 +11,8 @@ import { MobileCalendarService } from "../MobileCalendarService";
 import { MobilePerformanceService } from "../MobilePerformanceService";
 import { MobileUIService } from "../MobileUIService";
 import { MobileStateManager } from "./MobileStateManager";
+import { BatteryOptimizationService } from "../optimizations/BatteryOptimizationService";
+import { MemoryOptimizationService } from "../optimizations/MemoryOptimizationService";
 import type { 
   ViewportChangeResult,
   BatteryOptimizationResult,
@@ -67,7 +69,7 @@ export class MobileEventHandlers {
 
     try {
       // Optimize performance based on battery level
-      const batteryOpt = await MobilePerformanceService.optimizeBattery(
+      const batteryOpt = await BatteryOptimizationService.optimizeBattery(
         batteryLevel,
         isLowPowerMode
       );
@@ -96,6 +98,10 @@ export class MobileEventHandlers {
         optimizations.push("Disabled animations");
       }
 
+      // Add battery optimization details
+      optimizations.push(`Applied ${batteryOpt.strategy} battery strategy`);
+      optimizations.push(...batteryOpt.actions.map(action => `${action.description} (${action.impact} impact)`));
+
       return { success: true, optimizations };
     } catch (error) {
       console.error("Failed to handle battery change:", error);
@@ -114,22 +120,29 @@ export class MobileEventHandlers {
 
     try {
       if (severity === "high" || severity === "medium") {
-        // Clear performance service caches
-        const cleared = await MobilePerformanceService.clearCaches();
+        // Clear performance service caches using the correct service
+        const cleared = await MemoryOptimizationService.clearCaches();
         totalMemoryFreed += cleared.freedMemory;
         actions.push(
           ...cleared.clearedCaches.map((cache) => `Cleared ${cache} cache`)
         );
 
         // Apply memory optimizations
+        const memoryOpt = await MemoryOptimizationService.optimizeMemory();
         actions.push("Applied memory optimizations");
+        
+        // Add specific optimization actions
+        if (memoryOpt.warnings.length > 0) {
+          actions.push(`Addressed ${memoryOpt.warnings.length} memory warnings`);
+        }
       }
 
       if (severity === "high") {
-        // Force garbage collection if possible
-        // TODO: Implement actual garbage collection
-        actions.push("Triggered garbage collection");
-        totalMemoryFreed += 10; // Estimated
+        // Apply aggressive memory cleanup
+        const forceCleanupResult = await MemoryOptimizationService.forceCleanup();
+        totalMemoryFreed += forceCleanupResult.freedMemory;
+        actions.push("Triggered force memory cleanup");
+        actions.push(`Freed ${forceCleanupResult.freedMemory}MB through aggressive cleanup`);
       }
 
       return {

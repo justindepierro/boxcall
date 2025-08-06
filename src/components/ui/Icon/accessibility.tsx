@@ -13,27 +13,28 @@ import type { IconProps } from "./types";
 import "./categories/ActionIcons";
 import "./categories/NavigationIcons";
 import "./categories/BusinessIcons";
+import type { IconName } from "./types";
 
 // Coach-friendly accessibility components
 export const CoachActionIcon: React.FC<{
-  name: string;
+  name: IconName;
   color?: IconProps["color"];
 }> = ({ name, color = "slate" }) => (
-  <Icon name={name as any} size="lg" color={color} />
+  <Icon name={name} size="lg" color={color} />
 );
 
 export const HeaderIcon: React.FC<{
-  name: string;
+  name: IconName;
   color?: IconProps["color"];
 }> = ({ name, color = "navy" }) => (
-  <Icon name={name as any} size="xl" color={color} />
+  <Icon name={name} size="xl" color={color} />
 );
 
 export const TouchTargetIcon: React.FC<{
-  name: string;
+  name: IconName;
   color?: IconProps["color"];
 }> = ({ name, color = "current" }) => (
-  <Icon name={name as any} size="touch" color={color} />
+  <Icon name={name} size="touch" color={color} />
 );
 
 // Quick access for common coach actions
