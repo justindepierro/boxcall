@@ -1081,14 +1081,10 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
               {/* PDF Export Button - Lazy Loading */}
               <PDFExportTrigger
                 practiceData={{
-                  practiceBlocks: practiceBlocks,
-                  metadata: {
-                    title: eventData?.title || "Practice Plan",
-                    date: eventData?.date || new Date().toISOString(),
-                    duration: totalDuration,
-                    coach: "Head Coach",
-                    team: "Team",
-                  },
+                  blocks: practiceBlocks,
+                  title: event?.title || "Practice Plan",
+                  date: event?.start || new Date().toISOString(),
+                  duration: totalDuration,
                 }}
                 buttonClassName="bg-jade-600 hover:bg-jade-700 text-white font-medium flex items-center"
                 buttonText="Print Practice to PDF"
@@ -1756,14 +1752,10 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
                     {/* PDF Export Button - Main Location */}
                     <PDFExportTrigger
                       practiceData={{
-                        practiceBlocks: practiceBlocks,
-                        metadata: {
-                          title: eventData?.title || "Practice Plan",
-                          date: eventData?.date || new Date().toISOString(),
-                          duration: totalDuration,
-                          coach: "Head Coach",
-                          team: "Team",
-                        },
+                        blocks: practiceBlocks,
+                        title: event?.title || "Practice Plan",
+                        date: event?.start || new Date().toISOString(),
+                        duration: totalDuration,
                       }}
                       buttonClassName="bg-green-600 hover:bg-green-700 text-white border-green-600 font-medium shadow-lg flex items-center"
                       buttonText="Export Practice PDF"

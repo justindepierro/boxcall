@@ -13,6 +13,25 @@ export interface PracticeBlock {
   drillIds?: string[];
   notes?: string;
   equipmentIds?: string[];
+  // Training-specific properties
+  equipment?: string[]; // Equipment list (different from equipmentIds)
+  focus?: string[]; // Focus areas for this block
+  intensity?: "low" | "medium" | "high"; // Training intensity
+  reps?: number; // Number of repetitions
+  totalTime?: number; // Total time including breaks
+  // Practice planning properties
+  category?:
+    | "offense"
+    | "defense"
+    | "special-teams"
+    | "meeting"
+    | "weight-room"
+    | "transition"
+    | "break"
+    | "conditioning"
+    | "individual"
+    | "team-building";
+  location?: string; // Practice location
 }
 export interface PracticeSchedule {
   id: string;

@@ -6,6 +6,21 @@ import {
   LazyDashboardPage,
   LazyLoginPage,
   LazyPhase4DemoPage,
+  LazyCalendarPage,
+  LazyProfilePage,
+  LazyTeamBulletin,
+  LazyCreateTeam,
+  LazyJoinTeam,
+  LazyCreateCoachAccount,
+  LazyBoxCall,
+  LazyPlaybookPage,
+  LazyTeamSettings,
+  LazyTemplates,
+  LazyPlayground,
+  LazyAboutPage,
+  LazyPrivacyPolicyPage,
+  LazyTermsOfServicePage,
+  LazyContactPage,
 } from "../components/lazy/LazyRoutes";
 import {
   ProtectedRoute,
@@ -73,7 +88,7 @@ export const AppRouter: React.FC = () => {
             path="/profile"
             element={
               <ProtectedRoute>
-                <ProfilePage />
+                <LazyProfilePage />
               </ProtectedRoute>
             }
           />
@@ -82,7 +97,7 @@ export const AppRouter: React.FC = () => {
             path="/calendar"
             element={
               <ProtectedRoute>
-                <CalendarPage />
+                <LazyCalendarPage />
               </ProtectedRoute>
             }
           />
@@ -100,7 +115,7 @@ export const AppRouter: React.FC = () => {
                     "family",
                   ]}
                 >
-                  <TeamBulletin />
+                  <LazyTeamBulletin />
                 </TeamMemberRoute>
               </ProtectedRoute>
             }
@@ -129,7 +144,7 @@ export const AppRouter: React.FC = () => {
             element={
               <ProtectedRoute>
                 <RoleProtectedRoute allowedRoles={["coach", "admin"]}>
-                  <BoxCall />
+                  <LazyBoxCall />
                 </RoleProtectedRoute>
               </ProtectedRoute>
             }
@@ -139,7 +154,7 @@ export const AppRouter: React.FC = () => {
             path="/playbook"
             element={
               <ProtectedRoute>
-                <Playbook />
+                <LazyPlaybookPage />
               </ProtectedRoute>
             }
           />
@@ -151,7 +166,7 @@ export const AppRouter: React.FC = () => {
                 <TeamMemberRoute
                   allowedTeamRoles={["head_coach", "coach", "manager"]}
                 >
-                  <TeamSettings />
+                  <LazyTeamSettings />
                 </TeamMemberRoute>
               </ProtectedRoute>
             }
@@ -161,7 +176,7 @@ export const AppRouter: React.FC = () => {
             path="/create-team"
             element={
               <ProtectedRoute>
-                <CreateTeam />
+                <LazyCreateTeam />
               </ProtectedRoute>
             }
           />
@@ -170,7 +185,7 @@ export const AppRouter: React.FC = () => {
             path="/join-team"
             element={
               <ProtectedRoute>
-                <JoinTeam />
+                <LazyJoinTeam />
               </ProtectedRoute>
             }
           />
@@ -179,7 +194,7 @@ export const AppRouter: React.FC = () => {
             path="/create-coach-account"
             element={
               <ProtectedRoute>
-                <CreateCoachAccount />
+                <LazyCreateCoachAccount />
               </ProtectedRoute>
             }
           />
@@ -189,7 +204,7 @@ export const AppRouter: React.FC = () => {
             element={
               <ProtectedRoute>
                 <RoleProtectedRoute allowedRoles={["coach", "admin"]}>
-                  <Templates />
+                  <LazyTemplates />
                 </RoleProtectedRoute>
               </ProtectedRoute>
             }
@@ -200,7 +215,7 @@ export const AppRouter: React.FC = () => {
             element={
               <ProtectedRoute>
                 <RoleProtectedRoute allowedRoles={["admin"]}>
-                  <Playground />
+                  <LazyPlayground />
                 </RoleProtectedRoute>
               </ProtectedRoute>
             }
@@ -212,7 +227,7 @@ export const AppRouter: React.FC = () => {
             path="/about"
             element={
               <ProtectedRoute>
-                <AboutPage />
+                <LazyAboutPage />
               </ProtectedRoute>
             }
           />
@@ -220,7 +235,7 @@ export const AppRouter: React.FC = () => {
             path="/privacy-policy"
             element={
               <ProtectedRoute>
-                <PrivacyPolicyPage />
+                <LazyPrivacyPolicyPage />
               </ProtectedRoute>
             }
           />
@@ -228,7 +243,7 @@ export const AppRouter: React.FC = () => {
             path="/terms-of-service"
             element={
               <ProtectedRoute>
-                <TermsOfServicePage />
+                <LazyTermsOfServicePage />
               </ProtectedRoute>
             }
           />
@@ -236,7 +251,7 @@ export const AppRouter: React.FC = () => {
             path="/contact"
             element={
               <ProtectedRoute>
-                <ContactPage />
+                <LazyContactPage />
               </ProtectedRoute>
             }
           />

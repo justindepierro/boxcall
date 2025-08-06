@@ -146,8 +146,8 @@ export class AchievementService {
         console.warn("Error fetching achievements:", achievementsResult.error);
       }
 
-      const stickers = stickersResult.data || [];
-      const achievements = achievementsResult.data || [];
+      const stickers: unknown[] = stickersResult.data || [];
+      const achievements: unknown[] = achievementsResult.data || [];
 
       // Type guard function to ensure we have valid data
       const isValidSticker = (
@@ -166,30 +166,39 @@ export class AchievementService {
         );
       };
 
-      const helmetStickers: HelmetSticker[] = stickers
-        .filter(isValidSticker)
-        .map((sticker) => ({
-          id: sticker.id as string,
-          name: (sticker.reason as string) || "Sticker",
-          icon: this.getStickerIcon(sticker.sticker_type as string),
-          awardedBy: (sticker.awarded_by as string) || "",
-          awardedByName: "Coach", // Simplified for now
-          date: (sticker.awarded_at as string) || new Date().toISOString(),
-          teamId: (sticker.team_id as string) || "",
-          teamName: "Team", // Simplified for now
-        }));
+      // Safely extract stickers data
+      const validStickers: Record<string, unknown>[] = [];
+      if (Array.isArray(stickers)) {
+        validStickers.push(...stickers.filter(isValidSticker));
+      }
 
-      const boxcallMedals: BoxCallMedal[] = achievements
-        .filter(isValidAchievement)
-        .map((achievement) => ({
-          id: achievement.id as string,
-          name: (achievement.title as string) || "Achievement",
-          icon: (achievement.icon_name as string) || "award",
-          description: (achievement.description as string) || "",
+      // Safely extract achievements data
+      const validAchievements: Record<string, unknown>[] = [];
+      if (Array.isArray(achievements)) {
+        validAchievements.push(...achievements.filter(isValidAchievement));
+      }
+
+      const helmetStickers: HelmetSticker[] = validStickers.map((sticker) => ({
+        id: String(sticker.id || ""),
+        name: String(sticker.reason || "Sticker"),
+        icon: this.getStickerIcon(String(sticker.sticker_type || "star")),
+        awardedBy: String(sticker.awarded_by || ""),
+        awardedByName: "Coach", // Simplified for now
+        date: String(sticker.awarded_at || new Date().toISOString()),
+        teamId: String(sticker.team_id || ""),
+        teamName: "Team", // Simplified for now
+      }));
+
+      const boxcallMedals: BoxCallMedal[] = validAchievements.map(
+        (achievement) => ({
+          id: String(achievement.id || ""),
+          name: String(achievement.title || "Achievement"),
+          icon: String(achievement.icon_name || "award"),
+          description: String(achievement.description || ""),
           earned: true,
-          earnedDate:
-            (achievement.earned_at as string) || new Date().toISOString(),
-        }));
+          earnedDate: String(achievement.earned_at || new Date().toISOString()),
+        })
+      );
 
       return {
         helmetStickers,

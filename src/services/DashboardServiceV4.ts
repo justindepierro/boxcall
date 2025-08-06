@@ -32,8 +32,8 @@ export interface UserTeamData {
     name: string;
     description?: string;
     team_code?: string;
-    subscription_type?: string;
-    season?: string;
+    subscription_tier?: string;
+    season_year?: number;
     school?: string;
     mascot?: string;
   };

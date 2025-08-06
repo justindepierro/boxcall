@@ -7,9 +7,9 @@
 import React, { useState } from "react";
 import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
-import { Card } from "../../ui/Card/Card";
+import Card from "../../ui/Card/Card";
 import { Typography } from "../../design-system/Typography";
-import type { PracticeBlock } from "../types";
+import type { PracticeBlock } from "../../../types/practice";
 
 interface PracticeBlockEditorProps {
   block: PracticeBlock;
@@ -82,28 +82,30 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
   const addFocusItem = () => {
     const focus = prompt("Add focus item:");
     if (focus) {
-      updateField("focus", [...editingBlock.focus, focus]);
+      updateField("focus", [...(editingBlock.focus || []), focus]);
     }
   };
 
   const removeFocusItem = (index: number) => {
     updateField(
       "focus",
-      editingBlock.focus.filter((_, i) => i !== index)
+      (editingBlock.focus || []).filter((_: string, i: number) => i !== index)
     );
   };
 
   const addEquipmentItem = () => {
     const equipment = prompt("Add equipment item:");
     if (equipment) {
-      updateField("equipment", [...editingBlock.equipment, equipment]);
+      updateField("equipment", [...(editingBlock.equipment || []), equipment]);
     }
   };
 
   const removeEquipmentItem = (index: number) => {
     updateField(
       "equipment",
-      editingBlock.equipment.filter((_, i) => i !== index)
+      (editingBlock.equipment || []).filter(
+        (_: string, i: number) => i !== index
+      )
     );
   };
 
@@ -114,7 +116,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
   return (
     <Card className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <Typography variant="h3" className="flex items-center gap-2">
+        <Typography variant="headline-md" className="flex items-center gap-2">
           {selectedCategory && (
             <div className={`w-4 h-4 rounded-full ${selectedCategory.color}`} />
           )}
@@ -127,7 +129,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
             onClick={() => onDelete(block.id)}
             className="text-red-600 hover:text-red-700"
           >
-            <Icon name="trash" size={16} />
+            <Icon name="delete" size={16} />
           </Button>
         )}
       </div>
@@ -177,8 +179,18 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
               </label>
               <input
                 type="time"
-                value={editingBlock.startTime}
-                onChange={(e) => updateField("startTime", e.target.value)}
+                value={
+                  editingBlock.startTime instanceof Date
+                    ? editingBlock.startTime.toTimeString().slice(0, 5)
+                    : editingBlock.startTime
+                }
+                onChange={(e) => {
+                  const timeValue = e.target.value;
+                  const date = new Date();
+                  const [hours, minutes] = timeValue.split(":");
+                  date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+                  updateField("startTime", date);
+                }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -188,8 +200,18 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
               </label>
               <input
                 type="time"
-                value={editingBlock.endTime}
-                onChange={(e) => updateField("endTime", e.target.value)}
+                value={
+                  editingBlock.endTime instanceof Date
+                    ? editingBlock.endTime.toTimeString().slice(0, 5)
+                    : editingBlock.endTime
+                }
+                onChange={(e) => {
+                  const timeValue = e.target.value;
+                  const date = new Date();
+                  const [hours, minutes] = timeValue.split(":");
+                  date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+                  updateField("endTime", date);
+                }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -312,7 +334,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
           </Button>
         </div>
         <div className="flex flex-wrap gap-2">
-          {editingBlock.focus.map((item, index) => (
+          {(editingBlock.focus || []).map((item, index) => (
             <span
               key={index}
               className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-sm"
@@ -322,7 +344,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
                 onClick={() => removeFocusItem(index)}
                 className="text-blue-600 hover:text-blue-800"
               >
-                <Icon name="x" size={12} />
+                <Icon name="close" size={12} />
               </button>
             </span>
           ))}
@@ -341,7 +363,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
           </Button>
         </div>
         <div className="flex flex-wrap gap-2">
-          {editingBlock.equipment.map((item, index) => (
+          {(editingBlock.equipment || []).map((item, index) => (
             <span
               key={index}
               className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-md text-sm"
@@ -351,7 +373,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
                 onClick={() => removeEquipmentItem(index)}
                 className="text-green-600 hover:text-green-800"
               >
-                <Icon name="x" size={12} />
+                <Icon name="close" size={12} />
               </button>
             </span>
           ))}

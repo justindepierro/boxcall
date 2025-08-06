@@ -21,7 +21,7 @@
         name: team.name as string,
         description: (team.description as string) || "",
         teamCode: (team.team_code as string) || "",
-        subscriptionType: (team.subscription_type as string) || "free",
+        subscriptionType: (team.subscription_tier as string) || "free",
         season: (team.season as string) || "",
         school: (team.school as string) || "",
         mascot: (team.mascot as string) || "",n real and mock data
@@ -48,7 +48,7 @@ interface TeamDataResponse {
   name: string;
   description?: string;
   team_code?: string;
-  subscription_type?: string;
+  subscription_tier?: string;
   season?: string;
   school?: string;
   mascot?: string;
@@ -275,7 +275,7 @@ export class DataResolutionService {
       const isValidMembership = (
         m: unknown
       ): m is { team_id: string; role: string } => {
-        return m && typeof m === "object" && "team_id" in m;
+        return !!(m && typeof m === "object" && "team_id" in m);
       };
 
       const validMemberships = memberships.filter(isValidMembership);
@@ -284,7 +284,9 @@ export class DataResolutionService {
       }
 
       // Then, get the actual team data for those team IDs
-      const teamIds = validMemberships.map((m) => m.team_id);
+      const teamIds = validMemberships.map(
+        (m) => (m as unknown as { team_id: string }).team_id
+      );
       const { data: teams, error: teamsError } = await supabase
         .from("teams")
         .select(
@@ -293,7 +295,7 @@ export class DataResolutionService {
           name,
           description,
           team_code,
-          subscription_type,
+          subscription_tier,
           season,
           school,
           mascot
@@ -308,17 +310,32 @@ export class DataResolutionService {
 
       if (!teams) return [];
 
-      // Return teams with proper typing
-      return teams.map((team) => ({
-        id: team.id,
-        name: team.name,
-        description: team.description || "",
-        team_code: team.team_code || "",
-        subscription_type: team.subscription_type || "",
-        season: team.season || "",
-        school: team.school || "",
-        mascot: team.mascot || "",
-      }));
+      // Type guard for valid team data
+      const isValidTeam = (team: unknown): team is Record<string, unknown> => {
+        return !!(
+          team &&
+          typeof team === "object" &&
+          "id" in team &&
+          "name" in team
+        );
+      };
+
+      const validTeams = teams.filter(isValidTeam);
+
+      // Return teams with proper typing using type assertion
+      return validTeams.map((team) => {
+        const typedTeam = team as unknown as TeamDataResponse;
+        return {
+          id: typedTeam.id,
+          name: typedTeam.name,
+          description: typedTeam.description || "",
+          team_code: typedTeam.team_code || "",
+          subscription_tier: typedTeam.subscription_tier || "",
+          season: typedTeam.season || "",
+          school: typedTeam.school || "",
+          mascot: typedTeam.mascot || "",
+        };
+      });
     } catch (error) {
       console.error("Error loading real team data:", error);
       return [];
@@ -446,7 +463,7 @@ export class DataResolutionService {
         name: "Eastside Eagles",
         description: "High School Varsity Football - Development Team",
         team_code: "EAGLES2024",
-        subscription_type: "team_premium",
+        subscription_tier: "team_premium",
         season: "2024-2025",
         school: "Eastside High School",
         mascot: "Eagles",
@@ -559,7 +576,7 @@ export class DataResolutionService {
         name: "Mock Development Team",
         description: "Legacy mock team for backward compatibility",
         team_code: "MOCK2024",
-        subscription_type: "team_premium",
+        subscription_tier: "team_premium",
         season: "2024-2025",
         school: "Mock High School",
         mascot: "Developers",

@@ -1,9 +1,15 @@
 import { supabase } from "../lib/supabase";
 import type { Database } from "../types/database";
-// Type definitions
-export type TeamMember = Database["public"]["Tables"]["team_members"]["Row"];
-export type Team = Database["public"]["Tables"]["teams"]["Row"];
-export type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
+
+// Type definitions with proper database types
+type DatabaseTeam = Database["public"]["Tables"]["teams"]["Row"];
+type DatabaseTeamMember = Database["public"]["Tables"]["team_members"]["Row"];
+type DatabaseProfile = Database["public"]["Tables"]["profiles"]["Row"];
+
+// Export refined types for the service
+export type TeamMember = DatabaseTeamMember;
+export type Team = DatabaseTeam;
+export type UserProfile = DatabaseProfile;
 export interface UserTeamData {
   team: Team;
   membership: TeamMember;
@@ -52,26 +58,14 @@ export class DashboardService {
         return [];
       }
 
-      // Type guard for valid membership
-      const isValidMembership = (
-        membership: unknown
-      ): membership is Record<string, unknown> => {
-        return !!(
-          membership &&
-          typeof membership === "object" &&
-          "team_id" in membership
-        );
-      };
-
-      // Filter and get valid memberships
-      const validMemberships = memberships.filter(isValidMembership);
-
-      if (validMemberships.length === 0) {
-        return [];
-      }
+      // Get unique team IDs with proper typing
+      const teamIds = [
+        ...new Set(
+          memberships.map((m) => (m as unknown as TeamMember).team_id)
+        ),
+      ];
 
       // Get team data separately
-      const teamIds = validMemberships.map((m) => m.team_id);
       const { data: teams, error: teamsError } = await supabase
         .from("teams")
         .select("*")
@@ -82,74 +76,35 @@ export class DashboardService {
         return [];
       }
 
-      // Type guard for valid team
-      const isValidTeam = (team: unknown): team is Record<string, unknown> => {
-        return !!(team && typeof team === "object" && "id" in team);
-      };
+      if (!teams) {
+        return [];
+      }
 
-      const validTeams = teams?.filter(isValidTeam) || [];
+      // Transform the data with proper type handling
+      const userTeams: UserTeamData[] = [];
 
-      // Transform data and get member counts
-      const userTeams = await Promise.all(
-        validMemberships.map(async (membership) => {
-          // Find the corresponding team
-          const team = validTeams.find((t) => t.id === membership.team_id);
+      for (const membership of memberships) {
+        const typedMembership = membership as unknown as TeamMember;
+        const team = teams.find(
+          (t) => (t as unknown as Team).id === typedMembership.team_id
+        );
+        if (!team) continue;
 
-          if (!team) return null;
+        // Get member count for each team
+        const { count } = await supabase
+          .from("team_members")
+          .select("*", { count: "exact", head: true })
+          .eq("team_id", typedMembership.team_id)
+          .eq("status", "active");
 
-          // Get member count for each team
-          const { count } = await supabase
-            .from("team_members")
-            .select("*", { count: "exact", head: true })
-            .eq("team_id", membership.team_id)
-            .eq("status", "active");
+        userTeams.push({
+          team: team as unknown as Team,
+          membership: membership as unknown as TeamMember,
+          memberCount: count || 0,
+        });
+      }
 
-          return {
-            team: {
-              id: team.id as string,
-              name: team.name as string,
-              school_name: (team.school_name as string) || null,
-              mascot: (team.mascot as string) || null,
-              colors_primary: (team.colors_primary as string) || null,
-              colors_secondary: (team.colors_secondary as string) || null,
-              logo_url: (team.logo_url as string) || null,
-              created_by: team.created_by as string,
-              team_code: (team.team_code as string) || null,
-              subscription_type: (team.subscription_type as string) || "free",
-              season: (team.season as string) || null,
-              league: (team.league as string) || null,
-              division: (team.division as string) || null,
-              status: (team.status as string) || "active",
-              created_at: team.created_at as string,
-              updated_at: (team.updated_at as string) || null,
-            },
-            membership: {
-              id: membership.id as string,
-              user_id: membership.user_id as string,
-              team_id: membership.team_id as string,
-              role: membership.role as
-                | "head_coach"
-                | "assistant_coach"
-                | "coordinator"
-                | "manager",
-              permissions: membership.permissions as Record<string, unknown>,
-              status:
-                (membership.status as "active" | "inactive" | "pending") ||
-                null,
-              joined_at: (membership.joined_at as string) || null,
-              invited_by: (membership.invited_by as string) || null,
-            },
-            memberCount: count || 0,
-          };
-        })
-      );
-
-      // Filter out null results
-      return userTeams.filter(Boolean) as Array<{
-        team: Team;
-        membership: TeamMember;
-        memberCount: number;
-      }>;
+      return userTeams;
     } catch (error) {
       console.error("Error in getUserTeams:", error);
       return [];

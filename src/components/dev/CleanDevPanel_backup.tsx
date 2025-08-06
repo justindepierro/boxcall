@@ -23,7 +23,7 @@ interface CleanDevPanelProps {
 const CLEAN_DEV_MODES = [
   // Production modes
   {
-    mode: "production",
+    mode: "production" as const,
     label: "Production",
     description: "Your real data and permissions",
     category: "Production",
@@ -31,31 +31,31 @@ const CLEAN_DEV_MODES = [
 
   // Development modes - realistic testing
   {
-    mode: "view_as_head_coach",
+    mode: "view_as_head_coach" as const,
     label: "Head Coach",
     description: "Professional head coach with full access",
     category: "Development",
   },
   {
-    mode: "view_as_coach",
+    mode: "view_as_coach" as const,
     label: "Assistant Coach",
     description: "Professional assistant coach with limited access",
     category: "Development",
   },
   {
-    mode: "view_as_player",
+    mode: "view_as_player" as const,
     label: "Player",
     description: "Student athlete perspective",
     category: "Development",
   },
   {
-    mode: "view_as_manager",
+    mode: "view_as_manager" as const,
     label: "Team Manager",
     description: "Administrative and logistics role",
     category: "Development",
   },
   {
-    mode: "view_as_family",
+    mode: "view_as_family" as const,
     label: "Family Member",
     description: "Parent/guardian portal access",
     category: "Development",
@@ -63,7 +63,7 @@ const CLEAN_DEV_MODES = [
 
   // Testing modes
   {
-    mode: "blank_slate",
+    mode: "blank_slate" as const,
     label: "Blank Slate",
     description: "New coach experience - no data",
     category: "Testing",
@@ -71,17 +71,17 @@ const CLEAN_DEV_MODES = [
 
   // Legacy mode for backward compatibility
   {
-    mode: "super_admin_mock",
+    mode: "super_admin_mock" as const,
     label: "Legacy Mock Data",
     description: "Original mock system (backward compatibility)",
     category: "Legacy",
   },
-] as const;
+];
 
 export const CleanDevPanel: React.FC<CleanDevPanelProps> = ({
   className = "",
 }) => {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const { devMode, setDevMode, isDevMode } = useDevMode();
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -98,108 +98,74 @@ export const CleanDevPanel: React.FC<CleanDevPanelProps> = ({
       {/* Main Panel */}
       <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-w-sm">
         {/* Header */}
-        <div
-          className="p-3 border-b border-gray-200 dark:border-gray-700 cursor-pointer"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
+        <div className="p-3 border-b border-gray-200 dark:border-gray-600">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-              <Icon name="settings" className="w-4 h-4 inline" /> Dev Mode
-            </span>
-            <span className="text-xs text-gray-500">
-              {isExpanded ? "▼" : "▶"}
-            </span>
+            <div className="flex items-center gap-2">
+              {isSuperAdminUser && (
+                <Icon
+                  name="shield-check"
+                  className="w-4 h-4 text-emerald-600"
+                />
+              )}
+              <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+                Dev Mode
+              </span>
+            </div>
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              <Icon
+                name={isExpanded ? "chevron-down" : "chevron-up"}
+                className="w-4 h-4 text-gray-500"
+              />
+            </button>
           </div>
 
           {/* Current Mode Display */}
-          <div className="mt-2 space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600 dark:text-gray-400 text-xs">
-                Mode:
-              </span>
-              <span className="font-medium text-gray-800 dark:text-gray-200 text-xs">
-                {currentMode?.label || devMode}
-              </span>
+          <div className="mt-2">
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              Current Mode
             </div>
+            <div className="font-medium text-sm text-gray-900 dark:text-gray-100">
+              {currentMode?.label || "Unknown"}
+            </div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              {currentMode?.description || "No description available"}
+            </div>
+          </div>
 
-            {/* Super Admin Indicator */}
-            {isSuperAdminUser && (
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600 dark:text-gray-400 text-xs">
-                  Status:
-                </span>
-                <span className="font-medium text-green-600 dark:text-green-400 text-xs">
-                  System Owner
-                </span>
-              </div>
-            )}
-
-            {/* Dev Mode Active Indicator */}
+          {/* Quick Indicators */}
+          <div className="flex gap-2 mt-2">
             {isDevMode && (
-              <div className="text-orange-600 dark:text-orange-400 font-medium text-xs">
-                ⚠ DEV MODE ACTIVE
-              </div>
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200">
+                <Icon name="code" className="w-3 h-3 mr-1" />
+                Dev Mode
+              </span>
             )}
-
-            {/* Data Source Indicator */}
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600 dark:text-gray-400 text-xs">
-                Data:
+            {isSuperAdminUser && (
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200">
+                <Icon name="shield-check" className="w-3 h-3 mr-1" />
+                Super Admin
               </span>
-              <span className="text-xs">
-                {devMode === "production" && (
-                  <span className="text-blue-600 dark:text-blue-400">
-                    Real Database
-                  </span>
-                )}
-                {devMode === "blank_slate" && (
-                  <span className="text-purple-600 dark:text-purple-400">
-                    Empty State
-                  </span>
-                )}
-                {devMode.startsWith("view_as_") && (
-                  <span className="text-green-600 dark:text-green-400">
-                    Dev Profiles
-                  </span>
-                )}
-                {devMode === "super_admin_mock" && (
-                  <span className="text-orange-600 dark:text-orange-400">
-                    Legacy Mock
-                  </span>
-                )}
-              </span>
-            </div>
+            )}
           </div>
         </div>
 
-        {/* Expanded Content */}
+        {/* Expanded Panel */}
         {isExpanded && (
-          <div className="p-3 space-y-3">
-            {/* Current User Info */}
-            <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
-              <div>
-                <strong>User:</strong> {user?.email || "Not signed in"}
-              </div>
-              <div>
-                <strong>Real Role:</strong> {profile?.role || "none"}
-              </div>
-              {currentMode && (
-                <div>
-                  <strong>Test Role:</strong> {currentMode.description}
-                </div>
-              )}
-            </div>
-
-            {/* Dev Mode Categories */}
+          <div className="p-3 max-h-96 overflow-y-auto">
+            {/* Mode Groups */}
             {["Production", "Development", "Testing", "Legacy"].map(
               (category) => {
                 const categoryModes = CLEAN_DEV_MODES.filter(
                   (mode) => mode.category === category
                 );
+
                 if (categoryModes.length === 0) return null;
 
                 return (
-                  <div key={category}>
+                  <div key={category} className="mb-4 last:mb-0">
                     <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       {category}
                     </label>
@@ -245,3 +211,5 @@ export const CleanDevPanel: React.FC<CleanDevPanelProps> = ({
     </div>
   );
 };
+
+export default CleanDevPanel;

@@ -15,16 +15,30 @@ export const LazyCalendarPage = lazy(() => import("../../pages/CalendarPage"));
 
 export const LazyLoginPage = lazy(() => import("../../pages/LoginPage"));
 
-export const LazyProfilePage = lazy(() => import("../../pages/ProfilePage"));
+export const LazyProfilePage = lazy(() =>
+  import("../../pages/ProfilePage").then((module) => ({
+    default: module.ProfilePage,
+  }))
+);
 
 export const LazyTeamBulletin = lazy(() => import("../../pages/TeamBulletin"));
 
-export const LazyCreateTeam = lazy(() => import("../../pages/CreateTeam"));
+export const LazyCreateTeam = lazy(() =>
+  import("../../pages/CreateTeam").then((module) => ({
+    default: module.CreateTeam,
+  }))
+);
 
-export const LazyJoinTeam = lazy(() => import("../../pages/JoinTeam"));
+export const LazyJoinTeam = lazy(() =>
+  import("../../pages/JoinTeam").then((module) => ({
+    default: module.JoinTeam,
+  }))
+);
 
-export const LazyCreateCoachAccount = lazy(
-  () => import("../../pages/CreateCoachAccount")
+export const LazyCreateCoachAccount = lazy(() =>
+  import("../../pages/CreateCoachAccount").then((module) => ({
+    default: module.CreateCoachAccount,
+  }))
 );
 
 export const LazyBoxCall = lazy(() => import("../../pages/BoxCall"));
@@ -37,18 +51,28 @@ export const LazyTemplates = lazy(() => import("../../pages/Templates"));
 
 export const LazyPlayground = lazy(() => import("../../pages/Playground"));
 
-export const LazyAboutPage = lazy(() => import("../../pages/legal/AboutPage"));
-
-export const LazyPrivacyPolicyPage = lazy(
-  () => import("../../pages/legal/PrivacyPolicyPage")
+export const LazyAboutPage = lazy(() =>
+  import("../../pages/legal/AboutPage").then((module) => ({
+    default: module.AboutPage,
+  }))
 );
 
-export const LazyTermsOfServicePage = lazy(
-  () => import("../../pages/legal/TermsOfServicePage")
+export const LazyPrivacyPolicyPage = lazy(() =>
+  import("../../pages/legal/PrivacyPolicyPage").then((module) => ({
+    default: module.PrivacyPolicyPage,
+  }))
 );
 
-export const LazyContactPage = lazy(
-  () => import("../../pages/legal/ContactPage")
+export const LazyTermsOfServicePage = lazy(() =>
+  import("../../pages/legal/TermsOfServicePage").then((module) => ({
+    default: module.TermsOfServicePage,
+  }))
+);
+
+export const LazyContactPage = lazy(() =>
+  import("../../pages/legal/ContactPage").then((module) => ({
+    default: module.ContactPage,
+  }))
 );
 
 export const LazyPhase4DemoPage = lazy(
@@ -62,16 +86,20 @@ export const LazyPracticePlanner = lazy(
 // Heavy component lazy loading
 export const LazyPracticePlannerModal = lazy(() =>
   import("../practice/PracticePlannerModal").then((module) => ({
-    default: module.PracticePlannerModal || module.default,
+    default: module.PracticePlannerModal,
   }))
 );
 
-export const LazyBulkOperationsInterface = lazy(
-  () => import("../BulkOperationsInterface")
+export const LazyBulkOperationsInterface = lazy(() =>
+  import("../BulkOperationsInterface").then((module) => ({
+    default: module.BulkOperationsInterface,
+  }))
 );
 
-export const LazyAdvancedRSVPInterface = lazy(
-  () => import("../AdvancedRSVPInterface")
+export const LazyAdvancedRSVPInterface = lazy(() =>
+  import("../AdvancedRSVPInterface").then((module) => ({
+    default: module.AdvancedRSVPInterface,
+  }))
 );
 
 // Loading component for lazy routes

@@ -3,7 +3,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
 import { Typography } from "../../../../components/design-system";
 import { Button, Card } from "../../../../components/ui";
-import { Icon } from "../../../../components/ui/Icon/Icon";
+import { Icon, type IconName } from "../../../../components/ui/Icon/Icon";
 import type { PracticeBlock } from "../types";
 
 interface PracticeBlockListProps {
@@ -125,7 +125,9 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                               {/* Category Icon */}
                               <div className="flex items-center space-x-2">
                                 <Icon
-                                  name={getCategoryIcon(block.category)}
+                                  name={
+                                    getCategoryIcon(block.category) as IconName
+                                  }
                                   size="md"
                                 />
                                 <div>
@@ -154,7 +156,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                                 {block.location && (
                                   <div className="flex items-center text-sm text-gray-600">
                                     <Icon
-                                      name="map-pin"
+                                      name="map"
                                       size="xs"
                                       className="mr-1"
                                     />
@@ -164,7 +166,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                                 {block.notes && (
                                   <div className="flex items-start text-sm text-gray-600">
                                     <Icon
-                                      name="note"
+                                      name="message"
                                       size="xs"
                                       className="mr-1 mt-0.5"
                                     />
@@ -217,7 +219,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                               onClick={() => onDeleteBlock(block.id)}
                               className="text-red-500 hover:text-red-700"
                             >
-                              <Icon name="trash" size="sm" />
+                              <Icon name="close" size="sm" />
                             </Button>
                           </div>
                         </div>

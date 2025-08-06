@@ -25,7 +25,7 @@ export type MockTeamData = {
   name: string;
   description: string;
   team_code: string;
-  subscription_type: "free" | "coach" | "team_premium";
+  subscription_tier: "free" | "coach" | "team_premium";
   players: Array<{
     id: string;
     first_name: string;
@@ -61,7 +61,7 @@ export const mockTeamData: MockTeamData = {
   name: "BoxCall Dev Team",
   description: "High School Varsity Football - Mock Development Team",
   team_code: "DEVTEAM",
-  subscription_type: "team_premium",
+  subscription_tier: "team_premium",
   players: [
     {
       id: "player-1",

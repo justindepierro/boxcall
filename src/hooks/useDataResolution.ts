@@ -39,7 +39,7 @@ export interface TeamData {
   name: string;
   description?: string;
   team_code?: string;
-  subscription_type?: string;
+  subscription_tier?: string;
   season?: string;
   school?: string;
   mascot?: string;

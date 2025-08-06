@@ -76,22 +76,7 @@ export const usePracticeState = (event: CalendarEvent) => {
     }
   }, [practiceBlocks, event.start, event.end]);
 
-  // Load saved practice plan on mount
-  useEffect(() => {
-    const savedPracticeKey = `practice_plan_${event.id || "default"}`;
-    const savedPractice = localStorage.getItem(savedPracticeKey);
-
-    if (savedPractice) {
-      try {
-        const savedBlocks = JSON.parse(savedPractice);
-        const blocksWithTimes = recalculateBlockTimes(savedBlocks);
-        setPracticeBlocks(blocksWithTimes);
-      } catch (error) {
-        console.error("Error loading saved practice plan:", error);
-      }
-    }
-  }, [event.id, event.start, recalculateBlockTimes]);
-
+  // Helper function to recalculate block times based on order
   const recalculateBlockTimes = useCallback(
     (blocks: PracticeBlock[]): PracticeBlock[] => {
       return blocks.map((block, index) => {
@@ -124,6 +109,22 @@ export const usePracticeState = (event: CalendarEvent) => {
     },
     [event.start]
   );
+
+  // Load saved practice plan on mount
+  useEffect(() => {
+    const savedPracticeKey = `practice_plan_${event.id || "default"}`;
+    const savedPractice = localStorage.getItem(savedPracticeKey);
+
+    if (savedPractice) {
+      try {
+        const savedBlocks = JSON.parse(savedPractice);
+        const blocksWithTimes = recalculateBlockTimes(savedBlocks);
+        setPracticeBlocks(blocksWithTimes);
+      } catch (error) {
+        console.error("Error loading saved practice plan:", error);
+      }
+    }
+  }, [event.id, event.start, recalculateBlockTimes]);
 
   const savePracticeToLocalStorage = useCallback(() => {
     const practiceKey = `practice_plan_${event.id || "default"}`;

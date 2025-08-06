@@ -88,25 +88,32 @@ export const TimelineLegend: React.FC<TimelineLegendProps> = ({
       </div>
 
       <div className="flex flex-wrap gap-3">
-        {Object.entries(categoryBlocks).map(([category, data]) => (
-          <div
-            key={category}
-            className={`px-3 py-2 rounded-lg border-2 ${getCategoryColor(category as PracticeBlock["category"])} flex items-center space-x-2`}
-          >
-            <div className="flex items-center space-x-1">
-              <Icon name="clock" size="xs" />
-              <span className="font-medium text-sm">
-                {category
-                  .replace("-", " ")
-                  .replace(/\b\w/g, (l) => l.toUpperCase())}
-              </span>
+        {Object.entries(categoryBlocks).map(([category, data]) => {
+          const typedData = data as {
+            count: number;
+            blocks: Array<{ start: number; duration: number }>;
+          };
+          return (
+            <div
+              key={category}
+              className={`px-3 py-2 rounded-lg border-2 ${getCategoryColor(category as PracticeBlock["category"])} flex items-center space-x-2`}
+            >
+              <div className="flex items-center space-x-1">
+                <Icon name="clock" size="xs" />
+                <span className="font-medium text-sm">
+                  {category
+                    .replace("-", " ")
+                    .replace(/\b\w/g, (l) => l.toUpperCase())}
+                </span>
+              </div>
+              <div className="text-xs opacity-75">{typedData.count}min</div>
+              <div className="text-xs opacity-60">
+                ({typedData.blocks.length} block
+                {typedData.blocks.length !== 1 ? "s" : ""})
+              </div>
             </div>
-            <div className="text-xs opacity-75">{data.count}min</div>
-            <div className="text-xs opacity-60">
-              ({data.blocks.length} block{data.blocks.length !== 1 ? "s" : ""})
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="mt-3 text-xs text-gray-500">
