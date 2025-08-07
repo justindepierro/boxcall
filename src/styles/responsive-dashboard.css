@@ -1,13 +1,13 @@
 /**
- * Responsive Dashboard Layout Styles
+ * Professional Responsive Dashboard Layout Styles
  * 
- * CSS-only responsive behavior for unified dashboard layout
- * Mobile-first approach with progressive enhancement
+ * Clean CSS-only responsive behavior - NO JavaScript mobile detection!
+ * Mobile-first approach with professional visual hierarchy
  */
 
 /* ============================================================================
-   RESPONSIVE DASHBOARD CONTAINER
-   Mobile: Single column stack
+   RESPONSIVE DASHBOARD CONTAINER - Professional Layout
+   Mobile: Clean single column stack
    Tablet: 2x2 grid
    Desktop: 3-column layout
    ============================================================================ */
@@ -15,7 +15,7 @@
 .responsive-dashboard-container {
   max-width: 80rem; /* max-w-7xl */
   margin: 0 auto;
-  padding: 1rem 1rem; /* px-4 py-4 */
+  padding: 1rem; /* px-4 py-4 */
   min-height: calc(100vh - 8rem); /* Account for header and bottom nav */
 }
 
@@ -34,37 +34,35 @@
 }
 
 .responsive-content-grid {
-  /* Mobile: Stack layout (default) */
+  /* Mobile: Clean stack layout (default) - ALL sections visible */
   display: grid;
-  gap: 1rem;
-  padding-bottom: 5rem; /* pb-20 for bottom navigation space */
-  grid-template-rows: auto auto auto auto auto;
+  gap: 1.5rem; /* Increased gap for professional look */
+  padding-bottom: 6rem; /* pb-24 for bottom navigation safe area */
+  grid-template-columns: 1fr;
   grid-template-areas:
     "profile"
     "trophy"
     "feeds"
-    "calendar"
-    "quick-actions";
+    "calendar";
 }
 
 /* ============================================================================
-   TABLET LAYOUT (768px+)
+   TABLET LAYOUT (768px+) - Professional 2x2 Grid
    ============================================================================ */
 
 @media (min-width: 768px) {
   .responsive-content-grid {
-    padding-bottom: 1rem; /* Remove bottom nav spacing */
+    padding-bottom: 1.5rem; /* Remove bottom nav spacing */
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto;
     grid-template-areas:
       "profile trophy"
-      "feeds calendar"
-      "quick-actions quick-actions";
+      "feeds calendar";
   }
 }
 
 /* ============================================================================
-   DESKTOP LAYOUT (1024px+)
+   DESKTOP LAYOUT (1024px+) - Professional 3-Column Layout
    ============================================================================ */
 
 @media (min-width: 1024px) {
@@ -75,15 +73,10 @@
       "profile trophy feeds"
       "profile calendar feeds";
   }
-
-  /* Hide quick actions on desktop - replaced with sidebar or top nav */
-  .quick-actions-section {
-    display: none;
-  }
 }
 
 /* ============================================================================
-   GRID AREA ASSIGNMENTS
+   GRID AREA ASSIGNMENTS - Clean Professional Layout
    ============================================================================ */
 
 .profile-section {
@@ -102,37 +95,8 @@
   grid-area: calendar;
 }
 
-.quick-actions-section {
-  grid-area: quick-actions;
-}
-
 /* ============================================================================
-   MOBILE VIEW SWITCHING
-   Only applies on mobile/tablet, hidden on desktop
-   ============================================================================ */
-
-@media (min-width: 1024px) {
-  .mobile-view-switcher {
-    display: none;
-  }
-}
-
-/* Mobile view hiding logic - only on small screens */
-@media (max-width: 1023px) {
-  .mobile-hidden {
-    display: none !important;
-  }
-}
-
-/* Show all sections on tablet+ regardless of mobile view state */
-@media (min-width: 768px) {
-  .mobile-hidden {
-    display: block !important;
-  }
-}
-
-/* ============================================================================
-   MOBILE BOTTOM NAVIGATION
+   MOBILE BOTTOM NAVIGATION - Clean Fixed Positioning
    ============================================================================ */
 
 .mobile-bottom-nav {

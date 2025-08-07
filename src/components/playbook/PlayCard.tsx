@@ -67,8 +67,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const subtitleText = getSubtitleText(play, showOneWordCalls);
   return (
     <>
-      <div className="bg-white rounded-lg border border-slate-200 hover:border-slate-300 transition-colors">
-        <div className="p-4">
+      <div className="bg-white rounded-lg border border-slate-200 hover:border-slate-300 transition-colors shadow-sm">
+        <div className="p-4 sm:p-6">
           {/* Collapsed/Skinny Mode */}
           <div className="flex items-center justify-between">
             <div className="flex-1">
@@ -88,58 +88,62 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   {subtitleText}
                 </p>
               )}
-              {/* Play Type and additional info */}
-              <div className="flex items-center space-x-2 mt-2">
+              {/* Play Type and additional info - Mobile-friendly badges */}
+              <div className="flex flex-wrap items-center gap-2 mt-3">
                 <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${getPlayTypeColor(play.p_type)}`}
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium ${getPlayTypeColor(play.p_type)}`}
                 >
                   {play.p_type}
                 </span>
                 {play.f_type && (
-                  <span className="px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs">
+                  <span className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-full text-sm">
                     {play.f_type}
                   </span>
                 )}
                 <span
-                  className={`text-xs font-medium ${getConfidenceColor(play.confidence_base)}`}
+                  className={`text-sm font-medium ${getConfidenceColor(play.confidence_base)}`}
                 >
                   {play.confidence_base}%
                 </span>
               </div>
             </div>
-            {/* Action Buttons */}
+            {/* Action Buttons - Mobile Touch-Optimized */}
             <div className="flex items-center space-x-1 ml-4">
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
+                className="p-3 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all duration-200 active:scale-95 touch-target"
                 title={isExpanded ? "Collapse" : "Expand details"}
+                style={{ minWidth: "48px", minHeight: "48px" }}
               >
                 {isExpanded ? (
-                  <ChevronUp className="h-4 w-4" />
+                  <ChevronUp className="h-5 w-5" />
                 ) : (
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="h-5 w-5" />
                 )}
               </button>
               <button
                 onClick={() => onEdit?.(play)}
-                className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
+                className="p-3 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all duration-200 active:scale-95 touch-target"
                 title="Edit play"
+                style={{ minWidth: "48px", minHeight: "48px" }}
               >
-                <Edit className="h-4 w-4" />
+                <Edit className="h-5 w-5" />
               </button>
               <button
                 onClick={() => onDuplicate?.(play)}
-                className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
+                className="p-3 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all duration-200 active:scale-95 touch-target"
                 title="Duplicate play"
+                style={{ minWidth: "48px", minHeight: "48px" }}
               >
-                <Copy className="h-4 w-4" />
+                <Copy className="h-5 w-5" />
               </button>
               <button
                 onClick={handleCreateDiagram}
-                className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
+                className="p-3 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all duration-200 active:scale-95 touch-target"
                 title="Create diagram"
+                style={{ minWidth: "48px", minHeight: "48px" }}
               >
-                <Image className="h-4 w-4" />
+                <Image className="h-5 w-5" />
               </button>
             </div>
           </div>
