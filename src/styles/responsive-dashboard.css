@@ -1,0 +1,270 @@
+/**
+ * Responsive Dashboard Layout Styles
+ * 
+ * CSS-only responsive behavior for unified dashboard layout
+ * Mobile-first approach with progressive enhancement
+ */
+
+/* ============================================================================
+   RESPONSIVE DASHBOARD CONTAINER
+   Mobile: Single column stack
+   Tablet: 2x2 grid
+   Desktop: 3-column layout
+   ============================================================================ */
+
+.responsive-dashboard-container {
+  max-width: 80rem; /* max-w-7xl */
+  margin: 0 auto;
+  padding: 1rem 1rem; /* px-4 py-4 */
+  min-height: calc(100vh - 8rem); /* Account for header and bottom nav */
+}
+
+@media (min-width: 640px) {
+  .responsive-dashboard-container {
+    padding-left: 1.5rem; /* sm:px-6 */
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-dashboard-container {
+    padding-left: 2rem; /* lg:px-8 */
+    padding-right: 2rem;
+  }
+}
+
+.responsive-content-grid {
+  /* Mobile: Stack layout (default) */
+  display: grid;
+  gap: 1rem;
+  padding-bottom: 5rem; /* pb-20 for bottom navigation space */
+  grid-template-rows: auto auto auto auto auto;
+  grid-template-areas:
+    "profile"
+    "trophy"
+    "feeds"
+    "calendar"
+    "quick-actions";
+}
+
+/* ============================================================================
+   TABLET LAYOUT (768px+)
+   ============================================================================ */
+
+@media (min-width: 768px) {
+  .responsive-content-grid {
+    padding-bottom: 1rem; /* Remove bottom nav spacing */
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "profile trophy"
+      "feeds calendar"
+      "quick-actions quick-actions";
+  }
+}
+
+/* ============================================================================
+   DESKTOP LAYOUT (1024px+)
+   ============================================================================ */
+
+@media (min-width: 1024px) {
+  .responsive-content-grid {
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "profile trophy feeds"
+      "profile calendar feeds";
+  }
+  
+  /* Hide quick actions on desktop - replaced with sidebar or top nav */
+  .quick-actions-section {
+    display: none;
+  }
+}
+
+/* ============================================================================
+   GRID AREA ASSIGNMENTS
+   ============================================================================ */
+
+.profile-section {
+  grid-area: profile;
+}
+
+.trophy-section {
+  grid-area: trophy;
+}
+
+.feeds-section {
+  grid-area: feeds;
+}
+
+.calendar-section {
+  grid-area: calendar;
+}
+
+.quick-actions-section {
+  grid-area: quick-actions;
+}
+
+/* ============================================================================
+   MOBILE VIEW SWITCHING
+   Only applies on mobile/tablet, hidden on desktop
+   ============================================================================ */
+
+@media (min-width: 1024px) {
+  .mobile-view-switcher {
+    display: none;
+  }
+}
+
+/* Mobile view hiding logic - only on small screens */
+@media (max-width: 1023px) {
+  .mobile-hidden {
+    display: none !important;
+  }
+}
+
+/* Show all sections on tablet+ regardless of mobile view state */
+@media (min-width: 768px) {
+  .mobile-hidden {
+    display: block !important;
+  }
+}
+
+/* ============================================================================
+   MOBILE BOTTOM NAVIGATION
+   ============================================================================ */
+
+.mobile-bottom-nav {
+  /* Fixed positioning with safe area support */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background-color: white;
+  border-top: 1px solid #e5e7eb;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.dark .mobile-bottom-nav {
+  background-color: #1f2937;
+  border-top-color: #374151;
+}
+
+@media (min-width: 1024px) {
+  .mobile-bottom-nav {
+    display: none;
+  }
+}
+
+/* ============================================================================
+   MOBILE FLOATING ACTION BUTTON
+   ============================================================================ */
+
+.mobile-fab {
+  /* Fixed positioning for FAB */
+  position: fixed;
+  z-index: 40;
+}
+
+@media (min-width: 1024px) {
+  .mobile-fab {
+    display: none;
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE WELCOME HEADER
+   ============================================================================ */
+
+@media (max-width: 640px) {
+  .responsive-welcome-header .max-w-7xl {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .responsive-welcome-header h1 {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+  
+  .responsive-welcome-header p {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+}
+
+/* ============================================================================
+   CONTENT CARD RESPONSIVE BEHAVIOR
+   ============================================================================ */
+
+/* Ensure all dashboard cards have consistent mobile-friendly styling */
+.profile-section > *,
+.trophy-section > *,
+.feeds-section > *,
+.calendar-section > *,
+.quick-actions-section > * {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  min-height: 200px; /* Minimum height for touch-friendly interaction */
+}
+
+.dark .profile-section > *,
+.dark .trophy-section > *,
+.dark .feeds-section > *,
+.dark .calendar-section > *,
+.dark .quick-actions-section > * {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+@media (max-width: 767px) {
+  .profile-section > *,
+  .trophy-section > *,
+  .feeds-section > *,
+  .calendar-section > *,
+  .quick-actions-section > * {
+    /* Larger minimum height on mobile for easier touch interaction */
+    min-height: 250px;
+  }
+}
+
+/* ============================================================================
+   TOUCH TARGET OPTIMIZATION
+   ============================================================================ */
+
+/* Ensure all interactive elements meet 44px minimum touch target */
+.responsive-content-grid button,
+.responsive-content-grid a,
+.responsive-content-grid [role="button"] {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* ============================================================================
+   ACCESSIBILITY & PERFORMANCE
+   ============================================================================ */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .responsive-content-grid {
+    transition: none;
+  }
+  
+  .mobile-view-switcher button {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .responsive-content-grid > * {
+    border: 2px solid #111827;
+  }
+  
+  .dark .responsive-content-grid > * {
+    border-color: white;
+  }
+}
