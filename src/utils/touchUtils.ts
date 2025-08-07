@@ -58,27 +58,31 @@ export const HapticPatterns = {
 // Animation timing functions
 export const AnimationTimings = {
   /** Snappy material design timing */
-  snappy: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
-  
+  snappy: "cubic-bezier(0.4, 0.0, 0.2, 1)",
+
   /** Bouncy spring timing */
-  bouncy: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-  
+  bouncy: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+
   /** Smooth ease out */
-  smooth: 'cubic-bezier(0.2, 0, 0, 1)',
-  
+  smooth: "cubic-bezier(0.2, 0, 0, 1)",
+
   /** Natural movement */
-  natural: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-  
+  natural: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+
   /** iOS-style timing */
-  ios: 'cubic-bezier(0.4, 0.0, 0.6, 1)',
+  ios: "cubic-bezier(0.4, 0.0, 0.6, 1)",
 };
 
 // Animation utilities
 export class AnimationUtils {
   /** Create scale animation for touch feedback */
-  static createScaleAnimation(element: HTMLElement, scale = 0.95, duration = 150) {
+  static createScaleAnimation(
+    element: HTMLElement,
+    scale = 0.95,
+    duration = 150
+  ) {
     const originalTransform = element.style.transform;
-    
+
     return {
       start: () => {
         element.style.transition = `transform ${duration}ms ${AnimationTimings.snappy}`;
@@ -89,7 +93,7 @@ export class AnimationUtils {
       },
       cleanup: () => {
         setTimeout(() => {
-          element.style.transition = '';
+          element.style.transition = "";
         }, duration);
       },
     };
@@ -97,22 +101,23 @@ export class AnimationUtils {
 
   /** Create ripple effect */
   static createRipple(element: HTMLElement, x: number, y: number) {
-    const ripple = document.createElement('div');
+    const ripple = document.createElement("div");
     const rect = element.getBoundingClientRect();
     const size = Math.max(rect.width, rect.height);
-    
-    ripple.className = 'absolute rounded-full pointer-events-none bg-current opacity-20';
-    ripple.style.width = '0px';
-    ripple.style.height = '0px';
+
+    ripple.className =
+      "absolute rounded-full pointer-events-none bg-current opacity-20";
+    ripple.style.width = "0px";
+    ripple.style.height = "0px";
     ripple.style.left = `${x - rect.left}px`;
     ripple.style.top = `${y - rect.top}px`;
-    ripple.style.transform = 'translate(-50%, -50%)';
+    ripple.style.transform = "translate(-50%, -50%)";
     ripple.style.transition = `width 400ms ${AnimationTimings.smooth}, height 400ms ${AnimationTimings.smooth}, opacity 400ms ${AnimationTimings.smooth}`;
 
     // Ensure element has relative positioning for ripple
     const originalPosition = element.style.position;
-    if (!originalPosition || originalPosition === 'static') {
-      element.style.position = 'relative';
+    if (!originalPosition || originalPosition === "static") {
+      element.style.position = "relative";
     }
 
     element.appendChild(ripple);
@@ -121,7 +126,7 @@ export class AnimationUtils {
     requestAnimationFrame(() => {
       ripple.style.width = `${size * 2}px`;
       ripple.style.height = `${size * 2}px`;
-      ripple.style.opacity = '0';
+      ripple.style.opacity = "0";
     });
 
     // Clean up
@@ -137,7 +142,7 @@ export class AnimationUtils {
   /** Create slide animation */
   static createSlideAnimation(
     element: HTMLElement,
-    direction: 'left' | 'right' | 'up' | 'down',
+    direction: "left" | "right" | "up" | "down",
     distance = 20,
     duration = 200
   ) {
@@ -149,7 +154,7 @@ export class AnimationUtils {
     };
 
     const originalTransform = element.style.transform;
-    
+
     return {
       start: () => {
         element.style.transition = `transform ${duration}ms ${AnimationTimings.smooth}`;
@@ -160,16 +165,21 @@ export class AnimationUtils {
       },
       cleanup: () => {
         setTimeout(() => {
-          element.style.transition = '';
+          element.style.transition = "";
         }, duration);
       },
     };
   }
 
   /** Create fade animation */
-  static createFadeAnimation(element: HTMLElement, fromOpacity = 1, toOpacity = 0, duration = 200) {
-    const originalOpacity = element.style.opacity || '1';
-    
+  static createFadeAnimation(
+    element: HTMLElement,
+    fromOpacity = 1,
+    toOpacity = 0,
+    duration = 200
+  ) {
+    const originalOpacity = element.style.opacity || "1";
+
     return {
       start: () => {
         element.style.transition = `opacity ${duration}ms ${AnimationTimings.smooth}`;
@@ -183,16 +193,20 @@ export class AnimationUtils {
       },
       cleanup: () => {
         setTimeout(() => {
-          element.style.transition = '';
+          element.style.transition = "";
         }, duration);
       },
     };
   }
 
   /** Create bounce animation for emphasis */
-  static createBounceAnimation(element: HTMLElement, intensity = 1.1, duration = 300) {
+  static createBounceAnimation(
+    element: HTMLElement,
+    intensity = 1.1,
+    duration = 300
+  ) {
     const originalTransform = element.style.transform;
-    
+
     return {
       start: () => {
         element.style.transition = `transform ${duration}ms ${AnimationTimings.bouncy}`;
@@ -203,22 +217,28 @@ export class AnimationUtils {
       },
       cleanup: () => {
         setTimeout(() => {
-          element.style.transition = '';
+          element.style.transition = "";
         }, duration);
       },
     };
   }
 
   /** Chain multiple animations */
-  static chainAnimations(...animations: Array<{ start: () => void; end: () => void; cleanup: () => void }>) {
+  static chainAnimations(
+    ...animations: Array<{
+      start: () => void;
+      end: () => void;
+      cleanup: () => void;
+    }>
+  ) {
     let currentIndex = 0;
-    
+
     const runNext = () => {
       if (currentIndex < animations.length) {
         const animation = animations[currentIndex];
         animation.start();
         currentIndex++;
-        
+
         // Assume each animation runs for 200ms by default
         setTimeout(() => {
           animation.end();
@@ -227,7 +247,7 @@ export class AnimationUtils {
         }, 200);
       }
     };
-    
+
     return { start: runNext };
   }
 }
@@ -241,29 +261,29 @@ export class AnimationPerformanceMonitor {
   /** Start monitoring frame rate */
   static startMonitoring() {
     if (this.isMonitoring) return;
-    
+
     this.isMonitoring = true;
     this.frameCount = 0;
     this.startTime = performance.now();
-    
+
     const countFrames = () => {
       if (this.isMonitoring) {
         this.frameCount++;
         requestAnimationFrame(countFrames);
       }
     };
-    
+
     requestAnimationFrame(countFrames);
   }
 
   /** Stop monitoring and get FPS */
   static stopMonitoring(): number {
     if (!this.isMonitoring) return 0;
-    
+
     this.isMonitoring = false;
     const duration = performance.now() - this.startTime;
     const fps = Math.round((this.frameCount * 1000) / duration);
-    
+
     return fps;
   }
 
@@ -271,17 +291,17 @@ export class AnimationPerformanceMonitor {
   static async checkPerformanceCapability(): Promise<boolean> {
     return new Promise((resolve) => {
       this.startMonitoring();
-      
+
       // Run a test animation for 1 second
-      const testElement = document.createElement('div');
-      testElement.style.position = 'fixed';
-      testElement.style.top = '-100px';
-      testElement.style.width = '1px';
-      testElement.style.height = '1px';
+      const testElement = document.createElement("div");
+      testElement.style.position = "fixed";
+      testElement.style.top = "-100px";
+      testElement.style.width = "1px";
+      testElement.style.height = "1px";
       document.body.appendChild(testElement);
-      
+
       const animation = this.createScaleAnimation(testElement, 0.5, 50);
-      
+
       // Run multiple animations
       const runTest = () => {
         animation.start();
@@ -290,9 +310,9 @@ export class AnimationPerformanceMonitor {
           animation.cleanup();
         }, 50);
       };
-      
+
       const interval = setInterval(runTest, 100);
-      
+
       setTimeout(() => {
         clearInterval(interval);
         document.body.removeChild(testElement);
@@ -318,7 +338,7 @@ export class GestureDetector {
     endY: number,
     startTime: number,
     endTime: number
-  ): { direction: 'left' | 'right' | 'up' | 'down' | null; velocity: number } {
+  ): { direction: "left" | "right" | "up" | "down" | null; velocity: number } {
     const deltaX = endX - startX;
     const deltaY = endY - startY;
     const deltaTime = endTime - startTime;
@@ -331,21 +351,24 @@ export class GestureDetector {
 
     // Determine primary direction
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      return { direction: deltaX > 0 ? 'right' : 'left', velocity };
+      return { direction: deltaX > 0 ? "right" : "left", velocity };
     } else {
-      return { direction: deltaY > 0 ? 'down' : 'up', velocity };
+      return { direction: deltaY > 0 ? "down" : "up", velocity };
     }
   }
 
   /** Detect pinch gesture */
-  static detectPinch(touches: TouchList): { scale: number; center: { x: number; y: number } } | null {
+  static detectPinch(
+    touches: TouchList
+  ): { scale: number; center: { x: number; y: number } } | null {
     if (touches.length !== 2) return null;
 
     const touch1 = touches[0];
     const touch2 = touches[1];
 
     const distance = Math.sqrt(
-      Math.pow(touch2.clientX - touch1.clientX, 2) + Math.pow(touch2.clientY - touch1.clientY, 2)
+      Math.pow(touch2.clientX - touch1.clientX, 2) +
+        Math.pow(touch2.clientY - touch1.clientY, 2)
     );
 
     const center = {
@@ -363,7 +386,13 @@ export class GestureDetector {
     const touch1 = touches[0];
     const touch2 = touches[1];
 
-    return Math.atan2(touch2.clientY - touch1.clientY, touch2.clientX - touch1.clientX) * (180 / Math.PI);
+    return (
+      Math.atan2(
+        touch2.clientY - touch1.clientY,
+        touch2.clientX - touch1.clientX
+      ) *
+      (180 / Math.PI)
+    );
   }
 }
 

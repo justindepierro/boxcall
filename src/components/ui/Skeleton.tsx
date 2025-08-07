@@ -191,12 +191,3 @@ export const PageLoadingSkeleton: React.FC = () => (
     <NavigationSkeleton />
   </div>
 );
-
-// Namespace export for convenient access
-export const Skeleton = {
-  DashboardCard: DashboardCardSkeleton,
-  PlayCard: PlayCardSkeleton,
-  Navigation: NavigationSkeleton,
-  List: ListSkeleton,
-  PageLoading: PageLoadingSkeleton,
-};

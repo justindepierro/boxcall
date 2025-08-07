@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BoxCall - Offline</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .offline-container {
+        text-align: center;
+        max-width: 400px;
+        width: 100%;
+      }
+
+      .logo {
+        width: 80px;
+        height: 80px;
+        background: #3b82f6;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        font-size: 32px;
+        font-weight: bold;
+      }
+
+      h1 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #f9fafb;
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #d1d5db;
+        margin-bottom: 32px;
+      }
+
+      .actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      button {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      button:hover {
+        background: #2563eb;
+      }
+
+      button:active {
+        transform: translateY(1px);
+      }
+
+      .secondary-button {
+        background: transparent;
+        border: 1px solid #4b5563;
+        color: #d1d5db;
+      }
+
+      .secondary-button:hover {
+        background: #374151;
+      }
+
+      .features {
+        margin-top: 32px;
+        padding-top: 32px;
+        border-top: 1px solid #374151;
+      }
+
+      .features h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #f9fafb;
+      }
+
+      .features ul {
+        list-style: none;
+        text-align: left;
+      }
+
+      .features li {
+        padding: 8px 0;
+        color: #9ca3af;
+        display: flex;
+        align-items: center;
+      }
+
+      .features li::before {
+        content: "✓";
+        color: #10b981;
+        font-weight: bold;
+        margin-right: 12px;
+      }
+
+      .network-status {
+        margin-top: 24px;
+        padding: 12px;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 8px;
+        font-size: 14px;
+        color: #fca5a5;
+      }
+
+      .network-status.online {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: rgba(16, 185, 129, 0.3);
+        color: #6ee7b7;
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 20px;
+        }
+
+        p {
+          font-size: 14px;
+        }
+
+        button {
+          padding: 10px 20px;
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="offline-container">
+      <div class="logo">📦</div>
+
+      <h1>You're Offline</h1>
+      <p>
+        No internet connection detected. Don't worry - some features are still
+        available offline!
+      </p>
+
+      <div class="actions">
+        <button onclick="tryReconnect()">Try Again</button>
+        <button class="secondary-button" onclick="goHome()">Go to Home</button>
+      </div>
+
+      <div class="features">
+        <h3>Available Offline:</h3>
+        <ul>
+          <li>View cached playbooks</li>
+          <li>Access recent team data</li>
+          <li>Create new plays (saves when online)</li>
+          <li>Review performance statistics</li>
+        </ul>
+      </div>
+
+      <div id="network-status" class="network-status">
+        🔴 No internet connection
+      </div>
+    </div>
+
+    <script>
+      // Network status monitoring
+      function updateNetworkStatus() {
+        const statusElement = document.getElementById("network-status");
+        if (navigator.onLine) {
+          statusElement.textContent = "🟢 Back online! Refreshing...";
+          statusElement.className = "network-status online";
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          statusElement.textContent = "🔴 No internet connection";
+          statusElement.className = "network-status";
+        }
+      }
+
+      // Try to reconnect
+      function tryReconnect() {
+        if (navigator.onLine) {
+          window.location.reload();
+        } else {
+          // Visual feedback for trying to reconnect
+          const button = event.target;
+          const originalText = button.textContent;
+          button.textContent = "Checking...";
+          button.disabled = true;
+
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.disabled = false;
+            updateNetworkStatus();
+          }, 2000);
+        }
+      }
+
+      // Go to home page
+      function goHome() {
+        window.location.href = "/";
+      }
+
+      // Listen for network changes
+      window.addEventListener("online", updateNetworkStatus);
+      window.addEventListener("offline", updateNetworkStatus);
+
+      // Periodic connection check
+      setInterval(() => {
+        if (navigator.onLine) {
+          updateNetworkStatus();
+        }
+      }, 5000);
+
+      // Initial status check
+      updateNetworkStatus();
+
+      // Service worker communication
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.ready.then((registration) => {
+          // Listen for service worker updates
+          registration.addEventListener("updatefound", () => {
+            const newWorker = registration.installing;
+            newWorker.addEventListener("statechange", () => {
+              if (newWorker.state === "activated") {
+                // Show update available notification
+                const updateNotice = document.createElement("div");
+                updateNotice.innerHTML = `
+                                <div style="
+                                    position: fixed;
+                                    top: 20px;
+                                    left: 50%;
+                                    transform: translateX(-50%);
+                                    background: #1f2937;
+                                    color: white;
+                                    padding: 12px 24px;
+                                    border-radius: 8px;
+                                    border: 1px solid #3b82f6;
+                                    z-index: 1000;
+                                    font-size: 14px;
+                                ">
+                                    📱 App updated! <button onclick="window.location.reload()" style="
+                                        background: #3b82f6;
+                                        color: white;
+                                        border: none;
+                                        padding: 4px 12px;
+                                        border-radius: 4px;
+                                        margin-left: 8px;
+                                        cursor: pointer;
+                                        font-size: 12px;
+                                    ">Refresh</button>
+                                </div>
+                            `;
+                document.body.appendChild(updateNotice);
+              }
+            });
+          });
+        });
+      }
+
+      // Cache status check
+      if ("caches" in window) {
+        caches.keys().then((cacheNames) => {
+          if (cacheNames.length > 0) {
+            console.log("🚀 Cached resources available:", cacheNames);
+          } else {
+            console.log("⚠️ No cached resources found");
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -5,7 +5,13 @@
 import React, { useState, useEffect } from "react";
 import { useNetworkStatus } from "../../hooks/useNetworkStatus";
 import { useMobileErrorHandler } from "../../hooks/useMobileErrorHandler";
-import { Skeleton } from "./Skeleton";
+import {
+  DashboardCardSkeleton,
+  PlayCardSkeleton,
+  ListSkeleton,
+  NavigationSkeleton,
+  PageLoadingSkeleton,
+} from "./Skeleton";
 import { MobileErrorState, OfflineErrorState } from "./MobileErrorState";
 import { Typography } from "../design-system/Typography";
 
@@ -112,16 +118,16 @@ export const MobileLoadingStrategy: React.FC<LoadingStrategyProps> = ({
 
     switch (skeletonType) {
       case "dashboard":
-        return <Skeleton.DashboardCard />;
+        return <DashboardCardSkeleton />;
       case "play":
-        return <Skeleton.PlayCard />;
+        return <PlayCardSkeleton />;
       case "list":
-        return <Skeleton.List />;
+        return <ListSkeleton />;
       case "navigation":
-        return <Skeleton.Navigation />;
+        return <NavigationSkeleton />;
       case "page":
       default:
-        return <Skeleton.PageLoading />;
+        return <PageLoadingSkeleton />;
     }
   };
 

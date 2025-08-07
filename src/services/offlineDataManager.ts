@@ -1,23 +1,23 @@
 /**
  * Offline-First Data Management System for BoxCall
  * Part of Phase 3B: Offline Architecture
- * 
+ *
  * Provides intelligent caching, offline storage, and sync capabilities
  */
-import { Workbox } from 'workbox-window';
+import { Workbox } from "workbox-window";
 
 interface OfflineData {
   id: string;
-  type: 'play' | 'team' | 'player' | 'schedule';
+  type: "play" | "team" | "player" | "schedule";
   data: unknown;
   timestamp: number;
   version: number;
-  syncStatus: 'synced' | 'pending' | 'conflict';
+  syncStatus: "synced" | "pending" | "conflict";
 }
 
 interface SyncAction {
   id: string;
-  type: 'create' | 'update' | 'delete';
+  type: "create" | "update" | "delete";
   resource: string;
   data: unknown;
   timestamp: number;
@@ -25,7 +25,7 @@ interface SyncAction {
 }
 
 class OfflineDataManager {
-  private dbName = 'boxcall-offline';
+  private dbName = "boxcall-offline";
   private version = 1;
   private db: IDBDatabase | null = null;
   private syncQueue: SyncAction[] = [];
@@ -51,31 +51,35 @@ class OfflineDataManager {
         const db = (event.target as IDBOpenDBRequest).result;
 
         // Create object stores
-        if (!db.objectStoreNames.contains('offlineData')) {
-          const offlineStore = db.createObjectStore('offlineData', { keyPath: 'id' });
-          offlineStore.createIndex('type', 'type', { unique: false });
-          offlineStore.createIndex('timestamp', 'timestamp', { unique: false });
+        if (!db.objectStoreNames.contains("offlineData")) {
+          const offlineStore = db.createObjectStore("offlineData", {
+            keyPath: "id",
+          });
+          offlineStore.createIndex("type", "type", { unique: false });
+          offlineStore.createIndex("timestamp", "timestamp", { unique: false });
         }
 
-        if (!db.objectStoreNames.contains('syncQueue')) {
-          const syncStore = db.createObjectStore('syncQueue', { keyPath: 'id' });
-          syncStore.createIndex('timestamp', 'timestamp', { unique: false });
+        if (!db.objectStoreNames.contains("syncQueue")) {
+          const syncStore = db.createObjectStore("syncQueue", {
+            keyPath: "id",
+          });
+          syncStore.createIndex("timestamp", "timestamp", { unique: false });
         }
 
-        if (!db.objectStoreNames.contains('userPreferences')) {
-          db.createObjectStore('userPreferences', { keyPath: 'key' });
+        if (!db.objectStoreNames.contains("userPreferences")) {
+          db.createObjectStore("userPreferences", { keyPath: "key" });
         }
       };
     });
   }
 
   private setupNetworkListeners(): void {
-    window.addEventListener('online', () => {
+    window.addEventListener("online", () => {
       this.isOnline = true;
       this.processSyncQueue();
     });
 
-    window.addEventListener('offline', () => {
+    window.addEventListener("offline", () => {
       this.isOnline = false;
     });
   }
@@ -83,8 +87,8 @@ class OfflineDataManager {
   private async loadSyncQueue(): Promise<void> {
     if (!this.db) return;
 
-    const transaction = this.db.transaction(['syncQueue'], 'readonly');
-    const store = transaction.objectStore('syncQueue');
+    const transaction = this.db.transaction(["syncQueue"], "readonly");
+    const store = transaction.objectStore("syncQueue");
     const request = store.getAll();
 
     request.onsuccess = () => {
@@ -93,9 +97,13 @@ class OfflineDataManager {
   }
 
   // Store data offline with intelligent caching
-  async storeOfflineData(type: OfflineData['type'], id: string, data: unknown): Promise<void> {
+  async storeOfflineData(
+    type: OfflineData["type"],
+    id: string,
+    data: unknown
+  ): Promise<void> {
     if (!this.db) await this.initializeDB();
-    if (!this.db) throw new Error('Database not available');
+    if (!this.db) throw new Error("Database not available");
 
     const offlineData: OfflineData = {
       id: `${type}-${id}`,
@@ -103,12 +111,12 @@ class OfflineDataManager {
       data,
       timestamp: Date.now(),
       version: 1,
-      syncStatus: this.isOnline ? 'synced' : 'pending'
+      syncStatus: this.isOnline ? "synced" : "pending",
     };
 
-    const transaction = this.db.transaction(['offlineData'], 'readwrite');
-    const store = transaction.objectStore('offlineData');
-    
+    const transaction = this.db.transaction(["offlineData"], "readwrite");
+    const store = transaction.objectStore("offlineData");
+
     return new Promise((resolve, reject) => {
       const request = store.put(offlineData);
       request.onsuccess = () => resolve();
@@ -117,12 +125,15 @@ class OfflineDataManager {
   }
 
   // Retrieve offline data
-  async getOfflineData(type: OfflineData['type'], id?: string): Promise<OfflineData[]> {
+  async getOfflineData(
+    type: OfflineData["type"],
+    id?: string
+  ): Promise<OfflineData[]> {
     if (!this.db) await this.initializeDB();
     if (!this.db) return [];
 
-    const transaction = this.db.transaction(['offlineData'], 'readonly');
-    const store = transaction.objectStore('offlineData');
+    const transaction = this.db.transaction(["offlineData"], "readonly");
+    const store = transaction.objectStore("offlineData");
 
     if (id) {
       const request = store.get(`${type}-${id}`);
@@ -133,9 +144,9 @@ class OfflineDataManager {
         request.onerror = () => resolve([]);
       });
     } else {
-      const index = store.index('type');
+      const index = store.index("type");
       const request = index.getAll(type);
-      
+
       return new Promise((resolve) => {
         request.onsuccess = () => resolve(request.result || []);
         request.onerror = () => resolve([]);
@@ -145,8 +156,8 @@ class OfflineDataManager {
 
   // Queue action for sync when online
   async queueSyncAction(
-    type: SyncAction['type'], 
-    resource: string, 
+    type: SyncAction["type"],
+    resource: string,
     data: unknown
   ): Promise<void> {
     const syncAction: SyncAction = {
@@ -155,7 +166,7 @@ class OfflineDataManager {
       resource,
       data,
       timestamp: Date.now(),
-      retryCount: 0
+      retryCount: 0,
     };
 
     this.syncQueue.push(syncAction);
@@ -164,9 +175,9 @@ class OfflineDataManager {
     if (!this.db) await this.initializeDB();
     if (!this.db) return;
 
-    const transaction = this.db.transaction(['syncQueue'], 'readwrite');
-    const store = transaction.objectStore('syncQueue');
-    
+    const transaction = this.db.transaction(["syncQueue"], "readwrite");
+    const store = transaction.objectStore("syncQueue");
+
     return new Promise((resolve, reject) => {
       const request = store.put(syncAction);
       request.onsuccess = () => {
@@ -185,20 +196,20 @@ class OfflineDataManager {
     if (!this.isOnline || this.syncQueue.length === 0) return;
 
     const actionsToSync = [...this.syncQueue];
-    
+
     for (const action of actionsToSync) {
       try {
         await this.syncAction(action);
         await this.removeSyncAction(action.id);
-        this.syncQueue = this.syncQueue.filter(a => a.id !== action.id);
+        this.syncQueue = this.syncQueue.filter((a) => a.id !== action.id);
       } catch (error) {
-        console.error('Sync failed for action:', action.id, error);
+        console.error("Sync failed for action:", action.id, error);
         action.retryCount++;
-        
+
         // Remove actions that have failed too many times
         if (action.retryCount >= 3) {
           await this.removeSyncAction(action.id);
-          this.syncQueue = this.syncQueue.filter(a => a.id !== action.id);
+          this.syncQueue = this.syncQueue.filter((a) => a.id !== action.id);
         }
       }
     }
@@ -207,11 +218,11 @@ class OfflineDataManager {
   private async syncAction(action: SyncAction): Promise<void> {
     // This would integrate with your actual API
     // For now, simulate API call
-    console.log('Syncing action:', action);
-    
+    console.log("Syncing action:", action);
+
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
     // In real implementation, make actual API calls here
     // const response = await fetch(`/api/${action.resource}`, {
     //   method: action.type === 'create' ? 'POST' : action.type === 'update' ? 'PUT' : 'DELETE',
@@ -223,9 +234,9 @@ class OfflineDataManager {
   private async removeSyncAction(actionId: string): Promise<void> {
     if (!this.db) return;
 
-    const transaction = this.db.transaction(['syncQueue'], 'readwrite');
-    const store = transaction.objectStore('syncQueue');
-    
+    const transaction = this.db.transaction(["syncQueue"], "readwrite");
+    const store = transaction.objectStore("syncQueue");
+
     return new Promise((resolve, reject) => {
       const request = store.delete(actionId);
       request.onsuccess = () => resolve();
@@ -236,8 +247,8 @@ class OfflineDataManager {
   // Get sync queue status
   getSyncQueueStatus(): { pending: number; failed: number } {
     return {
-      pending: this.syncQueue.filter(a => a.retryCount < 3).length,
-      failed: this.syncQueue.filter(a => a.retryCount >= 3).length
+      pending: this.syncQueue.filter((a) => a.retryCount < 3).length,
+      failed: this.syncQueue.filter((a) => a.retryCount >= 3).length,
     };
   }
 
@@ -245,36 +256,45 @@ class OfflineDataManager {
   async clearOfflineData(): Promise<void> {
     if (!this.db) return;
 
-    const transaction = this.db.transaction(['offlineData', 'syncQueue'], 'readwrite');
-    
-    const offlineStore = transaction.objectStore('offlineData');
-    const syncStore = transaction.objectStore('syncQueue');
-    
+    const transaction = this.db.transaction(
+      ["offlineData", "syncQueue"],
+      "readwrite"
+    );
+
+    const offlineStore = transaction.objectStore("offlineData");
+    const syncStore = transaction.objectStore("syncQueue");
+
     await Promise.all([
-      new Promise(resolve => {
+      new Promise((resolve) => {
         const request = offlineStore.clear();
         request.onsuccess = () => resolve(undefined);
       }),
-      new Promise(resolve => {
+      new Promise((resolve) => {
         const request = syncStore.clear();
         request.onsuccess = () => resolve(undefined);
-      })
+      }),
     ]);
 
     this.syncQueue = [];
   }
 
   // Check if specific data is available offline
-  async isAvailableOffline(type: OfflineData['type'], id: string): Promise<boolean> {
+  async isAvailableOffline(
+    type: OfflineData["type"],
+    id: string
+  ): Promise<boolean> {
     const data = await this.getOfflineData(type, id);
     return data.length > 0;
   }
 
   // Get data age for freshness indicators
-  async getDataAge(type: OfflineData['type'], id: string): Promise<number | null> {
+  async getDataAge(
+    type: OfflineData["type"],
+    id: string
+  ): Promise<number | null> {
     const data = await this.getOfflineData(type, id);
     if (data.length === 0) return null;
-    
+
     return Date.now() - data[0].timestamp;
   }
 }
@@ -285,20 +305,20 @@ class ServiceWorkerManager {
   private updateAvailable = false;
 
   constructor() {
-    if ('serviceWorker' in navigator) {
+    if ("serviceWorker" in navigator) {
       this.initializeServiceWorker();
     }
   }
 
   private initializeServiceWorker(): void {
-    this.wb = new Workbox('/sw.js');
+    this.wb = new Workbox("/sw.js");
 
-    this.wb.addEventListener('waiting', () => {
+    this.wb.addEventListener("waiting", () => {
       this.updateAvailable = true;
       this.showUpdateAvailable();
     });
 
-    this.wb.addEventListener('controlling', () => {
+    this.wb.addEventListener("controlling", () => {
       window.location.reload();
     });
 
@@ -307,8 +327,8 @@ class ServiceWorkerManager {
 
   private showUpdateAvailable(): void {
     // Integration with your notification system
-    console.log('App update available! Reload to get the latest version.');
-    
+    console.log("App update available! Reload to get the latest version.");
+
     // You could show a notification toast here
     // notificationService.show('Update available', 'Reload to get the latest features', 'info');
   }

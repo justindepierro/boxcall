@@ -1,14 +1,17 @@
 /**
  * Offline-enhanced Dashboard Layout
  * Part of Phase 3B: Offline Architecture
- * 
+ *
  * Demonstrates integration of offline data management with existing components
  */
-import React, { useState } from 'react';
-import { MobileLoadingStrategy } from '../components/ui/MobileLoadingStrategy';
-import { OfflineAwareContainer, OfflineStatusBar } from '../components/ui/OfflineStatus';
-import { useOfflineData } from '../hooks/useOfflineData';
-import { Typography } from '../components/design-system/Typography';
+import React, { useState } from "react";
+import { MobileLoadingStrategy } from "../components/ui/MobileLoadingStrategy";
+import {
+  OfflineAwareContainer,
+  OfflineStatusBar,
+} from "../components/ui/OfflineStatus";
+import { useOfflineData } from "../hooks/useOfflineData";
+import { Typography } from "../components/design-system/Typography";
 
 // Example play data structure
 interface Play {
@@ -30,61 +33,61 @@ interface Team {
 // Simulate API calls (replace with actual API integration)
 const fetchPlays = async (): Promise<Play[]> => {
   // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   // Simulate some API calls failing occasionally
   if (Math.random() < 0.1) {
-    throw new Error('Network error: Unable to fetch plays');
+    throw new Error("Network error: Unable to fetch plays");
   }
-  
+
   return [
     {
-      id: '1',
-      name: 'Wing Right Power',
-      formation: 'I-Formation',
-      description: 'Power run to the right side with wing blocking',
-      tags: ['run', 'power', 'right']
+      id: "1",
+      name: "Wing Right Power",
+      formation: "I-Formation",
+      description: "Power run to the right side with wing blocking",
+      tags: ["run", "power", "right"],
     },
     {
-      id: '2', 
-      name: 'Quick Slant',
-      formation: 'Spread',
-      description: 'Quick 3-step slant pattern',
-      tags: ['pass', 'quick', 'slant']
+      id: "2",
+      name: "Quick Slant",
+      formation: "Spread",
+      description: "Quick 3-step slant pattern",
+      tags: ["pass", "quick", "slant"],
     },
     {
-      id: '3',
-      name: 'Draw Play',
-      formation: 'Shotgun',
-      description: 'Delayed handoff from shotgun formation',
-      tags: ['run', 'draw', 'misdirection']
-    }
+      id: "3",
+      name: "Draw Play",
+      formation: "Shotgun",
+      description: "Delayed handoff from shotgun formation",
+      tags: ["run", "draw", "misdirection"],
+    },
   ];
 };
 
 const fetchTeamData = async (): Promise<Team[]> => {
-  await new Promise(resolve => setTimeout(resolve, 800));
-  
+  await new Promise((resolve) => setTimeout(resolve, 800));
+
   return [
     {
-      id: 'team-1',
-      name: 'Varsity Eagles',
+      id: "team-1",
+      name: "Varsity Eagles",
       players: 45,
-      lastUpdated: new Date().toISOString()
-    }
+      lastUpdated: new Date().toISOString(),
+    },
   ];
 };
 
 // Offline-enhanced playbook section
 const OfflinePlaybookSection: React.FC = () => {
-  const { 
-    data: plays, 
-    isLoading, 
-    error, 
-    isOfflineData, 
-    dataAge, 
-    refresh 
-  } = useOfflineData<Play>('play', undefined, fetchPlays);
+  const {
+    data: plays,
+    isLoading,
+    error,
+    isOfflineData,
+    dataAge,
+    refresh,
+  } = useOfflineData<Play>("play", undefined, fetchPlays);
 
   return (
     <MobileLoadingStrategy
@@ -102,7 +105,8 @@ const OfflinePlaybookSection: React.FC = () => {
           {isOfflineData && (
             <div className="flex items-center space-x-1 text-yellow-600">
               <Typography variant="caption">
-                Offline data {dataAge ? `(${Math.round(dataAge / 60000)}m old)` : ''}
+                Offline data{" "}
+                {dataAge ? `(${Math.round(dataAge / 60000)}m old)` : ""}
               </Typography>
             </div>
           )}
@@ -115,7 +119,10 @@ const OfflinePlaybookSection: React.FC = () => {
               className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm"
             >
               <div className="flex items-center justify-between mb-2">
-                <Typography variant="body-md" className="font-semibold text-gray-900">
+                <Typography
+                  variant="body-md"
+                  className="font-semibold text-gray-900"
+                >
                   {play.name}
                 </Typography>
                 <Typography variant="caption" className="text-gray-500">
@@ -145,13 +152,13 @@ const OfflinePlaybookSection: React.FC = () => {
 
 // Offline-enhanced team section
 const OfflineTeamSection: React.FC = () => {
-  const { 
-    data: teams, 
-    isLoading, 
-    error, 
-    isOfflineData, 
-    refresh 
-  } = useOfflineData<Team>('team', undefined, fetchTeamData);
+  const {
+    data: teams,
+    isLoading,
+    error,
+    isOfflineData,
+    refresh,
+  } = useOfflineData<Team>("team", undefined, fetchTeamData);
 
   return (
     <MobileLoadingStrategy
@@ -172,7 +179,10 @@ const OfflineTeamSection: React.FC = () => {
             className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm"
           >
             <div className="flex items-center justify-between mb-2">
-              <Typography variant="body-md" className="font-semibold text-gray-900">
+              <Typography
+                variant="body-md"
+                className="font-semibold text-gray-900"
+              >
                 {team.name}
               </Typography>
               {isOfflineData && (
@@ -196,7 +206,9 @@ const OfflineTeamSection: React.FC = () => {
 
 // Main offline-enhanced dashboard
 export const OfflineEnhancedDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'plays' | 'team'>('overview');
+  const [activeTab, setActiveTab] = useState<"overview" | "plays" | "team">(
+    "overview"
+  );
 
   return (
     <OfflineAwareContainer showBanner showStatusBar={false}>
@@ -213,17 +225,17 @@ export const OfflineEnhancedDashboard: React.FC = () => {
           {/* Tab Navigation */}
           <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
             {[
-              { id: 'overview', label: 'Overview' },
-              { id: 'plays', label: 'Plays' },
-              { id: 'team', label: 'Team' }
+              { id: "overview", label: "Overview" },
+              { id: "plays", label: "Plays" },
+              { id: "team", label: "Team" },
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
                 className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-white text-team-primary shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? "bg-white text-team-primary shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
                 }`}
               >
                 {tab.label}
@@ -234,10 +246,13 @@ export const OfflineEnhancedDashboard: React.FC = () => {
 
         {/* Content Area */}
         <div className="p-4">
-          {activeTab === 'overview' && (
+          {activeTab === "overview" && (
             <div className="space-y-6">
               <div>
-                <Typography variant="headline-lg" className="text-gray-900 mb-4">
+                <Typography
+                  variant="headline-lg"
+                  className="text-gray-900 mb-4"
+                >
                   Team Overview
                 </Typography>
                 <div className="grid grid-cols-2 gap-4 mb-6">
@@ -263,9 +278,9 @@ export const OfflineEnhancedDashboard: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'plays' && <OfflinePlaybookSection />}
+          {activeTab === "plays" && <OfflinePlaybookSection />}
 
-          {activeTab === 'team' && <OfflineTeamSection />}
+          {activeTab === "team" && <OfflineTeamSection />}
         </div>
 
         {/* Status Bar at Bottom */}

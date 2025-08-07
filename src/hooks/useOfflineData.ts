@@ -2,13 +2,16 @@
  * Offline-aware hooks for seamless online/offline experience
  * Part of Phase 3B: Offline Architecture
  */
-import { useState, useEffect, useCallback } from 'react';
-import { offlineDataManager, type OfflineData } from '../services/offlineDataManager';
-import { useNetworkStatus } from './useNetworkStatus';
+import { useState, useEffect, useCallback } from "react";
+import {
+  offlineDataManager,
+  type OfflineData,
+} from "../services/offlineDataManager";
+import { useNetworkStatus } from "./useNetworkStatus";
 
 // Hook for offline-first data fetching
 export const useOfflineData = <T>(
-  type: OfflineData['type'],
+  type: OfflineData["type"],
   id?: string,
   fetchOnline?: () => Promise<T[]>
 ) => {
@@ -31,32 +34,39 @@ export const useOfflineData = <T>(
           setData(onlineData);
           setIsOfflineData(false);
           setDataAge(null);
-          
+
           // Cache the fresh data offline
           if (onlineData.length > 0) {
             await Promise.all(
-              onlineData.map((item, index) => 
-                offlineDataManager.storeOfflineData(type, id || `${index}`, item)
+              onlineData.map((item, index) =>
+                offlineDataManager.storeOfflineData(
+                  type,
+                  id || `${index}`,
+                  item
+                )
               )
             );
           }
-          
+
           setIsLoading(false);
           return;
         } catch (onlineError) {
-          console.log('Online fetch failed, falling back to offline data:', onlineError);
+          console.log(
+            "Online fetch failed, falling back to offline data:",
+            onlineError
+          );
         }
       }
 
       // Fallback to offline data
       const offlineData = await offlineDataManager.getOfflineData(type, id);
       if (offlineData.length > 0) {
-        const extractedData = offlineData.map(item => item.data as T);
+        const extractedData = offlineData.map((item) => item.data as T);
         setData(extractedData);
         setIsOfflineData(true);
-        
+
         // Set data age for freshness indicators
-        const age = await offlineDataManager.getDataAge(type, id || '');
+        const age = await offlineDataManager.getDataAge(type, id || "");
         setDataAge(age);
       } else {
         setData([]);
@@ -92,49 +102,52 @@ export const useOfflineData = <T>(
 
 // Hook for offline-first data mutations
 export const useOfflineMutation = <T>(
-  type: OfflineData['type'],
+  type: OfflineData["type"],
   resource: string
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const { isOnline } = useNetworkStatus();
 
-  const mutate = useCallback(async (
-    action: 'create' | 'update' | 'delete',
-    data: T,
-    onlineAction?: () => Promise<T>
-  ) => {
-    setIsLoading(true);
-    setError(null);
+  const mutate = useCallback(
+    async (
+      action: "create" | "update" | "delete",
+      data: T,
+      onlineAction?: () => Promise<T>
+    ) => {
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      if (isOnline && onlineAction) {
-        // Try online action first
-        try {
-          const result = await onlineAction();
-          setIsLoading(false);
-          return result;
-        } catch (onlineError) {
-          console.log('Online action failed, queuing for sync:', onlineError);
+      try {
+        if (isOnline && onlineAction) {
+          // Try online action first
+          try {
+            const result = await onlineAction();
+            setIsLoading(false);
+            return result;
+          } catch (onlineError) {
+            console.log("Online action failed, queuing for sync:", onlineError);
+          }
         }
-      }
 
-      // Queue action for offline sync
-      await offlineDataManager.queueSyncAction(action, resource, data);
-      
-      // Store locally for immediate UI update
-      if (action !== 'delete') {
-        await offlineDataManager.storeOfflineData(type, resource, data);
-      }
+        // Queue action for offline sync
+        await offlineDataManager.queueSyncAction(action, resource, data);
 
-      setIsLoading(false);
-      return data;
-    } catch (err) {
-      setError(err as Error);
-      setIsLoading(false);
-      throw err;
-    }
-  }, [type, resource, isOnline]);
+        // Store locally for immediate UI update
+        if (action !== "delete") {
+          await offlineDataManager.storeOfflineData(type, resource, data);
+        }
+
+        setIsLoading(false);
+        return data;
+      } catch (err) {
+        setError(err as Error);
+        setIsLoading(false);
+        throw err;
+      }
+    },
+    [type, resource, isOnline]
+  );
 
   return { mutate, isLoading, error };
 };
@@ -161,7 +174,7 @@ export const useSyncStatus = () => {
 
   const refresh = useCallback(async () => {
     if (!isOnline) return;
-    
+
     setIsRefreshing(true);
     // Trigger a sync process (this would be implemented in the offline manager)
     setTimeout(() => {
@@ -181,7 +194,7 @@ export const useSyncStatus = () => {
 };
 
 // Hook for data freshness indicators
-export const useDataFreshness = (type: OfflineData['type'], id: string) => {
+export const useDataFreshness = (type: OfflineData["type"], id: string) => {
   const [freshness, setFreshness] = useState<{
     age: number | null;
     isFresh: boolean;
@@ -199,7 +212,7 @@ export const useDataFreshness = (type: OfflineData['type'], id: string) => {
   useEffect(() => {
     const updateFreshness = async () => {
       const age = await offlineDataManager.getDataAge(type, id);
-      
+
       if (age === null) {
         setFreshness({
           age: null,
@@ -217,13 +230,13 @@ export const useDataFreshness = (type: OfflineData['type'], id: string) => {
 
       let lastSync: string;
       if (days > 0) {
-        lastSync = `${days} day${days > 1 ? 's' : ''} ago`;
+        lastSync = `${days} day${days > 1 ? "s" : ""} ago`;
       } else if (hours > 0) {
-        lastSync = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        lastSync = `${hours} hour${hours > 1 ? "s" : ""} ago`;
       } else if (minutes > 0) {
-        lastSync = `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        lastSync = `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
       } else {
-        lastSync = 'Just now';
+        lastSync = "Just now";
       }
 
       setFreshness({
@@ -244,7 +257,10 @@ export const useDataFreshness = (type: OfflineData['type'], id: string) => {
 };
 
 // Hook for offline availability check
-export const useOfflineAvailability = (type: OfflineData['type'], id: string) => {
+export const useOfflineAvailability = (
+  type: OfflineData["type"],
+  id: string
+) => {
   const [isAvailable, setIsAvailable] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
 

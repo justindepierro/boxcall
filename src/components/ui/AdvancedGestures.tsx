@@ -2,9 +2,9 @@
  * Advanced Gesture Components for Mobile Touch Experience
  * Part of Phase 3C: Professional Touch Experience
  */
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { RefreshCw, ChevronDown } from 'lucide-react';
-import { Typography } from '../design-system/Typography';
+import React, { useState, useRef, useCallback, useEffect } from "react";
+import { RefreshCw, ChevronDown } from "lucide-react";
+import { Typography } from "../design-system/Typography";
 
 // Pull-to-refresh component
 interface PullToRefreshProps {
@@ -28,7 +28,7 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({
   isRefreshing = false,
   loadingIndicator,
   children,
-  className = '',
+  className = "",
 }) => {
   const [pullDistance, setPullDistance] = useState(0);
   const [isPulling, setIsPulling] = useState(false);
@@ -42,19 +42,22 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({
     }
   }, []);
 
-  const handleTouchMove = useCallback((e: TouchEvent) => {
-    if (!isPulling) return;
+  const handleTouchMove = useCallback(
+    (e: TouchEvent) => {
+      if (!isPulling) return;
 
-    const currentY = e.touches[0].clientY;
-    const distance = Math.max(0, currentY - startY);
-    const adjustedDistance = Math.min(distance * 0.5, threshold * 1.5); // Damping effect
+      const currentY = e.touches[0].clientY;
+      const distance = Math.max(0, currentY - startY);
+      const adjustedDistance = Math.min(distance * 0.5, threshold * 1.5); // Damping effect
 
-    setPullDistance(adjustedDistance);
+      setPullDistance(adjustedDistance);
 
-    if (adjustedDistance > 10) {
-      e.preventDefault(); // Prevent scrolling when pulling
-    }
-  }, [isPulling, startY, threshold]);
+      if (adjustedDistance > 10) {
+        e.preventDefault(); // Prevent scrolling when pulling
+      }
+    },
+    [isPulling, startY, threshold]
+  );
 
   const handleTouchEnd = useCallback(async () => {
     if (!isPulling) return;
@@ -73,14 +76,18 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({
     const container = containerRef.current;
     if (!container) return;
 
-    container.addEventListener('touchstart', handleTouchStart, { passive: false });
-    container.addEventListener('touchmove', handleTouchMove, { passive: false });
-    container.addEventListener('touchend', handleTouchEnd);
+    container.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
+    container.addEventListener("touchmove", handleTouchMove, {
+      passive: false,
+    });
+    container.addEventListener("touchend", handleTouchEnd);
 
     return () => {
-      container.removeEventListener('touchstart', handleTouchStart);
-      container.removeEventListener('touchmove', handleTouchMove);
-      container.removeEventListener('touchend', handleTouchEnd);
+      container.removeEventListener("touchstart", handleTouchStart);
+      container.removeEventListener("touchmove", handleTouchMove);
+      container.removeEventListener("touchend", handleTouchEnd);
     };
   }, [handleTouchStart, handleTouchMove, handleTouchEnd]);
 
@@ -93,7 +100,9 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({
       className={`relative overflow-hidden ${className}`}
       style={{
         transform: `translateY(${isRefreshing ? threshold / 2 : pullDistance}px)`,
-        transition: isPulling ? 'none' : 'transform 300ms cubic-bezier(0.2, 0, 0, 1)',
+        transition: isPulling
+          ? "none"
+          : "transform 300ms cubic-bezier(0.2, 0, 0, 1)",
       }}
     >
       {/* Pull indicator */}
@@ -103,14 +112,14 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({
           height: threshold,
           transform: `translateY(-${threshold}px)`,
           opacity: showIndicator ? 1 : 0,
-          transition: 'opacity 200ms ease-out',
+          transition: "opacity 200ms ease-out",
         }}
       >
         {loadingIndicator || (
           <div className="flex flex-col items-center space-y-2">
             <div
               className={`transition-transform duration-200 ${
-                isRefreshing ? 'animate-spin' : ''
+                isRefreshing ? "animate-spin" : ""
               }`}
               style={{
                 transform: `rotate(${pullProgress * 180}deg)`,
@@ -123,12 +132,11 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({
               )}
             </div>
             <Typography variant="caption" className="text-gray-500">
-              {isRefreshing 
-                ? 'Refreshing...'
-                : pullProgress >= 1 
-                  ? 'Release to refresh' 
-                  : 'Pull to refresh'
-              }
+              {isRefreshing
+                ? "Refreshing..."
+                : pullProgress >= 1
+                  ? "Release to refresh"
+                  : "Pull to refresh"}
             </Typography>
           </div>
         )}
@@ -145,14 +153,14 @@ interface SwipeableItemProps {
   leftActions?: Array<{
     label: string;
     icon?: React.ReactNode;
-    color: 'blue' | 'green' | 'red' | 'yellow' | 'gray';
+    color: "blue" | "green" | "red" | "yellow" | "gray";
     action: () => void;
   }>;
   /** Right swipe actions */
   rightActions?: Array<{
     label: string;
     icon?: React.ReactNode;
-    color: 'blue' | 'green' | 'red' | 'yellow' | 'gray';
+    color: "blue" | "green" | "red" | "yellow" | "gray";
     action: () => void;
   }>;
   /** Swipe threshold */
@@ -168,7 +176,7 @@ export const SwipeableItem: React.FC<SwipeableItemProps> = ({
   rightActions = [],
   threshold = 80,
   children,
-  className = '',
+  className = "",
 }) => {
   const [swipeDistance, setSwipeDistance] = useState(0);
   const [isActionsVisible, setIsActionsVisible] = useState(false);
@@ -177,11 +185,11 @@ export const SwipeableItem: React.FC<SwipeableItemProps> = ({
   const itemRef = useRef<HTMLDivElement>(null);
 
   const colorStyles = {
-    blue: 'bg-blue-500 text-white',
-    green: 'bg-green-500 text-white',
-    red: 'bg-red-500 text-white',
-    yellow: 'bg-yellow-500 text-white',
-    gray: 'bg-gray-500 text-white',
+    blue: "bg-blue-500 text-white",
+    green: "bg-green-500 text-white",
+    red: "bg-red-500 text-white",
+    yellow: "bg-yellow-500 text-white",
+    gray: "bg-gray-500 text-white",
   };
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
@@ -189,21 +197,24 @@ export const SwipeableItem: React.FC<SwipeableItemProps> = ({
     setIsSwiping(true);
   }, []);
 
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!isSwiping) return;
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (!isSwiping) return;
 
-    const currentX = e.touches[0].clientX;
-    const distance = currentX - startX;
-    
-    // Apply damping for smoother feel
-    const dampedDistance = distance * 0.8;
-    setSwipeDistance(dampedDistance);
+      const currentX = e.touches[0].clientX;
+      const distance = currentX - startX;
 
-    // Show actions when threshold is reached
-    if (Math.abs(dampedDistance) >= threshold && !isActionsVisible) {
-      setIsActionsVisible(true);
-    }
-  }, [isSwiping, startX, threshold, isActionsVisible]);
+      // Apply damping for smoother feel
+      const dampedDistance = distance * 0.8;
+      setSwipeDistance(dampedDistance);
+
+      // Show actions when threshold is reached
+      if (Math.abs(dampedDistance) >= threshold && !isActionsVisible) {
+        setIsActionsVisible(true);
+      }
+    },
+    [isSwiping, startX, threshold, isActionsVisible]
+  );
 
   const handleTouchEnd = useCallback(() => {
     if (!isSwiping) return;
@@ -239,8 +250,8 @@ export const SwipeableItem: React.FC<SwipeableItemProps> = ({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [resetSwipe]);
 
   const actions = swipeDistance > 0 ? leftActions : rightActions;
@@ -251,7 +262,7 @@ export const SwipeableItem: React.FC<SwipeableItemProps> = ({
       {isActionsVisible && actions.length > 0 && (
         <div
           className={`absolute top-0 bottom-0 flex items-center ${
-            swipeDistance > 0 ? 'left-0' : 'right-0'
+            swipeDistance > 0 ? "left-0" : "right-0"
           }`}
           style={{ width: Math.abs(swipeDistance) }}
         >
@@ -277,7 +288,9 @@ export const SwipeableItem: React.FC<SwipeableItemProps> = ({
         className="bg-white relative z-10"
         style={{
           transform: `translateX(${swipeDistance}px)`,
-          transition: isSwiping ? 'none' : 'transform 300ms cubic-bezier(0.2, 0, 0, 1)',
+          transition: isSwiping
+            ? "none"
+            : "transform 300ms cubic-bezier(0.2, 0, 0, 1)",
         }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -310,29 +323,34 @@ export const LongPressMenu: React.FC<LongPressMenuProps> = ({
   items,
   duration = 500,
   children,
-  className = '',
+  className = "",
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
 
-  const handleLongPressStart = useCallback((e: React.TouchEvent | React.MouseEvent) => {
-    const rect = elementRef.current?.getBoundingClientRect();
-    if (rect) {
-      const x = ('touches' in e ? e.touches[0].clientX : e.clientX) - rect.left;
-      const y = ('touches' in e ? e.touches[0].clientY : e.clientY) - rect.top;
-      setMenuPosition({ x, y });
-    }
-
-    longPressTimer.current = setTimeout(() => {
-      setIsMenuOpen(true);
-      // Add haptic-style feedback
-      if (navigator.vibrate) {
-        navigator.vibrate(50);
+  const handleLongPressStart = useCallback(
+    (e: React.TouchEvent | React.MouseEvent) => {
+      const rect = elementRef.current?.getBoundingClientRect();
+      if (rect) {
+        const x =
+          ("touches" in e ? e.touches[0].clientX : e.clientX) - rect.left;
+        const y =
+          ("touches" in e ? e.touches[0].clientY : e.clientY) - rect.top;
+        setMenuPosition({ x, y });
       }
-    }, duration);
-  }, [duration]);
+
+      longPressTimer.current = setTimeout(() => {
+        setIsMenuOpen(true);
+        // Add haptic-style feedback
+        if (navigator.vibrate) {
+          navigator.vibrate(50);
+        }
+      }, duration);
+    },
+    [duration]
+  );
 
   const handleLongPressEnd = useCallback(() => {
     if (longPressTimer.current) {
@@ -352,8 +370,9 @@ export const LongPressMenu: React.FC<LongPressMenuProps> = ({
 
   useEffect(() => {
     if (isMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [isMenuOpen, handleClickOutside]);
 
@@ -377,14 +396,14 @@ export const LongPressMenu: React.FC<LongPressMenuProps> = ({
           style={{
             left: menuPosition.x,
             top: menuPosition.y,
-            transform: 'translate(-50%, -100%)',
+            transform: "translate(-50%, -100%)",
           }}
         >
           {items.map((item, index) => (
             <button
               key={index}
               className={`w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-2 transition-colors ${
-                item.destructive ? 'text-red-600' : 'text-gray-900'
+                item.destructive ? "text-red-600" : "text-gray-900"
               }`}
               onClick={() => handleMenuItemClick(item.action)}
             >
@@ -399,10 +418,7 @@ export const LongPressMenu: React.FC<LongPressMenuProps> = ({
 
       {/* Backdrop */}
       {isMenuOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={handleClickOutside}
-        />
+        <div className="fixed inset-0 z-40" onClick={handleClickOutside} />
       )}
     </div>
   );
