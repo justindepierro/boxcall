@@ -314,3 +314,93 @@
     transform: none;
   }
 }
+
+/* ============================================================================
+   MOBILE CALENDAR INTERFACE STYLES
+   ============================================================================ */
+
+/* Mobile Calendar Interface Styles */
+.mobile-calendar {
+  /* Smooth momentum scrolling */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.mobile-calendar .calendar-swipe-container {
+  /* Enable smooth transitions for swipe animations */
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.mobile-calendar .calendar-day-cell {
+  /* Large touch targets for calendar days */
+  min-height: 60px;
+  min-width: 44px;
+  touch-action: manipulation;
+}
+
+.mobile-calendar .calendar-event-dot {
+  /* Event indicators for mobile calendar */
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-brand-jade);
+  opacity: 0.8;
+}
+
+.mobile-calendar .calendar-event-item {
+  /* Touch-friendly event items */
+  min-height: 48px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+}
+
+.mobile-calendar .swipe-hint {
+  /* Subtle swipe hint animation */
+  animation: swipeHint 3s ease-in-out infinite;
+}
+
+@keyframes swipeHint {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Calendar Loading States */
+.mobile-calendar .calendar-loading {
+  /* Mobile-optimized loading spinner */
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Quick Action Buttons for Calendar */
+.mobile-quick-event-button {
+  /* Floating action button for quick event creation */
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background: var(--color-brand-jade);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 50;
+  touch-action: manipulation;
+}
+
+.mobile-quick-event-button:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease-out;
+}
