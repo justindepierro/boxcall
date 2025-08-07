@@ -10,6 +10,11 @@ import { MobileQuickActions, FloatingActionButton } from "./MobileQuickActions";
 import { MobileCalendarInterface } from "./MobileCalendarInterface";
 import { MobileTeamBulletin, type Message } from "./MobileTeamBulletin";
 import { MobileQuickEvent } from "./MobileQuickEvent";
+import {
+  MobilePlaybookBrowser,
+  type PlayPreview,
+} from "./MobilePlaybookBrowser";
+import { MobileAnalyticsDashboard } from "./MobileAnalyticsDashboard";
 import type { QuickAction } from "./MobileQuickActions";
 import type { CalendarEventCreate } from "../../services/calendarService";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
@@ -31,10 +36,18 @@ export const MobileDashboardLayout: React.FC = () => {
     typeof window !== "undefined" ? window.location.pathname : "/"
   );
   const [activeView, setActiveView] = useState<
-    "overview" | "quick-actions" | "calendar" | "team-chat"
+    | "overview"
+    | "quick-actions"
+    | "calendar"
+    | "team-chat"
+    | "playbook"
+    | "analytics"
   >("overview");
   const [showQuickEvent, setShowQuickEvent] = useState(false);
   const [selectedCalendarDate] = useState<Date | null>(null);
+  const [analyticsTimeframe, setAnalyticsTimeframe] = useState<
+    "week" | "month" | "season"
+  >("week");
 
   // Sample messages for team bulletin
   const [messages] = useState<Message[]>([
@@ -152,6 +165,16 @@ export const MobileDashboardLayout: React.FC = () => {
     console.log("Taking photo for team chat");
   };
 
+  const handlePlaySelect = (play: PlayPreview) => {
+    // TODO: Navigate to play detail view
+    console.log("Selected play:", play);
+  };
+
+  const handlePlayFavorite = (playId: string, favorite: boolean) => {
+    // TODO: Update play favorite status
+    console.log("Toggle play favorite:", playId, favorite);
+  };
+
   const handleNavigation = (href: string) => {
     window.location.href = href;
   };
@@ -184,13 +207,15 @@ export const MobileDashboardLayout: React.FC = () => {
 
       {/* Mobile View Switcher */}
       <div className="md:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-2">
-        <div className="flex space-x-1">
+        <div className="flex space-x-1 overflow-x-auto pb-2">
           {(
             [
               { id: "overview", label: "Overview" },
               { id: "quick-actions", label: "Actions" },
               { id: "calendar", label: "Calendar" },
               { id: "team-chat", label: "Team Chat", badge: messages.length },
+              { id: "playbook", label: "Playbook" },
+              { id: "analytics", label: "Analytics" },
             ] as Array<{ id: string; label: string; badge?: number }>
           ).map((view) => {
             return (
@@ -203,6 +228,8 @@ export const MobileDashboardLayout: React.FC = () => {
                       | "quick-actions"
                       | "calendar"
                       | "team-chat"
+                      | "playbook"
+                      | "analytics"
                   )
                 }
                 className={`relative px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -287,6 +314,26 @@ export const MobileDashboardLayout: React.FC = () => {
                 onSendMessage={handleSendMessage}
                 onSendVoice={handleSendVoice}
                 onTakePhoto={handleTakePhoto}
+              />
+            </div>
+          )}
+
+          {activeView === "playbook" && (
+            <div className="h-[calc(100vh-180px)]">
+              <MobilePlaybookBrowser
+                teamId="team-1"
+                onPlaySelect={handlePlaySelect}
+                onPlayFavorite={handlePlayFavorite}
+              />
+            </div>
+          )}
+
+          {activeView === "analytics" && (
+            <div className="h-[calc(100vh-180px)]">
+              <MobileAnalyticsDashboard
+                teamId="team-1"
+                timeframe={analyticsTimeframe}
+                onTimeframeChange={setAnalyticsTimeframe}
               />
             </div>
           )}
