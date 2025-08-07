@@ -55,7 +55,7 @@ export type Inserts<T extends keyof Database["public"]["Tables"]> =
 export type Updates<T extends keyof Database["public"]["Tables"]> =
   Database["public"]["Tables"][T]["Update"];
 
-// Convenience type exports for easy importing
+// Convenience type exports for easy importing - UPDATED FOR PHASE 1
 export type Achievement = Tables<"achievements">;
 export type Game = Tables<"games">;
 export type HelmetSticker = Tables<"helmet_stickers">;
@@ -78,6 +78,12 @@ export type TeamPost = Tables<"team_posts">;
 export type Team = Tables<"teams">;
 export type UserProfile = Tables<"user_profiles">;
 
+// 🔥 PHASE 1 CRITICAL TABLES - NEW EXPORTS
+export type CalendarEvent = Tables<"calendar_events">;
+export type PracticeSchedule = Tables<"practice_schedules">;
+export type PracticeAttendance = Tables<"practice_attendance">;
+export type Equipment = Tables<"equipment">;
+
 // Insert types
 export type AchievementInsert = Inserts<"achievements">;
 export type GameInsert = Inserts<"games">;
@@ -98,6 +104,18 @@ export type TeamInviteInsert = Inserts<"team_invites">;
 export type TeamMemberInsert = Inserts<"team_members">;
 export type TeamMembershipInsert = Inserts<"team_memberships">;
 export type TeamPostInsert = Inserts<"team_posts">;
+
+// 🔥 PHASE 1 CRITICAL INSERT TYPES - NEW EXPORTS
+export type CalendarEventInsert = Inserts<"calendar_events">;
+export type PracticeScheduleInsert = Inserts<"practice_schedules">;
+export type PracticeAttendanceInsert = Inserts<"practice_attendance">;
+export type EquipmentInsert = Inserts<"equipment">;
+
+// 🔥 PHASE 1 UPDATE TYPES - NEW EXPORTS
+export type CalendarEventUpdate = Updates<"calendar_events">;
+export type PracticeScheduleUpdate = Updates<"practice_schedules">;
+export type PracticeAttendanceUpdate = Updates<"practice_attendance">;
+export type EquipmentUpdate = Updates<"equipment">;
 export type TeamInsert = Inserts<"teams">;
 export type UserProfileInsert = Inserts<"user_profiles">;
 

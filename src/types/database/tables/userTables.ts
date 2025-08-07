@@ -13,36 +13,46 @@ type Json =
   | Json[];
 
 export interface UserTables {
+  // 🔥 CRITICAL: Enhanced Profiles table (required by dashboardService.ts)
   profiles: {
     Row: {
-      id: string;
+      id: string; // References auth.users.id
       full_name: string | null;
       avatar_url: string | null;
-      role: "player" | "coach" | "family" | "admin" | null;
+      role: "player" | "coach" | "assistant_coach" | "family" | "admin";
       bio: string | null;
       phone: string | null;
-      created_at: string | null;
       email: string | null;
       display_name: string | null;
       address: string | null;
       settings: Json | null;
       last_login: string | null;
-      updated_at: string | null;
+      created_at: string;
+      updated_at: string;
+      // Enhanced fields for Phase 1
+      position: string | null;
+      jersey_number: number | null;
+      is_active: boolean | null;
+      notification_preferences: Json | null;
     };
     Insert: {
-      id: string;
+      id: string; // References auth.users.id
       full_name?: string | null;
       avatar_url?: string | null;
-      role?: "player" | "coach" | "family" | "admin" | null;
+      role?: "player" | "coach" | "assistant_coach" | "family" | "admin";
       bio?: string | null;
       phone?: string | null;
-      created_at?: string | null;
       email?: string | null;
       display_name?: string | null;
       address?: string | null;
       settings?: Json | null;
       last_login?: string | null;
-      updated_at?: string | null;
+      created_at?: string;
+      updated_at?: string;
+      position?: string | null;
+      jersey_number?: number | null;
+      is_active?: boolean | null;
+      notification_preferences?: Json | null;
     };
     Update: {
       id?: string;

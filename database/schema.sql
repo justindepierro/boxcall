@@ -190,12 +190,181 @@ CREATE INDEX idx_script_plays_order ON practice_script_plays(script_id, order_nu
 CREATE INDEX idx_game_plans_team_week ON game_plans(team_id, week_number DESC);
 CREATE INDEX idx_situation_plays_priority ON game_plan_plays(situation_id, priority);
 
+-- =====================================================
+-- CRITICAL TABLES - PHASE 1 FOUNDATION FIXES
+-- =====================================================
+
+-- Calendar Events table (required by Phase 3 services)
+CREATE TABLE calendar_events (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  event_type TEXT NOT NULL CHECK (event_type IN ('practice', 'game', 'meeting', 'event')),
+  start_time TIMESTAMPTZ NOT NULL,
+  end_time TIMESTAMPTZ NOT NULL,
+  location TEXT,
+  is_recurring BOOLEAN DEFAULT false,
+  recurrence_rule TEXT, -- RFC5545 RRULE format
+  created_by TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  -- Performance optimization
+  status TEXT DEFAULT 'confirmed' CHECK (status IN ('confirmed', 'tentative', 'cancelled')),
+  attendee_count INTEGER DEFAULT 0,
+  priority TEXT DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high', 'urgent')),
+  color TEXT DEFAULT '#3B82F6',
+  is_all_day BOOLEAN DEFAULT false,
+  reminder_minutes INTEGER DEFAULT 30,
+  metadata JSONB DEFAULT '{}'
+);
+
+-- Practice Schedules table (required by practiceService.ts)
+CREATE TABLE practice_schedules (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  date_scheduled DATE NOT NULL,
+  start_time TIME NOT NULL,
+  end_time TIME NOT NULL,
+  location TEXT,
+  field_type TEXT,
+  weather_conditions TEXT,
+  total_duration INTEGER, -- minutes
+  created_by TEXT NOT NULL,
+  is_template BOOLEAN DEFAULT false,
+  tags TEXT[],
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  -- Service compatibility fields
+  equipment_required TEXT[],
+  coaching_notes TEXT,
+  objectives TEXT[],
+  completion_status TEXT DEFAULT 'scheduled' CHECK (completion_status IN ('scheduled', 'in_progress', 'completed', 'cancelled')),
+  calendar_event_id UUID REFERENCES calendar_events(id)
+);
+
+-- Practice Attendance table (required by practiceService.ts)
+CREATE TABLE practice_attendance (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  practice_id UUID REFERENCES practice_schedules(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL, -- References auth.users
+  attendance_status TEXT NOT NULL CHECK (attendance_status IN ('present', 'absent', 'late', 'excused')),
+  arrival_time TIMESTAMPTZ,
+  notes TEXT,
+  recorded_by TEXT NOT NULL,
+  recorded_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  UNIQUE(practice_id, user_id)
+);
+
+-- Equipment table (required by practiceService.ts)
+CREATE TABLE equipment (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  quantity INTEGER DEFAULT 1,
+  condition TEXT DEFAULT 'good' CHECK (condition IN ('excellent', 'good', 'fair', 'poor')),
+  location TEXT,
+  purchase_date DATE,
+  cost DECIMAL(10,2),
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  is_active BOOLEAN DEFAULT true,
+  checkout_status TEXT DEFAULT 'available' CHECK (checkout_status IN ('available', 'checked_out', 'maintenance'))
+);
+
+-- Profiles table (required by dashboardService.ts)
+CREATE TABLE profiles (
+  id TEXT PRIMARY KEY, -- References auth.users.id
+  full_name TEXT,
+  avatar_url TEXT,
+  role TEXT NOT NULL DEFAULT 'player' CHECK (role IN ('player', 'coach', 'assistant_coach', 'family', 'admin')),
+  bio TEXT,
+  phone TEXT,
+  email TEXT,
+  display_name TEXT,
+  address TEXT,
+  settings JSONB DEFAULT '{}',
+  last_login TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  -- Enhanced fields
+  position TEXT,
+  jersey_number INTEGER,
+  is_active BOOLEAN DEFAULT true,
+  notification_preferences JSONB DEFAULT '{"email": true, "push": true}'
+);
+
+-- Team Members table (proper team associations)
+CREATE TABLE team_members (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL, -- References auth.users.id
+  role TEXT NOT NULL DEFAULT 'player',
+  position TEXT,
+  jersey_number INTEGER,
+  is_active BOOLEAN DEFAULT true,
+  joined_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  UNIQUE(team_id, user_id)
+);
+
+-- Achievements table
+CREATE TABLE achievements (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
+  user_id TEXT, -- References auth.users.id
+  achievement_type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  points_value INTEGER DEFAULT 0,
+  earned_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Helmet Stickers table
+CREATE TABLE helmet_stickers (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL, -- References auth.users.id
+  reason TEXT NOT NULL,
+  description TEXT,
+  awarded_by TEXT NOT NULL,
+  awarded_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  color TEXT DEFAULT '#FFD700',
+  is_visible BOOLEAN DEFAULT true
+);
+
+-- PERFORMANCE INDEXES FOR CRITICAL TABLES
+CREATE INDEX idx_calendar_events_team_date ON calendar_events(team_id, start_time);
+CREATE INDEX idx_practice_schedules_team_date ON practice_schedules(team_id, date_scheduled DESC);
+CREATE INDEX idx_practice_attendance_practice ON practice_attendance(practice_id, attendance_status);
+CREATE INDEX idx_equipment_team_category ON equipment(team_id, category) WHERE is_active = true;
+CREATE INDEX idx_profiles_role ON profiles(role) WHERE is_active = true;
+CREATE INDEX idx_team_members_team_active ON team_members(team_id, is_active) WHERE is_active = true;
+
 -- ROW LEVEL SECURITY POLICIES
 ALTER TABLE teams ENABLE ROW LEVEL SECURITY;
 ALTER TABLE playbooks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE plays ENABLE ROW LEVEL SECURITY;
 ALTER TABLE practice_scripts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE game_plans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE calendar_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE practice_schedules ENABLE ROW LEVEL SECURITY;
+ALTER TABLE practice_attendance ENABLE ROW LEVEL SECURITY;
+ALTER TABLE equipment ENABLE ROW LEVEL SECURITY;
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE team_members ENABLE ROW LEVEL SECURITY;
+ALTER TABLE achievements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE helmet_stickers ENABLE ROW LEVEL SECURITY;
 
 -- Basic RLS policies (will be enhanced based on auth system)
 CREATE POLICY "Enable read access for all users" ON teams FOR SELECT USING (true);
@@ -203,6 +372,14 @@ CREATE POLICY "Enable read access for all users" ON playbooks FOR SELECT USING (
 CREATE POLICY "Enable read access for all users" ON plays FOR SELECT USING (true);
 CREATE POLICY "Enable read access for all users" ON practice_scripts FOR SELECT USING (true);
 CREATE POLICY "Enable read access for all users" ON game_plans FOR SELECT USING (true);
+CREATE POLICY "Enable read access for all users" ON calendar_events FOR SELECT USING (true);
+CREATE POLICY "Enable read access for all users" ON practice_schedules FOR SELECT USING (true);
+CREATE POLICY "Enable read access for all users" ON practice_attendance FOR SELECT USING (true);
+CREATE POLICY "Enable read access for all users" ON equipment FOR SELECT USING (true);
+CREATE POLICY "Enable read access for all users" ON profiles FOR SELECT USING (true);
+CREATE POLICY "Enable read access for all users" ON team_members FOR SELECT USING (true);
+CREATE POLICY "Enable read access for all users" ON achievements FOR SELECT USING (true);
+CREATE POLICY "Enable read access for all users" ON helmet_stickers FOR SELECT USING (true);
 
 -- Enable insert/update for authenticated users (temporary for development)
 CREATE POLICY "Enable write access for all users" ON teams FOR ALL USING (true);
@@ -213,3 +390,11 @@ CREATE POLICY "Enable write access for all users" ON game_plans FOR ALL USING (t
 CREATE POLICY "Enable write access for all users" ON practice_script_plays FOR ALL USING (true);
 CREATE POLICY "Enable write access for all users" ON game_plan_situations FOR ALL USING (true);
 CREATE POLICY "Enable write access for all users" ON game_plan_plays FOR ALL USING (true);
+CREATE POLICY "Enable write access for all users" ON calendar_events FOR ALL USING (true);
+CREATE POLICY "Enable write access for all users" ON practice_schedules FOR ALL USING (true);
+CREATE POLICY "Enable write access for all users" ON practice_attendance FOR ALL USING (true);
+CREATE POLICY "Enable write access for all users" ON equipment FOR ALL USING (true);
+CREATE POLICY "Enable write access for all users" ON profiles FOR ALL USING (true);
+CREATE POLICY "Enable write access for all users" ON team_members FOR ALL USING (true);
+CREATE POLICY "Enable write access for all users" ON achievements FOR ALL USING (true);
+CREATE POLICY "Enable write access for all users" ON helmet_stickers FOR ALL USING (true);
