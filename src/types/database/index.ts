@@ -147,3 +147,6 @@ export type { UserTables } from "./tables/userTables";
 export type { TeamTables } from "./tables/teamTables";
 export type { PracticeGameTables } from "./tables/practiceGameTables";
 export type { SocialTables } from "./tables/socialTables";
+
+// Export specialized Phase 2 types
+export * from './gamePlanningTypes';
