@@ -1,6 +1,6 @@
 // =============================================================================
 // GAME PLANNING SERVICE - Brian Billick Methodology Implementation
-// Phase 2: Core Football Features - Simplified Working Version
+// Phase 2: Core Football Features
 // =============================================================================
 
 import { supabase } from "../../lib/supabase";
@@ -25,41 +25,6 @@ import type {
 // =============================================================================
 
 export class GamePlanService {
-  // =============================================================================
-  // CORE CRUD OPERATIONS
-  // =============================================================================
-
-  /**
-   * Create a new game plan
-   */
-  async create(data: GamePlanEnhancedInsert): Promise<GamePlanEnhanced> {
-    const { data: gameplan, error } = await supabase
-      .from("game_plans")
-      .insert(data)
-      .select("*")
-      .single();
-
-    if (error) throw error;
-    return gameplan as GamePlanEnhanced;
-  }
-
-  /**
-   * Get game plan by ID
-   */
-  async findById(id: string): Promise<GamePlanEnhanced | null> {
-    const { data: gameplan, error } = await supabase
-      .from("game_plans")
-      .select("*")
-      .eq("id", id)
-      .single();
-
-    if (error) {
-      if (error.code === "PGRST116") return null; // Not found
-      throw error;
-    }
-    return gameplan as GamePlanEnhanced;
-  }
-
   // =============================================================================
   // BRIAN BILLICK METHODOLOGY - SITUATIONAL CATEGORIES
   // =============================================================================
@@ -214,14 +179,14 @@ export class GamePlanService {
         created_by: "system", // Will be overridden by auth
       };
 
-      const { data: created, error } = await supabase
+      const created = await supabase
         .from("game_plan_situations")
         .insert(situationData)
         .select("*")
         .single();
 
-      if (error) throw error;
-      createdSituations.push(created as GamePlanSituation);
+      if (created.error) throw created.error;
+      createdSituations.push(created.data as GamePlanSituation);
     }
 
     return createdSituations;
@@ -247,13 +212,7 @@ export class GamePlanService {
         play_id: assignment.playId,
         priority_level: assignment.priority,
         personnel_required: assignment.personnelRequired,
-        formation_strength: assignment.formationStrength as
-          | "strong_right"
-          | "strong_left"
-          | "weak_right"
-          | "weak_left"
-          | "balanced"
-          | undefined,
+        formation_strength: assignment.formationStrength,
         expected_coverage: assignment.expectedCoverage || [],
         success_probability: assignment.successProbability || 0.5,
         risk_level: assignment.riskLevel || 3,
@@ -262,14 +221,18 @@ export class GamePlanService {
         created_by: "coach", // Will be overridden by auth
       };
 
-      const { data: created, error } = await supabase
-        .from("game_plan_plays")
-        .insert(playData)
-        .select("*")
-        .single();
+      const created = await this.executeWithMetrics(async () => {
+        const { data, error } = await supabase
+          .from("game_plan_plays")
+          .insert(playData)
+          .select("*")
+          .single();
 
-      if (error) throw error;
-      createdPlays.push(created as GamePlanPlay);
+        if (error) throw error;
+        return data;
+      });
+
+      createdPlays.push(created);
     }
 
     return createdPlays;
@@ -305,20 +268,16 @@ export class GamePlanService {
     const coachCards: CoachCard[] = [];
 
     // Group situations by type for card organization
-    type SituationWithPlays = (typeof situations)[0];
     const situationsByType =
       situations?.reduce(
-        (
-          acc: Record<string, SituationWithPlays[]>,
-          situation: SituationWithPlays
-        ) => {
+        (acc, situation) => {
           if (!acc[situation.category_type]) {
             acc[situation.category_type] = [];
           }
           acc[situation.category_type].push(situation);
           return acc;
         },
-        {} as Record<string, SituationWithPlays[]>
+        {} as Record<string, typeof situations>
       ) || {};
 
     // Generate cards for each category type
@@ -334,25 +293,14 @@ export class GamePlanService {
         content: {
           layout: "list",
           plays: situationsByType.down_distance.flatMap(
-            (situation: SituationWithPlays) => {
-              type GamePlanPlayData = {
-                play_id: string;
-                plays?: { name?: string; formation?: string };
-                priority_level: number;
-              };
-
-              return (
-                (situation.game_plan_plays as GamePlanPlayData[])?.map(
-                  (gpp: GamePlanPlayData) => ({
-                    id: gpp.play_id,
-                    name: gpp.plays?.name || "Unknown Play",
-                    formation: gpp.plays?.formation || "",
-                    priority: gpp.priority_level,
-                    situation: situation.category_name,
-                  })
-                ) || []
-              );
-            }
+            (situation) =>
+              situation.game_plan_plays?.map((gpp) => ({
+                id: gpp.play_id,
+                name: gpp.plays?.name || "Unknown Play",
+                formation: gpp.plays?.formation || "",
+                priority: gpp.priority_level,
+                situation: situation.category_name,
+              })) || []
           ),
           notes: [
             "Priority 1 = Must have plays",
@@ -364,21 +312,124 @@ export class GamePlanService {
         created_by: "system",
       };
 
-      const { data: card, error } = await supabase
-        .from("coach_cards")
-        .insert(cardData)
-        .select("*")
-        .single();
+      const card = await this.executeWithMetrics(async () => {
+        const { data, error } = await supabase
+          .from("coach_cards")
+          .insert(cardData)
+          .select("*")
+          .single();
 
-      if (error) throw error;
-      coachCards.push(card as CoachCard);
+        if (error) throw error;
+        return data;
+      });
+
+      coachCards.push(card);
+    }
+
+    // Red Zone Card
+    if (situationsByType.field_position) {
+      const redZoneSituations = situationsByType.field_position.filter(
+        (s) =>
+          s.field_position === "red_zone" || s.field_position === "goal_line"
+      );
+
+      if (redZoneSituations.length > 0) {
+        const cardData: CoachCardInsert = {
+          game_plan_id: gamePlanId,
+          card_type: "red_zone",
+          title: "Red Zone Package",
+          subtitle: "Scoring Opportunities",
+          content: {
+            layout: "grid",
+            plays: redZoneSituations.flatMap(
+              (situation) =>
+                situation.game_plan_plays?.map((gpp) => ({
+                  id: gpp.play_id,
+                  name: gpp.plays?.name || "Unknown Play",
+                  formation: gpp.plays?.formation || "",
+                  priority: gpp.priority_level,
+                  situation: situation.category_name,
+                })) || []
+            ),
+            notes: [
+              "Execute with precision",
+              "Watch for goal line adjustments",
+              "Be ready for quick tempo",
+            ],
+          },
+          print_order: cardOrder++,
+          created_by: "system",
+        };
+
+        const card = await this.executeWithMetrics(async () => {
+          const { data, error } = await supabase
+            .from("coach_cards")
+            .insert(cardData)
+            .select("*")
+            .single();
+
+          if (error) throw error;
+          return data;
+        });
+
+        coachCards.push(card);
+      }
+    }
+
+    // Two Minute Card
+    if (situationsByType.game_situation) {
+      const twoMinuteSituations = situationsByType.game_situation.filter(
+        (s) => s.game_situation === "two_minute"
+      );
+
+      if (twoMinuteSituations.length > 0) {
+        const cardData: CoachCardInsert = {
+          game_plan_id: gamePlanId,
+          card_type: "two_minute",
+          title: "Two Minute Drill",
+          subtitle: "Clock Management",
+          content: {
+            layout: "list",
+            plays: twoMinuteSituations.flatMap(
+              (situation) =>
+                situation.game_plan_plays?.map((gpp) => ({
+                  id: gpp.play_id,
+                  name: gpp.plays?.name || "Unknown Play",
+                  formation: gpp.plays?.formation || "",
+                  priority: gpp.priority_level,
+                  situation: situation.category_name,
+                })) || []
+            ),
+            notes: [
+              "Communicate timeouts clearly",
+              "Know spike situations",
+              "Have boundary plays ready",
+            ],
+          },
+          print_order: cardOrder++,
+          created_by: "system",
+        };
+
+        const card = await this.executeWithMetrics(async () => {
+          const { data, error } = await supabase
+            .from("coach_cards")
+            .insert(cardData)
+            .select("*")
+            .single();
+
+          if (error) throw error;
+          return data;
+        });
+
+        coachCards.push(card);
+      }
     }
 
     return coachCards;
   }
 
   // =============================================================================
-  // PRIORITY OPTIMIZATION (SIMPLIFIED)
+  // PRIORITY OPTIMIZATION (AI-POWERED)
   // =============================================================================
 
   /**
@@ -387,6 +438,9 @@ export class GamePlanService {
   async optimizePriorityLevels(
     gamePlanId: string
   ): Promise<PriorityOptimization[]> {
+    // This would integrate with AI/analytics in Phase 3
+    // For now, return basic optimization suggestions based on success rates
+
     const { data: gamePlanPlays, error } = await supabase
       .from("game_plan_plays")
       .select(
@@ -402,14 +456,7 @@ export class GamePlanService {
 
     const optimizations: PriorityOptimization[] = [];
 
-    type OptimizationPlay = {
-      priority_level: number;
-      success_probability: number;
-      execution_count?: number;
-      situation_id: string;
-    };
-
-    gamePlanPlays?.forEach((play: OptimizationPlay) => {
+    gamePlanPlays?.forEach((play) => {
       // Simple optimization logic based on success probability
       let suggestedPriority = play.priority_level;
 
@@ -425,12 +472,10 @@ export class GamePlanService {
           currentPriority: play.priority_level,
           suggestedPriority,
           confidence: 0.75,
-          reasoning: `Based on ${Math.round(
-            play.success_probability * 100
-          )}% success rate`,
+          reasoning: `Based on ${Math.round(play.success_probability * 100)}% success rate`,
           historicalData: {
             successRate: play.success_probability,
-            executionCount: play.execution_count || 0,
+            executionCount: play.execution_count,
             avgYardsGained: 0, // Would come from analytics
           },
         });
@@ -441,16 +486,20 @@ export class GamePlanService {
   }
 
   // =============================================================================
-  // PREDICTIVE ANALYTICS (SIMPLIFIED)
+  // PREDICTIVE ANALYTICS (PHASE 3 PREVIEW)
   // =============================================================================
 
   /**
    * Predict play success probability based on context
+   * Full implementation in Phase 3 with ML integration
    */
   async predictPlaySuccess(
+    playId: string,
     gameContext: GameContext
   ): Promise<SuccessProbability> {
     // Simplified prediction logic for Phase 2
+    // In Phase 3, this will use ML models
+
     let baseProbability = 0.5;
     const confidence = 0.6;
 
@@ -498,7 +547,64 @@ export class GamePlanService {
   }
 
   // =============================================================================
-  // ENHANCED QUERIES
+  // GAME PLAN TEMPLATES (REUSABLE PATTERNS)
+  // =============================================================================
+
+  /**
+   * Create game plan from template with Billick methodology
+   */
+  async createFromTemplate(
+    templateId: string,
+    gamePlanData: GamePlanEnhancedInsert
+  ): Promise<GamePlanEnhanced> {
+    // Get template
+    const { data: template, error: templateError } = await supabase
+      .from("game_plan_templates")
+      .select("*")
+      .eq("id", templateId)
+      .single();
+
+    if (templateError) throw templateError;
+
+    // Create base game plan
+    const gameplan = await this.create(gamePlanData);
+
+    // Create situations from template
+    if (template?.situation_categories) {
+      const situationPromises = template.situation_categories.map(
+        (category, index) => {
+          const situationData: GamePlanSituationInsert = {
+            game_plan_id: gameplan.id,
+            category_name: category.name,
+            category_type: category.type,
+            description: category.description,
+            priority_level: category.priority,
+            sequence_order: index + 1,
+            created_by: gamePlanData.created_by,
+          };
+
+          return supabase
+            .from("game_plan_situations")
+            .insert(situationData)
+            .select("*")
+            .single();
+        }
+      );
+
+      await Promise.all(situationPromises);
+    }
+
+    // Increment template usage
+    await supabase
+      .from("game_plan_templates")
+      .update({ usage_count: (template.usage_count || 0) + 1 })
+      .eq("id", templateId);
+
+    return gameplan;
+  }
+
+  // =============================================================================
+  // ENHANCED CRUD OPERATIONS
   // =============================================================================
 
   /**

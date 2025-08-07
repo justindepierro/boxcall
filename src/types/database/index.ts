@@ -149,4 +149,4 @@ export type { PracticeGameTables } from "./tables/practiceGameTables";
 export type { SocialTables } from "./tables/socialTables";
 
 // Export specialized Phase 2 types
-export * from './gamePlanningTypes';
+export * from "./gamePlanningTypes";

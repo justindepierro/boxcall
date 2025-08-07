@@ -44,7 +44,7 @@ export interface SuccessMetrics {
 }
 
 export interface CoachCardContent {
-  layout: 'list' | 'grid' | 'diagram';
+  layout: "list" | "grid" | "diagram";
   plays: {
     id: string;
     name: string;
@@ -60,7 +60,7 @@ export interface CoachCardContent {
 
 export interface TemplateSituationCategory {
   name: string;
-  type: string;
+  type: "down_distance" | "field_position" | "game_situation" | "special_teams";
   priority: number;
   description?: string;
 }
@@ -77,10 +77,10 @@ export interface GamePlanEnhanced {
   team_id: string;
   opponent_team?: string;
   game_date?: string;
-  game_type: 'regular' | 'playoff' | 'scrimmage' | 'practice';
+  game_type: "regular" | "playoff" | "scrimmage" | "practice";
   week_number?: number;
   season?: string;
-  
+
   // Brian Billick methodology additions
   scouting_report: ScoutingReport;
   weather_considerations: WeatherConsiderations;
@@ -89,10 +89,10 @@ export interface GamePlanEnhanced {
   personnel_rotations: PersonnelRotations;
   coaching_points: string[];
   success_metrics: SuccessMetrics;
-  preparation_status: 'draft' | 'in_progress' | 'complete' | 'game_ready';
+  preparation_status: "draft" | "in_progress" | "complete" | "game_ready";
   total_situations: number;
   total_plays_assigned: number;
-  
+
   created_by: string;
   created_at: string;
   updated_at: string;
@@ -102,7 +102,7 @@ export interface GamePlanEnhancedInsert {
   team_id: string;
   opponent_team?: string;
   game_date?: string;
-  game_type: 'regular' | 'playoff' | 'scrimmage' | 'practice';
+  game_type: "regular" | "playoff" | "scrimmage" | "practice";
   week_number?: number;
   season?: string;
   scouting_report?: ScoutingReport;
@@ -112,14 +112,14 @@ export interface GamePlanEnhancedInsert {
   personnel_rotations?: PersonnelRotations;
   coaching_points?: string[];
   success_metrics?: SuccessMetrics;
-  preparation_status?: 'draft' | 'in_progress' | 'complete' | 'game_ready';
+  preparation_status?: "draft" | "in_progress" | "complete" | "game_ready";
   created_by: string;
 }
 
 export interface GamePlanEnhancedUpdate {
   opponent_team?: string;
   game_date?: string;
-  game_type?: 'regular' | 'playoff' | 'scrimmage' | 'practice';
+  game_type?: "regular" | "playoff" | "scrimmage" | "practice";
   week_number?: number;
   season?: string;
   scouting_report?: ScoutingReport;
@@ -129,7 +129,7 @@ export interface GamePlanEnhancedUpdate {
   personnel_rotations?: PersonnelRotations;
   coaching_points?: string[];
   success_metrics?: SuccessMetrics;
-  preparation_status?: 'draft' | 'in_progress' | 'complete' | 'game_ready';
+  preparation_status?: "draft" | "in_progress" | "complete" | "game_ready";
 }
 
 // =============================================================================
@@ -140,13 +140,29 @@ export interface GamePlanSituation {
   id: string;
   game_plan_id: string;
   category_name: string; // '1st & 10', '3rd & Short', 'Red Zone'
-  category_type: 'down_distance' | 'field_position' | 'game_situation' | 'special_teams';
+  category_type:
+    | "down_distance"
+    | "field_position"
+    | "game_situation"
+    | "special_teams";
   description?: string;
   success_criteria?: string;
   preferred_personnel?: string; // '11', '12', '21', etc.
   down_distance_range?: string; // '3rd-1-3', '1st-10+', '2nd-4-7'
-  field_position?: 'red_zone' | 'goal_line' | 'plus_territory' | 'midfield' | 'backed_up' | 'any';
-  game_situation?: 'two_minute' | 'clock_management' | 'fourth_down' | 'short_yardage' | 'normal' | 'hurry_up';
+  field_position?:
+    | "red_zone"
+    | "goal_line"
+    | "plus_territory"
+    | "midfield"
+    | "backed_up"
+    | "any";
+  game_situation?:
+    | "two_minute"
+    | "clock_management"
+    | "fourth_down"
+    | "short_yardage"
+    | "normal"
+    | "hurry_up";
   priority_level: number; // 1-5 scale
   sequence_order: number;
   total_plays_assigned: number;
@@ -159,13 +175,29 @@ export interface GamePlanSituation {
 export interface GamePlanSituationInsert {
   game_plan_id: string;
   category_name: string;
-  category_type: 'down_distance' | 'field_position' | 'game_situation' | 'special_teams';
+  category_type:
+    | "down_distance"
+    | "field_position"
+    | "game_situation"
+    | "special_teams";
   description?: string;
   success_criteria?: string;
   preferred_personnel?: string;
   down_distance_range?: string;
-  field_position?: 'red_zone' | 'goal_line' | 'plus_territory' | 'midfield' | 'backed_up' | 'any';
-  game_situation?: 'two_minute' | 'clock_management' | 'fourth_down' | 'short_yardage' | 'normal' | 'hurry_up';
+  field_position?:
+    | "red_zone"
+    | "goal_line"
+    | "plus_territory"
+    | "midfield"
+    | "backed_up"
+    | "any";
+  game_situation?:
+    | "two_minute"
+    | "clock_management"
+    | "fourth_down"
+    | "short_yardage"
+    | "normal"
+    | "hurry_up";
   priority_level?: number;
   sequence_order: number;
   is_active?: boolean;
@@ -178,8 +210,20 @@ export interface GamePlanSituationUpdate {
   success_criteria?: string;
   preferred_personnel?: string;
   down_distance_range?: string;
-  field_position?: 'red_zone' | 'goal_line' | 'plus_territory' | 'midfield' | 'backed_up' | 'any';
-  game_situation?: 'two_minute' | 'clock_management' | 'fourth_down' | 'short_yardage' | 'normal' | 'hurry_up';
+  field_position?:
+    | "red_zone"
+    | "goal_line"
+    | "plus_territory"
+    | "midfield"
+    | "backed_up"
+    | "any";
+  game_situation?:
+    | "two_minute"
+    | "clock_management"
+    | "fourth_down"
+    | "short_yardage"
+    | "normal"
+    | "hurry_up";
   priority_level?: number;
   sequence_order?: number;
   is_active?: boolean;
@@ -196,7 +240,12 @@ export interface GamePlanPlay {
   play_id: string;
   priority_level: number; // 1-5 scale
   personnel_required?: string; // '11', '12', '21', '22', etc.
-  formation_strength?: 'strong_right' | 'strong_left' | 'weak_right' | 'weak_left' | 'balanced';
+  formation_strength?:
+    | "strong_right"
+    | "strong_left"
+    | "weak_right"
+    | "weak_left"
+    | "balanced";
   expected_coverage: string[]; // ['cover_2', 'man_coverage', 'zone_blitz']
   success_probability: number; // 0.00 to 1.00
   risk_level: number; // 1-5 scale
@@ -217,7 +266,12 @@ export interface GamePlanPlayInsert {
   play_id: string;
   priority_level?: number;
   personnel_required?: string;
-  formation_strength?: 'strong_right' | 'strong_left' | 'weak_right' | 'weak_left' | 'balanced';
+  formation_strength?:
+    | "strong_right"
+    | "strong_left"
+    | "weak_right"
+    | "weak_left"
+    | "balanced";
   expected_coverage?: string[];
   success_probability?: number;
   risk_level?: number;
@@ -231,7 +285,12 @@ export interface GamePlanPlayInsert {
 export interface GamePlanPlayUpdate {
   priority_level?: number;
   personnel_required?: string;
-  formation_strength?: 'strong_right' | 'strong_left' | 'weak_right' | 'weak_left' | 'balanced';
+  formation_strength?:
+    | "strong_right"
+    | "strong_left"
+    | "weak_right"
+    | "weak_left"
+    | "balanced";
   expected_coverage?: string[];
   success_probability?: number;
   risk_level?: number;
@@ -248,12 +307,18 @@ export interface GamePlanPlayUpdate {
 export interface CoachCard {
   id: string;
   game_plan_id: string;
-  card_type: 'situation' | 'personnel' | 'two_minute' | 'red_zone' | 'special_teams' | 'adjustments';
+  card_type:
+    | "situation"
+    | "personnel"
+    | "two_minute"
+    | "red_zone"
+    | "special_teams"
+    | "adjustments";
   title: string;
   subtitle?: string;
   content: CoachCardContent; // Card layout data and play information
   print_order?: number;
-  card_size: 'standard' | 'large' | 'pocket';
+  card_size: "standard" | "large" | "pocket";
   is_active: boolean;
   last_updated: string;
   created_by: string;
@@ -262,12 +327,18 @@ export interface CoachCard {
 
 export interface CoachCardInsert {
   game_plan_id: string;
-  card_type: 'situation' | 'personnel' | 'two_minute' | 'red_zone' | 'special_teams' | 'adjustments';
+  card_type:
+    | "situation"
+    | "personnel"
+    | "two_minute"
+    | "red_zone"
+    | "special_teams"
+    | "adjustments";
   title: string;
   subtitle?: string;
   content: CoachCardContent;
   print_order?: number;
-  card_size?: 'standard' | 'large' | 'pocket';
+  card_size?: "standard" | "large" | "pocket";
   is_active?: boolean;
   created_by: string;
 }
@@ -277,7 +348,7 @@ export interface CoachCardUpdate {
   subtitle?: string;
   content?: CoachCardContent;
   print_order?: number;
-  card_size?: 'standard' | 'large' | 'pocket';
+  card_size?: "standard" | "large" | "pocket";
   is_active?: boolean;
 }
 
@@ -289,7 +360,11 @@ export interface GamePlanTemplate {
   id: string;
   team_id: string;
   template_name: string;
-  template_type: 'base_offense' | 'situational' | 'opponent_specific' | 'weather_specific';
+  template_type:
+    | "base_offense"
+    | "situational"
+    | "opponent_specific"
+    | "weather_specific";
   description?: string;
   situation_categories: TemplateSituationCategory[]; // Template situations to create
   default_plays: TemplateDefaultPlays[]; // Default play assignments
@@ -304,7 +379,11 @@ export interface GamePlanTemplate {
 export interface GamePlanTemplateInsert {
   team_id: string;
   template_name: string;
-  template_type: 'base_offense' | 'situational' | 'opponent_specific' | 'weather_specific';
+  template_type:
+    | "base_offense"
+    | "situational"
+    | "opponent_specific"
+    | "weather_specific";
   description?: string;
   situation_categories?: TemplateSituationCategory[];
   default_plays?: TemplateDefaultPlays[];
@@ -350,7 +429,7 @@ export interface GamePlanAnalytics {
   play_id?: string;
   execution_time: string;
   game_context: GameContext; // Down, distance, field position, score, time
-  outcome: 'success' | 'partial_success' | 'failure' | 'penalty' | 'turnover';
+  outcome: "success" | "partial_success" | "failure" | "penalty" | "turnover";
   yards_gained?: number;
   execution_quality?: number; // 1-10 scale
   coaching_assessment?: string;
@@ -364,7 +443,7 @@ export interface GamePlanAnalyticsInsert {
   play_id?: string;
   execution_time: string;
   game_context: GameContext;
-  outcome: 'success' | 'partial_success' | 'failure' | 'penalty' | 'turnover';
+  outcome: "success" | "partial_success" | "failure" | "penalty" | "turnover";
   yards_gained?: number;
   execution_quality?: number;
   coaching_assessment?: string;
@@ -390,14 +469,26 @@ export interface PlayAssignment {
 
 export interface BillickSituation {
   name: string;
-  type: 'down_distance' | 'field_position' | 'game_situation' | 'special_teams';
+  type: "down_distance" | "field_position" | "game_situation" | "special_teams";
   priority: number;
   description?: string;
   successCriteria?: string;
   preferredPersonnel?: string;
   downDistanceRange?: string;
-  fieldPosition?: 'red_zone' | 'goal_line' | 'plus_territory' | 'midfield' | 'backed_up' | 'any';
-  gameSituation?: 'two_minute' | 'clock_management' | 'fourth_down' | 'short_yardage' | 'normal' | 'hurry_up';
+  fieldPosition?:
+    | "red_zone"
+    | "goal_line"
+    | "plus_territory"
+    | "midfield"
+    | "backed_up"
+    | "any";
+  gameSituation?:
+    | "two_minute"
+    | "clock_management"
+    | "fourth_down"
+    | "short_yardage"
+    | "normal"
+    | "hurry_up";
 }
 
 export interface PriorityOptimization {
@@ -422,5 +513,10 @@ export interface SuccessProbability {
     opponentTendencies: number;
     playerFitness: number;
   };
-  recommendation: 'high_recommend' | 'recommend' | 'neutral' | 'caution' | 'avoid';
+  recommendation:
+    | "high_recommend"
+    | "recommend"
+    | "neutral"
+    | "caution"
+    | "avoid";
 }
