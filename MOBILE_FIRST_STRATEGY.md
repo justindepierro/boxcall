@@ -64,21 +64,33 @@
 
 #### **Playbook Builder**
 
-- **Why Desktop**: Complex play design requires precision
-- **Desktop Features**:
+- **Primary Device**: **Tablets & Laptops** (Bigger screens preferred)
+- **Why Bigger Screens**: Complex play design requires precision and screen real estate
+- **Desktop/Tablet Features**:
   - Mouse/trackpad precision for route drawing
   - Keyboard shortcuts for power users
   - Multiple windows for reference plays
   - Large screen for detailed formations
+- **Mobile Support**: Essential mobile functionality MUST be available
+  - Touch-optimized play browsing and viewing
+  - Quick play edits and modifications
+  - Offline access for sideline reference
+  - Simplified creation tools for basic plays
 
 #### **BoxCall Visual Builder**
 
-- **Why Desktop**: Advanced play diagramming needs screen real estate
-- **Desktop Features**:
+- **Primary Device**: **Tablets & Laptops** (Bigger screens preferred)
+- **Why Bigger Screens**: Advanced play diagramming needs screen real estate and precision
+- **Desktop/Tablet Features**:
   - Fabric.js canvas with precise controls
   - Drag-and-drop route building
   - Color-coded player assignments
   - Export to high-resolution images
+- **Mobile Support**: Essential mobile functionality MUST be available
+  - Touch-friendly canvas interactions
+  - Basic route drawing capabilities
+  - Play preview and quick edits
+  - Simplified visual builder for emergency use
 
 #### **Analytics Dashboard**
 
@@ -297,9 +309,29 @@
 - `PlaybookSyncService.ts` - Cross-device synchronization system
 - Desktop playbook builder enhancements for precision editing
 
-### **🔗 Phase 4: Cross-Device Sync & Polish** (Aug 29 - Sep 5, 2025)
+### **🔗 Phase 4: Mobile Architecture Polish & Cross-Device Sync** (CURRENT - Aug 6-15, 2025)
 
-**Seamless Data Synchronization**
+**🚨 PRIORITY: Fix Mobile Architecture Issues**
+
+- [ ] **Mobile Display Architecture Fix** (Week 1 Priority)
+  - Replace JavaScript mobile detection (`window.innerWidth < 768`) with CSS media queries
+  - Merge MobileDashboardLayout and DashboardPage into unified responsive component
+  - Fix "wonky" mobile behavior causing layout switching issues
+  - Implement true mobile-first responsive architecture
+
+- [ ] **Responsive Component Unification**
+  - Convert dashboard components to single responsive design
+  - Eliminate duplicate mobile/desktop layout switching
+  - Ensure consistent touch targets and spacing across all breakpoints
+  - Implement progressive enhancement patterns
+
+- [ ] **Mobile Touch & Interaction Polish**
+  - Fix touch target sizes and spacing inconsistencies
+  - Optimize touch response times and feedback
+  - Ensure proper thumb-reach zone optimization
+  - Test and fix mobile interaction edge cases
+
+**Cross-Device Sync & Performance**
 
 - [ ] **Real-Time Sync Architecture**
   - WebSocket connections for instant updates
@@ -307,47 +339,38 @@
   - Background sync for offline-created content
   - Sync status indicators across all devices
 
-- [ ] **Offline Capability Enhancement**
-  - Service worker implementation for offline functionality
-  - Local storage management for critical data
-  - Offline queue for actions taken while disconnected
-  - Smart sync prioritization when reconnecting
-
-- [ ] **Conflict Resolution System**
-  - Automatic conflict detection for simultaneous edits
-  - User-friendly conflict resolution interface
-  - Last-writer-wins with user notification for important conflicts
-  - Audit trail for all cross-device changes
-
-- [ ] **Device-Specific Optimizations**
-  - Performance tuning for different device capabilities
-  - Battery usage optimization for mobile
-  - Memory management for large datasets
-  - Network usage optimization with data compression
-
-**Polish & Performance**
-
 - [ ] **Mobile Performance Optimization**
   - Code splitting for faster initial load
   - Image lazy loading and compression
   - Animation performance tuning
   - Memory leak prevention
 
-- [ ] **Accessibility Compliance**
-  - Screen reader optimization
-  - High contrast mode support
-  - Keyboard navigation for all mobile features
-  - Voice control integration where applicable
-
-- [ ] **Testing & Quality Assurance**
-  - Cross-browser mobile testing
-  - Device-specific testing (iOS/Android)
+- [ ] **Device-Specific Testing & Polish**
+  - Cross-browser mobile testing (iOS Safari, Chrome Mobile)
+  - Device-specific testing (iPhone, Android, tablets)
   - Network condition testing (3G, 4G, WiFi)
-  - User acceptance testing with real coaches
+  - Touch interaction testing on real devices
 
-**🎯 Phase 4 Expected Deliverables:**
+**🎯 Phase 4 Week 1 Deliverables (Aug 6-12):**
 
-- `CrossDeviceSyncService.ts` - Complete synchronization system
+- **Fixed Responsive Architecture**
+  - Unified dashboard component with CSS-only responsive behavior
+  - Eliminated JavaScript-based mobile detection
+  - Consistent mobile experience without "wonky" behavior
+  - Touch-optimized interfaces across all breakpoints
+
+- **Enhanced Playbook Mobile Support**
+  - Touch-friendly playbook browsing (required mobile functionality)
+  - Simplified BoxCall visual builder for mobile (basic functionality)
+  - Mobile play creation and editing capabilities
+  - Cross-device playbook synchronization
+
+**🎯 Phase 4 Week 2 Deliverables (Aug 13-15):**
+
+- Performance optimization and cross-device sync implementation
+- Comprehensive mobile testing and bug fixes
+- Final polish and quality assurance
+- Documentation updates for mobile-first patterns
 - `OfflineManagerService.ts` - Offline functionality management
 - `ConflictResolutionUI.tsx` - User-friendly conflict resolution
 - Performance optimization across all mobile components
@@ -424,11 +447,23 @@
 
 ### **🎯 Phase 4 Success Targets**
 
+- **Mobile Architecture Quality**
+  - Eliminate "wonky" mobile behavior with responsive CSS architecture
+  - Consistent mobile experience across all pages and breakpoints
+  - JavaScript mobile detection replaced with CSS media queries
+  - Touch target compliance ≥44px across all components
+
 - **Cross-Device Sync Performance**
   - Sync conflicts <1% of all edits
   - Offline-to-online sync <10 seconds
   - Data consistency 99.9% across devices
   - Battery impact <5% additional drain
+
+- **Playbook Mobile Functionality**
+  - Essential playbook browsing available on mobile
+  - Basic BoxCall visual builder functional on touch devices
+  - Play creation possible (simplified) on mobile
+  - Full creative tools optimized for tablets and larger screens
 
 ### **🏆 Overall Success Metrics**
 
@@ -451,6 +486,41 @@
 **Timeline**: Week 2 (January 2025) - **COMPLETED ON SCHEDULE**  
 **Status**: 🎉 **COMPLETE** - All deliverables implemented with zero TypeScript errors  
 **Performance**: All success metrics exceeded (see [Phase 2 Complete Summary](./docs/PHASE_2_COMPLETE_SUMMARY.md))
+
+---
+
+## Phase 4: Mobile Architecture Polish - **🚧 IN PROGRESS** (Aug 6-15, 2025)
+
+**Current Status**: **Day 1 - Architecture Analysis Complete**  
+**Priority**: Fixing mobile display "wonky" behavior and responsive architecture  
+**Next Actions**: Replace JavaScript mobile detection with CSS-only responsive design
+
+### 🔍 **Current Issues Identified**
+
+- **JavaScript Mobile Detection Flaw**: Using `window.innerWidth < 768` causing layout switching issues
+- **Duplicate Component Architecture**: Separate mobile/desktop layouts instead of unified responsive design
+- **Inconsistent Touch Targets**: Some components not meeting 44px minimum requirements
+- **Mobile Experience Quality**: "Wonky" behavior preventing proper mobile user experience
+
+### 📋 **Week 1 Action Plan** (Aug 6-12, 2025)
+
+**Day 1-2: Architecture Fix**
+
+- [ ] Replace JavaScript mobile detection with CSS media queries
+- [ ] Merge MobileDashboardLayout and DashboardPage components
+- [ ] Implement unified responsive dashboard component
+
+**Day 3-4: Component Polish**
+
+- [ ] Fix touch target sizes across all mobile components
+- [ ] Optimize mobile interaction performance
+- [ ] Test responsive behavior on actual mobile devices
+
+**Day 5-7: Playbook Mobile Enhancement**
+
+- [ ] Add essential mobile functionality to Playbook Builder
+- [ ] Implement basic mobile BoxCall visual builder
+- [ ] Ensure mobile browsing and viewing capabilities
 
 ### ✅ Week 1 Deliverables - All Complete
 

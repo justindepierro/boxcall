@@ -91,7 +91,13 @@ export const MobileAnalyticsDashboard: React.FC<MobileAnalyticsProps> = ({
       case "up":
         return <Icon name="trending-up" size="sm" className="text-green-500" />;
       case "down":
-        return <Icon name="trending-up" size="sm" className="text-red-500 rotate-180" />;
+        return (
+          <Icon
+            name="trending-up"
+            size="sm"
+            className="text-red-500 rotate-180"
+          />
+        );
       default:
         return <Icon name="minus" size="sm" className="text-gray-500" />;
     }
@@ -187,8 +193,13 @@ export const MobileAnalyticsDashboard: React.FC<MobileAnalyticsProps> = ({
               >
                 {metric.label}
               </Typography>
-              <div className={`flex items-center mt-2 text-xs font-medium ${getChangeColor(metric.change)}`}>
-                <span>{metric.change > 0 ? "+" : ""}{metric.change}%</span>
+              <div
+                className={`flex items-center mt-2 text-xs font-medium ${getChangeColor(metric.change)}`}
+              >
+                <span>
+                  {metric.change > 0 ? "+" : ""}
+                  {metric.change}%
+                </span>
                 <span className="ml-1 opacity-75">vs last {timeframe}</span>
               </div>
             </button>
@@ -202,7 +213,10 @@ export const MobileAnalyticsDashboard: React.FC<MobileAnalyticsProps> = ({
           </Typography>
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
             {performanceData.map((item, index) => (
-              <div key={index} className={`${index !== performanceData.length - 1 ? "mb-4" : ""}`}>
+              <div
+                key={index}
+                className={`${index !== performanceData.length - 1 ? "mb-4" : ""}`}
+              >
                 <div className="flex items-center justify-between mb-2">
                   <Typography variant="body-sm" className="font-medium">
                     {item.category}
@@ -211,15 +225,20 @@ export const MobileAnalyticsDashboard: React.FC<MobileAnalyticsProps> = ({
                     <Typography variant="body-sm" color="muted">
                       {item.current}%
                     </Typography>
-                    <div className={`text-xs font-medium ${getChangeColor(item.current - item.previous)}`}>
-                      ({item.current - item.previous > 0 ? "+" : ""}{item.current - item.previous})
+                    <div
+                      className={`text-xs font-medium ${getChangeColor(item.current - item.previous)}`}
+                    >
+                      ({item.current - item.previous > 0 ? "+" : ""}
+                      {item.current - item.previous})
                     </div>
                   </div>
                 </div>
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                   <div
                     className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(item.current, item.target)}`}
-                    style={{ width: `${Math.min((item.current / item.target) * 100, 100)}%` }}
+                    style={{
+                      width: `${Math.min((item.current / item.target) * 100, 100)}%`,
+                    }}
                   />
                 </div>
                 <div className="flex justify-between mt-1">
@@ -243,13 +262,24 @@ export const MobileAnalyticsDashboard: React.FC<MobileAnalyticsProps> = ({
           <div className="space-y-3">
             <div className="bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg p-3">
               <div className="flex items-start">
-                <Icon name="trending-up" size="sm" className="text-green-600 dark:text-green-400 mt-0.5 mr-3" />
+                <Icon
+                  name="trending-up"
+                  size="sm"
+                  className="text-green-600 dark:text-green-400 mt-0.5 mr-3"
+                />
                 <div>
-                  <Typography variant="body-sm" className="font-medium text-green-800 dark:text-green-200">
+                  <Typography
+                    variant="body-sm"
+                    className="font-medium text-green-800 dark:text-green-200"
+                  >
                     Team Engagement Up 12%
                   </Typography>
-                  <Typography variant="body-xs" className="text-green-700 dark:text-green-300 mt-1">
-                    Players are more active in team communications and showing up consistently.
+                  <Typography
+                    variant="body-xs"
+                    className="text-green-700 dark:text-green-300 mt-1"
+                  >
+                    Players are more active in team communications and showing
+                    up consistently.
                   </Typography>
                 </div>
               </div>
@@ -257,13 +287,24 @@ export const MobileAnalyticsDashboard: React.FC<MobileAnalyticsProps> = ({
 
             <div className="bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-lg p-3">
               <div className="flex items-start">
-                <Icon name="warning" size="sm" className="text-yellow-600 dark:text-yellow-400 mt-0.5 mr-3" />
+                <Icon
+                  name="warning"
+                  size="sm"
+                  className="text-yellow-600 dark:text-yellow-400 mt-0.5 mr-3"
+                />
                 <div>
-                  <Typography variant="body-sm" className="font-medium text-yellow-800 dark:text-yellow-200">
+                  <Typography
+                    variant="body-sm"
+                    className="font-medium text-yellow-800 dark:text-yellow-200"
+                  >
                     Practice Frequency Below Target
                   </Typography>
-                  <Typography variant="body-xs" className="text-yellow-700 dark:text-yellow-300 mt-1">
-                    Consider scheduling more practice sessions to meet season goals.
+                  <Typography
+                    variant="body-xs"
+                    className="text-yellow-700 dark:text-yellow-300 mt-1"
+                  >
+                    Consider scheduling more practice sessions to meet season
+                    goals.
                   </Typography>
                 </div>
               </div>
@@ -271,13 +312,24 @@ export const MobileAnalyticsDashboard: React.FC<MobileAnalyticsProps> = ({
 
             <div className="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-lg p-3">
               <div className="flex items-start">
-                <Icon name="info" size="sm" className="text-blue-600 dark:text-blue-400 mt-0.5 mr-3" />
+                <Icon
+                  name="info"
+                  size="sm"
+                  className="text-blue-600 dark:text-blue-400 mt-0.5 mr-3"
+                />
                 <div>
-                  <Typography variant="body-sm" className="font-medium text-blue-800 dark:text-blue-200">
+                  <Typography
+                    variant="body-sm"
+                    className="font-medium text-blue-800 dark:text-blue-200"
+                  >
                     Special Teams Excellence
                   </Typography>
-                  <Typography variant="body-xs" className="text-blue-700 dark:text-blue-300 mt-1">
-                    Special teams performance is exceeding expectations this {timeframe}.
+                  <Typography
+                    variant="body-xs"
+                    className="text-blue-700 dark:text-blue-300 mt-1"
+                  >
+                    Special teams performance is exceeding expectations this{" "}
+                    {timeframe}.
                   </Typography>
                 </div>
               </div>
