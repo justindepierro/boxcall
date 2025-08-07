@@ -7,16 +7,7 @@ import { TeamFeeds } from "../dashboard/TeamFeeds";
 import { Typography } from "../design-system";
 import { MobileBottomNavigation } from "./MobileBottomNavigation";
 import { MobileQuickActions, FloatingActionButton } from "./MobileQuickActions";
-import { MobileCalendarInterface } from "./MobileCalendarInterface";
-import { MobileTeamBulletin, type Message } from "./MobileTeamBulletin";
-import { MobileQuickEvent } from "./MobileQuickEvent";
-import {
-  MobilePlaybookBrowser,
-  type PlayPreview,
-} from "./MobilePlaybookBrowser";
-import { MobileAnalyticsDashboard } from "./MobileAnalyticsDashboard";
 import type { QuickAction } from "./MobileQuickActions";
-import type { CalendarEventCreate } from "../../services/calendarService";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
 
 /**
@@ -36,42 +27,8 @@ export const MobileDashboardLayout: React.FC = () => {
     typeof window !== "undefined" ? window.location.pathname : "/"
   );
   const [activeView, setActiveView] = useState<
-    | "overview"
-    | "quick-actions"
-    | "calendar"
-    | "team-chat"
-    | "playbook"
-    | "analytics"
+    "overview" | "quick-actions" | "calendar"
   >("overview");
-  const [showQuickEvent, setShowQuickEvent] = useState(false);
-  const [selectedCalendarDate] = useState<Date | null>(null);
-  const [analyticsTimeframe, setAnalyticsTimeframe] = useState<
-    "week" | "month" | "season"
-  >("week");
-
-  // Sample messages for team bulletin
-  const [messages] = useState<Message[]>([
-    {
-      id: "1",
-      userId: "coach-1",
-      userName: "Coach Johnson",
-      userRole: "coach",
-      content:
-        "Great practice today everyone! Remember we have a game this Saturday at 2 PM.",
-      timestamp: new Date(Date.now() - 3600000), // 1 hour ago
-      type: "announcement",
-      isImportant: true,
-    },
-    {
-      id: "2",
-      userId: "player-1",
-      userName: "Mike Chen",
-      userRole: "player",
-      content: "Thanks coach! I'll be there early for warmup 💪",
-      timestamp: new Date(Date.now() - 1800000), // 30 minutes ago
-      type: "text",
-    },
-  ]);
 
   // Early returns for loading and error states
   if (loading) {
@@ -138,43 +95,6 @@ export const MobileDashboardLayout: React.FC = () => {
     },
   ];
 
-  // Event handlers for mobile components
-  const handleEventCreate = (eventData: CalendarEventCreate) => {
-    // TODO: Integrate with calendar service
-    console.log("Creating event:", eventData);
-    setShowQuickEvent(false);
-    // Show success message or refresh calendar
-  };
-
-  const handleSendMessage = (
-    content: string,
-    type: Message["type"],
-    attachmentUrl?: string
-  ) => {
-    // TODO: Integrate with team communication service
-    console.log("Sending message:", { content, type, attachmentUrl });
-  };
-
-  const handleSendVoice = (audioBlob: Blob) => {
-    // TODO: Upload voice message
-    console.log("Sending voice message:", audioBlob);
-  };
-
-  const handleTakePhoto = () => {
-    // TODO: Integrate with camera/photo upload
-    console.log("Taking photo for team chat");
-  };
-
-  const handlePlaySelect = (play: PlayPreview) => {
-    // TODO: Navigate to play detail view
-    console.log("Selected play:", play);
-  };
-
-  const handlePlayFavorite = (playId: string, favorite: boolean) => {
-    // TODO: Update play favorite status
-    console.log("Toggle play favorite:", playId, favorite);
-  };
-
   const handleNavigation = (href: string) => {
     window.location.href = href;
   };
@@ -207,43 +127,27 @@ export const MobileDashboardLayout: React.FC = () => {
 
       {/* Mobile View Switcher */}
       <div className="md:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-2">
-        <div className="flex space-x-1 overflow-x-auto pb-2">
-          {(
-            [
-              { id: "overview", label: "Overview" },
-              { id: "quick-actions", label: "Actions" },
-              { id: "calendar", label: "Calendar" },
-              { id: "team-chat", label: "Team Chat", badge: messages.length },
-              { id: "playbook", label: "Playbook" },
-              { id: "analytics", label: "Analytics" },
-            ] as Array<{ id: string; label: string; badge?: number }>
-          ).map((view) => {
+        <div className="flex space-x-1">
+          {[
+            { id: "overview", label: "Overview" },
+            { id: "quick-actions", label: "Actions" },
+            { id: "calendar", label: "Calendar" },
+          ].map((view) => {
             return (
               <button
                 key={view.id}
                 onClick={() =>
                   setActiveView(
-                    view.id as
-                      | "overview"
-                      | "quick-actions"
-                      | "calendar"
-                      | "team-chat"
-                      | "playbook"
-                      | "analytics"
+                    view.id as "overview" | "quick-actions" | "calendar"
                   )
                 }
-                className={`relative px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   activeView === view.id
                     ? "bg-brand-jade text-white"
                     : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
               >
                 {view.label}
-                {view.badge && view.badge > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                    {view.badge > 9 ? "9+" : view.badge}
-                  </span>
-                )}
               </button>
             );
           })}
@@ -298,43 +202,7 @@ export const MobileDashboardLayout: React.FC = () => {
 
           {activeView === "calendar" && (
             <div className="px-4 py-4">
-              <MobileCalendarInterface
-                userId={user!.id}
-                onEventCreate={() => setShowQuickEvent(true)}
-                onEventSelect={(event) => console.log("Selected event:", event)}
-              />
-            </div>
-          )}
-
-          {activeView === "team-chat" && (
-            <div className="h-[calc(100vh-180px)]">
-              <MobileTeamBulletin
-                teamId="team-1"
-                messages={messages}
-                onSendMessage={handleSendMessage}
-                onSendVoice={handleSendVoice}
-                onTakePhoto={handleTakePhoto}
-              />
-            </div>
-          )}
-
-          {activeView === "playbook" && (
-            <div className="h-[calc(100vh-180px)]">
-              <MobilePlaybookBrowser
-                teamId="team-1"
-                onPlaySelect={handlePlaySelect}
-                onPlayFavorite={handlePlayFavorite}
-              />
-            </div>
-          )}
-
-          {activeView === "analytics" && (
-            <div className="h-[calc(100vh-180px)]">
-              <MobileAnalyticsDashboard
-                teamId="team-1"
-                timeframe={analyticsTimeframe}
-                onTimeframeChange={setAnalyticsTimeframe}
-              />
+              <PersonalCalendar userId={user!.id} />
             </div>
           )}
         </div>
@@ -384,15 +252,6 @@ export const MobileDashboardLayout: React.FC = () => {
         color="jade"
         position="bottom-right"
       />
-
-      {/* Quick Event Modal */}
-      {showQuickEvent && (
-        <MobileQuickEvent
-          selectedDate={selectedCalendarDate}
-          onEventCreate={handleEventCreate}
-          onCancel={() => setShowQuickEvent(false)}
-        />
-      )}
     </div>
   );
 };

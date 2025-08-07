@@ -50,9 +50,7 @@ export const MobilePlaybookBrowser: React.FC<MobilePlaybookBrowserProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [filterBy, setFilterBy] = useState<"all" | "favorites" | "recent">(
-    "all"
-  );
+  const [filterBy, setFilterBy] = useState<"all" | "favorites" | "recent">("all");
   const [isSearching, setIsSearching] = useState(false);
 
   // Sample data - would come from playbook service
@@ -148,21 +146,14 @@ export const MobilePlaybookBrowser: React.FC<MobilePlaybookBrowserProps> = ({
 
   // Filter plays based on selected category and search
   const filteredPlays = samplePlays.filter((play) => {
-    const matchesCategory =
-      selectedCategory === "all" || play.category === selectedCategory;
-    const matchesSearch =
-      searchQuery === "" ||
+    const matchesCategory = selectedCategory === "all" || play.category === selectedCategory;
+    const matchesSearch = searchQuery === "" ||
       play.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      play.tags.some((tag) =>
-        tag.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      play.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    const matchesFilter =
-      filterBy === "all" ||
+    const matchesFilter = filterBy === "all" ||
       (filterBy === "favorites" && play.isFavorite) ||
-      (filterBy === "recent" &&
-        play.lastUsed &&
-        Date.now() - play.lastUsed.getTime() < 7 * 24 * 60 * 60 * 1000); // Last 7 days
+      (filterBy === "recent" && play.lastUsed && Date.now() - play.lastUsed.getTime() < 7 * 24 * 60 * 60 * 1000); // Last 7 days
 
     return matchesCategory && matchesSearch && matchesFilter;
   });
@@ -170,12 +161,8 @@ export const MobilePlaybookBrowser: React.FC<MobilePlaybookBrowserProps> = ({
   // Handle voice search (if supported)
   const handleVoiceSearch = () => {
     if ("webkitSpeechRecognition" in window) {
-      // Simple voice search implementation
-      console.log(
-        "Voice search requested - would implement speech recognition here"
-      );
+      console.log("Voice search requested - would implement speech recognition here");
       setIsSearching(true);
-
       // Simulate voice search delay
       setTimeout(() => {
         setIsSearching(false);
@@ -206,10 +193,7 @@ export const MobilePlaybookBrowser: React.FC<MobilePlaybookBrowserProps> = ({
 
             <div className="flex-1 min-w-0 text-left">
               <div className="flex items-center justify-between mb-1">
-                <Typography
-                  variant="body-md"
-                  className="font-semibold truncate"
-                >
+                <Typography variant="body-md" className="font-semibold truncate">
                   {play.name}
                 </Typography>
                 <button
@@ -219,9 +203,7 @@ export const MobilePlaybookBrowser: React.FC<MobilePlaybookBrowserProps> = ({
                   <Icon
                     name="star"
                     size="sm"
-                    className={
-                      play.isFavorite ? "text-yellow-500" : "text-gray-400"
-                    }
+                    className={play.isFavorite ? "text-yellow-500" : "text-gray-400"}
                   />
                 </button>
               </div>
@@ -297,10 +279,7 @@ export const MobilePlaybookBrowser: React.FC<MobilePlaybookBrowserProps> = ({
           </div>
 
           {play.successRate && (
-            <Typography
-              variant="body-xs"
-              className="text-green-600 dark:text-green-400 font-medium"
-            >
+            <Typography variant="body-xs" className="text-green-600 dark:text-green-400 font-medium">
               {play.successRate}% success
             </Typography>
           )}
@@ -326,11 +305,7 @@ export const MobilePlaybookBrowser: React.FC<MobilePlaybookBrowserProps> = ({
             placeholder="Search plays, formations, or tags..."
             className="w-full pl-10 pr-12 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-brand-jade focus:border-transparent prevent-zoom"
           />
-          <Icon
-            name="search"
-            size="md"
-            className="absolute left-3 top-3 text-gray-400"
-          />
+          <Icon name="search" size="md" className="absolute left-3 top-3 text-gray-400" />
 
           {/* Voice search button */}
           <button
@@ -400,9 +375,7 @@ export const MobilePlaybookBrowser: React.FC<MobilePlaybookBrowserProps> = ({
                   : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600"
               }`}
             >
-              <div
-                className={`w-4 h-4 ${category.color} rounded flex items-center justify-center`}
-              >
+              <div className={`w-4 h-4 ${category.color} rounded flex items-center justify-center`}>
                 <Icon name={category.icon} size="xs" className="text-white" />
               </div>
               <span className="text-sm font-medium">{category.name}</span>
@@ -416,11 +389,7 @@ export const MobilePlaybookBrowser: React.FC<MobilePlaybookBrowserProps> = ({
       <div className="p-4">
         {filteredPlays.length === 0 ? (
           <div className="text-center py-12">
-            <Icon
-              name="search"
-              size="lg"
-              className="mx-auto mb-3 text-gray-400"
-            />
+            <Icon name="search" size="lg" className="mx-auto mb-3 text-gray-400" />
             <Typography variant="body-md" color="muted" className="mb-2">
               No plays found
             </Typography>
@@ -444,11 +413,7 @@ export const MobilePlaybookBrowser: React.FC<MobilePlaybookBrowserProps> = ({
               )}
             </div>
 
-            <div
-              className={
-                viewMode === "grid" ? "grid grid-cols-2 gap-4" : "space-y-3"
-              }
-            >
+            <div className={viewMode === "grid" ? "grid grid-cols-2 gap-4" : "space-y-3"}>
               {filteredPlays.map(renderPlayCard)}
             </div>
           </>
