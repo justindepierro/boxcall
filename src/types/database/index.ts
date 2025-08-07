@@ -9,6 +9,10 @@
  * - Clear separation of concerns
  */
 
+// Domain-specific types - Phase 2 Additions
+export * from "./gamePlanningTypes";
+export * from "./practicePlanningTypes";
+
 // Core types - defined locally to avoid circular imports
 export type Json =
   | string
