@@ -6,7 +6,7 @@ import { ResponsiveDashboardLayout } from "../components/dashboard/ResponsiveDas
  *
  * Features:
  * - CSS-only responsive design (no JavaScript mobile detection)
- * - Mobile-first progressive enhancement 
+ * - Mobile-first progressive enhancement
  * - Touch-friendly interactions on mobile
  * - Desktop optimization for larger screens
  * - Unified component architecture

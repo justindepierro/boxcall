@@ -6,16 +6,19 @@ import { ProfileCard } from "../dashboard/ProfileCard";
 import { TeamFeeds } from "../dashboard/TeamFeeds";
 import { Typography } from "../design-system";
 import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
-import { MobileQuickActions, FloatingActionButton } from "../mobile/MobileQuickActions";
+import {
+  MobileQuickActions,
+  FloatingActionButton,
+} from "../mobile/MobileQuickActions";
 import type { QuickAction } from "../mobile/MobileQuickActions";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
 
 /**
  * Responsive Dashboard Layout
- * 
+ *
  * Unified responsive component that replaces both DashboardPage and MobileDashboardLayout
  * Uses CSS-only responsive behavior, no JavaScript mobile detection
- * 
+ *
  * Features:
  * - Mobile-first progressive enhancement
  * - CSS Grid/Flexbox responsive layout
@@ -29,7 +32,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
   const { items } = useMobileNavigation(
     typeof window !== "undefined" ? window.location.pathname : "/"
   );
-  
+
   // Mobile view state (only for mobile bottom nav switching)
   const [activeView, setActiveView] = useState<
     "overview" | "quick-actions" | "calendar"
@@ -48,7 +51,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
       color: "jade",
     },
     {
-      id: "message-team", 
+      id: "message-team",
       label: "Message Team",
       icon: "MessageSquare",
       onClick: () => {
@@ -195,7 +198,9 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         */}
         <div className="responsive-content-grid">
           {/* Profile Card */}
-          <div className={`profile-section ${activeView !== "overview" ? "mobile-hidden" : ""}`}>
+          <div
+            className={`profile-section ${activeView !== "overview" ? "mobile-hidden" : ""}`}
+          >
             <ProfileCard
               profile={profile}
               userRole={userRole}
@@ -206,25 +211,37 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           </div>
 
           {/* Trophy Shelf */}
-          <div className={`trophy-section ${activeView !== "overview" ? "mobile-hidden" : ""}`}>
+          <div
+            className={`trophy-section ${activeView !== "overview" ? "mobile-hidden" : ""}`}
+          >
             <PersonalTrophyShelf userId={user.id} userRole={userRole} />
           </div>
 
           {/* Team Feeds */}
-          <div className={`feeds-section ${activeView !== "overview" ? "mobile-hidden" : ""}`}>
+          <div
+            className={`feeds-section ${activeView !== "overview" ? "mobile-hidden" : ""}`}
+          >
             <TeamFeeds userId={user.id} />
           </div>
 
           {/* Calendar */}
-          <div className={`calendar-section ${activeView === "quick-actions" ? "mobile-hidden" : ""}`}>
+          <div
+            className={`calendar-section ${activeView === "quick-actions" ? "mobile-hidden" : ""}`}
+          >
             <PersonalCalendar userId={user.id} />
           </div>
 
           {/* Quick Actions (Mobile Only) */}
-          <div className={`quick-actions-section ${activeView !== "quick-actions" ? "mobile-hidden" : ""}`}>
+          <div
+            className={`quick-actions-section ${activeView !== "quick-actions" ? "mobile-hidden" : ""}`}
+          >
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
-              <Typography variant="headline-sm" className="mb-2">Quick Actions</Typography>
-              <Typography variant="body-sm" color="muted" className="mb-4">Tap any action to get started</Typography>
+              <Typography variant="headline-sm" className="mb-2">
+                Quick Actions
+              </Typography>
+              <Typography variant="body-sm" color="muted" className="mb-4">
+                Tap any action to get started
+              </Typography>
               <MobileQuickActions actions={quickActions} />
             </div>
           </div>
