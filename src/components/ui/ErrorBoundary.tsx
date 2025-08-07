@@ -1,5 +1,7 @@
 import type { ErrorInfo, ReactNode } from "react";
 import React, { Component } from "react";
+import { AlertTriangle, RefreshCw, Home, MessageCircle } from "lucide-react";
+import { Typography } from "../design-system";
 
 interface Props {
   children: ReactNode;
@@ -80,64 +82,77 @@ export class ErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
 
-      // Default error UI
+      // Default professional error UI with recovery options
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center mb-4">
-              <div className="flex-shrink-0">
-                <svg
-                  className="h-8 w-8 text-red-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
-                  />
-                </svg>
+          <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-6 mx-4">
+            {/* Error Icon and Title */}
+            <div className="text-center mb-6">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                <AlertTriangle className="h-6 w-6 text-red-600" />
               </div>
-              <div className="ml-3">
-                <h1 className="text-lg font-medium text-gray-900">
-                  Something went wrong
-                </h1>
-              </div>
+              <Typography variant="headline-lg" className="text-gray-900 mb-2">
+                Something went wrong
+              </Typography>
+              <Typography variant="body-md" className="text-gray-600">
+                We encountered an unexpected error. Don't worry, our team has
+                been notified and is working on it.
+              </Typography>
             </div>
 
-            <div className="mb-4">
-              <p className="text-sm text-gray-600">
-                We encountered an unexpected error. Our team has been notified.
-              </p>
-              {process.env.NODE_ENV === "development" && this.state.error && (
-                <details className="mt-4 p-3 bg-gray-100 rounded text-xs">
-                  <summary className="cursor-pointer font-medium">
-                    Error Details (Development)
+            {/* Development Error Details */}
+            {process.env.NODE_ENV === "development" && this.state.error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <details className="text-sm">
+                  <summary className="cursor-pointer font-medium text-red-800 mb-2">
+                    🔧 Error Details (Development Only)
                   </summary>
-                  <pre className="mt-2 whitespace-pre-wrap text-red-600">
-                    {this.state.error.message}
-                    {"\n\n"}
-                    {this.state.error.stack}
-                  </pre>
+                  <div className="mt-2 p-3 bg-white border rounded text-xs font-mono">
+                    <div className="text-red-600 mb-2">
+                      <strong>Message:</strong> {this.state.error.message}
+                    </div>
+                    <div className="text-gray-600 whitespace-pre-wrap">
+                      <strong>Stack:</strong>
+                      {this.state.error.stack}
+                    </div>
+                  </div>
                 </details>
-              )}
-            </div>
+              </div>
+            )}
 
-            <div className="flex space-x-3">
+            {/* Action Buttons */}
+            <div className="space-y-3">
               <button
                 onClick={this.handleRetry}
-                className="flex-1 bg-team-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                className="w-full flex items-center justify-center space-x-2 bg-team-primary hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
-                Try Again
+                <RefreshCw className="h-4 w-4" />
+                <span>Try Again</span>
               </button>
+
+              <button
+                onClick={() => (window.location.href = "/")}
+                className="w-full flex items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+              >
+                <Home className="h-4 w-4" />
+                <span>Go to Dashboard</span>
+              </button>
+
               <button
                 onClick={() => window.location.reload()}
-                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-900 font-medium py-2 px-4 rounded-lg transition-colors"
+                className="w-full flex items-center justify-center space-x-2 text-gray-500 hover:text-gray-700 font-medium py-2 transition-colors duration-200"
               >
-                Reload Page
+                <MessageCircle className="h-4 w-4" />
+                <span>Reload Page</span>
               </button>
+            </div>
+
+            {/* Help Text */}
+            <div className="mt-6 pt-4 border-t border-gray-200 text-center">
+              <Typography variant="caption" className="text-gray-500">
+                If this problem persists, please contact support with the error
+                details above.
+              </Typography>
             </div>
           </div>
         </div>

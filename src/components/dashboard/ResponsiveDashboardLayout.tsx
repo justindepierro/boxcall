@@ -7,6 +7,8 @@ import { TeamFeeds } from "../dashboard/TeamFeeds";
 import { Typography } from "../design-system";
 import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
+import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton";
+import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
 
 /**
  * Responsive Dashboard Layout
@@ -27,19 +29,11 @@ export const ResponsiveDashboardLayout: React.FC = () => {
   const { items } = useMobileNavigation(
     typeof window !== "undefined" ? window.location.pathname : "/"
   );
+  const { isStepVisible } = useProgressiveLoading(4, 200);
 
   // Early returns for loading and error states
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-brand-jade border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <Typography variant="body-md" color="muted">
-            Loading your dashboard...
-          </Typography>
-        </div>
-      </div>
-    );
+    return <PageLoadingSkeleton />;
   }
 
   if (error) {
@@ -119,28 +113,44 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         <div className="responsive-content-grid">
           {/* Profile Card */}
           <div className="profile-section">
-            <ProfileCard
-              profile={profile}
-              userRole={userRole}
-              onEditClick={() => {
-                // TODO: Implement edit functionality
-              }}
-            />
+            {isStepVisible(0) ? (
+              <ProfileCard
+                profile={profile}
+                userRole={userRole}
+                onEditClick={() => {
+                  // TODO: Implement edit functionality
+                }}
+              />
+            ) : (
+              <DashboardCardSkeleton />
+            )}
           </div>
 
           {/* Trophy Shelf */}
           <div className="trophy-section">
-            <PersonalTrophyShelf userId={user.id} userRole={userRole} />
+            {isStepVisible(1) ? (
+              <PersonalTrophyShelf userId={user.id} userRole={userRole} />
+            ) : (
+              <DashboardCardSkeleton />
+            )}
           </div>
 
           {/* Team Feeds */}
           <div className="feeds-section">
-            <TeamFeeds userId={user.id} />
+            {isStepVisible(2) ? (
+              <TeamFeeds userId={user.id} />
+            ) : (
+              <DashboardCardSkeleton />
+            )}
           </div>
 
           {/* Calendar */}
           <div className="calendar-section">
-            <PersonalCalendar userId={user.id} />
+            {isStepVisible(3) ? (
+              <PersonalCalendar userId={user.id} />
+            ) : (
+              <DashboardCardSkeleton />
+            )}
           </div>
         </div>
       </div>
