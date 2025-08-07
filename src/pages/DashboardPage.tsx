@@ -5,18 +5,28 @@ import { PersonalTrophyShelf } from "../components/dashboard/PersonalTrophyShelf
 import { ProfileCard } from "../components/dashboard/ProfileCard";
 import { TeamFeeds } from "../components/dashboard/TeamFeeds";
 import { Typography } from "../components/design-system";
+import { MobileDashboardLayout } from "../components/mobile/MobileDashboardLayout";
+
 /**
- * Personal Dashboard - Simplified 4-Component Layout
- * Based on user's vision: Profile Card, Trophy Shelf, Team Feeds, Calendar
+ * Personal Dashboard - Mobile-First Responsive Layout
  *
  * Features:
- * - Profile Card (left column) - modal-viewable
- * - Trophy Shelf (spanning top middle & right)
- * - Team Feeds (middle column, under trophy shelf)
- * - Calendar (right column, under trophy shelf)
+ * - Mobile-first design with bottom navigation
+ * - Progressive enhancement for desktop
+ * - Touch-friendly interactions
+ * - Contextual quick actions
+ * - Cross-device optimized experience
  */
 export const DashboardPage: React.FC = () => {
   const { user, profile, loading, error } = useAuth();
+
+  // Check for mobile viewport
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
+  // Use mobile layout for mobile devices, fall back to desktop for larger screens
+  if (isMobile || typeof window === "undefined") {
+    return <MobileDashboardLayout />;
+  }
   // Early returns for loading and error states
   if (loading) {
     return (

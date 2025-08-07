@@ -1,5 +1,6 @@
 /* Import centralized design tokens first */
 @import "./styles/tokens.css";
+@import "./styles/mobile.css";
 
 @tailwind base;
 @tailwind components;

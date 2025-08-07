@@ -94,10 +94,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           width="md"
           position="left"
         />
-        {/* Main content - always full width, no margin shifts */}
-        <main className="w-full">
-          <div className="min-h-screen flex flex-col">
-            <div className="flex-1">{children}</div>
+        {/* Main content - mobile-first layout */}
+        <main className="flex-1 min-h-screen">
+          <div className="flex flex-col min-h-screen">
+            <div className="flex-1 pb-4">{children}</div>
             <Footer />
           </div>
         </main>
