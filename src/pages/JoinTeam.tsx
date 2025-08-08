@@ -249,7 +249,12 @@ export const JoinTeam: React.FC = () => {
       case "invite-code":
         return (
           <div className="max-w-md mx-auto text-center">
-            <Icon name="key" size="xl" color="primary" className="mx-auto mb-6" />
+            <Icon
+              name="key"
+              size="xl"
+              color="primary"
+              className="mx-auto mb-6"
+            />
             <Typography variant="headline-lg" className="mb-4">
               Enter Invite Code
             </Typography>

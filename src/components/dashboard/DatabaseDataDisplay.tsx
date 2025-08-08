@@ -23,7 +23,7 @@ export const DatabaseDataDisplay: React.FC = () => {
     return (
       <Card className="p-6 border-orange-200 bg-orange-50">
         <div className="flex items-center">
-          <Icon name="warning" size={20} color="warning" className="mr-3" />
+          <Icon name="warning" size="md" color="warning" className="mr-3" />
           <div>
             <Typography variant="headline-sm" className="text-orange-800 mb-1">
               Dev Mode Active - {devMode}
@@ -59,7 +59,7 @@ export const DatabaseDataDisplay: React.FC = () => {
     return (
       <Card className="p-6 border-red-200 bg-red-50">
         <div className="flex items-center">
-          <Icon name="warning" size={20} color="error" className="mr-3" />
+          <Icon name="warning" size="md" color="error" className="mr-3" />
           <div>
             <Typography variant="headline-sm" className="text-red-800 mb-1">
               Database Error
@@ -79,7 +79,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         <div className="text-center py-8">
           <Icon
             name="database"
-            size={48}
+            size="xl"
             color="secondary"
             className="mx-auto mb-4 opacity-50"
           />
@@ -127,7 +127,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         <Card className="p-6">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-jade-100 rounded-lg flex items-center justify-center mr-3">
-              <Icon name="users" size={20} color="primary" />
+              <Icon name="users" size="md" color="primary" />
             </div>
             <div>
               <Typography variant="headline-sm" className="text-gray-900">
@@ -159,7 +159,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         <Card className="p-6">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-              <Icon name="book" size={20} color="info" />
+              <Icon name="book" size="md" color="info" />
             </div>
             <div>
               <Typography variant="headline-sm" className="text-gray-900">
@@ -202,7 +202,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         <Card className="p-6">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-              <Icon name="zap" size={20} color="navy" />
+              <Icon name="zap" size="md" color="secondary" />
             </div>
             <div>
               <Typography variant="headline-sm" className="text-gray-900">

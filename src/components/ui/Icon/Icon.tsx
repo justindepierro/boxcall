@@ -17,7 +17,14 @@ const SIZE_MAP = {
 } as const;
 
 export type IconSize = keyof typeof SIZE_MAP;
-export type IconColor = "primary" | "secondary" | "success" | "error" | "warning" | "info" | "current";
+export type IconColor =
+  | "primary"
+  | "secondary"
+  | "success"
+  | "error"
+  | "warning"
+  | "info"
+  | "current";
 
 // Essential icons for BoxCall - only what we actually use
 const ICON_MAP = {
@@ -32,7 +39,7 @@ const ICON_MAP = {
   "chevron-down": LucideIcons.ChevronDown,
   "chevron-left": LucideIcons.ChevronLeft,
   "chevron-right": LucideIcons.ChevronRight,
-  
+
   // Core football app
   play: LucideIcons.Play,
   pause: LucideIcons.Pause,
@@ -46,20 +53,20 @@ const ICON_MAP = {
   delete: LucideIcons.Trash2,
   plus: LucideIcons.Plus,
   minus: LucideIcons.Minus,
-  
+
   // Files & Actions
   save: LucideIcons.Save,
   download: LucideIcons.Download,
   upload: LucideIcons.Upload,
   search: LucideIcons.Search,
   filter: LucideIcons.Filter,
-  
+
   // Status & Feedback
   check: LucideIcons.Check,
   warning: LucideIcons.AlertTriangle,
   error: LucideIcons.AlertCircle,
   info: LucideIcons.Info,
-  
+
   // Sports specific
   target: LucideIcons.Target,
   zap: LucideIcons.Zap,
@@ -67,17 +74,18 @@ const ICON_MAP = {
   flag: LucideIcons.Flag,
   star: LucideIcons.Star,
   "trending-up": LucideIcons.TrendingUp,
-  
+
   // Communication
   phone: LucideIcons.Phone,
   mail: LucideIcons.Mail,
   message: LucideIcons.MessageCircle,
-  
+
   // Files
   file: LucideIcons.File,
   folder: LucideIcons.Folder,
   pdf: LucideIcons.FileText,
-  
+  database: LucideIcons.Database,
+
   // System
   eye: LucideIcons.Eye,
   "eye-off": LucideIcons.EyeOff,
@@ -86,7 +94,7 @@ const ICON_MAP = {
   key: LucideIcons.Key,
   "user-plus": LucideIcons.UserPlus,
   "check-circle": LucideIcons.CheckCircle,
-  
+
   // Arrows for UI
   "arrow-up": LucideIcons.ArrowUp,
   "arrow-down": LucideIcons.ArrowDown,
@@ -103,21 +111,22 @@ export interface IconProps {
   className?: string;
 }
 
-export const Icon: React.FC<IconProps> = ({ 
-  name, 
-  size = "md", 
-  color = "current", 
-  className = "" 
+export const Icon: React.FC<IconProps> = ({
+  name,
+  size = "md",
+  color = "current",
+  className = "",
 }) => {
   const IconComponent = ICON_MAP[name];
-  
+
   if (!IconComponent) {
     console.warn(`Icon "${name}" not found`);
     return <LucideIcons.HelpCircle size={SIZE_MAP[size]} />;
   }
 
-  const colorClass = color === "current" ? "" : getComponentColor("icon", color);
-  
+  const colorClass =
+    color === "current" ? "" : getComponentColor("icon", color);
+
   return (
     <IconComponent
       size={SIZE_MAP[size]}
