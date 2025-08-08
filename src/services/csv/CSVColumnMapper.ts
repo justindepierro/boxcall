@@ -1,10 +1,10 @@
 /**
  * CSV Column Mapping Service
- * 
+ *
  * Handles intelligent column detection and mapping for CSV imports
  */
 
-import type { ColumnMappings } from './types';
+import type { ColumnMappings } from "./types";
 
 export class CSVColumnMapper {
   /**

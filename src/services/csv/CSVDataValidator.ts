@@ -1,10 +1,15 @@
 /**
  * CSV Data Validator Service
- * 
+ *
  * Handles validation, auto-correction, and quality assessment of CSV data
  */
 
-import type { ValidationResult, PlayTypeMapping, FormationCorrection, CommonPlayCorrection } from './types';
+import type {
+  ValidationResult,
+  PlayTypeMapping,
+  FormationCorrection,
+  CommonPlayCorrection,
+} from "./types";
 
 export class CSVDataValidator {
   /**
@@ -16,22 +21,22 @@ export class CSVDataValidator {
 
     // Play type validation and auto-correction
     this.validateAndCorrectPlayType(correctedData, warnings);
-    
+
     // Formation validation
     this.validateAndCorrectFormation(correctedData, warnings);
-    
+
     // Personnel validation and correction
     this.validateAndCorrectPersonnel(correctedData, warnings);
-    
+
     // Play name validation
     this.validateAndCorrectPlayName(correctedData, warnings);
-    
+
     // One word play validation
     this.validateOneWordPlay(correctedData, warnings);
 
     return {
       warnings,
-      correctedData
+      correctedData,
     };
   }
 
@@ -92,7 +97,7 @@ export class CSVDataValidator {
           "Formation name seems very short. Consider using more descriptive names."
         );
       }
-      
+
       // Common formation corrections
       const formationCorrections: FormationCorrection = {
         gun: "Shotgun",
@@ -150,7 +155,7 @@ export class CSVDataValidator {
           "Play name seems very short. Consider using more descriptive names."
         );
       }
-      
+
       // Auto-capitalize common play names
       const commonPlays: CommonPlayCorrection = {
         dive: "Dive",
@@ -191,7 +196,8 @@ export class CSVDataValidator {
    * Check if play requires confirmation due to missing critical fields
    */
   static requiresConfirmation(rowData: Record<string, string>): boolean {
-    const missingFormation = !rowData.formation || rowData.formation.trim() === "";
+    const missingFormation =
+      !rowData.formation || rowData.formation.trim() === "";
     const missingPlayType = !rowData.p_type || rowData.p_type.trim() === "";
     return missingFormation || missingPlayType;
   }
@@ -207,7 +213,7 @@ export class CSVDataValidator {
       "personnel",
       "protection",
     ];
-    
+
     const filledFields = importantFields.filter(
       (field) => rowData[field] && rowData[field].trim() !== ""
     );

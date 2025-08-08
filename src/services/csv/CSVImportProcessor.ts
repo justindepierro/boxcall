@@ -1,14 +1,14 @@
 /**
  * CSV Import Processor Service
- * 
+ *
  * Orchestrates the CSV import process with intelligent parsing and validation
  */
 
-import { CSVParser } from './CSVParser';
-import { CSVColumnMapper } from './CSVColumnMapper';
-import { CSVDataValidator } from './CSVDataValidator';
-import { CSVPlayConverter } from './CSVPlayConverter';
-import type { CSVParseResult, CSVPlayPreview, CSVImportResult } from './types';
+import { CSVParser } from "./CSVParser";
+import { CSVColumnMapper } from "./CSVColumnMapper";
+import { CSVDataValidator } from "./CSVDataValidator";
+import { CSVPlayConverter } from "./CSVPlayConverter";
+import type { CSVParseResult, CSVPlayPreview, CSVImportResult } from "./types";
 import { UserPreferencesService } from "../userPreferencesService";
 
 export class CSVImportProcessor {
@@ -43,17 +43,22 @@ export class CSVImportProcessor {
     // Process each data row
     for (let i = 1; i < lines.length; i++) {
       const values = CSVParser.parseCSVLine(lines[i]);
-      const rowData = CSVParser.mapRowToFields(values, rawHeaders, columnMapping);
-      
+      const rowData = CSVParser.mapRowToFields(
+        values,
+        rawHeaders,
+        columnMapping
+      );
+
       const errors: string[] = [];
-      
+
       // Check for required fields (only play_name causes error)
       if (!CSVDataValidator.isValidRow(rowData)) {
         errors.push("Missing required field: play_name");
       }
 
       // Validate and correct data
-      const { warnings, correctedData } = CSVDataValidator.validateAndCorrect(rowData);
+      const { warnings, correctedData } =
+        CSVDataValidator.validateAndCorrect(rowData);
 
       // Check for confirmation-requiring scenarios
       if (CSVDataValidator.requiresConfirmation(correctedData)) {
@@ -92,7 +97,10 @@ export class CSVImportProcessor {
     }
 
     const validPlays = previews.filter((p) => p.isValid).length;
-    const totalWarnings = previews.reduce((sum, p) => sum + p.warnings.length, 0);
+    const totalWarnings = previews.reduce(
+      (sum, p) => sum + p.warnings.length,
+      0
+    );
 
     // Generate confirmation message if needed
     let needsConfirmation = false;

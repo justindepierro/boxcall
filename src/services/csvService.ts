@@ -1,17 +1,17 @@
 /**
  * CSV Service - Main Orchestrator
- * 
+ *
  * Handles import/export of plays and practice scripts with modular architecture
  */
 
-import { CSVImportProcessor } from './csv/CSVImportProcessor';
-import { CSVExporter } from './csv/CSVExporter';
-import { CSVPlayConverter } from './csv/CSVPlayConverter';
-import type { 
-  CSVParseResult, 
-  CSVImportResult, 
-  CSVExportOptions 
-} from './csv/types';
+import { CSVImportProcessor } from "./csv/CSVImportProcessor";
+import { CSVExporter } from "./csv/CSVExporter";
+import { CSVPlayConverter } from "./csv/CSVPlayConverter";
+import type {
+  CSVParseResult,
+  CSVImportResult,
+  CSVExportOptions,
+} from "./csv/types";
 import type { Play } from "../types/play";
 
 // Local interface to avoid circular dependency
@@ -37,11 +37,15 @@ export class CSVService {
    * Convert validated preview data to Play objects
    */
   static convertPreviewsToPlays(
-    previews: CSVParseResult['previews'],
+    previews: CSVParseResult["previews"],
     playbookId: string,
     forceImport: boolean = false
   ): CSVImportResult {
-    return CSVPlayConverter.convertPreviewsToPlays(previews, playbookId, forceImport);
+    return CSVPlayConverter.convertPreviewsToPlays(
+      previews,
+      playbookId,
+      forceImport
+    );
   }
 
   /**
@@ -82,5 +86,5 @@ export type {
   CSVImportResult,
   CSVPlayPreview,
   CSVParseResult,
-  CSVExportOptions
-} from './csv/types';
+  CSVExportOptions,
+} from "./csv/types";

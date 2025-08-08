@@ -152,12 +152,7 @@ export const CreateCoachAccount: React.FC = () => {
       case "intro":
         return (
           <div className="text-center">
-            <Icon
-              name="user"
-              size="xl"
-              color="info"
-              className="mx-auto mb-6"
-            />
+            <Icon name="user" size="xl" color="info" className="mx-auto mb-6" />
             <Typography variant="headline-xl" className="mb-4">
               Create Your Coach Account
             </Typography>

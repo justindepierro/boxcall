@@ -26,9 +26,7 @@ export const CoachActionIcon: React.FC<{
 export const HeaderIcon: React.FC<{
   name: IconName;
   color?: IconProps["color"];
-}> = ({ name, color = "navy" }) => (
-  <Icon name={name} size="xl" color={color} />
-);
+}> = ({ name, color = "navy" }) => <Icon name={name} size="xl" color={color} />;
 
 export const TouchTargetIcon: React.FC<{
   name: IconName;

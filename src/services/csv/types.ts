@@ -1,6 +1,6 @@
 /**
  * CSV Service Type Definitions
- * 
+ *
  * Centralized type definitions for CSV import/export functionality
  */
 

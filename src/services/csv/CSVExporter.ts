@@ -1,11 +1,11 @@
 /**
  * CSV Export Service
- * 
+ *
  * Handles exporting plays and practice scripts to CSV format
  */
 
 import type { Play } from "../../types/play";
-import type { CSVPlayData, CSVExportOptions } from './types';
+import type { CSVPlayData, CSVExportOptions } from "./types";
 
 // Import the PracticeScript type locally to avoid circular dependencies
 interface PracticeScript {

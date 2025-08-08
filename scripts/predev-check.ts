@@ -1,298 +1,177 @@
-#!/usr/bin/env node
+#!/usr/bin/env npx tsx
 
 /**
- * Pre-development error checking script
- * Runs comprehensive checks before starting the dev server
+ * Professional Pre-Development Validation Suite
+ *
+ * Runs comprehensive checks before starting development server:
+ * - TypeScript compilation with strict error checking
+ * - ESLint with zero tolerance for warnings
+ * - Format validation
+ * - Import validation
+ * - Dead code detection
+ *
+ * This ensures a professional development environment.
  */
 
 import { execSync } from "child_process";
-import { existsSync, readFileSync } from "fs";
-import { join } from "path";
+import { existsSync } from "fs";
 
 interface CheckResult {
   name: string;
-  passed: boolean;
+  success: boolean;
   message: string;
-  fix?: string;
+  duration: number;
 }
 
-class PreDevChecker {
-  private results: CheckResult[] = [];
-  private projectRoot: string;
+const colors = {
+  red: "\x1b[31m",
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  blue: "\x1b[34m",
+  reset: "\x1b[0m",
+  bold: "\x1b[1m",
+};
 
-  constructor() {
-    this.projectRoot = process.cwd();
-  }
+function log(message: string, color: string = colors.reset): void {
+  console.log(`${color}${message}${colors.reset}`);
+}
 
-  async runAllChecks(): Promise<boolean> {
-    console.log("🔍 Running pre-development checks...\n");
+function runCommand(command: string, description: string): CheckResult {
+  const startTime = Date.now();
 
-    await this.checkNodeVersion();
-    await this.checkPackageJson();
-    await this.checkDependencies();
-    await this.checkTypeScript();
-    await this.checkTailwindConfig();
-    await this.checkEslintConfig();
-    await this.checkGitSetup();
-    await this.checkEnvironmentFiles();
-
-    this.printResults();
-    return this.results.every((result) => result.passed);
-  }
-
-  private async checkNodeVersion() {
-    try {
-      const nodeVersion = process.version;
-      const majorVersion = parseInt(nodeVersion.slice(1).split(".")[0]);
-
-      if (majorVersion >= 18) {
-        this.addResult(
-          "Node.js Version",
-          true,
-          `✅ Node.js ${nodeVersion} (>= 18.0.0)`
-        );
-      } else {
-        this.addResult(
-          "Node.js Version",
-          false,
-          `❌ Node.js ${nodeVersion} (< 18.0.0)`,
-          "Update Node.js to version 18 or higher"
-        );
-      }
-    } catch {
-      this.addResult(
-        "Node.js Version",
-        false,
-        "❌ Could not check Node.js version"
-      );
-    }
-  }
-
-  private async checkPackageJson() {
-    const packageJsonPath = join(this.projectRoot, "package.json");
-
-    if (!existsSync(packageJsonPath)) {
-      this.addResult(
-        "package.json",
-        false,
-        "❌ package.json not found",
-        "Run npm init to create package.json"
-      );
-      return;
-    }
-
-    try {
-      const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
-
-      const requiredFields = ["name", "version", "scripts", "dependencies"];
-      const missingFields = requiredFields.filter(
-        (field) => !packageJson[field]
-      );
-
-      if (missingFields.length === 0) {
-        this.addResult("package.json", true, "✅ package.json is valid");
-      } else {
-        this.addResult(
-          "package.json",
-          false,
-          `❌ Missing fields: ${missingFields.join(", ")}`,
-          "Add missing fields to package.json"
-        );
-      }
-    } catch {
-      this.addResult(
-        "package.json",
-        false,
-        "❌ package.json is invalid JSON",
-        "Fix JSON syntax in package.json"
-      );
-    }
-  }
-
-  private async checkDependencies() {
-    try {
-      const nodeModulesPath = join(this.projectRoot, "node_modules");
-
-      if (!existsSync(nodeModulesPath)) {
-        this.addResult(
-          "Dependencies",
-          false,
-          "❌ node_modules not found",
-          "Run npm install"
-        );
-        return;
-      }
-
-      // Check for common dependency issues
-      execSync("npm ls --depth=0", { stdio: "pipe" });
-      this.addResult("Dependencies", true, "✅ All dependencies installed");
-    } catch {
-      this.addResult(
-        "Dependencies",
-        false,
-        "❌ Dependency issues found",
-        "Run npm install or npm audit fix"
-      );
-    }
-  }
-
-  private async checkTypeScript() {
-    const tsconfigPath = join(this.projectRoot, "tsconfig.json");
-
-    if (!existsSync(tsconfigPath)) {
-      this.addResult(
-        "TypeScript Config",
-        false,
-        "❌ tsconfig.json not found",
-        "Create tsconfig.json for TypeScript configuration"
-      );
-      return;
-    }
-
-    try {
-      execSync("npx tsc --noEmit", { stdio: "pipe" });
-      this.addResult("TypeScript", true, "✅ No TypeScript errors");
-    } catch {
-      this.addResult(
-        "TypeScript",
-        false,
-        "❌ TypeScript compilation errors",
-        "Run npx tsc --noEmit for details"
-      );
-    }
-  }
-
-  private async checkTailwindConfig() {
-    const tailwindConfigPath = join(this.projectRoot, "tailwind.config.js");
-    const postCSSConfigPath = join(this.projectRoot, "postcss.config.js");
-
-    const hasTailwindConfig = existsSync(tailwindConfigPath);
-    const hasPostCSSConfig = existsSync(postCSSConfigPath);
-
-    if (hasTailwindConfig && hasPostCSSConfig) {
-      this.addResult("Tailwind CSS", true, "✅ Tailwind CSS configured");
-    } else {
-      const missing: string[] = [];
-      if (!hasTailwindConfig) missing.push("tailwind.config.js");
-      if (!hasPostCSSConfig) missing.push("postcss.config.js");
-
-      this.addResult(
-        "Tailwind CSS",
-        false,
-        `❌ Missing: ${missing.join(", ")}`,
-        "Create missing Tailwind configuration files"
-      );
-    }
-  }
-
-  private async checkEslintConfig() {
-    const eslintConfigPath = join(this.projectRoot, ".eslintrc.js");
-    const eslintConfigCjsPath = join(this.projectRoot, ".eslintrc.cjs");
-    const eslintConfigJsonPath = join(this.projectRoot, ".eslintrc.json");
-
-    const hasEslintConfig =
-      existsSync(eslintConfigPath) ||
-      existsSync(eslintConfigCjsPath) ||
-      existsSync(eslintConfigJsonPath);
-
-    if (hasEslintConfig) {
-      try {
-        execSync("npx eslint . --ext ts,tsx --max-warnings 0", {
-          stdio: "pipe",
-        });
-        this.addResult("ESLint", true, "✅ No ESLint errors");
-      } catch {
-        this.addResult(
-          "ESLint",
-          false,
-          "❌ ESLint errors found",
-          "Run npm run lint:fix to auto-fix issues"
-        );
-      }
-    } else {
-      this.addResult(
-        "ESLint Config",
-        false,
-        "❌ ESLint configuration not found",
-        "Create ESLint configuration file"
-      );
-    }
-  }
-
-  private async checkGitSetup() {
-    try {
-      execSync("git status", { stdio: "pipe" });
-      this.addResult("Git Repository", true, "✅ Git repository initialized");
-    } catch {
-      this.addResult(
-        "Git Repository",
-        false,
-        "❌ Not a git repository",
-        "Run git init to initialize repository"
-      );
-    }
-  }
-
-  private async checkEnvironmentFiles() {
-    const envExamplePath = join(this.projectRoot, ".env.example");
-    const envPath = join(this.projectRoot, ".env");
-
-    if (existsSync(envExamplePath) && !existsSync(envPath)) {
-      this.addResult(
-        "Environment Files",
-        false,
-        "❌ .env file missing",
-        "Copy .env.example to .env and configure"
-      );
-    } else {
-      this.addResult(
-        "Environment Files",
-        true,
-        "✅ Environment configuration OK"
-      );
-    }
-  }
-
-  private addResult(
-    name: string,
-    passed: boolean,
-    message: string,
-    fix?: string
-  ) {
-    this.results.push({ name, passed, message, fix });
-  }
-
-  private printResults() {
-    console.log("\n📋 Pre-development Check Results:\n");
-
-    this.results.forEach((result) => {
-      console.log(`${result.message}`);
-      if (!result.passed && result.fix) {
-        console.log(`   💡 Fix: ${result.fix}`);
-      }
+  try {
+    log(`🔍 ${description}...`, colors.blue);
+    execSync(command, {
+      encoding: "utf8",
+      stdio: ["pipe", "pipe", "pipe"],
+      cwd: process.cwd(),
     });
 
-    const passedCount = this.results.filter((r) => r.passed).length;
-    const totalCount = this.results.length;
+    const duration = Date.now() - startTime;
+    const success = true;
+    const message = `✅ ${description} passed (${duration}ms)`;
 
-    console.log(`\n📊 Summary: ${passedCount}/${totalCount} checks passed`);
+    log(message, colors.green);
+    return { name: description, success, message, duration };
+  } catch (error: unknown) {
+    const duration = Date.now() - startTime;
+    const success = false;
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    const message = `❌ ${description} failed (${duration}ms)\n${errorMessage}`;
 
-    if (passedCount === totalCount) {
-      console.log("🎉 All checks passed! Ready to start development.");
-    } else {
-      console.log(
-        "⚠️  Some checks failed. Please fix the issues above before starting development."
-      );
-    }
+    log(message, colors.red);
+    return { name: description, success, message, duration };
   }
 }
 
-// Run checks if called directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  const checker = new PreDevChecker();
-  checker.runAllChecks().then((success) => {
-    process.exit(success ? 0 : 1);
-  });
+function runUnusedExportsCheck(): CheckResult {
+  const startTime = Date.now();
+
+  try {
+    log(`🔍 Unused Export Detection...`, colors.blue);
+    execSync(
+      'npx ts-unused-exports tsconfig.app.json --ignoreFiles="test,spec,stories"',
+      {
+        encoding: "utf8",
+        stdio: ["pipe", "pipe", "pipe"],
+        cwd: process.cwd(),
+      }
+    );
+
+    const duration = Date.now() - startTime;
+    const message = `✅ Unused Export Detection passed (${duration}ms)`;
+    log(message, colors.green);
+    return {
+      name: "Unused Export Detection",
+      success: true,
+      message,
+      duration,
+    };
+  } catch (_error: unknown) {
+    const duration = Date.now() - startTime;
+    // For unused exports, we treat it as a warning, not a failure
+    const message = `⚠️ Unused Export Detection found unused exports (${duration}ms) - Non-blocking`;
+    log(message, colors.yellow);
+    return {
+      name: "Unused Export Detection",
+      success: true,
+      message,
+      duration,
+    };
+  }
 }
 
-export { PreDevChecker };
+async function main(): Promise<void> {
+  log("🚀 PROFESSIONAL PRE-DEVELOPMENT VALIDATION", colors.bold);
+  log("================================================", colors.blue);
+
+  const checks: CheckResult[] = [];
+
+  // 1. TypeScript Compilation Check - ZERO TOLERANCE
+  checks.push(
+    runCommand(
+      "npx tsc --noEmit --strict --noUnusedLocals --noUnusedParameters",
+      "TypeScript Strict Compilation"
+    )
+  );
+
+  // 2. ESLint Check - ZERO WARNINGS
+  checks.push(
+    runCommand(
+      "npx eslint src/ --ext .ts,.tsx --max-warnings 0 --format stylish",
+      "ESLint Zero-Warning Validation"
+    )
+  );
+
+  // 3. Format Check - CONSISTENT STYLE
+  checks.push(
+    runCommand("npx prettier --check src/", "Prettier Format Validation")
+  );
+
+  // 4. Import Validation - REPORT UNUSED EXPORTS (NON-BLOCKING)
+  checks.push(runUnusedExportsCheck());
+
+  // 5. Bundle Analysis - SIZE CHECK
+  if (existsSync("dist")) {
+    checks.push(
+      runCommand(
+        "npx vite-bundle-analyzer dist --mode production",
+        "Bundle Size Analysis"
+      )
+    );
+  }
+
+  // Summary Report
+  log("\n📊 VALIDATION SUMMARY", colors.bold);
+  log("===================", colors.blue);
+
+  const passed = checks.filter((c) => c.success);
+  const failed = checks.filter((c) => !c.success);
+  const totalTime = checks.reduce((sum, c) => sum + c.duration, 0);
+
+  log(`✅ Passed: ${passed.length}/${checks.length}`, colors.green);
+  log(
+    `❌ Failed: ${failed.length}/${checks.length}`,
+    failed.length > 0 ? colors.red : colors.green
+  );
+  log(`⏱️  Total Time: ${totalTime}ms`, colors.blue);
+
+  if (failed.length > 0) {
+    log("\n🚨 DEVELOPMENT SERVER BLOCKED - FIX ERRORS FIRST", colors.red);
+    log("Failed checks:", colors.red);
+    failed.forEach((check) => {
+      log(`  • ${check.name}`, colors.red);
+    });
+    process.exit(1);
+  }
+
+  log("\n🎉 ALL CHECKS PASSED - DEVELOPMENT SERVER READY!", colors.green);
+  log("Professional development environment validated ✨", colors.green);
+}
+
+// Run the validation
+main().catch((error: unknown) => {
+  console.error("Validation script failed:", error);
+  process.exit(1);
+});

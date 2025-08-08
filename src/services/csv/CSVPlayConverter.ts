@@ -1,11 +1,11 @@
 /**
  * CSV Play Converter Service
- * 
+ *
  * Handles conversion between CSV data and Play objects
  */
 
 import type { Play } from "../../types/play";
-import type { CSVPlayPreview, CSVImportResult } from './types';
+import type { CSVPlayPreview, CSVImportResult } from "./types";
 import { UserPreferencesService } from "../userPreferencesService";
 
 export class CSVPlayConverter {
@@ -30,15 +30,23 @@ export class CSVPlayConverter {
         const playData = preview.data;
 
         // Check for confirmation-requiring scenarios
-        const missingFormation = !playData.formation || playData.formation.trim() === "";
-        const missingPlayType = !playData.p_type || playData.p_type.trim() === "";
+        const missingFormation =
+          !playData.formation || playData.formation.trim() === "";
+        const missingPlayType =
+          !playData.p_type || playData.p_type.trim() === "";
 
         if (missingFormation || missingPlayType) {
           playsNeedingConfirmation++;
         }
 
         // Count quality for warning
-        const importantFields = ["formation", "play_name", "p_type", "personnel", "protection"];
+        const importantFields = [
+          "formation",
+          "play_name",
+          "p_type",
+          "personnel",
+          "protection",
+        ];
         const filledFields = importantFields.filter(
           (field) => playData[field] && playData[field].trim() !== ""
         );
@@ -53,7 +61,9 @@ export class CSVPlayConverter {
 
         // Collect warnings for this play
         if (preview.warnings.length > 0) {
-          warnings.push(`Row ${preview.rowNumber}: ${preview.warnings.join(", ")}`);
+          warnings.push(
+            `Row ${preview.rowNumber}: ${preview.warnings.join(", ")}`
+          );
         }
       } catch (error) {
         errors.push(
@@ -112,7 +122,7 @@ export class CSVPlayConverter {
    * Create a Play object from CSV data
    */
   private static createPlayFromData(
-    playData: CSVPlayPreview['data'],
+    playData: CSVPlayPreview["data"],
     playbookId: string,
     index: number
   ): Play {
@@ -162,15 +172,18 @@ export class CSVPlayConverter {
   /**
    * Normalize play type to standard values
    */
-  private static normalizePlayType(playType?: string): "Pass" | "Run" | "RPO" | "Play Action" {
+  private static normalizePlayType(
+    playType?: string
+  ): "Pass" | "Run" | "RPO" | "Play Action" {
     if (!playType) return "Run"; // default
 
     const lowerType = playType.toLowerCase();
     if (lowerType.includes("pass")) return "Pass";
     if (lowerType.includes("rpo")) return "RPO";
-    if (lowerType.includes("action") || lowerType.includes("pa")) return "Play Action";
+    if (lowerType.includes("action") || lowerType.includes("pa"))
+      return "Play Action";
     if (lowerType.includes("run")) return "Run";
-    
+
     return "Run"; // default fallback
   }
 }

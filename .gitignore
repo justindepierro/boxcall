@@ -28,6 +28,20 @@ dist-ssr
 .cache/
 *.tmp
 
+# Phantom files that VS Code might auto-create
+**/DevToolsPanel.tsx
+**/SimpleDevTools.tsx
+**/ProfessionalDevTools.tsx
+**/DashboardPageV4.tsx
+**/Playground.tsx
+**/DashboardServiceV4.ts
+
+# Auto-generated empty component directories
+src/tests/
+src/examples/
+src/components/rsvp/AdvancedRSVPInterface/
+src/components/ui/Icon/examples/
+
 # GitHub Copilot cache
 ~/.cache/github-copilot/
 

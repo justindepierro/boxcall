@@ -229,9 +229,7 @@ export class PracticeScheduleService extends BaseService<"practice_schedules"> {
   /**
    * Get practices with attendance summary
    */
-  async getPracticesWithAttendance(
-    teamId: string
-  ): Promise<
+  async getPracticesWithAttendance(teamId: string): Promise<
     Array<
       PracticeSchedule & {
         attendance_summary?: {
