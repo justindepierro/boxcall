@@ -113,9 +113,9 @@ const NavBarItem: React.FC<{
           border rounded-md shadow-lg z-50
         `}
         >
-          {item.children?.map((childItem) => (
+          {item.children?.map((childItem, index) => (
             <div
-              key={childItem.id}
+              key={childItem.id || `child-${index}`}
               className={`
                 block px-4 py-2 text-sm cursor-pointer
                 ${
@@ -183,7 +183,7 @@ export const NavBar: React.FC<NavBarProps> = ({
             <div className="ml-10 flex items-baseline space-x-4">
               {items.map((item) => (
                 <NavBarItem
-                  key={item.id}
+                  key={`desktop-${item.id}`}
                   item={item}
                   onItemClick={handleItemClick}
                 />
@@ -234,7 +234,7 @@ export const NavBar: React.FC<NavBarProps> = ({
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200 dark:border-gray-700">
               {items.map((item) => (
                 <NavBarItem
-                  key={item.id}
+                  key={`mobile-${item.id}`}
                   item={item}
                   isMobile={true}
                   onItemClick={handleItemClick}

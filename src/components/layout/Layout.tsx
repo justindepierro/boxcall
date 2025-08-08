@@ -57,8 +57,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const roleInfo = getRoleDisplayInfo(currentRole);
 
   // Convert navigationItems to NavBarItems format
-  const navBarItems = navigationItems.map((item) => ({
-    id: item.href,
+  const navBarItems = navigationItems.map((item, index) => ({
+    id: item.id || item.href || `nav-item-${index}`,
     label: item.label,
     onClick: () => (window.location.href = item.href),
     active: window.location.pathname === item.href,
