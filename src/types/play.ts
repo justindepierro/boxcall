@@ -1,47 +1,99 @@
-// Play types that match the existing database schema
-export interface Play {
+// Custom field types
+export type CustomFieldType =
+  | "text"
+  | "number"
+  | "boolean"
+  | "select"
+  | "multi_select"
+  | "date"
+  | "url";
+
+// Valid custom field values
+export type CustomFieldValue =
+  | string
+  | number
+  | boolean
+  | string[]
+  | Date
+  | null;
+
+// Custom field definition (team-specific)
+export interface CustomFieldDefinition {
   id: string;
-  playbook_id: string;
-  formation: string; // Main formation name
-  f_dir?: string; // Formation direction/strength
-  ftag1?: string; // Formation tag 1
-  ftag2?: string; // Formation tag 2
-  back_align?: string; // RB alignment
-  shift?: string; // Formation shift
-  motion?: string; // Pre-snap motion
-  protection?: string; // Protection scheme
-  play_name: string; // Main play name
-  one_word_play?: string; // "Corndog" style audible call
-  p_tag1?: string; // Play tag 1
-  p_tag2?: string; // Play tag 2
-  p_dir?: string; // Play direction
-  f_type?: string; // Formation type (10P, 11P, etc)
-  p_type: PlayType; // Play type
-  key_player1?: string; // Key player identifier
-  key_player2?: string; // Second key player
-  pref_down?: string; // Preferred down
-  pref_dis?: string; // Preferred distance
-  pref_hash?: string; // Preferred hash
-  pref_cov?: string; // Preferred coverage
-  pref_front?: string; // Preferred front
-  check_into?: string; // Check/audible options
-  r_str?: string; // Run strength
-  p_str?: string; // Pass strength
-  personnel?: string; // Personnel grouping
-  confidence_base: number; // Base confidence (default 70)
-  success_rate?: number; // Historical success rate
-  times_called: number; // Usage tracking
-  times_successful: number; // Success tracking
-  diagram_url?: string; // Play diagram image
-  video_url?: string; // Instructional video
-  notes?: string; // Additional notes
-  tags?: string[]; // Flexible tagging
-  created_by: string;
+  team_id: string;
+  field_name: string;
+  field_type: CustomFieldType;
+  field_label: string;
+  field_description?: string;
+  field_options?: string[]; // For select/multi_select types
+  default_value?: CustomFieldValue;
+  is_required: boolean;
+  display_order: number;
+  category: string; // 'formation', 'execution', 'analysis', 'conditions', etc.
   created_at: Date;
   updated_at: Date;
 }
-// Play type enumeration matching database constraint
-export type PlayType = "Pass" | "Run" | "RPO" | "Play Action";
+
+// Custom field values (stored as JSONB in database)
+export interface CustomFieldValues {
+  [field_name: string]: CustomFieldValue; // Dynamic based on field definitions
+}
+
+// Play types that match the exact database schema
+export interface Play {
+  id: string; // uuid
+  playbook_id: string; // uuid
+  formation: string; // text
+  f_dir?: string; // text - Formation direction/strength
+  ftag1?: string; // text - Formation tag 1
+  ftag2?: string; // text - Formation tag 2
+  back_align?: string; // text - RB alignment
+  shift?: string; // text - Formation shift
+  motion?: string; // text - Pre-snap motion
+  protection?: string; // text - Protection scheme
+  play_name: string; // text - Main play name
+  p_tag1?: string; // text - Play tag 1
+  p_tag2?: string; // text - Play tag 2
+  p_dir?: string; // text - Play direction
+  f_type?: string; // text - Formation type (10P, 11P, etc)
+  p_type: string; // text - Play type (changed from enum to string to match DB)
+  key_player1?: string; // text - Key player identifier
+  key_player2?: string; // text - Second key player
+  pref_down?: string; // text - Preferred down
+  pref_dis?: string; // text - Preferred distance
+  pref_hash?: string; // text - Preferred hash
+  pref_cov?: string; // text - Preferred coverage
+  pref_front?: string; // text - Preferred front
+  check_into?: string; // text - Check/audible options
+  r_str?: string; // text - Run strength
+  p_str?: string; // text - Pass strength
+  personnel?: string; // text - Personnel grouping
+  confidence_base: number; // numeric - Base confidence (default 70)
+  success_rate?: number; // numeric - Historical success rate
+  times_called: number; // integer - Usage tracking
+  times_successful: number; // integer - Success tracking
+  diagram_url?: string; // text - Play diagram image
+  video_url?: string; // text - Instructional video
+  notes?: string; // text - Additional notes
+  tags?: string[]; // ARRAY _text - Flexible tagging
+  custom_fields?: CustomFieldValues; // JSONB - Team-defined custom fields
+  created_by: string; // uuid - User who created the play
+  created_at: Date; // timestamptz - Creation timestamp
+  updated_at: Date; // timestamptz - Last update timestamp
+  one_word_play?: string; // text - "Corndog" style audible call
+  is_archived?: boolean; // bool - Archive status
+  last_used_at?: Date; // timestamptz - When play was last used
+  complexity_score?: number; // integer - Play complexity rating
+  search_vector?: string; // tsvector - Full-text search (handled by DB)
+}
+// Play type enumeration matching database constraint (text field)
+export type PlayType =
+  | "Pass"
+  | "Run"
+  | "RPO"
+  | "Play Action"
+  | "Screen"
+  | "Special";
 // Formation types commonly used in football
 export interface FormationOption {
   name: string;

@@ -1,17 +1,11 @@
 import React, { useState } from "react";
-import {
-  FileText,
-  Plus,
-  Search,
-  Upload,
-  Download,
-  Clock,
-  Users,
-} from "lucide-react";
+import { FileText, Plus, Upload, Download, Clock, Users } from "lucide-react";
 import { PlayGrid } from "../components/playbook/PlayGrid";
 import { PlayFilters } from "../components/playbook/PlayFilters.tsx";
-import { PlayBuilderWizard } from "../components/playbook/PlayBuilder/PlayBuilderWizard";
+import { StreamlinedPlayBuilder } from "../components/playbook/PlayBuilder/StreamlinedPlayBuilder";
 import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal";
+import { AdvancedSearchBar } from "../components/playbook/AdvancedSearchBar";
+import { QuickFilters } from "../components/playbook/QuickFilters";
 import { PracticeScriptService } from "../services/practiceScriptService";
 import { CSVService } from "../services/csv";
 import type { Play } from "../types/play";
@@ -25,6 +19,7 @@ type CoachingView = "playbook" | "practice-script" | "game-plan";
 
 interface PlaybookPageState {
   searchQuery: string;
+  activeFilters: string[]; // Quick filter IDs (red-zone, goal-line, etc.)
   showBuilder: boolean;
   showImport: boolean;
   currentView: CoachingView;
@@ -45,6 +40,7 @@ interface PlaybookPageState {
 export const PlaybookPage: React.FC = () => {
   const [state, setState] = useState<PlaybookPageState>({
     searchQuery: "",
+    activeFilters: [], // Initialize with empty array
     showBuilder: false,
     showImport: false,
     currentView: "playbook",
@@ -187,6 +183,11 @@ export const PlaybookPage: React.FC = () => {
   const handleSearch = (query: string) => {
     setState((prev) => ({ ...prev, searchQuery: query }));
   };
+
+  // Handle quick filter changes
+  const handleFiltersChange = (filters: string[]) => {
+    setState((prev) => ({ ...prev, activeFilters: filters }));
+  };
   const handleOpenBuilder = () => {
     setState((prev) => ({ ...prev, showBuilder: true }));
   };
@@ -231,18 +232,14 @@ export const PlaybookPage: React.FC = () => {
                 </div>
               </div>
             </div>
-            {/* Search Bar */}
+            {/* Advanced Search Bar */}
             <div className="flex-1 max-w-lg mx-8">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="Search plays, formations, or tags..."
-                  className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  value={state.searchQuery}
-                  onChange={(e) => handleSearch(e.target.value)}
-                />
-              </div>
+              <AdvancedSearchBar
+                plays={[]} // TODO: Get actual plays from Supabase/PlayGrid
+                searchQuery={state.searchQuery}
+                onSearchChange={handleSearch}
+                placeholder="Search plays, formations, or tags..."
+              />
             </div>
             {/* Action Buttons with Reward Loop Psychology */}
             <div className="flex items-center space-x-3">
@@ -401,12 +398,22 @@ export const PlaybookPage: React.FC = () => {
 
             {/* Conditional View Rendering */}
             {state.currentView === "playbook" && (
-              <PlayGrid
-                searchQuery={state.searchQuery}
-                filters={state.selectedFilters}
-                onAddToPracticeScript={handleAddToPracticeScript}
-                onAddToGamePlan={handleAddToGamePlan}
-              />
+              <>
+                {/* Quick Filters */}
+                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4 mb-4">
+                  <QuickFilters
+                    activeFilters={state.activeFilters}
+                    onFiltersChange={handleFiltersChange}
+                  />
+                </div>
+
+                <PlayGrid
+                  searchQuery={state.searchQuery}
+                  filters={state.selectedFilters}
+                  onAddToPracticeScript={handleAddToPracticeScript}
+                  onAddToGamePlan={handleAddToGamePlan}
+                />
+              </>
             )}
 
             {state.currentView === "practice-script" && (
@@ -450,9 +457,15 @@ export const PlaybookPage: React.FC = () => {
       </div>
       {/* Modals */}
       {state.showBuilder && (
-        <PlayBuilderWizard
+        <StreamlinedPlayBuilder
           isOpen={state.showBuilder}
           onClose={handleCloseBuilder}
+          onSave={(playData) => {
+            console.log("Play saved:", playData);
+            // TODO: Save to Supabase database
+            // For now, just close the builder
+            handleCloseBuilder();
+          }}
         />
       )}
       {state.showImport && (
