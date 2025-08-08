@@ -84,7 +84,7 @@ export const DevToolsPanel: React.FC = () => {
   }, []);
 
   // Don't show in production
-  if (import.meta.env.NODE_ENV === 'production') return null;
+  if (import.meta.env.NODE_ENV === "production") return null;
 
   const handleModeSwitch = async (newMode: DevMode) => {
     setIsLoading(true);

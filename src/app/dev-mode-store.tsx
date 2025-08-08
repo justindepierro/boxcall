@@ -2,7 +2,12 @@
  * Minimal DevMode Provider
  * Replacement for the deleted dev-mode-store with essential functionality only
  */
-import React, { createContext, useContext, useState, type ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  type ReactNode,
+} from "react";
 import type { DevMode } from "./dev-mode-types";
 
 // Dev mode context
