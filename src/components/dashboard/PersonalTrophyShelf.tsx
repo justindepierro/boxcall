@@ -89,7 +89,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       // Map SmartIconSystem results to our available icons
       const smartIconMap: { [key: string]: IconName } = {
         trophy: "trophy",
-        award: "award", 
+        award: "award",
         star: "star",
         target: "target",
         zap: "zap",
