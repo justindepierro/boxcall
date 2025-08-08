@@ -71,9 +71,12 @@ const ICON_MAP = {
   target: LucideIcons.Target,
   zap: LucideIcons.Zap,
   award: LucideIcons.Award,
+  trophy: LucideIcons.Trophy,
   flag: LucideIcons.Flag,
   star: LucideIcons.Star,
   "trending-up": LucideIcons.TrendingUp,
+  activity: LucideIcons.Activity,
+  chart: LucideIcons.BarChart3,
 
   // Communication
   phone: LucideIcons.Phone,
