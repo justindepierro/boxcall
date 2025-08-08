@@ -26,7 +26,7 @@ import { LogoIcon } from "../components/ui/Logo";
 export const TeamBulletin: React.FC = () => {
   const { teamId } = useParams<{ teamId: string }>();
   const { user, profile } = useAuth();
-  const { devMode, isDevMode } = useDevMode();
+  const { devMode } = useDevMode();
   const { isSuperAdmin, canCreateTeamUnlimited } = usePermissions();
   const navigate = useNavigate();
 
@@ -75,7 +75,7 @@ export const TeamBulletin: React.FC = () => {
       return null;
     }
 
-    if (isDevMode) {
+    if (devMode !== "production") {
       // Dev mock modes - show mock team data
       return {
         id: teamId,

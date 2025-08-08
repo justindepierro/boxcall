@@ -8,7 +8,7 @@ import {
   getRoleDisplayInfo,
   toSidebarItems,
 } from "../../utils/navigation";
-import { Navigation } from "../ui/Navigation";
+import { NavBar } from "../ui/NavBar";
 import { Sidebar } from "../ui/Sidebar";
 import { DevTools } from "../dev";
 import { SidebarLogo } from "../ui/Logo";
@@ -55,9 +55,18 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navigationItems = getNavigationItems(currentRole);
   const sidebarItems = toSidebarItems(navigationItems, currentRole);
   const roleInfo = getRoleDisplayInfo(currentRole);
+
+  // Convert navigationItems to NavBarItems format
+  const navBarItems = navigationItems.map((item) => ({
+    id: item.href,
+    label: item.label,
+    onClick: () => (window.location.href = item.href),
+    active: window.location.pathname === item.href,
+  }));
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Navigation />
+      <NavBar items={navBarItems} />
       {/* Main content area with overlay sidebar and top padding for fixed nav */}
       <div className="relative pt-16">
         {/* Sidebar - Now overlays instead of pushing content */}

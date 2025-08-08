@@ -82,12 +82,6 @@ export const LazyPracticePlannerModal = lazy(() =>
   }))
 );
 
-export const LazyAdvancedRSVPInterface = lazy(() =>
-  import("../AdvancedRSVPInterface").then((module) => ({
-    default: module.AdvancedRSVPInterface,
-  }))
-);
-
 // Loading component for lazy routes
 export const RouteLoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center">

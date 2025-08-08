@@ -8,7 +8,7 @@ import { DatabaseDataDisplay } from "../dashboard/DatabaseDataDisplay";
 import { Typography } from "../design-system";
 import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
-import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton";
+import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
 
 /**

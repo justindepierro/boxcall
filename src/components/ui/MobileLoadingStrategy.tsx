@@ -11,7 +11,7 @@ import {
   ListSkeleton,
   NavigationSkeleton,
   PageLoadingSkeleton,
-} from "./Skeleton";
+} from "./Skeleton.tsx";
 import { MobileErrorState, OfflineErrorState } from "./MobileErrorState";
 import { Typography } from "../design-system/Typography";
 

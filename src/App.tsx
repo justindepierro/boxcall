@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import "./App.css";
-import { DevModeProvider } from "./app/dev-mode-store";
+import { DevModeProvider } from "./app/dev-mode-store.tsx";
 import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { useTheme } from "./hooks/useTheme";
