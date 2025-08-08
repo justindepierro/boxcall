@@ -4,7 +4,7 @@
  * Shared type definitions for the modular RSVP system
  */
 
-import type { AdvancedRSVP } from "../../../types/enhanced-calendar";
+import type { AdvancedRSVP } from "../../../types/rsvp";
 
 export interface AdvancedRSVPInterfaceProps {
   eventId: string;

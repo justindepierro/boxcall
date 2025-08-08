@@ -6,7 +6,7 @@
  */
 
 import { useState } from "react";
-import { useAdvancedRSVP } from "../../../hooks/useEnhancedCalendar";
+import { useAdvancedRSVP } from "../../../hooks/useAdvancedRSVP";
 import {
   RSVPHeader,
   RSVPForm,

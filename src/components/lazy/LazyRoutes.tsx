@@ -75,10 +75,6 @@ export const LazyContactPage = lazy(() =>
   }))
 );
 
-export const LazyPhase4DemoPage = lazy(
-  () => import("../../pages/Phase4DemoPage")
-);
-
 export const LazyPracticePlanner = lazy(
   () => import("../../pages/PracticePlanner")
 );
@@ -87,12 +83,6 @@ export const LazyPracticePlanner = lazy(
 export const LazyPracticePlannerModal = lazy(() =>
   import("../practice/PracticePlannerModal/index").then((module) => ({
     default: module.PracticePlannerModal,
-  }))
-);
-
-export const LazyBulkOperationsInterface = lazy(() =>
-  import("../BulkOperationsInterface").then((module) => ({
-    default: module.BulkOperationsInterface,
   }))
 );
 
