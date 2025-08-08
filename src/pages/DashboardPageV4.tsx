@@ -12,7 +12,6 @@ import React from "react";
 import { Icon } from "../components/ui/Icon/Icon";
 import { useDashboardData } from "../hooks/useDataResolution";
 import { Typography } from "../components/design-system";
-import { CleanDataIndicator } from "../components/dev/CleanDataIndicator";
 
 /**
  * Personal Dashboard - Phase 4 with Clean Data Resolution
@@ -65,7 +64,6 @@ export const DashboardPageV4: React.FC = () => {
           <Typography variant="body-lg" color="muted">
             {error}
           </Typography>
-          <CleanDataIndicator />
         </div>
       </div>
     );
@@ -75,8 +73,6 @@ export const DashboardPageV4: React.FC = () => {
   if (isEmptyState) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <CleanDataIndicator />
-
         <div className="flex items-center justify-center min-h-[80vh]">
           <div className="text-center max-w-md">
             <div className="mb-6">
@@ -113,9 +109,6 @@ export const DashboardPageV4: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Clean Data Indicator for development */}
-      <CleanDataIndicator />
-
       {/* Welcome Section - Enhanced with data awareness */}
       <div className="bg-gradient-to-r from-surface-jade to-surface-jade dark:from-surface-jade-dark dark:to-surface-jade-dark border-b border-surface-jade-dark dark:border-brand-jade-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-left">

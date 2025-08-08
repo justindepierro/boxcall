@@ -7,7 +7,6 @@ import { TeamCalendar } from "../components/team-dashboard/TeamCalendar";
 import { TeamFeed } from "../components/team-dashboard/TeamFeed";
 import { TeamQuickActions } from "../components/team-dashboard/TeamQuickActions";
 import { TeamTrophyCase } from "../components/team-dashboard/TeamTrophyCase";
-// import TeamNavigation from '../components/team-dashboard/TeamNavigation';
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
@@ -227,8 +226,7 @@ export const TeamBulletin: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* Team Navigation */}
-      {/* <TeamNavigation teamId={teamId} userRole={userRole} /> */}
+
       {/* Main Team Dashboard Content */}
       <div className="px-6">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
