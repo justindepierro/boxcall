@@ -94,6 +94,8 @@ const ICON_MAP = {
   key: LucideIcons.Key,
   "user-plus": LucideIcons.UserPlus,
   "check-circle": LucideIcons.CheckCircle,
+  grid: LucideIcons.Grid,
+  power: LucideIcons.Power,
 
   // Arrows for UI
   "arrow-up": LucideIcons.ArrowUp,
