@@ -587,6 +587,75 @@ export interface PracticeSearchFilters {
 }
 
 // =============================================================================
+// SERVICE INTERFACES
+// =============================================================================
+
+export interface PracticePlanningService {
+  // Practice block management
+  createPracticeBlock(
+    teamId: string,
+    payload: PracticeBlockInsert
+  ): Promise<PracticeBlock>;
+  updatePracticeBlock(
+    blockId: string,
+    payload: PracticeBlockUpdate
+  ): Promise<PracticeBlock>;
+  getPracticeBlock(blockId: string): Promise<PracticeBlock | null>;
+  listPracticeBlocks(
+    teamId: string,
+    filters?: PracticeSearchFilters
+  ): Promise<PracticeBlock[]>;
+  deletePracticeBlock(blockId: string): Promise<void>;
+
+  // Activity management
+  addActivity(
+    blockId: string,
+    payload: PracticeActivityInsert
+  ): Promise<PracticeActivity>;
+  updateActivity(
+    activityId: string,
+    payload: Partial<PracticeActivityInsert>
+  ): Promise<PracticeActivity>;
+  reorderActivities(blockId: string, activityIds: string[]): Promise<void>;
+  deleteActivity(activityId: string): Promise<void>;
+
+  // Template management
+  createTemplate(
+    teamId: string,
+    payload: PracticeTemplateInsert
+  ): Promise<PracticeTemplate>;
+  updateTemplate(
+    templateId: string,
+    payload: Partial<PracticeTemplateInsert>
+  ): Promise<PracticeTemplate>;
+  getTemplate(templateId: string): Promise<PracticeTemplate | null>;
+  searchTemplates(filters: PracticeSearchFilters): Promise<PracticeTemplate[]>;
+  deleteTemplate(templateId: string): Promise<void>;
+
+  // Practice execution
+  startPracticeExecution(
+    blockId: string,
+    payload: PracticeExecutionInsert
+  ): Promise<PracticeExecution>;
+  updateExecution(
+    executionId: string,
+    payload: Partial<PracticeExecution>
+  ): Promise<PracticeExecution>;
+  completePracticeExecution(executionId: string): Promise<PracticeExecution>;
+
+  // Analytics and reporting
+  getPracticeAnalytics(
+    teamId: string,
+    period: string
+  ): Promise<PracticeAnalytics>;
+  getPerformanceMetrics(
+    teamId: string,
+    playerId?: string
+  ): Promise<PracticePerformanceMetrics>;
+  generatePracticeReport(executionId: string): Promise<unknown>;
+}
+
+// =============================================================================
 // EXPORT ALL TYPES - No need for duplicate export type declaration
 // All interfaces and types are already exported above
 // =============================================================================

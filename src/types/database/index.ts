@@ -9,9 +9,11 @@
  * - Clear separation of concerns
  */
 
-// Domain-specific types - Phase 2 Additions
+// Domain-specific types - Phase 2 Complete System
 export * from "./gamePlanningTypes";
 export * from "./practicePlanningTypes";
+export * from "./playerPerformanceTypes";
+export * from "./teamManagementTypes";
 
 // Core types - defined locally to avoid circular imports
 export type Json =
@@ -154,3 +156,91 @@ export type { SocialTables } from "./tables/socialTables";
 
 // Export specialized Phase 2 types
 export * from "./gamePlanningTypes";
+
+// =============================================================================
+// PHASE 2 COMBINED SERVICE INTERFACES
+// =============================================================================
+
+import type { PracticePlanningService } from "./practicePlanningTypes";
+import type { PlayerPerformanceService } from "./playerPerformanceTypes";
+import type { TeamManagementService } from "./teamManagementTypes";
+
+/**
+ * Complete Phase 2 Database Services Interface
+ * Combines all major system services for enterprise-grade team management
+ */
+export interface Phase2DatabaseServices {
+  practicePlanning: PracticePlanningService;
+  playerPerformance: PlayerPerformanceService;
+  teamManagement: TeamManagementService;
+}
+
+// =============================================================================
+// PHASE 2 COMMON UTILITY TYPES
+// =============================================================================
+
+/**
+ * Standard database entity structure
+ */
+export interface Phase2BaseEntity {
+  id: string;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Team-scoped entity structure
+ */
+export interface Phase2TeamScopedEntity extends Phase2BaseEntity {
+  team_id: string;
+}
+
+/**
+ * User-scoped entity structure
+ */
+export interface Phase2UserScopedEntity extends Phase2BaseEntity {
+  user_id: string;
+}
+
+/**
+ * Standard pagination parameters for Phase 2
+ */
+export interface Phase2PaginationParams {
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}
+
+/**
+ * Standard pagination response for Phase 2
+ */
+export interface Phase2PaginatedResponse<T> {
+  data: T[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
+}
+
+/**
+ * Standard API response structure for Phase 2
+ */
+export interface Phase2ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+    details?: unknown;
+  };
+  meta?: {
+    timestamp: string;
+    requestId: string;
+    version: string;
+  };
+}
