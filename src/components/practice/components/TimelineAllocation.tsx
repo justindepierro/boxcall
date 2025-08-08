@@ -421,7 +421,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
             Current Allocation (Click time to edit):
           </Typography>
           <div className="flex items-center gap-1">
-            <Icon name="info" size="xs" color="slate" />
+            <Icon name="info" size="xs" color="secondary" />
             <Typography variant="body-xs" color="muted">
               Click minutes to adjust, press Enter to save
             </Typography>

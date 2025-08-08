@@ -20,7 +20,7 @@ export const Footer: React.FC = () => {
         <div className="flex flex-col items-center space-y-3 text-center md:flex-row md:justify-between md:space-y-0 md:text-left">
           {/* Left side - Brand */}
           <div className="flex items-center gap-2">
-            <Icon name="boxcall" size="sm" color="jade" />
+            <Icon name="boxcall" size="sm" color="primary" />
             <Typography variant="body-sm" color="muted">
               © {currentYear} BoxCall. All rights reserved.
             </Typography>

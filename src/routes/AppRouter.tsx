@@ -325,7 +325,7 @@ export const AppRouter: React.FC = () => {
               <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
                 <div className="text-center max-w-md mx-auto p-6">
                   <div className="mb-6">
-                    <Icon name="alert" size="3xl" color="slate" />
+                    <Icon name="alert" size="xl" color="secondary" />
                   </div>
                   <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                     404 - Page Not Found

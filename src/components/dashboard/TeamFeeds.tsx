@@ -97,7 +97,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
         <Typography variant="headline-md" className="text-navy-700">
           Team Feeds
         </Typography>
-        <Icon name="users" size={14} color="slate" />
+        <Icon name="users" size={14} color="secondary" />
       </div>
 
       {/* Feed Content */}
@@ -106,7 +106,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
           <Icon
             name="users"
             size={48}
-            color="slate"
+            color="secondary"
             className="mb-4 opacity-50"
           />
           <Typography variant="body-lg" className="text-gray-500 mb-2">
@@ -125,7 +125,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
             >
               {/* Feed Icon */}
               <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-jade-100 flex items-center justify-center mt-0.5">
-                <Icon name={feed.icon} size={14} color="jade" />
+                <Icon name={feed.icon} size={14} color="primary" />
               </div>
               {/* Feed Content */}
               <div className="flex-1 min-w-0">

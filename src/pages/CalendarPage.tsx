@@ -656,7 +656,7 @@ export const CalendarPage: React.FC = () => {
                       <Icon
                         name="calendar"
                         size="sm"
-                        color="slate"
+                        color="secondary"
                         className="mr-2"
                       />
                       {new Date(selectedEvent.start).toLocaleDateString(
@@ -697,7 +697,7 @@ export const CalendarPage: React.FC = () => {
                         <Icon
                           name="location"
                           size="sm"
-                          color="slate"
+                          color="secondary"
                           className="mr-2"
                         />
                         {selectedEvent.location}
@@ -708,7 +708,7 @@ export const CalendarPage: React.FC = () => {
                         <Icon
                           name="users"
                           size="sm"
-                          color="slate"
+                          color="secondary"
                           className="mr-2"
                         />
                         {selectedEvent.team_name}
@@ -719,7 +719,7 @@ export const CalendarPage: React.FC = () => {
                         <Icon
                           name="target"
                           size="sm"
-                          color="slate"
+                          color="secondary"
                           className="mr-2"
                         />
                         vs. {selectedEvent.opponent}

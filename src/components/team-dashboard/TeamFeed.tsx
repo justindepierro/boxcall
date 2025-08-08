@@ -81,17 +81,17 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
   const getPostIcon = (type: string) => {
     switch (type) {
       case "announcement":
-        return <Icon name="info" size="md" color="jade" />;
+        return <Icon name="info" size="md" color="primary" />;
       case "play_upload":
         return <Icon name="book" size="md" color="navy" />;
       case "achievement":
-        return <Icon name="award" size="md" color="jade" />;
+        return <Icon name="award" size="md" color="primary" />;
       case "practice_script":
         return <Icon name="file" size="md" color="navy" />;
       case "player_spotlight":
-        return <Icon name="star" size="md" color="jade" />;
+        return <Icon name="star" size="md" color="primary" />;
       default:
-        return <Icon name="file" size="md" color="slate" />;
+        return <Icon name="file" size="md" color="secondary" />;
     }
   };
   const getPostColor = (type: string) => {
@@ -170,7 +170,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = () => {
                       key={index}
                       className="flex items-center space-x-2 p-2 bg-gray-50 dark:bg-gray-700 rounded-md"
                     >
-                      <Icon name="download" size="md" color="jade" />
+                      <Icon name="download" size="md" color="primary" />
                       <Typography
                         variant="body-sm"
                         className="text-jade-600 dark:text-jade-400"

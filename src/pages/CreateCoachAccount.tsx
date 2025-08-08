@@ -154,7 +154,7 @@ export const CreateCoachAccount: React.FC = () => {
           <div className="text-center">
             <Icon
               name="user"
-              size="3xl"
+              size="xl"
               color="info"
               className="mx-auto mb-6"
             />
@@ -662,7 +662,7 @@ export const CreateCoachAccount: React.FC = () => {
           <div className="text-center">
             <Icon
               name="check-circle"
-              size="3xl"
+              size="xl"
               color="success"
               className="mx-auto mb-6"
             />

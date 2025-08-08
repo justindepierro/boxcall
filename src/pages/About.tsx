@@ -34,7 +34,7 @@ export const About: React.FC = () => {
           <Card className="p-6">
             <Icon
               name="trending-up"
-              size="3xl"
+              size="xl"
               className="text-interaction-jade mb-4"
             />
             <Typography variant="headline-md" className="mb-3">
@@ -48,7 +48,7 @@ export const About: React.FC = () => {
           </Card>
           {/* Features */}
           <Card className="p-6">
-            <Icon name="star" size="3xl" className="text-yellow-500 mb-4" />
+            <Icon name="star" size="xl" className="text-yellow-500 mb-4" />
             <Typography variant="headline-md" className="mb-3">
               Key Features
             </Typography>
@@ -83,7 +83,7 @@ export const About: React.FC = () => {
           {/* Version Info */}
           <Card className="p-6">
             <div className="mb-4">
-              <Icon name="target" size="3xl" color="jade" />
+              <Icon name="target" size="xl" color="primary" />
             </div>
             <Typography variant="headline-md" className="mb-3">
               Version Information

@@ -17,7 +17,7 @@ const LoginPage: React.FC = () => {
             variant="headline-xl"
             className="mb-2 flex items-center justify-center"
           >
-            <Icon name="target" size="xl" className="mr-3" color="jade" />
+            <Icon name="target" size="xl" className="mr-3" color="primary" />
             BoxCall
           </Typography>
           <Typography variant="body-lg" color="muted">

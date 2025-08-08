@@ -40,6 +40,8 @@ const ICON_MAP = {
   clock: LucideIcons.Clock,
   team: LucideIcons.Users,
   user: LucideIcons.User,
+  users: LucideIcons.Users, // For team navigation
+  book: LucideIcons.Book, // For playbook
   edit: LucideIcons.Edit3,
   delete: LucideIcons.Trash2,
   plus: LucideIcons.Plus,
@@ -63,6 +65,8 @@ const ICON_MAP = {
   zap: LucideIcons.Zap,
   award: LucideIcons.Award,
   flag: LucideIcons.Flag,
+  star: LucideIcons.Star,
+  "trending-up": LucideIcons.TrendingUp,
   
   // Communication
   phone: LucideIcons.Phone,
@@ -79,6 +83,9 @@ const ICON_MAP = {
   "eye-off": LucideIcons.EyeOff,
   lock: LucideIcons.Lock,
   unlock: LucideIcons.Unlock,
+  key: LucideIcons.Key,
+  "user-plus": LucideIcons.UserPlus,
+  "check-circle": LucideIcons.CheckCircle,
   
   // Arrows for UI
   "arrow-up": LucideIcons.ArrowUp,

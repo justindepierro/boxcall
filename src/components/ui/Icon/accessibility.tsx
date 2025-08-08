@@ -39,7 +39,7 @@ export const TouchTargetIcon: React.FC<{
 
 // Quick access for common coach actions
 export const CoachEditIcon: React.FC = () => (
-  <CoachActionIcon name="edit" color="slate" />
+  <CoachActionIcon name="edit" color="secondary" />
 );
 
 export const CoachDeleteIcon: React.FC = () => (
@@ -47,9 +47,9 @@ export const CoachDeleteIcon: React.FC = () => (
 );
 
 export const CoachPDFIcon: React.FC = () => (
-  <CoachActionIcon name="pdf" color="jade" />
+  <CoachActionIcon name="pdf" color="primary" />
 );
 
 export const CoachCloseIcon: React.FC = () => (
-  <TouchTargetIcon name="close" color="slate" />
+  <TouchTargetIcon name="close" color="secondary" />
 );

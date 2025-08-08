@@ -36,7 +36,7 @@ export const Templates: React.FC = () => {
         {/* Data Import Templates */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-6">
-            <Icon name="bar-chart" size="xl" color="jade" />
+            <Icon name="bar-chart" size="xl" color="primary" />
             <h3 className="text-2xl font-bold text-jade-600">
               Data Import Templates
             </h3>
@@ -100,7 +100,7 @@ export const Templates: React.FC = () => {
         {/* Visual Resources */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-6">
-            <Icon name="activity" size="xl" color="jade" />
+            <Icon name="activity" size="xl" color="primary" />
             <Typography variant="headline-lg">Visual Resources</Typography>
           </div>
           <div className="grid gap-6 md:grid-cols-2">
@@ -134,7 +134,7 @@ export const Templates: React.FC = () => {
             <Card className="p-6">
               <div className="flex items-center mb-4">
                 <div className="mr-3">
-                  <Icon name="zap" size="xl" color="jade" />
+                  <Icon name="zap" size="xl" color="primary" />
                 </div>
                 <Typography variant="headline-md">
                   Formation Templates
@@ -164,7 +164,7 @@ export const Templates: React.FC = () => {
         {/* Import Tools */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-6">
-            <Icon name="wrench" size="xl" color="jade" />
+            <Icon name="wrench" size="xl" color="primary" />
             <Typography variant="headline-lg">Coaching Tools</Typography>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -238,7 +238,7 @@ export const Templates: React.FC = () => {
         {/* Advanced Tools */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-6">
-            <Icon name="cog" size="xl" color="jade" />
+            <Icon name="cog" size="xl" color="primary" />
             <Typography variant="headline-lg">Advanced Tools</Typography>
           </div>
           <div className="grid gap-6 md:grid-cols-2">
@@ -291,7 +291,7 @@ export const Templates: React.FC = () => {
         {/* Quick Start Guide */}
         <Card className="p-6 text-center">
           <div className="flex justify-center mb-4">
-            <Icon name="book" size="3xl" color="jade" />
+            <Icon name="book" size="xl" color="primary" />
           </div>
           <Typography variant="headline-lg" className="mb-4">
             Quick Start Guide

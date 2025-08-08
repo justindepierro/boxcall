@@ -104,7 +104,7 @@ export const TeamBulletin: React.FC = () => {
             <Icon
               name="boxcall"
               size="xl"
-              color="jade"
+              color="primary"
               className="mx-auto mb-4"
             />
             <Typography variant="headline-lg" className="mb-2">
@@ -157,7 +157,7 @@ export const TeamBulletin: React.FC = () => {
               <div className="relative group">
                 <div className="flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-gray-400 dark:hover:border-gray-500 transition-colors cursor-pointer">
                   <div className="text-center">
-                    <Icon name="boxcall" size="md" color="slate" />
+                    <Icon name="boxcall" size="md" color="secondary" />
                     <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium">
                       Team Logo
                     </div>

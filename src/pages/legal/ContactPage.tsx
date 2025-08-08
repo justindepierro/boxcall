@@ -25,7 +25,7 @@ export const ContactPage: React.FC = () => {
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
                 <div className="w-10 h-10 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
-                  <Icon name="mail" size="sm" color="jade" />
+                  <Icon name="mail" size="sm" color="primary" />
                 </div>
               </div>
               <div>
@@ -47,7 +47,7 @@ export const ContactPage: React.FC = () => {
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
                 <div className="w-10 h-10 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
-                  <Icon name="phone" size="sm" color="jade" />
+                  <Icon name="phone" size="sm" color="primary" />
                 </div>
               </div>
               <div>
@@ -67,7 +67,7 @@ export const ContactPage: React.FC = () => {
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
                 <div className="w-10 h-10 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
-                  <Icon name="map" size="sm" color="jade" />
+                  <Icon name="map" size="sm" color="primary" />
                 </div>
               </div>
               <div>

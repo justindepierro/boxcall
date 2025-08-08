@@ -204,7 +204,7 @@ export const toSidebarItems = (
         ? React.createElement(Icon, {
             name: item.icon,
             size: "md",
-            color: item.id === "boxcall" ? "jade" : "current",
+            color: item.id === "boxcall" ? "primary" : "current",
           })
         : undefined,
       onClick: item.divider

@@ -188,26 +188,26 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
 
 // Convenience components for quick adoption
 export const ModularPlayIcon: React.FC = () => (
-  <ModularIcon name="play" color="jade" />
+  <ModularIcon name="play" color="primary" />
 );
 export const ModularEditIcon: React.FC = () => (
-  <ModularIcon name="edit" size="sm" color="slate" />
+  <ModularIcon name="edit" size="sm" color="secondary" />
 );
 export const ModularDeleteIcon: React.FC = () => (
   <ModularIcon name="delete" size="sm" color="error" />
 );
 export const ModularAddIcon: React.FC = () => (
-  <ModularIcon name="plus" color="jade" />
+  <ModularIcon name="plus" color="primary" />
 );
 export const ModularCalendarIcon: React.FC = () => (
   <ModularIcon name="calendar" color="navy" />
 );
 export const ModularClockIcon: React.FC = () => (
-  <ModularIcon name="clock" color="slate" />
+  <ModularIcon name="clock" color="secondary" />
 );
 export const ModularTeamIcon: React.FC = () => (
   <ModularIcon name="users" color="navy" />
 );
 export const ModularSettingsIcon: React.FC = () => (
-  <ModularIcon name="settings" color="slate" />
+  <ModularIcon name="settings" color="secondary" />
 );

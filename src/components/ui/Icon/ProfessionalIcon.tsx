@@ -241,14 +241,14 @@ export const Icon: React.FC<IconProps> = ({
 };
 
 // Convenience exports for common patterns
-export const PlayIcon = () => <Icon name="play" color="jade" />;
-export const PauseIcon = () => <Icon name="pause" color="slate" />;
-export const EditIcon = () => <Icon name="edit" size="sm" color="slate" />;
+export const PlayIcon = () => <Icon name="play" color="primary" />;
+export const PauseIcon = () => <Icon name="pause" color="secondary" />;
+export const EditIcon = () => <Icon name="edit" size="sm" color="secondary" />;
 export const DeleteIcon = () => <Icon name="delete" size="sm" color="error" />;
-export const AddIcon = () => <Icon name="plus" color="jade" />;
+export const AddIcon = () => <Icon name="plus" color="primary" />;
 export const CalendarIcon = () => <Icon name="calendar" color="navy" />;
-export const ClockIcon = () => <Icon name="clock" color="slate" />;
+export const ClockIcon = () => <Icon name="clock" color="secondary" />;
 export const TeamIcon = () => <Icon name="users" color="navy" />;
-export const SettingsIcon = () => <Icon name="settings" color="slate" />;
+export const SettingsIcon = () => <Icon name="settings" color="secondary" />;
 
 export default Icon;

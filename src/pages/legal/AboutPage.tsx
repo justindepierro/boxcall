@@ -7,7 +7,7 @@ export const AboutPage: React.FC = () => {
       {/* Header */}
       <div className="text-center mb-12">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <Icon name="boxcall" size="lg" color="jade" />
+          <Icon name="boxcall" size="lg" color="primary" />
           <h1 className="text-4xl font-bold text-interaction-jade font-display">
             About BoxCall
           </h1>
@@ -45,7 +45,7 @@ export const AboutPage: React.FC = () => {
           <div>
             <div className="flex items-center gap-3 mb-3">
               <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
-                <Icon name="file" size="sm" color="jade" />
+                <Icon name="file" size="sm" color="primary" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Digital Playbooks
@@ -60,7 +60,7 @@ export const AboutPage: React.FC = () => {
           <div>
             <div className="flex items-center gap-3 mb-3">
               <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
-                <Icon name="calendar" size="sm" color="jade" />
+                <Icon name="calendar" size="sm" color="primary" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Practice Planning
@@ -74,7 +74,7 @@ export const AboutPage: React.FC = () => {
           <div>
             <div className="flex items-center gap-3 mb-3">
               <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
-                <Icon name="users" size="sm" color="jade" />
+                <Icon name="users" size="sm" color="primary" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Team Management
@@ -89,7 +89,7 @@ export const AboutPage: React.FC = () => {
           <div>
             <div className="flex items-center gap-3 mb-3">
               <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
-                <Icon name="chart" size="sm" color="jade" />
+                <Icon name="chart" size="sm" color="primary" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Analytics & Reports

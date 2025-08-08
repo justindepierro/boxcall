@@ -80,7 +80,7 @@ export const DatabaseDataDisplay: React.FC = () => {
           <Icon
             name="database"
             size={48}
-            color="slate"
+            color="secondary"
             className="mx-auto mb-4 opacity-50"
           />
           <Typography variant="headline-sm" className="text-gray-600 mb-2">
@@ -127,7 +127,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         <Card className="p-6">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-jade-100 rounded-lg flex items-center justify-center mr-3">
-              <Icon name="users" size={20} color="jade" />
+              <Icon name="users" size={20} color="primary" />
             </div>
             <div>
               <Typography variant="headline-sm" className="text-gray-900">

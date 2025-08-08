@@ -188,9 +188,9 @@ export const JoinTeam: React.FC = () => {
           <div>
             <div className="text-center mb-8">
               <Icon
-                name="boxcall"
-                size="3xl"
-                color="jade"
+                name="phone"
+                size="xl"
+                color="primary"
                 className="mx-auto mb-4"
               />
               <Typography variant="headline-xl" className="mb-4">
@@ -224,7 +224,7 @@ export const JoinTeam: React.FC = () => {
                         method.icon as "key" | "mail" | "search" | "user-plus"
                       }
                       size="lg"
-                      color={method.primary ? "jade" : "slate"}
+                      color={method.primary ? "primary" : "secondary"}
                     />
                     <div>
                       <Typography variant="headline-sm" className="mb-2">
@@ -249,7 +249,7 @@ export const JoinTeam: React.FC = () => {
       case "invite-code":
         return (
           <div className="max-w-md mx-auto text-center">
-            <Icon name="key" size="3xl" color="jade" className="mx-auto mb-6" />
+            <Icon name="key" size="xl" color="primary" className="mx-auto mb-6" />
             <Typography variant="headline-lg" className="mb-4">
               Enter Invite Code
             </Typography>
@@ -300,8 +300,8 @@ export const JoinTeam: React.FC = () => {
             <div className="text-center mb-8">
               <Icon
                 name="search"
-                size="3xl"
-                color="jade"
+                size="xl"
+                color="primary"
                 className="mx-auto mb-4"
               />
               <Typography variant="headline-lg" className="mb-4">
@@ -389,7 +389,7 @@ export const JoinTeam: React.FC = () => {
                 <Icon
                   name="search"
                   size="xl"
-                  color="slate"
+                  color="secondary"
                   className="mx-auto mb-4"
                 />
                 <Typography variant="headline-md" className="mb-2">
@@ -416,8 +416,8 @@ export const JoinTeam: React.FC = () => {
           <div className="max-w-md mx-auto text-center">
             <Icon
               name="mail"
-              size="3xl"
-              color="jade"
+              size="xl"
+              color="primary"
               className="mx-auto mb-6"
             />
             <Typography variant="headline-lg" className="mb-4">
@@ -464,7 +464,7 @@ export const JoinTeam: React.FC = () => {
           <div className="max-w-md mx-auto text-center">
             <Icon
               name="check-circle"
-              size="3xl"
+              size="xl"
               color="success"
               className="mx-auto mb-6"
             />

@@ -249,7 +249,7 @@ export const MobileDashboardLayout: React.FC = () => {
         icon="plus"
         label="Quick Add"
         onClick={() => setActiveView("quick-actions")}
-        color="jade"
+        color="primary"
         position="bottom-right"
       />
     </div>

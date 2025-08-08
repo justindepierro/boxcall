@@ -220,8 +220,8 @@ export const CreateTeam: React.FC = () => {
           <div className="text-center">
             <Icon
               name="boxcall"
-              size="3xl"
-              color="jade"
+              size="xl"
+              color="primary"
               className="mx-auto mb-6"
             />
             <Typography variant="headline-xl" className="mb-4">
@@ -251,7 +251,7 @@ export const CreateTeam: React.FC = () => {
                 <Icon
                   name="users"
                   size="lg"
-                  color="jade"
+                  color="primary"
                   className="mx-auto mb-2"
                 />
                 <Typography variant="body-md" className="font-medium mb-1">
@@ -265,7 +265,7 @@ export const CreateTeam: React.FC = () => {
                 <Icon
                   name="calendar"
                   size="lg"
-                  color="jade"
+                  color="primary"
                   className="mx-auto mb-2"
                 />
                 <Typography variant="body-md" className="font-medium mb-1">
@@ -279,7 +279,7 @@ export const CreateTeam: React.FC = () => {
                 <Icon
                   name="trophy"
                   size="lg"
-                  color="jade"
+                  color="primary"
                   className="mx-auto mb-2"
                 />
                 <Typography variant="body-md" className="font-medium mb-1">
@@ -703,7 +703,7 @@ export const CreateTeam: React.FC = () => {
           <div className="text-center">
             <Icon
               name="check-circle"
-              size="3xl"
+              size="xl"
               color="success"
               className="mx-auto mb-6"
             />

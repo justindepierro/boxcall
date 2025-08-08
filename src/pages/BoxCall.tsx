@@ -31,7 +31,7 @@ export const BoxCall: React.FC = () => {
         {/* Coming Soon Card */}
         <Card className="text-center py-12">
           <div className="flex justify-center mb-4">
-            <Icon name="phone" size="3xl" color="jade" />
+            <Icon name="phone" size="xl" color="primary" />
           </div>
           <Typography variant="headline-lg" className="mb-4">
             Coming Soon

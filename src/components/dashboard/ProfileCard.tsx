@@ -97,7 +97,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
         )}
         {isFamily && (
           <div className="flex items-center space-x-2">
-            <Icon name="users" size={14} color="jade" />
+            <Icon name="users" size={14} color="primary" />
             <Typography variant="body-sm" className="text-gray-700">
               Family Member
             </Typography>
@@ -129,7 +129,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
         {/* Contact Info */}
         {profile.phone && !isViewMode && (
           <div className="flex items-center space-x-2 pt-1 border-t border-gray-100">
-            <Icon name="phone" size={14} color="slate" />
+            <Icon name="phone" size={14} color="secondary" />
             <Typography variant="body-sm" className="text-gray-600">
               {profile.phone}
             </Typography>
