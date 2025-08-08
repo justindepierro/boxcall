@@ -2,7 +2,7 @@ import React from "react";
 import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
-import { Icon, SmartIconSystem, type IconName } from "../ui/Icon";
+import { Icon, SmartIconSystem } from "../ui/Icon";
 interface PersonalTrophyShelfProps {
   userId: string;
   userRole?: string; // Optional for future role-based features
@@ -50,7 +50,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       maxProgress: medal.maxProgress,
     })),
   ];
-  // Helper function to render consistent icons using SmartIconSystem
+  // Helper function to render consistent icons using available Icon component names
   const renderAchievementIcon = (
     iconData: React.ReactElement | string | undefined,
     name?: string,
@@ -60,11 +60,26 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
     if (React.isValidElement(iconData)) {
       return iconData;
     }
-    // Use SmartIconSystem for intelligent icon selection
-    let iconName: IconName = "star"; // fallback
+
+    // Define available icon names that the Icon component supports
+    type ValidIconName =
+      | "star"
+      | "trophy"
+      | "award"
+      | "target"
+      | "zap"
+      | "check"
+      | "flag"
+      | "activity"
+      | "shield"
+      | "message"
+      | "calendar";
+
+    let iconName: ValidIconName = "star"; // fallback
+
     if (typeof iconData === "string") {
       // Try to use the provided icon name directly first with our available icons
-      const iconMap: { [key: string]: IconName } = {
+      const iconMap: { [key: string]: ValidIconName } = {
         target: "target",
         crown: "star", // crown -> star
         check: "check",
@@ -75,6 +90,9 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         award: "award",
         medal: "award", // medal -> award
         star: "star",
+        flag: "flag",
+        activity: "activity",
+        shield: "shield",
       };
       iconName = iconMap[iconData] || "star"; // fallback to star if not found
     } else {
@@ -86,7 +104,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         "trophy"
       );
       // Map SmartIconSystem results to our available icons
-      const smartIconMap: { [key: string]: IconName } = {
+      const smartIconMap: { [key: string]: ValidIconName } = {
         trophy: "trophy",
         award: "award",
         star: "star",
@@ -95,7 +113,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         check: "check",
         flag: "flag",
         activity: "activity",
-        chart: "bar-chart",
+        chart: "activity", // chart -> activity
         shield: "shield",
       };
       iconName = smartIconMap[smartIcon] || "star";
