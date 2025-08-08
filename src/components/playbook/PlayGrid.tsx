@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { ToggleLeft, ToggleRight } from "lucide-react";
 import type { Play } from "../../types/play";
 import { PlayCard } from "./PlayCard";
-import { getDemoPlays } from "../../data/demoPlays";
 interface PlayGridProps {
   searchQuery: string;
   filters: {
@@ -23,15 +22,11 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
 }) => {
   // Toggle for play name display mode (true = one-word calls, false = full names)
   const [showOneWordCalls, setShowOneWordCalls] = useState(false);
-  // Use demo data for now - replace with actual API call later
-  const plays: Play[] = getDemoPlays({
-    formation: filters.formation,
-    playType: filters.playType,
-    down: filters.down,
-    distance: filters.distance,
-    search: searchQuery,
-  });
-  const filteredPlays = plays; // Filtering is now done in getDemoPlays()
+  // TODO: Replace with Supabase data fetching
+  const plays: Play[] = []; // Empty until database integration
+  
+  const filteredPlays = plays; // Will implement filtering when we have real data
+  
   if (filteredPlays.length === 0) {
     return (
       <div className="text-center py-16">

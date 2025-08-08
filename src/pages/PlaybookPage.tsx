@@ -14,7 +14,6 @@ import { PlayBuilderWizard } from "../components/playbook/PlayBuilder/PlayBuilde
 import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal";
 import { PracticeScriptService } from "../services/practiceScriptService";
 import { CSVService } from "../services/csv";
-import { getDemoPlays } from "../data/demoPlays";
 import type { Play } from "../types/play";
 import {
   Badge,
@@ -160,8 +159,13 @@ export const PlaybookPage: React.FC = () => {
 
   const handleExportCSV = () => {
     try {
-      // Get current plays (using demo data for now)
-      const plays = getDemoPlays({});
+      // TODO: Get current plays from Supabase/real data
+      const plays: Play[] = []; // Empty for now until database integration
+
+      if (plays.length === 0) {
+        alert("No plays to export. Create some plays first!");
+        return;
+      }
 
       // Export to CSV
       const csvContent = CSVService.exportPlaysToCSV(plays, {

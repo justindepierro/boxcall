@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { X, Save, Eye, Users, Route, Palette } from "lucide-react";
 import type { Play } from "../../../types/play";
 import { FieldCanvas } from "./FieldCanvas";
-import { getDemoPlays } from "../../../data/demoPlays";
 interface VisualPlayBuilderProps {
   isOpen: boolean;
   onClose: () => void;
@@ -17,8 +16,8 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
   onSave,
 }) => {
   const [viewMode, setViewMode] = useState<ViewMode>("field");
-  const [selectedPlay, setSelectedPlay] = useState<Play | undefined>(
-    play || getDemoPlays({})[0] // Use first demo play if no play provided
+  const [selectedPlay, _setSelectedPlay] = useState<Play | undefined>(
+    play // Only use provided play, no fallback demo data
   );
   if (!isOpen) return null;
   const handleSave = () => {
@@ -101,18 +100,13 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                       <select
                         value={selectedPlay?.id || ""}
                         onChange={(e) => {
-                          const playId = e.target.value;
-                          const plays = getDemoPlays({});
-                          const play = plays.find((p) => p.id === playId);
-                          setSelectedPlay(play);
+                          // TODO: Implement play selection from database
+                          console.log("Play selection not yet implemented:", e.target.value);
                         }}
                         className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        disabled
                       >
-                        {getDemoPlays({}).map((play) => (
-                          <option key={play.id} value={play.id}>
-                            {play.play_name} ({play.formation})
-                          </option>
-                        ))}
+                        <option value="">Select a play (coming soon)</option>
                       </select>
                     </div>
                     <div>

@@ -95,12 +95,7 @@ export class AchievementService {
         return this.getEmptyAchievements();
       }
 
-      // For legacy mock dev modes, return mock data
-      if (devMode === "super_admin_mock" || devMode?.startsWith("view_as_")) {
-        return this.getMockAchievements(userId);
-      }
-
-      // Default fallback - try real data first
+      // Default - try real data first, fall back to empty
       try {
         const realAchievements = await this.getRealAchievements(userId);
         return realAchievements;
@@ -256,7 +251,7 @@ export class AchievementService {
    * Get helmet stickers awarded to user
    * TODO: Implement real database query
    */
-  static async getHelmetStickers(userId: string): Promise<HelmetSticker[]> {
+  static async getHelmetStickers(_userId: string): Promise<HelmetSticker[]> {
     try {
       // TODO: Query team_achievements or similar table
       // const { data, error } = await supabase
@@ -269,8 +264,8 @@ export class AchievementService {
       //   .eq('user_id', userId)
       //   .order('created_at', { ascending: false });
 
-      // For now, return mock data
-      return this.getMockHelmetStickers(userId);
+      // TODO: Implement real helmet stickers from database
+      return [];
     } catch (error) {
       console.error("Error fetching helmet stickers:", error);
       return [];
@@ -280,10 +275,10 @@ export class AchievementService {
   /**
    * Get BoxCall platform medals for user
    */
-  static async getBoxCallMedals(userId: string): Promise<BoxCallMedal[]> {
+  static async getBoxCallMedals(_userId: string): Promise<BoxCallMedal[]> {
     try {
       // TODO: Implement medal calculation based on user activity
-      return this.calculateBoxCallMedals(userId);
+      return [];
     } catch (error) {
       console.error("Error calculating BoxCall medals:", error);
       return [];
@@ -315,178 +310,6 @@ export class AchievementService {
     const streakBonus = achievements.weeklyStreak * 5; // 5 points per day streak
 
     return stickerPoints + medalPoints + streakBonus;
-  }
-
-  /**
-   * Mock data for development
-   */
-  private static getMockAchievements(userId: string): AchievementData {
-    const helmetStickers = this.getMockHelmetStickers(userId);
-    const boxcallMedals = this.getMockBoxCallMedals();
-    const weeklyStreak = Math.floor(Math.random() * 14) + 1;
-
-    const achievements: AchievementData = {
-      helmetStickers,
-      boxcallMedals,
-      weeklyStreak,
-      totalPoints: 0,
-      recentAchievements: [],
-    };
-
-    achievements.totalPoints = this.calculateTotalPoints(achievements);
-    achievements.recentAchievements = [
-      ...helmetStickers.slice(0, 2),
-      ...boxcallMedals.filter((m) => m.earned).slice(0, 1),
-    ];
-
-    return achievements;
-  }
-
-  private static getMockHelmetStickers(userId: string): HelmetSticker[] {
-    // Create different stickers based on user ID for variety
-    const stickerSets = [
-      [
-        {
-          name: "First Touchdown",
-          icon: "target",
-          awardedBy: "coach-1",
-          awardedByName: "Coach Johnson",
-        },
-        {
-          name: "Perfect Practice",
-          icon: "⭐",
-          awardedBy: "coach-2",
-          awardedByName: "Coach Williams",
-        },
-        {
-          name: "Team Leader",
-          icon: "crown",
-          awardedBy: "coach-1",
-          awardedByName: "Coach Johnson",
-        },
-      ],
-      [
-        {
-          name: "Defensive Stop",
-          icon: "shield",
-          awardedBy: "coach-3",
-          awardedByName: "Coach Davis",
-        },
-        {
-          name: "Hustle Award",
-          icon: "activity",
-          awardedBy: "coach-1",
-          awardedByName: "Coach Johnson",
-        },
-      ],
-      [
-        {
-          name: "Game Winner",
-          icon: "award",
-          awardedBy: "coach-2",
-          awardedByName: "Coach Williams",
-        },
-        {
-          name: "Sportsmanship",
-          icon: "🤝",
-          awardedBy: "coach-1",
-          awardedByName: "Coach Johnson",
-        },
-        {
-          name: "Study Hall",
-          icon: "book",
-          awardedBy: "coach-3",
-          awardedByName: "Coach Davis",
-        },
-        {
-          name: "Community Service",
-          icon: "star",
-          awardedBy: "coach-1",
-          awardedByName: "Coach Johnson",
-        },
-      ],
-    ];
-
-    const userIndex = userId.length % stickerSets.length;
-    const stickers = stickerSets[userIndex];
-
-    return stickers.map((sticker, index) => ({
-      id: `sticker-${index + 1}`,
-      ...sticker,
-      date: new Date(Date.now() - (index + 1) * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .split("T")[0],
-      teamId: "team-1",
-      teamName: "BoxCall Dev Team",
-    }));
-  }
-
-  private static getMockBoxCallMedals(): BoxCallMedal[] {
-    return [
-      {
-        id: "profile-complete",
-        name: "Profile Complete",
-        icon: "check",
-        description: "Completed profile setup with photo and info",
-        earned: true,
-        earnedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-          .toISOString()
-          .split("T")[0],
-      },
-      {
-        id: "team-player",
-        name: "Team Player",
-        icon: "🤝",
-        description: "Joined your first team",
-        earned: true,
-        earnedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
-          .toISOString()
-          .split("T")[0],
-      },
-      {
-        id: "week-warrior",
-        name: "Week Warrior",
-        icon: "zap",
-        description: "Active for 7 consecutive days",
-        earned: false,
-        progress: Math.floor(Math.random() * 7),
-        maxProgress: 7,
-      },
-      {
-        id: "social-butterfly",
-        name: "Social Butterfly",
-        icon: "message",
-        description: "Send 10 team messages",
-        earned: Math.random() > 0.5,
-        progress: Math.floor(Math.random() * 10),
-        maxProgress: 10,
-      },
-      {
-        id: "calendar-keeper",
-        name: "Calendar Keeper",
-        icon: "calendar",
-        description: "RSVP to 5 team events",
-        earned: false,
-        progress: Math.floor(Math.random() * 5),
-        maxProgress: 5,
-      },
-    ];
-  }
-
-  private static async calculateBoxCallMedals(
-    userId: string
-  ): Promise<BoxCallMedal[]> {
-    const medals = this.getMockBoxCallMedals();
-
-    // TODO: Calculate real progress based on user data
-    // - Profile completion: Check if user has filled out profile
-    // - Team membership: Check team_members table
-    console.log("Calculating BoxCall medals for user:", userId);
-    // - Activity streak: Check login history
-    // - Social activity: Check message/post counts
-    // - Calendar activity: Check RSVP history
-
-    return medals;
   }
 
   /**

@@ -183,56 +183,21 @@ export class DashboardService {
       }
     }
 
-    // For dev modes that need mock activity, check if user has teams
+        // For users with no teams, return empty activity
     if (!userTeams || userTeams.length === 0) {
       return [];
     }
 
-    // Return mock data only for dev mock modes
-    console.log("🧪 Dashboard Service: Returning mock activity for dev mode");
-    const mockActivity: ActivityItem[] = [
-      {
-        id: "1",
-        type: "achievement",
-        title: "New helmet sticker earned",
-        description: "Touchdown Pass - Game vs. Central",
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-        teamId: userTeams[0]?.team?.id,
-        teamName: userTeams[0]?.team?.name,
-        icon: "award",
-        color: "jade",
-      },
-      {
-        id: "2",
-        type: "practice",
-        title: "Practice script updated",
-        description: "Friday practice plan uploaded",
-        timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(), // 6 hours ago
-        teamId: userTeams[0]?.team?.id,
-        teamName: userTeams[0]?.team?.name,
-        icon: "file",
-        color: "blue",
-      },
-      {
-        id: "3",
-        type: "message",
-        title: "New message from coach",
-        description: "Important update about Saturday game",
-        timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(), // 12 hours ago
-        teamId: userTeams[0]?.team?.id,
-        teamName: userTeams[0]?.team?.name,
-        icon: "message",
-        color: "purple",
-      },
-    ];
-    return mockActivity;
+    // TODO: Implement real activity fetching from Supabase
+    // For now, return empty until we have real data
+    return [];
   }
   /**
    * Get team status for display
    */
   static getTeamStatus(): { status: string; color: string } {
-    // TODO: Implement real season/status logic
-    // For now, simple mock logic based on current date
+    // TODO: Implement real season/status logic from database
+    // For now, simple logic based on current date
     const currentMonth = new Date().getMonth(); // 0-11
     if (currentMonth >= 7 && currentMonth <= 11) {
       // Aug-Dec

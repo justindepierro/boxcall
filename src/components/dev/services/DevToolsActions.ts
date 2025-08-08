@@ -59,12 +59,12 @@ export class DevToolsActions {
   }
 
   exportStateSnapshot(
-    user: any,
-    profile: any,
+    user: { id: string; email: string } | null,
+    profile: Record<string, unknown> | null,
     devMode: string,
-    teams: any[],
-    playbooks: any[],
-    plays: any[]
+    teams: Record<string, unknown>[],
+    playbooks: Record<string, unknown>[],
+    plays: Record<string, unknown>[]
   ) {
     const snapshot = {
       user: user ? { id: user.id, email: user.email } : null,
