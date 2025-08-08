@@ -5,7 +5,6 @@ import { Icon } from "../components/ui/Icon/Icon";
 import {
   LazyDashboardPage,
   LazyLoginPage,
-  LazyPhase4DemoPage,
   LazyCalendarPage,
   LazyProfilePage,
   LazyTeamBulletin,
@@ -258,18 +257,6 @@ export const AppRouter: React.FC = () => {
           />
 
           {/* ==================== DEVELOPMENT & TESTING ==================== */}
-          {/* Phase 4 Demo Route - Data Resolution Testing */}
-          <Route
-            path="/phase4-demo"
-            element={
-              <ProtectedRoute>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyPhase4DemoPage />
-                </Suspense>
-              </ProtectedRoute>
-            }
-          />
-
           {/* ==================== LEGAL & INFO PAGES ==================== */}
           {/* ==================== LEGAL & INFO PAGES ==================== */}
           <Route

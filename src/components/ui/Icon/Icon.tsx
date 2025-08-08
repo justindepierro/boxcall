@@ -66,6 +66,7 @@ const ICON_MAP = {
   warning: LucideIcons.AlertTriangle,
   error: LucideIcons.AlertCircle,
   info: LucideIcons.Info,
+  alert: LucideIcons.AlertTriangle,
 
   // Sports specific
   target: LucideIcons.Target,
@@ -77,6 +78,7 @@ const ICON_MAP = {
   "trending-up": LucideIcons.TrendingUp,
   activity: LucideIcons.Activity,
   chart: LucideIcons.BarChart3,
+  "bar-chart": LucideIcons.BarChart3,
   shield: LucideIcons.Shield,
 
   // Communication
