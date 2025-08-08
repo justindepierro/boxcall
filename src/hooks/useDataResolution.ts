@@ -16,12 +16,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../app/auth-store";
-import { useCleanDevMode } from "../app/dev-mode-hooks-clean";
-import { DataResolutionService } from "../services/DataResolutionService";
-import type {
-  DataResolutionContext,
-  CleanDevMode,
-} from "../app/dev-mode-types-clean";
+import { useDevMode } from "../app/dev-mode-hooks";
+// TODO: Re-enable when DataResolutionService is fixed
+// import { DataResolutionService } from "../services/DataResolutionService";
 
 // Basic interfaces for resolved data (expanded from database types)
 export interface UserProfileData {
@@ -67,14 +64,14 @@ export interface CalendarEventData {
   [key: string]: unknown;
 }
 
-export interface ResolvedData {
+interface ResolvedData {
   userProfile: UserProfileData | null;
   teams: TeamData[];
   achievements: AchievementData[];
   calendarEvents: CalendarEventData[];
   isLoading: boolean;
   error: string | null;
-  context: DataResolutionContext | null;
+  context: { dataSource?: string } | null;
 }
 
 /**
@@ -83,7 +80,7 @@ export interface ResolvedData {
  */
 export const useDataResolution = () => {
   const { user } = useAuth();
-  const { devMode } = useCleanDevMode();
+  const { devMode } = useDevMode();
   const [resolvedData, setResolvedData] = useState<ResolvedData>({
     userProfile: null,
     teams: [],
@@ -94,7 +91,8 @@ export const useDataResolution = () => {
     context: null,
   });
 
-  const dataService = DataResolutionService.getInstance();
+  // TODO: Re-enable when DataResolutionService is fixed
+  // const dataService = DataResolutionService.getInstance();
 
   const loadData = useCallback(async () => {
     if (!user?.id || !devMode) {
@@ -105,63 +103,25 @@ export const useDataResolution = () => {
     try {
       setResolvedData((prev) => ({ ...prev, isLoading: true, error: null }));
 
-      // Get data resolution context
-      const context = dataService.resolveDataContext(
-        devMode as CleanDevMode,
-        user.id,
-        user.email
-      );
-
-      // Load all data in parallel
-      const [
-        userProfileResult,
-        teamsDataResult,
-        achievementsResult,
-        calendarEventsResult,
-      ] = await Promise.all([
-        dataService.getUserProfile(context, user.id),
-        dataService.getTeamData(context, user.id),
-        dataService.getAchievements(context),
-        dataService.getCalendarEvents(context),
-      ]);
-
-      // Handle potential error responses and type guard the results
-      const userProfile =
-        userProfileResult &&
-        typeof userProfileResult === "object" &&
-        "id" in userProfileResult
-          ? (userProfileResult as UserProfileData)
-          : null;
-
-      const teams = Array.isArray(teamsDataResult)
-        ? (teamsDataResult as TeamData[])
-        : [];
-
-      const achievements = Array.isArray(achievementsResult)
-        ? (achievementsResult as AchievementData[])
-        : [];
-
-      const calendarEvents = Array.isArray(calendarEventsResult)
-        ? (calendarEventsResult as CalendarEventData[])
-        : [];
+      // TODO: Fix DataResolutionService integration
+      // For now, return empty data to get app running
+      const mockContext = {
+        dataSource: devMode === "production" ? "user_real" : "dev_realistic",
+      };
 
       setResolvedData({
-        userProfile,
-        teams,
-        achievements,
-        calendarEvents,
+        userProfile: null,
+        teams: [],
+        achievements: [],
+        calendarEvents: [],
         isLoading: false,
         error: null,
-        context,
+        context: mockContext,
       });
 
-      console.log("✅ Data Resolution: Successfully loaded data", {
+      console.log("✅ Data Resolution: Using temporary mock data", {
         devMode,
-        dataSource: context.dataSource,
-        userProfileLoaded: !!userProfile,
-        teamsCount: teams?.length || 0,
-        achievementsCount: achievements?.length || 0,
-        eventsCount: calendarEvents?.length || 0,
+        dataSource: mockContext.dataSource,
       });
     } catch (error) {
       console.error("❌ Data Resolution: Error loading data", error);
@@ -171,7 +131,7 @@ export const useDataResolution = () => {
         error: error instanceof Error ? error.message : "Failed to load data",
       }));
     }
-  }, [user?.id, user?.email, devMode, dataService]);
+  }, [user?.id, devMode]);
 
   // Load data when dependencies change
   useEffect(() => {

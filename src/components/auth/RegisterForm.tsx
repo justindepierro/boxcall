@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../app/auth-store";
 import { Typography } from "../design-system";
 import { Button, Card, Input, Select } from "../ui";
+import { AuthLogo } from "../ui/Logo";
 interface RegisterFormProps {
   onSuccess?: () => void;
   onSwitchToLogin?: () => void;
@@ -98,11 +99,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       <div className="p-6">
         <div className="text-center mb-6">
           <div className="flex items-center justify-center mb-4">
-            <img
-              src="/assets/boxcall-logo-text.svg"
-              alt="BoxCall"
-              className="h-12"
-            />
+            <AuthLogo />
           </div>
           <Typography variant="headline-lg" as="h2" className="mb-2">
             Join BoxCall

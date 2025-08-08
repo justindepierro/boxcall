@@ -33,13 +33,14 @@
  */
 
 import type {
+  DevMode,
   CleanDevMode,
-  DataSource,
-  PermissionContext,
   DataResolutionContext,
-} from "../app/dev-mode-types-clean";
+  PermissionContext,
+  DataSource,
+} from "../app/dev-mode-types";
 
-import { DEV_MODE_CONFIGS } from "../app/dev-mode-types-clean";
+import { DEV_MODE_CONFIGS } from "../app/dev-mode-types";
 import { supabase } from "../lib/supabase";
 
 // Define consistent data interfaces

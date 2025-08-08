@@ -10,9 +10,10 @@
 
 import { DataResolutionService } from "./DataResolutionService";
 import type {
+  DevMode,
   CleanDevMode,
   DataResolutionContext,
-} from "../app/dev-mode-types-clean";
+} from "../app/dev-mode-types";
 
 export interface ActivityItem {
   id: string;

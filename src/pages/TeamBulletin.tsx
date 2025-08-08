@@ -11,6 +11,7 @@ import { TeamTrophyCase } from "../components/team-dashboard/TeamTrophyCase";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
+import { LogoIcon } from "../components/ui/Logo";
 /**
  * Team Bulletin - Team-specific communication hub
  * Facebook-style team feed with role-based functionality
@@ -101,12 +102,7 @@ export const TeamBulletin: React.FC = () => {
       <div className="py-6">
         <div className="max-w-2xl mx-auto text-center">
           <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-8">
-            <Icon
-              name="boxcall"
-              size="xl"
-              color="primary"
-              className="mx-auto mb-4"
-            />
+            <LogoIcon size="xl" color="brand" className="mx-auto mb-4" />
             <Typography variant="headline-lg" className="mb-2">
               No Team Found
             </Typography>
@@ -157,7 +153,7 @@ export const TeamBulletin: React.FC = () => {
               <div className="relative group">
                 <div className="flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-gray-400 dark:hover:border-gray-500 transition-colors cursor-pointer">
                   <div className="text-center">
-                    <Icon name="boxcall" size="md" color="secondary" />
+                    <LogoIcon size="md" color="brand" />
                     <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium">
                       Team Logo
                     </div>

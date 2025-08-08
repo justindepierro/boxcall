@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Typography } from "../design-system";
-import { Icon } from "../ui/Icon/Icon";
+import { LogoIcon } from "../ui/Logo";
 
 /**
  * Footer Component
@@ -20,7 +20,7 @@ export const Footer: React.FC = () => {
         <div className="flex flex-col items-center space-y-3 text-center md:flex-row md:justify-between md:space-y-0 md:text-left">
           {/* Left side - Brand */}
           <div className="flex items-center gap-2">
-            <Icon name="boxcall" size="sm" color="primary" />
+            <LogoIcon size="sm" color="brand" />
             <Typography variant="body-sm" color="muted">
               © {currentYear} BoxCall. All rights reserved.
             </Typography>

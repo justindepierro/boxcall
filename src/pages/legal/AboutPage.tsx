@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "../../components/ui/Icon/Icon";
+import { LogoIcon } from "../../components/ui/Logo";
 
 export const AboutPage: React.FC = () => {
   return (
@@ -7,7 +8,7 @@ export const AboutPage: React.FC = () => {
       {/* Header */}
       <div className="text-center mb-12">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <Icon name="boxcall" size="lg" color="primary" />
+          <LogoIcon size="lg" color="brand" />
           <h1 className="text-4xl font-bold text-interaction-jade font-display">
             About BoxCall
           </h1>

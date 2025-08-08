@@ -11,6 +11,7 @@ import {
 import { Navigation } from "../ui/Navigation";
 import { Sidebar } from "../ui/Sidebar";
 import { DevTools } from "../dev";
+import { SidebarLogo } from "../ui/Logo";
 import type { DevMode } from "../../types/dev";
 
 // Helper to get test role from dev mode
@@ -68,11 +69,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           header={
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 flex items-center justify-center">
-                <img
-                  src="/assets/boxcall-logo.svg"
-                  alt="BoxCall"
-                  className="w-8 h-8"
-                />
+                <SidebarLogo />
               </div>
               <div>
                 <h3 className="font-display font-bold text-lg text-jade-600">

@@ -5,6 +5,7 @@ import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
 import { Icon } from "./Icon/Icon";
 import { NotificationBadge, Badge } from "./Badge";
+import { NavbarLogo } from "./Logo";
 
 /**
  * Navigation Component
@@ -150,11 +151,7 @@ export const Navigation: React.FC = () => {
               className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
             >
               <div className="flex items-center justify-center w-8 h-8">
-                <img
-                  src="/assets/boxcall-logo.svg"
-                  alt="BoxCall"
-                  className="w-8 h-8"
-                />
+                <NavbarLogo />
               </div>
               <span className="font-display text-xl tracking-wide text-interaction-jade dark:text-brand-jade font-bold">
                 BoxCall

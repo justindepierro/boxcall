@@ -39,3 +39,25 @@ export const DEV_MODE_CONFIGS = {
     color: "pink",
   },
 } as const;
+
+// Additional types for data resolution services
+export type CleanDevMode = DevMode;
+export type DataSource =
+  | "user_real"
+  | "dev_realistic"
+  | "legacy_mock"
+  | "empty";
+
+export interface DataResolutionContext {
+  dataSource: DataSource;
+  permissionLevel: string;
+  userId?: string;
+  email?: string;
+}
+
+export interface PermissionContext {
+  devMode: DevMode;
+  userId: string;
+  email?: string;
+  permissionLevel: string;
+}

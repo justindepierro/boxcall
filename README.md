@@ -10,7 +10,7 @@
 [![Vite](https://img.shields.io/badge/Vite-7.0.6-646cff)](https://vitejs.dev/)
 
 <div align="center">
-  <img src="/public/assets/boxcall-logo-text.svg" alt="BoxCall" width="300"/>
+  <img src="/assets/boxcall-logo-text.svg" alt="BoxCall" width="300"/>
   
   **Professional football management platform built for coaches, by coaches**
 </div>
