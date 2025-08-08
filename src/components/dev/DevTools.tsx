@@ -162,7 +162,9 @@ export const DevTools: React.FC = () => {
             onTestDatabase={() => actions.testDatabaseConnection()}
             onExportState={() =>
               actions.exportStateSnapshot(
-                user,
+                user && user.email 
+                  ? { id: user.id, email: user.email }
+                  : null,
                 profile,
                 devMode,
                 teams,

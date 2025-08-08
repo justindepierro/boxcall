@@ -1,6 +1,11 @@
 # 📋 BoxCall - TODO & Next Phase Planning
 
-## 🎯 **CURRENT FOCUS: PHASE 3 PRODUCTION DEPLOYMENT** (August 2025)
+## 🎯 **CURRENT FOCU**Files Identified for Cleanup**: ✅ **ALL REMOVED\*\*
+
+- ~~`src/data/mock-team-data.ts` - 258 lines of mock team/member/profile data~~ ✅ **DELETED**
+- ~~`src/data/demoPlays.ts` - Demo football plays (evaluate if needed for onboarding)~~ ✅ **DELETED**
+- ~~`dashboardService.ts` - Dev mock activity logic (lines 186-228)~~ ✅ **CLEANED**
+- ~~`achievementService.ts` - Legacy mock dev modes (super*admin_mock, view_as*)~~ ✅ **REMOVED**SE 3 PRODUCTION DEPLOYMENT\*\* (August 2025)
 
 ### ✅ **COMPLETED - PHASE 2 FOUNDATIONS + PERFORMANCE**
 
@@ -22,18 +27,18 @@
 
 > _We're 90% there! Just need to activate existing infrastructure_
 
-### **🎯 IMMEDIATE PRIORITY: MOCK DATA CLEANUP (30 minutes)**
+### **🎯 IMMEDIATE PRIORITY: MOCK DATA CLEANUP (30 minutes)** ✅ **COMPLETE**
 
-- [ ] **Remove Mock Data Files**
-  - [ ] Delete `src/data/mock-team-data.ts` (258 lines of mock team/member data)
-  - [ ] Delete `src/data/demoPlays.ts` (or keep for onboarding if needed)
-  - [ ] Clean dashboard service mock logic in `dashboardService.ts`
-  - [ ] Remove legacy achievement service mock modes
+- [x] **Remove Mock Data Files** ✅ **COMPLETE**
+  - [x] Delete `src/data/mock-team-data.ts` (258 lines of mock team/member data)
+  - [x] Delete `src/data/demoPlays.ts` (or keep for onboarding if needed)
+  - [x] Clean dashboard service mock logic in `dashboardService.ts`
+  - [x] Remove legacy achievement service mock modes
 
-- [ ] **Service Cleanup**
-  - [ ] Remove `dev mock modes` from dashboard service
-  - [ ] Clean `super_admin_mock` logic from achievement service
-  - [ ] Update services to use real Supabase data only
+- [x] **Service Cleanup** ✅ **COMPLETE**
+  - [x] Remove `dev mock modes` from dashboard service
+  - [x] Clean `super_admin_mock` logic from achievement service
+  - [x] Update services to use real Supabase data only
 
 ### **🎯 SUPABASE PRODUCTION SETUP (30 minutes)**
 
@@ -99,7 +104,7 @@
 **Supabase Activation: 30 minutes** ⚡  
 **Production Testing: 15 minutes** ✅
 
-**Total Time to Production: 75 minutes** 🎯
+**Total Time to Production: 45 minutes** 🎯 (Reduced from 75 - mock cleanup complete!)
 
 ---
 

@@ -101,7 +101,10 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                         value={selectedPlay?.id || ""}
                         onChange={(e) => {
                           // TODO: Implement play selection from database
-                          console.log("Play selection not yet implemented:", e.target.value);
+                          console.log(
+                            "Play selection not yet implemented:",
+                            e.target.value
+                          );
                         }}
                         className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                         disabled

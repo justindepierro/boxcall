@@ -24,9 +24,9 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
   const [showOneWordCalls, setShowOneWordCalls] = useState(false);
   // TODO: Replace with Supabase data fetching
   const plays: Play[] = []; // Empty until database integration
-  
+
   const filteredPlays = plays; // Will implement filtering when we have real data
-  
+
   if (filteredPlays.length === 0) {
     return (
       <div className="text-center py-16">

@@ -183,7 +183,7 @@ export class DashboardService {
       }
     }
 
-        // For users with no teams, return empty activity
+    // For users with no teams, return empty activity
     if (!userTeams || userTeams.length === 0) {
       return [];
     }

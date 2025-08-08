@@ -60,16 +60,20 @@ export class DevToolsActions {
 
   exportStateSnapshot(
     user: { id: string; email: string } | null,
-    profile: Record<string, unknown> | null,
+    profile: unknown,
     devMode: string,
-    teams: Record<string, unknown>[],
-    playbooks: Record<string, unknown>[],
-    plays: Record<string, unknown>[]
+    teams: unknown[],
+    playbooks: unknown[],
+    plays: unknown[]
   ) {
     const snapshot = {
       user: user ? { id: user.id, email: user.email } : null,
-      profile: profile
-        ? { id: profile.id, role: profile.role, full_name: profile.full_name }
+      profile: profile && typeof profile === 'object' && profile !== null
+        ? {
+            id: (profile as Record<string, unknown>)?.id || 'unknown',
+            role: (profile as Record<string, unknown>)?.role || 'unknown',
+            full_name: (profile as Record<string, unknown>)?.full_name || 'Unknown User'
+          }
         : null,
       devMode,
       dataCount: {
