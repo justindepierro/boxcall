@@ -12,7 +12,6 @@ export { default as Playbook } from "./Playbook";
 export { default as TeamSettings } from "./TeamSettings";
 export { default as About } from "./About";
 export { default as Templates } from "./Templates";
-export { default as Playground } from "./Playground";
 // Legal pages
 export { AboutPage } from "./legal/AboutPage";
 export { PrivacyPolicyPage } from "./legal/PrivacyPolicyPage";

@@ -148,22 +148,7 @@ export const getNavigationItems = (
       description: "Pre-built templates and resources",
     });
   }
-  // Playground - Developers and Super Admins only
-  // Handle dev mode roles that include "super_admin"
-  if (
-    userRole === "admin" ||
-    (userRole && userRole.includes("super_admin")) ||
-    userRole === null ||
-    userRole === "coach"
-  ) {
-    items.push({
-      id: "smart-icon-playground",
-      label: "Icon Playground",
-      icon: "search",
-      href: "/playground/smart-icon-system",
-      description: "Test and explore the Smart Icon System",
-    });
-  }
+
   // Divider before logout
   items.push({
     id: "divider-logout",
