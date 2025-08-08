@@ -3,6 +3,8 @@
  * Centralized actions for DevTools functionality
  */
 import { supabase } from "../../../lib/supabase";
+import { checkDatabaseData } from "../../../utils/demo-data-check";
+import { createSampleData } from "../../../utils/create-sample-data";
 import type { DevLog } from "../types";
 
 export class DevToolsActions {
@@ -29,7 +31,7 @@ export class DevToolsActions {
       );
 
       const { data: _data, error } = await supabase
-        .from("profiles")
+        .from("teams")
         .select("count")
         .limit(1);
 
@@ -58,6 +60,109 @@ export class DevToolsActions {
     }
   }
 
+  async checkDemoData() {
+    try {
+      this.addLog("info", "Checking database data for demo...", "demo");
+      this.showToast(
+        "info",
+        "Checking what data exists in database...",
+        "Demo Data Check"
+      );
+
+      const result = await checkDatabaseData();
+
+      this.addLog(
+        "success",
+        `Found: ${result.teams.length} teams, ${result.playbooks.length} playbooks, ${result.plays.length} plays`,
+        "demo"
+      );
+
+      this.showToast(
+        "success",
+        `Database contains ${result.teams.length + result.playbooks.length + result.plays.length} total records - UI should now show data!`,
+        "Demo Data Found"
+      );
+
+      // Force a small delay to let hooks refresh
+      setTimeout(() => {
+        this.addLog(
+          "info",
+          "Data hooks refreshed - navigate to Teams/Playbooks to see data",
+          "demo"
+        );
+        this.showToast(
+          "info",
+          "✅ Try navigating to /teams or /playbook to see your data!",
+          "Navigation Tip"
+        );
+      }, 1000);
+
+      return result;
+    } catch (err) {
+      this.addLog("error", `Demo data check failed: ${err}`, "demo");
+      this.showToast("error", `Demo data check failed: ${err}`, "Check Failed");
+    }
+  }
+
+  async createSampleData() {
+    try {
+      this.addLog("info", "Creating sample data for demo...", "demo");
+      this.showToast(
+        "info",
+        "Creating sample team, playbook, and plays...",
+        "Creating Demo Data"
+      );
+
+      const result = await createSampleData();
+
+      if (result.success) {
+        this.addLog(
+          "success",
+          `Created sample team "${result.data?.team.name}" with ${result.data?.plays.length} plays`,
+          "demo"
+        );
+
+        this.showToast(
+          "success",
+          `Demo data created! Team "${result.data?.team.name}" with playbook and plays`,
+          "Sample Data Ready"
+        );
+      } else {
+        this.addLog(
+          "error",
+          `Sample data creation failed: ${result.error}`,
+          "demo"
+        );
+        this.showToast(
+          "error",
+          `Failed to create sample data: ${result.error}`,
+          "Creation Failed"
+        );
+      }
+
+      return result;
+    } catch (err) {
+      this.addLog("error", `Sample data creation failed: ${err}`, "demo");
+      this.showToast(
+        "error",
+        `Sample data creation failed: ${err}`,
+        "Creation Failed"
+      );
+    }
+  }
+
+  navigateToTeams() {
+    this.addLog("info", "Navigating to Teams page...", "navigation");
+    this.showToast("info", "Opening Teams page...", "Navigation");
+    window.location.href = "/teams";
+  }
+
+  navigateToPlaybook() {
+    this.addLog("info", "Navigating to Playbook page...", "navigation");
+    this.showToast("info", "Opening Playbook page...", "Navigation");
+    window.location.href = "/playbook";
+  }
+
   exportStateSnapshot(
     user: { id: string; email: string } | null,
     profile: unknown,
@@ -68,13 +173,16 @@ export class DevToolsActions {
   ) {
     const snapshot = {
       user: user ? { id: user.id, email: user.email } : null,
-      profile: profile && typeof profile === 'object' && profile !== null
-        ? {
-            id: (profile as Record<string, unknown>)?.id || 'unknown',
-            role: (profile as Record<string, unknown>)?.role || 'unknown',
-            full_name: (profile as Record<string, unknown>)?.full_name || 'Unknown User'
-          }
-        : null,
+      profile:
+        profile && typeof profile === "object" && profile !== null
+          ? {
+              id: (profile as Record<string, unknown>)?.id || "unknown",
+              role: (profile as Record<string, unknown>)?.role || "unknown",
+              full_name:
+                (profile as Record<string, unknown>)?.full_name ||
+                "Unknown User",
+            }
+          : null,
       devMode,
       dataCount: {
         teams: teams.length,

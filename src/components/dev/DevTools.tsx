@@ -15,6 +15,7 @@ import { DataTab } from "./tabs/DataTab";
 import { LogsTab } from "./tabs/LogsTab";
 import { DevToolsActions } from "./services/DevToolsActions";
 import { DEV_MODES, type DevToolsState, type DevLog } from "./types";
+// import { checkDatabaseData } from "../../utils/demo-data-check";
 import type { DevMode } from "../../app/dev-mode-types";
 
 export const DevTools: React.FC = () => {
@@ -162,9 +163,7 @@ export const DevTools: React.FC = () => {
             onTestDatabase={() => actions.testDatabaseConnection()}
             onExportState={() =>
               actions.exportStateSnapshot(
-                user && user.email 
-                  ? { id: user.id, email: user.email }
-                  : null,
+                user && user.email ? { id: user.id, email: user.email } : null,
                 profile,
                 devMode,
                 teams,
@@ -179,7 +178,7 @@ export const DevTools: React.FC = () => {
         );
 
       case "data":
-        return <DataTab onModeChange={handleModeChange} />;
+        return <DataTab onModeChange={handleModeChange} actions={actions} />;
 
       case "logs":
         return <LogsTab logs={logs} onClearLogs={() => setLogs([])} />;

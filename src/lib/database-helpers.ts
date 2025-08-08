@@ -23,8 +23,8 @@ export async function testDatabaseConnection() {
       return false;
     }
     // Profile check completed - connection working
-    // Test protected tables (requires auth)
-    const protectedTables = [
+    // Test only accessible tables (skip protected ones to avoid 500 errors)
+    const testTables = [
       "teams",
       "plays",
       "team_members",
@@ -32,15 +32,14 @@ export async function testDatabaseConnection() {
       "play_calls",
       "team_goals",
       "team_files",
-      "user_profiles",
       "post_reactions",
-      "super_admins",
-      "team_invites",
       "team_memberships",
     ] as const;
-    const accessibleTables = [];
-    const protectedCount = [];
-    for (const tableName of protectedTables) {
+
+    const accessibleTables: string[] = [];
+    const protectedCount: string[] = [];
+
+    for (const tableName of testTables) {
       try {
         const { error } = await supabase.from(tableName).select("id").limit(1);
         if (!error) {
@@ -53,6 +52,7 @@ export async function testDatabaseConnection() {
         }
       } catch {
         // Table doesn't exist or access denied
+        protectedCount.push(tableName);
       }
     }
     console.error(

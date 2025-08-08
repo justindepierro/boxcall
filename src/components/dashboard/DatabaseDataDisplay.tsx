@@ -1,20 +1,31 @@
 /**
  * Database Data Display
-             <Typography variant="body-md" className="text-orange-700">
-              Currently in <strong>{devMode}</strong> mode. Switch * Shows the loaded demo data from the database
+ * Shows the loaded demo data from the database with interactive team selector
  * Respects dev mode settings for data source
  */
-import React from "react";
+import React, { useState } from "react";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 
+// Using the same Team interface as useTeamsData hook
+interface Team {
+  id: string;
+  name: string;
+  school_name?: string;
+  mascot?: string;
+  season_year?: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export const DatabaseDataDisplay: React.FC = () => {
   const { devMode } = useDevMode();
   const { teams, playbooks, plays, loading, error, totalCount } =
     useTeamsData();
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
 
   // Show dev mode warning if not in production
   const showDevModeWarning = devMode !== "production";
@@ -123,7 +134,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
       {/* Data Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Teams */}
+        {/* Team Selector */}
         <Card className="p-6">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-jade-100 rounded-lg flex items-center justify-center mr-3">
@@ -131,28 +142,99 @@ export const DatabaseDataDisplay: React.FC = () => {
             </div>
             <div>
               <Typography variant="headline-sm" className="text-gray-900">
-                Teams
+                Team Selector
               </Typography>
               <Typography variant="body-sm" color="muted">
-                {teams.length} loaded
+                {teams.length} teams • Select to view details
               </Typography>
             </div>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {teams.map((team) => (
-              <div key={team.id} className="p-3 bg-gray-50 rounded-lg">
-                <Typography
-                  variant="body-sm"
-                  className="font-medium text-gray-900"
-                >
-                  {team.name}
-                </Typography>
-                <Typography variant="body-xs" color="muted">
-                  {team.school_name} • {team.mascot} • {team.season_year}
-                </Typography>
-              </div>
+              <button
+                key={team.id}
+                onClick={() =>
+                  setSelectedTeam(selectedTeam?.id === team.id ? null : team)
+                }
+                className={`w-full p-3 rounded-lg text-left transition-all duration-200 border ${
+                  selectedTeam?.id === team.id
+                    ? "bg-jade-50 border-jade-300 shadow-sm"
+                    : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <Typography
+                      variant="body-sm"
+                      className={`font-medium ${
+                        selectedTeam?.id === team.id
+                          ? "text-jade-900"
+                          : "text-gray-900"
+                      }`}
+                    >
+                      {team.name}
+                    </Typography>
+                    <Typography variant="body-xs" color="muted">
+                      {team.school_name} • {team.mascot}
+                    </Typography>
+                  </div>
+                  <Icon
+                    name={
+                      selectedTeam?.id === team.id
+                        ? "chevron-up"
+                        : "chevron-down"
+                    }
+                    size="sm"
+                    color={
+                      selectedTeam?.id === team.id ? "primary" : "secondary"
+                    }
+                  />
+                </div>
+              </button>
             ))}
           </div>
+
+          {/* Selected Team Details */}
+          {selectedTeam && (
+            <div className="mt-4 p-4 bg-jade-50 border border-jade-200 rounded-lg">
+              <Typography variant="headline-sm" className="text-jade-900 mb-3">
+                {selectedTeam.name} Details
+              </Typography>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <Typography variant="body-xs" color="muted">
+                    School:
+                  </Typography>
+                  <Typography variant="body-xs" className="font-medium">
+                    {selectedTeam.school_name}
+                  </Typography>
+                </div>
+                <div className="flex justify-between">
+                  <Typography variant="body-xs" color="muted">
+                    Mascot:
+                  </Typography>
+                  <Typography variant="body-xs" className="font-medium">
+                    {selectedTeam.mascot}
+                  </Typography>
+                </div>
+                <div className="flex justify-between">
+                  <Typography variant="body-xs" color="muted">
+                    Season:
+                  </Typography>
+                  <Typography variant="body-xs" className="font-medium">
+                    {selectedTeam.season_year}
+                  </Typography>
+                </div>
+                <div className="mt-3 pt-2 border-t border-jade-200">
+                  <Typography variant="body-xs" className="text-jade-700">
+                    💡 In a full app, selecting a team would switch your
+                    workspace context, filter playbooks/plays, and update all
+                    data to this team's information.
+                  </Typography>
+                </div>
+              </div>
+            </div>
+          )}
         </Card>
 
         {/* Playbooks */}
@@ -243,17 +325,25 @@ export const DatabaseDataDisplay: React.FC = () => {
         </Typography>
         <div className="space-y-2">
           <Typography variant="body-sm" className="text-blue-700">
-            • Navigate to <strong>/playbook</strong> to see your plays in the
-            playbook interface
+            • <strong>Try the Team Selector:</strong> Click on teams above to
+            explore team details and selection functionality
           </Typography>
           <Typography variant="body-sm" className="text-blue-700">
-            • Test team management features with the loaded teams
+            • <strong>Navigate to Playbook:</strong> Go to{" "}
+            <strong>/playbook</strong> to see your plays in the playbook
+            interface
           </Typography>
           <Typography variant="body-sm" className="text-blue-700">
-            • Create additional plays using the PlayBuilder interface
+            • <strong>Test Team Management:</strong> Use the loaded teams to
+            test coaching workflows and team-specific features
           </Typography>
           <Typography variant="body-sm" className="text-blue-700">
-            • Test the complete authentication flow (login → use app → logout)
+            • <strong>Create Additional Plays:</strong> Use the PlayBuilder
+            interface to add more plays to your playbooks
+          </Typography>
+          <Typography variant="body-sm" className="text-blue-700">
+            • <strong>Full Authentication Flow:</strong> Test the complete login
+            → use app → logout experience
           </Typography>
         </div>
       </Card>

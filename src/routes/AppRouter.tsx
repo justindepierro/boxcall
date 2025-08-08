@@ -8,6 +8,7 @@ import {
   LazyCalendarPage,
   LazyProfilePage,
   LazyTeamBulletin,
+  LazyTeamsPage,
   LazyCreateTeam,
   LazyJoinTeam,
   LazyCreateCoachAccount,
@@ -103,6 +104,18 @@ export const AppRouter: React.FC = () => {
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
                   <LazyCalendarPage />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Teams List - Available to all authenticated users */}
+          <Route
+            path="/teams"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyTeamsPage />
                 </Suspense>
               </ProtectedRoute>
             }

@@ -1,7 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { ToggleLeft, ToggleRight } from "lucide-react";
-import type { Play } from "../../types/play";
 import { PlayCard } from "./PlayCard";
+import { useTeamsData } from "../../hooks/useTeamsData";
+import type { Play } from "../../types/play";
+
+// Convert database play data to full Play type
+const mapDatabasePlayToFullPlay = (dbPlay: {
+  id: string;
+  playbook_id: string;
+  formation: string;
+  play_name: string;
+  p_type: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+}): Play => ({
+  id: dbPlay.id,
+  playbook_id: dbPlay.playbook_id,
+  formation: dbPlay.formation,
+  play_name: dbPlay.play_name,
+  p_type: dbPlay.p_type as "Pass" | "Run" | "RPO" | "Play Action",
+  notes: dbPlay.notes,
+  confidence_base: 70, // Default value
+  times_called: 0, // Default value
+  times_successful: 0, // Default value
+  created_by: "system", // Default value
+  created_at: new Date(dbPlay.created_at),
+  updated_at: new Date(dbPlay.updated_at),
+});
 interface PlayGridProps {
   searchQuery: string;
   filters: {
@@ -11,32 +37,92 @@ interface PlayGridProps {
     distance?: string;
     tags?: string[];
   };
+  onEdit?: (play: Play) => void;
+  onDuplicate?: (play: Play) => void;
+  onCreateDiagram?: (play: Play) => void;
   onAddToPracticeScript?: (play: Play) => void;
   onAddToGamePlan?: (play: Play) => void;
 }
+
 export const PlayGrid: React.FC<PlayGridProps> = ({
   searchQuery,
   filters,
+  onEdit,
+  onDuplicate,
+  onCreateDiagram,
   onAddToPracticeScript,
   onAddToGamePlan,
 }) => {
   // Toggle for play name display mode (true = one-word calls, false = full names)
   const [showOneWordCalls, setShowOneWordCalls] = useState(false);
-  // TODO: Replace with Supabase data fetching
-  const plays: Play[] = []; // Empty until database integration
 
-  const filteredPlays = plays; // Will implement filtering when we have real data
+  // Get real data from database
+  const { plays: allPlays, loading, error } = useTeamsData();
+
+  // Convert database plays to full Play type
+  const plays: Play[] = useMemo(
+    () => (allPlays || []).map(mapDatabasePlayToFullPlay),
+    [allPlays]
+  );
+
+  // Apply filters to plays
+  const filteredPlays = useMemo(() => {
+    return plays.filter((play) => {
+      // Search query filter
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesName = play.play_name.toLowerCase().includes(query);
+        const matchesFormation = play.formation.toLowerCase().includes(query);
+        const matchesNotes = play.notes?.toLowerCase().includes(query);
+        if (!matchesName && !matchesFormation && !matchesNotes) return false;
+      }
+
+      // Formation filter
+      if (filters.formation && play.formation !== filters.formation)
+        return false;
+
+      // Play type filter
+      if (filters.playType && play.p_type !== filters.playType) return false;
+
+      // Additional filters can be added here as needed
+
+      return true;
+    });
+  }, [plays, searchQuery, filters]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+        <span className="ml-2 text-gray-600">Loading plays...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center p-8">
+        <p className="text-red-600">Error loading plays: {error}</p>
+      </div>
+    );
+  }
+
+  const hasFilters =
+    searchQuery ||
+    Object.values(filters).some(
+      (f) => f && (Array.isArray(f) ? f.length > 0 : true)
+    );
 
   if (filteredPlays.length === 0) {
     return (
       <div className="text-center py-16">
         <div className="text-slate-400 text-lg mb-4">
-          {searchQuery || Object.values(filters).some((f) => f)
+          {hasFilters
             ? "No plays match your search criteria"
             : "No plays in your playbook yet"}
         </div>
         <p className="text-slate-500 text-sm">
-          {searchQuery || Object.values(filters).some((f) => f)
+          {hasFilters
             ? "Try adjusting your search or filters"
             : "Create your first play or import existing plays to get started"}
         </p>
@@ -45,11 +131,12 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
   }
   return (
     <div className="space-y-6">
-      {/* Results Header */}
+      {/* Results Header with Toggle */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-slate-900">
           {filteredPlays.length} {filteredPlays.length === 1 ? "Play" : "Plays"}
         </h2>
+
         {/* Play Name Display Toggle */}
         <div className="flex items-center space-x-3">
           <span className="text-sm text-slate-600">One-word calls</span>
@@ -71,22 +158,17 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
           <span className="text-sm text-slate-600">Full names</span>
         </div>
       </div>
-      {/* Play Grid - Changed to single column vertical layout */}
+
+      {/* Play Grid */}
       <div className="space-y-4">
         {filteredPlays.map((play) => (
           <PlayCard
             key={play.id}
             play={play}
             showOneWordCalls={showOneWordCalls}
-            onEdit={(_play: Play) => {
-              // TODO: Implement edit functionality
-            }}
-            onDuplicate={(_play: Play) => {
-              // TODO: Implement duplicate functionality
-            }}
-            onCreateDiagram={(_play: Play) => {
-              // TODO: Implement create diagram functionality
-            }}
+            onEdit={onEdit}
+            onDuplicate={onDuplicate}
+            onCreateDiagram={onCreateDiagram}
             onAddToPracticeScript={onAddToPracticeScript}
             onAddToGamePlan={onAddToGamePlan}
           />

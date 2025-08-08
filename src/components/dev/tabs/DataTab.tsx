@@ -9,11 +9,14 @@ import { useTeamsData } from "../../../hooks/useTeamsData";
 import { DEV_MODES } from "../types";
 import type { DevMode } from "../../../app/dev-mode-types";
 
+import { DevToolsActions } from "../services/DevToolsActions";
+
 interface DataTabProps {
   onModeChange: (mode: DevMode) => void;
+  actions: DevToolsActions;
 }
 
-export const DataTab: React.FC<DataTabProps> = ({ onModeChange }) => {
+export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
   const { devMode } = useDevMode();
   const { teams, playbooks, plays, error } = useTeamsData();
 
@@ -44,6 +47,38 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange }) => {
               {error ? "ERROR" : "OK"}
             </span>
           </div>
+        </div>
+
+        {/* Demo Data Check Button */}
+        <button
+          onClick={() => actions.checkDemoData()}
+          className="w-full px-3 py-1.5 text-xs bg-green-500 hover:bg-green-600 text-white rounded transition-colors"
+        >
+          🔍 Check Demo Data
+        </button>
+
+        {/* Create Sample Data Button */}
+        <button
+          onClick={() => actions.createSampleData()}
+          className="w-full px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded transition-colors"
+        >
+          🌱 Create Sample Data
+        </button>
+
+        {/* Navigation Buttons */}
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            onClick={() => actions.navigateToTeams()}
+            className="px-3 py-1.5 text-xs bg-green-500 hover:bg-green-600 text-white rounded transition-colors"
+          >
+            👥 Teams
+          </button>
+          <button
+            onClick={() => actions.navigateToPlaybook()}
+            className="px-3 py-1.5 text-xs bg-purple-500 hover:bg-purple-600 text-white rounded transition-colors"
+          >
+            📋 Playbook
+          </button>
         </div>
       </div>
 

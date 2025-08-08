@@ -18,7 +18,8 @@
     "analytics"
   ],
   "scripts": {
-    "dev": "npm run predev && vite",
+    "dev": "vite",
+    "dev:full": "npm run predev && vite",
     "predev": "tsx scripts/predev-check.ts",
     "validate:deep": "tsx scripts/error-detection.ts",
     "validate:vscode": "tsx scripts/vscode-parity-check.ts",

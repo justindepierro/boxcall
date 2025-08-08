@@ -44,11 +44,12 @@ export function useTeamsData() {
   const [plays, setPlays] = useState<Play[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
+  const { user: _user } = useAuth(); // DEMO MODE: Not used during demo
 
   useEffect(() => {
     async function fetchData() {
-      if (!user) return;
+      // DEMO MODE: Skip auth check to allow data fetching without user
+      // if (!user) return;
 
       try {
         setLoading(true);
@@ -106,7 +107,7 @@ export function useTeamsData() {
     }
 
     fetchData();
-  }, [user]);
+  }, []); // DEMO MODE: Remove user dependency to fetch data without auth
 
   return {
     teams,

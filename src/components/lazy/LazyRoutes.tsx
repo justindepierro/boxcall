@@ -23,6 +23,8 @@ export const LazyProfilePage = lazy(() =>
 
 export const LazyTeamBulletin = lazy(() => import("../../pages/TeamBulletin"));
 
+export const LazyTeamsPage = lazy(() => import("../../pages/TeamsPage"));
+
 export const LazyCreateTeam = lazy(() =>
   import("../../pages/CreateTeam").then((module) => ({
     default: module.CreateTeam,
