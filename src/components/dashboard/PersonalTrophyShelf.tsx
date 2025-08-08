@@ -2,7 +2,8 @@ import React from "react";
 import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
-import { Icon, SmartIconSystem, type IconName } from "../ui/Icon";
+import { Icon, SmartIconSystem } from "../ui/Icon";
+import type { IconName } from "../ui/Icon/Icon";
 interface PersonalTrophyShelfProps {
   userId: string;
   userRole?: string; // Optional for future role-based features
@@ -63,26 +64,44 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
     // Use SmartIconSystem for intelligent icon selection
     let iconName: IconName = "star"; // fallback
     if (typeof iconData === "string") {
-      // Try to use the provided icon name directly first
+      // Try to use the provided icon name directly first with our available icons
       const iconMap: { [key: string]: IconName } = {
         target: "target",
-        crown: "crown",
+        crown: "star", // crown -> star
         check: "check",
         zap: "zap",
-        message: "message-circle",
+        message: "message",
         calendar: "calendar",
+        trophy: "trophy",
+        award: "award",
+        medal: "award", // medal -> award
+        star: "star",
       };
-      iconName = iconMap[iconData] || (iconData as IconName);
+      iconName = iconMap[iconData] || "star"; // fallback to star if not found
     } else {
       // Use SmartIconSystem to analyze content and pick best icon
       const content = `${name || ""} ${description || ""}`;
-      iconName = SmartIconSystem.getContextualIcon(
+      const smartIcon = SmartIconSystem.getContextualIcon(
         content,
         "achievement",
         "trophy"
       );
+      // Map SmartIconSystem results to our available icons
+      const smartIconMap: { [key: string]: IconName } = {
+        trophy: "trophy",
+        award: "award", 
+        star: "star",
+        target: "target",
+        zap: "zap",
+        check: "check",
+        flag: "flag",
+        activity: "activity",
+        chart: "bar-chart",
+        shield: "shield",
+      };
+      iconName = smartIconMap[smartIcon] || "star";
     }
-    return <Icon name={iconName} size={16} className="text-gray-600" />;
+    return <Icon name={iconName} size="sm" className="text-gray-600" />;
   };
   // Show loading state
   if (loading) {
@@ -112,7 +131,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Icon name="trophy" size={14} className="text-yellow-600" />
+          <Icon name="trophy" size="sm" className="text-yellow-600" />
           <Typography
             variant="headline-md"
             className="text-gray-800 dark:text-white"
@@ -143,7 +162,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         <div className="flex flex-col gap-2 w-20">
           <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
-              <Icon name="zap" size={14} className="text-orange-500" />
+              <Icon name="zap" size="sm" className="text-orange-500" />
             </div>
             <Typography
               variant="body-sm"
@@ -161,7 +180,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
           </div>
           <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
-              <Icon name="star" size={14} className="text-jade-600" />
+              <Icon name="star" size="sm" className="text-jade-600" />
             </div>
             <Typography
               variant="body-sm"
@@ -179,7 +198,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
           </div>
           <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
-              <Icon name="medal" size={14} className="text-blue-600" />
+              <Icon name="award" size="sm" className="text-blue-600" />
             </div>
             <Typography
               variant="body-sm"
@@ -197,7 +216,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
           </div>
           <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
-              <Icon name="target" size={14} className="text-purple-600" />
+              <Icon name="target" size="sm" className="text-purple-600" />
             </div>
             <Typography
               variant="body-sm"
@@ -259,7 +278,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
                 <div className="flex flex-col items-center justify-center h-full text-center px-4 py-6">
                   <Icon
                     name="trophy"
-                    size={24}
+                    size="lg"
                     className="text-jade-400 mb-3 opacity-60"
                   />
                   <Typography
