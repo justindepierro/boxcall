@@ -4,7 +4,7 @@ import { PersonalCalendar } from "../dashboard/PersonalCalendar";
 import { PersonalTrophyShelf } from "../dashboard/PersonalTrophyShelf";
 import { ProfileCard } from "../dashboard/ProfileCard";
 import { TeamFeeds } from "../dashboard/TeamFeeds";
-import { DatabaseDataDisplay } from "../dashboard/DatabaseDataDisplay";
+import { ToastDemo } from "../dev/ToastDemo";
 import { Typography } from "../design-system";
 import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
@@ -112,9 +112,9 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           ============================================================================ 
         */}
         <div className="responsive-content-grid">
-          {/* Database Data Display - Show loaded demo data */}
+          {/* Toast Demo - Temporary to show new system working */}
           <div className="col-span-full">
-            <DatabaseDataDisplay />
+            <ToastDemo />
           </div>
 
           {/* Profile Card */}

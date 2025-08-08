@@ -71,6 +71,17 @@ export const LazyContactPage = lazy(() =>
   }))
 );
 
+// Role-specific dashboard pages
+export const LazyCoachManagementPage = lazy(
+  () => import("../../pages/roles/CoachManagementPage")
+);
+
+export const LazyPlayerDashboardPage = lazy(
+  () => import("../../pages/roles/PlayerDashboardPage")
+);
+
+// Route loading spinner component
+
 export const LazyPracticePlanner = lazy(
   () => import("../../pages/PracticePlanner")
 );

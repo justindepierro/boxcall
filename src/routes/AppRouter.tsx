@@ -18,6 +18,8 @@ import {
   LazyPrivacyPolicyPage,
   LazyTermsOfServicePage,
   LazyContactPage,
+  LazyCoachManagementPage,
+  LazyPlayerDashboardPage,
 } from "../components/lazy/LazyRoutes";
 import {
   ProtectedRoute,
@@ -171,6 +173,31 @@ export const AppRouter: React.FC = () => {
                     <LazyBoxCall />
                   </Suspense>
                 </RoleProtectedRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* ==================== ROLE-SPECIFIC DASHBOARDS ==================== */}
+          {/* Coach Management Hub - Coaches and admins only */}
+          <Route
+            path="/coach"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyCoachManagementPage />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Player Dashboard - Players only */}
+          <Route
+            path="/player"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<RouteLoadingSpinner />}>
+                  <LazyPlayerDashboardPage />
+                </Suspense>
               </ProtectedRoute>
             }
           />
