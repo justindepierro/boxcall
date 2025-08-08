@@ -1,47 +1,86 @@
-# 🚀 Database Migration Guide - 300+ Play Upgrade
+# 🚀 Database Migration Guide - Complete Team Management System
 
-## Quick Start (5 minutes)
+## Overview - Stepped Migration Architecture
 
-### 1. Run the Migration
+BoxCall uses a **modular stepped migration approach** for complex database changes. Large migrations are broken into logical, deployable steps that can be:
 
-1. Open your **Supabase Dashboard**
-2. Go to **SQL Editor**
-3. Copy and paste the entire contents of `database/migration_300_play_upgrade.sql`
-4. Click **Run** to execute the migration
+- Deployed incrementally
+- Tested individually
+- Rolled back if needed
+- Easier to debug and maintain
 
-### 2. Verify Success
+## Migration Status ✅
 
-```bash
-./scripts/verify-migration.sh
+### **Migration 006: Practice Planning System** ✅
+
+_Complete 7-table practice management system_
+
+**Deployed Steps:**
+
+- Step 1: Base practice tables (schedules, templates)
+- Step 2: Practice blocks and activities
+- Step 3: Automated triggers and functions
+- Step 4: Practice layout boxes (8-box system)
+- Step 5: Practice execution tracking
+- Step 6: Performance optimization and indexes
+
+### **Migration 007: Player Performance Analytics** ✅
+
+_Complete player tracking and development system_
+
+**Deployed Steps:**
+
+- Step 1: Individual performance tracking
+- Step 2: Progress monitoring and skill assessments
+- Step 3: Achievement and recognition system
+
+### **Migration 008: Enhanced Team Management** ✅
+
+_Complete organizational and family communication system_
+
+**Deployed Steps:**
+
+- Step 1: Enhanced teams structure and organizations
+- Step 2: Player roster management and depth charts
+- Step 3: Parent/guardian communication system
+
+## How to Deploy New Migrations
+
+### 1. **Check Migration Status**
+
+Before deploying, verify which steps are already complete:
+
+```sql
+-- Check existing tables
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
+ORDER BY table_name;
 ```
 
-Copy the output SQL into Supabase SQL Editor to verify everything worked.
+### 2. **Deploy Individual Steps**
 
-## What This Migration Does
+Deploy each step individually in order:
 
-### 🔧 **Enhanced Existing Tables**
+```bash
+# Example: Deploy Migration 007 Steps
+psql -f database/migrations/007_step1_player_performance.sql
+psql -f database/migrations/007_step2_progress_tracking.sql
+psql -f database/migrations/007_step3_achievement_system.sql
+```
 
-- **plays**: Added full-text search, archival flags, complexity scoring
-- **practice_scripts**: Added descriptions, planning dates, duration tracking
-- **script_plays**: Renamed columns for consistency
+### 3. **Verify Each Step**
 
-### 🆕 **New Game Planning Tables**
+Test each migration step before proceeding:
 
-- **game_plans**: Master game plan container (Brian Billick methodology)
-- **game_plan_situations**: Situational categories (1st & 10, Red Zone, etc.)
-- **game_plan_plays**: Play prioritization within situations
-
-### ⚡ **Performance Optimizations**
-
-- Full-text search indexes for instant play lookup
-- Strategic database indexes for sub-100ms queries
-- Row-level security policies for team isolation
-
-### 🔒 **Data Safety**
-
-- **ZERO data loss** - all existing data preserved
-- All new columns use `ADD COLUMN IF NOT EXISTS`
-- Migration is **reversible** if needed
+```sql
+-- Verify tables exist
+\dt
+-- Check Row Level Security
+\d+ table_name
+-- Test basic queries
+SELECT COUNT(*) FROM new_table;
+```
 
 ## After Migration
 

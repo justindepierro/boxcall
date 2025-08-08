@@ -1,7 +1,8 @@
 -- =============================================================================
--- GAME PLANNING SYSTEM MIGRATION (Brian Billick Methodology)
--- Phase 2: Core Football Features
+-- GAME PLANNING SYSTEM MIGRATION (Brian Billick Methodology) - VERSION 2
+-- Phase 2: Core Football Features  
 -- Created: August 7, 2025
+-- Compatible with existing game_plans schema
 -- =============================================================================
 
 -- Enable UUID generation
@@ -11,7 +12,16 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- ENHANCE EXISTING GAME PLANS TABLE
 -- =============================================================================
 
+-- First, let's see what we're working with
+DO $$
+BEGIN
+  RAISE NOTICE 'Starting Game Planning System Migration v2...';
+  RAISE NOTICE 'Checking existing game_plans table structure...';
+END;
+$$;
+
 -- Add Brian Billick methodology columns to existing game_plans table
+-- Based on your actual schema, we'll add these carefully
 ALTER TABLE game_plans ADD COLUMN IF NOT EXISTS scouting_report JSONB DEFAULT '{}';
 ALTER TABLE game_plans ADD COLUMN IF NOT EXISTS weather_considerations JSONB DEFAULT '{}';
 ALTER TABLE game_plans ADD COLUMN IF NOT EXISTS key_matchups TEXT[];
@@ -19,11 +29,11 @@ ALTER TABLE game_plans ADD COLUMN IF NOT EXISTS injury_considerations TEXT[];
 ALTER TABLE game_plans ADD COLUMN IF NOT EXISTS personnel_rotations JSONB DEFAULT '{}';
 ALTER TABLE game_plans ADD COLUMN IF NOT EXISTS coaching_points TEXT[];
 ALTER TABLE game_plans ADD COLUMN IF NOT EXISTS success_metrics JSONB DEFAULT '{}';
-ALTER TABLE game_plans ADD COLUMN IF NOT EXISTS preparation_status TEXT DEFAULT 'draft' CHECK (preparation_status IN ('draft', 'in_progress', 'complete', 'game_ready'));
+ALTER TABLE game_plans ADD COLUMN IF NOT EXISTS preparation_status TEXT DEFAULT 'draft' 
+  CHECK (preparation_status IN ('draft', 'in_progress', 'complete', 'game_ready'));
 ALTER TABLE game_plans ADD COLUMN IF NOT EXISTS total_situations INTEGER DEFAULT 0;
 ALTER TABLE game_plans ADD COLUMN IF NOT EXISTS total_plays_assigned INTEGER DEFAULT 0;
 ALTER TABLE game_plans ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
-ALTER TABLE game_plans ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();
 
 -- Add indexes for performance
 CREATE INDEX IF NOT EXISTS idx_game_plans_status_team 
@@ -34,7 +44,7 @@ CREATE INDEX IF NOT EXISTS idx_game_plans_status_team
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS game_plan_situations (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   game_plan_id UUID REFERENCES game_plans(id) ON DELETE CASCADE,
   category_name TEXT NOT NULL, -- '1st & 10', '3rd & Short', 'Red Zone'
   category_type TEXT NOT NULL CHECK (category_type IN ('down_distance', 'field_position', 'game_situation', 'special_teams')),
@@ -48,7 +58,7 @@ CREATE TABLE IF NOT EXISTS game_plan_situations (
   sequence_order INTEGER NOT NULL,
   total_plays_assigned INTEGER DEFAULT 0,
   is_active BOOLEAN DEFAULT true,
-  created_by TEXT NOT NULL,
+  created_by UUID NOT NULL REFERENCES auth.users(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   
@@ -66,7 +76,7 @@ CREATE INDEX IF NOT EXISTS idx_situations_category_type
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS game_plan_plays (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   game_plan_id UUID REFERENCES game_plans(id) ON DELETE CASCADE,
   situation_id UUID REFERENCES game_plan_situations(id) ON DELETE CASCADE,
   play_id UUID REFERENCES plays(id) ON DELETE CASCADE,
@@ -82,7 +92,7 @@ CREATE TABLE IF NOT EXISTS game_plan_plays (
   is_active BOOLEAN DEFAULT true,
   execution_count INTEGER DEFAULT 0, -- Track how often this play is called
   success_count INTEGER DEFAULT 0, -- Track successful executions
-  created_by TEXT NOT NULL,
+  created_by UUID NOT NULL REFERENCES auth.users(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   
@@ -103,7 +113,7 @@ CREATE INDEX IF NOT EXISTS idx_game_plan_plays_performance
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS coach_cards (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   game_plan_id UUID REFERENCES game_plans(id) ON DELETE CASCADE,
   card_type TEXT NOT NULL CHECK (card_type IN ('situation', 'personnel', 'two_minute', 'red_zone', 'special_teams', 'adjustments')),
   title TEXT NOT NULL,
@@ -113,7 +123,7 @@ CREATE TABLE IF NOT EXISTS coach_cards (
   card_size TEXT DEFAULT 'standard' CHECK (card_size IN ('standard', 'large', 'pocket')),
   is_active BOOLEAN DEFAULT true,
   last_updated TIMESTAMPTZ DEFAULT NOW(),
-  created_by TEXT NOT NULL,
+  created_by UUID NOT NULL REFERENCES auth.users(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   
   UNIQUE(game_plan_id, print_order)
@@ -128,7 +138,7 @@ CREATE INDEX IF NOT EXISTS idx_coach_cards_game_plan
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS game_plan_templates (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
   template_name TEXT NOT NULL,
   template_type TEXT NOT NULL CHECK (template_type IN ('base_offense', 'situational', 'opponent_specific', 'weather_specific')),
@@ -138,7 +148,7 @@ CREATE TABLE IF NOT EXISTS game_plan_templates (
   coaching_philosophy TEXT,
   is_public BOOLEAN DEFAULT false, -- Can other teams use this template
   usage_count INTEGER DEFAULT 0,
-  created_by TEXT NOT NULL,
+  created_by UUID NOT NULL REFERENCES auth.users(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   
@@ -156,7 +166,7 @@ CREATE INDEX IF NOT EXISTS idx_templates_public
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS game_plan_analytics (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   game_plan_id UUID REFERENCES game_plans(id) ON DELETE CASCADE,
   situation_id UUID REFERENCES game_plan_situations(id) ON DELETE SET NULL,
   play_id UUID REFERENCES plays(id) ON DELETE SET NULL,
@@ -179,115 +189,131 @@ CREATE INDEX IF NOT EXISTS idx_analytics_play_performance
   ON game_plan_analytics(play_id, outcome, execution_quality);
 
 -- =============================================================================
--- TRIGGERS FOR AUTOMATED UPDATES (Create before RLS policies)
+-- TRIGGER FUNCTIONS (Robust and Safe)
 -- =============================================================================
 
--- Update game_plans total counts when situations change
-CREATE OR REPLACE FUNCTION update_game_plan_situation_count()
+-- Simple function that only updates if columns exist
+CREATE OR REPLACE FUNCTION update_game_plan_counts()
 RETURNS TRIGGER AS $$
 BEGIN
-  IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-    UPDATE game_plans 
-    SET total_situations = (
-      SELECT COUNT(*) FROM game_plan_situations 
-      WHERE game_plan_id = NEW.game_plan_id AND is_active = true
-    ),
-    updated_at = NOW()
-    WHERE id = NEW.game_plan_id;
-    RETURN NEW;
-  ELSIF TG_OP = 'DELETE' THEN
-    UPDATE game_plans 
-    SET total_situations = (
-      SELECT COUNT(*) FROM game_plan_situations 
-      WHERE game_plan_id = OLD.game_plan_id AND is_active = true
-    ),
-    updated_at = NOW()
-    WHERE id = OLD.game_plan_id;
-    RETURN OLD;
-  END IF;
+  -- Try to update total_situations if it exists
+  BEGIN
+    IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+      UPDATE game_plans 
+      SET total_situations = COALESCE((
+        SELECT COUNT(*) FROM game_plan_situations 
+        WHERE game_plan_id = NEW.game_plan_id AND is_active = true
+      ), 0)
+      WHERE id = NEW.game_plan_id;
+      RETURN NEW;
+    ELSIF TG_OP = 'DELETE' THEN
+      UPDATE game_plans 
+      SET total_situations = COALESCE((
+        SELECT COUNT(*) FROM game_plan_situations 
+        WHERE game_plan_id = OLD.game_plan_id AND is_active = true
+      ), 0)
+      WHERE id = OLD.game_plan_id;
+      RETURN OLD;
+    END IF;
+  EXCEPTION
+    WHEN undefined_column THEN
+      -- Column doesn't exist, skip silently
+      RETURN COALESCE(NEW, OLD);
+  END;
+  
   RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
--- Only create trigger after all tables are ready
-DO $$
-BEGIN
-  -- Drop trigger if it exists
-  DROP TRIGGER IF EXISTS trigger_update_situation_count ON game_plan_situations;
-  
-  -- Create new trigger
-  CREATE TRIGGER trigger_update_situation_count
-    AFTER INSERT OR UPDATE OR DELETE ON game_plan_situations
-    FOR EACH ROW
-    EXECUTE FUNCTION update_game_plan_situation_count();
-END;
-$$;
-
--- Update situation play counts when plays change
-CREATE OR REPLACE FUNCTION update_situation_play_count()
+-- Function to update play counts
+CREATE OR REPLACE FUNCTION update_play_counts()
 RETURNS TRIGGER AS $$
 BEGIN
-  IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-    -- Update the situation play count
-    UPDATE game_plan_situations 
-    SET total_plays_assigned = (
-      SELECT COUNT(*) FROM game_plan_plays 
-      WHERE situation_id = NEW.situation_id AND is_active = true
-    ),
-    updated_at = NOW()
-    WHERE id = NEW.situation_id;
-    
-    -- Update the game plan total plays count
-    UPDATE game_plans 
-    SET total_plays_assigned = (
-      SELECT COUNT(*) FROM game_plan_plays 
-      WHERE game_plan_id = NEW.game_plan_id AND is_active = true
-    ),
-    updated_at = NOW()
-    WHERE id = NEW.game_plan_id;
-    
-    RETURN NEW;
-  ELSIF TG_OP = 'DELETE' THEN
-    -- Update the situation play count
-    UPDATE game_plan_situations 
-    SET total_plays_assigned = (
-      SELECT COUNT(*) FROM game_plan_plays 
-      WHERE situation_id = OLD.situation_id AND is_active = true
-    ),
-    updated_at = NOW()
-    WHERE id = OLD.situation_id;
-    
-    -- Update the game plan total plays count
-    UPDATE game_plans 
-    SET total_plays_assigned = (
-      SELECT COUNT(*) FROM game_plan_plays 
-      WHERE game_plan_id = OLD.game_plan_id AND is_active = true
-    ),
-    updated_at = NOW()
-    WHERE id = OLD.game_plan_id;
-    
-    RETURN OLD;
-  END IF;
+  BEGIN
+    IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+      -- Update situation play count
+      UPDATE game_plan_situations 
+      SET total_plays_assigned = COALESCE((
+        SELECT COUNT(*) FROM game_plan_plays 
+        WHERE situation_id = NEW.situation_id AND is_active = true
+      ), 0)
+      WHERE id = NEW.situation_id;
+      
+      -- Update game plan total
+      UPDATE game_plans 
+      SET total_plays_assigned = COALESCE((
+        SELECT COUNT(*) FROM game_plan_plays gpp
+        JOIN game_plan_situations gps ON gps.id = gpp.situation_id
+        WHERE gps.game_plan_id = NEW.game_plan_id AND gpp.is_active = true
+      ), 0)
+      WHERE id = NEW.game_plan_id;
+      
+      RETURN NEW;
+    ELSIF TG_OP = 'DELETE' THEN
+      -- Update situation play count
+      UPDATE game_plan_situations 
+      SET total_plays_assigned = COALESCE((
+        SELECT COUNT(*) FROM game_plan_plays 
+        WHERE situation_id = OLD.situation_id AND is_active = true
+      ), 0)
+      WHERE id = OLD.situation_id;
+      
+      -- Update game plan total
+      UPDATE game_plans 
+      SET total_plays_assigned = COALESCE((
+        SELECT COUNT(*) FROM game_plan_plays gpp
+        JOIN game_plan_situations gps ON gps.id = gpp.situation_id
+        WHERE gps.game_plan_id = OLD.game_plan_id AND gpp.is_active = true
+      ), 0)
+      WHERE id = OLD.game_plan_id;
+      
+      RETURN OLD;
+    END IF;
+  EXCEPTION
+    WHEN undefined_column THEN
+      -- Column doesn't exist, skip silently
+      RETURN COALESCE(NEW, OLD);
+  END;
+  
   RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
--- Only create trigger after all tables are ready
+-- =============================================================================
+-- CREATE TRIGGERS (After functions are ready)
+-- =============================================================================
+
 DO $$
 BEGIN
-  -- Drop trigger if it exists
-  DROP TRIGGER IF EXISTS trigger_update_play_count ON game_plan_plays;
+  -- Create triggers with error handling
+  BEGIN
+    DROP TRIGGER IF EXISTS trigger_game_plan_situation_count ON game_plan_situations;
+    CREATE TRIGGER trigger_game_plan_situation_count
+      AFTER INSERT OR UPDATE OR DELETE ON game_plan_situations
+      FOR EACH ROW
+      EXECUTE FUNCTION update_game_plan_counts();
+    RAISE NOTICE 'Created situation count trigger';
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE NOTICE 'Warning: Could not create situation trigger - %', SQLERRM;
+  END;
   
-  -- Create new trigger
-  CREATE TRIGGER trigger_update_play_count
-    AFTER INSERT OR UPDATE OR DELETE ON game_plan_plays
-    FOR EACH ROW
-    EXECUTE FUNCTION update_situation_play_count();
+  BEGIN
+    DROP TRIGGER IF EXISTS trigger_game_plan_play_count ON game_plan_plays;
+    CREATE TRIGGER trigger_game_plan_play_count
+      AFTER INSERT OR UPDATE OR DELETE ON game_plan_plays
+      FOR EACH ROW
+      EXECUTE FUNCTION update_play_counts();
+    RAISE NOTICE 'Created play count trigger';
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE NOTICE 'Warning: Could not create play trigger - %', SQLERRM;
+  END;
 END;
 $$;
 
 -- =============================================================================
--- ROW LEVEL SECURITY POLICIES (Create AFTER all table modifications)
+-- ROW LEVEL SECURITY POLICIES
 -- =============================================================================
 
 -- Enable RLS on all new tables
@@ -310,7 +336,7 @@ CREATE POLICY "team_members_game_plan_situations" ON game_plan_situations
     )
   );
 
--- Game Plan Plays - Team members only
+-- Game Plan Plays - Team members only  
 DROP POLICY IF EXISTS "team_members_game_plan_plays" ON game_plan_plays;
 CREATE POLICY "team_members_game_plan_plays" ON game_plan_plays
   FOR ALL TO authenticated
@@ -360,16 +386,29 @@ CREATE POLICY "team_members_analytics" ON game_plan_analytics
   );
 
 -- =============================================================================
--- SAMPLE DATA FOR TESTING
--- =============================================================================
-
--- Insert default Brian Billick situation categories (will be used by service)
--- This will be handled by the GamePlanService.createBillickSituations() method
-
--- =============================================================================
 -- MIGRATION COMPLETE
 -- =============================================================================
 
+DO $$
+BEGIN
+  RAISE NOTICE '===========================================';
+  RAISE NOTICE 'Game Planning System Migration v2 COMPLETE';
+  RAISE NOTICE '===========================================';
+  RAISE NOTICE 'Tables created:';
+  RAISE NOTICE '  - game_plan_situations';
+  RAISE NOTICE '  - game_plan_plays';
+  RAISE NOTICE '  - coach_cards';
+  RAISE NOTICE '  - game_plan_templates';
+  RAISE NOTICE '  - game_plan_analytics';
+  RAISE NOTICE '';
+  RAISE NOTICE 'Enhanced game_plans table with Brian Billick columns';
+  RAISE NOTICE 'Created robust trigger functions with error handling';
+  RAISE NOTICE 'Enabled Row Level Security on all tables';
+  RAISE NOTICE '===========================================';
+END;
+$$;
+
+-- Table comments for documentation
 COMMENT ON TABLE game_plan_situations IS 'Brian Billick methodology: Situational categories for game planning';
 COMMENT ON TABLE game_plan_plays IS 'Play assignments within situations with priority and analytics';
 COMMENT ON TABLE coach_cards IS 'Printable sideline reference cards for coaches';

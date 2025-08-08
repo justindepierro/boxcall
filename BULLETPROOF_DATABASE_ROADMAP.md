@@ -297,7 +297,7 @@ class GamePlanService {
 
 -- ✅ 6 New Tables Implemented:
 CREATE TABLE practice_blocks (...)          -- Timeline segments for practice organization
-CREATE TABLE practice_activities (...)      -- Detailed breakdown of block contents  
+CREATE TABLE practice_activities (...)      -- Detailed breakdown of block contents
 CREATE TABLE practice_templates (...)       -- Reusable practice structures
 CREATE TABLE practice_executions (...)      -- Real performance data tracking
 CREATE TABLE practice_layout_boxes (...)    -- 8-box visual practice organization
@@ -333,7 +333,7 @@ CREATE TABLE practice_analytics (...)       -- Aggregated insights and analytics
 
 -- ✅ 6 New Tables Implemented:
 CREATE TABLE player_performance (...)       -- Individual statistics and ratings
-CREATE TABLE player_progress_tracking (...) -- Long-term development monitoring  
+CREATE TABLE player_progress_tracking (...) -- Long-term development monitoring
 CREATE TABLE achievement_definitions (...)  -- Milestone and recognition system
 CREATE TABLE player_achievements (...)      -- Earned achievements tracking
 CREATE TABLE performance_analytics (...)    -- Aggregated data and insights

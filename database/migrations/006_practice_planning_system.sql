@@ -8,6 +8,36 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- =============================================================================
+-- BASE PRACTICE SCHEDULES TABLE - Core Scheduling Infrastructure
+-- =============================================================================
+
+-- Create practice_schedules table if it doesn't exist
+CREATE TABLE IF NOT EXISTS practice_schedules (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  date_scheduled DATE NOT NULL,
+  start_time TIME NOT NULL,
+  end_time TIME NOT NULL,
+  location TEXT,
+  field_type TEXT,
+  weather_conditions TEXT,
+  total_duration INTEGER, -- minutes
+  created_by TEXT NOT NULL,
+  is_template BOOLEAN DEFAULT false,
+  tags TEXT[],
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  -- Service compatibility fields
+  equipment_required TEXT[],
+  coaching_notes TEXT,
+  objectives TEXT[],
+  completion_status TEXT DEFAULT 'scheduled' CHECK (completion_status IN ('scheduled', 'in_progress', 'completed', 'cancelled'))
+);
+
+-- =============================================================================
 -- PRACTICE BLOCKS - Timeline Segments for Practice Organization
 -- =============================================================================
 
@@ -50,11 +80,7 @@ CREATE TABLE practice_blocks (
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   
   -- Constraints
-  UNIQUE(schedule_id, sequence_order),
-  
-  -- Indexes for performance
-  INDEX idx_practice_blocks_schedule_sequence (schedule_id, sequence_order),
-  INDEX idx_practice_blocks_type (block_type, is_template)
+  UNIQUE(schedule_id, sequence_order)
 );
 
 -- =============================================================================
@@ -114,12 +140,7 @@ CREATE TABLE practice_activities (
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   
   -- Constraints
-  UNIQUE(block_id, sequence_order),
-  
-  -- Indexes
-  INDEX idx_practice_activities_block_sequence (block_id, sequence_order),
-  INDEX idx_practice_activities_type (activity_type),
-  INDEX idx_practice_activities_play (play_id) WHERE play_id IS NOT NULL
+  UNIQUE(block_id, sequence_order)
 );
 
 -- =============================================================================
@@ -160,11 +181,7 @@ CREATE TABLE practice_templates (
   weather_suitability TEXT[] DEFAULT '{"any"}',
   
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  
-  -- Indexes
-  INDEX idx_practice_templates_team_category (team_id, category),
-  INDEX idx_practice_templates_public (is_public, category) WHERE is_public = true
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- =============================================================================
@@ -207,12 +224,7 @@ CREATE TABLE practice_executions (
   next_practice_notes TEXT,
   
   recorded_by TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  
-  -- Indexes
-  INDEX idx_practice_executions_practice_date (practice_id, executed_at),
-  INDEX idx_practice_executions_activity (activity_id),
-  INDEX idx_practice_executions_quality (execution_quality, completion_rate)
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- =============================================================================
@@ -263,11 +275,7 @@ CREATE TABLE practice_layout_boxes (
   
   -- Constraints
   UNIQUE(schedule_id, box_number),
-  UNIQUE(schedule_id, grid_row, grid_column),
-  
-  -- Indexes
-  INDEX idx_practice_layout_boxes_schedule (schedule_id, box_number),
-  INDEX idx_practice_layout_boxes_grid (grid_row, grid_column)
+  UNIQUE(schedule_id, grid_row, grid_column)
 );
 
 -- =============================================================================
@@ -308,11 +316,7 @@ CREATE TABLE practice_analytics (
   period_start DATE NOT NULL,
   period_end DATE NOT NULL,
   
-  calculated_at TIMESTAMPTZ DEFAULT NOW(),
-  
-  -- Indexes
-  INDEX idx_practice_analytics_team_period (team_id, analysis_period, period_start),
-  INDEX idx_practice_analytics_practice (practice_id) WHERE practice_id IS NOT NULL
+  calculated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- =============================================================================
@@ -320,12 +324,23 @@ CREATE TABLE practice_analytics (
 -- =============================================================================
 
 -- Enable RLS on all tables
+ALTER TABLE practice_schedules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE practice_blocks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE practice_activities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE practice_templates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE practice_executions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE practice_layout_boxes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE practice_analytics ENABLE ROW LEVEL SECURITY;
+
+-- Practice Schedules - Team members only
+CREATE POLICY "practice_schedules_team_access" ON practice_schedules
+  FOR ALL TO authenticated
+  USING (
+    team_id IN (
+      SELECT tm.team_id FROM team_members tm
+      WHERE tm.user_id = auth.uid() AND tm.is_active = true
+    )
+  );
 
 -- Practice Blocks - Team members only
 CREATE POLICY "practice_blocks_team_access" ON practice_blocks
@@ -556,6 +571,52 @@ INSERT INTO practice_templates (
 -- =============================================================================
 -- PERFORMANCE INDEXES (CREATED CONCURRENTLY IN PRODUCTION)
 -- =============================================================================
+
+-- Basic indexes for practice_schedules
+CREATE INDEX IF NOT EXISTS idx_practice_schedules_team_date 
+  ON practice_schedules(team_id, date_scheduled DESC);
+CREATE INDEX IF NOT EXISTS idx_practice_schedules_status 
+  ON practice_schedules(completion_status, team_id);
+
+-- Basic indexes for practice_blocks
+CREATE INDEX IF NOT EXISTS idx_practice_blocks_schedule_sequence 
+  ON practice_blocks(schedule_id, sequence_order);
+CREATE INDEX IF NOT EXISTS idx_practice_blocks_type 
+  ON practice_blocks(block_type, is_template);
+
+-- Basic indexes for practice_activities  
+CREATE INDEX IF NOT EXISTS idx_practice_activities_block_sequence 
+  ON practice_activities(block_id, sequence_order);
+CREATE INDEX IF NOT EXISTS idx_practice_activities_type 
+  ON practice_activities(activity_type);
+CREATE INDEX IF NOT EXISTS idx_practice_activities_play 
+  ON practice_activities(play_id) WHERE play_id IS NOT NULL;
+
+-- Basic indexes for practice_executions
+CREATE INDEX IF NOT EXISTS idx_practice_executions_practice_date 
+  ON practice_executions(practice_id, executed_at);
+CREATE INDEX IF NOT EXISTS idx_practice_executions_activity 
+  ON practice_executions(activity_id);
+CREATE INDEX IF NOT EXISTS idx_practice_executions_quality 
+  ON practice_executions(execution_quality, completion_rate);
+
+-- Basic indexes for practice_layout_boxes
+CREATE INDEX IF NOT EXISTS idx_practice_layout_boxes_schedule 
+  ON practice_layout_boxes(schedule_id, box_number);
+CREATE INDEX IF NOT EXISTS idx_practice_layout_boxes_grid 
+  ON practice_layout_boxes(grid_row, grid_column);
+
+-- Basic indexes for practice_analytics
+CREATE INDEX IF NOT EXISTS idx_practice_analytics_team_period 
+  ON practice_analytics(team_id, analysis_period, period_start);
+CREATE INDEX IF NOT EXISTS idx_practice_analytics_practice 
+  ON practice_analytics(practice_id) WHERE practice_id IS NOT NULL;
+
+-- Basic indexes for practice_templates
+CREATE INDEX IF NOT EXISTS idx_practice_templates_team_category 
+  ON practice_templates(team_id, category);
+CREATE INDEX IF NOT EXISTS idx_practice_templates_public 
+  ON practice_templates(is_public, category) WHERE is_public = true;
 
 -- Composite indexes for common query patterns
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_practice_blocks_schedule_time 

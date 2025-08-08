@@ -12,42 +12,41 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- =============================================================================
 
 -- Add columns to existing teams table for enhanced management
-ALTER TABLE teams ADD COLUMN IF NOT EXISTS
-  organization_id UUID, -- Parent organization (league, school district, etc.)
-  team_level TEXT CHECK (team_level IN (
-    'youth', 'middle_school', 'jv', 'varsity', 'college', 'semi_pro', 'pro'
-  )) DEFAULT 'varsity',
-  division TEXT, -- Conference, league division, etc.
-  league_name TEXT,
-  season_year INTEGER DEFAULT EXTRACT(YEAR FROM CURRENT_DATE),
-  
-  -- Team Configuration
-  max_roster_size INTEGER DEFAULT 50,
-  scholarship_count INTEGER DEFAULT 0, -- For college/pro teams
-  budget_allocation DECIMAL(12,2) DEFAULT 0.00,
-  
-  -- Team Identity
-  primary_color TEXT DEFAULT '#1E40AF',
-  secondary_color TEXT DEFAULT '#FFFFFF',
-  mascot_name TEXT,
-  fight_song TEXT,
-  team_motto TEXT,
-  
-  -- Season Information  
-  season_start_date DATE,
-  season_end_date DATE,
-  playoff_eligible BOOLEAN DEFAULT true,
-  current_record TEXT, -- "5-2", "0-0", etc.
-  
-  -- Contact and Location
-  home_field TEXT,
-  practice_facility TEXT,
-  mailing_address TEXT,
-  primary_contact_phone TEXT,
-  primary_contact_email TEXT,
-  
-  -- Team Settings
-  public_roster BOOLEAN DEFAULT false, -- Is roster visible to public?
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS organization_id UUID; -- Parent organization (league, school district, etc.)
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS team_level TEXT CHECK (team_level IN (
+  'youth', 'middle_school', 'jv', 'varsity', 'college', 'semi_pro', 'pro'
+)) DEFAULT 'varsity';
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS division TEXT; -- Conference, league division, etc.
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS league_name TEXT;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS season_year INTEGER DEFAULT EXTRACT(YEAR FROM CURRENT_DATE);
+
+-- Team Configuration
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS max_roster_size INTEGER DEFAULT 50;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS scholarship_count INTEGER DEFAULT 0; -- For college/pro teams
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS budget_allocation DECIMAL(12,2) DEFAULT 0.00;
+
+-- Team Identity
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS primary_color TEXT DEFAULT '#1E40AF';
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS secondary_color TEXT DEFAULT '#FFFFFF';
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS mascot_name TEXT;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS fight_song TEXT;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS team_motto TEXT;
+
+-- Season Information  
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS season_start_date DATE;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS season_end_date DATE;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS playoff_eligible BOOLEAN DEFAULT true;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS current_record TEXT; -- "5-2", "0-0", etc.
+
+-- Contact and Location
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS home_field TEXT;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS practice_facility TEXT;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS mailing_address TEXT;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS primary_contact_phone TEXT;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS primary_contact_email TEXT;
+
+-- Team Settings
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS public_roster BOOLEAN DEFAULT false; -- Is roster visible to public?
   allow_parent_access BOOLEAN DEFAULT true,
   require_physical BOOLEAN DEFAULT true,
   require_insurance BOOLEAN DEFAULT true,
