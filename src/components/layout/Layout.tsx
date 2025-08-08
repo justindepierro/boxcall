@@ -10,7 +10,24 @@ import {
 } from "../../utils/navigation";
 import { Navigation } from "../ui/Navigation";
 import { Sidebar } from "../ui/Sidebar";
-import { CleanDevPanel } from "../dev/CleanDevPanel";
+import { DevTools } from "../dev";
+import type { DevMode } from "../../types/dev";
+
+// Helper to get test role from dev mode
+const getTestRole = (devMode: DevMode): UserRole | null => {
+  switch (devMode) {
+    case "test_as_head_coach":
+      return "admin";
+    case "test_as_coach":
+      return "coach";
+    case "test_as_player":
+      return "player";
+    case "test_as_family":
+      return "family";
+    default:
+      return null;
+  }
+};
 import { Footer } from "./Footer";
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 interface LayoutProps {
@@ -25,13 +42,15 @@ interface LayoutProps {
  */
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const profile = useAuthProfile();
-  const { effectiveUserRole, devMode, isDevMode } = useDevMode();
+  const { devMode } = useDevMode();
   const { sidebarOpen, toggleSidebar } = useUI();
-  // Use effective role from dev mode if in dev mode, otherwise use profile role
-  // Cast effectiveUserRole to UserRole since we control the dev mode values
-  const currentRole: UserRole | null = isDevMode
-    ? (effectiveUserRole as UserRole)
-    : (profile?.role ?? null);
+
+  // Use profile role, or test role based on dev mode
+  const currentRole: UserRole | null =
+    devMode !== "production" ? getTestRole(devMode) : (profile?.role ?? null);
+
+  const isDevMode = devMode !== "production";
+
   const navigationItems = getNavigationItems(currentRole);
   const sidebarItems = toSidebarItems(navigationItems, currentRole);
   const roleInfo = getRoleDisplayInfo(currentRole);
@@ -102,8 +121,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </main>
 
-        {/* Development Tools Panel */}
-        <CleanDevPanel />
+        {/* Professional Development Tools Panel */}
+        <DevTools />
       </div>
     </div>
   );

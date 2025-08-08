@@ -54,78 +54,54 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 const SAMPLE_TEAMS = [
   {
     name: "West Valley Warriors",
-    division: "varsity",
-    season: "2025",
-    location: "West Valley High School",
-    description:
-      "Defending division champions focused on teamwork and excellence.",
+    school_name: "West Valley High School",
+    mascot: "Warriors",
+    season_year: 2025,
   },
   {
     name: "Metro Ravens",
-    division: "jv",
-    season: "2025",
-    location: "Metro High School",
-    description: "Young talented team building for the future.",
+    school_name: "Metro High School",
+    mascot: "Ravens",
+    season_year: 2025,
   },
   {
     name: "Eastside Eagles",
-    division: "varsity",
-    season: "2025",
-    location: "Eastside Regional High",
-    description: "Traditional powerhouse with strong fundamentals.",
+    school_name: "Eastside Regional High",
+    mascot: "Eagles",
+    season_year: 2025,
   },
 ];
 
 const SAMPLE_PLAYS = [
   {
-    name: "Power I Formation - Dive",
-    description: "Classic power running play with fullback lead blocking",
     formation: "I-Formation",
-    play_type: "run",
-    down_distance: "1st and 10",
-    field_position: "between_20s",
-    tags: ["power", "running", "short-yardage"],
-    success_rate: 75.5,
+    play_name: "Power I Formation - Dive",
+    p_type: "Run",
+    notes: "Classic power running play with fullback lead blocking",
   },
   {
-    name: "Shotgun - Quick Slants",
-    description: "Quick passing attack to beat the blitz",
     formation: "Shotgun",
-    play_type: "pass",
-    down_distance: "3rd and short",
-    field_position: "between_20s",
-    tags: ["quick-pass", "slant", "anti-blitz"],
-    success_rate: 82.3,
+    play_name: "Shotgun - Quick Slants",
+    p_type: "Pass",
+    notes: "Quick passing attack to beat the blitz",
   },
   {
-    name: "Spread - Four Verticals",
-    description: "Deep passing concept to stretch the defense",
     formation: "Spread",
-    play_type: "pass",
-    down_distance: "2nd and long",
-    field_position: "own_territory",
-    tags: ["deep-pass", "verticals", "big-play"],
-    success_rate: 68.9,
+    play_name: "Spread - Four Verticals",
+    p_type: "Pass",
+    notes: "Deep passing concept to stretch the defense",
   },
   {
-    name: "Goal Line - Power O",
-    description: "Goal line rushing attack with pulling guard",
     formation: "Goal Line",
-    play_type: "run",
-    down_distance: "goal_line",
-    field_position: "red_zone",
-    tags: ["goal-line", "power", "touchdown"],
-    success_rate: 89.2,
+    play_name: "Goal Line - Power O",
+    p_type: "Run",
+    notes: "Goal line rushing attack with pulling guard",
   },
   {
-    name: "Wildcat - Direct Snap",
-    description: "Direct snap to running back with multiple options",
     formation: "Wildcat",
-    play_type: "run",
-    down_distance: "1st and 10",
-    field_position: "between_20s",
-    tags: ["wildcat", "option", "misdirection"],
-    success_rate: 71.4,
+    play_name: "Wildcat - Direct Snap",
+    p_type: "Run",
+    notes: "Direct snap to running back with multiple options",
   },
 ];
 
@@ -133,26 +109,18 @@ const SAMPLE_PLAYBOOKS = [
   {
     name: "Red Zone Offense",
     description: "High-percentage plays for scoring in the red zone",
-    category: "offense",
-    tags: ["red-zone", "scoring", "high-percentage"],
   },
   {
     name: "Two-Minute Drill",
     description: "Fast-paced offense for end-of-half situations",
-    category: "offense",
-    tags: ["hurry-up", "two-minute", "clock-management"],
   },
   {
     name: "Short Yardage Package",
     description: "Power running plays for 3rd and short situations",
-    category: "offense",
-    tags: ["short-yardage", "power", "3rd-down"],
   },
   {
     name: "Nickel Defense",
     description: "Defensive package for passing situations",
-    category: "defense",
-    tags: ["passing-downs", "nickel", "coverage"],
   },
 ];
 
@@ -173,50 +141,55 @@ async function loadDemoData() {
 
     console.log("✅ Database connection successful!\n");
 
-    // Load Teams
-    console.log("📊 Loading sample teams...");
+    // Get a system user to act as creator
+    console.log("🔍 Finding or creating system user for demo data...");
+
+    // Try to find existing admin user or create a system marker
+    let systemUserId = "system"; // Default fallback
+
+    const { data: adminUser, error: userError } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("role", "admin")
+      .limit(1)
+      .single();
+
+    if (adminUser && adminUser.id) {
+      systemUserId = adminUser.id;
+      console.log("✅ Using admin user as creator:", systemUserId);
+    } else {
+      console.log("ℹ️ No admin user found, using system placeholder");
+    }
+
+    // Load Teams with proper creator field
+    console.log("\n📊 Loading sample teams...");
+    const teamsWithCreator = SAMPLE_TEAMS.map((team) => ({
+      ...team,
+      created_by: systemUserId,
+    }));
+
     const { data: teams, error: teamsError } = await supabase
       .from("teams")
-      .insert(SAMPLE_TEAMS)
+      .insert(teamsWithCreator)
       .select();
 
     if (teamsError) {
       console.error("❌ Error loading teams:", teamsError.message);
+      console.log("Debug info:", teamsError);
       return;
     }
 
     console.log(`✅ Loaded ${teams.length} teams`);
     teams.forEach((team) => {
-      console.log(`   • ${team.name} (${team.division})`);
+      console.log(`   • ${team.name} (${team.season_year})`);
     });
 
-    // Load Plays
-    console.log("\n🏈 Loading sample plays...");
-    const playsWithTeam = SAMPLE_PLAYS.map((play) => ({
-      ...play,
-      team_id: teams[0].id, // Assign to first team for demo
-    }));
-
-    const { data: plays, error: playsError } = await supabase
-      .from("plays")
-      .insert(playsWithTeam)
-      .select();
-
-    if (playsError) {
-      console.error("❌ Error loading plays:", playsError.message);
-      return;
-    }
-
-    console.log(`✅ Loaded ${plays.length} plays`);
-    plays.forEach((play) => {
-      console.log(`   • ${play.name} (${play.formation})`);
-    });
-
-    // Load Playbooks
+    // Load Playbooks first (plays need playbook_id)
     console.log("\n📚 Loading sample playbooks...");
     const playbooksWithTeam = SAMPLE_PLAYBOOKS.map((playbook) => ({
       ...playbook,
       team_id: teams[0].id, // Assign to first team for demo
+      created_by: systemUserId, // Add creator field
     }));
 
     const { data: playbooks, error: playbooksError } = await supabase
@@ -231,7 +204,30 @@ async function loadDemoData() {
 
     console.log(`✅ Loaded ${playbooks.length} playbooks`);
     playbooks.forEach((playbook) => {
-      console.log(`   • ${playbook.name} (${playbook.category})`);
+      console.log(`   • ${playbook.name}`);
+    });
+
+    // Load Plays (assign to first playbook)
+    console.log("\n🏈 Loading sample plays...");
+    const playsWithPlaybook = SAMPLE_PLAYS.map((play) => ({
+      ...play,
+      playbook_id: playbooks[0].id, // Assign to first playbook for demo
+      created_by: systemUserId, // Add creator field
+    }));
+
+    const { data: plays, error: playsError } = await supabase
+      .from("plays")
+      .insert(playsWithPlaybook)
+      .select();
+
+    if (playsError) {
+      console.error("❌ Error loading plays:", playsError.message);
+      return;
+    }
+
+    console.log(`✅ Loaded ${plays.length} plays`);
+    plays.forEach((play) => {
+      console.log(`   • ${play.play_name} (${play.formation})`);
     });
 
     // Summary

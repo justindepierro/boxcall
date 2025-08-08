@@ -229,14 +229,30 @@ export const toSidebarItems = (
  */
 const handleLogout = async () => {
   try {
-    // Import supabase dynamically to avoid circular imports
-    const { supabase } = await import("../lib/supabase");
-    await supabase.auth.signOut();
-    window.location.href = "/login";
+    console.log("Navigation utils: Starting logout process...");
+
+    // Import auth store dynamically to avoid circular imports
+    const { useAuth } = await import("../app/auth-store");
+
+    // Use auth store for proper state management
+    console.log("Navigation utils: Getting auth state...");
+    const { signOut } = useAuth.getState();
+
+    console.log("Navigation utils: Calling signOut...");
+    await signOut();
+
+    console.log("Navigation utils: Auth state cleared, redirecting...");
+
+    // Small delay to ensure state updates are processed
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // Force redirect to login
+    window.location.replace("/login");
   } catch (error) {
-    console.error("Error during logout:", error);
+    console.error("Navigation utils: Error during logout:", error);
     // Fallback: force redirect to login
-    window.location.href = "/login";
+    console.log("Navigation utils: Forcing redirect due to error");
+    window.location.replace("/login");
   }
 };
 /**
@@ -279,6 +295,7 @@ export const getRoleDisplayInfo = (role?: UserRole | null) => {
   > = {
     admin: { display: "Administrator", color: "red" },
     coach: { display: "Coach", color: "blue" },
+    assistant_coach: { display: "Assistant Coach", color: "blue" },
     player: { display: "Player", color: "green" },
     family: { display: "Family", color: "purple" },
   };

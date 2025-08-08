@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useIsAuthenticated } from "../../app/auth-store";
+import { useNavigate } from "react-router-dom";
+import { useIsAuthenticated, useAuth } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
-import { supabase } from "../../lib/supabase";
 import { Icon } from "./Icon/Icon";
 import { NotificationBadge, Badge } from "./Badge";
 
@@ -14,11 +14,14 @@ import { NotificationBadge, Badge } from "./Badge";
  */
 export const Navigation: React.FC = () => {
   const isAuthenticated = useIsAuthenticated();
-  const { isDevMode } = useDevMode();
+  const { devMode } = useDevMode();
   const { toggleSidebar } = useUI();
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+
+  const isDevMode = devMode !== "production";
 
   // Mock data for reward loop demonstration
   const [notifications] = useState({
@@ -70,12 +73,43 @@ export const Navigation: React.FC = () => {
     };
   }, [lastScrollY]);
 
+  const { signOut } = useAuth();
+
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    window.location.href = "/login";
+    try {
+      console.log("Navigation: Starting logout process...");
+      console.log("Navigation: Current window location:", window.location.href);
+
+      // Use the auth store's signOut method for proper state management
+      console.log("Navigation: Calling auth store signOut...");
+      await signOut();
+
+      console.log("Navigation: Auth state cleared successfully");
+
+      // Small delay to ensure state updates are processed
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      console.log("Navigation: Navigating to login...");
+
+      // Use React Router navigation instead of window.location
+      navigate("/login", { replace: true });
+    } catch (error) {
+      console.error("Navigation: Logout error:", error);
+      console.log("Navigation: Force redirecting due to error...");
+      // Force redirect even if there's an error - use navigate as fallback
+      try {
+        navigate("/login", { replace: true });
+      } catch (_navError) {
+        console.warn(
+          "Navigation: React Router navigation failed, using window.location"
+        );
+        window.location.replace("/login");
+      }
+    }
   };
+
   const handleNavigation = (path: string) => {
-    window.location.href = path;
+    navigate(path);
     setMobileMenuOpen(false);
   };
   if (!isAuthenticated) {

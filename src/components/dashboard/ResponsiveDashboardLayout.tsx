@@ -4,6 +4,7 @@ import { PersonalCalendar } from "../dashboard/PersonalCalendar";
 import { PersonalTrophyShelf } from "../dashboard/PersonalTrophyShelf";
 import { ProfileCard } from "../dashboard/ProfileCard";
 import { TeamFeeds } from "../dashboard/TeamFeeds";
+import { DatabaseDataDisplay } from "../dashboard/DatabaseDataDisplay";
 import { Typography } from "../design-system";
 import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
@@ -111,6 +112,11 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           ============================================================================ 
         */}
         <div className="responsive-content-grid">
+          {/* Database Data Display - Show loaded demo data */}
+          <div className="col-span-full">
+            <DatabaseDataDisplay />
+          </div>
+
           {/* Profile Card */}
           <div className="profile-section">
             {isStepVisible(0) ? (

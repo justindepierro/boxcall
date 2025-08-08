@@ -5,8 +5,8 @@
  */
 
 import React from "react";
-import { Icon } from "./Icon";
-import { ModularIcon } from "./ModularIcon";
+import { Icon } from "../Icon";
+import { ModularIcon } from "../ModularIcon";
 
 export const IconSystemTest: React.FC = () => {
   return (

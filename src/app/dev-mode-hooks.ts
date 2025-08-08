@@ -1,48 +1,76 @@
-import { useContext } from "react";
+import { useState } from "react";
+import type { DevMode } from "./dev-mode-types";
 import { useAuthProfile } from "./auth-store";
-import { DevModeContext } from "./dev-mode-context";
+
+// Simple dev mode hook without complex context
 export const useDevMode = () => {
-  const context = useContext(DevModeContext);
-  if (!context) {
-    throw new Error("useDevMode must be used within a DevModeProvider");
-  }
-  return context;
+  const [devMode, setDevModeState] = useState<DevMode>(() => {
+    // Get from localStorage or default to production
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("boxcall-dev-mode");
+      if (stored && isValidDevMode(stored)) {
+        return stored as DevMode;
+      }
+    }
+    return "production";
+  });
+
+  const setDevMode = (mode: DevMode) => {
+    setDevModeState(mode);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("boxcall-dev-mode", mode);
+    }
+  };
+
+  return { devMode, setDevMode };
 };
-// Hook to check if user has super admin capabilities (real or simulated)
-export const useIsSuperAdmin = () => {
+
+// Utility to validate dev mode
+function isValidDevMode(mode: string): boolean {
+  const validModes: DevMode[] = [
+    "production",
+    "blank_slate",
+    "test_as_head_coach",
+    "test_as_coach",
+    "test_as_player",
+    "test_as_family",
+  ];
+  return validModes.includes(mode as DevMode);
+}
+
+// Simplified role checking (using actual database role names)
+export const useIsHeadCoach = () => {
   const { devMode } = useDevMode();
   const profile = useAuthProfile();
-  // Real super admin check (using 'admin' role from actual auth system)
-  const isRealSuperAdmin = profile?.role === "admin";
-  // Simulated super admin in dev mode
-  const isSimulatedSuperAdmin =
-    devMode === "super_admin_real" || devMode === "super_admin_mock";
-  return isRealSuperAdmin || isSimulatedSuperAdmin;
+
+  // Database uses 'admin' for head coaches, or testing as head coach
+  return profile?.role === "admin" || devMode === "test_as_head_coach";
 };
-// Hook to get effective team member role for current context
-export const useEffectiveTeamRole = () => {
-  const { effectiveUserRole } = useDevMode();
-  return effectiveUserRole;
+
+export const useIsCoach = () => {
+  const { devMode } = useDevMode();
+  const profile = useAuthProfile();
+
+  // Any coaching role or testing as coach
+  return (
+    profile?.role === "admin" ||
+    profile?.role === "coach" ||
+    profile?.role === "assistant_coach" ||
+    devMode === "test_as_head_coach" ||
+    devMode === "test_as_coach"
+  );
 };
-// Hook to determine if we should use mock data or real database data
-export const useTeamDataSource = () => {
-  const { devMode, effectiveTeamData } = useDevMode();
 
-  const shouldUseMockData =
-    devMode === "super_admin_mock" || devMode.startsWith("view_as_");
+export const useIsPlayer = () => {
+  const { devMode } = useDevMode();
+  const profile = useAuthProfile();
 
-  const shouldUseBlankSlate = devMode === "blank_slate";
+  return profile?.role === "player" || devMode === "test_as_player";
+};
 
-  const teamData = effectiveTeamData;
+export const useIsFamily = () => {
+  const { devMode } = useDevMode();
+  const profile = useAuthProfile();
 
-  return {
-    shouldUseMockData,
-    shouldUseBlankSlate,
-    mockTeamData: teamData,
-    dataSource: shouldUseBlankSlate
-      ? ("blank" as const)
-      : shouldUseMockData
-        ? ("mock" as const)
-        : ("database" as const),
-  };
+  return profile?.role === "family" || devMode === "test_as_family";
 };
