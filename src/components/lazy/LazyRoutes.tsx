@@ -47,10 +47,6 @@ export const LazyPlaybookPage = lazy(() => import("../../pages/Playbook"));
 
 export const LazyTeamSettings = lazy(() => import("../../pages/TeamSettings"));
 
-export const LazyTemplates = lazy(() => import("../../pages/Templates"));
-
-export const LazyPlayground = lazy(() => import("../../pages/Playground"));
-
 export const LazyAboutPage = lazy(() =>
   import("../../pages/legal/AboutPage").then((module) => ({
     default: module.AboutPage,

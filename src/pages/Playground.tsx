@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
 import SmartIconDemo from "../components/demo/SmartIconDemo";
-import { Icon, SmartIconSystem } from "../components/ui/Icon/Icon";
+import { Icon, SmartIconSystem } from "../components/ui/Icon";
 import type { IconName } from "../components/ui/Icon/Icon";
 import {
   testSmartIconSystem,
