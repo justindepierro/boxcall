@@ -77,6 +77,7 @@ const ICON_MAP = {
   "trending-up": LucideIcons.TrendingUp,
   activity: LucideIcons.Activity,
   chart: LucideIcons.BarChart3,
+  shield: LucideIcons.Shield,
 
   // Communication
   phone: LucideIcons.Phone,
