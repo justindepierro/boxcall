@@ -78,7 +78,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         ============================================================================ 
       */}
       <div className="responsive-welcome-header bg-gradient-to-r from-surface-jade to-surface-jade dark:from-surface-jade-dark dark:to-surface-jade-dark border-b border-surface-jade-dark dark:border-brand-jade-dark">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-left">
+        <div className="max-w-7xl mx-auto bc-container-padding py-3 text-left">
           <Typography
             variant="headline-md"
             className="text-brand-jade-dark dark:text-brand-jade-light"
@@ -105,7 +105,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
       */}
       <div className="responsive-dashboard-container">
         {/* Team Onboarding - Shows for users without teams */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto bc-container-padding">
           <TeamOnboarding context="dashboard" />
         </div>
 

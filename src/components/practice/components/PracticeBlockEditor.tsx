@@ -114,7 +114,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
   );
 
   return (
-    <Card className="p-6 space-y-6">
+    <Card className="bc-card-padding space-y-6">
       <div className="flex items-center justify-between">
         <Typography variant="headline-md" className="flex items-center gap-2">
           {selectedCategory && (
@@ -129,7 +129,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
             onClick={() => onDelete(block.id)}
             className="text-red-600 hover:text-red-700"
           >
-            <Icon name="delete" size={16} />
+            <Icon name="delete" size="sm" />
           </Button>
         )}
       </div>
@@ -329,7 +329,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
             Focus Items
           </label>
           <Button variant="ghost" size="sm" onClick={addFocusItem}>
-            <Icon name="plus" size={14} className="mr-1" />
+            <Icon name="plus" size="sm" className="mr-1" />
             Add Focus
           </Button>
         </div>
@@ -344,7 +344,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
                 onClick={() => removeFocusItem(index)}
                 className="text-blue-600 hover:text-blue-800"
               >
-                <Icon name="close" size={12} />
+                <Icon name="close" size="xs" />
               </button>
             </span>
           ))}
@@ -358,7 +358,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
             Equipment
           </label>
           <Button variant="ghost" size="sm" onClick={addEquipmentItem}>
-            <Icon name="plus" size={14} className="mr-1" />
+            <Icon name="plus" size="sm" className="mr-1" />
             Add Equipment
           </Button>
         </div>
@@ -373,7 +373,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
                 onClick={() => removeEquipmentItem(index)}
                 className="text-green-600 hover:text-green-800"
               >
-                <Icon name="close" size={12} />
+                <Icon name="close" size="xs" />
               </button>
             </span>
           ))}
@@ -400,7 +400,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
           Cancel
         </Button>
         <Button variant="primary" onClick={handleSave}>
-          <Icon name="check" size={16} className="mr-2" />
+          <Icon name="check" size="sm" className="mr-2" />
           Save Block
         </Button>
       </div>

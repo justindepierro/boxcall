@@ -1,0 +1,37 @@
+:root {
+  --bc-surface: #fcfdfc;
+  --bc-surface-alt: #f6f9f7;
+}
+body[data-density="compact"] {
+  --bc-card-padding: 0.75rem; /* 12px */
+  --bc-grid-gap: 1rem; /* 16px */
+}
+body[data-density="comfortable"] {
+  --bc-card-padding: 1rem; /* 16px */
+  --bc-grid-gap: 1.25rem; /* 20px */
+}
+/* Utility classes (can be consumed gradually) */
+.bc-card-padding {
+  padding: var(--bc-card-padding);
+}
+.bc-grid-gap {
+  gap: var(--bc-grid-gap);
+}
+
+/* Container horizontal padding utility (mirrors Tailwind px-4 sm:px-6 lg:px-8) */
+.bc-container-padding {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+@media (min-width: 640px) {
+  .bc-container-padding {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .bc-container-padding {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}

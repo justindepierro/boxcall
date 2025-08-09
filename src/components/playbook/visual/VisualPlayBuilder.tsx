@@ -36,7 +36,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-7xl h-full max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-200">
+        <div className="flex items-center justify-between bc-card-padding border-b border-slate-200">
           <div className="flex items-center space-x-4">
             <h2 className="text-xl font-semibold text-slate-900">
               Visual Play Builder
@@ -63,7 +63,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
           </button>
         </div>
         {/* View Mode Tabs */}
-        <div className="flex items-center border-b border-slate-200 px-6">
+        <div className="flex items-center border-b border-slate-200 bc-card-padding">
           {viewModeButtons.map((button) => {
             const Icon = button.icon;
             return (
@@ -85,7 +85,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
         {/* Content */}
         <div className="flex-1 flex overflow-hidden">
           {/* Sidebar */}
-          <div className="w-80 border-r border-slate-200 bg-slate-50 p-6 overflow-y-auto">
+          <div className="w-80 border-r border-slate-200 bg-slate-50 bc-card-padding overflow-y-auto">
             {viewMode === "field" && (
               <div className="space-y-6">
                 <div>
@@ -150,7 +150,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                     </div>
                   </div>
                 </div>
-                <div className="bg-white rounded-lg p-4 border border-slate-200">
+                <div className="bg-white rounded-lg bc-card-padding border border-slate-200">
                   <h4 className="font-medium text-slate-900 mb-2">Play Info</h4>
                   {selectedPlay && (
                     <div className="space-y-2 text-sm">
@@ -254,7 +254,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             )}
           </div>
           {/* Main Field Canvas */}
-          <div className="flex-1 p-6">
+          <div className="flex-1 bc-card-padding">
             <FieldCanvas
               play={selectedPlay}
               readOnly={false}
@@ -263,7 +263,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
           </div>
         </div>
         {/* Footer */}
-        <div className="border-t border-slate-200 px-6 py-4 flex items-center justify-between">
+        <div className="border-t border-slate-200 bc-card-padding flex items-center justify-between">
           <div className="text-sm text-slate-600">
             Phase 2: Visual Play Builder - Interactive field canvas with player
             positions

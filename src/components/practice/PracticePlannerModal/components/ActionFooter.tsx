@@ -35,7 +35,7 @@ export const ActionFooter: React.FC<ActionFooterProps> = ({
       <div>
         {isOvertime && (
           <Typography variant="body-sm" className="text-red-600">
-            <Icon name="alert-triangle" size="xs" className="mr-1" />
+            <Icon name="warning" size="xs" className="mr-1" />
             Warning: Practice is {totalDuration - scheduledDuration} minutes
             over scheduled time
           </Typography>
@@ -53,13 +53,9 @@ export const ActionFooter: React.FC<ActionFooterProps> = ({
       {/* Overtime Warning Modal */}
       {showOvertimeWarning && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+          <div className="bg-white rounded-lg bc-card-padding max-w-md w-full mx-4">
             <div className="flex items-center mb-4">
-              <Icon
-                name="alert-triangle"
-                size="lg"
-                className="text-red-500 mr-3"
-              />
+              <Icon name="warning" size="lg" className="text-red-500 mr-3" />
               <Typography variant="headline-md" className="text-red-800">
                 Practice Overtime Warning
               </Typography>

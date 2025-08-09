@@ -61,7 +61,7 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
     setForm({ title: "", eventType: "practice", startsAt: "", location: "" });
   }
   return (
-    <Card className="p-6">
+    <Card className="bc-card-padding">
       <div className="flex items-center justify-between mb-4">
         <Typography
           variant="headline-md"
@@ -149,7 +149,7 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
                 placeholder="Practice / Game vs Central"
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 bc-grid-gap">
               <div>
                 <label
                   className="block text-sm font-medium mb-1"

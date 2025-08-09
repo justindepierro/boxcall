@@ -208,7 +208,7 @@ export const PracticePDFExportDialog: React.FC<
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md">
-      <div className="p-6">
+      <div className="bc-card-padding">
         <div className="flex items-center space-x-3 mb-6">
           <div className="text-3xl">📄</div>
           <div>
@@ -361,7 +361,7 @@ export const PracticePDFExportDialog: React.FC<
             </Typography>
             <div className="text-sm text-blue-800">
               <div>
-                <Icon name="clipboard" className="w-4 h-4 inline" />{" "}
+                <Icon name="file" size="xs" className="inline" />{" "}
                 <strong>Categories:</strong> {getSelectedCategoriesText()}
               </div>
               <div className="mt-1">

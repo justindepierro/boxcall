@@ -31,6 +31,7 @@ export const TeamBulletin: React.FC = () => {
     memberCount: number;
     mascot?: string | null;
     school_name?: string | null;
+    logo_url?: string | null;
   }
 
   function computeAcademicYearDisplay(baseYear?: number) {
@@ -204,28 +205,25 @@ export const TeamBulletin: React.FC = () => {
         id="main-content"
         role="main"
         aria-labelledby="team-dashboard-heading"
-        className="py-6"
+        className="py-4"
       >
-        <TeamBulletinHeader
-          headingId="team-dashboard-heading"
-          teamId={teamId}
-          teamName={teamData.name}
-          seasonDisplay={teamData.season}
-          record={teamData.record}
-          memberCount={teamData.memberCount}
-          nextGame={teamData.nextGame}
-          schoolName={teamData.school_name}
-          mascot={teamData.mascot}
-          isCoach={isCoach}
-        />
-        <div className="px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="px-4 sm:px-6 lg:px-8">
+          <TeamBulletinHeader
+            headingId="team-dashboard-heading"
+            teamId={teamId}
+            teamName={teamData.name}
+            seasonDisplay={teamData.season}
+            record={teamData.record}
+            memberCount={teamData.memberCount}
+            nextGame={teamData.nextGame}
+            schoolName={teamData.school_name}
+            mascot={teamData.mascot}
+            isCoach={isCoach}
+            logoUrl={teamData.logo_url || undefined}
+          />
+          <div className="grid grid-cols-1 lg:grid-cols-4 bc-grid-gap">
             <TeamBulletinLeftPanel teamId={teamId} userRole={userRole} />
-            <TeamBulletinFeedPanel
-              teamId={teamId}
-              userRole={userRole}
-              isCoach={isCoach}
-            />
+            <TeamBulletinFeedPanel teamId={teamId} userRole={userRole} />
             <TeamBulletinRightPanel teamId={teamId} />
           </div>
         </div>

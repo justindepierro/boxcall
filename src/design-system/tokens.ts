@@ -176,6 +176,20 @@ export const spacingTokens = {
   16: "4rem", // 64px
 } as const;
 
+// Density scale (compact layout support)
+export const densityTokens = {
+  compact: {
+    cardPadding: spacingTokens[3], // 12px
+    gridGap: spacingTokens[4], // 16px (visual rhythm)
+    headerPadding: spacingTokens[3],
+  },
+  comfortable: {
+    cardPadding: spacingTokens[4], // 16px
+    gridGap: spacingTokens[5], // 20px
+    headerPadding: spacingTokens[4],
+  },
+} as const;
+
 // ============================================================================
 // ELEVATION & SHADOW SYSTEM - "Professional Depth"
 // ============================================================================

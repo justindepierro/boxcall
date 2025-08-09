@@ -16,7 +16,7 @@ export const TeamBulletinFeedPanel: React.FC<FeedPanelProps> = ({
       className="lg:col-span-2 space-y-6"
       aria-labelledby="team-feed-heading"
     >
-      <Card className="p-6">
+      <Card className="bc-card-padding">
         <TeamFeed teamId={teamId || ""} userRole={userRole} />
       </Card>
     </section>

@@ -93,7 +93,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
     stats?.win_pct != null ? (stats.win_pct * 100).toFixed(1) + "%" : "-";
 
   return (
-    <Card className="p-6" aria-label="Season statistics">
+    <Card className="bc-card-padding" aria-label="Season statistics">
       <div className="flex items-center justify-between mb-4">
         <Typography
           variant="headline-md"
@@ -212,7 +212,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 </ul>
               </div>
             )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 bc-grid-gap">
               <div>
                 <label
                   className="block text-sm font-medium mb-1"
@@ -266,7 +266,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 placeholder="Central HS"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 bc-grid-gap">
               <div>
                 <label
                   className="block text-sm font-medium mb-1"

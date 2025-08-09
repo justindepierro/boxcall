@@ -69,7 +69,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-        <div className="p-6">
+        <div className="bc-card-padding">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
@@ -165,7 +165,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               Existing Scripts ({filteredScripts.length})
             </Typography>
             {filteredScripts.length === 0 ? (
-              <Card className="p-6 text-center">
+              <Card className="bc-card-padding text-center">
                 <div className="text-4xl mb-4">📚</div>
                 <Typography variant="body-lg" color="muted">
                   No scripts found in this category

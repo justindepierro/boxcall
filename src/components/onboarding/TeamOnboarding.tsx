@@ -67,7 +67,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
   // Show loading state
   if (loading) {
     return (
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg bc-card-padding">
         <div className="animate-pulse flex items-center gap-3">
           <div className="w-6 h-6 bg-blue-200 rounded-full"></div>
           <div className="h-4 bg-blue-200 rounded w-32"></div>
@@ -107,7 +107,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
     } else {
       // Free users need team or coach account for playbook
       return (
-        <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-6 mb-8">
+        <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg bc-card-padding mb-8">
           <div className="text-center">
             <Icon
               name="lock"
@@ -144,7 +144,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
 
   // DASHBOARD CONTEXT: Encourage team creation for full experience
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-jade-50 dark:from-blue-900/20 dark:to-jade-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-8 mb-8">
+    <div className="bg-gradient-to-r from-blue-50 to-jade-50 dark:from-blue-900/20 dark:to-jade-900/20 border border-blue-200 dark:border-blue-800 rounded-xl bc-card-padding mb-8">
       <div className="text-center">
         <div className="flex items-center justify-center mb-6">
           <div className="bg-jade-100 dark:bg-jade-900/40 p-4 rounded-full">
@@ -168,9 +168,9 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
             : "To get the full BoxCall experience, you can create a team, join one, or get a Coach Account for personal use."}
         </Typography>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap max-w-2xl mx-auto">
           {/* Create Team Option */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:border-jade-300 dark:hover:border-jade-600 transition-colors">
+          <div className="bg-white dark:bg-gray-800 rounded-lg bc-card-padding border border-gray-200 dark:border-gray-700 hover:border-jade-300 dark:hover:border-jade-600 transition-colors">
             <Icon
               name="plus"
               size="lg"
@@ -192,7 +192,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
           </div>
 
           {/* Join Team Option */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:border-jade-300 dark:hover:border-jade-600 transition-colors">
+          <div className="bg-white dark:bg-gray-800 rounded-lg bc-card-padding border border-gray-200 dark:border-gray-700 hover:border-jade-300 dark:hover:border-jade-600 transition-colors">
             <Icon
               name="user-plus"
               size="lg"

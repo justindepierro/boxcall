@@ -100,7 +100,7 @@ export function Form({
   };
   const variantClasses = {
     default: "space-y-6",
-    card: "bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-6",
+    card: "bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 bc-card-padding space-y-6",
     inline: "space-y-4",
     modal: "space-y-4",
   };

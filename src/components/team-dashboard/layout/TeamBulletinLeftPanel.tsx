@@ -20,7 +20,7 @@ export const TeamBulletinLeftPanel: React.FC<LeftPanelProps> = ({
       aria-labelledby="team-actions-heading"
     >
       <TeamTrophyCase teamId={teamId || ""} />
-      <Card className="p-6">
+      <Card className="bc-card-padding">
         <Typography
           as="h2"
           id="team-actions-heading"
@@ -31,7 +31,7 @@ export const TeamBulletinLeftPanel: React.FC<LeftPanelProps> = ({
         </Typography>
         <TeamQuickActions teamId={teamId || ""} userRole={userRole} />
       </Card>
-  <SeasonStatsCard teamId={teamId || ""} userRole={userRole} />
+      <SeasonStatsCard teamId={teamId || ""} userRole={userRole} />
     </aside>
   );
 };

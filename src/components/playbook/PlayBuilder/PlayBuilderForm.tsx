@@ -20,7 +20,8 @@ interface PlayBuilderFormProps {
 
 // Shared form styles for consistency
 const formStyles = {
-  section: "bg-white rounded-lg border border-slate-200 p-6 space-y-4",
+  section:
+    "bg-white rounded-none border border-slate-200 bc-card-padding space-y-4",
   sectionTitle:
     "text-lg font-semibold text-slate-900 pb-2 border-b border-slate-200",
   label: "block text-sm font-medium text-slate-700 mb-1.5",

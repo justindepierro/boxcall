@@ -84,7 +84,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
       {/* Search and Filters */}
-      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+      <div className="bc-card-padding border-b border-gray-200 dark:border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Search */}
           <div className="md:col-span-2">
@@ -146,7 +146,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
         </div>
       </div>
       {/* Player Grid */}
-      <div className="p-6">
+      <div className="bc-card-padding">
         {filteredPlayers.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-500 dark:text-gray-400">
@@ -154,7 +154,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bc-grid-gap">
             {filteredPlayers.map((player) => (
               <div
                 key={player.id}

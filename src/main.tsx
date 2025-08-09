@@ -4,6 +4,7 @@ import App from "./App.tsx";
 import { AppProviders } from "./app/providers.tsx";
 import "./index.css";
 import "./styles/responsive-dashboard.css";
+import "./styles/density.css";
 
 // Web Vitals monitoring for production
 if (process.env.NODE_ENV === "production") {

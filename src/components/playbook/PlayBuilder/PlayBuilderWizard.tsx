@@ -42,8 +42,8 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
             </button>
           </div>
           {/* Content */}
-          <div className="bg-white px-6 py-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-white bc-card-padding">
+            <div className="grid grid-cols-1 lg:grid-cols-2 bc-grid-gap">
               {/* Form Section */}
               <div>
                 <h3 className="text-lg font-medium text-slate-900 mb-6">
@@ -103,7 +103,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                 <h3 className="text-lg font-medium text-slate-900 mb-6">
                   Live Preview
                 </h3>
-                <div className="bg-slate-50 rounded-lg p-6 border-2 border-dashed border-slate-300">
+                <div className="bg-slate-50 rounded-lg bc-card-padding border-2 border-dashed border-slate-300">
                   <div className="text-center">
                     <div className="text-slate-400 mb-4">
                       <svg

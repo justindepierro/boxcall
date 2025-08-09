@@ -148,19 +148,19 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="bc-card-padding border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
             {player ? "Edit Player" : "Add New Player"}
           </h2>
         </div>
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="bc-card-padding space-y-6">
           {/* Basic Information */}
           <div>
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
               Basic Information
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   First Name *
@@ -272,7 +272,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
               Physical Information
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 bc-grid-gap">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Jersey Number
@@ -375,7 +375,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             </div>
           </div>
           {/* Actions */}
-          <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
             <Button
               type="button"
               variant="outline"

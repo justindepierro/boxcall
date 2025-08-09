@@ -10,6 +10,7 @@ import { DEV_MODES } from "../types";
 import type { DevMode } from "../../../app/dev-mode-types";
 
 import { DevToolsActions } from "../services/DevToolsActions";
+import { useUI } from "../../../app/store";
 
 interface DataTabProps {
   onModeChange: (mode: DevMode) => void;
@@ -19,6 +20,7 @@ interface DataTabProps {
 export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
   const { devMode } = useDevMode();
   const { teams, playbooks, plays, error } = useTeamsData();
+  const { uiDensity, setUIDensity } = useUI();
 
   return (
     <div className="space-y-4">
@@ -106,6 +108,27 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
               <div className="text-gray-600 dark:text-gray-400 ml-4">
                 {mode.description}
               </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Typography variant="body-sm" className="font-medium">
+          Layout Density
+        </Typography>
+        <div className="flex gap-2">
+          {(["compact", "comfortable"] as const).map((d) => (
+            <button
+              key={d}
+              onClick={() => setUIDensity(d)}
+              className={`px-3 py-1.5 text-xs rounded border transition-colors ${
+                uiDensity === d
+                  ? "bg-green-600 text-white border-green-600"
+                  : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
+              }`}
+            >
+              {d}
             </button>
           ))}
         </div>

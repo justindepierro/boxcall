@@ -18,7 +18,10 @@ export const TeamBulletinRightPanel: React.FC<RightPanelProps> = ({
       aria-labelledby="calendar-roster-heading"
     >
       <TeamCalendar teamId={teamId || ""} />
-      <Card className="p-6" aria-label="Upcoming events onboarding hint">
+      <Card
+        className="bc-card-padding"
+        aria-label="Upcoming events onboarding hint"
+      >
         <div className="flex items-center justify-between mb-4">
           <Typography
             as="h2"
@@ -33,7 +36,7 @@ export const TeamBulletinRightPanel: React.FC<RightPanelProps> = ({
           <PlayerRosterContainer teamId={teamId || ""} />
         </div>
       </Card>
-      <Card className="p-6">
+      <Card className="bc-card-padding">
         <OnboardingHint
           icon="calendar"
           title="Upcoming Events"

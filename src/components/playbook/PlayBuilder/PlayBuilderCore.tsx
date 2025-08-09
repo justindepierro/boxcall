@@ -190,7 +190,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
 
           {/* Content */}
           <div className="bg-white overflow-y-auto max-h-[calc(90vh-140px)]">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 bc-grid-gap bc-card-padding">
               {/* Form Section - 2/3 width */}
               <div className="lg:col-span-2">
                 <QuickEntry

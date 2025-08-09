@@ -66,7 +66,7 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
         className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6">
+        <div className="bc-card-padding">
           <PracticePlannerHeader
             event={event}
             userRole={practiceState.userRole}

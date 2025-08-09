@@ -27,7 +27,7 @@ export type Capability = (typeof Capability)[keyof typeof Capability];
 const BASE_ROLE_MAP: Record<string, Capability[]> = {
   head_coach: [
     Capability.CREATE_POST,
-  Capability.LOG_GAME_RESULT,
+    Capability.LOG_GAME_RESULT,
     Capability.AWARD_STICKERS,
     Capability.VIEW_PRACTICE_SCHEDULE,
     Capability.UPLOAD_FILM,
@@ -43,7 +43,7 @@ const BASE_ROLE_MAP: Record<string, Capability[]> = {
   ],
   coach: [
     Capability.CREATE_POST,
-  Capability.LOG_GAME_RESULT,
+    Capability.LOG_GAME_RESULT,
     Capability.AWARD_STICKERS,
     Capability.VIEW_PRACTICE_SCHEDULE,
     Capability.UPLOAD_FILM,

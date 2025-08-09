@@ -45,7 +45,7 @@ interface LayoutProps {
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const profile = useAuthProfile();
   const { devMode } = useDevMode();
-  const { sidebarOpen, toggleSidebar } = useUI();
+  const { sidebarOpen, toggleSidebar, uiDensity } = useUI();
 
   // Use profile role, or test role based on dev mode
   const currentRole: UserRole | null =
@@ -65,15 +65,20 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     active: window.location.pathname === item.href,
   }));
 
+  // Set data-density attribute on body (once per render cycle)
+  if (typeof document !== "undefined") {
+    document.body.setAttribute("data-density", uiDensity);
+  }
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_20%_15%,#f5f9f6,#eef3f1)] dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 bg-fixed relative">
+      <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' fill=\'none\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>')]" />
       <NavBar
         items={navBarItems}
         brand={<NavbarLogo />}
         actions={<UserMenu />}
       />
       {/* Main content area with overlay sidebar and top padding for fixed nav */}
-      <div className="relative pt-16">
+      <div className="relative pt-0">
         {/* Sidebar - Now overlays instead of pushing content */}
         <Sidebar
           items={sidebarItems}

@@ -162,7 +162,7 @@ export const Modal: React.FC<ModalProps> = ({
       >
         {/* Header - Enhanced with display font and substantial styling */}
         {title && (
-          <div className="px-8 py-6 border-b-2 border-gray-200 dark:border-gray-700">
+          <div className="bc-card-padding border-b-2 border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <h3
                 id="modal-title"
@@ -198,10 +198,10 @@ export const Modal: React.FC<ModalProps> = ({
           </div>
         )}
         {/* Content - More substantial padding */}
-        <div className="px-8 py-6">{children}</div>
+        <div className="bc-card-padding">{children}</div>
         {/* Footer - Enhanced styling */}
         {footer && (
-          <div className="px-8 py-6 border-t-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+          <div className="bc-card-padding border-t-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
             {footer}
           </div>
         )}

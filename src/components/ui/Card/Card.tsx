@@ -8,27 +8,28 @@ import { forwardRef } from "react";
 import type { CardProps, CardStylesConfig } from "./Card.types";
 // Card styles configuration - Square, substantial styling with jade/navy theme
 const cardStyles: CardStylesConfig = {
-  base: "rounded-md transition-all duration-200 shadow-sm", // More square corners, stronger shadows
+  base: "rounded-none transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.06)]", // Thin professional shadow
   variants: {
     default:
-      "bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 hover:shadow-md",
+      "bg-[#FCFDFC] border border-gray-200 dark:bg-gray-800 dark:border-gray-700 hover:shadow-[0_2px_4px_rgba(0,0,0,0.08)]",
     elevated:
-      "bg-white shadow-lg border border-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-900/20 hover:shadow-xl",
+      "bg-[#FCFDFC] shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-900/30 hover:shadow-[0_6px_18px_rgba(0,0,0,0.12)]",
     outlined:
-      "bg-transparent border-2 border-brand-jade dark:border-brand-jade hover:bg-surface-jade dark:hover:bg-surface-jade-dark", // Jade outlined variant
+      "bg-transparent border border-brand-jade/60 dark:border-brand-jade/70 hover:bg-brand-jade/5", // Subtle outlined
     filled:
-      "bg-gray-50 border border-gray-200 dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800",
+      "bg-gray-100/60 border border-gray-200 dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800",
     accent:
-      "bg-surface-navy border-2 border-brand-navy dark:bg-surface-navy-dark dark:border-brand-navy", // New navy accent variant
+      "bg-surface-navy border border-brand-navy/70 dark:bg-surface-navy-dark dark:border-brand-navy", // Navy accent
   },
   sizes: {
-    sm: "p-4", // More substantial padding
-    md: "p-6", // Increased from p-4
-    lg: "p-8", // Increased from p-6
-    xl: "p-10", // Increased from p-8
+    sm: "p-3",
+    // Use density-driven padding utility for the default (md) size so cards inherit global density
+    md: "bc-card-padding",
+    lg: "p-6",
+    xl: "p-8",
   },
   interactive:
-    "cursor-pointer hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0", // Subtle lift effect, no scale
+    "cursor-pointer hover:shadow-[0_3px_6px_rgba(0,0,0,0.12)] active:shadow-[0_1px_2px_rgba(0,0,0,0.10)] active:translate-y-px", // Refined lift
   disabled: "opacity-50 cursor-not-allowed",
   loading: "animate-pulse",
 };

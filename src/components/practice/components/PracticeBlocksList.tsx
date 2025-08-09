@@ -107,7 +107,7 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
       </div>
       {/* Empty State */}
       {practiceBlocks.length === 0 ? (
-        <Card className="p-8 text-center">
+        <Card className="bc-card-padding text-center">
           <div className="mb-4 flex justify-center">
             <Icon name="clock" size="lg" className="text-gray-400" />
           </div>
@@ -181,7 +181,7 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                   {block.location && (
                                     <div className="flex items-center gap-1">
                                       <Icon
-                                        name="location"
+                                        name="target"
                                         size="sm"
                                         className="text-gray-500"
                                       />
@@ -191,7 +191,7 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                   {block.assignedCoach && (
                                     <div className="flex items-center gap-1">
                                       <Icon
-                                        name="user-check"
+                                        name="check-circle"
                                         size="sm"
                                         className="text-gray-500"
                                       />
@@ -290,7 +290,7 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                         {group.location && (
                                           <div className="flex items-center gap-1">
                                             <Icon
-                                              name="location"
+                                              name="target"
                                               size="sm"
                                               className="text-gray-400"
                                             />

@@ -71,6 +71,8 @@ interface AppState {
   notifications: Notification[];
   // Error Handling
   error: string | null;
+  // UI density (layout compaction)
+  uiDensity: "compact" | "comfortable";
 }
 interface AppActions {
   // Authentication actions
@@ -97,6 +99,7 @@ interface AppActions {
   // Error handling
   setError: (error: string | null) => void;
   clearError: () => void;
+  setUIDensity: (uiDensity: "compact" | "comfortable") => void;
 }
 type AppStore = AppState & AppActions;
 // Create the Zustand store with devtools for debugging
@@ -115,6 +118,7 @@ export const useAppStore = create<AppStore>()(
       sidebarOpen: false,
       notifications: [],
       error: null,
+      uiDensity: "compact",
       // Authentication actions
       setUser: (user) => set({ user }, false, "setUser"),
       setAuthenticated: (isAuthenticated) =>
@@ -206,6 +210,8 @@ export const useAppStore = create<AppStore>()(
           false,
           "toggleSidebar"
         ),
+      setUIDensity: (uiDensity: "compact" | "comfortable") =>
+        set({ uiDensity }, false, "setUIDensity"),
       addNotification: (notification) =>
         set(
           (state) => ({
@@ -266,6 +272,8 @@ export const useUI = () => {
   const toggleSidebar = useAppStore((state) => state.toggleSidebar);
   const addNotification = useAppStore((state) => state.addNotification);
   const removeNotification = useAppStore((state) => state.removeNotification);
+  const uiDensity = useAppStore((state) => state.uiDensity);
+  const setUIDensity = useAppStore((state) => state.setUIDensity);
   return {
     theme,
     sidebarOpen,
@@ -274,6 +282,8 @@ export const useUI = () => {
     toggleSidebar,
     addNotification,
     removeNotification,
+    uiDensity,
+    setUIDensity,
   };
 };
 export const useError = () => {

@@ -135,11 +135,14 @@ A Phase 2 item is “Done” only if:
 
 17. Game result logging (coach) updates season stats view (wins/losses, PF/PA) — view auto refresh. (✅ Complete)
 18. Feed MVP: create + list posts (announcement only) with pinned boolean. No comments/reactions yet. (✅ Complete)
-   - Delivered: listing, creation modal + inline composer, optimistic create, pin toggle (head coach), onboarding hint, aria-live announcements, first-post telemetry, error state, skeletons, truncation with expand.
+
+- Delivered: listing, creation modal + inline composer, optimistic create, pin toggle (head coach), onboarding hint, aria-live announcements, first-post telemetry, error state, skeletons, truncation with expand.
 - 2025-08-09: Step 18 complete: Feed MVP (list/create/pin, inline composer, accessibility & telemetry) implemented.
+
 19. Telemetry events for first event, first post, first game result.
-   - ✅ Implemented: post.first (TeamFeed), event.first (TeamCalendar), game_result.first (SeasonStatsCard) – emitted only when pre-action list length == 0
-- 2025-08-09: Step 19 complete: first-* telemetry events added (post/event/game_result) with conditional emission logic.
+
+- ✅ Implemented: post.first (TeamFeed), event.first (TeamCalendar), game_result.first (SeasonStatsCard) – emitted only when pre-action list length == 0
+- 2025-08-09: Step 19 complete: first-\* telemetry events added (post/event/game_result) with conditional emission logic.
 
 ### Phase 3 (Engagement & Expansion)
 

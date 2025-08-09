@@ -46,7 +46,7 @@ interface LazyPDFExportProps {
 }
 
 const PDFLoadingSpinner = () => (
-  <div className="flex items-center justify-center p-8">
+  <div className="flex items-center justify-center bc-card-padding">
     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
     <span className="ml-3 text-gray-600">Loading PDF Export...</span>
   </div>
@@ -141,7 +141,10 @@ export const PDFExportTrigger: React.FC<PDFExportTriggerProps> = ({
             className={buttonClassName || "gap-2"}
             size={size}
           >
-            <Icon name={iconName as IconName} size={size === "sm" ? 14 : 16} />
+            <Icon
+              name={iconName as IconName}
+              size={size === "sm" ? "sm" : "md"}
+            />
             {children || buttonText || "Export PDF"}
           </Button>
         ))}

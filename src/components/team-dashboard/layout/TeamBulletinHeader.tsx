@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Typography } from "../../design-system";
 import { LogoIcon } from "../../ui/Logo";
-import { Icon } from "../../ui/Icon/Icon";
-import { Button } from "../../ui";
+// Removed old inline edit button import usage after redesign
+import { supabase } from "../../../lib/supabase";
 
 export interface TeamBulletinHeaderProps {
   teamId: string | undefined;
@@ -14,6 +14,7 @@ export interface TeamBulletinHeaderProps {
   schoolName?: string | null;
   mascot?: string | null;
   isCoach: boolean;
+  logoUrl?: string | null;
   /** Optional id for main heading to support aria-labelledby on main */
   headingId?: string;
 }
@@ -28,97 +29,148 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
   schoolName,
   mascot,
   isCoach,
+  logoUrl,
   headingId,
 }) => {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [localLogo, setLocalLogo] = useState<string | null>(logoUrl || null);
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files || !e.target.files[0] || !teamId) return;
+    const file = e.target.files[0];
+    const ext = file.name.split(".").pop();
+    const filePath = `team-${teamId}/${crypto.randomUUID()}.${ext}`;
+    try {
+      setUploading(true);
+      const { error: uploadError } = await supabase.storage
+        .from("team-logos")
+        .upload(filePath, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const { data: pub } = supabase.storage
+        .from("team-logos")
+        .getPublicUrl(filePath);
+      const publicUrl = pub.publicUrl;
+      // Persist on team row
+      const { error: updateError } = await supabase
+        .from("teams")
+        .update({ logo_url: publicUrl })
+        .eq("id", teamId);
+      if (updateError) throw updateError;
+      setLocalLogo(publicUrl);
+    } catch (err) {
+      console.warn("team.logo.upload.error", err);
+      // Simple fallback: revert input value
+      e.target.value = "";
+    } finally {
+      setUploading(false);
+    }
+  }
+
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg mb-6">
-      <div className="px-6 py-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            {/* Team Logo Placeholder */}
-            <div className="relative group">
-              <div className="flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-gray-400 dark:hover:border-gray-500 transition-colors cursor-pointer">
-                <div className="text-center">
-                  <LogoIcon size="md" color="brand" />
-                  <div className="text-xs text-gray-600 dark:text-gray-300 mt-1 font-medium">
-                    Team Logo
-                  </div>
+    <div className="bg-[#FCFDFC] dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-none mb-3 shadow-[0_1px_2px_rgba(0,0,0,0.06)] p-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          {/* Team Logo / Uploader */}
+          <div className="relative group">
+            <button
+              type="button"
+              disabled={!isCoach || uploading}
+              onClick={() => fileInputRef.current?.click()}
+              className={`flex items-center justify-center w-20 h-20 rounded-none border ${
+                localLogo
+                  ? "border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 overflow-hidden"
+                  : "border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500"
+              } transition-colors cursor-pointer relative`}
+              aria-label={
+                isCoach
+                  ? localLogo
+                    ? "Change team logo"
+                    : "Upload team logo"
+                  : "Team logo"
+              }
+            >
+              {localLogo ? (
+                <img
+                  src={localLogo}
+                  alt={`${teamName} logo`}
+                  className="object-cover w-full h-full"
+                />
+              ) : (
+                <div className="text-center flex flex-col items-center text-gray-600 dark:text-gray-300">
+                  <LogoIcon size="lg" color="brand" />
+                  <span className="text-[10px] font-medium mt-1">
+                    {uploading ? "Uploading..." : isCoach ? "Add Logo" : "Logo"}
+                  </span>
+                </div>
+              )}
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            {!isCoach && !localLogo && (
+              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="bg-gray-800 text-white text-xs py-1 px-2 rounded whitespace-nowrap">
+                  Coaches can add team logo
                 </div>
               </div>
-              {isCoach && (
-                <Button
-                  variant="primary"
-                  size="xs"
-                  className="absolute -top-2 -right-2 !px-2 !py-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg rounded-full"
-                  title="Upload team logo (Go to Team Settings)"
-                  onClick={() =>
-                    (window.location.href = `/team/${teamId}/settings`)
-                  }
-                  icon={<Icon name="edit" size="xs" />}
-                  iconPosition="only"
-                  aria-label="Edit team logo"
-                />
-              )}
-              {!isCoach && (
-                <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="bg-gray-800 text-white text-xs py-1 px-2 rounded whitespace-nowrap">
-                    Coaches can add team logo
-                  </div>
-                </div>
-              )}
-            </div>
-            <div>
-              <Typography
-                variant="headline-xl"
-                as="h1"
-                id={headingId}
-                className="text-gray-900 dark:text-white"
-              >
-                {teamName}
-              </Typography>
-              <Typography
-                variant="body-lg"
-                className="mt-1 text-gray-600 dark:text-gray-300"
-              >
-                {seasonDisplay} • Record: {record.wins}-{record.losses}
-              </Typography>
-              {schoolName && (
-                <div className="text-xs text-gray-600 dark:text-gray-300 mt-1">
-                  {schoolName}
-                  {mascot ? ` ${mascot}` : ""}
-                </div>
-              )}
-            </div>
+            )}
           </div>
-          <div className="flex items-center space-x-6">
-            <div className="text-right">
-              <Typography
-                variant="body-sm"
-                className="text-gray-600 dark:text-gray-300"
-              >
-                Next Game
-              </Typography>
-              <Typography
-                variant="body-md"
-                className="font-semibold text-gray-900 dark:text-white"
-              >
-                {nextGame}
-              </Typography>
-            </div>
-            <div className="text-right">
-              <Typography
-                variant="body-sm"
-                className="text-gray-600 dark:text-gray-300"
-              >
-                Team Members
-              </Typography>
-              <Typography
-                variant="body-md"
-                className="font-semibold text-gray-900 dark:text-white"
-              >
-                {memberCount}
-              </Typography>
-            </div>
+          <div>
+            <Typography
+              variant="headline-xl"
+              as="h1"
+              id={headingId}
+              className="text-gray-900 dark:text-white"
+            >
+              {teamName}
+            </Typography>
+            <Typography
+              variant="body-lg"
+              className="mt-0.5 text-gray-600 dark:text-gray-300"
+            >
+              {seasonDisplay} • Record: {record.wins}-{record.losses}
+            </Typography>
+            {schoolName && (
+              <div className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                {schoolName}
+                {mascot ? ` ${mascot}` : ""}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center space-x-6">
+          <div className="text-right">
+            <Typography
+              variant="body-sm"
+              className="text-gray-600 dark:text-gray-300"
+            >
+              Next Game
+            </Typography>
+            <Typography
+              variant="body-md"
+              className="font-semibold text-gray-900 dark:text-white"
+            >
+              {nextGame}
+            </Typography>
+          </div>
+          <div className="text-right">
+            <Typography
+              variant="body-sm"
+              className="text-gray-600 dark:text-gray-300"
+            >
+              Team Members
+            </Typography>
+            <Typography
+              variant="body-md"
+              className="font-semibold text-gray-900 dark:text-white"
+            >
+              {memberCount}
+            </Typography>
           </div>
         </div>
       </div>

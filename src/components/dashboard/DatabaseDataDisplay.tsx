@@ -32,7 +32,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (showDevModeWarning) {
     return (
-      <Card className="p-6 border-orange-200 bg-orange-50">
+      <Card className="bc-card-padding border-orange-200 bg-orange-50">
         <div className="flex items-center">
           <Icon name="warning" size="md" color="warning" className="mr-3" />
           <div>
@@ -55,7 +55,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (loading) {
     return (
-      <Card className="p-6">
+      <Card className="bc-card-padding">
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
           <Typography variant="body-md" className="ml-3">
@@ -68,7 +68,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (error) {
     return (
-      <Card className="p-6 border-red-200 bg-red-50">
+      <Card className="bc-card-padding border-red-200 bg-red-50">
         <div className="flex items-center">
           <Icon name="warning" size="md" color="error" className="mr-3" />
           <div>
@@ -86,7 +86,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (totalCount === 0) {
     return (
-      <Card className="p-6">
+      <Card className="bc-card-padding">
         <div className="text-center py-8">
           <Icon
             name="database"
@@ -108,7 +108,7 @@ export const DatabaseDataDisplay: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Summary Card */}
-      <Card className="p-6 bg-gradient-to-r from-jade-50 to-blue-50 border-jade-200">
+      <Card className="bc-card-padding bg-gradient-to-r from-jade-50 to-blue-50 border-jade-200">
         <div className="flex items-center justify-between">
           <div>
             <Typography variant="headline-md" className="text-jade-800 mb-1">
@@ -133,9 +133,9 @@ export const DatabaseDataDisplay: React.FC = () => {
       </Card>
 
       {/* Data Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 bc-grid-gap">
         {/* Team Selector */}
-        <Card className="p-6">
+        <Card className="bc-card-padding">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-jade-100 rounded-lg flex items-center justify-center mr-3">
               <Icon name="users" size="md" color="primary" />
@@ -238,7 +238,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         </Card>
 
         {/* Playbooks */}
-        <Card className="p-6">
+        <Card className="bc-card-padding">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
               <Icon name="book" size="md" color="info" />
@@ -281,7 +281,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         </Card>
 
         {/* Plays */}
-        <Card className="p-6">
+        <Card className="bc-card-padding">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
               <Icon name="zap" size="md" color="secondary" />
@@ -319,7 +319,7 @@ export const DatabaseDataDisplay: React.FC = () => {
       </div>
 
       {/* Next Steps */}
-      <Card className="p-6 bg-blue-50 border-blue-200">
+      <Card className="bc-card-padding bg-blue-50 border-blue-200">
         <Typography variant="headline-sm" className="text-blue-800 mb-3">
           🚀 Next Steps
         </Typography>

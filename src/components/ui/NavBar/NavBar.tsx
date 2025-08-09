@@ -174,7 +174,7 @@ export const NavBar: React.FC<NavBarProps> = ({
   };
   return (
     <nav className={`${getNavBarStyles(sticky)} ${className}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full bc-container-padding">
         <div className="flex justify-between items-center h-16">
           {/* Brand/Logo */}
           {brand && <div className="flex-shrink-0">{brand}</div>}
