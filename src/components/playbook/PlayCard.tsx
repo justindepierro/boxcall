@@ -23,6 +23,10 @@ interface PlayCardProps {
   onCreateDiagram?: (play: PlayType) => void;
   onAddToPracticeScript?: (play: PlayType) => void;
   onAddToGamePlan?: (play: PlayType) => void;
+  // Bulk Operations
+  enableSelection?: boolean;
+  isSelected?: boolean;
+  onSelectionChange?: (playId: string, selected: boolean) => void;
 }
 export const PlayCard: React.FC<PlayCardProps> = ({
   play,
@@ -32,6 +36,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   onCreateDiagram,
   onAddToPracticeScript,
   onAddToGamePlan,
+  // Bulk Operations
+  enableSelection = false,
+  isSelected = false,
+  onSelectionChange,
 }) => {
   const [showVisualBuilder, setShowVisualBuilder] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -67,10 +75,30 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const subtitleText = getSubtitleText(play, showOneWordCalls);
   return (
     <>
-      <div className="bg-white rounded-lg border border-slate-200 hover:border-slate-300 transition-colors shadow-sm">
+      <div
+        className={`bg-white rounded-lg border transition-colors shadow-sm ${
+          isSelected
+            ? "border-blue-500 ring-2 ring-blue-200"
+            : "border-slate-200 hover:border-slate-300"
+        }`}
+      >
         <div className="p-4 sm:p-6">
           {/* Collapsed/Skinny Mode */}
           <div className="flex items-center justify-between">
+            {/* Selection Checkbox */}
+            {enableSelection && (
+              <div className="flex items-center mr-3">
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={(e) =>
+                    onSelectionChange?.(play.id, e.target.checked)
+                  }
+                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                />
+              </div>
+            )}
+
             <div className="flex-1">
               {/* Play Name with MonoCode Font */}
               <h3

@@ -3,6 +3,7 @@ import { FileText, Plus, Upload, Download, Clock, Users } from "lucide-react";
 import { PlayGrid } from "../components/playbook/PlayGrid";
 import { PlaybookGlossary } from "../components/playbook/PlaybookGlossary";
 import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
+import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
 import { StreamlinedPlayBuilder } from "../components/playbook/PlayBuilder/StreamlinedPlayBuilder";
 import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal";
 import { AdvancedSearchBar } from "../components/playbook/AdvancedSearchBar";
@@ -44,6 +45,9 @@ interface PlaybookPageState {
   // Playbook Glossary State
   selectedCategory?: string;
   selectedSubcategory?: string;
+  // Bulk Operations State
+  enableBulkOperations: boolean;
+  selectedPlayIds: Set<string>;
   // Reward Loop State
   playsCreated: number;
   recentAchievement: string | null;
@@ -65,6 +69,9 @@ export const PlaybookPage: React.FC = () => {
     // Playbook Glossary Initial State
     selectedCategory: undefined,
     selectedSubcategory: undefined,
+    // Bulk Operations Initial State
+    enableBulkOperations: false,
+    selectedPlayIds: new Set(),
     // Reward Loop Initial State
     playsCreated: 0,
     recentAchievement: null,
@@ -253,10 +260,6 @@ export const PlaybookPage: React.FC = () => {
     setState((prev) => ({ ...prev, searchQuery: query }));
   };
 
-  // Handle quick filter changes - to be phased out
-  const _handleFiltersChange = (filters: string[]) => {
-    setState((prev) => ({ ...prev, activeFilters: filters }));
-  };
   const handleOpenBuilder = () => {
     setState((prev) => ({ ...prev, showBuilder: true }));
   };
@@ -269,10 +272,6 @@ export const PlaybookPage: React.FC = () => {
   const handleCloseImport = () => {
     setState((prev) => ({ ...prev, showImport: false }));
   };
-  // Legacy filter handler - will be phased out as we move to category-based filtering
-  const _handleFilterChange = (filters: typeof state.selectedFilters) => {
-    setState((prev) => ({ ...prev, selectedFilters: filters }));
-  };
 
   // Advanced filters handler
   const handleAdvancedFiltersChange = (
@@ -284,6 +283,86 @@ export const PlaybookPage: React.FC = () => {
   const handleViewChange = (view: CoachingView) => {
     setState((prev) => ({ ...prev, currentView: view }));
   };
+
+  // Bulk Operations Handlers
+  const toggleBulkOperations = () => {
+    setState((prev) => ({
+      ...prev,
+      enableBulkOperations: !prev.enableBulkOperations,
+      selectedPlayIds: new Set(), // Clear selection when toggling
+    }));
+  };
+
+  const handlePlaySelectionChange = (playIds: Set<string>) => {
+    setState((prev) => ({ ...prev, selectedPlayIds: playIds }));
+  };
+
+  const handleClearSelection = () => {
+    setState((prev) => ({ ...prev, selectedPlayIds: new Set() }));
+  };
+
+  const handleBulkAction = async (action: string) => {
+    const selectedPlays = Array.from(state.selectedPlayIds);
+    console.log(`🔄 Bulk action: ${action}`, selectedPlays);
+
+    try {
+      switch (action) {
+        case "delete":
+          if (
+            confirm(
+              `Delete ${selectedPlays.length} selected plays? This cannot be undone.`
+            )
+          ) {
+            // TODO: Implement bulk delete
+            for (const playId of selectedPlays) {
+              await PlaysService.deletePlay(playId);
+            }
+            alert(`${selectedPlays.length} plays deleted successfully`);
+            refreshPlays();
+            handleClearSelection();
+          }
+          break;
+
+        case "export":
+          // TODO: Implement bulk export using CSVService
+          alert(`Exporting ${selectedPlays.length} plays...`);
+          break;
+
+        case "add-to-practice":
+          // TODO: Implement bulk add to practice
+          alert(`Adding ${selectedPlays.length} plays to practice script...`);
+          break;
+
+        case "add-tags": {
+          // TODO: Implement bulk tag editor
+          const tag = prompt("Enter tag to add to selected plays:");
+          if (tag) {
+            alert(`Adding tag "${tag}" to ${selectedPlays.length} plays...`);
+          }
+          break;
+        }
+
+        case "duplicate":
+          // TODO: Implement bulk duplicate
+          alert(`Duplicating ${selectedPlays.length} plays...`);
+          break;
+
+        case "batch-edit":
+          // TODO: Implement batch edit modal
+          alert(`Batch editing ${selectedPlays.length} plays...`);
+          break;
+
+        default:
+          console.warn(`Unknown bulk action: ${action}`);
+      }
+    } catch (error) {
+      console.error(`Error performing bulk action ${action}:`, error);
+      alert(
+        `Error: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
@@ -320,6 +399,29 @@ export const PlaybookPage: React.FC = () => {
             </div>
             {/* Action Buttons with Reward Loop Psychology */}
             <div className="flex items-center space-x-3">
+              {/* Bulk Operations Toggle */}
+              <button
+                onClick={toggleBulkOperations}
+                className={`inline-flex items-center px-4 py-2 border rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+                  state.enableBulkOperations
+                    ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
+                    : "border-slate-300 text-slate-700 bg-white hover:bg-slate-50"
+                }`}
+                title={
+                  state.enableBulkOperations
+                    ? "Disable bulk operations"
+                    : "Enable bulk operations"
+                }
+              >
+                <input
+                  type="checkbox"
+                  checked={state.enableBulkOperations}
+                  onChange={() => {}} // Handled by button onClick
+                  className="h-4 w-4 mr-2 rounded border-slate-300 text-blue-600"
+                />
+                Bulk Edit
+              </button>
+
               {/* Export button */}
               <button
                 onClick={handleExportCSV}
@@ -485,6 +587,21 @@ export const PlaybookPage: React.FC = () => {
                   />
                 </div>
 
+                {/* Bulk Actions Toolbar */}
+                {state.enableBulkOperations &&
+                  state.selectedPlayIds.size > 0 && (
+                    <BulkActionsToolbar
+                      selectedCount={state.selectedPlayIds.size}
+                      onClearSelection={() =>
+                        setState((prev) => ({
+                          ...prev,
+                          selectedPlayIds: new Set(),
+                        }))
+                      }
+                      onBulkAction={handleBulkAction}
+                    />
+                  )}
+
                 <PlayGrid
                   searchQuery={state.searchQuery}
                   filters={state.selectedFilters}
@@ -493,6 +610,9 @@ export const PlaybookPage: React.FC = () => {
                   onAddToPracticeScript={handleAddToPracticeScript}
                   onAddToGamePlan={handleAddToGamePlan}
                   refreshTrigger={state.refreshTrigger}
+                  enableBulkOperations={state.enableBulkOperations}
+                  selectedPlayIds={state.selectedPlayIds}
+                  onPlaySelectionChange={handlePlaySelectionChange}
                 />
               </>
             )}

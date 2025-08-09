@@ -55,6 +55,10 @@ interface PlayGridProps {
   onAddToGamePlan?: (play: Play) => void;
   onPlayCreated?: () => void; // Add callback for when data should refresh
   refreshTrigger?: number; // Trigger to refresh data from parent
+  // Bulk Operations
+  enableBulkOperations?: boolean;
+  selectedPlayIds?: Set<string>;
+  onPlaySelectionChange?: (playIds: Set<string>) => void;
 }
 
 export const PlayGrid: React.FC<PlayGridProps> = ({
@@ -69,6 +73,10 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
   onAddToGamePlan,
   onPlayCreated: _onPlayCreated, // Prefixed with _ to indicate intentionally unused
   refreshTrigger = 0,
+  // Bulk Operations
+  enableBulkOperations = false,
+  selectedPlayIds = new Set(),
+  onPlaySelectionChange,
 }) => {
   // Toggle for play name display mode (true = one-word calls, false = full names)
   const [showOneWordCalls, setShowOneWordCalls] = useState(false);
@@ -108,6 +116,31 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
       logValidationResults(validationResults);
     }
   }, [plays]);
+
+  // Bulk Operations Handlers
+  const handlePlaySelect = (playId: string, selected: boolean) => {
+    if (!onPlaySelectionChange) return;
+
+    const newSelection = new Set(selectedPlayIds);
+    if (selected) {
+      newSelection.add(playId);
+    } else {
+      newSelection.delete(playId);
+    }
+    onPlaySelectionChange(newSelection);
+  };
+
+  const handleSelectAll = () => {
+    if (!onPlaySelectionChange) return;
+
+    if (selectedPlayIds.size === filteredPlays.length) {
+      // Deselect all
+      onPlaySelectionChange(new Set());
+    } else {
+      // Select all filtered plays
+      onPlaySelectionChange(new Set(filteredPlays.map((p) => p.id)));
+    }
+  };
 
   // Apply filters to plays
   const filteredPlays = useMemo(() => {
@@ -198,19 +231,43 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
     <div className="space-y-6">
       {/* Results Header with Toggle */}
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-slate-900">
-            {filteredPlays.length}{" "}
-            {filteredPlays.length === 1 ? "Play" : "Plays"}
-            {selectedCategory && (
-              <span className="text-slate-500 font-normal ml-2">
-                in{" "}
-                {selectedCategory.charAt(0).toUpperCase() +
-                  selectedCategory.slice(1).replace("-", " ")}
-                {selectedSubcategory && ` › ${selectedSubcategory}`}
-              </span>
-            )}
-          </h2>
+        <div className="flex items-center space-x-4">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">
+              {filteredPlays.length}{" "}
+              {filteredPlays.length === 1 ? "Play" : "Plays"}
+              {selectedCategory && (
+                <span className="text-slate-500 font-normal ml-2">
+                  in{" "}
+                  {selectedCategory.charAt(0).toUpperCase() +
+                    selectedCategory.slice(1).replace("-", " ")}
+                  {selectedSubcategory && ` › ${selectedSubcategory}`}
+                </span>
+              )}
+            </h2>
+          </div>
+
+          {/* Bulk Selection Controls */}
+          {enableBulkOperations && (
+            <div className="flex items-center space-x-2">
+              <label className="flex items-center space-x-2 text-sm text-slate-600">
+                <input
+                  type="checkbox"
+                  checked={
+                    selectedPlayIds.size > 0 &&
+                    selectedPlayIds.size === filteredPlays.length
+                  }
+                  onChange={handleSelectAll}
+                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                />
+                <span>
+                  {selectedPlayIds.size > 0
+                    ? `${selectedPlayIds.size} selected`
+                    : "Select all"}
+                </span>
+              </label>
+            </div>
+          )}
         </div>
 
         {/* Play Name Display Toggle */}
@@ -247,6 +304,10 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
             onCreateDiagram={onCreateDiagram}
             onAddToPracticeScript={onAddToPracticeScript}
             onAddToGamePlan={onAddToGamePlan}
+            // Bulk Operations
+            enableSelection={enableBulkOperations}
+            isSelected={selectedPlayIds.has(play.id)}
+            onSelectionChange={handlePlaySelect}
           />
         ))}
       </div>
