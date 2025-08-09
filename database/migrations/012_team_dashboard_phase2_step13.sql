@@ -50,9 +50,14 @@ END $$;
 
 -- Indexes for team_events
 CREATE INDEX IF NOT EXISTS idx_team_events_team_id_starts_at_desc ON public.team_events (team_id, starts_at DESC);
--- Upcoming partial index (optional optimization)
-CREATE INDEX IF NOT EXISTS idx_team_events_upcoming ON public.team_events (team_id, starts_at)
-  WHERE starts_at >= now();
+-- NOTE: Removed attempted partial index filtered by starts_at >= now();
+-- Reason: Postgres error 42P17 (functions in index predicate must be IMMUTABLE) because now() is VOLATILE.
+-- Planner can still efficiently satisfy upcoming events queries with the existing (team_id, starts_at DESC) btree index
+-- via a backward/forward scan plus range condition (starts_at >= now()). If future profiling shows need for a
+-- narrower index, consider:
+--   * Creating a BRIN index on starts_at for very large tables, or
+--   * Periodically maintaining a materialized view of upcoming events.
+-- For now no additional index is created to avoid redundancy.
 
 -- 3. GAME RESULTS TABLE
 CREATE TABLE IF NOT EXISTS public.game_results (
