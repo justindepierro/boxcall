@@ -214,8 +214,7 @@ export const PlaybookPage: React.FC = () => {
         `"${play.play_name}" added to practice script "${script.name}"!\n\nNavigate to Calendar > Practice Planning to build your full practice session.`
       );
 
-      // Trigger achievement for workflow completion
-      handlePlayCreated();
+      // Note: Don't increment play count for workflow actions - only for actual play creation
     } catch (error) {
       console.error("Error adding play to practice script:", error);
       alert("Failed to add play to practice script. Please try again.");
@@ -249,8 +248,7 @@ export const PlaybookPage: React.FC = () => {
       const timestamp = new Date().toISOString().split("T")[0];
       CSVService.downloadCSV(csvContent, `playbook-export-${timestamp}.csv`);
 
-      // Trigger achievement for workflow completion
-      handlePlayCreated();
+      // Note: Don't increment play count for exports - only for actual play creation
     } catch (error) {
       console.error("Error exporting CSV:", error);
       alert("Failed to export playbook. Please try again.");
@@ -445,8 +443,6 @@ export const PlaybookPage: React.FC = () => {
                 <button
                   onClick={() => {
                     handleOpenBuilder();
-                    // Demo: Trigger reward celebration for testing
-                    handlePlayCreated();
                   }}
                   className="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-emerald-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-200"
                 >
@@ -469,7 +465,7 @@ export const PlaybookPage: React.FC = () => {
       </header>
 
       {/* Week 3 Feature: Complexity Challenge System Demo */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-purple-200">
           <div className="flex items-center justify-between">
             <div>
@@ -525,8 +521,8 @@ export const PlaybookPage: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="flex gap-6">{/* Reduced from gap-8 to gap-6 */}
           {/* Smart Playbook Glossary */}
           <aside className="w-80 flex-shrink-0">
             <PlaybookGlossary

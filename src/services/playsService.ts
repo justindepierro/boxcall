@@ -73,7 +73,8 @@ export class PlaysService {
         custom_fields: playData.custom_fields || {},
 
         // System fields (will be set by database)
-        created_by: "system", // TODO: Set from auth context
+        // Note: created_by should be a UUID, but for demo we'll omit it and let DB set defaults
+        // created_by: "system", // Remove this - let database handle it
         created_at: new Date(),
         updated_at: new Date(),
       };
