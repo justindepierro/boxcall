@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { DataSyncService } from "../../../services/dataSyncService";
 import { CSVService, type CSVParseResult } from "../../../services/csv";
+import { PlaysService } from "../../../services/playsService";
 
 interface CSVImportModalProps {
   isOpen: boolean;
@@ -97,7 +98,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   };
 
   const handleImport = async () => {
-    if (!parseResult || !playbookId) return;
+    if (!parseResult) return;
 
     setStep("importing");
     setIsProcessing(true);
@@ -105,10 +106,19 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     try {
       console.log("🚀 Starting CSV import...");
 
+      // Get or create a real playbook for the current user
+      let actualPlaybookId = playbookId;
+
+      if (!playbookId || playbookId === "demo-playbook-id") {
+        console.log("🔧 Getting real playbook for user...");
+        actualPlaybookId = await PlaysService.ensureUserHasPlaybook();
+        console.log("✅ Using playbook ID:", actualPlaybookId);
+      }
+
       // Convert previews to plays and import
       const conversionResult = CSVService.convertPreviewsToPlays(
         parseResult.previews,
-        playbookId
+        actualPlaybookId
       );
 
       if (conversionResult.plays.length === 0) {
@@ -128,7 +138,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
       // Use DataSync service to bulk import the converted plays
       const result = await DataSyncService.bulkCreatePlays(
-        playbookId,
+        actualPlaybookId,
         playsForImport
       );
 

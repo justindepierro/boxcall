@@ -3,7 +3,7 @@
  *
  * Fetches teams data from Supabase database
  */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../app/auth-store";
 
@@ -48,9 +48,9 @@ export function useTeamsData() {
   const { user: _user } = useAuth(); // DEMO MODE: Not used during demo
 
   // Function to manually refresh data
-  const refreshData = () => {
+  const refreshData = useCallback(() => {
     setRefreshTrigger((prev) => prev + 1);
-  };
+  }, []);
 
   useEffect(() => {
     async function fetchData() {

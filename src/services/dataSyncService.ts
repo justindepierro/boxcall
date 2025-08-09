@@ -14,6 +14,7 @@ import type { Play } from "../types/play";
 import type { PracticeScript } from "./practiceScriptService";
 import type { GamePlan } from "./gamePlanService";
 import { CSVService } from "./csv";
+import { normalizePlayName, normalizeText } from "../utils/textNormalization";
 
 interface CachedData<T = unknown> {
   data: T;
@@ -81,13 +82,17 @@ export class DataSyncService {
    */
 
   /**
-   * Load plays with smart caching (target: <100ms)
+   * Get plays with 3-layer caching for sub-100ms response
    */
   static async getPlays(playbookId: string, useCache = true): Promise<Play[]> {
-    const startTime = performance.now();
-    const cacheKey = `plays_${playbookId}`;
+    // Ensure service is initialized before proceeding
+    if (!this.supabase) {
+      console.log("🔧 DataSyncService not initialized, initializing now...");
+      await this.initialize();
+    }
 
-    // Level 1: Check in-memory cache (instant)
+    const startTime = performance.now();
+    const cacheKey = `plays_${playbookId}`; // Level 1: Check in-memory cache (instant)
     if (useCache && this.cache.has(cacheKey)) {
       const cached = this.cache.get(cacheKey)!;
       const age = Date.now() - cached.timestamp;
@@ -155,6 +160,12 @@ export class DataSyncService {
     playId: string,
     updates: Partial<Play>
   ): Promise<void> {
+    // Ensure service is initialized before proceeding
+    if (!this.supabase) {
+      console.log("🔧 DataSyncService not initialized, initializing now...");
+      await this.initialize();
+    }
+
     // 1. Update local cache immediately for instant UI response
     this.updateLocalCache("play", playId, updates);
 
@@ -184,9 +195,26 @@ export class DataSyncService {
   static async createPlay(
     play: Omit<Play, "id" | "created_at" | "updated_at">
   ): Promise<Play> {
+    // Ensure service is initialized before proceeding
+    if (!this.supabase) {
+      console.log("🔧 DataSyncService not initialized, initializing now...");
+      await this.initialize();
+    }
+
     const tempId = `temp_${Date.now()}`;
-    const optimisticPlay: Play = {
+
+    // Normalize text fields before creating play
+    const normalizedPlay = {
       ...play,
+      play_name: normalizePlayName(play.play_name),
+      one_word_play: play.one_word_play
+        ? normalizeText(play.one_word_play)
+        : play.one_word_play,
+      formation: normalizeText(play.formation),
+    };
+
+    const optimisticPlay: Play = {
+      ...normalizedPlay,
       id: tempId,
       created_at: new Date(),
       updated_at: new Date(),
@@ -198,7 +226,7 @@ export class DataSyncService {
     try {
       // 2. Create in Supabase
       const { data, error } = await this.supabase!.from("plays")
-        .insert(play)
+        .insert(normalizedPlay)
         .select()
         .single();
 
@@ -222,13 +250,19 @@ export class DataSyncService {
    */
   static async bulkCreatePlays(
     playbookId: string,
-    plays: Omit<Play, "id" | "created_at" | "updated_at">[]
+    plays: Omit<Play, "id" | "created_at" | "updated_at" | "created_by">[]
   ): Promise<{
     success: boolean;
     created: Play[];
     errors: string[];
     totalProcessed: number;
   }> {
+    // Ensure service is initialized before proceeding
+    if (!this.supabase) {
+      console.log("🔧 DataSyncService not initialized, initializing now...");
+      await this.initialize();
+    }
+
     const startTime = performance.now();
     const created: Play[] = [];
     const errors: string[] = [];
@@ -236,12 +270,33 @@ export class DataSyncService {
     console.log(`🚀 Starting bulk import of ${plays.length} plays...`);
 
     try {
+      // Get current user for created_by field
+      const {
+        data: { user },
+      } = await this.supabase!.auth.getUser();
+
+      if (!user) {
+        throw new Error("No authenticated user found for bulk import");
+      }
+
       // Prepare plays for insertion
       const playsToInsert = plays.map((play) => ({
         ...play,
+        // Normalize text fields for consistency
+        play_name: normalizePlayName(play.play_name),
+        one_word_play: play.one_word_play
+          ? normalizeText(play.one_word_play)
+          : play.one_word_play,
+        formation: normalizeText(play.formation),
+        // Database fields
         playbook_id: playbookId,
+        created_by: user.id, // Required field for database schema
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
+        // Ensure required numeric fields have defaults if missing
+        confidence_base: play.confidence_base ?? 70,
+        times_called: play.times_called ?? 0,
+        times_successful: play.times_successful ?? 0,
       }));
 
       // Bulk insert to Supabase (batch size 100 for reliability)
@@ -253,13 +308,25 @@ export class DataSyncService {
           `📦 Processing batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(playsToInsert.length / batchSize)}...`
         );
 
+        console.log(
+          "🔍 Sample play data being inserted:",
+          JSON.stringify(batch[0], null, 2)
+        );
+
         const { data, error } = await this.supabase!.from("plays")
           .insert(batch)
           .select();
 
         if (error) {
+          console.error("❌ Supabase insert error:", error);
+          console.error("📊 Error details:", {
+            code: error.code,
+            message: error.message,
+            details: error.details,
+            hint: error.hint,
+          });
           errors.push(
-            `Batch ${Math.floor(i / batchSize) + 1} failed: ${error.message}`
+            `Batch ${Math.floor(i / batchSize) + 1} failed: ${error.message} (Code: ${error.code})`
           );
           continue;
         }

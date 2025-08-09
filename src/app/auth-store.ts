@@ -68,6 +68,12 @@ export const useAuth = create<AuthState>()(
             password,
           });
           if (error) {
+            console.error("🚨 Supabase signIn error:", error);
+            console.error("🚨 Error details:", {
+              message: error.message,
+              status: error.status,
+              details: error,
+            });
             set({ error: error.message, loading: false });
             return { success: false, error: error.message };
           }

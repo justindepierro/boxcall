@@ -117,6 +117,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             disabled={loading}
             fullWidth
             size="lg"
+            className="!bg-emerald-600 !hover:bg-emerald-700 !border-emerald-600 !hover:border-emerald-700 !text-white"
           >
             {loading ? "Signing In..." : "Sign In"}
           </Button>

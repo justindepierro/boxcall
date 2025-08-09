@@ -54,6 +54,7 @@ interface PlayGridProps {
   onAddToPracticeScript?: (play: Play) => void;
   onAddToGamePlan?: (play: Play) => void;
   onPlayCreated?: () => void; // Add callback for when data should refresh
+  onPlayCountChange?: (count: number) => void; // Callback to report actual play count
   refreshTrigger?: number; // Trigger to refresh data from parent
   // Bulk Operations
   enableBulkOperations?: boolean;
@@ -72,6 +73,7 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
   onAddToPracticeScript,
   onAddToGamePlan,
   onPlayCreated: _onPlayCreated, // Prefixed with _ to indicate intentionally unused
+  onPlayCountChange,
   refreshTrigger = 0,
   // Bulk Operations
   enableBulkOperations = false,
@@ -97,6 +99,13 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
     () => (allPlays || []).map(mapDatabasePlayToFullPlay),
     [allPlays]
   );
+
+  // Notify parent of play count changes for the play counter
+  useEffect(() => {
+    if (onPlayCountChange) {
+      onPlayCountChange(plays.length);
+    }
+  }, [plays.length, onPlayCountChange]);
 
   // Validate database integration (development mode only)
   useEffect(() => {

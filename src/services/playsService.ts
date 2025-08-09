@@ -6,20 +6,157 @@
 import { supabase } from "../lib/supabase";
 import type { Play } from "../types/play";
 import { DatabaseDebug } from "../utils/databaseDebug";
+import { normalizePlayName, normalizeText } from "../utils/textNormalization";
 
 export class PlaysService {
+  /**
+   * Auto-create a default team for a user if they don't have one
+   * Creates a "Personal Playbook" team for Coach Account users
+   */
+  private static async ensureUserHasTeam(): Promise<string> {
+    try {
+      // Get current user
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
+      // Get user profile to check role
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      // Check if user already has a team they own/created
+      const { data: existingTeams } = await supabase
+        .from("teams")
+        .select("id")
+        .eq("created_by", user.id)
+        .limit(1);
+
+      if (existingTeams && existingTeams.length > 0) {
+        return existingTeams[0].id;
+      }
+
+      // Create appropriate default team based on user type
+      const isCoach = profile?.role === "coach";
+      const teamName = isCoach ? "Personal Playbook" : "My Team";
+      const schoolName = isCoach ? "Personal Collection" : "Auto-Created Team";
+
+      const { data: newTeam, error: teamError } = await supabase
+        .from("teams")
+        .insert({
+          name: teamName,
+          school_name: schoolName,
+          created_by: user.id,
+        })
+        .select("id")
+        .single();
+
+      if (teamError) throw teamError;
+
+      // Create team membership for the user as a coach
+      const { error: membershipError } = await supabase
+        .from("team_members")
+        .insert({
+          team_id: newTeam.id,
+          user_id: user.id,
+          role: "coach",
+          is_active: true,
+        });
+
+      if (membershipError) {
+        console.error(
+          "Warning: Failed to create team membership:",
+          membershipError
+        );
+        // Don't throw here - team was created successfully
+      }
+
+      return newTeam.id;
+    } catch (error) {
+      console.error("Failed to ensure user has team:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Auto-create a default playbook for a user if they don't have one
+   */
+  static async ensureUserHasPlaybook(): Promise<string> {
+    try {
+      // Get current user
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
+      // Get user profile to check role
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      // Check if user already has a playbook
+      const { data: existingPlaybooks } = await supabase
+        .from("playbooks")
+        .select("id")
+        .eq("created_by", user.id)
+        .limit(1);
+
+      if (existingPlaybooks && existingPlaybooks.length > 0) {
+        return existingPlaybooks[0].id;
+      }
+
+      // Create default playbook for user
+      const teamId = await this.ensureUserHasTeam();
+
+      // Create appropriate playbook based on user type
+      const isCoach = profile?.role === "coach";
+      const playbookName = isCoach ? "Personal Playbook" : "My Playbook";
+      const playbookDescription = isCoach
+        ? "Personal collection of plays and concepts - ready to apply to any program"
+        : "Default playbook created automatically";
+
+      const { data: newPlaybook, error: playbookError } = await supabase
+        .from("playbooks")
+        .insert({
+          name: playbookName,
+          description: playbookDescription,
+          team_id: teamId,
+          created_by: user.id,
+        })
+        .select("id")
+        .single();
+
+      if (playbookError) throw playbookError;
+      return newPlaybook.id;
+    } catch (error) {
+      console.error("Failed to ensure user has playbook:", error);
+      throw error;
+    }
+  }
+
   /**
    * Create a new play in the database
    * Only saves fields that exist in the database schema
    */
   static async createPlay(playData: Partial<Play>): Promise<Play> {
     try {
+      // Get current user for created_by field
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
       // Generate a unique ID for the play
       const playId = crypto.randomUUID();
 
-      // Use the correct demo playbook UUID from our database seeds
+      // Ensure user has a playbook (auto-create if needed)
       const playbookId =
-        playData.playbook_id || "550e8400-e29b-41d4-a716-446655440001";
+        playData.playbook_id || (await this.ensureUserHasPlaybook());
 
       // Prepare ONLY database-valid fields for insertion
       const newPlay = {
@@ -27,12 +164,14 @@ export class PlaysService {
         playbook_id: playbookId,
 
         // Core required fields
-        play_name: playData.play_name || "Untitled Play",
+        play_name: normalizePlayName(playData.play_name || "Untitled Play"),
         p_type: playData.p_type || "Pass",
-        formation: playData.formation || "",
+        formation: normalizeText(playData.formation || ""),
 
         // Optional text fields (all exist in database)
-        one_word_play: playData.one_word_play || "",
+        one_word_play: playData.one_word_play
+          ? normalizeText(playData.one_word_play)
+          : "",
         notes: playData.notes || "",
         personnel: playData.personnel || "",
 
@@ -75,7 +214,7 @@ export class PlaysService {
 
         // Metadata
         is_archived: playData.is_archived || false,
-        created_by: "00000000-0000-0000-0000-000000000001", // Demo coach UUID
+        created_by: user.id, // Use actual authenticated user ID
         created_at: new Date(),
         updated_at: new Date(),
       };
@@ -191,12 +330,18 @@ export class PlaysService {
       // Prepare updates with only database-valid fields
       const validUpdates = {
         // Core fields
-        play_name: updates.play_name,
+        play_name: updates.play_name
+          ? normalizePlayName(updates.play_name)
+          : undefined,
         p_type: updates.p_type,
-        formation: updates.formation,
+        formation: updates.formation
+          ? normalizeText(updates.formation)
+          : undefined,
 
         // Optional fields
-        one_word_play: updates.one_word_play,
+        one_word_play: updates.one_word_play
+          ? normalizeText(updates.one_word_play)
+          : updates.one_word_play,
         notes: updates.notes,
         personnel: updates.personnel,
         f_type: updates.f_type,

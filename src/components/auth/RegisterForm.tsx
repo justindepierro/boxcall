@@ -68,6 +68,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     } else if (formData.password !== formData.confirmPassword) {
       errors.confirmPassword = "Passwords do not match";
     }
+
     if (!formData.role) {
       errors.role = "Please select your role";
     }
@@ -89,10 +90,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     }
   };
   const roleOptions = [
-    { value: "coach", label: "👨‍🏫 Coach" },
-    { value: "player", label: "🏃‍♂️ Player" },
-    { value: "family", label: "👨‍👩‍👧‍👦 Family Member" },
-    { value: "admin", label: "⚙️ Administrator" },
+    { value: "coach", label: "Coach" },
+    { value: "player", label: "Player" },
+    { value: "family", label: "Family Member" },
+    { value: "admin", label: "Administrator" },
   ];
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -197,6 +198,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             disabled={loading}
             fullWidth
             size="lg"
+            className="!bg-emerald-600 !hover:bg-emerald-700 !border-emerald-600 !hover:border-emerald-700 !text-white"
           >
             {loading ? "Creating Account..." : "Create Account"}
           </Button>

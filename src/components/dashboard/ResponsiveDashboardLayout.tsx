@@ -10,6 +10,7 @@ import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
+import { TeamOnboarding } from "../onboarding/TeamOnboarding";
 
 /**
  * Responsive Dashboard Layout
@@ -103,6 +104,11 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         ============================================================================ 
       */}
       <div className="responsive-dashboard-container">
+        {/* Team Onboarding - Shows for users without teams */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TeamOnboarding context="dashboard" />
+        </div>
+
         {/* 
           ============================================================================
           MAIN CONTENT GRID - Clean Responsive Design

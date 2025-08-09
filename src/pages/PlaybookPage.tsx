@@ -10,6 +10,7 @@ import { AdvancedSearchBar } from "../components/playbook/AdvancedSearchBar";
 import { PracticeScriptService } from "../services/practiceScriptService";
 import { CSVService } from "../services/csv";
 import { PlaysService } from "../services/playsService";
+import { TeamOnboarding } from "../components/onboarding/TeamOnboarding";
 // TODO: Future enhancement - calculate real play counts with: import { calculatePlayCounts } from "../utils/playbook-categories";
 import type { Play } from "../types/play";
 import {
@@ -464,6 +465,11 @@ export const PlaybookPage: React.FC = () => {
         </div>
       </header>
 
+      {/* Team Onboarding - Shows for users without teams */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <TeamOnboarding context="playbook" />
+      </div>
+
       {/* Week 3 Feature: Complexity Challenge System Demo */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-purple-200">
@@ -610,6 +616,12 @@ export const PlaybookPage: React.FC = () => {
                   enableBulkOperations={state.enableBulkOperations}
                   selectedPlayIds={state.selectedPlayIds}
                   onPlaySelectionChange={handlePlaySelectionChange}
+                  onPlayCountChange={(count) => {
+                    setState((prev) => ({
+                      ...prev,
+                      playsCreated: count,
+                    }));
+                  }}
                 />
               </>
             )}
@@ -665,10 +677,15 @@ export const PlaybookPage: React.FC = () => {
         <CSVImportModal
           isOpen={state.showImport}
           onClose={handleCloseImport}
-          playbookId="demo-playbook-id" // TODO: Get from props or context
+          playbookId="" // Let CSVImportModal auto-detect/create the playbook
           onImportComplete={(result) => {
             console.log("Import completed:", result);
-            // TODO: Refresh the plays list
+            if (result.success && result.importedPlays > 0) {
+              console.log(
+                `✅ Successfully imported ${result.importedPlays} plays, refreshing play grid...`
+              );
+              refreshPlays(); // Trigger PlayGrid refresh to show new plays
+            }
             handleCloseImport();
           }}
         />

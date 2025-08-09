@@ -1,13 +1,42 @@
 # 📋 BoxCall - TODO & Next Phase Planning
 
-## 🎯 **CURRENT FOCU**Files Identified for Cleanup**: ✅ **ALL REMOVED\*\*
+## 🎯 **CURRENT FOCUS**: ✅ **PHASE 3 PRODUCTION DEPLOYMENT** (August 2025)
 
-- ~~`src/data/mock-team-data.ts` - 258 lines of mock team/member/profile data~~ ✅ **DELETED**
-- ~~`src/data/demoPlays.ts` - Demo football plays (evaluate if needed for onboarding)~~ ✅ **DELETED**
-- ~~`dashboardService.ts` - Dev mock activity logic (lines 186-228)~~ ✅ **CLEANED**
-- ~~`achievementService.ts` - Legacy mock dev modes (super*admin_mock, view_as*)~~ ✅ **REMOVED**SE 3 PRODUCTION DEPLOYMENT\*\* (August 2025)
+## 🎓 **TUTORIALS & ONBOARDING SYSTEM** (Priority 1)
 
-### ✅ **COMPLETED - PHASE 2 FOUNDATIONS + PERFORMANCE**
+> _Make first-time users love BoxCall immediately_
+
+### **🚀 Smart Role-Based Tutorials**
+
+- [ ] **Coach Tutorial Flow** - Playbook creation, team management, game planning
+- [ ] **Player Tutorial Flow** - View plays, practice schedules, team communication
+- [ ] **Family Tutorial Flow** - Schedule access, player progress, team updates
+- [ ] **Admin Tutorial Flow** - Team setup, user management, system configuration
+
+### **💡 Tutorial Triggers**
+
+- [ ] **First Login Detection** - Show welcome tutorial based on selected role
+- [ ] **Feature Discovery** - Contextual tips when accessing new features
+- [ ] **Progressive Disclosure** - Unlock advanced features as users progress
+- [ ] **Skip & Replay Options** - "Skip Tutorial" and "Replay Tutorial" in settings
+
+### **📱 Interactive Onboarding**
+
+- [ ] **Guided Tours** - Step-by-step overlays for key workflows
+- [ ] **Sample Data** - Pre-populated demo content for hands-on learning
+- [ ] **Achievement System** - "First Play Created", "Team Joined" progress milestones
+- [ ] **Help Tooltips** - Contextual help bubbles on complex features
+
+### **🔧 Tutorial Technical Implementation**
+
+- [ ] **Tutorial State Management** - Track completion, preferences, replay options
+- [ ] **Role-Based Content** - Dynamic tutorial content based on user role
+- [ ] **Mobile-Optimized Tours** - Touch-friendly tutorial overlays
+- [ ] **Analytics Integration** - Track tutorial completion rates and drop-off points
+
+---
+
+## ✅ **COMPLETED - PHASE 2 FOUNDATIONS + PERFORMANCE**
 
 - **✅ Complete Brian Billick Game Planning Database**: 6-table system with full methodology implementation
 - **✅ Complete Practice Planning System**: 7-table architecture with 8-box layout support
