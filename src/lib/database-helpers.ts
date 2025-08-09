@@ -55,14 +55,17 @@ export async function testDatabaseConnection() {
         protectedCount.push(tableName);
       }
     }
-    console.error(
-      `🔒 Found ${protectedCount.length} protected tables (need auth):`,
-      protectedCount
-    );
-    console.error(
-      `✅ Found ${accessibleTables.length} accessible tables:`,
-      accessibleTables
-    );
+
+    // Only log in development mode to reduce console noise
+    if (import.meta.env.DEV) {
+      console.info(
+        `🔗 Database: ${accessibleTables.length} accessible tables, ${protectedCount.length} protected`
+      );
+      if (protectedCount.length > 0) {
+        console.info(`🔒 Protected tables:`, protectedCount);
+      }
+    }
+
     return true;
   } catch (error) {
     console.error("❌ Database connection failed:", error);

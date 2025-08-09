@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { FileText, Plus, Upload, Download, Clock, Users } from "lucide-react";
 import { PlayGrid } from "../components/playbook/PlayGrid";
-import { PlayFilters } from "../components/playbook/PlayFilters.tsx";
+import { PlaybookGlossary } from "../components/playbook/PlaybookGlossary";
+import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
 import { StreamlinedPlayBuilder } from "../components/playbook/PlayBuilder/StreamlinedPlayBuilder";
 import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal";
 import { AdvancedSearchBar } from "../components/playbook/AdvancedSearchBar";
-import { QuickFilters } from "../components/playbook/QuickFilters";
 import { PracticeScriptService } from "../services/practiceScriptService";
 import { CSVService } from "../services/csv";
+import { PlaysService } from "../services/playsService";
+// TODO: Future enhancement - calculate real play counts with: import { calculatePlayCounts } from "../utils/playbook-categories";
 import type { Play } from "../types/play";
 import {
   Badge,
@@ -15,11 +17,20 @@ import {
   ProgressBadge,
   ComplexityBadge,
 } from "../components/ui/Badge";
+
+interface ActiveFilter {
+  id: string;
+  field: string;
+  operator: "equals" | "contains" | "in";
+  value: string | string[];
+  label: string;
+}
 type CoachingView = "playbook" | "practice-script" | "game-plan";
 
 interface PlaybookPageState {
   searchQuery: string;
   activeFilters: string[]; // Quick filter IDs (red-zone, goal-line, etc.)
+  advancedFilters: ActiveFilter[]; // Advanced filters
   showBuilder: boolean;
   showImport: boolean;
   currentView: CoachingView;
@@ -30,27 +41,38 @@ interface PlaybookPageState {
     distance?: string;
     tags?: string[];
   };
+  // Playbook Glossary State
+  selectedCategory?: string;
+  selectedSubcategory?: string;
   // Reward Loop State
   playsCreated: number;
   recentAchievement: string | null;
   showCelebration: boolean;
   streakDays: number;
   lastPlayCreated: Date | null;
+  // Data refresh trigger
+  refreshTrigger: number;
 }
 export const PlaybookPage: React.FC = () => {
   const [state, setState] = useState<PlaybookPageState>({
     searchQuery: "",
-    activeFilters: [], // Initialize with empty array
+    activeFilters: [],
+    advancedFilters: [],
     showBuilder: false,
     showImport: false,
     currentView: "playbook",
     selectedFilters: {},
+    // Playbook Glossary Initial State
+    selectedCategory: undefined,
+    selectedSubcategory: undefined,
     // Reward Loop Initial State
-    playsCreated: 23, // Mock current count
+    playsCreated: 0,
     recentAchievement: null,
     showCelebration: false,
-    streakDays: 3, // Mock streak
-    lastPlayCreated: new Date(Date.now() - 24 * 60 * 60 * 1000), // Yesterday
+    streakDays: 0,
+    lastPlayCreated: null,
+    // Data refresh trigger
+    refreshTrigger: 0,
   });
 
   // Achievement system - the heart of reward loop psychology
@@ -109,6 +131,53 @@ export const PlaybookPage: React.FC = () => {
 
     // Check for achievements
     checkAchievements(newCount);
+  };
+
+  // Trigger data refresh
+  const refreshPlays = () => {
+    setState((prev) => ({
+      ...prev,
+      refreshTrigger: prev.refreshTrigger + 1,
+    }));
+  };
+
+  // Handle glossary category selection
+  const handleCategorySelect = (categoryId: string, subcategory?: string) => {
+    console.log("📚 Category selected:", { categoryId, subcategory });
+    setState((prev) => ({
+      ...prev,
+      selectedCategory: categoryId,
+      selectedSubcategory: subcategory,
+    }));
+  };
+
+  // Handle saving a new play
+  const handleSavePlay = async (playData: Partial<Play>) => {
+    try {
+      console.log("💾 Saving play to database:", playData);
+
+      // Save to Supabase database
+      const newPlay = await PlaysService.createPlay(playData);
+      console.log("✅ Play saved successfully:", newPlay);
+
+      // Close the builder
+      handleCloseBuilder();
+
+      // Refresh the plays list
+      refreshPlays();
+
+      // Trigger celebration
+      handlePlayCreated();
+
+      // Show success message (optional)
+      // You could add a toast notification here if you have one
+      alert(`Play "${playData.play_name}" has been saved to your playbook!`);
+    } catch (error) {
+      console.error("❌ Error saving play:", error);
+      alert(
+        `Failed to save play: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
   };
 
   // 3-Part Workflow Handlers - Week 3 Feature
@@ -184,8 +253,8 @@ export const PlaybookPage: React.FC = () => {
     setState((prev) => ({ ...prev, searchQuery: query }));
   };
 
-  // Handle quick filter changes
-  const handleFiltersChange = (filters: string[]) => {
+  // Handle quick filter changes - to be phased out
+  const _handleFiltersChange = (filters: string[]) => {
     setState((prev) => ({ ...prev, activeFilters: filters }));
   };
   const handleOpenBuilder = () => {
@@ -200,8 +269,16 @@ export const PlaybookPage: React.FC = () => {
   const handleCloseImport = () => {
     setState((prev) => ({ ...prev, showImport: false }));
   };
-  const handleFilterChange = (filters: typeof state.selectedFilters) => {
+  // Legacy filter handler - will be phased out as we move to category-based filtering
+  const _handleFilterChange = (filters: typeof state.selectedFilters) => {
     setState((prev) => ({ ...prev, selectedFilters: filters }));
+  };
+
+  // Advanced filters handler
+  const handleAdvancedFiltersChange = (
+    filters: typeof state.advancedFilters
+  ) => {
+    setState((prev) => ({ ...prev, advancedFilters: filters }));
   };
 
   const handleViewChange = (view: CoachingView) => {
@@ -348,11 +425,12 @@ export const PlaybookPage: React.FC = () => {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8">
-          {/* Sidebar Filters */}
+          {/* Smart Playbook Glossary */}
           <aside className="w-80 flex-shrink-0">
-            <PlayFilters
-              onFilterChange={handleFilterChange}
-              selectedFilters={state.selectedFilters}
+            <PlaybookGlossary
+              onCategorySelect={handleCategorySelect}
+              selectedCategory={state.selectedCategory}
+              selectedSubcategory={state.selectedSubcategory}
             />
           </aside>
           {/* Play Grid */}
@@ -399,19 +477,22 @@ export const PlaybookPage: React.FC = () => {
             {/* Conditional View Rendering */}
             {state.currentView === "playbook" && (
               <>
-                {/* Quick Filters */}
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4 mb-4">
-                  <QuickFilters
-                    activeFilters={state.activeFilters}
-                    onFiltersChange={handleFiltersChange}
+                {/* Advanced Filters */}
+                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-3 mb-4">
+                  <AdvancedFilters
+                    activeFilters={state.advancedFilters}
+                    onFiltersChange={handleAdvancedFiltersChange}
                   />
                 </div>
 
                 <PlayGrid
                   searchQuery={state.searchQuery}
                   filters={state.selectedFilters}
+                  selectedCategory={state.selectedCategory}
+                  selectedSubcategory={state.selectedSubcategory}
                   onAddToPracticeScript={handleAddToPracticeScript}
                   onAddToGamePlan={handleAddToGamePlan}
+                  refreshTrigger={state.refreshTrigger}
                 />
               </>
             )}
@@ -460,12 +541,7 @@ export const PlaybookPage: React.FC = () => {
         <StreamlinedPlayBuilder
           isOpen={state.showBuilder}
           onClose={handleCloseBuilder}
-          onSave={(playData) => {
-            console.log("Play saved:", playData);
-            // TODO: Save to Supabase database
-            // For now, just close the builder
-            handleCloseBuilder();
-          }}
+          onSave={handleSavePlay}
         />
       )}
       {state.showImport && (

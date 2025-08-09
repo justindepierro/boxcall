@@ -44,7 +44,13 @@ export function useTeamsData() {
   const [plays, setPlays] = useState<Play[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const { user: _user } = useAuth(); // DEMO MODE: Not used during demo
+
+  // Function to manually refresh data
+  const refreshData = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -107,7 +113,7 @@ export function useTeamsData() {
     }
 
     fetchData();
-  }, []); // DEMO MODE: Remove user dependency to fetch data without auth
+  }, [refreshTrigger]); // DEMO MODE: Remove user dependency to fetch data without auth, add refreshTrigger
 
   return {
     teams,
@@ -116,5 +122,6 @@ export function useTeamsData() {
     loading,
     error,
     totalCount: teams.length + playbooks.length + plays.length,
+    refreshData, // Add refresh function to return value
   };
 }

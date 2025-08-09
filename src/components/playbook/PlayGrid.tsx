@@ -7,6 +7,10 @@ import {
   validatePlaybookData,
   logValidationResults,
 } from "../../utils/playbook-test-validation";
+import {
+  getPlayCategory,
+  playMatchesSubcategory,
+} from "../../utils/playbook-categories";
 
 // Convert database play data to full Play type
 const mapDatabasePlayToFullPlay = (dbPlay: {
@@ -41,27 +45,44 @@ interface PlayGridProps {
     distance?: string;
     tags?: string[];
   };
+  // Category-based filtering from Smart Glossary
+  selectedCategory?: string;
+  selectedSubcategory?: string;
   onEdit?: (play: Play) => void;
   onDuplicate?: (play: Play) => void;
   onCreateDiagram?: (play: Play) => void;
   onAddToPracticeScript?: (play: Play) => void;
   onAddToGamePlan?: (play: Play) => void;
+  onPlayCreated?: () => void; // Add callback for when data should refresh
+  refreshTrigger?: number; // Trigger to refresh data from parent
 }
 
 export const PlayGrid: React.FC<PlayGridProps> = ({
   searchQuery,
   filters,
+  selectedCategory,
+  selectedSubcategory,
   onEdit,
   onDuplicate,
   onCreateDiagram,
   onAddToPracticeScript,
   onAddToGamePlan,
+  onPlayCreated: _onPlayCreated, // Prefixed with _ to indicate intentionally unused
+  refreshTrigger = 0,
 }) => {
   // Toggle for play name display mode (true = one-word calls, false = full names)
   const [showOneWordCalls, setShowOneWordCalls] = useState(false);
 
-  // Get real data from database
-  const { plays: allPlays, loading, error } = useTeamsData();
+  // Get real data from database with refresh capability
+  const { plays: allPlays, loading, error, refreshData } = useTeamsData();
+
+  // Refresh data when refreshTrigger changes
+  useEffect(() => {
+    if (refreshTrigger > 0) {
+      console.log("🔄 Refreshing plays data due to trigger:", refreshTrigger);
+      refreshData();
+    }
+  }, [refreshTrigger, refreshData]);
 
   // Convert database plays to full Play type
   const plays: Play[] = useMemo(
@@ -100,6 +121,21 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
         if (!matchesName && !matchesFormation && !matchesNotes) return false;
       }
 
+      // Category-based filtering from Smart Playbook Glossary
+      if (selectedCategory) {
+        const playCategories = getPlayCategory(play);
+        if (!playCategories.includes(selectedCategory)) {
+          return false;
+        }
+
+        // Subcategory filtering (more specific filtering within categories)
+        if (selectedSubcategory) {
+          if (!playMatchesSubcategory(play, selectedSubcategory)) {
+            return false;
+          }
+        }
+      }
+
       // Formation filter
       if (filters.formation && play.formation !== filters.formation)
         return false;
@@ -111,7 +147,7 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
 
       return true;
     });
-  }, [plays, searchQuery, filters]);
+  }, [plays, searchQuery, filters, selectedCategory, selectedSubcategory]);
 
   if (loading) {
     return (
@@ -132,6 +168,8 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
 
   const hasFilters =
     searchQuery ||
+    selectedCategory ||
+    selectedSubcategory ||
     Object.values(filters).some(
       (f) => f && (Array.isArray(f) ? f.length > 0 : true)
     );
@@ -141,7 +179,11 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
       <div className="text-center py-16">
         <div className="text-slate-400 text-lg mb-4">
           {hasFilters
-            ? "No plays match your search criteria"
+            ? selectedCategory && selectedSubcategory
+              ? `No plays found in "${selectedSubcategory}" under "${selectedCategory}"`
+              : selectedCategory
+                ? `No plays found in "${selectedCategory}" category`
+                : "No plays match your search criteria"
             : "No plays in your playbook yet"}
         </div>
         <p className="text-slate-500 text-sm">
@@ -156,9 +198,20 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
     <div className="space-y-6">
       {/* Results Header with Toggle */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-slate-900">
-          {filteredPlays.length} {filteredPlays.length === 1 ? "Play" : "Plays"}
-        </h2>
+        <div>
+          <h2 className="text-lg font-semibold text-slate-900">
+            {filteredPlays.length}{" "}
+            {filteredPlays.length === 1 ? "Play" : "Plays"}
+            {selectedCategory && (
+              <span className="text-slate-500 font-normal ml-2">
+                in{" "}
+                {selectedCategory.charAt(0).toUpperCase() +
+                  selectedCategory.slice(1).replace("-", " ")}
+                {selectedSubcategory && ` › ${selectedSubcategory}`}
+              </span>
+            )}
+          </h2>
+        </div>
 
         {/* Play Name Display Toggle */}
         <div className="flex items-center space-x-3">
