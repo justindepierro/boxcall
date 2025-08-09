@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import type { PostgrestError } from "@supabase/supabase-js";
 
 export interface SeasonStats {
   team_id: string;
@@ -18,13 +19,24 @@ export async function getSeasonStats(
   teamId: string
 ): Promise<SeasonStats | null> {
   if (!teamId) return null;
-  const { data, error } = await supabase
+  const { data, error, status } = await supabase
     .from("season_stats")
     .select(STATS_COLUMNS)
     .eq("team_id", teamId)
     .order("season_year", { ascending: false })
     .limit(1)
     .maybeSingle();
-  if (error) throw error;
+  if (error) {
+    const pgErr = error as PostgrestError;
+    if (status === 404 || pgErr?.code === "42P01") {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn(
+          "season_stats view not found (likely migrations pending) – returning null"
+        );
+      }
+      return null;
+    }
+    throw error;
+  }
   return data ?? null;
 }

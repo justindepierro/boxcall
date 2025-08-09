@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import type { PostgrestError } from "@supabase/supabase-js";
 
 export interface TeamEventListItem {
   id: string;
@@ -17,12 +18,23 @@ export async function listTeamEvents(
   teamId: string
 ): Promise<TeamEventListItem[]> {
   if (!teamId) return [];
-  const { data, error } = await supabase
+  const { data, error, status } = await supabase
     .from("team_events")
     .select(EVENT_COLUMNS)
     .eq("team_id", teamId)
     .order("starts_at", { ascending: true });
-  if (error) throw error;
+  if (error) {
+    const pgErr = error as PostgrestError;
+    if (status === 404 || pgErr?.code === "42P01") {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn(
+          "team_events relation not found (likely migrations pending) – returning empty list"
+        );
+      }
+      return [];
+    }
+    throw error;
+  }
   return data ?? [];
 }
 
