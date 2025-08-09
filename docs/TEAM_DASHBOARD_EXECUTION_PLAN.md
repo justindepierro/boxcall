@@ -130,7 +130,7 @@ A Phase 2 item is “Done” only if:
     - game_results + season_stats view
 14. Implement RLS policies (select => team members; insert/update guarded by capabilities).
 15. Service layer stubs + hooks: useTeamEvents(), useTeamPosts(), useSeasonStats().
-16. Event creation (coach only) minimal form (title, type, starts_at, location).
+- [x] Step 16: Event creation UI (modal form, optimistic create, capability-gated) – implemented (pending review)
 17. Game result logging (coach) updates season stats view (wins/losses, PF/PA) — view auto refresh.
 18. Feed MVP: create + list posts (announcement only) with pinned boolean. No comments/reactions yet.
 19. Telemetry events for first event, first post, first game result.

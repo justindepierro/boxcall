@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { OnboardingHint } from "../onboarding/OnboardingHint";
+import { useCreateEvent, useTeamEvents } from "../../hooks/teamDataHooks";
+import { Capability, getCapabilitiesForRole, hasCapability } from "../../services/capabilities/capabilityMap";
+import { Button } from "../ui/Button/Button";
+import { Input } from "../ui/Input";
+import { Select } from "../ui/Select";
+import { Modal } from "../ui/Modal/Modal";
+
 interface TeamCalendarProps {
   teamId: string;
+  userRole?: string;
 }
 /**
  * Team Calendar - Team-specific events and schedule
@@ -15,8 +23,32 @@ interface TeamCalendarProps {
  * - Event details and locations
  * - RSVP functionality for events
  */
-export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
-  const events: unknown[] = [];
+export const TeamCalendar: React.FC<TeamCalendarProps> = ({ teamId, userRole }) => {
+  const { data: events = [], isLoading } = useTeamEvents(teamId);
+  const { mutateAsync: createEvent, isPending } = useCreateEvent(teamId);
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({
+    title: "",
+    eventType: "practice",
+    startsAt: "",
+    location: "",
+  });
+  const caps = getCapabilitiesForRole(userRole);
+  // Reuse CREATE_POST until a dedicated CREATE_EVENT capability constant is added
+  const canCreate = hasCapability(caps, Capability.CREATE_POST);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!form.title || !form.startsAt) return;
+    await createEvent({
+      title: form.title,
+      eventType: form.eventType,
+      startsAt: new Date(form.startsAt).toISOString(),
+      location: form.location || undefined,
+    });
+    setOpen(false);
+    setForm({ title: "", eventType: "practice", startsAt: "", location: "" });
+  }
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
@@ -26,8 +58,16 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
         >
           <Icon name="calendar" size="md" /> Team Calendar
         </Typography>
+        {canCreate && (
+          <Button size="sm" variant="primary" onClick={() => setOpen(true)}>
+            New Event
+          </Button>
+        )}
       </div>
-      {!events.length && (
+      {isLoading && (
+        <div className="text-sm text-gray-500 dark:text-gray-400">Loading events...</div>
+      )}
+      {!isLoading && !events.length && (
         <OnboardingHint
           icon="calendar"
           title="Schedule Your First Event"
@@ -41,8 +81,7 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
             {
               label: "Plan Event",
               variant: "primary",
-              onClick: () =>
-                console.log("telemetry:onboarding.calendar.plan_event"),
+              onClick: () => setOpen(true),
             },
             {
               label: "View Roadmap",
@@ -52,6 +91,111 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = () => {
             },
           ]}
         />
+      )}
+      {!!events.length && !isLoading && (
+        <ul className="space-y-2" aria-label="Upcoming team events">
+          {events.slice(0, 6).map((ev) => (
+            <li
+              key={ev.id}
+              className="flex items-center justify-between text-sm bg-gray-50 dark:bg-gray-700 rounded px-3 py-2"
+            >
+              <span className="font-medium text-gray-800 dark:text-gray-100">
+                {ev.title}
+              </span>
+              <span className="text-gray-500 dark:text-gray-300">
+                {new Date(ev.starts_at).toLocaleDateString(undefined, {
+                  month: "short",
+                  day: "numeric",
+                })}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {open && (
+        <Modal
+          isOpen={open}
+          onClose={() => setOpen(false)}
+          title="Create Event"
+        >
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            <div>
+              <label className="block text-sm font-medium mb-1" htmlFor="ev-title">
+                Title
+              </label>
+              <Input
+                id="ev-title"
+                value={form.title}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setForm((f) => ({ ...f, title: e.target.value }))
+                }
+                required
+                placeholder="Practice / Game vs Central"
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1" htmlFor="ev-type">
+                  Type
+                </label>
+                <Select
+                  id="ev-type"
+                  value={form.eventType}
+                  onChange={(value) =>
+                    setForm((f) => ({ ...f, eventType: String(value) }))
+                  }
+                  options={[
+                    { value: "practice", label: "Practice" },
+                    { value: "game", label: "Game" },
+                    { value: "meeting", label: "Meeting" },
+                    { value: "workout", label: "Workout" },
+                    { value: "other", label: "Other" },
+                  ]}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1" htmlFor="ev-start">
+                  Starts At
+                </label>
+                <Input
+                  id="ev-start"
+                  type="datetime-local"
+                  value={form.startsAt}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setForm((f) => ({ ...f, startsAt: e.target.value }))
+                  }
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1" htmlFor="ev-location">
+                Location (optional)
+              </label>
+              <Input
+                id="ev-location"
+                value={form.location}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setForm((f) => ({ ...f, location: e.target.value }))
+                }
+                placeholder="Main Field"
+              />
+            </div>
+            <div className="flex justify-end gap-3 pt-2">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setOpen(false)}
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" variant="primary" disabled={isPending}>
+                {isPending ? "Creating..." : "Create Event"}
+              </Button>
+            </div>
+          </form>
+        </Modal>
       )}
     </Card>
   );
