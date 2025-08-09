@@ -192,30 +192,45 @@ export const TeamBulletin: React.FC = () => {
   const isCoach = userRole === "coach";
 
   return (
-    <div className="py-6">
-      <TeamBulletinHeader
-        teamId={teamId}
-        teamName={teamData.name}
-        seasonDisplay={teamData.season}
-        record={teamData.record}
-        memberCount={teamData.memberCount}
-        nextGame={teamData.nextGame}
-        schoolName={teamData.school_name}
-        mascot={teamData.mascot}
-        isCoach={isCoach}
-      />
-      <div className="px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <TeamBulletinLeftPanel teamId={teamId} userRole={userRole} />
-          <TeamBulletinFeedPanel
-            teamId={teamId}
-            userRole={userRole}
-            isCoach={isCoach}
-          />
-          <TeamBulletinRightPanel teamId={teamId} />
+    <>
+      {/* Skip link for keyboard users */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-jade-600 text-white px-4 py-2 rounded-md z-50"
+      >
+        Skip to main content
+      </a>
+      <main
+        id="main-content"
+        role="main"
+        aria-labelledby="team-dashboard-heading"
+        className="py-6"
+      >
+        <TeamBulletinHeader
+          headingId="team-dashboard-heading"
+          teamId={teamId}
+          teamName={teamData.name}
+          seasonDisplay={teamData.season}
+          record={teamData.record}
+          memberCount={teamData.memberCount}
+          nextGame={teamData.nextGame}
+          schoolName={teamData.school_name}
+          mascot={teamData.mascot}
+          isCoach={isCoach}
+        />
+        <div className="px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <TeamBulletinLeftPanel teamId={teamId} userRole={userRole} />
+            <TeamBulletinFeedPanel
+              teamId={teamId}
+              userRole={userRole}
+              isCoach={isCoach}
+            />
+            <TeamBulletinRightPanel teamId={teamId} />
+          </div>
         </div>
-      </div>
-    </div>
+      </main>
+    </>
   );
 };
 export default TeamBulletin;

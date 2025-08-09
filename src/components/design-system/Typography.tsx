@@ -37,7 +37,7 @@ export type TypographyElement =
   | "div"
   | "label"
   | "code";
-export interface TypographyProps {
+export interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   /** Typography variant for consistent styling */
   variant: TypographyVariant;
   /** HTML element to render */

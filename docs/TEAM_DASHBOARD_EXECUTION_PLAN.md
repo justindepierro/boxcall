@@ -205,3 +205,4 @@ Log:
 - 2025-08-09: Phase 1 Step 11 completed (buttons unified to design-system, dashboard emojis removed, contrast review queued for Step 12).
 - 2025-08-09: Telemetry lifecycle helpers added (post/event/game_result) + New Post button instrumented; accessibility & contrast incremental updates applied.
 - 2025-08-09: Added Git safeguards, Phase 2 verification checklist, augmented Phase 2 DoD, and revised next commit sequence.
+- 2025-08-09: Stage 12 a11y audit pass: added main landmark, skip link, aria-labelledby, consistent h1/h2 hierarchy, converted panels to section/aside.

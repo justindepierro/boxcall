@@ -13,15 +13,16 @@ export const TeamBulletinRightPanel: React.FC<RightPanelProps> = ({
   teamId,
 }) => {
   return (
-    <div
+    <aside
       className="lg:col-span-1 space-y-6"
-      role="complementary"
-      aria-label="Calendar and roster overview"
+      aria-labelledby="calendar-roster-heading"
     >
       <TeamCalendar teamId={teamId || ""} />
       <Card className="p-6" aria-label="Upcoming events onboarding hint">
         <div className="flex items-center justify-between mb-4">
           <Typography
+            as="h2"
+            id="calendar-roster-heading"
             variant="headline-md"
             className="text-gray-900 dark:text-white"
           >
@@ -46,6 +47,6 @@ export const TeamBulletinRightPanel: React.FC<RightPanelProps> = ({
           ]}
         />
       </Card>
-    </div>
+  </aside>
   );
 };

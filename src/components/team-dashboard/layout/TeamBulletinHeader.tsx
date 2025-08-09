@@ -14,6 +14,8 @@ export interface TeamBulletinHeaderProps {
   schoolName?: string | null;
   mascot?: string | null;
   isCoach: boolean;
+  /** Optional id for main heading to support aria-labelledby on main */
+  headingId?: string;
 }
 
 export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
@@ -26,6 +28,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
   schoolName,
   mascot,
   isCoach,
+  headingId,
 }) => {
   return (
     <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg mb-6">
@@ -67,6 +70,8 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             <div>
               <Typography
                 variant="headline-xl"
+                as="h1"
+                id={headingId}
                 className="text-gray-900 dark:text-white"
               >
                 {teamName}

@@ -21,15 +21,16 @@ export const TeamBulletinFeedPanel: React.FC<FeedPanelProps> = ({
   isCoach,
 }) => {
   return (
-    <div
+    <section
       className="lg:col-span-2 space-y-6"
-      role="region"
-      aria-label="Team feed"
+      aria-labelledby="team-feed-heading"
     >
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
           <Typography
-            variant="headline-md"
+            as="h2"
+            id="team-feed-heading"
+            variant="headline-lg"
             className="text-gray-900 dark:text-white"
           >
             Team Feed
@@ -56,6 +57,6 @@ export const TeamBulletinFeedPanel: React.FC<FeedPanelProps> = ({
         </div>
         <TeamFeed teamId={teamId || ""} userRole={userRole} />
       </Card>
-    </div>
+  </section>
   );
 };

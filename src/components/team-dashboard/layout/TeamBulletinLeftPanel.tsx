@@ -15,14 +15,15 @@ export const TeamBulletinLeftPanel: React.FC<LeftPanelProps> = ({
   userRole,
 }) => {
   return (
-    <div
+    <aside
       className="lg:col-span-1 space-y-6"
-      role="complementary"
-      aria-label="Team achievements and actions"
+      aria-labelledby="team-actions-heading"
     >
       <TeamTrophyCase teamId={teamId || ""} />
       <Card className="p-6">
         <Typography
+          as="h2"
+          id="team-actions-heading"
           variant="headline-md"
           className="mb-4 text-gray-900 dark:text-white"
         >
@@ -49,6 +50,6 @@ export const TeamBulletinLeftPanel: React.FC<LeftPanelProps> = ({
           ]}
         />
       </Card>
-    </div>
+  </aside>
   );
 };
