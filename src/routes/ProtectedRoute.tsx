@@ -26,10 +26,6 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const loading = useAuthLoading();
   const location = useLocation();
 
-  // TEMPORARY: Skip all auth checks for demo purposes
-  console.log("🚀 DEMO MODE: Bypassing authentication");
-  return <Layout>{children}</Layout>;
-
   // Show loading spinner while checking authentication
   if (loading) {
     return (
@@ -38,11 +34,13 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       </div>
     );
   }
+
   // If route requires auth and user is not authenticated
   if (requireAuth && !isAuthenticated) {
     // Save the attempted location for redirect after login
     return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }
+
   // If route requires NO auth (login page) and user IS authenticated
   if (!requireAuth && isAuthenticated) {
     // Get the intended destination from state, or default to dashboard

@@ -8,6 +8,7 @@ import { X, Save } from "lucide-react";
 import type { Play } from "../../../types/play";
 import { PlayBuilderForm } from "./PlayBuilderForm";
 import { PlayBuilderPreview } from "./PlayBuilderPreview";
+import { QuickEntry } from "./QuickEntry";
 
 interface PlayBuilderCoreProps {
   isOpen: boolean;
@@ -47,8 +48,14 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
     is_archived: initialPlay.is_archived || false,
   });
 
+  const [isQuickEntryVisible, setIsQuickEntryVisible] = useState(false);
+
   const updateField = (field: keyof Play, value: string | number | boolean) => {
     setPlayData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleQuickEntryParsed = (parsedData: Partial<Play>) => {
+    setPlayData((prev) => ({ ...prev, ...parsedData }));
   };
 
   const handleSave = () => {
@@ -124,6 +131,12 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
               {/* Form Section - 2/3 width */}
               <div className="lg:col-span-2">
+                <QuickEntry
+                  onPlayParsed={handleQuickEntryParsed}
+                  isVisible={isQuickEntryVisible}
+                  onToggle={() => setIsQuickEntryVisible(!isQuickEntryVisible)}
+                />
+
                 <PlayBuilderForm
                   playData={playData}
                   onUpdateField={updateField}

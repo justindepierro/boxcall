@@ -1,10 +1,17 @@
 /**
- * Play Builder Form - Core form fields
+ * Play Builder Form - Core form fields with text normalization
  * Only includes database-valid fields
  */
 
 import React from "react";
 import type { Play } from "../../../types/play";
+import {
+  normalizeText,
+  normalizePlayName,
+  normalizeFormation,
+  normalizePersonnel,
+  fuzzyMatch,
+} from "../../../utils/textNormalization";
 
 interface PlayBuilderFormProps {
   playData: Partial<Play>;
@@ -15,6 +22,18 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
   playData,
   onUpdateField,
 }) => {
+  // Helper function for normalized input handling
+  const handleNormalizedBlur = (
+    field: keyof Play,
+    value: string,
+    normalizer: (input: string) => string
+  ) => {
+    const normalized = normalizer(value);
+    if (normalized !== value) {
+      onUpdateField(field, normalized);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Core Play Information */}
@@ -33,8 +52,15 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
               type="text"
               value={playData.play_name || ""}
               onChange={(e) => onUpdateField("play_name", e.target.value)}
+              onBlur={(e) =>
+                handleNormalizedBlur(
+                  "play_name",
+                  e.target.value,
+                  normalizePlayName
+                )
+              }
               placeholder="e.g., Four Verticals, Power O, Quick Slant"
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="playbuilder-input w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               required
             />
           </div>
@@ -67,8 +93,15 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
               type="text"
               value={playData.formation || ""}
               onChange={(e) => onUpdateField("formation", e.target.value)}
+              onBlur={(e) =>
+                handleNormalizedBlur(
+                  "formation",
+                  e.target.value,
+                  normalizeFormation
+                )
+              }
               placeholder="e.g., Shotgun, I-Formation, Singleback"
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="playbuilder-input w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               required
             />
           </div>
@@ -82,8 +115,15 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
               type="text"
               value={playData.one_word_play || ""}
               onChange={(e) => onUpdateField("one_word_play", e.target.value)}
+              onBlur={(e) =>
+                handleNormalizedBlur(
+                  "one_word_play",
+                  e.target.value,
+                  normalizeText
+                )
+              }
               placeholder="e.g., Thunder, Smash, Quick"
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="playbuilder-input w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             />
           </div>
 
@@ -118,7 +158,7 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
             onChange={(e) => onUpdateField("notes", e.target.value)}
             placeholder="Add coaching notes, key reads, or execution details..."
             rows={3}
-            className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="playbuilder-input w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
           />
         </div>
       </div>
@@ -138,8 +178,11 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
               type="text"
               value={playData.f_type || ""}
               onChange={(e) => onUpdateField("f_type", e.target.value)}
+              onBlur={(e) =>
+                handleNormalizedBlur("f_type", e.target.value, normalizeText)
+              }
               placeholder="e.g., Trips Right, Bunch Left, Stack"
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="playbuilder-input w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             />
           </div>
 

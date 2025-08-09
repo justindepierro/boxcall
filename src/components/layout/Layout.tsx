@@ -11,7 +11,8 @@ import {
 import { NavBar } from "../ui/NavBar";
 import { Sidebar } from "../ui/Sidebar";
 import { DevTools } from "../dev";
-import { SidebarLogo } from "../ui/Logo";
+import { SidebarLogo, NavbarLogo } from "../ui/Logo";
+import { UserMenu } from "../auth/UserMenu";
 import type { DevMode } from "../../types/dev";
 
 // Helper to get test role from dev mode
@@ -66,7 +67,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <NavBar items={navBarItems} />
+      <NavBar
+        items={navBarItems}
+        brand={<NavbarLogo />}
+        actions={<UserMenu />}
+      />
       {/* Main content area with overlay sidebar and top padding for fixed nav */}
       <div className="relative pt-16">
         {/* Sidebar - Now overlays instead of pushing content */}

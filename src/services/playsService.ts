@@ -1,34 +1,11 @@
 /**
  * Plays Service
- * Handles CRUD operations for plays         // P        // Performance fields (only include fields that exist in database)
-        confidence_base: playData.confidence_base || 70,
-        times_called: playData.times_called || 0,
-        times_successful: playData.times_successful || 0,
-        complexity_score: playData.complexity_score || 1,
-
-        // Metadata 
-        is_archived: playData.is_archived || false,
-
-        // System fields
-        created_by: "demo-coach", // Use demo coach name (TEXT field, not UUID)
-        created_at: new Date(),
-        updated_at: new Date(),nly include fields that exist in database)
-        confidence_base: playData.confidence_base || 70,
-        times_called: playData.times_called || 0,
-        times_successful: playData.times_successful || 0,
-        complexity_score: playData.complexity_score || 1,
-
-        // Metadata 
-        is_archived: playData.is_archived || false,
-
-        // System fields
-        created_by: "demo-coach", // Use demo coach name (TEXT field, not UUID)
-        created_at: new Date(),
-        updated_at: new Date(),
+ * Handles CRUD operations for plays with database-aligned fields
  */
 
 import { supabase } from "../lib/supabase";
 import type { Play } from "../types/play";
+import { DatabaseDebug } from "../utils/databaseDebug";
 
 export class PlaysService {
   /**
@@ -58,16 +35,24 @@ export class PlaysService {
         one_word_play: playData.one_word_play || "",
         notes: playData.notes || "",
         personnel: playData.personnel || "",
+
+        // Formation details
         f_type: playData.f_type || "",
         f_dir: playData.f_dir || "",
+
+        // Play details
         protection: playData.protection || "",
         p_dir: playData.p_dir || "",
         r_str: playData.r_str || "",
         p_str: playData.p_str || "",
+
+        // Tags (new system - database uses ftag1, ftag2, p_tag1, p_tag2)
         ftag1: playData.ftag1 || "",
         ftag2: playData.ftag2 || "",
         p_tag1: playData.p_tag1 || "",
         p_tag2: playData.p_tag2 || "",
+
+        // Additional play data
         back_align: playData.back_align || "",
         shift: playData.shift || "",
         motion: playData.motion || "",
@@ -75,7 +60,7 @@ export class PlaysService {
         key_player2: playData.key_player2 || "",
         check_into: playData.check_into || "",
 
-        // Preference fields
+        // Preferences
         pref_down: playData.pref_down || "",
         pref_dis: playData.pref_dis || "",
         pref_hash: playData.pref_hash || "",
@@ -90,7 +75,7 @@ export class PlaysService {
 
         // Metadata
         is_archived: playData.is_archived || false,
-        created_by: "demo-coach",
+        created_by: "00000000-0000-0000-0000-000000000001", // Demo coach UUID
         created_at: new Date(),
         updated_at: new Date(),
       };
@@ -98,11 +83,37 @@ export class PlaysService {
       console.log("🎯 Creating play in database:", newPlay);
 
       // Insert into Supabase
-      const { data, error } = await supabase
+      let { data, error } = await supabase
         .from("plays")
         .insert([newPlay])
         .select()
         .single();
+
+      // If we get a foreign key error, try to create the demo playbook
+      if (
+        error &&
+        error.code === "23503" &&
+        error.message.includes("playbook_id")
+      ) {
+        console.log("📚 Playbook doesn't exist, creating demo playbook...");
+        await DatabaseDebug.checkPlaybooks();
+
+        const createdPlaybookId = await DatabaseDebug.createDemoPlaybook();
+        if (createdPlaybookId) {
+          // Update the play with the new playbook ID and try again
+          newPlay.playbook_id = createdPlaybookId;
+          console.log("🔄 Retrying play creation with new playbook...");
+
+          const retryResult = await supabase
+            .from("plays")
+            .insert([newPlay])
+            .select()
+            .single();
+
+          data = retryResult.data;
+          error = retryResult.error;
+        }
+      }
 
       if (error) {
         console.error("❌ Error creating play:", error);
@@ -122,22 +133,120 @@ export class PlaysService {
   }
 
   /**
-   * Update an existing play in the database
+   * Get plays by playbook ID
    */
-  static async updatePlay(
-    playId: string,
-    playData: Partial<Play>
-  ): Promise<Play> {
+  static async getPlaysByPlaybook(playbookId: string): Promise<Play[]> {
     try {
-      const updatedPlay = {
-        ...playData,
+      const { data, error } = await supabase
+        .from("plays")
+        .select("*")
+        .eq("playbook_id", playbookId)
+        .eq("is_archived", false)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("❌ Error fetching plays:", error);
+        throw new Error(`Failed to fetch plays: ${error.message}`);
+      }
+
+      return (data as Play[]) || [];
+    } catch (error) {
+      console.error("❌ PlaysService.getPlaysByPlaybook failed:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get a single play by ID
+   */
+  static async getPlay(id: string): Promise<Play | null> {
+    try {
+      const { data, error } = await supabase
+        .from("plays")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error) {
+        if (error.code === "PGRST116") {
+          // No rows found
+          return null;
+        }
+        console.error("❌ Error fetching play:", error);
+        throw new Error(`Failed to fetch play: ${error.message}`);
+      }
+
+      return data as Play;
+    } catch (error) {
+      console.error("❌ PlaysService.getPlay failed:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update an existing play
+   */
+  static async updatePlay(id: string, updates: Partial<Play>): Promise<Play> {
+    try {
+      // Prepare updates with only database-valid fields
+      const validUpdates = {
+        // Core fields
+        play_name: updates.play_name,
+        p_type: updates.p_type,
+        formation: updates.formation,
+
+        // Optional fields
+        one_word_play: updates.one_word_play,
+        notes: updates.notes,
+        personnel: updates.personnel,
+        f_type: updates.f_type,
+        f_dir: updates.f_dir,
+        protection: updates.protection,
+        p_dir: updates.p_dir,
+        r_str: updates.r_str,
+        p_str: updates.p_str,
+
+        // Tags
+        ftag1: updates.ftag1,
+        ftag2: updates.ftag2,
+        p_tag1: updates.p_tag1,
+        p_tag2: updates.p_tag2,
+
+        // Additional data
+        back_align: updates.back_align,
+        shift: updates.shift,
+        motion: updates.motion,
+        key_player1: updates.key_player1,
+        key_player2: updates.key_player2,
+        check_into: updates.check_into,
+
+        // Preferences
+        pref_down: updates.pref_down,
+        pref_dis: updates.pref_dis,
+        pref_hash: updates.pref_hash,
+        pref_cov: updates.pref_cov,
+        pref_front: updates.pref_front,
+
+        // Performance
+        confidence_base: updates.confidence_base,
+        times_called: updates.times_called,
+        times_successful: updates.times_successful,
+        complexity_score: updates.complexity_score,
+
+        // Metadata
+        is_archived: updates.is_archived,
         updated_at: new Date(),
       };
 
+      // Remove undefined values
+      const cleanUpdates = Object.fromEntries(
+        Object.entries(validUpdates).filter(([_, value]) => value !== undefined)
+      );
+
       const { data, error } = await supabase
         .from("plays")
-        .update(updatedPlay)
-        .eq("id", playId)
+        .update(cleanUpdates)
+        .eq("id", id)
         .select()
         .single();
 
@@ -150,7 +259,6 @@ export class PlaysService {
         throw new Error("No data returned from play update");
       }
 
-      console.log("✅ Play updated successfully:", data);
       return data as Play;
     } catch (error) {
       console.error("❌ PlaysService.updatePlay failed:", error);
@@ -159,47 +267,24 @@ export class PlaysService {
   }
 
   /**
-   * Delete a play from the database
+   * Delete a play (archive it)
    */
-  static async deletePlay(playId: string): Promise<void> {
+  static async deletePlay(id: string): Promise<void> {
     try {
-      const { error } = await supabase.from("plays").delete().eq("id", playId);
+      const { error } = await supabase
+        .from("plays")
+        .update({
+          is_archived: true,
+          updated_at: new Date(),
+        })
+        .eq("id", id);
 
       if (error) {
-        console.error("❌ Error deleting play:", error);
-        throw new Error(`Failed to delete play: ${error.message}`);
+        console.error("❌ Error archiving play:", error);
+        throw new Error(`Failed to archive play: ${error.message}`);
       }
-
-      console.log("✅ Play deleted successfully");
     } catch (error) {
       console.error("❌ PlaysService.deletePlay failed:", error);
-      throw error;
-    }
-  }
-
-  /**
-   * Get a single play by ID
-   */
-  static async getPlay(playId: string): Promise<Play | null> {
-    try {
-      const { data, error } = await supabase
-        .from("plays")
-        .select("*")
-        .eq("id", playId)
-        .single();
-
-      if (error) {
-        if (error.code === "PGRST116") {
-          // Play not found
-          return null;
-        }
-        console.error("❌ Error fetching play:", error);
-        throw new Error(`Failed to fetch play: ${error.message}`);
-      }
-
-      return data as Play;
-    } catch (error) {
-      console.error("❌ PlaysService.getPlay failed:", error);
       throw error;
     }
   }

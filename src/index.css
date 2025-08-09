@@ -31,6 +31,22 @@ body,
     outline: none;
   }
 
+  /* MonoSpace font family for PlayBuilder inputs */
+  .playbuilder-input,
+  .mono-input {
+    font-family:
+      "JetBrains Mono", "SF Mono", "Monaco", "Cascadia Code", "Roboto Mono",
+      "Courier New", Courier, monospace !important;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.025em;
+  }
+
+  /* Ensure consistent sizing for monospace fonts */
+  .playbuilder-input {
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.5;
+  }
+
   /* Global theme override - force proper light/dark mode styling */
   html:not(.dark) * {
     /* Force light mode for any dark background classes */
