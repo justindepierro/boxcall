@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { listTeamPosts, createPost } from "../services/postsService";
+import { listTeamPosts, createPost, updatePostPin } from "../services/postsService";
 import type { TeamPostListItem } from "../services/postsService";
 import { listTeamEvents, createEvent } from "../services/eventsService";
 import type {
@@ -92,6 +92,30 @@ export function useCreatePost(teamId: string | undefined) {
     onSettled: () => {
       if (teamId) qc.invalidateQueries({ queryKey: qk.posts(teamId) });
     },
+  });
+}
+
+export function usePinPost(teamId: string | undefined) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ postId, pin }: { postId: string; pin: boolean }) => {
+      return updatePostPin(postId, pin);
+    },
+    onMutate: async ({ postId, pin }) => {
+      if (!teamId) return;
+      await qc.cancelQueries({ queryKey: qk.posts(teamId) });
+      const prev = qc.getQueryData<TeamPostListItem[] | undefined>(qk.posts(teamId));
+      if (prev) {
+        qc.setQueryData<TeamPostListItem[] | undefined>(qk.posts(teamId), prev.map(p => p.id === postId ? { ...p, is_pinned: pin } : p));
+      }
+      return { prev };
+    },
+    onError: (_err, _vars, ctx) => {
+      if (teamId && ctx?.prev) qc.setQueryData(qk.posts(teamId), ctx.prev);
+    },
+    onSettled: () => {
+      if (teamId) qc.invalidateQueries({ queryKey: qk.posts(teamId) });
+    }
   });
 }
 

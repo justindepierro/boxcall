@@ -135,6 +135,7 @@ A Phase 2 item is “Done” only if:
 
 17. Game result logging (coach) updates season stats view (wins/losses, PF/PA) — view auto refresh. (✅ Complete)
 18. Feed MVP: create + list posts (announcement only) with pinned boolean. No comments/reactions yet.
+   - In progress: implemented listing, creation modal (coach roles), optimistic create, pin toggle (head coach capability), onboarding hint fallback
 19. Telemetry events for first event, first post, first game result.
 
 ### Phase 3 (Engagement & Expansion)

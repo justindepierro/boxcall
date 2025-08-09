@@ -46,3 +46,14 @@ export async function createPost({
   if (error) throw error;
   return data;
 }
+
+export async function updatePostPin(postId: string, isPinned: boolean) {
+  const { data, error } = await supabase
+    .from("team_posts")
+    .update({ is_pinned: isPinned })
+    .eq("id", postId)
+    .select(POST_COLUMNS)
+    .single();
+  if (error) throw error;
+  return data;
+}
