@@ -209,3 +209,4 @@ Log:
 - 2025-08-09: Step 15 scaffolding: service layer + React Query hooks (posts/events/game_results/stats) with optimistic updates & telemetry lifecycle integration.
 - 2025-08-09: Step 16 complete: Event creation modal integrated in TeamCalendar (coach/head_coach gating via placeholder capability), optimistic insert + telemetry.
 - 2025-08-09: Step 17 planning initiated: Add LOG_GAME_RESULT capability, SeasonStats card component (wins/losses/pf/pa/win%), modal form (date, opponent, site enum, scores, notes optional), optimistic result entry (already supported) + automatic stats refetch.
+- 2025-08-09: Step 17 in progress: LOG_GAME_RESULT capability added; SeasonStatsCard component with stats display + recent results list + game result logging modal integrated into left panel.

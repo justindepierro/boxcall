@@ -3,7 +3,7 @@ import { Card } from "../../ui";
 import { Typography } from "../../design-system";
 import { TeamTrophyCase } from "../TeamTrophyCase";
 import { TeamQuickActions } from "../TeamQuickActions";
-import { OnboardingHint } from "../../onboarding/OnboardingHint";
+import { SeasonStatsCard } from "../SeasonStatsCard";
 
 interface LeftPanelProps {
   teamId: string | undefined;
@@ -31,25 +31,7 @@ export const TeamBulletinLeftPanel: React.FC<LeftPanelProps> = ({
         </Typography>
         <TeamQuickActions teamId={teamId || ""} userRole={userRole} />
       </Card>
-      <Card className="p-6">
-        <OnboardingHint
-          icon="chart"
-          title="Season Stats"
-          message="Track wins, points, and player performance here once you begin logging games and practices. We'll surface trends, streaks, and rankings."
-          steps={[
-            "Record first game or practice (feature pending)",
-            "Automatic season aggregation",
-            "Unlock comparative insights",
-          ]}
-          actions={[
-            {
-              label: "View Roadmap",
-              variant: "ghost",
-              onClick: () => console.log("onboarding.stats.roadmap"),
-            },
-          ]}
-        />
-      </Card>
+  <SeasonStatsCard teamId={teamId || ""} userRole={userRole} />
     </aside>
   );
 };
