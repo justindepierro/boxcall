@@ -14,7 +14,9 @@ export interface GameResultListItem {
 const GAME_RESULT_COLUMNS =
   "id, team_id, game_date, opponent, site, points_for, points_against, created_at" as const;
 
-export async function listGameResults(teamId: string): Promise<GameResultListItem[]> {
+export async function listGameResults(
+  teamId: string
+): Promise<GameResultListItem[]> {
   if (!teamId) return [];
   const { data, error } = await supabase
     .from("game_results")
@@ -36,7 +38,8 @@ export interface LogGameResultInput {
 }
 
 export async function logGameResult(input: LogGameResultInput) {
-  const { teamId, gameDate, opponent, site, pointsFor, pointsAgainst, notes } = input;
+  const { teamId, gameDate, opponent, site, pointsFor, pointsAgainst, notes } =
+    input;
   const { data, error } = await supabase
     .from("game_results")
     .insert({

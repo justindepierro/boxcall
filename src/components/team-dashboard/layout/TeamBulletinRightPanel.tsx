@@ -47,6 +47,6 @@ export const TeamBulletinRightPanel: React.FC<RightPanelProps> = ({
           ]}
         />
       </Card>
-  </aside>
+    </aside>
   );
 };

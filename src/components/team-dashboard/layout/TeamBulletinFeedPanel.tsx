@@ -57,6 +57,6 @@ export const TeamBulletinFeedPanel: React.FC<FeedPanelProps> = ({
         </div>
         <TeamFeed teamId={teamId || ""} userRole={userRole} />
       </Card>
-  </section>
+    </section>
   );
 };

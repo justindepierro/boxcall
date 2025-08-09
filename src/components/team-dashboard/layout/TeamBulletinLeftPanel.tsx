@@ -50,6 +50,6 @@ export const TeamBulletinLeftPanel: React.FC<LeftPanelProps> = ({
           ]}
         />
       </Card>
-  </aside>
+    </aside>
   );
 };

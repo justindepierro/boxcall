@@ -13,7 +13,9 @@ export interface TeamPostListItem {
 const POST_COLUMNS =
   "id, team_id, author_id, content, created_at, is_pinned" as const;
 
-export async function listTeamPosts(teamId: string): Promise<TeamPostListItem[]> {
+export async function listTeamPosts(
+  teamId: string
+): Promise<TeamPostListItem[]> {
   if (!teamId) return [];
   const { data, error } = await supabase
     .from("team_posts")
@@ -31,7 +33,11 @@ export interface CreatePostInput {
   isPinned?: boolean;
 }
 
-export async function createPost({ teamId, content, isPinned }: CreatePostInput) {
+export async function createPost({
+  teamId,
+  content,
+  isPinned,
+}: CreatePostInput) {
   const { data, error } = await supabase
     .from("team_posts")
     .insert({ team_id: teamId, content, is_pinned: !!isPinned })

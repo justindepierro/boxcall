@@ -2,9 +2,15 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { listTeamPosts, createPost } from "../services/postsService";
 import type { TeamPostListItem } from "../services/postsService";
 import { listTeamEvents, createEvent } from "../services/eventsService";
-import type { TeamEventListItem, CreateEventInput } from "../services/eventsService";
+import type {
+  TeamEventListItem,
+  CreateEventInput,
+} from "../services/eventsService";
 import { listGameResults, logGameResult } from "../services/gameResultsService";
-import type { GameResultListItem, LogGameResultInput } from "../services/gameResultsService";
+import type {
+  GameResultListItem,
+  LogGameResultInput,
+} from "../services/gameResultsService";
 import { getSeasonStats } from "../services/statsService";
 import {
   postCreateStarted,
@@ -72,13 +78,16 @@ export function useCreatePost(teamId: string | undefined) {
     },
     onSuccess: (data) => {
       if (!teamId) return;
-      qc.setQueryData<TeamPostListItem[] | undefined>(qk.posts(teamId), (old) => {
-        if (!old) return [data];
-        return [
-          data,
-          ...old.filter((p) => !String(p.id).startsWith("optimistic-")),
-        ];
-      });
+      qc.setQueryData<TeamPostListItem[] | undefined>(
+        qk.posts(teamId),
+        (old) => {
+          if (!old) return [data];
+          return [
+            data,
+            ...old.filter((p) => !String(p.id).startsWith("optimistic-")),
+          ];
+        }
+      );
     },
     onSettled: () => {
       if (teamId) qc.invalidateQueries({ queryKey: qk.posts(teamId) });
@@ -97,7 +106,9 @@ export function useTeamEvents(teamId: string | undefined) {
 export function useCreateEvent(teamId: string | undefined) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (input: Omit<CreateEventInput, "teamId"> & { teamId?: string }) => {
+    mutationFn: async (
+      input: Omit<CreateEventInput, "teamId"> & { teamId?: string }
+    ) => {
       const tid = input.teamId || teamId;
       if (!tid) throw new Error("Missing teamId");
       eventCreateStarted();
@@ -130,9 +141,8 @@ export function useCreateEvent(teamId: string | undefined) {
         location: input.location || null,
         created_at: new Date().toISOString(),
       };
-      qc.setQueryData<TeamEventListItem[] | undefined>(
-        qk.events(tid),
-        (old) => (old ? [optimistic, ...old] : [optimistic])
+      qc.setQueryData<TeamEventListItem[] | undefined>(qk.events(tid), (old) =>
+        old ? [optimistic, ...old] : [optimistic]
       );
       return { prev, tid };
     },
@@ -169,7 +179,9 @@ export function useGameResults(teamId: string | undefined) {
 export function useLogGameResult(teamId: string | undefined) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (input: Omit<LogGameResultInput, "teamId"> & { teamId?: string }) => {
+    mutationFn: async (
+      input: Omit<LogGameResultInput, "teamId"> & { teamId?: string }
+    ) => {
       const tid = input.teamId || teamId;
       if (!tid) throw new Error("Missing teamId");
       gameResultLogStarted();
@@ -179,7 +191,7 @@ export function useLogGameResult(teamId: string | undefined) {
           gameDate: input.gameDate,
           opponent: input.opponent,
           site: input.site,
-            pointsFor: input.pointsFor,
+          pointsFor: input.pointsFor,
           pointsAgainst: input.pointsAgainst,
           notes: input.notes,
         });

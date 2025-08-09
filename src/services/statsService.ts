@@ -14,7 +14,9 @@ export interface SeasonStats {
 const STATS_COLUMNS =
   "team_id, season_year, games_played, wins, losses, pf_total, pa_total, win_pct" as const;
 
-export async function getSeasonStats(teamId: string): Promise<SeasonStats | null> {
+export async function getSeasonStats(
+  teamId: string
+): Promise<SeasonStats | null> {
   if (!teamId) return null;
   const { data, error } = await supabase
     .from("season_stats")

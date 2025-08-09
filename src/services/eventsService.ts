@@ -13,7 +13,9 @@ export interface TeamEventListItem {
 const EVENT_COLUMNS =
   "id, team_id, title, event_type, starts_at, location, created_at" as const;
 
-export async function listTeamEvents(teamId: string): Promise<TeamEventListItem[]> {
+export async function listTeamEvents(
+  teamId: string
+): Promise<TeamEventListItem[]> {
   if (!teamId) return [];
   const { data, error } = await supabase
     .from("team_events")
