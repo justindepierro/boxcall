@@ -189,6 +189,20 @@ Phase 4: Analytics & quality enhancements + test thresholds met.
 
 - Phase 0 baseline placeholders complete (Step 6 optional pending). ✅
 - Phase 1: Capability map, QuickActions refactor, layout modularization complete; telemetry lifecycle events implemented; accessibility pass in progress. ✅/🔄
+- Phase 2: Steps 16–19 (event creation, game result logging, feed MVP, first-* telemetry) complete; migrations/RLS/service stubs (steps 13–15) still to be finalized. 🔄
+
+### Supporting Infrastructure Update: UI Density System (2025-08-09)
+
+Implemented global density tokens and utilities (`bc-card-padding`, `bc-grid-gap`, `bc-container-padding`) now applied across dashboard shells, play builder, practice suite, auth/onboarding, and team management components. Benefits for Team Dashboard:
+
+- Consistent compact vertical rhythm across feed/events/stats panels.
+- Future density toggle (compact/comfortable) already wired—dashboard panels inherit automatically.
+- Reduced ad-hoc Tailwind spacing classes simplifies further refactors (comments, real-time, achievements).
+
+Remaining dashboard-specific adoptions:
+- Replace any lingering `p-6` / `gap-6` inside TeamBulletin page-level wrappers with density utilities.
+- Normalize action bar paddings in header and feed composer.
+- Introduce optional `bc-section-padding` if outer route spacing needs differentiation from card interior.
 
 ### Next Immediate Commits (Suggested Sequence)
 
@@ -219,3 +233,6 @@ Log:
 - 2025-08-09: Step 16 complete: Event creation modal integrated in TeamCalendar (coach/head_coach gating via placeholder capability), optimistic insert + telemetry.
 - 2025-08-09: Step 17 planning initiated: Add LOG_GAME_RESULT capability, SeasonStats card component (wins/losses/pf/pa/win%), modal form (date, opponent, site enum, scores, notes optional), optimistic result entry (already supported) + automatic stats refetch.
 - 2025-08-09: Step 17 complete: LOG_GAME_RESULT capability, SeasonStatsCard (stats, recent results, outcome badges), logging modal w/ validation, toast notifications, focus return & optimistic + stats refresh.
+- 2025-08-09: Step 18 complete: Feed MVP (create/list/pin, inline composer, onboarding hint, a11y announcements, telemetry lifecycle) merged.
+- 2025-08-09: Step 19 complete: first-* telemetry events (post/event/game_result) implemented with conditional emission (fires only on first item creation).
+- 2025-08-09: UI density system rolled out (global spacing tokens & utilities) applied to dashboard-related components for consistent compact layout.
