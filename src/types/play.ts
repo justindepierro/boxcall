@@ -39,52 +39,79 @@ export interface CustomFieldValues {
   [field_name: string]: CustomFieldValue; // Dynamic based on field definitions
 }
 
-// Play types that match the exact database schema
+// Play types that match the EXACT database schema (database/schema.sql lines 34-90)
 export interface Play {
+  // Database primary fields
   id: string; // uuid
   playbook_id: string; // uuid
-  formation: string; // text
-  f_dir?: string; // text - Formation direction/strength
-  ftag1?: string; // text - Formation tag 1
-  ftag2?: string; // text - Formation tag 2
-  back_align?: string; // text - RB alignment
-  shift?: string; // text - Formation shift
-  motion?: string; // text - Pre-snap motion
-  protection?: string; // text - Protection scheme
-  play_name: string; // text - Main play name
-  p_tag1?: string; // text - Play tag 1
-  p_tag2?: string; // text - Play tag 2
-  p_dir?: string; // text - Play direction
-  f_type?: string; // text - Formation type (10P, 11P, etc)
-  p_type: string; // text - Play type (changed from enum to string to match DB)
-  key_player1?: string; // text - Key player identifier
-  key_player2?: string; // text - Second key player
-  pref_down?: string; // text - Preferred down
-  pref_dis?: string; // text - Preferred distance
-  pref_hash?: string; // text - Preferred hash
-  pref_cov?: string; // text - Preferred coverage
-  pref_front?: string; // text - Preferred front
-  check_into?: string; // text - Check/audible options
-  r_str?: string; // text - Run strength
-  p_str?: string; // text - Pass strength
-  personnel?: string; // text - Personnel grouping
-  confidence_base: number; // numeric - Base confidence (default 70)
-  success_rate?: number; // numeric - Historical success rate
-  times_called: number; // integer - Usage tracking
-  times_successful: number; // integer - Success tracking
-  diagram_url?: string; // text - Play diagram image
-  video_url?: string; // text - Instructional video
-  notes?: string; // text - Additional notes
-  tags?: string[]; // ARRAY _text - Flexible tagging
-  custom_fields?: CustomFieldValues; // JSONB - Team-defined custom fields
-  created_by: string; // uuid - User who created the play
-  created_at: Date; // timestamptz - Creation timestamp
-  updated_at: Date; // timestamptz - Last update timestamp
-  one_word_play?: string; // text - "Corndog" style audible call
-  is_archived?: boolean; // bool - Archive status
-  last_used_at?: Date; // timestamptz - When play was last used
-  complexity_score?: number; // integer - Play complexity rating
-  search_vector?: string; // tsvector - Full-text search (handled by DB)
+
+  // Core play data (required)
+  formation: string; // text NOT NULL
+  play_name: string; // text NOT NULL
+  p_type: string; // text NOT NULL (Pass, Run, RPO, Play Action)
+
+  // Optional core fields
+  one_word_play?: string; // text
+
+  // Formation details
+  personnel?: string; // text
+  f_type?: string; // text
+  f_dir?: string; // text
+
+  // Play details
+  protection?: string; // text
+  p_dir?: string; // text
+  r_str?: string; // text
+  p_str?: string; // text
+
+  // Preferences
+  pref_down?: string; // text
+  pref_dis?: string; // text
+  pref_hash?: string; // text
+  pref_cov?: string; // text
+  pref_front?: string; // text
+
+  // Tags and categorization
+  ftag1?: string; // text
+  ftag2?: string; // text
+  p_tag1?: string; // text
+  p_tag2?: string; // text
+
+  // Additional data
+  back_align?: string; // text
+  shift?: string; // text
+  motion?: string; // text
+  key_player1?: string; // text
+  key_player2?: string; // text
+  check_into?: string; // text
+  notes?: string; // text
+
+  // Performance metrics
+  confidence_base: number; // integer DEFAULT 70
+  times_called: number; // integer DEFAULT 0
+  times_successful: number; // integer DEFAULT 0
+
+  // Metadata (required)
+  created_by: string; // text NOT NULL
+  created_at: Date; // timestamptz DEFAULT NOW()
+  updated_at: Date; // timestamptz DEFAULT NOW()
+
+  // Optional metadata
+  is_archived?: boolean; // boolean DEFAULT false
+  last_used_at?: Date; // timestamptz
+  complexity_score?: number; // integer
+  search_vector?: string; // tsvector (auto-generated, read-only)
+}
+
+// DEPRECATED - Legacy interface with extra fields not in database
+// TODO: Remove after migrating all components to use database-aligned Play interface
+export interface PlayLegacy {
+  // All fields from Play interface above, plus these extra ones:
+  success_rate?: number; // NOT in database
+  diagram_url?: string; // NOT in database
+  video_url?: string; // NOT in database
+  tags?: string[]; // NOT in database (no array support)
+  custom_fields?: CustomFieldValues; // NOT in database (no JSONB support)
 }
 // Play type enumeration matching database constraint (text field)
 export type PlayType =
