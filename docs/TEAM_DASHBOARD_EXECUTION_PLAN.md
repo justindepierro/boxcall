@@ -138,6 +138,8 @@ A Phase 2 item is “Done” only if:
    - Delivered: listing, creation modal + inline composer, optimistic create, pin toggle (head coach), onboarding hint, aria-live announcements, first-post telemetry, error state, skeletons, truncation with expand.
 - 2025-08-09: Step 18 complete: Feed MVP (list/create/pin, inline composer, accessibility & telemetry) implemented.
 19. Telemetry events for first event, first post, first game result.
+   - ✅ Implemented: post.first (TeamFeed), event.first (TeamCalendar), game_result.first (SeasonStatsCard) – emitted only when pre-action list length == 0
+- 2025-08-09: Step 19 complete: first-* telemetry events added (post/event/game_result) with conditional emission logic.
 
 ### Phase 3 (Engagement & Expansion)
 

@@ -4,11 +4,16 @@ import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { OnboardingHint } from "../onboarding/OnboardingHint";
 import { useCreateEvent, useTeamEvents } from "../../hooks/teamDataHooks";
-import { Capability, getCapabilitiesForRole, hasCapability } from "../../services/capabilities/capabilityMap";
+import {
+  Capability,
+  getCapabilitiesForRole,
+  hasCapability,
+} from "../../services/capabilities/capabilityMap";
 import { Button } from "../ui/Button/Button";
 import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
 import { Modal } from "../ui/Modal/Modal";
+import { telemetry } from "../../lib/telemetry";
 
 interface TeamCalendarProps {
   teamId: string;
@@ -23,7 +28,10 @@ interface TeamCalendarProps {
  * - Event details and locations
  * - RSVP functionality for events
  */
-export const TeamCalendar: React.FC<TeamCalendarProps> = ({ teamId, userRole }) => {
+export const TeamCalendar: React.FC<TeamCalendarProps> = ({
+  teamId,
+  userRole,
+}) => {
   const { data: events = [], isLoading } = useTeamEvents(teamId);
   const { mutateAsync: createEvent, isPending } = useCreateEvent(teamId);
   const [open, setOpen] = useState(false);
@@ -46,6 +54,9 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({ teamId, userRole }) 
       startsAt: new Date(form.startsAt).toISOString(),
       location: form.location || undefined,
     });
+    if (events.length === 0) {
+      telemetry.track("event.first", { teamId });
+    }
     setOpen(false);
     setForm({ title: "", eventType: "practice", startsAt: "", location: "" });
   }
@@ -65,7 +76,9 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({ teamId, userRole }) 
         )}
       </div>
       {isLoading && (
-        <div className="text-sm text-gray-500 dark:text-gray-400">Loading events...</div>
+        <div className="text-sm text-gray-500 dark:text-gray-400">
+          Loading events...
+        </div>
       )}
       {!isLoading && !events.length && (
         <OnboardingHint
@@ -120,7 +133,10 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({ teamId, userRole }) 
         >
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
-              <label className="block text-sm font-medium mb-1" htmlFor="ev-title">
+              <label
+                className="block text-sm font-medium mb-1"
+                htmlFor="ev-title"
+              >
                 Title
               </label>
               <Input
@@ -135,7 +151,10 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({ teamId, userRole }) 
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="ev-type">
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="ev-type"
+                >
                   Type
                 </label>
                 <Select
@@ -154,7 +173,10 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({ teamId, userRole }) 
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="ev-start">
+                <label
+                  className="block text-sm font-medium mb-1"
+                  htmlFor="ev-start"
+                >
                   Starts At
                 </label>
                 <Input
@@ -169,7 +191,10 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({ teamId, userRole }) 
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1" htmlFor="ev-location">
+              <label
+                className="block text-sm font-medium mb-1"
+                htmlFor="ev-location"
+              >
                 Location (optional)
               </label>
               <Input

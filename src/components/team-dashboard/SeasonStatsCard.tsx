@@ -16,6 +16,7 @@ import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
 import { Modal } from "../ui/Modal/Modal";
 import { useToast } from "../../hooks/useToast";
+import { telemetry } from "../../lib/telemetry";
 
 interface SeasonStatsCardProps {
   teamId: string;
@@ -69,6 +70,9 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
         pointsAgainst: Number(form.pointsAgainst),
         notes: form.notes || undefined,
       });
+      if (results.length === 0) {
+        telemetry.track("game_result.first", { teamId });
+      }
       toast.success("Game result logged", "Season stats updated");
       setOpen(false);
       setForm({
@@ -169,12 +173,14 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
               outcome === "W"
                 ? "bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-200"
                 : outcome === "L"
-                ? "bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-200"
-                : "bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-100";
+                  ? "bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-200"
+                  : "bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-100";
             return (
               <li key={r.id} className="flex items-center justify-between py-1">
                 <span className="flex items-center gap-2 font-medium text-gray-800 dark:text-gray-100">
-                  <span className={`inline-flex items-center justify-center rounded px-1.5 py-0.5 text-xs font-semibold ${color}`}>
+                  <span
+                    className={`inline-flex items-center justify-center rounded px-1.5 py-0.5 text-xs font-semibold ${color}`}
+                  >
                     {outcome}
                   </span>
                   {pf}-{pa} vs {r.opponent}
