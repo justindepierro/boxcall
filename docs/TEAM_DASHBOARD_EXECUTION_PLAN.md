@@ -130,8 +130,10 @@ A Phase 2 item is “Done” only if:
     - game_results + season_stats view
 14. Implement RLS policies (select => team members; insert/update guarded by capabilities).
 15. Service layer stubs + hooks: useTeamEvents(), useTeamPosts(), useSeasonStats().
+
 - [x] Step 16: Event creation UI (modal form, optimistic create, capability-gated) – complete
-17. Game result logging (coach) updates season stats view (wins/losses, PF/PA) — view auto refresh.
+
+17. Game result logging (coach) updates season stats view (wins/losses, PF/PA) — view auto refresh. (✅ Complete)
 18. Feed MVP: create + list posts (announcement only) with pinned boolean. No comments/reactions yet.
 19. Telemetry events for first event, first post, first game result.
 
@@ -209,4 +211,4 @@ Log:
 - 2025-08-09: Step 15 scaffolding: service layer + React Query hooks (posts/events/game_results/stats) with optimistic updates & telemetry lifecycle integration.
 - 2025-08-09: Step 16 complete: Event creation modal integrated in TeamCalendar (coach/head_coach gating via placeholder capability), optimistic insert + telemetry.
 - 2025-08-09: Step 17 planning initiated: Add LOG_GAME_RESULT capability, SeasonStats card component (wins/losses/pf/pa/win%), modal form (date, opponent, site enum, scores, notes optional), optimistic result entry (already supported) + automatic stats refetch.
-- 2025-08-09: Step 17 in progress: LOG_GAME_RESULT capability added; SeasonStatsCard component with stats display + recent results list + game result logging modal integrated into left panel.
+- 2025-08-09: Step 17 complete: LOG_GAME_RESULT capability, SeasonStatsCard (stats, recent results, outcome badges), logging modal w/ validation, toast notifications, focus return & optimistic + stats refresh.
