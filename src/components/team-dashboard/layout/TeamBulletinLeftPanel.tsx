@@ -15,7 +15,11 @@ export const TeamBulletinLeftPanel: React.FC<LeftPanelProps> = ({
   userRole,
 }) => {
   return (
-    <div className="lg:col-span-1 space-y-6">
+    <div
+      className="lg:col-span-1 space-y-6"
+      role="complementary"
+      aria-label="Team achievements and actions"
+    >
       <TeamTrophyCase teamId={teamId || ""} />
       <Card className="p-6">
         <Typography

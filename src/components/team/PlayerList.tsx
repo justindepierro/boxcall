@@ -54,7 +54,9 @@ export const PlayerList: React.FC<PlayerListProps> = ({
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
         <div className="text-center">
-          <div className="text-6xl mb-4">👥</div>
+          <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full bg-jade-500/10 text-jade-600 dark:text-jade-400">
+            <Icon name="users" size="lg" />
+          </div>
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
             No Players Yet
           </h3>
@@ -62,16 +64,17 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             Start building your roster by adding players manually or importing
             from CSV.
           </p>
-          <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button
               onClick={onAddPlayer}
               variant="primary"
-              className="w-full sm:w-auto"
+              className="sm:w-auto"
             >
-              👤 Add First Player
+              <Icon name="user-plus" className="w-4 h-4 mr-2" /> Add First
+              Player
             </Button>
-            <Button variant="outline" className="w-full sm:w-auto ml-0 sm:ml-3">
-              📄 Import CSV
+            <Button variant="outline" className="sm:w-auto">
+              <Icon name="upload" className="w-4 h-4 mr-2" /> Import CSV
             </Button>
           </div>
         </div>
@@ -131,13 +134,13 @@ export const PlayerList: React.FC<PlayerListProps> = ({
           </p>
           <div className="space-x-2">
             <Button onClick={onAddPlayer} variant="primary" size="sm">
-              👤 Add Player
+              <Icon name="user-plus" className="w-4 h-4 mr-2" /> Add Player
             </Button>
             <Button variant="outline" size="sm">
-              📄 Import CSV
+              <Icon name="upload" className="w-4 h-4 mr-2" /> Import CSV
             </Button>
             <Button variant="outline" size="sm">
-              📊 Export Roster
+              <Icon name="download" className="w-4 h-4 mr-2" /> Export Roster
             </Button>
           </div>
         </div>
@@ -183,14 +186,14 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                       className="p-1 text-gray-400 hover:text-jade-600 transition-colors"
                       title="Edit Player"
                     >
-                      ✏️
+                      <Icon name="edit" size="sm" />
                     </button>
                     <button
                       onClick={() => onDeletePlayer(player.id)}
                       className="p-1 text-gray-400 hover:text-red-600 transition-colors"
                       title="Remove Player"
                     >
-                      🗑️
+                      <Icon name="delete" size="sm" />
                     </button>
                   </div>
                 </div>
@@ -232,8 +235,8 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                 {(player.email || player.phone) && (
                   <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                     {player.email && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                        📧 {player.email}
+                      <div className="text-xs text-gray-500 dark:text-gray-400 truncate flex items-center gap-1">
+                        <Icon name="mail" size="xs" /> {player.email}
                       </div>
                     )}
                     {player.phone && (

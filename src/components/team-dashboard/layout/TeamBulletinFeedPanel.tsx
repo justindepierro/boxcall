@@ -2,6 +2,12 @@ import React from "react";
 import { Card } from "../../ui";
 import { Typography } from "../../design-system";
 import { TeamFeed } from "../TeamFeed";
+import { Button } from "../../ui";
+import {
+  postCreateStarted,
+  postCreateSucceeded,
+  postCreateFailed,
+} from "../../../lib/telemetry";
 
 interface FeedPanelProps {
   teamId: string | undefined;
@@ -15,7 +21,11 @@ export const TeamBulletinFeedPanel: React.FC<FeedPanelProps> = ({
   isCoach,
 }) => {
   return (
-    <div className="lg:col-span-2 space-y-6">
+    <div
+      className="lg:col-span-2 space-y-6"
+      role="region"
+      aria-label="Team feed"
+    >
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
           <Typography
@@ -25,9 +35,23 @@ export const TeamBulletinFeedPanel: React.FC<FeedPanelProps> = ({
             Team Feed
           </Typography>
           {isCoach && (
-            <button className="px-4 py-2 bg-jade-500 text-white rounded-md hover:bg-jade-600 transition-colors">
-              + New Post
-            </button>
+            <Button
+              variant="primary"
+              size="sm"
+              aria-label="Create new post"
+              onClick={async () => {
+                try {
+                  postCreateStarted();
+                  // Placeholder logic until modal / form is implemented
+                  await new Promise((res) => setTimeout(res, 250));
+                  postCreateSucceeded();
+                } catch (e) {
+                  postCreateFailed({ error: (e as Error).message });
+                }
+              }}
+            >
+              New Post
+            </Button>
           )}
         </div>
         <TeamFeed teamId={teamId || ""} userRole={userRole} />

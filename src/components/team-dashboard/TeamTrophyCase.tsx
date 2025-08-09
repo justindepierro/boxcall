@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography } from "../design-system";
-import { Card } from "../ui";
+import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 
 interface TeamTrophyCaseProps {
@@ -28,12 +28,14 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = ({ teamId }) => {
         <li>Add a season goal (coming soon)</li>
         <li>Track academic/community achievements (coming soon)</li>
       </ol>
-      <button
-        onClick={() => console.log("TODO: achievements help", { teamId })}
-        className="w-full py-2 rounded-md bg-jade-500 hover:bg-jade-600 text-white text-sm font-medium transition-colors"
+      <Button
+        variant="primary"
+        size="sm"
+        fullWidth
+        onClick={() => console.log("achievements.help.click", { teamId })}
       >
         Learn how achievements work
-      </button>
+      </Button>
     </Card>
   );
 };

@@ -27,10 +27,10 @@ Replace misleading mock data with truthful onboarding states, then incrementally
 
 7. ✅ Capability Map: role → capabilities (e.g., CAN_CREATE_POST, CAN_CREATE_EVENT, CAN_LOG_GAME_RESULT, CAN_VIEW_STATS).
 8. ✅ Refactor QuickActions to config-driven rendering (no emojis; design-system icons w/ labels).
-9. 🔄 Telemetry utility: onboarding.view, onboarding.action.click (wired in OnboardingHint), future: post.create.started (creation events pending).
+9. ✅ Telemetry utility: onboarding.view, onboarding.action.click + lifecycle helpers (post/event/game_result create/log) added.
 10. ✅ Layout modularization: split `TeamBulletin` into `TeamBulletinHeader`, `TeamFeedPanel`, `TeamLeftPanel`, `TeamRightPanel` for maintainability.
-11. ⏳ Design consistency pass: remove remaining emojis, normalize button variants, audit contrast (AA).
-12. ⏳ Accessibility pass: heading structure (H1 page title, H2 section titles), aria roles for onboarding hints (role="note" or region labeled).
+11. ✅ Design consistency pass: normalized button variants (shared Button), removed dashboard emojis, prepared contrast/a11y notes.
+12. 🔄 Accessibility pass: Landmarks + aria-labels (feed, left, right panels; new post/button labels) added; next: heading hierarchy (H1/H2), role="note" for hints, focus order review.
 
 ### Phase 2 (Data Models & Initial Features) – enable reads then writes
 
@@ -89,7 +89,7 @@ Phase 4: Analytics & quality enhancements + test thresholds met.
 ### Current Status
 
 - Phase 0 baseline placeholders complete (Step 6 optional pending). ✅
-- Phase 1: Capability map, QuickActions refactor, layout modularization complete; telemetry scaffold active (creation events pending). ✅/🔄
+- Phase 1: Capability map, QuickActions refactor, layout modularization complete; telemetry lifecycle events implemented; accessibility pass in progress. ✅/🔄
 
 ### Next Immediate Commits (Suggested Sequence)
 
@@ -109,3 +109,5 @@ Log:
 - 2025-08-09: Feed & Calendar placeholders merged; capability map + QuickActions refactor + telemetry scaffold implemented.
 - 2025-08-09: Layout modularization completed (header/left/feed/right panels).
 - 2025-08-09: Added visual status check marks (✅ done, 🔄 partial, ⏳ pending) and prepped for Phase 1 Step 11 design consistency pass.
+- 2025-08-09: Phase 1 Step 11 completed (buttons unified to design-system, dashboard emojis removed, contrast review queued for Step 12).
+- 2025-08-09: Telemetry lifecycle helpers added (post/event/game_result) + New Post button instrumented; accessibility & contrast incremental updates applied.

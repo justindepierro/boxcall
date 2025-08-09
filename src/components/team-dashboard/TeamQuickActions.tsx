@@ -40,14 +40,14 @@ const ACTIONS: QuickActionConfig[] = [
     id: "award_stickers",
     label: "Award Helmet Stickers",
     icon: "award",
-    variant: "outline",
+    variant: "outline", // constrained to allowed variants
     onClick: () => console.log("action.award_stickers"),
     requires: Capability.AWARD_STICKERS,
   },
   {
     id: "practice_schedule",
     label: "Practice Schedule",
-    icon: "award", // placeholder until schedule feature
+    icon: "calendar", // better semantic icon
     variant: "outline",
     requires: Capability.VIEW_PRACTICE_SCHEDULE,
     to: "practice",

@@ -13,9 +13,13 @@ export const TeamBulletinRightPanel: React.FC<RightPanelProps> = ({
   teamId,
 }) => {
   return (
-    <div className="lg:col-span-1 space-y-6">
+    <div
+      className="lg:col-span-1 space-y-6"
+      role="complementary"
+      aria-label="Calendar and roster overview"
+    >
       <TeamCalendar teamId={teamId || ""} />
-      <Card className="p-6">
+      <Card className="p-6" aria-label="Upcoming events onboarding hint">
         <div className="flex items-center justify-between mb-4">
           <Typography
             variant="headline-md"
