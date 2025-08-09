@@ -28,6 +28,14 @@ export const getNavigationItems = (
     userRole,
     typeof userRole
   );
+  // Dynamic team selection (persisted after creation)
+  let activeTeamId = "1";
+  try {
+    const stored = localStorage.getItem("activeTeamId");
+    if (stored) activeTeamId = stored;
+  } catch (_err) {
+    /* ignore */
+  }
   const items: NavigationItem[] = [
     // Dashboard - Available to everyone
     {
@@ -42,7 +50,7 @@ export const getNavigationItems = (
       id: "team-bulletin",
       label: "Team Bulletin",
       icon: "users",
-      href: "/team/1/bulletin", // Will need team switching dropdown
+      href: `/team/${activeTeamId}/bulletin`,
       description: "Team-specific feed, announcements, and quick actions",
     },
   ];
@@ -104,20 +112,14 @@ export const getNavigationItems = (
     description: "Edit user settings and preferences",
   });
   // Team Settings - Coaches and super_admin only
-  if (
-    userRole === "admin" ||
-    userRole === "coach" ||
-    (userRole as string) === "super_admin"
-  ) {
-    items.push({
-      id: "team-settings",
-      label: "Team Settings",
-      icon: "settings",
-      href: "/team/1/settings",
-      roles: ["admin", "coach", "super_admin"],
-      description: "Manage team configuration and roster",
-    });
-  }
+  // TEMP: Expose Team Settings to all authenticated roles for rapid iteration (will re-gate later)
+  items.push({
+    id: "team-settings",
+    label: "Team Settings",
+    icon: "settings",
+    href: `/team/${activeTeamId}/settings`,
+    description: "Manage team configuration and roster",
+  });
   // Divider before utility pages
   items.push({
     id: "divider-utility",

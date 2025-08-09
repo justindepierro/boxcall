@@ -1,4 +1,5 @@
 import type { Play } from "../types/play";
+import { normalizePlayName } from "./textNormalization";
 /**
  * Utility functions for play name generation
  */
@@ -7,7 +8,18 @@ function safe(value: string | undefined | null): string {
 }
 function clean(value: string | undefined | null): string {
   const cleaned = safe(value);
-  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1).toLowerCase();
+  if (!cleaned) return "";
+  // Preserve known all-caps abbreviations (<=4 chars and already all caps)
+  if (/^[A-Z0-9]{1,4}$/.test(cleaned)) return cleaned.toUpperCase();
+  // Proper-case each word while preserving single-letter tokens (e.g., "Z")
+  return cleaned
+    .split(/\s+/)
+    .map((word) => {
+      if (!word) return "";
+      if (/^[A-Z0-9]{1,3}$/.test(word)) return word.toUpperCase();
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(" ");
 }
 function normalize(value: string | undefined | null): string {
   return safe(value).toLowerCase();
@@ -57,7 +69,7 @@ export function generateConcatenatedName(play: Play): string {
     parts.push(clean(protection));
   }
   // Core play + direction
-  const playCore = clean(play.play_name);
+  const playCore = normalizePlayName(play.play_name || "");
   const playDir = clean(play.p_dir);
   if (playCore) parts.push(playCore);
   if (playDir) parts.push(playDir);

@@ -5,6 +5,11 @@
 
 import React, { useState } from "react";
 import type { Play } from "../../../types/play";
+import {
+  normalizePlayName,
+  normalizeFormation,
+  normalizeText,
+} from "../../../utils/textNormalization";
 
 interface QuickEntryProps {
   onPlayParsed: (playData: Partial<Play>) => void;
@@ -28,16 +33,18 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
     const playData: Partial<Play> = {};
 
     // Parse each part based on common patterns
-    parts.forEach((part, index) => {
+    parts.forEach((rawPart, index) => {
+      // Preserve original for display but use normalized for logic
+      const part = rawPart.trim();
       const lowerPart = part.toLowerCase();
 
       // Index-based parsing (most reliable)
       switch (index) {
         case 0: // Play name
-          playData.play_name = part;
+          playData.play_name = normalizePlayName(part);
           break;
         case 1: // Formation
-          playData.formation = part;
+          playData.formation = normalizeFormation(part);
           break;
         case 2: // Play type
           if (lowerPart.includes("run") || lowerPart === "r") {
@@ -74,7 +81,7 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
       ) {
         // Formation indicators
         if (!playData.formation) {
-          playData.formation = part;
+          playData.formation = normalizeFormation(part);
         }
       } else if (
         lowerPart === "run" ||
@@ -92,6 +99,17 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
         }
       }
     });
+
+    // Final normalization pass (defensive)
+    if (playData.play_name) {
+      playData.play_name = normalizePlayName(playData.play_name);
+    }
+    if (playData.formation) {
+      playData.formation = normalizeFormation(playData.formation);
+    }
+    if (playData.one_word_play) {
+      playData.one_word_play = normalizeText(playData.one_word_play);
+    }
 
     return playData;
   };

@@ -3,12 +3,19 @@
  * Database-aligned with clean architecture
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { X, Save } from "lucide-react";
 import type { Play } from "../../../types/play";
 import { PlayBuilderForm } from "./PlayBuilderForm";
 import { PlayBuilderPreview } from "./PlayBuilderPreview";
 import { QuickEntry } from "./QuickEntry";
+// Explicit normalization to guarantee consistency BEFORE hitting service layer
+import {
+  normalizePlayName,
+  normalizeText,
+  normalizeFormation,
+} from "../../../utils/textNormalization";
+import { PlaysService } from "../../../services/playsService";
 
 interface PlayBuilderCoreProps {
   isOpen: boolean;
@@ -49,6 +56,28 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   });
 
   const [isQuickEntryVisible, setIsQuickEntryVisible] = useState(false);
+  const [existingNames, setExistingNames] = useState<Set<string>>(new Set());
+  const [attemptedSave, setAttemptedSave] = useState(false);
+
+  // Load existing play names for duplicate detection when modal opens
+  useEffect(() => {
+    if (!isOpen) return;
+    (async () => {
+      try {
+        const playbookId = await PlaysService.ensureUserHasPlaybook();
+        const plays = await PlaysService.getPlaysByPlaybook(playbookId);
+        setExistingNames(
+          new Set(
+            plays
+              .filter((p) => p.play_name)
+              .map((p) => normalizePlayName(p.play_name).toLowerCase())
+          )
+        );
+      } catch (e) {
+        console.error("Failed to load existing play names", e);
+      }
+    })();
+  }, [isOpen]);
 
   const updateField = (field: keyof Play, value: string | number | boolean) => {
     setPlayData((prev) => ({ ...prev, [field]: value }));
@@ -59,22 +88,45 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   };
 
   const handleSave = () => {
-    // Validate required fields
+    // Validate required fields (raw first)
     if (!playData.play_name?.trim()) {
-      alert("Play name is required");
-      return;
+      setAttemptedSave(true);
+      return; // inline validation handles message
     }
     if (!playData.p_type) {
-      alert("Play type is required");
+      setAttemptedSave(true);
       return;
     }
     if (!playData.formation?.trim()) {
-      alert("Formation is required");
+      setAttemptedSave(true);
       return;
     }
 
-    console.log("💾 Saving play data:", playData);
-    onSave(playData);
+    // Apply normalization before persisting (defensive even though service also normalizes)
+    const normalized: Partial<Play> = {
+      ...playData,
+      play_name: normalizePlayName(playData.play_name),
+      formation: normalizeFormation(playData.formation || ""),
+      one_word_play: playData.one_word_play
+        ? normalizeText(playData.one_word_play)
+        : "",
+    };
+
+    // Duplicate detection (exclude if editing the same play)
+    const currentNorm = (normalized.play_name || "").toLowerCase();
+    const initialNorm = normalizePlayName(
+      initialPlay.play_name || ""
+    ).toLowerCase();
+    const isDuplicate =
+      existingNames.has(currentNorm) &&
+      (!initialPlay?.id || currentNorm !== initialNorm);
+    if (isDuplicate) {
+      setAttemptedSave(true);
+      return;
+    }
+
+    console.log("💾 Saving (normalized) play data:", normalized);
+    onSave(normalized);
     onClose();
   };
 
@@ -84,10 +136,19 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
 
   if (!isOpen) return null;
 
+  const normalizedName = normalizePlayName(playData.play_name || "");
+  const isDuplicateName =
+    !!normalizedName &&
+    existingNames.has(normalizedName.toLowerCase()) &&
+    (!initialPlay?.id ||
+      normalizePlayName(initialPlay.play_name || "").toLowerCase() !==
+        normalizedName.toLowerCase());
+
   const isValid = !!(
     playData.play_name?.trim() &&
     playData.p_type &&
-    playData.formation?.trim()
+    playData.formation?.trim() &&
+    !isDuplicateName
   );
 
   const validationErrors: string[] = [];
@@ -96,6 +157,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   if (!playData.p_type) validationErrors.push("Play type is required");
   if (!playData.formation?.trim())
     validationErrors.push("Formation is required");
+  if (isDuplicateName) validationErrors.push("Duplicate play name in playbook");
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -140,6 +202,8 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
                 <PlayBuilderForm
                   playData={playData}
                   onUpdateField={updateField}
+                  duplicateName={isDuplicateName}
+                  showErrors={attemptedSave}
                 />
               </div>
 

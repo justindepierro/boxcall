@@ -4,6 +4,8 @@ import { useAuth } from "../app/auth-store";
 import { usePermissions } from "../hooks/usePermissions";
 import { Typography } from "../components/design-system";
 import { Icon } from "../components/ui/Icon/Icon";
+import { supabase } from "../lib/supabase";
+import { emitTelemetry } from "../lib/telemetry";
 
 /**
  * Create Team Page
@@ -22,9 +24,9 @@ import { Icon } from "../components/ui/Icon/Icon";
 
 interface TeamFormData {
   // Basic Team Info
-  teamName: string; // Now stores mascot name (e.g., "Eagles")
-  sport: string;
-  season: string; // Auto-set to current school year (2024-2025)
+  teamName: string; // Mascot name (e.g., "Eagles")
+  sport: string; // (UI only for now – not yet persisted until schema supports it)
+  season: string; // Display string for academic year (e.g., "2025-2026")
 
   // School Information (moved from team-info step)
   schoolName: string;
@@ -72,16 +74,32 @@ type CreationStep =
   | "review"
   | "complete";
 
+// Helper: compute academic (school) year given current date.
+// Academic year starts July 1 -> June 30 the following year.
+function computeAcademicYear(date: Date = new Date()) {
+  const month = date.getMonth(); // 0=Jan
+  const startYear = month >= 6 ? date.getFullYear() : date.getFullYear() - 1; // July (6) or later => current year start
+  const endYear = startYear + 1;
+  return {
+    startYear,
+    endYear,
+    display: `${startYear}-${endYear}`,
+  };
+}
+
 export const CreateTeam: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { isSuperAdmin, canCreateTeamUnlimited } = usePermissions();
+  const { isSuperAdmin } = usePermissions();
+  // TEMPORARY: Universal access (any authenticated user) regardless of prior permission flags
+  const universalAccess = true;
 
   const [currentStep, setCurrentStep] = useState<CreationStep>("intro");
+  const initialAcademic = computeAcademicYear();
   const [formData, setFormData] = useState<TeamFormData>({
     teamName: "", // Mascot name (e.g., "Eagles")
     sport: "Football",
-    season: "2024-2025", // Auto-set to current school year
+    season: initialAcademic.display, // Dynamic current academic year
     schoolName: "",
     schoolDistrict: "",
     schoolAddress: "",
@@ -105,37 +123,11 @@ export const CreateTeam: React.FC = () => {
     paymentMethod: "",
   });
 
-  // Check if user has permission to create teams
-  if (!canCreateTeamUnlimited && !isSuperAdmin) {
-    return (
-      <div className="py-12">
-        <div className="max-w-2xl mx-auto text-center">
-          <Icon name="lock" size="xl" color="error" className="mx-auto mb-4" />
-          <Typography variant="headline-lg" className="mb-4">
-            Team Creation Not Available
-          </Typography>
-          <Typography variant="body-lg" color="muted" className="mb-6">
-            You don't have permission to create teams. Please contact your
-            administrator or join an existing team instead.
-          </Typography>
-          <div className="flex gap-3 justify-center">
-            <button
-              onClick={() => navigate("/join-team")}
-              className="bg-jade-500 hover:bg-jade-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-            >
-              Join Existing Team
-            </button>
-            <button
-              onClick={() => navigate("/")}
-              className="border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 px-6 py-2 rounded-lg font-medium transition-colors"
-            >
-              Back to Dashboard
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // If universal access is disabled in future, revert to permission gate above.
+
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [createdTeamId, setCreatedTeamId] = useState<string | null>(null);
 
   const steps: { id: CreationStep; title: string; description: string }[] = [
     {
@@ -200,17 +192,108 @@ export const CreateTeam: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    // TODO: Implement actual team creation logic
-    console.log("🎯 Creating team with data:", formData);
-
-    if (isSuperAdmin) {
-      console.log("🔓 Super admin team creation - bypassing payment");
+    if (creating) return;
+    setCreating(true);
+    setCreateError(null);
+    try {
+      emitTelemetry("team.create.attempt", {
+        universalAccess,
+        super: isSuperAdmin,
+      });
+      // Minimal required fields for teams table
+      const teamNameCombined =
+        `${formData.schoolName.trim()} ${formData.teamName.trim()}`.trim();
+      const { startYear: seasonYear, display: seasonDisplay } =
+        computeAcademicYear();
+      if (!user?.id) throw new Error("User not authenticated");
+      // Attempt insert including created_by (needed on production schema). If column doesn't exist locally, fallback.
+      const teamInsertRes = await supabase
+        .from("teams")
+        .insert({
+          name: teamNameCombined || "New Team",
+          school_name: formData.schoolName || null,
+          mascot: formData.teamName || null,
+          season_year: seasonYear,
+          created_by: user.id, // Production schema requires this
+        })
+        .select("id")
+        .single();
+      let teamInsert = teamInsertRes.data;
+      let teamErr = teamInsertRes.error;
+      // Attempt to include sport if migration applied; silent ignore if column missing.
+      if (!teamErr && formData.sport) {
+        const { error: sportErr } = await supabase
+          .from("teams")
+          .update({ sport: formData.sport })
+          .eq("id", teamInsert?.id || "")
+          .select("id")
+          .single();
+        if (
+          sportErr &&
+          /column .*sport.* does not exist/i.test(sportErr.message)
+        ) {
+          emitTelemetry("team.create.sport_column_missing", {
+            message: sportErr.message,
+          });
+        }
+      }
+      if (
+        teamErr &&
+        /created_by|column .* does not exist/i.test(teamErr.message)
+      ) {
+        // Retry without created_by for local dev schemas that haven't added the column
+        emitTelemetry("team.create.retry_without_created_by", {
+          reason: teamErr.message,
+        });
+        const retry = await supabase
+          .from("teams")
+          .insert({
+            name: teamNameCombined || "New Team",
+            school_name: formData.schoolName || null,
+            mascot: formData.teamName || null,
+            season_year: seasonYear,
+          })
+          .select("id")
+          .single();
+        teamInsert = retry.data;
+        teamErr = retry.error;
+      }
+      if (teamErr || !teamInsert)
+        throw teamErr || new Error("Team insert failed");
+      const newTeamId = teamInsert.id as string;
+      // Insert membership (coach by default)
+      if (user?.id) {
+        const { error: memberErr } = await supabase
+          .from("team_members")
+          .insert({
+            team_id: newTeamId,
+            user_id: user.id,
+            role: "coach",
+            status: "active",
+          });
+        if (memberErr) console.warn("team_members insert warning", memberErr);
+      }
+      // Persist active team selection
+      try {
+        localStorage.setItem("activeTeamId", newTeamId);
+      } catch (_err) {
+        /* ignore */
+      }
+      setCreatedTeamId(newTeamId);
+      emitTelemetry("team.create.success", {
+        teamId: newTeamId,
+        season_year: seasonYear,
+        season_display: seasonDisplay,
+        sport_ui: formData.sport,
+      });
+      setCurrentStep("complete");
+    } catch (e) {
+      const msg = (e as Error).message;
+      setCreateError(msg);
+      emitTelemetry("team.create.error", { error: msg });
+    } finally {
+      setCreating(false);
     }
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setCurrentStep("complete");
   };
 
   const renderStepContent = () => {
@@ -219,7 +302,7 @@ export const CreateTeam: React.FC = () => {
         return (
           <div className="text-center">
             <Icon
-              name="boxcall"
+              name="users"
               size="xl"
               color="primary"
               className="mx-auto mb-6"
@@ -369,7 +452,7 @@ export const CreateTeam: React.FC = () => {
                     variant="body-sm"
                     className="font-medium text-blue-700 dark:text-blue-300 mb-1"
                   >
-                    Season: 2024-2025 School Year
+                    Season: {computeAcademicYear().display} School Year
                   </Typography>
                   <Typography variant="body-sm" color="muted">
                     Teams are automatically assigned to the current school year.
@@ -715,13 +798,15 @@ export const CreateTeam: React.FC = () => {
               color="muted"
               className="mb-8 max-w-2xl mx-auto"
             >
-              Congratulations! Your team "{formData.schoolName}{" "}
-              {formData.teamName}" has been created and is ready to use. You can
-              now start inviting players and coaches to join your team.
+              {createError
+                ? "Team was created locally but an error occurred when finalizing setup. You can retry from dashboard."
+                : `Congratulations! Your team "${formData.schoolName} ${formData.teamName}" has been created and is ready to use. You can now start inviting players and coaches.`}
             </Typography>
             <div className="flex gap-3 justify-center">
               <button
-                onClick={() => navigate(`/team/new-team-id/bulletin`)}
+                onClick={() =>
+                  navigate(`/team/${createdTeamId || "unknown"}/bulletin`)
+                }
                 className="bg-jade-500 hover:bg-jade-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
               >
                 Go to Team Dashboard
@@ -796,10 +881,11 @@ export const CreateTeam: React.FC = () => {
             {currentStep === "review" ? (
               <button
                 onClick={handleSubmit}
-                className="flex items-center gap-2 bg-jade-500 hover:bg-jade-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                disabled={creating}
+                className="flex items-center gap-2 bg-jade-500 hover:bg-jade-600 disabled:opacity-60 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-colors"
               >
-                Create Team
-                <Icon name="check" size="sm" />
+                {creating ? "Creating..." : "Create Team"}
+                {!creating && <Icon name="check" size="sm" />}
               </button>
             ) : (
               <button
@@ -810,6 +896,12 @@ export const CreateTeam: React.FC = () => {
                 <Icon name="chevron-right" size="sm" />
               </button>
             )}
+          </div>
+        )}
+
+        {createError && (
+          <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
+            Error creating team: {createError}
           </div>
         )}
 

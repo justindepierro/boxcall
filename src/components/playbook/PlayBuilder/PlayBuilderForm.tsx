@@ -14,6 +14,8 @@ import {
 interface PlayBuilderFormProps {
   playData: Partial<Play>;
   onUpdateField: (field: keyof Play, value: string | number | boolean) => void;
+  duplicateName?: boolean;
+  showErrors?: boolean; // show validation hints after attempted save
 }
 
 // Shared form styles for consistency
@@ -37,6 +39,8 @@ const formStyles = {
 export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
   playData,
   onUpdateField,
+  duplicateName = false,
+  showErrors = false,
 }) => {
   // Helper for normalized text input handling
   const handleNormalizedBlur = (
@@ -74,12 +78,23 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
                 )
               }
               placeholder="Four Verticals, Power O, Quick Slant..."
-              className={formStyles.input}
+              className={`${formStyles.input} ${showErrors && (!playData.play_name?.trim() || duplicateName) ? "border-red-400 focus:border-red-500 focus:ring-red-500" : ""}`}
               required
             />
             <p className={formStyles.helpText}>
               The primary name coaches and players will use
             </p>
+            {showErrors && !playData.play_name?.trim() && (
+              <p className="text-xs text-red-600 mt-1">
+                Play name is required.
+              </p>
+            )}
+            {showErrors && duplicateName && playData.play_name?.trim() && (
+              <p className="text-xs text-red-600 mt-1">
+                A play with this (normalized) name already exists in your
+                playbook.
+              </p>
+            )}
           </div>
 
           {/* Play Type - Required */}
@@ -90,7 +105,7 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
             <select
               value={playData.p_type || ""}
               onChange={(e) => onUpdateField("p_type", e.target.value)}
-              className={formStyles.select}
+              className={`${formStyles.select} ${showErrors && !playData.p_type ? "border-red-400 focus:border-red-500 focus:ring-red-500" : ""}`}
               required
             >
               <option value="">Choose play type</option>
@@ -99,6 +114,11 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
               <option value="RPO">RPO (Run-Pass Option)</option>
               <option value="Play Action">Play Action</option>
             </select>
+            {showErrors && !playData.p_type && (
+              <p className="text-xs text-red-600 mt-1">
+                Play type is required.
+              </p>
+            )}
           </div>
 
           {/* Formation - Required */}
@@ -118,9 +138,14 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
                 )
               }
               placeholder="Shotgun, I-Formation, Singleback..."
-              className={formStyles.input}
+              className={`${formStyles.input} ${showErrors && !playData.formation?.trim() ? "border-red-400 focus:border-red-500 focus:ring-red-500" : ""}`}
               required
             />
+            {showErrors && !playData.formation?.trim() && (
+              <p className="text-xs text-red-600 mt-1">
+                Formation is required.
+              </p>
+            )}
           </div>
 
           {/* Personnel Package */}

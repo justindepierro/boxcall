@@ -1,178 +1,189 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Icon } from "../ui/Icon/Icon";
+import type { IconName } from "../ui/Icon/Icon";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "../design-system";
 import { Button } from "../ui";
+import {
+  Capability,
+  getCapabilitiesForRole,
+  hasCapability,
+} from "../../services/capabilities/capabilityMap";
+import { telemetry } from "../../lib/telemetry";
+
 interface TeamQuickActionsProps {
   teamId: string;
   userRole: string;
 }
-/**
- * Team Quick Actions - Role-based team management shortcuts
- *
- * Features:
- * - Role-specific action buttons
- * - Team management shortcuts
- * - Quick access to team features
- * - Context-aware functionality
- */
+
+interface QuickActionConfig {
+  id: string;
+  label: string;
+  icon: IconName; // limited to known icon set
+  variant?: "primary" | "outline" | "ghost";
+  to?: string; // navigation target
+  onClick?: () => void;
+  requires: Capability | Capability[]; // capability gate
+}
+
+// Central action registry
+const ACTIONS: QuickActionConfig[] = [
+  {
+    id: "create_post",
+    label: "Send Announcement",
+    icon: "message",
+    variant: "primary",
+    onClick: () => console.log("action.create_post"),
+    requires: Capability.CREATE_POST,
+  },
+  {
+    id: "award_stickers",
+    label: "Award Helmet Stickers",
+    icon: "award",
+    variant: "outline",
+    onClick: () => console.log("action.award_stickers"),
+    requires: Capability.AWARD_STICKERS,
+  },
+  {
+    id: "practice_schedule",
+    label: "Practice Schedule",
+    icon: "award", // placeholder until schedule feature
+    variant: "outline",
+    requires: Capability.VIEW_PRACTICE_SCHEDULE,
+    to: "practice",
+  },
+  {
+    id: "upload_film",
+    label: "Upload Game Film",
+    icon: "upload",
+    variant: "outline",
+    onClick: () => console.log("action.upload_film"),
+    requires: Capability.UPLOAD_FILM,
+  },
+  {
+    id: "manage_roster",
+    label: "Manage Roster",
+    icon: "users",
+    variant: "outline",
+    onClick: () => console.log("action.manage_roster"),
+    requires: Capability.MANAGE_ROSTER,
+  },
+  {
+    id: "team_settings",
+    label: "Team Settings",
+    icon: "settings",
+    variant: "ghost",
+    to: "settings",
+    requires: Capability.MANAGE_TEAM_SETTINGS,
+  },
+  // Player / shared
+  {
+    id: "view_stats",
+    label: "My Team Stats",
+    icon: "bar-chart",
+    variant: "primary",
+    onClick: () => console.log("action.view_stats"),
+    requires: Capability.VIEW_STATS,
+  },
+  {
+    id: "study_plays",
+    label: "Study Team Plays",
+    icon: "book",
+    variant: "outline",
+    onClick: () => console.log("action.study_plays"),
+    requires: Capability.STUDY_PLAYS,
+  },
+  {
+    id: "rsvp_events",
+    label: "RSVP to Events",
+    icon: "calendar",
+    variant: "outline",
+    onClick: () => console.log("action.rsvp_events"),
+    requires: Capability.RSVP_EVENT,
+  },
+  {
+    id: "team_chat",
+    label: "Team Chat",
+    icon: "message",
+    variant: "ghost",
+    onClick: () => console.log("action.team_chat"),
+    requires: Capability.TEAM_CHAT,
+  },
+  // Family
+  {
+    id: "player_progress",
+    label: "Player Progress",
+    icon: "trending-up",
+    variant: "primary",
+    onClick: () => console.log("action.player_progress"),
+    requires: Capability.PLAYER_PROGRESS,
+  },
+  {
+    id: "team_photos",
+    label: "Team Photos",
+    icon: "folder",
+    variant: "ghost",
+    onClick: () => console.log("action.team_photos"),
+    requires: Capability.TEAM_PHOTOS,
+  },
+];
+
 export const TeamQuickActions: React.FC<TeamQuickActionsProps> = ({
   teamId,
   userRole,
 }) => {
   const navigate = useNavigate();
-  const isCoach = userRole === "coach" || userRole === "head_coach";
-  const isPlayer = userRole === "player";
-  const isFamily = userRole === "family";
-  if (isCoach) {
+
+  const capabilities = useMemo(
+    () => getCapabilitiesForRole(userRole),
+    [userRole]
+  );
+
+  const visibleActions = useMemo(
+    () =>
+      ACTIONS.filter((a) => hasCapability(capabilities, a.requires)).map(
+        (a) => ({ ...a })
+      ),
+    [capabilities]
+  );
+
+  if (visibleActions.length === 0) {
     return (
-      <div className="space-y-3">
-        <Button
-          variant="primary"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => console.log("Send Announcement")}
-        >
-          <span className="mr-2">📢</span>
-          Send Announcement
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => console.log("Award Stickers")}
-        >
-          <span className="mr-2">⭐</span>
-          Award Helmet Stickers
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => navigate(`/team/${teamId}/practice`)}
-        >
-          <Icon name="award" className="w-5 h-5" />
-          Practice Schedule
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => console.log("Upload Film")}
-        >
-          <span className="mr-2">🎬</span>
-          Upload Game Film
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => console.log("Manage Roster")}
-        >
-          <span className="mr-2">👥</span>
-          Manage Roster
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => console.log("Team Settings")}
-        >
-          <span className="mr-2">⚙️</span>
-          Team Settings
-        </Button>
+      <div className="text-center py-4">
+        <Typography variant="body-sm" color="muted">
+          No actions available for your role.
+        </Typography>
       </div>
     );
   }
-  if (isPlayer) {
-    return (
-      <div className="space-y-3">
-        <Button
-          variant="primary"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => console.log("View Stats")}
-        >
-          <Icon name="bar-chart" className="w-5 h-5" />
-          My Team Stats
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => console.log("Study Plays")}
-        >
-          <Icon name="clipboard" className="w-5 h-5" />
-          Study Team Plays
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => console.log("RSVP Events")}
-        >
-          <Icon name="check-circle" className="w-5 h-5" />
-          RSVP to Events
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => console.log("Team Chat")}
-        >
-          <span className="mr-2">💬</span>
-          Team Chat
-        </Button>
-      </div>
-    );
-  }
-  if (isFamily) {
-    return (
-      <div className="space-y-3">
-        <Button
-          variant="primary"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => console.log("Player Progress")}
-        >
-          <Icon name="trending-up" className="w-5 h-5" />
-          Player Progress
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => console.log("RSVP Events")}
-        >
-          <Icon name="check-circle" className="w-5 h-5" />
-          RSVP to Events
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => console.log("Message Coach")}
-        >
-          <span className="mr-2">💬</span>
-          Message Coach
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-start"
-          onClick={() => console.log("Team Photos")}
-        >
-          <span className="mr-2">📸</span>
-          Team Photos
-        </Button>
-      </div>
-    );
-  }
+
+  const handleClick = (action: QuickActionConfig) => {
+    telemetry.track("quick_action.click", {
+      id: action.id,
+      teamId,
+      role: userRole,
+    });
+    if (action.to) {
+      navigate(`/team/${teamId}/${action.to}`);
+    } else if (action.onClick) {
+      action.onClick();
+    }
+  };
+
   return (
-    <div className="text-center py-4">
-      <Typography variant="body-sm" color="muted">
-        No actions available for your role.
-      </Typography>
+    <div className="space-y-3">
+      {visibleActions.map((a) => (
+        <Button
+          key={a.id}
+          variant={a.variant || "outline"}
+          size="sm"
+          className="w-full justify-start"
+          onClick={() => handleClick(a)}
+        >
+          <Icon name={a.icon} className="w-5 h-5 mr-2" />
+          {a.label}
+        </Button>
+      ))}
     </div>
   );
 };
