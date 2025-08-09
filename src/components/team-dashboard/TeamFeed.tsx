@@ -8,6 +8,7 @@ import { Button } from "../ui/Button/Button";
 import { Modal } from "../ui/Modal/Modal";
 import { TextArea } from "../ui/TextArea";
 import { useToast } from "../../hooks/useToast";
+import { telemetry } from "../../lib/telemetry";
 
 interface TeamFeedProps {
   teamId: string;
@@ -36,6 +37,9 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
     try {
       await createPost(content.trim());
       toast.success("Post created");
+      if (posts.length === 0) {
+        telemetry.track("post.first", { teamId });
+      }
       setOpen(false);
       setContent("");
     } catch (e) {
@@ -162,7 +166,10 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
         </Modal>
       )}
       {isLoading && <div className="text-sm text-gray-500">Loading posts...</div>}
-      <ul className="space-y-3">
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {posts.length ? `${posts.length} posts loaded` : "No posts"}
+      </div>
+      <ul className="space-y-3" aria-label="Posts list">
         {posts.map(p => (
           <li key={p.id} className="rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
             <div className="flex items-start justify-between gap-4">
