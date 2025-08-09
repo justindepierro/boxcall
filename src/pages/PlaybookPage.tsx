@@ -4,7 +4,7 @@ import { PlayGrid } from "../components/playbook/PlayGrid";
 import { PlaybookGlossary } from "../components/playbook/PlaybookGlossary";
 import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
 import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
-import { StreamlinedPlayBuilder } from "../components/playbook/PlayBuilder/StreamlinedPlayBuilder";
+import { PlayBuilderCore } from "../components/playbook/PlayBuilder";
 import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal";
 import { AdvancedSearchBar } from "../components/playbook/AdvancedSearchBar";
 import { PracticeScriptService } from "../services/practiceScriptService";
@@ -522,7 +522,8 @@ export const PlaybookPage: React.FC = () => {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex gap-6">{/* Reduced from gap-8 to gap-6 */}
+        <div className="flex gap-6">
+          {/* Reduced from gap-8 to gap-6 */}
           {/* Smart Playbook Glossary */}
           <aside className="w-80 flex-shrink-0">
             <PlaybookGlossary
@@ -654,7 +655,7 @@ export const PlaybookPage: React.FC = () => {
       </div>
       {/* Modals */}
       {state.showBuilder && (
-        <StreamlinedPlayBuilder
+        <PlayBuilderCore
           isOpen={state.showBuilder}
           onClose={handleCloseBuilder}
           onSave={handleSavePlay}

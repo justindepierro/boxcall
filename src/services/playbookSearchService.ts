@@ -42,7 +42,10 @@ export class PlaybookSearchService {
       label: "Red Zone",
       description: "Plays designed for red zone (inside 20 yard line)",
       filter: (play) =>
-        play.tags?.includes("red-zone") ||
+        play.ftag1?.toLowerCase().includes("red-zone") ||
+        play.ftag2?.toLowerCase().includes("red-zone") ||
+        play.p_tag1?.toLowerCase().includes("red-zone") ||
+        play.p_tag2?.toLowerCase().includes("red-zone") ||
         play.notes?.toLowerCase().includes("red zone") ||
         play.play_name.toLowerCase().includes("goal"),
       color: "red",
@@ -53,7 +56,10 @@ export class PlaybookSearchService {
       label: "Goal Line",
       description: "Short yardage plays for goal line situations",
       filter: (play) =>
-        play.tags?.includes("goal-line") ||
+        play.ftag1?.toLowerCase().includes("goal-line") ||
+        play.ftag2?.toLowerCase().includes("goal-line") ||
+        play.p_tag1?.toLowerCase().includes("goal-line") ||
+        play.p_tag2?.toLowerCase().includes("goal-line") ||
         play.notes?.toLowerCase().includes("goal line") ||
         play.pref_dis === "1-2",
       color: "green",
@@ -64,7 +70,10 @@ export class PlaybookSearchService {
       label: "2-Minute",
       description: "Hurry-up offense for 2-minute drill",
       filter: (play) =>
-        (play.tags?.includes("two-minute") ?? false) ||
+        play.ftag1?.toLowerCase().includes("two-minute") ||
+        play.ftag2?.toLowerCase().includes("two-minute") ||
+        play.p_tag1?.toLowerCase().includes("two-minute") ||
+        play.p_tag2?.toLowerCase().includes("two-minute") ||
         (play.notes?.toLowerCase().includes("hurry") ?? false) ||
         (play.notes?.toLowerCase().includes("2-minute") ?? false),
       color: "orange",
@@ -76,7 +85,10 @@ export class PlaybookSearchService {
       description: "Third down conversion plays",
       filter: (play) =>
         play.pref_down === "3" ||
-        (play.tags?.includes("third-down") ?? false) ||
+        play.ftag1?.toLowerCase().includes("third-down") ||
+        play.ftag2?.toLowerCase().includes("third-down") ||
+        play.p_tag1?.toLowerCase().includes("third-down") ||
+        play.p_tag2?.toLowerCase().includes("third-down") ||
         (play.notes?.toLowerCase().includes("3rd") ?? false),
       color: "blue",
       icon: "🔄",
@@ -85,7 +97,15 @@ export class PlaybookSearchService {
       id: "high-success",
       label: "High Success",
       description: "Plays with high success rates (>80%)",
-      filter: (play) => (play.success_rate || 0) > 80,
+      filter: (play) => {
+        // Calculate success rate from times_called and times_successful
+        if (play.times_called > 0) {
+          const successRate = (play.times_successful / play.times_called) * 100;
+          return successRate > 80;
+        }
+        // For plays with high confidence but no game data yet
+        return play.confidence_base > 85;
+      },
       color: "green",
       icon: "⭐",
     },
