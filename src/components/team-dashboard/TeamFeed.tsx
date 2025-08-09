@@ -3,6 +3,7 @@ import { Typography } from "../design-system";
 import { Icon } from "../ui/Icon/Icon";
 import { OnboardingHint } from "../onboarding/OnboardingHint";
 import { useTeamPosts, useCreatePost, usePinPost } from "../../hooks/teamDataHooks";
+import type { TeamPostListItem } from "../../services/postsService";
 import { Capability, getCapabilitiesForRole, hasCapability } from "../../services/capabilities/capabilityMap";
 import { Button } from "../ui/Button/Button";
 import { Modal } from "../ui/Modal/Modal";
@@ -15,8 +16,52 @@ interface TeamFeedProps {
   userRole: string;
 }
 
+interface PostItemProps {
+  id: string; content: string; created_at: string | null; is_pinned: boolean | null; canPin: boolean; onTogglePin: (id: string, current: boolean | null) => void;
+}
+
+const PostItem: React.FC<PostItemProps> = ({ id, content, created_at, is_pinned, canPin, onTogglePin }) => {
+  const [expanded, setExpanded] = useState(false);
+  const MAX = 280;
+  const over = content.length > MAX;
+  const display = over && !expanded ? content.slice(0, MAX) + "…" : content;
+  return (
+    <li className="rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <p className="text-sm text-gray-800 dark:text-gray-100 whitespace-pre-wrap">{display}</p>
+          {over && (
+            <button
+              type="button"
+              onClick={() => setExpanded(e => !e)}
+              className="mt-1 text-xs text-blue-600 dark:text-blue-400 underline"
+              aria-expanded={expanded}
+            >
+              {expanded ? "Show less" : "Read more"}
+            </button>
+          )}
+        </div>
+        {canPin && (
+          <button
+            onClick={() => onTogglePin(id, !!is_pinned)}
+            className={`text-xs px-2 py-1 rounded border transition-colors ${is_pinned ? "bg-amber-200 dark:bg-amber-600/30 border-amber-300 dark:border-amber-500 text-amber-800 dark:text-amber-200" : "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"}`}
+            aria-pressed={!!is_pinned}
+            aria-label={is_pinned ? "Unpin post" : "Pin post"}
+          >
+            {is_pinned ? "Pinned" : "Pin"}
+          </button>
+        )}
+      </div>
+      <div className="mt-2 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+        <span>{created_at ? new Date(created_at).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}</span>
+        {is_pinned && <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-300"><Icon name="star" size="sm" />Pinned</span>}
+      </div>
+    </li>
+  );
+};
+
 export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
-  const { data: posts = [], isLoading } = useTeamPosts(teamId);
+  const { data: posts = [], isLoading, error } = useTeamPosts(teamId) as { data: TeamPostListItem[] | undefined; isLoading: boolean; error: Error | null };
   const { mutateAsync: createPost, isPending: creating } = useCreatePost(teamId);
   const { mutate: pinMutate } = usePinPost(teamId);
   const [open, setOpen] = useState(false);
@@ -51,7 +96,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
     pinMutate({ postId: id, pin: !current });
   }
 
-  if (!isLoading && posts.length === 0) {
+  if (!isLoading && !error && posts.length === 0) {
     return (
       <div className="space-y-4">
         {canCreate && (
@@ -165,31 +210,53 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
           </form>
         </Modal>
       )}
-      {isLoading && <div className="text-sm text-gray-500">Loading posts...</div>}
+      {isLoading && (
+        <ul className="space-y-3" aria-hidden="true">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <li key={i} className="animate-pulse rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+              <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-5/6 mb-2" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-2/3" />
+            </li>
+          ))}
+        </ul>
+      )}
+    {!!error && (
+        <div className="rounded border border-red-200 dark:border-red-700 bg-red-50 dark:bg-red-900/30 p-4 text-sm text-red-700 dark:text-red-300">
+          Failed to load posts.
+          <button className="underline ml-1" onClick={() => window.location.reload()}>Retry</button>
+      {error.message && (<div className="mt-1 text-xs opacity-75">{error.message}</div>)}
+        </div>
+      )}
+      {canCreate && !isLoading && !error && posts.length > 0 && (
+        <div className="border border-gray-200 dark:border-gray-700 rounded p-4 bg-white dark:bg-gray-800" aria-label="Quick post composer">
+          <form onSubmit={handleSubmit} className="space-y-3" noValidate>
+            <TextArea
+              id="inline-composer"
+              value={content}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
+              placeholder="Share an update..."
+              rows={3}
+            />
+            <div className="flex justify-end gap-2">
+              <Button type="submit" size="sm" variant="primary" disabled={creating || !content.trim()}>{creating ? "Posting..." : "Post"}</Button>
+            </div>
+          </form>
+        </div>
+      )}
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {posts.length ? `${posts.length} posts loaded` : "No posts"}
       </div>
       <ul className="space-y-3" aria-label="Posts list">
-        {posts.map(p => (
-          <li key={p.id} className="rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
-            <div className="flex items-start justify-between gap-4">
-              <p className="text-sm text-gray-800 dark:text-gray-100 whitespace-pre-wrap">{p.content}</p>
-              {canPin && (
-                <button
-                  onClick={() => togglePin(p.id, !!p.is_pinned)}
-                  className={`text-xs px-2 py-1 rounded border transition-colors ${p.is_pinned ? "bg-amber-200 dark:bg-amber-600/30 border-amber-300 dark:border-amber-500 text-amber-800 dark:text-amber-200" : "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"}`}
-                  aria-pressed={!!p.is_pinned}
-                  aria-label={p.is_pinned ? "Unpin post" : "Pin post"}
-                >
-                  {p.is_pinned ? "Pinned" : "Pin"}
-                </button>
-              )}
-            </div>
-            <div className="mt-2 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-              <span>{p.created_at ? new Date(p.created_at).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}</span>
-              {p.is_pinned && <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-300"><Icon name="star" size="sm" />Pinned</span>}
-            </div>
-          </li>
+  {posts.map((p: TeamPostListItem) => (
+          <PostItem
+            key={p.id}
+            id={p.id}
+            content={p.content}
+            created_at={p.created_at}
+            is_pinned={p.is_pinned}
+            canPin={canPin}
+            onTogglePin={togglePin}
+          />
         ))}
       </ul>
     </div>
