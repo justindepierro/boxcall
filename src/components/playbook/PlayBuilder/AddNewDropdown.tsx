@@ -78,13 +78,13 @@ export const AddNewDropdown: React.FC<AddNewDropdownProps> = ({
             onChange={(e) => setCustomValue(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder={`Enter new ${label.toLowerCase()}...`}
-            className="flex-1 px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="flex-1 px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
             autoFocus
           />
           <button
             type="button"
             onClick={handleCustomSubmit}
-            className="p-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 focus:ring-2 focus:ring-emerald-500"
+            className="p-2 bg-jade-500 text-white rounded-md hover:bg-jade-600 focus:ring-2 focus:ring-jade-500"
             title="Add"
           >
             <Check className="h-4 w-4" />
@@ -102,7 +102,7 @@ export const AddNewDropdown: React.FC<AddNewDropdownProps> = ({
         <select
           value={value}
           onChange={handleSelectChange}
-          className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+          className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
         >
           <option value="">{placeholder}</option>
           {options.map((option) => (
@@ -113,7 +113,7 @@ export const AddNewDropdown: React.FC<AddNewDropdownProps> = ({
           {allowCustom && (
             <option
               value="__ADD_NEW__"
-              className="border-t border-slate-200 font-medium text-emerald-600"
+              className="border-t border-slate-200 font-medium text-jade-600"
             >
               + Add New {label}...
             </option>
@@ -123,7 +123,7 @@ export const AddNewDropdown: React.FC<AddNewDropdownProps> = ({
 
       {/* Show current custom value if it's not in the predefined options */}
       {value && !options.includes(value) && !showCustomInput && (
-        <p className="text-xs text-emerald-600 mt-1">
+        <p className="text-xs text-jade-600 mt-1">
           Custom {label.toLowerCase()}: "{value}"
         </p>
       )}

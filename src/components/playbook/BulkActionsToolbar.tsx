@@ -56,7 +56,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
 
           <button
             onClick={() => onBulkAction("add-to-practice")}
-            className="flex items-center space-x-1 px-3 py-1.5 text-sm text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded transition-colors"
+            className="flex items-center space-x-1 px-3 py-1.5 text-sm text-jade-600 hover:text-jade-700 hover:bg-jade-50 rounded transition-colors"
             title="Add to practice script"
           >
             <Plus className="h-4 w-4" />

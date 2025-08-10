@@ -190,7 +190,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       <div
         className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
           dragActive
-            ? "border-emerald-400 bg-emerald-50"
+            ? "border-jade-400 bg-jade-50"
             : "border-slate-300 hover:border-slate-400"
         }`}
         onDragEnter={handleDrag}
@@ -200,7 +200,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       >
         {isProcessing ? (
           <div className="space-y-4">
-            <Loader2 className="h-12 w-12 text-emerald-600 mx-auto animate-spin" />
+            <Loader2 className="h-12 w-12 text-jade-600 mx-auto animate-spin" />
             <p className="text-slate-600">Processing your CSV file...</p>
           </div>
         ) : (
@@ -209,7 +209,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <div>
               <p className="text-slate-600">
                 Drag and drop your CSV file here, or{" "}
-                <label className="text-emerald-600 hover:text-emerald-700 cursor-pointer font-medium">
+                <label className="text-jade-600 hover:text-jade-700 cursor-pointer font-medium">
                   browse to upload
                   <input
                     type="file"
@@ -533,7 +533,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             disabled={summary.validPlays === 0}
             className={`px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md ${
               summary.validPlays > 0
-                ? "bg-emerald-600 hover:bg-emerald-700"
+                ? "bg-jade-600 hover:bg-jade-700"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
           >
@@ -547,7 +547,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   const renderImportingStep = () => (
     <div className="text-center space-y-6">
       <div>
-        <Loader2 className="h-16 w-16 text-emerald-600 mx-auto mb-4 animate-spin" />
+        <Loader2 className="h-16 w-16 text-jade-600 mx-auto mb-4 animate-spin" />
         <h3 className="text-lg font-medium text-slate-900 mb-2">
           Importing Plays...
         </h3>
@@ -661,7 +661,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
       <button
         onClick={onClose}
-        className="px-6 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md hover:bg-emerald-700"
+        className="px-6 py-2 text-sm font-medium text-white bg-jade-600 border border-transparent rounded-md hover:bg-jade-700"
       >
         View Playbook
       </button>

@@ -146,7 +146,7 @@ const ComplexityProgress: React.FC<{ complexity: ComplexityMetrics }> = ({
       </div>
       <div className="w-full bg-gray-700 rounded-full h-1.5">
         <div
-          className="bg-emerald-500 h-1.5 rounded-full transition-all duration-300"
+          className="bg-jade-500 h-1.5 rounded-full transition-all duration-300"
           style={{ width: `${Math.min(progressPercent, 100)}%` }}
         />
       </div>

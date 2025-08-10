@@ -222,7 +222,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
           <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
             <div className="text-sm text-slate-500">
               {isValid ? (
-                <span className="text-emerald-600">✓ Ready to save</span>
+                <span className="text-jade-600">✓ Ready to save</span>
               ) : (
                 <span className="text-amber-600">
                   ⚠ Missing required fields
@@ -233,14 +233,14 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
             <div className="flex space-x-3">
               <button
                 onClick={handleCancel}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jade-500"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={!isValid}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:bg-slate-400 disabled:cursor-not-allowed"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-jade-600 border border-transparent rounded-md hover:bg-jade-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jade-500 disabled:bg-slate-400 disabled:cursor-not-allowed"
               >
                 <Save className="h-4 w-4 mr-2" />
                 {initialPlay?.id ? "Update Play" : "Create Play"}

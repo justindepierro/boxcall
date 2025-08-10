@@ -48,7 +48,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                   <span className="ml-2">• {selectedPlay.formation}</span>
                 )}
                 {selectedPlay.one_word_play && (
-                  <span className="ml-2 text-emerald-600">
+                  <span className="ml-2 text-jade-600">
                     • "{selectedPlay.one_word_play}"
                   </span>
                 )}
@@ -72,7 +72,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                 onClick={() => setViewMode(button.id)}
                 className={`flex items-center px-4 py-3 text-sm font-medium border-b-2 ${
                   viewMode === button.id
-                    ? "border-emerald-500 text-emerald-600"
+                    ? "border-jade-500 text-jade-600"
                     : "border-transparent text-slate-500 hover:text-slate-700"
                 }`}
               >
@@ -106,7 +106,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                             e.target.value
                           );
                         }}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
                         disabled
                       >
                         <option value="">Select a play (coming soon)</option>
@@ -116,7 +116,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                       <label className="flex items-center">
                         <input
                           type="checkbox"
-                          className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                          className="rounded border-slate-300 text-jade-600 focus:ring-jade-500"
                           defaultChecked
                         />
                         <span className="ml-2 text-sm text-slate-700">
@@ -128,7 +128,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                       <label className="flex items-center">
                         <input
                           type="checkbox"
-                          className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                          className="rounded border-slate-300 text-jade-600 focus:ring-jade-500"
                           defaultChecked
                         />
                         <span className="ml-2 text-sm text-slate-700">
@@ -140,7 +140,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                       <label className="flex items-center">
                         <input
                           type="checkbox"
-                          className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                          className="rounded border-slate-300 text-jade-600 focus:ring-jade-500"
                           defaultChecked
                         />
                         <span className="ml-2 text-sm text-slate-700">
@@ -233,7 +233,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                       <label className="block text-sm font-medium text-slate-700 mb-2">
                         Field Orientation
                       </label>
-                      <select className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                      <select className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500">
                         <option>Horizontal</option>
                         <option>Vertical</option>
                       </select>
@@ -242,7 +242,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                       <label className="block text-sm font-medium text-slate-700 mb-2">
                         Color Scheme
                       </label>
-                      <select className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                      <select className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500">
                         <option>Standard</option>
                         <option>High Contrast</option>
                         <option>Colorblind Friendly</option>
@@ -277,7 +277,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             </button>
             <button
               onClick={handleSave}
-              className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md hover:bg-emerald-700"
+              className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-jade-600 border border-transparent rounded-md hover:bg-jade-700"
             >
               <Save className="h-4 w-4 mr-2" />
               Save Diagram

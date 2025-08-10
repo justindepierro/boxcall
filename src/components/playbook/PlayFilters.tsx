@@ -47,7 +47,7 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
           {hasActiveFilters && (
             <button
               onClick={clearAllFilters}
-              className="text-sm text-emerald-600 hover:text-emerald-700 font-medium"
+              className="text-sm text-jade-600 hover:text-jade-700 font-medium"
             >
               Clear all
             </button>
@@ -86,7 +86,7 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
                   onChange={(e) =>
                     handleFilterUpdate("playType", e.target.value)
                   }
-                  className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300"
+                  className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-slate-300"
                 />
                 <span className="ml-2 text-sm text-slate-700">
                   {option.label}
@@ -111,7 +111,7 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
             onChange={(e) =>
               handleFilterUpdate("formation", e.target.value || undefined)
             }
-            className="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
           >
             <option value="">All Formations</option>
             {FORMATION_OPTIONS.map((formation) => (
@@ -132,7 +132,7 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
                 onChange={(e) =>
                   handleFilterUpdate("down", e.target.value || undefined)
                 }
-                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
               >
                 <option value="">Any Down</option>
                 {DOWN_OPTIONS.map((down) => (
@@ -151,7 +151,7 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
                 onChange={(e) =>
                   handleFilterUpdate("distance", e.target.value || undefined)
                 }
-                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
               >
                 <option value="">Any Distance</option>
                 {DISTANCE_OPTIONS.map((distance) => (
@@ -190,7 +190,7 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
                       newTags.length > 0 ? newTags : undefined
                     );
                   }}
-                  className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded"
+                  className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-slate-300 rounded"
                 />
                 <span className="ml-2 text-sm text-slate-700">{tag}</span>
               </label>

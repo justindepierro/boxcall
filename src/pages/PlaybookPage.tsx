@@ -369,7 +369,7 @@ export const PlaybookPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <FileText className="h-8 w-8 text-emerald-600 mr-3" />
+              <FileText className="h-8 w-8 text-jade-600 mr-3" />
               <div className="flex flex-col">
                 <h1 className="text-2xl font-bold text-slate-900">Playbook</h1>
                 {/* Progress indicator - key reward loop element */}
@@ -424,7 +424,7 @@ export const PlaybookPage: React.FC = () => {
               {/* Export button */}
               <button
                 onClick={handleExportCSV}
-                className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-200"
+                className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jade-500 transition-all duration-200"
               >
                 <Download className="h-4 w-4 mr-2" />
                 Export CSV
@@ -433,7 +433,7 @@ export const PlaybookPage: React.FC = () => {
               {/* Import button with subtle enhancement */}
               <button
                 onClick={handleOpenImport}
-                className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-200"
+                className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jade-500 transition-all duration-200"
               >
                 <Upload className="h-4 w-4 mr-2" />
                 Import CSV
@@ -445,7 +445,7 @@ export const PlaybookPage: React.FC = () => {
                   onClick={() => {
                     handleOpenBuilder();
                   }}
-                  className="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-emerald-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-200"
+                  className="inline-flex items-center px-4 py-2 bg-jade-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-jade-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jade-500 transition-all duration-200"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   New Play
@@ -547,7 +547,7 @@ export const PlaybookPage: React.FC = () => {
                   onClick={() => handleViewChange("playbook")}
                   className={`flex-1 flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                     state.currentView === "playbook"
-                      ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                      ? "bg-jade-100 text-jade-700 border border-jade-200"
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                   }`}
                 >
@@ -558,7 +558,7 @@ export const PlaybookPage: React.FC = () => {
                   onClick={() => handleViewChange("practice-script")}
                   className={`flex-1 flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                     state.currentView === "practice-script"
-                      ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                      ? "bg-jade-100 text-jade-700 border border-jade-200"
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                   }`}
                 >
@@ -569,7 +569,7 @@ export const PlaybookPage: React.FC = () => {
                   onClick={() => handleViewChange("game-plan")}
                   className={`flex-1 flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                     state.currentView === "game-plan"
-                      ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                      ? "bg-jade-100 text-jade-700 border border-jade-200"
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                   }`}
                 >
@@ -638,7 +638,7 @@ export const PlaybookPage: React.FC = () => {
                     Create timelines, add repetitions, and export professional
                     practice scripts.
                   </p>
-                  <button className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors">
+                  <button className="bg-jade-600 text-white px-4 py-2 rounded-md hover:bg-jade-700 transition-colors">
                     Create New Practice Script
                   </button>
                 </div>
@@ -656,7 +656,7 @@ export const PlaybookPage: React.FC = () => {
                     Organize plays by game situations using Brian Billick
                     methodology. Down & Distance, Red Zone, Goal Line, and more.
                   </p>
-                  <button className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors">
+                  <button className="bg-jade-600 text-white px-4 py-2 rounded-md hover:bg-jade-700 transition-colors">
                     Create New Game Plan
                   </button>
                 </div>
@@ -706,7 +706,7 @@ export const PlaybookPage: React.FC = () => {
               onClick={() =>
                 setState((prev) => ({ ...prev, showCelebration: false }))
               }
-              className="mt-6 px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              className="mt-6 px-6 py-2 bg-jade-600 text-white rounded-lg hover:bg-jade-700 transition-colors"
             >
               Awesome!
             </button>

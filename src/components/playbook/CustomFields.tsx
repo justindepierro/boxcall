@@ -101,7 +101,7 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
   const renderFieldInput = (definition: CustomFieldDefinition) => {
     const value = values[definition.field_name];
     const commonClasses =
-      "w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500";
+      "w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500";
 
     switch (definition.field_type) {
       case "text":
@@ -173,7 +173,7 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
               onChange={(e) =>
                 updateFieldValue(definition.field_name, e.target.checked)
               }
-              className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded"
+              className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-slate-300 rounded"
             />
             <span className="text-sm text-slate-700">
               {definition.field_label}
@@ -217,7 +217,7 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
                       : selectedValues.filter((v) => v !== option);
                     updateFieldValue(definition.field_name, newValues);
                   }}
-                  className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded"
+                  className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-slate-300 rounded"
                 />
                 <span className="text-sm text-slate-700">{option}</span>
               </label>

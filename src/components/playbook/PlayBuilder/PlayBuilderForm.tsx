@@ -27,11 +27,11 @@ const formStyles = {
   label: "block text-sm font-medium text-slate-700 mb-1.5",
   required: "text-red-500 ml-1",
   input:
-    "playbuilder-input w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors",
+    "playbuilder-input w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 transition-colors",
   select:
-    "w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white transition-colors",
+    "w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 bg-white transition-colors",
   textarea:
-    "playbuilder-input w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none transition-colors",
+    "playbuilder-input w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 resize-none transition-colors",
   helpText: "text-xs text-slate-500 mt-1",
   grid: "grid grid-cols-1 md:grid-cols-2 gap-4",
   gridFull: "md:col-span-2",
@@ -299,7 +299,7 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
               type="checkbox"
               checked={playData.is_archived || false}
               onChange={(e) => onUpdateField("is_archived", e.target.checked)}
-              className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded"
+              className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-slate-300 rounded"
             />
             <div>
               <span className="text-sm font-medium text-slate-700">

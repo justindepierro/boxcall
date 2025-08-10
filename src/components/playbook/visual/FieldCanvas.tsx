@@ -289,7 +289,7 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
           <div>Zoom: {Math.round(zoom * 100)}%</div>
           <div>Field: 120 × 53.3 yards</div>
           {play && (
-            <div className="font-medium text-emerald-600">
+            <div className="font-medium text-jade-600">
               {play.formation} Formation
             </div>
           )}

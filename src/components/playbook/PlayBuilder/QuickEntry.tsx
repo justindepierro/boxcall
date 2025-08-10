@@ -142,7 +142,7 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
       <div className="mb-4">
         <button
           onClick={onToggle}
-          className="flex items-center space-x-2 text-emerald-600 hover:text-emerald-700 font-medium"
+          className="flex items-center space-x-2 text-jade-600 hover:text-jade-700 font-medium"
         >
           <svg
             className="w-4 h-4"
@@ -164,9 +164,9 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
   }
 
   return (
-    <div className="mb-6 bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+    <div className="mb-6 bg-jade-50 border border-jade-200 rounded-lg p-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-medium text-emerald-900 flex items-center space-x-2">
+        <h3 className="text-lg font-medium text-jade-900 flex items-center space-x-2">
           <svg
             className="w-5 h-5"
             fill="none"
@@ -184,7 +184,7 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
         </h3>
         <button
           onClick={onToggle}
-          className="text-emerald-600 hover:text-emerald-700"
+          className="text-jade-600 hover:text-jade-700"
         >
           <svg
             className="w-5 h-5"
@@ -204,7 +204,7 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
 
       <div className="space-y-3">
         <div>
-          <label className="block text-sm font-medium text-emerald-700 mb-2">
+          <label className="block text-sm font-medium text-jade-700 mb-2">
             Enter play details separated by | or comma:
           </label>
           <input
@@ -213,30 +213,30 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
             onChange={(e) => setQuickInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Power O | I-Form | Run | 21 Personnel"
-            className="playbuilder-input w-full px-4 py-3 bg-white border-2 border-emerald-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
+            className="playbuilder-input w-full px-4 py-3 bg-white border-2 border-jade-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 text-base"
             autoFocus
           />
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="text-sm text-emerald-600">
+          <div className="text-sm text-jade-600">
             <div className="font-medium mb-1">Examples:</div>
             <div className="space-y-1 text-xs">
               <div>
                 •{" "}
-                <code className="bg-emerald-100 px-1 rounded">
+                <code className="bg-jade-100 px-1 rounded">
                   Four Verticals | Shotgun | Pass | 11
                 </code>
               </div>
               <div>
                 •{" "}
-                <code className="bg-emerald-100 px-1 rounded">
+                <code className="bg-jade-100 px-1 rounded">
                   Power O, I-Form, Run, 21 Personnel
                 </code>
               </div>
               <div>
                 •{" "}
-                <code className="bg-emerald-100 px-1 rounded">
+                <code className="bg-jade-100 px-1 rounded">
                   Quick Slant | Gun | Pass
                 </code>
               </div>
@@ -246,21 +246,21 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
           <div className="flex space-x-2">
             <button
               onClick={() => setQuickInput("")}
-              className="px-3 py-1 text-sm text-emerald-600 hover:text-emerald-700 border border-emerald-300 rounded-md hover:bg-emerald-50"
+              className="px-3 py-1 text-sm text-jade-600 hover:text-jade-700 border border-jade-300 rounded-md hover:bg-jade-50"
             >
               Clear
             </button>
             <button
               onClick={handleQuickSubmit}
               disabled={!quickInput.trim()}
-              className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="px-4 py-2 bg-jade-600 text-white rounded-md hover:bg-jade-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               Parse & Fill ⚡
             </button>
           </div>
         </div>
 
-        <div className="text-xs text-emerald-600 bg-emerald-100 p-2 rounded-md">
+        <div className="text-xs text-jade-600 bg-jade-100 p-2 rounded-md">
           <strong>Pro Tip:</strong> Use Cmd+Enter (Mac) or Ctrl+Enter to quickly
           parse entries
         </div>

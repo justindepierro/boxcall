@@ -31,7 +31,7 @@ const DEFAULT_CATEGORIES = [
     id: "passes",
     name: "Passes",
     icon: Zap,
-    color: "bg-emerald-100 text-emerald-700 border-emerald-200",
+    color: "bg-jade-100 text-jade-700 border-jade-200",
     subcategories: [
       "Quick Game",
       "Intermediate",
@@ -245,7 +245,7 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
             plays total
           </span>
           <span className="flex items-center">
-            <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1"></div>
+            <div className="w-1.5 h-1.5 bg-jade-400 rounded-full mr-1"></div>
             Active
           </span>
         </div>

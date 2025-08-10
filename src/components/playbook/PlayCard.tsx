@@ -368,7 +368,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     </button>
                     <button
                       onClick={() => onAddToGamePlan?.(play)}
-                      className="inline-flex items-center px-3 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-lg text-xs font-medium transition-colors"
+                      className="inline-flex items-center px-3 py-1.5 bg-jade-50 text-jade-700 hover:bg-jade-100 rounded-lg text-xs font-medium transition-colors"
                       title="Add this play to a game plan"
                     >
                       <Gamepad2 className="h-3 w-3 mr-1" />

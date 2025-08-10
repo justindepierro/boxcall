@@ -168,7 +168,7 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
           onFocus={handleInputFocus}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="w-full px-3 py-2 pr-10 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white"
+          className="w-full px-3 py-2 pr-10 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 bg-white"
           autoComplete="off"
         />
 
@@ -188,10 +188,10 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
           <button
             type="button"
             onClick={handleAddNew}
-            className="absolute inset-y-0 right-8 flex items-center px-1 text-emerald-500 hover:text-emerald-600 z-10"
+            className="absolute inset-y-0 right-8 flex items-center px-1 text-jade-500 hover:text-jade-600 z-10"
             title={`Add new ${label.toLowerCase()}: "${inputValue}"`}
           >
-            <Plus className="h-4 w-4 bg-white rounded-full border border-emerald-500" />
+            <Plus className="h-4 w-4 bg-white rounded-full border border-jade-500" />
           </button>
         )}
       </div>
@@ -206,8 +206,8 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
                   key={option}
                   type="button"
                   onClick={() => handleOptionClick(option)}
-                  className={`w-full px-3 py-2 text-left hover:bg-emerald-50 focus:bg-emerald-50 focus:outline-none ${
-                    index === highlightedIndex ? "bg-emerald-50" : ""
+                  className={`w-full px-3 py-2 text-left hover:bg-jade-50 focus:bg-jade-50 focus:outline-none ${
+                    index === highlightedIndex ? "bg-jade-50" : ""
                   }`}
                 >
                   {option}
@@ -221,7 +221,7 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
                   <button
                     type="button"
                     onClick={handleAddNew}
-                    className="w-full px-3 py-2 text-left text-emerald-600 hover:bg-emerald-50 focus:bg-emerald-50 focus:outline-none font-medium flex items-center"
+                    className="w-full px-3 py-2 text-left text-jade-600 hover:bg-jade-50 focus:bg-jade-50 focus:outline-none font-medium flex items-center"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Add "{inputValue}"
@@ -235,7 +235,7 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
                 <button
                   type="button"
                   onClick={handleAddNew}
-                  className="w-full text-left text-emerald-600 hover:text-emerald-700 font-medium flex items-center"
+                  className="w-full text-left text-jade-600 hover:text-jade-700 font-medium flex items-center"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Add "{inputValue}"
@@ -250,7 +250,7 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
 
       {/* Show current custom value indicator */}
       {value && !options.includes(value) && (
-        <p className="text-xs text-emerald-600 mt-1 flex items-center">
+        <p className="text-xs text-jade-600 mt-1 flex items-center">
           <Check className="h-3 w-3 mr-1" />
           Custom {label.toLowerCase()}: "{value}"
         </p>

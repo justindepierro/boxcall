@@ -28,7 +28,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
               <div className="mt-2">
                 <div className="w-full bg-slate-200 rounded-full h-2">
                   <div
-                    className="bg-emerald-600 h-2 rounded-full"
+                    className="bg-jade-600 h-2 rounded-full"
                     style={{ width: "16.67%" }}
                   />
                 </div>
@@ -57,7 +57,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                     <input
                       type="text"
                       placeholder="e.g., Smash Concept, Traffic, Corndog"
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
                     />
                   </div>
                   <div>
@@ -74,7 +74,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                             type="radio"
                             name="playType"
                             value={type}
-                            className="h-4 w-4 text-emerald-600 focus:ring-emerald-500"
+                            className="h-4 w-4 text-jade-600 focus:ring-jade-500"
                           />
                           <span className="ml-2 text-sm font-medium text-slate-700">
                             {type}
@@ -90,7 +90,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                     <input
                       type="text"
                       placeholder='e.g., "Corndog", "Traffic", "Alpha"'
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
                     />
                     <p className="mt-1 text-xs text-slate-500">
                       Simple word or code for quick communication during games
@@ -146,7 +146,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                 <Save className="h-4 w-4 mr-2" />
                 Save Draft
               </button>
-              <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-md hover:bg-emerald-700">
+              <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-jade-600 border border-transparent rounded-md hover:bg-jade-700">
                 Next
                 <ArrowRight className="h-4 w-4 ml-2" />
               </button>
