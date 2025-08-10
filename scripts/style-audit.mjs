@@ -44,6 +44,8 @@ const metrics = {
   whiteOnWhiteInteractions: [],
   tooltipInverseTotal: 0,
   tooltipInverseSurface: 0,
+  popoverInverseTotal: 0,
+  popoverInverseSurface: 0,
 };
 
 const brandPatterns = [
@@ -74,6 +76,16 @@ for (const file of files) {
         lineEnd === -1 ? undefined : lineEnd
       );
       if (/surface-inverse/.test(line)) metrics.tooltipInverseSurface++;
+    }
+  }
+  if (/role=\"dialog\"/.test(content) && /popover/.test(file)) {
+    const matches = [...content.matchAll(/role=\"dialog\"/g)];
+    metrics.popoverInverseTotal += matches.length;
+    for (const m of matches) {
+      const lineStart = content.lastIndexOf("\n", m.index) + 1;
+      const lineEnd = content.indexOf("\n", m.index);
+      const line = content.slice(lineStart, lineEnd === -1 ? undefined : lineEnd);
+      if (/surface-inverse/.test(line)) metrics.popoverInverseSurface++;
     }
   }
   // text-white occurrences
@@ -200,6 +212,10 @@ mdLines.push(
       [
         "Tooltip Inverse Adoption",
         `${metrics.tooltipInverseSurface}/${metrics.tooltipInverseTotal}`,
+      ],
+      [
+        "Popover Inverse Adoption",
+        `${metrics.popoverInverseSurface}/${metrics.popoverInverseTotal}`,
       ],
     ],
     ["Metric", "Value"]

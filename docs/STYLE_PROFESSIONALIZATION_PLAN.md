@@ -55,7 +55,7 @@
 | ----- | ---------------------------------------------- | ----------------------------- | ---------------------------------------------------------------------- |
 | B1    | Typography sweep codemod                       | All headings (h1–h5)          | 95% adoption                                                           |
 | B2    | Badge & Tag primitives                         | Status chips, filters, counts | 100% Tag adoption (0 inline pills) + Badge canonical variants complete |
-| B3    | Tooltip & Popover refactor (`surface-inverse`) | ComplexityBadge, menus, hints | 0 raw `bg-gray-900`                                                    |
+| B3    | Tooltip & Popover refactor (`surface-inverse`) | ComplexityBadge, menus, hints | Tooltip & Popover primitives added; inverse adoption metric tracking  |
 | B4    | Button variant audit & tighten spacing         | Variant map + docs            | No variant drift                                                       |
 | B5    | IconButton variant alignment                   | Danger/ghost/subtle mapping   | Shared interaction tokens                                              |
 | B6    | Add `surface-subtle-hover` token + class       | Row/list hovers               | Replace interim row-hover                                              |
@@ -124,7 +124,7 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 - [x] Add CI gate: fail if raw utility headings / `text-white`; soft baseline watch for raw container `bg-white` (script `style:gate`).
 - [x] Tag primitive rollout (replaced all inline pills) + CI gate for new inline pill patterns.
 - [ ] Draft Badge primitive API + sample variants (neutral, accent, info, danger) and replace any heavy status chips.
-- [ ] Implement tooltip / popover inverse surface (use `surface-inverse`, elevation-popover if needed).
+- [x] Implement tooltip / popover inverse surface (primitives added; rollout continuing).
 - [ ] Extend style-audit to log elevation usage counts & inverse adoption %.
 - [ ] Begin lint rule scaffold for surface enforcement (no raw bg-neutral on containers).
 
@@ -137,7 +137,7 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 - [x] Typography codemod enacted & 100% adoption.
 - [x] Tags unified (0 inline pills; Tag primitive in production).
 - [x] Badges standardized (canonical variants + guidelines doc).
-- [ ] Tooltips/popovers inverse surface.
+- [x] Tooltips/popovers inverse surface primitives (adoption rollout in progress).
 - [x] Row hover standard applied everywhere (interim).
 - [ ] CI gating active for unsafe surfaces & text colors.
 - [ ] Documentation updated (guide + contrast matrix).
@@ -157,7 +157,8 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 | 2025-08-10T17:45Z | Badge system refactored: canonical variants (neutral/info/success/warning/danger/accent/premium) with legacy mapping |
 | 2025-08-10T17:55Z | Added ESLint rules: legacy Badge variant warning + raw gradient guard (with decorative-gradient escape hatch)        |
 | 2025-08-10T18:05Z | Added `BADGE_TAG_GUIDELINES.md` and linked from plan + docs index; Acceptance checklist updated                      |
+| 2025-08-10T18:30Z | Added Tooltip + Popover components (surface-inverse), style-audit metrics extended (tooltip/popover inverse adoption) |
 
 ---
 
-_Last Updated: 2025-08-10T18:05:00Z_
+_Last Updated: 2025-08-10T18:30:00Z_
