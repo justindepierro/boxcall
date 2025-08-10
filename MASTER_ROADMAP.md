@@ -478,6 +478,200 @@ Optimization: Limit simultaneous custom field predicates to N (e.g., 6) initiall
 - multi_select stored as JSONB array of strings.
 - date: ISO8601 date-only; convert to YYYY-MM-DD strings.
 
+---
+
+## 19. STYLE & DESIGN SYSTEM CONSISTENCY AUDIT (NEW)
+
+Current State Findings (2025-08-10 Audit):
+| Domain | Issue | Examples | Severity | Action |
+|--------|-------|----------|----------|--------|
+| Surfaces | Residual raw gray utilities (`bg-gray-50`, `border-gray-200`) instead of semantic tokens | Practice timeline panels, legal pages, subscription panel | Med | Sweep & replace with `surface-*` + `border-subtle` (scriptable codemod) |
+| Typography | Mixed raw text-gray-600 / text-gray-800 and variant misalignment | Legacy legal/marketing pages | Med | Introduce `text-*` semantic tokens + lint rule ban raw gray text |
+| Spacing | Inconsistent `p-3 / p-4 / bc-card-padding` usage in similar card contexts | Dashboard cards vs roster panels | Low | Adopt spacing scale (xs, sm, md, lg) mapped to tokens; codemod normalization |
+| Iconography | Emoji + custom Icon mix | Some dashboard quick actions | Med | Replace emojis with standardized Icon or Badge; add lint disallow raw emoji in Button children (allow in content text) |
+| Color Contrast | A few low-contrast text-on-subtle surfaces in dark mode | Player list filters, subtle legend chips | Med | Add automated a11y contrast test (axe + palette matrix) |
+| Focus Styles | Some interactive elements rely on default outline only | Filter selects, timeline slider | Med | Implement design-system focus ring utility (`focus-visible:ring-brand`) |
+| Motion | Ad-hoc transitions (ease-linear / ease-in-out mix) | Buttons, tags | Low | Define motion tokens (duration-100/150/250, easing-standard) |
+| Deprecated Variants | `outline` removed but examples persisted | Button README (fixed) | Resolved | Guard test passes |
+
+Remediation Wave:
+
+1. Token Codemod: regex replace raw gray backgrounds/borders → semantic classes (generate diff report).
+2. Typography Sweep: create mapping doc (raw utility → variant) and apply transform.
+3. Contrast Test Harness: add vitest + axe pass for major pages; fail build < WCAG AA.
+4. Focus Ring Utility Implementation & Global Style Injection.
+5. Emoji Replacement Script + exceptions list (marketing copy allowed).
+6. Spacing Normalization: inventory tool to list divergent padding values for components of same role.
+
+Success Exit: Zero raw gray utilities; axe contrast score ≥ 90% pages; lint rule enforcement active.
+
+## 20. PERFORMANCE BOTTLENECK ANALYSIS & PLAN (NEW)
+
+Key Bundle Observations (latest build):
+| Chunk | Gzip Size | Notes |
+|-------|-----------|-------|
+| pdf-Cv0974nT.js | 500.68 kB | pdf generation heavy – candidate for dynamic import only when exporting |
+| calendar-DwUjuHII.js | 76.84 kB | Calendar shell + logic; could split controller hooks |
+| data-Cl6wD65s.js | 43.34 kB | Mixed service utilities – consider domain-sliced entrypoints |
+| ui-CBaEu6ih.js | 41.63 kB | Aggregated design system; evaluate tree-shaking & per-component entry |
+
+Runtime Hot Paths (suspected): Practice planner re-render cycles, PlayBuilder canvas interactions, search suggestion recomputations.
+
+Optimization Roadmap:
+
+1. Code Splitting: manualChunks for `pdf`, `calendar`, `playbuilder`, `team-settings`.
+2. Dynamic Import Gate: PDF export & heavy telemetry modules loaded on demand.
+3. React 18 Concurrency Prep: Introduce `<Suspense>` boundaries around heavy panels with skeleton states.
+4. Memoization Audit: Identify components with prop-stable children triggering renders (use why-did-you-render in dev flag mode).
+5. Web Vitals Collection (INP, LCP) → telemetry; set regression budget (INP delta > +15ms fails CI).
+6. Animation & Layout Shift: Replace layout-jumping conditional blocks with height-reserved skeleton wrappers.
+7. Asset Strategy: Preload critical icon subset; lazy load full icon registry (avoid dual dynamic + static import conflict by single strategy).
+8. Database Query Consolidation: Batch practice planner related fetches via RPC or supabase multi-select pattern.
+
+Metrics Targets Addendum:
+| Metric | Baseline (est) | Target | Measurement Method |
+|--------|----------------|--------|--------------------|
+| P95 Route Switch (Practice Planner) | ~1200ms | <700ms | nav timing + custom mark |
+| Largest Chunk (non-pdf) | 274.57 kB gzip | <180 kB | build stats diff |
+| Re-render Count (Planner initial load) | >40 | <15 | profiling flag script |
+
+## 21. MOBILE READINESS & RESPONSIVE STRATEGY (NEW)
+
+Gaps:
+
+- Some grid layouts overflow at <400px (Practice Planner modals, Team Settings forms).
+- Timeline slider not fully touch-optimized (hit target width).
+- Fixed padding causing vertical scroll friction in small viewports.
+
+Plan:
+
+1. Introduce `useResponsive()` hook (breakpoint booleans) to simplify conditional rendering.
+2. Compact Surface Density Tokens (spacing scale halves in compact mode).
+3. Mobile-First Modals: full-screen slide-up pattern for creation flows on <640px.
+4. Gesture Enhancements: swipe to delete / reorder blocks (future) using accessible drag handle.
+5. PWA Audit: add `apple-touch-icon`, maskable icons, offline fallback completeness.
+6. Form Field Optimization: `inputmode` and `autocomplete` attributes everywhere; numeric optimization for durations.
+7. Mobile Performance Budget: FCP < 2.5s mid-tier device (throttle preset) with bundle gating.
+
+## 22. DATABASE INTEGRATION & DATA QUALITY ENHANCEMENTS (NEW)
+
+Identified Issues:
+
+- Ad-hoc Supabase calls scattered; inconsistent error handling.
+- Lack of centralized retry/backoff & rate-limit detection.
+- Data duplication risk without universal canonicalization in Services.
+
+Service Layer Plan:
+
+1. Create `src/data/` domain folders (plays, practice, roster, recognition, calendar).
+2. Each domain exports: `fetch`, `mutate`, `subscribe` (where applicable), with canonicalization & validation.
+3. Introduce Zod schemas for inbound/outbound shapes (strip extraneous fields before state insertion).
+4. Global PostgREST Error Interpreter → normalized error codes (duplicate, permission, network, validation).
+5. Caching Policy Matrix: define staleTime / gcTime / refetch triggers per domain (React Query integration step).
+6. Data Quality Jobs: scheduled verification (duplicate_key conflicts, orphan references) – results logged to a telemetry table.
+
+Future-Proofing:
+
+- Prepare for multi-org scaling: partition large audit/event tables by month.
+- Add soft-delete strategy (deleted_at) for logical recovery where needed.
+
+## 23. FUTURE-PROOF ARCHITECTURE & DOMAIN LAYERING (NEW)
+
+Layer Goals:
+| Layer | Responsibility | Success Criteria |
+|-------|----------------|------------------|
+| UI Components | Stateless presentational | No direct Supabase calls; pure props |
+| Feature Controllers | Orchestrate data + actions | Limited to a single domain set each |
+| Data Services | Fetch/mutate/cache, canonicalization | 100% normalization before return |
+| Domain Models | Type-safe schema & invariants | Zod parse passes; no unknown fields |
+| Infrastructure | Auth, telemetry, config, error boundary | Pluggable, testable, minimal side effects |
+
+Action Steps:
+
+1. Introduce folder convention: `src/domains/<domain>/{model,service,queries,types}.ts`.
+2. Add barrel boundaries; lint rule banning cross-domain deep imports (must go via barrel).
+3. Event Bus Abstraction: decouple telemetry & domain events; supports feature toggles & analytics plugins.
+4. Migration Scripts Domain: shared helpers (dryRun wrapper, transactionalBatch) to standardize DDL operations.
+
+## 24. ACCESSIBILITY & INCLUSIVE DESIGN (NEW)
+
+Roadmap:
+
+1. Automated Axe + jest-dom a11y snapshot for core pages (play create, practice planner, dashboard).
+2. Keyboard Trap & Focus Management utilities (modal, off-canvas panels).
+3. Color Blind Safe Palette Validation: ensure tag & status colors pass 4.5:1 where text present.
+4. Reduced Motion Preference: disable non-essential transitions.
+5. ARIA Enhancements: live regions for async save states; progress indicators.
+6. Screen Reader Shortcuts: hidden help panel listing key actions.
+
+KPIs: a11y score (Lighthouse) ≥ 95, zero keyboard traps, automated suite green.
+
+## 25. OBSERVABILITY & TELEMETRY EXPANSION (NEW)
+
+Additions:
+
+- Error Taxonomy: `error.play.create.duplicate`, `error.practice.save.timeout`.
+- Client Trace Correlation: inject `x-trace-id` header in Supabase calls; propagate in events.
+- Performance Spans: simple manual span API bridging user interactions → network call timings.
+- Logging Policy: redact PII fields at source; structured JSON events.
+
+Dashboards (Phase 1): Play Create Funnel, Practice Planner Interaction Heatmap, Performance (INP, LCP trends), Error Rate by Category.
+
+## 26. SECURITY HARDENING & GOVERNANCE (NEW)
+
+Next Controls:
+
+1. Row-Level Ownership Assertions test suite (vitest hitting local supabase).
+2. System Audit Log Table (append-only) for sensitive mutations.
+3. Key Rotation Playbook (document + scripts for supabase anon/service keys).
+4. Secret Scanning pre-commit (gitleaks config minimal; integrated in CI).
+5. Dependency Risk Policy: weekly audit (npm audit --omit=dev --json diff) → report artifact.
+
+## 27. RELEASE ENGINEERING & TOOLING (NEW)
+
+Improvements:
+
+1. Preview Environments: branch → ephemeral deployment (Netlify/Vercel) with seeded demo data.
+2. Size Regress Guard: PR comment bot with bundle diff & INP delta.
+3. Visual Regression: lightweight chromatic-style story capture for core components (Button, Tag, Modal) – post semantic token stability.
+4. PR Quality Checklist Automation: ensure tests + type + lint + design guard all green before merge label allowed.
+5. Migration Safety Bot: enforces presence of dry-run plan & rollback steps in migration PR description.
+
+## 28. INNOVATION TRACKS (NEW)
+
+Opportunities:
+
+1. AI Assisted Play Naming: embed model suggestions based on formation/personnel (client prompt assembly, server scoring).
+2. Practice Efficiency Analytics: compute distribution of time allocation vs plan; highlight overtime sources.
+3. Injury / Fatigue Monitoring Integration (future external data ingestion).
+4. Predictive Install Planner: recommend next installs based on usage gaps + opponent tendencies (once data available).
+
+## 29. UPDATED KPI & METRIC ADDITIONS (NEW)
+
+| KPI                        | Definition                           | Target | Owner         |
+| -------------------------- | ------------------------------------ | ------ | ------------- |
+| A11y Score                 | Lighthouse average across key pages  | ≥95    | Frontend Lead |
+| Practice Planner INP       | P95 interaction latency              | <180ms | Perf Champion |
+| Raw Gray Drift             | Count of offenders snapshot          | 0      | Design System |
+| Domain Import Violations   | Lint rule hits / week                | 0      | Architecture  |
+| Data Duplication Incidents | duplicate_key violations             | 0      | Data Quality  |
+| Error Regression Time      | Mean time to resolve new error class | <24h   | Ops           |
+
+## 30. EXECUTION SEQUENCING (ADDITIONAL)
+
+Phase G (Design System Finalization): style sweep, focus rings, typography tokens, contrast tests.
+Phase H (Service Layer & Caching): domain services + React Query + error interpreter.
+Phase I (Performance & Concurrency): code splitting, suspense, INP optimization, asset strategy.
+Phase J (Observability & Security): span API, trace IDs, audit logs, secret scanning.
+Phase K (Accessibility & Mobile): axe suite, mobile modals, reduced motion, gesture improvements.
+Phase L (Innovation): AI naming MVP, practice analytics instrumentation.
+
+Exit Criteria (Cumulative): All earlier KPI targets on track; guard tests green (button, surface drift, contrast); service layer adoption ≥80% of queries; performance budgets enforced in CI.
+
+Changelog Additions:
+
+- 2025-08-10: Added Sections 19–30 (style audit, performance plan, mobile strategy, DB integration, architecture layering, accessibility, observability expansion, security hardening, release engineering, innovation, KPI extensions, execution sequencing).
+
 ### 18.9 Canonicalization Extension
 
 - Extend `canonicalizePlayInput` to ignore keys matching definition set; separate function `extractCustomFields(input, definitions)` that:
