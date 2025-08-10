@@ -1,0 +1,7 @@
+{
+  "createdAt": "2025-08-10T22:08:41.841Z",
+  "budgets": {
+    "largestNonPdfChunkGzipTarget": 184320,
+    "initialJsGzipTarget": 256000
+  }
+}
