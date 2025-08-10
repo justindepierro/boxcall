@@ -49,12 +49,12 @@
 
 \*Token class not yet added; functional standardization achieved via `row-hover` utility.
 
-### Phase B (Next Up)
+### Phase B (In Progress)
 
 | Order | Task                                           | Scope                         | Metric                    |
 | ----- | ---------------------------------------------- | ----------------------------- | ------------------------- |
 | B1    | Typography sweep codemod                       | All headings (h1–h5)          | 95% adoption              |
-| B2    | Badge & Tag primitives                         | Status chips, filters, counts | 0 inline pill styles      |
+| B2    | Badge & Tag primitives                         | Status chips, filters, counts | 100% Tag adoption (0 inline pills) |
 | B3    | Tooltip & Popover refactor (`surface-inverse`) | ComplexityBadge, menus, hints | 0 raw `bg-gray-900`       |
 | B4    | Button variant audit & tighten spacing         | Variant map + docs            | No variant drift          |
 | B5    | IconButton variant alignment                   | Danger/ghost/subtle mapping   | Shared interaction tokens |
@@ -101,15 +101,16 @@
 
 ## 5. Metrics & Gates (Snapshot 2025-08-10 Post Phase A)
 
-| Metric                                  | Previous (Est) | Current           | Gate Enable | Final Target |
-| --------------------------------------- | -------------- | ----------------- | ----------- | ------------ |
-| Raw `bg-white` (non-semantic container) | >50            | 0                 | <15         | 0            |
-| `surfaceCandidates` (open)              | 80+            | 25 (audit sample) | <25         | 0            |
-| Card elevation consistency              | <40%           | ~100%             | 100%        | 100%         |
-| Typography adoption                     | 0%             | 100%              | Gate now    | 100%         |
-| Tooltip inverse adoption                | <10%           | <10%              | 100%        | 100%         |
-| Contrast violations                     | 0              | 0                 | Gate now    | 0            |
-| New unsafe whites post-gate             | 0              | 0                 | Immediate   | 0            |
+| Metric                                  | Previous (Est) | Current                  | Gate Enable | Final Target |
+| --------------------------------------- | -------------- | ------------------------ | ----------- | ------------ |
+| Raw `bg-white` (non-semantic container) | >50            | 0                        | <15         | 0            |
+| `surfaceCandidates` (open)              | 80+            | 25 (audit sample)        | <25         | 0            |
+| Card elevation consistency              | <40%           | ~100%                    | 100%        | 100%         |
+| Typography adoption                     | 0%             | 100%                     | Gate now    | 100%         |
+| Tag adoption (inline pills remaining)   | ~60+ raw pills | 0                        | Gate now    | 0            |
+| Tooltip inverse adoption                | <10%           | <10%                     | 100%        | 100%         |
+| Contrast violations                     | 0              | 0                        | Gate now    | 0            |
+| New unsafe whites post-gate             | 0              | 0                        | Immediate   | 0            |
 
 Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic cases (e.g. `bg-white/50`, wizard modals, legacy playbuilder stacks) to be migrated in Phase B/C when those components undergo deeper refactor. They are now isolated and enumerated in `style-audit.md` for tracking.
 
@@ -121,7 +122,8 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 
 - [ ] Migrate `row-hover` utility to new `surface-subtle-hover` class (verify parity then remove alias).
 - [x] Add CI gate: fail if raw utility headings / `text-white`; soft baseline watch for raw container `bg-white` (script `style:gate`).
-- [ ] Draft Badge primitive API + sample variants (neutral, accent, info, danger) and replace inline pills.
+- [x] Tag primitive rollout (replaced all inline pills) + CI gate for new inline pill patterns.
+- [ ] Draft Badge primitive API + sample variants (neutral, accent, info, danger) and replace any heavy status chips.
 - [ ] Implement tooltip / popover inverse surface (use `surface-inverse`, elevation-popover if needed).
 - [ ] Extend style-audit to log elevation usage counts & inverse adoption %.
 - [ ] Begin lint rule scaffold for surface enforcement (no raw bg-neutral on containers).
@@ -133,7 +135,8 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 - [x] All surfaces semantic.
 - [x] Elevation rhythm enforced & documented.
 - [x] Typography codemod enacted & 100% adoption.
-- [ ] Badges / Tags unified.
+- [x] Tags unified (0 inline pills; Tag primitive in production).
+- [ ] Badges standardized (pending Badge refactor).
 - [ ] Tooltips/popovers inverse surface.
 - [x] Row hover standard applied everywhere (interim).
 - [ ] CI gating active for unsafe surfaces & text colors.
@@ -150,7 +153,8 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 | 2025-08-10T15:55Z | Metrics snapshot inserted; next Phase B tasks added        |
 | 2025-08-10T16:30Z | Typography codemod complete (100% adoption) & plan updated |
 | 2025-08-10T16:50Z | Added style CI gate script (`style:gate`) for headings/text-white/bg drift |
+| 2025-08-10T17:20Z | Tag primitive rollout complete (0 inline pills) + CI gate extended (inline pill detection) |
 
 ---
 
-_Last Updated: 2025-08-10T16:50:00Z_
+_Last Updated: 2025-08-10T17:20:00Z_

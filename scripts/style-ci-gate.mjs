@@ -29,7 +29,7 @@ function walk(dir, out = []) {
 const files = walk(SRC);
 
 const headingRe = /<h([1-4])[^>]*className=\"([^\"]+)\"/g;
-const issues = { headings: [], textWhite: [], rawSurfaces: [] };
+const issues = { headings: [], textWhite: [], rawSurfaces: [], inlinePills: [] };
 
 for (const file of files) {
   const txt = readFileSync(file, 'utf8');
@@ -54,6 +54,11 @@ for (const file of files) {
     if (/(bg-(white|gray-(50|100|200))\b)/.test(cls) && /(p-|px-|py-|shadow|border)/.test(cls) && !/surface-(app|header|card|subtle|inverse|nav)/.test(cls)) {
       const line = txt.slice(0, m.index).split(/\n/).length;
       issues.rawSurfaces.push({ file: relative(ROOT, file), line, classes: cls.slice(0,140) });
+    }
+    // Inline pill heuristic (legacy pattern): rounded-full + (px-2|px-3) + (bg-*-100) + text-*-800
+    if (/rounded-full/.test(cls) && /px-2|px-3/.test(cls) && /bg-[a-z]+-100/.test(cls) && /text-[a-z]+-800/.test(cls) && !/Tag/.test(txt)) {
+      const line = txt.slice(0, m.index).split(/\n/).length;
+      issues.inlinePills.push({ file: relative(ROOT, file), line, classes: cls.slice(0,140) });
     }
   }
 }
@@ -86,6 +91,7 @@ function hardFailSection(title, arr) {
 // Hard gates
 hardFailSection('Raw utility headings (replace with <Typography>)', issues.headings);
 hardFailSection('text-white occurrences (use semantic text tokens)', issues.textWhite);
+hardFailSection('Inline pill styles (replace with <Tag>)', issues.inlinePills);
 
 // Soft gate for raw surfaces: only fail if NEW items beyond baseline or count grows
 const baselineSet = new Set(baseline.rawSurfaces?.entries || []);
