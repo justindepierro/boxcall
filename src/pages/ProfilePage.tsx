@@ -273,7 +273,7 @@ export const ProfilePage: React.FC = () => {
                   />
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="secondary"
                     onClick={handlePasswordChange}
                   >
                     Change Password
@@ -287,11 +287,7 @@ export const ProfilePage: React.FC = () => {
           </div>
           {/* Actions */}
           <div className="flex justify-between items-center">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => window.history.back()}
-            >
+            <Button type="button" variant="ghost" onClick={() => window.history.back()}>
               Cancel
             </Button>
             <Button

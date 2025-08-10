@@ -142,7 +142,7 @@ export const Templates: React.FC = () => {
               <div className="space-y-2">
                 <Button
                   onClick={() => downloadTemplate("offensive-plays.pdf")}
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   fullWidth
                 >
@@ -150,7 +150,7 @@ export const Templates: React.FC = () => {
                 </Button>
                 <Button
                   onClick={() => downloadTemplate("defensive-formations.png")}
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   fullWidth
                 >
@@ -175,7 +175,7 @@ export const Templates: React.FC = () => {
               <div className="space-y-2">
                 <Button
                   onClick={() => downloadTemplate("blank-formations.pdf")}
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   fullWidth
                 >
@@ -183,7 +183,7 @@ export const Templates: React.FC = () => {
                 </Button>
                 <Button
                   onClick={() => downloadTemplate("formation-builder.png")}
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   fullWidth
                 >
@@ -334,7 +334,9 @@ export const Templates: React.FC = () => {
                 data automatically and build custom integrations.
               </Typography>
               <div className="bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800 rounded-lg p-3">
-                <div className="flex items-center gap-1">
+                {/* TODO: Replace status background with semantic status token when available */}
+                {/* Converted neutral gray panel to semantic subtle surface */}
+                <div className="flex items-center gap-1 surface-subtle border-subtle rounded-md p-2">
                   <Icon name="zap" size="sm" color="current" />
                   <Typography
                     variant="body-sm"
@@ -378,7 +380,7 @@ export const Templates: React.FC = () => {
           </div>
         </Card>
         {/* Help Section */}
-        <div className="mt-8 bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+  <div className="mt-8 surface-card elevation-card rounded-lg p-6">
           <Typography variant="headline-md" className="mb-4">
             Need Help with Templates?
           </Typography>

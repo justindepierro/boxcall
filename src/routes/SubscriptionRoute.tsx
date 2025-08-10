@@ -143,7 +143,7 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
             </Button>
             <Button
               fullWidth
-              variant="outline"
+                variant="ghost"
               onClick={() => window.history.back()}
             >
               Go Back
@@ -177,7 +177,7 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
               </Button>
               <Button
                 fullWidth
-                variant="outline"
+                variant="ghost"
                 onClick={() => (window.location.href = fallbackTo)}
               >
                 Return to Dashboard

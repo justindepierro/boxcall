@@ -744,7 +744,7 @@ export const CreateCoachAccount: React.FC = () => {
             <Button
               onClick={handlePrevious}
               disabled={currentStepIndex === 0}
-              variant="outline"
+              variant="ghost"
               size="sm"
               icon={<Icon name="chevron-left" size="sm" />}
             >

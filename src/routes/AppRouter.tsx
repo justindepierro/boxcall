@@ -374,7 +374,7 @@ export const AppRouter: React.FC = () => {
                     </Button>
                     <Button
                       onClick={() => (window.location.href = "/dashboard")}
-                      variant="outline"
+                      variant="ghost"
                       className="w-full px-6 py-3 font-sans font-semibold"
                     >
                       <Icon name="home" size="sm" className="mr-2 inline" />

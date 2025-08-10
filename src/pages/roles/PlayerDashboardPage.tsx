@@ -282,7 +282,7 @@ const PlayerDashboardContent: React.FC = () => {
                 Team Chat
               </Button>
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 className="p-4 flex flex-col items-center justify-center space-y-2"
                 icon={<Icon name="user" size="sm" />}

@@ -288,7 +288,7 @@ export function PracticePlanner() {
                     {/* PDF Export Button */}
                     <Button
                       onClick={() => setIsPDFExportOpen(true)}
-                      variant="outline"
+                      variant="secondary"
                       className="surface-card border-subtle text-text-secondary hover:text-text-primary surface-subtle-hover flex items-center gap-2"
                       disabled={currentBlocks.length === 0}
                     >
@@ -313,8 +313,8 @@ export function PracticePlanner() {
                       <div className="flex items-center space-x-2">
                         <Button
                           onClick={handleStopPractice}
-                          variant="outline"
-                          className="border-red-300 text-red-700 hover:bg-red-50 flex items-center gap-2"
+                          variant="danger"
+                          className="flex items-center gap-2"
                         >
                           <Icon
                             name="power"
@@ -326,7 +326,7 @@ export function PracticePlanner() {
                         {lockedSchedule && (
                           <Button
                             onClick={handleUnlockSchedule}
-                            variant="outline"
+                            variant="ghost"
                             size="sm"
                             className="text-xs flex items-center gap-1"
                           >
@@ -514,7 +514,7 @@ export function PracticePlanner() {
                               (interval) => (
                                 <Button
                                   key={interval.duration}
-                                  variant="outline"
+                                  variant="ghost"
                                   size="sm"
                                   onClick={() =>
                                     handleQuickAddBlock(
@@ -567,7 +567,7 @@ export function PracticePlanner() {
                     {templates.slice(0, 3).map((template) => (
                       <Button
                         key={template.id}
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         className="w-full justify-start text-left"
                         disabled={lockedSchedule}
@@ -810,7 +810,7 @@ function TemplatesModal({
           ))}
         </div>
         <div className="flex justify-end pt-4">
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="ghost" onClick={onClose}>
             Close
           </Button>
         </div>

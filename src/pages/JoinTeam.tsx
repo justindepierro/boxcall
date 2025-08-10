@@ -472,7 +472,7 @@ export const JoinTeam: React.FC = () => {
               </Button>
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 className="flex-1"
                 onClick={() => setCurrentStep("method")}
               >
@@ -525,7 +525,7 @@ export const JoinTeam: React.FC = () => {
               </Button>
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 className="flex-1"
                 onClick={() => navigate("/dashboard")}
               >
