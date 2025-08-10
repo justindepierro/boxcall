@@ -32,8 +32,36 @@ const hexRegexes = hexPalette.map(h => new RegExp(h.replace('#','\\#'), 'gi'));
 // Files to scan
 const patterns = ['src/**/*.{ts,tsx,css}', '!**/generated-*', '!**/dist/**', '!**/node_modules/**'];
 
+// Whitelist token/definition files (not considered drift) - still tracked separately
+const definitionGlobs = [
+  'src/themes/registry.ts',
+  'src/themes/types.ts',
+  'src/styles/tokens.css',
+  'src/styles/generated-tokens.css',
+  'src/styles/generated-themes.css',
+  'src/design-system/tokens.ts'
+];
+
+function globToRegex(glob) {
+  return new RegExp('^' + glob
+    .replace(/[-/\\^$+?.()|[\]{}]/g, '\\$&')
+    .replace(/\*\*/g, '.*')
+    .replace(/\*/g, '[^/]*') + '$');
+}
+const definitionRegexes = definitionGlobs.map(globToRegex);
+
+function classifyFile(file) {
+  if (definitionRegexes.some(r => r.test(file))) return 'definition';
+  if (file.includes('/components/ui/')) return 'ui-primitive';
+  if (file.includes('/components/practice/')) return 'practice';
+  if (file.includes('/components/playbook/')) return 'playbook';
+  if (file.includes('/pages/')) return 'page';
+  return 'other';
+}
+
 const results = [];
 let totalMatches = 0;
+const buckets = { definition: [], 'ui-primitive': [], practice: [], playbook: [], page: [], other: [] };
 
 const files = await globby(patterns);
 for (const file of files) {
@@ -56,8 +84,11 @@ for (const file of files) {
     }
   }
   if (fileFindings.length) {
+    const category = classifyFile(file);
     totalMatches += fileFindings.length;
-    results.push({ file, count: fileFindings.length, findings: fileFindings });
+    const record = { file, count: fileFindings.length, findings: fileFindings, category };
+    results.push(record);
+    buckets[category].push(record);
   }
 }
 
@@ -68,21 +99,27 @@ const summary = {
   generatedAt: new Date().toISOString(),
   totalFilesWithFindings: results.length,
   totalMatches,
-  topOffenders: results.slice(0, 25).map(r => ({ file: r.file, count: r.count })),
+  byCategory: Object.fromEntries(Object.entries(buckets).map(([k, list]) => [k, { files: list.length, matches: list.reduce((a,c)=>a+c.count,0) } ])),
+  topOffenders: results.slice(0, 25).map(r => ({ file: r.file, count: r.count, category: r.category })),
 };
 
 // Markdown report
 let md = `# Theme Drift Audit\n\nGenerated: ${summary.generatedAt}\n\n`;
-md += `Total files with drift: ${summary.totalFilesWithFindings}  \\\nTotal raw color occurrences: ${totalMatches}\n\n`;
-md += `## Top Offenders (first 25)\n\n| File | Count |\n| ---- | -----:|\n`;
+md += `Total files with drift: ${summary.totalFilesWithFindings}  \\\n+Total raw color occurrences: ${totalMatches}\n\n`;
+md += `## Category Breakdown\n\n| Category | Files | Matches |\n|----------|------:|--------:|\n`;
+for (const [cat,data] of Object.entries(summary.byCategory)) {
+  md += `| ${cat} | ${data.files} | ${data.matches} |\n`;
+}
+md += `\n## Top Offenders (first 25)\n\n| File | Count | Category |\n| ---- | -----:|----------|\n`;
 for (const off of summary.topOffenders) {
-  md += `| ${off.file} | ${off.count} |\n`;
+  md += `| ${off.file} | ${off.count} | ${off.category} |\n`;
 }
 md += `\n## Recommended Next Steps\n\n`;
 md += `1. Replace bg/text utility colors with semantic classes (surface-*, text-* semantic).\n`;
 md += `2. Introduce missing semantic tokens if a recurring color has no mapping.\n`;
 md += `3. For legacy hex in components, extract to tokens or use CSS vars (var(--semantic-...)).\n`;
 md += `4. After cleanup, enable lint rule to forbid these patterns (planned).\n`;
+md += `5. Ignore definition category for gating; focus remediation on page, practice, playbook, ui-primitive.\n`;
 
 if (!existsSync('docs/style-inventory')) {
   mkdirSync('docs/style-inventory', { recursive: true });
