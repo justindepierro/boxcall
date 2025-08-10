@@ -370,7 +370,11 @@ export const CustomFieldsGrouped: React.FC<CustomFieldsGroupedProps> = ({
     <div className={`space-y-6 ${className}`}>
       {Object.entries(fieldsByCategory).map(([category, _fields]) => (
         <div key={category} className="space-y-3">
-          <Typography variant="label-lg" as="h4" className="text-slate-800 flex items-center space-x-2">
+          <Typography
+            variant="label-lg"
+            as="h4"
+            className="text-slate-800 flex items-center space-x-2"
+          >
             <span className="text-lg">
               {categoryIcons[category as keyof typeof categoryIcons] || "📋"}
             </span>

@@ -24,7 +24,11 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
           {/* Header */}
           <div className="bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between">
             <div>
-              <Typography variant="headline-sm" as="h2" className="text-slate-900">
+              <Typography
+                variant="headline-sm"
+                as="h2"
+                className="text-slate-900"
+              >
                 Play Builder: Step 1/6 - Play Info
               </Typography>
               <div className="mt-2">
@@ -50,7 +54,11 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
             <div className="grid grid-cols-1 lg:grid-cols-2 bc-grid-gap">
               {/* Form Section */}
               <div>
-                <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-6">
+                <Typography
+                  variant="headline-sm"
+                  as="h3"
+                  className="text-slate-900 mb-6"
+                >
                   Basic Play Information
                 </Typography>
                 <div className="space-y-6">
@@ -104,7 +112,11 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
               </div>
               {/* Preview Section */}
               <div>
-                <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-6">
+                <Typography
+                  variant="headline-sm"
+                  as="h3"
+                  className="text-slate-900 mb-6"
+                >
                   Live Preview
                 </Typography>
                 <div className="bg-slate-50 rounded-lg bc-card-padding border-subtle">

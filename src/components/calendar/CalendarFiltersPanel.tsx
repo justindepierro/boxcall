@@ -29,7 +29,7 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
   className,
 }) => {
   return (
-    <div className={className}>      
+    <div className={className}>
       {/* Universal Search */}
       <Card className="p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
@@ -71,26 +71,24 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
               Event Types
             </Typography>
             <div className="space-y-2">
-              {["game", "practice", "meeting", "film", "other"].map(
-                (type) => (
-                  <label key={type} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      className="rounded border-gray-300 text-jade-600 focus:ring-jade-500"
-                      checked={filters.eventTypes?.includes(type) || false}
-                      onChange={(e) => {
-                        const newTypes = e.target.checked
-                          ? [...(filters.eventTypes || []), type]
-                          : (filters.eventTypes || []).filter(
-                              (t: string) => t !== type
-                            );
-                        onFilterChange({ eventTypes: newTypes });
-                      }}
-                    />
-                    <span className="ml-2 text-sm capitalize">{type}</span>
-                  </label>
-                )
-              )}
+              {["game", "practice", "meeting", "film", "other"].map((type) => (
+                <label key={type} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    className="rounded border-gray-300 text-jade-600 focus:ring-jade-500"
+                    checked={filters.eventTypes?.includes(type) || false}
+                    onChange={(e) => {
+                      const newTypes = e.target.checked
+                        ? [...(filters.eventTypes || []), type]
+                        : (filters.eventTypes || []).filter(
+                            (t: string) => t !== type
+                          );
+                      onFilterChange({ eventTypes: newTypes });
+                    }}
+                  />
+                  <span className="ml-2 text-sm capitalize">{type}</span>
+                </label>
+              ))}
             </div>
           </div>
           {/* Date Range Filter */}

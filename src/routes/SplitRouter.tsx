@@ -138,7 +138,11 @@ export const SplitRouter: React.FC = () => {
           <RouteLoader routeName="not-found">
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
               <div className="text-center">
-                <Typography variant="headline-md" as="h1" className="text-gray-900 mb-2">
+                <Typography
+                  variant="headline-md"
+                  as="h1"
+                  className="text-gray-900 mb-2"
+                >
                   Page Not Found
                 </Typography>
                 <p className="text-gray-600 mb-4">

@@ -3,384 +3,102 @@
   "textWhite": 0,
   "textWhiteEntries": [],
   "bgClasses": [
-    [
-      "white",
-      58
-    ],
-    [
-      "gray-50",
-      31
-    ],
-    [
-      "blue-50",
-      27
-    ],
-    [
-      "gray-700",
-      22
-    ],
-    [
-      "opacity-50",
-      17
-    ],
-    [
-      "black",
-      16
-    ],
-    [
-      "slate-50",
-      16
-    ],
-    [
-      "gray-200",
-      15
-    ],
-    [
-      "red-50",
-      14
-    ],
-    [
-      "jade-600",
-      14
-    ],
-    [
-      "slate-200",
-      12
-    ],
-    [
-      "gray-100",
-      12
-    ],
-    [
-      "jade-100",
-      11
-    ],
-    [
-      "jade-50",
-      11
-    ],
-    [
-      "blue-100",
-      10
-    ],
-    [
-      "blue-900/20",
-      10
-    ],
-    [
-      "gray-800",
-      10
-    ],
-    [
-      "gray-300",
-      9
-    ],
-    [
-      "green-100",
-      8
-    ],
-    [
-      "slate-100",
-      8
-    ],
-    [
-      "surface-jade",
-      8
-    ],
-    [
-      "surface-jade-dark",
-      8
-    ],
-    [
-      "jade-700",
-      7
-    ],
-    [
-      "jade-500",
-      7
-    ],
-    [
-      "gradient-to-r",
-      7
-    ],
-    [
-      "green-50",
-      7
-    ],
-    [
-      "white/50",
-      6
-    ],
-    [
-      "yellow-50",
-      6
-    ],
-    [
-      "gradient-to-br",
-      5
-    ],
-    [
-      "green-900/20",
-      5
-    ],
-    [
-      "purple-100",
-      4
-    ],
-    [
-      "gray-700/30",
-      4
-    ],
-    [
-      "blue-200",
-      4
-    ],
-    [
-      "amber-50",
-      4
-    ],
-    [
-      "red-900/20",
-      4
-    ],
-    [
-      "jade-900/20",
-      3
-    ],
-    [
-      "red-100",
-      3
-    ],
-    [
-      "slate-900",
-      3
-    ],
-    [
-      "blue-900",
-      3
-    ],
-    [
-      "green-900",
-      3
-    ],
-    [
-      "purple-900",
-      3
-    ],
-    [
-      "red-900/10",
-      2
-    ],
-    [
-      "orange-50",
-      2
-    ],
-    [
-      "amber-100",
-      2
-    ],
-    [
-      "red-500",
-      2
-    ],
-    [
-      "transparent",
-      2
-    ],
-    [
-      "red-900/30",
-      2
-    ],
-    [
-      "gray-600",
-      2
-    ],
-    [
-      "gray-800/50",
-      2
-    ],
-    [
-      "yellow-900/20",
-      2
-    ],
-    [
-      "purple-50",
-      2
-    ],
-    [
-      "purple-900/20",
-      2
-    ],
-    [
-      "white/60",
-      1
-    ],
-    [
-      "gray-700/40",
-      1
-    ],
-    [
-      "white/20",
-      1
-    ],
-    [
-      "fixed",
-      1
-    ],
-    [
-      "amber-900",
-      1
-    ],
-    [
-      "brand-jade",
-      1
-    ],
-    [
-      "brand-jade-light",
-      1
-    ],
-    [
-      "orange-900/20",
-      1
-    ],
-    [
-      "jade-900/40",
-      1
-    ],
-    [
-      "jade-400",
-      1
-    ],
-    [
-      "opacity-10",
-      1
-    ],
-    [
-      "slate-300",
-      1
-    ],
-    [
-      "gradient-to-b",
-      1
-    ],
-    [
-      "yellow-200",
-      1
-    ],
-    [
-      "yellow-300",
-      1
-    ],
-    [
-      "black/5",
-      1
-    ],
-    [
-      "jade-500/10",
-      1
-    ],
-    [
-      "navy-900/20",
-      1
-    ],
-    [
-      "surface-subtle/70",
-      1
-    ],
-    [
-      "gray-900",
-      1
-    ],
-    [
-      "gray-900/50",
-      1
-    ],
-    [
-      "opacity-70",
-      1
-    ],
-    [
-      "opacity-30",
-      1
-    ],
-    [
-      "blue-900/10",
-      1
-    ],
-    [
-      "jade-900/10",
-      1
-    ],
-    [
-      "surface-jade0",
-      1
-    ],
-    [
-      "navy-50",
-      1
-    ],
-    [
-      "gray-900/20",
-      1
-    ],
-    [
-      "interaction-jade",
-      1
-    ],
-    [
-      "brand-jade-dark",
-      1
-    ],
-    [
-      "orange-100",
-      1
-    ],
-    [
-      "orange-900",
-      1
-    ],
-    [
-      "green-600",
-      1
-    ],
-    [
-      "purple-600",
-      1
-    ],
-    [
-      "orange-600",
-      1
-    ],
-    [
-      "yellow-900",
-      1
-    ]
+    ["white", 58],
+    ["gray-50", 31],
+    ["blue-50", 27],
+    ["gray-700", 22],
+    ["opacity-50", 17],
+    ["black", 16],
+    ["slate-50", 16],
+    ["gray-200", 15],
+    ["red-50", 14],
+    ["jade-600", 14],
+    ["slate-200", 12],
+    ["gray-100", 12],
+    ["jade-100", 11],
+    ["jade-50", 11],
+    ["blue-100", 10],
+    ["blue-900/20", 10],
+    ["gray-800", 10],
+    ["gray-300", 9],
+    ["green-100", 8],
+    ["slate-100", 8],
+    ["surface-jade", 8],
+    ["surface-jade-dark", 8],
+    ["jade-700", 7],
+    ["jade-500", 7],
+    ["gradient-to-r", 7],
+    ["green-50", 7],
+    ["white/50", 6],
+    ["yellow-50", 6],
+    ["gradient-to-br", 5],
+    ["green-900/20", 5],
+    ["purple-100", 4],
+    ["gray-700/30", 4],
+    ["blue-200", 4],
+    ["amber-50", 4],
+    ["red-900/20", 4],
+    ["jade-900/20", 3],
+    ["red-100", 3],
+    ["slate-900", 3],
+    ["blue-900", 3],
+    ["green-900", 3],
+    ["purple-900", 3],
+    ["red-900/10", 2],
+    ["orange-50", 2],
+    ["amber-100", 2],
+    ["red-500", 2],
+    ["transparent", 2],
+    ["red-900/30", 2],
+    ["gray-600", 2],
+    ["gray-800/50", 2],
+    ["yellow-900/20", 2],
+    ["purple-50", 2],
+    ["purple-900/20", 2],
+    ["white/60", 1],
+    ["gray-700/40", 1],
+    ["white/20", 1],
+    ["fixed", 1],
+    ["amber-900", 1],
+    ["brand-jade", 1],
+    ["brand-jade-light", 1],
+    ["orange-900/20", 1],
+    ["jade-900/40", 1],
+    ["jade-400", 1],
+    ["opacity-10", 1],
+    ["slate-300", 1],
+    ["gradient-to-b", 1],
+    ["yellow-200", 1],
+    ["yellow-300", 1],
+    ["black/5", 1],
+    ["jade-500/10", 1],
+    ["navy-900/20", 1],
+    ["surface-subtle/70", 1],
+    ["gray-900", 1],
+    ["gray-900/50", 1],
+    ["opacity-70", 1],
+    ["opacity-30", 1],
+    ["blue-900/10", 1],
+    ["jade-900/10", 1],
+    ["surface-jade0", 1],
+    ["navy-50", 1],
+    ["gray-900/20", 1],
+    ["interaction-jade", 1],
+    ["brand-jade-dark", 1],
+    ["orange-100", 1],
+    ["orange-900", 1],
+    ["green-600", 1],
+    ["purple-600", 1],
+    ["orange-600", 1],
+    ["yellow-900", 1]
   ],
   "brandClasses": [
-    [
-      "brand-jade",
-      24
-    ],
-    [
-      "surface-jade",
-      11
-    ],
-    [
-      "brand-jade-dark",
-      10
-    ],
-    [
-      "surface-jade-dark",
-      10
-    ],
-    [
-      "interaction-jade",
-      5
-    ],
-    [
-      "brand-jade-light",
-      3
-    ]
+    ["brand-jade", 24],
+    ["surface-jade", 11],
+    ["brand-jade-dark", 10],
+    ["surface-jade-dark", 10],
+    ["interaction-jade", 5],
+    ["brand-jade-light", 3]
   ],
   "rawButtonHeuristic": 1,
   "surfaceCandidates": [

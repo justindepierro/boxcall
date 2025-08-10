@@ -12,15 +12,32 @@ interface VitalsData {
   value: number;
   rating: "good" | "needs-improvement" | "poor";
   threshold: number;
+  timestamp: number;
 }
-const reportVital = (vital: VitalsData) => {
+declare global {
+  interface Window {
+    __WEB_VITALS__?: VitalsData[];
+  }
+}
+const pushGlobal = (vital: VitalsData) => {
+  if (!window.__WEB_VITALS__) window.__WEB_VITALS__ = [];
+  window.__WEB_VITALS__ = [
+    ...window.__WEB_VITALS__.filter((v) => v.name !== vital.name),
+    vital,
+  ];
+  window.dispatchEvent(new CustomEvent("web-vitals", { detail: vital }));
+};
+
+const reportVital = (vital: Omit<VitalsData, "timestamp">) => {
+  const withTime: VitalsData = { ...vital, timestamp: performance.now() };
+  pushGlobal(withTime);
   // Log to console in development
   if (process.env.NODE_ENV === "development") {
     console.log("Core Web Vital:", {
-      name: vital.name,
-      value: vital.value,
-      threshold: vital.threshold,
-      delta: vital.value - vital.threshold,
+      name: withTime.name,
+      value: withTime.value,
+      threshold: withTime.threshold,
+      delta: withTime.value - withTime.threshold,
     });
   }
   // Send to analytics in production

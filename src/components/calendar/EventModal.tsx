@@ -4,9 +4,18 @@ import { Button, Input } from "../ui";
 import Icon from "../ui/Icon/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../ui/Tag";
 import { Typography } from "../design-system/Typography";
-import type { CalendarEvent, EventRSVP, CalendarComment } from "../../domain/calendar/types";
+import type {
+  CalendarEvent,
+  EventRSVP,
+  CalendarComment,
+} from "../../domain/calendar/types";
 import { PracticePlannerModal } from "../practice/PracticePlannerModal";
-import { useRSVPs, useUpdateRSVP, useComments, useAddComment } from "../../state/calendar/hooks";
+import {
+  useRSVPs,
+  useUpdateRSVP,
+  useComments,
+  useAddComment,
+} from "../../state/calendar/hooks";
 import type { Database } from "../../types/database";
 
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -84,8 +93,8 @@ export const EventModal: React.FC<EventModalProps> = ({
                   {isCreating
                     ? "Create Event"
                     : isEditing
-                    ? "Edit Event"
-                    : "Event Details"}
+                      ? "Edit Event"
+                      : "Event Details"}
                 </Typography>
               </div>
               <Button
@@ -104,7 +113,10 @@ export const EventModal: React.FC<EventModalProps> = ({
                   label="Event Title"
                   value={event.title}
                   onChange={(e) =>
-                    setEvent({ ...(event as CalendarEvent), title: e.target.value })
+                    setEvent({
+                      ...(event as CalendarEvent),
+                      title: e.target.value,
+                    })
                   }
                   placeholder="Practice, Game vs. Team Name, etc."
                 />
@@ -114,7 +126,10 @@ export const EventModal: React.FC<EventModalProps> = ({
                     type="datetime-local"
                     value={event.start?.slice(0, 16)}
                     onChange={(e) =>
-                      setEvent({ ...(event as CalendarEvent), start: e.target.value })
+                      setEvent({
+                        ...(event as CalendarEvent),
+                        start: e.target.value,
+                      })
                     }
                   />
                   <Input
@@ -122,7 +137,10 @@ export const EventModal: React.FC<EventModalProps> = ({
                     type="datetime-local"
                     value={event.end?.slice(0, 16) || ""}
                     onChange={(e) =>
-                      setEvent({ ...(event as CalendarEvent), end: e.target.value })
+                      setEvent({
+                        ...(event as CalendarEvent),
+                        end: e.target.value,
+                      })
                     }
                   />
                 </div>
@@ -152,7 +170,10 @@ export const EventModal: React.FC<EventModalProps> = ({
                     label="Location"
                     value={event.location || ""}
                     onChange={(e) =>
-                      setEvent({ ...(event as CalendarEvent), location: e.target.value })
+                      setEvent({
+                        ...(event as CalendarEvent),
+                        location: e.target.value,
+                      })
                     }
                     placeholder="Field, Stadium, etc."
                   />
@@ -220,7 +241,10 @@ export const EventModal: React.FC<EventModalProps> = ({
                   label="Event Title"
                   value={event.title}
                   onChange={(e) =>
-                    setEvent({ ...(event as CalendarEvent), title: e.target.value })
+                    setEvent({
+                      ...(event as CalendarEvent),
+                      title: e.target.value,
+                    })
                   }
                   placeholder="Practice, Game vs. Team Name, etc."
                 />
@@ -230,7 +254,10 @@ export const EventModal: React.FC<EventModalProps> = ({
                     type="datetime-local"
                     value={event.start?.slice(0, 16)}
                     onChange={(e) =>
-                      setEvent({ ...(event as CalendarEvent), start: e.target.value })
+                      setEvent({
+                        ...(event as CalendarEvent),
+                        start: e.target.value,
+                      })
                     }
                   />
                   <Input
@@ -238,7 +265,10 @@ export const EventModal: React.FC<EventModalProps> = ({
                     type="datetime-local"
                     value={event.end?.slice(0, 16) || ""}
                     onChange={(e) =>
-                      setEvent({ ...(event as CalendarEvent), end: e.target.value })
+                      setEvent({
+                        ...(event as CalendarEvent),
+                        end: e.target.value,
+                      })
                     }
                   />
                 </div>
@@ -268,7 +298,10 @@ export const EventModal: React.FC<EventModalProps> = ({
                     label="Location"
                     value={event.location || ""}
                     onChange={(e) =>
-                      setEvent({ ...(event as CalendarEvent), location: e.target.value })
+                      setEvent({
+                        ...(event as CalendarEvent),
+                        location: e.target.value,
+                      })
                     }
                     placeholder="Field, Stadium, etc."
                   />
@@ -340,7 +373,12 @@ export const EventModal: React.FC<EventModalProps> = ({
                 </div>
                 <div className="space-y-2 text-sm text-gray-600">
                   <div className="flex items-center">
-                    <Icon name="calendar" size="sm" color="secondary" className="mr-2" />
+                    <Icon
+                      name="calendar"
+                      size="sm"
+                      color="secondary"
+                      className="mr-2"
+                    />
                     {new Date(event.start).toLocaleDateString("en-US", {
                       weekday: "long",
                       year: "numeric",
@@ -356,7 +394,8 @@ export const EventModal: React.FC<EventModalProps> = ({
                     })}
                     {event.end && (
                       <>
-                        {" "}-{" "}
+                        {" "}
+                        -{" "}
                         {new Date(event.end).toLocaleTimeString("en-US", {
                           hour: "numeric",
                           minute: "2-digit",
@@ -366,19 +405,34 @@ export const EventModal: React.FC<EventModalProps> = ({
                   </div>
                   {event.location && (
                     <div className="flex items-center">
-                      <Icon name="target" size="sm" color="secondary" className="mr-2" />
+                      <Icon
+                        name="target"
+                        size="sm"
+                        color="secondary"
+                        className="mr-2"
+                      />
                       {event.location}
                     </div>
                   )}
                   {event.team_name && (
                     <div className="flex items-center">
-                      <Icon name="users" size="sm" color="secondary" className="mr-2" />
+                      <Icon
+                        name="users"
+                        size="sm"
+                        color="secondary"
+                        className="mr-2"
+                      />
                       {event.team_name}
                     </div>
                   )}
                   {event.opponent && (
                     <div className="flex items-center">
-                      <Icon name="target" size="sm" color="secondary" className="mr-2" />
+                      <Icon
+                        name="target"
+                        size="sm"
+                        color="secondary"
+                        className="mr-2"
+                      />
                       vs. {event.opponent}
                     </div>
                   )}
@@ -391,79 +445,110 @@ export const EventModal: React.FC<EventModalProps> = ({
                   </div>
                 )}
                 <div className="flex space-x-3 pt-4 flex-wrap">
-                  {event.type === "practice" && (profile?.role === "coach" || profile?.role === "admin") && (
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      onClick={() => {
-                        setShowPracticePlanner(true);
-                        onClose();
-                        onOpenPracticePlanner(event);
-                      }}
-                    >
-                      <Icon name="file" size="sm" className="mr-1" />
-                      Plan Practice
-                    </Button>
-                  )}
-                  {(profile?.role === "coach" || profile?.role === "admin") && event.id && (
-                    <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
-                      Edit
-                    </Button>
-                  )}
+                  {event.type === "practice" &&
+                    (profile?.role === "coach" ||
+                      profile?.role === "admin") && (
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => {
+                          setShowPracticePlanner(true);
+                          onClose();
+                          onOpenPracticePlanner(event);
+                        }}
+                      >
+                        <Icon name="file" size="sm" className="mr-1" />
+                        Plan Practice
+                      </Button>
+                    )}
+                  {(profile?.role === "coach" || profile?.role === "admin") &&
+                    event.id && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setIsEditing(true)}
+                      >
+                        Edit
+                      </Button>
+                    )}
                   <Button variant="outline" size="sm">
                     Add to Personal Calendar
                   </Button>
-                  {(profile?.role === "coach" || profile?.role === "admin") && event.id && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={deleteEventMutation.status === "pending"}
-                      onClick={async () => {
-                        try {
-                          await deleteEventMutation.mutateAsync(event.id);
-                          onClose();
-                          setEvent(null);
-                        } catch (err) {
-                          console.error("Failed to delete event:", err);
-                        }
-                      }}
-                    >
-                      {deleteEventMutation.status === "pending" ? "Deleting..." : "Delete"}
-                    </Button>
-                  )}
+                  {(profile?.role === "coach" || profile?.role === "admin") &&
+                    event.id && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={deleteEventMutation.status === "pending"}
+                        onClick={async () => {
+                          try {
+                            await deleteEventMutation.mutateAsync(event.id);
+                            onClose();
+                            setEvent(null);
+                          } catch (err) {
+                            console.error("Failed to delete event:", err);
+                          }
+                        }}
+                      >
+                        {deleteEventMutation.status === "pending"
+                          ? "Deleting..."
+                          : "Delete"}
+                      </Button>
+                    )}
                 </div>
                 {event.rsvp_required && event.id && (
                   <div className="mt-4 border-t border-gray-200 pt-4">
-                    <Typography variant="body-sm" className="font-semibold mb-2 text-gray-700">
+                    <Typography
+                      variant="body-sm"
+                      className="font-semibold mb-2 text-gray-700"
+                    >
                       RSVP
                     </Typography>
                     {rsvps.isLoading ? (
-                      <div className="text-sm text-gray-500">Loading RSVP...</div>
+                      <div className="text-sm text-gray-500">
+                        Loading RSVP...
+                      </div>
                     ) : rsvps.isError ? (
-                      <div className="text-sm text-red-500">Failed to load RSVP</div>
+                      <div className="text-sm text-red-500">
+                        Failed to load RSVP
+                      </div>
                     ) : (
                       <div className="flex items-center gap-2 flex-wrap">
-                        {(["attending", "maybe", "not_attending"] as const).map((status) => {
-                          const myStatus = rsvps.data?.find((r: EventRSVP) => r.user_id === userId)?.status;
-                          const isActive = myStatus === status;
-                          return (
-                            <Button
-                              key={status}
-                              size="xs"
-                              variant={isActive ? "primary" : "outline"}
-                              disabled={updateRSVPMutation.status === "pending" || !userId}
-                              onClick={() => updateRSVPMutation.mutate({ userId: userId || "", status })}
-                            >
-                              {status === "attending"
-                                ? "Going"
-                                : status === "maybe"
-                                ? "Maybe"
-                                : "Can't Go"}
-                            </Button>
-                          );
-                        })}
+                        {(["attending", "maybe", "not_attending"] as const).map(
+                          (status) => {
+                            const myStatus = rsvps.data?.find(
+                              (r: EventRSVP) => r.user_id === userId
+                            )?.status;
+                            const isActive = myStatus === status;
+                            return (
+                              <Button
+                                key={status}
+                                size="xs"
+                                variant={isActive ? "primary" : "outline"}
+                                disabled={
+                                  updateRSVPMutation.status === "pending" ||
+                                  !userId
+                                }
+                                onClick={() =>
+                                  updateRSVPMutation.mutate({
+                                    userId: userId || "",
+                                    status,
+                                  })
+                                }
+                              >
+                                {status === "attending"
+                                  ? "Going"
+                                  : status === "maybe"
+                                    ? "Maybe"
+                                    : "Can't Go"}
+                              </Button>
+                            );
+                          }
+                        )}
                         {updateRSVPMutation.status === "pending" && (
-                          <span className="text-xs text-gray-500">Saving...</span>
+                          <span className="text-xs text-gray-500">
+                            Saving...
+                          </span>
                         )}
                       </div>
                     )}
@@ -471,26 +556,41 @@ export const EventModal: React.FC<EventModalProps> = ({
                 )}
                 {event.id && (
                   <div className="mt-6 border-t border-gray-200 pt-4">
-                    <Typography variant="body-sm" className="font-semibold mb-2 text-gray-700">
+                    <Typography
+                      variant="body-sm"
+                      className="font-semibold mb-2 text-gray-700"
+                    >
                       Comments
                     </Typography>
                     {comments.isLoading ? (
-                      <div className="text-sm text-gray-500">Loading comments...</div>
+                      <div className="text-sm text-gray-500">
+                        Loading comments...
+                      </div>
                     ) : comments.isError ? (
-                      <div className="text-sm text-red-500">Failed to load comments</div>
+                      <div className="text-sm text-red-500">
+                        Failed to load comments
+                      </div>
                     ) : (
                       <div className="space-y-3 max-h-40 overflow-y-auto pr-1">
                         {comments.data && comments.data.length > 0 ? (
                           comments.data.map((c: CalendarComment) => (
-                            <div key={c.id} className="p-2 bg-gray-50 rounded border border-gray-100">
+                            <div
+                              key={c.id}
+                              className="p-2 bg-gray-50 rounded border border-gray-100"
+                            >
                               <div className="text-xs text-gray-500 mb-1">
-                                {new Date(c.created_at).toLocaleString()} • {c.user_id}
+                                {new Date(c.created_at).toLocaleString()} •{" "}
+                                {c.user_id}
                               </div>
-                              <div className="text-sm text-gray-800 whitespace-pre-wrap">{c.body}</div>
+                              <div className="text-sm text-gray-800 whitespace-pre-wrap">
+                                {c.body}
+                              </div>
                             </div>
                           ))
                         ) : (
-                          <div className="text-xs text-gray-500">No comments yet.</div>
+                          <div className="text-xs text-gray-500">
+                            No comments yet.
+                          </div>
                         )}
                       </div>
                     )}
@@ -508,17 +608,22 @@ export const EventModal: React.FC<EventModalProps> = ({
                           size="xs"
                           variant="primary"
                           disabled={
-                            addCommentMutation.status === "pending" || !newComment.trim()
+                            addCommentMutation.status === "pending" ||
+                            !newComment.trim()
                           }
                           onClick={() => {
                             addCommentMutation.mutate(newComment.trim());
                             setNewComment("");
                           }}
                         >
-                          {addCommentMutation.status === "pending" ? "Posting..." : "Post"}
+                          {addCommentMutation.status === "pending"
+                            ? "Posting..."
+                            : "Post"}
                         </Button>
                         {addCommentMutation.status === "pending" && (
-                          <span className="text-xs text-gray-500">Saving...</span>
+                          <span className="text-xs text-gray-500">
+                            Saving...
+                          </span>
                         )}
                       </div>
                     </div>

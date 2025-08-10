@@ -4,7 +4,9 @@
  */
 let __calendarServiceStubWarned = false;
 if (process.env.NODE_ENV !== "production" && !__calendarServiceStubWarned) {
-  console.warn("[DEPRECATED-STUB] services/calendarService.ts -> legacy/calendar/calendarService.ts");
+  console.warn(
+    "[DEPRECATED-STUB] services/calendarService.ts -> legacy/calendar/calendarService.ts"
+  );
   __calendarServiceStubWarned = true;
 }
 export * from "../legacy/calendar/calendarService";

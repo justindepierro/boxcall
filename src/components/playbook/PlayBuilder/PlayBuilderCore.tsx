@@ -175,7 +175,11 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
           {/* Header */}
           <div className="bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between">
             <div>
-              <Typography variant="headline-sm" as="h2" className="text-slate-900">
+              <Typography
+                variant="headline-sm"
+                as="h2"
+                className="text-slate-900"
+              >
                 {initialPlay?.id ? "Edit Play" : "Create New Play"}
               </Typography>
               <p className="text-sm text-slate-500 mt-1">

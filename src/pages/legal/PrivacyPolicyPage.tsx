@@ -7,7 +7,11 @@ export const PrivacyPolicyPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className="prose dark:prose-invert max-w-none">
-        <Typography variant="headline-lg" as="h1" className="mb-2 text-text-primary">
+        <Typography
+          variant="headline-lg"
+          as="h1"
+          className="mb-2 text-text-primary"
+        >
           Privacy Policy
         </Typography>
         <p className="text-sm mb-8 text-text-secondary">
@@ -15,7 +19,11 @@ export const PrivacyPolicyPage: React.FC = () => {
         </p>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             Introduction
           </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -31,11 +39,19 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             Information We Collect
           </Typography>
 
-          <Typography variant="headline-sm" as="h3" className="mb-3 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="mb-3 text-text-primary"
+          >
             Personal Information
           </Typography>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
@@ -46,7 +62,11 @@ export const PrivacyPolicyPage: React.FC = () => {
             <li>Profile photos and team logos</li>
           </ul>
 
-          <Typography variant="headline-sm" as="h3" className="mb-3 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="mb-3 text-text-primary"
+          >
             Usage Information
           </Typography>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
@@ -58,7 +78,11 @@ export const PrivacyPolicyPage: React.FC = () => {
             <li>Cookies and similar tracking technologies</li>
           </ul>
 
-          <Typography variant="headline-sm" as="h3" className="mb-3 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="mb-3 text-text-primary"
+          >
             Team and Playbook Data
           </Typography>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
@@ -70,7 +94,11 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             How We Use Your Information
           </Typography>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
@@ -85,7 +113,11 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             Information Sharing and Disclosure
           </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -117,7 +149,11 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             Data Security
           </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -134,7 +170,11 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             Your Rights and Choices
           </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -165,7 +205,11 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             Children's Privacy
           </Typography>
           <p className="text-gray-700 dark:text-gray-300">
@@ -177,7 +221,11 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             Changes to This Privacy Policy
           </Typography>
           <p className="text-gray-700 dark:text-gray-300">
@@ -189,7 +237,11 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             Contact Us
           </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">

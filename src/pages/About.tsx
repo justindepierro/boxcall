@@ -18,10 +18,7 @@ export const About: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <Typography
-            variant="headline-xl"
-            className="text-text-primary"
-          >
+          <Typography variant="headline-xl" className="text-text-primary">
             About BoxCall
           </Typography>
           <Typography variant="body-lg" color="muted" className="mt-2">

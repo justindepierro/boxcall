@@ -8,7 +8,11 @@ export const ContactPage: React.FC = () => {
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="text-center mb-12">
-        <Typography variant="headline-lg" as="h1" className="mb-4 text-text-primary">
+        <Typography
+          variant="headline-lg"
+          as="h1"
+          className="mb-4 text-text-primary"
+        >
           Contact Us
         </Typography>
         <p className="text-lg max-w-2xl mx-auto text-text-secondary">
@@ -19,7 +23,11 @@ export const ContactPage: React.FC = () => {
       <div className="grid md:grid-cols-2 gap-12">
         {/* Contact Information */}
         <div>
-          <Typography variant="headline-sm" as="h2" className="mb-6 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-6 text-text-primary"
+          >
             Get in Touch
           </Typography>
 
@@ -31,9 +39,7 @@ export const ContactPage: React.FC = () => {
                 </div>
               </div>
               <div>
-                <h3 className="font-medium text-text-primary">
-                  Email Support
-                </h3>
+                <h3 className="font-medium text-text-primary">Email Support</h3>
                 <p className="text-sm mt-1 text-text-secondary">
                   Get help with your account, billing, or technical issues
                 </p>
@@ -53,9 +59,7 @@ export const ContactPage: React.FC = () => {
                 </div>
               </div>
               <div>
-                <h3 className="font-medium text-text-primary">
-                  Phone Support
-                </h3>
+                <h3 className="font-medium text-text-primary">Phone Support</h3>
                 <p className="text-sm mt-1 text-text-secondary">
                   Speak directly with our coaching support team
                 </p>
@@ -96,17 +100,11 @@ export const ContactPage: React.FC = () => {
             </h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-text-secondary">
-                  Monday - Friday
-                </span>
-                <span className="text-text-primary">
-                  9:00 AM - 6:00 PM EST
-                </span>
+                <span className="text-text-secondary">Monday - Friday</span>
+                <span className="text-text-primary">9:00 AM - 6:00 PM EST</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary">
-                  Saturday
-                </span>
+                <span className="text-text-secondary">Saturday</span>
                 <span className="text-text-primary">
                   10:00 AM - 2:00 PM EST
                 </span>
@@ -121,7 +119,11 @@ export const ContactPage: React.FC = () => {
 
         {/* Contact Form */}
         <div>
-          <Typography variant="headline-sm" as="h2" className="mb-6 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-6 text-text-primary"
+          >
             Send us a Message
           </Typography>
 
@@ -209,7 +211,11 @@ export const ContactPage: React.FC = () => {
       {/* FAQ Link */}
       <div className="mt-12 text-center">
         <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
-          <Typography variant="headline-sm" as="h3" className="mb-2 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="mb-2 text-text-primary"
+          >
             Looking for Quick Answers?
           </Typography>
           <p className="mb-4 text-text-secondary">

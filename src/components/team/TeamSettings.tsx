@@ -113,7 +113,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
       <form onSubmit={handleSubmit} className="bc-card-padding space-y-8">
         {/* Team Logo */}
         <div>
-          <Typography variant="headline-sm" as="h3" className="text-text-primary mb-4">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="text-text-primary mb-4"
+          >
             Team Logo
           </Typography>
           <div className="flex items-center space-x-6">
@@ -147,7 +151,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
         {/* Basic Information */}
         <div>
-          <Typography variant="headline-sm" as="h3" className="text-text-primary mb-4">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="text-text-primary mb-4"
+          >
             Basic Information
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
@@ -201,7 +209,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
         {/* Location Information */}
         <div>
-          <Typography variant="headline-sm" as="h3" className="text-text-primary mb-4">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="text-text-primary mb-4"
+          >
             Location Information
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
@@ -254,7 +266,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
         {/* Subscription Information */}
         <div>
-          <Typography variant="headline-sm" as="h3" className="text-text-primary mb-4">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="text-text-primary mb-4"
+          >
             Subscription Status
           </Typography>
           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
@@ -276,7 +292,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
         {/* Team ID */}
         <div>
-          <Typography variant="headline-sm" as="h3" className="text-text-primary mb-4">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="text-text-primary mb-4"
+          >
             Team Information
           </Typography>
           <div className="bg-jade-50 dark:bg-navy-900/20 rounded-md p-4">

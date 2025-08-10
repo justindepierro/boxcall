@@ -29,7 +29,11 @@ export type {
   EventRSVP,
   CalendarFilters,
 } from "../../domain/calendar/types"; // Backward compatibility
-import { CalendarAPI, CalendarRSVP, CalendarComments } from "../../infra/calendar";
+import {
+  CalendarAPI,
+  CalendarRSVP,
+  CalendarComments,
+} from "../../infra/calendar";
 
 export class CalendarService {
   static async getUserEvents(

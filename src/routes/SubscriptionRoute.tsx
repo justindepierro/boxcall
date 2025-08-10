@@ -97,7 +97,11 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
-          <Typography variant="headline-md" as="h1" className="text-red-600 mb-4 flex items-center justify-center">
+          <Typography
+            variant="headline-md"
+            as="h1"
+            className="text-red-600 mb-4 flex items-center justify-center"
+          >
             <Icon name="users" size="lg" className="mr-2" />
             Team Not Found
           </Typography>
@@ -122,7 +126,11 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
-          <Typography variant="headline-md" as="h1" className="text-yellow-600 mb-4">
+          <Typography
+            variant="headline-md"
+            as="h1"
+            className="text-yellow-600 mb-4"
+          >
             ⭐ Premium Feature
           </Typography>
           <p className="mb-6 text-text-secondary">
@@ -152,7 +160,11 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
       return (
         <div className="min-h-screen flex items-center justify-center">
           <div className="max-w-md mx-auto text-center">
-            <Typography variant="headline-md" as="h1" className="text-red-600 mb-4">
+            <Typography
+              variant="headline-md"
+              as="h1"
+              className="text-red-600 mb-4"
+            >
               ⏰ Subscription Expired
             </Typography>
             <p className="mb-6 text-text-secondary">

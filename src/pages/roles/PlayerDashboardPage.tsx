@@ -163,7 +163,11 @@ const PlayerDashboardContent: React.FC = () => {
           {/* Recent Performance */}
           <div className="surface-card elevation-card rounded-lg">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <Typography variant="headline-sm" as="h3" className="flex items-center text-text-primary">
+              <Typography
+                variant="headline-sm"
+                as="h3"
+                className="flex items-center text-text-primary"
+              >
                 <Icon name="bar-chart" className="mr-2" />
                 Recent Performance
               </Typography>
@@ -242,7 +246,11 @@ const PlayerDashboardContent: React.FC = () => {
         {/* Quick Actions */}
         <div className="mt-8">
           <div className="surface-card elevation-card rounded-lg p-6">
-            <Typography variant="headline-sm" as="h3" className="mb-4 text-text-primary">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="mb-4 text-text-primary"
+            >
               Quick Actions
             </Typography>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

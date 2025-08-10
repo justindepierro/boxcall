@@ -10,13 +10,19 @@ import { CalendarService } from "../services/calendarService";
 export const CalendarPageNew: React.FC = () => {
   const { user } = useAuth();
   const { devMode } = useDevMode();
-  const { data: events = [], isLoading, isError, error } = useEvents({
+  const {
+    data: events = [],
+    isLoading,
+    isError,
+    error,
+  } = useEvents({
     userId: user?.id || "",
     devMode,
   });
 
   if (isLoading) return <div className="p-8 text-sm">Loading events...</div>;
-  if (isError) return <div className="p-8 text-sm text-red-600">{String(error)}</div>;
+  if (isError)
+    return <div className="p-8 text-sm text-red-600">{String(error)}</div>;
 
   return (
     <div className="p-6 space-y-6">
@@ -34,9 +40,11 @@ export const CalendarPageNew: React.FC = () => {
         size="xs"
         variant="outline"
         onClick={() => {
-            void CalendarService.searchEvents("test");
+          void CalendarService.searchEvents("test");
         }}
-      >Test Search (legacy service)</Button>
+      >
+        Test Search (legacy service)
+      </Button>
     </div>
   );
 };

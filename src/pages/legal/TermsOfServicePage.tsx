@@ -7,7 +7,11 @@ export const TermsOfServicePage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className="prose dark:prose-invert max-w-none">
-        <Typography variant="headline-lg" as="h1" className="mb-2 text-text-primary">
+        <Typography
+          variant="headline-lg"
+          as="h1"
+          className="mb-2 text-text-primary"
+        >
           Terms of Service
         </Typography>
         <p className="text-sm mb-8 text-text-secondary">
@@ -15,7 +19,11 @@ export const TermsOfServicePage: React.FC = () => {
         </p>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             1. Acceptance of Terms
           </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -31,7 +39,11 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             2. Description of Service
           </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -49,7 +61,11 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             3. User Accounts and Registration
           </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -73,7 +89,11 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             4. Acceptable Use Policy
           </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -92,11 +112,19 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             5. Subscription and Payment Terms
           </Typography>
 
-          <Typography variant="headline-sm" as="h3" className="mb-3 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="mb-3 text-text-primary"
+          >
             Team Subscriptions ($199/year)
           </Typography>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
@@ -107,7 +135,11 @@ export const TermsOfServicePage: React.FC = () => {
             <li>Automatic renewal unless cancelled before renewal date</li>
           </ul>
 
-          <Typography variant="headline-sm" as="h3" className="mb-3 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="mb-3 text-text-primary"
+          >
             Coach Accounts ($9.99/month)
           </Typography>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
@@ -123,7 +155,11 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             6. Intellectual Property Rights
           </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -140,7 +176,11 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             7. Privacy and Data Protection
           </Typography>
           <p className="text-gray-700 dark:text-gray-300">
@@ -151,7 +191,11 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             8. Termination
           </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -167,7 +211,11 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             9. Disclaimers and Limitation of Liability
           </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -185,7 +233,11 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             10. Indemnification
           </Typography>
           <p className="text-gray-700 dark:text-gray-300">
@@ -197,7 +249,11 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             11. Governing Law
           </Typography>
           <p className="text-gray-700 dark:text-gray-300">
@@ -208,7 +264,11 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             12. Changes to Terms
           </Typography>
           <p className="text-gray-700 dark:text-gray-300">
@@ -220,7 +280,11 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="mb-4 text-text-primary"
+          >
             13. Contact Information
           </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">

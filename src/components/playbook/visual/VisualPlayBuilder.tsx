@@ -40,7 +40,11 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between bc-card-padding border-b border-slate-200">
           <div className="flex items-center space-x-4">
-            <Typography variant="headline-sm" as="h2" className="text-slate-900">
+            <Typography
+              variant="headline-sm"
+              as="h2"
+              className="text-slate-900"
+            >
               Visual Play Builder
             </Typography>
             {selectedPlay && (
@@ -95,7 +99,11 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             {viewMode === "field" && (
               <div className="space-y-6">
                 <div>
-                  <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-4">
+                  <Typography
+                    variant="headline-sm"
+                    as="h3"
+                    className="text-slate-900 mb-4"
+                  >
                     Field View Options
                   </Typography>
                   <div className="space-y-4">
@@ -194,7 +202,11 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             {viewMode === "players" && (
               <div className="space-y-6">
                 <div>
-                  <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-4">
+                  <Typography
+                    variant="headline-sm"
+                    as="h3"
+                    className="text-slate-900 mb-4"
+                  >
                     Player Positions
                   </Typography>
                   <p className="text-sm text-slate-600 mb-4">
@@ -213,7 +225,11 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             {viewMode === "routes" && (
               <div className="space-y-6">
                 <div>
-                  <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-4">
+                  <Typography
+                    variant="headline-sm"
+                    as="h3"
+                    className="text-slate-900 mb-4"
+                  >
                     Route Drawing
                   </Typography>
                   <p className="text-sm text-slate-600 mb-4">
@@ -231,7 +247,11 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             {viewMode === "settings" && (
               <div className="space-y-6">
                 <div>
-                  <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-4">
+                  <Typography
+                    variant="headline-sm"
+                    as="h3"
+                    className="text-slate-900 mb-4"
+                  >
                     Visual Settings
                   </Typography>
                   <div className="space-y-4">

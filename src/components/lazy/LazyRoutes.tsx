@@ -149,7 +149,11 @@ export class LazyLoadErrorBoundary extends React.Component<
                   />
                 </svg>
               </div>
-              <Typography variant="headline-sm" as="h2" className="text-gray-900 mb-2">
+              <Typography
+                variant="headline-sm"
+                as="h2"
+                className="text-gray-900 mb-2"
+              >
                 Failed to load page
               </Typography>
               <p className="text-gray-600 mb-4">

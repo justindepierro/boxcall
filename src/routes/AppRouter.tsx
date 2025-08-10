@@ -31,6 +31,7 @@ import {
   SubscriptionRoute,
   TeamMemberRoute,
 } from "../routes";
+import DiagnosticsPage from "../pages/DiagnosticsPage";
 
 // Route loading fallback with better UX
 const RouteLoadingSpinner: React.FC = () => (
@@ -271,6 +272,26 @@ export const AppRouter: React.FC = () => {
           />
 
           {/* ==================== DEVELOPMENT & TESTING ==================== */}
+          {import.meta.env.DEV && (
+            <Route
+              path="/dev/diagnostics"
+              element={
+                <ProtectedRoute>
+                  <DiagnosticsPage />
+                </ProtectedRoute>
+              }
+            />
+          )}
+          {import.meta.env.DEV && (
+            <Route
+              path="/dev/diagnostics"
+              element={
+                <ProtectedRoute>
+                  <DiagnosticsPage />
+                </ProtectedRoute>
+              }
+            />
+          )}
           {/* ==================== LEGAL & INFO PAGES ==================== */}
           {/* ==================== LEGAL & INFO PAGES ==================== */}
           <Route

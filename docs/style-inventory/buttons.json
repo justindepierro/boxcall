@@ -5,9 +5,7 @@
     {
       "file": "src/components/team-dashboard/layout/TeamBulletinHeader.tsx",
       "count": 1,
-      "lines": [
-        76
-      ],
+      "lines": [76],
       "hasSharedImport": false
     }
   ]

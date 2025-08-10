@@ -3,6 +3,7 @@
 Legacy artifacts archived under `src/legacy/calendar`.
 
 Open Tasks:
+
 1. Wire mutations to React Query hooks
 2. Migrate RSVP flows
 3. Migrate comments flows
@@ -12,6 +13,7 @@ Open Tasks:
 7. Remove legacy folder
 
 Validation Checklist:
+
 - [ ] All mutation paths migrated
 - [ ] RSVP UI migrated
 - [ ] Comments UI migrated

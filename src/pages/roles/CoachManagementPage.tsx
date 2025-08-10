@@ -13,7 +13,11 @@ const CoachManagementContent: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <Typography variant="headline-lg" as="h1" className="flex items-center text-text-primary">
+          <Typography
+            variant="headline-lg"
+            as="h1"
+            className="flex items-center text-text-primary"
+          >
             <Icon name="users" className="mr-3" />
             Coach Management Hub
           </Typography>
@@ -26,7 +30,11 @@ const CoachManagementContent: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {/* Team Management */}
           <div className="surface-card elevation-card hoverable rounded-lg p-6">
-            <Typography variant="headline-sm" as="h3" className="mb-4 flex items-center text-text-primary">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="mb-4 flex items-center text-text-primary"
+            >
               <Icon name="team" className="mr-2" />
               Team Management
             </Typography>
@@ -60,7 +68,11 @@ const CoachManagementContent: React.FC = () => {
 
           {/* Playbook */}
           <div className="surface-card elevation-card hoverable rounded-lg p-6">
-            <Typography variant="headline-sm" as="h3" className="mb-4 flex items-center text-text-primary">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="mb-4 flex items-center text-text-primary"
+            >
               <Icon name="book" className="mr-2" />
               Playbook
             </Typography>
@@ -94,7 +106,11 @@ const CoachManagementContent: React.FC = () => {
 
           {/* Practice Planning */}
           <div className="surface-card elevation-card hoverable rounded-lg p-6">
-            <Typography variant="headline-sm" as="h3" className="mb-4 flex items-center text-text-primary">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="mb-4 flex items-center text-text-primary"
+            >
               <Icon name="calendar" className="mr-2" />
               Practice Planning
             </Typography>
@@ -130,7 +146,11 @@ const CoachManagementContent: React.FC = () => {
         {/* Recent Activity */}
         <div className="surface-card elevation-card rounded-lg">
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <Typography variant="headline-sm" as="h3" className="text-text-primary">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="text-text-primary"
+            >
               Recent Activity
             </Typography>
           </div>

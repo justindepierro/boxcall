@@ -4,7 +4,9 @@
  */
 let __legacyHooksStubWarned = false;
 if (process.env.NODE_ENV !== "production" && !__legacyHooksStubWarned) {
-  console.warn("[DEPRECATED-STUB] hooks/useCalendar.ts -> legacy/calendar/useCalendar.ts");
+  console.warn(
+    "[DEPRECATED-STUB] hooks/useCalendar.ts -> legacy/calendar/useCalendar.ts"
+  );
   __legacyHooksStubWarned = true;
 }
 export * from "../legacy/calendar/useCalendar";

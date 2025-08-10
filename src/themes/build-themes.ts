@@ -6,11 +6,24 @@
 import { writeFileSync } from "fs";
 import { themeRegistry } from "./registry";
 
+function normalize(val: string): string {
+  // Lowercase hex codes
+  if (/^#?[0-9A-F]{3,8}$/.test(val)) return val.toLowerCase();
+  // Add spaces after commas in rgba()
+  if (/^rgba\(/i.test(val)) {
+    return val
+      .replace(/rgba\(([^)]+)\)/i, (_, inner) =>
+        `rgba(${inner.split(/\s*,\s*/).join(", ")})`
+      );
+  }
+  return val;
+}
+
 function toCSSVars(prefix: string, obj: Record<string, string>): string[] {
-  return Object.entries(obj).map(
-    ([k, v]) =>
-      `  --${prefix}-${k.replace(/([A-Z])/g, "-$1").toLowerCase()}: ${v};`
-  );
+  return Object.entries(obj).map(([k, v]) => {
+    const key = k.replace(/([A-Z])/g, "-$1").toLowerCase();
+    return `  --${prefix}-${key}: ${normalize(v)};`;
+  });
 }
 
 const lines: string[] = [];
@@ -38,5 +51,6 @@ for (const theme of themeRegistry.themes) {
   lines.push("");
 }
 
-writeFileSync("src/styles/generated-themes.css", lines.join("\n"), "utf8");
+// Ensure trailing newline for Prettier determinism
+writeFileSync("src/styles/generated-themes.css", lines.join("\n") + "\n", "utf8");
 console.log("Generated src/styles/generated-themes.css");
