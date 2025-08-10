@@ -32,7 +32,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (showDevModeWarning) {
     return (
-      <Card className="bc-card-padding border-orange-200 bg-orange-50">
+      <Card className="bc-card-padding surface-card border-orange-200 bg-orange-50">
         <div className="flex items-center">
           <Icon name="warning" size="md" color="warning" className="mr-3" />
           <div>
@@ -55,7 +55,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (loading) {
     return (
-      <Card className="bc-card-padding">
+  <Card className="bc-card-padding surface-card">
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
           <Typography variant="body-md" className="ml-3">
@@ -68,14 +68,14 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (error) {
     return (
-      <Card className="bc-card-padding border-red-200 bg-red-50">
+  <Card className="bc-card-padding surface-card border-red-200 bg-red-50">
         <div className="flex items-center">
           <Icon name="warning" size="md" color="error" className="mr-3" />
           <div>
-            <Typography variant="headline-sm" className="text-red-800 mb-1">
+    <Typography variant="headline-sm" className="text-red-800 mb-1">
               Database Error
             </Typography>
-            <Typography variant="body-sm" className="text-red-600">
+    <Typography variant="body-sm" className="text-red-600">
               {error}
             </Typography>
           </div>
@@ -86,7 +86,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (totalCount === 0) {
     return (
-      <Card className="bc-card-padding">
+    <Card className="bc-card-padding surface-card">
         <div className="text-center py-8">
           <Icon
             name="database"
@@ -94,10 +94,10 @@ export const DatabaseDataDisplay: React.FC = () => {
             color="secondary"
             className="mx-auto mb-4 opacity-50"
           />
-          <Typography variant="headline-sm" className="text-gray-600 mb-2">
+      <Typography variant="headline-sm" className="text-text-secondary mb-2">
             No Data Found
           </Typography>
-          <Typography variant="body-sm" className="text-gray-500">
+      <Typography variant="body-sm" className="text-text-muted">
             Run the demo data loader to populate your database
           </Typography>
         </div>
@@ -108,7 +108,7 @@ export const DatabaseDataDisplay: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Summary Card */}
-      <Card className="bc-card-padding bg-gradient-to-r from-jade-50 to-blue-50 border-jade-200">
+  <Card className="bc-card-padding surface-card bg-gradient-to-r from-jade-50 to-blue-50 border-jade-200">
         <div className="flex items-center justify-between">
           <div>
             <Typography variant="headline-md" className="text-jade-800 mb-1">
@@ -135,13 +135,13 @@ export const DatabaseDataDisplay: React.FC = () => {
       {/* Data Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 bc-grid-gap">
         {/* Team Selector */}
-        <Card className="bc-card-padding">
+    <Card className="bc-card-padding surface-card">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-jade-100 rounded-lg flex items-center justify-center mr-3">
               <Icon name="users" size="md" color="primary" />
             </div>
             <div>
-              <Typography variant="headline-sm" className="text-gray-900">
+      <Typography variant="headline-sm" className="text-text-primary">
                 Team Selector
               </Typography>
               <Typography variant="body-sm" color="muted">
@@ -168,7 +168,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                     <div className="flex-1 text-left">
                       <Typography
                         variant="body-sm"
-                        className="font-medium truncate"
+                        className="font-medium truncate text-text-primary"
                       >
                         {team.name}
                       </Typography>
@@ -231,13 +231,13 @@ export const DatabaseDataDisplay: React.FC = () => {
         </Card>
 
         {/* Playbooks */}
-        <Card className="bc-card-padding">
+        <Card className="bc-card-padding surface-card">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
               <Icon name="book" size="md" color="info" />
             </div>
             <div>
-              <Typography variant="headline-sm" className="text-gray-900">
+              <Typography variant="headline-sm" className="text-text-primary">
                 Playbooks
               </Typography>
               <Typography variant="body-sm" color="muted">
@@ -250,7 +250,7 @@ export const DatabaseDataDisplay: React.FC = () => {
               <div key={playbook.id} className="p-3 bg-gray-50 rounded-lg">
                 <Typography
                   variant="body-sm"
-                  className="font-medium text-gray-900"
+                  className="font-medium text-text-primary"
                 >
                   {playbook.name}
                 </Typography>
@@ -274,13 +274,13 @@ export const DatabaseDataDisplay: React.FC = () => {
         </Card>
 
         {/* Plays */}
-        <Card className="bc-card-padding">
+        <Card className="bc-card-padding surface-card">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
               <Icon name="zap" size="md" color="secondary" />
             </div>
             <div>
-              <Typography variant="headline-sm" className="text-gray-900">
+              <Typography variant="headline-sm" className="text-text-primary">
                 Plays
               </Typography>
               <Typography variant="body-sm" color="muted">
@@ -293,7 +293,7 @@ export const DatabaseDataDisplay: React.FC = () => {
               <div key={play.id} className="p-3 bg-gray-50 rounded-lg">
                 <Typography
                   variant="body-sm"
-                  className="font-medium text-gray-900"
+                  className="font-medium text-text-primary"
                 >
                   {play.play_name}
                 </Typography>
@@ -301,7 +301,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                   {play.formation} • {play.p_type}
                 </Typography>
                 {play.notes && (
-                  <Typography variant="body-xs" className="text-gray-600 mt-1">
+                  <Typography variant="body-xs" className="text-text-secondary mt-1">
                     {play.notes.substring(0, 50)}...
                   </Typography>
                 )}
@@ -312,7 +312,7 @@ export const DatabaseDataDisplay: React.FC = () => {
       </div>
 
       {/* Next Steps */}
-      <Card className="bc-card-padding bg-blue-50 border-blue-200">
+  <Card className="bc-card-padding surface-card bg-blue-50 border-blue-200">
         <Typography variant="headline-sm" className="text-blue-800 mb-3">
           🚀 Next Steps
         </Typography>
