@@ -92,7 +92,10 @@ export class ErrorBoundary extends Component<Props, State> {
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
                 <AlertTriangle className="h-6 w-6 text-red-600" />
               </div>
-              <Typography variant="headline-lg" className="text-text-primary mb-2">
+              <Typography
+                variant="headline-lg"
+                className="text-text-primary mb-2"
+              >
                 Something went wrong
               </Typography>
               <Typography variant="body-md" className="text-text-secondary">

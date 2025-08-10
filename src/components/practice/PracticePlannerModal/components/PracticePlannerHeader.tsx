@@ -228,7 +228,7 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
           onClick={onClose}
           variant="ghost"
           size="sm"
-          className="text-gray-400 hover:text-gray-600"
+          className="text-text-muted hover:text-text-primary"
         >
           <Icon name="close" size="lg" />
         </Button>

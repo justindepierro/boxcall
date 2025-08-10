@@ -210,7 +210,7 @@ export const PracticePDFExportDialog: React.FC<
     <Modal isOpen={isOpen} onClose={onClose} size="md">
       <div className="bc-card-padding">
         <div className="flex items-center space-x-3 mb-6">
-          <div className="text-3xl">📄</div>
+          <Icon name="file" size="xl" className="text-text-secondary" />
           <div>
             <Typography variant="headline-md" className="text-navy-900">
               Print Practice to PDF
@@ -365,7 +365,7 @@ export const PracticePDFExportDialog: React.FC<
                 <strong>Categories:</strong> {getSelectedCategoriesText()}
               </div>
               <div className="mt-1">
-                📄 <strong>Content:</strong> Basic timeline
+                <Icon name="file" size="xs" className="inline" /> <strong>Content:</strong> Basic timeline
                 {exportOptions.addScripts && ", Practice scripts"}
                 {exportOptions.addNotes && ", Coach notes"}
               </div>
@@ -394,7 +394,9 @@ export const PracticePDFExportDialog: React.FC<
                 <span>Generating PDF...</span>
               </div>
             ) : (
-              <>📄 Export to PDF</>
+              <>
+                <Icon name="file" size="sm" className="inline mr-1" /> Export to PDF
+              </>
             )}
           </Button>
         </div>

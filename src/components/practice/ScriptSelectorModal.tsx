@@ -144,7 +144,9 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
             </Typography>
             {filteredScripts.length === 0 ? (
               <Card className="bc-card-padding text-center">
-                <div className="text-4xl mb-4">📚</div>
+                <div className="mb-4 flex items-center justify-center">
+                  <Icon name="book" size="xl" className="text-text-secondary" />
+                </div>
                 <Typography variant="body-lg" color="muted">
                   No scripts found in this category
                 </Typography>

@@ -59,7 +59,7 @@ export const About: React.FC = () => {
           </Card>
           {/* Support */}
           <Card className="p-6">
-            <div className="text-4xl mb-4">🤝</div>
+            <Icon name="users" size="xl" className="text-text-secondary mb-4" />
             <Typography variant="headline-md" className="mb-3">
               Support & Help
             </Typography>

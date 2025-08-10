@@ -62,7 +62,9 @@ const PracticeBlockRow = memo<{
       <td className="px-4 py-3 text-sm font-medium text-text-primary">
         {block.title}
       </td>
-      <td className="px-4 py-3 text-sm text-text-secondary">{block.location}</td>
+      <td className="px-4 py-3 text-sm text-text-secondary">
+        {block.location}
+      </td>
       <td className="px-4 py-3 text-sm text-text-secondary">
         {block.assignedCoach || "Unassigned"}
       </td>
@@ -119,7 +121,11 @@ export const PracticeBlockTable = memo<PracticeBlockTableProps>(
       <div className="surface-card rounded-lg shadow overflow-hidden border-subtle">
         <div className="px-4 py-3 surface-subtle border-b border-subtle flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Typography variant="headline-sm" as="h3" className="text-text-primary">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="text-text-primary"
+            >
               Practice Blocks
             </Typography>
             <span className="text-sm text-text-secondary">

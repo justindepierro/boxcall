@@ -1,504 +1,264 @@
 [
   {
     "file": "src/components/auth/UserMenu.tsx",
-    "lines": [
-      73,
-      107
-    ]
+    "lines": [73, 107]
   },
   {
     "file": "src/components/calendar/CalendarSkeletons.tsx",
     "lines": [
-      10,
-      11,
-      12,
-      13,
-      16,
-      18,
-      19,
-      20,
-      23,
-      24,
-      25,
-      34,
-      36,
-      37,
-      44,
-      46,
-      59,
-      61,
-      62
+      10, 11, 12, 13, 16, 18, 19, 20, 23, 24, 25, 34, 36, 37, 44, 46, 59, 61, 62
     ]
   },
   {
     "file": "src/components/calendar/EventModal/EventDetails.tsx",
-    "lines": [
-      107,
-      143,
-      184,
-      201
-    ]
+    "lines": [107, 143, 184, 201]
   },
   {
     "file": "src/components/dashboard/DatabaseDataDisplay.tsx",
-    "lines": [
-      167,
-      253,
-      268,
-      296
-    ]
+    "lines": [167, 253, 268, 296]
   },
   {
     "file": "src/components/dashboard/PersonalCalendar.tsx",
-    "lines": [
-      84,
-      161
-    ]
+    "lines": [84, 161]
   },
   {
     "file": "src/components/dashboard/PersonalProfile.tsx",
-    "lines": [
-      280
-    ]
+    "lines": [280]
   },
   {
     "file": "src/components/dashboard/ProfileCard.tsx",
-    "lines": [
-      44,
-      108,
-      131
-    ]
+    "lines": [44, 108, 131]
   },
   {
     "file": "src/components/dashboard/TeamFeeds.tsx",
-    "lines": [
-      100,
-      157
-    ]
+    "lines": [100, 157]
   },
   {
     "file": "src/components/dev/DevTools.tsx",
-    "lines": [
-      281,
-      296
-    ]
+    "lines": [281, 296]
   },
   {
     "file": "src/components/dev/tabs/LogsTab.tsx",
-    "lines": [
-      39
-    ]
+    "lines": [39]
   },
   {
     "file": "src/components/layout/Footer.tsx",
-    "lines": [
-      17
-    ]
+    "lines": [17]
   },
   {
     "file": "src/components/mobile/MobileBottomNavigation.tsx",
-    "lines": [
-      59
-    ]
+    "lines": [59]
   },
   {
     "file": "src/components/mobile/MobileQuickActions.tsx",
-    "lines": [
-      39
-    ]
+    "lines": [39]
   },
   {
     "file": "src/components/onboarding/TeamOnboarding.tsx",
-    "lines": [
-      176,
-      200,
-      225
-    ]
+    "lines": [176, 200, 225]
   },
   {
     "file": "src/components/playbook/CSVImport/CSVImportModal.tsx",
-    "lines": [
-      432
-    ]
+    "lines": [432]
   },
   {
     "file": "src/components/playbook/visual/InteractivePlayBuilder.tsx",
-    "lines": [
-      104,
-      111,
-      146,
-      178,
-      225,
-      263
-    ]
+    "lines": [104, 111, 146, 178, 225, 263]
   },
   {
     "file": "src/components/practice/PracticePDFExportDialog.tsx",
-    "lines": [
-      224,
-      273
-    ]
+    "lines": [224, 273]
   },
   {
     "file": "src/components/practice/PracticePlannerModal/components/ActionFooter.tsx",
-    "lines": [
-      34
-    ]
+    "lines": [34]
   },
   {
     "file": "src/components/practice/PracticePlannerModal/components/PracticeBlockList.tsx",
-    "lines": [
-      77,
-      230
-    ]
+    "lines": [77, 230]
   },
   {
     "file": "src/components/practice/PracticePlannerModal/components/PracticeTimeline/TimelineContainer.tsx",
-    "lines": [
-      66,
-      75
-    ]
+    "lines": [66, 75]
   },
   {
     "file": "src/components/practice/PracticePlannerModal/components/PracticeTimeline/TimelineLegend.tsx",
-    "lines": [
-      65
-    ]
+    "lines": [65]
   },
   {
     "file": "src/components/practice/PracticePlannerModal/components/ScriptSelector/ScriptSelectorModal.tsx",
-    "lines": [
-      89,
-      136
-    ]
+    "lines": [89, 136]
   },
   {
     "file": "src/components/practice/README.md",
-    "lines": [
-      202
-    ]
+    "lines": [202]
   },
   {
     "file": "src/components/practice/ScriptSelectorModal.tsx",
-    "lines": [
-      66,
-      187,
-      216
-    ]
+    "lines": [66, 187, 216]
   },
   {
     "file": "src/components/practice/components/PracticeBlocksList.tsx",
-    "lines": [
-      267,
-      287,
-      411
-    ]
+    "lines": [267, 287, 411]
   },
   {
     "file": "src/components/practice/components/TimeSummary.tsx",
-    "lines": [
-      46,
-      96,
-      131
-    ]
+    "lines": [46, 96, 131]
   },
   {
     "file": "src/components/practice/components/TimelineAllocation.tsx",
-    "lines": [
-      250,
-      275,
-      293,
-      322,
-      336,
-      436
-    ]
+    "lines": [250, 275, 293, 322, 336, 436]
   },
   {
     "file": "src/components/practice/utils.ts",
-    "lines": [
-      31,
-      35
-    ]
+    "lines": [31, 35]
   },
   {
     "file": "src/components/team/PlayerForm.tsx",
-    "lines": [
-      152,
-      267,
-      399
-    ]
+    "lines": [152, 267, 399]
   },
   {
     "file": "src/components/team/PlayerList.tsx",
-    "lines": [
-      92,
-      166,
-      247
-    ]
+    "lines": [92, 166, 247]
   },
   {
     "file": "src/components/team/TeamSettings.tsx",
-    "lines": [
-      88,
-      132,
-      276,
-      320
-    ]
+    "lines": [88, 132, 276, 320]
   },
   {
     "file": "src/components/team-dashboard/SeasonStatsCard.tsx",
-    "lines": [
-      174
-    ]
+    "lines": [174]
   },
   {
     "file": "src/components/team-dashboard/TeamFeed.tsx",
-    "lines": [
-      303,
-      304
-    ]
+    "lines": [303, 304]
   },
   {
     "file": "src/components/team-dashboard/layout/TeamBulletinHeader.tsx",
-    "lines": [
-      71,
-      82,
-      83
-    ]
+    "lines": [71, 82, 83]
   },
   {
     "file": "src/components/ui/Animations/SquareAnimations.tsx",
-    "lines": [
-      39,
-      155
-    ]
+    "lines": [39, 155]
   },
   {
     "file": "src/components/ui/Badge/Badge.tsx",
-    "lines": [
-      127,
-      128
-    ]
+    "lines": [127, 128]
   },
   {
     "file": "src/components/ui/Breadcrumb/Breadcrumb.tsx",
-    "lines": [
-      100
-    ]
+    "lines": [100]
   },
   {
     "file": "src/components/ui/Button/Button.tsx",
-    "lines": [
-      51,
-      52,
-      53,
-      55
-    ]
+    "lines": [51, 52, 53, 55]
   },
   {
     "file": "src/components/ui/Card/Card.tsx",
-    "lines": [
-      14,
-      16,
-      20,
-      40,
-      41,
-      119,
-      120,
-      121
-    ]
+    "lines": [14, 16, 20, 40, 41, 119, 120, 121]
   },
   {
     "file": "src/components/ui/Form/Form.tsx",
-    "lines": [
-      158
-    ]
+    "lines": [158]
   },
   {
     "file": "src/components/ui/Icon/ModularIcon.tsx",
-    "lines": [
-      167
-    ]
+    "lines": [167]
   },
   {
     "file": "src/components/ui/Input/Input.tsx",
-    "lines": [
-      44
-    ]
+    "lines": [44]
   },
   {
     "file": "src/components/ui/MobileErrorState.tsx",
-    "lines": [
-      55,
-      109
-    ]
+    "lines": [55, 109]
   },
   {
     "file": "src/components/ui/Modal/Modal.tsx",
-    "lines": [
-      166,
-      201
-    ]
+    "lines": [166, 201]
   },
   {
     "file": "src/components/ui/NavBar/NavBar.tsx",
-    "lines": [
-      101,
-      112,
-      230,
-      240
-    ]
+    "lines": [101, 112, 230, 240]
   },
   {
     "file": "src/components/ui/RouteLoadingSkeleton.tsx",
-    "lines": [
-      9,
-      10,
-      31
-    ]
+    "lines": [9, 10, 31]
   },
   {
     "file": "src/components/ui/Select/Select.tsx",
-    "lines": [
-      29
-    ]
+    "lines": [29]
   },
   {
     "file": "src/components/ui/Sidebar/Sidebar.tsx",
-    "lines": [
-      84,
-      92,
-      238,
-      279
-    ]
+    "lines": [84, 92, 238, 279]
   },
   {
     "file": "src/components/ui/Skeleton.tsx",
-    "lines": [
-      31,
-      107,
-      140,
-      164
-    ]
+    "lines": [31, 107, 140, 164]
   },
   {
     "file": "src/components/ui/Table/Table.tsx",
-    "lines": [
-      95,
-      107,
-      108,
-      129,
-      145,
-      331
-    ]
+    "lines": [95, 107, 108, 129, 145, 331]
   },
   {
     "file": "src/components/ui/Tag/Tag.tsx",
-    "lines": [
-      31
-    ]
+    "lines": [31]
   },
   {
     "file": "src/components/ui/TextArea/TextArea.tsx",
-    "lines": [
-      11
-    ]
+    "lines": [11]
   },
   {
     "file": "src/components/ui/TouchFeedback.tsx",
-    "lines": [
-      203,
-      205,
-      299
-    ]
+    "lines": [203, 205, 299]
   },
   {
     "file": "src/pages/CreateCoachAccount.tsx",
-    "lines": [
-      488,
-      522,
-      537,
-      548,
-      724
-    ]
+    "lines": [488, 522, 537, 548, 724]
   },
   {
     "file": "src/pages/CreateTeam.tsx",
-    "lines": [
-      728,
-      857
-    ]
+    "lines": [728, 857]
   },
   {
     "file": "src/pages/JoinTeam.tsx",
-    "lines": [
-      222,
-      361
-    ]
+    "lines": [222, 361]
   },
   {
     "file": "src/pages/ProfilePage.tsx",
-    "lines": [
-      175,
-      226,
-      272,
-      308,
-      333
-    ]
+    "lines": [175, 226, 272, 308, 333]
   },
   {
     "file": "src/pages/TeamsPage.tsx",
-    "lines": [
-      70,
-      87
-    ]
+    "lines": [70, 87]
   },
   {
     "file": "src/pages/Templates.tsx",
-    "lines": [
-      336
-    ]
+    "lines": [336]
   },
   {
     "file": "src/pages/legal/AboutPage.tsx",
-    "lines": [
-      135
-    ]
+    "lines": [135]
   },
   {
     "file": "src/pages/legal/ContactPage.tsx",
-    "lines": [
-      97,
-      213
-    ]
+    "lines": [97, 213]
   },
   {
     "file": "src/pages/legal/PrivacyPolicyPage.tsx",
-    "lines": [
-      251
-    ]
+    "lines": [251]
   },
   {
     "file": "src/pages/legal/TermsOfServicePage.tsx",
-    "lines": [
-      294
-    ]
+    "lines": [294]
   },
   {
     "file": "src/pages/roles/CoachManagementPage.tsx",
-    "lines": [
-      148
-    ]
+    "lines": [148]
   },
   {
     "file": "src/pages/roles/PlayerDashboardPage.tsx",
-    "lines": [
-      100,
-      165,
-      182,
-      198,
-      214,
-      230
-    ]
+    "lines": [100, 165, 182, 198, 214, 230]
   }
 ]

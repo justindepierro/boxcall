@@ -39,7 +39,9 @@ const PlayerDashboardContent: React.FC = () => {
                 <p className="text-sm font-medium text-text-secondary">
                   Practices Attended
                 </p>
-                <p className="text-2xl font-bold text-text-primary">23/25</p>
+                <Typography variant="headline-sm" as="p" className="text-text-primary">
+                  23/25
+                </Typography>
               </div>
             </div>
           </div>
@@ -55,7 +57,9 @@ const PlayerDashboardContent: React.FC = () => {
                 <p className="text-sm font-medium text-text-secondary">
                   Games Played
                 </p>
-                <p className="text-2xl font-bold text-text-primary">8</p>
+                <Typography variant="headline-sm" as="p" className="text-text-primary">
+                  8
+                </Typography>
               </div>
             </div>
           </div>
@@ -71,7 +75,9 @@ const PlayerDashboardContent: React.FC = () => {
                 <p className="text-sm font-medium text-text-secondary">
                   Skill Rating
                 </p>
-                <p className="text-2xl font-bold text-text-primary">8.5</p>
+                <Typography variant="headline-sm" as="p" className="text-text-primary">
+                  8.5
+                </Typography>
               </div>
             </div>
           </div>
@@ -87,7 +93,9 @@ const PlayerDashboardContent: React.FC = () => {
                 <p className="text-sm font-medium text-text-secondary">
                   Improvement
                 </p>
-                <p className="text-2xl font-bold text-text-primary">+2.1</p>
+                <Typography variant="headline-sm" as="p" className="text-text-primary">
+                  +2.1
+                </Typography>
               </div>
             </div>
           </div>

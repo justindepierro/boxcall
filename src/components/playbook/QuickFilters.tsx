@@ -104,7 +104,7 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
             onClick={clearAllFilters}
             variant="link"
             size="xs"
-            className="text-xs text-text-muted hover:text-gray-700 underline"
+            className="text-xs text-text-muted hover:text-text-primary underline"
           >
             Clear all
           </Button>

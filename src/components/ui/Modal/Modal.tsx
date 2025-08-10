@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { IconButton } from "../IconButton/IconButton";
+import { Typography } from "../../design-system/Typography";
 export interface ModalProps {
   /** Whether the modal is open */
   isOpen: boolean;
@@ -165,12 +166,14 @@ export const Modal: React.FC<ModalProps> = ({
         {title && (
           <div className="bc-card-padding border-b-2 border-subtle dark:border-gray-700">
             <div className="flex items-center justify-between">
-              <h3
+              <Typography
                 id="modal-title"
-                className={`text-xl font-display font-bold leading-6 ${type === "alert" ? "text-red-900 dark:text-red-100" : ""} "confirm" "text-yellow-900 dark:text-yellow-100" text-text-primary`}
+                variant="headline-sm"
+                as="h3"
+                className={`${type === "alert" ? "text-red-900 dark:text-red-100" : ""} text-text-primary`}
               >
                 {title}
-              </h3>
+              </Typography>
               <IconButton
                 aria-label="Close modal"
                 onClick={onClose}

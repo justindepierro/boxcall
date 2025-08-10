@@ -105,6 +105,8 @@ export default tseslint.config([
         },
       ],
       "boxcall-style/no-raw-gray-text": "error",
+  "boxcall-style/no-raw-heading-utilities": "error",
+  "boxcall-style/no-raw-emoji": "error",
     },
   },
   // Plugin injection for custom rule namespace
@@ -296,6 +298,96 @@ export default tseslint.config([
                           "Raw gray text utility detected; replace with text-text-primary / text-text-secondary / text-text-muted.",
                       });
                     }
+                  }
+                },
+              };
+            },
+          },
+          "no-raw-heading-utilities": {
+            meta: {
+              type: "problem",
+              docs: {
+                description:
+                  "Disallow raw text-xl/2xl/3xl/4xl heading utilities outside Typography component; use <Typography variant=...>",
+              },
+              schema: [],
+              messages: {
+                rawHeading:
+                  "Raw heading utility '{{utility}}' detected. Replace with <Typography variant=\"headline-*\" />.",
+              },
+            },
+            create(context) {
+              const headingRe = /(\s|^)(text-(xl|2xl|3xl|4xl))(\s|$)/;
+              return {
+                JSXAttribute(attr) {
+                  if (
+                    attr.name?.name === "className" &&
+                    attr.value?.type === "Literal"
+                  ) {
+                    const v = String(attr.value.value);
+                    if (headingRe.test(v)) {
+                      // Allow inside Typography component via parent name check
+                      const parent = attr.parent?.parent;
+                      if (
+                        parent &&
+                        parent.type === "JSXOpeningElement" &&
+                        parent.name.type === "JSXIdentifier" &&
+                        parent.name.name === "Typography"
+                      ) {
+                        return;
+                      }
+                      const match = v.match(/text-(xl|2xl|3xl|4xl)/);
+                      context.report({
+                        node: attr,
+                        messageId: "rawHeading",
+                        data: { utility: match ? match[0] : "text-*" },
+                      });
+                    }
+                  }
+                },
+              };
+            },
+          },
+          "no-raw-emoji": {
+            meta: {
+              type: "problem",
+              docs: {
+                description:
+                  "Disallow raw emoji characters in interactive / structural UI; use <Icon name=...> instead",
+              },
+              schema: [],
+              messages: {
+                rawEmoji:
+                  "Raw emoji '{{emoji}}' detected. Replace with appropriate <Icon /> component.",
+              },
+            },
+            create(context) {
+              // Basic emoji detection pattern (covers most common pictographs used previously)
+              const emojiRe = /[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/u;
+              return {
+                JSXText(node) {
+                  const value = node.value;
+                  if (emojiRe.test(value)) {
+                    const match = value.match(emojiRe);
+                    context.report({
+                      node,
+                      messageId: "rawEmoji",
+                      data: { emoji: match?.[0] || "emoji" },
+                    });
+                  }
+                },
+                Literal(node) {
+                  if (
+                    typeof node.value === "string" &&
+                    emojiRe.test(node.value) &&
+                    node.parent?.type === "JSXElement"
+                  ) {
+                    const match = String(node.value).match(emojiRe);
+                    context.report({
+                      node,
+                      messageId: "rawEmoji",
+                      data: { emoji: match?.[0] || "emoji" },
+                    });
                   }
                 },
               };

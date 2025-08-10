@@ -247,7 +247,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                               ? getCategoryColor(
                                   dominantCategory as PracticeBlock["category"]
                                 )
-                              : "surface-subtle text-gray-600"
+                              : "surface-subtle text-text-secondary"
                           }`}
                         >
                           Hour {hourIndex + 1}
@@ -435,7 +435,10 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
       {/* Current Allocation Summary */}
       <div className="mt-4 p-3 surface-subtle rounded-lg">
         <div className="flex items-center justify-between mb-2">
-          <Typography variant="body-sm" className="font-medium text-text-primary">
+          <Typography
+            variant="body-sm"
+            className="font-medium text-text-primary"
+          >
             Current Allocation (Click time to edit):
           </Typography>
           <div className="flex items-center gap-1">

@@ -87,7 +87,11 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-subtle surface-subtle">
           <div>
-            <Typography variant="headline-sm" as="h2" className="text-text-primary">
+            <Typography
+              variant="headline-sm"
+              as="h2"
+              className="text-text-primary"
+            >
               Interactive Play Builder
             </Typography>
             <p className="text-sm text-text-secondary">

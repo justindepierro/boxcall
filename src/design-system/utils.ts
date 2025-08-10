@@ -59,7 +59,7 @@ export const tokenClasses = {
 
   // Navigation styles
   navItem:
-    "text-gray-600 hover:text-interaction-jade hover:bg-surface-jade p-2 rounded transition-colors",
+    "text-text-secondary hover:text-interaction-jade hover:bg-surface-jade p-2 rounded transition-colors",
   navBrand: "text-interaction-jade font-bold text-xl",
 
   // Form styles
@@ -69,8 +69,8 @@ export const tokenClasses = {
 
   // Text styles
   heading: "text-brand-navy-dark font-bold",
-  body: "text-gray-700",
-  muted: "text-gray-500",
+  body: "text-text-primary",
+  muted: "text-text-muted",
 
   // Interactive states
   interactive:

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Icon from "../Icon/Icon";
 import { Typography } from "../../design-system";
 import { Button } from "../Button";
 import { Form, FormActions, FormField } from "../Form";
@@ -506,7 +507,7 @@ export function ResetPasswordForm({
       >
         <div className="text-center py-8">
           <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/20 mb-4">
-            <span className="text-2xl">✉️</span>
+            <Icon name="mail" size="md" className="text-green-700 dark:text-green-300" />
           </div>
           <Typography variant="body-md" color="muted">
             If an account with that email exists, you'll receive password reset

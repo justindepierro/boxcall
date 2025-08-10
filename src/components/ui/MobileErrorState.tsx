@@ -113,7 +113,10 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
             <IconComponent className={`h-4 w-4 ${config.color}`} />
           </div>
           <div>
-            <Typography variant="body-sm" className="text-text-primary font-medium">
+            <Typography
+              variant="body-sm"
+              className="text-text-primary font-medium"
+            >
               {title || config.defaultTitle}
             </Typography>
             <Typography variant="caption" className="text-text-muted">

@@ -314,28 +314,36 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         {/* Summary Stats */}
         <div className="grid grid-cols-4 gap-4 bg-slate-50 rounded-lg p-4">
           <div className="text-center">
-            <p className="text-2xl font-bold text-slate-900">
+            <Typography variant="headline-sm" as="p" className="mb-1">
               {summary.totalRows}
-            </p>
-            <p className="text-xs text-slate-600">Total Rows</p>
+            </Typography>
+            <Typography variant="caption" className="text-slate-600">
+              Total Rows
+            </Typography>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-green-600">
+            <Typography variant="headline-sm" as="p" className="text-green-600 mb-1">
               {summary.validPlays}
-            </p>
-            <p className="text-xs text-slate-600">Valid Plays</p>
+            </Typography>
+            <Typography variant="caption" className="text-slate-600">
+              Valid Plays
+            </Typography>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-red-600">
+            <Typography variant="headline-sm" as="p" className="text-red-600 mb-1">
               {summary.invalidPlays}
-            </p>
-            <p className="text-xs text-slate-600">Invalid Plays</p>
+            </Typography>
+            <Typography variant="caption" className="text-slate-600">
+              Invalid Plays
+            </Typography>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-amber-600">
+            <Typography variant="headline-sm" as="p" className="text-amber-600 mb-1">
               {summary.warnings}
-            </p>
-            <p className="text-xs text-slate-600">Warnings</p>
+            </Typography>
+            <Typography variant="caption" className="text-slate-600">
+              Warnings
+            </Typography>
           </div>
         </div>
 
@@ -429,7 +437,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                                 ? "bg-green-100 text-green-800"
                                 : preview.data.p_type === "RPO"
                                   ? "bg-purple-100 text-purple-800"
-                                  : "surface-subtle text-gray-800"
+                                  : "surface-subtle text-text-primary"
                           }`}
                         >
                           {preview.data.p_type || "Unknown"}
@@ -623,28 +631,28 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         <div className="bg-slate-50 rounded-lg p-4">
           <div className="grid grid-cols-4 gap-4 text-center">
             <div>
-              <p className="text-2xl font-bold text-green-600">
+              <Typography variant="headline-sm" as="p" className="text-green-600 mb-1">
                 {importResult.importedPlays}
-              </p>
-              <p className="text-sm text-slate-600">Plays Added</p>
+              </Typography>
+              <Typography variant="caption" className="text-slate-600">Plays Added</Typography>
             </div>
             <div>
-              <p className="text-2xl font-bold text-blue-600">
+              <Typography variant="headline-sm" as="p" className="text-blue-600 mb-1">
                 {importResult.totalRows}
-              </p>
-              <p className="text-sm text-slate-600">Total Rows</p>
+              </Typography>
+              <Typography variant="caption" className="text-slate-600">Total Rows</Typography>
             </div>
             <div>
-              <p className="text-2xl font-bold text-red-600">
+              <Typography variant="headline-sm" as="p" className="text-red-600 mb-1">
                 {importResult.errors.length}
-              </p>
-              <p className="text-sm text-slate-600">Errors</p>
+              </Typography>
+              <Typography variant="caption" className="text-slate-600">Errors</Typography>
             </div>
             <div>
-              <p className="text-2xl font-bold text-amber-600">
+              <Typography variant="headline-sm" as="p" className="text-amber-600 mb-1">
                 {importResult.warnings?.length || 0}
-              </p>
-              <p className="text-sm text-slate-600">Warnings</p>
+              </Typography>
+              <Typography variant="caption" className="text-slate-600">Warnings</Typography>
             </div>
           </div>
         </div>

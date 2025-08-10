@@ -16,7 +16,9 @@ export const TeamsPage: React.FC = () => {
       <div className="container mx-auto p-6">
         <div className="flex items-center justify-center p-8">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
-          <span className="ml-3 text-lg text-text-secondary">Loading teams...</span>
+          <span className="ml-3 text-lg text-text-secondary">
+            Loading teams...
+          </span>
         </div>
       </div>
     );
@@ -51,7 +53,7 @@ export const TeamsPage: React.FC = () => {
           <Typography variant="headline-lg" className="text-text-muted mb-4">
             No Teams Found
           </Typography>
-          <p className="text-gray-400">
+          <p className="text-text-muted">
             Create a team or check your database connection
           </p>
         </div>

@@ -274,7 +274,8 @@ export const JoinTeam: React.FC = () => {
                 onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
                 placeholder="ABC123"
                 maxLength={6}
-                className="w-full px-4 py-3 text-center text-2xl font-mono border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-brand-jade tracking-widest"
+                className="w-full px-4 py-3 text-center font-mono text-[1.75rem] leading-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-brand-jade tracking-widest"
+                aria-label="Invite code"
               />
               <Typography variant="body-sm" color="muted" className="mt-2">
                 Enter the 6-character code exactly as provided
@@ -560,7 +561,7 @@ export const JoinTeam: React.FC = () => {
               variant="link"
               size="sm"
               onClick={() => setCurrentStep("method")}
-              className="flex items-center gap-1 text-text-secondary hover:text-gray-800"
+              className="flex items-center gap-1 text-text-secondary hover:text-text-primary"
             >
               <Icon name="chevron-left" size="sm" /> Back to join methods
             </Button>

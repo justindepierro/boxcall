@@ -109,7 +109,7 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
       {practiceBlocks.length === 0 ? (
         <Card className="bc-card-padding text-center">
           <div className="mb-4 flex justify-center">
-            <Icon name="clock" size="lg" className="text-gray-400" />
+            <Icon name="clock" size="lg" className="text-text-muted" />
           </div>
           <Typography variant="body-lg" color="muted">
             No practice blocks planned yet

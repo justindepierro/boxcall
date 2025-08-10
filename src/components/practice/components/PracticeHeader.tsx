@@ -82,7 +82,7 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
                     name={timeAllocationMode ? "bar-chart" : "clock"}
                     size="sm"
                     className={
-                      timeAllocationMode ? "text-white" : "text-gray-600"
+                      timeAllocationMode ? "text-white" : "text-text-secondary"
                     }
                   />
                 }
@@ -101,7 +101,9 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
                   <Icon
                     name={scaffoldMode ? "file" : "target"}
                     size="sm"
-                    className={scaffoldMode ? "text-white" : "text-gray-600"}
+                    className={
+                      scaffoldMode ? "text-white" : "text-text-secondary"
+                    }
                   />
                 }
                 iconPosition="left"
@@ -130,12 +132,12 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
           variant="ghost"
           size="xs"
           aria-label="Close practice planner"
-          className="p-2 text-gray-400 hover:text-gray-600 h-auto"
+          className="p-2 text-text-muted hover:text-text-primary h-auto"
           icon={
             <Icon
               name="close"
               size="sm"
-              className="text-text-muted hover:text-gray-700"
+              className="text-text-muted hover:text-text-primary"
             />
           }
           iconPosition="only"
