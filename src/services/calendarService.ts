@@ -94,7 +94,7 @@ export class CalendarService {
       //   .eq('team_id', teamId)
       //   .order('start', { ascending: true });
 
-      return this.getMockTeamEvents(teamId, filters);
+  return parseCalendarEvents(this.getMockTeamEvents(teamId, filters));
     } catch (error) {
       console.error("Error fetching team events:", error);
       return [];
@@ -274,13 +274,14 @@ export class CalendarService {
       const allEvents = this.getMockUserEvents("search-user", filters);
       const searchTerm = query.toLowerCase();
 
-      return allEvents.filter(
+  const filtered = allEvents.filter(
         (event) =>
           event.title.toLowerCase().includes(searchTerm) ||
           event.description?.toLowerCase().includes(searchTerm) ||
           event.location?.toLowerCase().includes(searchTerm) ||
           event.opponent?.toLowerCase().includes(searchTerm)
-      );
+  );
+  return parseCalendarEvents(filtered);
     } catch (error) {
       console.error("Error searching events:", error);
       return [];
@@ -297,13 +298,13 @@ export class CalendarService {
     try {
       const events = await this.getUserEvents(userId);
       const now = new Date();
-
-      return events
+      const upcoming = events
         .filter((event) => new Date(event.start) >= now)
         .sort(
           (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()
         )
         .slice(0, limit);
+      return parseCalendarEvents(upcoming);
     } catch (error) {
       console.error("Error fetching upcoming events:", error);
       return [];
