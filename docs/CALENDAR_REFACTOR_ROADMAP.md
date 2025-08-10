@@ -97,9 +97,6 @@ src/
 
 **Objectives**
 
-- Split monolithic `calendarService.ts` into infra modules (`api.ts`, `rsvp.ts`, `comments.ts`).
-- Add adapter: `FullCalendarAdapter` (map domain event ↔ FullCalendar event object).
-- Introduce ICS generation prototype (single event export).
 
 **Tasks**
 
@@ -109,9 +106,8 @@ src/
 
 **Exit Criteria**
 
-- Calendar page uses adapter; no direct FullCalendar-specific shapes elsewhere.
-- ICS export button returns valid `.ics` (validated by regex + sample import test).
 
+| 2025-08-10 | 2      | Extracted RSVP & comments infra modules (rsvp.ts, comments.ts) + tests; added legacy deprecation note to calendarService. |
 ---
 
 ## Phase 3 – State Management & Optimistic UX
@@ -316,14 +312,14 @@ src/
 
 ## Status Log
 
-| Date       | Phase  | Update                                                                                        |
-| ---------- | ------ | --------------------------------------------------------------------------------------------- |
-| (init)     | 0      | Roadmap created.                                                                              |
-| 2025-08-10 | 0      | Baseline metrics captured (raw util debt 23 on CalendarPage, stable build, no type errors).   |
-| 2025-08-10 | 1-prep | Domain types extracted to `domain/calendar/types.ts` (no functional change) ahead of Phase 1. |
-| 2025-08-10 | 1      | Added zod schemas (schema.ts), comment types, and rules.ts scaffolding.                       |
+| Date       | Phase  | Update                                                                                                                                                                                           |
+| ---------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| (init)     | 0      | Roadmap created.                                                                                                                                                                                 |
+| 2025-08-10 | 0      | Baseline metrics captured (raw util debt 23 on CalendarPage, stable build, no type errors).                                                                                                      |
+| 2025-08-10 | 1-prep | Domain types extracted to `domain/calendar/types.ts` (no functional change) ahead of Phase 1.                                                                                                    |
+| 2025-08-10 | 1      | Added zod schemas (schema.ts), comment types, and rules.ts scaffolding.                                                                                                                          |
 | 2025-08-10 | 1-done | Phase 1 complete: all service fetch/mutation paths parsed via zod; rules + schema tests added (17 tests). Domain coverage: schema 97.7% stmts, rules 100%. Ready to begin Phase 2 decomposition. |
-| 2025-08-10 | 2-kick | Phase 2 scaffolding: created infra/calendar (api.ts, ics.ts) + adapter (FullCalendarAdapter.ts) + initial adapter/ICS test. |
+| 2025-08-10 | 2-kick | Phase 2 scaffolding: created infra/calendar (api.ts, ics.ts) + adapter (FullCalendarAdapter.ts) + initial adapter/ICS test.                                                                      |
 
 ---
 

@@ -1,13 +1,17 @@
-import { describe, it, expect } from 'vitest';
-import { CalendarAPI } from './api';
-import { eventToICS } from './ics';
-import { FullCalendarAdapter } from '../../adapters/fullcalendar/FullCalendarAdapter';
+import { describe, it, expect } from "vitest";
+import { CalendarAPI } from "./api";
+import { eventToICS } from "./ics";
+import { FullCalendarAdapter } from "../../adapters/fullcalendar/FullCalendarAdapter";
 
 const iso = () => new Date().toISOString();
 
-describe('Calendar Infra Phase 2 scaffolding', () => {
-  it('creates event via API and converts to FullCalendar & ICS', async () => {
-    const created = await CalendarAPI.createEvent({ title: 'Adapter Test', start: iso(), type: 'practice' });
+describe("Calendar Infra Phase 2 scaffolding", () => {
+  it("creates event via API and converts to FullCalendar & ICS", async () => {
+    const created = await CalendarAPI.createEvent({
+      title: "Adapter Test",
+      start: iso(),
+      type: "practice",
+    });
     expect(created).not.toBeNull();
     if (!created) return;
     const fc = FullCalendarAdapter.toFullCalendar(created);

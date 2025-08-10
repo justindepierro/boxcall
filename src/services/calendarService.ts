@@ -22,8 +22,10 @@ import {
 } from "../domain/calendar/schema";
 
 /**
- * Calendar Service
- * Manages calendar events, RSVP functionality, and schedule management
+ * Calendar Service (Legacy - Phase 2 migration in progress)
+ * Responsibilities being migrated to infra/calendar/* (api, rsvp, comments, ics) and adapters.
+ * New code SHOULD prefer CalendarAPI / CalendarRSVP / CalendarComments. This facade will be
+ * slimmed and eventually removed once UI + state layers are refactored.
  */
 export class CalendarService {
   /**
@@ -48,10 +50,10 @@ export class CalendarService {
       }
 
       // For production/real modes, try to get real data
-    if (devMode === "production" || devMode === "super_admin_real") {
+      if (devMode === "production" || devMode === "super_admin_real") {
         try {
-      const realEvents = await this.getRealUserEvents(userId, filters);
-      return parseCalendarEvents(realEvents);
+          const realEvents = await this.getRealUserEvents(userId, filters);
+          return parseCalendarEvents(realEvents);
         } catch (error) {
           console.warn("Could not fetch real events, returning empty:", error);
           return [];
@@ -65,7 +67,9 @@ export class CalendarService {
 
       // Default: try real data first, fallback to empty
       try {
-        return parseCalendarEvents(await this.getRealUserEvents(userId, filters));
+        return parseCalendarEvents(
+          await this.getRealUserEvents(userId, filters)
+        );
       } catch (error) {
         console.warn("Could not fetch real events, returning empty:", error);
         return [];
@@ -95,7 +99,7 @@ export class CalendarService {
       //   .eq('team_id', teamId)
       //   .order('start', { ascending: true });
 
-  return parseCalendarEvents(this.getMockTeamEvents(teamId, filters));
+      return parseCalendarEvents(this.getMockTeamEvents(teamId, filters));
     } catch (error) {
       console.error("Error fetching team events:", error);
       return [];
@@ -109,8 +113,8 @@ export class CalendarService {
     eventData: CalendarEventCreate
   ): Promise<CalendarEvent | null> {
     try {
-  // Validate input shape
-  const validated = parseCalendarEventCreate(eventData);
+      // Validate input shape
+      const validated = parseCalendarEventCreate(eventData);
       // TODO: Implement real database creation
       // const { data, error } = await supabase
       //   .from('calendar_events')
@@ -208,7 +212,7 @@ export class CalendarService {
       //   .eq('event_id', eventId)
       //   .order('created_at', { ascending: false });
 
-  return parseEventRSVPs(this.getMockRSVPs(eventId));
+      return parseEventRSVPs(this.getMockRSVPs(eventId));
     } catch (error) {
       console.error("Error fetching event RSVPs:", error);
       return [];
@@ -275,14 +279,14 @@ export class CalendarService {
       const allEvents = this.getMockUserEvents("search-user", filters);
       const searchTerm = query.toLowerCase();
 
-  const filtered = allEvents.filter(
+      const filtered = allEvents.filter(
         (event) =>
           event.title.toLowerCase().includes(searchTerm) ||
           event.description?.toLowerCase().includes(searchTerm) ||
           event.location?.toLowerCase().includes(searchTerm) ||
           event.opponent?.toLowerCase().includes(searchTerm)
-  );
-  return parseCalendarEvents(filtered);
+      );
+      return parseCalendarEvents(filtered);
     } catch (error) {
       console.error("Error searching events:", error);
       return [];
