@@ -97,17 +97,33 @@ src/
 
 **Objectives**
 
+- Decompose legacy `calendarService` into focused infra modules (api, rsvp, comments, ics) behind typed boundaries.
+- Introduce reusable adapter that isolates FullCalendar specifics from domain/UI.
+- Provide ICS single‑event generation prototype (foundation for feeds in Phase 8).
+- Maintain 100% parsing at boundaries (no raw event objects leak across layers).
 
-**Tasks**
+**Tasks (Expanded)**
 
-1. Move fetch/create/update logic into `api.ts` returning _parsed_ domain objects.
-2. Add `ics.ts` with basic event → ICS string (UID format: `<eventId>@boxcall`).
-3. Add smoke tests for adapter mapping.
+1. Scaffold infra modules (api, rsvp, comments, ics) and FullCalendarAdapter (DONE).
+2. Extract RSVP + comments logic from service (DONE).
+3. Migrate user/team/search/upcoming fetch & create/update/delete paths to `CalendarAPI` (IN PROGRESS).
+4. Add adapter mapping edge tests (optional fields, tags, fallback type, round‑trip integrity).
+5. Add ICS validation test (regex for VCALENDAR, DTSTART, DTEND, UID invariant) + failure case (missing title sanitization).
+6. Slim legacy `calendarService` to thin façade, mark deprecated, ensure all new code uses infra.
+7. Add barrel export for infra & adapter (e.g. `src/infra/calendar/index.ts`).
+8. Documentation: create `docs/calendar/PHASE2_TECH_NOTES.md` with migration checklist + adapter contract.
 
 **Exit Criteria**
 
+- `calendarService` no longer contains core fetch/transform logic (≤150 LOC, only delegates or mock fallbacks).
+- All calendar data retrieval & mutations travel through `CalendarAPI` / `CalendarRSVP` / `CalendarComments`.
+- Adapter round‑trip test passes for at least 5 representative event shapes.
+- ICS generator tested (snapshot or pattern) for at least one event; UID format `<eventId>@boxcall` enforced.
+- Coverage for infra + adapter files ≥85% statements.
+- Status log updated; roadmap marks Phase 2 ready to hand off to Phase 3.
 
 | 2025-08-10 | 2      | Extracted RSVP & comments infra modules (rsvp.ts, comments.ts) + tests; added legacy deprecation note to calendarService. |
+| 2025-08-10 | 2-prog | Added adapter & ICS scaffolding tests; defined Phase 2 objectives & exit criteria; prepared task list for remaining service decomposition. |
 ---
 
 ## Phase 3 – State Management & Optimistic UX
