@@ -152,7 +152,7 @@ export function LoginForm({
       {/* Social Login */}
       {showSocialLogin && (
         <div className="space-y-3">
-          <Button variant="outline" className="w-full" disabled={loading}>
+          <Button variant="secondary" className="w-full" disabled={loading}>
             <span className="mr-2">🔗</span>
             Continue with Google
           </Button>
@@ -317,7 +317,7 @@ export function SignupForm({
       {/* Social Signup */}
       {showSocialSignup && (
         <div className="space-y-3">
-          <Button variant="outline" className="w-full" disabled={loading}>
+          <Button variant="secondary" className="w-full" disabled={loading}>
             <span className="mr-2">🔗</span>
             Sign up with Google
           </Button>
@@ -497,7 +497,7 @@ export function ResetPasswordForm({
         footer={
           <FormActions align="center">
             {onBackToLogin && (
-              <Button variant="outline" onClick={onBackToLogin}>
+              <Button variant="ghost" onClick={onBackToLogin}>
                 Back to Sign In
               </Button>
             )}
