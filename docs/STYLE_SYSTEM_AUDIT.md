@@ -189,6 +189,7 @@ PR Checklist Additions (Planned):
 | 2025-08-10 | Mobile nav primitive migration  | MobileBottomNavigation items now use Button primitive for consistent focus ring & a11y; metric 16 → 5                                                                                                                      |
 | 2025-08-10 | Grid toggle micro control       | PlayGrid one-word toggle uses IconButton; metric 5 → 4                                                                                                                                                                     |
 | 2025-08-10 | Logo uploader exemption noted   | Chose to exempt TeamBulletinHeader logo upload control (media upload surface) from Button migration; final non-exempt raw count = 0 (exempt raw = 1)                                                                       |
+| 2025-08-10 | ESLint rule `no-raw-button`     | Added custom ESLint rule enforcing Button/IconButton usage; allowlist covers logo uploader; enables CI gating against regressions                                                    |
 
 ### Exemption Rationale (Interactive Density / Specialized Controls)
 
