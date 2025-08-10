@@ -20,7 +20,7 @@ export const About: React.FC = () => {
         <div className="mb-8">
           <Typography
             variant="headline-xl"
-            className="text-gray-900 dark:text-white"
+            className="text-text-primary"
           >
             About BoxCall
           </Typography>
@@ -52,7 +52,7 @@ export const About: React.FC = () => {
             <Typography variant="headline-md" className="mb-3">
               Key Features
             </Typography>
-            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+            <ul className="space-y-2 text-sm text-text-secondary">
               <li>• Team communication and bulletin boards</li>
               <li>• Digital playbook and strategy tools</li>
               <li>• Calendar and schedule management</li>

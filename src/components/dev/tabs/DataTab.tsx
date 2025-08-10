@@ -110,7 +110,7 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
                 ></span>
                 <span className="font-medium">{mode.label}</span>
               </div>
-              <div className="text-gray-600 dark:text-gray-400 ml-4 text-[10px] leading-snug">
+              <div className="ml-4 text-[10px] leading-snug text-text-secondary">
                 {mode.description}
               </div>
             </Button>

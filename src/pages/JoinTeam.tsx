@@ -233,7 +233,7 @@ export const JoinTeam: React.FC = () => {
                       <Typography variant="headline-sm" className="mb-2">
                         {method.title}
                         {method.primary && (
-                          <span className="ml-2 bg-surface-jade0 text-white text-xs px-2 py-1 rounded-full">
+                          <span className="ml-2 bg-surface-jade0 text-text-primary text-xs px-2 py-1 rounded-full">
                             Most Common
                           </span>
                         )}

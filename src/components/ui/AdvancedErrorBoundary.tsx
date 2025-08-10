@@ -394,7 +394,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
                 ${
                   isRecovering
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-team-primary text-white hover:bg-team-primary/90"
+                    : "bg-team-primary text-text-primary hover:bg-team-primary/90"
                 }
               `}
               onPress={isRecovering ? undefined : onRetry}

@@ -364,7 +364,7 @@ export const TouchNavItem: React.FC<TouchNavItemProps> = ({
       <div className="relative">
         {icon && <div className="flex-shrink-0">{icon}</div>}
         {badge && badge > 0 && (
-          <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+          <div className="absolute -top-1 -right-1 bg-red-500 text-text-inverse text-xs rounded-full w-5 h-5 flex items-center justify-center">
             {badge > 99 ? "99+" : badge}
           </div>
         )}

@@ -97,7 +97,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
       <div className="flex items-center justify-between mb-4">
         <Typography
           variant="headline-md"
-          className="text-gray-900 dark:text-white"
+          className="text-text-primary"
         >
           Season Stats
         </Typography>
@@ -123,37 +123,37 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
       {stats && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center mb-4">
           <div>
-            <div className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <div className="text-xs uppercase tracking-wide text-text-secondary">
               Wins
             </div>
             <div className="text-lg font-semibold">{stats.wins}</div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <div className="text-xs uppercase tracking-wide text-text-secondary">
               Losses
             </div>
             <div className="text-lg font-semibold">{stats.losses}</div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <div className="text-xs uppercase tracking-wide text-text-secondary">
               Win %
             </div>
             <div className="text-lg font-semibold">{winPct}</div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <div className="text-xs uppercase tracking-wide text-text-secondary">
               PF
             </div>
             <div className="text-lg font-semibold">{stats.pf_total}</div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <div className="text-xs uppercase tracking-wide text-text-secondary">
               PA
             </div>
             <div className="text-lg font-semibold">{stats.pa_total}</div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <div className="text-xs uppercase tracking-wide text-text-secondary">
               GP
             </div>
             <div className="text-lg font-semibold">{stats.games_played}</div>

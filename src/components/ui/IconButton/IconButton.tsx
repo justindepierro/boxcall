@@ -4,6 +4,8 @@
  */
 import React, { forwardRef } from "react";
 import clsx from "clsx";
+import { Button } from "../Button";
+import type { ButtonProps } from "../Button/Button.types";
 
 export interface IconButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -26,39 +28,37 @@ const variantStyles = {
   danger: "text-red-600 hover:text-red-700 hover:bg-red-50 active:bg-red-100",
 };
 
-export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
-  function IconButton(
-    {
-      size = "xs",
-      variant = "ghost",
-      className,
-      tooltip,
-      children,
-      disabled,
-      ...rest
-    },
-    ref
-  ) {
-    return (
-      <button
-        ref={ref}
-        type={rest.type || "button"}
-        disabled={disabled}
-        className={clsx(
-          "inline-flex items-center justify-center rounded-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-jade focus-visible:ring-offset-2 transition-colors select-none",
-          sizeStyles[size],
-          variantStyles[variant],
-          disabled && "opacity-40 cursor-not-allowed",
-          className
-        )}
-        title={tooltip}
-        {...rest}
-      >
-        {children}
-        <span className="sr-only">{rest["aria-label"]}</span>
-      </button>
-    );
-  }
-);
+export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(function IconButton(
+  { size = "xs", variant = "ghost", className, tooltip, children, disabled, type, ...rest },
+  ref
+) {
+  // Map IconButton variants to existing Button variants.
+  const buttonVariant: ButtonProps["variant"] = variant === "danger" ? "danger" : "ghost";
+  const sizeMap: Record<NonNullable<IconButtonProps["size"]>, ButtonProps["size"]> = {
+    xs: "xs",
+    sm: "sm",
+  };
+  return (
+    <Button
+      ref={ref}
+      type={type as ButtonProps["type"]}
+      variant={buttonVariant}
+      size={sizeMap[size]}
+      disabled={disabled}
+      className={clsx(
+        sizeStyles[size],
+        variant === "subtle" && variantStyles.subtle,
+        variant === "ghost" && variantStyles.ghost,
+        variant === "danger" && variantStyles.danger,
+        "!rounded-xs !p-0",
+        className
+      )}
+      title={tooltip}
+  {...rest}
+    >
+      {children}
+    </Button>
+  );
+});
 
 export default IconButton;

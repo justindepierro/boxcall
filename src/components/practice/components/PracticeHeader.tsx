@@ -118,7 +118,7 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
           onClick={onPDFExport}
           variant="success"
           size="sm"
-          icon={<Icon name="pdf" size="sm" className="text-white" />}
+          icon={<Icon name="pdf" size="sm" className="text-text-primary" />}
           iconPosition="left"
           className="shadow-lg"
         >

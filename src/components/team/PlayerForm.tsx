@@ -149,7 +149,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="bc-card-padding border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+          <h2 className="text-xl font-semibold text-text-primary">
             {player ? "Edit Player" : "Add New Player"}
           </h2>
         </div>
@@ -157,7 +157,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
         <form onSubmit={handleSubmit} className="bc-card-padding space-y-6">
           {/* Basic Information */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+            <h3 className="text-lg font-medium mb-4 text-text-primary">
               Basic Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
@@ -244,7 +244,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
           </div>
           {/* Positions */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+            <h3 className="text-lg font-medium mb-4 text-text-primary">
               Positions *
             </h3>
             <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
@@ -273,7 +273,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
           </div>
           {/* Physical Information */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+            <h3 className="text-lg font-medium mb-4 text-text-primary">
               Physical Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-4 bc-grid-gap">
@@ -358,7 +358,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
           </div>
           {/* Team Level */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+            <h3 className="text-lg font-medium mb-4 text-text-primary">
               Team Level
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

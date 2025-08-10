@@ -19,7 +19,7 @@ export const TeamSettings: React.FC = () => {
         <div className="mb-8">
           <Typography
             variant="headline-xl"
-            className="text-gray-900 dark:text-white"
+            className="text-text-primary"
           >
             Team Settings
           </Typography>

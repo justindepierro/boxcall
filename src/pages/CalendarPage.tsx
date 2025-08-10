@@ -163,7 +163,7 @@ export const CalendarPage: React.FC = () => {
               <div>
                 <Typography
                   variant="headline-xl"
-                  className="text-gray-900 dark:text-white"
+                  className="text-text-primary"
                 >
                   Master Calendar
                 </Typography>
@@ -211,7 +211,7 @@ export const CalendarPage: React.FC = () => {
                 <Icon name="search" size="lg" className="text-navy-600" />
                 <Typography
                   variant="headline-md"
-                  className="text-gray-900 dark:text-white"
+                  className="text-text-primary"
                 >
                   Universal Search
                 </Typography>
@@ -240,7 +240,7 @@ export const CalendarPage: React.FC = () => {
                 <Icon name="filter" size="lg" className="text-navy-600" />
                 <Typography
                   variant="headline-md"
-                  className="text-gray-900 dark:text-white"
+                  className="text-text-primary"
                 >
                   Filters
                 </Typography>
@@ -351,7 +351,7 @@ export const CalendarPage: React.FC = () => {
                 <Icon name="bar-chart" size="lg" className="text-navy-600" />
                 <Typography
                   variant="headline-md"
-                  className="text-gray-900 dark:text-white"
+                  className="text-text-primary"
                 >
                   Stats
                 </Typography>

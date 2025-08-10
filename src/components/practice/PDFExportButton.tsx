@@ -139,13 +139,15 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
       {error && (
         <div className="absolute top-full left-0 mt-1 p-2 bg-red-50 border border-red-200 rounded-md shadow-sm z-10 min-w-max max-w-xs">
           <div className="text-xs text-red-700">{error}</div>
-          <button
+          <Button
+            variant="ghost"
+            size="xs"
             onClick={clearError}
-            className="text-red-400 hover:text-red-600 ml-2"
+            className="text-red-400 hover:text-red-600 ml-2 !h-auto !p-0"
             aria-label="Clear error"
           >
             ×
-          </button>
+          </Button>
         </div>
       )}
       {/* No Data Tooltip */}

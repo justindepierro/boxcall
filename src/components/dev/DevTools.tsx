@@ -186,7 +186,7 @@ export const DevTools: React.FC = () => {
 
       default:
         return (
-          <div className="text-center text-gray-500 dark:text-gray-400 text-sm py-4">
+          <div className="text-center text-sm py-4 text-text-secondary">
             Coming soon...
           </div>
         );

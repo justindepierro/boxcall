@@ -27,7 +27,7 @@ export const TeamBulletinRightPanel: React.FC<RightPanelProps> = ({
             as="h2"
             id="calendar-roster-heading"
             variant="headline-md"
-            className="text-gray-900 dark:text-white"
+            className="text-text-primary"
           >
             Roster
           </Typography>

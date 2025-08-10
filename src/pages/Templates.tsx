@@ -25,7 +25,7 @@ export const Templates: React.FC = () => {
         <div className="mb-8">
           <Typography
             variant="headline-xl"
-            className="text-gray-900 dark:text-white"
+            className="text-text-primary"
           >
             Coach Templates & Resources
           </Typography>
@@ -375,7 +375,7 @@ export const Templates: React.FC = () => {
             >
               Download Quick Start Guide (PDF)
             </Button>
-            <div className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="text-sm text-text-secondary">
               Includes step-by-step instructions and best practices
             </div>
           </div>

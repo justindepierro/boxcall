@@ -198,7 +198,7 @@ const EmptyState: React.FC<{ message: string }> = ({ message }) => (
         d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2 2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
       />
     </svg>
-    <p className="text-sm text-gray-500 dark:text-gray-400">{message}</p>
+    <p className="text-sm text-text-secondary">{message}</p>
   </div>
 );
 export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {

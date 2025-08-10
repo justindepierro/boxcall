@@ -25,7 +25,7 @@ export const TeamBulletinLeftPanel: React.FC<LeftPanelProps> = ({
           as="h2"
           id="team-actions-heading"
           variant="headline-md"
-          className="mb-4 text-gray-900 dark:text-white"
+          className="mb-4 text-text-primary"
         >
           Team Actions
         </Typography>

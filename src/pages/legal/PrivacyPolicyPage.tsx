@@ -6,15 +6,15 @@ export const PrivacyPolicyPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className="prose dark:prose-invert max-w-none">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        <h1 className="text-3xl font-bold mb-2 text-text-primary">
           Privacy Policy
         </h1>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-8">
+        <p className="text-sm mb-8 text-text-secondary">
           Last updated: {lastUpdated}
         </p>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             Introduction
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -30,11 +30,11 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             Information We Collect
           </h2>
 
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-3">
+          <h3 className="text-lg font-medium mb-3 text-text-primary">
             Personal Information
           </h3>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
@@ -45,7 +45,7 @@ export const PrivacyPolicyPage: React.FC = () => {
             <li>Profile photos and team logos</li>
           </ul>
 
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-3">
+          <h3 className="text-lg font-medium mb-3 text-text-primary">
             Usage Information
           </h3>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
@@ -57,7 +57,7 @@ export const PrivacyPolicyPage: React.FC = () => {
             <li>Cookies and similar tracking technologies</li>
           </ul>
 
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-3">
+          <h3 className="text-lg font-medium mb-3 text-text-primary">
             Team and Playbook Data
           </h3>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
@@ -69,7 +69,7 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             How We Use Your Information
           </h2>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
@@ -84,7 +84,7 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             Information Sharing and Disclosure
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -116,7 +116,7 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             Data Security
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -133,7 +133,7 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             Your Rights and Choices
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -164,7 +164,7 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             Children's Privacy
           </h2>
           <p className="text-gray-700 dark:text-gray-300">
@@ -176,7 +176,7 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             Changes to This Privacy Policy
           </h2>
           <p className="text-gray-700 dark:text-gray-300">
@@ -188,7 +188,7 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             Contact Us
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">

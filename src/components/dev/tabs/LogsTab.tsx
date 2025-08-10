@@ -52,20 +52,20 @@ export const LogsTab: React.FC<LogsTabProps> = ({ logs, onClearLogs }) => {
                 >
                   {log.level.toUpperCase()}
                 </span>
-                <span className="text-gray-500 dark:text-gray-400 font-mono">
+                <span className="font-mono text-text-secondary">
                   {log.timestamp.toLocaleTimeString()}
                 </span>
               </div>
               <div className="mt-1 text-gray-900 dark:text-gray-100">
                 {log.message}
               </div>
-              <div className="text-gray-500 dark:text-gray-400 text-xs mt-1">
+              <div className="text-xs mt-1 text-text-secondary">
                 {log.source}
               </div>
             </div>
           ))}
         {logs.length === 0 && (
-          <div className="text-center text-gray-500 dark:text-gray-400 text-xs py-4">
+          <div className="text-center text-xs py-4 text-text-secondary">
             No logs yet. Actions will appear here.
           </div>
         )}

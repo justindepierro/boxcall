@@ -13,7 +13,7 @@ export const AboutPage: React.FC = () => {
             About BoxCall
           </h1>
         </div>
-        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+        <p className="text-lg max-w-2xl mx-auto text-text-secondary">
           Revolutionizing football coaching with intelligent play management and
           team coordination tools.
         </p>
@@ -21,7 +21,7 @@ export const AboutPage: React.FC = () => {
 
       {/* Mission Section */}
       <div className="mb-12">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+        <h2 className="text-2xl font-bold mb-6 text-text-primary">
           Our Mission
         </h2>
         <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -39,7 +39,7 @@ export const AboutPage: React.FC = () => {
 
       {/* Features Section */}
       <div className="mb-12">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+        <h2 className="text-2xl font-bold mb-6 text-text-primary">
           What We Offer
         </h2>
         <div className="grid md:grid-cols-2 gap-8">
@@ -48,11 +48,11 @@ export const AboutPage: React.FC = () => {
               <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                 <Icon name="file" size="sm" color="primary" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-xl font-semibold text-text-primary">
                 Digital Playbooks
               </h3>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-text-secondary">
               Create, organize, and access your complete playbook from any
               device. Share plays instantly with your coaching staff and
               players.
@@ -63,11 +63,11 @@ export const AboutPage: React.FC = () => {
               <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                 <Icon name="calendar" size="sm" color="primary" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-xl font-semibold text-text-primary">
                 Practice Planning
               </h3>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-text-secondary">
               Design efficient practice sessions with drill libraries, timing
               tools, and progress tracking for optimal team development.
             </p>
@@ -77,11 +77,11 @@ export const AboutPage: React.FC = () => {
               <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                 <Icon name="users" size="sm" color="primary" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-xl font-semibold text-text-primary">
                 Team Management
               </h3>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-text-secondary">
               Manage rosters, track player progress, coordinate with coaching
               staff, and maintain seamless communication across your
               organization.
@@ -92,11 +92,11 @@ export const AboutPage: React.FC = () => {
               <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                 <Icon name="chart" size="sm" color="primary" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-xl font-semibold text-text-primary">
                 Analytics & Reports
               </h3>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-text-secondary">
               Gain insights into team performance, play effectiveness, and
               player development with comprehensive analytics and reporting
               tools.
@@ -107,7 +107,7 @@ export const AboutPage: React.FC = () => {
 
       {/* Team Section */}
       <div className="mb-12">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+        <h2 className="text-2xl font-bold mb-6 text-text-primary">
           Built by Coaches, for Coaches
         </h2>
         <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -124,17 +124,17 @@ export const AboutPage: React.FC = () => {
 
       {/* Contact CTA */}
       <div className="text-center bg-gray-50 dark:bg-gray-800 rounded-lg p-8">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        <h3 className="text-xl font-semibold mb-4 text-text-primary">
           Ready to Transform Your Coaching?
         </h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <p className="mb-6 text-text-secondary">
           Join thousands of coaches who are already using BoxCall to elevate
           their teams.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href="/create-team"
-            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-interaction-jade hover:bg-brand-jade-dark transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-text-primary bg-interaction-jade hover:bg-brand-jade-dark transition-colors"
           >
             Start Your Team
           </a>

@@ -167,12 +167,7 @@ export const Modal: React.FC<ModalProps> = ({
             <div className="flex items-center justify-between">
               <h3
                 id="modal-title"
-                className={`
-                  text-xl font-display font-bold leading-6
-                  text-gray-900 dark:text-white
-                  ${type === "alert" ? "text-red-900 dark:text-red-100" : ""}
-                  ${type === "confirm" ? "text-yellow-900 dark:text-yellow-100" : ""}
-                `}
+                className={`text-xl font-display font-bold leading-6 ${type === "alert" ? "text-red-900 dark:text-red-100" : ""} "confirm" "text-yellow-900 dark:text-yellow-100" text-text-primary`}
               >
                 {title}
               </h3>

@@ -114,7 +114,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             />
             {!isCoach && !localLogo && (
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="bg-gray-800 text-white text-xs py-1 px-2 rounded whitespace-nowrap">
+                <div className="bg-gray-800 text-text-inverse text-xs py-1 px-2 rounded whitespace-nowrap">
                   Coaches can add team logo
                 </div>
               </div>
@@ -125,7 +125,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
               variant="headline-xl"
               as="h1"
               id={headingId}
-              className="text-gray-900 dark:text-white"
+              className="text-text-primary"
             >
               {teamName}
             </Typography>
@@ -153,7 +153,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             </Typography>
             <Typography
               variant="body-md"
-              className="font-semibold text-gray-900 dark:text-white"
+              className="font-semibold text-text-primary"
             >
               {nextGame}
             </Typography>
@@ -167,7 +167,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             </Typography>
             <Typography
               variant="body-md"
-              className="font-semibold text-gray-900 dark:text-white"
+              className="font-semibold text-text-primary"
             >
               {memberCount}
             </Typography>

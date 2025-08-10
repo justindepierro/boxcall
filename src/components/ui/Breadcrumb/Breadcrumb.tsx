@@ -85,7 +85,7 @@ const CollapsedIndicator: React.FC<{
         variant="ghost"
         size="xs"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="px-2 py-1 h-auto text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white"
+        className="px-2 py-1 h-auto hover:text-gray-700 dark:hover:text-text-primary text-text-secondary"
         aria-label="Show hidden breadcrumb items"
       >
         ...

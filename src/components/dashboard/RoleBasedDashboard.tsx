@@ -45,7 +45,7 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-text-secondary">
             Loading your dashboard...
           </p>
         </div>
@@ -64,7 +64,7 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
                 <h1 className="text-2xl font-bold text-text-primary dark:text-text-inverse">
                   Welcome back, {profile.full_name || "User"}!
                 </h1>
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p className="mt-1 text-sm text-text-secondary">
                   {isCoach && "Manage your team and create winning game plans"}
                   {isPlayer &&
                     "Track your progress and stay updated with team activities"}
@@ -150,7 +150,7 @@ const AdminDashboard: React.FC = () => {
         </h3>
         <div className="space-y-3">
           <div className="flex justify-between">
-            <span className="text-gray-600 dark:text-gray-400">
+            <span className="text-text-secondary">
               Active Teams
             </span>
             <span className="font-medium text-text-primary dark:text-text-inverse">
@@ -158,7 +158,7 @@ const AdminDashboard: React.FC = () => {
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600 dark:text-gray-400">
+            <span className="text-text-secondary">
               Total Users
             </span>
             <span className="font-medium text-text-primary dark:text-text-inverse">
@@ -166,7 +166,7 @@ const AdminDashboard: React.FC = () => {
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600 dark:text-gray-400">
+            <span className="text-text-secondary">
               System Health
             </span>
             <span className="text-green-600 font-medium">Excellent</span>

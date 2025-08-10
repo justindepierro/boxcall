@@ -65,7 +65,7 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
       <div className="flex items-center justify-between mb-4">
         <Typography
           variant="headline-md"
-          className="text-gray-900 dark:text-white flex items-center gap-2"
+          className="flex items-center gap-2 text-text-primary"
         >
           <Icon name="calendar" size="md" /> Team Calendar
         </Typography>
@@ -76,7 +76,7 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
         )}
       </div>
       {isLoading && (
-        <div className="text-sm text-gray-500 dark:text-gray-400">
+        <div className="text-sm text-text-secondary">
           Loading events...
         </div>
       )}

@@ -12,11 +12,11 @@ const CoachManagementContent: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
+          <h1 className="text-3xl font-bold flex items-center text-text-primary">
             <Icon name="users" className="mr-3" />
             Coach Management Hub
           </h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
+          <p className="mt-2 text-text-secondary">
             Manage your team, create plays, and plan practices
           </p>
         </div>
@@ -25,7 +25,7 @@ const CoachManagementContent: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {/* Team Management */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+            <h3 className="text-lg font-medium mb-4 flex items-center text-text-primary">
               <Icon name="team" className="mr-2" />
               Team Management
             </h3>
@@ -59,7 +59,7 @@ const CoachManagementContent: React.FC = () => {
 
           {/* Playbook */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+            <h3 className="text-lg font-medium mb-4 flex items-center text-text-primary">
               <Icon name="book" className="mr-2" />
               Playbook
             </h3>
@@ -93,7 +93,7 @@ const CoachManagementContent: React.FC = () => {
 
           {/* Practice Planning */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+            <h3 className="text-lg font-medium mb-4 flex items-center text-text-primary">
               <Icon name="calendar" className="mr-2" />
               Practice Planning
             </h3>
@@ -129,7 +129,7 @@ const CoachManagementContent: React.FC = () => {
         {/* Recent Activity */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+            <h3 className="text-lg font-medium text-text-primary">
               Recent Activity
             </h3>
           </div>
@@ -140,10 +140,10 @@ const CoachManagementContent: React.FC = () => {
                   <Icon name="play" size="sm" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-900 dark:text-white">
+                  <p className="text-sm text-text-primary">
                     Created new play: "Slant Right Formation"
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-text-secondary">
                     2 hours ago
                   </p>
                 </div>
@@ -153,10 +153,10 @@ const CoachManagementContent: React.FC = () => {
                   <Icon name="calendar" size="sm" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-900 dark:text-white">
+                  <p className="text-sm text-text-primary">
                     Scheduled practice for Thursday 3:30 PM
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-text-secondary">
                     5 hours ago
                   </p>
                 </div>
@@ -166,10 +166,10 @@ const CoachManagementContent: React.FC = () => {
                   <Icon name="user" size="sm" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-900 dark:text-white">
+                  <p className="text-sm text-text-primary">
                     Added new player: John Smith (#23)
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-text-secondary">
                     1 day ago
                   </p>
                 </div>

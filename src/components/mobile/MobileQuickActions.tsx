@@ -61,7 +61,7 @@ export const MobileQuickActions: React.FC<MobileQuickActionsProps> = ({
         <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
           Quick Actions
         </h3>
-        <span className="text-xs text-gray-500 dark:text-gray-400">
+        <span className="text-xs text-text-secondary">
           Tap to execute
         </span>
       </div>
@@ -103,7 +103,7 @@ export const MobileQuickActions: React.FC<MobileQuickActionsProps> = ({
             {action.badge && action.badge > 0 && (
               <div className="absolute -top-1 -right-1">
                 <div className="flex items-center justify-center w-5 h-5 bg-red-500 rounded-full">
-                  <span className="text-xs font-bold text-white">
+                  <span className="text-xs font-bold text-text-primary">
                     {action.badge > 9 ? "9+" : action.badge}
                   </span>
                 </div>

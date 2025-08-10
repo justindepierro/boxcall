@@ -173,7 +173,7 @@ export const TeamBulletin: React.FC = () => {
               >
                 Create Team
                 {isSuperAdmin && (
-                  <Icon name="unlock" size="sm" className="text-white" />
+                  <Icon name="unlock" size="sm" className="text-text-primary" />
                 )}
               </Button>
               <Button
@@ -203,7 +203,7 @@ export const TeamBulletin: React.FC = () => {
       {/* Skip link for keyboard users */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-jade-600 text-white px-4 py-2 rounded-md z-50"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-jade-600 text-text-inverse px-4 py-2 rounded-md z-50"
       >
         Skip to main content
       </a>

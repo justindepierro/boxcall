@@ -78,7 +78,7 @@ export const SuperAdminRoute: React.FC<SuperAdminRouteProps> = ({
             <Icon name="shield" size="lg" className="mr-2" />
             Developer Access Only
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="mb-6 text-text-secondary">
             This area is restricted to super administrators and developers.
           </p>
           <Button

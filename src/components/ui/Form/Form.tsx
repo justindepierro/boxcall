@@ -122,7 +122,7 @@ export function Form({
             <Typography
               variant="headline-md"
               as="h2"
-              className="text-gray-900 dark:text-white"
+              className="text-text-primary"
             >
               {title}
               {showRequiredIndicator && (
@@ -263,7 +263,7 @@ export function FormGroup({
           {title && (
             <Typography
               variant="headline-sm"
-              className="text-gray-900 dark:text-white"
+              className="text-text-primary"
             >
               {title}
             </Typography>

@@ -6,15 +6,15 @@ export const TermsOfServicePage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className="prose dark:prose-invert max-w-none">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        <h1 className="text-3xl font-bold mb-2 text-text-primary">
           Terms of Service
         </h1>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-8">
+        <p className="text-sm mb-8 text-text-secondary">
           Last updated: {lastUpdated}
         </p>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             1. Acceptance of Terms
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -30,7 +30,7 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             2. Description of Service
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -48,7 +48,7 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             3. User Accounts and Registration
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -72,7 +72,7 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             4. Acceptable Use Policy
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -91,11 +91,11 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             5. Subscription and Payment Terms
           </h2>
 
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-3">
+          <h3 className="text-lg font-medium mb-3 text-text-primary">
             Team Subscriptions ($199/year)
           </h3>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
@@ -106,7 +106,7 @@ export const TermsOfServicePage: React.FC = () => {
             <li>Automatic renewal unless cancelled before renewal date</li>
           </ul>
 
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-3">
+          <h3 className="text-lg font-medium mb-3 text-text-primary">
             Coach Accounts ($9.99/month)
           </h3>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
@@ -122,7 +122,7 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             6. Intellectual Property Rights
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -139,7 +139,7 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             7. Privacy and Data Protection
           </h2>
           <p className="text-gray-700 dark:text-gray-300">
@@ -150,7 +150,7 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             8. Termination
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -166,7 +166,7 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             9. Disclaimers and Limitation of Liability
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -184,7 +184,7 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             10. Indemnification
           </h2>
           <p className="text-gray-700 dark:text-gray-300">
@@ -196,7 +196,7 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             11. Governing Law
           </h2>
           <p className="text-gray-700 dark:text-gray-300">
@@ -207,7 +207,7 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             12. Changes to Terms
           </h2>
           <p className="text-gray-700 dark:text-gray-300">
@@ -219,7 +219,7 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold mb-4 text-text-primary">
             13. Contact Information
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">

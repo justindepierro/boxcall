@@ -83,7 +83,7 @@ const PostItem: React.FC<PostItemProps> = ({
           </Button>
         )}
       </div>
-      <div className="mt-2 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+      <div className="mt-2 flex items-center justify-between text-xs text-text-secondary">
         <span>
           {created_at
             ? new Date(created_at).toLocaleString(undefined, {
@@ -241,7 +241,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
       <div className="flex items-center justify-between">
         <Typography
           variant="headline-md"
-          className="flex items-center gap-2 text-gray-900 dark:text-white"
+          className="flex items-center gap-2 text-text-primary"
         >
           <Icon name="message" size="md" /> Team Feed
         </Typography>

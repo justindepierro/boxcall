@@ -95,7 +95,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   BoxCall
                 </h3>
                 <div className="flex items-center space-x-2">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-text-secondary">
                     {roleInfo.display}
                   </p>
                   {isDevMode && (
@@ -113,7 +113,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           }
           footer={
-            <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
+            <div className="text-xs text-center text-text-secondary">
               <p>BoxCall v0.1.5</p>
               <p>Football Management</p>
               {isDevMode && (

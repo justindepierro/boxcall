@@ -65,7 +65,7 @@ export const SquareProgressBar: React.FC<ProgressBarProps> = ({
             </span>
           )}
           {showPercentage && (
-            <span className="text-sm font-mono font-bold text-gray-600 dark:text-gray-400">
+            <span className="text-sm font-mono font-bold text-text-secondary">
               {clampedValue}%
             </span>
           )}
@@ -127,7 +127,7 @@ export const SquareLoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         className={`${getSpinnerSize()} border-2 ${getBorderColor()} border-t-transparent rounded-sm animate-spin`}
       />
       {label && (
-        <span className="text-sm font-sans font-medium text-gray-600 dark:text-gray-400">
+        <span className="text-sm font-sans font-medium text-text-secondary">
           {label}
         </span>
       )}
@@ -227,7 +227,7 @@ export const FootballLoadingSpinner: React.FC<{ message?: string }> = ({
         </div>
       </div>
       <div className="text-center">
-        <p className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-1">
+        <p className="text-lg font-display font-semibold mb-1 text-text-primary">
           {message}
         </p>
         <SquareProgressBar

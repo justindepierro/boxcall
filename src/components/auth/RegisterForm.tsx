@@ -198,7 +198,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             disabled={loading}
             fullWidth
             size="lg"
-            className="!bg-jade-600 !hover:bg-jade-700 !border-jade-600 !hover:border-jade-700 !text-white"
+            className="!bg-jade-600 !hover:bg-jade-700 !border-jade-600 !hover:border-jade-700 !text-text-inverse"
           >
             {loading ? "Creating Account..." : "Create Account"}
           </Button>

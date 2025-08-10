@@ -36,7 +36,7 @@ const RouteLoadingSpinner: React.FC = () => (
   <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
     <div className="text-center">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
-      <p className="text-gray-600 dark:text-gray-400 font-medium">
+      <p className="font-medium text-text-secondary">
         Loading page...
       </p>
     </div>
@@ -325,10 +325,10 @@ export const AppRouter: React.FC = () => {
                   <div className="mb-6">
                     <Icon name="alert" size="xl" color="secondary" />
                   </div>
-                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                  <h1 className="text-3xl font-bold mb-4 text-text-primary">
                     404 - Page Not Found
                   </h1>
-                  <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+                  <p className="mb-8 leading-relaxed text-text-secondary">
                     The page you're looking for doesn't exist or has been moved.
                   </p>
                   <div className="space-y-3">

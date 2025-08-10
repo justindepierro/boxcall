@@ -100,7 +100,7 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
             <Icon name="users" size="lg" className="mr-2" />
             Team Not Found
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="mb-6 text-text-secondary">
             Unable to verify team subscription status.
           </p>
           <Button
@@ -124,7 +124,7 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
           <h1 className="text-2xl font-bold text-yellow-600 mb-4">
             ⭐ Premium Feature
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="mb-6 text-text-secondary">
             This feature requires a {requiredTiers.join(" or ")} subscription.
             Current plan: {subscription.subscription_tier || "none"}
           </p>
@@ -154,7 +154,7 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
             <h1 className="text-2xl font-bold text-red-600 mb-4">
               ⏰ Subscription Expired
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="mb-6 text-text-secondary">
               Team subscription expired on {expirationDate.toLocaleDateString()}
               . Please renew to continue using premium features.
             </p>

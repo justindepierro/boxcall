@@ -368,7 +368,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
           <div className="flex-1">
             <div>{option.label}</div>
             {option.description && (
-              <div className="text-xs text-gray-500 dark:text-gray-400">
+              <div className="text-xs text-text-secondary">
                 {option.description}
               </div>
             )}
@@ -393,7 +393,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
           <label htmlFor={selectId} className={labelClassName}>
             <Typography
               variant="label-md"
-              className="text-gray-900 dark:text-white"
+              className="text-text-primary"
             >
               {label}
               {required && <span className="text-red-500 ml-1">*</span>}

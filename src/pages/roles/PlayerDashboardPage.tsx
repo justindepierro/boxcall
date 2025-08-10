@@ -12,11 +12,11 @@ const PlayerDashboardContent: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
+          <h1 className="text-3xl font-bold flex items-center text-text-primary">
             <Icon name="user" className="mr-3" />
             Player Dashboard
           </h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
+          <p className="mt-2 text-text-secondary">
             Track your progress and stay updated with team activities
           </p>
         </div>
@@ -32,10 +32,10 @@ const PlayerDashboardContent: React.FC = () => {
                 />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <p className="text-sm font-medium text-text-secondary">
                   Practices Attended
                 </p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <p className="text-2xl font-bold text-text-primary">
                   23/25
                 </p>
               </div>
@@ -51,10 +51,10 @@ const PlayerDashboardContent: React.FC = () => {
                 />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <p className="text-sm font-medium text-text-secondary">
                   Games Played
                 </p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <p className="text-2xl font-bold text-text-primary">
                   8
                 </p>
               </div>
@@ -70,10 +70,10 @@ const PlayerDashboardContent: React.FC = () => {
                 />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <p className="text-sm font-medium text-text-secondary">
                   Skill Rating
                 </p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <p className="text-2xl font-bold text-text-primary">
                   8.5
                 </p>
               </div>
@@ -89,10 +89,10 @@ const PlayerDashboardContent: React.FC = () => {
                 />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <p className="text-sm font-medium text-text-secondary">
                   Improvement
                 </p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <p className="text-2xl font-bold text-text-primary">
                   +2.1
                 </p>
               </div>
@@ -105,7 +105,7 @@ const PlayerDashboardContent: React.FC = () => {
           {/* Upcoming Events */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white flex items-center">
+              <h3 className="text-lg font-medium flex items-center text-text-primary">
                 <Icon name="calendar" className="mr-2" />
                 Upcoming Events
               </h3>
@@ -117,13 +117,13 @@ const PlayerDashboardContent: React.FC = () => {
                     <Icon name="calendar" size="sm" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-text-primary">
                       Practice Session
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-text-secondary">
                       Thursday, 3:30 PM - 5:30 PM
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-xs text-text-secondary">
                       Focus: Offensive Line Drills
                     </p>
                   </div>
@@ -133,13 +133,13 @@ const PlayerDashboardContent: React.FC = () => {
                     <Icon name="flag" size="sm" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-text-primary">
                       Game vs. Eagles
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-text-secondary">
                       Saturday, 7:00 PM
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-xs text-text-secondary">
                       Away Game - Memorial Stadium
                     </p>
                   </div>
@@ -149,13 +149,13 @@ const PlayerDashboardContent: React.FC = () => {
                     <Icon name="users" size="sm" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-text-primary">
                       Team Meeting
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-text-secondary">
                       Monday, 4:00 PM - 5:00 PM
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-xs text-text-secondary">
                       Film Review & Strategy
                     </p>
                   </div>
@@ -167,7 +167,7 @@ const PlayerDashboardContent: React.FC = () => {
           {/* Recent Performance */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white flex items-center">
+              <h3 className="text-lg font-medium flex items-center text-text-primary">
                 <Icon name="bar-chart" className="mr-2" />
                 Recent Performance
               </h3>
@@ -175,7 +175,7 @@ const PlayerDashboardContent: React.FC = () => {
             <div className="p-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                  <span className="text-sm text-text-secondary">
                     Passing Accuracy
                   </span>
                   <div className="flex items-center">
@@ -185,13 +185,13 @@ const PlayerDashboardContent: React.FC = () => {
                         style={{ width: "85%" }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">
+                    <span className="text-sm font-medium text-text-primary">
                       85%
                     </span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                  <span className="text-sm text-text-secondary">
                     Speed & Agility
                   </span>
                   <div className="flex items-center">
@@ -201,13 +201,13 @@ const PlayerDashboardContent: React.FC = () => {
                         style={{ width: "78%" }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">
+                    <span className="text-sm font-medium text-text-primary">
                       78%
                     </span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                  <span className="text-sm text-text-secondary">
                     Team Coordination
                   </span>
                   <div className="flex items-center">
@@ -217,13 +217,13 @@ const PlayerDashboardContent: React.FC = () => {
                         style={{ width: "92%" }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">
+                    <span className="text-sm font-medium text-text-primary">
                       92%
                     </span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                  <span className="text-sm text-text-secondary">
                     Leadership
                   </span>
                   <div className="flex items-center">
@@ -233,7 +233,7 @@ const PlayerDashboardContent: React.FC = () => {
                         style={{ width: "88%" }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">
+                    <span className="text-sm font-medium text-text-primary">
                       88%
                     </span>
                   </div>
@@ -246,7 +246,7 @@ const PlayerDashboardContent: React.FC = () => {
         {/* Quick Actions */}
         <div className="mt-8">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+            <h3 className="text-lg font-medium mb-4 text-text-primary">
               Quick Actions
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

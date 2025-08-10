@@ -296,10 +296,10 @@ export function PracticePlanner() {
                     {!practiceStarted ? (
                       <Button
                         onClick={handleStartPractice}
-                        className="bg-jade-600 hover:bg-jade-700 text-white flex items-center gap-2"
+                        className="bg-jade-600 hover:bg-jade-700 text-text-inverse flex items-center gap-2"
                         disabled={currentBlocks.length === 0}
                       >
-                        <Icon name="play" size="sm" className="text-white" />
+                        <Icon name="play" size="sm" className="text-text-primary" />
                         Start Practice
                       </Button>
                     ) : (
@@ -540,7 +540,7 @@ export function PracticePlanner() {
                   </Typography>
                   <Button
                     onClick={() => setIsCreateBlockModalOpen(true)}
-                    className="w-full bg-jade-600 hover:bg-jade-700 text-white"
+                    className="w-full bg-jade-600 hover:bg-jade-700 text-text-inverse"
                     disabled={lockedSchedule}
                   >
                     + Create Custom Block
@@ -743,7 +743,7 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
             </Button>
             <Button
               type="submit"
-              className="bg-jade-600 hover:bg-jade-700 text-white"
+              className="bg-jade-600 hover:bg-jade-700 text-text-inverse"
             >
               Create Block
             </Button>
@@ -790,7 +790,7 @@ function TemplatesModal({
                 <Button
                   size="sm"
                   onClick={() => onSelectTemplate(template.id)}
-                  className="bg-jade-600 hover:bg-jade-700 text-white"
+                  className="bg-jade-600 hover:bg-jade-700 text-text-inverse"
                 >
                   Use Template
                 </Button>

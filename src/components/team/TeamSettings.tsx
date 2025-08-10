@@ -88,7 +88,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
         <h2 className="text-xl font-semibold text-text-primary">
           Team Settings
         </h2>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">
+        <p className="mt-1 text-text-secondary">
           Configure your team information and preferences
         </p>
       </div>

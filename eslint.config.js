@@ -41,6 +41,7 @@ export default tseslint.config([
         {
           allow: [
             "team-dashboard/layout/TeamBulletinHeader.tsx", // logo uploader exemption
+            "components/ui/IconButton/IconButton.tsx", // IconButton internal wrapper (uses <Button>)
           ],
         },
       ],

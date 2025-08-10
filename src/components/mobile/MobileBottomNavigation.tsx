@@ -73,11 +73,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
               onClick={() => handleItemClick(item)}
               variant={item.isActive ? "primary" : "ghost"}
               size="sm"
-              className={`relative flex flex-col items-center justify-center min-w-[60px] px-2 py-2 h-auto active:scale-95 focus-visible:ring-2 focus-visible:ring-jade-500 ${
-                item.isActive
-                  ? "text-brand-jade dark:text-brand-jade-light"
-                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-              }`}
+              className={`relative flex flex-col items-center justify-center min-w-[60px] px-2 py-2 h-auto active:scale-95 focus-visible:ring-2 focus-visible:ring-jade-500 ${ item.isActive ? "text-brand-jade dark:text-brand-jade-light" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" } text-text-secondary`}
               style={{ minHeight: "60px" }}
               aria-label={`Navigate to ${item.label}`}
             >

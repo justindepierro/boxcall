@@ -68,7 +68,7 @@ export const ComplexityBadge: React.FC<ComplexityBadgeProps> = ({
 
       {showDetails && (
         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-          <div className="bg-gray-900 text-white text-xs rounded-lg p-3 shadow-lg min-w-48">
+          <div className="bg-gray-900 text-text-inverse text-xs rounded-lg p-3 shadow-lg min-w-48">
             <div className="text-center mb-2">
               <div className="font-semibold">{badgeInfo.title}</div>
               <div className="text-gray-300">{badgeInfo.description}</div>
