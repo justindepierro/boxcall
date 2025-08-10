@@ -10,11 +10,11 @@ import { PracticePlannerModal } from "../components/practice/PracticePlannerModa
 import { Button, Card, Input } from "../components/ui";
 import Icon from "../components/ui/Icon/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../components/ui/Tag";
-import { useEvents } from "../state/calendar/hooks";
+import { useEvents, useCreateEvent, useDeleteEvent } from "../state/calendar/hooks";
 import { useDevMode } from "../app/dev-mode-hooks";
 import type { CalendarFilters } from "../services/calendarService";
 import type { CalendarEvent } from "../domain/calendar/types";
-import { CalendarService } from "../services/calendarService";
+import { CalendarService } from "../services/calendarService"; // legacy search only (to be migrated)
 interface CalendarPageState {
   userTeamsFilter?: string[];
   teamFilter?: string;
@@ -67,6 +67,13 @@ export const CalendarPage: React.FC = () => {
   });
   // Phase 3: replace legacy useCalendar read path with React Query useEvents
   const { devMode } = useDevMode();
+  // Phase 3 mutation hook integration (create/delete)
+  const createEventMutation = useCreateEvent(user?.id || "", devMode, {
+    teamIds: filters.teamIds,
+    eventTypes: filters.eventTypes,
+    dateRange: filters.dateRange,
+  });
+  const deleteEventMutation = useDeleteEvent();
   const {
     data: events = [],
     isLoading: loading,
@@ -621,9 +628,10 @@ export const CalendarPage: React.FC = () => {
                   <div className="flex space-x-3 pt-4">
                     <Button
                       variant="primary"
+                      disabled={createEventMutation.status === "pending" || !selectedEvent.title || !selectedEvent.start}
                       onClick={async () => {
                         try {
-                          await CalendarService.createEvent({
+                          await createEventMutation.mutateAsync({
                             title: selectedEvent.title,
                             start: selectedEvent.start,
                             end: selectedEvent.end,
@@ -633,14 +641,12 @@ export const CalendarPage: React.FC = () => {
                           });
                           setShowEventModal(false);
                           setIsCreatingEvent(false);
-                          // Refresh events
-                          window.location.reload();
                         } catch (error) {
                           console.error("Failed to create event:", error);
                         }
                       }}
                     >
-                      Create Event
+                      {createEventMutation.status === "pending" ? "Creating..." : "Create Event"}
                     </Button>
                     <Button
                       variant="outline"
@@ -774,9 +780,25 @@ export const CalendarPage: React.FC = () => {
                         RSVP
                       </Button>
                     )}
-                    <Button variant="outline" size="sm">
-                      Add to Personal Calendar
-                    </Button>
+                    <Button variant="outline" size="sm">Add to Personal Calendar</Button>
+                    {(profile?.role === "coach" || profile?.role === "admin") && selectedEvent.id && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={deleteEventMutation.status === "pending"}
+                        onClick={async () => {
+                          try {
+                            await deleteEventMutation.mutateAsync(selectedEvent.id);
+                            setShowEventModal(false);
+                            setSelectedEvent(null);
+                          } catch (error) {
+                            console.error("Failed to delete event:", error);
+                          }
+                        }}
+                      >
+                        {deleteEventMutation.status === "pending" ? "Deleting..." : "Delete"}
+                      </Button>
+                    )}
                   </div>
                 </div>
               )}
