@@ -9,6 +9,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { EnhancedFieldCanvas } from "./EnhancedFieldCanvas";
+import { Button } from "../../ui/Button/Button";
 import type { Play } from "../../../types/play";
 interface InteractivePlayBuilderProps {
   isOpen: boolean;
@@ -92,12 +93,15 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
               {currentPlay.play_name} - {currentPlay.formation} Formation
             </p>
           </div>
-          <button
+          <Button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+            variant="ghost"
+            size="sm"
+            icon={<X className="w-5 h-5" />}
+            iconPosition="only"
+            aria-label="Close"
+            className="p-2 h-auto hover:bg-gray-100 rounded-lg"
+          />
         </div>
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar */}
@@ -108,39 +112,33 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
                 Edit Mode
               </h3>
               <div className="space-y-2">
-                <button
+                <Button
                   onClick={() => handleModeChange("view")}
-                  className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    editMode === "view"
-                      ? "bg-blue-100 text-blue-700"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
+                  variant={editMode === "view" ? "primary" : "ghost"}
+                  size="sm"
+                  icon={<Eye className="w-4 h-4" />}
+                  className="w-full justify-start"
                 >
-                  <Eye className="w-4 h-4" />
                   View Only
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => handleModeChange("move")}
-                  className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    editMode === "move"
-                      ? "bg-blue-100 text-blue-700"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
+                  variant={editMode === "move" ? "primary" : "ghost"}
+                  size="sm"
+                  icon={<Users className="w-4 h-4" />}
+                  className="w-full justify-start"
                 >
-                  <Users className="w-4 h-4" />
                   Move Players
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => handleModeChange("draw")}
-                  className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    editMode === "draw"
-                      ? "bg-blue-100 text-blue-700"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
+                  variant={editMode === "draw" ? "primary" : "ghost"}
+                  size="sm"
+                  icon={<Route className="w-4 h-4" />}
+                  className="w-full justify-start"
                 >
-                  <Route className="w-4 h-4" />
                   Draw Routes
-                </button>
+                </Button>
               </div>
             </div>
             {/* Animation Controls */}
@@ -149,24 +147,30 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
                 Animation
               </h3>
               <div className="flex gap-2">
-                <button
+                <Button
                   onClick={handlePlayAnimation}
-                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors"
+                  variant={isPlaying ? "outline" : "success"}
+                  size="sm"
+                  icon={
+                    isPlaying ? (
+                      <Pause className="w-4 h-4" />
+                    ) : (
+                      <PlayIcon className="w-4 h-4" />
+                    )
+                  }
+                  className="flex-1"
                 >
-                  {isPlaying ? (
-                    <Pause className="w-4 h-4" />
-                  ) : (
-                    <PlayIcon className="w-4 h-4" />
-                  )}
                   {isPlaying ? "Pause" : "Play"}
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={handleReset}
-                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  variant="ghost"
+                  size="sm"
+                  icon={<RotateCcw className="w-4 h-4" />}
+                  iconPosition="only"
+                  aria-label="Reset to formation"
                   title="Reset to formation"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                </button>
+                />
               </div>
             </div>
             {/* Display Options */}
@@ -213,12 +217,7 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
                   <span className="font-medium">Formation:</span>{" "}
                   {currentPlay.formation}
                 </div>
-                {currentPlay.success_rate && (
-                  <div>
-                    <span className="font-medium">Success Rate:</span>{" "}
-                    {Math.round(currentPlay.success_rate * 100)}%
-                  </div>
-                )}
+                {/* Success rate removed: property not present on Play type */}
               </div>
             </div>
             {/* Instructions */}
@@ -284,12 +283,9 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={handleSave}
-                    className="px-4 py-2 bg-jade-600 text-white rounded-lg hover:bg-jade-700 transition-colors font-medium"
-                  >
+                  <Button onClick={handleSave} variant="primary" size="sm">
                     Save Play
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

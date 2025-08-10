@@ -15,6 +15,7 @@ import type { Play as PlayType } from "../../types/play";
 import { VisualPlayBuilder } from "./visual/VisualPlayBuilder";
 import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
 import { Badge } from "../ui/Badge";
+import { Button } from "../ui/Button/Button";
 interface PlayCardProps {
   play: PlayType;
   showOneWordCalls?: boolean;
@@ -137,42 +138,52 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             </div>
             {/* Action Buttons - Mobile Touch-Optimized */}
             <div className="flex items-center space-x-1 ml-4">
-              <button
+              <Button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="p-3 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all duration-200 active:scale-95 touch-target"
+                variant="ghost"
+                size="sm"
+                icon={
+                  isExpanded ? (
+                    <ChevronUp className="h-5 w-5" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5" />
+                  )
+                }
+                iconPosition="only"
+                aria-label={isExpanded ? "Collapse details" : "Expand details"}
                 title={isExpanded ? "Collapse" : "Expand details"}
-                style={{ minWidth: "48px", minHeight: "48px" }}
-              >
-                {isExpanded ? (
-                  <ChevronUp className="h-5 w-5" />
-                ) : (
-                  <ChevronDown className="h-5 w-5" />
-                )}
-              </button>
-              <button
+                className="p-3 !h-auto min-w-[48px] min-h-[48px]"
+              />
+              <Button
                 onClick={() => onEdit?.(play)}
-                className="p-3 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all duration-200 active:scale-95 touch-target"
+                variant="ghost"
+                size="sm"
+                icon={<Edit className="h-5 w-5" />}
+                iconPosition="only"
+                aria-label="Edit play"
                 title="Edit play"
-                style={{ minWidth: "48px", minHeight: "48px" }}
-              >
-                <Edit className="h-5 w-5" />
-              </button>
-              <button
+                className="p-3 !h-auto min-w-[48px] min-h-[48px]"
+              />
+              <Button
                 onClick={() => onDuplicate?.(play)}
-                className="p-3 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all duration-200 active:scale-95 touch-target"
+                variant="ghost"
+                size="sm"
+                icon={<Copy className="h-5 w-5" />}
+                iconPosition="only"
+                aria-label="Duplicate play"
                 title="Duplicate play"
-                style={{ minWidth: "48px", minHeight: "48px" }}
-              >
-                <Copy className="h-5 w-5" />
-              </button>
-              <button
+                className="p-3 !h-auto min-w-[48px] min-h-[48px]"
+              />
+              <Button
                 onClick={handleCreateDiagram}
-                className="p-3 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all duration-200 active:scale-95 touch-target"
+                variant="ghost"
+                size="sm"
+                icon={<Image className="h-5 w-5" />}
+                iconPosition="only"
+                aria-label="Create diagram"
                 title="Create diagram"
-                style={{ minWidth: "48px", minHeight: "48px" }}
-              >
-                <Image className="h-5 w-5" />
-              </button>
+                className="p-3 !h-auto min-w-[48px] min-h-[48px]"
+              />
             </div>
           </div>
           {/* Expanded Details */}
@@ -275,10 +286,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   Usage & Stats
                 </h4>
                 <div className="space-y-1 text-sm text-slate-600">
-                  <div>
-                    <span className="font-medium">Success Rate:</span>{" "}
-                    {play.success_rate || "N/A"}%
-                  </div>
+                  {/* Success rate removed: deprecated legacy field */}
                   <div>
                     <span className="font-medium">Times Called:</span>{" "}
                     {play.times_called}
@@ -314,7 +322,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 </div>
               </div>
               {/* Notes & Tags */}
-              {(play.notes || play.tags?.length) && (
+              {play.notes && (
                 <div className="md:col-span-3 pt-2 border-t border-slate-100">
                   {play.notes && (
                     <div className="mb-2">
@@ -326,23 +334,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                       </p>
                     </div>
                   )}
-                  {play.tags?.length && (
-                    <div>
-                      <span className="text-sm font-medium text-slate-700">
-                        Tags:
-                      </span>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {play.tags.map((tag, index) => (
-                          <span
-                            key={index}
-                            className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  {/* Tags removed: deprecated legacy field */}
                 </div>
               )}
 
@@ -358,22 +350,26 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
+                    <Button
+                      variant="outline"
+                      size="xs"
                       onClick={() => onAddToPracticeScript?.(play)}
-                      className="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-xs font-medium transition-colors"
                       title="Add this play to a practice script"
+                      className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-transparent"
                     >
                       <Calendar className="h-3 w-3 mr-1" />
                       Practice Script
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="xs"
                       onClick={() => onAddToGamePlan?.(play)}
-                      className="inline-flex items-center px-3 py-1.5 bg-jade-50 text-jade-700 hover:bg-jade-100 rounded-lg text-xs font-medium transition-colors"
                       title="Add this play to a game plan"
+                      className="bg-jade-50 hover:bg-jade-100 text-jade-700 border-transparent"
                     >
                       <Gamepad2 className="h-3 w-3 mr-1" />
                       Game Plan
-                    </button>
+                    </Button>
                     <Badge variant="premium" size="sm">
                       Week 3
                     </Badge>

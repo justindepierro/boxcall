@@ -19,6 +19,7 @@ import {
   ProgressBadge,
   ComplexityBadge,
 } from "../components/ui/Badge";
+import { Button } from "../components/ui/Button/Button";
 
 interface ActiveFilter {
   id: string;
@@ -399,57 +400,58 @@ export const PlaybookPage: React.FC = () => {
             {/* Action Buttons with Reward Loop Psychology */}
             <div className="flex items-center space-x-3">
               {/* Bulk Operations Toggle */}
-              <button
+              <Button
                 onClick={toggleBulkOperations}
-                className={`inline-flex items-center px-4 py-2 border rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jade-500 ${
-                  state.enableBulkOperations
-                    ? "bg-jade-600 text-white border-jade-600 hover:bg-jade-700"
-                    : "border-slate-300 text-slate-700 bg-white hover:bg-slate-50"
-                }`}
+                variant={state.enableBulkOperations ? "primary" : "outline"}
+                size="sm"
                 title={
                   state.enableBulkOperations
                     ? "Disable bulk operations"
                     : "Enable bulk operations"
                 }
+                className="px-4 py-2 hover:scale-105 transition-transform"
               >
                 <input
                   type="checkbox"
                   checked={state.enableBulkOperations}
-                  onChange={() => {}} // Handled by button onClick
+                  onChange={() => {}}
                   className="h-4 w-4 mr-2 rounded border-slate-300 text-blue-600"
                 />
                 Bulk Edit
-              </button>
+              </Button>
 
               {/* Export button */}
-              <button
+              <Button
                 onClick={handleExportCSV}
-                className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jade-500 transition-all duration-200"
+                variant="outline"
+                size="sm"
+                className="px-4 py-2 hover:scale-105 transition-transform"
               >
-                <Download className="h-4 w-4 mr-2" />
-                Export CSV
-              </button>
+                <Download className="h-4 w-4 mr-2" /> Export CSV
+              </Button>
 
               {/* Import button with subtle enhancement */}
-              <button
+              <Button
                 onClick={handleOpenImport}
-                className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jade-500 transition-all duration-200"
+                variant="outline"
+                size="sm"
+                className="px-4 py-2 hover:scale-105 transition-transform"
               >
-                <Upload className="h-4 w-4 mr-2" />
-                Import CSV
-              </button>
+                <Upload className="h-4 w-4 mr-2" /> Import CSV
+              </Button>
 
               {/* New Play button - primary action with celebration potential */}
               <div className="relative">
-                <button
+                <Button
                   onClick={() => {
                     handleOpenBuilder();
                   }}
-                  className="inline-flex items-center px-4 py-2 bg-jade-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-jade-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jade-500 transition-all duration-200"
+                  variant="primary"
+                  size="sm"
+                  className="px-4 py-2 hover:scale-105 transition-transform"
                 >
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Play
-                </button>
+                  <Plus className="h-4 w-4 mr-2" /> New Play
+                </Button>
 
                 {/* Next milestone indicator - creates desire for next achievement */}
                 {state.playsCreated < 100 && (
@@ -543,39 +545,38 @@ export const PlaybookPage: React.FC = () => {
             {/* 3-View System Toggle */}
             <div className="mb-6 bg-white rounded-lg shadow-sm border border-slate-200 p-1">
               <div className="flex space-x-1">
-                <button
+                <Button
                   onClick={() => handleViewChange("playbook")}
-                  className={`flex-1 flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    state.currentView === "playbook"
-                      ? "bg-jade-100 text-jade-700 border border-jade-200"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                  }`}
+                  variant={
+                    state.currentView === "playbook" ? "primary" : "ghost"
+                  }
+                  size="sm"
+                  className="flex-1 flex items-center justify-center"
                 >
-                  <FileText className="h-4 w-4 mr-2" />
-                  Playbook View
-                </button>
-                <button
+                  <FileText className="h-4 w-4 mr-2" /> Playbook View
+                </Button>
+                <Button
                   onClick={() => handleViewChange("practice-script")}
-                  className={`flex-1 flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  variant={
                     state.currentView === "practice-script"
-                      ? "bg-jade-100 text-jade-700 border border-jade-200"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                  }`}
+                      ? "primary"
+                      : "ghost"
+                  }
+                  size="sm"
+                  className="flex-1 flex items-center justify-center"
                 >
-                  <Clock className="h-4 w-4 mr-2" />
-                  Practice Script View
-                </button>
-                <button
+                  <Clock className="h-4 w-4 mr-2" /> Practice Script View
+                </Button>
+                <Button
                   onClick={() => handleViewChange("game-plan")}
-                  className={`flex-1 flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    state.currentView === "game-plan"
-                      ? "bg-jade-100 text-jade-700 border border-jade-200"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                  }`}
+                  variant={
+                    state.currentView === "game-plan" ? "primary" : "ghost"
+                  }
+                  size="sm"
+                  className="flex-1 flex items-center justify-center"
                 >
-                  <Users className="h-4 w-4 mr-2" />
-                  Game Plan View
-                </button>
+                  <Users className="h-4 w-4 mr-2" /> Game Plan View
+                </Button>
               </div>
             </div>
 
@@ -638,9 +639,9 @@ export const PlaybookPage: React.FC = () => {
                     Create timelines, add repetitions, and export professional
                     practice scripts.
                   </p>
-                  <button className="bg-jade-600 text-white px-4 py-2 rounded-md hover:bg-jade-700 transition-colors">
+                  <Button variant="primary" size="sm">
                     Create New Practice Script
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
@@ -656,9 +657,9 @@ export const PlaybookPage: React.FC = () => {
                     Organize plays by game situations using Brian Billick
                     methodology. Down & Distance, Red Zone, Goal Line, and more.
                   </p>
-                  <button className="bg-jade-600 text-white px-4 py-2 rounded-md hover:bg-jade-700 transition-colors">
+                  <Button variant="primary" size="sm">
                     Create New Game Plan
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
@@ -702,14 +703,16 @@ export const PlaybookPage: React.FC = () => {
             <p className="text-gray-600 mt-4">
               You're building an incredible playbook! Keep the momentum going!
             </p>
-            <button
+            <Button
               onClick={() =>
                 setState((prev) => ({ ...prev, showCelebration: false }))
               }
-              className="mt-6 px-6 py-2 bg-jade-600 text-white rounded-lg hover:bg-jade-700 transition-colors"
+              variant="primary"
+              size="sm"
+              className="mt-6"
             >
               Awesome!
-            </button>
+            </Button>
           </div>
         </div>
       )}

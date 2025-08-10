@@ -5,6 +5,7 @@ import { useUpcomingEvents } from "../../hooks/useCalendar";
 import type { CalendarEvent } from "../../services/calendarService";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
+import { Button } from "../ui/Button/Button";
 import Icon from "../ui/Icon/Icon";
 
 interface PersonalCalendarProps {
@@ -89,18 +90,22 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
             Personal Calendar
           </Typography>
           <div className="flex items-center space-x-2">
-            <button
+            <Button
+              variant="link"
+              size="xs"
               onClick={() => navigate("/calendar")}
-              className="text-jade-600 hover:text-jade-700 text-xs font-medium transition-colors"
+              className="text-jade-600 hover:text-jade-700"
             >
               View Full Calendar
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="outline"
+              size="xs"
               onClick={() => setShowQuickAdd(!showQuickAdd)}
-              className="px-2 py-1 text-xs font-medium text-jade-600 hover:text-jade-700 border border-jade-200 rounded-md transition-colors"
+              className="border-jade-200 text-jade-600 hover:text-jade-700"
             >
               + Add
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -116,18 +121,17 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                 className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-jade-500 focus:border-jade-500"
                 onKeyPress={(e) => e.key === "Enter" && handleQuickAdd()}
               />
-              <button
-                onClick={handleQuickAdd}
-                className="px-3 py-2 text-sm font-medium text-white bg-jade-600 rounded-md hover:bg-jade-700 transition-colors"
-              >
+              <Button variant="primary" size="sm" onClick={handleQuickAdd}>
                 Add
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="link"
+                size="sm"
                 onClick={() => setShowQuickAdd(false)}
-                className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-700 transition-colors"
+                className="text-gray-600 hover:text-gray-700"
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -140,7 +144,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                 <div className="text-center py-8">
                   <Icon
                     name="calendar"
-                    size="2xl"
+                    size="xl"
                     className="text-gray-400 mx-auto mb-3"
                   />
                   <Typography variant="body-lg" className="text-gray-500 mb-2">
@@ -167,7 +171,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                               ? "activity"
                               : "calendar"
                         }
-                        size={16}
+                        size="sm"
                         className="text-jade-600"
                       />
                     </div>
@@ -227,12 +231,15 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                 >
                   {selectedEvent.title}
                 </Typography>
-                <button
+                <Button
+                  variant="ghost"
+                  size="xs"
                   onClick={() => setSelectedEvent(null)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <Icon name="close" size={20} />
-                </button>
+                  aria-label="Close"
+                  className="text-gray-400 hover:text-gray-600"
+                  icon={<Icon name="close" size="sm" />}
+                  iconPosition="only"
+                />
               </div>
 
               <div className="space-y-3">
@@ -250,7 +257,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                 </div>
 
                 <div className="flex items-center space-x-2 text-gray-600">
-                  <Icon name="calendar" size={16} />
+                  <Icon name="calendar" size="sm" />
                   <Typography variant="body-sm">
                     {format(
                       new Date(selectedEvent.start),
@@ -260,7 +267,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                 </div>
 
                 <div className="flex items-center space-x-2 text-gray-600">
-                  <Icon name="clock" size={16} />
+                  <Icon name="clock" size="sm" />
                   <Typography variant="body-sm">
                     {formatEventTime(selectedEvent.start, selectedEvent.end)}
                   </Typography>
@@ -268,7 +275,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
                 {selectedEvent.location && (
                   <div className="flex items-center space-x-2 text-gray-600">
-                    <Icon name="map" size={16} />
+                    <Icon name="target" size="sm" />
                     <Typography variant="body-sm">
                       {selectedEvent.location}
                     </Typography>
@@ -277,7 +284,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
                 {selectedEvent.team_name && (
                   <div className="flex items-center space-x-2 text-gray-600">
-                    <Icon name="users" size={16} />
+                    <Icon name="users" size="sm" />
                     <Typography variant="body-sm" className="font-medium">
                       {selectedEvent.team_name}
                     </Typography>
@@ -286,7 +293,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
                 {selectedEvent.opponent && (
                   <div className="flex items-center space-x-2 text-gray-600">
-                    <Icon name="shield" size={16} />
+                    <Icon name="shield" size="sm" />
                     <Typography variant="body-sm" className="font-medium">
                       vs. {selectedEvent.opponent}
                     </Typography>
@@ -295,12 +302,16 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
               </div>
 
               <div className="flex space-x-3 mt-6">
-                <button className="flex-1 bg-jade-600 text-white px-4 py-2 rounded-lg hover:bg-jade-700 transition-colors font-medium">
+                <Button variant="primary" size="sm" className="flex-1">
                   RSVP Going
-                </button>
-                <button className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 border-gray-300"
+                >
                   Maybe
-                </button>
+                </Button>
               </div>
             </div>
           </div>

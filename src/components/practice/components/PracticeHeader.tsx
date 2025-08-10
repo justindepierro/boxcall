@@ -24,6 +24,7 @@ import React from "react";
 import type { PracticeHeaderProps } from "../types";
 import { Typography } from "../../design-system/Typography";
 import Icon from "../../ui/Icon/Icon";
+import { Button } from "../../ui/Button";
 export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
   event,
   userRole,
@@ -56,7 +57,7 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
             }`}
           >
             <Icon
-              name={userRole === "head_coach" ? "user-check" : "users"}
+              name={userRole === "head_coach" ? "user" : "users"}
               size="sm"
               className={
                 userRole === "head_coach" ? "text-blue-600" : "text-green-600"
@@ -71,65 +72,74 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
           </Typography>
           {userRole === "head_coach" && (
             <div className="flex space-x-2">
-              <button
+              <Button
                 onClick={onTimeAllocationModeToggle}
-                className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
-                  timeAllocationMode
-                    ? "bg-jade-600 text-white"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
+                variant={timeAllocationMode ? "primary" : "outline"}
+                size="xs"
+                className="flex items-center gap-1"
+                icon={
+                  <Icon
+                    name={timeAllocationMode ? "bar-chart" : "clock"}
+                    size="sm"
+                    className={
+                      timeAllocationMode ? "text-white" : "text-gray-600"
+                    }
+                  />
+                }
+                iconPosition="left"
               >
-                <Icon
-                  name={timeAllocationMode ? "bar-chart" : "clock"}
-                  size="sm"
-                  className={
-                    timeAllocationMode ? "text-white" : "text-gray-600"
-                  }
-                />
                 {timeAllocationMode
                   ? "Time Allocation Mode"
                   : "Enable Time Allocation"}
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={onScaffoldModeToggle}
-                className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
-                  scaffoldMode
-                    ? "bg-green-500 text-white"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
+                variant={scaffoldMode ? "primary" : "outline"}
+                size="xs"
+                className="flex items-center gap-1"
+                icon={
+                  <Icon
+                    name={scaffoldMode ? "file" : "target"}
+                    size="sm"
+                    className={scaffoldMode ? "text-white" : "text-gray-600"}
+                  />
+                }
+                iconPosition="left"
               >
-                <Icon
-                  name={scaffoldMode ? "file" : "target"}
-                  size="sm"
-                  className={scaffoldMode ? "text-white" : "text-gray-600"}
-                />
                 {scaffoldMode ? "Scaffold Mode" : "Enable Practice Scaffold"}
-              </button>
+              </Button>
             </div>
           )}
         </div>
       </div>
       <div className="flex items-center space-x-3">
         {/* PDF Export Button */}
-        <button
+        <Button
           onClick={onPDFExport}
-          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors shadow-lg flex items-center gap-2"
+          variant="success"
+          size="sm"
+          icon={<Icon name="pdf" size="sm" className="text-white" />}
+          iconPosition="left"
+          className="shadow-lg"
         >
-          <Icon name="pdf" size="lg" className="text-white" />
           Print Practice to PDF
-        </button>
+        </Button>
         {/* Close Button */}
-        <button
+        <Button
           onClick={onClose}
-          className="text-gray-400 hover:text-gray-600 transition-colors p-2"
+          variant="ghost"
+          size="xs"
           aria-label="Close practice planner"
-        >
-          <Icon
-            name="close"
-            size="lg"
-            className="text-gray-500 hover:text-gray-700"
-          />
-        </button>
+          className="p-2 text-gray-400 hover:text-gray-600 h-auto"
+          icon={
+            <Icon
+              name="close"
+              size="sm"
+              className="text-gray-500 hover:text-gray-700"
+            />
+          }
+          iconPosition="only"
+        />
       </div>
     </div>
   );

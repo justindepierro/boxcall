@@ -129,28 +129,31 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
             { key: "defense", label: "Defense", icon: "shield" },
             { key: "special-teams", label: "Special Teams", icon: "zap" },
             { key: "break", label: "Break", icon: "pause" },
-          ].map((category) => (
-            <button
-              key={category.key}
-              onClick={() =>
-                onCategorySelect(category.key as PracticeBlock["category"])
-              }
-              className={`p-3 rounded-lg border-2 transition-all text-center ${
-                selectedCategory === category.key
-                  ? `border-jade-600 ${getCategoryColor(category.key as PracticeBlock["category"])} shadow-md`
-                  : `border-gray-200 ${getCategoryColor(category.key as PracticeBlock["category"])} hover:border-gray-300`
-              }`}
-            >
-              <div className="mb-1">
-                <Icon
-                  name={category.icon as IconName}
-                  size="lg"
-                  color="current"
-                />
-              </div>
-              <div className="text-xs font-medium">{category.label}</div>
-            </button>
-          ))}
+          ].map((category) => {
+            const isActive = selectedCategory === category.key;
+            return (
+              <Button
+                key={category.key}
+                onClick={() =>
+                  onCategorySelect(category.key as PracticeBlock["category"])
+                }
+                variant={isActive ? "primary" : "ghost"}
+                size="sm"
+                className={`flex flex-col items-center py-3 ${getCategoryColor(category.key as PracticeBlock["category"])} ${isActive ? "shadow-md" : ""}`}
+                icon={
+                  <Icon
+                    name={category.icon as IconName}
+                    size="sm"
+                    color="current"
+                  />
+                }
+              >
+                <span className="text-[10px] font-medium leading-tight">
+                  {category.label}
+                </span>
+              </Button>
+            );
+          })}
         </div>
         {selectedCategory && (
           <div className="mt-3 p-2 bg-blue-50 rounded-lg">
@@ -187,20 +190,22 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
               Practice Timeline ({scheduledDuration} minutes)
             </Typography>
             <div className="flex space-x-2">
-              <button
+              <Button
                 onClick={onRemoveEmpty}
-                className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200 flex items-center gap-1"
+                variant="outline"
+                size="xs"
+                icon={<Icon name="activity" size="sm" color="current" />}
               >
-                <Icon name="activity" size="sm" color="current" />
-                Remove Empty Time
-              </button>
-              <button
+                Remove Empty
+              </Button>
+              <Button
                 onClick={onClearAll}
-                className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 flex items-center gap-1"
+                variant="danger"
+                size="xs"
+                icon={<Icon name="delete" size="sm" color="current" />}
               >
-                <Icon name="delete" size="sm" color="current" />
                 Clear All
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -309,10 +314,8 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                             key={absoluteMinute}
                             onClick={() => {
                               if (allocation) {
-                                // Block exists - select it for editing
                                 onBlockClick(absoluteMinute);
                               } else {
-                                // No block - add new block
                                 onTimelineClick(absoluteMinute);
                               }
                             }}
@@ -374,12 +377,15 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                 </Typography>
               </div>
             </div>
-            <button
+            <Button
+              variant="ghost"
+              size="xs"
               onClick={onClearSelected}
-              className="text-blue-600 hover:text-blue-800 p-1"
+              className="h-auto p-1 text-blue-600 hover:text-blue-800"
+              aria-label="Clear selection"
             >
               ✕
-            </button>
+            </Button>
           </div>
 
           <div className="space-y-3">
@@ -535,9 +541,10 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
 
           {/* Add new block button */}
           {selectedCategory && (
-            <button
+            <Button
+              variant="outline"
+              size="xs"
               onClick={() => {
-                // Find next available spot for new block
                 let nextSpot = 0;
                 while (
                   timelineAllocation[nextSpot] &&
@@ -545,23 +552,17 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                 ) {
                   nextSpot++;
                 }
-
-                // This would trigger a callback to add the block in parent
                 console.log("Add new block at", nextSpot);
               }}
-              className={`px-3 py-2 rounded-lg border-2 border-dashed transition-colors ${getCategoryColor(
-                selectedCategory
-              )
+              className={`border-dashed ${getCategoryColor(selectedCategory)
                 .replace("bg-", "border-")
-                .replace("text-", "text-")} hover:bg-opacity-20`}
+                .replace("text-", "text-")}`}
             >
-              <div className="flex items-center space-x-1">
-                <span className="text-lg">+</span>
-                <span className="text-xs font-medium">
-                  Add {selectedCategory.replace("-", " ")}
-                </span>
-              </div>
-            </button>
+              <span className="text-lg leading-none mr-1">+</span>
+              <span className="text-xs font-medium">
+                Add {selectedCategory.replace("-", " ")}
+              </span>
+            </Button>
           )}
         </div>
       </div>

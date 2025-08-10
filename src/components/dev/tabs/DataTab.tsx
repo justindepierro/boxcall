@@ -3,6 +3,7 @@
  * Database status and role switching
  */
 import React from "react";
+import { Button } from "../../ui/Button/Button";
 import { Typography } from "../../design-system";
 import { useDevMode } from "../../../app/dev-mode-hooks";
 import { useTeamsData } from "../../../hooks/useTeamsData";
@@ -52,35 +53,41 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
         </div>
 
         {/* Demo Data Check Button */}
-        <button
+        <Button
           onClick={() => actions.checkDemoData()}
-          className="w-full px-3 py-1.5 text-xs bg-green-500 hover:bg-green-600 text-white rounded transition-colors"
+          variant="success"
+          size="xs"
+          fullWidth
         >
           🔍 Check Demo Data
-        </button>
+        </Button>
 
         {/* Create Sample Data Button */}
-        <button
+        <Button
           onClick={() => actions.createSampleData()}
-          className="w-full px-3 py-1.5 text-xs bg-jade-600 hover:bg-jade-600 text-white rounded transition-colors"
+          variant="primary"
+          size="xs"
+          fullWidth
         >
           🌱 Create Sample Data
-        </button>
+        </Button>
 
         {/* Navigation Buttons */}
         <div className="grid grid-cols-2 gap-2">
-          <button
+          <Button
             onClick={() => actions.navigateToTeams()}
-            className="px-3 py-1.5 text-xs bg-green-500 hover:bg-green-600 text-white rounded transition-colors"
+            variant="success"
+            size="xs"
           >
             👥 Teams
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => actions.navigateToPlaybook()}
-            className="px-3 py-1.5 text-xs bg-purple-500 hover:bg-purple-600 text-white rounded transition-colors"
+            variant="outline"
+            size="xs"
           >
             📋 Playbook
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -90,25 +97,23 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
         </Typography>
         <div className="max-h-40 overflow-y-auto space-y-1">
           {DEV_MODES.map((mode) => (
-            <button
+            <Button
               key={mode.mode}
               onClick={() => onModeChange(mode.mode as DevMode)}
-              className={`w-full text-left px-2 py-1 text-xs rounded transition-colors ${
-                devMode === mode.mode
-                  ? "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border border-blue-300 dark:border-jade-600"
-                  : "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
-              }`}
+              variant={devMode === mode.mode ? "primary" : "ghost"}
+              size="xs"
+              className="w-full justify-start flex-col items-start text-left !h-auto px-2 py-1"
             >
               <div className="flex items-center">
-                <div
+                <span
                   className={`w-2 h-2 rounded-full bg-${mode.color}-500 mr-2`}
-                ></div>
+                ></span>
                 <span className="font-medium">{mode.label}</span>
               </div>
-              <div className="text-gray-600 dark:text-gray-400 ml-4">
+              <div className="text-gray-600 dark:text-gray-400 ml-4 text-[10px] leading-snug">
                 {mode.description}
               </div>
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -119,17 +124,14 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
         </Typography>
         <div className="flex gap-2">
           {(["compact", "comfortable"] as const).map((d) => (
-            <button
+            <Button
               key={d}
               onClick={() => setUIDensity(d)}
-              className={`px-3 py-1.5 text-xs rounded border transition-colors ${
-                uiDensity === d
-                  ? "bg-green-600 text-white border-green-600"
-                  : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-              }`}
+              variant={uiDensity === d ? "success" : "ghost"}
+              size="xs"
             >
               {d}
-            </button>
+            </Button>
           ))}
         </div>
       </div>

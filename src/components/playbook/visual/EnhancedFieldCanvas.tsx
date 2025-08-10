@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import { Button } from "../../ui/Button/Button";
 import * as fabric from "fabric";
 import type { Play } from "../../../types/play";
 import {
@@ -285,51 +286,59 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
           {/* Zoom Controls */}
           <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-2">
             <div className="flex items-center space-x-1">
-              <button
+              <Button
+                size="xs"
+                variant="ghost"
                 onClick={handleZoomOut}
-                className="p-1 hover:bg-slate-100 rounded text-slate-600"
+                className="p-1 h-auto w-auto hover:bg-slate-100 text-slate-600"
                 title="Zoom Out"
               >
                 <ZoomOut className="h-4 w-4" />
-              </button>
+              </Button>
               <span className="text-xs text-slate-500 min-w-[3rem] text-center">
                 {Math.round(zoom * 100)}%
               </span>
-              <button
+              <Button
+                size="xs"
+                variant="ghost"
                 onClick={handleZoomIn}
-                className="p-1 hover:bg-slate-100 rounded text-slate-600"
+                className="p-1 h-auto w-auto hover:bg-slate-100 text-slate-600"
                 title="Zoom In"
               >
                 <ZoomIn className="h-4 w-4" />
-              </button>
-              <button
+              </Button>
+              <Button
+                size="xs"
+                variant="ghost"
                 onClick={handleResetView}
-                className="p-1 hover:bg-slate-100 rounded text-slate-600 ml-1"
+                className="p-1 h-auto w-auto hover:bg-slate-100 text-slate-600 ml-1"
                 title="Reset View"
               >
                 <RotateCcw className="h-4 w-4" />
-              </button>
+              </Button>
             </div>
           </div>
           {/* Player Controls */}
           <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-2 space-y-2">
-            <button
+            <Button
+              size="xs"
+              variant={isDrawingRoute ? "danger" : "secondary"}
               onClick={toggleRouteDrawing}
               disabled={!selectedPlayer}
-              className={`w-full px-3 py-2 text-sm rounded transition-colors ${
-                isDrawingRoute
-                  ? "bg-red-100 text-red-700 hover:bg-red-200"
-                  : "bg-blue-100 text-blue-700 hover:bg-blue-200"
-              } disabled:opacity-50 disabled:cursor-not-allowed`}
+              fullWidth
+              className="h-auto px-3 py-2"
             >
               {isDrawingRoute ? "Stop Drawing" : "Draw Route"}
-            </button>
-            <button
+            </Button>
+            <Button
+              size="xs"
+              variant="outline"
               onClick={resetPlayers}
-              className="w-full px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
+              fullWidth
+              className="h-auto px-3 py-2"
             >
               Reset Positions
-            </button>
+            </Button>
           </div>
         </div>
       )}

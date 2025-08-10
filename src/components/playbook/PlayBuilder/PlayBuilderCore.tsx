@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from "react";
 import { X, Save } from "lucide-react";
+import { Button } from "../../ui/Button";
 import type { Play } from "../../../types/play";
 import { PlayBuilderForm } from "./PlayBuilderForm";
 import { PlayBuilderPreview } from "./PlayBuilderPreview";
@@ -180,12 +181,15 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
                 Build your play with proper database fields
               </p>
             </div>
-            <button
+            <Button
+              variant="ghost"
+              size="xs"
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-600 p-2 hover:bg-slate-100 rounded-lg transition-colors"
-            >
-              <X className="h-6 w-6" />
-            </button>
+              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg h-auto"
+              aria-label="Close play builder"
+              icon={<X className="h-5 w-5" />}
+              iconPosition="only"
+            />
           </div>
 
           {/* Content */}
@@ -231,20 +235,19 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
             </div>
 
             <div className="flex space-x-3">
-              <button
-                onClick={handleCancel}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jade-500"
-              >
+              <Button onClick={handleCancel} variant="outline" size="sm">
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleSave}
                 disabled={!isValid}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-jade-600 border border-transparent rounded-md hover:bg-jade-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jade-500 disabled:bg-slate-400 disabled:cursor-not-allowed"
+                variant="primary"
+                size="sm"
+                icon={<Save className="h-4 w-4" />}
+                iconPosition="left"
               >
-                <Save className="h-4 w-4 mr-2" />
                 {initialPlay?.id ? "Update Play" : "Create Play"}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

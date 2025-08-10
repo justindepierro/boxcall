@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useRef, useEffect } from "react";
+import { Button } from "../ui/Button/Button";
 import { useAuth } from "../../app/auth-store";
 
 export const UserMenu: React.FC = () => {
@@ -37,9 +38,11 @@ export const UserMenu: React.FC = () => {
   return (
     <div className="relative inline-block text-left" ref={menuRef}>
       {/* User Avatar/Button */}
-      <button
+      <Button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+        variant="ghost"
+        size="sm"
+        className="flex items-center space-x-2 px-3 py-2 h-auto font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white"
         disabled={loading}
       >
         {/* Simple avatar circle */}
@@ -60,7 +63,7 @@ export const UserMenu: React.FC = () => {
             d="M19 9l-7 7-7-7"
           />
         </svg>
-      </button>
+      </Button>
 
       {/* Dropdown Menu */}
       {isOpen && (
@@ -77,38 +80,42 @@ export const UserMenu: React.FC = () => {
             </div>
 
             {/* Menu Items */}
-            <button
+            <Button
               onClick={() => {
                 setIsOpen(false);
-                // Navigate to profile - you can add this later
                 console.log("Navigate to profile");
               }}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+              variant="ghost"
+              size="xs"
+              className="w-full justify-start px-4 py-2 h-auto text-sm text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white"
             >
               Profile Settings
-            </button>
+            </Button>
 
-            <button
+            <Button
               onClick={() => {
                 setIsOpen(false);
-                // Navigate to team settings - you can add this later
                 console.log("Navigate to team");
               }}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+              variant="ghost"
+              size="xs"
+              className="w-full justify-start px-4 py-2 h-auto text-sm text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white"
             >
               Team Settings
-            </button>
+            </Button>
 
             <hr className="border-gray-200 dark:border-gray-700" />
 
             {/* Logout */}
-            <button
+            <Button
               onClick={handleLogout}
               disabled={loading}
-              className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 transition-colors disabled:opacity-50"
+              variant="danger"
+              size="xs"
+              className="w-full justify-start px-4 py-2 h-auto text-sm"
             >
               {loading ? "Signing out..." : "Sign Out"}
-            </button>
+            </Button>
           </div>
         </div>
       )}

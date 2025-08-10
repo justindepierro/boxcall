@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from "react";
+import { Button } from "../../ui/Button/Button";
 import type { Play } from "../../../types/play";
 import {
   normalizePlayName,
@@ -140,9 +141,11 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
   if (!isVisible) {
     return (
       <div className="mb-4">
-        <button
+        <Button
           onClick={onToggle}
-          className="flex items-center space-x-2 text-jade-600 hover:text-jade-700 font-medium"
+          variant="link"
+          size="sm"
+          className="flex items-center space-x-2 font-medium"
         >
           <svg
             className="w-4 h-4"
@@ -158,7 +161,7 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
             />
           </svg>
           <span>Quick Entry Mode</span>
-        </button>
+        </Button>
       </div>
     );
   }
@@ -182,9 +185,11 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
           </svg>
           <span>⚡ Quick Entry Mode</span>
         </h3>
-        <button
+        <Button
           onClick={onToggle}
-          className="text-jade-600 hover:text-jade-700"
+          variant="ghost"
+          size="xs"
+          className="text-jade-600 hover:text-jade-700 p-1 h-auto w-auto"
         >
           <svg
             className="w-5 h-5"
@@ -199,7 +204,7 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
-        </button>
+        </Button>
       </div>
 
       <div className="space-y-3">
@@ -244,19 +249,22 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
           </div>
 
           <div className="flex space-x-2">
-            <button
+            <Button
               onClick={() => setQuickInput("")}
-              className="px-3 py-1 text-sm text-jade-600 hover:text-jade-700 border border-jade-300 rounded-md hover:bg-jade-50"
+              variant="outline"
+              size="xs"
             >
               Clear
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={handleQuickSubmit}
               disabled={!quickInput.trim()}
-              className="px-4 py-2 bg-jade-600 text-white rounded-md hover:bg-jade-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              variant="primary"
+              size="sm"
+              className="font-medium"
             >
               Parse & Fill ⚡
-            </button>
+            </Button>
           </div>
         </div>
 

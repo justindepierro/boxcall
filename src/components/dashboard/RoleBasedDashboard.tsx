@@ -7,6 +7,7 @@ import {
   useIsAdmin,
 } from "../../app/auth-store";
 import { Icon } from "../ui/Icon/Icon";
+import { Button } from "../ui/Button/Button";
 
 // Import the existing dashboard components
 const CoachDashboard = React.lazy(() =>
@@ -180,15 +181,15 @@ const AdminDashboard: React.FC = () => {
           User Management
         </h3>
         <div className="space-y-3">
-          <button className="w-full text-left bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-3 rounded-md text-sm transition-colors">
+          <Button variant="ghost" size="sm" className="w-full justify-start">
             Manage User Accounts
-          </button>
-          <button className="w-full text-left bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-3 rounded-md text-sm transition-colors">
+          </Button>
+          <Button variant="ghost" size="sm" className="w-full justify-start">
             Role Permissions
-          </button>
-          <button className="w-full text-left bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-3 rounded-md text-sm transition-colors">
+          </Button>
+          <Button variant="ghost" size="sm" className="w-full justify-start">
             System Analytics
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -199,15 +200,15 @@ const AdminDashboard: React.FC = () => {
           Quick Actions
         </h3>
         <div className="space-y-3">
-          <button className="w-full bg-jade-600 hover:bg-jade-700 text-white p-3 rounded-md text-sm font-medium transition-colors">
+          <Button variant="primary" size="sm" className="w-full">
             Run System Backup
-          </button>
-          <button className="w-full bg-jade-600 hover:bg-jade-700 text-white p-3 rounded-md text-sm font-medium transition-colors">
+          </Button>
+          <Button variant="primary" size="sm" className="w-full">
             Generate Reports
-          </button>
-          <button className="w-full bg-orange-600 hover:bg-orange-700 text-white p-3 rounded-md text-sm font-medium transition-colors">
+          </Button>
+          <Button variant="warning" size="sm" className="w-full">
             Maintenance Mode
-          </button>
+          </Button>
         </div>
       </div>
     </div>

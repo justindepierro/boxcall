@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon } from "../../components/ui/Icon/Icon";
 import { RoleProtectedRoute } from "../../routes/RoleProtectedRoute";
+import { Button } from "../../components/ui/Button";
 
 /**
  * Player Dashboard Page - Only accessible by players
@@ -249,22 +250,42 @@ const PlayerDashboardContent: React.FC = () => {
               Quick Actions
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <button className="bg-jade-600 hover:bg-jade-700 text-white p-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2">
-                <Icon name="book" size="sm" />
-                <span>View Playbook</span>
-              </button>
-              <button className="bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2">
-                <Icon name="calendar" size="sm" />
-                <span>Check Schedule</span>
-              </button>
-              <button className="bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2">
-                <Icon name="message" size="sm" />
-                <span>Team Chat</span>
-              </button>
-              <button className="bg-orange-600 hover:bg-orange-700 text-white p-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2">
-                <Icon name="user" size="sm" />
-                <span>My Profile</span>
-              </button>
+              <Button
+                variant="primary"
+                size="sm"
+                className="p-4 flex flex-col items-center justify-center space-y-2"
+                icon={<Icon name="book" size="sm" />}
+                iconPosition="left"
+              >
+                View Playbook
+              </Button>
+              <Button
+                variant="success"
+                size="sm"
+                className="p-4 flex flex-col items-center justify-center space-y-2"
+                icon={<Icon name="calendar" size="sm" />}
+                iconPosition="left"
+              >
+                Check Schedule
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="p-4 flex flex-col items-center justify-center space-y-2"
+                icon={<Icon name="message" size="sm" />}
+                iconPosition="left"
+              >
+                Team Chat
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="p-4 flex flex-col items-center justify-center space-y-2"
+                icon={<Icon name="user" size="sm" />}
+                iconPosition="left"
+              >
+                My Profile
+              </Button>
             </div>
           </div>
         </div>

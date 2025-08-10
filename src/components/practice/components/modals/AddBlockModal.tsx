@@ -23,6 +23,7 @@ import { Typography } from "../../../design-system";
 import { getCategoryColor } from "../../utils";
 import type { PracticeBlock, SelectedBlock, UserRole } from "../../types";
 import Icon from "../../../ui/Icon/Icon";
+import { Button } from "../../../ui/Button";
 interface AddBlockModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -124,12 +125,15 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               Add Practice Block
             </Typography>
           </div>
-          <button
+          <Button
+            variant="link"
+            size="xs"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 p-1"
+            className="p-1 text-gray-400 hover:text-gray-600 h-auto"
+            aria-label="Close add block modal"
           >
             <Icon name="close" size="lg" />
-          </button>
+          </Button>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
@@ -268,19 +272,23 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           </div>
           {/* Submit Buttons */}
           <div className="flex space-x-3 pt-4">
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="sm"
+              className="flex-1"
               onClick={onClose}
-              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="flex-1 px-4 py-2 text-white bg-jade-600 rounded-md hover:bg-jade-700 transition-colors"
+              variant="primary"
+              size="sm"
+              className="flex-1"
             >
               Add Block
-            </button>
+            </Button>
           </div>
         </form>
       </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "../ui/Button/Button";
 import { Filter, Star, Clock, Folder } from "lucide-react";
 import {
   FORMATION_OPTIONS,
@@ -45,12 +46,14 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
             <h3 className="font-semibold text-slate-900">Filters</h3>
           </div>
           {hasActiveFilters && (
-            <button
+            <Button
               onClick={clearAllFilters}
-              className="text-sm text-jade-600 hover:text-jade-700 font-medium"
+              size="xs"
+              variant="ghost"
+              className="font-medium text-jade-600 hover:text-jade-700 h-auto px-2"
             >
               Clear all
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -62,14 +65,20 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
             Quick Access
           </h4>
           <div className="space-y-2">
-            <button className="w-full text-left px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-md flex items-center">
-              <Star className="h-4 w-4 mr-2 text-yellow-500" />
-              Favorites
-            </button>
-            <button className="w-full text-left px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-md flex items-center">
-              <Clock className="h-4 w-4 mr-2 text-blue-500" />
-              Recent
-            </button>
+            <Button
+              variant="ghost"
+              size="xs"
+              className="w-full justify-start px-3 py-2 h-auto text-slate-700 hover:text-slate-900"
+            >
+              <Star className="h-4 w-4 mr-2 text-yellow-500" /> Favorites
+            </Button>
+            <Button
+              variant="ghost"
+              size="xs"
+              className="w-full justify-start px-3 py-2 h-auto text-slate-700 hover:text-slate-900"
+            >
+              <Clock className="h-4 w-4 mr-2 text-blue-500" /> Recent
+            </Button>
           </div>
         </div>
         {/* Play Type Filter */}
@@ -94,12 +103,14 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
               </label>
             ))}
             {selectedFilters.playType && (
-              <button
+              <Button
                 onClick={() => handleFilterUpdate("playType", undefined)}
-                className="text-xs text-slate-500 hover:text-slate-700"
+                size="xs"
+                variant="link"
+                className="text-xs text-slate-500 hover:text-slate-700 h-auto px-1"
               >
                 Clear
-              </button>
+              </Button>
             )}
           </div>
         </div>

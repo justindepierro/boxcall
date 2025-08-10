@@ -4,6 +4,7 @@ import { useAuth } from "../app/auth-store";
 import { usePermissions } from "../hooks/usePermissions";
 import { Typography } from "../components/design-system";
 import { Icon } from "../components/ui/Icon/Icon";
+import { Button } from "../components/ui/Button/Button";
 import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";
 
@@ -767,15 +768,17 @@ export const CreateTeam: React.FC = () => {
                   </ul>
                 </div>
 
-                <button
+                <Button
                   onClick={() => {
                     console.log("🏃‍♂️ Redirecting to Coach Account signup");
                     navigate("/create-coach-account");
                   }}
-                  className="w-full bg-jade-600 hover:bg-jade-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                  fullWidth
+                  variant="primary"
+                  size="sm"
                 >
                   Get Coach Account
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -803,20 +806,22 @@ export const CreateTeam: React.FC = () => {
                 : `Congratulations! Your team "${formData.schoolName} ${formData.teamName}" has been created and is ready to use. You can now start inviting players and coaches.`}
             </Typography>
             <div className="flex gap-3 justify-center">
-              <button
+              <Button
                 onClick={() =>
                   navigate(`/team/${createdTeamId || "unknown"}/bulletin`)
                 }
-                className="bg-jade-500 hover:bg-jade-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                variant="primary"
+                size="sm"
               >
                 Go to Team Dashboard
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => navigate("/dashboard")}
-                className="border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 px-6 py-2 rounded-lg font-medium transition-colors"
+                variant="ghost"
+                size="sm"
               >
                 Back to Dashboard
-              </button>
+              </Button>
             </div>
           </div>
         );
@@ -869,32 +874,38 @@ export const CreateTeam: React.FC = () => {
         {/* Navigation */}
         {currentStep !== "intro" && currentStep !== "complete" && (
           <div className="flex justify-between">
-            <button
+            <Button
               onClick={handlePrevious}
               disabled={currentStepIndex === 0}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              variant="outline"
+              size="sm"
+              icon={<Icon name="chevron-left" size="sm" />}
             >
-              <Icon name="chevron-left" size="sm" />
               Previous
-            </button>
+            </Button>
 
             {currentStep === "review" ? (
-              <button
+              <Button
                 onClick={handleSubmit}
                 disabled={creating}
-                className="flex items-center gap-2 bg-jade-500 hover:bg-jade-600 disabled:opacity-60 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                variant="primary"
+                size="sm"
+                icon={!creating ? <Icon name="check" size="sm" /> : undefined}
+                iconPosition="right"
+                loading={creating}
               >
                 {creating ? "Creating..." : "Create Team"}
-                {!creating && <Icon name="check" size="sm" />}
-              </button>
+              </Button>
             ) : (
-              <button
+              <Button
                 onClick={handleNext}
-                className="flex items-center gap-2 bg-jade-500 hover:bg-jade-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                variant="primary"
+                size="sm"
+                icon={<Icon name="chevron-right" size="sm" />}
+                iconPosition="right"
               >
                 Next
-                <Icon name="chevron-right" size="sm" />
-              </button>
+              </Button>
             )}
           </div>
         )}
@@ -907,12 +918,9 @@ export const CreateTeam: React.FC = () => {
 
         {currentStep === "intro" && (
           <div className="text-center">
-            <button
-              onClick={handleNext}
-              className="bg-jade-500 hover:bg-jade-600 text-white px-8 py-3 rounded-lg font-medium transition-colors"
-            >
+            <Button onClick={handleNext} variant="primary" size="md">
               Get Started
-            </button>
+            </Button>
           </div>
         )}
       </div>

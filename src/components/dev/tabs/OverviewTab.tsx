@@ -5,6 +5,7 @@
 import React from "react";
 import { Typography } from "../../design-system";
 import { Card } from "../../ui";
+import { Button } from "../../ui/Button/Button";
 import { useAuth } from "../../../app/auth-store";
 import { useDevMode } from "../../../app/dev-mode-hooks";
 import { useTeamsData } from "../../../hooks/useTeamsData";
@@ -126,36 +127,26 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           Quick Actions
         </Typography>
         <div className="grid grid-cols-2 gap-2">
-          <button
-            onClick={onTestDatabase}
-            className="px-3 py-2 text-xs bg-jade-600 text-white rounded hover:bg-jade-600 transition-colors"
-          >
-            🔍 Test DB
-          </button>
-          <button
-            onClick={onExportState}
-            className="px-3 py-2 text-xs bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
-          >
-            📥 Export State
-          </button>
-          <button
-            onClick={onReloadData}
-            className="px-3 py-2 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors"
-          >
-            🔄 Reload Data
-          </button>
-          <button
-            onClick={onClearData}
-            className="px-3 py-2 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-          >
-            🗑️ Clear All
-          </button>
-          <button
+          <Button size="xs" variant="secondary" onClick={onTestDatabase}>
+            <span className="mr-1">🔍</span> Test DB
+          </Button>
+          <Button size="xs" variant="success" onClick={onExportState}>
+            <span className="mr-1">📥</span> Export State
+          </Button>
+          <Button size="xs" variant="primary" onClick={onReloadData}>
+            <span className="mr-1">🔄</span> Reload Data
+          </Button>
+          <Button size="xs" variant="danger" onClick={onClearData}>
+            <span className="mr-1">🗑️</span> Clear All
+          </Button>
+          <Button
+            size="xs"
+            variant="outline"
             onClick={runAllTests}
-            className="px-3 py-2 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors col-span-2"
+            className="col-span-2"
           >
-            🧪 Run All Tests
-          </button>
+            <span className="mr-1">🧪</span> Run All Tests
+          </Button>
         </div>
       </div>
     </div>

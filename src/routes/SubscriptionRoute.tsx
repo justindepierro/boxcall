@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { useAuthLoading, useIsAuthenticated } from "../app/auth-store";
 import { Icon } from "../components/ui/Icon/Icon";
+import { Button } from "../components/ui/Button/Button";
 import { supabase } from "../lib/supabase";
 import type { Database } from "../types/database";
 // Subscription tier type
@@ -102,12 +103,12 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             Unable to verify team subscription status.
           </p>
-          <button
+          <Button
+            variant="primary"
             onClick={() => (window.location.href = fallbackTo)}
-            className="bg-brand-jade text-white px-4 py-2 rounded-sm hover:bg-interaction-jade font-sans font-semibold"
           >
             Return to Dashboard
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -128,15 +129,16 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
             Current plan: {subscription.subscription_tier || "none"}
           </p>
           <div className="space-y-3">
-            <button className="w-full bg-brand-jade text-white px-4 py-2 rounded-sm hover:bg-interaction-jade font-sans font-semibold">
+            <Button fullWidth variant="primary">
               Upgrade Subscription
-            </button>
-            <button
+            </Button>
+            <Button
+              fullWidth
+              variant="outline"
               onClick={() => window.history.back()}
-              className="w-full bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
             >
               Go Back
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -157,15 +159,16 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
               . Please renew to continue using premium features.
             </p>
             <div className="space-y-3">
-              <button className="w-full bg-brand-jade text-white px-4 py-2 rounded-sm hover:bg-interaction-jade font-sans font-semibold">
+              <Button fullWidth variant="primary">
                 Renew Subscription
-              </button>
-              <button
+              </Button>
+              <Button
+                fullWidth
+                variant="outline"
                 onClick={() => (window.location.href = fallbackTo)}
-                className="w-full bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
               >
                 Return to Dashboard
-              </button>
+              </Button>
             </div>
           </div>
         </div>

@@ -208,7 +208,7 @@ export const CalendarPage: React.FC = () => {
             {/* Universal Search */}
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-4">
-                <Icon name="search" size="lg" color="navy" />
+                <Icon name="search" size="lg" className="text-navy-600" />
                 <Typography
                   variant="headline-md"
                   className="text-gray-900 dark:text-white"
@@ -237,7 +237,7 @@ export const CalendarPage: React.FC = () => {
             {/* Advanced Filters */}
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-4">
-                <Icon name="filter" size="lg" color="navy" />
+                <Icon name="filter" size="lg" className="text-navy-600" />
                 <Typography
                   variant="headline-md"
                   className="text-gray-900 dark:text-white"
@@ -348,7 +348,7 @@ export const CalendarPage: React.FC = () => {
             {/* Calendar Stats */}
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-4">
-                <Icon name="bar-chart" size="lg" color="navy" />
+                <Icon name="bar-chart" size="lg" className="text-navy-600" />
                 <Typography
                   variant="headline-md"
                   className="text-gray-900 dark:text-white"
@@ -421,36 +421,48 @@ export const CalendarPage: React.FC = () => {
                 </div>
                 {/* View Switcher */}
                 <div className="flex rounded-lg bg-gray-100 p-1">
-                  <button
+                  <Button
+                    variant={
+                      currentView === "dayGridMonth" ? "primary" : "ghost"
+                    }
+                    size="xs"
                     onClick={() => handleViewChange("dayGridMonth")}
-                    className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                    className={
                       currentView === "dayGridMonth"
-                        ? "bg-white text-navy-900 shadow-sm"
-                        : "text-gray-600 hover:text-navy-900"
-                    }`}
+                        ? "bg-white text-navy-900"
+                        : "text-gray-600"
+                    }
                   >
                     Month
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant={
+                      currentView === "timeGridWeek" ? "primary" : "ghost"
+                    }
+                    size="xs"
                     onClick={() => handleViewChange("timeGridWeek")}
-                    className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                    className={
                       currentView === "timeGridWeek"
-                        ? "bg-white text-navy-900 shadow-sm"
-                        : "text-gray-600 hover:text-navy-900"
-                    }`}
+                        ? "bg-white text-navy-900"
+                        : "text-gray-600"
+                    }
                   >
                     Week
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant={
+                      currentView === "timeGridDay" ? "primary" : "ghost"
+                    }
+                    size="xs"
                     onClick={() => handleViewChange("timeGridDay")}
-                    className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                    className={
                       currentView === "timeGridDay"
-                        ? "bg-white text-navy-900 shadow-sm"
-                        : "text-gray-600 hover:text-navy-900"
-                    }`}
+                        ? "bg-white text-navy-900"
+                        : "text-gray-600"
+                    }
                   >
                     Day
-                  </button>
+                  </Button>
                 </div>
               </div>
               {/* FullCalendar Component */}
@@ -485,22 +497,25 @@ export const CalendarPage: React.FC = () => {
                   <Icon
                     name={isCreatingEvent ? "plus" : "calendar"}
                     size="lg"
-                    color="navy"
+                    className="text-navy-600"
                   />
                   <Typography variant="headline-md" className="text-navy-900">
                     {isCreatingEvent ? "Create Event" : "Event Details"}
                   </Typography>
                 </div>
-                <button
+                <Button
+                  variant="ghost"
+                  size="xs"
                   onClick={() => {
                     setShowEventModal(false);
                     setSelectedEvent(null);
                     setIsCreatingEvent(false);
                   }}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <Icon name="close" size="lg" />
-                </button>
+                  className="text-gray-400 hover:text-gray-600 h-auto"
+                  icon={<Icon name="close" size="sm" />}
+                  iconPosition="only"
+                  aria-label="Close event modal"
+                />
               </div>
               {isCreatingEvent ? (
                 /* Event Creation Form */
@@ -694,8 +709,9 @@ export const CalendarPage: React.FC = () => {
                     </div>
                     {selectedEvent.location && (
                       <div className="flex items-center">
+                        {/* 'location' icon not in map; using 'target' as fallback until pin icon added */}
                         <Icon
-                          name="location"
+                          name="target"
                           size="sm"
                           color="secondary"
                           className="mr-2"

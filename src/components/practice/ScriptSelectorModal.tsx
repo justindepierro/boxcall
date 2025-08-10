@@ -78,12 +78,14 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                 Add Practice Script
               </Typography>
             </div>
-            <button
+            <Button
+              size="xs"
+              variant="ghost"
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+              className="text-gray-400 hover:text-gray-600 p-1 h-auto w-auto"
             >
               <Icon name="close" size="lg" />
-            </button>
+            </Button>
           </div>
           {/* Category Filter */}
           <div className="mb-6">
@@ -91,46 +93,22 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               Filter by Category
             </Typography>
             <div className="flex space-x-2">
-              <button
-                onClick={() => setSelectedCategory("all")}
-                className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  selectedCategory === "all"
-                    ? "bg-jade-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                All
-              </button>
-              <button
-                onClick={() => setSelectedCategory("offense")}
-                className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  selectedCategory === "offense"
-                    ? "bg-jade-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                Offense
-              </button>
-              <button
-                onClick={() => setSelectedCategory("defense")}
-                className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  selectedCategory === "defense"
-                    ? "bg-jade-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                Defense
-              </button>
-              <button
-                onClick={() => setSelectedCategory("special-teams")}
-                className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  selectedCategory === "special-teams"
-                    ? "bg-jade-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                Special Teams
-              </button>
+              {[
+                { key: "all", label: "All" },
+                { key: "offense", label: "Offense" },
+                { key: "defense", label: "Defense" },
+                { key: "special-teams", label: "Special Teams" },
+              ].map((c) => (
+                <Button
+                  key={c.key}
+                  size="xs"
+                  variant={selectedCategory === c.key ? "primary" : "outline"}
+                  onClick={() => setSelectedCategory(c.key)}
+                  className="rounded-full px-3 py-1 h-auto"
+                >
+                  {c.label}
+                </Button>
+              ))}
             </div>
           </div>
           {/* Create New Script Option */}

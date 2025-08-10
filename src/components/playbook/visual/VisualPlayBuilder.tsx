@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button } from "../../ui/Button/Button";
 import { X, Save, Eye, Users, Route, Palette } from "lucide-react";
 import type { Play } from "../../../types/play";
 import { FieldCanvas } from "./FieldCanvas";
@@ -55,30 +56,34 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
               </div>
             )}
           </div>
-          <button
+          <Button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600"
+            variant="ghost"
+            size="xs"
+            className="text-slate-400 hover:text-slate-600 p-1 h-auto w-auto"
           >
             <X className="h-6 w-6" />
-          </button>
+          </Button>
         </div>
         {/* View Mode Tabs */}
         <div className="flex items-center border-b border-slate-200 bc-card-padding">
           {viewModeButtons.map((button) => {
             const Icon = button.icon;
             return (
-              <button
+              <Button
                 key={button.id}
                 onClick={() => setViewMode(button.id)}
-                className={`flex items-center px-4 py-3 text-sm font-medium border-b-2 ${
+                variant={viewMode === button.id ? "primary" : "ghost"}
+                size="xs"
+                className={`flex items-center px-4 py-2 h-auto font-medium border-b-2 rounded-none ${
                   viewMode === button.id
-                    ? "border-jade-500 text-jade-600"
-                    : "border-transparent text-slate-500 hover:text-slate-700"
+                    ? "border-jade-500"
+                    : "border-transparent"
                 }`}
               >
                 <Icon className="h-4 w-4 mr-2" />
                 {button.label}
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -269,19 +274,22 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             positions
           </div>
           <div className="flex space-x-3">
-            <button
+            <Button
               onClick={onClose}
-              className="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50"
+              variant="outline"
+              size="sm"
+              className="inline-flex items-center"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={handleSave}
-              className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-jade-600 border border-transparent rounded-md hover:bg-jade-700"
+              variant="primary"
+              size="sm"
+              className="inline-flex items-center"
             >
-              <Save className="h-4 w-4 mr-2" />
-              Save Diagram
-            </button>
+              <Save className="h-4 w-4 mr-2" /> Save Diagram
+            </Button>
           </div>
         </div>
       </div>

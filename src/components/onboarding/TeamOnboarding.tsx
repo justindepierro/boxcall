@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../app/auth-store";
 import { Typography } from "../design-system";
+import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
 import { supabase } from "../../lib/supabase";
 
@@ -123,18 +124,20 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
               membership.
             </Typography>
             <div className="flex gap-3 justify-center">
-              <button
+              <Button
+                size="sm"
+                variant="primary"
                 onClick={() => navigate("/create-coach-account")}
-                className="bg-jade-600 hover:bg-jade-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
               >
                 Get Coach Account ($19.99)
-              </button>
-              <button
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
                 onClick={() => navigate("/join-team")}
-                className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 px-4 py-2 rounded-lg font-medium transition-colors"
               >
                 Join a Team
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -183,12 +186,14 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
             <Typography variant="body-sm" color="muted" className="mb-4">
               Set up your own program and invite players and coaches
             </Typography>
-            <button
+            <Button
+              fullWidth
+              size="sm"
+              variant="primary"
               onClick={() => navigate("/create-team")}
-              className="w-full bg-jade-500 hover:bg-jade-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
             >
               Create Team
-            </button>
+            </Button>
           </div>
 
           {/* Join Team Option */}
@@ -205,12 +210,14 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
             <Typography variant="body-sm" color="muted" className="mb-4">
               Use an invite code or search for your existing team
             </Typography>
-            <button
+            <Button
+              fullWidth
+              size="sm"
+              variant="outline"
               onClick={() => navigate("/join-team")}
-              className="w-full border border-jade-300 dark:border-jade-600 text-jade-600 dark:text-jade-400 hover:bg-jade-50 dark:hover:bg-jade-900/20 px-4 py-2 rounded-lg font-medium transition-colors"
             >
               Join Team
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -220,12 +227,14 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
               <strong>Individual Coaches:</strong> Want to build personal
               playbooks without a team?
             </Typography>
-            <button
+            <Button
+              variant="link"
+              size="sm"
               onClick={() => navigate("/create-coach-account")}
-              className="text-blue-600 hover:text-blue-700 font-medium underline"
+              className="font-medium"
             >
               Get Coach Account ($19.99 one-time) →
-            </button>
+            </Button>
           </div>
         )}
       </div>

@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { ZoomIn, ZoomOut, RotateCcw, Move } from "lucide-react";
+import { Button } from "../../ui/Button";
 import type { Play } from "../../../types/play";
 import { PlayerPositionSystem } from "./PlayerPositionSystem";
 import { RouteDrawingSystem } from "./RouteDrawingSystem";
@@ -156,27 +157,36 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
       {/* Controls */}
       {!readOnly && (
         <div className="absolute top-4 right-4 z-10 flex items-center space-x-2 bg-white rounded-lg shadow-sm border border-slate-200 p-2">
-          <button
+          <Button
             onClick={handleZoomIn}
-            className="p-1 hover:bg-slate-100 rounded"
+            variant="ghost"
+            size="xs"
+            className="p-1 h-auto"
             title="Zoom In"
-          >
-            <ZoomIn className="h-4 w-4 text-slate-600" />
-          </button>
-          <button
+            icon={<ZoomIn className="h-4 w-4 text-slate-600" />}
+            iconPosition="only"
+            aria-label="Zoom in"
+          />
+          <Button
             onClick={handleZoomOut}
-            className="p-1 hover:bg-slate-100 rounded"
+            variant="ghost"
+            size="xs"
+            className="p-1 h-auto"
             title="Zoom Out"
-          >
-            <ZoomOut className="h-4 w-4 text-slate-600" />
-          </button>
-          <button
+            icon={<ZoomOut className="h-4 w-4 text-slate-600" />}
+            iconPosition="only"
+            aria-label="Zoom out"
+          />
+          <Button
             onClick={handleResetView}
-            className="p-1 hover:bg-slate-100 rounded"
+            variant="ghost"
+            size="xs"
+            className="p-1 h-auto"
             title="Reset View"
-          >
-            <RotateCcw className="h-4 w-4 text-slate-600" />
-          </button>
+            icon={<RotateCcw className="h-4 w-4 text-slate-600" />}
+            iconPosition="only"
+            aria-label="Reset view"
+          />
           <div className="w-px h-4 bg-slate-300" />
           <Move className="h-4 w-4 text-slate-400" />
           <span className="text-xs text-slate-500">Drag to pan</span>

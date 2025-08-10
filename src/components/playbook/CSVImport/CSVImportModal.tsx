@@ -13,6 +13,7 @@ import {
 import { DataSyncService } from "../../../services/dataSyncService";
 import { CSVService, type CSVParseResult } from "../../../services/csv";
 import { PlaysService } from "../../../services/playsService";
+import { Button } from "../../ui/Button/Button";
 
 interface CSVImportModalProps {
   isOpen: boolean;
@@ -238,12 +239,14 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               Your CSV should include columns for: formation, play_name, p_type,
               personnel, one_word_play, etc.
             </p>
-            <button
+            <Button
               onClick={downloadSampleCSV}
-              className="text-xs text-blue-700 hover:text-blue-800 font-medium"
+              variant="link"
+              size="xs"
+              className="text-blue-700 hover:text-blue-800"
             >
               Download sample CSV template →
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -436,16 +439,25 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                         </div>
                       </td>
                       <td className="px-3 py-2">
-                        <button
+                        <Button
                           onClick={() => toggleRowExpansion(preview.rowNumber)}
+                          variant="ghost"
+                          size="xs"
+                          icon={
+                            expandedRows.has(preview.rowNumber) ? (
+                              <ChevronDown className="h-4 w-4" />
+                            ) : (
+                              <ChevronRight className="h-4 w-4" />
+                            )
+                          }
+                          iconPosition="only"
+                          aria-label={
+                            expandedRows.has(preview.rowNumber)
+                              ? "Collapse row"
+                              : "Expand row"
+                          }
                           className="text-slate-400 hover:text-slate-600"
-                        >
-                          {expandedRows.has(preview.rowNumber) ? (
-                            <ChevronDown className="h-4 w-4" />
-                          ) : (
-                            <ChevronRight className="h-4 w-4" />
-                          )}
-                        </button>
+                        />
                       </td>
                     </tr>
 
@@ -521,24 +533,18 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-between">
-          <button
-            onClick={() => setStep("upload")}
-            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50"
-          >
+        <div className="flex justify-between gap-3">
+          <Button onClick={() => setStep("upload")} variant="outline" size="sm">
             Back
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleImport}
             disabled={summary.validPlays === 0}
-            className={`px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md ${
-              summary.validPlays > 0
-                ? "bg-jade-600 hover:bg-jade-700"
-                : "bg-gray-400 cursor-not-allowed"
-            }`}
+            variant="primary"
+            size="sm"
           >
             Import {summary.validPlays} Valid Plays
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -659,12 +665,9 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         </div>
       )}
 
-      <button
-        onClick={onClose}
-        className="px-6 py-2 text-sm font-medium text-white bg-jade-600 border border-transparent rounded-md hover:bg-jade-700"
-      >
+      <Button onClick={onClose} variant="primary" size="sm">
         View Playbook
-      </button>
+      </Button>
     </div>
   );
 
@@ -693,12 +696,15 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         <div className="inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
           <div className="bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-slate-900">CSV Import</h2>
-            <button
+            <Button
               onClick={onClose}
+              variant="ghost"
+              size="sm"
+              icon={<X className="h-6 w-6" />}
+              iconPosition="only"
+              aria-label="Close modal"
               className="text-slate-400 hover:text-slate-600"
-            >
-              <X className="h-6 w-6" />
-            </button>
+            />
           </div>
           <div className="bg-white px-6 py-8">{renderStep()}</div>
         </div>

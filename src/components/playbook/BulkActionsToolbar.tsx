@@ -1,5 +1,6 @@
 import React from "react";
 import { Trash2, Tag, Download, Plus, Copy, Edit3, X } from "lucide-react";
+import { Button } from "../ui/Button/Button";
 
 interface BulkActionsToolbarProps {
   selectedCount: number;
@@ -22,13 +23,16 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
           <span className="text-sm font-medium text-slate-900">
             {selectedCount} play{selectedCount !== 1 ? "s" : ""} selected
           </span>
-          <button
+          <Button
             onClick={onClearSelection}
-            className="text-slate-400 hover:text-slate-600 transition-colors"
+            variant="ghost"
+            size="xs"
+            icon={<X className="w-4 h-4" />}
+            iconPosition="only"
+            aria-label="Clear selection"
+            className="text-slate-400 hover:text-slate-600 [&_svg]:w-4 [&_svg]:h-4"
             title="Clear selection"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          />
         </div>
 
         {/* Divider */}
@@ -36,62 +40,71 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
 
         {/* Bulk Actions */}
         <div className="flex items-center space-x-2">
-          <button
+          <Button
             onClick={() => onBulkAction("add-tags")}
-            className="flex items-center space-x-1 px-3 py-1.5 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded transition-colors"
+            variant="ghost"
+            size="sm"
+            icon={<Tag className="w-4 h-4" />}
+            className="text-slate-600 hover:text-slate-900"
             title="Add tags to selected plays"
           >
-            <Tag className="h-4 w-4" />
-            <span>Tag</span>
-          </button>
+            Tag
+          </Button>
 
-          <button
+          <Button
             onClick={() => onBulkAction("duplicate")}
-            className="flex items-center space-x-1 px-3 py-1.5 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded transition-colors"
+            variant="ghost"
+            size="sm"
+            icon={<Copy className="w-4 h-4" />}
+            className="text-slate-600 hover:text-slate-900"
             title="Duplicate selected plays"
           >
-            <Copy className="h-4 w-4" />
-            <span>Duplicate</span>
-          </button>
+            Duplicate
+          </Button>
 
-          <button
+          <Button
             onClick={() => onBulkAction("add-to-practice")}
-            className="flex items-center space-x-1 px-3 py-1.5 text-sm text-jade-600 hover:text-jade-700 hover:bg-jade-50 rounded transition-colors"
+            variant="success"
+            size="sm"
+            icon={<Plus className="w-4 h-4" />}
             title="Add to practice script"
           >
-            <Plus className="h-4 w-4" />
-            <span>Practice</span>
-          </button>
+            Practice
+          </Button>
 
-          <button
+          <Button
             onClick={() => onBulkAction("batch-edit")}
-            className="flex items-center space-x-1 px-3 py-1.5 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded transition-colors"
+            variant="outline"
+            size="sm"
+            icon={<Edit3 className="w-4 h-4" />}
             title="Batch edit properties"
           >
-            <Edit3 className="h-4 w-4" />
-            <span>Edit</span>
-          </button>
+            Edit
+          </Button>
 
-          <button
+          <Button
             onClick={() => onBulkAction("export")}
-            className="flex items-center space-x-1 px-3 py-1.5 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded transition-colors"
+            variant="ghost"
+            size="sm"
+            icon={<Download className="w-4 h-4" />}
+            className="text-slate-600 hover:text-slate-900"
             title="Export selected plays"
           >
-            <Download className="h-4 w-4" />
-            <span>Export</span>
-          </button>
+            Export
+          </Button>
 
           {/* Divider */}
           <div className="w-px h-6 bg-slate-200"></div>
 
-          <button
+          <Button
             onClick={() => onBulkAction("delete")}
-            className="flex items-center space-x-1 px-3 py-1.5 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
+            variant="danger"
+            size="sm"
+            icon={<Trash2 className="w-4 h-4" />}
             title="Delete selected plays"
           >
-            <Trash2 className="h-4 w-4" />
-            <span>Delete</span>
-          </button>
+            Delete
+          </Button>
         </div>
       </div>
     </div>

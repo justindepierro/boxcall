@@ -1,49 +1,11 @@
 # Raw Button Inventory
 
-Generated: 2025-08-10T01:14:33.847Z
+Generated: 2025-08-10T01:55:17.574Z
 
-Total files with raw <button>: **71**
+Total files with raw <button>: **34**
 
 | File | Raw Buttons | Lines | Imports Shared Button? |
 | ---- | ----------- | ----- | ---------------------- |
-| src/pages/PlaybookPage.tsx | 10 | 402, 425, 434, 444, 546, 557, 568, 641, 659, 705 | No |
-| src/pages/roles/CoachManagementPage.tsx | 9 | 32, 35, 38, 51, 54, 57, 70, 73, 76 | No |
-| src/components/dashboard/PersonalCalendar.tsx | 7 | 92, 98, 119, 125, 230, 298, 301 | No |
-| src/components/playbook/BulkActionsToolbar.tsx | 7 | 25, 39, 48, 57, 66, 75, 87 | No |
-| src/components/playbook/visual/InteractivePlayBuilder.tsx | 7 | 95, 111, 122, 133, 152, 163, 287 | No |
-| src/pages/CreateTeam.tsx | 7 | 770, 806, 814, 872, 882, 891, 910 | No |
-| src/components/dashboard/RoleBasedDashboard.tsx | 6 | 183, 186, 189, 202, 205, 208 | No |
-| src/components/dev/tabs/DataTab.tsx | 6 | 55, 63, 72, 78, 93, 122 | No |
-| src/components/playbook/CSVImport/CSVImportModal.tsx | 6 | 241, 439, 525, 531, 662, 696 | No |
-| src/components/playbook/PlayCard.tsx | 6 | 140, 152, 160, 168, 361, 369 | No |
-| src/components/practice/components/TimelineAllocation.tsx | 6 | 133, 190, 197, 308, 377, 538 | No |
-| src/pages/CreateCoachAccount.tsx | 6 | 677, 683, 741, 751, 759, 772 | No |
-| src/components/dev/tabs/OverviewTab.tsx | 5 | 129, 135, 141, 147, 153 | No |
-| src/components/onboarding/TeamOnboarding.tsx | 5 | 126, 132, 186, 208, 223 | No |
-| src/components/playbook/AdvancedFilters.tsx | 5 | 176, 197, 211, 312, 319 | No |
-| src/components/playbook/PlayBuilder/AutocompleteDropdown.tsx | 5 | 176, 188, 205, 221, 235 | No |
-| src/components/playbook/PlaybookGlossary.tsx | 5 | 135, 159, 170, 207, 234 | No |
-| src/components/playbook/visual/EnhancedFieldCanvas.tsx | 5 | 288, 298, 305, 316, 327 | No |
-| src/components/practice/ScriptSelectorModal.tsx | 5 | 81, 94, 104, 114, 124 | No |
-| src/routes/SubscriptionRoute.tsx | 5 | 105, 131, 134, 160, 163 | No |
-| src/components/auth/UserMenu.tsx | 4 | 40, 80, 91, 105 | No |
-| src/components/playbook/PlayBuilder/PlayBuilderWizard.tsx | 4 | 37, 134, 142, 149 | No |
-| src/components/playbook/PlayBuilder/QuickEntry.tsx | 4 | 143, 185, 247, 253 | No |
-| src/components/playbook/PlayFilters.tsx | 4 | 48, 65, 69, 97 | No |
-| src/components/playbook/visual/VisualPlayBuilder.tsx | 4 | 58, 70, 272, 278 | No |
-| src/components/practice/components/PracticeHeader.tsx | 4 | 74, 93, 114, 122 | No |
-| src/pages/CalendarPage.tsx | 4 | 424, 434, 444, 494 | No |
-| src/pages/roles/PlayerDashboardPage.tsx | 4 | 252, 256, 260, 264 | No |
-| src/components/playbook/PlayBuilder/PlayBuilderCore.tsx | 3 | 183, 234, 240 | No |
-| src/components/playbook/visual/DrawingTools.tsx | 3 | 66, 112, 137 | No |
-| src/components/playbook/visual/FieldCanvas.tsx | 3 | 159, 166, 173 | No |
-| src/components/practice/PracticePlannerModal/components/PracticeTimeline/TimelineSlider.tsx | 3 | 51, 82, 89 | No |
-| src/components/practice/components/modals/AddBlockModal.tsx | 3 | 127, 271, 278 | No |
-| src/components/practice/components/modals/AddGroupModal.tsx | 3 | 70, 126, 133 | No |
-| src/components/practice/components/modals/EditGroupModal.tsx | 3 | 72, 145, 152 | No |
-| src/components/ui/Breadcrumb/Breadcrumb.tsx | 3 | 83, 93, 149 | No |
-| src/components/ui/ErrorBoundary.tsx | 3 | 125, 133, 141 | No |
-| src/components/ui/MobileErrorState.tsx | 3 | 124, 160, 170 | No |
 | src/components/dev/DevTools.tsx | 2 | 245, 269 | No |
 | src/components/mobile/MobileQuickActions.tsx | 2 | 71, 180 | No |
 | src/components/playbook/AdvancedSearchBar.tsx | 2 | 145, 171 | No |
@@ -68,6 +30,7 @@ Total files with raw <button>: **71**
 | src/components/practice/PracticePlannerModal/components/Forms/AddBlockModal.tsx | 1 | 131 | No |
 | src/components/practice/PracticePlannerModal/components/PracticeTimeline/CategorySelector.tsx | 1 | 35 | No |
 | src/components/practice/PracticePlannerModal/components/PracticeTimeline/TimelineContainer.tsx | 1 | 61 | No |
+| src/components/practice/components/TimelineAllocation.tsx | 1 | 313 | No |
 | src/components/team/PlayerRosterContainer.tsx | 1 | 55 | No |
 | src/components/team-dashboard/layout/TeamBulletinHeader.tsx | 1 | 76 | No |
 | src/components/ui/Input/Input.tsx | 1 | 186 | No |

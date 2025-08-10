@@ -3,6 +3,7 @@
  * Part of Phase 3A: Critical Performance & Error Handling
  */
 import React from "react";
+import { Button } from "./Button";
 import { AlertTriangle, RefreshCw, Home, WifiOff, Server } from "lucide-react";
 import { Typography } from "../design-system/Typography";
 
@@ -121,12 +122,15 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
           </div>
         </div>
         {showRetry && (
-          <button
+          <Button
             onClick={handleRetry}
-            className="flex-shrink-0 p-2 text-team-primary hover:bg-blue-50 rounded-lg transition-colors"
-          >
-            <RefreshCw className="h-4 w-4" />
-          </button>
+            variant="ghost"
+            size="xs"
+            className="flex-shrink-0 p-2 h-auto text-team-primary hover:bg-blue-50"
+            icon={<RefreshCw className="h-4 w-4" />}
+            iconPosition="only"
+            aria-label="Retry"
+          />
         )}
       </div>
     );
@@ -157,23 +161,29 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
       {/* Actions */}
       <div className="space-y-3">
         {showRetry && (
-          <button
+          <Button
             onClick={handleRetry}
-            className="w-full flex items-center justify-center space-x-2 bg-team-primary hover:bg-jade-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-jade-500 focus:ring-offset-2"
+            variant="primary"
+            size="sm"
+            className="w-full flex items-center justify-center"
+            icon={<RefreshCw className="h-4 w-4" />}
+            iconPosition="left"
           >
-            <RefreshCw className="h-4 w-4" />
-            <span>Try Again</span>
-          </button>
+            Try Again
+          </Button>
         )}
 
         {showHome && (
-          <button
+          <Button
             onClick={handleHome}
-            className="w-full flex items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+            variant="outline"
+            size="sm"
+            className="w-full flex items-center justify-center"
+            icon={<Home className="h-4 w-4" />}
+            iconPosition="left"
           >
-            <Home className="h-4 w-4" />
-            <span>Go Home</span>
-          </button>
+            Go Home
+          </Button>
         )}
 
         {actions}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button } from "../ui/Button/Button";
 import { Filter, Plus, X } from "lucide-react";
 import { FORMATION_OPTIONS, PLAY_TYPE_OPTIONS } from "../../types/play";
 
@@ -173,12 +174,14 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             )}
           </div>
           {activeFilters.length > 0 && (
-            <button
+            <Button
+              size="xs"
+              variant="danger"
               onClick={clearAllFilters}
-              className="text-xs text-red-600 hover:text-red-700 font-medium"
+              className="font-medium"
             >
               Clear All
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -194,12 +197,14 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
               <span className="text-xs text-blue-900 truncate flex-1">
                 {filter.label}
               </span>
-              <button
+              <Button
+                size="xs"
+                variant="ghost"
                 onClick={() => removeFilter(filter.id)}
-                className="ml-2 text-blue-600 hover:text-blue-800"
+                className="text-blue-600 hover:text-blue-800 h-auto px-1 py-0"
               >
                 <X className="h-3 w-3" />
-              </button>
+              </Button>
             </div>
           ))}
         </div>
@@ -208,13 +213,15 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
       {/* Add Filter Section */}
       <div className="p-3 border-t border-slate-100">
         {!showAddFilter ? (
-          <button
+          <Button
+            size="xs"
+            variant="outline"
             onClick={() => setShowAddFilter(true)}
-            className="w-full flex items-center justify-center px-2 py-1.5 text-xs text-slate-600 hover:text-slate-800 hover:bg-slate-50 border border-dashed border-slate-300 rounded transition-colors"
+            className="w-full flex items-center justify-center border-dashed"
           >
             <Plus className="h-3 w-3 mr-1" />
             Add Filter
-          </button>
+          </Button>
         ) : (
           <div className="space-y-2">
             {/* Field Selection */}
@@ -309,22 +316,25 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
             {/* Actions */}
             <div className="flex gap-1">
-              <button
+              <Button
+                size="xs"
+                variant="primary"
                 onClick={addFilter}
                 disabled={!newFilter.field || !newFilter.value}
-                className="flex-1 px-2 py-1 text-xs bg-jade-600 text-white rounded hover:bg-jade-700 disabled:bg-slate-300 disabled:cursor-not-allowed"
+                className="flex-1"
               >
                 Add
-              </button>
-              <button
+              </Button>
+              <Button
+                size="xs"
+                variant="ghost"
                 onClick={() => {
                   setShowAddFilter(false);
                   setNewFilter({ field: "", operator: "equals", value: "" });
                 }}
-                className="px-2 py-1 text-xs border border-slate-300 rounded hover:bg-slate-50"
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         )}

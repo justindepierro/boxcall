@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon } from "../../components/ui/Icon/Icon";
 import { RoleProtectedRoute } from "../../routes/RoleProtectedRoute";
+import { Button } from "../../components/ui/Button/Button";
 
 /**
  * Coach Management Page - Only accessible by coaches and admins
@@ -29,15 +30,30 @@ const CoachManagementContent: React.FC = () => {
               Team Management
             </h3>
             <div className="space-y-3">
-              <button className="w-full text-left bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-3 rounded-md text-sm transition-colors">
+              <Button
+                variant="ghost"
+                size="sm"
+                fullWidth
+                className="justify-start"
+              >
                 View Team Roster
-              </button>
-              <button className="w-full text-left bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-3 rounded-md text-sm transition-colors">
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                fullWidth
+                className="justify-start"
+              >
                 Add New Player
-              </button>
-              <button className="w-full text-left bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-3 rounded-md text-sm transition-colors">
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                fullWidth
+                className="justify-start"
+              >
                 Update Player Stats
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -48,15 +64,30 @@ const CoachManagementContent: React.FC = () => {
               Playbook
             </h3>
             <div className="space-y-3">
-              <button className="w-full text-left bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-3 rounded-md text-sm transition-colors">
+              <Button
+                variant="ghost"
+                size="sm"
+                fullWidth
+                className="justify-start"
+              >
                 Create New Play
-              </button>
-              <button className="w-full text-left bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-3 rounded-md text-sm transition-colors">
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                fullWidth
+                className="justify-start"
+              >
                 Edit Existing Plays
-              </button>
-              <button className="w-full text-left bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-3 rounded-md text-sm transition-colors">
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                fullWidth
+                className="justify-start"
+              >
                 Export Playbook
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -67,15 +98,30 @@ const CoachManagementContent: React.FC = () => {
               Practice Planning
             </h3>
             <div className="space-y-3">
-              <button className="w-full text-left bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-3 rounded-md text-sm transition-colors">
+              <Button
+                variant="ghost"
+                size="sm"
+                fullWidth
+                className="justify-start"
+              >
                 Schedule Practice
-              </button>
-              <button className="w-full text-left bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-3 rounded-md text-sm transition-colors">
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                fullWidth
+                className="justify-start"
+              >
                 Create Practice Script
-              </button>
-              <button className="w-full text-left bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 p-3 rounded-md text-sm transition-colors">
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                fullWidth
+                className="justify-start"
+              >
                 View Practice History
-              </button>
+              </Button>
             </div>
           </div>
         </div>

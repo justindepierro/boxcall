@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography } from "../../../../../components/design-system";
 import { Icon } from "../../../../../components/ui/Icon/Icon";
+import { Button } from "../../../../../components/ui/Button";
 import type { SelectedBlock } from "../../types";
 
 interface TimelineSliderProps {
@@ -48,12 +49,15 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
             Press Space/Enter to save, Esc to cancel
           </Typography>
         </div>
-        <button
+        <Button
+          variant="link"
+          size="xs"
           onClick={onCancelBlock}
-          className="text-blue-600 hover:text-blue-800 p-1"
+          className="p-1 text-blue-600 hover:text-blue-800 h-auto"
+          aria-label="Cancel resize"
         >
           <Icon name="close" size="sm" />
-        </button>
+        </Button>
       </div>
 
       <div className="space-y-3">
@@ -79,20 +83,26 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
         </div>
 
         <div className="flex space-x-2">
-          <button
+          <Button
             onClick={onSaveBlock}
-            className="flex-1 bg-jade-600 text-white py-2 px-4 rounded-lg hover:bg-jade-700 transition-colors flex items-center justify-center"
+            variant="primary"
+            size="sm"
+            className="flex-1 flex items-center justify-center"
+            icon={<Icon name="check" size="sm" />}
+            iconPosition="left"
           >
-            <Icon name="check" size="sm" className="mr-2" />
             Save Block
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={onCancelBlock}
-            className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors flex items-center justify-center"
+            variant="outline"
+            size="sm"
+            className="flex-1 flex items-center justify-center"
+            icon={<Icon name="close" size="sm" />}
+            iconPosition="left"
           >
-            <Icon name="close" size="sm" className="mr-2" />
             Cancel
-          </button>
+          </Button>
         </div>
       </div>
     </div>

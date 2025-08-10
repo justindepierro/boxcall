@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useRef, useEffect } from "react";
+import { Button } from "../../ui/Button/Button";
 import { Plus, Check, ChevronDown } from "lucide-react";
 import { useToast } from "./useToast";
 
@@ -173,26 +174,30 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
         />
 
         {/* Dropdown arrow */}
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="xs"
           onClick={() => setIsOpen(!isOpen)}
-          className="absolute inset-y-0 right-0 flex items-center px-2 text-slate-400 hover:text-slate-600"
+          className="absolute inset-y-0 right-0 px-2 h-auto text-slate-400 hover:text-slate-600"
         >
           <ChevronDown
             className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
           />
-        </button>
+        </Button>
 
         {/* Add new button - shows when typing something new */}
         {showAddNewOption && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="xs"
             onClick={handleAddNew}
-            className="absolute inset-y-0 right-8 flex items-center px-1 text-jade-500 hover:text-jade-600 z-10"
+            className="absolute inset-y-0 right-8 px-1 h-auto text-jade-500 hover:text-jade-600 z-10"
             title={`Add new ${label.toLowerCase()}: "${inputValue}"`}
           >
             <Plus className="h-4 w-4 bg-white rounded-full border border-jade-500" />
-          </button>
+          </Button>
         )}
       </div>
 
@@ -202,44 +207,50 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
           {filteredOptions.length > 0 ? (
             <>
               {filteredOptions.map((option, index) => (
-                <button
+                <Button
                   key={option}
                   type="button"
+                  variant="ghost"
+                  size="xs"
                   onClick={() => handleOptionClick(option)}
-                  className={`w-full px-3 py-2 text-left hover:bg-jade-50 focus:bg-jade-50 focus:outline-none ${
+                  className={`w-full justify-start px-3 py-2 h-auto hover:bg-jade-50 focus:bg-jade-50 focus:outline-none ${
                     index === highlightedIndex ? "bg-jade-50" : ""
                   }`}
                 >
                   {option}
-                </button>
+                </Button>
               ))}
 
               {/* Add new option at bottom if applicable */}
               {showAddNewOption && (
                 <>
                   <div className="border-t border-slate-200"></div>
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="xs"
                     onClick={handleAddNew}
-                    className="w-full px-3 py-2 text-left text-jade-600 hover:bg-jade-50 focus:bg-jade-50 focus:outline-none font-medium flex items-center"
+                    className="w-full justify-start px-3 py-2 h-auto text-jade-600 hover:bg-jade-50 focus:bg-jade-50 focus:outline-none font-medium flex items-center"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Add "{inputValue}"
-                  </button>
+                  </Button>
                 </>
               )}
             </>
           ) : (
             <div className="px-3 py-2 text-slate-500 text-sm">
               {showAddNewOption ? (
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="xs"
                   onClick={handleAddNew}
-                  className="w-full text-left text-jade-600 hover:text-jade-700 font-medium flex items-center"
+                  className="w-full justify-start text-jade-600 hover:text-jade-700 font-medium flex items-center h-auto"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Add "{inputValue}"
-                </button>
+                </Button>
               ) : (
                 "No options found"
               )}

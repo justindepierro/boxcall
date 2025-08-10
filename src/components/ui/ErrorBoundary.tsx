@@ -1,6 +1,7 @@
 import type { ErrorInfo, ReactNode } from "react";
 import React, { Component } from "react";
 import { AlertTriangle, RefreshCw, Home, MessageCircle } from "lucide-react";
+import { Button } from "./Button";
 import { Typography } from "../design-system";
 
 interface Props {
@@ -122,29 +123,38 @@ export class ErrorBoundary extends Component<Props, State> {
 
             {/* Action Buttons */}
             <div className="space-y-3">
-              <button
+              <Button
                 onClick={this.handleRetry}
-                className="w-full flex items-center justify-center space-x-2 bg-team-primary hover:bg-jade-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-jade-500 focus:ring-offset-2"
+                variant="primary"
+                size="sm"
+                className="w-full flex items-center justify-center"
+                icon={<RefreshCw className="h-4 w-4" />}
+                iconPosition="left"
               >
-                <RefreshCw className="h-4 w-4" />
-                <span>Try Again</span>
-              </button>
+                Try Again
+              </Button>
 
-              <button
+              <Button
                 onClick={() => (window.location.href = "/")}
-                className="w-full flex items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                variant="outline"
+                size="sm"
+                className="w-full flex items-center justify-center"
+                icon={<Home className="h-4 w-4" />}
+                iconPosition="left"
               >
-                <Home className="h-4 w-4" />
-                <span>Go to Dashboard</span>
-              </button>
+                Go to Dashboard
+              </Button>
 
-              <button
+              <Button
                 onClick={() => window.location.reload()}
-                className="w-full flex items-center justify-center space-x-2 text-gray-500 hover:text-gray-700 font-medium py-2 transition-colors duration-200"
+                variant="ghost"
+                size="sm"
+                className="w-full flex items-center justify-center text-gray-500 hover:text-gray-700"
+                icon={<MessageCircle className="h-4 w-4" />}
+                iconPosition="left"
               >
-                <MessageCircle className="h-4 w-4" />
-                <span>Reload Page</span>
-              </button>
+                Reload Page
+              </Button>
             </div>
 
             {/* Help Text */}

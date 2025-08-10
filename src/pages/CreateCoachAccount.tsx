@@ -4,6 +4,7 @@ import { useAuth } from "../app/auth-store";
 import { usePermissions } from "../hooks/usePermissions";
 import { Typography } from "../components/design-system";
 import { Icon } from "../components/ui/Icon/Icon";
+import { Button } from "../components/ui/Button/Button";
 
 /**
  * Create Coach Account Page
@@ -674,18 +675,20 @@ export const CreateCoachAccount: React.FC = () => {
               and planning your practices.
             </Typography>
             <div className="flex gap-3 justify-center">
-              <button
+              <Button
                 onClick={() => navigate("/dashboard")}
-                className="bg-jade-600 hover:bg-jade-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                variant="primary"
+                size="sm"
               >
                 Go to Coach Dashboard
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => navigate("/playbook")}
-                className="border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 px-6 py-2 rounded-lg font-medium transition-colors"
+                variant="ghost"
+                size="sm"
               >
                 Start Building Playbooks
-              </button>
+              </Button>
             </div>
           </div>
         );
@@ -738,43 +741,44 @@ export const CreateCoachAccount: React.FC = () => {
         {/* Navigation */}
         {currentStep !== "intro" && currentStep !== "complete" && (
           <div className="flex justify-between">
-            <button
+            <Button
               onClick={handlePrevious}
               disabled={currentStepIndex === 0}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              variant="outline"
+              size="sm"
+              icon={<Icon name="chevron-left" size="sm" />}
             >
-              <Icon name="chevron-left" size="sm" />
               Previous
-            </button>
-
+            </Button>
             {currentStep === "payment" ? (
-              <button
+              <Button
                 onClick={handleSubmit}
-                className="flex items-center gap-2 bg-jade-600 hover:bg-jade-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                variant="primary"
+                size="sm"
+                icon={<Icon name="check" size="sm" />}
+                iconPosition="right"
               >
                 Create Coach Account
-                <Icon name="check" size="sm" />
-              </button>
+              </Button>
             ) : (
-              <button
+              <Button
                 onClick={handleNext}
-                className="flex items-center gap-2 bg-jade-600 hover:bg-jade-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                variant="primary"
+                size="sm"
+                icon={<Icon name="chevron-right" size="sm" />}
+                iconPosition="right"
               >
                 Next
-                <Icon name="chevron-right" size="sm" />
-              </button>
+              </Button>
             )}
           </div>
         )}
 
         {currentStep === "intro" && (
           <div className="text-center">
-            <button
-              onClick={handleNext}
-              className="bg-jade-600 hover:bg-jade-600 text-white px-8 py-3 rounded-lg font-medium transition-colors"
-            >
+            <Button onClick={handleNext} variant="primary" size="md">
               Get Started
-            </button>
+            </Button>
           </div>
         )}
       </div>

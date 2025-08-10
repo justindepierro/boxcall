@@ -20,6 +20,7 @@ import React, { useState, useEffect } from "react";
 import { Typography } from "../../../design-system";
 import type { EditingGroup, PracticeGroup } from "../../types";
 import Icon from "../../../ui/Icon/Icon";
+import { Button } from "../../../ui/Button";
 interface EditGroupModalProps {
   isOpen: boolean;
   editingGroup: EditingGroup | null;
@@ -69,16 +70,19 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
               Edit Group
             </Typography>
           </div>
-          <button
+          <Button
+            variant="link"
+            size="xs"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 hover:text-gray-600 h-auto"
+            aria-label="Close edit group modal"
           >
             <Icon
               name="close"
               size="md"
               className="text-gray-500 hover:text-gray-700"
             />
-          </button>
+          </Button>
         </div>
         {/* Script Assignment Display */}
         {editingGroup.group.scriptId && (
@@ -142,19 +146,23 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
           </div>
           {/* Submit Buttons */}
           <div className="flex space-x-3 pt-4">
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="sm"
+              className="flex-1"
               onClick={onClose}
-              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="flex-1 px-4 py-2 text-white bg-jade-600 rounded-md hover:bg-jade-700 transition-colors"
+              variant="primary"
+              size="sm"
+              className="flex-1"
             >
               Update Group
-            </button>
+            </Button>
           </div>
         </form>
       </div>

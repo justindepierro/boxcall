@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button } from "../../ui/Button";
 import * as fabric from "fabric";
 interface DrawingToolsProps {
   canvas: fabric.Canvas | null;
@@ -63,21 +64,19 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
       {/* Tool Selection */}
       <div className="grid grid-cols-3 gap-1">
         {tools.map((tool) => (
-          <button
+          <Button
             key={tool.id}
             onClick={() => onToolChange(tool.id)}
-            className={`p-2 text-xs rounded border transition-colors ${
-              selectedTool === tool.id
-                ? "bg-blue-100 border-blue-300 text-blue-700"
-                : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
-            }`}
+            variant={selectedTool === tool.id ? "primary" : "ghost"}
+            size="xs"
+            className="p-2 h-auto flex flex-col border border-slate-200"
             title={tool.label}
           >
-            <span className="block text-center">{tool.icon}</span>
-            <span className="block text-center mt-1">
+            <span className="text-center leading-none mb-1">{tool.icon}</span>
+            <span className="text-center text-[10px]">
               {tool.label.split(" ")[0]}
             </span>
-          </button>
+          </Button>
         ))}
       </div>
       {/* Route Style Options */}
@@ -109,38 +108,31 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
             "#f59e0b",
             "#8b5cf6",
           ].map((color) => (
-            <button
+            <Button
               key={color}
               onClick={() => setSelectedColor(color)}
-              className={`w-6 h-6 rounded border-2 ${
-                selectedColor === color
-                  ? "border-slate-400"
-                  : "border-slate-200"
-              }`}
+              variant={selectedColor === color ? "outline" : "ghost"}
+              size="xs"
+              className="w-6 h-6 p-0 min-w-0 border-2"
               style={{ backgroundColor: color }}
+              aria-label={`Select color ${color}`}
             />
           ))}
-        </div>
-      </div>
-      {/* Quick Add Annotations */}
-      <div className="space-y-2">
-        <div className="text-xs font-medium text-slate-600">
-          Quick Annotations
-        </div>
-        <div className="grid grid-cols-2 gap-1">
           {[
             { text: "5 YDS", style: "yard-marker" },
             { text: "10 YDS", style: "yard-marker" },
             { text: "HOT", style: "alert" },
             { text: "ALERT", style: "alert" },
-          ].map(({ text, style }) => (
-            <button
-              key={text}
-              onClick={() => addTextAnnotation(text, style)}
-              className="px-2 py-1 text-xs bg-slate-100 border border-slate-200 rounded hover:bg-slate-200"
+          ].map((item) => (
+            <Button
+              key={item.text}
+              onClick={() => addTextAnnotation(item.text, item.style)}
+              variant="ghost"
+              size="xs"
+              className="px-2 py-1 text-xs border border-slate-200 bg-slate-100 hover:bg-slate-200"
             >
-              {text}
-            </button>
+              {item.text}
+            </Button>
           ))}
         </div>
       </div>

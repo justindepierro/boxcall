@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button } from "../ui/Button/Button";
 import {
   Book,
   ChevronDown,
@@ -132,12 +133,14 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
             <Book className="h-4 w-4 text-slate-500 mr-2" />
             <h3 className="font-medium text-slate-900">Playbook</h3>
           </div>
-          <button
-            className="p-1 hover:bg-slate-100 rounded text-slate-500 hover:text-slate-700 transition-colors"
+          <Button
+            size="xs"
+            variant="ghost"
+            className="p-1 h-auto w-auto hover:bg-slate-100 text-slate-500 hover:text-slate-700"
             title="Manage Categories"
           >
             <Settings className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
         <p className="text-xs text-slate-500 mt-1">
           Organize plays by football concepts
@@ -156,23 +159,25 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
             <div key={category.id} className="mb-1">
               {/* Category Header */}
               <div className="flex items-center group">
-                <button
+                <Button
+                  size="xs"
+                  variant="ghost"
                   onClick={() => toggleCategory(category.id)}
-                  className="p-0.5 hover:bg-slate-100 rounded mr-1 transition-colors"
+                  className="p-0.5 h-auto w-auto hover:bg-slate-100 mr-1"
                 >
                   {isExpanded ? (
                     <ChevronDown className="h-3 w-3 text-slate-500" />
                   ) : (
                     <ChevronRight className="h-3 w-3 text-slate-500" />
                   )}
-                </button>
+                </Button>
 
-                <button
+                <Button
+                  size="xs"
+                  variant={isSelected ? "primary" : "ghost"}
                   onClick={() => handleCategoryClick(category.id)}
-                  className={`flex items-center flex-1 px-2 py-1.5 rounded text-sm font-medium transition-colors ${
-                    isSelected
-                      ? category.color
-                      : "text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                  className={`flex-1 justify-start px-2 py-1.5 h-auto font-medium ${
+                    isSelected ? "" : "text-slate-700"
                   }`}
                 >
                   <IconComponent className="h-3 w-3 mr-2" />
@@ -188,7 +193,7 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
                       {playCount}
                     </span>
                   )}
-                </button>
+                </Button>
               </div>
 
               {/* Subcategories */}
@@ -204,15 +209,17 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
                       ] || 0;
 
                     return (
-                      <button
+                      <Button
                         key={subcategory}
+                        size="xs"
+                        variant={isSubSelected ? "outline" : "ghost"}
                         onClick={() =>
                           handleSubcategoryClick(category.id, subcategory)
                         }
-                        className={`w-full flex items-center justify-between px-2 py-1 rounded text-xs transition-colors ${
+                        className={`w-full justify-between px-2 py-1 h-auto text-xs ${
                           isSubSelected
-                            ? "bg-slate-100 text-slate-900 font-medium"
-                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                            ? "font-medium"
+                            : "text-slate-600 hover:text-slate-900"
                         }`}
                       >
                         <span>{subcategory}</span>
@@ -221,7 +228,7 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
                             {subPlayCount}
                           </span>
                         )}
-                      </button>
+                      </Button>
                     );
                   })}
                 </div>
@@ -231,10 +238,14 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
         })}
 
         {/* Add Custom Category Button */}
-        <button className="w-full flex items-center px-2 py-1.5 mt-3 text-xs text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded border border-dashed border-slate-200 hover:border-slate-300 transition-colors">
+        <Button
+          size="xs"
+          variant="outline"
+          className="w-full flex items-center justify-start px-2 py-1.5 mt-3 h-auto text-xs border-dashed"
+        >
           <Plus className="h-3 w-3 mr-1" />
           Add Custom Category
-        </button>
+        </Button>
       </div>
 
       {/* Quick Stats */}

@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "../../ui/Button/Button";
 import { X, ArrowLeft, ArrowRight, Save } from "lucide-react";
 interface PlayBuilderWizardProps {
   isOpen: boolean;
@@ -34,12 +35,14 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                 </div>
               </div>
             </div>
-            <button
+            <Button
+              variant="ghost"
+              size="xs"
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-600"
+              className="text-slate-400 hover:text-slate-600 p-1 h-auto w-auto"
             >
               <X className="h-6 w-6" />
-            </button>
+            </Button>
           </div>
           {/* Content */}
           <div className="bg-white bc-card-padding">
@@ -131,25 +134,30 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
           </div>
           {/* Footer */}
           <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
-            <button
+            <Button
               disabled
-              className="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-400 bg-white border border-slate-300 rounded-md cursor-not-allowed"
+              variant="ghost"
+              size="sm"
+              className="text-slate-400 cursor-not-allowed"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Previous
-            </button>
+              <ArrowLeft className="h-4 w-4 mr-2" /> Previous
+            </Button>
             <div className="flex space-x-3">
-              <button
+              <Button
                 onClick={onClose}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50"
+                variant="outline"
+                size="sm"
+                className="inline-flex items-center"
               >
-                <Save className="h-4 w-4 mr-2" />
-                Save Draft
-              </button>
-              <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-jade-600 border border-transparent rounded-md hover:bg-jade-700">
-                Next
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </button>
+                <Save className="h-4 w-4 mr-2" /> Save Draft
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                className="inline-flex items-center"
+              >
+                Next <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import React from "react";
+import { Button } from "../Button";
 export interface BreadcrumbItem {
   /** Unique identifier for the breadcrumb item */
   id: string;
@@ -80,19 +81,23 @@ const CollapsedIndicator: React.FC<{
   const [isExpanded, setIsExpanded] = React.useState(false);
   return (
     <div className="relative">
-      <button
-        className="px-2 py-1 rounded text-sm transition-colors duration-200 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+      <Button
+        variant="ghost"
+        size="xs"
         onClick={() => setIsExpanded(!isExpanded)}
+        className="px-2 py-1 h-auto text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white"
         aria-label="Show hidden breadcrumb items"
       >
         ...
-      </button>
+      </Button>
       {isExpanded && (
         <div className="absolute top-full left-0 mt-1 py-1 z-10 min-w-48 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 border rounded-md shadow-lg">
           {hiddenItems.map((item) => (
-            <button
+            <Button
               key={item.id}
-              className="block w-full text-left px-3 py-2 text-sm transition-colors duration-200 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
+              variant="ghost"
+              size="xs"
+              className="w-full justify-start px-3 py-2 h-auto text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               onClick={() => {
                 onItemClick(item);
                 setIsExpanded(false);
@@ -104,7 +109,7 @@ const CollapsedIndicator: React.FC<{
                 )}
                 <span>{item.label}</span>
               </div>
-            </button>
+            </Button>
           ))}
         </div>
       )}
@@ -146,9 +151,14 @@ const BreadcrumbItem: React.FC<{
   }
   if (!item.current && item.onClick) {
     return (
-      <button className={getBreadcrumbItemStyles(item)} onClick={handleClick}>
+      <Button
+        variant="link"
+        size="xs"
+        className={getBreadcrumbItemStyles(item)}
+        onClick={handleClick}
+      >
         {content}
-      </button>
+      </Button>
     );
   }
   return <span className={getBreadcrumbItemStyles(item)}>{content}</span>;
