@@ -143,7 +143,7 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
             </Button>
             <Button
               fullWidth
-                variant="ghost"
+              variant="ghost"
               onClick={() => window.history.back()}
             >
               Go Back

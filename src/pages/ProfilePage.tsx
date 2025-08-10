@@ -287,7 +287,11 @@ export const ProfilePage: React.FC = () => {
           </div>
           {/* Actions */}
           <div className="flex justify-between items-center">
-            <Button type="button" variant="ghost" onClick={() => window.history.back()}>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => window.history.back()}
+            >
               Cancel
             </Button>
             <Button

@@ -380,7 +380,7 @@ export const Templates: React.FC = () => {
           </div>
         </Card>
         {/* Help Section */}
-  <div className="mt-8 surface-card elevation-card rounded-lg p-6">
+        <div className="mt-8 surface-card elevation-card rounded-lg p-6">
           <Typography variant="headline-md" className="mb-4">
             Need Help with Templates?
           </Typography>
