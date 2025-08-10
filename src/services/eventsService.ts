@@ -4,6 +4,7 @@ import type { PostgrestError } from "@supabase/supabase-js";
 export interface TeamEventListItem {
   id: string;
   team_id: string;
+  created_by: string;
   title: string;
   event_type: string;
   starts_at: string;
@@ -12,7 +13,7 @@ export interface TeamEventListItem {
 }
 
 const EVENT_COLUMNS =
-  "id, team_id, title, event_type, starts_at, location, created_at" as const;
+  "id, team_id, created_by, title, event_type, starts_at, location, created_at" as const;
 
 export async function listTeamEvents(
   teamId: string
@@ -48,10 +49,18 @@ export interface CreateEventInput {
 
 export async function createEvent(input: CreateEventInput) {
   const { teamId, title, eventType, startsAt, location } = input;
+  // Retrieve current authenticated user for created_by (required by NOT NULL + RLS policies)
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+  if (authError) throw authError;
+  if (!user) throw new Error("No authenticated user");
   const { data, error } = await supabase
     .from("team_events")
     .insert({
       team_id: teamId,
+      created_by: user.id,
       title,
       event_type: eventType,
       starts_at: startsAt,

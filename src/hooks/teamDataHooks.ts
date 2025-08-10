@@ -168,6 +168,7 @@ export function useCreateEvent(teamId: string | undefined) {
       const optimistic = {
         id: `optimistic-${Date.now()}`,
         team_id: tid,
+  created_by: "me",
         title: input.title,
         event_type: input.eventType,
         starts_at: input.startsAt,
@@ -243,6 +244,7 @@ export function useLogGameResult(teamId: string | undefined) {
       const optimistic = {
         id: `optimistic-${Date.now()}`,
         team_id: tid,
+  created_by: "me",
         game_date: input.gameDate,
         opponent: input.opponent,
         site: input.site,

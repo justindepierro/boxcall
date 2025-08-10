@@ -4,6 +4,7 @@ import type { PostgrestError } from "@supabase/supabase-js";
 export interface GameResultListItem {
   id: string;
   team_id: string;
+  created_by: string;
   game_date: string;
   opponent: string;
   site: string;
@@ -13,7 +14,7 @@ export interface GameResultListItem {
 }
 
 const GAME_RESULT_COLUMNS =
-  "id, team_id, game_date, opponent, site, points_for, points_against, created_at" as const;
+  "id, team_id, created_by, game_date, opponent, site, points_for, points_against, created_at" as const;
 
 export async function listGameResults(
   teamId: string
@@ -52,10 +53,18 @@ export interface LogGameResultInput {
 export async function logGameResult(input: LogGameResultInput) {
   const { teamId, gameDate, opponent, site, pointsFor, pointsAgainst, notes } =
     input;
+  // Fetch current user for created_by (required by schema & RLS)
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+  if (authError) throw authError;
+  if (!user) throw new Error("No authenticated user");
   const { data, error } = await supabase
     .from("game_results")
     .insert({
       team_id: teamId,
+      created_by: user.id,
       game_date: gameDate,
       opponent,
       site,

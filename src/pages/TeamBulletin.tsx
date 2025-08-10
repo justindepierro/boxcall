@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../app/auth-store";
 import { useDevMode } from "../app/dev-mode-hooks";
@@ -19,6 +20,8 @@ export const TeamBulletin: React.FC = () => {
   const { devMode } = useDevMode();
   const { isSuperAdmin, canCreateTeamUnlimited } = usePermissions();
   const navigate = useNavigate();
+  // Resolve authoritative team membership role ASAP (must be before early returns to satisfy Rules of Hooks)
+  const { data: membershipRole } = useTeamMembershipRole(teamId, profile?.id);
 
   interface TeamData {
     id: string;
@@ -189,8 +192,8 @@ export const TeamBulletin: React.FC = () => {
     );
   }
 
-  const userRole = profile.role || "player";
-  const isCoach = userRole === "coach";
+  const userRole = membershipRole || profile.role || "player";
+  const isCoach = userRole === "coach" || userRole === "head_coach";
 
   return (
     <>
