@@ -11,6 +11,7 @@ import Icon from "../components/ui/Icon/Icon";
 import { EventModal } from "../components/calendar/EventModal";
 import CalendarStats from "../components/calendar/CalendarStats";
 import CalendarFiltersPanel from "../components/calendar/CalendarFiltersPanel";
+import CalendarToolbar from "../components/calendar/CalendarToolbar";
 
 // Calendar hooks (React Query)
 import { useEvents } from "../state/calendar/hooks";
@@ -108,8 +109,8 @@ export const CalendarPage: React.FC = () => {
   const handleSearch = async () => {
     if (searchQuery.trim()) {
       try {
-  // TODO (Phase 3+): incorporate filters into search when infra supports it
-  await CalendarService.searchEvents(searchQuery);
+        // TODO (Phase 3+): incorporate filters into search when infra supports it
+        await CalendarService.searchEvents(searchQuery);
         // TODO: Update events with search results
       } catch (error) {
         console.error("Search failed:", error);
@@ -262,77 +263,13 @@ export const CalendarPage: React.FC = () => {
           {/* Main Calendar */}
           <div className="lg:col-span-3">
             <Card className="p-6">
-              {/* Calendar Header Controls */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => calendarRef.current?.today()}
-                  >
-                    Today
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => calendarRef.current?.prev()}
-                  >
-                    ‹ Prev
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => calendarRef.current?.next()}
-                  >
-                    Next ›
-                  </Button>
-                </div>
-                {/* View Switcher */}
-                <div className="flex rounded-lg bg-gray-100 p-1">
-                  <Button
-                    variant={
-                      currentView === "dayGridMonth" ? "primary" : "ghost"
-                    }
-                    size="xs"
-                    onClick={() => handleViewChange("dayGridMonth")}
-                    className={
-                      currentView === "dayGridMonth"
-                        ? "bg-white text-navy-900"
-                        : "text-gray-600"
-                    }
-                  >
-                    Month
-                  </Button>
-                  <Button
-                    variant={
-                      currentView === "timeGridWeek" ? "primary" : "ghost"
-                    }
-                    size="xs"
-                    onClick={() => handleViewChange("timeGridWeek")}
-                    className={
-                      currentView === "timeGridWeek"
-                        ? "bg-white text-navy-900"
-                        : "text-gray-600"
-                    }
-                  >
-                    Week
-                  </Button>
-                  <Button
-                    variant={
-                      currentView === "timeGridDay" ? "primary" : "ghost"
-                    }
-                    size="xs"
-                    onClick={() => handleViewChange("timeGridDay")}
-                    className={
-                      currentView === "timeGridDay"
-                        ? "bg-white text-navy-900"
-                        : "text-gray-600"
-                    }
-                  >
-                    Day
-                  </Button>
-                </div>
-              </div>
+              <CalendarToolbar
+                currentView={currentView}
+                onViewChange={handleViewChange}
+                onToday={() => calendarRef.current?.today()}
+                onPrev={() => calendarRef.current?.prev()}
+                onNext={() => calendarRef.current?.next()}
+              />
               {/* FullCalendar Component */}
               <div className="h-[600px]">
                 <BoxCallCalendar
