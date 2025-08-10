@@ -358,6 +358,22 @@ body,
     background-color: #4b5563;
   }
 
+  /* Unified Focus Ring Utilities */
+  .focus-ring {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0), var(--focus-ring, 0 0 0 2px rgba(34,197,94,0.6));
+    transition: box-shadow 120ms ease;
+  }
+  .focus-ring:focus-visible {
+    box-shadow: 0 0 0 2px rgba(255,255,255,0), var(--focus-ring, 0 0 0 2px rgba(34,197,94,0.6));
+  }
+  .focus-ring-offset:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-bgBase, #fff), var(--focus-ring, 0 0 0 2px rgba(34,197,94,0.6));
+  }
+  .dark .focus-ring-offset:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-bgBase, #111827), var(--focus-ring, 0 0 0 2px rgba(16,185,129,0.7));
+  }
+
   .btn-danger {
     background-color: #dc2626;
     color: #ffffff;

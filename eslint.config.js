@@ -214,6 +214,39 @@ export default tseslint.config([
               };
             },
           },
+          "no-raw-tooltip-bg": {
+            meta: {
+              type: "suggestion",
+              docs: {
+                description:
+                  "Disallow raw bg-gray-900 tooltip/popover containers; use surface-inverse",
+              },
+              schema: [],
+            },
+            create(context) {
+              return {
+                JSXAttribute(attr) {
+                  if (
+                    attr.name?.name === "className" &&
+                    attr.value?.type === "Literal"
+                  ) {
+                    const v = String(attr.value.value);
+                    if (
+                      /role=\"tooltip\"/.test(context.getSourceCode().getText()) &&
+                      /bg-gray-900/.test(v) &&
+                      !/surface-inverse/.test(v)
+                    ) {
+                      context.report({
+                        node: attr,
+                        message:
+                          "Tooltip uses raw bg-gray-900; replace with surface-inverse for theming.",
+                      });
+                    }
+                  }
+                },
+              };
+            },
+          },
         },
       },
     },

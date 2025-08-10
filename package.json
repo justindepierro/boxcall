@@ -28,6 +28,7 @@
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
     "codemod:badge-variants": "node scripts/codemod-badge-variants.mjs",
+  "codemod:tooltip-bg": "node scripts/codemod-tooltip-bg.mjs",
     "style:inventory:buttons": "node scripts/inventory-buttons.mjs",
     "style:contrast:buttons": "node scripts/contrast-check.mjs",
     "style:audit": "node scripts/style-audit.mjs",

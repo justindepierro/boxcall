@@ -125,6 +125,13 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 - [x] Tag primitive rollout (replaced all inline pills) + CI gate for new inline pill patterns.
 - [ ] Draft Badge primitive API + sample variants (neutral, accent, info, danger) and replace any heavy status chips.
 - [x] Implement tooltip / popover inverse surface (primitives added; rollout continuing).
+ - [x] Implement tooltip / popover inverse surface (primitives added; rollout continuing).
+ - [x] Add smart tooltip collision handling.
+ - [x] Add Popover component (inverse) with focus/outside click handling.
+ - [x] Extend audit: tooltip & popover inverse adoption metrics.
+ - [x] Lint rule scaffold: no-raw-tooltip-bg.
+ - [x] Codemods: badge variants, tooltip bg normalization.
+ - [x] Introduce unified focus ring utilities (.focus-ring / offset variants).
 - [ ] Extend style-audit to log elevation usage counts & inverse adoption %.
 - [ ] Begin lint rule scaffold for surface enforcement (no raw bg-neutral on containers).
 
@@ -158,7 +165,8 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 | 2025-08-10T17:55Z | Added ESLint rules: legacy Badge variant warning + raw gradient guard (with decorative-gradient escape hatch)        |
 | 2025-08-10T18:05Z | Added `BADGE_TAG_GUIDELINES.md` and linked from plan + docs index; Acceptance checklist updated                      |
 | 2025-08-10T18:30Z | Added Tooltip + Popover components (surface-inverse), style-audit metrics extended (tooltip/popover inverse adoption) |
+| 2025-08-10T18:40Z | Smart tooltip collision handling, focus ring utilities, tooltip bg codemod, lint rule no-raw-tooltip-bg              |
 
 ---
 
-_Last Updated: 2025-08-10T18:30:00Z_
+_Last Updated: 2025-08-10T18:40:00Z_
