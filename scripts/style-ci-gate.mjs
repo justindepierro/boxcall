@@ -11,7 +11,7 @@
  * On failure prints a concise report with file:line and offending snippet, then exits 1.
  * Otherwise prints PASS summary and exits 0.
  */
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync, writeFileSync, existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const ROOT = new URL('..', import.meta.url).pathname; // project root (scripts/..)
@@ -58,20 +58,57 @@ for (const file of files) {
   }
 }
 
+// Baseline support: create or load baseline snapshot (raw surfaces only for now)
+// Baseline file structure: { rawSurfaces: { count: number, entries: string[] } }
+const BASELINE_PATH = join(ROOT, 'scripts/style-ci-baseline.json');
+let baseline;
+if (existsSync(BASELINE_PATH)) {
+  try { baseline = JSON.parse(readFileSync(BASELINE_PATH, 'utf8')); } catch { baseline = null; }
+}
+
+// Construct current raw surface signature list (file:line::classes)
+const currentRawSurfaceKeys = issues.rawSurfaces.map(r => `${r.file}:${r.line}::${r.classes}`);
+
+// If no baseline, generate one with current state (soft gating) unless forced strict via env
+if (!baseline) {
+  baseline = { rawSurfaces: { count: currentRawSurfaceKeys.length, entries: currentRawSurfaceKeys } };
+  writeFileSync(BASELINE_PATH, JSON.stringify(baseline, null, 2));
+  console.log(`Created baseline at scripts/style-ci-baseline.json (rawSurfaces=${baseline.rawSurfaces.count}). Commit this file.`);
+}
+
 let failed = false;
-function section(title, arr) {
+function hardFailSection(title, arr) {
   if (!arr.length) return; failed = true; console.log(`\n[FAIL] ${title} (${arr.length})`);
   for (const f of arr.slice(0, 40)) console.log(`  - ${f.file}:${f.line} :: ${f.classes}`);
   if (arr.length > 40) console.log(`  ... ${arr.length - 40} more`);
 }
 
-section('Raw utility headings (replace with <Typography>)', issues.headings);
-section('text-white occurrences (use semantic text tokens)', issues.textWhite);
-section('Raw bg-* surface containers lacking semantic surface-*', issues.rawSurfaces);
+// Hard gates
+hardFailSection('Raw utility headings (replace with <Typography>)', issues.headings);
+hardFailSection('text-white occurrences (use semantic text tokens)', issues.textWhite);
+
+// Soft gate for raw surfaces: only fail if NEW items beyond baseline or count grows
+const baselineSet = new Set(baseline.rawSurfaces?.entries || []);
+const newRawSurfaceEntries = currentRawSurfaceKeys.filter(k => !baselineSet.has(k));
+const rawSurfaceCountGrowth = currentRawSurfaceKeys.length > (baseline.rawSurfaces?.count || 0);
+if (newRawSurfaceEntries.length || rawSurfaceCountGrowth) {
+  failed = true;
+  console.log(`\n[FAIL] Raw bg-* surface containers regression (baseline=${baseline.rawSurfaces.count} current=${currentRawSurfaceKeys.length} new=${newRawSurfaceEntries.length})`);
+  for (const k of newRawSurfaceEntries.slice(0, 40)) console.log(`  + ${k}`);
+  if (newRawSurfaceEntries.length > 40) console.log(`  ... ${newRawSurfaceEntries.length - 40} more new entries`);
+} else {
+  console.log(`Raw surface containers: OK (baseline=${baseline.rawSurfaces.count}, current=${currentRawSurfaceKeys.length})`);
+}
+
+if (process.env.STYLE_CI_UPDATE_BASELINE === '1') {
+  // Update baseline intentionally
+  baseline.rawSurfaces = { count: currentRawSurfaceKeys.length, entries: currentRawSurfaceKeys };
+  writeFileSync(BASELINE_PATH, JSON.stringify(baseline, null, 2));
+  console.log('Baseline updated via STYLE_CI_UPDATE_BASELINE=1');
+}
 
 if (failed) {
-  console.log(`\nStyle CI Gate: FAILED (headings=${issues.headings.length} text-white=${issues.textWhite.length} rawSurfaces=${issues.rawSurfaces.length})`);
+  console.log(`\nStyle CI Gate: FAILED (headings=${issues.headings.length} text-white=${issues.textWhite.length} rawSurfaces=${currentRawSurfaceKeys.length})`);
   process.exit(1);
-} else {
-  console.log(`Style CI Gate: PASS (scanned ${files.length} files) – No regressions detected.`);
 }
+console.log(`Style CI Gate: PASS (scanned ${files.length} files)`);

@@ -120,7 +120,7 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 ## 6. Immediate NEXT TODO (Phase B In Flight)
 
 - [ ] Migrate `row-hover` utility to new `surface-subtle-hover` class (verify parity then remove alias).
-- [ ] Add CI gate: fail if `typography-scan` > 0 candidates (lock in 100% adoption).
+- [x] Add CI gate: fail if raw utility headings / `text-white`; soft baseline watch for raw container `bg-white` (script `style:gate`).
 - [ ] Draft Badge primitive API + sample variants (neutral, accent, info, danger) and replace inline pills.
 - [ ] Implement tooltip / popover inverse surface (use `surface-inverse`, elevation-popover if needed).
 - [ ] Extend style-audit to log elevation usage counts & inverse adoption %.
@@ -149,7 +149,8 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 | 2025-08-10T15:45Z | Phase A surfaces/elevation complete; doc updated           |
 | 2025-08-10T15:55Z | Metrics snapshot inserted; next Phase B tasks added        |
 | 2025-08-10T16:30Z | Typography codemod complete (100% adoption) & plan updated |
+| 2025-08-10T16:50Z | Added style CI gate script (`style:gate`) for headings/text-white/bg drift |
 
 ---
 
-_Last Updated: 2025-08-10T16:30:00Z_
+_Last Updated: 2025-08-10T16:50:00Z_
