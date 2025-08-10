@@ -255,6 +255,7 @@ src/
 | (init) | 0 | Roadmap created. |
 | 2025-08-10 | 0 | Baseline metrics captured (raw util debt 23 on CalendarPage, stable build, no type errors). |
 | 2025-08-10 | 1-prep | Domain types extracted to `domain/calendar/types.ts` (no functional change) ahead of Phase 1. |
+| 2025-08-10 | 1 | Added zod schemas (schema.ts), comment types, and rules.ts scaffolding. |
 
 ---
 ## Ownership
