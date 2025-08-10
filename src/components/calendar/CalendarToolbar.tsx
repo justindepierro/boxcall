@@ -19,18 +19,30 @@ export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
   className,
 }) => {
   return (
-    <div className={"flex items-center justify-between mb-6 " + (className || "")}>      
+    <div
+      className={"flex items-center justify-between mb-6 " + (className || "")}
+    >
       <div className="flex items-center space-x-4">
-        <Button variant="outline" size="sm" onClick={onToday}>Today</Button>
-        <Button variant="outline" size="sm" onClick={onPrev}>‹ Prev</Button>
-        <Button variant="outline" size="sm" onClick={onNext}>Next ›</Button>
+        <Button variant="outline" size="sm" onClick={onToday}>
+          Today
+        </Button>
+        <Button variant="outline" size="sm" onClick={onPrev}>
+          ‹ Prev
+        </Button>
+        <Button variant="outline" size="sm" onClick={onNext}>
+          Next ›
+        </Button>
       </div>
       <div className="flex rounded-lg bg-gray-100 p-1">
         <Button
           variant={currentView === "dayGridMonth" ? "primary" : "ghost"}
           size="xs"
           onClick={() => onViewChange("dayGridMonth")}
-          className={currentView === "dayGridMonth" ? "bg-white text-navy-900" : "text-gray-600"}
+          className={
+            currentView === "dayGridMonth"
+              ? "bg-white text-navy-900"
+              : "text-gray-600"
+          }
         >
           Month
         </Button>
@@ -38,7 +50,11 @@ export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
           variant={currentView === "timeGridWeek" ? "primary" : "ghost"}
           size="xs"
           onClick={() => onViewChange("timeGridWeek")}
-          className={currentView === "timeGridWeek" ? "bg-white text-navy-900" : "text-gray-600"}
+          className={
+            currentView === "timeGridWeek"
+              ? "bg-white text-navy-900"
+              : "text-gray-600"
+          }
         >
           Week
         </Button>
@@ -46,7 +62,11 @@ export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
           variant={currentView === "timeGridDay" ? "primary" : "ghost"}
           size="xs"
           onClick={() => onViewChange("timeGridDay")}
-          className={currentView === "timeGridDay" ? "bg-white text-navy-900" : "text-gray-600"}
+          className={
+            currentView === "timeGridDay"
+              ? "bg-white text-navy-900"
+              : "text-gray-600"
+          }
         >
           Day
         </Button>

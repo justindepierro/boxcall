@@ -47,7 +47,9 @@ function App() {
           )}
           {/* Simple keyboard toggle: ctrl+` to show/hide React Query Devtools in dev */}
           {import.meta.env.DEV && (
-            <ToggleQueryDevtools onToggle={() => setShowRQDevtools((v) => !v)} />
+            <ToggleQueryDevtools
+              onToggle={() => setShowRQDevtools((v) => !v)}
+            />
           )}
         </div>
       </DevModeProvider>

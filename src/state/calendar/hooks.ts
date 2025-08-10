@@ -65,7 +65,11 @@ export function useEvent(id: string) {
       if (import.meta.env.DEV && match) {
         const parse = CalendarEventSchema.safeParse(match);
         if (!parse.success) {
-          console.warn("Invalid CalendarEvent shape", parse.error.issues, match);
+          console.warn(
+            "Invalid CalendarEvent shape",
+            parse.error.issues,
+            match
+          );
         }
       }
       return match;
@@ -221,7 +225,7 @@ export function useRSVPs(eventId: string) {
 export function useUpdateRSVP(eventId: string) {
   const qc = useQueryClient();
   return useMutation({
-  mutationFn: (vars: {
+    mutationFn: (vars: {
       userId: string;
       status: EventRSVP["status"];
       note?: string;
@@ -293,7 +297,11 @@ export function useComments(eventId: string) {
         for (const c of data.slice(0, 50)) {
           const parse = CalendarCommentSchema.safeParse(c);
           if (!parse.success) {
-            console.warn("Invalid CalendarComment shape", parse.error.issues, c);
+            console.warn(
+              "Invalid CalendarComment shape",
+              parse.error.issues,
+              c
+            );
           }
         }
       }
