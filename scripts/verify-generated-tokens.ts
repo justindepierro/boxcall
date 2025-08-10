@@ -14,9 +14,9 @@ function normalizeLines(lines: string[]): string[] {
   const out: string[] = [];
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-  if (/^\s{2}--elevation-.*:$/.test(line)) {
+    if (/^\s{2}--elevation-.*:$/.test(line)) {
       // Merge following indented value line(s) until next token or closing brace
-  let merged = line.replace(/:$/, ":");
+      let merged = line.replace(/:$/, ":");
       i++;
       while (i < lines.length && /^\s{4}\S/.test(lines[i])) {
         merged += " " + lines[i].trim();
@@ -42,11 +42,15 @@ if (current !== expected) {
     if (normCurrent[i] !== normExpected[i]) {
       diffCount++;
       if (diffs.length < 15) {
-        diffs.push(`Line ${i + 1}:\n  expected: ${normExpected[i] ?? "<missing>"}\n  found:    ${normCurrent[i] ?? "<missing>"}`);
+        diffs.push(
+          `Line ${i + 1}:\n  expected: ${normExpected[i] ?? "<missing>"}\n  found:    ${normCurrent[i] ?? "<missing>"}`
+        );
       }
     }
   }
-  console.error(`generated-tokens.css drift detected (first ${diffs.length} mismatches shown, total ${diffCount}).`);
+  console.error(
+    `generated-tokens.css drift detected (first ${diffs.length} mismatches shown, total ${diffCount}).`
+  );
   console.error(diffs.join("\n"));
   process.exit(1);
 }

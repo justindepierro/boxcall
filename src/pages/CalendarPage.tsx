@@ -14,6 +14,10 @@ import { Typography } from "@components/design-system/Typography";
 import { PracticePlannerModal } from "@components/practice/PracticePlannerModal";
 import { Button, Card } from "@components/ui";
 import Icon from "@components/ui/Icon/Icon";
+import {
+  CalendarPageSkeleton,
+  CalendarErrorSkeleton,
+} from "@components/calendar/CalendarSkeletons";
 
 // Calendar hooks (React Query)
 import {
@@ -23,14 +27,17 @@ import {
   useSearchEvents,
 } from "@state/calendar/hooks";
 import { useDevMode } from "@app/dev-mode-hooks";
-import type { CalendarFilters } from "@lib/../services/calendarService"; // keep legacy path reference if needed
-import type { CalendarEvent } from "@lib/../domain/calendar/types";
-// Legacy CalendarService no longer referenced for search (search now client-side via useSearchEvents)
+import type {
+  CalendarFilters,
+  CalendarEvent,
+} from "@lib/../domain/calendar/types";
+
 interface CalendarPageState {
   userTeamsFilter?: string[];
   teamFilter?: string;
   defaultView?: "dayGridMonth" | "timeGridWeek" | "timeGridDay";
 }
+
 /**
  * Master Calendar Page - Comprehensive calendar management interface
  *
@@ -159,38 +166,8 @@ export const CalendarPage: React.FC = () => {
       console.error("Export failed:", error);
     }
   };
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
-          <Typography variant="body-lg" className="text-gray-600">
-            Loading your calendar...
-          </Typography>
-        </div>
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Icon name="warning" size="xl" className="text-red-600" />
-            <Typography variant="headline-lg" className="text-red-600">
-              Calendar Error
-            </Typography>
-          </div>
-          <Typography variant="body-md" className="text-gray-600 mb-6">
-            {error}
-          </Typography>
-          <Button onClick={() => window.location.reload()}>
-            Reload Calendar
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <CalendarPageSkeleton />;
+  if (error) return <CalendarErrorSkeleton message={error} />;
   return (
     <div className="min-h-screen surface-app">
       {/* Header */}

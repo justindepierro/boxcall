@@ -55,7 +55,8 @@ export function useSearchEvents(query: string, params: EventsQueryParams) {
       (e) =>
         e.title?.toLowerCase().includes(lc) ||
         (e.location && e.location.toLowerCase().includes(lc)) ||
-        (Array.isArray(e.tags) && e.tags.some((t) => t.toLowerCase().includes(lc)))
+        (Array.isArray(e.tags) &&
+          e.tags.some((t) => t.toLowerCase().includes(lc)))
     );
   }, [lc, eventsQuery.data]);
   return { ...eventsQuery, data: filtered };

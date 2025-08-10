@@ -2,6 +2,109 @@
 
 ## 🎯 **CURRENT FOCUS**: ✅ **PHASE 3 PRODUCTION DEPLOYMENT** (August 2025)
 
+### ✅ Recently Completed (Aug 2025 Additions)
+
+**Infra & Tooling**
+
+- [x] Deterministic design token & theme generation (+ verify scripts)
+- [x] Lighthouse CI configuration & GitHub Action integration
+- [x] Core Web Vitals global capture + Diagnostics page (/dev/diagnostics)
+- [x] Build metadata injection (window.**BUILD_META**)
+- [x] Version bump script (release:version) & CHANGELOG initialized
+- [x] Web Vitals dispatch event system for live diagnostics
+
+**Quality & DX**
+
+- [x] React Query Devtools toggle (Ctrl/⌘+`)
+- [x] Zod validation layer for calendar domain entities
+- [x] Snapshot & a11y smoke tests baseline
+
+### 🎯 Immediate Next Focus: Calendar Modernization & Feature Enhancements
+
+Short list (detailed section added below): replace legacy search, enrich event model (recurrence, tags), export & import (ICS / CSV), accessibility & performance polish, CI a11y automation, release workflow finalization.
+
+---
+
+## 📆 Calendar Enhancements Roadmap (Next Focus)
+
+> Modernize remaining legacy paths & add high‑impact user features.
+
+### 🔄 Data & Query Layer
+
+- [x] Replace legacy CalendarService.searchEvents with React Query powered search hook returning filtered events array
+- [x] Merge search results into existing useEvents cache (query key strategy) for unified display (client-side interim)
+- [x] Introduce event query invalidation on create/update/delete (central helper via narrow invalidations)
+- [x] Add optimistic update for updateEvent mutation parity (create/delete already)
+
+### 🧱 Event Model Extensions
+
+- [ ] Recurring events (RRULE-lite: daily/weekly/monthly + until count/date)
+- [ ] Event tags / categories (multi-select chips) with filter integration
+- [ ] Location & address fields + map link generation
+- [ ] Attachments (initial: URL links; future: file upload placeholder)
+
+### 📤 Import / Export
+
+- [ ] Export calendar month/week/day to ICS
+- [ ] Bulk import ICS (dedupe by UID) preview + confirmation
+- [ ] CSV quick import (date,start,end,title,type) for coaches
+- [ ] Per-team filtered export (respect active filters)
+
+### ♿ Accessibility & UX
+
+- [ ] Keyboard navigation for calendar grid (arrow keys, Enter to open, Esc to close modals)
+- [ ] ARIA roles/labels for events & toolbar controls
+- [ ] Focus trap & return focus after modal close
+- [ ] High-contrast theme token audit (contrast validation script gate)
+- [ ] Loading skeleton (while events fetching) instead of spinner
+- [ ] Retry CTA on error state (with incremental backoff)
+
+### ⚡ Performance
+
+- [ ] Virtualize large day/week event lists (optional panel virtualization)
+- [ ] Lazy load heavy modals (EventModal / PracticePlanner) via dynamic import
+- [ ] Memoize derived filters & stats (CalendarStats inputs)
+- [ ] Pre-fetch next/prev range events on view switch
+- [ ] Core Web Vitals budget script (warn if LCP>2.5s INP>200ms in diagnostics)
+
+### 📊 Analytics & Diagnostics
+
+- [ ] Emit custom event counts (events per team, per type) into diagnostics
+- [ ] Add event create/update/delete success/failure counters
+- [ ] Optional anonymized usage snapshot for future RUM integration
+
+### 🧪 Testing
+
+- [ ] Add mutation tests for updateEvent optimistic path
+- [ ] Add search integration tests (query + filters interplay)
+- [ ] Snapshot tests for recurring rule expansion (deterministic set)
+- [ ] Axe a11y test for CalendarPage (critical interactions)
+
+### 🚀 Developer Experience
+
+- [ ] Calendar code-splitting boundary (separate chunk) & verify bundle delta
+- [ ] Shared calendar constants/types barrel (remove legacy deep imports)
+- [ ] ESLint rule: disallow direct CalendarService import outside migration folder
+
+### 🔐 Future (Nice-to-Have)
+
+- [ ] Role-based visibility: mark events private / team-only
+- [ ] Event audit trail (created by, last modified at)
+- [ ] Real-time updates via Supabase realtime channel (subscription)
+
+---
+
+## 🔄 Release & CI Enhancements (Pending)
+
+- [ ] Add accessibility CI step (Playwright + @axe-core/playwright) fail if critical violations > 0
+- [ ] Add performance budgets (Lighthouse score >= 0.85 perf, 0.90 a11y) enforced (currently warn)
+- [ ] Add Core Web Vitals budget script to CI (read .lighthouse JSON & fail on thresholds)
+- [ ] Automate CHANGELOG promotion & tag creation (GitHub Action using release:version)
+- [ ] Upload diagnostics artifact (subset: build meta, vitals summary) per PR
+- [ ] Slack / webhook notification placeholder (deferred)
+
+---
+
 ## 🎓 **TUTORIALS & ONBOARDING SYSTEM** (Priority 1)
 
 > _Make first-time users love BoxCall immediately_

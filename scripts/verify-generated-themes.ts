@@ -19,7 +19,9 @@ try {
 const after = readFileSync("src/styles/generated-themes.css", "utf8");
 
 if (before !== after) {
-  console.error("generated-themes.css drift detected (non-deterministic output)");
+  console.error(
+    "generated-themes.css drift detected (non-deterministic output)"
+  );
   process.exit(1);
 }
 console.log("generated-themes.css is up-to-date and deterministic.");

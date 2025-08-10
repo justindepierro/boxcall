@@ -3,8 +3,7 @@ import { useAuth } from "../app/auth-store";
 import { useEvents } from "../state/calendar/hooks";
 import { useDevMode } from "../app/dev-mode-hooks";
 import type { CalendarEvent } from "../domain/calendar/types";
-import { Card, Button } from "../components/ui";
-import { CalendarService } from "../services/calendarService";
+import { Card } from "../components/ui";
 
 // Minimal new page leveraging React Query read path (Phase 3 incremental migration)
 export const CalendarPageNew: React.FC = () => {
@@ -36,15 +35,6 @@ export const CalendarPageNew: React.FC = () => {
           ))}
         </ul>
       </Card>
-      <Button
-        size="xs"
-        variant="outline"
-        onClick={() => {
-          void CalendarService.searchEvents("test");
-        }}
-      >
-        Test Search (legacy service)
-      </Button>
     </div>
   );
 };

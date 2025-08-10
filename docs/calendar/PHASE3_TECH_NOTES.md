@@ -1,143 +1,57 @@
-# Phase 3 – State Layer & Optimistic UX Tech Notes
+# Phase 3 Technical Notes (State Management & Optimistic UX)
 
-Date: 2025-08-10
+Status: Complete (Task 13)
 
 ## Scope
 
-Introduce a React Query powered state layer for calendar entities (events, RSVPs, comments) providing:
+React Query state layer with optimistic create/update/delete, RSVP upsert, and comment add. Legacy `calendarService` removed.
 
-- Deterministic query keys for cache stability & selective invalidation.
-- Optimistic mutations for event create/update/delete, RSVP upsert, and comment add.
-- Failure injection harness to assert rollback correctness in tests.
-- Transitional facade period while UI migrates off legacy `calendarService`.
-
-## Query Key Strategy
-
-Factory in `state/calendar/queryKeys.ts` ensures all keys share a root segment:
+## Query Keys
 
 ```
-calendarKeys = {
-  all: ["calendar"],
-  events(filters, range, devMode) => ["calendar","events", { range, devMode, ...filters }]
-  event(id) => ["calendar","event", id]
-  rsvps(eventId) => ["calendar","rsvps", eventId]
-  comments(eventId) => ["calendar","comments", eventId]
-}
+calendar / events / {filters, range:{s,e}, devMode}
+calendar / event / id
+calendar / rsvps / eventId
+calendar / comments / eventId
 ```
 
-Reasons:
+## Optimistic Mutation Matrix
 
-- Allows bulk invalidation with `{ queryKey: ["calendar","events"] }` regardless of the parameter object shape.
-- Avoids accidental collisions with ad-hoc arrays.
-- Embedding the filter object keeps variations distinct while still group‑invalidatable via partial matching.
+| Mutation    | onMutate                  | Rollback              | Reconcile                |
+| ----------- | ------------------------- | --------------------- | ------------------------ |
+| createEvent | append temp event         | restore previous list | replace temp id          |
+| updateEvent | patch across cached lists | restore per-snapshot  | refetch via invalidate   |
+| deleteEvent | remove from cached lists  | restore per-snapshot  | refetch via invalidate   |
+| upsertRSVP  | update/append RSVP        | restore prior array   | swap temp/new with saved |
+| addComment  | append temp comment       | restore prior list    | invalidate to sync       |
 
-## Optimistic Mutation Patterns
+Failure simulation via `CalendarAPI.__setFailure` ensures rollback correctness in tests.
 
-### Event Create
+## Single Event Hydration
 
-1. `onMutate` snapshot current list for the canonical (unfiltered) events key.
-2. Append a temp item with `temp-<ts>` id.
-3. On success, map replace temp id -> server id.
-4. On error, restore snapshot.
-5. On settled, invalidate the events key for server reconciliation.
+`useEvent(id)` scans all `calendar/events` caches before network fetch.
 
-### Event Update / Delete
+## Skeletons
 
-Because multiple events queries may coexist (different filters), we iterate over the entire query cache selecting keys where `queryKey[0]=="calendar" && queryKey[1]=="events"` and patch each list.
+`CalendarPageSkeleton` + `CalendarErrorSkeleton` provide layout-stable UX (Task 8).
 
-Rollback stores an array of `{ key, data }` snapshots; error restores each.
+## Removal of Legacy
 
-### RSVP Upsert
+`src/services/calendarService.ts` deleted; no active imports remain.
 
-Optimistic in-place update or append. On success we reconcile with server object (ensures timestamps & id). On error rollback to previous array.
+## Pending (Phase 4+)
 
-### Comment Add
+- Debounced search & highlight
+- Range prefetch effect integration
+- URL state sync & deep links
+- Lint rule banning legacy imports
 
-Optimistic append then either server success persists (same id semantics) or rollback on failure. Tests focus on final state (less brittle than asserting transient state plus rollback).
+## Risks Mitigated
 
-## Failure Injection Harness
+- Inconsistent cache writes -> standardized optimistic patterns
+- Over-invalidation -> narrow query key strategy
+- Layout shift during load -> skeletons
 
-Added hidden methods on `CalendarAPI`:
+## Next Steps
 
-```
-CalendarAPI.__setFailure({ create?|update?|delete?|comment?: boolean })
-CalendarAPI.__resetFailures()
-```
-
-Tests trigger injected failures to force `onError` paths and ensure snapshots restore.
-
-Reasons for approach vs monkey patching:
-
-- Keeps mutation functions pure and testable without global jest mocks.
-- Allows granular flag combination (e.g., test simultaneous delete+comment failure later).
-
-## In-Memory Persistence (Dev/Test)
-
-Modules maintain ephemeral arrays:
-
-- `createdEvents[]` in `infra/calendar/api.ts`.
-- RSVP store in `infra/calendar/rsvp.ts`.
-- Comment store in `infra/calendar/comments.ts`.
-
-These simulate server state so that optimistic updates reconcile with subsequent refetch results.
-
-## Testing Strategy
-
-File: `state/calendar/hooks.test.ts`
-
-Covered:
-
-- Events fetch baseline.
-- Optimistic create (length delta, temp replacement).
-- RSVP optimistic update & server reconciliation.
-- Update & delete rollback on injected failure.
-- Comment add rollback & success cases.
-
-Deliberately avoided snapshot tests for lists—focused on structural assertions (length, id replacement) to reduce brittleness.
-
-## Pending / Next
-
-- Pagination strategy for comments (cursor token vs time-based window). Provide minimal type + placeholder fetch signature before UI consumption.
-- Loading & error skeleton components (wire once UI migration begins) to leverage `placeholderData` and reduce layout shift.
-- Range prefetch: pre-warm adjacent month/week queries on view change for snappier navigation.
-- Service deprecation: Replace remaining `CalendarService` usages with hooks; add console warn on first import usage to encourage migration.
-
-## Migration Plan (UI)
-
-1. Introduce `CalendarShell` container using `useEvents`.
-2. Replace direct `CalendarService.createEvent` calls with `useCreateEvent` mutate; remove manual reload.
-3. Hydrate selected event modal via `useEvent(id)` (fallback search if uncached already handled).
-4. Add RSVP & Comment panels gated behind lazy imports; use hooks for data.
-5. Remove dead code paths & finalize service removal PR.
-
-## Performance Considerations
-
-- `placeholderData: prev` is applied to events query to smooth filter or range changes.
-- Future: employ `keepPreviousData` + shallow equality filtering or derived selectors for expensive projections (stats, counts).
-- Potential addition: query observer for visible date range to prefetch next/prev.
-
-## Error Handling & Observability
-
-- Centralized rollback ensures no partial states linger after failure.
-- Add TODO to wrap mutation functions with logging (Phase 9).
-- Consider exposing a dev overlay summarizing active calendar query keys for debugging.
-
-## Risks & Mitigations
-
-| Risk                                      | Mitigation                                                                                           |
-| ----------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Over-invalidation causing refetch storms  | Consistent key factory + partial invalidation targeting `["calendar","events"]` only when necessary. |
-| Growing optimistic code complexity        | Consolidate repetitive snapshot logic into small util if additional entities added.                  |
-| UI migration drift (dual paths lingering) | Add lint rule / codemod to forbid new imports from `calendarService`.                                |
-
-## Reference Implementation Links
-
-- Query keys: `src/state/calendar/queryKeys.ts`
-- Hooks: `src/state/calendar/hooks.ts`
-- Failure tests: `src/state/calendar/hooks.test.ts`
-- RSVP infra: `src/infra/calendar/rsvp.ts`
-- Comments infra: `src/infra/calendar/comments.ts`
-
----
-
-End of Phase 3 Tech Notes (initial draft). Update as migration proceeds.
+Proceed to Phase 4 UI decomposition and integrate prefetch + URL sync.

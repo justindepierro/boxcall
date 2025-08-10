@@ -11,10 +11,10 @@ function normalize(val: string): string {
   if (/^#?[0-9A-F]{3,8}$/.test(val)) return val.toLowerCase();
   // Add spaces after commas in rgba()
   if (/^rgba\(/i.test(val)) {
-    return val
-      .replace(/rgba\(([^)]+)\)/i, (_, inner) =>
-        `rgba(${inner.split(/\s*,\s*/).join(", ")})`
-      );
+    return val.replace(
+      /rgba\(([^)]+)\)/i,
+      (_, inner) => `rgba(${inner.split(/\s*,\s*/).join(", ")})`
+    );
   }
   return val;
 }
@@ -52,5 +52,9 @@ for (const theme of themeRegistry.themes) {
 }
 
 // Ensure trailing newline for Prettier determinism
-writeFileSync("src/styles/generated-themes.css", lines.join("\n") + "\n", "utf8");
+writeFileSync(
+  "src/styles/generated-themes.css",
+  lines.join("\n") + "\n",
+  "utf8"
+);
 console.log("Generated src/styles/generated-themes.css");

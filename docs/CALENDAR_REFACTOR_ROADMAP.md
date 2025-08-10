@@ -54,75 +54,75 @@ src/
 
 ---
 
-## Phase 0 – Stabilize & Baseline (Today → Short)
+## Phase 0 – Stabilize & Baseline (Today → Short) ✅
 
 **Objectives**
 
-- Restore current `CalendarPage` integrity (undo temporary parsing hacks if any remain).
-- Snapshot baseline metrics: bundle size (Calendar chunk), render time, Lighthouse a11y, raw utility debt count.
-- Extract _only_ semantic class replacements already safe.
+- [x] Restore current `CalendarPage` integrity (undo temporary parsing hacks if any remain)
+- [x] Snapshot baseline metrics: bundle size (Calendar chunk), render time, Lighthouse a11y, raw utility debt count
+- [x] Extract _only_ semantic class replacements already safe
 
 **Deliverables**
 
-- Baseline report: `docs/calendar/baseline-metrics.md`.
-- Commit: `feat(calendar): baseline pre-refactor snapshot`.
+- [x] Baseline report: `docs/calendar/baseline-metrics.md`
+- [x] Commit: `feat(calendar): baseline pre-refactor snapshot`
 
 **Exit Criteria**
 
-- Type errors: 0.
-- Page loads without runtime warnings.
+- [x] Type errors: 0
+- [x] Page loads without runtime warnings
 
 ---
 
-## Phase 1 – Domain & Type Extraction
+## Phase 1 – Domain & Type Extraction ✅
 
 **Objectives**
 
-- Create `domain/calendar/types.ts` & `schema.ts` (zod).
-- Migrate interfaces from service file → domain.
-- Introduce `rules.ts` with core guards (e.g., `canEditEvent(user, event)`).
+- [x] Create `domain/calendar/types.ts` & `schema.ts` (zod)
+- [x] Migrate interfaces from service file → domain
+- [x] Introduce `rules.ts` with core guards (e.g., `canEditEvent(user, event)`)
 
 **Tasks**
 
-1. Add zod schemas (EventCore, EventCreate, RSVP, Comment, Filters).
-2. Wrap external responses with `parse...` functions.
-3. Add Jest/unit tests for schema + rules.
+- [x] Add zod schemas (EventCore, EventCreate, RSVP, Comment, Filters)
+- [x] Wrap external responses with `parse...` functions
+- [x] Add unit tests for schema + rules
 
 **Exit Criteria**
 
-- 100% of calendar data consumed via schema parse.
-- Unit tests: ≥90% statements on `domain/calendar`.
+- [x] 100% of calendar data consumed via schema parse
+- [x] Unit tests: ≥90% statements on `domain/calendar`
 
 ---
 
-## Phase 2 – Service & Adapter Layering
+## Phase 2 – Service & Adapter Layering ✅
 
 **Objectives**
 
-- Decompose legacy `calendarService` into focused infra modules (api, rsvp, comments, ics) behind typed boundaries.
-- Introduce reusable adapter that isolates FullCalendar specifics from domain/UI.
-- Provide ICS single‑event generation prototype (foundation for feeds in Phase 8).
-- Maintain 100% parsing at boundaries (no raw event objects leak across layers).
+- [x] Decompose legacy `calendarService` into focused infra modules (api, rsvp, comments, ics) behind typed boundaries
+- [x] Introduce reusable adapter that isolates FullCalendar specifics from domain/UI
+- [x] Provide ICS single‑event generation prototype (foundation for feeds in Phase 8)
+- [x] Maintain 100% parsing at boundaries (no raw event objects leak across layers)
 
 **Tasks (Expanded)**
 
-1. Scaffold infra modules (api, rsvp, comments, ics) and FullCalendarAdapter (DONE).
-2. Extract RSVP + comments logic from service (DONE).
-3. Migrate user/team/search/upcoming fetch & create/update/delete paths to `CalendarAPI` (DONE).
-4. Add adapter mapping edge tests (optional fields, tags, fallback type, round‑trip integrity).
-5. Add ICS validation test (regex for VCALENDAR, DTSTART, DTEND, UID invariant) + failure case (missing title sanitization).
-6. Slim legacy `calendarService` to thin façade, mark deprecated, ensure all new code uses infra (DONE).
-7. Add barrel export for infra & adapter (e.g. `src/infra/calendar/index.ts`).
-8. Documentation: create `docs/calendar/PHASE2_TECH_NOTES.md` with migration checklist + adapter contract.
+- [x] Scaffold infra modules (api, rsvp, comments, ics) and FullCalendarAdapter
+- [x] Extract RSVP + comments logic from service
+- [x] Migrate user/team/search/upcoming fetch & create/update/delete paths to `CalendarAPI`
+- [x] Add adapter mapping edge tests (optional fields, tags, fallback type, round‑trip integrity)
+- [x] Add ICS validation test (regex for VCALENDAR, DTSTART, DTEND, UID invariant) + failure case (missing title sanitization)
+- [x] Slim legacy `calendarService` to thin façade, mark deprecated, ensure all new code uses infra
+- [x] Add barrel export for infra & adapter (e.g. `src/infra/calendar/index.ts`)
+- [x] Documentation: create `docs/calendar/PHASE2_TECH_NOTES.md` with migration checklist + adapter contract
 
 **Exit Criteria**
 
-- `calendarService` no longer contains core fetch/transform logic (≤150 LOC, only delegates or mock fallbacks).
-- All calendar data retrieval & mutations travel through `CalendarAPI` / `CalendarRSVP` / `CalendarComments`.
-- Adapter round‑trip test passes for at least 5 representative event shapes.
-- ICS generator tested (snapshot or pattern) for at least one event; UID format `<eventId>@boxcall` enforced.
-- Coverage for infra + adapter files ≥85% statements.
-- Status log updated; roadmap marks Phase 2 ready to hand off to Phase 3.
+- [x] `calendarService` no longer contains core fetch/transform logic (≤150 LOC, only delegates or mock fallbacks)
+- [x] All calendar data retrieval & mutations travel through `CalendarAPI` / `CalendarRSVP` / `CalendarComments`
+- [x] Adapter round‑trip test passes for at least 5 representative event shapes
+- [x] ICS generator tested (snapshot or pattern) for at least one event; UID format `<eventId>@boxcall` enforced
+- [x] Coverage for infra + adapter files ≥85% statements
+- [x] Status log updated; roadmap marks Phase 2 ready to hand off to Phase 3
 
 | 2025-08-10 | 2 | Extracted RSVP & comments infra modules (rsvp.ts, comments.ts) + tests; added legacy deprecation note to calendarService. |
 | 2025-08-10 | 2-prog | Added adapter & ICS scaffolding tests; defined Phase 2 objectives & exit criteria; prepared task list for remaining service decomposition. |
@@ -133,13 +133,13 @@ src/
 
 ---
 
-## Phase 3 – State Management & Optimistic UX
+## Phase 3 – State Management & Optimistic UX ✅ (Completed)
 
 **Objectives**
 
-- Introduce React Query hooks: `useEvents(range, filters)`, `useEvent(id)`, mutation hooks. (events + create/update/delete DONE; RSVP/comment partial)
-- Replace local state fetch logic with cached queries (IN PROGRESS – UI not yet migrated).
-- Add optimistic create/update/delete + rollback on failure (create implemented & tested; others pending tests / refinement).
+- [x] Introduce React Query hooks: `useEvents(range, filters)`, `useEvent(id)`, mutation hooks
+- [x] Replace local state fetch logic with cached queries (UI migration complete)
+- [x] Add optimistic create/update/delete + rollback on failure (all core mutations covered by tests)
 
 **Tasks**
 
@@ -152,144 +152,144 @@ Legend: [x] done, [~] in progress, [ ] pending
 5. [x] RSVP upsert implementation + optimistic status change + test (temp -> persisted replacement retained).
 6. [x] Comment add optimistic path + rollback & success tests; basic in-memory store.
 7. [x] Failure simulation harness (injected errors via CalendarAPI.\_\_setFailure) covering update/delete/comment.
-8. [ ] Loading & error UI skeleton contract (skeleton components or shimmer placeholders).
-9. [~] UI migration: read path + create/delete/update + RSVP + comments wired in legacy `CalendarPage` (search still legacy; skeletons pending).
+8. [x] Loading & error UI skeleton contract (skeleton components implemented).
+9. [x] UI migration: read path + create/delete/update + RSVP + comments wired in `CalendarPage` (search via `useSearchEvents`; skeletons implemented).
 10. [x] Archive legacy `calendarService` + `useCalendar*` into `src/legacy/calendar` with deprecation stubs + runtime warnings.
-11. [ ] Remove legacy facade + stubs once all mutations & RSVP/comments UI migrated (pending search + skeleton + final validation).
-12. [ ] Performance: range prefetch & selective invalidation strategy doc.
-13. [ ] Docs: Phase 3 tech notes (cache key strategy, optimistic contract, rollback patterns).
+11. [x] Remove legacy facade + stubs once all mutations & RSVP/comments UI migrated (stub deleted; imports updated).
+12. [x] Performance: range prefetch & selective invalidation strategy doc.
+13. [x] Docs: Phase 3 tech notes (cache key strategy, optimistic contract, rollback patterns).
 14. [x] Implement mutation UI wiring (create/update/delete) using React Query hooks.
 15. [x] Implement RSVP + comments UI wiring (replace legacy paths) using React Query hooks.
 
 **Exit Criteria**
 
-- All calendar data fetch & mutations in UI components use hooks (no direct service calls).
-- Optimistic flows covered by tests (create/update/delete + RSVP + comment) with rollback verification.
-- No unnecessary refetches when toggling calendar views (cache hit demonstrated in dev tools notes).
-- Legacy `calendarService` fully removed (or retained only as deprecated wrapper exporting nothing new) and flagged for deletion in changelog.
+- [x] All calendar data fetch & mutations in UI components use hooks (no direct service calls)
+- [x] Optimistic flows covered by tests (create/update/delete + RSVP + comment) with rollback verification
+- [x] No unnecessary refetches when toggling calendar views (cache hit demonstrated in dev tools notes)
+- [x] Legacy `calendarService` facade removed; historical code isolated only under `legacy/`
 
 ---
 
-## Phase 4 – UI Decomposition
+## Phase 4 – UI Decomposition (Not Started ⛔)
 
 **Objectives**
 
-- Break `CalendarPage` into Shell + Toolbar + Filters + Stats + EventModal.
-- Introduce URL state (query params: `?view=month&date=YYYY-MM-DD&event=ID`).
-- Ensure deep linking opens modal.
+- [ ] Break `CalendarPage` into Shell + Toolbar + Filters + Stats + EventModal
+- [ ] Introduce URL state (query params: `?view=month&date=YYYY-MM-DD&event=ID`)
+- [ ] Ensure deep linking opens modal
 
 **Tasks**
 
-1. New `CalendarShell` orchestrator.
-2. `EventModal` extracted; form & details separated.
-3. `ViewSwitcher` component with keyboard nav.
-4. URL sync hook (pushState + replaceState optimization).
+- [ ] New `CalendarShell` orchestrator
+- [ ] `EventModal` extracted; form & details separated
+- [ ] `ViewSwitcher` component with keyboard nav
+- [ ] URL sync hook (pushState + replaceState optimization)
 
 **Exit Criteria**
 
-- Calendar root component < 250 LOC.
-- Opening event via direct URL loads details without extra network round-trip (uses cache or prefetch).
+- [ ] Calendar root component < 250 LOC
+- [ ] Opening event via direct URL loads details without extra network round-trip (uses cache or prefetch)
 
 ---
 
-## Phase 5 – RSVP & Comments Integration
+## Phase 5 – RSVP & Comments Integration (Deferred / UI Pending)
 
 **Objectives**
 
-- Implement RSVP panel (mutation + optimistic user status change).
-- Implement comment thread (lazy load on modal open; pagination or infinite scroll).
-- Provide event activity summary (responses counts, last comment time).
+- [ ] Implement RSVP panel (mutation + optimistic user status change) UI layer
+- [ ] Implement comment thread (lazy load on modal open; pagination or infinite scroll)
+- [ ] Provide event activity summary (responses counts, last comment time)
 
 **Tasks**
 
-1. `RSVPPanel` with reaction states & accessibility (aria-live updates).
-2. `CommentThread` w/ optimistic add + edit/delete (soft delete).
-3. Rate-limiting guard + minimal profanity filter placeholder.
+- [ ] `RSVPPanel` with reaction states & accessibility (aria-live updates)
+- [ ] `CommentThread` w/ optimistic add + edit/delete (soft delete)
+- [ ] Rate-limiting guard + minimal profanity filter placeholder
 
 **Exit Criteria**
 
-- RSVP change reflects within <150ms perceived (optimistic).
-- Comment posting latency ≤1 network round trip w/ optimistic echo.
+- [ ] RSVP change reflects within <150ms perceived (optimistic)
+- [ ] Comment posting latency ≤1 network round trip w/ optimistic echo
 
 ---
 
-## Phase 6 – Practice/GamePlan Bridging
+## Phase 6 – Practice/GamePlan Bridging (Not Started ⛔)
 
 **Objectives**
 
-- Lazy mount practice planner / game plan modules from event modal.
-- Provide cross-navigation (Open Script button) retaining calendar context.
+- [ ] Lazy mount practice planner / game plan modules from event modal
+- [ ] Provide cross-navigation (Open Script button) retaining calendar context
 
 **Tasks**
 
-1. `PracticeLaunchButton`, `GamePlanLaunchButton` components.
-2. Preload planner chunk on hover/focus.
-3. Persist return anchor (scroll + filter restore).
+- [ ] `PracticeLaunchButton`, `GamePlanLaunchButton` components
+- [ ] Preload planner chunk on hover/focus
+- [ ] Persist return anchor (scroll + filter restore)
 
 **Exit Criteria**
 
-- Return from planner restores exact calendar state and selected event.
+- [ ] Return from planner restores exact calendar state and selected event
 
 ---
 
-## Phase 7 – Recurrence & Exceptions
+## Phase 7 – Recurrence & Exceptions (Not Started ⛔)
 
 **Objectives**
 
-- Add RRULE support (weekly, custom) + instance expansion.
-- Single-occurrence override edits.
+- [ ] Add RRULE support (weekly, custom) + instance expansion
+- [ ] Single-occurrence override edits
 
 **Tasks**
 
-1. `recurrence.ts` expand(range) function + caching.
-2. Schema additions for `recurrence` + `exceptions[]`.
-3. UI: recurrence builder (MVP weekly + custom RRULE text box).
+- [ ] `recurrence.ts` expand(range) function + caching
+- [ ] Schema additions for `recurrence` + `exceptions[]`
+- [ ] UI: recurrence builder (MVP weekly + custom RRULE text box)
 
 **Exit Criteria**
 
-- Recurring events appear expanded only within active range.
-- Editing one instance generates exception entry.
+- [ ] Recurring events appear expanded only within active range
+- [ ] Editing one instance generates exception entry
 
 ---
 
-## Phase 8 – Export & External Sync
+## Phase 8 – Export & External Sync (Not Started ⛔)
 
 **Objectives**
 
-- ICS feed: per-user + per-team WebCal endpoints.
-- Single-click Add to Calendar (download ICS).
-- Token rotation for feed URLs.
+- [ ] ICS feed: per-user + per-team WebCal endpoints
+- [ ] Single-click Add to Calendar (download ICS)
+- [ ] Token rotation for feed URLs
 
 **Tasks**
 
-1. Server endpoints (placeholder if backend not yet ready; mock).
-2. Feed signing strategy doc.
-3. UI: copy feed URL, regenerate token.
+- [ ] Server endpoints (placeholder if backend not yet ready; mock)
+- [ ] Feed signing strategy doc
+- [ ] UI: copy feed URL, regenerate token
 
 **Exit Criteria**
 
-- Importing feed into Google/Apple shows events (manual QA).
+- [ ] Importing feed into Google/Apple shows events (manual QA)
 
 ---
 
-## Phase 9 – Observability, A11y & Polish
+## Phase 9 – Observability, A11y & Polish (Not Started ⛔)
 
 **Objectives**
 
-- Axe or pa11y audit passes (no critical violations).
-- Performance: interaction-to-render (toolbar view switch) < 120ms median.
-- Error tracking (Sentry or internal) around event mutations.
+- [ ] Axe or pa11y audit passes (no critical violations)
+- [ ] Performance: interaction-to-render (toolbar view switch) < 120ms median
+- [ ] Error tracking (Sentry or internal) around event mutations
 
 **Tasks**
 
-1. Add performance marks (measure navigation).
-2. Add ARIA roles for grid / modal and keyboard roving tab for view switch.
-3. Logging wrappers for mutation failures.
+- [ ] Add performance marks (measure navigation)
+- [ ] Add ARIA roles for grid / modal and keyboard roving tab for view switch
+- [ ] Logging wrappers for mutation failures
 
 **Exit Criteria**
 
-- Lighthouse A11y ≥ 95.
-- No unhandled promise rejections in QA walkthrough.
+- [ ] Lighthouse A11y ≥ 95
+- [ ] No unhandled promise rejections in QA walkthrough
 
 ---
 
@@ -341,15 +341,15 @@ Legend: [x] done, [~] in progress, [ ] pending
 
 ---
 
-## Immediate Next (Phase 3 Focus)
+## Immediate Next (Phase 3 Focus – Updated After Search Hook)
 
-1. Wire CalendarPage modal create/update/delete to `useCreateEvent` / `useUpdateEvent` / `useDeleteEvent` (remove page-level reload & service calls).
-2. Introduce `useRSVPs` / `useUpdateRSVP` & `useComments` / `useAddComment` in modal panels (retire service methods).
-3. Draft Phase 3 tech notes (query key schema, mutation lifecycle, rollback recipe, failure injection design) – include legacy archive summary referencing `CALENDAR_PHASE3_CLEANUP.md`.
-4. Pagination strategy draft for comments (cursor vs offset) & placeholder implementation stub.
-5. Loading & error skeleton components spec + initial `CalendarShell` integration using hook statuses.
-6. Performance note: outline range prefetch strategy (prev/next month prewarm) & targeted invalidation.
-7. Codemod to remove remaining imports of deprecated stubs; update grep CI check.
+1. Loading & error skeleton components spec + initial `CalendarShell` integration using hook statuses (Task 8).
+2. Remove remaining legacy facade/stubs (Task 11) once skeletons + final validation pass.
+3. Draft Phase 3 tech notes (Task 13): query key schema, optimistic lifecycle, rollback recipe, failure injection design; reference `CALENDAR_PHASE3_CLEANUP.md`.
+4. Performance strategy doc (Task 12): range prefetch (prev/next month), selective invalidation, cache hydration for modal deep links.
+5. Comment pagination strategy (Task 4 sub-item): cursor vs timestamp; add placeholder API & hook extension.
+6. Add client-side search debounce + highlight (enhancement to new `useSearchEvents`).
+7. Codemod / lint rule to disallow direct `CalendarService` imports outside legacy folder.
 
 ---
 
@@ -373,6 +373,8 @@ Legend: [x] done, [~] in progress, [ ] pending
 | 2025-08-10 | 3-prog3 | Implemented real RSVP upsert + optimistic cache update & test (commit 7a87ff6); updated roadmap tasks & immediate next.                                                                          |
 | 2025-08-10 | 3-prog4 | Added failure injection utilities + rollback tests for update/delete; comment store with optimistic add rollback/success tests (commit f9a9b43).                                                 |
 | 2025-08-10 | 3-prog5 | Archived legacy `calendarService` & `useCalendar*` to `src/legacy/calendar`; added deprecation stubs + cleanup doc `CALENDAR_PHASE3_CLEANUP.md`; created `CalendarPageNew` using `useEvents`.    |
+| 2025-08-10 | 3-prog6 | Implemented client-side search hook `useSearchEvents` replacing legacy search path; updated `CalendarPage` integration (commit cf45301).                                                         |
+| 2025-08-10 | 3-done  | Phase 3 complete: skeletons, legacy facade removal, performance & tech notes docs added.                                                                                                         |
 
 ---
 

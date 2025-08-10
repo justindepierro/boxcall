@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { CalendarService } from "./calendarService";
 import { parseEventRSVPs } from "../domain/calendar/schema";
+import { CalendarAPI } from "../infra/calendar/api";
 import type { CalendarEventCreate } from "../domain/calendar/types";
 
 // Helpers
 const iso = () => new Date().toISOString();
 
-describe("CalendarService & schema negative cases", () => {
+describe("Calendar API & schema negative cases", () => {
   it("rejects invalid RSVP objects", () => {
     expect(() =>
       parseEventRSVPs([{ id: "r1" } as unknown as Record<string, unknown>])
@@ -19,16 +19,14 @@ describe("CalendarService & schema negative cases", () => {
       start: iso(),
       type: "practice",
     } as unknown as CalendarEventCreate;
-    await expect(
-      CalendarService.createEvent(invalidCreate)
-    ).rejects.toBeTruthy();
+    await expect(CalendarAPI.createEvent(invalidCreate)).rejects.toBeTruthy();
   });
 
   it("returns null when updating event with invalid field values (bad type)", async () => {
     const invalidUpdate = {
       type: "not_a_real_type",
     } as unknown as Partial<CalendarEventCreate>;
-    const result = await CalendarService.updateEvent("evt-1", invalidUpdate);
+    const result = await CalendarAPI.updateEvent("evt-1", invalidUpdate);
     expect(result).toBeNull();
   });
 });
