@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../app/auth-store";
 import { Typography } from "../components/design-system";
 import { Icon } from "../components/ui/Icon/Icon";
+import { Tag } from "../components/ui/Tag";
 import { Button } from "../components/ui/Button/Button";
 
 /**
@@ -365,10 +366,8 @@ export const JoinTeam: React.FC = () => {
                             <Typography variant="headline-sm">
                               {team.name}
                             </Typography>
-                            {!team.isPublic && (
-                              <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
-                                Private
-                              </span>
+                            {!team.isPublic && ( 
+                              <Tag variant="warning" size="sm">Private</Tag>
                             )}
                           </div>
                           <Typography
@@ -499,9 +498,9 @@ export const JoinTeam: React.FC = () => {
             </Typography>
 
             <div className="mb-6">
-              <Typography variant="body-sm" className="font-medium mb-2">
-                Your Role:{" "}
-                <span className="capitalize text-jade-600">{selectedRole}</span>
+              <Typography variant="body-sm" className="font-medium mb-2 flex items-center gap-2">
+                Your Role:
+                <Tag variant="success" size="sm" className="capitalize">{selectedRole}</Tag>
               </Typography>
               <Typography variant="body-sm" color="muted">
                 If this isn't correct, contact your coach to update your role.

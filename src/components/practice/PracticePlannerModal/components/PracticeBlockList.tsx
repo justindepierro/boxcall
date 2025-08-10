@@ -1,4 +1,5 @@
 import React from "react";
+import { Tag } from "../../../ui/Tag";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
 import { Typography } from "../../../design-system";
@@ -179,14 +180,10 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                             {/* Assigned Coach */}
                             {block.assignedCoach && (
                               <div className="ml-10 mt-2">
-                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                  <Icon
-                                    name="user"
-                                    size="xs"
-                                    className="mr-1"
-                                  />
+                                <Tag variant="info" size="sm">
+                                  <Icon name="user" size="xs" className="mr-1" />
                                   {block.assignedCoach}
-                                </span>
+                                </Tag>
                               </div>
                             )}
                           </div>

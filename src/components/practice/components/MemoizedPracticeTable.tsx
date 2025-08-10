@@ -6,6 +6,7 @@ import { Typography } from "../../design-system/Typography";
  * Prevents unnecessary re-renders when practice data hasn't changed
  */
 import { memo } from "react";
+import { Tag, mapCategoryToTagVariant } from "../../ui/Tag";
 import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
 
@@ -28,25 +29,14 @@ interface PracticeBlockTableProps {
   onDuplicateBlock: (block: PracticeBlock) => void;
 }
 
-const getCategoryColor = (category: string): string => {
-  const colors: Record<string, string> = {
-    offense: "bg-green-100 text-green-800",
-    defense: "bg-red-100 text-red-800",
-    "special-teams": "bg-yellow-100 text-yellow-800",
-    meeting: "bg-blue-100 text-blue-800",
-    "weight-room": "bg-purple-100 text-purple-800",
-    conditioning: "bg-orange-100 text-orange-800",
-    break: "bg-gray-100 text-gray-800",
-    transition: "bg-indigo-100 text-indigo-800",
-  };
-  return colors[category] || "bg-gray-100 text-gray-800";
-};
-
 const formatTime = (timeString: string): string => {
-        <Tag variant={mapCategoryToTagVariant(block.category)} size="sm">
-          {block.category}
-        </Tag>
-  return `${displayHour}:${minutes} ${period}`;
+  const date = new Date(timeString);
+  if (Number.isNaN(date.getTime())) return timeString; // fallback for invalid
+  let hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const period = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12;
+  return `${hours}:${minutes} ${period}`;
 };
 
 // Memoized row component to prevent unnecessary re-renders
@@ -65,11 +55,9 @@ const PracticeBlockRow = memo<{
         {block.duration} min
       </td>
       <td className="px-4 py-3">
-        <span
-          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(block.category)}`}
-        >
+        <Tag variant={mapCategoryToTagVariant(block.category)} size="sm">
           {block.category}
-        </span>
+        </Tag>
       </td>
       <td className="px-4 py-3 text-sm font-medium text-gray-900">
         {block.title}

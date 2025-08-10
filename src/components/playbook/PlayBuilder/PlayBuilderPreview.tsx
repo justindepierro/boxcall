@@ -5,6 +5,7 @@ import { Typography } from "../../design-system/Typography";
  */
 
 import React from "react";
+import { Tag } from "../../ui/Tag";
 import { ArrowRight, CheckCircle, AlertTriangle } from "lucide-react";
 import type { Play } from "../../../types/play";
 
@@ -19,21 +20,6 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
   isValid,
   validationErrors,
 }) => {
-  // Get complexity color
-  const getComplexityColor = (score?: number) => {
-    if (!score) return "bg-slate-100 text-slate-600";
-    if (score <= 2) return "bg-green-100 text-green-800";
-    if (score <= 3) return "bg-yellow-100 text-yellow-800";
-    return "bg-red-100 text-red-800";
-  };
-
-  // Get confidence color
-  const getConfidenceColor = (confidence?: number) => {
-    if (!confidence) return "bg-slate-100 text-slate-600";
-    if (confidence >= 80) return "bg-green-100 text-green-800";
-    if (confidence >= 60) return "bg-yellow-100 text-yellow-800";
-    return "bg-red-100 text-red-800";
-  };
 
   return (
     <div className="bg-white rounded-lg border border-slate-200">
@@ -137,20 +123,36 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
             Performance
           </h4>
           <div className="flex flex-wrap gap-3">
-            <span
-              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getConfidenceColor(playData.confidence_base)}`}
+            <Tag
+              variant={
+                playData.confidence_base
+                  ? playData.confidence_base >= 80
+                    ? "success"
+                    : playData.confidence_base >= 60
+                      ? "warning"
+                      : "danger"
+                  : "neutral"
+              }
+              size="sm"
             >
               Confidence: {playData.confidence_base || 70}%
-            </span>
-            <span
-              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getComplexityColor(playData.complexity_score)}`}
+            </Tag>
+            <Tag
+              variant={
+                playData.complexity_score
+                  ? playData.complexity_score <= 2
+                    ? "success"
+                    : playData.complexity_score <= 3
+                      ? "warning"
+                      : "danger"
+                  : "neutral"
+              }
+              size="sm"
             >
               Complexity: {playData.complexity_score || 1}/5
-            </span>
+            </Tag>
             {playData.is_archived && (
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-800">
-                Archived
-              </span>
+              <Tag variant="outline" size="sm">Archived</Tag>
             )}
           </div>
         </div>

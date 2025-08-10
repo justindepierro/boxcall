@@ -73,40 +73,4 @@ export const Tag: React.FC<TagProps> = ({
   );
 };
 
-export function mapCategoryToTagVariant(category: string): TagVariant {
-  switch (category) {
-    case "offense":
-    case "conditioning":
-      return "accent";
-    case "defense":
-      return "danger";
-    case "special-teams":
-      return "info";
-    case "meeting":
-    case "transition":
-      return "neutral";
-    case "weight-room":
-      return "success";
-    case "break":
-      return "outline";
-    default:
-      return "neutral";
-  }
-}
-
-export function mapEventTypeToTagVariant(type: string): TagVariant {
-  switch (type) {
-    case "game":
-      return "danger";
-    case "practice":
-      return "accent";
-    case "meeting":
-      return "warning";
-    case "film":
-      return "info";
-    default:
-      return "neutral";
-  }
-}
-
 export default Tag;

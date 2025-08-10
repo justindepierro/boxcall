@@ -8,6 +8,7 @@ import { Typography } from "../components/design-system/Typography";
 import { PracticePlannerModal } from "../components/practice/PracticePlannerModal";
 import { Button, Card, Input } from "../components/ui";
 import Icon from "../components/ui/Icon/Icon";
+import { Tag, mapEventTypeToTagVariant } from "../components/ui/Tag";
 import { useCalendar } from "../hooks/useCalendar";
 import type {
   CalendarEvent,
@@ -633,25 +634,11 @@ export const CalendarPage: React.FC = () => {
                 /* Event Display */
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2">
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        selectedEvent.type === "game"
-                          ? "bg-red-100 text-red-800"
-                          : selectedEvent.type === "practice"
-                            ? "bg-blue-100 text-blue-800"
-                            : selectedEvent.type === "meeting"
-                              ? "bg-amber-100 text-amber-800"
-                              : selectedEvent.type === "film"
-                                ? "bg-purple-100 text-purple-800"
-                                : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
+                    <Tag variant={mapEventTypeToTagVariant(selectedEvent.type)} size="sm">
                       {selectedEvent.type}
-                    </span>
+                    </Tag>
                     {selectedEvent.is_home && (
-                      <span className="px-2 py-1 text-xs font-medium rounded-full bg-jade-100 text-jade-800">
-                        HOME
-                      </span>
+                      <Tag variant="success" size="sm">HOME</Tag>
                     )}
                   </div>
                   <div className="space-y-2 text-sm text-gray-600">

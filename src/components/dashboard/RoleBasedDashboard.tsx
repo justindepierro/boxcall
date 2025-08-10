@@ -9,6 +9,7 @@ import {
 import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
+import { Tag } from "../ui/Tag";
 
 // Import the existing dashboard components
 const CoachDashboard = React.lazy(() =>
@@ -72,9 +73,7 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
                 </Typography>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="bg-jade-100 dark:bg-jade-900 text-jade-800 dark:text-jade-200 px-3 py-1 rounded-full text-sm font-medium capitalize">
-                  {profile.role}
-                </div>
+                <Tag variant="success" size="sm" className="capitalize">{profile.role}</Tag>
               </div>
             </div>
           </div>
