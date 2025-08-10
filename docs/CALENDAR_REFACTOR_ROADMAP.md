@@ -357,8 +357,8 @@ Legend: [x] done, [~] in progress, [ ] pending
 4. Extract `EventForm` & `EventDetails` from `EventModal` (no behavior change) + add folder structure.
 5. Implement `ViewSwitcher` with keyboard support and aria attributes.
 6. Add debounced (250ms) search + match highlighting.
-7. Create parity QA checklist doc; run under VITE_CALENDAR_SHELL=1 and record deltas.
-8. Update roadmap status & flip flag once parity achieved.
+7. Create parity QA checklist doc; run under VITE_CALENDAR_SHELL=1 and record deltas. (Created: `CALENDAR_SHELL_QA_CHECKLIST.md`)
+8. Execute QA, trim legacy page reference, update roadmap status & flip flag once parity achieved.
 
 ---
 
@@ -385,17 +385,17 @@ Legend: [x] done, [~] in progress, [ ] pending
 | 2025-08-10 | 3-prog6 | Implemented client-side search hook `useSearchEvents` replacing legacy search path; updated `CalendarPage` integration (commit cf45301).                                                         |
 | 2025-08-10 | 3-done  | Phase 3 complete: skeletons, legacy facade removal, performance & tech notes docs added.                                                                                                         |
 | 2025-08-10 | 4-kick  | Phase 4 started: experimental `CalendarPageShell` + feature flag route toggle (`VITE_CALENDAR_SHELL`); prototype shell fetch + stats; planning URL sync & component extraction.                  |
-| 2025-08-10 | 4-prog1 | Shell expanded (toolbar, filters, stats, calendar adapter). URL sync hook scaffolded.                                      |
-| 2025-08-10 | 4-prog2 | URL sync (view/date/event) + deep link modal open implemented.                                                          |
-| 2025-08-10 | 4-prog3 | EventModal decomposed into EventForm + EventDetails.                                                                    |
-| 2025-08-10 | 4-prog4 | Accessible ViewSwitcher integrated (tablist, roving tabindex).                                                           |
-| 2025-08-10 | 4-prog5 | Month prefetch (prev/next) effect implemented.                                                                          |
-| 2025-08-10 | 4-prog6 | Debounced search + highlighted titles added.                                                                            |
-| 2025-08-10 | 4-prog  | Expanded `CalendarShell` to include toolbar, filters, stats, calendar grid, and event modal (parity structure). Ready to implement URL state sync next.                                        |
-| 2025-08-10 | 4-prog2 | Added URL state sync hook (`useCalendarUrlState`); shell now syncs view changes to query params and opens modal on `?event=ID`. Next: date navigation syncing & prefetch ranges.                |
-| 2025-08-10 | 4-prog3 | Date param sync + preliminary month prefetch (prev/next) added to shell; placeholder queryFn to be replaced with real fetcher.                                            |
-| 2025-08-10 | 4-prog4 | Split `EventModal` into `EventForm` and `EventDetails` components (no behavior change, groundwork for accessibility & future extensions).                               |
-| 2025-08-10 | 4-prog5 | Implemented accessible `ViewSwitcher` (roving tabindex, role=tablist) and integrated into `CalendarToolbar`.                                                  |
+| 2025-08-10 | 4-prog1 | Shell expanded (toolbar, filters, stats, calendar adapter). URL sync hook scaffolded.                                                                                                            |
+| 2025-08-10 | 4-prog2 | URL sync (view/date/event) + deep link modal open implemented.                                                                                                                                   |
+| 2025-08-10 | 4-prog3 | EventModal decomposed into EventForm + EventDetails.                                                                                                                                             |
+| 2025-08-10 | 4-prog4 | Accessible ViewSwitcher integrated (tablist, roving tabindex).                                                                                                                                   |
+| 2025-08-10 | 4-prog5 | Month prefetch (prev/next) effect implemented.                                                                                                                                                   |
+| 2025-08-10 | 4-prog6 | Debounced search + highlighted titles added.                                                                                                                                                     |
+| 2025-08-10 | 4-prog  | Expanded `CalendarShell` to include toolbar, filters, stats, calendar grid, and event modal (parity structure). Ready to implement URL state sync next.                                          |
+| 2025-08-10 | 4-prog2 | Added URL state sync hook (`useCalendarUrlState`); shell now syncs view changes to query params and opens modal on `?event=ID`. Next: date navigation syncing & prefetch ranges.                 |
+| 2025-08-10 | 4-prog3 | Date param sync + preliminary month prefetch (prev/next) added to shell; placeholder queryFn to be replaced with real fetcher.                                                                   |
+| 2025-08-10 | 4-prog4 | Split `EventModal` into `EventForm` and `EventDetails` components (no behavior change, groundwork for accessibility & future extensions).                                                        |
+| 2025-08-10 | 4-prog5 | Implemented accessible `ViewSwitcher` (roving tabindex, role=tablist) and integrated into `CalendarToolbar`.                                                                                     |
 
 ---
 
