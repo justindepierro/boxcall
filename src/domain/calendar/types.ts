@@ -55,6 +55,22 @@ export interface CalendarFilters {
   tags?: string[];
 }
 
+export interface CalendarComment {
+  id: string;
+  event_id: string;
+  user_id: string;
+  body: string;
+  created_at: string;
+  updated_at: string;
+  edited?: boolean;
+  deleted?: boolean; // soft delete flag
+}
+
+export interface CalendarCommentCreate {
+  event_id: string;
+  body: string;
+}
+
 // Phase 1 TODOs:
 // - Add zod schemas (Event, Create, RSVP, Filters)
 // - Introduce status (draft|published|locked) and recurrence scaffolding
