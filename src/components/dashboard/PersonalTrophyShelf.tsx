@@ -134,7 +134,10 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   if (error) {
     return (
       <Card className="compact-card surface-card bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-red-200 dark:border-red-800">
-        <Typography variant="headline-md" className="text-red-600 dark:text-red-400 text-center">
+        <Typography
+          variant="headline-md"
+          className="text-red-600 dark:text-red-400 text-center"
+        >
           Failed to load achievements
         </Typography>
       </Card>
@@ -151,7 +154,10 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
           </Typography>
         </div>
         <div className="flex-1 flex justify-center">
-          <Typography variant="body-sm" className="font-semibold text-text-primary">
+          <Typography
+            variant="body-sm"
+            className="font-semibold text-text-primary"
+          >
             BoxCall Achievements
           </Typography>
         </div>
@@ -289,7 +295,10 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
                     size="lg"
                     className="text-jade-400 mb-3 opacity-60"
                   />
-                  <Typography variant="body-sm" className="font-semibold text-jade-700 dark:text-jade-300 mb-2">
+                  <Typography
+                    variant="body-sm"
+                    className="font-semibold text-jade-700 dark:text-jade-300 mb-2"
+                  >
                     Ready to Fill Your Trophy Shelf?
                   </Typography>
                   <Typography

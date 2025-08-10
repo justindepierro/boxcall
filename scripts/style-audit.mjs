@@ -9,11 +9,17 @@
  *
  * Outputs JSON + Markdown summary under docs/style-inventory/
  */
-import { readdirSync, readFileSync, statSync, mkdirSync, writeFileSync } from 'node:fs';
-import { relative, join } from 'node:path';
+import {
+  readdirSync,
+  readFileSync,
+  statSync,
+  mkdirSync,
+  writeFileSync,
+} from "node:fs";
+import { relative, join } from "node:path";
 
-const ROOT = new URL('..', import.meta.url).pathname;
-const SRC = join(ROOT, 'src');
+const ROOT = new URL("..", import.meta.url).pathname;
+const SRC = join(ROOT, "src");
 
 function walk(dir, files = []) {
   for (const entry of readdirSync(dir)) {
@@ -38,25 +44,34 @@ const metrics = {
 };
 
 const brandPatterns = [
-  'brand-jade', 'brand-jade-dark', 'brand-jade-light',
-  'brand-navy', 'brand-navy-dark', 'interaction-jade',
-  'surface-jade', 'surface-jade-dark'
+  "brand-jade",
+  "brand-jade-dark",
+  "brand-jade-light",
+  "brand-navy",
+  "brand-navy-dark",
+  "interaction-jade",
+  "surface-jade",
+  "surface-jade-dark",
 ];
 
 const bgRegex = /\bbg-([a-zA-Z0-9-\/]+)/g; // captures tailwind bg-* tokens
 
 for (const file of files) {
-  const content = readFileSync(file, 'utf8');
+  const content = readFileSync(file, "utf8");
   // text-white occurrences
   const twMatches = [...content.matchAll(/className=\"([^\"]*)\"/g)];
   for (const m of twMatches) {
     const cls = m[1];
-    if (cls.includes('text-white')) {
+    if (cls.includes("text-white")) {
       metrics.textWhite++;
       // get line number
       const upto = content.slice(0, m.index);
       const line = upto.split(/\n/).length;
-      metrics.textWhiteEntries.push({ file: relative(ROOT, file), line, className: cls.slice(0, 140) });
+      metrics.textWhiteEntries.push({
+        file: relative(ROOT, file),
+        line,
+        className: cls.slice(0, 140),
+      });
     }
     let b;
     while ((b = bgRegex.exec(cls))) {
@@ -64,67 +79,120 @@ for (const file of files) {
       metrics.bgClasses[key] = (metrics.bgClasses[key] || 0) + 1;
     }
     for (const bp of brandPatterns) {
-      if (cls.includes(bp)) metrics.brandClasses[bp] = (metrics.brandClasses[bp] || 0) + 1;
+      if (cls.includes(bp))
+        metrics.brandClasses[bp] = (metrics.brandClasses[bp] || 0) + 1;
     }
     // Surface candidate detection: bg-white / bg-gray-50/100/200 used on containers lacking semantic surface-* class
-    if (/\bbg-(white|gray-(50|100|200))\b/.test(cls) && !/surface-(card|subtle|raised|jade)/.test(cls)) {
+    if (
+      /\bbg-(white|gray-(50|100|200))\b/.test(cls) &&
+      !/surface-(card|subtle|raised|jade)/.test(cls)
+    ) {
       // heuristic: consider if class string also has padding or shadow or border (container-like)
       if (/(p-|px-|py-|shadow|border)/.test(cls)) {
         const upto = content.slice(0, m.index);
         const line = upto.split(/\n/).length;
-        metrics.surfaceCandidates.push({ file: relative(ROOT, file), line, className: cls.slice(0,140) });
+        metrics.surfaceCandidates.push({
+          file: relative(ROOT, file),
+          line,
+          className: cls.slice(0, 140),
+        });
       }
     }
   }
   // raw <button ...> heuristic (exclude Button.tsx and IconButton)
   const rawBtnMatches = content.match(/<button(?![^>]*role=)/g);
-  if (rawBtnMatches && !file.includes('Button.tsx') && !file.includes('IconButton')) {
+  if (
+    rawBtnMatches &&
+    !file.includes("Button.tsx") &&
+    !file.includes("IconButton")
+  ) {
     metrics.rawButtonHeuristic += rawBtnMatches.length;
   }
 }
 
 // Sort bg classes by count desc
-const sortedBg = Object.entries(metrics.bgClasses).sort((a,b)=>b[1]-a[1]);
-const sortedBrand = Object.entries(metrics.brandClasses).sort((a,b)=>b[1]-a[1]);
+const sortedBg = Object.entries(metrics.bgClasses).sort((a, b) => b[1] - a[1]);
+const sortedBrand = Object.entries(metrics.brandClasses).sort(
+  (a, b) => b[1] - a[1]
+);
 
-const outDir = join(ROOT, 'docs/style-inventory');
+const outDir = join(ROOT, "docs/style-inventory");
 mkdirSync(outDir, { recursive: true });
 
-const jsonPath = join(outDir, 'style-audit.json');
-writeFileSync(jsonPath, JSON.stringify({ ...metrics, bgClasses: sortedBg, brandClasses: sortedBrand }, null, 2));
+const jsonPath = join(outDir, "style-audit.json");
+writeFileSync(
+  jsonPath,
+  JSON.stringify(
+    { ...metrics, bgClasses: sortedBg, brandClasses: sortedBrand },
+    null,
+    2
+  )
+);
 
-function table(rows, headers){
-  const head = `| ${headers.join(' | ')} |`;
-  const sep = `| ${headers.map(()=> '---').join(' | ')} |`;
-  return [head, sep, ...rows.map(r=>`| ${r.join(' | ')} |`)].join('\n');
+function table(rows, headers) {
+  const head = `| ${headers.join(" | ")} |`;
+  const sep = `| ${headers.map(() => "---").join(" | ")} |`;
+  return [head, sep, ...rows.map((r) => `| ${r.join(" | ")} |`)].join("\n");
 }
 
 const mdLines = [];
-mdLines.push('# Style Audit Summary');
+mdLines.push("# Style Audit Summary");
 mdLines.push(`Generated: ${new Date().toISOString()}`);
-mdLines.push('\n## Key Metrics');
-mdLines.push(table([
-  ['Total Source Files', String(metrics.totalFiles)],
-  ['text-white Occurrences', String(metrics.textWhite)],
-  ['Raw <button> Heuristic (non-primitive)', String(metrics.rawButtonHeuristic)],
-], ['Metric', 'Value']));
+mdLines.push("\n## Key Metrics");
+mdLines.push(
+  table(
+    [
+      ["Total Source Files", String(metrics.totalFiles)],
+      ["text-white Occurrences", String(metrics.textWhite)],
+      [
+        "Raw <button> Heuristic (non-primitive)",
+        String(metrics.rawButtonHeuristic),
+      ],
+    ],
+    ["Metric", "Value"]
+  )
+);
 
-mdLines.push('\n## Top Background Classes');
-mdLines.push(table(sortedBg.slice(0,25).map(([k,v])=>[k,String(v)]), ['bg-*', 'Count']));
+mdLines.push("\n## Top Background Classes");
+mdLines.push(
+  table(
+    sortedBg.slice(0, 25).map(([k, v]) => [k, String(v)]),
+    ["bg-*", "Count"]
+  )
+);
 
-mdLines.push('\n## Brand Class Utilization');
-mdLines.push(table(sortedBrand.map(([k,v])=>[k,String(v)]), ['Brand Token Class', 'Count']));
+mdLines.push("\n## Brand Class Utilization");
+mdLines.push(
+  table(
+    sortedBrand.map(([k, v]) => [k, String(v)]),
+    ["Brand Token Class", "Count"]
+  )
+);
 
-mdLines.push('\n## Sample text-white Locations (first 25)');
-mdLines.push(table(metrics.textWhiteEntries.slice(0,25).map(e=>[e.file+':'+e.line, '`'+e.className+'`']), ['File:Line','ClassName Snip']));
+mdLines.push("\n## Sample text-white Locations (first 25)");
+mdLines.push(
+  table(
+    metrics.textWhiteEntries
+      .slice(0, 25)
+      .map((e) => [e.file + ":" + e.line, "`" + e.className + "`"]),
+    ["File:Line", "ClassName Snip"]
+  )
+);
 
-mdLines.push('\n## Surface Class Remediation Candidates (first 25)');
-mdLines.push(table(metrics.surfaceCandidates.slice(0,25).map(e=>[e.file+':'+e.line, '`'+e.className+'`']), ['File:Line','ClassName Snip']));
+mdLines.push("\n## Surface Class Remediation Candidates (first 25)");
+mdLines.push(
+  table(
+    metrics.surfaceCandidates
+      .slice(0, 25)
+      .map((e) => [e.file + ":" + e.line, "`" + e.className + "`"]),
+    ["File:Line", "ClassName Snip"]
+  )
+);
 
-const mdPath = join(outDir, 'style-audit.md');
-writeFileSync(mdPath, mdLines.join('\n'));
+const mdPath = join(outDir, "style-audit.md");
+writeFileSync(mdPath, mdLines.join("\n"));
 
-console.log('Style audit complete');
+console.log("Style audit complete");
 console.log(` text-white: ${metrics.textWhite}`);
 console.log(` raw <button> heuristic: ${metrics.rawButtonHeuristic}`);
 console.log(` Report: ${relative(ROOT, mdPath)}`);

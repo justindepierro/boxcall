@@ -54,9 +54,9 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
   }
 
   return (
-  <div className="min-h-screen surface-app">
+    <div className="min-h-screen surface-app">
       {/* Welcome Header */}
-  <div className="surface-header shadow-sm border-b">
+      <div className="surface-header shadow-sm border-b">
         <div className="max-w-7xl mx-auto bc-container-padding">
           <div className="py-6">
             <div className="flex items-center justify-between">
@@ -143,8 +143,8 @@ const AdminDashboard: React.FC = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bc-grid-gap">
       {/* System Overview */}
-  <div className="surface-card rounded-lg shadow bc-card-padding">
-  <h3 className="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 flex items-center">
+      <div className="surface-card rounded-lg shadow bc-card-padding">
+        <h3 className="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 flex items-center">
           <Icon name="database" className="mr-2" />
           System Overview
         </h3>
@@ -175,8 +175,8 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* User Management */}
-  <div className="surface-card rounded-lg shadow bc-card-padding">
-  <h3 className="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 flex items-center">
+      <div className="surface-card rounded-lg shadow bc-card-padding">
+        <h3 className="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 flex items-center">
           <Icon name="users" className="mr-2" />
           User Management
         </h3>
@@ -194,8 +194,8 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Quick Actions */}
-  <div className="surface-card rounded-lg shadow bc-card-padding">
-  <h3 className="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 flex items-center">
+      <div className="surface-card rounded-lg shadow bc-card-padding">
+        <h3 className="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 flex items-center">
           <Icon name="zap" className="mr-2" />
           Quick Actions
         </h3>

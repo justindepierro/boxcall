@@ -47,7 +47,7 @@ export const OnboardingHint: React.FC<OnboardingHintProps> = ({
 
   return (
     <div
-      className={`border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 bg-white dark:bg-gray-800 ${className}`}
+      className={`border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 surface-card ${className}`}
     >
       <div className="flex items-start gap-3 mb-3">
         <div className="mt-0.5">
@@ -69,7 +69,7 @@ export const OnboardingHint: React.FC<OnboardingHintProps> = ({
         </div>
       </div>
       {steps && steps.length > 0 && (
-        <ol className="list-decimal list-inside space-y-1 text-sm text-gray-600 dark:text-gray-300 mb-4">
+        <ol className="list-decimal list-inside space-y-1 text-sm text-text-secondary mb-4">
           {steps.map((s, i) => (
             <li key={i}>{s}</li>
           ))}

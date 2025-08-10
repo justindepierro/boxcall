@@ -98,16 +98,32 @@ body,
 
 @layer components {
   /* Semantic Surface Utilities */
-  .surface-app { @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100; }
-  .surface-header { @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100; }
-  .surface-card { @apply bg-white dark:bg-gray-800; }
-  .surface-subtle { @apply bg-gray-50 dark:bg-gray-800/60; }
+  .surface-app {
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+  }
+  .surface-header {
+    @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100;
+  }
+  .surface-card {
+    @apply bg-white dark:bg-gray-800;
+  }
+  .surface-subtle {
+    @apply bg-gray-50 dark:bg-gray-800/60;
+  }
 
   /* Semantic Text Tokens */
-  .text-text-primary { @apply text-gray-900 dark:text-gray-100; }
-  .text-text-secondary { @apply text-gray-600 dark:text-gray-400; }
-  .text-text-muted { @apply text-gray-500 dark:text-gray-500; }
-  .text-text-inverse { @apply text-white; }
+  .text-text-primary {
+    @apply text-gray-900 dark:text-gray-100;
+  }
+  .text-text-secondary {
+    @apply text-gray-600 dark:text-gray-400;
+  }
+  .text-text-muted {
+    @apply text-gray-500 dark:text-gray-500;
+  }
+  .text-text-inverse {
+    @apply text-white;
+  }
   /* Button variants */
   .btn-primary {
     @apply bg-team-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors;

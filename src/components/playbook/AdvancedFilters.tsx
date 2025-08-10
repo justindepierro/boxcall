@@ -188,7 +188,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
       {/* Active Filters */}
       {activeFilters.length > 0 && (
-  <div className="p-3 space-y-2">
+        <div className="p-3 space-y-2">
           {activeFilters.map((filter) => (
             <div
               key={filter.id}
@@ -211,7 +211,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
       )}
 
       {/* Add Filter Section */}
-  <div className="p-3 border-t border-slate-100 dark:border-gray-700">
+      <div className="p-3 border-t border-slate-100 dark:border-gray-700">
         {!showAddFilter ? (
           <Button
             size="xs"
@@ -236,7 +236,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                     value: "",
                   }))
                 }
-        className="w-full px-2 py-1.5 text-xs border border-slate-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-jade-500 bg-white dark:bg-gray-800 text-text-primary"
+                className="w-full px-2 py-1.5 text-xs border border-slate-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-jade-500 bg-white dark:bg-gray-800 text-text-primary"
               >
                 <option value="">Select field...</option>
                 {FILTER_FIELDS.map((field) => (

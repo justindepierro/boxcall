@@ -229,25 +229,19 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             ) : (
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-text-secondary">
-                    🪖 Helmet:
-                  </span>
+                  <span className="text-text-secondary">🪖 Helmet:</span>
                   <span className="font-semibold">
                     {editedProfile.gear.helmet || "Not set"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-text-secondary">
-                    🧤 Gloves:
-                  </span>
+                  <span className="text-text-secondary">🧤 Gloves:</span>
                   <span className="font-semibold">
                     {editedProfile.gear.gloves || "Not set"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-text-secondary">
-                    👟 Cleats:
-                  </span>
+                  <span className="text-text-secondary">👟 Cleats:</span>
                   <span className="font-semibold">
                     {editedProfile.gear.cleats || "Not set"}
                   </span>
@@ -267,21 +261,15 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             </Typography>
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-text-secondary">
-                  Experience:
-                </span>
+                <span className="text-text-secondary">Experience:</span>
                 <span className="font-semibold">15 years</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary">
-                  Certifications:
-                </span>
+                <span className="text-text-secondary">Certifications:</span>
                 <span className="font-semibold">NFHS, USA Football</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary">
-                  Specialty:
-                </span>
+                <span className="text-text-secondary">Specialty:</span>
                 <span className="font-semibold">Offensive Coordinator</span>
               </div>
             </div>

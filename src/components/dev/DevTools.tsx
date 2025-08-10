@@ -214,19 +214,26 @@ export const DevTools: React.FC = () => {
       onMouseLeave={handleMouseLeave}
       style={{ opacity: state.opacity }}
     >
-  <div className="surface-card border border-gray-300 dark:border-gray-600 rounded-lg shadow-2xl max-w-md">
+      <div className="surface-card border border-gray-300 dark:border-gray-600 rounded-lg shadow-2xl max-w-md">
         {/* Header */}
-    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-text-inverse rounded-t-lg">
+        <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-text-inverse rounded-t-lg">
           <div className="flex items-center">
-      <Icon name="settings" size="sm" className="mr-2 text-text-inverse" />
-            <Typography variant="body-sm" className="font-medium text-text-inverse">
+            <Icon
+              name="settings"
+              size="sm"
+              className="mr-2 text-text-inverse"
+            />
+            <Typography
+              variant="body-sm"
+              className="font-medium text-text-inverse"
+            >
               {state.isExpanded ? "BoxCall Dev Tools" : "🛠️"}
             </Typography>
           </div>
           <div className="flex items-center gap-2">
             {state.isExpanded && (
               <div className="flex items-center gap-1">
-        <Icon name="eye" size="xs" className="text-text-inverse" />
+                <Icon name="eye" size="xs" className="text-text-inverse" />
                 <input
                   type="range"
                   min="0.3"

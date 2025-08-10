@@ -147,7 +147,10 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                     size="xl"
                     className="text-text-muted mx-auto mb-3"
                   />
-                  <Typography variant="body-lg" className="text-text-secondary mb-2">
+                  <Typography
+                    variant="body-lg"
+                    className="text-text-secondary mb-2"
+                  >
                     No upcoming events scheduled
                   </Typography>
                   <Typography variant="body-sm" className="text-text-muted">
@@ -222,12 +225,12 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
       {/* Event Detail Modal */}
       {selectedEvent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-    <div className="surface-card rounded-lg shadow-xl max-w-md w-full max-h-96 overflow-y-auto">
+          <div className="surface-card rounded-lg shadow-xl max-w-md w-full max-h-96 overflow-y-auto">
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <Typography
                   variant="headline-md"
-      className="text-text-primary pr-4"
+                  className="text-text-primary pr-4"
                 >
                   {selectedEvent.title}
                 </Typography>
@@ -236,7 +239,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                   size="xs"
                   onClick={() => setSelectedEvent(null)}
                   aria-label="Close"
-      className="text-text-muted hover:text-text-secondary"
+                  className="text-text-muted hover:text-text-secondary"
                   icon={<Icon name="close" size="sm" />}
                   iconPosition="only"
                 />

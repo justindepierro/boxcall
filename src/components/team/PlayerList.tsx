@@ -52,15 +52,15 @@ export const PlayerList: React.FC<PlayerListProps> = ({
   };
   if (players.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
+      <div className="surface-card rounded-lg shadow-sm p-8">
         <div className="text-center">
           <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full bg-jade-500/10 text-jade-600 dark:text-jade-400">
             <Icon name="users" size="lg" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 className="text-xl font-semibold text-text-primary mb-2">
             No Players Yet
           </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-text-secondary mb-6">
             Start building your roster by adding players manually or importing
             from CSV.
           </p>
@@ -82,7 +82,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
     );
   }
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+    <div className="surface-card rounded-lg shadow-sm">
       {/* Search and Filters */}
       <div className="bc-card-padding border-b border-gray-200 dark:border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -101,7 +101,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterLevel}
               onChange={(e) => setFilterLevel(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-white font-sans"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
             >
               <option value="all">All Levels</option>
               {TEAM_LEVELS.map((level) => (
@@ -116,7 +116,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterPosition}
               onChange={(e) => setFilterPosition(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-white font-sans"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
             >
               <option value="all">All Positions</option>
               {allPositions.map((position) => (
@@ -129,7 +129,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
         </div>
         {/* Results Summary */}
         <div className="mt-4 flex items-center justify-between">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-text-secondary">
             Showing {filteredPlayers.length} of {players.length} players
           </p>
           <div className="space-x-2">
@@ -149,7 +149,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
       <div className="bc-card-padding">
         {filteredPlayers.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-500 dark:text-gray-400">
+            <p className="text-text-muted">
               No players match your search criteria.
             </p>
           </div>
@@ -164,16 +164,16 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center space-x-3">
                     {/* Jersey Number */}
-                    <div className="w-12 h-12 bg-jade-500 rounded-md flex items-center justify-center text-white font-display font-bold">
+                    <div className="w-12 h-12 bg-jade-500 rounded-md flex items-center justify-center text-text-inverse font-display font-bold">
                       {player.jersey_number || "?"}
                     </div>
                     {/* Name and Level */}
                     <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white">
+                      <h3 className="font-semibold text-text-primary">
                         {player.first_name} {player.last_name}
                       </h3>
                       <span
-                        className={`inline-block px-2 py-1 text-xs font-medium rounded-full text-white bg-${getTeamLevelColor(player.team_level)}-600`}
+                        className={`inline-block px-2 py-1 text-xs font-medium rounded-full text-text-inverse bg-${getTeamLevelColor(player.team_level)}-600`}
                       >
                         {getTeamLevelLabel(player.team_level)}
                       </span>
@@ -209,7 +209,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     {player.positions.map((position) => (
                       <span
                         key={position}
-                        className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded"
+                        className="inline-block px-2 py-1 text-xs font-medium surface-subtle text-text-secondary rounded"
                       >
                         #{position}
                       </span>
@@ -217,7 +217,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                   </div>
                 </div>
                 {/* Physical Stats */}
-                <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 dark:text-gray-400">
+                <div className="grid grid-cols-2 gap-2 text-sm text-text-secondary">
                   {player.height && (
                     <div>
                       <span className="font-medium">Height:</span>{" "}
@@ -241,12 +241,12 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                 {(player.email || player.phone) && (
                   <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                     {player.email && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400 truncate flex items-center gap-1">
+                      <div className="text-xs text-text-muted truncate flex items-center gap-1">
                         <Icon name="mail" size="xs" /> {player.email}
                       </div>
                     )}
                     {player.phone && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                      <div className="text-xs text-text-muted flex items-center gap-1">
                         <Icon name="phone" size="xs" />
                         {player.phone}
                       </div>

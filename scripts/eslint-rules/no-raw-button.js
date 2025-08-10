@@ -11,7 +11,8 @@ export const noRawButtonRule = {
       recommended: false,
     },
     messages: {
-      noRaw: "Use the shared <Button> component instead of a raw <button>. If this is a dense-grid or upload exemption, add it to the allowlist or convert to role=button container.",
+      noRaw:
+        "Use the shared <Button> component instead of a raw <button>. If this is a dense-grid or upload exemption, add it to the allowlist or convert to role=button container.",
     },
     schema: [
       {
@@ -28,14 +29,14 @@ export const noRawButtonRule = {
     const allow = new Set(options.allow || []);
     return {
       JSXOpeningElement(node) {
-        if (node.name && node.name.name === 'button') {
+        if (node.name && node.name.name === "button") {
           const filename = context.getFilename();
           if ([...allow].some((allowed) => filename.includes(allowed))) return;
-          context.report({ node, messageId: 'noRaw' });
+          context.report({ node, messageId: "noRaw" });
         }
-      }
+      },
     };
-  }
+  },
 };
 
 export default noRawButtonRule;

@@ -46,7 +46,7 @@ export const UserMenu: React.FC = () => {
         disabled={loading}
       >
         {/* Simple avatar circle */}
-  <div className="w-8 h-8 bg-jade-500 rounded-full flex items-center justify-center text-text-inverse font-medium text-sm">
+        <div className="w-8 h-8 bg-jade-500 rounded-full flex items-center justify-center text-text-inverse font-medium text-sm">
           {userName.charAt(0).toUpperCase()}
         </div>
         <span className="hidden sm:block max-w-32 truncate">{userName}</span>

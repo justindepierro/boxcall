@@ -173,7 +173,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap max-w-2xl mx-auto">
           {/* Create Team Option */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg bc-card-padding border border-gray-200 dark:border-gray-700 hover:border-jade-300 dark:hover:border-jade-600 transition-colors">
+          <div className="surface-card rounded-lg bc-card-padding border border-gray-200 dark:border-gray-700 hover:border-jade-300 dark:hover:border-jade-600 transition-colors">
             <Icon
               name="plus"
               size="lg"
@@ -197,7 +197,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
           </div>
 
           {/* Join Team Option */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg bc-card-padding border border-gray-200 dark:border-gray-700 hover:border-jade-300 dark:hover:border-jade-600 transition-colors">
+          <div className="surface-card rounded-lg bc-card-padding border border-gray-200 dark:border-gray-700 hover:border-jade-300 dark:hover:border-jade-600 transition-colors">
             <Icon
               name="user-plus"
               size="lg"

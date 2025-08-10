@@ -122,12 +122,12 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
   return (
     <div className={`relative ${className}`}>
       {/* Search Input */}
-    <div className="relative">
+      <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-      <Search className="h-4 w-4 text-text-muted" />
+          <Search className="h-4 w-4 text-text-muted" />
         </div>
 
-  <input
+        <input
           ref={inputRef}
           type="text"
           value={searchQuery}
@@ -158,7 +158,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
 
       {/* Suggestions Dropdown */}
       {isOpen && suggestions.length > 0 && (
-  <div
+        <div
           ref={dropdownRef}
           className="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg 
        border border-gray-200 dark:border-gray-700 dark:bg-gray-800 max-h-64 overflow-y-auto"

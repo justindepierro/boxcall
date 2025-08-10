@@ -9,7 +9,7 @@ interface TeamTrophyCaseProps {
 
 export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = ({ teamId }) => {
   return (
-    <Card className="p-6 border-2 border-dashed border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800">
+    <Card className="p-6 border-2 border-dashed border-gray-300 dark:border-gray-600 surface-card">
       <div className="flex items-center gap-2 mb-3">
         <Icon name="award" size="md" />
         <Typography variant="headline-md">Team Trophy Case</Typography>

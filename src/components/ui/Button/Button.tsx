@@ -13,10 +13,10 @@ import type {
 // Button variant styles configuration - Updated with jade/navy theme
 const buttonVariants: ButtonStylesConfig = {
   primary: {
-  // Darken base background (jade 600) for AA contrast with white text
-  base: "bg-brand-jade-dark text-white border border-brand-jade-dark",
-  hover: "hover:bg-brand-jade-darker hover:border-brand-jade-darker",
-  active: "active:bg-brand-jade-darker active:border-brand-jade-darker",
+    // Darken base background (jade 600) for AA contrast with white text
+    base: "bg-brand-jade-dark text-white border border-brand-jade-dark",
+    hover: "hover:bg-brand-jade-darker hover:border-brand-jade-darker",
+    active: "active:bg-brand-jade-darker active:border-brand-jade-darker",
     disabled:
       "disabled:bg-brand-jade-light disabled:border-brand-jade-light disabled:cursor-not-allowed",
     focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
@@ -72,10 +72,10 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
   },
   warning: {
-  // Use darker background and dark text for AA contrast
-  base: "bg-yellow-600 text-gray-900 border border-yellow-600",
-  hover: "hover:bg-yellow-700 hover:border-yellow-700",
-  active: "active:bg-yellow-700 active:border-yellow-700",
+    // Use darker background and dark text for AA contrast
+    base: "bg-yellow-600 text-gray-900 border border-yellow-600",
+    hover: "hover:bg-yellow-700 hover:border-yellow-700",
+    active: "active:bg-yellow-700 active:border-yellow-700",
     disabled:
       "disabled:bg-yellow-300 disabled:border-yellow-300 disabled:cursor-not-allowed",
     focus: "focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2",

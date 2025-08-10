@@ -48,14 +48,27 @@ export default tseslint.config([
         "warn",
         {
           allowBg: [
-            "bg-jade-600","bg-jade-700","bg-jade-800","bg-jade-900",
-            "bg-navy-600","bg-navy-700","bg-navy-800","bg-navy-900",
-            "bg-gray-800","bg-gray-900","bg-black",
-            "bg-red-600","bg-red-700","bg-red-800",
-            "bg-yellow-700","bg-yellow-800","bg-yellow-900",
-            "bg-brand-jade-dark","bg-brand-navy-dark"
-          ]
-        }
+            "bg-jade-600",
+            "bg-jade-700",
+            "bg-jade-800",
+            "bg-jade-900",
+            "bg-navy-600",
+            "bg-navy-700",
+            "bg-navy-800",
+            "bg-navy-900",
+            "bg-gray-800",
+            "bg-gray-900",
+            "bg-black",
+            "bg-red-600",
+            "bg-red-700",
+            "bg-red-800",
+            "bg-yellow-700",
+            "bg-yellow-800",
+            "bg-yellow-900",
+            "bg-brand-jade-dark",
+            "bg-brand-navy-dark",
+          ],
+        },
       ],
       "react-refresh/only-export-components": [
         "warn",
@@ -80,7 +93,7 @@ export default tseslint.config([
           "no-raw-button": noRawButtonRule,
         },
       },
-      "contrast": {
+      contrast: {
         rules: {
           "no-unsafe-white": noUnsafeWhiteRule,
         },

@@ -82,10 +82,10 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+    <div className="surface-card rounded-lg shadow-sm">
       {/* Header */}
       <div className="bc-card-padding border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+        <h2 className="text-xl font-semibold text-text-primary">
           Team Settings
         </h2>
         <p className="text-gray-600 dark:text-gray-400 mt-1">
@@ -112,7 +112,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
       <form onSubmit={handleSubmit} className="bc-card-padding space-y-8">
         {/* Team Logo */}
         <div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          <h3 className="text-lg font-medium text-text-primary mb-4">
             Team Logo
           </h3>
           <div className="flex items-center space-x-6">
@@ -146,12 +146,12 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
         {/* Basic Information */}
         <div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          <h3 className="text-lg font-medium text-text-primary mb-4">
             Basic Information
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 Team Name *
               </label>
               <Input
@@ -163,7 +163,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 School/Organization
               </label>
               <Input
@@ -174,7 +174,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 Season
               </label>
               <Input
@@ -185,7 +185,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 Logo URL
               </label>
               <Input
@@ -200,12 +200,12 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
         {/* Location Information */}
         <div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          <h3 className="text-lg font-medium text-text-primary mb-4">
             Location Information
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 Address
               </label>
               <Input
@@ -216,7 +216,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 City
               </label>
               <Input
@@ -227,7 +227,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 State
               </label>
               <Input
@@ -238,7 +238,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 ZIP Code
               </label>
               <Input
@@ -253,16 +253,16 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
         {/* Subscription Information */}
         <div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          <h3 className="text-lg font-medium text-text-primary mb-4">
             Subscription Status
           </h3>
           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-gray-900 dark:text-white capitalize">
+                <p className="font-medium text-text-primary capitalize">
                   {teamSettings.subscription.tier} Plan
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-text-secondary">
                   Features: {teamSettings.subscription.features.join(", ")}
                 </p>
               </div>
@@ -275,19 +275,19 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
         {/* Team ID */}
         <div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          <h3 className="text-lg font-medium text-text-primary mb-4">
             Team Information
           </h3>
           <div className="bg-jade-50 dark:bg-navy-900/20 rounded-md p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-gray-900 dark:text-white">
+                <p className="font-medium text-text-primary">
                   Team ID:{" "}
                   <code className="bg-white dark:bg-gray-800 px-2 py-1 rounded-sm text-jade-600 font-mono">
                     {teamSettings.id}
                   </code>
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <p className="text-sm text-text-secondary mt-1">
                   Internal team identifier
                 </p>
               </div>
