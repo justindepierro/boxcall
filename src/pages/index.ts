@@ -1,4 +1,4 @@
-export { CalendarPage } from "./CalendarPage";
+export { CalendarShellPage } from "./CalendarShellPage";
 export { DashboardPage } from "./DashboardPage";
 export { default as LoginPage } from "./LoginPage";
 export { ProfilePage } from "./ProfilePage";

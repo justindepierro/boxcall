@@ -13,12 +13,11 @@ export const LazyDashboardPage = lazy(
   () => import("../../pages/DashboardPage")
 );
 
-export const LazyCalendarPage = lazy(() => import("../../pages/CalendarPage"));
-
-// Phase 4: Calendar Shell (side-by-side / experimental) lazy route
-// Allows incremental migration & comparison before full replacement.
-export const LazyCalendarPageShell = lazy(
-  () => import("../../pages/CalendarPageShell")
+// Calendar Shell (final) – load direct page wrapper (legacy shims removed)
+export const LazyCalendarShellPage = lazy(() =>
+  import("../../pages/CalendarShellPage").then((m) => ({
+    default: m.CalendarShellPage,
+  }))
 );
 
 export const LazyLoginPage = lazy(() => import("../../pages/LoginPage"));

@@ -20,19 +20,28 @@ export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
   className,
 }) => {
   return (
-    <div className={"flex flex-wrap items-center justify-between gap-3 mb-4 " + (className || "")}>
+    <div
+      className={
+        "flex flex-wrap items-center justify-between gap-3 mb-4 " +
+        (className || "")
+      }
+    >
       <div className="flex items-center gap-2">
-        <Button variant="secondary" size="xs" onClick={onToday}>
+        <Button variant="subtle" size="xs" className="" onClick={onToday}>
           Today
         </Button>
-        <Button variant="secondary" size="xs" onClick={onPrev}>
+        <Button variant="subtle" size="xs" className="" onClick={onPrev}>
           ‹
         </Button>
-        <Button variant="secondary" size="xs" onClick={onNext}>
+        <Button variant="subtle" size="xs" className="" onClick={onNext}>
           ›
         </Button>
       </div>
-      <ViewSwitcher value={currentView} onChange={onViewChange} className="ml-auto" />
+      <ViewSwitcher
+        value={currentView}
+        onChange={onViewChange}
+        className="ml-auto"
+      />
     </div>
   );
 };

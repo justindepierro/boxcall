@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Button, Input } from "../../components/ui";
 import Icon from "../../components/ui/Icon/Icon";
 import { Typography } from "../../components/design-system/Typography";
-import type { CalendarFilters } from "../../services/calendarService"; // existing shape
+import type { CalendarFilters } from "../../domain/calendar/types"; // modern source
 
 export interface CalendarFiltersPanelProps {
   searchQuery: string;

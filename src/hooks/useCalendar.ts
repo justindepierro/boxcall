@@ -1,12 +1,7 @@
 /**
- * @deprecated Legacy hooks moved to src/legacy/calendar/useCalendar.ts
- * Use React Query hooks instead.
+ * Removed legacy calendar hooks.
+ * If you hit this file, update your import to use state/calendar/hooks.
  */
-let __legacyHooksStubWarned = false;
-if (process.env.NODE_ENV !== "production" && !__legacyHooksStubWarned) {
-  console.warn(
-    "[DEPRECATED-STUB] hooks/useCalendar.ts -> legacy/calendar/useCalendar.ts"
-  );
-  __legacyHooksStubWarned = true;
-}
-export * from "../legacy/calendar/useCalendar";
+throw new Error(
+  "useCalendar legacy hooks removed. Import from state/calendar/hooks instead."
+);

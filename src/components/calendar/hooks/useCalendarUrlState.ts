@@ -25,10 +25,14 @@ const reverseViewMap: Record<string, string> = {
   day: "timeGridDay",
 };
 
-export function mapInternalViewToQuery(view: string): CalendarUrlState["view"] | undefined {
+export function mapInternalViewToQuery(
+  view: string
+): CalendarUrlState["view"] | undefined {
   return viewMap[view];
 }
-export function mapQueryViewToInternal(view: string | undefined): string | undefined {
+export function mapQueryViewToInternal(
+  view: string | undefined
+): string | undefined {
   if (!view) return undefined;
   return reverseViewMap[view] || undefined;
 }
@@ -45,7 +49,11 @@ export function useCalendarUrlState(options: Options = {}) {
     const view = params.get("view") as CalendarUrlState["view"] | null;
     const date = params.get("date");
     const event = params.get("event");
-  return { view: (view as CalendarUrlState["view"]) || undefined, date: date || undefined, event: event || undefined };
+    return {
+      view: (view as CalendarUrlState["view"]) || undefined,
+      date: date || undefined,
+      event: event || undefined,
+    };
   }, [location.search]);
 
   const state = parse();
@@ -61,22 +69,32 @@ export function useCalendarUrlState(options: Options = {}) {
       const params = new URLSearchParams(location.search);
       // apply patch
       if (patch.view !== undefined) {
-        if (patch.view) params.set("view", patch.view); else params.delete("view");
+        if (patch.view) params.set("view", patch.view);
+        else params.delete("view");
       }
       if (patch.date !== undefined) {
-        if (patch.date) params.set("date", patch.date); else params.delete("date");
+        if (patch.date) params.set("date", patch.date);
+        else params.delete("date");
       }
       if (patch.event !== undefined) {
-        if (patch.event) params.set("event", patch.event); else params.delete("event");
+        if (patch.event) params.set("event", patch.event);
+        else params.delete("event");
       }
       const search = params.toString();
       const next = search ? `?${search}` : "";
       const now = Date.now();
-      const shouldReplace = replace || now - lastPushRef.current < replaceThreshold;
+      const shouldReplace =
+        replace || now - lastPushRef.current < replaceThreshold;
       if (shouldReplace) {
-        navigate({ pathname: location.pathname, search: next }, { replace: true });
+        navigate(
+          { pathname: location.pathname, search: next },
+          { replace: true }
+        );
       } else {
-        navigate({ pathname: location.pathname, search: next }, { replace: false });
+        navigate(
+          { pathname: location.pathname, search: next },
+          { replace: false }
+        );
         lastPushRef.current = now;
       }
     },

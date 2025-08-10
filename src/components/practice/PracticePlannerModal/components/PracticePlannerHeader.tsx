@@ -2,7 +2,7 @@ import React from "react";
 import { Typography } from "../../../design-system/Typography";
 import { Button } from "../../../../components/ui";
 import { Icon } from "../../../../components/ui/Icon/Icon";
-import type { CalendarEvent } from "../../../../services/calendarService";
+import type { CalendarEvent } from "../../../../domain/calendar/types";
 import { PDFExportTrigger } from "../../LazyPDFExport";
 import type {
   PracticeBlock,

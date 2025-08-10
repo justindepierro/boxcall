@@ -143,7 +143,9 @@ export const BoxCallCalendar = forwardRef<
             const term = highlightQuery.trim();
             const title = arg.event.title || "";
             const html = term ? highlightText(title, term) : escapeHtml(title);
-            return { html: `<div class="fc-event-title bc-event-title">${html}</div>` };
+            return {
+              html: `<div class="fc-event-title bc-event-title">${html}</div>`,
+            };
           }}
           // BoxCall styling
           themeSystem="standard"
@@ -208,7 +210,7 @@ function highlightText(text: string, term: string): string {
   return parts
     .map((part) =>
       pattern.test(part) && part.length
-  ? `<mark class="bc-hl">${escapeHtml(part)}</mark>`
+        ? `<mark class="bc-hl">${escapeHtml(part)}</mark>`
         : escapeHtml(part)
     )
     .join("");

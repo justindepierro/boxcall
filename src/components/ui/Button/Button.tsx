@@ -47,6 +47,14 @@ const buttonVariants: ButtonStylesConfig = {
     disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
     focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
   },
+  subtle: {
+    base: "bg-gray-50 text-gray-700 border border-gray-300",
+    hover: "hover:bg-gray-100 hover:text-gray-900",
+    active: "active:bg-gray-200 active:text-gray-900",
+    disabled:
+      "disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed",
+    focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
+  },
   link: {
     base: "bg-transparent text-interaction-jade border border-transparent p-0 h-auto",
     hover: "hover:text-brand-jade-dark hover:underline",

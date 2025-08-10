@@ -15,7 +15,7 @@ import {
   loadPracticeFromStorage,
   savePracticeToStorage,
 } from "../utils";
-import type { CalendarEvent } from "../../../services/calendarService";
+import type { CalendarEvent } from "../../../domain/calendar/types";
 
 export const usePracticeState = (event: CalendarEvent) => {
   // Core state

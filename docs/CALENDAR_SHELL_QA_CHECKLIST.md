@@ -3,10 +3,12 @@
 Goal: Verify new `CalendarShell` achieves functional parity with legacy `CalendarPage` before flipping feature flag default and removing legacy rendering.
 
 ## Environment
+
 - Build with `VITE_CALENDAR_SHELL=1`
 - (Optional) Dev mode profiles to populate events: set dev mode via existing UI/dev tools
 
 ## Core Flows
+
 1. Load `/calendar` (authenticated) – shell renders without errors (skeleton appears then events).
 2. View switching: Month ↔ Week ↔ Day updates calendar, URL `?view=` param reflects changes.
 3. Date navigation: Prev / Next / Today updates calendar; `?date=` param updates (YYYY-MM-DD).
@@ -28,17 +30,20 @@ Goal: Verify new `CalendarShell` achieves functional parity with legacy `Calenda
 19. Fallback: With feature flag off, legacy page still working (until flag flip phase).
 
 ## Edge Cases
+
 - Search term with special regex chars (e.g. `* ( ) + ?`) does not crash highlighting.
 - Empty event list (devMode blank profile) shows stats component gracefully.
 - Very rapid navigation (prev/next spam) does not throw errors.
 - Opening modal via deep link for event not yet in current range (should fail gracefully or fetch if implemented later).
 
 ## Pass Criteria
+
 - All applicable core flows pass (excluding deferred Phase 5 features) with no console errors.
 - No regressions vs legacy in create/update/delete flows.
 - URL state always matches visible calendar state after interactions.
 
 ## Sign-off Steps
+
 1. Complete checklist, record any deltas.
 2. Fix critical deltas (data loss, incorrect state sync).
 3. Update roadmap (Phase 4) marking QA parity achieved.

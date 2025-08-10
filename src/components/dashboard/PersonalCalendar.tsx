@@ -1,8 +1,9 @@
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUpcomingEvents } from "../../hooks/useCalendar";
-import type { CalendarEvent } from "../../services/calendarService";
+import { useEvents } from "../../state/calendar/hooks";
+import type { CalendarEvent } from "../../domain/calendar/types";
+import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
@@ -32,11 +33,15 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [quickEventTitle, setQuickEventTitle] = useState("");
 
-  // Use calendar hooks
-  const { upcomingEvents, loading: upcomingLoading } = useUpcomingEvents(
+  const { devMode } = useDevMode();
+  // Fetch a short horizon of events (next 14 days)
+  const rangeStart = new Date();
+  const rangeEnd = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+  const { data: upcomingEvents = [], isLoading: upcomingLoading } = useEvents({
     userId,
-    8
-  );
+    devMode,
+    range: { start: rangeStart.toISOString(), end: rangeEnd.toISOString() },
+  });
 
   // Handle event click
   const handleEventClick = (event: CalendarEvent) => {

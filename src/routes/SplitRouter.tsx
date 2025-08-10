@@ -23,8 +23,12 @@ const PlaybookPage = lazy(() =>
   )
 );
 
-const CalendarPage = lazy(() =>
-  dynamicImportWithRetry(() => import("../pages/CalendarPage"))
+const CalendarShellPage = lazy(() =>
+  dynamicImportWithRetry(() =>
+    import("../pages/CalendarShellPage").then((m) => ({
+      default: m.CalendarShellPage,
+    }))
+  )
 );
 
 const TeamSettingsPage = lazy(() =>
@@ -99,7 +103,7 @@ export const SplitRouter: React.FC = () => {
         path="/calendar"
         element={
           <RouteLoader routeName="calendar">
-            <CalendarPage />
+            <CalendarShellPage />
           </RouteLoader>
         }
       />

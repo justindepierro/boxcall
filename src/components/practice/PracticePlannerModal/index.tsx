@@ -1,5 +1,5 @@
 import React from "react";
-import type { CalendarEvent } from "../../../services/calendarService";
+import type { CalendarEvent } from "../../../domain/calendar/types";
 import { PracticePlannerHeader } from "./components/PracticePlannerHeader";
 import { PracticeTimeline } from "./components/PracticeTimeline";
 import { PracticeBlockList } from "./components/PracticeBlockList";

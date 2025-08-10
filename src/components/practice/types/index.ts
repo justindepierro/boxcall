@@ -3,7 +3,7 @@
  *
  * Shared TypeScript interfaces for the Practice Planner system
  */
-import type { CalendarEvent } from "../../../services/calendarService";
+import type { CalendarEvent } from "../../../domain/calendar/types";
 
 export interface PracticeGroup {
   id: string;

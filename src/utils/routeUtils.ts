@@ -15,7 +15,7 @@ export const preloadRoute = (routeName: string) => {
     case "practice-planner":
       return import("../pages/PracticePlanner");
     case "calendar":
-      return import("../pages/CalendarPage");
+      return import("../pages/CalendarShellPage");
     case "team-settings":
       return import("../pages/TeamSettings");
     case "login":

@@ -9,6 +9,7 @@ export type ButtonVariant =
   | "secondary" // Secondary action button
   | "outline" // Outline style button
   | "ghost" // Minimal ghost button
+  | "subtle" // Low-emphasis neutral button
   | "link" // Text link style
   | "danger" // Destructive action button
   | "success" // Success/confirmation button

@@ -7,8 +7,7 @@ import { Typography } from "../components/design-system/Typography";
 import {
   LazyDashboardPage,
   LazyLoginPage,
-  LazyCalendarPage,
-  LazyCalendarPageShell,
+  LazyCalendarShellPage,
   LazyProfilePage,
   LazyTeamBulletin,
   LazyTeamsPage,
@@ -99,18 +98,13 @@ export const AppRouter: React.FC = () => {
             }
           />
 
-          {/* Master Calendar - Available to all authenticated users */}
+          {/* Master Calendar (Shell) - Legacy fully removed */}
           <Route
             path="/calendar"
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
-                  {(() => {
-                    const sp = new URLSearchParams(window.location.search);
-                    const forceLegacy = sp.get("legacy") === "1";
-                    if (forceLegacy) return <LazyCalendarPage />;
-                    return <LazyCalendarPageShell />; // Shell is now default
-                  })()}
+                  <LazyCalendarShellPage />
                 </Suspense>
               </ProtectedRoute>
             }

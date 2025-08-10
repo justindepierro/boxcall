@@ -56,11 +56,11 @@ export interface Script {
 }
 // Props interfaces
 export interface PracticePlannerModalProps {
-  event: import("../../services/calendarService").CalendarEvent;
+  event: import("../../domain/calendar/types").CalendarEvent;
   onClose: () => void;
 }
 export interface PracticeHeaderProps {
-  event: import("../../services/calendarService").CalendarEvent;
+  event: import("../../domain/calendar/types").CalendarEvent;
   userRole: UserRole;
   timeAllocationMode: boolean;
   scaffoldMode: boolean;
@@ -74,7 +74,7 @@ export interface TimeSummaryProps {
   scheduledDuration: number;
   totalDuration: number;
   practiceBlocks: PracticeBlock[];
-  event: import("../../services/calendarService").CalendarEvent;
+  event: import("../../domain/calendar/types").CalendarEvent;
 }
 export interface PracticeBlocksListProps {
   practiceBlocks: PracticeBlock[];

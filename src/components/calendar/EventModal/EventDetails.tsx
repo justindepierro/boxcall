@@ -3,7 +3,11 @@ import { Button } from "../../ui";
 import Icon from "../../ui/Icon/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../../ui/Tag";
 import { Typography } from "../../design-system/Typography";
-import type { CalendarEvent, EventRSVP, CalendarComment } from "../../../domain/calendar/types";
+import type {
+  CalendarEvent,
+  EventRSVP,
+  CalendarComment,
+} from "../../../domain/calendar/types";
 
 interface EventDetailsProps {
   event: CalendarEvent;
@@ -71,7 +75,8 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
           })}
           {event.end && (
             <>
-              {" "}-{" "}
+              {" "}
+              -{" "}
               {new Date(event.end).toLocaleTimeString("en-US", {
                 hour: "numeric",
                 minute: "2-digit",
@@ -106,12 +111,13 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
         </div>
       )}
       <div className="flex space-x-3 pt-4 flex-wrap">
-        {event.type === "practice" && (profileRole === "coach" || profileRole === "admin") && (
-          <Button variant="primary" size="sm" onClick={onPlanPractice}>
-            <Icon name="file" size="sm" className="mr-1" />
-            Plan Practice
-          </Button>
-        )}
+        {event.type === "practice" &&
+          (profileRole === "coach" || profileRole === "admin") && (
+            <Button variant="primary" size="sm" onClick={onPlanPractice}>
+              <Icon name="file" size="sm" className="mr-1" />
+              Plan Practice
+            </Button>
+          )}
         {(profileRole === "coach" || profileRole === "admin") && event.id && (
           <Button variant="outline" size="sm" onClick={onEdit}>
             Edit
@@ -135,7 +141,10 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
       </div>
       {rsvpRequired && event.id && (
         <div className="mt-4 border-t border-gray-200 pt-4">
-          <Typography variant="body-sm" className="font-semibold mb-2 text-gray-700">
+          <Typography
+            variant="body-sm"
+            className="font-semibold mb-2 text-gray-700"
+          >
             RSVP
           </Typography>
           {rsvps.isLoading ? (
@@ -144,24 +153,26 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
             <div className="text-sm text-red-500">Failed to load RSVP</div>
           ) : (
             <div className="flex items-center gap-2 flex-wrap">
-              {(["attending", "maybe", "not_attending"] as const).map((status) => {
-                const isActive = myRsvpStatus === status;
-                return (
-                  <Button
-                    key={status}
-                    size="xs"
-                    variant={isActive ? "primary" : "outline"}
-                    disabled={rsvpPending || !userId}
-                    onClick={() => onRsvp(status)}
-                  >
-                    {status === "attending"
-                      ? "Going"
-                      : status === "maybe"
-                      ? "Maybe"
-                      : "Can't Go"}
-                  </Button>
-                );
-              })}
+              {(["attending", "maybe", "not_attending"] as const).map(
+                (status) => {
+                  const isActive = myRsvpStatus === status;
+                  return (
+                    <Button
+                      key={status}
+                      size="xs"
+                      variant={isActive ? "primary" : "outline"}
+                      disabled={rsvpPending || !userId}
+                      onClick={() => onRsvp(status)}
+                    >
+                      {status === "attending"
+                        ? "Going"
+                        : status === "maybe"
+                          ? "Maybe"
+                          : "Can't Go"}
+                    </Button>
+                  );
+                }
+              )}
               {rsvpPending && (
                 <span className="text-xs text-gray-500">Saving...</span>
               )}
@@ -171,7 +182,10 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
       )}
       {event.id && (
         <div className="mt-6 border-t border-gray-200 pt-4">
-          <Typography variant="body-sm" className="font-semibold mb-2 text-gray-700">
+          <Typography
+            variant="body-sm"
+            className="font-semibold mb-2 text-gray-700"
+          >
             Comments
           </Typography>
           {comments.isLoading ? (
@@ -182,11 +196,16 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
             <div className="space-y-3 max-h-40 overflow-y-auto pr-1">
               {comments.data && comments.data.length > 0 ? (
                 comments.data.map((c) => (
-                  <div key={c.id} className="p-2 bg-gray-50 rounded border border-gray-100">
+                  <div
+                    key={c.id}
+                    className="p-2 bg-gray-50 rounded border border-gray-100"
+                  >
                     <div className="text-xs text-gray-500 mb-1">
                       {new Date(c.created_at).toLocaleString()} • {c.user_id}
                     </div>
-                    <div className="text-sm text-gray-800 whitespace-pre-wrap">{c.body}</div>
+                    <div className="text-sm text-gray-800 whitespace-pre-wrap">
+                      {c.body}
+                    </div>
                   </div>
                 ))
               ) : (
