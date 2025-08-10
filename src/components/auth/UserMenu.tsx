@@ -42,11 +42,11 @@ export const UserMenu: React.FC = () => {
         onClick={() => setIsOpen(!isOpen)}
         variant="ghost"
         size="sm"
-        className="flex items-center space-x-2 px-3 py-2 h-auto font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white"
+        className="flex items-center space-x-2 px-3 py-2 h-auto font-medium text-text-secondary hover:text-text-primary"
         disabled={loading}
       >
         {/* Simple avatar circle */}
-        <div className="w-8 h-8 bg-jade-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
+  <div className="w-8 h-8 bg-jade-500 rounded-full flex items-center justify-center text-text-inverse font-medium text-sm">
           {userName.charAt(0).toUpperCase()}
         </div>
         <span className="hidden sm:block max-w-32 truncate">{userName}</span>
@@ -67,14 +67,14 @@ export const UserMenu: React.FC = () => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
+        <div className="absolute right-0 mt-2 w-64 surface-card rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
           <div className="py-1">
             {/* User Info */}
             <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-              <p className="text-sm font-medium text-gray-900 dark:text-white">
+              <p className="text-sm font-medium text-text-primary dark:text-text-inverse">
                 {userName}
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+              <p className="text-sm text-text-secondary truncate">
                 {userEmail}
               </p>
             </div>
@@ -87,7 +87,7 @@ export const UserMenu: React.FC = () => {
               }}
               variant="ghost"
               size="xs"
-              className="w-full justify-start px-4 py-2 h-auto text-sm text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white"
+              className="w-full justify-start px-4 py-2 h-auto text-sm text-text-secondary hover:text-text-primary"
             >
               Profile Settings
             </Button>
@@ -99,7 +99,7 @@ export const UserMenu: React.FC = () => {
               }}
               variant="ghost"
               size="xs"
-              className="w-full justify-start px-4 py-2 h-auto text-sm text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white"
+              className="w-full justify-start px-4 py-2 h-auto text-sm text-text-secondary hover:text-text-primary"
             >
               Team Settings
             </Button>
