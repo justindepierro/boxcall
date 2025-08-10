@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "../../components/ui";
+import { ViewSwitcher } from "./ViewSwitcher";
 
 export interface CalendarToolbarProps {
   currentView: "dayGridMonth" | "timeGridWeek" | "timeGridDay";
@@ -33,44 +34,7 @@ export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
           Next ›
         </Button>
       </div>
-      <div className="flex rounded-lg bg-gray-100 p-1">
-        <Button
-          variant={currentView === "dayGridMonth" ? "primary" : "ghost"}
-          size="xs"
-          onClick={() => onViewChange("dayGridMonth")}
-          className={
-            currentView === "dayGridMonth"
-              ? "bg-white text-navy-900"
-              : "text-gray-600"
-          }
-        >
-          Month
-        </Button>
-        <Button
-          variant={currentView === "timeGridWeek" ? "primary" : "ghost"}
-          size="xs"
-          onClick={() => onViewChange("timeGridWeek")}
-          className={
-            currentView === "timeGridWeek"
-              ? "bg-white text-navy-900"
-              : "text-gray-600"
-          }
-        >
-          Week
-        </Button>
-        <Button
-          variant={currentView === "timeGridDay" ? "primary" : "ghost"}
-          size="xs"
-          onClick={() => onViewChange("timeGridDay")}
-          className={
-            currentView === "timeGridDay"
-              ? "bg-white text-navy-900"
-              : "text-gray-600"
-          }
-        >
-          Day
-        </Button>
-      </div>
+  <ViewSwitcher value={currentView} onChange={onViewChange} />
     </div>
   );
 };
