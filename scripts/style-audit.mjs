@@ -42,6 +42,8 @@ const metrics = {
   rawButtonHeuristic: 0,
   surfaceCandidates: [],
   whiteOnWhiteInteractions: [],
+  tooltipInverseTotal: 0,
+  tooltipInverseSurface: 0,
 };
 
 const brandPatterns = [
@@ -59,6 +61,18 @@ const bgRegex = /\bbg-([a-zA-Z0-9-\/]+)/g; // captures tailwind bg-* tokens
 
 for (const file of files) {
   const content = readFileSync(file, "utf8");
+  // Tooltip usage sampling (heuristic: role="tooltip" or className containing 'tooltip')
+  if (/role=\"tooltip\"/.test(content)) {
+    const matches = [...content.matchAll(/role=\"tooltip\"/g)];
+    metrics.tooltipInverseTotal += matches.length;
+    // Count how many have surface-inverse in same line span
+    for (const m of matches) {
+      const lineStart = content.lastIndexOf("\n", m.index) + 1;
+      const lineEnd = content.indexOf("\n", m.index);
+      const line = content.slice(lineStart, lineEnd === -1 ? undefined : lineEnd);
+      if (/surface-inverse/.test(line)) metrics.tooltipInverseSurface++;
+    }
+  }
   // text-white occurrences
   const twMatches = [...content.matchAll(/class(Name)?=\"([^\"]*)\"/g)];
   for (const m of twMatches) {
@@ -179,6 +193,10 @@ mdLines.push(
       [
         "Raw <button> Heuristic (non-primitive)",
         String(metrics.rawButtonHeuristic),
+      ],
+      [
+        "Tooltip Inverse Adoption",
+        `${metrics.tooltipInverseSurface}/${metrics.tooltipInverseTotal}`,
       ],
     ],
     ["Metric", "Value"]
