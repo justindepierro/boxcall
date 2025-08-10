@@ -5,6 +5,7 @@
  * Can be used in any practice component where PDF export is needed.
  */
 import React from "react";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 import { Button } from "../ui";
 import Icon from "../ui/Icon/Icon";
 import { usePracticeScriptPDF } from "../../services/pdf/usePracticeScriptPDF";
@@ -136,28 +137,42 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
         )}
       </Button>
       {/* Error Tooltip */}
-      {error && (
-        <div className="absolute top-full left-0 mt-1 p-2 bg-red-50 border border-red-200 rounded-md shadow-sm z-10 min-w-max max-w-xs">
-          <div className="text-xs text-red-700">{error}</div>
-          <Button
-            variant="ghost"
-            size="xs"
-            onClick={clearError}
-            className="text-red-400 hover:text-red-600 ml-2 !h-auto !p-0"
-            aria-label="Clear error"
+        {error && (
+          <Tooltip
+            content={
+              <div className="flex items-start gap-2">
+                <span className="text-red-300 font-medium">{error}</span>
+                <Button
+                  variant="ghost"
+                  size="xs"
+                  onClick={clearError}
+                  className="text-red-300 hover:text-red-200 !h-auto !p-0"
+                  aria-label="Clear error"
+                >
+                  ×
+                </Button>
+              </div>
+            }
+            placement="bottom"
+            className="surface-inverse border-red-500/30 text-[11px]"
+            maxWidth={240}
           >
-            ×
-          </Button>
-        </div>
-      )}
+            <span className="sr-only">Error</span>
+          </Tooltip>
+        )}
       {/* No Data Tooltip */}
-      {!hasValidData && !isExporting && (
-        <div className="absolute top-full left-0 mt-1 p-2 bg-gray-50 border border-gray-200 rounded-md shadow-sm z-10 min-w-max">
-          <div className="text-xs text-gray-600">
-            Add practice blocks to enable PDF export
-          </div>
-        </div>
-      )}
+        {!hasValidData && !isExporting && (
+          <Tooltip
+            content={
+              <span className="text-gray-200">Add practice blocks to enable PDF export</span>
+            }
+            placement="bottom"
+            className="surface-inverse text-[11px]"
+            maxWidth={220}
+          >
+            <span className="sr-only">Info</span>
+          </Tooltip>
+        )}
     </div>
   );
 };
