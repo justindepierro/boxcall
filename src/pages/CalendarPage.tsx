@@ -1,26 +1,25 @@
 import React, { useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useAuth } from "../app/auth-store";
-import type { BoxCallCalendarRef } from "../components/calendar/BoxCallCalendar";
-import { BoxCallCalendar } from "../components/calendar/BoxCallCalendar";
-import "../components/calendar/BoxCallCalendar.css";
-import { Typography } from "../components/design-system/Typography";
-import { PracticePlannerModal } from "../components/practice/PracticePlannerModal";
-import { Button, Card } from "../components/ui";
-import Icon from "../components/ui/Icon/Icon";
-import { EventModal } from "../components/calendar/EventModal";
-import CalendarStats from "../components/calendar/CalendarStats";
-import CalendarFiltersPanel from "../components/calendar/CalendarFiltersPanel";
-import CalendarToolbar from "../components/calendar/CalendarToolbar";
+import { useAuth } from "@app/auth-store";
+import type { BoxCallCalendarRef } from "@components/calendar";
+import {
+  BoxCallCalendar,
+  CalendarToolbar,
+  CalendarFiltersPanel,
+  CalendarStats,
+  EventModal,
+} from "@components/calendar";
+import "@components/calendar/BoxCallCalendar.css";
+import { Typography } from "@components/design-system/Typography";
+import { PracticePlannerModal } from "@components/practice/PracticePlannerModal";
+import { Button, Card } from "@components/ui";
+import Icon from "@components/ui/Icon/Icon";
 
 // Calendar hooks (React Query)
-import { useEvents } from "../state/calendar/hooks";
-import { useCreateEvent } from "../state/calendar/hooks";
-import { useDeleteEvent } from "../state/calendar/hooks";
-import { useUpdateEvent } from "../state/calendar/hooks";
-import { useDevMode } from "../app/dev-mode-hooks";
-import type { CalendarFilters } from "../services/calendarService";
-import type { CalendarEvent } from "../domain/calendar/types";
+import { useEvents, useCreateEvent, useDeleteEvent, useUpdateEvent } from "@state/calendar/hooks";
+import { useDevMode } from "@app/dev-mode-hooks";
+import type { CalendarFilters } from "@lib/../services/calendarService"; // keep legacy path reference if needed
+import type { CalendarEvent } from "@lib/../domain/calendar/types";
 import { CalendarService } from "../services/calendarService"; // legacy search only (to be migrated)
 interface CalendarPageState {
   userTeamsFilter?: string[];
@@ -327,6 +326,3 @@ export const CalendarPage: React.FC = () => {
   );
 };
 export default CalendarPage;
-
-// Debug: ensure parser reads end of file correctly
-export const __CALENDAR_PAGE_LOADED = true;
