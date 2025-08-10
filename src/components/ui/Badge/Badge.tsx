@@ -146,7 +146,7 @@ export const Badge: React.FC<BadgeProps> = ({
       "hover:bg-jade-100 hover:text-jade-800 dark:bg-jade-900/40 dark:text-jade-300 dark:border-jade-800 dark:hover:bg-jade-900/60"
     ),
     premium: cn(
-      "bg-gradient-to-r from-purple-50 to-indigo-50 text-purple-700 border border-purple-200",
+      "premium-badge decorative-gradient bg-gradient-to-r from-purple-50 to-indigo-50 text-purple-700 border border-purple-200",
       "hover:from-purple-100 hover:to-indigo-100 hover:text-purple-800 dark:text-purple-200 dark:from-purple-900/40 dark:to-indigo-900/40 dark:border-purple-800"
     ),
   };

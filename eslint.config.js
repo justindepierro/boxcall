@@ -84,6 +84,8 @@ export default tseslint.config([
           caughtErrorsIgnorePattern: "^_",
         },
       ],
+      "boxcall-style/no-legacy-badge-variants": "warn",
+      "boxcall-style/no-raw-surface-gradients": "warn",
     },
   },
   // Plugin injection for custom rule namespace
@@ -99,6 +101,42 @@ export default tseslint.config([
           "no-unsafe-white": noUnsafeWhiteRule,
         },
       },
+      "boxcall-style": {
+        rules: {
+          'no-legacy-badge-variants': {
+            meta: { type: 'problem', docs: { description: 'Disallow legacy Badge variant names' }, schema: [] },
+            create(context) {
+              const legacy = new Set(['default','urgency','achievement','information','attention']);
+              return {
+                JSXOpeningElement(node) {
+                  if (node.name.type === 'JSXIdentifier' && node.name.name === 'Badge') {
+                    const variantAttr = node.attributes.find(a => a.type === 'JSXAttribute' && a.name.name === 'variant');
+                    if (variantAttr && variantAttr.value && variantAttr.value.type === 'Literal' && legacy.has(variantAttr.value.value)) {
+                      context.report({ node: variantAttr, message: `Legacy Badge variant "${variantAttr.value.value}" — use canonical (neutral, info, success, warning, danger, accent, premium).` });
+                    }
+                  }
+                }
+              };
+            }
+          },
+          'no-raw-surface-gradients': {
+            meta: { type: 'suggestion', docs: { description: 'Discourage ad-hoc bg-gradient-* containers; prefer semantic surface + utility' }, schema: [] },
+            create(context) {
+              return {
+                JSXAttribute(attr) {
+                  if (attr.name && attr.name.name === 'className' && attr.value && attr.value.type === 'Literal') {
+                    const v = String(attr.value.value);
+                    const filename = context.getFilename();
+                    if (/bg-gradient-to-/.test(v) && !/surface-/.test(v) && !/(decorative-gradient|premium-badge)/.test(v) && !/\/Badge\//.test(filename)) {
+                      context.report({ node: attr, message: 'Raw gradient background without semantic surface-* class. Wrap or replace with surface-card + decorative overlay.' });
+                    }
+                  }
+                }
+              };
+            }
+          }
+        }
+      }
     },
   },
 ]);

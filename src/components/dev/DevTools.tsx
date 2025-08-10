@@ -216,7 +216,8 @@ export const DevTools: React.FC = () => {
     >
       <div className="surface-card border border-gray-300 dark:border-gray-600 rounded-lg shadow-2xl max-w-md">
         {/* Header */}
-        <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-text-inverse rounded-t-lg">
+        <div className="flex items-center justify-between p-3 surface-inverse relative overflow-hidden rounded-t-lg">
+          <div className="absolute inset-0 pointer-events-none opacity-20 decorative-gradient bg-gradient-to-r from-jade-500/40 via-purple-500/30 to-blue-500/40" />
           <div className="flex items-center">
             <Icon
               name="settings"
