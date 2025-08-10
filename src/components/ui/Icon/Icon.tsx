@@ -65,7 +65,8 @@ const ICON_MAP = {
 
   // Status & Feedback
   check: LucideIcons.Check,
-  "alert-triangle": LucideIcons.AlertTriangle,
+  warning: LucideIcons.AlertTriangle,
+  "alert-triangle": LucideIcons.AlertTriangle, // alias
   error: LucideIcons.AlertCircle,
   info: LucideIcons.Info,
   alert: LucideIcons.AlertTriangle,
@@ -132,30 +133,22 @@ export const Icon: React.FC<IconProps> = ({
 }) => {
   const IconComponent = ICON_MAP[name];
 
+  const resolvedSize =
+    typeof size === "number" ? size : (SIZE_MAP[size] ?? SIZE_MAP.md);
+
   if (!IconComponent) {
     console.warn(`Icon "${name}" not found`);
-    return <LucideIcons.HelpCircle size={SIZE_MAP[size]} />;
+    return <LucideIcons.HelpCircle size={resolvedSize} />;
   }
 
   const colorClass =
     color === "current"
       ? ""
-      : getComponentColor(
-          "icon",
-          color === "navy" ? "secondary" : color
-        );
-
-  const resolvedSize =
-    typeof size === "number" ? size : SIZE_MAP[size] ?? SIZE_MAP.md;
-    return (
-      <LucideIcons.HelpCircle
-        size={typeof size === "number" ? size : SIZE_MAP[size] ?? SIZE_MAP.md}
-      />
-    );
+      : getComponentColor("icon", color === "navy" ? "secondary" : color);
 
   return (
     <IconComponent
-  size={resolvedSize}
+      size={resolvedSize}
       className={`${colorClass} ${className}`.trim()}
     />
   );
