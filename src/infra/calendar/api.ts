@@ -4,11 +4,11 @@ import {
   parseCalendarEvents,
   parseCalendarEventCreate,
   parseCalendarEventUpdate,
-  parseEventRSVPs,
   parseCalendarComments,
   parseCalendarCommentCreate,
   parseCalendarEvent,
 } from "../../domain/calendar/schema";
+import { CalendarRSVP } from "./rsvp";
 import type {
   CalendarEventCreate,
   CalendarComment,
@@ -127,26 +127,6 @@ function professionalDevEvents(userId: string, devMode: string): MockEvent[] {
   return [];
 }
 
-function mockRSVPs(eventId: string) {
-  return [
-    {
-      id: `rsvp-1-${eventId}`,
-      event_id: eventId,
-      user_id: "user-1",
-      status: "attending",
-      created_at: "2025-08-01T10:00:00Z",
-      updated_at: "2025-08-01T10:00:00Z",
-    },
-    {
-      id: `rsvp-2-${eventId}`,
-      event_id: eventId,
-      user_id: "user-2",
-      status: "maybe",
-      created_at: "2025-08-01T11:00:00Z",
-      updated_at: "2025-08-01T11:00:00Z",
-    },
-  ];
-}
 
 // In-memory created events (test/dev only)
 const createdEvents: CalendarEvent[] = [];
@@ -222,7 +202,7 @@ export const CalendarAPI = {
     );
   },
   async getRSVPs(eventId: string) {
-    return parseEventRSVPs(mockRSVPs(eventId));
+    return CalendarRSVP.list(eventId);
   },
   async listComments(_eventId: string): Promise<CalendarComment[]> {
     return parseCalendarComments([]);

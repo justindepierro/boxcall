@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { QueryKey } from "@tanstack/react-query";
 import { calendarKeys, type EventFilters } from "./queryKeys";
 import { CalendarAPI } from "../../infra/calendar/api";
+import { CalendarRSVP } from "../../infra/calendar/rsvp";
 import type {
   CalendarEventCreate,
   EventRSVP,
@@ -197,11 +198,11 @@ export function useRSVPs(eventId: string) {
 export function useUpdateRSVP(eventId: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (_vars: {
+    mutationFn: (vars: {
       userId: string;
       status: EventRSVP["status"];
       note?: string;
-    }) => Promise.resolve(null), // placeholder
+    }) => CalendarRSVP.upsert(eventId, vars.userId, vars.status, vars.note),
     onMutate: async (vars) => {
       const key = calendarKeys.rsvps(eventId);
       const prev = qc.getQueryData<EventRSVP[]>(key);
@@ -234,8 +235,22 @@ export function useUpdateRSVP(eventId: string) {
     },
     onError: (_err, _vars, ctx) =>
       ctx?.prev && qc.setQueryData(calendarKeys.rsvps(eventId), ctx.prev),
-    onSettled: () =>
-      qc.invalidateQueries({ queryKey: calendarKeys.rsvps(eventId) }),
+    onSuccess: (saved, vars) => {
+      if (!saved) return;
+      const key = calendarKeys.rsvps(eventId);
+      const current = qc.getQueryData<EventRSVP[]>(key);
+      if (current) {
+        const updated = current.map((r) =>
+          r.user_id === vars.userId ? saved : r
+        );
+        // If was a new RSVP, ensure it's present
+        const ensure = updated.some((r) => r.user_id === vars.userId)
+          ? updated
+          : [...updated, saved];
+        qc.setQueryData<EventRSVP[]>(key, ensure);
+      }
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: calendarKeys.rsvps(eventId) }),
   });
 }
 
