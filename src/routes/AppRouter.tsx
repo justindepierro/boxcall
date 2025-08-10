@@ -105,11 +105,12 @@ export const AppRouter: React.FC = () => {
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
-                  {import.meta.env.VITE_CALENDAR_SHELL === "1" ? (
-                    <LazyCalendarPageShell />
-                  ) : (
-                    <LazyCalendarPage />
-                  )}
+                  {(() => {
+                    const sp = new URLSearchParams(window.location.search);
+                    const forceLegacy = sp.get("legacy") === "1";
+                    if (forceLegacy) return <LazyCalendarPage />;
+                    return <LazyCalendarPageShell />; // Shell is now default
+                  })()}
                 </Suspense>
               </ProtectedRoute>
             }
