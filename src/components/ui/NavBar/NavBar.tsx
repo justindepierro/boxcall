@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import React, { useState } from "react";
 import { Button } from "../Button";
+import { ThemeToggle } from "../ThemeToggle/ThemeToggle";
 export interface NavBarItem {
   /** Unique identifier for the nav item */
   id: string;
@@ -69,6 +70,7 @@ const NavBarItem: React.FC<{
     }
   };
   const hasDropdown = item.children && item.children.length > 0;
+
   return (
     <div className={`relative ${isMobile ? "block" : "inline-block"}`}>
       <div className={getNavItemStyles(item)} onClick={handleClick}>
@@ -146,6 +148,14 @@ export const NavBar: React.FC<NavBarProps> = ({
   showMobileMenu = true,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mergedActions = actions ? (
+    <div className="flex items-center gap-2">
+      {actions}
+      <ThemeToggle />
+    </div>
+  ) : (
+    <ThemeToggle />
+  );
   const handleMobileMenuToggle = () => {
     const newState = !isMobileMenuOpen;
     setIsMobileMenuOpen(newState);
@@ -177,7 +187,7 @@ export const NavBar: React.FC<NavBarProps> = ({
             </div>
           </div>
           {/* Actions */}
-          <div className="hidden md:block">{actions}</div>
+          <div className="hidden md:block">{mergedActions}</div>
           {/* Mobile menu button */}
           {showMobileMenu && (
             <div className="md:hidden">
@@ -227,11 +237,9 @@ export const NavBar: React.FC<NavBarProps> = ({
                 />
               ))}
               {/* Mobile Actions */}
-              {actions && (
-                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                  {actions}
-                </div>
-              )}
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                {mergedActions}
+              </div>
             </div>
           </div>
         )}
