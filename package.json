@@ -35,6 +35,7 @@
   "tokens:build": "tsx scripts/generate-tokens-css.ts && prettier --write src/styles/generated-tokens.css",
   "tokens:verify": "tsx scripts/verify-generated-tokens.ts",
   "themes:build": "tsx src/themes/build-themes.ts && prettier --write src/styles/generated-themes.css",
+  "themes:verify": "tsx scripts/verify-generated-themes.ts",
     "themes:validate-contrast": "tsx src/scripts/validate-theme-contrast.ts",
     "style:theme-drift": "node scripts/theme-drift-audit.mjs",
     "style:contrast-matrix": "node scripts/contrast-matrix.mjs",
