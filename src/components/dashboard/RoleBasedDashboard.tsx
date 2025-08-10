@@ -54,14 +54,14 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div className="min-h-screen surface-app">
       {/* Welcome Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm border-b">
+  <div className="surface-header shadow-sm border-b">
         <div className="max-w-7xl mx-auto bc-container-padding">
           <div className="py-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h1 className="text-2xl font-bold text-text-primary dark:text-text-inverse">
                   Welcome back, {profile.full_name || "User"}!
                 </h1>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -93,7 +93,7 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
         >
           {isCoach && (
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+              <h2 className="text-xl font-semibold text-text-primary dark:text-text-inverse mb-6 flex items-center">
                 <Icon name="users" className="mr-3" />
                 Coach Dashboard
               </h2>
@@ -103,7 +103,7 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
 
           {isPlayer && (
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+              <h2 className="text-xl font-semibold text-text-primary dark:text-text-inverse mb-6 flex items-center">
                 <Icon name="user" className="mr-3" />
                 Player Dashboard
               </h2>
@@ -113,7 +113,7 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
 
           {isFamily && (
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+              <h2 className="text-xl font-semibold text-text-primary dark:text-text-inverse mb-6 flex items-center">
                 <Icon name="home" className="mr-3" />
                 Family Dashboard
               </h2>
@@ -123,7 +123,7 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
 
           {isAdmin && (
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+              <h2 className="text-xl font-semibold text-text-primary dark:text-text-inverse mb-6 flex items-center">
                 <Icon name="settings" className="mr-3" />
                 Admin Dashboard
               </h2>
@@ -143,8 +143,8 @@ const AdminDashboard: React.FC = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bc-grid-gap">
       {/* System Overview */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow bc-card-padding">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+  <div className="surface-card rounded-lg shadow bc-card-padding">
+  <h3 className="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 flex items-center">
           <Icon name="database" className="mr-2" />
           System Overview
         </h3>
@@ -153,7 +153,7 @@ const AdminDashboard: React.FC = () => {
             <span className="text-gray-600 dark:text-gray-400">
               Active Teams
             </span>
-            <span className="font-medium text-gray-900 dark:text-white">
+            <span className="font-medium text-text-primary dark:text-text-inverse">
               12
             </span>
           </div>
@@ -161,7 +161,7 @@ const AdminDashboard: React.FC = () => {
             <span className="text-gray-600 dark:text-gray-400">
               Total Users
             </span>
-            <span className="font-medium text-gray-900 dark:text-white">
+            <span className="font-medium text-text-primary dark:text-text-inverse">
               247
             </span>
           </div>
@@ -175,8 +175,8 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* User Management */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow bc-card-padding">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+  <div className="surface-card rounded-lg shadow bc-card-padding">
+  <h3 className="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 flex items-center">
           <Icon name="users" className="mr-2" />
           User Management
         </h3>
@@ -194,8 +194,8 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow bc-card-padding">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+  <div className="surface-card rounded-lg shadow bc-card-padding">
+  <h3 className="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 flex items-center">
           <Icon name="zap" className="mr-2" />
           Quick Actions
         </h3>
