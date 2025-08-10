@@ -35,28 +35,17 @@ export interface NavBarProps {
   /** Whether to show mobile menu button */
   showMobileMenu?: boolean;
 }
-// NavBar styles using only Tailwind dark mode classes
+// NavBar styles leveraging semantic surface + token utilities
 const getNavBarStyles = (sticky: boolean) => {
-  const baseStyles = `
-    w-full transition-all duration-200 ease-in-out
-    border-b border-gray-200 dark:border-gray-700
-    bg-white dark:bg-gray-800
-  `;
+  const base = `surface-nav w-full transition-all duration-200 ease-in-out backdrop-blur-xs`;
   const stickyStyles = sticky ? "sticky top-0 z-40 shadow-sm" : "";
-  return `${baseStyles} ${stickyStyles}`;
+  return `${base} ${stickyStyles}`;
 };
 const getNavItemStyles = (item: NavBarItem) => {
-  const baseStyles = `
-    relative flex items-center px-3 py-2 rounded-md text-sm font-medium
-    transition-colors duration-200 ease-in-out cursor-pointer
-  `;
-  if (item.disabled) {
-    return `${baseStyles} text-gray-400 dark:text-gray-500 cursor-not-allowed`;
-  }
-  if (item.active) {
-    return `${baseStyles} bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-white`;
-  }
-  return `${baseStyles} text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white`;
+  let classes = `nav-item-base`;
+  if (item.disabled) classes += " nav-item-disabled";
+  if (item.active) classes += " nav-item-active";
+  return classes;
 };
 const getBadgeStyles = () => {
   return `
@@ -87,9 +76,7 @@ const NavBarItem: React.FC<{
         <span>{item.label}</span>
         {hasDropdown && (
           <svg
-            className={`ml-1 h-4 w-4 transition-transform duration-200 ${
-              isDropdownOpen ? "rotate-180" : ""
-            }`}
+            className={`ml-0.5 h-4 w-4 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -109,8 +96,7 @@ const NavBarItem: React.FC<{
         <div
           className={`
           ${isMobile ? "ml-4 mt-1" : "absolute left-0 mt-2 w-48"}
-          bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700
-          border rounded-md shadow-lg z-50
+          surface-card border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50
         `}
         >
           {item.children?.map((childItem, index) => (

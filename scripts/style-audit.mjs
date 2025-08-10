@@ -102,22 +102,31 @@ for (const file of files) {
 
     // White-on-white interaction detection
     // Heuristic: button-like element (inline-flex + focus ring or variant markers) inside white/gray-50 surface without contrasting hover/background
-    const isGhostyButton = /inline-flex/.test(cls) && /focus:ring/.test(cls) && /btn|Button|variant|hover:/.test(cls);
+    const isGhostyButton =
+      /inline-flex/.test(cls) &&
+      /focus:ring/.test(cls) &&
+      /btn|Button|variant|hover:/.test(cls);
     const transparentBg = !/\bbg-/.test(cls) || /bg-transparent/.test(cls);
     const lacksHoverBg = !/hover:bg-/.test(cls) && !/hover:surface-/.test(cls);
     // Look backwards a little for container context
     if (isGhostyButton && transparentBg && lacksHoverBg) {
-      const contextSnippet = content.slice(Math.max(0, m.index - 400), m.index + cls.length + 50);
-      if (/bg-(white|gray-50)/.test(contextSnippet) || /surface-card/.test(contextSnippet)) {
+      const contextSnippet = content.slice(
+        Math.max(0, m.index - 400),
+        m.index + cls.length + 50
+      );
+      if (
+        /bg-(white|gray-50)/.test(contextSnippet) ||
+        /surface-card/.test(contextSnippet)
+      ) {
         // Ensure no immediate border/shadow giving separation
         if (!/border(-[a-z0-9-]+)?\s/.test(cls) && !/shadow/.test(cls)) {
           const upto = content.slice(0, m.index);
-            const line = upto.split(/\n/).length;
-            metrics.whiteOnWhiteInteractions.push({
-              file: relative(ROOT, file),
-              line,
-              className: cls.slice(0,120),
-            });
+          const line = upto.split(/\n/).length;
+          metrics.whiteOnWhiteInteractions.push({
+            file: relative(ROOT, file),
+            line,
+            className: cls.slice(0, 120),
+          });
         }
       }
     }
