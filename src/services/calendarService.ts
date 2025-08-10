@@ -13,6 +13,7 @@ export type {
   EventRSVP,
   CalendarFilters,
 } from "../domain/calendar/types"; // Re-export for backward compatibility
+import { parseCalendarEvents, parseEventRSVPs } from "../domain/calendar/schema";
 
 /**
  * Calendar Service
@@ -35,14 +36,16 @@ export class CalendarService {
 
       // For professional dev profiles, get realistic dev data
       if (devMode?.startsWith("dev_")) {
-        return this.getProfessionalDevEvents(userId, devMode, filters);
+        return parseCalendarEvents(
+          this.getProfessionalDevEvents(userId, devMode, filters)
+        );
       }
 
       // For production/real modes, try to get real data
-      if (devMode === "production" || devMode === "super_admin_real") {
+    if (devMode === "production" || devMode === "super_admin_real") {
         try {
-          const realEvents = await this.getRealUserEvents(userId, filters);
-          return realEvents;
+      const realEvents = await this.getRealUserEvents(userId, filters);
+      return parseCalendarEvents(realEvents);
         } catch (error) {
           console.warn("Could not fetch real events, returning empty:", error);
           return [];
@@ -51,12 +54,12 @@ export class CalendarService {
 
       // For legacy mock modes, return mock data
       if (devMode === "super_admin_mock" || devMode?.startsWith("view_as_")) {
-        return this.getMockUserEvents(userId, filters);
+        return parseCalendarEvents(this.getMockUserEvents(userId, filters));
       }
 
       // Default: try real data first, fallback to empty
       try {
-        return await this.getRealUserEvents(userId, filters);
+        return parseCalendarEvents(await this.getRealUserEvents(userId, filters));
       } catch (error) {
         console.warn("Could not fetch real events, returning empty:", error);
         return [];
@@ -186,7 +189,7 @@ export class CalendarService {
       //   .eq('event_id', eventId)
       //   .order('created_at', { ascending: false });
 
-      return this.getMockRSVPs(eventId);
+  return parseEventRSVPs(this.getMockRSVPs(eventId));
     } catch (error) {
       console.error("Error fetching event RSVPs:", error);
       return [];
