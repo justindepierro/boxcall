@@ -41,6 +41,7 @@
     "validate:full": "npm run type-check && npm run lint && npm run test && npm run style:gate && npm run tokens:verify && npm run themes:verify && npx ts-unused-exports tsconfig.app.json --ignoreFiles=\"test,spec,stories\" && npx bundlesize",
     "codemod:badge-variants": "node scripts/codemod-badge-variants.mjs",
     "codemod:tooltip-bg": "node scripts/codemod-tooltip-bg.mjs",
+    "codemod:raw-gray": "node scripts/codemod-raw-gray.mjs",
     "tokens:build": "tsx scripts/generate-tokens-css.ts && prettier --write src/styles/generated-tokens.css",
     "tokens:verify": "tsx scripts/verify-generated-tokens.ts",
     "themes:build": "tsx src/themes/build-themes.ts && prettier --write src/styles/generated-themes.css",
@@ -52,11 +53,11 @@
     "style:contrast:buttons": "node scripts/contrast-check.mjs",
     "style:audit": "node scripts/style-audit.mjs",
     "style:gate": "node scripts/style-ci-gate.mjs",
-  "audit:lighthouse": "npm run build && lhci autorun",
-  "diagnostics:open": "vite --open /dev/diagnostics",
-  "release:version": "tsx scripts/release-version.ts",
-  "baseline:create": "node scripts/create-baseline.mjs",
-  "perf:budgets": "node scripts/perf-budget-check.mjs"
+    "audit:lighthouse": "npm run build && lhci autorun",
+    "diagnostics:open": "vite --open /dev/diagnostics",
+    "release:version": "tsx scripts/release-version.ts",
+    "baseline:create": "node scripts/create-baseline.mjs",
+    "perf:budgets": "node scripts/perf-budget-check.mjs"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.18",
