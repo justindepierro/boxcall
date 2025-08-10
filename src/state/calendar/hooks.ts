@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
 import type { QueryKey } from "@tanstack/react-query";
 import { calendarKeys, type EventFilters } from "./queryKeys";
 import { CalendarAPI } from "../../infra/calendar/api";
@@ -41,6 +42,23 @@ export function useEvents(params: EventsQueryParams) {
     // Keep previous data to avoid loading jank when filters/range adjust
     placeholderData: (prev) => prev,
   });
+}
+
+// Client-side search derived from cached events (Phase 3 interim until server-side filtering integrated)
+export function useSearchEvents(query: string, params: EventsQueryParams) {
+  const eventsQuery = useEvents(params);
+  const lc = query.trim().toLowerCase();
+  const filtered = useMemo(() => {
+    if (!lc) return eventsQuery.data || [];
+    const source = eventsQuery.data || [];
+    return source.filter(
+      (e) =>
+        e.title?.toLowerCase().includes(lc) ||
+        (e.location && e.location.toLowerCase().includes(lc)) ||
+        (Array.isArray(e.tags) && e.tags.some((t) => t.toLowerCase().includes(lc)))
+    );
+  }, [lc, eventsQuery.data]);
+  return { ...eventsQuery, data: filtered };
 }
 
 export function useEvent(id: string) {

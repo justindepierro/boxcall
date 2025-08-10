@@ -16,11 +16,16 @@ import { Button, Card } from "@components/ui";
 import Icon from "@components/ui/Icon/Icon";
 
 // Calendar hooks (React Query)
-import { useEvents, useCreateEvent, useDeleteEvent, useUpdateEvent } from "@state/calendar/hooks";
+import {
+  useCreateEvent,
+  useDeleteEvent,
+  useUpdateEvent,
+  useSearchEvents,
+} from "@state/calendar/hooks";
 import { useDevMode } from "@app/dev-mode-hooks";
 import type { CalendarFilters } from "@lib/../services/calendarService"; // keep legacy path reference if needed
 import type { CalendarEvent } from "@lib/../domain/calendar/types";
-import { CalendarService } from "../services/calendarService"; // legacy search only (to be migrated)
+// Legacy CalendarService no longer referenced for search (search now client-side via useSearchEvents)
 interface CalendarPageState {
   userTeamsFilter?: string[];
   teamFilter?: string;
@@ -82,12 +87,7 @@ export const CalendarPage: React.FC = () => {
   });
   const deleteEventMutation = useDeleteEvent();
   const updateEventMutation = useUpdateEvent();
-  const {
-    data: events = [],
-    isLoading: loading,
-    isError,
-    error: eventsError,
-  } = useEvents({
+  const baseQueryParams = {
     userId: user?.id || "",
     devMode,
     filters: {
@@ -98,7 +98,13 @@ export const CalendarPage: React.FC = () => {
     range: filters.dateRange
       ? { start: filters.dateRange.start, end: filters.dateRange.end }
       : undefined,
-  });
+  };
+  const {
+    data: events = [],
+    isLoading: loading,
+    isError,
+    error: eventsError,
+  } = useSearchEvents(searchQuery, baseQueryParams);
   const error = isError
     ? eventsError instanceof Error
       ? eventsError.message
@@ -106,15 +112,9 @@ export const CalendarPage: React.FC = () => {
     : null;
   // Handle search
   const handleSearch = async () => {
-    if (searchQuery.trim()) {
-      try {
-        // TODO (Phase 3+): incorporate filters into search when infra supports it
-        await CalendarService.searchEvents(searchQuery);
-        // TODO: Update events with search results
-      } catch (error) {
-        console.error("Search failed:", error);
-      }
-    }
+    // Client-side derived; future: trigger server search or invalidate search-specific key
+    // No-op placeholder to keep existing UI wiring (enter key etc.)
+    return Promise.resolve();
   };
   // Handle event click
   const handleEventClick = (event: CalendarEvent) => {
