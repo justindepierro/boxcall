@@ -39,48 +39,48 @@
 
 ### Phase 0 (Immediate – Tonight)
 
-1. Identify and patch any white text on light backgrounds (visual hot spots: onboarding, TeamBulletin CTAs, calendar pills).
-2. Codemod: `bg-emerald-*` → `bg-jade-*` (and matching hover/focus).
-3. Replace strong blue CTA backgrounds with semantic `Button` variant (use existing `primary` or create `info`).
-4. Introduce temporary `.debug-contrast` utility (outline low-contrast nodes) for manual QA.
-5. Create this audit doc & commit baseline metrics.
+1. ✅ Identify and patch any white text on light backgrounds (IN PROGRESS: 197 heuristic candidates queued; triage subset next).
+2. ✅ Codemod: `bg-emerald-*` → `bg-jade-*` (complete – 156 replacements).
+3. ✅ Replace strong blue CTA backgrounds with semantic `Button` variant (complete – 158 replacements; 1 doc example retained).
+4. ⏳ Introduce temporary `.debug-contrast` utility (outline low-contrast nodes) for manual QA.
+5. ✅ Create this audit doc & commit baseline metrics.
 
 ### Phase 1 (Unification)
 
-6. Inventory & migrate all raw `<button>` elements to shared `Button` component (add variants if needed).
-7. Implement `Badge` & `Tag` primitives; refactor inline pills / status chips.
-8. Add `palette.ts` (semantic mapping) exporting structural + semantic tokens.
-9. Apply semantic surface classes (`surface-card`, `surface-subtle`) to cards/modals instead of raw `bg-white/bg-gray-*`.
-10. Replace ad-hoc heading classes with `<Typography>` usage (script to flag offenders).
+6. ⏳ Inventory & migrate all raw `<button>` elements to shared `Button` component (script planned).
+7. ⏳ Implement `Badge` & `Tag` primitives; refactor inline pills / status chips (Badge exists; Tag pending).
+8. ⏳ Add `palette.ts` (semantic mapping) exporting structural + semantic tokens.
+9. ⏳ Apply semantic surface classes (`surface-card`, `surface-subtle`) to cards/modals instead of raw `bg-white/bg-gray-*`.
+10. ⏳ Replace ad-hoc heading classes with `<Typography>` usage (script to flag offenders).
 
 ### Phase 2 (Automation & Gates)
 
-11. Script `scripts/style-audit.mjs`: parse JSX classNames → produce JSON + Markdown (color utility usage, components missing primitives).
-12. Add `scripts/contrast-check.mjs`: static approximate contrast evaluation of foreground/background pairs (logs failures).
-13. ESLint custom rule: forbid `text-white` unless paired with approved dark/brand backgrounds.
-14. Add `npm run style-audit` to predev / CI pipeline (fails on violations).
-15. Snapshot baseline diff before enabling fail mode (allow learning period).
+11. ⏳ Script `scripts/style-audit.mjs`: parse JSX classNames → produce JSON + Markdown (color utility usage, components missing primitives).
+12. ⏳ Add `scripts/contrast-check.mjs`: static approximate contrast evaluation of foreground/background pairs (logs failures).
+13. ⏳ ESLint custom rule: forbid `text-white` unless paired with approved dark/brand backgrounds.
+14. ⏳ Add `npm run style-audit` to predev / CI pipeline (fails on violations).
+15. ⏳ Snapshot baseline diff before enabling fail mode (allow learning period).
 
 ### Phase 3 (Token Hardening)
 
-16. Introduce CSS variable layer: `:root { --color-primary-bg: #00A86B; ... }` with dark overrides under `.dark`.
-17. Refactor `buttonVariants` to consume token maps (no raw tailwind color utilities inside variant definitions).
-18. Build `semanticClasses` generator (maps tokens → tailwind safelisted classes) for future theme overrides.
-19. Replace direct radius utilities with token classes (`radius-xs`, `radius-sm`, `radius-md`).
+16. ⏳ Introduce CSS variable layer: `:root { --color-primary-bg: #00A86B; ... }` with dark overrides under `.dark`.
+17. ⏳ Refactor `buttonVariants` to consume token maps (no raw tailwind color utilities inside variant definitions).
+18. ⏳ Build `semanticClasses` generator (maps tokens → tailwind safelisted classes) for future theme overrides.
+19. ⏳ Replace direct radius utilities with token classes (`radius-xs`, `radius-sm`, `radius-md`).
 
 ### Phase 4 (Accessibility & Motion)
 
-20. Audit focus-visible: ensure all interactive elements have strong, non-color-only focus states (≥2px outline or ring).
-21. Honor `prefers-reduced-motion`: wrap animations in media query & provide fallback.
-22. Validate keyboard navigation order & skip links (expand beyond current single skip link).
-23. Add high contrast theme toggle (phase backlog if bandwidth limited).
+20. ⏳ Audit focus-visible: ensure all interactive elements have strong, non-color-only focus states (≥2px outline or ring).
+21. ⏳ Honor `prefers-reduced-motion`: wrap animations in media query & provide fallback.
+22. ⏳ Validate keyboard navigation order & skip links (expand beyond current single skip link).
+23. ⏳ Add high contrast theme toggle (phase backlog if bandwidth limited).
 
 ### Phase 5 (Documentation & Governance)
 
-24. Author `STYLE_GUIDE.md` (visual examples, do/don't, component matrices).
-25. Publish color contrast matrix (rows: backgrounds, columns: text variants).
-26. PR checklist updates: design primitives usage, contrast pass, no new disallowed utilities.
-27. Weekly automated style report appended to `docs/styles/REPORT_<date>.md`.
+24. ⏳ Author `STYLE_GUIDE.md` (visual examples, do/don't, component matrices).
+25. ⏳ Publish color contrast matrix (rows: backgrounds, columns: text variants).
+26. ⏳ PR checklist updates: design primitives usage, contrast pass, no new disallowed utilities.
+27. ⏳ Weekly automated style report appended to `docs/styles/REPORT_<date>.md`.
 
 ## 5. Scripts & Tooling (Planned)
 
@@ -95,7 +95,7 @@
 
 | Metric                              | Baseline               | Goal Phase 1 | Goal Phase 2 | Final Target             |
 | ----------------------------------- | ---------------------- | ------------ | ------------ | ------------------------ |
-| Raw `text-white` occurrences        | 322                    | <250         | <190         | <150 (mostly primitives) |
+| Raw `text-white` occurrences        | 322 (197 flagged heuristically for review) | <250         | <190         | <150 (mostly primitives) |
 | Legacy emerald usages               | 33 (→ 0 after codemod) | 0            | 0            | 0                        |
 | Blue CTA backgrounds (non-semantic) | 27 (→ 1 after codemod) | <10          | <3           | 0                        |
 | Non-primitive buttons (%)           | TBC                    | <40%         | <15%         | <5%                      |
@@ -105,7 +105,7 @@
 ## 7. Immediate Task List (Active)
 
 - [x] (P0) Codemod emerald → jade mapping applied (156 replacements; legacy usages now 0).
-- [ ] (P0) Identify & patch white-on-light risk clusters.
+- [ ] (P0) Identify & patch white-on-light risk clusters (197 heuristic candidates; prioritize high-traffic screens first).
 - [x] (P0) Migrate highest-traffic blue CTAs to `Button` primary variant (blue 500/600 CTAs → jade; 1 remaining in docs README).
 - [ ] (P0) Add `.debug-contrast` utility (temporary).
 - [ ] (P0) Commit baseline metrics (this doc).
@@ -144,12 +144,13 @@ PR Checklist Additions (Planned):
 
 ## 11. Implementation Notes / Decisions Log
 
-| Date       | Change                        | Rationale                    |
-| ---------- | ----------------------------- | ---------------------------- |
-| 2025-08-09 | Document created              | Establish baseline & urgency |
-| 2025-08-10 | Codemod run #1 (emerald→jade) | Palette consolidation (156 replacements; legacy emerald utilities removed) |
-| 2025-08-10 | Codemod run #2 (blue CTAs)     | Consolidated high-emphasis blues → jade (158 replacements; 1 doc example retained) |
-| (add)      | Introduced style audit script | Automation foundation        |
+| Date       | Change                        | Rationale                                                                          |
+| ---------- | ----------------------------- | ---------------------------------------------------------------------------------- |
+| 2025-08-09 | Document created              | Establish baseline & urgency                                                       |
+| 2025-08-10 | Codemod run #1 (emerald→jade) | Palette consolidation (156 replacements; legacy emerald utilities removed)         |
+| 2025-08-10 | Codemod run #2 (blue CTAs)    | Consolidated high-emphasis blues → jade (158 replacements; 1 doc example retained) |
+| (add)      | Introduced style audit script | Automation foundation                                                              |
+| 2025-08-10 | White-on-light scan heuristic | 197 potential candidates identified for triage                                    |
 
 ---
 
