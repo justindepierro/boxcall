@@ -67,7 +67,12 @@ All BoxCall documentation follows these standards:
 
 ---
 
-**Last Updated**: August 3, 2025  
-**Documentation Version**: 1.2  
-**Current Phase**: Trophy Shelf Implementation, Component UI/UX Enhancement  
-**Project Phase**: 4.3 - Dashboard Component Development
+**Last Updated**: August 10, 2025  
+**Documentation Version**: 1.3  
+**Current Phase**: UI Professionalization (Surfaces / Typography / Badge & Tag)  
+**Project Phase**: 4.4 - Styling & Governance
+
+### 🎨 UI Style System References
+
+- [Style Professionalization Plan](./STYLE_PROFESSIONALIZATION_PLAN.md)
+- [Badge vs Tag Guidelines](./BADGE_TAG_GUIDELINES.md)

@@ -2,7 +2,7 @@
 
 > Goal: Elevate the current refactored, tokenized foundation into a cohesive, professional, brand-consistent product UI. This plan is the tactical playbook for the next styling sprint. Source of truth for style direction going forward.
 >
-> Companion docs: `STYLE_SYSTEM_AUDIT.md` (governance + metrics), `tokens.ts`, `style-audit.mjs`.
+> Companion docs: `STYLE_SYSTEM_AUDIT.md` (governance + metrics), `BADGE_TAG_GUIDELINES.md` (Badge vs Tag decision tree), `tokens.ts`, `style-audit.mjs`.
 
 ---
 
@@ -54,7 +54,7 @@
 | Order | Task                                           | Scope                         | Metric                             |
 | ----- | ---------------------------------------------- | ----------------------------- | ---------------------------------- |
 | B1    | Typography sweep codemod                       | All headings (h1–h5)          | 95% adoption                       |
-| B2    | Badge & Tag primitives                         | Status chips, filters, counts | 100% Tag adoption (0 inline pills) |
+| B2    | Badge & Tag primitives                         | Status chips, filters, counts | 100% Tag adoption (0 inline pills) + Badge canonical variants complete |
 | B3    | Tooltip & Popover refactor (`surface-inverse`) | ComplexityBadge, menus, hints | 0 raw `bg-gray-900`                |
 | B4    | Button variant audit & tighten spacing         | Variant map + docs            | No variant drift                   |
 | B5    | IconButton variant alignment                   | Danger/ghost/subtle mapping   | Shared interaction tokens          |
@@ -136,7 +136,7 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 - [x] Elevation rhythm enforced & documented.
 - [x] Typography codemod enacted & 100% adoption.
 - [x] Tags unified (0 inline pills; Tag primitive in production).
-- [ ] Badges standardized (pending Badge refactor).
+- [x] Badges standardized (canonical variants + guidelines doc).
 - [ ] Tooltips/popovers inverse surface.
 - [x] Row hover standard applied everywhere (interim).
 - [ ] CI gating active for unsafe surfaces & text colors.
@@ -146,17 +146,18 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 
 ## 8. Changelog
 
-| Date (UTC)        | Change Summary                                                                             |
-| ----------------- | ------------------------------------------------------------------------------------------ |
-| 2025-08-10T00:00Z | Plan authored (baseline)                                                                   |
-| 2025-08-10T15:45Z | Phase A surfaces/elevation complete; doc updated                                           |
-| 2025-08-10T15:55Z | Metrics snapshot inserted; next Phase B tasks added                                        |
-| 2025-08-10T16:30Z | Typography codemod complete (100% adoption) & plan updated                                 |
-| 2025-08-10T16:50Z | Added style CI gate script (`style:gate`) for headings/text-white/bg drift                 |
-| 2025-08-10T17:20Z | Tag primitive rollout complete (0 inline pills) + CI gate extended (inline pill detection) |
+| Date (UTC)        | Change Summary                                                                                                       |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------- |
+| 2025-08-10T00:00Z | Plan authored (baseline)                                                                                             |
+| 2025-08-10T15:45Z | Phase A surfaces/elevation complete; doc updated                                                                     |
+| 2025-08-10T15:55Z | Metrics snapshot inserted; next Phase B tasks added                                                                  |
+| 2025-08-10T16:30Z | Typography codemod complete (100% adoption) & plan updated                                                           |
+| 2025-08-10T16:50Z | Added style CI gate script (`style:gate`) for headings/text-white/bg drift                                           |
+| 2025-08-10T17:20Z | Tag primitive rollout complete (0 inline pills) + CI gate extended (inline pill detection)                           |
 | 2025-08-10T17:45Z | Badge system refactored: canonical variants (neutral/info/success/warning/danger/accent/premium) with legacy mapping |
-| 2025-08-10T17:55Z | Added ESLint rules: legacy Badge variant warning + raw gradient guard (with decorative-gradient escape hatch) |
+| 2025-08-10T17:55Z | Added ESLint rules: legacy Badge variant warning + raw gradient guard (with decorative-gradient escape hatch)        |
+| 2025-08-10T18:05Z | Added `BADGE_TAG_GUIDELINES.md` and linked from plan + docs index; Acceptance checklist updated                    |
 
 ---
 
-_Last Updated: 2025-08-10T17:20:00Z_
+_Last Updated: 2025-08-10T18:05:00Z_
