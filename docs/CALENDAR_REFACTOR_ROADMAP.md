@@ -148,10 +148,10 @@ Legend: [x] done, [~] in progress, [ ] pending
 1. [x] Query key factory (`state/calendar/queryKeys.ts`).
 2. [x] Core hooks file (`state/calendar/hooks.ts`) with events + single event queries.
 3. [x] Optimistic create mutation (temp ID replacement) + passing test.
-4. [~] Optimistic update/delete logic (implemented, needs dedicated tests + rollback simulation).
+4. [x] Optimistic update/delete logic + rollback tests with failure injection.
 5. [x] RSVP upsert implementation + optimistic status change + test (temp -> persisted replacement retained).
-6. [ ] Comment add optimistic + rollback test; pagination strategy stub.
-7. [ ] Failure simulation harness (inject error via dev mode flag) + rollback tests for create/update/delete/RSVP/comment.
+6. [x] Comment add optimistic path + rollback & success tests; basic in-memory store.
+7. [x] Failure simulation harness (injected errors via CalendarAPI.__setFailure) covering update/delete/comment.
 8. [ ] Loading & error UI skeleton contract (skeleton components or shimmer placeholders).
 9. [ ] UI migration: replace calendarService usages with hooks (incremental by component).
 10. [ ] Remove legacy `calendarService` after full migration + codemod cleanup.
@@ -340,11 +340,11 @@ Legend: [x] done, [~] in progress, [ ] pending
 
 ## Immediate Next (Phase 3 Focus)
 
-1. Add dedicated tests for optimistic update & delete (success + forced failure rollback).
-2. Implement error injection toggle (e.g. devMode: `fail_mutations`) to exercise rollback paths.
-3. Add comment optimistic add + rollback test (simulate failure) & decide pagination placeholder strategy.
-4. Draft Phase 3 tech notes (query key schema, mutation lifecycle, rollback recipe, failure injection design).
-5. Begin UI component migration (introduce `CalendarShell` using `useEvents`).
+1. Draft Phase 3 tech notes (query key schema, mutation lifecycle, rollback recipe, failure injection design).
+2. Pagination strategy draft for comments (cursor vs offset) & placeholder implementation stub.
+3. Loading & error skeleton components spec + initial `CalendarShell` integration using hooks.
+4. Begin UI migration off CalendarService (replace data props with `useEvents`, `useEvent`).
+5. Codemod / removal plan for legacy `calendarService` + deprecation banner.
 
 ---
 
@@ -366,6 +366,7 @@ Legend: [x] done, [~] in progress, [ ] pending
 | 2025-08-10 | 3-prog  | Implemented optimistic create + test (temp ID replace), in-memory persistence tweak; updated legacy negative test behavior (Zod errors).                                                         |
 | 2025-08-10 | 3-prog2 | Added update/delete optimistic logic (needs rollback tests), placeholder RSVP mutation, planned next tasks.                                                                                      |
 | 2025-08-10 | 3-prog3 | Implemented real RSVP upsert + optimistic cache update & test (commit 7a87ff6); updated roadmap tasks & immediate next.                                                                        |
+| 2025-08-10 | 3-prog4 | Added failure injection utilities + rollback tests for update/delete; comment store with optimistic add rollback/success tests (commit f9a9b43).                                               |
 
 ---
 
