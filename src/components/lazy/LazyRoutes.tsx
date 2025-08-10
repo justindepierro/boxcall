@@ -15,6 +15,12 @@ export const LazyDashboardPage = lazy(
 
 export const LazyCalendarPage = lazy(() => import("../../pages/CalendarPage"));
 
+// Phase 4: Calendar Shell (side-by-side / experimental) lazy route
+// Allows incremental migration & comparison before full replacement.
+export const LazyCalendarPageShell = lazy(
+  () => import("../../pages/CalendarPageShell")
+);
+
 export const LazyLoginPage = lazy(() => import("../../pages/LoginPage"));
 
 export const LazyProfilePage = lazy(() =>

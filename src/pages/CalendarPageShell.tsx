@@ -2,6 +2,10 @@ import React from "react";
 import CalendarPage from "./CalendarPage";
 import { CalendarShell } from "../components/calendar/CalendarShell";
 
+// Phase 4: Experimental CalendarPageShell
+// Enabled via VITE_CALENDAR_SHELL=1 build env flag (see AppRouter).
+// Renders new modular shell and legacy page side-by-side for QA parity checks.
+
 // Temporary migration wrapper: renders new state-driven shell above legacy page.
 // Allows QA comparison before fully decomposing CalendarPage.
 export const CalendarPageShell: React.FC = () => {

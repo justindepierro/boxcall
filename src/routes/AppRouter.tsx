@@ -8,6 +8,7 @@ import {
   LazyDashboardPage,
   LazyLoginPage,
   LazyCalendarPage,
+  LazyCalendarPageShell,
   LazyProfilePage,
   LazyTeamBulletin,
   LazyTeamsPage,
@@ -104,7 +105,11 @@ export const AppRouter: React.FC = () => {
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyCalendarPage />
+                  {import.meta.env.VITE_CALENDAR_SHELL === "1" ? (
+                    <LazyCalendarPageShell />
+                  ) : (
+                    <LazyCalendarPage />
+                  )}
                 </Suspense>
               </ProtectedRoute>
             }
