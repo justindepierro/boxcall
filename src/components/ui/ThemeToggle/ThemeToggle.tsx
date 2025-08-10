@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { THEME_IDS, applyTheme, getStoredTheme, type ThemeName } from "../../../themes/ThemeManager";
+import {
+  THEME_IDS,
+  applyTheme,
+  getStoredTheme,
+  type ThemeName,
+} from "../../../themes/ThemeManager";
 import { Button } from "../Button";
 
 // Order we cycle through
 const cycleOrder: ThemeName[] = [...THEME_IDS];
 
-export const ThemeToggle: React.FC<{ className?: string }> = ({ className = "" }) => {
-  const [theme, setTheme] = useState<ThemeName>(() => getStoredTheme() ?? cycleOrder[0]);
+export const ThemeToggle: React.FC<{ className?: string }> = ({
+  className = "",
+}) => {
+  const [theme, setTheme] = useState<ThemeName>(
+    () => getStoredTheme() ?? cycleOrder[0]
+  );
 
   useEffect(() => {
     applyTheme(theme);
@@ -39,7 +48,10 @@ export const ThemeToggle: React.FC<{ className?: string }> = ({ className = "" }
       onClick={cycle}
       className={`flex items-center gap-1 font-medium ${className}`}
     >
-      <span className="inline-block w-2 h-2 rounded-sm" style={{ background: "var(--semantic-primary)" }} />
+      <span
+        className="inline-block w-2 h-2 rounded-sm"
+        style={{ background: "var(--semantic-primary)" }}
+      />
       <span>{label()}</span>
     </Button>
   );

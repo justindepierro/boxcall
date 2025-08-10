@@ -218,45 +218,45 @@ export function PracticePlanner() {
     };
   };
   if (!teamId) {
-      return (
-        <div className="min-h-screen surface-app flex items-center justify-center">
-          <Typography variant="body-lg" className="text-text-secondary">
-            Team not found
-          </Typography>
-        </div>
-      );
+    return (
+      <div className="min-h-screen surface-app flex items-center justify-center">
+        <Typography variant="body-lg" className="text-text-secondary">
+          Team not found
+        </Typography>
+      </div>
+    );
   }
   if (loading) {
-      return (
-        <div className="min-h-screen surface-app flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
-        </div>
-      );
+    return (
+      <div className="min-h-screen surface-app flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
+      </div>
+    );
   }
   return (
-      <div className="min-h-screen surface-app">
+    <div className="min-h-screen surface-app">
       {/* Header */}
-  <div className="surface-header border-b border-subtle">
+      <div className="surface-header border-b border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
                 onClick={() => navigate(`/team/${teamId}`)}
-                  className="text-text-secondary hover:text-text-primary"
+                className="text-text-secondary hover:text-text-primary"
               >
                 ← Back to Team
               </Button>
               <Typography
                 variant="headline-lg"
-                  className="text-text-primary font-display"
+                className="text-text-primary font-display"
               >
                 Practice Schedule
               </Typography>
             </div>
             <div className="flex items-center space-x-4">
               {selectedSchedule && (
-                  <div className="text-sm text-text-secondary">
+                <div className="text-sm text-text-secondary">
                   {format(selectedSchedule.date, "MMM d, yyyy")} •{" "}
                   {selectedSchedule.location}
                 </div>
@@ -278,7 +278,10 @@ export function PracticePlanner() {
             <Card className="mb-6">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <Typography variant="headline-md" className="text-text-primary">
+                  <Typography
+                    variant="headline-md"
+                    className="text-text-primary"
+                  >
                     Practice Blocks
                   </Typography>
                   <div className="flex items-center space-x-4">
@@ -352,13 +355,13 @@ export function PracticePlanner() {
                           <div className="text-center py-8">
                             <Typography
                               variant="body-lg"
-                                className="text-text-muted mb-4"
+                              className="text-text-muted mb-4"
                             >
                               No practice blocks yet
                             </Typography>
                             <Typography
                               variant="body-sm"
-                                className="text-text-muted"
+                              className="text-text-muted"
                             >
                               Add blocks using the quick actions or create
                               custom blocks
@@ -596,13 +599,17 @@ export function PracticePlanner() {
                     </Typography>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="font-medium text-text-secondary">Date:</span>
+                        <span className="font-medium text-text-secondary">
+                          Date:
+                        </span>
                         <span className="ml-2">
                           {format(selectedSchedule.date, "MMM d, yyyy")}
                         </span>
                       </div>
                       <div>
-                        <span className="font-medium text-text-secondary">Time:</span>
+                        <span className="font-medium text-text-secondary">
+                          Time:
+                        </span>
                         <span className="ml-2">
                           {format(selectedSchedule.startTime, "h:mm a")} -{" "}
                           {format(selectedSchedule.endTime, "h:mm a")}
@@ -700,7 +707,7 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-6">
-  <Typography variant="headline-md" className="text-text-primary mb-6">
+        <Typography variant="headline-md" className="text-text-primary mb-6">
           Create Custom Practice Block
         </Typography>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -773,7 +780,7 @@ function TemplatesModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-6">
-  <Typography variant="headline-md" className="text-text-primary mb-6">
+        <Typography variant="headline-md" className="text-text-primary mb-6">
           Practice Templates
         </Typography>
         <div className="space-y-3">

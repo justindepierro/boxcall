@@ -1,5 +1,5 @@
 {
-  "totalFiles": 361,
+  "totalFiles": 366,
   "textWhite": 0,
   "textWhiteEntries": [],
   "bgClasses": [
@@ -9,7 +9,7 @@
     ],
     [
       "gray-50",
-      32
+      31
     ],
     [
       "blue-50",
@@ -32,20 +32,16 @@
       16
     ],
     [
-      "red-50",
-      15
-    ],
-    [
       "gray-200",
       15
     ],
     [
-      "jade-600",
+      "red-50",
       14
     ],
     [
-      "jade-100",
-      13
+      "jade-600",
+      14
     ],
     [
       "slate-200",
@@ -56,12 +52,16 @@
       12
     ],
     [
+      "jade-100",
+      11
+    ],
+    [
       "jade-50",
       11
     ],
     [
       "blue-100",
-      11
+      10
     ],
     [
       "blue-900/20",
@@ -72,15 +72,15 @@
       10
     ],
     [
-      "slate-100",
-      9
-    ],
-    [
       "gray-300",
       9
     ],
     [
       "green-100",
+      8
+    ],
+    [
+      "slate-100",
       8
     ],
     [
@@ -220,10 +220,6 @@
       1
     ],
     [
-      "jade-900",
-      1
-    ],
-    [
       "white/20",
       1
     ],
@@ -317,10 +313,6 @@
     ],
     [
       "surface-jade0",
-      1
-    ],
-    [
-      "yellow-100",
       1
     ],
     [
@@ -424,7 +416,7 @@
     },
     {
       "file": "src/components/dev/DevTools.tsx",
-      "line": 262,
+      "line": 263,
       "className": "p-1 h-auto hover:bg-white/20 text-text-inverse"
     },
     {
@@ -434,17 +426,17 @@
     },
     {
       "file": "src/components/playbook/CSVImport/CSVImportModal.tsx",
-      "line": 696,
+      "line": 717,
       "className": "inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full"
     },
     {
       "file": "src/components/playbook/CSVImport/CSVImportModal.tsx",
-      "line": 697,
+      "line": 718,
       "className": "bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between"
     },
     {
       "file": "src/components/playbook/CSVImport/CSVImportModal.tsx",
-      "line": 709,
+      "line": 736,
       "className": "bg-white px-6 py-8"
     },
     {
@@ -464,37 +456,37 @@
     },
     {
       "file": "src/components/playbook/PlayBuilder/PlayBuilderCore.tsx",
-      "line": 173,
+      "line": 174,
       "className": "inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full max-h-[90vh]"
     },
     {
       "file": "src/components/playbook/PlayBuilder/PlayBuilderCore.tsx",
-      "line": 175,
+      "line": 176,
       "className": "bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between"
     },
     {
       "file": "src/components/playbook/PlayBuilder/PlayBuilderPreview.tsx",
-      "line": 38,
+      "line": 24,
       "className": "bg-white rounded-lg border border-slate-200"
     },
     {
       "file": "src/components/playbook/PlayBuilder/PlayBuilderWizard.tsx",
-      "line": 22,
+      "line": 23,
       "className": "inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full"
     },
     {
       "file": "src/components/playbook/PlayBuilder/PlayBuilderWizard.tsx",
-      "line": 24,
+      "line": 25,
       "className": "bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between"
     },
     {
       "file": "src/components/playbook/PlayBuilder/QuickEntry.tsx",
-      "line": 221,
+      "line": 222,
       "className": "playbuilder-input w-full px-4 py-3 bg-white border-2 border-jade-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 text-"
     },
     {
       "file": "src/components/playbook/PlayFilters.tsx",
-      "line": 40,
+      "line": 41,
       "className": "bg-white rounded-lg shadow-sm border border-slate-200"
     },
     {
@@ -544,38 +536,33 @@
     },
     {
       "file": "src/components/playbook/visual/InteractivePlayBuilder.tsx",
-      "line": 85,
+      "line": 86,
       "className": "bg-white rounded-lg shadow-xl w-[95vw] h-[90vh] flex flex-col"
     },
     {
       "file": "src/components/playbook/visual/InteractivePlayBuilder.tsx",
-      "line": 103,
+      "line": 104,
       "className": "p-2 h-auto hover:bg-gray-100 rounded-lg"
     },
     {
       "file": "src/components/playbook/visual/InteractivePlayBuilder.tsx",
-      "line": 108,
+      "line": 109,
       "className": "w-64 bg-gray-50 border-r border-gray-200 flex flex-col"
     },
     {
       "file": "src/components/playbook/visual/InteractivePlayBuilder.tsx",
-      "line": 262,
+      "line": 263,
       "className": "p-4 border-t border-gray-200 bg-gray-50"
     },
     {
       "file": "src/components/playbook/visual/VisualPlayBuilder.tsx",
-      "line": 38,
+      "line": 39,
       "className": "bg-white rounded-lg shadow-xl w-full max-w-7xl h-full max-h-[90vh] flex flex-col"
     },
     {
       "file": "src/components/playbook/visual/VisualPlayBuilder.tsx",
-      "line": 158,
+      "line": 159,
       "className": "bg-white rounded-lg bc-card-padding border border-slate-200"
-    },
-    {
-      "file": "src/components/practice/PDFExportButton.tsx",
-      "line": 155,
-      "className": "absolute top-full left-0 mt-1 p-2 bg-gray-50 border border-gray-200 rounded-md shadow-sm z-10 min-w-max"
     },
     {
       "file": "src/components/practice/PracticePDFExportDialog.tsx",
@@ -584,7 +571,7 @@
     },
     {
       "file": "src/components/practice/PracticePlannerModal/components/PracticeBlockList.tsx",
-      "line": 240,
+      "line": 241,
       "className": "flex items-center justify-between p-2 bg-white/50 rounded"
     },
     {
@@ -614,12 +601,12 @@
     },
     {
       "file": "src/components/practice/components/MemoizedPracticeTable.tsx",
-      "line": 132,
+      "line": 119,
       "className": "bg-white rounded-lg shadow overflow-hidden"
     },
     {
       "file": "src/components/practice/components/MemoizedPracticeTable.tsx",
-      "line": 133,
+      "line": 120,
       "className": "px-4 py-3 bg-gray-50 border-b flex items-center justify-between"
     },
     {
@@ -644,12 +631,12 @@
     },
     {
       "file": "src/components/team/TeamSettings.tsx",
-      "line": 127,
+      "line": 128,
       "className": "w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center border border-gray-300 dark:border-gray-600"
     },
     {
       "file": "src/components/team/TeamSettings.tsx",
-      "line": 259,
+      "line": 260,
       "className": "bg-gray-50 dark:bg-gray-700 rounded-lg p-4"
     },
     {
@@ -739,12 +726,12 @@
     },
     {
       "file": "src/pages/CalendarPage.tsx",
-      "line": 411,
+      "line": 412,
       "className": "flex rounded-lg bg-gray-100 p-1"
     },
     {
       "file": "src/pages/CalendarPage.tsx",
-      "line": 481,
+      "line": 482,
       "className": "bg-white rounded-lg shadow-xl max-w-lg w-full max-h-96 overflow-y-auto"
     },
     {
@@ -774,32 +761,32 @@
     },
     {
       "file": "src/pages/PlaybookPage.tsx",
-      "line": 369,
+      "line": 370,
       "className": "bg-white shadow-sm border-b border-slate-200"
     },
     {
       "file": "src/pages/PlaybookPage.tsx",
-      "line": 546,
+      "line": 557,
       "className": "mb-6 bg-white rounded-lg shadow-sm border border-slate-200 p-1"
     },
     {
       "file": "src/pages/PlaybookPage.tsx",
-      "line": 587,
+      "line": 598,
       "className": "bg-white rounded-lg shadow-sm border border-slate-200 p-3 mb-4"
     },
     {
       "file": "src/pages/PlaybookPage.tsx",
-      "line": 631,
+      "line": 642,
       "className": "bg-white rounded-lg shadow-sm border border-slate-200 p-6"
     },
     {
       "file": "src/pages/PlaybookPage.tsx",
-      "line": 650,
+      "line": 665,
       "className": "bg-white rounded-lg shadow-sm border border-slate-200 p-6"
     },
     {
       "file": "src/pages/PlaybookPage.tsx",
-      "line": 698,
+      "line": 717,
       "className": "bg-white rounded-xl p-8 max-w-md mx-4 text-center transform animate-bounce-in"
     },
     {
@@ -819,12 +806,12 @@
     },
     {
       "file": "src/pages/ProfilePage.tsx",
-      "line": 296,
+      "line": 304,
       "className": "mt-8 bg-gray-50 dark:bg-gray-800/50 rounded-lg p-6"
     },
     {
       "file": "src/pages/ProfilePage.tsx",
-      "line": 319,
+      "line": 329,
       "className": "text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded"
     },
     {
@@ -844,34 +831,73 @@
     },
     {
       "file": "src/pages/legal/AboutPage.tsx",
-      "line": 126,
+      "line": 135,
       "className": "text-center bg-gray-50 dark:bg-gray-800 rounded-lg p-8"
     },
     {
       "file": "src/pages/legal/ContactPage.tsx",
-      "line": 92,
+      "line": 93,
       "className": "mt-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
     },
     {
       "file": "src/pages/legal/ContactPage.tsx",
-      "line": 210,
+      "line": 211,
       "className": "bg-gray-50 dark:bg-gray-800 rounded-lg p-6"
     },
     {
       "file": "src/pages/legal/PrivacyPolicyPage.tsx",
-      "line": 198,
+      "line": 199,
       "className": "bg-gray-50 dark:bg-gray-800 p-4 rounded-lg"
     },
     {
       "file": "src/pages/legal/TermsOfServicePage.tsx",
-      "line": 229,
+      "line": 230,
       "className": "bg-gray-50 dark:bg-gray-800 p-4 rounded-lg"
     },
     {
       "file": "src/routes/SplitRouter.tsx",
-      "line": 138,
+      "line": 139,
       "className": "min-h-screen bg-gray-50 flex items-center justify-center p-4"
     }
   ],
-  "whiteOnWhiteInteractions": []
+  "whiteOnWhiteInteractions": [],
+  "tooltipInverseTotal": 2,
+  "tooltipInverseSurface": 0,
+  "popoverInverseTotal": 0,
+  "popoverInverseSurface": 0,
+  "elevationUsage": {
+    "elevation-dropdown": 2,
+    "elevation-modal": 1,
+    "elevation-card": 21
+  },
+  "radiusViolations": [
+    {
+      "file": "src/components/team/PlayerList.tsx",
+      "line": 109,
+      "token": "rounded-xs",
+      "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle t",
+      "reason": "unsupported-scale"
+    },
+    {
+      "file": "src/components/team/PlayerList.tsx",
+      "line": 124,
+      "token": "rounded-xs",
+      "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle t",
+      "reason": "unsupported-scale"
+    },
+    {
+      "file": "src/components/ui/Badge/Badge.tsx",
+      "line": 158,
+      "token": "rounded-inherit",
+      "className": "absolute inset-0 overflow-hidden rounded-inherit",
+      "reason": "unsupported-scale"
+    },
+    {
+      "file": "src/pages/ProfilePage.tsx",
+      "line": 249,
+      "token": "rounded-xs",
+      "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700",
+      "reason": "unsupported-scale"
+    }
+  ]
 }

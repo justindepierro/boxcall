@@ -1,9 +1,9 @@
-import { getTheme } from './registry';
+import { getTheme } from "./registry";
 
-const THEME_STORAGE_KEY = 'app-theme';
+const THEME_STORAGE_KEY = "app-theme";
 // Explicit theme id union (keep in sync with registry contents)
 export const THEME_IDS = ["light", "dark", "high-contrast"] as const;
-export type ThemeName = typeof THEME_IDS[number];
+export type ThemeName = (typeof THEME_IDS)[number];
 export const DEFAULT_THEME: ThemeName = "light";
 
 export function getStoredTheme(): ThemeName | null {
@@ -17,20 +17,22 @@ export function applyTheme(name: ThemeName) {
   if (!theme) return;
   const root = document.documentElement;
   // Data attribute for CSS variable scoping
-  root.setAttribute('data-theme', name);
+  root.setAttribute("data-theme", name);
   // Legacy Tailwind dark variant support (many classes still rely on .dark)
   // We treat both dark + high-contrast as dark base until full variable migration.
-  if (name === 'dark' || name === 'high-contrast') {
-    root.classList.add('dark');
+  if (name === "dark" || name === "high-contrast") {
+    root.classList.add("dark");
   } else {
-    root.classList.remove('dark');
+    root.classList.remove("dark");
   }
   // Optional high-contrast class for future specific overrides
-  root.classList.remove('high-contrast');
-  if (name === 'high-contrast') root.classList.add('high-contrast');
+  root.classList.remove("high-contrast");
+  if (name === "high-contrast") root.classList.add("high-contrast");
   try {
     localStorage.setItem(THEME_STORAGE_KEY, name);
-  } catch { /* ignore storage errors (private mode, etc.) */ }
+  } catch {
+    /* ignore storage errors (private mode, etc.) */
+  }
 }
 
 export function initTheme(fallback: ThemeName = DEFAULT_THEME) {
@@ -39,12 +41,12 @@ export function initTheme(fallback: ThemeName = DEFAULT_THEME) {
 }
 
 // Optional immediate hydration (call at app entry before React mounts)
-if (typeof document !== 'undefined') {
+if (typeof document !== "undefined") {
   // Defer to next microtask to allow other early scripts to run
   queueMicrotask(() => {
-    if (!document.documentElement.getAttribute('data-theme')) {
+    if (!document.documentElement.getAttribute("data-theme")) {
       const stored = getStoredTheme();
-  applyTheme((stored as ThemeName) ?? DEFAULT_THEME);
+      applyTheme((stored as ThemeName) ?? DEFAULT_THEME);
     }
   });
 }

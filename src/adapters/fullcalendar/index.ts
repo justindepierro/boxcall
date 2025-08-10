@@ -1,1 +1,1 @@
-export * from './FullCalendarAdapter';
+export * from "./FullCalendarAdapter";

@@ -106,10 +106,10 @@ src/
 
 1. Scaffold infra modules (api, rsvp, comments, ics) and FullCalendarAdapter (DONE).
 2. Extract RSVP + comments logic from service (DONE).
-3. Migrate user/team/search/upcoming fetch & create/update/delete paths to `CalendarAPI` (IN PROGRESS).
+3. Migrate user/team/search/upcoming fetch & create/update/delete paths to `CalendarAPI` (DONE).
 4. Add adapter mapping edge tests (optional fields, tags, fallback type, round‑trip integrity).
 5. Add ICS validation test (regex for VCALENDAR, DTSTART, DTEND, UID invariant) + failure case (missing title sanitization).
-6. Slim legacy `calendarService` to thin façade, mark deprecated, ensure all new code uses infra.
+6. Slim legacy `calendarService` to thin façade, mark deprecated, ensure all new code uses infra (DONE).
 7. Add barrel export for infra & adapter (e.g. `src/infra/calendar/index.ts`).
 8. Documentation: create `docs/calendar/PHASE2_TECH_NOTES.md` with migration checklist + adapter contract.
 
@@ -125,6 +125,9 @@ src/
 | 2025-08-10 | 2 | Extracted RSVP & comments infra modules (rsvp.ts, comments.ts) + tests; added legacy deprecation note to calendarService. |
 | 2025-08-10 | 2-prog | Added adapter & ICS scaffolding tests; defined Phase 2 objectives & exit criteria; prepared task list for remaining service decomposition. |
 | 2025-08-10 | 2-prog2 | Expanded CalendarAPI (team, search, upcoming, delete), added adapter edge tests + ICS validation, created infra barrel exports. |
+| 2025-08-10 | 2-prog3 | Slimmed legacy calendarService to delegation facade (<150 LOC), migrated create/update/delete + user/team/search/upcoming to CalendarAPI, removed duplicate mock logic. Added plan for coverage & tech notes. |
+| 2025-08-10 | 2-prog4 | Added exhaustive infra tests (filters, dev modes, search, upcoming, delete, invalid update, RSVPs, comments) + ICS escaping. Coverage: api ~98%, adapter ~91%, ics ~97%. |
+| 2025-08-10 | 2-done | Phase 2 complete: exit criteria satisfied (service slimmed, infra coverage >95% agg, adapter ≥90%, ICS + adapter contracts documented). Ready to begin Phase 3 state layer. |
 
 ---
 

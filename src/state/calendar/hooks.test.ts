@@ -1,0 +1,50 @@
+/* @vitest-environment jsdom */
+import React from "react";
+import { describe, it, expect } from "vitest";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { renderHook, act, waitFor } from "@testing-library/react";
+import { useCreateEvent, useEvents } from "./hooks";
+import { calendarKeys } from "./queryKeys";
+import type { CalendarEvent } from "../../domain/calendar/types";
+
+describe("calendar state hooks", () => {
+  const setup = () => {
+    const qc = new QueryClient();
+    const wrapper = ({ children }: { children: React.ReactNode }) =>
+      React.createElement(QueryClientProvider, { client: qc, children });
+    return { qc, wrapper };
+  };
+
+  it("fetches events list (mock)", async () => {
+    const { wrapper } = setup();
+    const { result } = renderHook(() => useEvents({ userId: "u-test" }), {
+      wrapper,
+    });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect((result.current.data || []).length).toBeGreaterThan(0);
+  });
+
+  it("optimistically adds event then replaces temp id", async () => {
+    const { wrapper, qc } = setup();
+    const eventsHook = renderHook(() => useEvents({ userId: "u-test" }), {
+      wrapper,
+    });
+    await waitFor(() => expect(eventsHook.result.current.isSuccess).toBe(true));
+    // Capture baseline lengths per events query
+    const eventsKey = calendarKeys.events(undefined, undefined, undefined);
+    const before = (qc.getQueryData<CalendarEvent[]>(eventsKey) || []).length;
+
+    const createHook = renderHook(() => useCreateEvent("u-test"), { wrapper });
+    await act(async () => {
+      createHook.result.current.mutate({
+        title: "New Practice",
+        start: new Date().toISOString(),
+        type: "practice",
+      });
+    });
+    await waitFor(() => {
+      const afterData = qc.getQueryData<CalendarEvent[]>(eventsKey) || [];
+      expect(afterData.length).toBe(before + 1);
+    });
+  });
+});
