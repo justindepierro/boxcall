@@ -1,59 +1,18 @@
 // import { supabase } from '../lib/supabase'; // TODO: Use when implementing real database queries
 
-// Calendar Event Types
-export interface CalendarEvent {
-  id: string;
-  title: string;
-  start: string; // ISO date string
-  end?: string; // ISO date string
-  type: "game" | "practice" | "meeting" | "film" | "other";
-  team_id?: string;
-  team_name?: string;
-  location?: string;
-  description?: string;
-  is_home?: boolean; // For games
-  opponent?: string; // For games
-  created_by?: string;
-  rsvp_required?: boolean;
-  tags?: string[];
-  searchable_content?: string;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export interface CalendarEventCreate {
-  title: string;
-  start: string;
-  end?: string;
-  type: "game" | "practice" | "meeting" | "film" | "other";
-  team_id?: string;
-  location?: string;
-  description?: string;
-  is_home?: boolean;
-  opponent?: string;
-  rsvp_required?: boolean;
-  tags?: string[];
-}
-
-export interface EventRSVP {
-  id: string;
-  event_id: string;
-  user_id: string;
-  status: "attending" | "not_attending" | "maybe";
-  note?: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface CalendarFilters {
-  teamIds?: string[];
-  eventTypes?: string[];
-  dateRange?: {
-    start: string;
-    end: string;
-  };
-  tags?: string[];
-}
+// Calendar Event Types now sourced from domain layer
+import type {
+  CalendarEvent,
+  CalendarEventCreate,
+  EventRSVP,
+  CalendarFilters,
+} from "../domain/calendar/types";
+export type {
+  CalendarEvent,
+  CalendarEventCreate,
+  EventRSVP,
+  CalendarFilters,
+} from "../domain/calendar/types"; // Re-export for backward compatibility
 
 /**
  * Calendar Service
