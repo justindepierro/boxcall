@@ -122,8 +122,10 @@ src/
 - Coverage for infra + adapter files ≥85% statements.
 - Status log updated; roadmap marks Phase 2 ready to hand off to Phase 3.
 
-| 2025-08-10 | 2      | Extracted RSVP & comments infra modules (rsvp.ts, comments.ts) + tests; added legacy deprecation note to calendarService. |
+| 2025-08-10 | 2 | Extracted RSVP & comments infra modules (rsvp.ts, comments.ts) + tests; added legacy deprecation note to calendarService. |
 | 2025-08-10 | 2-prog | Added adapter & ICS scaffolding tests; defined Phase 2 objectives & exit criteria; prepared task list for remaining service decomposition. |
+| 2025-08-10 | 2-prog2 | Expanded CalendarAPI (team, search, upcoming, delete), added adapter edge tests + ICS validation, created infra barrel exports. |
+
 ---
 
 ## Phase 3 – State Management & Optimistic UX

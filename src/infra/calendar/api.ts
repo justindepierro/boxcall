@@ -35,6 +35,22 @@ export const CalendarAPI = {
     const { CalendarService } = await import("../../services/calendarService");
     return CalendarService.updateEvent(id, updates);
   },
+  async listTeamEvents(teamId: string) {
+    const { CalendarService } = await import("../../services/calendarService");
+    return parseCalendarEvents(await CalendarService.getTeamEvents(teamId));
+  },
+  async search(query: string) {
+    const { CalendarService } = await import("../../services/calendarService");
+    return parseCalendarEvents(await CalendarService.searchEvents(query));
+  },
+  async upcoming(userId: string, limit = 5) {
+    const { CalendarService } = await import("../../services/calendarService");
+    return parseCalendarEvents(await CalendarService.getUpcomingEvents(userId, limit));
+  },
+  async deleteEvent(id: string) {
+    const { CalendarService } = await import("../../services/calendarService");
+    return CalendarService.deleteEvent(id);
+  },
   async getRSVPs(eventId: string) {
     const { CalendarService } = await import("../../services/calendarService");
     return parseEventRSVPs(await CalendarService.getEventRSVPs(eventId));
