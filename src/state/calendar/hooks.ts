@@ -8,6 +8,11 @@ import type {
   EventRSVP,
   CalendarEvent,
 } from "../../domain/calendar/types";
+import {
+  CalendarEventSchema,
+  EventRSVPSchema,
+  CalendarCommentSchema,
+} from "../../domain/calendar/types";
 
 // Types for ranges & params
 export interface EventsQueryParams {
@@ -21,7 +26,18 @@ export function useEvents(params: EventsQueryParams) {
   const { range, filters, devMode, userId } = params;
   return useQuery({
     queryKey: calendarKeys.events(filters, range, devMode),
-    queryFn: () => CalendarAPI.listUserEvents(userId, devMode, filters),
+    queryFn: async () => {
+      const data = await CalendarAPI.listUserEvents(userId, devMode, filters);
+      if (import.meta.env.DEV && Array.isArray(data)) {
+        for (const ev of data.slice(0, 25)) {
+          const parse = CalendarEventSchema.safeParse(ev);
+          if (!parse.success) {
+            console.warn("Invalid CalendarEvent shape", parse.error.issues, ev);
+          }
+        }
+      }
+      return data;
+    },
     // Keep previous data to avoid loading jank when filters/range adjust
     placeholderData: (prev) => prev,
   });
@@ -45,7 +61,14 @@ export function useEvent(id: string) {
         }
       }
       const results = await CalendarAPI.search(id);
-      return results.find((e) => e.id === id) ?? null;
+      const match = results.find((e) => e.id === id) ?? null;
+      if (import.meta.env.DEV && match) {
+        const parse = CalendarEventSchema.safeParse(match);
+        if (!parse.success) {
+          console.warn("Invalid CalendarEvent shape", parse.error.issues, match);
+        }
+      }
+      return match;
     },
     enabled: !!id,
   });
@@ -198,7 +221,7 @@ export function useRSVPs(eventId: string) {
 export function useUpdateRSVP(eventId: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (vars: {
+  mutationFn: (vars: {
       userId: string;
       status: EventRSVP["status"];
       note?: string;
@@ -237,6 +260,12 @@ export function useUpdateRSVP(eventId: string) {
       ctx?.prev && qc.setQueryData(calendarKeys.rsvps(eventId), ctx.prev),
     onSuccess: (saved, vars) => {
       if (!saved) return;
+      if (import.meta.env.DEV) {
+        const parse = EventRSVPSchema.safeParse(saved);
+        if (!parse.success) {
+          console.warn("Invalid EventRSVP shape", parse.error.issues, saved);
+        }
+      }
       const key = calendarKeys.rsvps(eventId);
       const current = qc.getQueryData<EventRSVP[]>(key);
       if (current) {
@@ -258,7 +287,18 @@ export function useUpdateRSVP(eventId: string) {
 export function useComments(eventId: string) {
   return useQuery({
     queryKey: calendarKeys.comments(eventId),
-    queryFn: () => CalendarAPI.listComments(eventId),
+    queryFn: async () => {
+      const data = await CalendarAPI.listComments(eventId);
+      if (import.meta.env.DEV && Array.isArray(data)) {
+        for (const c of data.slice(0, 50)) {
+          const parse = CalendarCommentSchema.safeParse(c);
+          if (!parse.success) {
+            console.warn("Invalid CalendarComment shape", parse.error.issues, c);
+          }
+        }
+      }
+      return data;
+    },
     enabled: !!eventId,
   });
 }
