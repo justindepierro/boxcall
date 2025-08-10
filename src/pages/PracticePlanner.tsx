@@ -299,7 +299,11 @@ export function PracticePlanner() {
                         className="bg-jade-600 hover:bg-jade-700 text-text-inverse flex items-center gap-2"
                         disabled={currentBlocks.length === 0}
                       >
-                        <Icon name="play" size="sm" className="text-text-primary" />
+                        <Icon
+                          name="play"
+                          size="sm"
+                          className="text-text-primary"
+                        />
                         Start Practice
                       </Button>
                     ) : (
@@ -310,7 +314,7 @@ export function PracticePlanner() {
                           className="border-red-300 text-red-700 hover:bg-red-50 flex items-center gap-2"
                         >
                           <Icon
-                            name="stop"
+                            name="power"
                             size="sm"
                             className="text-red-700"
                           />
@@ -338,7 +342,7 @@ export function PracticePlanner() {
                       <div
                         {...provided.droppableProps}
                         ref={provided.innerRef}
-                        className={`space-y-3 min-h-[200px] p-4 rounded-lg border-2 border-dashed transition-colors ${
+                        className={`space-y-3 min-h-[200px] p-4 rounded-lg placeholder-zone transition-colors ${
                           snapshot.isDraggingOver
                             ? "border-jade-400 bg-jade-50"
                             : "border-gray-300 bg-gray-50"
@@ -776,7 +780,7 @@ function TemplatesModal({
           {templates.map((template) => (
             <div
               key={template.id}
-              className="border rounded-lg p-4 hover:bg-gray-50"
+              className="border-subtle rounded-lg p-4 row-hover"
             >
               <div className="flex items-center justify-between">
                 <div>

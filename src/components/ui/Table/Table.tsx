@@ -89,7 +89,7 @@ const getTableStyles = (size?: "sm" | "md" | "lg", bordered?: boolean) => {
   };
   return [
     "w-full table-auto",
-    "bg-white dark:bg-gray-800",
+    "surface-card",
     "text-gray-900 dark:text-gray-100",
     sizeStyles[size || "md"],
     bordered && "border border-gray-200 dark:border-gray-700",
@@ -140,7 +140,7 @@ const getRowStyles = (
 ) => {
   return [
     "transition-colors duration-200",
-    hoverable && "hover:bg-gray-50 dark:hover:bg-gray-700",
+    hoverable && "row-hover",
     isSelected && "bg-jade-50 dark:bg-navy-900/20",
     striped && isEven && "bg-gray-50 dark:bg-gray-800",
   ]

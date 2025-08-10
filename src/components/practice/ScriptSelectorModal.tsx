@@ -112,7 +112,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
             </div>
           </div>
           {/* Create New Script Option */}
-          <Card className="p-4 mb-4 border-2 border-dashed border-blue-300 bg-blue-50">
+          <Card className="p-4 mb-4 placeholder-zone emphasis">
             <div className="flex items-center justify-between">
               <div>
                 <Typography

@@ -217,7 +217,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             size="xs"
             variant="outline"
             onClick={() => setShowAddFilter(true)}
-            className="w-full flex items-center justify-center border-dashed"
+            className="w-full flex items-center justify-center border-subtle"
           >
             <Plus className="h-3 w-3 mr-1" />
             Add Filter
@@ -236,7 +236,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                     value: "",
                   }))
                 }
-                className="w-full px-2 py-1.5 text-xs border border-slate-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-jade-500 bg-white dark:bg-gray-800 text-text-primary"
+                className="w-full px-2 py-1.5 text-xs border-subtle rounded focus:outline-none focus:ring-1 focus:ring-jade-500 surface-card text-text-primary"
               >
                 <option value="">Select field...</option>
                 {FILTER_FIELDS.map((field) => (
@@ -258,7 +258,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                       operator: e.target.value as "equals" | "contains" | "in",
                     }))
                   }
-                  className="w-full px-2 py-1.5 text-xs border border-slate-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-jade-500 bg-white dark:bg-gray-800 text-text-primary"
+                  className="w-full px-2 py-1.5 text-xs border-subtle rounded focus:outline-none focus:ring-1 focus:ring-jade-500 surface-card text-text-primary"
                 >
                   {availableOperators.map((op) => (
                     <option key={op.id} value={op.id}>
@@ -281,7 +281,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                         value: e.target.value,
                       }))
                     }
-                    className="w-full px-2 py-1.5 text-xs border border-slate-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-jade-500 bg-white dark:bg-gray-800 text-text-primary"
+                    className="w-full px-2 py-1.5 text-xs border-subtle rounded focus:outline-none focus:ring-1 focus:ring-jade-500 surface-card text-text-primary"
                   >
                     <option value="">Select value...</option>
                     {selectedField.options?.map(
@@ -308,7 +308,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                       }))
                     }
                     placeholder="Enter value..."
-                    className="w-full px-2 py-1.5 text-xs border border-slate-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-jade-500 bg-white dark:bg-gray-800 text-text-primary"
+                    className="w-full px-2 py-1.5 text-xs border-subtle rounded focus:outline-none focus:ring-1 focus:ring-jade-500 surface-card text-text-primary"
                   />
                 )}
               </div>

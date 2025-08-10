@@ -236,20 +236,80 @@ body,
     background-color: #f3f4f6; /* gray-100 creates subtle contrast over subtle */
   }
   .dark .surface-subtle-hover {
-    background-color: rgba(31,41,55,0.8);
+    background-color: rgba(31, 41, 55, 0.8);
+  }
+  /* Alias for row/list hover standardization */
+  .row-hover:hover {
+    background-color: #f3f4f6;
+  }
+  .dark .row-hover:hover {
+    background-color: rgba(31, 41, 55, 0.8);
   }
 
   /* Elevation utilities (token friendly) */
-  .elevation-card { box-shadow: var(--card-shadow); transition: box-shadow .18s ease, transform .18s ease; }
-  .elevation-card.hoverable:hover { box-shadow: 0 6px 16px -4px rgba(0,0,0,0.18), 0 2px 6px -2px rgba(0,0,0,0.12); }
-  .elevation-dropdown { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.10),0 4px 6px -4px rgba(0,0,0,0.10); }
-  .elevation-modal { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25),0 0 0 1px rgba(0,0,0,0.05); }
+  .elevation-card {
+    box-shadow: var(--shadow-card-rest);
+    transition:
+      box-shadow 0.18s ease,
+      transform 0.18s ease;
+  }
+  .elevation-card.hoverable:hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+  .elevation-card:active {
+    box-shadow: var(--shadow-card-active);
+  }
+  .elevation-button {
+    box-shadow: var(--shadow-button-rest);
+    transition: box-shadow 0.18s ease;
+  }
+  .elevation-button:hover {
+    box-shadow: var(--shadow-button-hover);
+  }
+  .elevation-button:active {
+    box-shadow: var(--shadow-button-active);
+  }
+  .elevation-dropdown {
+    box-shadow: var(--shadow-dropdown);
+  }
+  .elevation-modal {
+    box-shadow: var(--shadow-modal);
+  }
 
   /* Dividers */
-  .divider-light { height:1px; background: #e5e7eb; }
-  .dark .divider-light { background:#374151; }
-  .divider-strong { height:1px; background:#cbd5e1; }
-  .dark .divider-strong { background:#475569; }
+  .divider-light {
+    height: 1px;
+    background: #e5e7eb;
+  }
+  .dark .divider-light {
+    background: #374151;
+  }
+  .divider-strong {
+    height: 1px;
+    background: #cbd5e1;
+  }
+  .dark .divider-strong {
+    background: #475569;
+  }
+
+  /* Semantic border utility (replaces ad-hoc dashed placeholders) */
+  .border-subtle {
+    border: 1px solid var(--color-border);
+  }
+  .dark .border-subtle {
+    border-color: #374151;
+  }
+
+  /* Drop zone / placeholder (refined from dashed boxes) */
+  .placeholder-zone {
+    background: var(--color-bgSecondary);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+  }
+  .placeholder-zone.emphasis {
+    background: var(--color-bgBrand);
+    border-color: var(--color-primaryHover);
+  }
 
   /* Semantic Text Tokens */
   .text-text-primary {

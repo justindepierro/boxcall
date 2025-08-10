@@ -241,7 +241,7 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
         <Button
           size="xs"
           variant="outline"
-          className="w-full flex items-center justify-start px-2 py-1.5 mt-3 h-auto text-xs border-dashed"
+          className="w-full flex items-center justify-start px-2 py-1.5 mt-3 h-auto text-xs border-subtle"
         >
           <Plus className="h-3 w-3 mr-1" />
           Add Custom Category

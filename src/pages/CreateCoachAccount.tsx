@@ -734,7 +734,7 @@ export const CreateCoachAccount: React.FC = () => {
         )}
 
         {/* Step Content */}
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-8 mb-6">
+        <div className="surface-card elevation-card border-subtle rounded-lg p-8 mb-6">
           {renderStepContent()}
         </div>
 

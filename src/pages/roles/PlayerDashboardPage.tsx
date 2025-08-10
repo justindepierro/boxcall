@@ -8,7 +8,7 @@ import { Button } from "../../components/ui/Button";
  */
 const PlayerDashboardContent: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen surface-app">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -23,7 +23,7 @@ const PlayerDashboardContent: React.FC = () => {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="surface-card elevation-card hoverable rounded-lg p-6">
             <div className="flex items-center">
               <div className="bg-blue-100 dark:bg-blue-900 rounded-full p-3">
                 <Icon
@@ -35,14 +35,11 @@ const PlayerDashboardContent: React.FC = () => {
                 <p className="text-sm font-medium text-text-secondary">
                   Practices Attended
                 </p>
-                <p className="text-2xl font-bold text-text-primary">
-                  23/25
-                </p>
+                <p className="text-2xl font-bold text-text-primary">23/25</p>
               </div>
             </div>
           </div>
-
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="surface-card elevation-card hoverable rounded-lg p-6">
             <div className="flex items-center">
               <div className="bg-green-100 dark:bg-green-900 rounded-full p-3">
                 <Icon
@@ -54,14 +51,11 @@ const PlayerDashboardContent: React.FC = () => {
                 <p className="text-sm font-medium text-text-secondary">
                   Games Played
                 </p>
-                <p className="text-2xl font-bold text-text-primary">
-                  8
-                </p>
+                <p className="text-2xl font-bold text-text-primary">8</p>
               </div>
             </div>
           </div>
-
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="surface-card elevation-card hoverable rounded-lg p-6">
             <div className="flex items-center">
               <div className="bg-purple-100 dark:bg-purple-900 rounded-full p-3">
                 <Icon
@@ -73,14 +67,11 @@ const PlayerDashboardContent: React.FC = () => {
                 <p className="text-sm font-medium text-text-secondary">
                   Skill Rating
                 </p>
-                <p className="text-2xl font-bold text-text-primary">
-                  8.5
-                </p>
+                <p className="text-2xl font-bold text-text-primary">8.5</p>
               </div>
             </div>
           </div>
-
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="surface-card elevation-card hoverable rounded-lg p-6">
             <div className="flex items-center">
               <div className="bg-orange-100 dark:bg-orange-900 rounded-full p-3">
                 <Icon
@@ -92,9 +83,7 @@ const PlayerDashboardContent: React.FC = () => {
                 <p className="text-sm font-medium text-text-secondary">
                   Improvement
                 </p>
-                <p className="text-2xl font-bold text-text-primary">
-                  +2.1
-                </p>
+                <p className="text-2xl font-bold text-text-primary">+2.1</p>
               </div>
             </div>
           </div>
@@ -103,7 +92,7 @@ const PlayerDashboardContent: React.FC = () => {
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Upcoming Events */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+          <div className="surface-card elevation-card rounded-lg">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               <h3 className="text-lg font-medium flex items-center text-text-primary">
                 <Icon name="calendar" className="mr-2" />
@@ -165,7 +154,7 @@ const PlayerDashboardContent: React.FC = () => {
           </div>
 
           {/* Recent Performance */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+          <div className="surface-card elevation-card rounded-lg">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               <h3 className="text-lg font-medium flex items-center text-text-primary">
                 <Icon name="bar-chart" className="mr-2" />
@@ -245,7 +234,7 @@ const PlayerDashboardContent: React.FC = () => {
 
         {/* Quick Actions */}
         <div className="mt-8">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="surface-card elevation-card rounded-lg p-6">
             <h3 className="text-lg font-medium mb-4 text-text-primary">
               Quick Actions
             </h3>

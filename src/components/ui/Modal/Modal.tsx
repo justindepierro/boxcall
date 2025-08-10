@@ -48,7 +48,7 @@ const getModalTypeStyles = (type: ModalProps["type"]) => {
     case "confirm":
       return `${baseStyles} bg-yellow-50 dark:bg-yellow-900/20 border-yellow-400 dark:border-yellow-500`;
     default:
-      return `${baseStyles} bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600`;
+      return `${baseStyles} surface-card elevation-modal border-subtle`;
   }
 };
 const getBackdropStyles = () => {

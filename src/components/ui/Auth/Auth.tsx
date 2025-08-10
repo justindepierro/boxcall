@@ -161,7 +161,7 @@ export function LoginForm({
               <div className="w-full border-t border-gray-300 dark:border-gray-600" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white dark:bg-gray-800 text-gray-500">
+              <span className="px-2 surface-card text-text-secondary">
                 Or continue with email
               </span>
             </div>
@@ -326,7 +326,7 @@ export function SignupForm({
               <div className="w-full border-t border-gray-300 dark:border-gray-600" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white dark:bg-gray-800 text-gray-500">
+              <span className="px-2 surface-card text-text-secondary">
                 Or sign up with email
               </span>
             </div>

@@ -46,7 +46,7 @@ const PostItem: React.FC<PostItemProps> = ({
   const over = content.length > MAX;
   const display = over && !expanded ? content.slice(0, MAX) + "…" : content;
   return (
-    <li className="rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3">
+    <li className="rounded border-subtle surface-card elevation-card p-3">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
           <p className="text-sm text-gray-800 dark:text-gray-100 whitespace-pre-wrap">
@@ -298,7 +298,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
           {Array.from({ length: 3 }).map((_, i) => (
             <li
               key={i}
-              className="animate-pulse rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3"
+              className="animate-pulse rounded border-subtle surface-card p-3"
             >
               <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-5/6 mb-2" />
               <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-2/3" />
@@ -325,7 +325,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
       )}
       {canCreate && !isLoading && !error && posts.length > 0 && (
         <div
-          className="border border-gray-200 dark:border-gray-700 rounded p-4 bg-white dark:bg-gray-800"
+          className="border-subtle surface-card elevation-card rounded p-4"
           aria-label="Quick post composer"
         >
           <form onSubmit={handleSubmit} className="space-y-3" noValidate>

@@ -14,7 +14,7 @@ import type {
 } from "./Input.types";
 // Input base styles configuration - Square, technical styling with jade/navy theme
 const inputStyles: InputStylesConfig = {
-  base: "block w-full rounded-xs border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 font-sans",
+  base: "block w-full rounded-xs border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 surface-card text-text-primary placeholder-gray-500 dark:placeholder-gray-400 font-sans",
   sizes: {
     sm: "px-3 py-2 text-sm",
     md: "px-4 py-3 text-sm",

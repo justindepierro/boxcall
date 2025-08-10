@@ -186,7 +186,7 @@ export const PageLoadingSkeleton: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen surface-app">
       {/* Header skeleton */}
       <div className="bg-gradient-to-r from-surface-jade to-surface-jade border-b border-surface-jade-dark">
         <div className="max-w-7xl mx-auto px-4 py-4">

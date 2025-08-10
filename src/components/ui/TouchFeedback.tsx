@@ -351,7 +351,7 @@ export const TouchNavItem: React.FC<TouchNavItemProps> = ({
     ${
       active
         ? "bg-blue-100 text-team-primary"
-        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+        : "text-text-secondary hover:text-text-primary row-hover"
     }
   `;
 

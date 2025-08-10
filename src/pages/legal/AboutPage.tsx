@@ -140,7 +140,7 @@ export const AboutPage: React.FC = () => {
           </a>
           <a
             href="/contact"
-            className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-base font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 border-subtle text-base font-medium rounded-md text-text-primary surface-card row-hover transition-colors"
           >
             Contact Us
           </a>

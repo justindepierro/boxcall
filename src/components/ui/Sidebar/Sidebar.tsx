@@ -69,7 +69,7 @@ const getSidebarPosition = (
 const getSidebarStyles = () => {
   return `
     fixed top-0 bottom-0 z-50 flex flex-col
-    bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700
+  surface-nav border-subtle
     border-r shadow-lg
   `;
 };

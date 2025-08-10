@@ -283,7 +283,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               <div>
                 <p className="font-medium text-text-primary">
                   Team ID:{" "}
-                  <code className="bg-white dark:bg-gray-800 px-2 py-1 rounded-sm text-jade-600 font-mono">
+                  <code className="surface-subtle px-2 py-1 rounded-sm text-jade-600 font-mono">
                     {teamSettings.id}
                   </code>
                 </p>

@@ -23,7 +23,7 @@ const selectStyles: SelectStylesConfig = {
     fullWidth: "w-full",
   },
   trigger: {
-    base: "relative flex items-center justify-between w-full rounded-md border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:border-jade-600 dark:focus:border-blue-400 focus:ring-jade-500 dark:focus:ring-blue-400",
+    base: "relative flex items-center justify-between w-full rounded-md border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer surface-card text-text-primary focus:ring-jade-500 dark:focus:ring-blue-400",
     variants: {
       default: "",
       filled: "bg-gray-50 dark:bg-gray-700",
@@ -50,7 +50,7 @@ const selectStyles: SelectStylesConfig = {
     },
   },
   menu: {
-    base: "absolute z-50 w-full mt-1 rounded-md border shadow-lg overflow-hidden bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600",
+    base: "absolute z-50 w-full mt-1 rounded-md border-subtle elevation-dropdown overflow-hidden surface-card",
     positions: {
       top: "bottom-full mb-1 mt-0",
       bottom: "top-full mt-1",
@@ -58,7 +58,7 @@ const selectStyles: SelectStylesConfig = {
     maxHeight: "max-h-60 overflow-y-auto",
   },
   option: {
-    base: "flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700",
+    base: "flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 text-text-primary row-hover",
     states: {
       default: "",
       highlighted:
@@ -391,10 +391,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
       <div className={containerClasses} ref={containerRef}>
         {label && (
           <label htmlFor={selectId} className={labelClassName}>
-            <Typography
-              variant="label-md"
-              className="text-text-primary"
-            >
+            <Typography variant="label-md" className="text-text-primary">
               {label}
               {required && <span className="text-red-500 ml-1">*</span>}
             </Typography>
@@ -502,7 +499,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                 (opt) => opt.label.toLowerCase() === searchTerm.toLowerCase()
               ) && (
                 <div
-                  className={`${selectStyles.option.base} border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700`}
+                  className={`${selectStyles.option.base} border-t border-subtle`}
                   onClick={() => onCreateOption?.(searchTerm)}
                 >
                   <span className="text-blue-600">Create "{searchTerm}"</span>

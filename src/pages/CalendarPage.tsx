@@ -153,18 +153,15 @@ export const CalendarPage: React.FC = () => {
     );
   }
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen surface-app">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="surface-header border-b border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Icon name="calendar" size="xl" className="text-navy-600" />
               <div>
-                <Typography
-                  variant="headline-xl"
-                  className="text-text-primary"
-                >
+                <Typography variant="headline-xl" className="text-text-primary">
                   Master Calendar
                 </Typography>
                 <Typography variant="body-lg" color="muted" className="mt-1">
@@ -209,10 +206,7 @@ export const CalendarPage: React.FC = () => {
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Icon name="search" size="lg" className="text-navy-600" />
-                <Typography
-                  variant="headline-md"
-                  className="text-text-primary"
-                >
+                <Typography variant="headline-md" className="text-text-primary">
                   Universal Search
                 </Typography>
               </div>
@@ -238,10 +232,7 @@ export const CalendarPage: React.FC = () => {
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Icon name="filter" size="lg" className="text-navy-600" />
-                <Typography
-                  variant="headline-md"
-                  className="text-text-primary"
-                >
+                <Typography variant="headline-md" className="text-text-primary">
                   Filters
                 </Typography>
               </div>
@@ -349,10 +340,7 @@ export const CalendarPage: React.FC = () => {
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Icon name="bar-chart" size="lg" className="text-navy-600" />
-                <Typography
-                  variant="headline-md"
-                  className="text-text-primary"
-                >
+                <Typography variant="headline-md" className="text-text-primary">
                   Stats
                 </Typography>
               </div>

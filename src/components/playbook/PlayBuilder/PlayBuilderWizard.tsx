@@ -106,7 +106,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                 <h3 className="text-lg font-medium text-slate-900 mb-6">
                   Live Preview
                 </h3>
-                <div className="bg-slate-50 rounded-lg bc-card-padding border-2 border-dashed border-slate-300">
+                <div className="bg-slate-50 rounded-lg bc-card-padding border-subtle">
                   <div className="text-center">
                     <div className="text-slate-400 mb-4">
                       <svg

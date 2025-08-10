@@ -100,7 +100,7 @@ export function Form({
   };
   const variantClasses = {
     default: "space-y-6",
-    card: "bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 bc-card-padding space-y-6",
+    card: "surface-card elevation-card rounded-lg border-subtle bc-card-padding space-y-6",
     inline: "space-y-4",
     modal: "space-y-4",
   };
@@ -261,10 +261,7 @@ export function FormGroup({
       {(title || description) && (
         <div className="space-y-1">
           {title && (
-            <Typography
-              variant="headline-sm"
-              className="text-text-primary"
-            >
+            <Typography variant="headline-sm" className="text-text-primary">
               {title}
             </Typography>
           )}

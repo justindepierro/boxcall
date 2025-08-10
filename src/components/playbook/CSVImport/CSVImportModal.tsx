@@ -189,7 +189,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       </div>
 
       <div
-        className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+        className={`relative placeholder-zone rounded-lg p-8 text-center transition-colors ${
           dragActive
             ? "border-jade-400 bg-jade-50"
             : "border-slate-300 hover:border-slate-400"

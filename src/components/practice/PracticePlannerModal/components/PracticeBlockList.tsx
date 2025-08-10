@@ -70,7 +70,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className={`space-y-3 min-h-[200px] p-4 rounded-lg border-2 border-dashed transition-colors ${
+              className={`space-y-3 min-h-[200px] p-4 rounded-lg placeholder-zone transition-colors ${
                 snapshot.isDraggingOver
                   ? "border-blue-400 bg-blue-50"
                   : "border-gray-300 bg-gray-50"

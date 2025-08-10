@@ -46,9 +46,7 @@ export const OnboardingHint: React.FC<OnboardingHintProps> = ({
   }, [title]);
 
   return (
-    <div
-      className={`border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 surface-card ${className}`}
-    >
+    <div className={`surface-card border-subtle rounded-lg p-6 ${className}`}>
       <div className="flex items-start gap-3 mb-3">
         <div className="mt-0.5">
           <Icon name={icon as IconName} size="md" />
@@ -82,7 +80,7 @@ export const OnboardingHint: React.FC<OnboardingHintProps> = ({
               a.variant === "primary"
                 ? "bg-jade-500 hover:bg-jade-600 text-white"
                 : a.variant === "secondary"
-                  ? "border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  ? "border-subtle row-hover"
                   : "text-jade-600 dark:text-jade-400 hover:underline";
             if (a.href) {
               return (

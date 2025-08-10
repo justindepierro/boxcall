@@ -76,9 +76,7 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
         )}
       </div>
       {isLoading && (
-        <div className="text-sm text-text-secondary">
-          Loading events...
-        </div>
+        <div className="text-sm text-text-secondary">Loading events...</div>
       )}
       {!isLoading && !events.length && (
         <OnboardingHint
@@ -106,15 +104,13 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
         />
       )}
       {!!events.length && !isLoading && (
-  <ul className="space-y-2" aria-label="Upcoming team events">
+        <ul className="space-y-2" aria-label="Upcoming team events">
           {events.slice(0, 6).map((ev) => (
             <li
               key={ev.id}
               className="flex items-center justify-between text-sm surface-subtle rounded px-3 py-2 hover:bg-surface-subtle/70 transition-colors"
             >
-              <span className="font-medium text-text-primary">
-                {ev.title}
-              </span>
+              <span className="font-medium text-text-primary">{ev.title}</span>
               <span className="text-text-secondary">
                 {new Date(ev.starts_at).toLocaleDateString(undefined, {
                   month: "short",

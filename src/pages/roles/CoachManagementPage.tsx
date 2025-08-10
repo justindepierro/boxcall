@@ -8,7 +8,7 @@ import { Button } from "../../components/ui/Button/Button";
  */
 const CoachManagementContent: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen surface-app">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -24,7 +24,7 @@ const CoachManagementContent: React.FC = () => {
         {/* Quick Actions Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {/* Team Management */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="surface-card elevation-card hoverable rounded-lg p-6">
             <h3 className="text-lg font-medium mb-4 flex items-center text-text-primary">
               <Icon name="team" className="mr-2" />
               Team Management
@@ -58,7 +58,7 @@ const CoachManagementContent: React.FC = () => {
           </div>
 
           {/* Playbook */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="surface-card elevation-card hoverable rounded-lg p-6">
             <h3 className="text-lg font-medium mb-4 flex items-center text-text-primary">
               <Icon name="book" className="mr-2" />
               Playbook
@@ -92,7 +92,7 @@ const CoachManagementContent: React.FC = () => {
           </div>
 
           {/* Practice Planning */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="surface-card elevation-card hoverable rounded-lg p-6">
             <h3 className="text-lg font-medium mb-4 flex items-center text-text-primary">
               <Icon name="calendar" className="mr-2" />
               Practice Planning
@@ -127,7 +127,7 @@ const CoachManagementContent: React.FC = () => {
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div className="surface-card elevation-card rounded-lg">
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
             <h3 className="text-lg font-medium text-text-primary">
               Recent Activity
@@ -143,9 +143,7 @@ const CoachManagementContent: React.FC = () => {
                   <p className="text-sm text-text-primary">
                     Created new play: "Slant Right Formation"
                   </p>
-                  <p className="text-xs text-text-secondary">
-                    2 hours ago
-                  </p>
+                  <p className="text-xs text-text-secondary">2 hours ago</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -156,9 +154,7 @@ const CoachManagementContent: React.FC = () => {
                   <p className="text-sm text-text-primary">
                     Scheduled practice for Thursday 3:30 PM
                   </p>
-                  <p className="text-xs text-text-secondary">
-                    5 hours ago
-                  </p>
+                  <p className="text-xs text-text-secondary">5 hours ago</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -169,9 +165,7 @@ const CoachManagementContent: React.FC = () => {
                   <p className="text-sm text-text-primary">
                     Added new player: John Smith (#23)
                   </p>
-                  <p className="text-xs text-text-secondary">
-                    1 day ago
-                  </p>
+                  <p className="text-xs text-text-secondary">1 day ago</p>
                 </div>
               </div>
             </div>

@@ -136,10 +136,10 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
           onBlur={handleInputBlur}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg 
+          className="block w-full pl-10 pr-10 py-3 border-subtle rounded-lg 
                    focus:ring-2 focus:ring-jade-500 focus:border-jade-600 
                    placeholder-gray-500 text-sm transition-colors duration-200
-       bg-white dark:bg-gray-800 shadow-sm hover:border-gray-400 dark:border-gray-600"
+       surface-card shadow-sm hover:border-gray-400"
         />
 
         {searchQuery && (
@@ -160,8 +160,8 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
       {isOpen && suggestions.length > 0 && (
         <div
           ref={dropdownRef}
-          className="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg 
-       border border-gray-200 dark:border-gray-700 dark:bg-gray-800 max-h-64 overflow-y-auto"
+          className="absolute z-50 w-full mt-1 surface-card rounded-lg elevation-dropdown 
+       border-subtle max-h-64 overflow-y-auto"
         >
           <div className="py-1">
             {suggestions.map((suggestion, index) => {
@@ -179,7 +179,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
                   className={`w-full justify-start px-4 py-2 text-left text-sm flex items-center space-x-3 rounded-none ${
                     isSelected
                       ? "bg-blue-50 text-blue-700 dark:bg-blue-900/40"
-                      : "text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700"
+                      : "text-text-secondary row-hover"
                   }`}
                 >
                   {isHistory ? (

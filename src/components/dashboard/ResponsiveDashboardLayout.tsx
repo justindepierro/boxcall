@@ -40,7 +40,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen surface-app">
         <div className="text-center max-w-md px-4">
           <Typography variant="headline-lg" className="text-red-600 mb-4">
             Authentication Error
@@ -55,7 +55,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
 
   if (!user || !profile) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen surface-app">
         <div className="text-center max-w-md px-4">
           <Typography variant="headline-lg" className="text-red-600 mb-4">
             Failed to load dashboard
@@ -71,7 +71,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
   const userRole = profile.role || "player";
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen surface-app">
       {/* 
         ============================================================================
         WELCOME HEADER - Responsive across all breakpoints

@@ -66,6 +66,22 @@
   --card-border: #e5e7eb;
   --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
 
+  /* Elevation / Shadow Tokens (expanded for semantic utilities) */
+  --shadow-card-rest:
+    0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-card-hover:
+    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-card-active: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-button-rest: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-button-hover:
+    0 2px 4px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-button-active: inset 0 1px 2px 0 rgb(0 0 0 / 0.1);
+  --shadow-dropdown:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-modal:
+    0 25px 50px -12px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(0 0 0 / 0.05);
+  --shadow-focus-ring: 0 0 0 2px rgb(4 120 87 / 0.2);
+
   --navigation-background: #ffffff;
   --navigation-border: #e5e7eb;
   --navigation-linkHover: #ecfdf5;
@@ -89,4 +105,18 @@
   --color-textPrimary: #f9fafb;
   --color-textSecondary: #d1d5db;
   --color-border: #374151;
+  /* Dark mode elevation tuning (slightly reduced spread/opacity if desired) */
+  --shadow-card-rest:
+    0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+  --shadow-card-hover:
+    0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-card-active: 0 1px 2px 0 rgb(0 0 0 / 0.35);
+  --shadow-button-rest: 0 1px 2px 0 rgb(0 0 0 / 0.35);
+  --shadow-button-hover:
+    0 2px 4px 0 rgb(0 0 0 / 0.45), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+  --shadow-button-active: inset 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --shadow-dropdown:
+    0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+  --shadow-modal:
+    0 25px 50px -12px rgb(0 0 0 / 0.75), 0 0 0 1px rgb(255 255 255 / 0.05);
 }

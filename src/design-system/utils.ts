@@ -7,7 +7,6 @@ import {
   colorTokens,
   semanticTokens,
   componentTokens,
-  elevationTokens,
   contrastTokens,
 } from "./tokens";
 
@@ -94,12 +93,12 @@ export const tokenClasses = {
   iconInverted: `text-[${contrastTokens.text.onDark}]`,
 
   // Enhanced elevation classes
-  elevationCard: `shadow-[${elevationTokens.card.resting}]`,
-  elevationCardHover: `shadow-[${elevationTokens.card.hover}]`,
-  elevationButton: `shadow-[${elevationTokens.button.resting}]`,
-  elevationButtonHover: `shadow-[${elevationTokens.button.hover}]`,
-  elevationModal: `shadow-[${elevationTokens.modal}]`,
-  elevationDropdown: `shadow-[${elevationTokens.dropdown}]`,
+  elevationCard: "elevation-card",
+  elevationCardHover: "elevation-card hoverable",
+  elevationButton: "elevation-button",
+  elevationButtonHover: "elevation-button", // hover state handled in CSS
+  elevationModal: "elevation-modal",
+  elevationDropdown: "elevation-dropdown",
 
   // Enhanced contrast classes
   textHighContrast: `text-[${contrastTokens.text.onLight}]`,
