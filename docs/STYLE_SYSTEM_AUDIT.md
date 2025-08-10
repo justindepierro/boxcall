@@ -47,40 +47,57 @@
 
 ### Phase 1 (Unification)
 
-6. ⏳ Inventory & migrate all raw `<button>` elements to shared `Button` component (script planned).
+6. ✅ Inventory & migrate all raw `<button>` elements to shared `Button` component (completed; 0 non-exempt remain; ESLint guard in place).
 7. ⏳ Implement `Badge` & `Tag` primitives; refactor inline pills / status chips (Badge exists; Tag pending).
-8. ⏳ Add `palette.ts` (semantic mapping) exporting structural + semantic tokens.
-9. ⏳ Apply semantic surface classes (`surface-card`, `surface-subtle`) to cards/modals instead of raw `bg-white/bg-gray-*`.
-10. ⏳ Replace ad-hoc heading classes with `<Typography>` usage (script to flag offenders).
+8. ✅ Token system centralization (`tokens.ts`) already in place; rename task to "Adopt tokens.ts as canonical palette" (complete).
+9. ⏳ Apply semantic surface classes (`surface-card`, `surface-subtle`) to cards/modals instead of raw `bg-white/bg-gray-*` (next: identify top 15 offenders via style audit extension).
+10. ⏳ Replace ad-hoc heading classes with `<Typography>` usage (script to flag offenders) – planned after surface pass.
 
 ### Phase 2 (Automation & Gates)
 
-11. ⏳ Script `scripts/style-audit.mjs`: parse JSX classNames → produce JSON + Markdown (color utility usage, components missing primitives).
-12. ⏳ Add `scripts/contrast-check.mjs`: static approximate contrast evaluation of foreground/background pairs (logs failures).
-13. ⏳ ESLint custom rule: forbid `text-white` unless paired with approved dark/brand backgrounds.
-14. ⏳ Add `npm run style-audit` to predev / CI pipeline (fails on violations).
-15. ⏳ Snapshot baseline diff before enabling fail mode (allow learning period).
+11. ✅ `scripts/style-audit.mjs` baseline generated (metrics recorded; to be extended with surface semantic mapping check).
+12. ✅ `scripts/contrast-check.mjs` added; button variants AA baseline = 0 violations.
+13. ⏳ ESLint custom rule: forbid unsafe `text-white` (pending – will use style-audit JSON as source-of-truth to reduce false positives).
+14. ⏳ Add audit scripts to predev / CI with non-failing mode (after rule 13 drafted).
+15. ⏳ Snapshot baseline diff before enabling fail mode (target after surfaces + Typography migration to avoid churn).
 
 ### Phase 3 (Token Hardening)
 
-16. ⏳ Introduce CSS variable layer: `:root { --color-primary-bg: #00A86B; ... }` with dark overrides under `.dark`.
-17. ⏳ Refactor `buttonVariants` to consume token maps (no raw tailwind color utilities inside variant definitions).
-18. ⏳ Build `semanticClasses` generator (maps tokens → tailwind safelisted classes) for future theme overrides.
-19. ⏳ Replace direct radius utilities with token classes (`radius-xs`, `radius-sm`, `radius-md`).
+16. ⏳ Introduce CSS variable layer: `:root { --color-primary-bg: #00A86B; ... }` (design tokens exist; need build step to emit CSS vars for runtime theming).
+17. ⏳ Refactor `buttonVariants` to consume token maps (partial; contrast-driven tweaks done, structural refactor pending to remove direct utility color coupling).
+18. ⏳ Build `semanticClasses` generator (maps tokens → tailwind safelisted classes) – will follow CSS var export to ensure consistency.
+19. ⏳ Replace direct radius utilities with token classes (`radius-xs`, `radius-sm`, `radius-md`) – add lint autofix later.
 
 ### Phase 4 (Accessibility & Motion)
 
-20. ⏳ Audit focus-visible: ensure all interactive elements have strong, non-color-only focus states (≥2px outline or ring).
-21. ⏳ Honor `prefers-reduced-motion`: wrap animations in media query & provide fallback.
-22. ⏳ Validate keyboard navigation order & skip links (expand beyond current single skip link).
-23. ⏳ Add high contrast theme toggle (phase backlog if bandwidth limited).
+20. ⏳ Audit focus-visible: check non-Button primitives (inputs, custom cells) – queued after surface class adoption.
+21. ⏳ Honor `prefers-reduced-motion`: wrap existing keyframe utilities – create motion token map first.
+22. ⏳ Validate keyboard navigation order & skip links – schedule after dense timeline adjustments stabilize.
+23. ⏳ High contrast theme toggle (backlog; dependent on CSS variable layer from Phase 3).
 
 ### Phase 5 (Documentation & Governance)
 
-24. ⏳ Author `STYLE_GUIDE.md` (visual examples, do/don't, component matrices).
-25. ⏳ Publish color contrast matrix (rows: backgrounds, columns: text variants).
-26. ⏳ PR checklist updates: design primitives usage, contrast pass, no new disallowed utilities.
-27. ⏳ Weekly automated style report appended to `docs/styles/REPORT_<date>.md`.
+24. ⏳ Author `STYLE_GUIDE.md` (visual examples, do/don't, component matrices) – skeleton after Typography & surface adoption.
+25. ✅ Publish button contrast matrix (initial done; expand to full color matrix later) – reclassify broader matrix as Phase 5b.
+26. ⏳ PR checklist updates (integrate with style audit output) – draft after ESLint `text-white` rule.
+27. ⏳ Weekly automated style report appended to `docs/styles/REPORT_<date>.md` – implement once CI job added.
+
+### Direction Summary (Where We're Headed Next)
+
+Short Term (Next Working Block):
+- Extend style-audit to flag top N `bg-white/bg-gray-*` containers lacking semantic surface class; produce remediation list.
+- Draft ESLint `no-unsafe-white` rule (warn mode) using allowlist of approved dark backgrounds.
+- Introduce `<Typography>` sweep script to compute heading adoption % baseline.
+
+Mid Term (Following Phases):
+- Emit CSS variable map from `tokens.ts` into a generated `:root` stylesheet (support theming & high-contrast toggle).
+- Refactor Button variant definitions to consume token constants (remove raw color utility strings) enabling theme swap.
+- Build `Badge` + `Tag` primitives and migrate ad-hoc pills.
+
+Long Term (Governance & Theming):
+- CI gating: style & contrast scripts run in non-fail baseline now → switch to fail after remediation thresholds hit.
+- Add semantic class generator & enforce via lint for future-proof palette swapping.
+- Publish full contrast matrix (text variants × surfaces) in docs.
 
 ## 5. Scripts & Tooling (Planned)
 
