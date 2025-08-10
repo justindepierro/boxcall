@@ -181,20 +181,26 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                   </div>
                   {/* Actions Menu */}
                   <div className="flex space-x-1">
-                    <button
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="xs"
                       onClick={() => onEditPlayer(player)}
-                      className="p-1 text-gray-400 hover:text-jade-600 transition-colors"
-                      title="Edit Player"
+                      aria-label="Edit Player"
+                      className="p-1 h-auto w-auto text-text-secondary hover:text-brand-jade"
                     >
                       <Icon name="edit" size="sm" />
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="xs"
                       onClick={() => onDeletePlayer(player.id)}
-                      className="p-1 text-gray-400 hover:text-red-600 transition-colors"
-                      title="Remove Player"
+                      aria-label="Remove Player"
+                      className="p-1 h-auto w-auto text-text-secondary hover:text-red-600"
                     >
                       <Icon name="delete" size="sm" />
-                    </button>
+                    </Button>
                   </div>
                 </div>
                 {/* Positions */}

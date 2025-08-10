@@ -2,6 +2,7 @@ import React from "react";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
+import { Button } from "../components/ui/Button/Button";
 /**
  * Templates - Coach resource hub with downloadable templates and import tools
  * Available to coaches only
@@ -45,55 +46,76 @@ export const Templates: React.FC = () => {
             {/* Roster Import */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <Icon name="users" size="xl" color="navy" className="mr-3" />
+                <Icon
+                  name="users"
+                  size="xl"
+                  color="secondary"
+                  className="mr-3"
+                />
                 <Typography variant="headline-md">Roster Import</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
                 CSV template for importing team rosters with player details,
                 positions, and contact information.
               </Typography>
-              <button
+              <Button
                 onClick={() => {
                   // TODO: Implement template action
                 }}
-                className="w-full bg-jade-600 text-white px-4 py-2 rounded-lg hover:bg-jade-600 text-sm font-medium"
+                variant="primary"
+                size="sm"
+                fullWidth
               >
                 Download CSV Template
-              </button>
+              </Button>
             </Card>
             {/* Playbook Import */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <Icon name="book" size="xl" color="navy" className="mr-3" />
+                <Icon
+                  name="book"
+                  size="xl"
+                  color="secondary"
+                  className="mr-3"
+                />
                 <Typography variant="headline-md">Playbook Import</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
                 Structured CSV format for importing plays, formations, and
                 strategic information into your digital playbook.
               </Typography>
-              <button
+              <Button
                 onClick={() => downloadTemplate("playbook-import.csv")}
-                className="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 text-sm font-medium"
+                variant="primary"
+                size="sm"
+                fullWidth
               >
                 Download CSV Template
-              </button>
+              </Button>
             </Card>
             {/* Playscript Import */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <Icon name="file" size="xl" color="navy" className="mr-3" />
+                <Icon
+                  name="file"
+                  size="xl"
+                  color="secondary"
+                  className="mr-3"
+                />
                 <Typography variant="headline-md">Playscript Maker</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
                 CSV template for creating and uploading detailed play scripts
                 with timing, formations, and player assignments.
               </Typography>
-              <button
+              <Button
                 onClick={() => downloadTemplate("playscript-template.csv")}
-                className="w-full bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 text-sm font-medium"
+                variant="primary"
+                size="sm"
+                fullWidth
               >
                 Download CSV Template
-              </button>
+              </Button>
             </Card>
           </div>
         </div>
@@ -107,7 +129,12 @@ export const Templates: React.FC = () => {
             {/* Playbook Diagrams */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <Icon name="target" size="xl" color="navy" className="mr-3" />
+                <Icon
+                  name="target"
+                  size="xl"
+                  color="secondary"
+                  className="mr-3"
+                />
                 <Typography variant="headline-md">Playbook Diagrams</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -116,18 +143,22 @@ export const Templates: React.FC = () => {
                 strategies.
               </Typography>
               <div className="space-y-2">
-                <button
+                <Button
                   onClick={() => downloadTemplate("offensive-plays.pdf")}
-                  className="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 text-sm font-medium"
+                  variant="outline"
+                  size="sm"
+                  fullWidth
                 >
                   Download Offensive Plays (PDF)
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => downloadTemplate("defensive-formations.png")}
-                  className="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 text-sm font-medium"
+                  variant="outline"
+                  size="sm"
+                  fullWidth
                 >
                   Download Defensive Formations (PNG)
-                </button>
+                </Button>
               </div>
             </Card>
             {/* Formation Templates */}
@@ -145,18 +176,22 @@ export const Templates: React.FC = () => {
                 in multiple formats for easy editing and printing.
               </Typography>
               <div className="space-y-2">
-                <button
+                <Button
                   onClick={() => downloadTemplate("blank-formations.pdf")}
-                  className="w-full bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 text-sm font-medium"
+                  variant="outline"
+                  size="sm"
+                  fullWidth
                 >
                   Download Blank Templates (PDF)
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => downloadTemplate("formation-builder.png")}
-                  className="w-full bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 text-sm font-medium"
+                  variant="outline"
+                  size="sm"
+                  fullWidth
                 >
                   Download Builder Template (PNG)
-                </button>
+                </Button>
               </div>
             </Card>
           </div>
@@ -164,33 +199,45 @@ export const Templates: React.FC = () => {
         {/* Import Tools */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-6">
-            <Icon name="wrench" size="xl" color="primary" />
+            <Icon name="settings" size="xl" color="primary" />
             <Typography variant="headline-lg">Coaching Tools</Typography>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Practice Planner */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <Icon name="clock" size="xl" color="navy" className="mr-3" />
+                <Icon
+                  name="clock"
+                  size="xl"
+                  color="secondary"
+                  className="mr-3"
+                />
                 <Typography variant="headline-md">Practice Planner</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
                 Advanced practice planning tool with drag-and-drop scheduling,
                 timing controls, and drill management for efficient practices.
               </Typography>
-              <button
+              <Button
                 onClick={() => {
                   // TODO: Open practice planner
                 }}
-                className="w-full bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 text-sm font-medium"
+                variant="primary"
+                size="sm"
+                fullWidth
               >
                 Open Practice Planner
-              </button>
+              </Button>
             </Card>
             {/* Data Import Wizard */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <Icon name="upload" size="xl" color="navy" className="mr-3" />
+                <Icon
+                  name="upload"
+                  size="xl"
+                  color="secondary"
+                  className="mr-3"
+                />
                 <Typography variant="headline-md">
                   Data Import Wizard
                 </Typography>
@@ -214,7 +261,12 @@ export const Templates: React.FC = () => {
             {/* Bulk Data Export */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <Icon name="download" size="xl" color="navy" className="mr-3" />
+                <Icon
+                  name="download"
+                  size="xl"
+                  color="secondary"
+                  className="mr-3"
+                />
                 <Typography variant="headline-md">Bulk Export</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -238,14 +290,19 @@ export const Templates: React.FC = () => {
         {/* Advanced Tools */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-6">
-            <Icon name="cog" size="xl" color="primary" />
+            <Icon name="settings" size="xl" color="primary" />
             <Typography variant="headline-lg">Advanced Tools</Typography>
           </div>
           <div className="grid gap-6 md:grid-cols-2">
             {/* Template Builder */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <Icon name="wrench" size="xl" color="navy" className="mr-3" />
+                <Icon
+                  name="settings"
+                  size="xl"
+                  color="secondary"
+                  className="mr-3"
+                />
                 <Typography variant="headline-md">Template Builder</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -267,7 +324,12 @@ export const Templates: React.FC = () => {
             {/* API Integration */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <Icon name="database" size="xl" color="navy" className="mr-3" />
+                <Icon
+                  name="database"
+                  size="xl"
+                  color="secondary"
+                  className="mr-3"
+                />
                 <Typography variant="headline-md">API Integration</Typography>
               </div>
               <Typography variant="body-md" color="muted" className="mb-4">
@@ -306,12 +368,13 @@ export const Templates: React.FC = () => {
             set up your team for success.
           </Typography>
           <div className="space-y-3">
-            <button
+            <Button
               onClick={() => downloadTemplate("boxcall-quick-start-guide.pdf")}
-              className="bg-jade-500 text-white px-6 py-3 rounded-lg hover:bg-jade-600 text-sm font-medium"
+              variant="primary"
+              size="md"
             >
               Download Quick Start Guide (PDF)
-            </button>
+            </Button>
             <div className="text-sm text-gray-500 dark:text-gray-400">
               Includes step-by-step instructions and best practices
             </div>
@@ -328,15 +391,15 @@ export const Templates: React.FC = () => {
             optimized.
           </Typography>
           <div className="flex flex-wrap gap-4">
-            <button className="bg-jade-600 text-white px-4 py-2 rounded-lg hover:bg-jade-600 text-sm font-medium">
+            <Button variant="primary" size="sm">
               Contact Support
-            </button>
-            <button className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 text-sm font-medium">
+            </Button>
+            <Button variant="ghost" size="sm">
               Video Tutorials
-            </button>
-            <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 text-sm font-medium">
+            </Button>
+            <Button variant="success" size="sm">
               Schedule Demo
-            </button>
+            </Button>
           </div>
         </div>
       </div>

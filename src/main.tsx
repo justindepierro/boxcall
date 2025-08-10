@@ -5,6 +5,8 @@ import { AppProviders } from "./app/providers.tsx";
 import "./index.css";
 import "./styles/responsive-dashboard.css";
 import "./styles/density.css";
+// Development-only contrast debugging overlay (activated via localStorage 'debugContrast')
+import "./dev/contrastDebug";
 
 // Web Vitals monitoring for production
 if (process.env.NODE_ENV === "production") {

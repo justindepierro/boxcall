@@ -53,25 +53,34 @@ const PostItem: React.FC<PostItemProps> = ({
             {display}
           </p>
           {over && (
-            <button
+            <Button
               type="button"
+              size="xs"
+              variant="link"
               onClick={() => setExpanded((e) => !e)}
-              className="mt-1 text-xs text-blue-600 dark:text-blue-400 underline"
+              className="mt-1"
               aria-expanded={expanded}
             >
               {expanded ? "Show less" : "Read more"}
-            </button>
+            </Button>
           )}
         </div>
         {canPin && (
-          <button
+          <Button
+            type="button"
+            size="xs"
+            variant={is_pinned ? "secondary" : "ghost"}
             onClick={() => onTogglePin(id, !!is_pinned)}
-            className={`text-xs px-2 py-1 rounded border transition-colors ${is_pinned ? "bg-amber-200 dark:bg-amber-600/30 border-amber-300 dark:border-amber-500 text-amber-800 dark:text-amber-200" : "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"}`}
             aria-pressed={!!is_pinned}
             aria-label={is_pinned ? "Unpin post" : "Pin post"}
+            className={
+              is_pinned
+                ? "bg-amber-200 dark:bg-amber-600/30 border border-amber-300 dark:border-amber-500 text-amber-800 dark:text-amber-200"
+                : "border border-transparent text-text-secondary hover:text-text-primary"
+            }
           >
             {is_pinned ? "Pinned" : "Pin"}
-          </button>
+          </Button>
         )}
       </div>
       <div className="mt-2 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
@@ -300,12 +309,15 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
       {!!error && (
         <div className="rounded border border-red-200 dark:border-red-700 bg-red-50 dark:bg-red-900/30 p-4 text-sm text-red-700 dark:text-red-300">
           Failed to load posts.
-          <button
-            className="underline ml-1"
+          <Button
+            type="button"
+            variant="link"
+            size="xs"
+            className="ml-1"
             onClick={() => window.location.reload()}
           >
             Retry
-          </button>
+          </Button>
           {error.message && (
             <div className="mt-1 text-xs opacity-75">{error.message}</div>
           )}

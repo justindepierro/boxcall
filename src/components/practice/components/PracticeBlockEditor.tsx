@@ -340,12 +340,16 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
               className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-sm"
             >
               {item}
-              <button
+              <Button
+                type="button"
+                variant="ghost"
+                size="xs"
                 onClick={() => removeFocusItem(index)}
-                className="text-blue-600 hover:text-blue-800"
+                aria-label={`Remove focus ${item}`}
+                className="p-0 h-auto w-auto text-blue-600 hover:text-blue-800 bg-transparent"
               >
                 <Icon name="close" size="xs" />
-              </button>
+              </Button>
             </span>
           ))}
         </div>
@@ -369,12 +373,16 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
               className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-md text-sm"
             >
               {item}
-              <button
+              <Button
+                type="button"
+                variant="ghost"
+                size="xs"
                 onClick={() => removeEquipmentItem(index)}
-                className="text-green-600 hover:text-green-800"
+                aria-label={`Remove equipment ${item}`}
+                className="p-0 h-auto w-auto text-green-600 hover:text-green-800 bg-transparent"
               >
                 <Icon name="close" size="xs" />
-              </button>
+              </Button>
             </span>
           ))}
         </div>

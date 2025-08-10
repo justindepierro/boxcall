@@ -42,7 +42,7 @@
 1. ✅ Identify and patch any white text on light backgrounds (IN PROGRESS: 197 heuristic candidates queued; triage subset next).
 2. ✅ Codemod: `bg-emerald-*` → `bg-jade-*` (complete – 156 replacements).
 3. ✅ Replace strong blue CTA backgrounds with semantic `Button` variant (complete – 158 replacements; 1 doc example retained).
-4. ⏳ Introduce temporary `.debug-contrast` utility (outline low-contrast nodes) for manual QA.
+4. ✅ Introduce temporary `.debug-contrast` (runtime overlay `contrastDebug.ts`) for manual QA (enable with localStorage flag).
 5. ✅ Create this audit doc & commit baseline metrics.
 
 ### Phase 1 (Unification)
@@ -93,22 +93,22 @@
 
 ## 6. Metrics & Success Criteria
 
-| Metric                              | Baseline               | Goal Phase 1 | Goal Phase 2 | Final Target             |
-| ----------------------------------- | ---------------------- | ------------ | ------------ | ------------------------ |
-| Raw `text-white` occurrences        | 322 (197 flagged heuristically for review) | <250         | <190         | <150 (mostly primitives) |
-| Legacy emerald usages               | 33 (→ 0 after codemod) | 0            | 0            | 0                        |
-| Blue CTA backgrounds (non-semantic) | 27 (→ 1 after codemod) | <10          | <3           | 0                        |
-| Non-primitive buttons (%)           | TBC                    | <40%         | <15%         | <5%                      |
-| Contrast violations (AA)            | TBD (after first scan) | <10          | 0            | 0                        |
-| Headings using Typography (%)       | TBD                    | >80%         | >95%         | 100%                     |
+| Metric                              | Baseline                                                                                     | Goal Phase 1 | Goal Phase 2 | Final Target             |
+| ----------------------------------- | -------------------------------------------------------------------------------------------- | ------------ | ------------ | ------------------------ |
+| Raw `text-white` occurrences        | 322 (197 flagged heuristically for review)                                                   | <250         | <190         | <150 (mostly primitives) |
+| Legacy emerald usages               | 33 (→ 0 after codemod)                                                                       | 0            | 0            | 0                        |
+| Blue CTA backgrounds (non-semantic) | 27 (→ 1 after codemod)                                                                       | <10          | <3           | 0                        |
+| Non-primitive button files          | 78 (baseline) → 74 (after pass 1) → 73 (JoinTeam) → 72 (Templates) → 71 (PracticeBlocksList) | <40          | <15          | <5                       |
+| Contrast violations (AA)            | TBD (after first scan)                                                                       | <10          | 0            | 0                        |
+| Headings using Typography (%)       | TBD                                                                                          | >80%         | >95%         | 100%                     |
 
 ## 7. Immediate Task List (Active)
 
 - [x] (P0) Codemod emerald → jade mapping applied (156 replacements; legacy usages now 0).
 - [ ] (P0) Identify & patch white-on-light risk clusters (197 heuristic candidates; prioritize high-traffic screens first).
 - [x] (P0) Migrate highest-traffic blue CTAs to `Button` primary variant (blue 500/600 CTAs → jade; 1 remaining in docs README).
-- [ ] (P0) Add `.debug-contrast` utility (temporary).
-- [ ] (P0) Commit baseline metrics (this doc).
+- [x] (P0) Add `.debug-contrast` utility (runtime overlay loaded in dev via import in `main.tsx`).
+- [x] (P0) Commit baseline metrics (this doc).
 
 ## 8. Risk & Mitigation
 
@@ -150,8 +150,15 @@ PR Checklist Additions (Planned):
 | 2025-08-10 | Codemod run #1 (emerald→jade) | Palette consolidation (156 replacements; legacy emerald utilities removed)         |
 | 2025-08-10 | Codemod run #2 (blue CTAs)    | Consolidated high-emphasis blues → jade (158 replacements; 1 doc example retained) |
 | (add)      | Introduced style audit script | Automation foundation                                                              |
-| 2025-08-10 | White-on-light scan heuristic | 197 potential candidates identified for triage                                    |
+| 2025-08-10 | White-on-light scan heuristic | 197 potential candidates identified for triage                                     |
+| 2025-08-10 | Button inventory script       | Added `scripts/inventory-buttons.mjs` + npm script `style:inventory:buttons`       |
+| 2025-08-10 | Button migration pass 1       | Removed mixed usage; raw button files 78 → 74                                      |
+| 2025-08-10 | JoinTeam cluster migrated     | Largest raw button cluster (13) converted to `Button`; metric 74 → 73              |
+| 2025-08-10 | Templates cluster migrated    | Second largest cluster (12) converted; metric 73 → 72                              |
+| 2025-08-10 | PracticeBlocksList migrated   | Third cluster (10) converted; metric 72 → 71                                       |
 
 ---
 
 **Next Action After Commit:** Execute emerald→jade codemod prototype and patch top 5 white-on-light issues; then update metrics section.
+
+> Button Inventory: Run `npm run style:inventory:buttons` to generate `docs/style-inventory/buttons.{json,md}`; update "Non-primitive buttons (%)" baseline after first run.

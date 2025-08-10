@@ -249,18 +249,22 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             </h3>
             <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
               {FOOTBALL_POSITIONS.map((position) => (
-                <button
+                <Button
                   key={position}
                   type="button"
-                  onClick={() => handlePositionToggle(position)}
-                  className={`px-3 py-2 text-sm font-medium rounded transition-colors ${
+                  size="sm"
+                  variant={
+                    formData.positions?.includes(position) ? "primary" : "ghost"
+                  }
+                  className={
                     formData.positions?.includes(position)
-                      ? "bg-jade-500 text-white"
-                      : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                  }`}
+                      ? ""
+                      : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
+                  }
+                  onClick={() => handlePositionToggle(position)}
                 >
                   {position}
-                </button>
+                </Button>
               ))}
             </div>
             {errors.positions && (
@@ -359,18 +363,22 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {TEAM_LEVELS.map((level) => (
-                <button
+                <Button
                   key={level.value}
                   type="button"
-                  onClick={() => handleInputChange("team_level", level.value)}
-                  className={`px-4 py-3 text-sm font-medium rounded-lg border transition-colors ${
+                  size="sm"
+                  variant={
+                    formData.team_level === level.value ? "secondary" : "ghost"
+                  }
+                  className={
                     formData.team_level === level.value
-                      ? `bg-${level.color}-600 text-white border-${level.color}-600`
-                      : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
-                  }`}
+                      ? ""
+                      : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  }
+                  onClick={() => handleInputChange("team_level", level.value)}
                 >
                   {level.label}
-                </button>
+                </Button>
               ))}
             </div>
           </div>

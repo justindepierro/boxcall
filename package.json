@@ -26,7 +26,8 @@
     "build": "npm run type-check && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "style:inventory:buttons": "node scripts/inventory-buttons.mjs"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.18",

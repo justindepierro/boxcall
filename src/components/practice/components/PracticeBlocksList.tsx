@@ -233,27 +233,33 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                             </div>
                             {/* Block Actions */}
                             <div className="flex space-x-2 ml-4">
-                              <button
+                              <Button
+                                variant="ghost"
+                                size="xs"
                                 onClick={() => onEditBlock(block)}
-                                className="text-blue-600 hover:text-blue-800 p-1"
+                                aria-label="Edit block"
                                 title="Edit block"
-                              >
-                                <Icon name="edit" size="sm" />
-                              </button>
-                              <button
+                                icon={<Icon name="edit" size="sm" />}
+                                iconPosition="only"
+                              />
+                              <Button
+                                variant="ghost"
+                                size="xs"
                                 onClick={() => onAddScriptToBlock(block.id)}
-                                className="text-green-600 hover:text-green-800 p-1"
+                                aria-label="Add script to block"
                                 title="Add script to block"
-                              >
-                                <Icon name="file" size="sm" />
-                              </button>
-                              <button
+                                icon={<Icon name="file" size="sm" />}
+                                iconPosition="only"
+                              />
+                              <Button
+                                variant="ghost"
+                                size="xs"
                                 onClick={() => onRemoveBlock(block.id)}
-                                className="text-red-600 hover:text-red-800 p-1"
+                                aria-label="Delete block"
                                 title="Delete block"
-                              >
-                                <Icon name="delete" size="sm" />
-                              </button>
+                                icon={<Icon name="delete" size="sm" />}
+                                iconPosition="only"
+                              />
                             </div>
                           </div>
                           {/* Groups Section */}
@@ -266,12 +272,13 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                 >
                                   👥 Groups ({block.groups.length})
                                 </Typography>
-                                <button
+                                <Button
+                                  variant="link"
+                                  size="sm"
                                   onClick={() => onAddGroup(block.id)}
-                                  className="text-blue-600 hover:text-blue-800 text-sm"
                                 >
                                   + Add Group
-                                </button>
+                                </Button>
                               </div>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {block.groups.map((group) => (
@@ -304,36 +311,44 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                         )}
                                       </div>
                                       <div className="flex space-x-1 ml-2">
-                                        <button
+                                        <Button
+                                          variant="ghost"
+                                          size="xs"
                                           onClick={() =>
                                             onEditGroup(block.id, group)
                                           }
-                                          className="text-blue-600 hover:text-blue-800 p-1"
+                                          aria-label="Edit group"
                                           title="Edit group"
-                                        >
-                                          <Icon name="edit" size="sm" />
-                                        </button>
-                                        <button
+                                          icon={<Icon name="edit" size="sm" />}
+                                          iconPosition="only"
+                                        />
+                                        <Button
+                                          variant="ghost"
+                                          size="xs"
                                           onClick={() =>
                                             onAddScriptToGroup(
                                               block.id,
                                               group.id
                                             )
                                           }
-                                          className="text-green-600 hover:text-green-800 p-1"
+                                          aria-label="Add script to group"
                                           title="Add script to group"
-                                        >
-                                          <Icon name="file" size="sm" />
-                                        </button>
-                                        <button
+                                          icon={<Icon name="file" size="sm" />}
+                                          iconPosition="only"
+                                        />
+                                        <Button
+                                          variant="ghost"
+                                          size="xs"
                                           onClick={() =>
                                             onRemoveGroup(block.id, group.id)
                                           }
-                                          className="text-red-600 hover:text-red-800 p-1"
+                                          aria-label="Remove group"
                                           title="Remove group"
-                                        >
-                                          <Icon name="delete" size="sm" />
-                                        </button>
+                                          icon={
+                                            <Icon name="delete" size="sm" />
+                                          }
+                                          iconPosition="only"
+                                        />
                                       </div>
                                     </div>
                                     {/* Group Notes */}
@@ -357,28 +372,34 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                           {group.scriptTitle ||
                                             `Script ${group.scriptId}`}
                                         </Typography>
-                                        <button
+                                        <Button
+                                          variant="ghost"
+                                          size="xs"
                                           onClick={() =>
                                             onRemoveScriptFromGroup(
                                               block.id,
                                               group.id
                                             )
                                           }
-                                          className="text-green-600 hover:text-green-800 text-xs"
+                                          aria-label="Remove script"
                                           title="Remove script"
+                                          className="text-green-700"
                                         >
                                           ✕
-                                        </button>
+                                        </Button>
                                       </div>
                                     ) : (
-                                      <button
+                                      <Button
                                         onClick={() =>
                                           onAddScriptToGroup(block.id, group.id)
                                         }
-                                        className="w-full p-2 border-2 border-dashed border-gray-300 rounded text-gray-500 hover:border-gray-400 hover:text-gray-600 text-xs"
+                                        variant="outline"
+                                        size="xs"
+                                        fullWidth
+                                        className="border-dashed text-gray-500 hover:text-gray-600"
                                       >
                                         + Add Script to Group
-                                      </button>
+                                      </Button>
                                     )}
                                   </div>
                                 ))}
@@ -388,12 +409,15 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                           {/* Add Group Button (when no groups exist) */}
                           {(!block.groups || block.groups.length === 0) && (
                             <div className="mt-4 pt-4 border-t border-gray-200">
-                              <button
+                              <Button
                                 onClick={() => onAddGroup(block.id)}
-                                className="w-full p-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors"
+                                variant="outline"
+                                size="sm"
+                                fullWidth
+                                className="border-dashed text-gray-500 hover:text-gray-600"
                               >
                                 👥 Add Groups to This Block
-                              </button>
+                              </Button>
                             </div>
                           )}
                         </div>
