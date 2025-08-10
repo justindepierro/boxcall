@@ -180,16 +180,16 @@ Legend: [x] done, [~] in progress, [ ] pending
 
 **Tasks** (legend: [x] done, [~] in progress)
 
-1. [~] New `CalendarShell` orchestrator (prototype exists: fetch + stats; needs toolbar, filters, calendar adapter integration)
+1. [x] New `CalendarShell` orchestrator (toolbar, filters, stats, calendar, modal wiring)
 2. [x] Feature flag & routing: `VITE_CALENDAR_SHELL=1` toggles experimental shell (`/calendar`) with side‑by‑side legacy page for parity
-3. [ ] Extract Toolbar + Filters + Stats into shell composition (legacy page trimmed)
-4. [ ] Implement URL sync hook (`useCalendarUrlState`) handling view/date/event with push vs replace optimization
-5. [ ] Deep link modal open (`?event=ID` opens `EventModal` using cache or prefetch)
-6. [ ] Split `EventModal` internals → `EventForm` + `EventDetails` (folder structure per architecture diagram)
-7. [ ] Add `ViewSwitcher` component (keyboard accessible, roving tabindex, aria-current)
-8. [ ] Prefetch effect: when month changes, prefetch prev/next month ranges (as per Phase 3 perf doc)
-9. [ ] Debounced + highlighted search (enhance `useSearchEvents` with fuse.js or simple substring + <mark> rendering)
-10. [ ] Reduce `CalendarPage` legacy wrapper to just mounting shell (eventually delete after QA sign-off)
+3. [x] Extract Toolbar + Filters + Stats into shell composition
+4. [x] Implement URL sync hook (`useCalendarUrlState`) handling view/date/event with push vs replace optimization
+5. [x] Deep link modal open (`?event=ID` opens `EventModal` using cache)
+6. [x] Split `EventModal` internals → `EventForm` + `EventDetails`
+7. [x] Add `ViewSwitcher` component (keyboard accessible, roving tabindex, aria-current)
+8. [x] Prefetch effect: month navigation prefetches prev/next month ranges
+9. [x] Debounced + highlighted search (substring + <mark> rendering)
+10. [ ] Reduce `CalendarPage` legacy wrapper to just mounting shell (eventual removal after QA sign-off)
 
 **Exit Criteria**
 
@@ -385,6 +385,12 @@ Legend: [x] done, [~] in progress, [ ] pending
 | 2025-08-10 | 3-prog6 | Implemented client-side search hook `useSearchEvents` replacing legacy search path; updated `CalendarPage` integration (commit cf45301).                                                         |
 | 2025-08-10 | 3-done  | Phase 3 complete: skeletons, legacy facade removal, performance & tech notes docs added.                                                                                                         |
 | 2025-08-10 | 4-kick  | Phase 4 started: experimental `CalendarPageShell` + feature flag route toggle (`VITE_CALENDAR_SHELL`); prototype shell fetch + stats; planning URL sync & component extraction.                  |
+| 2025-08-10 | 4-prog1 | Shell expanded (toolbar, filters, stats, calendar adapter). URL sync hook scaffolded.                                      |
+| 2025-08-10 | 4-prog2 | URL sync (view/date/event) + deep link modal open implemented.                                                          |
+| 2025-08-10 | 4-prog3 | EventModal decomposed into EventForm + EventDetails.                                                                    |
+| 2025-08-10 | 4-prog4 | Accessible ViewSwitcher integrated (tablist, roving tabindex).                                                           |
+| 2025-08-10 | 4-prog5 | Month prefetch (prev/next) effect implemented.                                                                          |
+| 2025-08-10 | 4-prog6 | Debounced search + highlighted titles added.                                                                            |
 | 2025-08-10 | 4-prog  | Expanded `CalendarShell` to include toolbar, filters, stats, calendar grid, and event modal (parity structure). Ready to implement URL state sync next.                                        |
 | 2025-08-10 | 4-prog2 | Added URL state sync hook (`useCalendarUrlState`); shell now syncs view changes to query params and opens modal on `?event=ID`. Next: date navigation syncing & prefetch ranges.                |
 | 2025-08-10 | 4-prog3 | Date param sync + preliminary month prefetch (prev/next) added to shell; placeholder queryFn to be replaced with real fetcher.                                            |
