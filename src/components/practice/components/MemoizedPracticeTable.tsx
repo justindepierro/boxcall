@@ -48,10 +48,10 @@ const PracticeBlockRow = memo<{
 }>(({ block, onEdit, onDelete, onDuplicate }) => {
   return (
     <tr className="surface-subtle-hover transition-colors">
-      <td className="px-4 py-3 text-sm text-gray-600">
+      <td className="px-4 py-3 text-sm text-text-secondary">
         {formatTime(block.startTime)} - {formatTime(block.endTime)}
       </td>
-      <td className="px-4 py-3 text-sm font-medium text-gray-900">
+      <td className="px-4 py-3 text-sm font-medium text-text-primary">
         {block.duration} min
       </td>
       <td className="px-4 py-3">
@@ -59,14 +59,14 @@ const PracticeBlockRow = memo<{
           {block.category}
         </Tag>
       </td>
-      <td className="px-4 py-3 text-sm font-medium text-gray-900">
+      <td className="px-4 py-3 text-sm font-medium text-text-primary">
         {block.title}
       </td>
-      <td className="px-4 py-3 text-sm text-gray-600">{block.location}</td>
-      <td className="px-4 py-3 text-sm text-gray-600">
+      <td className="px-4 py-3 text-sm text-text-secondary">{block.location}</td>
+      <td className="px-4 py-3 text-sm text-text-secondary">
         {block.assignedCoach || "Unassigned"}
       </td>
-      <td className="px-4 py-3 text-sm text-gray-600">
+      <td className="px-4 py-3 text-sm text-text-secondary">
         {block.notes && block.notes.length > 50
           ? `${block.notes.substring(0, 50)}...`
           : block.notes}
@@ -119,17 +119,17 @@ export const PracticeBlockTable = memo<PracticeBlockTableProps>(
       <div className="surface-card rounded-lg shadow overflow-hidden border-subtle">
         <div className="px-4 py-3 surface-subtle border-b border-subtle flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Typography variant="headline-sm" as="h3" className="text-gray-900">
+            <Typography variant="headline-sm" as="h3" className="text-text-primary">
               Practice Blocks
             </Typography>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-text-secondary">
               {blocks.length} blocks • {totalHours}h {totalMinutes}m total
             </span>
           </div>
         </div>
 
         {blocks.length === 0 ? (
-          <div className="px-4 py-8 text-center text-gray-500">
+          <div className="px-4 py-8 text-center text-text-muted">
             <Icon
               name="calendar"
               size={24}
@@ -143,28 +143,28 @@ export const PracticeBlockTable = memo<PracticeBlockTableProps>(
             <table className="min-w-full divide-y divide-subtle">
               <thead className="surface-subtle">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                     Time
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                     Duration
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                     Category
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                     Title
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                     Location
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                     Coach
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                     Notes
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>

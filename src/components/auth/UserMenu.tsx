@@ -70,7 +70,7 @@ export const UserMenu: React.FC = () => {
         <div className="absolute right-0 mt-2 w-64 surface-card rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
           <div className="py-1">
             {/* User Info */}
-            <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+            <div className="px-4 py-2 border-b border-subtle dark:border-gray-700">
               <p className="text-sm font-medium text-text-primary dark:text-text-inverse">
                 {userName}
               </p>
@@ -104,7 +104,7 @@ export const UserMenu: React.FC = () => {
               Team Settings
             </Button>
 
-            <hr className="border-gray-200 dark:border-gray-700" />
+            <hr className="border-subtle dark:border-gray-700" />
 
             {/* Logout */}
             <Button

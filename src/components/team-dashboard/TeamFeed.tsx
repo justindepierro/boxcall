@@ -49,7 +49,7 @@ const PostItem: React.FC<PostItemProps> = ({
     <li className="rounded border-subtle surface-card elevation-card p-3">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <p className="text-sm text-gray-800 dark:text-gray-100 whitespace-pre-wrap">
+          <p className="text-sm text-text-primary dark:text-gray-100 whitespace-pre-wrap">
             {display}
           </p>
           {over && (
@@ -300,8 +300,8 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
               key={i}
               className="animate-pulse rounded border-subtle surface-card p-3"
             >
-              <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-5/6 mb-2" />
-              <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-2/3" />
+              <div className="h-4 surface-subtle dark:bg-gray-600 rounded w-5/6 mb-2" />
+              <div className="h-4 surface-subtle dark:bg-gray-600 rounded w-2/3" />
             </li>
           ))}
         </ul>

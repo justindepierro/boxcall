@@ -41,7 +41,7 @@ const inputStyles: InputStylesConfig = {
   },
   focus: "focus:ring-2 focus:ring-offset-1",
   disabled:
-    "disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 dark:disabled:border-gray-600",
+    "disabled:surface-subtle dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-subtle dark:disabled:border-gray-600",
 };
 // Size configuration
 const sizeConfig: InputSizeConfig = {

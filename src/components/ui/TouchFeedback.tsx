@@ -200,9 +200,9 @@ export const TouchButton: React.FC<TouchButtonProps> = ({
     primary:
       "bg-team-primary hover:bg-jade-700 text-white shadow-md hover:shadow-lg",
     secondary:
-      "bg-gray-100 hover:bg-gray-200 text-gray-900 shadow-sm hover:shadow-md",
+      "surface-subtle surface-subtle-hover text-gray-900 shadow-sm hover:shadow-md",
     ghost:
-      "bg-transparent hover:bg-gray-100 text-gray-700 border border-gray-300 hover:border-gray-400",
+      "bg-transparent surface-subtle-hover text-gray-700 border border-gray-300 hover:border-gray-400",
     danger: "bg-red-500 hover:bg-red-600 text-white shadow-md hover:shadow-lg",
   };
 
@@ -296,7 +296,7 @@ export const TouchCard: React.FC<TouchCardProps> = ({
   };
 
   const cardStyles = `
-    bg-white rounded-lg border border-gray-200
+    bg-white rounded-lg border border-subtle
     transition-all duration-200 ease-out
     ${hoverElevation ? "hover:shadow-md hover:-translate-y-0.5" : "shadow-sm"}
     ${pressable ? "cursor-pointer" : ""}

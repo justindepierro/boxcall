@@ -149,7 +149,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="surface-card elevation-modal rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="bc-card-padding border-b border-gray-200 dark:border-gray-700">
+        <div className="bc-card-padding border-b border-subtle dark:border-gray-700">
           <Typography variant="headline-sm" as="h2">
             {player ? "Edit Player" : "Add New Player"}
           </Typography>
@@ -163,7 +163,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
                   First Name *
                 </label>
                 <Input
@@ -181,7 +181,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
                   Last Name *
                 </label>
                 <Input
@@ -199,7 +199,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
                   Email
                 </label>
                 <Input
@@ -213,7 +213,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
                   Phone Number
                 </label>
                 <Input
@@ -224,7 +224,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
                   Parent Email
                 </label>
                 <Input
@@ -264,7 +264,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   className={
                     formData.positions?.includes(position)
                       ? ""
-                      : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
+                      : "surface-subtle dark:bg-gray-700 surface-subtle-hover dark:hover:bg-gray-600 text-text-secondary dark:text-gray-300"
                   }
                   onClick={() => handlePositionToggle(position)}
                 >
@@ -287,7 +287,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-4 bc-grid-gap">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
                   Jersey Number
                 </label>
                 <Input
@@ -310,7 +310,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
                   Height
                 </label>
                 <Input
@@ -321,7 +321,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
                   Weight (lbs)
                 </label>
                 <Input
@@ -341,7 +341,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
                   Graduation Year
                 </label>
                 <Input
@@ -396,7 +396,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             </div>
           </div>
           {/* Actions */}
-          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex justify-end space-x-3 pt-4 border-t border-subtle dark:border-gray-700">
             <Button
               type="button"
               variant="ghost"

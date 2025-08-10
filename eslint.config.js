@@ -18,6 +18,7 @@ export default tseslint.config([
       "build/",
       "coverage/",
       ".vscode/",
+      ".codemod-backups/",
       "*.log",
       "!shared/",
       "!shared/**/*.ts",
@@ -103,6 +104,7 @@ export default tseslint.config([
           ],
         },
       ],
+      "boxcall-style/no-raw-gray-text": "error",
     },
   },
   // Plugin injection for custom rule namespace
@@ -269,6 +271,36 @@ export default tseslint.config([
           "no-radius-violations": noRadiusViolationsRule,
           "no-outline-variant-in-disallowed-contexts":
             noOutlineVariantInDisallowedContextsRule,
+          "no-raw-gray-text": {
+            meta: {
+              type: "problem",
+              docs: {
+                description:
+                  "Disallow raw text-gray-500/600/700/800/900 utilities; use semantic text-text-* tokens",
+              },
+              schema: [],
+            },
+            create(context) {
+              return {
+                JSXAttribute(attr) {
+                  if (
+                    attr.name?.name === "className" &&
+                    attr.value?.type === "Literal"
+                  ) {
+                    const v = String(attr.value.value);
+                    const re = /(\s|^)(text-gray-(500|600|700|800|900))(\s|$)/;
+                    if (re.test(v)) {
+                      context.report({
+                        node: attr,
+                        message:
+                          "Raw gray text utility detected; replace with text-text-primary / text-text-secondary / text-text-muted.",
+                      });
+                    }
+                  }
+                },
+              };
+            },
+          },
         },
       },
     },

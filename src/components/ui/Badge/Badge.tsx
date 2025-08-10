@@ -124,8 +124,8 @@ export const Badge: React.FC<BadgeProps> = ({
   // Color variants using our psychological color system
   const variantStyles: Record<CanonicalBadgeVariant, string> = {
     neutral: cn(
-      "bg-gray-100 text-gray-700 border border-gray-200",
-      "hover:bg-gray-200 hover:text-gray-800 dark:bg-gray-700/40 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600/50"
+      "surface-subtle text-gray-700 border border-subtle",
+      "surface-subtle-hover hover:text-gray-800 dark:bg-gray-700/40 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600/50"
     ),
     info: cn(
       "bg-blue-50 text-blue-700 border border-blue-200",

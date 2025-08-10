@@ -89,7 +89,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
   return (
     <div className="surface-card rounded-lg shadow-sm">
       {/* Search and Filters */}
-      <div className="bc-card-padding border-b border-gray-200 dark:border-gray-700">
+      <div className="bc-card-padding border-b border-subtle dark:border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Search */}
           <div className="md:col-span-2">
@@ -163,7 +163,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             {filteredPlayers.map((player) => (
               <div
                 key={player.id}
-                className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
+                className="border border-subtle dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
               >
                 {/* Player Header */}
                 <div className="flex items-start justify-between mb-3">
@@ -244,7 +244,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                 </div>
                 {/* Contact Info */}
                 {(player.email || player.phone) && (
-                  <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                  <div className="mt-3 pt-3 border-t border-subtle dark:border-gray-700">
                     {player.email && (
                       <div className="text-xs text-text-muted truncate flex items-center gap-1">
                         <Icon name="mail" size="xs" /> {player.email}

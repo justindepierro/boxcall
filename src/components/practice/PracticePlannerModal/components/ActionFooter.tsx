@@ -31,7 +31,7 @@ export const ActionFooter: React.FC<ActionFooterProps> = ({
   };
 
   return (
-    <div className="flex justify-between pt-4 border-t border-gray-200">
+    <div className="flex justify-between pt-4 border-t border-subtle">
       <div>
         {isOvertime && (
           <Typography variant="body-sm" className="text-red-600">
@@ -42,7 +42,7 @@ export const ActionFooter: React.FC<ActionFooterProps> = ({
         )}
       </div>
       <div className="flex space-x-3">
-  <Button variant="ghost" onClick={onClose}>
+        <Button variant="ghost" onClick={onClose}>
           Close
         </Button>
         <Button variant="primary" onClick={handleSaveClick}>

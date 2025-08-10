@@ -135,7 +135,7 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
             <Icon
               name="close"
               size="sm"
-              className="text-gray-500 hover:text-gray-700"
+              className="text-text-muted hover:text-gray-700"
             />
           }
           iconPosition="only"

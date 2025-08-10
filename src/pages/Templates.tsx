@@ -333,14 +333,14 @@ export const Templates: React.FC = () => {
                 Connect BoxCall with your existing systems using our API. Sync
                 data automatically and build custom integrations.
               </Typography>
-              <div className="bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800 rounded-lg p-3">
+              <div className="surface-subtle dark:bg-gray-900/20 border border-subtle dark:border-gray-800 rounded-lg p-3">
                 {/* TODO: Replace status background with semantic status token when available */}
                 {/* Converted neutral gray panel to semantic subtle surface */}
                 <div className="flex items-center gap-1 surface-subtle border-subtle rounded-md p-2">
                   <Icon name="zap" size="sm" color="current" />
                   <Typography
                     variant="body-sm"
-                    className="text-gray-700 dark:text-gray-300"
+                    className="text-text-primary dark:text-gray-300"
                   >
                     Coming Soon - Developer tools
                   </Typography>

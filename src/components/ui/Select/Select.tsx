@@ -26,7 +26,7 @@ const selectStyles: SelectStylesConfig = {
     base: "relative flex items-center justify-between w-full rounded-md border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer surface-card text-text-primary focus:ring-jade-500 dark:focus:ring-blue-400",
     variants: {
       default: "",
-      filled: "bg-gray-50 dark:bg-gray-700",
+      filled: "surface-subtle dark:bg-gray-700",
       outlined: "border-2",
     },
     sizes: {

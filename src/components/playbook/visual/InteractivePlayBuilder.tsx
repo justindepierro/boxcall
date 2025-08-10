@@ -87,10 +87,10 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-subtle surface-subtle">
           <div>
-            <Typography variant="headline-sm" as="h2" className="text-gray-900">
+            <Typography variant="headline-sm" as="h2" className="text-text-primary">
               Interactive Play Builder
             </Typography>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-text-secondary">
               {currentPlay.play_name} - {currentPlay.formation} Formation
             </p>
           </div>
@@ -101,15 +101,15 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
             icon={<X className="w-5 h-5" />}
             iconPosition="only"
             aria-label="Close"
-            className="p-2 h-auto hover:bg-gray-100 rounded-lg"
+            className="p-2 h-auto surface-subtle-hover rounded-lg"
           />
         </div>
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar */}
           <div className="w-64 surface-subtle border-r border-subtle flex flex-col">
             {/* Mode Controls */}
-            <div className="p-4 border-b border-gray-200">
-              <h3 className="text-sm font-medium text-gray-900 mb-3">
+            <div className="p-4 border-b border-subtle">
+              <h3 className="text-sm font-medium text-text-primary mb-3">
                 Edit Mode
               </h3>
               <div className="space-y-2">
@@ -143,8 +143,8 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
               </div>
             </div>
             {/* Animation Controls */}
-            <div className="p-4 border-b border-gray-200">
-              <h3 className="text-sm font-medium text-gray-900 mb-3">
+            <div className="p-4 border-b border-subtle">
+              <h3 className="text-sm font-medium text-text-primary mb-3">
                 Animation
               </h3>
               <div className="flex gap-2">
@@ -175,8 +175,8 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
               </div>
             </div>
             {/* Display Options */}
-            <div className="p-4 border-b border-gray-200">
-              <h3 className="text-sm font-medium text-gray-900 mb-3">
+            <div className="p-4 border-b border-subtle">
+              <h3 className="text-sm font-medium text-text-primary mb-3">
                 Display
               </h3>
               <div className="space-y-2">
@@ -187,7 +187,7 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
                     onChange={(e) => setShowYardLines(e.target.checked)}
                     className="rounded border-gray-300"
                   />
-                  <span className="text-gray-700">Yard lines</span>
+                  <span className="text-text-primary">Yard lines</span>
                 </label>
                 <label className="flex items-center gap-2 text-sm">
                   <input
@@ -196,16 +196,16 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
                     onChange={(e) => setShowLabels(e.target.checked)}
                     className="rounded border-gray-300"
                   />
-                  <span className="text-gray-700">Player labels</span>
+                  <span className="text-text-primary">Player labels</span>
                 </label>
               </div>
             </div>
             {/* Play Information */}
             <div className="p-4">
-              <h3 className="text-sm font-medium text-gray-900 mb-3">
+              <h3 className="text-sm font-medium text-text-primary mb-3">
                 Play Info
               </h3>
-              <div className="space-y-2 text-sm text-gray-600">
+              <div className="space-y-2 text-sm text-text-secondary">
                 <div>
                   <span className="font-medium">Type:</span>{" "}
                   {currentPlay.p_type}
@@ -222,8 +222,8 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
               </div>
             </div>
             {/* Instructions */}
-            <div className="mt-auto p-4 border-t border-gray-200">
-              <div className="text-xs text-gray-600 space-y-1">
+            <div className="mt-auto p-4 border-t border-subtle">
+              <div className="text-xs text-text-secondary space-y-1">
                 {editMode === "move" && (
                   <p>Drag players to reposition them on the field</p>
                 )}
@@ -260,17 +260,17 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
               </div>
             </div>
             {/* Status Bar */}
-            <div className="p-4 border-t border-gray-200 bg-gray-50">
+            <div className="p-4 border-t border-subtle surface-subtle">
               <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-4">
-                  <span className="text-gray-600">
+                  <span className="text-text-secondary">
                     Mode:{" "}
                     <span className="font-medium capitalize text-blue-600">
                       {editMode}
                     </span>
                   </span>
                   {selectedPlayerId && (
-                    <span className="text-gray-600">
+                    <span className="text-text-secondary">
                       Selected:{" "}
                       <span className="font-medium text-green-600">
                         {selectedPlayerId}

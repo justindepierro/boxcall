@@ -632,7 +632,7 @@ export const CreateTeam: React.FC = () => {
 
                 <div className="mt-4">
                   <Typography variant="headline-xl" className="mb-2">
-                    $199<span className="text-lg text-gray-500">/year</span>
+                    $199<span className="text-lg text-text-muted">/year</span>
                   </Typography>
                   <Typography
                     variant="body-md"
@@ -652,7 +652,7 @@ export const CreateTeam: React.FC = () => {
                           <Icon name="check" size="xs" color="success" />
                           Full Team Management Platform
                         </span>
-                        <span className="text-gray-500">$199</span>
+                        <span className="text-text-muted">$199</span>
                       </li>
                       <li className="flex items-center justify-between">
                         <span className="flex items-center gap-2">
@@ -725,7 +725,7 @@ export const CreateTeam: React.FC = () => {
               </div>
 
               {/* Coach Account Option */}
-              <div className="border border-gray-200 rounded-lg p-6 bg-gray-50 dark:bg-gray-800">
+              <div className="border border-subtle rounded-lg p-6 surface-subtle dark:bg-gray-800">
                 <Typography variant="headline-md" className="mb-4">
                   Not Ready to Create a Team?
                 </Typography>
@@ -735,7 +735,7 @@ export const CreateTeam: React.FC = () => {
                     Try our Coach Account
                   </Typography>
                   <Typography variant="headline-lg" className="mb-2">
-                    $9.99<span className="text-sm text-gray-500">/month</span>
+                    $9.99<span className="text-sm text-text-muted">/month</span>
                   </Typography>
                   <Typography variant="body-sm" color="muted" className="mb-4">
                     Experience the full BoxCall App and playbook features
@@ -854,7 +854,7 @@ export const CreateTeam: React.FC = () => {
                 {Math.round(progress)}% Complete
               </Typography>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full surface-subtle rounded-full h-2">
               <div
                 className="bg-jade-500 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}

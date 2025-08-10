@@ -92,10 +92,10 @@ export class ErrorBoundary extends Component<Props, State> {
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
                 <AlertTriangle className="h-6 w-6 text-red-600" />
               </div>
-              <Typography variant="headline-lg" className="text-gray-900 mb-2">
+              <Typography variant="headline-lg" className="text-text-primary mb-2">
                 Something went wrong
               </Typography>
-              <Typography variant="body-md" className="text-gray-600">
+              <Typography variant="body-md" className="text-text-secondary">
                 We encountered an unexpected error. Don't worry, our team has
                 been notified and is working on it.
               </Typography>
@@ -112,7 +112,7 @@ export class ErrorBoundary extends Component<Props, State> {
                     <div className="text-red-600 mb-2">
                       <strong>Message:</strong> {this.state.error.message}
                     </div>
-                    <div className="text-gray-600 whitespace-pre-wrap">
+                    <div className="text-text-secondary whitespace-pre-wrap">
                       <strong>Stack:</strong>
                       {this.state.error.stack}
                     </div>
@@ -149,7 +149,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 onClick={() => window.location.reload()}
                 variant="ghost"
                 size="sm"
-                className="w-full flex items-center justify-center text-gray-500 hover:text-gray-700"
+                className="w-full flex items-center justify-center text-text-muted hover:text-gray-700"
                 icon={<MessageCircle className="h-4 w-4" />}
                 iconPosition="left"
               >
@@ -159,7 +159,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
             {/* Help Text */}
             <div className="mt-6 pt-4 border-t border-subtle text-center">
-              <Typography variant="caption" className="text-gray-500">
+              <Typography variant="caption" className="text-text-muted">
                 If this problem persists, please contact support with the error
                 details above.
               </Typography>

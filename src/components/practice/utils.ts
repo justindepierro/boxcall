@@ -28,11 +28,11 @@ export const getCategoryColor = (category: PracticeBlock["category"]) => {
     case "weight-room":
       return "bg-orange-100 text-orange-800";
     case "transition":
-      return "bg-gray-100 text-gray-800";
+      return "surface-subtle text-gray-800";
     case "break":
       return "bg-yellow-100 text-yellow-800";
     default:
-      return "bg-gray-100 text-gray-800";
+      return "surface-subtle text-gray-800";
   }
 };
 /**

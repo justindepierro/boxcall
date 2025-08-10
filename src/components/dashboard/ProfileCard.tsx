@@ -41,7 +41,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   return (
     <Card className="compact-card h-full">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-200 pb-2">
+      <div className="flex items-center justify-between border-b border-subtle pb-2">
         <Typography variant="headline-md" className="text-navy-800">
           Profile
         </Typography>
@@ -68,7 +68,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
           <div className="flex-1 min-w-0">
             <Typography
               variant="body-lg"
-              className="font-semibold text-gray-800 truncate"
+              className="font-semibold text-text-primary truncate"
             >
               {displayName}
             </Typography>
@@ -79,7 +79,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
         </div>
         {/* Role-Specific Info */}
         {isPlayer && (
-          <div className="text-xs text-gray-600">
+          <div className="text-xs text-text-secondary">
             <Typography variant="body-sm" color="muted">
               Player Profile
             </Typography>
@@ -89,7 +89,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
               <Icon name="crown" size={14} color="navy" />
-              <Typography variant="body-sm" className="text-gray-700">
+              <Typography variant="body-sm" className="text-text-primary">
                 Coach
               </Typography>
             </div>
@@ -98,17 +98,17 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
         {isFamily && (
           <div className="flex items-center space-x-2">
             <Icon name="users" size={14} color="primary" />
-            <Typography variant="body-sm" className="text-gray-700">
+            <Typography variant="body-sm" className="text-text-primary">
               Family Member
             </Typography>
           </div>
         )}
         {/* Bio */}
         {profile.bio && (
-          <div className="pt-1 border-t border-gray-100">
+          <div className="pt-1 border-t border-subtle">
             <Typography
               variant="body-sm"
-              className="text-gray-600 leading-relaxed"
+              className="text-text-secondary leading-relaxed"
             >
               {showFullBio
                 ? profile.bio
@@ -128,9 +128,9 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
         )}
         {/* Contact Info */}
         {profile.phone && !isViewMode && (
-          <div className="flex items-center space-x-2 pt-1 border-t border-gray-100">
+          <div className="flex items-center space-x-2 pt-1 border-t border-subtle">
             <Icon name="phone" size={14} color="secondary" />
-            <Typography variant="body-sm" className="text-gray-600">
+            <Typography variant="body-sm" className="text-text-secondary">
               {profile.phone}
             </Typography>
           </div>

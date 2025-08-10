@@ -43,7 +43,7 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
   const isOverScheduled = totalDuration > scheduledDuration;
   const remainingTime = scheduledDuration - totalDuration;
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+    <div className="bg-white rounded-lg border border-subtle p-4 mb-6">
       <div className="flex items-center gap-2 mb-3">
         <Icon name="clock" size="lg" className="text-navy-700" />
         <Typography variant="headline-sm" className="text-navy-900">
@@ -93,7 +93,7 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
             {Math.round(progressPercentage)}%
           </Typography>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2.5">
+        <div className="w-full surface-subtle rounded-full h-2.5">
           <div
             className={`h-2.5 rounded-full transition-all duration-300 ${
               isOverScheduled
@@ -128,7 +128,7 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
         </div>
       )}
       {/* Event Details */}
-      <div className="mt-4 pt-4 border-t border-gray-100">
+      <div className="mt-4 pt-4 border-t border-subtle">
         <Typography variant="body-sm" color="muted">
           📅 {event.title} • {new Date(event.start).toLocaleDateString()} •
           {new Date(event.start).toLocaleTimeString([], {

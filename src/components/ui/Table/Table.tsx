@@ -90,9 +90,9 @@ const getTableStyles = (size?: "sm" | "md" | "lg", bordered?: boolean) => {
   return [
     "w-full table-auto",
     "surface-card",
-    "text-gray-900 dark:text-gray-100",
+    "text-text-primary dark:text-gray-100",
     sizeStyles[size || "md"],
-    bordered && "border border-gray-200 dark:border-gray-700",
+    bordered && "border border-subtle dark:border-gray-700",
   ]
     .filter(Boolean)
     .join(" ");
@@ -104,10 +104,10 @@ const getHeaderStyles = (size?: "sm" | "md" | "lg") => {
     lg: "px-6 py-3",
   };
   return [
-    "border-b border-gray-200 dark:border-gray-700",
-    "bg-gray-50 dark:bg-gray-900",
+    "border-b border-subtle dark:border-gray-700",
+    "surface-subtle dark:bg-gray-900",
     "text-left font-semibold",
-    "text-gray-900 dark:text-gray-100",
+    "text-text-primary dark:text-gray-100",
     sizeStyles[size || "md"],
   ].join(" ");
 };
@@ -126,8 +126,8 @@ const getCellStyles = (
     right: "text-right",
   };
   return [
-    "border-b border-gray-100 dark:border-gray-700",
-    "text-gray-900 dark:text-gray-100",
+    "border-b border-subtle dark:border-gray-700",
+    "text-text-primary dark:text-gray-100",
     sizeStyles[size || "md"],
     alignStyles[align || "left"],
   ].join(" ");
@@ -142,7 +142,7 @@ const getRowStyles = (
     "transition-colors duration-200",
     hoverable && "surface-subtle-hover",
     isSelected && "bg-jade-50 dark:bg-navy-900/20",
-    striped && isEven && "bg-gray-50 dark:bg-gray-800",
+    striped && isEven && "surface-subtle dark:bg-gray-800",
   ]
     .filter(Boolean)
     .join(" ");
@@ -328,7 +328,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
           />
         </div>
       )}
-      <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
+      <div className="overflow-x-auto border border-subtle dark:border-gray-700 rounded-lg">
         <table className={getTableStyles(size, bordered)}>
           <thead>
             <tr>
@@ -426,7 +426,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
       </div>
       {pagination && (
         <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-700 dark:text-gray-300">
+          <div className="text-sm text-text-primary dark:text-gray-300">
             Showing {currentPage * pageSize + 1} to{" "}
             {Math.min(
               (currentPage + 1) * pageSize,
@@ -443,7 +443,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
             >
               Previous
             </Button>
-            <span className="text-sm text-gray-700 dark:text-gray-300">
+            <span className="text-sm text-text-primary dark:text-gray-300">
               Page {currentPage + 1} of {totalPages}
             </span>
             <Button

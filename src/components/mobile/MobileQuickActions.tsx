@@ -36,7 +36,7 @@ export const MobileQuickActions: React.FC<MobileQuickActionsProps> = ({
       blue: "bg-jade-600 hover:bg-jade-600 text-white shadow-blue/25",
       red: "bg-red-500 hover:bg-red-600 text-white shadow-red/25",
       yellow: "bg-yellow-500 hover:bg-yellow-600 text-white shadow-yellow/25",
-      gray: "bg-gray-100 hover:bg-gray-200 text-gray-700 shadow-gray/25 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-300",
+      gray: "surface-subtle surface-subtle-hover text-gray-700 shadow-gray/25 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-300",
     };
 
     return `${colorMap[color as keyof typeof colorMap] || colorMap.gray}`;
@@ -62,7 +62,7 @@ export const MobileQuickActions: React.FC<MobileQuickActionsProps> = ({
         <Typography
           variant="label-lg"
           as="h3"
-          className="text-gray-700 dark:text-gray-300"
+          className="text-text-primary dark:text-gray-300"
         >
           Quick Actions
         </Typography>

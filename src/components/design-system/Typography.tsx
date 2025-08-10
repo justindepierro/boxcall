@@ -85,7 +85,7 @@ const typographyClasses: Record<TypographyVariant, string> = {
   "label-lg": "font-sans text-sm font-semibold uppercase tracking-wide",
   "label-md": "font-sans text-xs font-semibold uppercase tracking-wide",
   button: "font-sans text-sm font-semibold",
-  caption: "font-sans text-xs text-gray-600 dark:text-gray-400",
+  caption: "font-sans text-xs text-text-secondary",
 };
 // Color class mappings - Updated with jade/navy system
 const colorClasses: Record<string, string> = {

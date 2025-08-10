@@ -66,7 +66,7 @@ export const ContactPage: React.FC = () => {
                 <p className="text-interaction-jade font-medium">
                   1-800-BOXCALL
                 </p>
-                <p className="text-gray-500 text-sm">Mon-Fri 9AM-6PM EST</p>
+                <p className="text-text-muted text-sm">Mon-Fri 9AM-6PM EST</p>
               </div>
             </div>
 
@@ -94,7 +94,7 @@ export const ContactPage: React.FC = () => {
           </div>
 
           {/* Business Hours */}
-          <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <div className="mt-8 p-4 surface-subtle dark:bg-gray-800 rounded-lg">
             <h3 className="font-medium mb-3 text-text-primary">
               Support Hours
             </h3>
@@ -131,7 +131,7 @@ export const ContactPage: React.FC = () => {
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2"
               >
                 Name
               </label>
@@ -147,7 +147,7 @@ export const ContactPage: React.FC = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2"
               >
                 Email
               </label>
@@ -163,7 +163,7 @@ export const ContactPage: React.FC = () => {
             <div>
               <label
                 htmlFor="subject"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2"
               >
                 Subject
               </label>
@@ -184,7 +184,7 @@ export const ContactPage: React.FC = () => {
             <div>
               <label
                 htmlFor="message"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2"
               >
                 Message
               </label>
@@ -210,7 +210,7 @@ export const ContactPage: React.FC = () => {
 
       {/* FAQ Link */}
       <div className="mt-12 text-center">
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+        <div className="surface-subtle dark:bg-gray-800 rounded-lg p-6">
           <Typography
             variant="headline-sm"
             as="h3"

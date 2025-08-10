@@ -42,6 +42,7 @@
     "codemod:badge-variants": "node scripts/codemod-badge-variants.mjs",
     "codemod:tooltip-bg": "node scripts/codemod-tooltip-bg.mjs",
     "codemod:raw-gray": "node scripts/codemod-raw-gray.mjs",
+    "codemod:text-gray": "node scripts/codemod-text-gray.mjs",
     "tokens:build": "tsx scripts/generate-tokens-css.ts && prettier --write src/styles/generated-tokens.css",
     "tokens:verify": "tsx scripts/verify-generated-tokens.ts",
     "themes:build": "tsx src/themes/build-themes.ts && prettier --write src/styles/generated-themes.css",

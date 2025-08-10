@@ -359,10 +359,10 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
       <div className="max-w-md w-full surface-card elevation-modal rounded-lg shadow-lg p-6 text-center">
         <div className="mb-4">
           <AlertTriangle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-          <Typography variant="headline-md" className="text-gray-900 mb-2">
+          <Typography variant="headline-md" className="text-text-primary mb-2">
             Something went wrong
           </Typography>
-          <Typography variant="body-md" className="text-gray-600 mb-4">
+          <Typography variant="body-md" className="text-text-secondary mb-4">
             We encountered an unexpected error. Don't worry, we've been notified
             and are working on a fix.
           </Typography>
@@ -425,7 +425,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
 
           {/* Report error button */}
           <TouchFeedback
-            className="w-full py-2 px-4 text-gray-500 hover:text-gray-700 transition-colors"
+            className="w-full py-2 px-4 text-text-muted hover:text-gray-700 transition-colors"
             onPress={onReportError}
           >
             <div className="flex items-center justify-center space-x-2">
@@ -436,7 +436,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
         </div>
 
         {!canRetry && (
-          <Typography variant="body-sm" className="text-gray-500 mt-4">
+          <Typography variant="body-sm" className="text-text-muted mt-4">
             Maximum retry attempts reached. Please refresh the page or contact
             support if the issue persists.
           </Typography>

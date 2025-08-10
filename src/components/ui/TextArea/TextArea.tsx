@@ -8,7 +8,7 @@ import { forwardRef, useEffect, useRef } from "react";
 import type { TextAreaProps } from "./TextArea.types";
 // TextArea styles using only Tailwind dark mode classes
 const textareaStyles = {
-  base: "block w-full rounded-md border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 surface-card text-text-primary placeholder-gray-500 dark:placeholder-gray-400 disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 dark:disabled:border-gray-600",
+  base: "block w-full rounded-md border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 surface-card text-text-primary placeholder-gray-500 dark:placeholder-gray-400 disabled:surface-subtle dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-subtle dark:disabled:border-gray-600",
   statuses: {
     default:
       "border-gray-300 dark:border-gray-600 focus:border-jade-600 dark:focus:border-blue-400 focus:ring-jade-500 dark:focus:ring-blue-400",

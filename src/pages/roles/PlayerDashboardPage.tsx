@@ -97,7 +97,7 @@ const PlayerDashboardContent: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Upcoming Events */}
           <div className="surface-card elevation-card rounded-lg">
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="px-6 py-4 border-b border-subtle dark:border-gray-700">
               <Typography
                 variant="headline-sm"
                 as="h3"
@@ -162,7 +162,7 @@ const PlayerDashboardContent: React.FC = () => {
 
           {/* Recent Performance */}
           <div className="surface-card elevation-card rounded-lg">
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="px-6 py-4 border-b border-subtle dark:border-gray-700">
               <Typography
                 variant="headline-sm"
                 as="h3"
@@ -179,7 +179,7 @@ const PlayerDashboardContent: React.FC = () => {
                     Passing Accuracy
                   </span>
                   <div className="flex items-center">
-                    <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-2 w-20 mr-2">
+                    <div className="surface-subtle dark:bg-gray-700 rounded-full h-2 w-20 mr-2">
                       <div
                         className="bg-green-600 h-2 rounded-full"
                         style={{ width: "85%" }}
@@ -195,7 +195,7 @@ const PlayerDashboardContent: React.FC = () => {
                     Speed & Agility
                   </span>
                   <div className="flex items-center">
-                    <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-2 w-20 mr-2">
+                    <div className="surface-subtle dark:bg-gray-700 rounded-full h-2 w-20 mr-2">
                       <div
                         className="bg-jade-600 h-2 rounded-full"
                         style={{ width: "78%" }}
@@ -211,7 +211,7 @@ const PlayerDashboardContent: React.FC = () => {
                     Team Coordination
                   </span>
                   <div className="flex items-center">
-                    <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-2 w-20 mr-2">
+                    <div className="surface-subtle dark:bg-gray-700 rounded-full h-2 w-20 mr-2">
                       <div
                         className="bg-purple-600 h-2 rounded-full"
                         style={{ width: "92%" }}
@@ -227,7 +227,7 @@ const PlayerDashboardContent: React.FC = () => {
                     Leadership
                   </span>
                   <div className="flex items-center">
-                    <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-2 w-20 mr-2">
+                    <div className="surface-subtle dark:bg-gray-700 rounded-full h-2 w-20 mr-2">
                       <div
                         className="bg-orange-600 h-2 rounded-full"
                         style={{ width: "88%" }}

@@ -145,7 +145,7 @@ const CoachManagementContent: React.FC = () => {
 
         {/* Recent Activity */}
         <div className="surface-card elevation-card rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="px-6 py-4 border-b border-subtle dark:border-gray-700">
             <Typography
               variant="headline-sm"
               as="h3"

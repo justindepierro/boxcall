@@ -219,7 +219,7 @@ export const JoinTeam: React.FC = () => {
                   className={`p-6 h-auto w-full justify-start text-left rounded-lg ${
                     method.primary
                       ? ""
-                      : "border-gray-200 dark:border-gray-700 bg-transparent"
+                      : "border-subtle dark:border-gray-700 bg-transparent"
                   }`}
                 >
                   <div className="flex items-start gap-4">
@@ -358,7 +358,7 @@ export const JoinTeam: React.FC = () => {
                   {searchResults.map((team) => (
                     <div
                       key={team.id}
-                      className="border border-gray-200 dark:border-gray-700 rounded-lg p-6"
+                      className="border border-subtle dark:border-gray-700 rounded-lg p-6"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -379,7 +379,7 @@ export const JoinTeam: React.FC = () => {
                           >
                             {team.school} • {team.sport} • {team.level}
                           </Typography>
-                          <div className="flex items-center gap-4 text-sm text-gray-600">
+                          <div className="flex items-center gap-4 text-sm text-text-secondary">
                             <span>{team.memberCount} members</span>
                             <span>Coach: {team.coachName}</span>
                           </div>
@@ -560,7 +560,7 @@ export const JoinTeam: React.FC = () => {
               variant="link"
               size="sm"
               onClick={() => setCurrentStep("method")}
-              className="flex items-center gap-1 text-gray-600 hover:text-gray-800"
+              className="flex items-center gap-1 text-text-secondary hover:text-gray-800"
             >
               <Icon name="chevron-left" size="sm" /> Back to join methods
             </Button>

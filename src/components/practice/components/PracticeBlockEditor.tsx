@@ -138,7 +138,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
         {/* Basic Info */}
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Title *
             </label>
             <input
@@ -151,7 +151,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Category *
             </label>
             <select
@@ -174,7 +174,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-primary mb-1">
                 Start Time
               </label>
               <input
@@ -195,7 +195,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-primary mb-1">
                 End Time
               </label>
               <input
@@ -218,7 +218,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Duration (minutes)
             </label>
             <input
@@ -237,7 +237,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
         {/* Details */}
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Description
             </label>
             <textarea
@@ -250,7 +250,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Location
             </label>
             <input
@@ -263,7 +263,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Intensity
             </label>
             <select
@@ -286,7 +286,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-primary mb-1">
                 Reps
               </label>
               <input
@@ -301,7 +301,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-primary mb-1">
                 Total Time
               </label>
               <input
@@ -325,7 +325,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
       {/* Focus Items */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-text-primary">
             Focus Items
           </label>
           <Button variant="ghost" size="sm" onClick={addFocusItem}>
@@ -358,7 +358,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
       {/* Equipment */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-text-primary">
             Equipment
           </label>
           <Button variant="ghost" size="sm" onClick={addEquipmentItem}>
@@ -390,7 +390,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-text-primary mb-1">
           Notes
         </label>
         <textarea

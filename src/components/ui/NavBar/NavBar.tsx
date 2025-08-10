@@ -98,7 +98,7 @@ const NavBarItem: React.FC<{
         <div
           className={`
           ${isMobile ? "ml-4 mt-1" : "absolute left-0 mt-2 w-48"}
-          surface-card border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50
+          surface-card border border-subtle dark:border-gray-700 rounded-md shadow-lg z-50
         `}
         >
           {item.children?.map((childItem, index) => (
@@ -109,7 +109,7 @@ const NavBarItem: React.FC<{
                 ${
                   childItem.disabled
                     ? "text-gray-400 dark:text-gray-500"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-text-inverse"
+                    : "text-gray-700 dark:text-gray-300 surface-subtle-hover dark:hover:bg-gray-700 dark:hover:text-text-inverse"
                 }
               `}
               onClick={() => {
@@ -227,7 +227,7 @@ export const NavBar: React.FC<NavBarProps> = ({
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200 dark:border-gray-700">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-subtle dark:border-gray-700">
               {items.map((item) => (
                 <NavBarItem
                   key={`mobile-${item.id}`}
@@ -237,7 +237,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                 />
               ))}
               {/* Mobile Actions */}
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="pt-4 border-t border-subtle dark:border-gray-700">
                 {mergedActions}
               </div>
             </div>

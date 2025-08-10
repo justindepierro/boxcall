@@ -719,7 +719,7 @@ export const PlaybookPage: React.FC = () => {
             <AchievementBadge size="lg">
               {state.recentAchievement}
             </AchievementBadge>
-            <p className="text-gray-600 mt-4">
+            <p className="text-text-secondary mt-4">
               You're building an incredible playbook! Keep the momentum going!
             </p>
             <Button

@@ -145,11 +145,11 @@ export const SplitRouter: React.FC = () => {
                 <Typography
                   variant="headline-md"
                   as="h1"
-                  className="text-gray-900 mb-2"
+                  className="text-text-primary mb-2"
                 >
                   Page Not Found
                 </Typography>
-                <p className="text-gray-600 mb-4">
+                <p className="text-text-secondary mb-4">
                   The page you're looking for doesn't exist.
                 </p>
                 <div className="flex justify-center">

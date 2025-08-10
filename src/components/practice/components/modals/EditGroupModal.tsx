@@ -74,13 +74,13 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
             variant="link"
             size="xs"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 h-auto"
+            className="text-text-muted hover:text-text-primary h-auto"
             aria-label="Close edit group modal"
           >
             <Icon
               name="close"
               size="md"
-              className="text-gray-500 hover:text-gray-700"
+              className="text-text-muted hover:text-text-primary"
             />
           </Button>
         </div>
@@ -100,7 +100,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Group Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Group Name *
             </label>
             <input
@@ -116,7 +116,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
           </div>
           {/* Location */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Location
             </label>
             <input
@@ -131,7 +131,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
           </div>
           {/* Notes */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Notes
             </label>
             <textarea

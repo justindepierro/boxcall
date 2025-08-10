@@ -356,8 +356,8 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
       {selectedPlayer && (
         <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-sm border border-slate-200 p-3 z-20">
           <div className="text-sm">
-            <div className="font-medium text-gray-900">Selected Player</div>
-            <div className="text-gray-600">{selectedPlayer}</div>
+            <div className="font-medium text-text-primary">Selected Player</div>
+            <div className="text-text-secondary">{selectedPlayer}</div>
             {isDrawingRoute && (
               <div className="text-blue-600 mt-1">
                 Click to add route points
@@ -368,7 +368,7 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
       )}
       {/* Field Info */}
       <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-sm border border-slate-200 p-3 z-20">
-        <div className="text-xs text-gray-600 space-y-1">
+        <div className="text-xs text-text-secondary space-y-1">
           <div className="font-medium capitalize">
             {fieldMode.replace("-", " ")} Mode
           </div>

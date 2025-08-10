@@ -57,7 +57,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
           </Tag>
         )}
       </div>
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-text-secondary">
         <div className="flex items-center">
           <Icon name="calendar" size="sm" color="secondary" className="mr-2" />
           {new Date(event.start).toLocaleDateString("en-US", {
@@ -104,8 +104,8 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
         )}
       </div>
       {event.description && (
-        <div className="pt-3 border-t border-gray-200">
-          <Typography variant="body-md" className="text-gray-700">
+        <div className="pt-3 border-t border-subtle">
+          <Typography variant="body-md" className="text-text-primary">
             {event.description}
           </Typography>
         </div>
@@ -140,15 +140,15 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
         )}
       </div>
       {rsvpRequired && event.id && (
-        <div className="mt-4 border-t border-gray-200 pt-4">
+        <div className="mt-4 border-t border-subtle pt-4">
           <Typography
             variant="body-sm"
-            className="font-semibold mb-2 text-gray-700"
+            className="font-semibold mb-2 text-text-primary"
           >
             RSVP
           </Typography>
           {rsvps.isLoading ? (
-            <div className="text-sm text-gray-500">Loading RSVP...</div>
+            <div className="text-sm text-text-muted">Loading RSVP...</div>
           ) : rsvps.isError ? (
             <div className="text-sm text-red-500">Failed to load RSVP</div>
           ) : (
@@ -174,22 +174,22 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
                 }
               )}
               {rsvpPending && (
-                <span className="text-xs text-gray-500">Saving...</span>
+                <span className="text-xs text-text-muted">Saving...</span>
               )}
             </div>
           )}
         </div>
       )}
       {event.id && (
-        <div className="mt-6 border-t border-gray-200 pt-4">
+        <div className="mt-6 border-t border-subtle pt-4">
           <Typography
             variant="body-sm"
-            className="font-semibold mb-2 text-gray-700"
+            className="font-semibold mb-2 text-text-primary"
           >
             Comments
           </Typography>
           {comments.isLoading ? (
-            <div className="text-sm text-gray-500">Loading comments...</div>
+            <div className="text-sm text-text-muted">Loading comments...</div>
           ) : comments.isError ? (
             <div className="text-sm text-red-500">Failed to load comments</div>
           ) : (
@@ -198,18 +198,18 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
                 comments.data.map((c) => (
                   <div
                     key={c.id}
-                    className="p-2 bg-gray-50 rounded border border-gray-100"
+                    className="p-2 surface-subtle rounded border border-subtle"
                   >
-                    <div className="text-xs text-gray-500 mb-1">
+                    <div className="text-xs text-text-muted mb-1">
                       {new Date(c.created_at).toLocaleString()} • {c.user_id}
                     </div>
-                    <div className="text-sm text-gray-800 whitespace-pre-wrap">
+                    <div className="text-sm text-text-primary whitespace-pre-wrap">
                       {c.body}
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="text-xs text-gray-500">No comments yet.</div>
+                <div className="text-xs text-text-muted">No comments yet.</div>
               )}
             </div>
           )}
@@ -235,7 +235,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
                 {addCommentPending ? "Posting..." : "Post"}
               </Button>
               {addCommentPending && (
-                <span className="text-xs text-gray-500">Saving...</span>
+                <span className="text-xs text-text-muted">Saving...</span>
               )}
             </div>
           </div>

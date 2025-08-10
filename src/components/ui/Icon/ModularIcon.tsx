@@ -164,7 +164,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
     // Return a minimal loading placeholder
     return (
       <div
-        className={`inline-block animate-pulse bg-gray-200 rounded ${className}`}
+        className={`inline-block animate-pulse surface-subtle rounded ${className}`}
         style={{
           width: typeof size === "number" ? size : sizeMap[size],
           height: typeof size === "number" ? size : sizeMap[size],

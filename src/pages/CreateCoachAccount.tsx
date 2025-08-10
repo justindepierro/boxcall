@@ -485,7 +485,7 @@ export const CreateCoachAccount: React.FC = () => {
                       hasSchoolCode: e.target.checked,
                     })
                   }
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-jade-500"
+                  className="w-4 h-4 text-blue-600 surface-subtle border-gray-300 rounded focus:ring-jade-500"
                 />
                 <label htmlFor="hasSchoolCode" className="text-sm font-medium">
                   I have a school/team code
@@ -519,7 +519,7 @@ export const CreateCoachAccount: React.FC = () => {
                         setFormData({ ...formData, schoolName: e.target.value })
                       }
                       placeholder="Will auto-populate"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg surface-subtle text-text-muted"
                       disabled
                     />
                   </div>
@@ -534,7 +534,7 @@ export const CreateCoachAccount: React.FC = () => {
                           requestTeamLink: e.target.checked,
                         })
                       }
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-jade-500"
+                      className="w-4 h-4 text-blue-600 surface-subtle border-gray-300 rounded focus:ring-jade-500"
                     />
                     <label htmlFor="requestTeamLink" className="text-sm">
                       Request to be linked to this team (Head Coach will
@@ -545,7 +545,7 @@ export const CreateCoachAccount: React.FC = () => {
               )}
 
               {!formData.hasSchoolCode && (
-                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                <div className="p-4 surface-subtle dark:bg-gray-800 rounded-lg">
                   <Typography variant="body-sm" color="muted">
                     No problem! You can always join teams later from your coach
                     dashboard. Your personal playbooks and content will be ready
@@ -721,7 +721,7 @@ export const CreateCoachAccount: React.FC = () => {
                 {Math.round(progress)}% Complete
               </Typography>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full surface-subtle rounded-full h-2">
               <div
                 className="bg-jade-600 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}

@@ -247,7 +247,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                               ? getCategoryColor(
                                   dominantCategory as PracticeBlock["category"]
                                 )
-                              : "bg-gray-100 text-gray-600"
+                              : "surface-subtle text-gray-600"
                           }`}
                         >
                           Hour {hourIndex + 1}
@@ -265,14 +265,14 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                     </div>
 
                     {/* Time markers for this hour - every 10 minutes */}
-                    <div className="flex text-xs text-gray-500 mb-2">
+                    <div className="flex text-xs text-text-muted mb-2">
                       {Array.from({ length: 7 }, (_, i) => {
                         const totalMinute = hourStart + i * 10;
                         if (totalMinute > scheduledDuration) return null;
                         return (
                           <div
                             key={i}
-                            className="flex-[10] text-center border-r border-gray-200 last:border-r-0"
+                            className="flex-[10] text-center border-r border-subtle last:border-r-0"
                           >
                             {totalMinute}
                           </div>
@@ -290,7 +290,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                           return (
                             <div
                               key={absoluteMinute}
-                              className="flex-1 h-16 bg-gray-200 border-r border-gray-300 opacity-50"
+                              className="flex-1 h-16 surface-subtle border-r border-gray-300 opacity-50"
                               style={{ minWidth: "8px" }}
                             />
                           );
@@ -319,7 +319,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                                 onTimelineClick(absoluteMinute);
                               }
                             }}
-                            className={`flex-1 h-16 border-r border-gray-200 transition-all hover:scale-105 relative ${
+                            className={`flex-1 h-16 border-r border-subtle transition-all hover:scale-105 relative ${
                               selectedBlock &&
                               absoluteMinute >= selectedBlock.start &&
                               absoluteMinute <
@@ -333,7 +333,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                                     getCategoryColor(allocation.category)
                                   : isSelected
                                     ? "bg-blue-200 border-t-4 border-t-blue-500"
-                                    : "bg-gray-50 hover:bg-gray-100"
+                                    : "surface-subtle surface-subtle-hover"
                             } ${is10MinuteBoundary ? "border-l-2 border-l-gray-400" : ""}`}
                             style={{ minWidth: "8px" }}
                             title={`Minute ${absoluteMinute}${allocation ? ` - ${allocation.category} (click to resize)` : " (click to add block)"}`}
@@ -433,9 +433,9 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
       )}
 
       {/* Current Allocation Summary */}
-      <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+      <div className="mt-4 p-3 surface-subtle rounded-lg">
         <div className="flex items-center justify-between mb-2">
-          <Typography variant="body-sm" className="font-medium text-gray-700">
+          <Typography variant="body-sm" className="font-medium text-text-primary">
             Current Allocation (Click time to edit):
           </Typography>
           <div className="flex items-center gap-1">
@@ -541,7 +541,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                             />
                             <span className="text-xs">min</span>
                           </div>
-                          <span className="text-xs text-gray-600">
+                          <span className="text-xs text-text-secondary">
                             ({block.start}-{block.start + block.duration - 1})
                           </span>
                         </div>

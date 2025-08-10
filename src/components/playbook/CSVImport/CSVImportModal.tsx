@@ -429,7 +429,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                                 ? "bg-green-100 text-green-800"
                                 : preview.data.p_type === "RPO"
                                   ? "bg-purple-100 text-purple-800"
-                                  : "bg-gray-100 text-gray-800"
+                                  : "surface-subtle text-gray-800"
                           }`}
                         >
                           {preview.data.p_type || "Unknown"}

@@ -81,7 +81,7 @@ const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
     ${paddingLeft}
   `;
   if (item.divider) {
-    return `border-t border-gray-200 dark:border-gray-700 my-2`;
+    return `border-t border-subtle dark:border-gray-700 my-2`;
   }
   if (item.disabled) {
     return `${baseStyles} text-gray-400 dark:text-gray-500 cursor-not-allowed`;
@@ -89,7 +89,7 @@ const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
   if (item.active) {
     return `${baseStyles} bg-blue-50 dark:bg-gray-700 text-blue-700 dark:text-white border-r-2 border-jade-600`;
   }
-  return `${baseStyles} text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white`;
+  return `${baseStyles} text-gray-700 dark:text-gray-300 surface-subtle-hover dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white`;
 };
 const getBadgeStyles = () => {
   return `
@@ -235,7 +235,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         {/* Header */}
         {header && (
-          <div className="px-4 py-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="px-4 py-4 border-b border-subtle dark:border-gray-700">
             <div className="flex items-center justify-between">
               <div className="flex-1">{header}</div>
               <Button
@@ -276,7 +276,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
         {/* Footer */}
         {footer && (
-          <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="px-4 py-4 border-t border-subtle dark:border-gray-700">
             {footer}
           </div>
         )}

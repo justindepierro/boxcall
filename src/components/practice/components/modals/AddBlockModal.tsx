@@ -129,7 +129,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
             variant="link"
             size="xs"
             onClick={onClose}
-            className="p-1 text-gray-400 hover:text-gray-600 h-auto"
+            className="p-1 text-text-muted hover:text-text-primary h-auto"
             aria-label="Close add block modal"
           >
             <Icon name="close" size="lg" />
@@ -138,7 +138,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Block Title *
             </label>
             <input
@@ -154,7 +154,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           </div>
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Category *
             </label>
             <select
@@ -183,7 +183,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           {/* Time and Duration */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-primary mb-1">
                 Start Time
               </label>
               <input
@@ -200,7 +200,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-primary mb-1">
                 Duration (minutes)
               </label>
               <input
@@ -222,7 +222,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           </div>
           {/* Location */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Location
             </label>
             <input
@@ -238,7 +238,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           {/* Assigned Coach */}
           {userRole === "head_coach" && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-primary mb-1">
                 Assigned Coach
               </label>
               <input
@@ -257,7 +257,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           )}
           {/* Notes */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Notes
             </label>
             <textarea

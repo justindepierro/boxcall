@@ -110,10 +110,10 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
         )}
       </div>
       {statsLoading && (
-        <div className="text-sm text-gray-500">Loading stats...</div>
+        <div className="text-sm text-text-muted">Loading stats...</div>
       )}
       {!statsLoading && !stats && (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-text-muted">
           No stats yet – log your first game.
         </div>
       )}
@@ -171,10 +171,10 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 ? "bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-200"
                 : outcome === "L"
                   ? "bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-200"
-                  : "bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-100";
+                  : "surface-subtle text-gray-800 dark:bg-gray-600 dark:text-gray-100";
             return (
               <li key={r.id} className="flex items-center justify-between py-1">
-                <span className="flex items-center gap-2 font-medium text-gray-800 dark:text-gray-100">
+                <span className="flex items-center gap-2 font-medium text-text-primary dark:text-gray-100">
                   <span
                     className={`inline-flex items-center justify-center rounded px-1.5 py-0.5 text-xs font-semibold ${color}`}
                   >
@@ -182,7 +182,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                   </span>
                   {pf}-{pa} vs {r.opponent}
                 </span>
-                <span className="text-gray-500 dark:text-gray-300">
+                <span className="text-text-muted dark:text-gray-300">
                   {new Date(r.game_date).toLocaleDateString(undefined, {
                     month: "short",
                     day: "numeric",

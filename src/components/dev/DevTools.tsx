@@ -278,7 +278,7 @@ export const DevTools: React.FC = () => {
         {state.isExpanded && (
           <>
             {/* Tabs */}
-            <div className="flex border-b border-gray-200 dark:border-gray-600 surface-subtle">
+            <div className="flex border-b border-subtle dark:border-gray-600 surface-subtle">
               {tabs.map((tab) => (
                 <Button
                   key={tab.id}
@@ -293,7 +293,7 @@ export const DevTools: React.FC = () => {
                   className={`flex-1 px-2 py-2 rounded-none first:rounded-tl-lg last:rounded-tr-lg border-b-2 ${
                     state.activeTab === tab.id
                       ? "surface-card border-jade-600 text-blue-600 dark:text-blue-400"
-                      : "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 border-transparent"
+                      : "surface-subtle-hover dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 border-transparent"
                   }`}
                   title={tab.title}
                 >

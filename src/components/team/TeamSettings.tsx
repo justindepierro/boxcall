@@ -85,7 +85,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
   return (
     <div className="surface-card rounded-lg shadow-sm">
       {/* Header */}
-      <div className="bc-card-padding border-b border-gray-200 dark:border-gray-700">
+      <div className="bc-card-padding border-b border-subtle dark:border-gray-700">
         <Typography variant="headline-sm" as="h2" className="text-text-primary">
           Team Settings
         </Typography>
@@ -129,7 +129,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                   className="w-24 h-24 rounded-lg object-cover border border-gray-300 dark:border-gray-600"
                 />
               ) : (
-                <div className="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center border border-gray-300 dark:border-gray-600">
+                <div className="w-24 h-24 surface-subtle dark:bg-gray-700 rounded-lg flex items-center justify-center border border-gray-300 dark:border-gray-600">
                   <Icon name="award" className="w-5 h-5" />
                 </div>
               )}
@@ -142,7 +142,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               >
                 📸 Upload Logo
               </Button>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-text-muted mt-1">
                 JPG, PNG or SVG. Max file size 2MB.
               </p>
             </div>
@@ -273,7 +273,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           >
             Subscription Status
           </Typography>
-          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+          <div className="surface-subtle dark:bg-gray-700 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-text-primary capitalize">
@@ -317,7 +317,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex justify-end pt-4 border-t border-subtle dark:border-gray-700">
           <Button
             type="submit"
             variant="primary"

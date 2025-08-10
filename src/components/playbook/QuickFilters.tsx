@@ -96,7 +96,7 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
       {/* Clear All Filters */}
       {activeFilters.length > 0 && (
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-text-muted">
             {activeFilters.length} filter{activeFilters.length > 1 ? "s" : ""}{" "}
             active
           </span>
@@ -104,7 +104,7 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
             onClick={clearAllFilters}
             variant="link"
             size="xs"
-            className="text-xs text-gray-500 hover:text-gray-700 underline"
+            className="text-xs text-text-muted hover:text-gray-700 underline"
           >
             Clear all
           </Button>

@@ -26,13 +26,13 @@ export const PrivacyPolicyPage: React.FC = () => {
           >
             Introduction
           </Typography>
-          <p className="text-gray-700 dark:text-gray-300 mb-4">
+          <p className="text-text-primary dark:text-gray-300 mb-4">
             BoxCall ("we," "our," or "us") is committed to protecting your
             privacy. This Privacy Policy explains how we collect, use, disclose,
             and safeguard your information when you use our football coaching
             management platform and related services.
           </p>
-          <p className="text-gray-700 dark:text-gray-300">
+          <p className="text-text-primary dark:text-gray-300">
             By using BoxCall, you consent to the data practices described in
             this Privacy Policy.
           </p>
@@ -54,7 +54,7 @@ export const PrivacyPolicyPage: React.FC = () => {
           >
             Personal Information
           </Typography>
-          <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
+          <ul className="list-disc pl-6 text-text-primary dark:text-gray-300 mb-4">
             <li>Account information (name, email address, phone number)</li>
             <li>Team and coaching information</li>
             <li>Player roster data (names, positions, contact information)</li>
@@ -69,7 +69,7 @@ export const PrivacyPolicyPage: React.FC = () => {
           >
             Usage Information
           </Typography>
-          <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
+          <ul className="list-disc pl-6 text-text-primary dark:text-gray-300 mb-4">
             <li>How you use our platform and services</li>
             <li>
               Device information (IP address, browser type, operating system)
@@ -85,7 +85,7 @@ export const PrivacyPolicyPage: React.FC = () => {
           >
             Team and Playbook Data
           </Typography>
-          <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
+          <ul className="list-disc pl-6 text-text-primary dark:text-gray-300">
             <li>Playbook content and formations</li>
             <li>Practice plans and drill information</li>
             <li>Team statistics and performance data</li>
@@ -101,7 +101,7 @@ export const PrivacyPolicyPage: React.FC = () => {
           >
             How We Use Your Information
           </Typography>
-          <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
+          <ul className="list-disc pl-6 text-text-primary dark:text-gray-300">
             <li>Provide and maintain our coaching platform services</li>
             <li>Process payments and manage subscriptions</li>
             <li>Communicate with you about your account and our services</li>
@@ -120,11 +120,11 @@ export const PrivacyPolicyPage: React.FC = () => {
           >
             Information Sharing and Disclosure
           </Typography>
-          <p className="text-gray-700 dark:text-gray-300 mb-4">
+          <p className="text-text-primary dark:text-gray-300 mb-4">
             We do not sell, trade, or otherwise transfer your personal
             information to third parties, except in the following circumstances:
           </p>
-          <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
+          <ul className="list-disc pl-6 text-text-primary dark:text-gray-300">
             <li>
               <strong>With your consent:</strong> When you explicitly authorize
               us to share information
@@ -156,12 +156,12 @@ export const PrivacyPolicyPage: React.FC = () => {
           >
             Data Security
           </Typography>
-          <p className="text-gray-700 dark:text-gray-300 mb-4">
+          <p className="text-text-primary dark:text-gray-300 mb-4">
             We implement appropriate technical and organizational security
             measures to protect your personal information against unauthorized
             access, alteration, disclosure, or destruction.
           </p>
-          <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
+          <ul className="list-disc pl-6 text-text-primary dark:text-gray-300">
             <li>Encryption of data in transit and at rest</li>
             <li>Regular security audits and updates</li>
             <li>Access controls and authentication measures</li>
@@ -177,10 +177,10 @@ export const PrivacyPolicyPage: React.FC = () => {
           >
             Your Rights and Choices
           </Typography>
-          <p className="text-gray-700 dark:text-gray-300 mb-4">
+          <p className="text-text-primary dark:text-gray-300 mb-4">
             You have the following rights regarding your personal information:
           </p>
-          <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
+          <ul className="list-disc pl-6 text-text-primary dark:text-gray-300">
             <li>
               <strong>Access:</strong> Request a copy of your personal
               information
@@ -212,7 +212,7 @@ export const PrivacyPolicyPage: React.FC = () => {
           >
             Children's Privacy
           </Typography>
-          <p className="text-gray-700 dark:text-gray-300">
+          <p className="text-text-primary dark:text-gray-300">
             BoxCall is designed for use by coaches and team administrators. We
             do not knowingly collect personal information from children under
             13. If you believe we have collected information from a child under
@@ -228,7 +228,7 @@ export const PrivacyPolicyPage: React.FC = () => {
           >
             Changes to This Privacy Policy
           </Typography>
-          <p className="text-gray-700 dark:text-gray-300">
+          <p className="text-text-primary dark:text-gray-300">
             We may update this Privacy Policy from time to time. We will notify
             you of any changes by posting the new Privacy Policy on this page
             and updating the "Last updated" date. Your continued use of BoxCall
@@ -244,12 +244,12 @@ export const PrivacyPolicyPage: React.FC = () => {
           >
             Contact Us
           </Typography>
-          <p className="text-gray-700 dark:text-gray-300 mb-4">
+          <p className="text-text-primary dark:text-gray-300 mb-4">
             If you have any questions about this Privacy Policy or our data
             practices, please contact us:
           </p>
-          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-            <p className="text-gray-700 dark:text-gray-300">
+          <div className="surface-subtle dark:bg-gray-800 p-4 rounded-lg">
+            <p className="text-text-primary dark:text-gray-300">
               <strong>BoxCall Privacy Team</strong>
               <br />
               Email: privacy@boxcall.com

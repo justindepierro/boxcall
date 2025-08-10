@@ -63,7 +63,7 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
               onClick={() => onTimelineClick(minute)}
               onMouseDown={() => onMouseDown(minute)}
               onMouseEnter={() => onMouseEnter(minute)}
-              className={`flex-1 h-12 relative border-r border-gray-200 transition-all ${
+              className={`flex-1 h-12 relative border-r border-subtle transition-all ${
                 allocation
                   ? getCategoryColor(allocation.category)
                       .replace("text-", "border-t-4 border-t-")
@@ -72,7 +72,7 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
                     getCategoryColor(allocation.category)
                   : isSelected
                     ? "bg-blue-200 border-t-4 border-t-blue-500"
-                    : "bg-gray-50 hover:bg-gray-100"
+                    : "surface-subtle surface-subtle-hover"
               } ${is5MinuteBoundary ? "border-l-2 border-l-gray-400" : ""}`}
               style={{ minWidth: "3px" }}
               title={`Minute ${minute}${
@@ -90,7 +90,7 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
               }}
             >
               {minute % 5 === 0 && minute > 0 && (
-                <div className="absolute -top-4 left-0 text-xs text-gray-600 font-medium">
+                <div className="absolute -top-4 left-0 text-xs text-text-secondary font-medium">
                   {minute}
                 </div>
               )}

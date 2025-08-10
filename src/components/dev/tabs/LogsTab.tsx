@@ -36,7 +36,7 @@ export const LogsTab: React.FC<LogsTabProps> = ({ logs, onClearLogs }) => {
           .map((log) => (
             <div
               key={log.id}
-              className="text-xs p-2 rounded bg-gray-50 dark:bg-gray-700"
+              className="text-xs p-2 rounded surface-subtle dark:bg-gray-700"
             >
               <div className="flex items-center justify-between">
                 <span
@@ -56,7 +56,7 @@ export const LogsTab: React.FC<LogsTabProps> = ({ logs, onClearLogs }) => {
                   {log.timestamp.toLocaleTimeString()}
                 </span>
               </div>
-              <div className="mt-1 text-gray-900 dark:text-gray-100">
+              <div className="mt-1 text-text-primary dark:text-gray-100">
                 {log.message}
               </div>
               <div className="text-xs mt-1 text-text-secondary">

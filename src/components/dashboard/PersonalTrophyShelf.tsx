@@ -118,7 +118,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       };
       iconName = smartIconMap[smartIcon] || "star";
     }
-    return <Icon name={iconName} size="sm" className="text-gray-600" />;
+    return <Icon name={iconName} size="sm" className="text-text-secondary" />;
   };
   // Show loading state
   if (loading) {

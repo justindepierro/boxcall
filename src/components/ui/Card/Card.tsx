@@ -11,13 +11,13 @@ const cardStyles: CardStylesConfig = {
   base: "rounded-none transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.06)]", // Thin professional shadow
   variants: {
     default:
-      "bg-[#FCFDFC] border border-gray-200 dark:bg-gray-800 dark:border-gray-700 hover:shadow-[0_2px_4px_rgba(0,0,0,0.08)]",
+      "bg-[#FCFDFC] border border-subtle dark:bg-gray-800 dark:border-gray-700 hover:shadow-[0_2px_4px_rgba(0,0,0,0.08)]",
     elevated:
-      "bg-[#FCFDFC] shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-900/30 hover:shadow-[0_6px_18px_rgba(0,0,0,0.12)]",
+      "bg-[#FCFDFC] shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-subtle dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-900/30 hover:shadow-[0_6px_18px_rgba(0,0,0,0.12)]",
     outlined:
       "bg-transparent border border-brand-jade/60 dark:border-brand-jade/70 hover:bg-brand-jade/5", // Subtle outlined
     filled:
-      "bg-gray-100/60 border border-gray-200 dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800",
+      "surface-subtle/60 border border-subtle dark:bg-gray-900 dark:border-gray-700 surface-subtle-hover dark:hover:bg-gray-800",
     accent:
       "bg-surface-navy border border-brand-navy/70 dark:bg-surface-navy-dark dark:border-brand-navy", // Navy accent
   },
@@ -37,8 +37,8 @@ const cardStyles: CardStylesConfig = {
 const getSectionStyles = (type: "header" | "footer", size: string) => {
   const base =
     type === "header"
-      ? "border-b border-gray-200 dark:border-gray-700"
-      : "border-t border-gray-200 dark:border-gray-700";
+      ? "border-b border-subtle dark:border-gray-700"
+      : "border-t border-subtle dark:border-gray-700";
   const sizes = {
     sm: type === "header" ? "pb-2 mb-3" : "pt-2 mt-3",
     md: type === "header" ? "pb-3 mb-4" : "pt-3 mt-4",
@@ -116,9 +116,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         <div className={contentClasses}>
           {loading ? (
             <div className="space-y-3">
-              <div className="h-4 rounded animate-pulse bg-gray-200 dark:bg-gray-700"></div>
-              <div className="h-4 rounded animate-pulse w-3/4 bg-gray-200 dark:bg-gray-700"></div>
-              <div className="h-4 rounded animate-pulse w-1/2 bg-gray-200 dark:bg-gray-700"></div>
+              <div className="h-4 rounded animate-pulse surface-subtle dark:bg-gray-700"></div>
+              <div className="h-4 rounded animate-pulse w-3/4 surface-subtle dark:bg-gray-700"></div>
+              <div className="h-4 rounded animate-pulse w-1/2 surface-subtle dark:bg-gray-700"></div>
             </div>
           ) : (
             children

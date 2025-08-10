@@ -97,7 +97,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
   return (
     <Card className="compact-card h-full surface-card">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2">
+      <div className="flex items-center justify-between border-b border-subtle dark:border-gray-700 pb-2">
         <Typography variant="headline-md" className="text-text-primary">
           Team Feeds
         </Typography>
@@ -154,7 +154,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
             </div>
           ))}
           {/* Show More */}
-          <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
+          <div className="pt-2 border-t border-subtle dark:border-gray-700">
             <Button
               variant="link"
               size="sm"

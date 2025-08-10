@@ -28,7 +28,7 @@ const sizeStyles: Record<NonNullable<TagProps["size"]>, string> = {
 // Semantic palette aligned with psychological system but lower elevation than Badge
 const variantStyles: Record<TagVariant, string> = {
   neutral:
-    "bg-gray-100 text-gray-700 dark:bg-gray-700/60 dark:text-gray-200 border border-gray-200 dark:border-gray-600",
+    "surface-subtle text-gray-700 dark:bg-gray-700/60 dark:text-gray-200 border border-subtle dark:border-gray-600",
   info: "bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-700",
   success:
     "bg-green-50 text-green-700 dark:bg-green-900/40 dark:text-green-300 border border-green-200 dark:border-green-700",

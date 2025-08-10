@@ -74,7 +74,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
               className={`space-y-3 min-h-[200px] p-4 rounded-lg placeholder-zone transition-colors ${
                 snapshot.isDraggingOver
                   ? "border-blue-400 bg-blue-50"
-                  : "border-gray-300 bg-gray-50"
+                  : "border-gray-300 surface-subtle"
               }`}
             >
               {practiceBlocks.length === 0 ? (
@@ -155,7 +155,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                             {(block.location || block.notes) && (
                               <div className="ml-10 space-y-1">
                                 {block.location && (
-                                  <div className="flex items-center text-sm text-gray-600">
+                                  <div className="flex items-center text-sm text-text-secondary">
                                     <Icon
                                       name="map"
                                       size="xs"
@@ -165,7 +165,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                                   </div>
                                 )}
                                 {block.notes && (
-                                  <div className="flex items-start text-sm text-gray-600">
+                                  <div className="flex items-start text-sm text-text-secondary">
                                     <Icon
                                       name="message"
                                       size="xs"
@@ -199,7 +199,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => onAddGroup(block.id)}
-                                className="text-gray-500 hover:text-gray-700"
+                                className="text-text-muted hover:text-gray-700"
                               >
                                 <Icon name="plus" size="sm" />
                               </Button>
@@ -209,7 +209,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                               variant="ghost"
                               size="sm"
                               onClick={() => onEditBlock(block)}
-                              className="text-gray-500 hover:text-gray-700"
+                              className="text-text-muted hover:text-gray-700"
                             >
                               <Icon name="edit" size="sm" />
                             </Button>
@@ -227,7 +227,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
 
                         {/* Groups within block */}
                         {block.groups && block.groups.length > 0 && (
-                          <div className="ml-10 mt-3 pl-4 border-l-2 border-gray-200">
+                          <div className="ml-10 mt-3 pl-4 border-l-2 border-subtle">
                             <Typography
                               variant="body-sm"
                               className="font-medium mb-2"

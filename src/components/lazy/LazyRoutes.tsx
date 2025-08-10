@@ -107,7 +107,7 @@ export const RouteLoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center">
     <div className="text-center">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
-      <p className="text-gray-600">Loading page...</p>
+      <p className="text-text-secondary">Loading page...</p>
     </div>
   </div>
 );
@@ -157,11 +157,11 @@ export class LazyLoadErrorBoundary extends React.Component<
               <Typography
                 variant="headline-sm"
                 as="h2"
-                className="text-gray-900 mb-2"
+                className="text-text-primary mb-2"
               >
                 Failed to load page
               </Typography>
-              <p className="text-gray-600 mb-4">
+              <p className="text-text-secondary mb-4">
                 There was an error loading this page. Please try refreshing.
               </p>
               <Button

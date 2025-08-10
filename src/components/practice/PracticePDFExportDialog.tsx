@@ -221,10 +221,10 @@ export const PracticePDFExportDialog: React.FC<
           </div>
         </div>
         {/* Practice Info Preview */}
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+        <div className="surface-subtle rounded-lg p-4 mb-6">
           <Typography
             variant="body-sm"
-            className="font-medium text-gray-700 mb-2"
+            className="font-medium text-text-primary mb-2"
           >
             Practice Details:
           </Typography>
@@ -253,7 +253,7 @@ export const PracticePDFExportDialog: React.FC<
           <div>
             <Typography
               variant="body-md"
-              className="font-medium text-gray-900 mb-3"
+              className="font-medium text-text-primary mb-3"
             >
               Select Categories to Include:
             </Typography>
@@ -266,11 +266,11 @@ export const PracticePDFExportDialog: React.FC<
                   className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-gray-300 rounded"
                 />
                 <span className="text-sm font-medium">Everything</span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-text-muted">
                   (All practice blocks and activities)
                 </span>
               </label>
-              <div className="ml-4 space-y-2 border-l-2 border-gray-200 pl-4">
+              <div className="ml-4 space-y-2 border-l-2 border-subtle pl-4">
                 <label className="flex items-center space-x-3 cursor-pointer">
                   <input
                     type="checkbox"
@@ -320,7 +320,7 @@ export const PracticePDFExportDialog: React.FC<
           <div>
             <Typography
               variant="body-md"
-              className="font-medium text-gray-900 mb-3"
+              className="font-medium text-text-primary mb-3"
             >
               Additional Content:
             </Typography>
@@ -333,7 +333,7 @@ export const PracticePDFExportDialog: React.FC<
                   className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-gray-300 rounded"
                 />
                 <span className="text-sm">Add Scripts</span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-text-muted">
                   (Include attached practice scripts and play sheets)
                 </span>
               </label>
@@ -345,7 +345,7 @@ export const PracticePDFExportDialog: React.FC<
                   className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-gray-300 rounded"
                 />
                 <span className="text-sm">Add Notes</span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-text-muted">
                   (Include coach notes and block instructions)
                 </span>
               </label>

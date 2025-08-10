@@ -173,7 +173,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap max-w-2xl mx-auto">
           {/* Create Team Option */}
-          <div className="surface-card rounded-lg bc-card-padding border border-gray-200 dark:border-gray-700 hover:border-jade-300 dark:hover:border-jade-600 transition-colors">
+          <div className="surface-card rounded-lg bc-card-padding border border-subtle dark:border-gray-700 hover:border-jade-300 dark:hover:border-jade-600 transition-colors">
             <Icon
               name="plus"
               size="lg"
@@ -197,7 +197,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
           </div>
 
           {/* Join Team Option */}
-          <div className="surface-card rounded-lg bc-card-padding border border-gray-200 dark:border-gray-700 hover:border-jade-300 dark:hover:border-jade-600 transition-colors">
+          <div className="surface-card rounded-lg bc-card-padding border border-subtle dark:border-gray-700 hover:border-jade-300 dark:hover:border-jade-600 transition-colors">
             <Icon
               name="user-plus"
               size="lg"
@@ -222,7 +222,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
         </div>
 
         {!hasCoachAccount && (
-          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="mt-6 pt-6 border-t border-subtle dark:border-gray-700">
             <Typography variant="body-sm" color="muted" className="mb-3">
               <strong>Individual Coaches:</strong> Want to build personal
               playbooks without a team?

@@ -52,7 +52,7 @@ const ERROR_CONFIGURATIONS = {
     defaultMessage:
       "Check your connection and try again when you're back online.",
     color: "text-gray-600",
-    bgColor: "bg-gray-100",
+    bgColor: "surface-subtle",
   },
   timeout: {
     icon: RefreshCw,
@@ -106,17 +106,17 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
   if (compact) {
     return (
       <div
-        className={`flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg ${className}`}
+        className={`flex items-center justify-between p-4 bg-white border border-subtle rounded-lg ${className}`}
       >
         <div className="flex items-center space-x-3">
           <div className={`p-2 rounded-full ${config.bgColor}`}>
             <IconComponent className={`h-4 w-4 ${config.color}`} />
           </div>
           <div>
-            <Typography variant="body-sm" className="text-gray-900 font-medium">
+            <Typography variant="body-sm" className="text-text-primary font-medium">
               {title || config.defaultTitle}
             </Typography>
-            <Typography variant="caption" className="text-gray-500">
+            <Typography variant="caption" className="text-text-muted">
               {message || config.defaultMessage}
             </Typography>
           </div>
@@ -147,12 +147,12 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
 
       {/* Error Content */}
       <div className="mb-6">
-        <Typography variant="headline-md" className="text-gray-900 mb-2">
+        <Typography variant="headline-md" className="text-text-primary mb-2">
           {title || config.defaultTitle}
         </Typography>
         <Typography
           variant="body-md"
-          className="text-gray-600 max-w-sm mx-auto"
+          className="text-text-secondary max-w-sm mx-auto"
         >
           {message || config.defaultMessage}
         </Typography>

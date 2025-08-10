@@ -33,13 +33,13 @@ export const AboutPage: React.FC = () => {
         <Typography variant="headline-lg" as="h2" className="mb-6">
           Our Mission
         </Typography>
-        <p className="text-gray-700 dark:text-gray-300 mb-4">
+        <p className="text-text-primary dark:text-gray-300 mb-4">
           BoxCall is dedicated to empowering football coaches at every level
           with innovative technology that simplifies play calling, enhances team
           communication, and elevates game strategy. We believe that great
           coaching tools should be accessible, intuitive, and powerful.
         </p>
-        <p className="text-gray-700 dark:text-gray-300">
+        <p className="text-text-primary dark:text-gray-300">
           From youth leagues to high school varsity teams, BoxCall provides the
           digital playbook and coordination platform that modern football
           demands.
@@ -119,12 +119,12 @@ export const AboutPage: React.FC = () => {
         <Typography variant="headline-lg" as="h2" className="mb-6">
           Built by Coaches, for Coaches
         </Typography>
-        <p className="text-gray-700 dark:text-gray-300 mb-4">
+        <p className="text-text-primary dark:text-gray-300 mb-4">
           BoxCall was founded by experienced football coaches who understand the
           unique challenges of modern football coaching. Our team combines
           decades of on-field experience with cutting-edge technology expertise.
         </p>
-        <p className="text-gray-700 dark:text-gray-300">
+        <p className="text-text-primary dark:text-gray-300">
           We're committed to continuously improving our platform based on real
           feedback from coaches in the field, ensuring BoxCall evolves with the
           game we all love.
@@ -132,7 +132,7 @@ export const AboutPage: React.FC = () => {
       </div>
 
       {/* Contact CTA */}
-      <div className="text-center bg-gray-50 dark:bg-gray-800 rounded-lg p-8">
+      <div className="text-center surface-subtle dark:bg-gray-800 rounded-lg p-8">
         <Typography variant="headline-sm" as="h3" className="mb-4">
           Ready to Transform Your Coaching?
         </Typography>

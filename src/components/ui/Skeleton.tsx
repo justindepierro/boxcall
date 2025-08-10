@@ -28,7 +28,7 @@ const SkeletonBase: React.FC<SkeletonProps> = ({
  * Dashboard Card Skeleton - Matches dashboard card structure
  */
 export const DashboardCardSkeleton: React.FC = () => (
-  <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+  <div className="bg-white rounded-lg border border-subtle p-6 shadow-sm">
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -104,7 +104,7 @@ export const PlayCardSkeleton: React.FC = () => (
  * Navigation Skeleton - For bottom navigation loading
  */
 export const NavigationSkeleton: React.FC = () => (
-  <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 pb-safe-area-inset-bottom">
+  <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-subtle pb-safe-area-inset-bottom">
     <div className="px-2 py-1">
       <div className="flex justify-between items-center max-w-sm mx-auto">
         {Array.from({ length: 4 }).map((_, i) => (
@@ -137,7 +137,7 @@ export const ListSkeleton: React.FC<ListSkeletonProps> = ({
     {Array.from({ length: items }).map((_, i) => (
       <div
         key={i}
-        className="flex items-center space-x-3 p-4 bg-white rounded-lg border border-gray-200"
+        className="flex items-center space-x-3 p-4 bg-white rounded-lg border border-subtle"
       >
         {showAvatar && (
           <SkeletonBase
@@ -161,7 +161,7 @@ export const ListSkeleton: React.FC<ListSkeletonProps> = ({
  */
 export const PageLoadingSkeleton: React.FC = () => {
   const CardSkeleton = () => (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+    <div className="bg-white rounded-lg border border-subtle p-6 shadow-sm">
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">

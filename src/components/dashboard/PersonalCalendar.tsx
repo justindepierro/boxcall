@@ -81,7 +81,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
     <>
       <Card className="compact-card h-full surface-card">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2 mb-3">
+        <div className="flex items-center justify-between border-b border-subtle dark:border-gray-700 pb-2 mb-3">
           <Typography variant="headline-md" className="text-text-primary">
             Personal Calendar
           </Typography>
@@ -124,7 +124,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                 variant="link"
                 size="sm"
                 onClick={() => setShowQuickAdd(false)}
-                className="text-gray-600 hover:text-gray-700"
+                className="text-text-secondary hover:text-gray-700"
               >
                 Cancel
               </Button>
@@ -158,7 +158,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                   <div
                     key={event.id}
                     onClick={() => handleEventClick(event)}
-                    className="flex items-start space-x-3 p-3 rounded-lg surface-subtle-hover transition-colors cursor-pointer border border-gray-100 dark:border-gray-700"
+                    className="flex items-start space-x-3 p-3 rounded-lg surface-subtle-hover transition-colors cursor-pointer border border-subtle dark:border-gray-700"
                   >
                     {/* Event Icon */}
                     <div className="flex-shrink-0 mt-1">
@@ -304,11 +304,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                 <Button variant="primary" size="sm" className="flex-1">
                   RSVP Going
                 </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="flex-1"
-                >
+                <Button variant="secondary" size="sm" className="flex-1">
                   Maybe
                 </Button>
               </div>

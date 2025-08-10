@@ -149,7 +149,7 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                               {/* Drag Handle */}
                               <div
                                 {...provided.dragHandleProps}
-                                className="text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing mt-1"
+                                className="text-text-muted hover:text-text-primary cursor-grab active:cursor-grabbing mt-1"
                               >
                                 ⋮⋮
                               </div>
@@ -171,19 +171,19 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                       .replace("-", " ")
                                       .toUpperCase()}
                                   </span>
-                                  <span className="text-sm text-gray-600">
+                                  <span className="text-sm text-text-secondary">
                                     {block.startTime} - {block.endTime} (
                                     {block.duration}m)
                                   </span>
                                 </div>
                                 {/* Location & Coach */}
-                                <div className="flex items-center space-x-4 text-sm text-gray-600">
+                                <div className="flex items-center space-x-4 text-sm text-text-secondary">
                                   {block.location && (
                                     <div className="flex items-center gap-1">
                                       <Icon
                                         name="target"
                                         size="sm"
-                                        className="text-gray-500"
+                                        className="text-text-muted"
                                       />
                                       <span>{block.location}</span>
                                     </div>
@@ -193,7 +193,7 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                       <Icon
                                         name="check-circle"
                                         size="sm"
-                                        className="text-gray-500"
+                                        className="text-text-muted"
                                       />
                                       <span>{block.assignedCoach}</span>
                                     </div>
@@ -264,11 +264,11 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                           </div>
                           {/* Groups Section */}
                           {block.groups && block.groups.length > 0 && (
-                            <div className="mt-4 pt-4 border-t border-gray-200">
+                            <div className="mt-4 pt-4 border-t border-subtle">
                               <div className="flex items-center justify-between mb-3">
                                 <Typography
                                   variant="body-md"
-                                  className="font-medium text-gray-700"
+                                  className="font-medium text-text-primary"
                                 >
                                   👥 Groups ({block.groups.length})
                                 </Typography>
@@ -284,13 +284,13 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                 {block.groups.map((group) => (
                                   <div
                                     key={group.id}
-                                    className="p-3 bg-gray-50 rounded-lg border border-gray-200"
+                                    className="p-3 surface-subtle rounded-lg border border-subtle"
                                   >
                                     <div className="flex items-start justify-between mb-2">
                                       <div className="flex-1">
                                         <Typography
                                           variant="body-sm"
-                                          className="font-medium text-gray-900"
+                                          className="font-medium text-text-primary"
                                         >
                                           {group.name}
                                         </Typography>
@@ -408,7 +408,7 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                           )}
                           {/* Add Group Button (when no groups exist) */}
                           {(!block.groups || block.groups.length === 0) && (
-                            <div className="mt-4 pt-4 border-t border-gray-200">
+                            <div className="mt-4 pt-4 border-t border-subtle">
                               <Button
                                 onClick={() => onAddGroup(block.id)}
                                 variant="ghost"

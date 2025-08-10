@@ -7,22 +7,22 @@ import { Card, Button } from "../ui";
 export const CalendarSidebarSkeleton: React.FC = () => (
   <div className="space-y-6" aria-label="Loading calendar sidebar">
     <Card className="p-6 space-y-4 animate-pulse">
-      <div className="h-5 w-40 rounded bg-gray-200" />
-      <div className="h-9 w-full rounded bg-gray-200" />
-      <div className="h-9 w-5/6 rounded bg-gray-200" />
-      <div className="h-9 w-2/3 rounded bg-gray-200" />
+      <div className="h-5 w-40 rounded surface-subtle" />
+      <div className="h-9 w-full rounded surface-subtle" />
+      <div className="h-9 w-5/6 rounded surface-subtle" />
+      <div className="h-9 w-2/3 rounded surface-subtle" />
     </Card>
     <Card className="p-6 space-y-4 animate-pulse">
-      <div className="h-5 w-28 rounded bg-gray-200" />
+      <div className="h-5 w-28 rounded surface-subtle" />
       <div className="flex gap-3">
-        <div className="h-6 w-12 rounded bg-gray-200" />
-        <div className="h-6 w-10 rounded bg-gray-200" />
-        <div className="h-6 w-14 rounded bg-gray-200" />
+        <div className="h-6 w-12 rounded surface-subtle" />
+        <div className="h-6 w-10 rounded surface-subtle" />
+        <div className="h-6 w-14 rounded surface-subtle" />
       </div>
       <div className="space-y-2 pt-2">
-        <div className="h-3 w-5/6 rounded bg-gray-200" />
-        <div className="h-3 w-2/3 rounded bg-gray-200" />
-        <div className="h-3 w-3/5 rounded bg-gray-200" />
+        <div className="h-3 w-5/6 rounded surface-subtle" />
+        <div className="h-3 w-2/3 rounded surface-subtle" />
+        <div className="h-3 w-3/5 rounded surface-subtle" />
       </div>
     </Card>
   </div>
@@ -31,19 +31,19 @@ export const CalendarSidebarSkeleton: React.FC = () => (
 export const CalendarGridSkeleton: React.FC = () => (
   <Card className="p-6 animate-pulse" aria-label="Loading calendar grid">
     <div className="flex items-center justify-between mb-6">
-      <div className="h-9 w-56 rounded bg-gray-200" />
+      <div className="h-9 w-56 rounded surface-subtle" />
       <div className="flex gap-3">
-        <div className="h-9 w-20 rounded bg-gray-200" />
-        <div className="h-9 w-24 rounded bg-gray-200" />
+        <div className="h-9 w-20 rounded surface-subtle" />
+        <div className="h-9 w-24 rounded surface-subtle" />
       </div>
     </div>
     <div className="grid grid-cols-7 gap-2 h-[600px] select-none">
       {Array.from({ length: 35 }).map((_, i) => (
         <div
           key={`skel-${i}`}
-          className="rounded border border-gray-200/60 bg-gray-50 relative overflow-hidden"
+          className="rounded border border-subtle/60 surface-subtle relative overflow-hidden"
         >
-          <div className="h-4 w-8 bg-gray-200 rounded mt-1 ml-1" />
+          <div className="h-4 w-8 surface-subtle rounded mt-1 ml-1" />
           <div className="absolute inset-0 opacity-60" />
         </div>
       ))}
@@ -56,10 +56,10 @@ export const CalendarPageSkeleton: React.FC = () => (
     <div className="surface-header border-b border-subtle">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-pulse">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-gray-200" />
+          <div className="h-10 w-10 rounded-full surface-subtle" />
           <div className="space-y-2">
-            <div className="h-6 w-56 rounded bg-gray-200" />
-            <div className="h-4 w-72 rounded bg-gray-200" />
+            <div className="h-6 w-56 rounded surface-subtle" />
+            <div className="h-4 w-72 rounded surface-subtle" />
           </div>
         </div>
       </div>
@@ -86,7 +86,7 @@ export const CalendarErrorSkeleton: React.FC<{ message?: string }> = ({
         <div className="h-8 w-8 rounded-full bg-red-300" />
       </div>
       <p className="text-red-700 font-medium">Calendar Error</p>
-      <p className="text-sm text-gray-600 max-w-sm mx-auto">{message}</p>
+      <p className="text-sm text-text-secondary max-w-sm mx-auto">{message}</p>
       <Button
         variant="primary"
         size="sm"

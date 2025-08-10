@@ -4,6 +4,88 @@
 
 ---
 
+## ✅ PROGRESS SNAPSHOT (As of 2025-08-10)
+
+Foundational Design & UI Governance
+
+- [x] Semantic surface tokens (surface-app/header/card/subtle/inverse/nav) adopted; raw bg-gray/border-gray utilities purged via codemod
+- [x] Performance/style governance baseline established (bundle stats + performance budgets JSON)
+- [x] Hard CI/style gate: rejects raw gray surface & raw gray text utilities; ESLint custom rules integrated
+- [x] Focus ring unified (focus-ring utilities) — applied to Button component
+- [x] Initial semantic text token migration (text-gray-500..900 → text-text-{muted|secondary|primary}) codemod run
+- [ ] Residual hover/dark state raw gray text utilities (hover:text-gray-700 etc.) — cleanup in progress
+- [ ] Heading & ad‑hoc typography utilities migration to <Typography /> variants (planned)
+- [ ] Contrast audit pass (pending — will follow remaining text token cleanup)
+
+Performance & Delivery
+
+- [x] Performance budget gate wired (JS bundle size thresholds enforced)
+- [ ] Route-level lazy loading for heavy practice / export flows (planned)
+- [ ] Suspense boundaries + skeleton states standardization (skeleton components partially present; consolidation pending)
+- [ ] Web Vitals capture & telemetry emission (not started)
+
+Data & Normalization
+
+- [x] Canonicalization utilities created (canonicalizePlayInput, duplicate key compute)
+- [ ] Service layer enforcement (write path always canonicalizes) — pending integration
+- [ ] duplicate_key column + backfill migration (not yet applied)
+- [ ] Retro normalization analyzer & diff reports (not started)
+
+Migrations & Database
+
+- [x] Wave 1 scaffolding migration 009 COMPLETE
+- [x] RLS & immutability migration 011 COMPLETE
+- [ ] Migration 010 (recognitions backfill) — drafted conceptually, implementation pending
+- [ ] Add duplicate_key column & unique index (queued after canonical write path live)
+
+Search & Assistive Features
+
+- [ ] Search document builder integration (utility ready, not wired)
+- [ ] Fuzzy formation/personnel suggestions (not started)
+- [ ] Play name suggestion + recency weighting (not started)
+
+Mobile UX & Accessibility
+
+- [ ] Compact mode toggle & swipe group interactions (spec referenced; implementation pending)
+- [ ] Offline draft buffer (not started in current branch)
+- [ ] Accessibility audit (targeted fixes only so far; full pass pending)
+
+Telemetry & Observability
+
+- [ ] Event dispatcher (queue + batching) (not started)
+- [ ] Web Vitals instrumentation (not started)
+- [ ] Error boundary → telemetry integration (not started)
+
+Testing & Quality
+
+- [ ] Unit tests for canonicalization & duplicate key edge cases (not added yet)
+- [ ] Snapshot/drift tests for style tokens expanded beyond raw gray (candidate: focus ring / typography) (planned)
+
+Dashboard Onboarding Cleanup (Section 17.1)
+
+- [x] Removed mock Trophy Case, Feed, Calendar, Season Stats, Upcoming Events (replaced with onboarding hints)
+- [x] Introduced reusable OnboardingHint component
+- [ ] Telemetry for onboarding.view / onboarding.action (pending)
+- [ ] Feed backend schema & migration draft (pending)
+- [ ] Calendar events schema draft (pending)
+- [ ] Stats aggregation strategy doc (pending)
+- [ ] Accessibility & mobile layout refinements for onboarding components (pending)
+
+Risk & Compliance
+
+- [ ] Audit log triggers (planned post canonical write path)
+- [ ] Rate limiting & enhanced RLS for new telemetry tables (future phase)
+
+Next Immediate Focus (Proposed Order)
+
+1. Finish residual raw gray hover/dark text cleanup + heading typography migration
+2. Contrast audit adjustments using semantic tokens (ensure AA/AAA targets)
+3. Integrate canonicalization in write path + add duplicate_key column migration
+4. Draft Migration 010 & row count report
+5. Introduce lightweight telemetry dispatcher (foundation for Web Vitals & onboarding events)
+
+---
+
 ## 1. PRODUCT VISION
 
 | Pillar                       | Outcome                                  | Core KPI                        | 2025 Target |
@@ -751,3 +833,102 @@ Phase 4 (Analytics Integration):
 7. Advanced analytics (aggregations, distributions).
 
 ---
+
+Task: Turn broad roadmap into an ordered, executable sequence. Below is a prioritized, dependency-aware plan with crisp acceptance criteria.
+
+High-Level Phase Order (why this order)
+
+Lock Baseline & Guard Rails (prevent regression while we refactor)
+Style/System Consistency (semantic surfaces, typography, focus, contrast) – reduces future churn
+Data Service Layer + React Query (stabilize data contract before performance work)
+Performance Optimization (split, lazy load, INP improvements) using stable APIs
+Accessibility & Mobile Enhancements (on solid style + performance foundation)
+Observability & Telemetry Expansion (instrument after hot paths optimized)
+Security & Release Engineering (governance after system shape settles)
+Innovation Track Prototypes (de-risk after core reliability is high)
+Detailed Ordered Plan
+
+Phase 0: Baseline Lock (Day 0)
+
+Tag current main (v0-style-baseline).
+Add CI step: run guard tests (button variants, raw gray drift, types, lint, build).
+Success: Green pipeline on tag; artifacts captured (bundle stats JSON).
+Phase 1: Style & Design System Finalization (Days 1–3)
+
+Raw Gray Codemod
+Script replaces bg-gray-50/100/200 → surface-subtle (context-aware), border-gray-200/100 → border-subtle.
+Produce before/after diff report (markdown).
+Update surfaceRawGray snapshot (should become empty array).
+Typography Token Sweep
+Map text-gray-600 → text-text-secondary, text-gray-800 → text-text-primary, etc.
+Add lint rule banning text-gray-\* outside exceptions list.
+Focus Ring Utility
+Global .bc-focus ring style; apply to Button, Input, Select, interactive Tags.
+Contrast & Axe Test Harness
+Add vitest + axe tests for Dashboard, Practice Planner, PlayBuilder.
+Fail build if any contrast < 4.5:1 (AA) for text elements.
+Emoji-to-Icon Audit
+Lint rule: forbid raw Unicode emoji inside Button children (allow in prose). Acceptance: Zero raw gray offenders; axe suite passes; lint prevents reintroduction.
+Phase 2: Data Service Layer & React Query (Days 4–7)
+
+Introduce /src/domains structure (plays, practice, roster, recognition).
+PlaysService (MVP): getPlays, createPlay (with canonicalization + duplicate_key).
+React Query integration for plays only; migrate existing manual fetch to useQuery/useMutation.
+Error Interpreter (normalize Supabase errors).
+Add caching policy matrix doc + verify staleTime settings.
+Telemetry: play.create events hooked through service. Acceptance: UI reads/writes plays solely via service + React Query; duplicate_key computed for all new writes.
+Phase 3: Performance & Bundling (Days 8–10)
+
+Manual Chunking: pdf, calendar, playbuilder, telemetry, icon-categories.
+Remove dual static/dynamic icon imports (standardize on lazy registry).
+Dynamic import PDF export path & large optional panels.
+Add INP measurement script + CI regression budget (diff vs previous run).
+Memoization sweep (useMemo/useCallback) for Practice Planner hot loops; measure rerenders with profiling flag.
+Preload critical fonts & small icon sprite; defer non-critical JS (web-vitals, telemetry). Acceptance: Largest non-pdf chunk <180 kB gzip; P95 INP (dev synthetic) trending downward; CI budget gating active.
+Phase 4: Accessibility & Mobile (Days 11–13)
+
+Mobile Full-Screen Modals for creation flows (<640px).
+Touch-friendly slider & buttons (min 44px).
+Reduced motion support (prefers-reduced-motion).
+Keyboard navigation: tab order + arrow key in suggestion lists.
+Screen reader live regions for save/loading states. Acceptance: Lighthouse a11y ≥95 across target pages; no keyboard traps; mobile layouts pass manual audit.
+Phase 5: Observability & Telemetry Expansion (Days 14–15)
+
+Trace ID injection + span API (interaction → network).
+Event batching (flush interval + onBeforeUnload).
+Dashboards config (JSON spec) committed (not production hosted yet). Acceptance: Telemetry events show trace IDs; batching reduces network calls; sample traces verified.
+Phase 6: Security & Release Engineering (Days 16–18)
+
+RLS automated test suite for new duplicate_key, custom_fields.
+Audit log table + minimal insert triggers.
+Secret scanning pre-commit (gitleaks) + weekly dependency diff report.
+Preview deploy automation with seeded demo dataset script.
+Bundle & INP diff PR bot (comment). Acceptance: Security suite green; PRs show size + perf diff; preview env auto builds.
+Phase 7: Innovation Pilots (Days 19–21)
+
+AI Play Naming (client prompt assembly + stub scorer).
+Practice Time Efficiency analytics (compare planned vs actual timeline).
+Install Planner heuristic (non-ML initial rules). Acceptance: Feature flags gated; telemetry collecting pilot usage.
+Ongoing Weekly Cadence
+
+Monday: Metrics snapshot (INP, bundle, a11y score, raw gray count, duplicate_key violations).
+Mid-week: Innovation spike slot (4h).
+Friday: Risk register & KPI delta update.
+Parallelization Guidance
+
+While codemod runs (Phase 1), another thread can scaffold domains/plays service.
+React Query migration for roster can start once plays service pattern finalized (Phase 2 late).
+Performance profiling can begin baseline capture during Phase 2 (non-blocking).
+Immediate Next 3 Actions (start now)
+
+Implement & run raw gray codemod (generate offenders report; apply replacements).
+Add lint rule banning bg-gray-/border-gray- & text-gray-\* (except whitelist).
+Create /src/domains/plays with PlaysService skeleton + migrate a single read path (feature-flagged) to de-risk pattern.
+Acceptance Contracts (quick reference)
+
+Codemod: 100% of targeted classes replaced (report lists zero after run).
+Service layer: No component outside domains imports Supabase directly.
+Performance: All heavy optional features behind dynamic imports.
+Accessibility: Axe suite green in CI.
+Observability: Each mutation emits structured event with trace id.
+Security: No direct table queries bypassing service; RLS tests cover CRUD.

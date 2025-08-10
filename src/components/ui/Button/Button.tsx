@@ -19,7 +19,7 @@ const buttonVariants: ButtonStylesConfig = {
     active: "active:bg-brand-jade-darker active:border-brand-jade-darker",
     disabled:
       "disabled:bg-brand-jade-light disabled:border-brand-jade-light disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
+    focus: "focus-ring focus-ring-offset",
   },
   secondary: {
     base: "bg-transparent text-brand-navy border-2 border-brand-navy",
@@ -28,7 +28,7 @@ const buttonVariants: ButtonStylesConfig = {
       "active:bg-brand-navy-dark active:text-white active:border-brand-navy-dark",
     disabled:
       "disabled:text-brand-navy-light disabled:border-brand-navy-light disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-brand-navy focus:ring-offset-2",
+    focus: "focus-ring focus-ring-offset",
   },
   outline: {
     base: "bg-transparent text-interaction-jade border border-brand-jade",
@@ -38,21 +38,21 @@ const buttonVariants: ButtonStylesConfig = {
       "active:bg-surface-jade-dark active:text-brand-jade-dark active:border-brand-jade-dark",
     disabled:
       "disabled:text-brand-jade-light disabled:border-brand-jade-light disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
+    focus: "focus-ring focus-ring-offset",
   },
   ghost: {
     base: "bg-transparent text-text-secondary border border-transparent",
     hover: "hover:bg-surface-neutral hover:text-text-primary",
     active: "active:bg-surface-neutral-dark active:text-text-primary",
     disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
+    focus: "focus-ring focus-ring-offset",
   },
   subtle: {
-    base: "bg-gray-50 text-gray-700 border border-gray-300",
-    hover: "hover:bg-gray-100 hover:text-gray-900",
-    active: "active:bg-gray-200 active:text-gray-900",
+    base: "surface-subtle text-text-secondary border border-gray-300",
+    hover: "surface-subtle-hover hover:text-text-primary",
+    active: "active:surface-subtle active:text-text-primary",
     disabled:
-      "disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed",
+      "disabled:surface-subtle disabled:text-text-muted disabled:border-subtle disabled:cursor-not-allowed",
     focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
   },
   link: {
@@ -60,8 +60,7 @@ const buttonVariants: ButtonStylesConfig = {
     hover: "hover:text-brand-jade-dark hover:underline",
     active: "active:text-brand-jade-dark",
     disabled: "disabled:text-brand-jade-light disabled:cursor-not-allowed",
-    focus:
-      "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2 focus:rounded-sm",
+    focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   danger: {
     base: "bg-red-600 text-white border border-red-600",
@@ -69,7 +68,7 @@ const buttonVariants: ButtonStylesConfig = {
     active: "active:bg-red-800 active:border-red-800",
     disabled:
       "disabled:bg-red-300 disabled:border-red-300 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-red-500 focus:ring-offset-2",
+    focus: "focus-ring focus-ring-offset",
   },
   success: {
     base: "bg-interaction-jade text-white border border-interaction-jade",
@@ -77,7 +76,7 @@ const buttonVariants: ButtonStylesConfig = {
     active: "active:bg-brand-jade-darker active:border-brand-jade-darker",
     disabled:
       "disabled:bg-brand-jade-light disabled:border-brand-jade-light disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
+    focus: "focus-ring focus-ring-offset",
   },
   warning: {
     // Use darker background and dark text for AA contrast
@@ -86,7 +85,7 @@ const buttonVariants: ButtonStylesConfig = {
     active: "active:bg-yellow-700 active:border-yellow-700",
     disabled:
       "disabled:bg-yellow-300 disabled:border-yellow-300 disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2",
+    focus: "focus-ring focus-ring-offset",
   },
 };
 // Button size styles configuration - Enhanced for masculine, substantial feel

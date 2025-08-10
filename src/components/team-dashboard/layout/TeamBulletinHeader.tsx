@@ -68,7 +68,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
   }
 
   return (
-    <div className="bg-[#FCFDFC] dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-none mb-3 shadow-[0_1px_2px_rgba(0,0,0,0.06)] p-3">
+    <div className="bg-[#FCFDFC] dark:bg-gray-800 border border-subtle dark:border-gray-700 rounded-none mb-3 shadow-[0_1px_2px_rgba(0,0,0,0.06)] p-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           {/* Team Logo / Uploader */}
@@ -79,8 +79,8 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
               onClick={() => fileInputRef.current?.click()}
               className={`flex items-center justify-center w-20 h-20 rounded-none border ${
                 localLogo
-                  ? "border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 overflow-hidden"
-                  : "border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500"
+                  ? "border-subtle dark:border-gray-600 surface-subtle dark:bg-gray-700 overflow-hidden"
+                  : "border-gray-300 dark:border-gray-600 surface-subtle dark:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500"
               } transition-colors cursor-pointer relative`}
               aria-label={
                 isCoach
@@ -97,7 +97,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
                   className="object-cover w-full h-full"
                 />
               ) : (
-                <div className="text-center flex flex-col items-center text-gray-600 dark:text-gray-300">
+                <div className="text-center flex flex-col items-center text-text-secondary dark:text-gray-300">
                   <LogoIcon size="lg" color="brand" />
                   <span className="text-[10px] font-medium mt-1">
                     {uploading ? "Uploading..." : isCoach ? "Add Logo" : "Logo"}
@@ -131,12 +131,12 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             </Typography>
             <Typography
               variant="body-lg"
-              className="mt-0.5 text-gray-600 dark:text-gray-300"
+              className="mt-0.5 text-text-secondary dark:text-gray-300"
             >
               {seasonDisplay} • Record: {record.wins}-{record.losses}
             </Typography>
             {schoolName && (
-              <div className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+              <div className="text-xs text-text-secondary dark:text-gray-300 mt-1">
                 {schoolName}
                 {mascot ? ` ${mascot}` : ""}
               </div>
@@ -147,7 +147,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
           <div className="text-right">
             <Typography
               variant="body-sm"
-              className="text-gray-600 dark:text-gray-300"
+              className="text-text-secondary dark:text-gray-300"
             >
               Next Game
             </Typography>
@@ -161,7 +161,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
           <div className="text-right">
             <Typography
               variant="body-sm"
-              className="text-gray-600 dark:text-gray-300"
+              className="text-text-secondary dark:text-gray-300"
             >
               Team Members
             </Typography>

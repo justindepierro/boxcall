@@ -277,7 +277,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
         )}
       </div>
       {/* Profile Stats */}
-      <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600">
+      <div className="mt-6 pt-4 border-t border-subtle dark:border-gray-600">
         <Typography
           variant="body-sm"
           className="font-semibold mb-3 text-text-primary"

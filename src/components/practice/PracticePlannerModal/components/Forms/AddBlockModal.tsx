@@ -122,7 +122,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
       <div className="mb-4">
         <Typography
           variant="body-sm"
-          className="mb-2 font-medium text-gray-700"
+          className="mb-2 font-medium text-text-primary"
         >
           Quick Templates:
         </Typography>
@@ -148,7 +148,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
       {/* Form Fields */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-text-primary mb-1">
             Title
           </label>
           <input
@@ -162,7 +162,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-text-primary mb-1">
             Duration (minutes)
           </label>
           <input
@@ -183,7 +183,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
 
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-text-primary mb-1">
             Category
           </label>
           <select
@@ -205,7 +205,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-text-primary mb-1">
             Location
           </label>
           <input
@@ -221,7 +221,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
       </div>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-text-primary mb-1">
           Notes
         </label>
         <textarea
@@ -244,7 +244,11 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           Cancel
         </Button>
         {userRole === "head_coach" && (
-          <Button variant="secondary" onClick={onRoleSwitch} className="text-xs">
+          <Button
+            variant="secondary"
+            onClick={onRoleSwitch}
+            className="text-xs"
+          >
             <Icon name="eye" size="sm" className="mr-1" />
             Switch to Position Coach View
           </Button>

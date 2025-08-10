@@ -62,7 +62,7 @@ export const TimelineLegend: React.FC<TimelineLegendProps> = ({
 
   if (Object.keys(categoryBlocks).length === 0) {
     return (
-      <div className="mt-4 p-4 bg-gray-50 rounded-lg text-center">
+      <div className="mt-4 p-4 surface-subtle rounded-lg text-center">
         <Typography variant="body-sm" color="muted">
           No time blocks allocated yet. Select a category above and click on the
           timeline to start.
@@ -116,7 +116,7 @@ export const TimelineLegend: React.FC<TimelineLegendProps> = ({
         })}
       </div>
 
-      <div className="mt-3 text-xs text-gray-500">
+      <div className="mt-3 text-xs text-text-muted">
         Total allocated: {Object.keys(timelineAllocation).length} minutes
       </div>
     </div>

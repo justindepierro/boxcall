@@ -97,7 +97,7 @@ const CollapsedIndicator: React.FC<{
               key={item.id}
               variant="ghost"
               size="xs"
-              className="w-full justify-start px-3 py-2 h-auto text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="w-full justify-start px-3 py-2 h-auto text-text-primary dark:text-gray-300 surface-subtle-hover dark:hover:bg-gray-700"
               onClick={() => {
                 onItemClick(item);
                 setIsExpanded(false);

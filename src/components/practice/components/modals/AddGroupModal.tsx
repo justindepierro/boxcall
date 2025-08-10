@@ -72,7 +72,7 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
             variant="link"
             size="xs"
             onClick={onClose}
-            className="p-1 text-gray-400 hover:text-gray-600 h-auto"
+            className="p-1 text-text-muted hover:text-text-primary h-auto"
             aria-label="Close add group modal"
           >
             <Icon name="close" size="lg" />
@@ -81,7 +81,7 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Group Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Group Name *
             </label>
             <input
@@ -97,7 +97,7 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
           </div>
           {/* Location */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Location
             </label>
             <input
@@ -112,7 +112,7 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
           </div>
           {/* Notes */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-primary mb-1">
               Notes
             </label>
             <textarea

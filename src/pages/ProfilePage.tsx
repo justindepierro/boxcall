@@ -165,21 +165,21 @@ export const ProfilePage: React.FC = () => {
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
                   Email Address
                 </label>
                 <Input
                   type="email"
                   value={profile.email || ""}
                   disabled
-                  className="bg-gray-100 dark:bg-gray-700"
+                  className="surface-subtle dark:bg-gray-700"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-text-muted mt-1">
                   Email cannot be changed
                 </p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
                   Display Name
                 </label>
                 <Input
@@ -192,7 +192,7 @@ export const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
                   Full Name
                 </label>
                 <Input
@@ -205,7 +205,7 @@ export const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
                   Phone Number
                 </label>
                 <Input
@@ -216,21 +216,21 @@ export const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
                   Role
                 </label>
                 <Input
                   type="text"
                   value={profile.role || "Not specified"}
                   disabled
-                  className="bg-gray-100 dark:bg-gray-700 capitalize"
+                  className="surface-subtle dark:bg-gray-700 capitalize"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-text-muted mt-1">
                   Role is set by team administrators
                 </p>
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
                   Address
                 </label>
                 <Input
@@ -242,7 +242,7 @@ export const ProfilePage: React.FC = () => {
               </div>
             </div>
             <div className="mt-6">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
                 Bio
               </label>
               <textarea
@@ -261,7 +261,7 @@ export const ProfilePage: React.FC = () => {
             </Typography>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
                   Password
                 </label>
                 <div className="flex items-center space-x-4">
@@ -269,7 +269,7 @@ export const ProfilePage: React.FC = () => {
                     type="password"
                     value="••••••••••"
                     disabled
-                    className="bg-gray-100 dark:bg-gray-700"
+                    className="surface-subtle dark:bg-gray-700"
                   />
                   <Button
                     type="button"
@@ -279,7 +279,7 @@ export const ProfilePage: React.FC = () => {
                     Change Password
                   </Button>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-text-muted mt-1">
                   A password reset link will be sent to your email
                 </p>
               </div>
@@ -305,7 +305,7 @@ export const ProfilePage: React.FC = () => {
           </div>
         </form>
         {/* Account Info */}
-        <div className="mt-8 bg-gray-50 dark:bg-gray-800/50 rounded-lg p-6">
+        <div className="mt-8 surface-subtle dark:bg-gray-800/50 rounded-lg p-6">
           <Typography variant="headline-sm" as="h3" className="mb-3">
             Account Information
           </Typography>
@@ -330,7 +330,7 @@ export const ProfilePage: React.FC = () => {
             </div>
             <div>
               <span className="font-medium">User ID:</span>{" "}
-              <code className="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">
+              <code className="text-xs surface-subtle dark:bg-gray-700 px-2 py-1 rounded">
                 {profile.id.substring(0, 8)}...
               </code>
             </div>

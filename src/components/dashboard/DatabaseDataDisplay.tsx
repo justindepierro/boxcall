@@ -164,7 +164,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                   className={`w-full justify-start px-3 py-3 ${
                     isActive
                       ? "bg-jade-50 border border-jade-300 shadow-sm"
-                      : "bg-gray-50 hover:bg-gray-100"
+                      : "surface-subtle surface-subtle-hover"
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
@@ -250,7 +250,7 @@ export const DatabaseDataDisplay: React.FC = () => {
           </div>
           <div className="space-y-3">
             {playbooks.map((playbook) => (
-              <div key={playbook.id} className="p-3 bg-gray-50 rounded-lg">
+              <div key={playbook.id} className="p-3 surface-subtle rounded-lg">
                 <Typography
                   variant="body-sm"
                   className="font-medium text-text-primary"
@@ -265,7 +265,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                     className={`inline-block px-2 py-1 rounded text-xs ${
                       playbook.is_active
                         ? "bg-green-100 text-green-700"
-                        : "bg-gray-100 text-gray-700"
+                        : "surface-subtle text-gray-700"
                     }`}
                   >
                     {playbook.is_active ? "Active" : "Inactive"}
@@ -293,7 +293,7 @@ export const DatabaseDataDisplay: React.FC = () => {
           </div>
           <div className="space-y-3 max-h-64 overflow-y-auto">
             {plays.map((play) => (
-              <div key={play.id} className="p-3 bg-gray-50 rounded-lg">
+              <div key={play.id} className="p-3 surface-subtle rounded-lg">
                 <Typography
                   variant="body-sm"
                   className="font-medium text-text-primary"

@@ -205,7 +205,7 @@ export function LoginForm({
         />
         <label
           htmlFor="remember-me"
-          className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
+          className="ml-2 block text-sm text-text-primary dark:text-gray-300"
         >
           Remember me
         </label>
@@ -424,7 +424,7 @@ export function SignupForm({
           />
           <label
             htmlFor="accept-terms"
-            className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
+            className="ml-2 block text-sm text-text-primary dark:text-gray-300"
           >
             I agree to the{" "}
             <a href="/terms" className="text-blue-600 hover:text-blue-500">

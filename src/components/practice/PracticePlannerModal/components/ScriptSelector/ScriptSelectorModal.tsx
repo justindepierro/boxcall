@@ -76,7 +76,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-text-muted hover:text-text-primary"
             >
               <Icon name="close" size="lg" />
             </Button>
@@ -86,7 +86,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
             {MOCK_SCRIPTS.map((script) => (
               <div
                 key={script.id}
-                className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors"
+                className="p-4 border border-subtle rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors"
                 onClick={() => handleScriptSelect(script)}
               >
                 <div className="flex items-start justify-between">
@@ -102,7 +102,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                       {script.description}
                     </Typography>
                     <div className="flex items-center space-x-4 text-sm">
-                      <span className="flex items-center text-gray-600">
+                      <span className="flex items-center text-text-secondary">
                         <Icon name="clock" size="xs" className="mr-1" />
                         {script.duration} min
                       </span>
@@ -133,7 +133,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
             ))}
           </div>
 
-          <div className="mt-6 pt-4 border-t border-gray-200 flex justify-between">
+          <div className="mt-6 pt-4 border-t border-subtle flex justify-between">
             <Button variant="ghost" onClick={onClose}>
               Cancel
             </Button>

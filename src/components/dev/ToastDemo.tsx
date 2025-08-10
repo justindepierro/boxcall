@@ -42,7 +42,7 @@ export const ToastDemo: React.FC = () => {
       >
         Test Toast Notifications
       </Button>
-      <div className="mt-4 text-sm text-gray-600">
+      <div className="mt-4 text-sm text-text-secondary">
         <p>✅ Toast system fully implemented</p>
         <p>✅ Database loading issue fixed</p>
         <p>🔧 DevPanel improvements ready (pending DevTools syntax fix)</p>

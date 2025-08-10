@@ -170,7 +170,7 @@ export const AppRouter: React.FC = () => {
                       <Icon name="bar-chart" size="lg" className="mr-2" />
                       Premium Analytics
                     </Typography>
-                    <p className="text-gray-600">
+                    <p className="text-text-secondary">
                       Advanced team analytics and reporting tools.
                     </p>
                   </div>

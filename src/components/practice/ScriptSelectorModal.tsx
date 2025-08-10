@@ -63,7 +63,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
       case "special-teams":
         return "bg-green-100 text-green-800";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "surface-subtle text-text-primary";
     }
   };
   return (
@@ -82,7 +82,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               size="xs"
               variant="ghost"
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 p-1 h-auto w-auto"
+              className="text-text-muted hover:text-text-primary p-1 h-auto w-auto"
             >
               <Icon name="close" size="lg" />
             </Button>
@@ -184,13 +184,13 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                           {script.plays.slice(0, 3).map((play, index) => (
                             <span
                               key={index}
-                              className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded"
+                              className="text-xs surface-subtle text-text-secondary px-2 py-1 rounded"
                             >
                               {play}
                             </span>
                           ))}
                           {script.plays.length > 3 && (
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-text-muted">
                               +{script.plays.length - 3} more
                             </span>
                           )}
@@ -213,7 +213,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
             )}
           </div>
           {/* Action Buttons */}
-          <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200 mt-6">
+          <div className="flex justify-end space-x-3 pt-6 border-t border-subtle mt-6">
             <Button variant="ghost" onClick={onClose}>
               Cancel
             </Button>
