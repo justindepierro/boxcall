@@ -1,3 +1,4 @@
+// Calendar Page (Phase 3) - read path migrated to React Query (useEvents)
 import React, { useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../app/auth-store";
@@ -9,11 +10,10 @@ import { PracticePlannerModal } from "../components/practice/PracticePlannerModa
 import { Button, Card, Input } from "../components/ui";
 import Icon from "../components/ui/Icon/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../components/ui/Tag";
-import { useCalendar } from "../hooks/useCalendar";
-import type {
-  CalendarEvent,
-  CalendarFilters,
-} from "../services/calendarService";
+import { useEvents } from "../state/calendar/hooks";
+import { useDevMode } from "../app/dev-mode-hooks";
+import type { CalendarFilters } from "../services/calendarService";
+import type { CalendarEvent } from "../domain/calendar/types";
 import { CalendarService } from "../services/calendarService";
 interface CalendarPageState {
   userTeamsFilter?: string[];
@@ -65,13 +65,36 @@ export const CalendarPage: React.FC = () => {
         .split("T")[0],
     },
   });
-  // Use calendar hook with filters
-  const { events, loading, error } = useCalendar(user?.id || "");
+  // Phase 3: replace legacy useCalendar read path with React Query useEvents
+  const { devMode } = useDevMode();
+  const {
+    data: events = [],
+    isLoading: loading,
+    isError,
+    error: eventsError,
+  } = useEvents({
+    userId: user?.id || "",
+    devMode,
+    filters: {
+      teamIds: filters.teamIds,
+      eventTypes: filters.eventTypes,
+      dateRange: filters.dateRange,
+    },
+    range: filters.dateRange
+      ? { start: filters.dateRange.start, end: filters.dateRange.end }
+      : undefined,
+  });
+  const error = isError
+    ? eventsError instanceof Error
+      ? eventsError.message
+      : "Failed to load calendar events"
+    : null;
   // Handle search
   const handleSearch = async () => {
     if (searchQuery.trim()) {
       try {
-        await CalendarService.searchEvents(searchQuery, filters);
+  // TODO (Phase 3+): incorporate filters into search when infra supports it
+  await CalendarService.searchEvents(searchQuery);
         // TODO: Update events with search results
       } catch (error) {
         console.error("Search failed:", error);
@@ -354,7 +377,7 @@ export const CalendarPage: React.FC = () => {
                   <span className="text-sm text-gray-600">This Month</span>
                   <span className="font-semibold">
                     {
-                      events.filter((e) => {
+                      events.filter((e: CalendarEvent) => {
                         const eventDate = new Date(e.start);
                         const now = new Date();
                         return (
@@ -368,13 +391,13 @@ export const CalendarPage: React.FC = () => {
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">Games</span>
                   <span className="font-semibold">
-                    {events.filter((e) => e.type === "game").length}
+                    {events.filter((e: CalendarEvent) => e.type === "game").length}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">Practices</span>
                   <span className="font-semibold">
-                    {events.filter((e) => e.type === "practice").length}
+                    {events.filter((e: CalendarEvent) => e.type === "practice").length}
                   </span>
                 </div>
               </div>
