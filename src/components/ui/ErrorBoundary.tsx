@@ -136,7 +136,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
               <Button
                 onClick={() => (window.location.href = "/")}
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 className="w-full flex items-center justify-center"
                 icon={<Home className="h-4 w-4" />}
@@ -158,7 +158,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </div>
 
             {/* Help Text */}
-            <div className="mt-6 pt-4 border-t border-gray-200 text-center">
+            <div className="mt-6 pt-4 border-t border-subtle text-center">
               <Typography variant="caption" className="text-gray-500">
                 If this problem persists, please contact support with the error
                 details above.

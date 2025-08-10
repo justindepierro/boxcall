@@ -367,7 +367,7 @@ export const PlaybookPage: React.FC = () => {
   return (
     <div className="min-h-screen surface-app decorative-gradient bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-slate-200">
+  <header className="surface-subtle shadow-sm border-b border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
@@ -409,7 +409,7 @@ export const PlaybookPage: React.FC = () => {
               {/* Bulk Operations Toggle */}
               <Button
                 onClick={toggleBulkOperations}
-                variant={state.enableBulkOperations ? "primary" : "outline"}
+                variant={state.enableBulkOperations ? "primary" : "ghost"}
                 size="sm"
                 title={
                   state.enableBulkOperations
@@ -430,7 +430,7 @@ export const PlaybookPage: React.FC = () => {
               {/* Export button */}
               <Button
                 onClick={handleExportCSV}
-                variant="outline"
+                variant="subtle"
                 size="sm"
                 className="px-4 py-2 hover:scale-105 transition-transform"
               >
@@ -440,7 +440,7 @@ export const PlaybookPage: React.FC = () => {
               {/* Import button with subtle enhancement */}
               <Button
                 onClick={handleOpenImport}
-                variant="outline"
+                variant="subtle"
                 size="sm"
                 className="px-4 py-2 hover:scale-105 transition-transform"
               >
@@ -554,7 +554,7 @@ export const PlaybookPage: React.FC = () => {
           {/* Play Grid */}
           <main className="flex-1">
             {/* 3-View System Toggle */}
-            <div className="mb-6 bg-white rounded-lg shadow-sm border border-slate-200 p-1">
+            <div className="mb-6 surface-subtle rounded-lg shadow-sm border-subtle p-1">
               <div className="flex space-x-1">
                 <Button
                   onClick={() => handleViewChange("playbook")}
@@ -595,7 +595,7 @@ export const PlaybookPage: React.FC = () => {
             {state.currentView === "playbook" && (
               <>
                 {/* Advanced Filters */}
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-3 mb-4">
+                <div className="surface-card rounded-lg shadow-sm border-subtle p-3 mb-4">
                   <AdvancedFilters
                     activeFilters={state.advancedFilters}
                     onFiltersChange={handleAdvancedFiltersChange}
@@ -639,7 +639,7 @@ export const PlaybookPage: React.FC = () => {
             )}
 
             {state.currentView === "practice-script" && (
-              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+              <div className="surface-card rounded-lg shadow-sm border-subtle p-6">
                 <div className="text-center py-12">
                   <Clock className="h-12 w-12 text-slate-400 mx-auto mb-4" />
                   <Typography
@@ -662,7 +662,7 @@ export const PlaybookPage: React.FC = () => {
             )}
 
             {state.currentView === "game-plan" && (
-              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+              <div className="surface-card rounded-lg shadow-sm border-subtle p-6">
                 <div className="text-center py-12">
                   <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
                   <Typography
@@ -714,7 +714,7 @@ export const PlaybookPage: React.FC = () => {
       {/* Achievement Celebration Overlay - The reward loop climax */}
       {state.showCelebration && state.recentAchievement && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-md p-8 max-w-md mx-4 text-center transform animate-bounce-in">
+          <div className="surface-card elevation-modal rounded-md p-8 max-w-md mx-4 text-center transform animate-bounce-in">
             <div className="mb-4">🎉</div>
             <AchievementBadge size="lg">
               {state.recentAchievement}
