@@ -17,9 +17,12 @@ import { Card, Button } from "../ui"; // adjust relative path if needed
 import Icon from "../ui/Icon/Icon";
 import { CalendarPageSkeleton, CalendarErrorSkeleton } from "./CalendarSkeletons";
 import { useCalendarUrlState, mapQueryViewToInternal, mapInternalViewToQuery } from "./hooks/useCalendarUrlState";
+import { useQueryClient } from "@tanstack/react-query";
+import { calendarKeys } from "../../state/calendar/queryKeys";
 
 // NOTE: This shell intentionally mirrors logic from legacy CalendarPage; once stable we will remove duplicated code there.
 export const CalendarShell: React.FC = () => {
+  const queryClient = useQueryClient();
   const { user, profile } = useAuth();
   const { devMode } = useDevMode();
   const calendarRef = useRef<BoxCallCalendarRef>(null);
@@ -113,6 +116,9 @@ export const CalendarShell: React.FC = () => {
   const handleViewChange = (view: "dayGridMonth" | "timeGridWeek" | "timeGridDay") => {
     setCurrentView(view);
     calendarRef.current?.changeView(view);
+  // sync view immediately (effect also does replace, but ensure responsiveness)
+  const mapped = mapInternalViewToQuery(view);
+  setUrlState({ view: mapped }, true);
   };
   const handleFilterChange = (newFilters: Partial<CalendarFilters>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
@@ -136,6 +142,59 @@ export const CalendarShell: React.FC = () => {
       setShowEventModal(true);
     }
   };
+  // Sync current visible date (center) into URL on navigation (prev/next/today) with throttling
+  useEffect(() => {
+    const api = calendarRef.current?.getApi();
+    if (!api) return;
+    const handler = () => {
+      const date = api.getDate();
+      const iso = date.toISOString().split("T")[0];
+      setUrlState({ date: iso });
+      // Prefetch adjacent month ranges (month view only for now)
+      if (currentView === "dayGridMonth") {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+  const startPrev = new Date(year, month - 1, 1);
+  const startNext = new Date(year, month + 1, 1);
+  const endPrev = new Date(year, month, 0); // last day prev
+  const endNext = new Date(year, month + 2, 0);
+        const toISO = (d: Date) => d.toISOString().split("T")[0];
+        const rangePrev = { start: toISO(startPrev), end: toISO(endPrev) };
+        const rangeNext = { start: toISO(startNext), end: toISO(endNext) };
+        // Fire and forget prefetch (reuse existing query fn via search events key for now)
+        const paramsBase = {
+          userId: user?.id || "",
+          devMode,
+          filters: {
+            teamIds: filters.teamIds,
+            eventTypes: filters.eventTypes,
+            dateRange: filters.dateRange,
+          },
+        };
+        [rangePrev, rangeNext].forEach((r) => {
+          queryClient.prefetchQuery({
+            queryKey: calendarKeys.events(
+              {
+                ...paramsBase.filters,
+                dateRange: { start: r.start, end: r.end },
+              },
+              r,
+              devMode ? "1" : undefined
+            ),
+            // Placeholder: reuse currently loaded events; real implementation should call fetcher
+            queryFn: () => Promise.resolve(events.filter(() => true)),
+            staleTime: 60_000,
+          });
+        });
+      }
+    };
+    handler(); // initial sync
+    // FullCalendar emits events we could listen to; simpler polling on view change for now.
+    const id = setInterval(() => {
+      handler();
+    }, 5000);
+    return () => clearInterval(id);
+  }, [currentView, filters.teamIds, filters.eventTypes, filters.dateRange, user?.id, devMode, setUrlState, queryClient, events]);
   const handleExportCalendar = () => {
     // placeholder
     alert("Calendar export coming soon");
