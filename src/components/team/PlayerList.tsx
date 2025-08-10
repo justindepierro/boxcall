@@ -78,7 +78,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
               <Icon name="user-plus" className="w-4 h-4 mr-2" /> Add First
               Player
             </Button>
-            <Button variant="outline" className="sm:w-auto">
+            <Button variant="secondary" className="sm:w-auto">
               <Icon name="upload" className="w-4 h-4 mr-2" /> Import CSV
             </Button>
           </div>
@@ -141,10 +141,10 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <Button onClick={onAddPlayer} variant="primary" size="sm">
               <Icon name="user-plus" className="w-4 h-4 mr-2" /> Add Player
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="sm">
               <Icon name="upload" className="w-4 h-4 mr-2" /> Import CSV
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="sm">
               <Icon name="download" className="w-4 h-4 mr-2" /> Export Roster
             </Button>
           </div>

@@ -95,7 +95,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
               View Full Calendar
             </Button>
             <Button
-              variant="outline"
+              variant="secondary"
               size="xs"
               onClick={() => setShowQuickAdd(!showQuickAdd)}
               className="border-jade-200 text-jade-600 hover:text-jade-700"
@@ -305,9 +305,9 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                   RSVP Going
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
-                  className="flex-1 border-gray-300"
+                  className="flex-1"
                 >
                   Maybe
                 </Button>

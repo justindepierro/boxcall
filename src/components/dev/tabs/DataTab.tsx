@@ -83,7 +83,7 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
           </Button>
           <Button
             onClick={() => actions.navigateToPlaybook()}
-            variant="outline"
+            variant="secondary"
             size="xs"
           >
             📋 Playbook

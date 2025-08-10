@@ -554,7 +554,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
           {/* Add new block button */}
           {selectedCategory && (
             <Button
-              variant="outline"
+              variant="ghost"
               size="xs"
               onClick={() => {
                 let nextSpot = 0;

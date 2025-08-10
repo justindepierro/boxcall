@@ -95,7 +95,7 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
           </Button>
           <Button
             onClick={onCancelBlock}
-            variant="outline"
+            variant="ghost"
             size="sm"
             className="flex-1 flex items-center justify-center"
             icon={<Icon name="close" size="sm" />}

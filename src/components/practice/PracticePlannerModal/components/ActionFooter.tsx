@@ -42,7 +42,7 @@ export const ActionFooter: React.FC<ActionFooterProps> = ({
         )}
       </div>
       <div className="flex space-x-3">
-        <Button variant="outline" onClick={onClose}>
+  <Button variant="ghost" onClick={onClose}>
           Close
         </Button>
         <Button variant="primary" onClick={handleSaveClick}>
@@ -76,7 +76,7 @@ export const ActionFooter: React.FC<ActionFooterProps> = ({
                 Save Anyway
               </Button>
               <Button
-                variant="outline"
+                variant="ghost"
                 onClick={() => onShowOvertimeWarning(false)}
               >
                 Go Back and Edit

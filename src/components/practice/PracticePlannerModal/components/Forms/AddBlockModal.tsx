@@ -240,11 +240,11 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
         <Button variant="primary" onClick={onAddBlock}>
           Add Block
         </Button>
-        <Button variant="outline" onClick={handleCancel}>
+        <Button variant="ghost" onClick={handleCancel}>
           Cancel
         </Button>
         {userRole === "head_coach" && (
-          <Button variant="outline" onClick={onRoleSwitch} className="text-xs">
+          <Button variant="secondary" onClick={onRoleSwitch} className="text-xs">
             <Icon name="eye" size="sm" className="mr-1" />
             Switch to Position Coach View
           </Button>

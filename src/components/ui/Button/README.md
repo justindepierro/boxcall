@@ -89,7 +89,7 @@ Used for secondary actions and general interactions.
 Used for less prominent actions while maintaining button importance.
 
 ```tsx
-<Button variant="outline">View Details</Button>
+<Button variant="secondary">View Details</Button>
 ```
 
 ### Ghost

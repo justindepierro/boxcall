@@ -137,7 +137,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
             <div>
               <Button
                 type="button"
-                variant="outline"
+                variant="secondary"
                 onClick={handleLogoUpload}
               >
                 📸 Upload Logo
@@ -283,7 +283,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                   Features: {teamSettings.subscription.features.join(", ")}
                 </p>
               </div>
-              <Button variant="outline" size="sm">
+              <Button variant="secondary" size="sm">
                 Manage Subscription
               </Button>
             </div>

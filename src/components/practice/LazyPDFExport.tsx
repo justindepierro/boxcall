@@ -134,7 +134,7 @@ export const PDFExportTrigger: React.FC<PDFExportTriggerProps> = ({
       {triggerElement !== null &&
         (triggerElement || (
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={() =>
               isControlledExternally ? undefined : setInternalIsOpen(true)
             }

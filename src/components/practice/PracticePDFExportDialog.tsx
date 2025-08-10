@@ -379,7 +379,7 @@ export const PracticePDFExportDialog: React.FC<
         </div>
         {/* Action Buttons */}
         <div className="flex justify-end space-x-3 mt-8">
-          <Button variant="outline" onClick={onClose} disabled={isExporting}>
+          <Button variant="ghost" onClick={onClose} disabled={isExporting}>
             Cancel
           </Button>
           <Button

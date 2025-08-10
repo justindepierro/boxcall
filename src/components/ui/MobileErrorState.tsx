@@ -176,7 +176,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
         {showHome && (
           <Button
             onClick={handleHome}
-            variant="outline"
+            variant="secondary"
             size="sm"
             className="w-full flex items-center justify-center"
             icon={<Home className="h-4 w-4" />}

@@ -141,7 +141,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           </Button>
           <Button
             size="xs"
-            variant="outline"
+            variant="secondary"
             onClick={runAllTests}
             className="col-span-2"
           >

@@ -399,7 +399,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
           <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               onClick={onCancel}
               disabled={saving}
             >

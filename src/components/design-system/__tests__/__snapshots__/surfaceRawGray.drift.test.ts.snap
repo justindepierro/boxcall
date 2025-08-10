@@ -1,0 +1,502 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`surface-tokens: raw gray utility drift > does not use disallowed raw gray bg/border utilities > raw-gray-offenders 1`] = `
+[
+  {
+    "file": "components/auth/UserMenu.tsx",
+    "lines": [
+      73,
+      107,
+    ],
+  },
+  {
+    "file": "components/calendar/CalendarSkeletons.tsx",
+    "lines": [
+      10,
+      11,
+      12,
+      13,
+      16,
+      18,
+      19,
+      20,
+      23,
+      24,
+      25,
+      34,
+      36,
+      37,
+      44,
+      46,
+      59,
+      61,
+      62,
+    ],
+  },
+  {
+    "file": "components/calendar/EventModal/EventDetails.tsx",
+    "lines": [
+      107,
+      143,
+      184,
+      201,
+    ],
+  },
+  {
+    "file": "components/dashboard/DatabaseDataDisplay.tsx",
+    "lines": [
+      167,
+      253,
+      268,
+      296,
+    ],
+  },
+  {
+    "file": "components/dashboard/PersonalCalendar.tsx",
+    "lines": [
+      84,
+      161,
+    ],
+  },
+  {
+    "file": "components/dashboard/PersonalProfile.tsx",
+    "lines": [
+      280,
+    ],
+  },
+  {
+    "file": "components/dashboard/ProfileCard.tsx",
+    "lines": [
+      44,
+      108,
+      131,
+    ],
+  },
+  {
+    "file": "components/dashboard/TeamFeeds.tsx",
+    "lines": [
+      100,
+      157,
+    ],
+  },
+  {
+    "file": "components/dev/DevTools.tsx",
+    "lines": [
+      281,
+      296,
+    ],
+  },
+  {
+    "file": "components/dev/tabs/LogsTab.tsx",
+    "lines": [
+      39,
+    ],
+  },
+  {
+    "file": "components/layout/Footer.tsx",
+    "lines": [
+      17,
+    ],
+  },
+  {
+    "file": "components/mobile/MobileBottomNavigation.tsx",
+    "lines": [
+      59,
+    ],
+  },
+  {
+    "file": "components/mobile/MobileQuickActions.tsx",
+    "lines": [
+      39,
+    ],
+  },
+  {
+    "file": "components/onboarding/TeamOnboarding.tsx",
+    "lines": [
+      176,
+      200,
+      225,
+    ],
+  },
+  {
+    "file": "components/playbook/CSVImport/CSVImportModal.tsx",
+    "lines": [
+      432,
+    ],
+  },
+  {
+    "file": "components/playbook/visual/InteractivePlayBuilder.tsx",
+    "lines": [
+      104,
+      111,
+      146,
+      178,
+      225,
+      263,
+    ],
+  },
+  {
+    "file": "components/practice/PracticePDFExportDialog.tsx",
+    "lines": [
+      224,
+      273,
+    ],
+  },
+  {
+    "file": "components/practice/PracticePlannerModal/components/ActionFooter.tsx",
+    "lines": [
+      34,
+    ],
+  },
+  {
+    "file": "components/practice/PracticePlannerModal/components/PracticeBlockList.tsx",
+    "lines": [
+      77,
+      230,
+    ],
+  },
+  {
+    "file": "components/practice/PracticePlannerModal/components/PracticeTimeline/TimelineContainer.tsx",
+    "lines": [
+      66,
+      75,
+    ],
+  },
+  {
+    "file": "components/practice/PracticePlannerModal/components/PracticeTimeline/TimelineLegend.tsx",
+    "lines": [
+      65,
+    ],
+  },
+  {
+    "file": "components/practice/PracticePlannerModal/components/ScriptSelector/ScriptSelectorModal.tsx",
+    "lines": [
+      89,
+      136,
+    ],
+  },
+  {
+    "file": "components/practice/ScriptSelectorModal.tsx",
+    "lines": [
+      66,
+      187,
+      216,
+    ],
+  },
+  {
+    "file": "components/practice/components/PracticeBlocksList.tsx",
+    "lines": [
+      267,
+      287,
+      411,
+    ],
+  },
+  {
+    "file": "components/practice/components/TimeSummary.tsx",
+    "lines": [
+      46,
+      96,
+      131,
+    ],
+  },
+  {
+    "file": "components/practice/components/TimelineAllocation.tsx",
+    "lines": [
+      250,
+      275,
+      293,
+      322,
+      336,
+      436,
+    ],
+  },
+  {
+    "file": "components/practice/utils.ts",
+    "lines": [
+      31,
+      35,
+    ],
+  },
+  {
+    "file": "components/team/PlayerForm.tsx",
+    "lines": [
+      152,
+      267,
+      399,
+    ],
+  },
+  {
+    "file": "components/team/PlayerList.tsx",
+    "lines": [
+      92,
+      166,
+      247,
+    ],
+  },
+  {
+    "file": "components/team/TeamSettings.tsx",
+    "lines": [
+      88,
+      132,
+      276,
+      320,
+    ],
+  },
+  {
+    "file": "components/team-dashboard/SeasonStatsCard.tsx",
+    "lines": [
+      174,
+    ],
+  },
+  {
+    "file": "components/team-dashboard/TeamFeed.tsx",
+    "lines": [
+      303,
+      304,
+    ],
+  },
+  {
+    "file": "components/team-dashboard/layout/TeamBulletinHeader.tsx",
+    "lines": [
+      71,
+      82,
+      83,
+    ],
+  },
+  {
+    "file": "components/ui/Animations/SquareAnimations.tsx",
+    "lines": [
+      39,
+      155,
+    ],
+  },
+  {
+    "file": "components/ui/Badge/Badge.tsx",
+    "lines": [
+      127,
+      128,
+    ],
+  },
+  {
+    "file": "components/ui/Breadcrumb/Breadcrumb.tsx",
+    "lines": [
+      100,
+    ],
+  },
+  {
+    "file": "components/ui/Button/Button.tsx",
+    "lines": [
+      51,
+      52,
+      53,
+      55,
+    ],
+  },
+  {
+    "file": "components/ui/Card/Card.tsx",
+    "lines": [
+      14,
+      16,
+      20,
+      40,
+      41,
+      119,
+      120,
+      121,
+    ],
+  },
+  {
+    "file": "components/ui/Form/Form.tsx",
+    "lines": [
+      158,
+    ],
+  },
+  {
+    "file": "components/ui/Icon/ModularIcon.tsx",
+    "lines": [
+      167,
+    ],
+  },
+  {
+    "file": "components/ui/Input/Input.tsx",
+    "lines": [
+      44,
+    ],
+  },
+  {
+    "file": "components/ui/MobileErrorState.tsx",
+    "lines": [
+      55,
+      109,
+    ],
+  },
+  {
+    "file": "components/ui/Modal/Modal.tsx",
+    "lines": [
+      166,
+      201,
+    ],
+  },
+  {
+    "file": "components/ui/NavBar/NavBar.tsx",
+    "lines": [
+      101,
+      112,
+      230,
+      240,
+    ],
+  },
+  {
+    "file": "components/ui/RouteLoadingSkeleton.tsx",
+    "lines": [
+      9,
+      10,
+      31,
+    ],
+  },
+  {
+    "file": "components/ui/Select/Select.tsx",
+    "lines": [
+      29,
+    ],
+  },
+  {
+    "file": "components/ui/Sidebar/Sidebar.tsx",
+    "lines": [
+      84,
+      92,
+      238,
+      279,
+    ],
+  },
+  {
+    "file": "components/ui/Skeleton.tsx",
+    "lines": [
+      31,
+      107,
+      140,
+      164,
+    ],
+  },
+  {
+    "file": "components/ui/Table/Table.tsx",
+    "lines": [
+      95,
+      107,
+      108,
+      129,
+      145,
+      331,
+    ],
+  },
+  {
+    "file": "components/ui/Tag/Tag.tsx",
+    "lines": [
+      31,
+    ],
+  },
+  {
+    "file": "components/ui/TextArea/TextArea.tsx",
+    "lines": [
+      11,
+    ],
+  },
+  {
+    "file": "components/ui/TouchFeedback.tsx",
+    "lines": [
+      203,
+      205,
+      299,
+    ],
+  },
+  {
+    "file": "pages/CreateCoachAccount.tsx",
+    "lines": [
+      488,
+      522,
+      537,
+      548,
+      724,
+    ],
+  },
+  {
+    "file": "pages/CreateTeam.tsx",
+    "lines": [
+      728,
+      857,
+    ],
+  },
+  {
+    "file": "pages/JoinTeam.tsx",
+    "lines": [
+      222,
+      361,
+    ],
+  },
+  {
+    "file": "pages/ProfilePage.tsx",
+    "lines": [
+      175,
+      226,
+      272,
+      308,
+      333,
+    ],
+  },
+  {
+    "file": "pages/TeamsPage.tsx",
+    "lines": [
+      70,
+      87,
+    ],
+  },
+  {
+    "file": "pages/Templates.tsx",
+    "lines": [
+      336,
+    ],
+  },
+  {
+    "file": "pages/legal/AboutPage.tsx",
+    "lines": [
+      135,
+    ],
+  },
+  {
+    "file": "pages/legal/ContactPage.tsx",
+    "lines": [
+      97,
+      213,
+    ],
+  },
+  {
+    "file": "pages/legal/PrivacyPolicyPage.tsx",
+    "lines": [
+      251,
+    ],
+  },
+  {
+    "file": "pages/legal/TermsOfServicePage.tsx",
+    "lines": [
+      294,
+    ],
+  },
+  {
+    "file": "pages/roles/CoachManagementPage.tsx",
+    "lines": [
+      148,
+    ],
+  },
+  {
+    "file": "pages/roles/PlayerDashboardPage.tsx",
+    "lines": [
+      100,
+      165,
+      182,
+      198,
+      214,
+      230,
+    ],
+  },
+]
+`;

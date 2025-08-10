@@ -69,7 +69,7 @@ export const PracticeTimeline: React.FC<PracticeTimelineProps> = ({
           </Typography>
         </div>
         <div className="flex space-x-2">
-          <Button variant="outline" size="sm" onClick={onCancelScaffold}>
+          <Button variant="ghost" size="sm" onClick={onCancelScaffold}>
             Cancel
           </Button>
           <Button variant="primary" size="sm" onClick={onSaveTimeAllocation}>

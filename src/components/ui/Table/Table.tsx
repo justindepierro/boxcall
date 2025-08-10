@@ -436,7 +436,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
           </div>
           <div className="flex items-center space-x-2">
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               disabled={currentPage === 0}
               onClick={() => onPageChange?.(currentPage - 1)}
@@ -447,7 +447,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
               Page {currentPage + 1} of {totalPages}
             </span>
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               disabled={currentPage >= totalPages - 1}
               onClick={() => onPageChange?.(currentPage + 1)}

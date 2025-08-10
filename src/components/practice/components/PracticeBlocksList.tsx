@@ -393,10 +393,10 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                         onClick={() =>
                                           onAddScriptToGroup(block.id, group.id)
                                         }
-                                        variant="outline"
+                                        variant="ghost"
                                         size="xs"
                                         fullWidth
-                                        className="border-dashed text-gray-500 hover:text-gray-600"
+                                        className="border-dashed text-text-secondary hover:text-text-primary"
                                       >
                                         + Add Script to Group
                                       </Button>
@@ -411,10 +411,10 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                             <div className="mt-4 pt-4 border-t border-gray-200">
                               <Button
                                 onClick={() => onAddGroup(block.id)}
-                                variant="outline"
+                                variant="ghost"
                                 size="sm"
                                 fullWidth
-                                className="border-dashed text-gray-500 hover:text-gray-600"
+                                className="border-dashed text-text-secondary hover:text-text-primary"
                               >
                                 👥 Add Groups to This Block
                               </Button>

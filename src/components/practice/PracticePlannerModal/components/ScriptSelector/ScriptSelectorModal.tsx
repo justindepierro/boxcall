@@ -134,7 +134,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
           </div>
 
           <div className="mt-6 pt-4 border-t border-gray-200 flex justify-between">
-            <Button variant="outline" onClick={onClose}>
+            <Button variant="ghost" onClick={onClose}>
               Cancel
             </Button>
             <Button variant="primary" onClick={onClose}>
