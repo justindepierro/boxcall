@@ -1,6 +1,7 @@
 import React from "react";
 import { useRoster } from "../../hooks/useRoster";
 import { PlayerList } from "./PlayerList";
+import { Button } from "../ui";
 import type { TeamPlayer } from "../../types/team-management";
 import type { RosterPlayerView } from "../../services/rosterService";
 
@@ -52,9 +53,14 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
     return (
       <div className="p-4 text-sm text-red-600">
         Roster error: {error}{" "}
-        <button onClick={refresh} className="underline">
+        <Button
+          variant="link"
+          size="xs"
+          onClick={refresh}
+          className="p-0 h-auto align-baseline"
+        >
           Retry
-        </button>
+        </Button>
       </div>
     );
 

@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from "react";
+import { Button } from "../../ui";
 import { X, Check } from "lucide-react";
 
 interface AddNewDropdownProps {
@@ -81,22 +82,26 @@ export const AddNewDropdown: React.FC<AddNewDropdownProps> = ({
             className="flex-1 px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
             autoFocus
           />
-          <button
+          <Button
             type="button"
+            variant="primary"
+            size="xs"
             onClick={handleCustomSubmit}
-            className="p-2 bg-jade-500 text-white rounded-md hover:bg-jade-600 focus:ring-2 focus:ring-jade-500"
+            className="p-2 h-auto"
             title="Add"
           >
             <Check className="h-4 w-4" />
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="secondary"
+            size="xs"
             onClick={handleCustomCancel}
-            className="p-2 bg-slate-400 text-white rounded-md hover:bg-slate-500 focus:ring-2 focus:ring-slate-500"
+            className="p-2 h-auto"
             title="Cancel"
           >
             <X className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
       ) : (
         <select

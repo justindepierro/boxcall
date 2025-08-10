@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { ToggleLeft, ToggleRight } from "lucide-react";
+import { IconButton } from "../ui";
 import { PlayCard } from "./PlayCard";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import type { Play } from "../../types/play";
@@ -282,21 +283,22 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
         {/* Play Name Display Toggle */}
         <div className="flex items-center space-x-3">
           <span className="text-sm text-slate-600">One-word calls</span>
-          <button
-            onClick={() => setShowOneWordCalls(!showOneWordCalls)}
-            className="inline-flex items-center p-1 rounded-md hover:bg-slate-100 transition-colors"
-            title={
+          <IconButton
+            aria-label={
               showOneWordCalls
                 ? "Switch to full play names"
                 : "Switch to one-word calls"
             }
+            onClick={() => setShowOneWordCalls(!showOneWordCalls)}
+            variant="subtle"
+            size="sm"
           >
             {showOneWordCalls ? (
               <ToggleRight className="h-5 w-5 text-blue-600" />
             ) : (
               <ToggleLeft className="h-5 w-5 text-slate-400" />
             )}
-          </button>
+          </IconButton>
           <span className="text-sm text-slate-600">Full names</span>
         </div>
       </div>

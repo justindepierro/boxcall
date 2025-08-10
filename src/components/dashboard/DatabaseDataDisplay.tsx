@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";
-import { Card } from "../ui";
+import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 
 // Using the same Team interface as useTeamsData hook
@@ -150,48 +150,41 @@ export const DatabaseDataDisplay: React.FC = () => {
             </div>
           </div>
           <div className="space-y-2">
-            {teams.map((team) => (
-              <button
-                key={team.id}
-                onClick={() =>
-                  setSelectedTeam(selectedTeam?.id === team.id ? null : team)
-                }
-                className={`w-full p-3 rounded-lg text-left transition-all duration-200 border ${
-                  selectedTeam?.id === team.id
-                    ? "bg-jade-50 border-jade-300 shadow-sm"
-                    : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <Typography
-                      variant="body-sm"
-                      className={`font-medium ${
-                        selectedTeam?.id === team.id
-                          ? "text-jade-900"
-                          : "text-gray-900"
-                      }`}
-                    >
-                      {team.name}
-                    </Typography>
-                    <Typography variant="body-xs" color="muted">
-                      {team.school_name} • {team.mascot}
-                    </Typography>
+            {teams.map((team) => {
+              const isActive = selectedTeam?.id === team.id;
+              return (
+                <Button
+                  key={team.id}
+                  onClick={() => setSelectedTeam(isActive ? null : team)}
+                  variant={isActive ? "primary" : "ghost"}
+                  size="sm"
+                  className={`w-full justify-start px-3 py-3 ${
+                    isActive
+                      ? "bg-jade-50 border border-jade-300 shadow-sm"
+                      : "bg-gray-50 hover:bg-gray-100"
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex-1 text-left">
+                      <Typography
+                        variant="body-sm"
+                        className="font-medium truncate"
+                      >
+                        {team.name}
+                      </Typography>
+                      <Typography variant="body-xs" color="muted">
+                        {team.school_name} • {team.mascot}
+                      </Typography>
+                    </div>
+                    <Icon
+                      name={isActive ? "chevron-up" : "chevron-down"}
+                      size="sm"
+                      color={isActive ? "primary" : "secondary"}
+                    />
                   </div>
-                  <Icon
-                    name={
-                      selectedTeam?.id === team.id
-                        ? "chevron-up"
-                        : "chevron-down"
-                    }
-                    size="sm"
-                    color={
-                      selectedTeam?.id === team.id ? "primary" : "secondary"
-                    }
-                  />
-                </div>
-              </button>
-            ))}
+                </Button>
+              );
+            })}
           </div>
 
           {/* Selected Team Details */}

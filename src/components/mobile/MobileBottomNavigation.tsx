@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "../ui/Icon/Icon";
+import { Button } from "../ui";
 import { NotificationBadge } from "../ui/Badge";
 
 export interface MobileNavItem {
@@ -67,23 +68,17 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
       <div className="px-2 py-1">
         <div className="flex justify-between items-center max-w-sm mx-auto">
           {items.map((item) => (
-            <button
+            <Button
               key={item.id}
               onClick={() => handleItemClick(item)}
-              className={`
-                relative flex flex-col items-center justify-center
-                min-w-[60px] px-2 py-2
-                text-xs font-medium
-                transition-all duration-200 ease-out
-                active:scale-95
-                ${
-                  item.isActive
-                    ? "text-brand-jade dark:text-brand-jade-light"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                }
-                touch-manipulation
-              `}
-              style={{ minHeight: "60px" }} // Ensures 44px+ touch target
+              variant={item.isActive ? "primary" : "ghost"}
+              size="sm"
+              className={`relative flex flex-col items-center justify-center min-w-[60px] px-2 py-2 h-auto active:scale-95 focus-visible:ring-2 focus-visible:ring-jade-500 ${
+                item.isActive
+                  ? "text-brand-jade dark:text-brand-jade-light"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+              }`}
+              style={{ minHeight: "60px" }}
               aria-label={`Navigate to ${item.label}`}
             >
               {/* Icon Container */}
@@ -115,19 +110,10 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
               </div>
 
               {/* Label */}
-              <span
-                className={`
-                  text-xs font-medium leading-tight
-                  ${
-                    item.isActive
-                      ? "text-brand-jade dark:text-brand-jade-light"
-                      : "text-gray-500 dark:text-gray-400"
-                  }
-                `}
-              >
+              <span className="text-xs font-medium leading-tight">
                 {item.label}
               </span>
-            </button>
+            </Button>
           ))}
         </div>
       </div>

@@ -5,6 +5,7 @@
  * Square, confident design for football team management
  */
 import { forwardRef, useState } from "react";
+import { IconButton } from "../IconButton/IconButton";
 import { Typography } from "../../design-system";
 import type {
   InputProps,
@@ -183,11 +184,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {(rightIcon || (variant === "password" && showPasswordToggle)) && (
             <div className={`${sizeConfig.icon} right-3`}>
               {variant === "password" && showPasswordToggle ? (
-                <button
-                  type="button"
-                  onClick={togglePasswordVisibility}
-                  className="focus:outline-none text-gray-400 hover:text-gray-600 focus:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 dark:focus:text-gray-300"
+                <IconButton
                   aria-label={showPassword ? "Hide password" : "Show password"}
+                  onClick={togglePasswordVisibility}
+                  size="xs"
+                  variant="ghost"
+                  className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
                 >
                   {showPassword ? (
                     <svg
@@ -224,7 +226,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                       />
                     </svg>
                   )}
-                </button>
+                </IconButton>
               ) : rightIcon ? (
                 <div className="text-gray-400 dark:text-gray-500">
                   {rightIcon}

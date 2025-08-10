@@ -7,6 +7,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Icon } from "./Icon/Icon";
 import { Typography } from "../design-system";
 import { ToastContext, type Toast } from "../../contexts/ToastContext";
+import { Button } from "./index";
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -176,21 +177,25 @@ const ToastItem: React.FC<{
             {toast.message}
           </Typography>
           {toast.action && (
-            <button
+            <Button
               onClick={toast.action.onClick}
-              className="mt-2 text-sm font-medium underline hover:no-underline"
+              variant="link"
+              size="xs"
+              className="mt-2 underline hover:no-underline"
             >
               {toast.action.label}
-            </button>
+            </Button>
           )}
         </div>
-        <button
+        <Button
           onClick={handleRemove}
-          className="ml-3 flex-shrink-0 p-1 hover:opacity-70 transition-opacity"
+          variant="ghost"
+          size="xs"
+          className="ml-3 flex-shrink-0 p-1 h-auto hover:opacity-70"
           aria-label="Dismiss"
         >
           <Icon name="close" size="sm" />
-        </button>
+        </Button>
       </div>
     </div>
   );

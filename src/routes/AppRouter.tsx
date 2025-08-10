@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import { Button } from "../components/ui";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../components/auth";
 import { Icon } from "../components/ui/Icon/Icon";
@@ -331,9 +332,10 @@ export const AppRouter: React.FC = () => {
                     The page you're looking for doesn't exist or has been moved.
                   </p>
                   <div className="space-y-3">
-                    <button
+                    <Button
                       onClick={() => window.history.back()}
-                      className="w-full bg-brand-jade text-white px-6 py-3 rounded-sm hover:bg-interaction-jade font-sans font-semibold transition-colors"
+                      variant="primary"
+                      className="w-full px-6 py-3 font-sans font-semibold"
                     >
                       <Icon
                         name="arrow-left"
@@ -341,14 +343,15 @@ export const AppRouter: React.FC = () => {
                         className="mr-2 inline"
                       />
                       Go Back
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() => (window.location.href = "/dashboard")}
-                      className="w-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-sm hover:bg-gray-50 dark:hover:bg-gray-800 font-sans font-semibold transition-colors"
+                      variant="outline"
+                      className="w-full px-6 py-3 font-sans font-semibold"
                     >
                       <Icon name="home" size="sm" className="mr-2 inline" />
                       Go to Dashboard
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>

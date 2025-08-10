@@ -4,7 +4,7 @@
  */
 import React from "react";
 import { useToast } from "../../hooks/useToast";
-import { Card } from "../ui";
+import { Card, Button } from "../ui";
 import { Typography } from "../design-system";
 
 export const ToastDemo: React.FC = () => {
@@ -34,12 +34,14 @@ export const ToastDemo: React.FC = () => {
         The new professional toast system is ready! This provides much better
         feedback than the old stale DevPanel.
       </Typography>
-      <button
+      <Button
         onClick={showToasts}
-        className="px-4 py-2 bg-jade-600 text-white rounded-lg hover:bg-jade-700 transition-colors"
+        variant="primary"
+        size="sm"
+        className="px-4 py-2"
       >
         Test Toast Notifications
-      </button>
+      </Button>
       <div className="mt-4 text-sm text-gray-600">
         <p>✅ Toast system fully implemented</p>
         <p>✅ Database loading issue fixed</p>

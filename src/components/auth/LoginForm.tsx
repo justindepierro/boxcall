@@ -125,13 +125,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         <div className="mt-6 text-center">
           <Typography variant="body-sm" color="muted">
             Don't have an account?{" "}
-            <button
+            <Button
               type="button"
+              variant="link"
+              size="sm"
               onClick={onSwitchToRegister}
-              className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              className="p-0 h-auto align-baseline font-medium"
             >
               Sign up here
-            </button>
+            </Button>
           </Typography>
         </div>
       </div>

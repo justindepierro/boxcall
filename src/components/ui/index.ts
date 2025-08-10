@@ -31,3 +31,4 @@ export type {
 } from "./Auth";
 export { DevHealthCheck } from "./DevHealthCheck";
 export { ErrorBoundary } from "./ErrorBoundary";
+export * from "./IconButton/IconButton";

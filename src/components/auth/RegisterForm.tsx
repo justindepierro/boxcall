@@ -206,13 +206,15 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         <div className="mt-6 text-center">
           <Typography variant="body-sm" color="muted">
             Already have an account?{" "}
-            <button
+            <Button
               type="button"
+              variant="link"
+              size="sm"
               onClick={onSwitchToLogin}
-              className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              className="p-0 h-auto align-baseline font-medium"
             >
               Sign in here
-            </button>
+            </Button>
           </Typography>
         </div>
       </div>

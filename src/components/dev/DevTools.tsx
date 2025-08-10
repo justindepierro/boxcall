@@ -4,6 +4,7 @@
  * Refactored from 946-line monolithic component into modular architecture
  */
 import React, { useState, useEffect } from "react";
+import { Button } from "../ui";
 import { useAuth } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useTeamsData } from "../../hooks/useTeamsData";
@@ -242,21 +243,26 @@ export const DevTools: React.FC = () => {
                 />
               </div>
             )}
-            <button
+            <Button
+              variant="ghost"
+              size="xs"
               onClick={() =>
                 setState((prev) => ({
                   ...prev,
                   isExpanded: !prev.isExpanded,
                 }))
               }
-              className="p-1 hover:bg-white/20 rounded transition-colors"
+              className="p-1 h-auto hover:bg-white/20 text-white"
+              aria-label={
+                state.isExpanded ? "Collapse dev tools" : "Expand dev tools"
+              }
             >
               <Icon
                 name={state.isExpanded ? "chevron-down" : "chevron-up"}
                 size="xs"
                 className="text-white"
               />
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -266,23 +272,25 @@ export const DevTools: React.FC = () => {
             {/* Tabs */}
             <div className="flex border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
               {tabs.map((tab) => (
-                <button
+                <Button
                   key={tab.id}
+                  variant={state.activeTab === tab.id ? "primary" : "ghost"}
+                  size="xs"
                   onClick={() =>
                     setState((prev) => ({
                       ...prev,
                       activeTab: tab.id as DevToolsState["activeTab"],
                     }))
                   }
-                  className={`flex-1 px-2 py-2 text-xs text-center transition-colors ${
+                  className={`flex-1 px-2 py-2 rounded-none first:rounded-tl-lg last:rounded-tr-lg border-b-2 ${
                     state.activeTab === tab.id
-                      ? "bg-white dark:bg-gray-800 border-b-2 border-jade-600 text-blue-600 dark:text-blue-400"
-                      : "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300"
+                      ? "bg-white dark:bg-gray-800 border-jade-600 text-blue-600 dark:text-blue-400"
+                      : "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 border-transparent"
                   }`}
                   title={tab.title}
                 >
                   <span className="text-sm">{tab.label}</span>
-                </button>
+                </Button>
               ))}
             </div>
 

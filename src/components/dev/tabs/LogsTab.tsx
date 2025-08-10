@@ -4,6 +4,7 @@
  */
 import React from "react";
 import { Typography } from "../../design-system";
+import { Button } from "../../ui";
 import type { DevLog } from "../types";
 
 interface LogsTabProps {
@@ -18,12 +19,14 @@ export const LogsTab: React.FC<LogsTabProps> = ({ logs, onClearLogs }) => {
         <Typography variant="body-sm" className="font-medium">
           System Logs
         </Typography>
-        <button
+        <Button
           onClick={onClearLogs}
-          className="px-2 py-1 text-xs bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+          size="xs"
+          variant="ghost"
+          className="px-2 py-1 text-xs"
         >
           Clear
-        </button>
+        </Button>
       </div>
 
       <div className="max-h-64 overflow-y-auto space-y-1">

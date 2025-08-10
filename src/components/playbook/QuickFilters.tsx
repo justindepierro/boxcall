@@ -4,6 +4,7 @@
  */
 
 import React from "react";
+import { Button } from "../ui";
 import { X } from "lucide-react";
 import {
   PlaybookSearchService,
@@ -68,14 +69,13 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
         {quickFilters.map((filter) => {
           const isActive = activeFilters.includes(filter.id);
           return (
-            <button
+            <Button
               key={filter.id}
               onClick={() => toggleFilter(filter.id)}
               title={filter.description}
-              className={`inline-flex items-center space-x-1.5 px-3 py-1.5 
-                       rounded-full text-xs font-medium border transition-all duration-200
-                       ${getFilterColorClasses(filter, isActive)}
-                       ${isActive ? "shadow-sm transform scale-105" : "hover:shadow-sm"}`}
+              variant={isActive ? "secondary" : "outline"}
+              size="xs"
+              className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 ${getFilterColorClasses(filter, isActive)} ${isActive ? "shadow-sm scale-105" : "hover:shadow-sm"}`}
             >
               <span className="text-sm">{filter.icon}</span>
               <span>{filter.label}</span>
@@ -88,7 +88,7 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
                   }}
                 />
               )}
-            </button>
+            </Button>
           );
         })}
       </div>
@@ -100,13 +100,14 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
             {activeFilters.length} filter{activeFilters.length > 1 ? "s" : ""}{" "}
             active
           </span>
-          <button
+          <Button
             onClick={clearAllFilters}
-            className="text-xs text-gray-500 hover:text-gray-700 underline 
-                     transition-colors duration-150"
+            variant="link"
+            size="xs"
+            className="text-xs text-gray-500 hover:text-gray-700 underline"
           >
             Clear all
-          </button>
+          </Button>
         </div>
       )}
     </div>

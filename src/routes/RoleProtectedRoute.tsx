@@ -1,5 +1,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
+import { Button } from "../components/ui";
 import {
   useAuthLoading,
   useAuthProfile,
@@ -58,12 +59,14 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             You don't have permission to access this page.
           </p>
-          <button
+          <Button
             onClick={() => window.history.back()}
-            className="bg-brand-jade text-white px-4 py-2 rounded-sm hover:bg-interaction-jade font-sans font-semibold"
+            variant="primary"
+            size="sm"
+            className="px-4 py-2"
           >
             Go Back
-          </button>
+          </Button>
         </div>
       </div>
     );

@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography } from "../design-system";
-import { Card } from "../ui";
+import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 import { useDevMode } from "../../app/dev-mode-hooks";
 
@@ -56,7 +56,11 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
     }
 
     // Legacy mock modes
-    if (devMode === "super_admin_mock" || devMode?.startsWith("view_as_")) {
+    // Allow legacy mock modes (cast for narrowed union compatibility)
+    if (
+      (devMode as string) === "super_admin_mock" ||
+      devMode?.startsWith("view_as_")
+    ) {
       return [
         {
           id: 1,
@@ -97,7 +101,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
         <Typography variant="headline-md" className="text-navy-700">
           Team Feeds
         </Typography>
-        <Icon name="users" size={14} color="secondary" />
+        <Icon name="users" size="sm" color="secondary" />
       </div>
 
       {/* Feed Content */}
@@ -105,7 +109,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <Icon
             name="users"
-            size={48}
+            size="xl"
             color="secondary"
             className="mb-4 opacity-50"
           />
@@ -125,7 +129,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
             >
               {/* Feed Icon */}
               <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-jade-100 flex items-center justify-center mt-0.5">
-                <Icon name={feed.icon} size={14} color="primary" />
+                <Icon name={feed.icon} size="sm" color="primary" />
               </div>
               {/* Feed Content */}
               <div className="flex-1 min-w-0">
@@ -151,9 +155,13 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
           ))}
           {/* Show More */}
           <div className="pt-2 border-t border-gray-100">
-            <button className="w-full text-center py-2 text-sm text-jade-600 hover:text-jade-700 font-medium transition-colors">
+            <Button
+              variant="link"
+              size="sm"
+              className="w-full justify-center text-jade-600 hover:text-jade-700"
+            >
               View All Team Updates
-            </button>
+            </Button>
           </div>
         </div>
       )}

@@ -310,7 +310,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                           relativeMinute % 10 === 0 && relativeMinute > 0;
 
                         return (
-                          <button
+                          <div
                             key={absoluteMinute}
                             onClick={() => {
                               if (allocation) {
@@ -337,7 +337,19 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                             } ${is10MinuteBoundary ? "border-l-2 border-l-gray-400" : ""}`}
                             style={{ minWidth: "8px" }}
                             title={`Minute ${absoluteMinute}${allocation ? ` - ${allocation.category} (click to resize)` : " (click to add block)"}`}
-                          ></button>
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                if (allocation) {
+                                  onBlockClick(absoluteMinute);
+                                } else {
+                                  onTimelineClick(absoluteMinute);
+                                }
+                              }
+                            }}
+                          ></div>
                         );
                       })}
                     </div>

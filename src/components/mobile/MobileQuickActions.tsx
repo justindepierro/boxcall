@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 
 export interface QuickAction {
@@ -68,18 +69,12 @@ export const MobileQuickActions: React.FC<MobileQuickActionsProps> = ({
       {/* Actions Grid */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {actions.map((action) => (
-          <button
+          <Button
             key={action.id}
+            variant="secondary"
+            size="sm"
             onClick={() => handleActionClick(action)}
-            className={`
-              relative flex flex-col items-center justify-center
-              min-h-[80px] p-4 rounded-xl
-              shadow-lg active:shadow-sm
-              transition-all duration-200 ease-out
-              active:scale-95 transform
-              touch-manipulation
-              ${getActionStyles(action.color)}
-            `}
+            className={`relative flex flex-col items-center justify-center min-h-[80px] p-4 rounded-xl shadow-lg active:shadow-sm transition-all duration-200 ease-out active:scale-95 transform touch-manipulation ${getActionStyles(action.color)} !h-auto`}
             aria-label={action.label}
           >
             {/* Icon */}
@@ -114,7 +109,7 @@ export const MobileQuickActions: React.FC<MobileQuickActionsProps> = ({
                 </div>
               </div>
             )}
-          </button>
+          </Button>
         ))}
       </div>
     </div>
@@ -177,19 +172,11 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   };
 
   return (
-    <button
+    <Button
       onClick={handleClick}
-      className={`
-        fixed z-40 md:hidden
-        w-14 h-14 rounded-full
-        shadow-xl hover:shadow-2xl
-        transition-all duration-300 ease-out
-        active:scale-90 transform
-        touch-manipulation
-        ${getPositionStyles()}
-        ${getColorStyles()}
-        ${className}
-      `}
+      variant="primary"
+      size="sm"
+      className={`fixed z-40 md:hidden w-14 h-14 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 ease-out active:scale-90 transform touch-manipulation ${getPositionStyles()} ${getColorStyles()} ${className}`}
       aria-label={label}
       title={label}
     >
@@ -198,6 +185,6 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         size="lg"
         className="drop-shadow-sm"
       />
-    </button>
+    </Button>
   );
 };

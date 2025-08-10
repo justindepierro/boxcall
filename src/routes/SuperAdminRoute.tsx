@@ -6,6 +6,7 @@ import {
   useIsAuthenticated,
 } from "../app/auth-store";
 import { Icon } from "../components/ui/Icon/Icon";
+import { Button } from "../components/ui";
 import { supabase } from "../lib/supabase";
 interface SuperAdminRouteProps {
   children: React.ReactNode;
@@ -80,12 +81,13 @@ export const SuperAdminRoute: React.FC<SuperAdminRouteProps> = ({
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             This area is restricted to super administrators and developers.
           </p>
-          <button
+          <Button
+            variant="primary"
+            size="sm"
             onClick={() => window.history.back()}
-            className="bg-brand-jade text-white px-4 py-2 rounded-sm hover:bg-interaction-jade font-sans font-semibold"
           >
             Go Back
-          </button>
+          </Button>
         </div>
       </div>
     );

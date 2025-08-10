@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography } from "../../../../components/design-system";
 import { Icon } from "../../../../components/ui/Icon/Icon";
+import { Button } from "../../../../components/ui";
 
 interface DevelopmentToolsProps {
   eventId: string;
@@ -24,15 +25,17 @@ export const DevelopmentTools: React.FC<DevelopmentToolsProps> = ({
     <div className="mb-4 p-2 bg-yellow-50 border border-yellow-200 rounded">
       <div className="flex items-center justify-between">
         <Typography variant="body-sm" className="text-yellow-800">
-          <Icon name="wrench" size="sm" className="mr-1" />
+          <Icon name="settings" size="sm" className="mr-1" />
           Development Tools
         </Typography>
-        <button
+        <Button
           onClick={resetToSampleData}
-          className="px-2 py-1 bg-yellow-200 text-yellow-800 rounded text-xs hover:bg-yellow-300 transition-colors"
+          variant="warning"
+          size="xs"
+          className="bg-yellow-200 text-yellow-800 hover:bg-yellow-300"
         >
           Reset to Sample Data
-        </button>
+        </Button>
       </div>
     </div>
   );

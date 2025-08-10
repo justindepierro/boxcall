@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Typography } from "../design-system";
 import { Icon } from "../ui/Icon/Icon";
+import { Button } from "../ui";
 import { telemetry } from "../../lib/telemetry";
 
 /**
@@ -96,16 +97,23 @@ export const OnboardingHint: React.FC<OnboardingHintProps> = ({
               );
             }
             return (
-              <button
+              <Button
                 key={i}
                 onClick={() => {
                   telemetry.onboardingAction(a.label);
                   a.onClick?.();
                 }}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${base}`}
+                variant={
+                  a.variant === "primary"
+                    ? "primary"
+                    : a.variant === "secondary"
+                      ? "outline"
+                      : "link"
+                }
+                size="sm"
               >
                 {a.label}
-              </button>
+              </Button>
             );
           })}
         </div>

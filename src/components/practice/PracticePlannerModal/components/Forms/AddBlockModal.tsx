@@ -128,17 +128,19 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
         </Typography>
         <div className="flex flex-wrap gap-2">
           {QUICK_TEMPLATES.map((template, index) => (
-            <button
+            <Button
               key={index}
               onClick={() => handleTemplateSelect(template)}
-              className={`px-3 py-1 bg-${template.color}-100 text-${template.color}-800 rounded-md text-sm hover:bg-${template.color}-200 flex items-center transition-colors`}
+              variant="ghost"
+              size="xs"
+              className={`px-3 py-1 bg-${template.color}-100 text-${template.color}-800 hover:bg-${template.color}-200 flex items-center rounded-md`}
+              icon={<Icon name={template.icon} size="xs" className="mr-1" />}
             >
-              <Icon name={template.icon} size="xs" className="mr-1" />
               {template.title.includes("Equipment") ? "🥿 " : ""}
               {template.title}
               {template.title !== "Equipment Change" &&
                 ` (${template.duration} min)`}
-            </button>
+            </Button>
           ))}
         </div>
       </div>

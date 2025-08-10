@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { Button } from "../ui";
 import { Search, X, Clock, TrendingUp } from "lucide-react";
 import { PlaybookSearchService } from "../../services/playbookSearchService";
 import type { Play } from "../../types/play";
@@ -142,14 +143,16 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
         />
 
         {searchQuery && (
-          <button
+          <Button
             onClick={clearSearch}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center 
-                     text-gray-400 hover:text-gray-600 transition-colors"
+            variant="ghost"
+            size="xs"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center h-auto text-gray-400 hover:text-gray-600"
             type="button"
+            aria-label="Clear search"
           >
             <X className="h-4 w-4" />
-          </button>
+          </Button>
         )}
       </div>
 
@@ -168,15 +171,16 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
               const isSelected = index === selectedIndex;
 
               return (
-                <button
+                <Button
                   key={suggestion}
                   onClick={() => handleSuggestionClick(suggestion)}
-                  className={`w-full px-4 py-2 text-left text-sm flex items-center
-                           space-x-3 transition-colors duration-150 ${
-                             isSelected
-                               ? "bg-blue-50 text-blue-700"
-                               : "text-gray-700 hover:bg-gray-50"
-                           }`}
+                  variant={isSelected ? "secondary" : "ghost"}
+                  size="sm"
+                  className={`w-full justify-start px-4 py-2 text-left text-sm flex items-center space-x-3 rounded-none ${
+                    isSelected
+                      ? "bg-blue-50 text-blue-700"
+                      : "text-gray-700 hover:bg-gray-50"
+                  }`}
                 >
                   {isHistory ? (
                     <Clock className="h-3 w-3 text-gray-400" />
@@ -189,7 +193,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
                       Recent
                     </span>
                   )}
-                </button>
+                </Button>
               );
             })}
           </div>

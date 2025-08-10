@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Button } from "../components/ui";
 import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../app/auth-store";
@@ -165,21 +166,23 @@ export const TeamBulletin: React.FC = () => {
                 : "This team doesn't exist or you don't have access to it."}
             </Typography>
             <div className="flex gap-3 justify-center">
-              <button
+              <Button
                 onClick={handleCreateTeam}
-                className="bg-jade-500 hover:bg-jade-600 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
+                variant="primary"
+                className="px-6 py-2 rounded-lg font-medium flex items-center gap-2"
               >
                 Create Team
                 {isSuperAdmin && (
                   <Icon name="unlock" size="sm" className="text-white" />
                 )}
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleJoinTeam}
-                className="border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 px-6 py-2 rounded-lg font-medium transition-colors"
+                variant="outline"
+                className="px-6 py-2 rounded-lg font-medium"
               >
                 Join Team
-              </button>
+              </Button>
             </div>
             {isSuperAdmin && (
               <div className="mt-2 text-xs text-jade-600 dark:text-jade-400">

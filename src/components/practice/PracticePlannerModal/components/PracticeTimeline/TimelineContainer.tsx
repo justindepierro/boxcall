@@ -58,7 +58,7 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
             minute < selectedBlock.start + selectedBlock.duration;
 
           return (
-            <button
+            <div
               key={minute}
               onClick={() => onTimelineClick(minute)}
               onMouseDown={() => onMouseDown(minute)}
@@ -80,13 +80,21 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
                   ? ` - ${allocation.category} (click to resize)`
                   : " (click to add block)"
               }`}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onTimelineClick(minute);
+                }
+              }}
             >
               {minute % 5 === 0 && minute > 0 && (
                 <div className="absolute -top-4 left-0 text-xs text-gray-600 font-medium">
                   {minute}
                 </div>
               )}
-            </button>
+            </div>
           );
         })}
       </div>

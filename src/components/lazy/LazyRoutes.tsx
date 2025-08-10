@@ -5,6 +5,7 @@
  * Each page component is loaded only when the user navigates to it
  */
 import React, { lazy } from "react";
+import { Button } from "../ui";
 
 // Lazy load all major page components
 export const LazyDashboardPage = lazy(
@@ -153,12 +154,13 @@ export class LazyLoadErrorBoundary extends React.Component<
               <p className="text-gray-600 mb-4">
                 There was an error loading this page. Please try refreshing.
               </p>
-              <button
+              <Button
+                variant="primary"
+                size="sm"
                 onClick={() => window.location.reload()}
-                className="px-4 py-2 bg-jade-600 text-white rounded-md hover:bg-jade-700"
               >
                 Refresh Page
-              </button>
+              </Button>
             </div>
           </div>
         )

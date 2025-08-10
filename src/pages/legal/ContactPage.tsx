@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "../../components/ui/Icon/Icon";
+import { Button } from "../../components/ui";
 
 export const ContactPage: React.FC = () => {
   return (
@@ -67,7 +68,7 @@ export const ContactPage: React.FC = () => {
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
                 <div className="w-10 h-10 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
-                  <Icon name="map" size="sm" color="primary" />
+                  <Icon name="info" size="sm" color="primary" />
                 </div>
               </div>
               <div>
@@ -193,12 +194,13 @@ export const ContactPage: React.FC = () => {
               />
             </div>
 
-            <button
+            <Button
               type="submit"
-              className="w-full bg-interaction-jade text-white py-2 px-4 rounded-md hover:bg-brand-jade-dark focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2 transition-colors"
+              variant="primary"
+              className="w-full justify-center"
             >
               Send Message
-            </button>
+            </Button>
           </form>
         </div>
       </div>
@@ -213,12 +215,11 @@ export const ContactPage: React.FC = () => {
             Check out our FAQ section for common questions about BoxCall
             features and usage.
           </p>
-          <a
-            href="/faq"
-            className="inline-flex items-center justify-center px-4 py-2 border border-surface-jade-dark text-brand-jade-dark bg-surface-jade hover:bg-surface-jade rounded-md transition-colors"
-          >
-            View FAQ
-          </a>
+          <Button variant="link" size="sm" className="px-4 py-2">
+            <a href="/faq" className="hover:underline">
+              View FAQ
+            </a>
+          </Button>
         </div>
       </div>
     </div>

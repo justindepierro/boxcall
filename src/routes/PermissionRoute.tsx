@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Button } from "../components/ui";
 import { Navigate, useParams } from "react-router-dom";
 import {
   useAuthLoading,
@@ -183,18 +184,21 @@ export const PermissionRoute: React.FC<PermissionRouteProps> = ({
             {accessDeniedMessage || defaultMessage}
           </p>
           <div className="space-y-2">
-            <button
+            <Button
               onClick={() => window.history.back()}
-              className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 mr-2"
+              variant="secondary"
+              size="sm"
+              className="mr-2"
             >
               Go Back
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => (window.location.href = fallbackTo)}
-              className="bg-brand-jade text-white px-4 py-2 rounded-sm hover:bg-interaction-jade font-sans font-semibold"
+              variant="primary"
+              size="sm"
             >
               Dashboard
-            </button>
+            </Button>
           </div>
           {/* Debug info for super admins */}
           {accessData?.isSuperAdmin && (

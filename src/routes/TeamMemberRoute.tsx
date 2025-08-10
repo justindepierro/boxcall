@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Button } from "../components/ui";
 import { Navigate, useParams } from "react-router-dom";
 import {
   useAuthLoading,
@@ -113,12 +114,14 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
               ? "You are not a member of this team."
               : "Your team membership is not active."}
           </p>
-          <button
+          {/* Replaced raw button with Button primitive */}
+          <Button
             onClick={() => (window.location.href = fallbackTo)}
-            className="bg-brand-jade text-white px-4 py-2 rounded-sm hover:bg-interaction-jade font-sans font-semibold"
+            variant="primary"
+            size="sm"
           >
             Return to Dashboard
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -135,12 +138,14 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             Your role ({teamMember.role}) doesn't have access to this feature.
           </p>
-          <button
+          {/* Replaced raw button with Button primitive */}
+          <Button
             onClick={() => window.history.back()}
-            className="bg-brand-jade text-white px-4 py-2 rounded-sm hover:bg-interaction-jade font-sans font-semibold"
+            variant="primary"
+            size="sm"
           >
             Go Back
-          </button>
+          </Button>
         </div>
       </div>
     );

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { IconButton } from "../IconButton/IconButton";
 export interface ModalProps {
   /** Whether the modal is open */
   isOpen: boolean;
@@ -175,13 +176,14 @@ export const Modal: React.FC<ModalProps> = ({
               >
                 {title}
               </h3>
-              <button
-                onClick={onClose}
-                className="ml-4 p-2 rounded-sm transition-all duration-200 text-gray-600 hover:text-interaction-jade hover:bg-surface-jade dark:text-gray-400 dark:hover:text-brand-jade dark:hover:bg-surface-jade-dark border border-transparent hover:border-surface-jade-dark"
+              <IconButton
                 aria-label="Close modal"
+                onClick={onClose}
+                className="ml-2"
+                tooltip="Close"
               >
                 <svg
-                  className="w-5 h-5"
+                  className="w-4 h-4"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -193,7 +195,7 @@ export const Modal: React.FC<ModalProps> = ({
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-              </button>
+              </IconButton>
             </div>
           </div>
         )}

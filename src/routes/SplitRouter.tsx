@@ -4,6 +4,7 @@
  */
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import { Button } from "../components/ui";
 import { RouteLoadingSkeleton } from "../components/ui/RouteLoadingSkeleton";
 import AdvancedErrorBoundary from "../components/ui/AdvancedErrorBoundary";
 import { dynamicImportWithRetry } from "../utils/bundleOptimization";
@@ -19,10 +20,6 @@ const PlaybookPage = lazy(() =>
       default: module.PlaybookPage,
     }))
   )
-);
-
-const PracticePlannerPage = lazy(() =>
-  dynamicImportWithRetry(() => import("../pages/PracticePlanner"))
 );
 
 const CalendarPage = lazy(() =>
@@ -98,15 +95,6 @@ export const SplitRouter: React.FC = () => {
       />
 
       <Route
-        path="/practice-planner"
-        element={
-          <RouteLoader routeName="practice-planner">
-            <PracticePlannerPage />
-          </RouteLoader>
-        }
-      />
-
-      <Route
         path="/calendar"
         element={
           <RouteLoader routeName="calendar">
@@ -155,12 +143,15 @@ export const SplitRouter: React.FC = () => {
                 <p className="text-gray-600 mb-4">
                   The page you're looking for doesn't exist.
                 </p>
-                <button
-                  onClick={() => window.history.back()}
-                  className="bg-team-primary text-white px-4 py-2 rounded-lg hover:bg-team-primary/90 transition-colors"
-                >
-                  Go Back
-                </button>
+                <div className="flex justify-center">
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => window.history.back()}
+                  >
+                    Go Back
+                  </Button>
+                </div>
               </div>
             </div>
           </RouteLoader>

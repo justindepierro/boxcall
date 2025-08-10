@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography } from "../../../../../components/design-system";
-import { Card } from "../../../../../components/ui";
+import { Card, Button } from "../../../../../components/ui";
 import { Icon, type IconName } from "../../../../../components/ui/Icon/Icon";
 import type { PracticeBlock } from "../../types";
 
@@ -31,24 +31,31 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
         Select Category to Allocate:
       </Typography>
       <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
-        {CATEGORIES.map((category) => (
-          <button
-            key={category.key}
-            onClick={() =>
-              onCategorySelect(category.key as PracticeBlock["category"])
-            }
-            className={`p-3 rounded-lg border-2 transition-all text-center ${
-              selectedCategory === category.key
-                ? `border-jade-600 ${getCategoryColor(category.key as PracticeBlock["category"])} shadow-md`
-                : `border-gray-200 ${getCategoryColor(category.key as PracticeBlock["category"])} hover:border-gray-300`
-            }`}
-          >
-            <div className="mb-1">
-              <Icon name={category.icon as IconName} size="lg" />
-            </div>
-            <div className="text-xs font-medium">{category.label}</div>
-          </button>
-        ))}
+        {CATEGORIES.map((category) => {
+          const isActive = selectedCategory === category.key;
+          return (
+            <Button
+              key={category.key}
+              onClick={() =>
+                onCategorySelect(category.key as PracticeBlock["category"])
+              }
+              variant={isActive ? "primary" : "ghost"}
+              size="sm"
+              className={`flex flex-col items-center py-3 ${getCategoryColor(category.key as PracticeBlock["category"])} ${isActive ? "shadow-md" : ""}`}
+              icon={
+                <Icon
+                  name={category.icon as IconName}
+                  size="sm"
+                  color="current"
+                />
+              }
+            >
+              <span className="text-[10px] font-medium leading-tight">
+                {category.label}
+              </span>
+            </Button>
+          );
+        })}
       </div>
       {selectedCategory && (
         <div className="mt-3 p-2 bg-blue-50 rounded-lg">

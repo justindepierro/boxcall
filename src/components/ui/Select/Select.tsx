@@ -4,6 +4,7 @@
  * Professional select/dropdown component with search, multi-select, and validation
  */
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
+import { IconButton } from "../IconButton/IconButton";
 import { Typography } from "../../design-system";
 import type {
   SelectOption,
@@ -432,18 +433,18 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
           </div>
           <div className="flex items-center space-x-1 ml-2">
             {clearable && internalValue && !disabled && (
-              <button
-                type="button"
+              <IconButton
+                aria-label="Clear selection"
+                size="xs"
                 onClick={(e) => {
                   e.stopPropagation();
                   const newValue = multiple ? [] : "";
                   setInternalValue(newValue);
                   onChange?.(newValue);
                 }}
-                className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="w-3.5 h-3.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -455,7 +456,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-              </button>
+              </IconButton>
             )}
             {loading ? (
               <div className="animate-spin rounded-full h-4 w-4 border-2 border-jade-600 border-t-transparent" />
