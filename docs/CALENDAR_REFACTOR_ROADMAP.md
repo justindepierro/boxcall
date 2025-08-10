@@ -323,6 +323,7 @@ src/
 | 2025-08-10 | 1-prep | Domain types extracted to `domain/calendar/types.ts` (no functional change) ahead of Phase 1. |
 | 2025-08-10 | 1      | Added zod schemas (schema.ts), comment types, and rules.ts scaffolding.                       |
 | 2025-08-10 | 1-done | Phase 1 complete: all service fetch/mutation paths parsed via zod; rules + schema tests added (17 tests). Domain coverage: schema 97.7% stmts, rules 100%. Ready to begin Phase 2 decomposition. |
+| 2025-08-10 | 2-kick | Phase 2 scaffolding: created infra/calendar (api.ts, ics.ts) + adapter (FullCalendarAdapter.ts) + initial adapter/ICS test. |
 
 ---
 
