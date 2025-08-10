@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system";
 import { Button, Card, Input } from "../ui";
-import Icon from "../ui/Icon/Icon";
 interface PersonalProfileProps {
   profile: {
     bio?: string | null;
@@ -65,18 +64,11 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
     setIsEditing(false);
   };
   return (
-    <Card className="p-6">
+    <Card className="p-6 surface-card">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2 mb-6">
-          <Icon
-            name="user"
-            size="lg"
-            className="text-gray-700 dark:text-gray-300"
-          />
-          <Typography
-            variant="headline-md"
-            className="text-gray-900 dark:text-white"
-          >
+          <Icon name="user" size="lg" className="text-text-secondary" />
+          <Typography variant="headline-md" className="text-text-primary">
             My Profile
           </Typography>
         </div>
@@ -108,7 +100,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
         <div>
           <Typography
             variant="body-sm"
-            className="font-semibold mb-2 text-gray-900 dark:text-white"
+            className="font-semibold mb-2 text-text-primary"
           >
             About Me
           </Typography>
@@ -119,7 +111,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                 setEditedProfile((prev) => ({ ...prev, bio: e.target.value }))
               }
               placeholder="Tell everyone about yourself..."
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md surface-card text-text-primary"
               rows={3}
             />
           ) : (
@@ -134,7 +126,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             <div>
               <Typography
                 variant="body-sm"
-                className="font-semibold mb-2 text-gray-900 dark:text-white"
+                className="font-semibold mb-2 text-text-primary"
               >
                 <Icon name="bar-chart" className="w-4 h-4 inline" /> GPA
               </Typography>
@@ -165,7 +157,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             <div>
               <Typography
                 variant="body-sm"
-                className="font-semibold mb-2 text-gray-900 dark:text-white"
+                className="font-semibold mb-2 text-text-primary"
               >
                 <Icon name="award" className="w-4 h-4 inline" /> Favorite
                 Position
@@ -194,7 +186,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
           <div>
             <Typography
               variant="body-sm"
-              className="font-semibold mb-3 text-gray-900 dark:text-white"
+              className="font-semibold mb-3 text-text-primary"
             >
               👕 My Gear (Drip)
             </Typography>
@@ -237,7 +229,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             ) : (
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
+                  <span className="text-text-secondary">
                     🪖 Helmet:
                   </span>
                   <span className="font-semibold">
@@ -245,7 +237,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
+                  <span className="text-text-secondary">
                     🧤 Gloves:
                   </span>
                   <span className="font-semibold">
@@ -253,7 +245,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
+                  <span className="text-text-secondary">
                     👟 Cleats:
                   </span>
                   <span className="font-semibold">
@@ -269,25 +261,25 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
           <div>
             <Typography
               variant="body-sm"
-              className="font-semibold mb-3 text-gray-900 dark:text-white"
+              className="font-semibold mb-3 text-text-primary"
             >
               🎓 Coaching Background
             </Typography>
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-text-secondary">
                   Experience:
                 </span>
                 <span className="font-semibold">15 years</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-text-secondary">
                   Certifications:
                 </span>
                 <span className="font-semibold">NFHS, USA Football</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-text-secondary">
                   Specialty:
                 </span>
                 <span className="font-semibold">Offensive Coordinator</span>
@@ -300,7 +292,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
       <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600">
         <Typography
           variant="body-sm"
-          className="font-semibold mb-3 text-gray-900 dark:text-white"
+          className="font-semibold mb-3 text-text-primary"
         >
           <Icon name="trending-up" className="w-4 h-4 inline" /> Profile Stats
         </Typography>

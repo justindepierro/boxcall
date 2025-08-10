@@ -123,7 +123,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   // Show loading state
   if (loading) {
     return (
-      <Card className="compact-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
+      <Card className="compact-card surface-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
         <div className="flex items-center justify-center h-24">
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-jade-600"></div>
         </div>
@@ -133,34 +133,25 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   // Show error state
   if (error) {
     return (
-      <Card className="compact-card bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-red-200 dark:border-red-800">
-        <Typography
-          variant="headline-md"
-          className="text-red-600 dark:text-red-400 text-center"
-        >
+      <Card className="compact-card surface-card bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-red-200 dark:border-red-800">
+        <Typography variant="headline-md" className="text-red-600 dark:text-red-400 text-center">
           Failed to load achievements
         </Typography>
       </Card>
     );
   }
   return (
-    <Card className="compact-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
+    <Card className="compact-card surface-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Icon name="trophy" size="sm" className="text-yellow-600" />
-          <Typography
-            variant="headline-md"
-            className="text-gray-800 dark:text-white"
-          >
+          <Typography variant="headline-md" className="text-text-primary">
             Trophy Shelf
           </Typography>
         </div>
         <div className="flex-1 flex justify-center">
-          <Typography
-            variant="body-sm"
-            className="font-semibold text-gray-800 dark:text-white"
-          >
+          <Typography variant="body-sm" className="font-semibold text-text-primary">
             BoxCall Achievements
           </Typography>
         </div>
@@ -177,7 +168,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       <div className="flex gap-3 h-full">
         {/* Left: Vertical Stats Stack */}
         <div className="flex flex-col gap-2 w-20">
-          <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
+          <div className="text-center p-2 surface-card/50 dark:surface-card/30 bg-white/50 dark:bg-gray-700/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
               <Icon name="zap" size="sm" className="text-orange-500" />
             </div>
@@ -298,10 +289,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
                     size="lg"
                     className="text-jade-400 mb-3 opacity-60"
                   />
-                  <Typography
-                    variant="body-sm"
-                    className="font-semibold text-jade-700 dark:text-jade-300 mb-2"
-                  >
+                  <Typography variant="body-sm" className="font-semibold text-jade-700 dark:text-jade-300 mb-2">
                     Ready to Fill Your Trophy Shelf?
                   </Typography>
                   <Typography

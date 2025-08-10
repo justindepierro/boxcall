@@ -201,7 +201,7 @@ export const DevTools: React.FC = () => {
         onMouseEnter={handleMouseEnter}
       >
         <div className="w-12 h-12 bg-jade-600 hover:bg-jade-600 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-all duration-200 animate-pulse">
-          <span className="text-white text-lg">🛠️</span>
+          <span className="text-text-inverse text-lg">🛠️</span>
         </div>
       </div>
     );
@@ -214,19 +214,19 @@ export const DevTools: React.FC = () => {
       onMouseLeave={handleMouseLeave}
       style={{ opacity: state.opacity }}
     >
-      <div className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-2xl max-w-md">
+  <div className="surface-card border border-gray-300 dark:border-gray-600 rounded-lg shadow-2xl max-w-md">
         {/* Header */}
-        <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-t-lg">
+    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-text-inverse rounded-t-lg">
           <div className="flex items-center">
-            <Icon name="settings" size="sm" className="mr-2 text-white" />
-            <Typography variant="body-sm" className="font-medium text-white">
+      <Icon name="settings" size="sm" className="mr-2 text-text-inverse" />
+            <Typography variant="body-sm" className="font-medium text-text-inverse">
               {state.isExpanded ? "BoxCall Dev Tools" : "🛠️"}
             </Typography>
           </div>
           <div className="flex items-center gap-2">
             {state.isExpanded && (
               <div className="flex items-center gap-1">
-                <Icon name="eye" size="xs" className="text-white" />
+        <Icon name="eye" size="xs" className="text-text-inverse" />
                 <input
                   type="range"
                   min="0.3"
@@ -252,7 +252,7 @@ export const DevTools: React.FC = () => {
                   isExpanded: !prev.isExpanded,
                 }))
               }
-              className="p-1 h-auto hover:bg-white/20 text-white"
+              className="p-1 h-auto hover:bg-white/20 text-text-inverse"
               aria-label={
                 state.isExpanded ? "Collapse dev tools" : "Expand dev tools"
               }
@@ -260,7 +260,7 @@ export const DevTools: React.FC = () => {
               <Icon
                 name={state.isExpanded ? "chevron-down" : "chevron-up"}
                 size="xs"
-                className="text-white"
+                className="text-text-inverse"
               />
             </Button>
           </div>
@@ -270,7 +270,7 @@ export const DevTools: React.FC = () => {
         {state.isExpanded && (
           <>
             {/* Tabs */}
-            <div className="flex border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
+            <div className="flex border-b border-gray-200 dark:border-gray-600 surface-subtle">
               {tabs.map((tab) => (
                 <Button
                   key={tab.id}
@@ -295,7 +295,7 @@ export const DevTools: React.FC = () => {
             </div>
 
             {/* Content */}
-            <div className="p-4 max-h-80 overflow-y-auto bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+            <div className="p-4 max-h-80 overflow-y-auto surface-card text-text-primary">
               {renderTabContent()}
             </div>
           </>
