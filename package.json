@@ -52,10 +52,11 @@
     "style:contrast:buttons": "node scripts/contrast-check.mjs",
     "style:audit": "node scripts/style-audit.mjs",
     "style:gate": "node scripts/style-ci-gate.mjs",
-    "audit:lighthouse": "npm run build && lhci autorun",
-    "diagnostics:open": "vite --open /dev/diagnostics",
+  "audit:lighthouse": "npm run build && lhci autorun",
+  "diagnostics:open": "vite --open /dev/diagnostics",
   "release:version": "tsx scripts/release-version.ts",
-  "baseline:create": "node scripts/create-baseline.mjs"
+  "baseline:create": "node scripts/create-baseline.mjs",
+  "perf:budgets": "node scripts/perf-budget-check.mjs"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.18",

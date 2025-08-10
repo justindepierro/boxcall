@@ -304,6 +304,29 @@ npm run analyze
 
 ## ⚡ **Performance & Quality Monitoring**
 
+### 📏 Baseline & Performance Budgets
+
+We maintain a locked Phase 0 baseline to measure optimization progress and prevent regressions.
+
+Artifacts:
+- `baseline/performance-budgets.json` – gzip targets (largest non-PDF chunk + initial index/vendor total)
+- `baseline/bundle-stats.json` – raw byte sizes for every JS/CSS asset
+- `baseline/raw-gray-offenders.json` – style debt inventory (raw gray utilities slated for codemod)
+
+Local workflow:
+```bash
+npm run build            # produce dist/assets
+npm run perf:budgets     # enforce current budgets
+npm run baseline:create  # (only when intentionally updating baseline)
+```
+
+Budget policy:
+1. If you exceed a budget, either optimize (preferred) or intentionally raise in `baseline/performance-budgets.json` in the same PR.
+2. Provide before/after numbers (from `bundle-stats.json`) plus rationale.
+3. Add a follow-up issue if increase >10% with a mitigation plan (code-splitting, library replacement, lazy loading, etc.).
+
+Planned extensions: per-route LCP/INP thresholds, image weight budgets, PDF bundle isolation via dynamic import, and automated daily trend capture.
+
 ### 🎯 **Core Web Vitals Tracking**
 
 - **Real-time performance monitoring** with Web Vitals v5.1.0

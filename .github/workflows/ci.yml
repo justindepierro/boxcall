@@ -28,6 +28,8 @@ jobs:
         run: npx vitest run --coverage
       - name: Build
         run: npm run build
+      - name: Performance budget check
+        run: npm run perf:budgets || (echo "Performance budget check failed" && exit 1)
       - name: Bundle size check
         run: npx bundlesize || echo "Bundlesize check complete"
       - name: Lighthouse (PR only)
