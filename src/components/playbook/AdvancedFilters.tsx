@@ -160,13 +160,13 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
   );
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-slate-200">
+    <div className="surface-card rounded-lg shadow-sm border border-slate-200 dark:border-gray-700">
       {/* Header */}
-      <div className="p-3 border-b border-slate-200">
+      <div className="p-3 border-b border-slate-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <Filter className="h-4 w-4 text-slate-500 mr-2" />
-            <h3 className="font-medium text-slate-900">Filters</h3>
+            <Filter className="h-4 w-4 text-text-secondary mr-2" />
+            <h3 className="font-medium text-text-primary">Filters</h3>
             {activeFilters.length > 0 && (
               <span className="ml-2 px-1.5 py-0.5 text-xs bg-blue-100 text-blue-800 rounded">
                 {activeFilters.length}
@@ -188,7 +188,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
       {/* Active Filters */}
       {activeFilters.length > 0 && (
-        <div className="p-3 space-y-2">
+  <div className="p-3 space-y-2">
           {activeFilters.map((filter) => (
             <div
               key={filter.id}
@@ -211,7 +211,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
       )}
 
       {/* Add Filter Section */}
-      <div className="p-3 border-t border-slate-100">
+  <div className="p-3 border-t border-slate-100 dark:border-gray-700">
         {!showAddFilter ? (
           <Button
             size="xs"
@@ -236,7 +236,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                     value: "",
                   }))
                 }
-                className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-jade-500"
+        className="w-full px-2 py-1.5 text-xs border border-slate-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-jade-500 bg-white dark:bg-gray-800 text-text-primary"
               >
                 <option value="">Select field...</option>
                 {FILTER_FIELDS.map((field) => (
@@ -258,7 +258,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                       operator: e.target.value as "equals" | "contains" | "in",
                     }))
                   }
-                  className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-jade-500"
+                  className="w-full px-2 py-1.5 text-xs border border-slate-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-jade-500 bg-white dark:bg-gray-800 text-text-primary"
                 >
                   {availableOperators.map((op) => (
                     <option key={op.id} value={op.id}>
@@ -281,7 +281,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                         value: e.target.value,
                       }))
                     }
-                    className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-jade-500"
+                    className="w-full px-2 py-1.5 text-xs border border-slate-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-jade-500 bg-white dark:bg-gray-800 text-text-primary"
                   >
                     <option value="">Select value...</option>
                     {selectedField.options?.map(
@@ -308,7 +308,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                       }))
                     }
                     placeholder="Enter value..."
-                    className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-jade-500"
+                    className="w-full px-2 py-1.5 text-xs border border-slate-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-jade-500 bg-white dark:bg-gray-800 text-text-primary"
                   />
                 )}
               </div>

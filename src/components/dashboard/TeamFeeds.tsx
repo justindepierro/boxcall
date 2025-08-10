@@ -95,10 +95,10 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
   const feeds = getFeeds();
 
   return (
-    <Card className="compact-card h-full">
+    <Card className="compact-card h-full surface-card">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-200 pb-2">
-        <Typography variant="headline-md" className="text-navy-700">
+      <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2">
+        <Typography variant="headline-md" className="text-text-primary">
           Team Feeds
         </Typography>
         <Icon name="users" size="sm" color="secondary" />
@@ -113,10 +113,10 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
             color="secondary"
             className="mb-4 opacity-50"
           />
-          <Typography variant="body-lg" className="text-gray-500 mb-2">
+          <Typography variant="body-lg" className="text-text-secondary mb-2">
             No team activity yet
           </Typography>
-          <Typography variant="body-sm" className="text-gray-400">
+          <Typography variant="body-sm" className="text-text-muted">
             Join a team to see updates and announcements
           </Typography>
         </div>
@@ -125,7 +125,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
           {feeds.map((feed) => (
             <div
               key={feed.id}
-              className="flex items-start space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+              className="flex items-start space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
             >
               {/* Feed Icon */}
               <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-jade-100 flex items-center justify-center mt-0.5">
@@ -136,7 +136,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
                 <div className="flex items-center justify-between">
                   <Typography
                     variant="body-sm"
-                    className="font-medium text-navy-700 truncate"
+                    className="font-medium text-text-primary truncate"
                   >
                     {feed.team}
                   </Typography>
@@ -146,7 +146,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
                 </div>
                 <Typography
                   variant="body-sm"
-                  className="text-gray-700 mt-0.5 leading-snug"
+                  className="text-text-secondary mt-0.5 leading-snug"
                 >
                   {feed.title}
                 </Typography>
@@ -154,7 +154,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
             </div>
           ))}
           {/* Show More */}
-          <div className="pt-2 border-t border-gray-100">
+          <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
             <Button
               variant="link"
               size="sm"

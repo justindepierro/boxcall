@@ -122,12 +122,12 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
   return (
     <div className={`relative ${className}`}>
       {/* Search Input */}
-      <div className="relative">
+    <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-4 w-4 text-gray-400" />
+      <Search className="h-4 w-4 text-text-muted" />
         </div>
 
-        <input
+  <input
           ref={inputRef}
           type="text"
           value={searchQuery}
@@ -139,7 +139,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
           className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg 
                    focus:ring-2 focus:ring-jade-500 focus:border-jade-600 
                    placeholder-gray-500 text-sm transition-colors duration-200
-                   bg-white shadow-sm hover:border-gray-400"
+       bg-white dark:bg-gray-800 shadow-sm hover:border-gray-400 dark:border-gray-600"
         />
 
         {searchQuery && (
@@ -147,7 +147,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
             onClick={clearSearch}
             variant="ghost"
             size="xs"
-            className="absolute inset-y-0 right-0 pr-3 flex items-center h-auto text-gray-400 hover:text-gray-600"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center h-auto text-text-muted hover:text-text-secondary"
             type="button"
             aria-label="Clear search"
           >
@@ -158,10 +158,10 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
 
       {/* Suggestions Dropdown */}
       {isOpen && suggestions.length > 0 && (
-        <div
+  <div
           ref={dropdownRef}
           className="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg 
-                   border border-gray-200 max-h-64 overflow-y-auto"
+       border border-gray-200 dark:border-gray-700 dark:bg-gray-800 max-h-64 overflow-y-auto"
         >
           <div className="py-1">
             {suggestions.map((suggestion, index) => {
@@ -178,18 +178,18 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
                   size="sm"
                   className={`w-full justify-start px-4 py-2 text-left text-sm flex items-center space-x-3 rounded-none ${
                     isSelected
-                      ? "bg-blue-50 text-blue-700"
-                      : "text-gray-700 hover:bg-gray-50"
+                      ? "bg-blue-50 text-blue-700 dark:bg-blue-900/40"
+                      : "text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700"
                   }`}
                 >
                   {isHistory ? (
-                    <Clock className="h-3 w-3 text-gray-400" />
+                    <Clock className="h-3 w-3 text-text-muted" />
                   ) : (
-                    <TrendingUp className="h-3 w-3 text-gray-400" />
+                    <TrendingUp className="h-3 w-3 text-text-muted" />
                   )}
                   <span className="truncate">{suggestion}</span>
                   {isHistory && (
-                    <span className="text-xs text-gray-400 ml-auto">
+                    <span className="text-xs text-text-muted ml-auto">
                       Recent
                     </span>
                   )}

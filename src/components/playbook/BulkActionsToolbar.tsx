@@ -16,11 +16,11 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
   if (selectedCount === 0) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg border border-slate-200 p-3 z-50">
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 surface-card rounded-lg shadow-lg border border-slate-200 dark:border-gray-700 p-3 z-50">
       <div className="flex items-center space-x-4">
         {/* Selection Count */}
         <div className="flex items-center space-x-2">
-          <span className="text-sm font-medium text-slate-900">
+          <span className="text-sm font-medium text-text-primary">
             {selectedCount} play{selectedCount !== 1 ? "s" : ""} selected
           </span>
           <Button
@@ -30,7 +30,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
             icon={<X className="w-4 h-4" />}
             iconPosition="only"
             aria-label="Clear selection"
-            className="text-slate-400 hover:text-slate-600 [&_svg]:w-4 [&_svg]:h-4"
+            className="text-text-muted hover:text-text-secondary [&_svg]:w-4 [&_svg]:h-4"
             title="Clear selection"
           />
         </div>
@@ -45,7 +45,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
             variant="ghost"
             size="sm"
             icon={<Tag className="w-4 h-4" />}
-            className="text-slate-600 hover:text-slate-900"
+            className="text-text-secondary hover:text-text-primary"
             title="Add tags to selected plays"
           >
             Tag
@@ -56,7 +56,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
             variant="ghost"
             size="sm"
             icon={<Copy className="w-4 h-4" />}
-            className="text-slate-600 hover:text-slate-900"
+            className="text-text-secondary hover:text-text-primary"
             title="Duplicate selected plays"
           >
             Duplicate
@@ -87,7 +87,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
             variant="ghost"
             size="sm"
             icon={<Download className="w-4 h-4" />}
-            className="text-slate-600 hover:text-slate-900"
+            className="text-text-secondary hover:text-text-primary"
             title="Export selected plays"
           >
             Export
