@@ -3,6 +3,7 @@ import { Button } from "../components/ui";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../components/auth";
 import { Icon } from "../components/ui/Icon/Icon";
+import { Typography } from "../components/design-system/Typography";
 import {
   LazyDashboardPage,
   LazyLoginPage,
@@ -160,10 +161,14 @@ export const AppRouter: React.FC = () => {
               <TeamMemberRoute allowedTeamRoles={["coach", "admin"]}>
                 <SubscriptionRoute requiredTiers={["team_premium"]}>
                   <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold mb-4 flex items-center justify-center">
+                    <Typography
+                      variant="headline-md"
+                      as="h1"
+                      className="mb-4 flex items-center justify-center"
+                    >
                       <Icon name="bar-chart" size="lg" className="mr-2" />
                       Premium Analytics
-                    </h1>
+                    </Typography>
                     <p className="text-gray-600">
                       Advanced team analytics and reporting tools.
                     </p>
@@ -323,9 +328,13 @@ export const AppRouter: React.FC = () => {
                   <div className="mb-6">
                     <Icon name="alert" size="xl" color="secondary" />
                   </div>
-                  <h1 className="text-3xl font-bold mb-4 text-text-primary">
+                  <Typography
+                    variant="headline-lg"
+                    as="h1"
+                    className="mb-4 text-text-primary"
+                  >
                     404 - Page Not Found
-                  </h1>
+                  </Typography>
                   <p className="mb-8 leading-relaxed text-text-secondary">
                     The page you're looking for doesn't exist or has been moved.
                   </p>

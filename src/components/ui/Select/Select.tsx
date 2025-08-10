@@ -1,3 +1,4 @@
+import { Typography } from "../../design-system";
 /**
  * BoxCall Select Component
  *
@@ -5,7 +6,6 @@
  */
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { IconButton } from "../IconButton/IconButton";
-import { Typography } from "../../design-system";
 import type {
   SelectOption,
   SelectProps,

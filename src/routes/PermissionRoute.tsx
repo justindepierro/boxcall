@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../components/ui";
 import { Navigate, useParams } from "react-router-dom";
+import { Typography } from "../components/design-system/Typography";
 import {
   useAuthLoading,
   useAuthProfile,
@@ -176,10 +177,14 @@ export const PermissionRoute: React.FC<PermissionRouteProps> = ({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
-          <h1 className="text-2xl font-bold mb-4 flex items-center justify-center text-text-primary">
+          <Typography
+            variant="headline-md"
+            as="h1"
+            className="mb-4 flex items-center justify-center text-text-primary"
+          >
             <Icon name="shield" size="lg" className="mr-2" />
             Access Denied
-          </h1>
+          </Typography>
           <p className="mb-6 text-text-secondary">
             {accessDeniedMessage || defaultMessage}
           </p>

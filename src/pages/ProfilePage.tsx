@@ -3,6 +3,7 @@ import { useAuthLoading, useAuthProfile } from "../app/auth-store";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Icon } from "../components/ui/Icon/Icon";
+import { Typography } from "../components/design-system/Typography";
 import { supabase } from "../lib/supabase";
 /**
  * ProfilePage Component
@@ -113,9 +114,9 @@ export const ProfilePage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">
+          <Typography variant="headline-md" as="h1" className="text-red-600 mb-4">
             Profile Not Found
-          </h1>
+          </Typography>
           <p className="text-text-secondary">
             Unable to load your profile information.
           </p>
@@ -128,13 +129,16 @@ export const ProfilePage: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="surface-card elevation-card rounded-lg p-6 mb-8">
-          <h1 className="text-3xl font-bold mb-2 flex items-center text-text-primary">
-            <Icon name="user" size="xl" className="mr-3" />
-            My Profile
-          </h1>
-          <p className="text-text-secondary">
+          <Typography
+            variant="headline-lg"
+            className="flex items-center mb-2"
+            as="h1"
+          >
+            <Icon name="user" size="xl" className="mr-3" /> My Profile
+          </Typography>
+          <Typography variant="body-md" color="muted">
             Manage your account information and preferences
-          </p>
+          </Typography>
         </div>
         {/* Message Display */}
         {message && (
@@ -152,7 +156,9 @@ export const ProfilePage: React.FC = () => {
         <form onSubmit={handleSaveProfile} className="space-y-6">
           {/* Basic Information */}
           <div className="surface-card elevation-card rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
+            <Typography variant="headline-sm" as="h2" className="mb-4">
+              Basic Information
+            </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -246,7 +252,9 @@ export const ProfilePage: React.FC = () => {
           </div>
           {/* Account Security */}
           <div className="surface-card elevation-card rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Account Security</h2>
+            <Typography variant="headline-sm" as="h2" className="mb-4">
+              Account Security
+            </Typography>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -294,7 +302,9 @@ export const ProfilePage: React.FC = () => {
         </form>
         {/* Account Info */}
         <div className="mt-8 bg-gray-50 dark:bg-gray-800/50 rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-3">Account Information</h3>
+          <Typography variant="headline-sm" as="h3" className="mb-3">
+            Account Information
+          </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
               <span className="font-medium">Account Created:</span>{" "}

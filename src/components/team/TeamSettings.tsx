@@ -3,6 +3,7 @@ import { Icon } from "../ui/Icon/Icon";
 import type { TeamSettings as TeamSettingsType } from "../../types/team-management";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
+import { Typography } from "../design-system/Typography";
 
 interface TeamSettingsProps {
   teamSettings: TeamSettingsType;
@@ -85,9 +86,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
     <div className="surface-card rounded-lg shadow-sm">
       {/* Header */}
       <div className="bc-card-padding border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold text-text-primary">
+        <Typography variant="headline-sm" as="h2" className="text-text-primary">
           Team Settings
-        </h2>
+        </Typography>
         <p className="mt-1 text-text-secondary">
           Configure your team information and preferences
         </p>
@@ -112,9 +113,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
       <form onSubmit={handleSubmit} className="bc-card-padding space-y-8">
         {/* Team Logo */}
         <div>
-          <h3 className="text-lg font-medium text-text-primary mb-4">
+          <Typography variant="headline-sm" as="h3" className="text-text-primary mb-4">
             Team Logo
-          </h3>
+          </Typography>
           <div className="flex items-center space-x-6">
             <div className="flex-shrink-0">
               {teamSettings.logoUrl ? (
@@ -146,9 +147,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
         {/* Basic Information */}
         <div>
-          <h3 className="text-lg font-medium text-text-primary mb-4">
+          <Typography variant="headline-sm" as="h3" className="text-text-primary mb-4">
             Basic Information
-          </h3>
+          </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
             <div>
               <label className="block text-sm font-medium text-text-secondary mb-2">
@@ -200,9 +201,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
         {/* Location Information */}
         <div>
-          <h3 className="text-lg font-medium text-text-primary mb-4">
+          <Typography variant="headline-sm" as="h3" className="text-text-primary mb-4">
             Location Information
-          </h3>
+          </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
             <div>
               <label className="block text-sm font-medium text-text-secondary mb-2">
@@ -253,9 +254,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
         {/* Subscription Information */}
         <div>
-          <h3 className="text-lg font-medium text-text-primary mb-4">
+          <Typography variant="headline-sm" as="h3" className="text-text-primary mb-4">
             Subscription Status
-          </h3>
+          </Typography>
           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -275,9 +276,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
 
         {/* Team ID */}
         <div>
-          <h3 className="text-lg font-medium text-text-primary mb-4">
+          <Typography variant="headline-sm" as="h3" className="text-text-primary mb-4">
             Team Information
-          </h3>
+          </Typography>
           <div className="bg-jade-50 dark:bg-navy-900/20 rounded-md p-4">
             <div className="flex items-center justify-between">
               <div>

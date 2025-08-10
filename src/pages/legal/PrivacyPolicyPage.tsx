@@ -1,4 +1,5 @@
 import React from "react";
+import { Typography } from "../../components/design-system/Typography";
 
 export const PrivacyPolicyPage: React.FC = () => {
   const lastUpdated = "August 4, 2025";
@@ -6,17 +7,17 @@ export const PrivacyPolicyPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className="prose dark:prose-invert max-w-none">
-        <h1 className="text-3xl font-bold mb-2 text-text-primary">
+        <Typography variant="headline-lg" as="h1" className="mb-2 text-text-primary">
           Privacy Policy
-        </h1>
+        </Typography>
         <p className="text-sm mb-8 text-text-secondary">
           Last updated: {lastUpdated}
         </p>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             Introduction
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             BoxCall ("we," "our," or "us") is committed to protecting your
             privacy. This Privacy Policy explains how we collect, use, disclose,
@@ -30,13 +31,13 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             Information We Collect
-          </h2>
+          </Typography>
 
-          <h3 className="text-lg font-medium mb-3 text-text-primary">
+          <Typography variant="headline-sm" as="h3" className="mb-3 text-text-primary">
             Personal Information
-          </h3>
+          </Typography>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
             <li>Account information (name, email address, phone number)</li>
             <li>Team and coaching information</li>
@@ -45,9 +46,9 @@ export const PrivacyPolicyPage: React.FC = () => {
             <li>Profile photos and team logos</li>
           </ul>
 
-          <h3 className="text-lg font-medium mb-3 text-text-primary">
+          <Typography variant="headline-sm" as="h3" className="mb-3 text-text-primary">
             Usage Information
-          </h3>
+          </Typography>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
             <li>How you use our platform and services</li>
             <li>
@@ -57,9 +58,9 @@ export const PrivacyPolicyPage: React.FC = () => {
             <li>Cookies and similar tracking technologies</li>
           </ul>
 
-          <h3 className="text-lg font-medium mb-3 text-text-primary">
+          <Typography variant="headline-sm" as="h3" className="mb-3 text-text-primary">
             Team and Playbook Data
-          </h3>
+          </Typography>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
             <li>Playbook content and formations</li>
             <li>Practice plans and drill information</li>
@@ -69,9 +70,9 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             How We Use Your Information
-          </h2>
+          </Typography>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
             <li>Provide and maintain our coaching platform services</li>
             <li>Process payments and manage subscriptions</li>
@@ -84,9 +85,9 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             Information Sharing and Disclosure
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             We do not sell, trade, or otherwise transfer your personal
             information to third parties, except in the following circumstances:
@@ -116,9 +117,9 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             Data Security
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             We implement appropriate technical and organizational security
             measures to protect your personal information against unauthorized
@@ -133,9 +134,9 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             Your Rights and Choices
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             You have the following rights regarding your personal information:
           </p>
@@ -164,9 +165,9 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             Children's Privacy
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300">
             BoxCall is designed for use by coaches and team administrators. We
             do not knowingly collect personal information from children under
@@ -176,9 +177,9 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             Changes to This Privacy Policy
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300">
             We may update this Privacy Policy from time to time. We will notify
             you of any changes by posting the new Privacy Policy on this page
@@ -188,9 +189,9 @@ export const PrivacyPolicyPage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             Contact Us
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             If you have any questions about this Privacy Policy or our data
             practices, please contact us:

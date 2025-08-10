@@ -1,3 +1,4 @@
+import { Typography } from "../design-system";
 /**
  * Development Tools Panel
  * Clean, modular development tools with better error handling
@@ -9,7 +10,6 @@ import { useAuth } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import { useToast } from "../../hooks/useToast";
-import { Typography } from "../design-system";
 import { Icon } from "../ui/Icon/Icon";
 import { OverviewTab } from "./tabs/OverviewTab";
 import { DataTab } from "./tabs/DataTab";

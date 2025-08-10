@@ -38,9 +38,9 @@ export const Templates: React.FC = () => {
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-6">
             <Icon name="bar-chart" size="xl" color="primary" />
-            <h3 className="text-2xl font-bold text-jade-600">
+            <Typography variant="headline-md" as="h3" className="text-jade-600">
               Data Import Templates
-            </h3>
+            </Typography>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Roster Import */}

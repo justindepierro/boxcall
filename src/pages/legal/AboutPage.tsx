@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon } from "../../components/ui/Icon/Icon";
 import { LogoIcon } from "../../components/ui/Logo";
+import { Typography } from "../../components/design-system/Typography";
 
 export const AboutPage: React.FC = () => {
   return (
@@ -9,21 +10,29 @@ export const AboutPage: React.FC = () => {
       <div className="text-center mb-12">
         <div className="flex items-center justify-center gap-3 mb-4">
           <LogoIcon size="lg" color="brand" />
-          <h1 className="text-4xl font-bold text-interaction-jade font-display">
+          <Typography
+            variant="headline-xl"
+            as="h1"
+            className="text-interaction-jade"
+          >
             About BoxCall
-          </h1>
+          </Typography>
         </div>
-        <p className="text-lg max-w-2xl mx-auto text-text-secondary">
+        <Typography
+          variant="body-lg"
+          color="muted"
+          className="max-w-2xl mx-auto"
+        >
           Revolutionizing football coaching with intelligent play management and
           team coordination tools.
-        </p>
+        </Typography>
       </div>
 
       {/* Mission Section */}
       <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-6 text-text-primary">
+        <Typography variant="headline-lg" as="h2" className="mb-6">
           Our Mission
-        </h2>
+        </Typography>
         <p className="text-gray-700 dark:text-gray-300 mb-4">
           BoxCall is dedicated to empowering football coaches at every level
           with innovative technology that simplifies play calling, enhances team
@@ -39,18 +48,18 @@ export const AboutPage: React.FC = () => {
 
       {/* Features Section */}
       <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-6 text-text-primary">
+        <Typography variant="headline-lg" as="h2" className="mb-6">
           What We Offer
-        </h2>
+        </Typography>
         <div className="grid md:grid-cols-2 gap-8">
           <div>
             <div className="flex items-center gap-3 mb-3">
               <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                 <Icon name="file" size="sm" color="primary" />
               </div>
-              <h3 className="text-xl font-semibold text-text-primary">
+              <Typography variant="headline-sm" as="h3">
                 Digital Playbooks
-              </h3>
+              </Typography>
             </div>
             <p className="text-text-secondary">
               Create, organize, and access your complete playbook from any
@@ -63,9 +72,9 @@ export const AboutPage: React.FC = () => {
               <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                 <Icon name="calendar" size="sm" color="primary" />
               </div>
-              <h3 className="text-xl font-semibold text-text-primary">
+              <Typography variant="headline-sm" as="h3">
                 Practice Planning
-              </h3>
+              </Typography>
             </div>
             <p className="text-text-secondary">
               Design efficient practice sessions with drill libraries, timing
@@ -77,9 +86,9 @@ export const AboutPage: React.FC = () => {
               <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                 <Icon name="users" size="sm" color="primary" />
               </div>
-              <h3 className="text-xl font-semibold text-text-primary">
+              <Typography variant="headline-sm" as="h3">
                 Team Management
-              </h3>
+              </Typography>
             </div>
             <p className="text-text-secondary">
               Manage rosters, track player progress, coordinate with coaching
@@ -92,9 +101,9 @@ export const AboutPage: React.FC = () => {
               <div className="w-8 h-8 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
                 <Icon name="chart" size="sm" color="primary" />
               </div>
-              <h3 className="text-xl font-semibold text-text-primary">
+              <Typography variant="headline-sm" as="h3">
                 Analytics & Reports
-              </h3>
+              </Typography>
             </div>
             <p className="text-text-secondary">
               Gain insights into team performance, play effectiveness, and
@@ -107,9 +116,9 @@ export const AboutPage: React.FC = () => {
 
       {/* Team Section */}
       <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-6 text-text-primary">
+        <Typography variant="headline-lg" as="h2" className="mb-6">
           Built by Coaches, for Coaches
-        </h2>
+        </Typography>
         <p className="text-gray-700 dark:text-gray-300 mb-4">
           BoxCall was founded by experienced football coaches who understand the
           unique challenges of modern football coaching. Our team combines
@@ -124,9 +133,9 @@ export const AboutPage: React.FC = () => {
 
       {/* Contact CTA */}
       <div className="text-center bg-gray-50 dark:bg-gray-800 rounded-lg p-8">
-        <h3 className="text-xl font-semibold mb-4 text-text-primary">
+        <Typography variant="headline-sm" as="h3" className="mb-4">
           Ready to Transform Your Coaching?
-        </h3>
+        </Typography>
         <p className="mb-6 text-text-secondary">
           Join thousands of coaches who are already using BoxCall to elevate
           their teams.

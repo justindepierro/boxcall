@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { Button } from "../components/ui";
+import { Typography } from "../components/design-system/Typography";
 import {
   useAuthLoading,
   useAuthProfile,
@@ -53,9 +54,13 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
-          <h1 className="text-2xl font-bold mb-4 text-text-primary">
+          <Typography
+            variant="headline-md"
+            as="h1"
+            className="mb-4 text-text-primary"
+          >
             Access Denied
-          </h1>
+          </Typography>
           <p className="mb-6 text-text-secondary">
             You don't have permission to access this page.
           </p>

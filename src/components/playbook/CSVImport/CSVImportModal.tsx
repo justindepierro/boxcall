@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Typography } from "../../design-system/Typography";
 import {
   X,
   Upload,
@@ -180,9 +181,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   const renderUploadStep = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <h3 className="text-lg font-medium text-slate-900 mb-2">
+        <Typography
+          variant="headline-sm"
+          as="h3"
+          className="text-slate-900 mb-2"
+        >
           Import Plays from CSV
-        </h3>
+        </Typography>
         <p className="text-sm text-slate-600">
           Upload your existing playbook data to get started quickly
         </p>
@@ -294,9 +299,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     return (
       <div className="space-y-6">
         <div className="text-center">
-          <h3 className="text-lg font-medium text-slate-900 mb-2">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="text-slate-900 mb-2"
+          >
             Review Your Plays
-          </h3>
+          </Typography>
           <p className="text-sm text-slate-600">
             Verify the imported data before adding to your playbook
           </p>
@@ -554,9 +563,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     <div className="text-center space-y-6">
       <div>
         <Loader2 className="h-16 w-16 text-jade-600 mx-auto mb-4 animate-spin" />
-        <h3 className="text-lg font-medium text-slate-900 mb-2">
+        <Typography
+          variant="headline-sm"
+          as="h3"
+          className="text-slate-900 mb-2"
+        >
           Importing Plays...
-        </h3>
+        </Typography>
         <p className="text-sm text-slate-600">
           Processing your CSV file and adding plays to the database
         </p>
@@ -576,9 +589,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         {importResult?.success ? (
           <>
             <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-900 mb-2">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="text-slate-900 mb-2"
+            >
               Import Complete!
-            </h3>
+            </Typography>
             <p className="text-sm text-slate-600">
               Successfully imported {importResult.importedPlays} plays to your
               playbook
@@ -587,9 +604,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         ) : (
           <>
             <AlertCircle className="h-16 w-16 text-red-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-900 mb-2">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="text-slate-900 mb-2"
+            >
               Import Had Issues
-            </h3>
+            </Typography>
             <p className="text-sm text-slate-600">
               {importResult?.importedPlays || 0} plays imported, but some errors
               occurred
@@ -695,7 +716,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         />
         <div className="inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
           <div className="bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-slate-900">CSV Import</h2>
+            <Typography
+              variant="headline-sm"
+              as="h2"
+              className="text-slate-900"
+            >
+              CSV Import
+            </Typography>
             <Button
               onClick={onClose}
               variant="ghost"

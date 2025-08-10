@@ -1,3 +1,4 @@
+import { Typography } from "../../design-system";
 /**
  * PracticeBlocksList Component (Regular Mode)
  *
@@ -32,7 +33,6 @@
 import React from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
-import { Typography } from "../../design-system";
 import { Button, Card } from "../../ui";
 import { getCategoryColor } from "../utils";
 import type { PracticeBlock, PracticeGroup, UserRole } from "../types";

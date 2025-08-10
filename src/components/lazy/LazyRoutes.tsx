@@ -1,3 +1,4 @@
+import { Typography } from "../design-system/Typography";
 /**
  * Lazy Route Components
  *
@@ -148,9 +149,9 @@ export class LazyLoadErrorBoundary extends React.Component<
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              <Typography variant="headline-sm" as="h2" className="text-gray-900 mb-2">
                 Failed to load page
-              </h2>
+              </Typography>
               <p className="text-gray-600 mb-4">
                 There was an error loading this page. Please try refreshing.
               </p>

@@ -1,3 +1,4 @@
+import { Typography } from "../components/design-system";
 /**
  * Teams Page - Shows all teams from database
  *
@@ -6,7 +7,6 @@
 import React from "react";
 import { useTeamsData } from "../hooks/useTeamsData";
 import Card from "../components/ui/Card/Card";
-import { Typography } from "../components/design-system";
 
 export const TeamsPage: React.FC = () => {
   const { teams, loading, error } = useTeamsData();

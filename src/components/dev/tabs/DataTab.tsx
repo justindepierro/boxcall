@@ -1,10 +1,10 @@
+import { Typography } from "../../design-system";
 /**
  * DevTools Data & Modes Tab
  * Database status and role switching
  */
 import React from "react";
 import { Button } from "../../ui/Button/Button";
-import { Typography } from "../../design-system";
 import { useDevMode } from "../../../app/dev-mode-hooks";
 import { useTeamsData } from "../../../hooks/useTeamsData";
 import { DEV_MODES } from "../types";

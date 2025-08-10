@@ -11,6 +11,7 @@ import { PracticeScriptService } from "../services/practiceScriptService";
 import { CSVService } from "../services/csv";
 import { PlaysService } from "../services/playsService";
 import { TeamOnboarding } from "../components/onboarding/TeamOnboarding";
+import { Typography } from "../components/design-system/Typography";
 // TODO: Future enhancement - calculate real play counts with: import { calculatePlayCounts } from "../utils/playbook-categories";
 import type { Play } from "../types/play";
 import {
@@ -372,7 +373,7 @@ export const PlaybookPage: React.FC = () => {
             <div className="flex items-center space-x-4">
               <FileText className="h-8 w-8 text-jade-600 mr-3" />
               <div className="flex flex-col">
-                <h1 className="text-2xl font-bold text-slate-900">Playbook</h1>
+                <Typography variant="headline-md" as="h1" className="text-slate-900">Playbook</Typography>
                 {/* Progress indicator - key reward loop element */}
                 <div className="flex items-center space-x-2 mt-1">
                   <ProgressBadge
@@ -477,12 +478,12 @@ export const PlaybookPage: React.FC = () => {
         <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-purple-200">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-semibold text-purple-900 flex items-center gap-2">
+              <Typography variant="label-lg" as="h3" className="text-purple-900 flex items-center gap-2">
                 Week 3 Feature: Complexity Challenge System
                 <Badge variant="premium" size="sm">
                   NEW
                 </Badge>
-              </h3>
+              </Typography>
               <p className="text-sm text-purple-700 mt-1">
                 Your plays are now analyzed for complexity and rewarded with
                 achievement badges!
@@ -631,9 +632,9 @@ export const PlaybookPage: React.FC = () => {
               <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
                 <div className="text-center py-12">
                   <Clock className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                  <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-2">
                     Practice Script Builder
-                  </h3>
+                  </Typography>
                   <p className="text-slate-600 mb-6">
                     Build practice sessions with plays from your playbook.
                     Create timelines, add repetitions, and export professional
@@ -650,9 +651,9 @@ export const PlaybookPage: React.FC = () => {
               <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
                 <div className="text-center py-12">
                   <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                  <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-2">
                     Game Plan Organization
-                  </h3>
+                  </Typography>
                   <p className="text-slate-600 mb-6">
                     Organize plays by game situations using Brian Billick
                     methodology. Down & Distance, Red Zone, Goal Line, and more.

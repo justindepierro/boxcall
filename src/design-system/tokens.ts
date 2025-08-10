@@ -109,11 +109,15 @@ export const semanticTokens = {
   bgMuted: colorTokens.gray[100],
   bgBrand: colorTokens.jade[50],
   bgNavy: colorTokens.navy[50],
+  surfaceSubtleHover: colorTokens.gray[100],
+  surfaceInverse: colorTokens.gray[900],
+  surfaceInverseAlt: colorTokens.gray[700],
 
   // Borders & Focus
   border: colorTokens.gray[200],
   borderFocus: colorTokens.jade[500],
   borderError: colorTokens.error[500],
+  focusRing: colorTokens.jade[600],
 
   // Status states
   success: colorTokens.success[500],

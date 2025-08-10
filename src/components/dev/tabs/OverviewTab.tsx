@@ -1,9 +1,9 @@
+import { Typography } from "../../design-system";
 /**
  * DevTools Overview Tab
  * System status and quick actions
  */
 import React from "react";
-import { Typography } from "../../design-system";
 import { Card } from "../../ui";
 import { Button } from "../../ui/Button/Button";
 import { useAuth } from "../../../app/auth-store";

@@ -1,3 +1,4 @@
+import { Typography } from "../../design-system";
 /**
  * TimelineAllocation Component (Scaffold Mode)
  *
@@ -32,7 +33,6 @@
  */
 
 import React from "react";
-import { Typography } from "../../design-system";
 import { Button, Card } from "../../ui";
 import { getCategoryColor } from "../utils";
 import { Icon, type IconName } from "../../ui/Icon/Icon";

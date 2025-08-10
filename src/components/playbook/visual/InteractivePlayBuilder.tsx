@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from "react";
+import { Typography } from "../../design-system/Typography";
 import {
   X,
   Eye,
@@ -86,9 +87,9 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">
+            <Typography variant="headline-sm" as="h2" className="text-gray-900">
               Interactive Play Builder
-            </h2>
+            </Typography>
             <p className="text-sm text-gray-600">
               {currentPlay.play_name} - {currentPlay.formation} Formation
             </p>

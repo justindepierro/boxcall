@@ -1,3 +1,4 @@
+import { Typography } from "../design-system";
 /**
  * Database Data Display
  * Shows the loaded demo data from the database with interactive team selector
@@ -6,7 +7,6 @@
 import React, { useState } from "react";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import { useDevMode } from "../../app/dev-mode-hooks";
-import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 

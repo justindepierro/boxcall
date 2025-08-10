@@ -1,10 +1,10 @@
+import { Typography } from "../../design-system";
 /**
  * BoxCall TextArea Component
  *
  * Professional textarea component with auto-resize and character counting
  */
 import { forwardRef, useEffect, useRef } from "react";
-import { Typography } from "../../design-system";
 import type { TextAreaProps } from "./TextArea.types";
 // TextArea styles using only Tailwind dark mode classes
 const textareaStyles = {

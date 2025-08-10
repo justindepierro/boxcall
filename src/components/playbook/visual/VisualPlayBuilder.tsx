@@ -3,6 +3,7 @@ import { Button } from "../../ui/Button/Button";
 import { X, Save, Eye, Users, Route, Palette } from "lucide-react";
 import type { Play } from "../../../types/play";
 import { FieldCanvas } from "./FieldCanvas";
+import { Typography } from "../../design-system/Typography";
 interface VisualPlayBuilderProps {
   isOpen: boolean;
   onClose: () => void;
@@ -39,9 +40,9 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between bc-card-padding border-b border-slate-200">
           <div className="flex items-center space-x-4">
-            <h2 className="text-xl font-semibold text-slate-900">
+            <Typography variant="headline-sm" as="h2" className="text-slate-900">
               Visual Play Builder
-            </h2>
+            </Typography>
             {selectedPlay && (
               <div className="text-sm text-slate-600">
                 <span className="font-medium">{selectedPlay.play_name}</span>
@@ -94,9 +95,9 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             {viewMode === "field" && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-slate-900 mb-4">
+                  <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-4">
                     Field View Options
-                  </h3>
+                  </Typography>
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -193,9 +194,9 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             {viewMode === "players" && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-slate-900 mb-4">
+                  <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-4">
                     Player Positions
-                  </h3>
+                  </Typography>
                   <p className="text-sm text-slate-600 mb-4">
                     Drag and drop players to adjust their positions on the
                     field.
@@ -212,9 +213,9 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             {viewMode === "routes" && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-slate-900 mb-4">
+                  <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-4">
                     Route Drawing
-                  </h3>
+                  </Typography>
                   <p className="text-sm text-slate-600 mb-4">
                     Click and drag to draw routes for each receiver.
                   </p>
@@ -230,9 +231,9 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             {viewMode === "settings" && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-slate-900 mb-4">
+                  <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-4">
                     Visual Settings
-                  </h3>
+                  </Typography>
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-2">

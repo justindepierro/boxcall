@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import type { TeamPlayer, TeamPlayerInsert } from "../../types/team-management";
 import { FOOTBALL_POSITIONS, TEAM_LEVELS } from "../../types/team-management";
 import { Button } from "../ui/Button";
+import { Typography } from "../design-system/Typography";
 import { Input } from "../ui/Input";
 interface PlayerFormProps {
   player?: TeamPlayer | null;
@@ -149,17 +150,17 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
       <div className="surface-card elevation-modal rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="bc-card-padding border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-text-primary">
+          <Typography variant="headline-sm" as="h2">
             {player ? "Edit Player" : "Add New Player"}
-          </h2>
+          </Typography>
         </div>
         {/* Form */}
         <form onSubmit={handleSubmit} className="bc-card-padding space-y-6">
           {/* Basic Information */}
           <div>
-            <h3 className="text-lg font-medium mb-4 text-text-primary">
+            <Typography variant="headline-sm" as="h3" className="mb-4">
               Basic Information
-            </h3>
+            </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -244,9 +245,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
           </div>
           {/* Positions */}
           <div>
-            <h3 className="text-lg font-medium mb-4 text-text-primary">
+            <Typography variant="headline-sm" as="h3" className="mb-4 text-text-primary">
               Positions *
-            </h3>
+            </Typography>
             <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
               {FOOTBALL_POSITIONS.map((position) => (
                 <Button
@@ -273,9 +274,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
           </div>
           {/* Physical Information */}
           <div>
-            <h3 className="text-lg font-medium mb-4 text-text-primary">
+            <Typography variant="headline-sm" as="h3" className="mb-4 text-text-primary">
               Physical Information
-            </h3>
+            </Typography>
             <div className="grid grid-cols-1 md:grid-cols-4 bc-grid-gap">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -358,9 +359,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
           </div>
           {/* Team Level */}
           <div>
-            <h3 className="text-lg font-medium mb-4 text-text-primary">
+            <Typography variant="headline-sm" as="h3" className="mb-4 text-text-primary">
               Team Level
-            </h3>
+            </Typography>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {TEAM_LEVELS.map((level) => (
                 <Button

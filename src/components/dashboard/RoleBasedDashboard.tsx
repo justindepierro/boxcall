@@ -8,6 +8,7 @@ import {
 } from "../../app/auth-store";
 import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
+import { Typography } from "../design-system/Typography";
 
 // Import the existing dashboard components
 const CoachDashboard = React.lazy(() =>
@@ -45,9 +46,7 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
-          <p className="text-text-secondary">
-            Loading your dashboard...
-          </p>
+          <p className="text-text-secondary">Loading your dashboard...</p>
         </div>
       </div>
     );
@@ -61,16 +60,16 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
           <div className="py-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-text-primary dark:text-text-inverse">
+                <Typography variant="headline-md" as="h1" className="">
                   Welcome back, {profile.full_name || "User"}!
-                </h1>
-                <p className="mt-1 text-sm text-text-secondary">
+                </Typography>
+                <Typography variant="body-sm" color="muted" className="mt-1">
                   {isCoach && "Manage your team and create winning game plans"}
                   {isPlayer &&
                     "Track your progress and stay updated with team activities"}
                   {isFamily && "Follow your player's journey and team updates"}
                   {isAdmin && "Oversee system operations and manage all teams"}
-                </p>
+                </Typography>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="bg-jade-100 dark:bg-jade-900 text-jade-800 dark:text-jade-200 px-3 py-1 rounded-full text-sm font-medium capitalize">
@@ -93,40 +92,52 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
         >
           {isCoach && (
             <div>
-              <h2 className="text-xl font-semibold text-text-primary dark:text-text-inverse mb-6 flex items-center">
-                <Icon name="users" className="mr-3" />
-                Coach Dashboard
-              </h2>
+              <Typography
+                variant="headline-sm"
+                as="h2"
+                className="mb-6 flex items-center"
+              >
+                <Icon name="users" className="mr-3" /> Coach Dashboard
+              </Typography>
               <CoachDashboard />
             </div>
           )}
 
           {isPlayer && (
             <div>
-              <h2 className="text-xl font-semibold text-text-primary dark:text-text-inverse mb-6 flex items-center">
-                <Icon name="user" className="mr-3" />
-                Player Dashboard
-              </h2>
+              <Typography
+                variant="headline-sm"
+                as="h2"
+                className="mb-6 flex items-center"
+              >
+                <Icon name="user" className="mr-3" /> Player Dashboard
+              </Typography>
               <PlayerDashboard />
             </div>
           )}
 
           {isFamily && (
             <div>
-              <h2 className="text-xl font-semibold text-text-primary dark:text-text-inverse mb-6 flex items-center">
-                <Icon name="home" className="mr-3" />
-                Family Dashboard
-              </h2>
+              <Typography
+                variant="headline-sm"
+                as="h2"
+                className="mb-6 flex items-center"
+              >
+                <Icon name="home" className="mr-3" /> Family Dashboard
+              </Typography>
               <FamilyDashboard />
             </div>
           )}
 
           {isAdmin && (
             <div>
-              <h2 className="text-xl font-semibold text-text-primary dark:text-text-inverse mb-6 flex items-center">
-                <Icon name="settings" className="mr-3" />
-                Admin Dashboard
-              </h2>
+              <Typography
+                variant="headline-sm"
+                as="h2"
+                className="mb-6 flex items-center"
+              >
+                <Icon name="settings" className="mr-3" /> Admin Dashboard
+              </Typography>
               <AdminDashboard />
             </div>
           )}
@@ -144,31 +155,25 @@ const AdminDashboard: React.FC = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bc-grid-gap">
       {/* System Overview */}
       <div className="surface-card rounded-lg shadow bc-card-padding">
-        <h3 className="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 flex items-center">
+        <Typography variant="headline-sm" as="h3" className="text-text-primary dark:text-text-inverse mb-4 flex items-center">
           <Icon name="database" className="mr-2" />
           System Overview
-        </h3>
+        </Typography>
         <div className="space-y-3">
           <div className="flex justify-between">
-            <span className="text-text-secondary">
-              Active Teams
-            </span>
+            <span className="text-text-secondary">Active Teams</span>
             <span className="font-medium text-text-primary dark:text-text-inverse">
               12
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-text-secondary">
-              Total Users
-            </span>
+            <span className="text-text-secondary">Total Users</span>
             <span className="font-medium text-text-primary dark:text-text-inverse">
               247
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-text-secondary">
-              System Health
-            </span>
+            <span className="text-text-secondary">System Health</span>
             <span className="text-green-600 font-medium">Excellent</span>
           </div>
         </div>
@@ -176,10 +181,10 @@ const AdminDashboard: React.FC = () => {
 
       {/* User Management */}
       <div className="surface-card rounded-lg shadow bc-card-padding">
-        <h3 className="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 flex items-center">
+        <Typography variant="headline-sm" as="h3" className="text-text-primary dark:text-text-inverse mb-4 flex items-center">
           <Icon name="users" className="mr-2" />
           User Management
-        </h3>
+        </Typography>
         <div className="space-y-3">
           <Button variant="ghost" size="sm" className="w-full justify-start">
             Manage User Accounts
@@ -195,10 +200,10 @@ const AdminDashboard: React.FC = () => {
 
       {/* Quick Actions */}
       <div className="surface-card rounded-lg shadow bc-card-padding">
-        <h3 className="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 flex items-center">
+        <Typography variant="headline-sm" as="h3" className="text-text-primary dark:text-text-inverse mb-4 flex items-center">
           <Icon name="zap" className="mr-2" />
           Quick Actions
-        </h3>
+        </Typography>
         <div className="space-y-3">
           <Button variant="primary" size="sm" className="w-full">
             Run System Backup

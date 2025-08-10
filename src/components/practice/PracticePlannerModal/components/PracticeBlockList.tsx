@@ -1,7 +1,7 @@
 import React from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
-import { Typography } from "../../../../components/design-system";
+import { Typography } from "../../../design-system";
 import { Button, Card } from "../../../../components/ui";
 import { Icon, type IconName } from "../../../../components/ui/Icon/Icon";
 import type { PracticeBlock } from "../types";

@@ -1,3 +1,4 @@
+import { Typography } from "../../../design-system";
 /**
  * EditGroupModal Component
  *
@@ -17,7 +18,6 @@
  * />
  */
 import React, { useState, useEffect } from "react";
-import { Typography } from "../../../design-system";
 import type { EditingGroup, PracticeGroup } from "../../types";
 import Icon from "../../../ui/Icon/Icon";
 import { Button } from "../../../ui/Button";

@@ -5,6 +5,7 @@ import { Icon } from "../components/ui/Icon/Icon";
 import { Button } from "../components/ui/Button/Button";
 import { supabase } from "../lib/supabase";
 import type { Database } from "../types/database";
+import { Typography } from "../components/design-system/Typography";
 // Subscription tier type
 type SubscriptionTier =
   Database["public"]["Tables"]["teams"]["Row"]["subscription_tier"];
@@ -96,10 +97,10 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4 flex items-center justify-center">
+          <Typography variant="headline-md" as="h1" className="text-red-600 mb-4 flex items-center justify-center">
             <Icon name="users" size="lg" className="mr-2" />
             Team Not Found
-          </h1>
+          </Typography>
           <p className="mb-6 text-text-secondary">
             Unable to verify team subscription status.
           </p>
@@ -121,9 +122,9 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
-          <h1 className="text-2xl font-bold text-yellow-600 mb-4">
+          <Typography variant="headline-md" as="h1" className="text-yellow-600 mb-4">
             ⭐ Premium Feature
-          </h1>
+          </Typography>
           <p className="mb-6 text-text-secondary">
             This feature requires a {requiredTiers.join(" or ")} subscription.
             Current plan: {subscription.subscription_tier || "none"}
@@ -151,9 +152,9 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
       return (
         <div className="min-h-screen flex items-center justify-center">
           <div className="max-w-md mx-auto text-center">
-            <h1 className="text-2xl font-bold text-red-600 mb-4">
+            <Typography variant="headline-md" as="h1" className="text-red-600 mb-4">
               ⏰ Subscription Expired
-            </h1>
+            </Typography>
             <p className="mb-6 text-text-secondary">
               Team subscription expired on {expirationDate.toLocaleDateString()}
               . Please renew to continue using premium features.

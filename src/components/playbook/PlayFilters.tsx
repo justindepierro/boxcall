@@ -1,4 +1,5 @@
 import React from "react";
+import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button/Button";
 import { Filter, Star, Clock, Folder } from "lucide-react";
 import {
@@ -43,7 +44,9 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Filter className="h-5 w-5 text-slate-500 mr-2" />
-            <h3 className="font-semibold text-slate-900">Filters</h3>
+            <Typography variant="headline-sm" as="h3">
+              Filters
+            </Typography>
           </div>
           {hasActiveFilters && (
             <Button

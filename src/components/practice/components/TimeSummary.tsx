@@ -1,3 +1,4 @@
+import { Typography } from "../../design-system";
 /**
  * TimeSummary Component
  *
@@ -17,7 +18,6 @@
  * />
  */
 import React from "react";
-import { Typography } from "../../design-system";
 import { getCategoryColor, formatDuration } from "../utils";
 import type { TimeSummaryProps, PracticeBlock } from "../types";
 import Icon from "../../ui/Icon/Icon";

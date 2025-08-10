@@ -1,3 +1,4 @@
+import { Typography } from "../components/design-system/Typography";
 /**
  * Route-based Code Splitting
  * Part of Phase 3D: Final Mobile Polish & Performance Optimization
@@ -137,9 +138,9 @@ export const SplitRouter: React.FC = () => {
           <RouteLoader routeName="not-found">
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
               <div className="text-center">
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                <Typography variant="headline-md" as="h1" className="text-gray-900 mb-2">
                   Page Not Found
-                </h1>
+                </Typography>
                 <p className="text-gray-600 mb-4">
                   The page you're looking for doesn't exist.
                 </p>

@@ -4,6 +4,7 @@ import { IconButton } from "../ui";
 import { PlayCard } from "./PlayCard";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import type { Play } from "../../types/play";
+import { Typography } from "../design-system/Typography";
 import {
   validatePlaybookData,
   logValidationResults,
@@ -243,7 +244,11 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">
+            <Typography
+              variant="headline-sm"
+              as="h2"
+              className="text-slate-900"
+            >
               {filteredPlays.length}{" "}
               {filteredPlays.length === 1 ? "Play" : "Plays"}
               {selectedCategory && (
@@ -254,7 +259,7 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
                   {selectedSubcategory && ` › ${selectedSubcategory}`}
                 </span>
               )}
-            </h2>
+            </Typography>
           </div>
 
           {/* Bulk Selection Controls */}

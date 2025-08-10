@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
+import { Typography } from "../design-system/Typography";
 
 export interface QuickAction {
   id: string;
@@ -58,9 +59,9 @@ export const MobileQuickActions: React.FC<MobileQuickActionsProps> = ({
     <div className={`${className}`}>
       {/* Quick Actions Header */}
       <div className="flex items-center justify-between mb-3 px-1">
-        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <Typography variant="label-lg" as="h3" className="text-gray-700 dark:text-gray-300">
           Quick Actions
-        </h3>
+        </Typography>
         <span className="text-xs text-text-secondary">
           Tap to execute
         </span>

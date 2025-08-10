@@ -1,3 +1,4 @@
+import { Typography } from "../design-system/Typography";
 /**
  * Custom Fields Component
  * Renders team-specific custom fields in the Play Builder
@@ -369,7 +370,7 @@ export const CustomFieldsGrouped: React.FC<CustomFieldsGroupedProps> = ({
     <div className={`space-y-6 ${className}`}>
       {Object.entries(fieldsByCategory).map(([category, _fields]) => (
         <div key={category} className="space-y-3">
-          <h4 className="text-sm font-semibold text-slate-800 flex items-center space-x-2">
+          <Typography variant="label-lg" as="h4" className="text-slate-800 flex items-center space-x-2">
             <span className="text-lg">
               {categoryIcons[category as keyof typeof categoryIcons] || "📋"}
             </span>
@@ -377,7 +378,7 @@ export const CustomFieldsGrouped: React.FC<CustomFieldsGroupedProps> = ({
               {categoryLabels[category as keyof typeof categoryLabels] ||
                 category}
             </span>
-          </h4>
+          </Typography>
 
           <CustomFields
             teamId={teamId}

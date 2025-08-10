@@ -1,3 +1,4 @@
+import { Typography } from "../../design-system/Typography";
 /**
  * Memoized Practice Block Table
  *
@@ -132,9 +133,9 @@ export const PracticeBlockTable = memo<PracticeBlockTableProps>(
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="px-4 py-3 bg-gray-50 border-b flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h3 className="text-lg font-medium text-gray-900">
+            <Typography variant="headline-sm" as="h3" className="text-gray-900">
               Practice Blocks
-            </h3>
+            </Typography>
             <span className="text-sm text-gray-600">
               {blocks.length} blocks • {totalHours}h {totalMinutes}m total
             </span>

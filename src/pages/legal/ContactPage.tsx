@@ -1,15 +1,16 @@
 import React from "react";
 import { Icon } from "../../components/ui/Icon/Icon";
 import { Button } from "../../components/ui";
+import { Typography } from "../../components/design-system/Typography";
 
 export const ContactPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold mb-4 text-text-primary">
+        <Typography variant="headline-lg" as="h1" className="mb-4 text-text-primary">
           Contact Us
-        </h1>
+        </Typography>
         <p className="text-lg max-w-2xl mx-auto text-text-secondary">
           Have questions about BoxCall? We're here to help coaches succeed.
         </p>
@@ -18,9 +19,9 @@ export const ContactPage: React.FC = () => {
       <div className="grid md:grid-cols-2 gap-12">
         {/* Contact Information */}
         <div>
-          <h2 className="text-xl font-semibold mb-6 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-6 text-text-primary">
             Get in Touch
-          </h2>
+          </Typography>
 
           <div className="space-y-6">
             <div className="flex items-start gap-4">
@@ -120,9 +121,9 @@ export const ContactPage: React.FC = () => {
 
         {/* Contact Form */}
         <div>
-          <h2 className="text-xl font-semibold mb-6 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-6 text-text-primary">
             Send us a Message
-          </h2>
+          </Typography>
 
           <form className="space-y-6">
             <div>
@@ -208,9 +209,9 @@ export const ContactPage: React.FC = () => {
       {/* FAQ Link */}
       <div className="mt-12 text-center">
         <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-2 text-text-primary">
+          <Typography variant="headline-sm" as="h3" className="mb-2 text-text-primary">
             Looking for Quick Answers?
-          </h3>
+          </Typography>
           <p className="mb-4 text-text-secondary">
             Check out our FAQ section for common questions about BoxCall
             features and usage.

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Icon } from "../ui/Icon/Icon";
-import { Typography } from "../design-system";
+import { Typography } from "../design-system/Typography";
 import { Card } from "../ui";
 import { OnboardingHint } from "../onboarding/OnboardingHint";
 import { useCreateEvent, useTeamEvents } from "../../hooks/teamDataHooks";

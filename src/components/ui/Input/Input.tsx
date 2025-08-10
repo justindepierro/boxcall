@@ -1,3 +1,4 @@
+import { Typography } from "../../design-system";
 /**
  * BoxCall Input Component
  *
@@ -6,7 +7,6 @@
  */
 import { forwardRef, useState } from "react";
 import { IconButton } from "../IconButton/IconButton";
-import { Typography } from "../../design-system";
 import type {
   InputProps,
   InputSizeConfig,

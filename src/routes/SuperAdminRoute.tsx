@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { Typography } from "../components/design-system/Typography";
 import {
   useAuthLoading,
   useAuthProfile,
@@ -74,10 +75,14 @@ export const SuperAdminRoute: React.FC<SuperAdminRouteProps> = ({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4 flex items-center justify-center">
+          <Typography
+            variant="headline-md"
+            as="h1"
+            className="text-red-600 mb-4 flex items-center justify-center"
+          >
             <Icon name="shield" size="lg" className="mr-2" />
             Developer Access Only
-          </h1>
+          </Typography>
           <p className="mb-6 text-text-secondary">
             This area is restricted to super administrators and developers.
           </p>

@@ -1,3 +1,4 @@
+import { Typography } from "../design-system";
 /**
  * Toast Component System
  *
@@ -5,7 +6,6 @@
  */
 import React, { useState, useEffect, useCallback } from "react";
 import { Icon } from "./Icon/Icon";
-import { Typography } from "../design-system";
 import { ToastContext, type Toast } from "../../contexts/ToastContext";
 import { Button } from "./index";
 

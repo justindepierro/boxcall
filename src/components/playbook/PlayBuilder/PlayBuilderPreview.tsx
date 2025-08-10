@@ -1,3 +1,4 @@
+import { Typography } from "../../design-system/Typography";
 /**
  * Play Builder Preview - Live preview of play being created
  * Database-aligned with actual Play schema
@@ -39,7 +40,7 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
       {/* Preview Header */}
       <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium text-slate-900">Play Preview</h3>
+          <Typography variant="headline-sm" as="h3" className="text-slate-900">Play Preview</Typography>
           <div className="flex items-center space-x-2">
             {isValid ? (
               <div className="flex items-center text-green-700">
@@ -61,9 +62,9 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
       <div className="p-6">
         {/* Play Title */}
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-slate-900">
+          <Typography variant="headline-md" as="h2" className="text-slate-900">
             {playData.play_name || "Untitled Play"}
-          </h2>
+          </Typography>
           {playData.one_word_play && (
             <p className="text-lg text-slate-600 mt-1">
               Call: "{playData.one_word_play}"

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Typography } from "../design-system/Typography";
 import {
   Edit,
   Copy,
@@ -191,10 +192,14 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             <div className="mt-4 pt-4 border-t border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Formation Details */}
               <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-slate-700 flex items-center">
+                <Typography
+                  variant="label-lg"
+                  as="h4"
+                  className="text-slate-700 flex items-center"
+                >
                   <Target className="h-4 w-4 mr-1" />
                   Formation
-                </h4>
+                </Typography>
                 <div className="space-y-1 text-sm text-slate-600">
                   <div>
                     <span className="font-medium">Base:</span> {play.formation}
@@ -235,10 +240,14 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               </div>
               {/* Play Details */}
               <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-slate-700 flex items-center">
+                <Typography
+                  variant="label-lg"
+                  as="h4"
+                  className="text-slate-700 flex items-center"
+                >
                   <Hash className="h-4 w-4 mr-1" />
                   Play Details
-                </h4>
+                </Typography>
                 <div className="space-y-1 text-sm text-slate-600">
                   <div>
                     <span className="font-medium">Core:</span> {play.play_name}
@@ -281,10 +290,14 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               </div>
               {/* Situational & Stats */}
               <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-slate-700 flex items-center">
+                <Typography
+                  variant="label-lg"
+                  as="h4"
+                  className="text-slate-700 flex items-center"
+                >
                   <Clock className="h-4 w-4 mr-1" />
                   Usage & Stats
-                </h4>
+                </Typography>
                 <div className="space-y-1 text-sm text-slate-600">
                   {/* Success rate removed: deprecated legacy field */}
                   <div>
@@ -342,9 +355,13 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               <div className="md:col-span-3 pt-4 border-t border-slate-100">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="text-sm font-semibold text-slate-700 mb-1">
+                    <Typography
+                      variant="label-lg"
+                      as="h4"
+                      className="text-slate-700 mb-1"
+                    >
                       Add to Workflow
-                    </h4>
+                    </Typography>
                     <p className="text-xs text-slate-500">
                       Build practice scripts and game plans from this play
                     </p>

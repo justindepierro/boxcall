@@ -1,4 +1,5 @@
 import React from "react";
+import { Typography } from "../design-system/Typography";
 import { useAuthProfile } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
@@ -91,9 +92,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <SidebarLogo />
               </div>
               <div>
-                <h3 className="font-display font-bold text-lg text-jade-600">
+                <Typography
+                  variant="headline-sm"
+                  as="h3"
+                  className="text-jade-600"
+                >
                   BoxCall
-                </h3>
+                </Typography>
                 <div className="flex items-center space-x-2">
                   <p className="text-xs text-text-secondary">
                     {roleInfo.display}

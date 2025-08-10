@@ -1,3 +1,4 @@
+import { Typography } from "../../design-system/Typography";
 /**
  * Quick Entry Mode for PlayBuilder
  * Allows rapid play creation with format: "Power O | I-Form | Run | 21 Personnel"
@@ -169,7 +170,7 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
   return (
     <div className="mb-6 bg-jade-50 border border-jade-200 rounded-lg p-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-medium text-jade-900 flex items-center space-x-2">
+        <Typography variant="headline-sm" as="h3" className="text-jade-900 flex items-center space-x-2">
           <svg
             className="w-5 h-5"
             fill="none"
@@ -184,7 +185,7 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
             />
           </svg>
           <span>⚡ Quick Entry Mode</span>
-        </h3>
+        </Typography>
         <Button
           onClick={onToggle}
           variant="ghost"

@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "../../components/ui/Icon/Icon";
+import { Typography } from "../../components/design-system/Typography";
 import { RoleProtectedRoute } from "../../routes/RoleProtectedRoute";
 import { Button } from "../../components/ui/Button";
 
@@ -12,13 +13,16 @@ const PlayerDashboardContent: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold flex items-center text-text-primary">
-            <Icon name="user" className="mr-3" />
-            Player Dashboard
-          </h1>
-          <p className="mt-2 text-text-secondary">
+          <Typography
+            variant="headline-lg"
+            as="h1"
+            className="flex items-center"
+          >
+            <Icon name="user" className="mr-3" /> Player Dashboard
+          </Typography>
+          <Typography variant="body-md" color="muted" className="mt-2">
             Track your progress and stay updated with team activities
-          </p>
+          </Typography>
         </div>
 
         {/* Quick Stats */}
@@ -94,10 +98,13 @@ const PlayerDashboardContent: React.FC = () => {
           {/* Upcoming Events */}
           <div className="surface-card elevation-card rounded-lg">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-medium flex items-center text-text-primary">
-                <Icon name="calendar" className="mr-2" />
-                Upcoming Events
-              </h3>
+              <Typography
+                variant="headline-sm"
+                as="h3"
+                className="flex items-center"
+              >
+                <Icon name="calendar" className="mr-2" /> Upcoming Events
+              </Typography>
             </div>
             <div className="p-6">
               <div className="space-y-4">
@@ -156,10 +163,10 @@ const PlayerDashboardContent: React.FC = () => {
           {/* Recent Performance */}
           <div className="surface-card elevation-card rounded-lg">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-medium flex items-center text-text-primary">
+              <Typography variant="headline-sm" as="h3" className="flex items-center text-text-primary">
                 <Icon name="bar-chart" className="mr-2" />
                 Recent Performance
-              </h3>
+              </Typography>
             </div>
             <div className="p-6">
               <div className="space-y-4">
@@ -235,9 +242,9 @@ const PlayerDashboardContent: React.FC = () => {
         {/* Quick Actions */}
         <div className="mt-8">
           <div className="surface-card elevation-card rounded-lg p-6">
-            <h3 className="text-lg font-medium mb-4 text-text-primary">
+            <Typography variant="headline-sm" as="h3" className="mb-4 text-text-primary">
               Quick Actions
-            </h3>
+            </Typography>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Button
                 variant="primary"

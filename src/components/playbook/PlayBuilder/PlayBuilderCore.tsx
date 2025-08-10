@@ -1,3 +1,4 @@
+import { Typography } from "../../design-system/Typography";
 /**
  * Core Play Builder - Main container component
  * Database-aligned with clean architecture
@@ -174,9 +175,9 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
           {/* Header */}
           <div className="bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-slate-900">
+              <Typography variant="headline-sm" as="h2" className="text-slate-900">
                 {initialPlay?.id ? "Edit Play" : "Create New Play"}
-              </h2>
+              </Typography>
               <p className="text-sm text-slate-500 mt-1">
                 Build your play with proper database fields
               </p>

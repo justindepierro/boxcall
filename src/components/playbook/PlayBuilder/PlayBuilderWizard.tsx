@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "../../ui/Button/Button";
 import { X, ArrowLeft, ArrowRight, Save } from "lucide-react";
+import { Typography } from "../../design-system/Typography";
 interface PlayBuilderWizardProps {
   isOpen: boolean;
   onClose: () => void;
@@ -23,9 +24,9 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
           {/* Header */}
           <div className="bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-slate-900">
+              <Typography variant="headline-sm" as="h2" className="text-slate-900">
                 Play Builder: Step 1/6 - Play Info
-              </h2>
+              </Typography>
               <div className="mt-2">
                 <div className="w-full bg-slate-200 rounded-full h-2">
                   <div
@@ -49,9 +50,9 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
             <div className="grid grid-cols-1 lg:grid-cols-2 bc-grid-gap">
               {/* Form Section */}
               <div>
-                <h3 className="text-lg font-medium text-slate-900 mb-6">
+                <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-6">
                   Basic Play Information
-                </h3>
+                </Typography>
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -103,9 +104,9 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
               </div>
               {/* Preview Section */}
               <div>
-                <h3 className="text-lg font-medium text-slate-900 mb-6">
+                <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-6">
                   Live Preview
-                </h3>
+                </Typography>
                 <div className="bg-slate-50 rounded-lg bc-card-padding border-subtle">
                   <div className="text-center">
                     <div className="text-slate-400 mb-4">

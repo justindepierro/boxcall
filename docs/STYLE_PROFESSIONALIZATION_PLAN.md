@@ -39,13 +39,13 @@
 
 ### Phase A (Visual Foundation) – COMPLETED 2025-08-10
 
-| Order | Task                                                                 | Status     | Outcome Metric Result                     |
-| ----- | -------------------------------------------------------------------- | ---------- | ----------------------------------------- |
-| A1    | Finish surface remediation                                           | Done       | 0 legacy `bg-white` containers (search=0) |
-| A2    | Apply elevation utility classes                                      | Done       | Cards/dropdowns/modals mapped             |
-| A3    | Standardize interactive list rows                                    | Done       | row-hover applied globally                |
-| A4    | Introduce `surface-subtle-hover` token & replace ad-hoc `hover:bg-*` | Deferred\* | Using `row-hover` interim (token pending) |
-| A5    | Navigation polish (badges + active state small-screen)               | Pending    | Scheduled next                            |
+| Order | Task                                                                 | Status      | Outcome Metric Result                     |
+| ----- | -------------------------------------------------------------------- | ----------- | ----------------------------------------- |
+| A1    | Finish surface remediation                                           | Done        | 0 legacy `bg-white` containers (search=0) |
+| A2    | Apply elevation utility classes                                      | Done        | Cards/dropdowns/modals mapped             |
+| A3    | Standardize interactive list rows                                    | Done        | row-hover applied globally                |
+| A4    | Introduce `surface-subtle-hover` token & replace ad-hoc `hover:bg-*` | In Progress | Token added; migrating usages via alias   |
+| A5    | Navigation polish (badges + active state small-screen)               | Pending     | Scheduled next                            |
 
 \*Token class not yet added; functional standardization achieved via `row-hover` utility.
 
@@ -91,8 +91,8 @@
 
 | Token                    | Purpose               | Light Value               | Dark Value         | Status    |
 | ------------------------ | --------------------- | ------------------------- | ------------------ | --------- |
-| `--surface-subtle-hover` | Row hover delta       | `#F3F4F6` (gray-100)      | rgba(31,41,55,0.8) | Not added |
-| `--surface-inverse`      | Tooltip / popover     | `#111827`                 | `#374151`          | Not added |
+| `--surface-subtle-hover` | Row hover delta       | `#F3F4F6` (gray-100)      | rgba(31,41,55,0.8) | Added     |
+| `--surface-inverse`      | Tooltip / popover     | `#111827`                 | `#374151`          | Added     |
 | `--border-strong`        | Emphasis dividers     | `#CBD5E1`                 | `#475569`          | Not added |
 | `--focus-ring`           | Unified focus outline | Jade 600                  | Jade 500           | Not added |
 | `--easing-standard`      | Animation consistency | `cubic-bezier(.4,0,.2,1)` | same               | Not added |
@@ -106,7 +106,7 @@
 | Raw `bg-white` (non-semantic container) | >50            | 0                 | <15         | 0            |
 | `surfaceCandidates` (open)              | 80+            | 25 (audit sample) | <25         | 0            |
 | Card elevation consistency              | <40%           | ~100%             | 100%        | 100%         |
-| Typography adoption                     | TBD            | TBD               | >80%        | 100%         |
+| Typography adoption                     | 0%             | 100%              | Gate now    | 100%         |
 | Tooltip inverse adoption                | <10%           | <10%              | 100%        | 100%         |
 | Contrast violations                     | 0              | 0                 | Gate now    | 0            |
 | New unsafe whites post-gate             | 0              | 0                 | Immediate   | 0            |
@@ -117,14 +117,14 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 
 ---
 
-## 6. Immediate NEXT TODO (Phase B Kickoff)
+## 6. Immediate NEXT TODO (Phase B In Flight)
 
-- [ ] Add `surface-subtle-hover` token + utility; migrate row-hover.
-- [ ] Typography codemod dry run (collect heading class stacks).
-- [ ] Draft Badge primitive API + sample variants (neutral, info, accent, danger).
-- [ ] Implement tooltip inverse surface.
-- [ ] Extend style-audit to log elevation usage counts & inverse adoption.
-- [ ] Begin lint rule scaffold for surface enforcement.
+- [ ] Migrate `row-hover` utility to new `surface-subtle-hover` class (verify parity then remove alias).
+- [ ] Add CI gate: fail if `typography-scan` > 0 candidates (lock in 100% adoption).
+- [ ] Draft Badge primitive API + sample variants (neutral, accent, info, danger) and replace inline pills.
+- [ ] Implement tooltip / popover inverse surface (use `surface-inverse`, elevation-popover if needed).
+- [ ] Extend style-audit to log elevation usage counts & inverse adoption %.
+- [ ] Begin lint rule scaffold for surface enforcement (no raw bg-neutral on containers).
 
 ---
 
@@ -132,7 +132,7 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 
 - [x] All surfaces semantic.
 - [x] Elevation rhythm enforced & documented.
-- [ ] Typography codemod enacted & 100% adoption.
+- [x] Typography codemod enacted & 100% adoption.
 - [ ] Badges / Tags unified.
 - [ ] Tooltips/popovers inverse surface.
 - [x] Row hover standard applied everywhere (interim).
@@ -143,12 +143,13 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 
 ## 8. Changelog
 
-| Date (UTC)        | Change Summary                                      |
-| ----------------- | --------------------------------------------------- |
-| 2025-08-10T00:00Z | Plan authored (baseline)                            |
-| 2025-08-10T15:45Z | Phase A surfaces/elevation complete; doc updated    |
-| 2025-08-10T15:55Z | Metrics snapshot inserted; next Phase B tasks added |
+| Date (UTC)        | Change Summary                                             |
+| ----------------- | ---------------------------------------------------------- |
+| 2025-08-10T00:00Z | Plan authored (baseline)                                   |
+| 2025-08-10T15:45Z | Phase A surfaces/elevation complete; doc updated           |
+| 2025-08-10T15:55Z | Metrics snapshot inserted; next Phase B tasks added        |
+| 2025-08-10T16:30Z | Typography codemod complete (100% adoption) & plan updated |
 
 ---
 
-_Last Updated: 2025-08-10T15:55:00Z_
+_Last Updated: 2025-08-10T16:30:00Z_

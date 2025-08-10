@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Card } from "../ui";
-import { Typography } from "../design-system";
+import { Typography } from "../design-system/Typography";
 import {
   useSeasonStats,
   useLogGameResult,
@@ -95,10 +95,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
   return (
     <Card className="bc-card-padding" aria-label="Season statistics">
       <div className="flex items-center justify-between mb-4">
-        <Typography
-          variant="headline-md"
-          className="text-text-primary"
-        >
+        <Typography variant="headline-md" className="text-text-primary">
           Season Stats
         </Typography>
         {canLog && (

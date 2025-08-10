@@ -1,3 +1,4 @@
+import { Typography } from "../../../design-system";
 /**
  * AddBlockModal Component
  *
@@ -19,7 +20,6 @@
  * />
  */
 import React, { useState, useEffect } from "react";
-import { Typography } from "../../../design-system";
 import { getCategoryColor } from "../../utils";
 import type { PracticeBlock, SelectedBlock, UserRole } from "../../types";
 import Icon from "../../../ui/Icon/Icon";

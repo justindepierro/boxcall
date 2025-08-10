@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Typography } from "../design-system/Typography";
 import type { TeamPlayer } from "../../types/team-management";
 import { TEAM_LEVELS } from "../../types/team-management";
 import { Button } from "../ui/Button";
@@ -57,9 +58,13 @@ export const PlayerList: React.FC<PlayerListProps> = ({
           <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full bg-jade-500/10 text-jade-600 dark:text-jade-400">
             <Icon name="users" size="lg" />
           </div>
-          <h3 className="text-xl font-semibold text-text-primary mb-2">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="text-text-primary mb-2"
+          >
             No Players Yet
-          </h3>
+          </Typography>
           <p className="text-text-secondary mb-6">
             Start building your roster by adding players manually or importing
             from CSV.
@@ -169,9 +174,9 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     </div>
                     {/* Name and Level */}
                     <div>
-                      <h3 className="font-semibold text-text-primary">
+                      <Typography variant="headline-sm" as="h3">
                         {player.first_name} {player.last_name}
-                      </h3>
+                      </Typography>
                       <span
                         className={`inline-block px-2 py-1 text-xs font-medium rounded-full text-text-inverse bg-${getTeamLevelColor(player.team_level)}-600`}
                       >

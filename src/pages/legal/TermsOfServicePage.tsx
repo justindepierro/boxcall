@@ -1,4 +1,5 @@
 import React from "react";
+import { Typography } from "../../components/design-system/Typography";
 
 export const TermsOfServicePage: React.FC = () => {
   const lastUpdated = "August 4, 2025";
@@ -6,17 +7,17 @@ export const TermsOfServicePage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className="prose dark:prose-invert max-w-none">
-        <h1 className="text-3xl font-bold mb-2 text-text-primary">
+        <Typography variant="headline-lg" as="h1" className="mb-2 text-text-primary">
           Terms of Service
-        </h1>
+        </Typography>
         <p className="text-sm mb-8 text-text-secondary">
           Last updated: {lastUpdated}
         </p>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             1. Acceptance of Terms
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             By accessing and using BoxCall ("the Service"), you accept and agree
             to be bound by the terms and provision of this agreement. If you do
@@ -30,9 +31,9 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             2. Description of Service
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             BoxCall is a comprehensive football coaching management platform
             that provides:
@@ -48,9 +49,9 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             3. User Accounts and Registration
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             To access certain features of the Service, you must register for an
             account. You agree to:
@@ -72,9 +73,9 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             4. Acceptable Use Policy
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             You agree not to use the Service to:
           </p>
@@ -91,13 +92,13 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             5. Subscription and Payment Terms
-          </h2>
+          </Typography>
 
-          <h3 className="text-lg font-medium mb-3 text-text-primary">
+          <Typography variant="headline-sm" as="h3" className="mb-3 text-text-primary">
             Team Subscriptions ($199/year)
-          </h3>
+          </Typography>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
             <li>Annual subscription fee for full team management features</li>
             <li>
@@ -106,9 +107,9 @@ export const TermsOfServicePage: React.FC = () => {
             <li>Automatic renewal unless cancelled before renewal date</li>
           </ul>
 
-          <h3 className="text-lg font-medium mb-3 text-text-primary">
+          <Typography variant="headline-sm" as="h3" className="mb-3 text-text-primary">
             Coach Accounts ($9.99/month)
-          </h3>
+          </Typography>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 mb-4">
             <li>Individual coach access to personal playbooks and tools</li>
             <li>Monthly subscription with automatic renewal</li>
@@ -122,9 +123,9 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             6. Intellectual Property Rights
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             The Service and its original content, features, and functionality
             are owned by BoxCall and are protected by international copyright,
@@ -139,9 +140,9 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             7. Privacy and Data Protection
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300">
             Your privacy is important to us. Please review our Privacy Policy,
             which also governs your use of the Service, to understand our
@@ -150,9 +151,9 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             8. Termination
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             We may terminate or suspend your account and access to the Service
             immediately, without prior notice, for conduct that we believe
@@ -166,9 +167,9 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             9. Disclaimers and Limitation of Liability
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             The Service is provided "as is" and "as available" without
             warranties of any kind. We disclaim all warranties, express or
@@ -184,9 +185,9 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             10. Indemnification
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300">
             You agree to defend, indemnify, and hold harmless BoxCall and its
             officers, directors, employees, and agents from and against any
@@ -196,9 +197,9 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             11. Governing Law
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300">
             These Terms shall be interpreted and governed by the laws of
             [State/Country], without regard to conflict of law provisions. Any
@@ -207,9 +208,9 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             12. Changes to Terms
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300">
             We reserve the right to modify these Terms at any time. We will
             notify users of any material changes via email or platform
@@ -219,9 +220,9 @@ export const TermsOfServicePage: React.FC = () => {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-text-primary">
+          <Typography variant="headline-sm" as="h2" className="mb-4 text-text-primary">
             13. Contact Information
-          </h2>
+          </Typography>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             If you have any questions about these Terms of Service, please
             contact us:

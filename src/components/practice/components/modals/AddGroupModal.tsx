@@ -1,3 +1,4 @@
+import { Typography } from "../../../design-system";
 /**
  * AddGroupModal Component
  *
@@ -16,7 +17,6 @@
  * />
  */
 import React, { useState, useEffect } from "react";
-import { Typography } from "../../../design-system";
 import Icon from "../../../ui/Icon/Icon";
 import { Button } from "../../../ui/Button";
 import type { PracticeGroup } from "../../types";

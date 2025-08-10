@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Typography } from "../design-system";
+import { Typography } from "../design-system/Typography";
 import { Icon } from "../ui/Icon/Icon";
 import { OnboardingHint } from "../onboarding/OnboardingHint";
 import {
