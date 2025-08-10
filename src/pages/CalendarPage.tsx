@@ -1,4 +1,3 @@
-// Calendar Page (Phase 3) - read path migrated to React Query (useEvents)
 import React, { useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../app/auth-store";
@@ -9,8 +8,14 @@ import { Typography } from "../components/design-system/Typography";
 import { PracticePlannerModal } from "../components/practice/PracticePlannerModal";
 import { Button, Card, Input } from "../components/ui";
 import Icon from "../components/ui/Icon/Icon";
-import { Tag, mapEventTypeToTagVariant } from "../components/ui/Tag";
-import { useEvents, useCreateEvent, useDeleteEvent } from "../state/calendar/hooks";
+import { EventModal } from "../components/calendar/EventModal";
+import CalendarStats from "../components/calendar/CalendarStats";
+
+// Calendar hooks (React Query)
+import { useEvents } from "../state/calendar/hooks";
+import { useCreateEvent } from "../state/calendar/hooks";
+import { useDeleteEvent } from "../state/calendar/hooks";
+import { useUpdateEvent } from "../state/calendar/hooks";
 import { useDevMode } from "../app/dev-mode-hooks";
 import type { CalendarFilters } from "../services/calendarService";
 import type { CalendarEvent } from "../domain/calendar/types";
@@ -50,6 +55,7 @@ export const CalendarPage: React.FC = () => {
   const [showPracticePlanner, setShowPracticePlanner] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
+  const [isEditingEvent, setIsEditingEvent] = useState(false);
   const [currentView, setCurrentView] = useState(
     state?.defaultView || "dayGridMonth"
   );
@@ -74,6 +80,7 @@ export const CalendarPage: React.FC = () => {
     dateRange: filters.dateRange,
   });
   const deleteEventMutation = useDeleteEvent();
+  const updateEventMutation = useUpdateEvent();
   const {
     data: events = [],
     isLoading: loading,
@@ -375,39 +382,7 @@ export const CalendarPage: React.FC = () => {
                   Stats
                 </Typography>
               </div>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Total Events</span>
-                  <span className="font-semibold">{events.length}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">This Month</span>
-                  <span className="font-semibold">
-                    {
-                      events.filter((e: CalendarEvent) => {
-                        const eventDate = new Date(e.start);
-                        const now = new Date();
-                        return (
-                          eventDate.getMonth() === now.getMonth() &&
-                          eventDate.getFullYear() === now.getFullYear()
-                        );
-                      }).length
-                    }
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Games</span>
-                  <span className="font-semibold">
-                    {events.filter((e: CalendarEvent) => e.type === "game").length}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Practices</span>
-                  <span className="font-semibold">
-                    {events.filter((e: CalendarEvent) => e.type === "practice").length}
-                  </span>
-                </div>
-              </div>
+              <CalendarStats events={events} />
             </Card>
           </div>
           {/* Main Calendar */}
@@ -507,305 +482,27 @@ export const CalendarPage: React.FC = () => {
         </div>
       </div>
       {/* Event Detail/Edit Modal */}
-      {showEventModal && selectedEvent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-lg w-full max-h-96 overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Icon
-                    name={isCreatingEvent ? "plus" : "calendar"}
-                    size="lg"
-                    className="text-navy-600"
-                  />
-                  <Typography variant="headline-md" className="text-navy-900">
-                    {isCreatingEvent ? "Create Event" : "Event Details"}
-                  </Typography>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  onClick={() => {
-                    setShowEventModal(false);
-                    setSelectedEvent(null);
-                    setIsCreatingEvent(false);
-                  }}
-                  className="text-gray-400 hover:text-gray-600 h-auto"
-                  icon={<Icon name="close" size="sm" />}
-                  iconPosition="only"
-                  aria-label="Close event modal"
-                />
-              </div>
-              {isCreatingEvent ? (
-                /* Event Creation Form */
-                <div className="space-y-4">
-                  <Input
-                    label="Event Title"
-                    value={selectedEvent.title}
-                    onChange={(e) =>
-                      setSelectedEvent({
-                        ...selectedEvent,
-                        title: e.target.value,
-                      })
-                    }
-                    placeholder="Practice, Game vs. Team Name, etc."
-                  />
-                  <div className="grid grid-cols-2 gap-4">
-                    <Input
-                      label="Start Date"
-                      type="datetime-local"
-                      value={selectedEvent.start?.slice(0, 16)}
-                      onChange={(e) =>
-                        setSelectedEvent({
-                          ...selectedEvent,
-                          start: e.target.value,
-                        })
-                      }
-                    />
-                    <Input
-                      label="End Date"
-                      type="datetime-local"
-                      value={selectedEvent.end?.slice(0, 16) || ""}
-                      onChange={(e) =>
-                        setSelectedEvent({
-                          ...selectedEvent,
-                          end: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Event Type
-                      </label>
-                      <select
-                        value={selectedEvent.type}
-                        onChange={(e) =>
-                          setSelectedEvent({
-                            ...selectedEvent,
-                            type: e.target.value as CalendarEvent["type"],
-                          })
-                        }
-                        className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      >
-                        <option value="practice">Practice</option>
-                        <option value="game">Game</option>
-                        <option value="meeting">Meeting</option>
-                        <option value="film">Film Session</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                    <Input
-                      label="Location"
-                      value={selectedEvent.location || ""}
-                      onChange={(e) =>
-                        setSelectedEvent({
-                          ...selectedEvent,
-                          location: e.target.value,
-                        })
-                      }
-                      placeholder="Field, Stadium, etc."
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Description
-                    </label>
-                    <textarea
-                      value={selectedEvent.description || ""}
-                      onChange={(e) =>
-                        setSelectedEvent({
-                          ...selectedEvent,
-                          description: e.target.value,
-                        })
-                      }
-                      placeholder="Event details, notes, etc."
-                      rows={3}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2"
-                    />
-                  </div>
-                  <div className="flex space-x-3 pt-4">
-                    <Button
-                      variant="primary"
-                      disabled={createEventMutation.status === "pending" || !selectedEvent.title || !selectedEvent.start}
-                      onClick={async () => {
-                        try {
-                          await createEventMutation.mutateAsync({
-                            title: selectedEvent.title,
-                            start: selectedEvent.start,
-                            end: selectedEvent.end,
-                            type: selectedEvent.type,
-                            location: selectedEvent.location,
-                            description: selectedEvent.description,
-                          });
-                          setShowEventModal(false);
-                          setIsCreatingEvent(false);
-                        } catch (error) {
-                          console.error("Failed to create event:", error);
-                        }
-                      }}
-                    >
-                      {createEventMutation.status === "pending" ? "Creating..." : "Create Event"}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setShowEventModal(false);
-                        setIsCreatingEvent(false);
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                /* Event Display */
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <Tag
-                      variant={mapEventTypeToTagVariant(selectedEvent.type)}
-                      size="sm"
-                    >
-                      {selectedEvent.type}
-                    </Tag>
-                    {selectedEvent.is_home && (
-                      <Tag variant="success" size="sm">
-                        HOME
-                      </Tag>
-                    )}
-                  </div>
-                  <div className="space-y-2 text-sm text-gray-600">
-                    <div className="flex items-center">
-                      <Icon
-                        name="calendar"
-                        size="sm"
-                        color="secondary"
-                        className="mr-2"
-                      />
-                      {new Date(selectedEvent.start).toLocaleDateString(
-                        "en-US",
-                        {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        }
-                      )}
-                    </div>
-                    <div className="flex items-center">
-                      <span className="w-4 h-4 mr-2">⏰</span>
-                      {new Date(selectedEvent.start).toLocaleTimeString(
-                        "en-US",
-                        {
-                          hour: "numeric",
-                          minute: "2-digit",
-                        }
-                      )}
-                      {selectedEvent.end && (
-                        <>
-                          {" "}
-                          -{" "}
-                          {new Date(selectedEvent.end).toLocaleTimeString(
-                            "en-US",
-                            {
-                              hour: "numeric",
-                              minute: "2-digit",
-                            }
-                          )}
-                        </>
-                      )}
-                    </div>
-                    {selectedEvent.location && (
-                      <div className="flex items-center">
-                        {/* 'location' icon not in map; using 'target' as fallback until pin icon added */}
-                        <Icon
-                          name="target"
-                          size="sm"
-                          color="secondary"
-                          className="mr-2"
-                        />
-                        {selectedEvent.location}
-                      </div>
-                    )}
-                    {selectedEvent.team_name && (
-                      <div className="flex items-center">
-                        <Icon
-                          name="users"
-                          size="sm"
-                          color="secondary"
-                          className="mr-2"
-                        />
-                        {selectedEvent.team_name}
-                      </div>
-                    )}
-                    {selectedEvent.opponent && (
-                      <div className="flex items-center">
-                        <Icon
-                          name="target"
-                          size="sm"
-                          color="secondary"
-                          className="mr-2"
-                        />
-                        vs. {selectedEvent.opponent}
-                      </div>
-                    )}
-                  </div>
-                  {selectedEvent.description && (
-                    <div className="pt-3 border-t border-gray-200">
-                      <Typography variant="body-md" className="text-gray-700">
-                        {selectedEvent.description}
-                      </Typography>
-                    </div>
-                  )}
-                  <div className="flex space-x-3 pt-4">
-                    {/* Practice Planning Button - Only for practice events and coaches */}
-                    {selectedEvent.type === "practice" &&
-                      (profile?.role === "coach" ||
-                        profile?.role === "admin") && (
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          onClick={() => {
-                            setShowPracticePlanner(true);
-                            setShowEventModal(false);
-                          }}
-                        >
-                          <Icon name="file" size="sm" className="mr-1" />
-                          Plan Practice
-                        </Button>
-                      )}
-                    {selectedEvent.rsvp_required && (
-                      <Button variant="primary" size="sm">
-                        RSVP
-                      </Button>
-                    )}
-                    <Button variant="outline" size="sm">Add to Personal Calendar</Button>
-                    {(profile?.role === "coach" || profile?.role === "admin") && selectedEvent.id && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={deleteEventMutation.status === "pending"}
-                        onClick={async () => {
-                          try {
-                            await deleteEventMutation.mutateAsync(selectedEvent.id);
-                            setShowEventModal(false);
-                            setSelectedEvent(null);
-                          } catch (error) {
-                            console.error("Failed to delete event:", error);
-                          }
-                        }}
-                      >
-                        {deleteEventMutation.status === "pending" ? "Deleting..." : "Delete"}
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      <EventModal
+        isOpen={showEventModal && !!selectedEvent}
+        onClose={() => {
+          setShowEventModal(false);
+          setSelectedEvent(null);
+          setIsCreatingEvent(false);
+          setIsEditingEvent(false);
+        }}
+        event={selectedEvent}
+        setEvent={setSelectedEvent}
+        isCreating={isCreatingEvent}
+        setIsCreating={setIsCreatingEvent}
+        isEditing={isEditingEvent}
+        setIsEditing={setIsEditingEvent}
+        profile={profile}
+        userId={user?.id}
+        createEventMutation={createEventMutation}
+        updateEventMutation={updateEventMutation}
+        deleteEventMutation={deleteEventMutation}
+        onOpenPracticePlanner={() => setShowPracticePlanner(true)}
+      />
       {/* Practice Planner Modal */}
       {showPracticePlanner &&
         selectedEvent &&
@@ -819,3 +516,6 @@ export const CalendarPage: React.FC = () => {
   );
 };
 export default CalendarPage;
+
+// Debug: ensure parser reads end of file correctly
+export const __CALENDAR_PAGE_LOADED = true;
