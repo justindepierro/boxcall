@@ -138,7 +138,7 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 - [x] Integrate tokens:build into predev & prebuild (guaranteed fresh variables).
 - [x] Add theme build script & generated theme CSS import.
 - [x] Scaffold Theme Registry (light, dark, high-contrast) + ThemeManager.
-- [ ] Add theme toggle UI + persistence verification test.
+- [x] Add theme toggle UI (cycle) + persistence via ThemeManager (test pending).
 - [ ] Expand contrast matrix to include semantic text tokens vs all surfaces (current = base subset).
 - [ ] Theme validation script: ensure AA for primary text on every surface across all themes.
 - [ ] Add utility usage manifest generation (fail on unexpected new categories once stable).

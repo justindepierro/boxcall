@@ -23,6 +23,7 @@ export interface SemanticTheme {
   warningBg: string;
   error: string;
   errorBg: string;
+  [key: string]: string; // allow indexed semantic lookups in tooling scripts
 }
 
 export interface ThemeDefinition {

@@ -1,38 +1,53 @@
-import { useEffect, useState } from "react";
-export type Theme = "light" | "dark";
+import { useCallback, useEffect, useState } from "react";
+import {
+  THEME_IDS,
+  applyTheme,
+  getStoredTheme,
+  type ThemeName,
+  DEFAULT_THEME,
+} from "../themes/ThemeManager";
+
+export type Theme = ThemeName;
+
 /**
- * Theme hook for managing light/dark mode
- * Uses system preference by default, allows manual override
+ * useTheme (legacy-compatible) now delegates to ThemeManager and supports high-contrast.
+ * Provides current theme id, setters, and a cycle toggle.
  */
 export const useTheme = () => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    // Check if there's a saved theme preference
-    const savedTheme = localStorage.getItem("boxcall-theme") as Theme;
-    if (savedTheme) {
-      return savedTheme;
-    }
-    // Default to system preference
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return "dark";
-    }
-    return "light";
+  const [theme, setThemeState] = useState<Theme>(() => {
+    return getStoredTheme() ?? DEFAULT_THEME;
   });
+
+  // Apply whenever state changes
   useEffect(() => {
-    const root = window.document.documentElement;
-    // Remove previous theme classes
-    root.classList.remove("light", "dark");
-    // Add current theme class
-    root.classList.add(theme);
-    // Save theme preference
-    localStorage.setItem("boxcall-theme", theme);
+    applyTheme(theme);
   }, [theme]);
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
-  };
+
+  // Sync if another tab changes localStorage
+  useEffect(() => {
+    const listener = (e: StorageEvent) => {
+      if (e.key === "app-theme") {
+        const stored = getStoredTheme();
+        if (stored && stored !== theme) setThemeState(stored);
+      }
+    };
+    window.addEventListener("storage", listener);
+    return () => window.removeEventListener("storage", listener);
+  }, [theme]);
+
+  const setTheme = useCallback((t: Theme) => setThemeState(t), []);
+  const toggleTheme = useCallback(() => {
+    const idx = THEME_IDS.indexOf(theme);
+    const next = THEME_IDS[(idx + 1) % THEME_IDS.length];
+    setThemeState(next);
+  }, [theme]);
+
   return {
     theme,
     setTheme,
     toggleTheme,
     isDark: theme === "dark",
+    isHighContrast: theme === "high-contrast",
+    availableThemes: THEME_IDS,
   };
 };
