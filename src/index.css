@@ -47,10 +47,7 @@ body,
     line-height: 1.5;
   }
 
-  /* Global theme override - force proper light/dark mode styling */
-  html:not(.dark) * {
-    /* Force light mode for any dark background classes */
-  }
+  /* Removed empty html:not(.dark) * rule that triggered a CSS warning */
 
   html:not(.dark) .card,
   html:not(.dark) [class*="bg-gray-8"],
@@ -233,17 +230,17 @@ body,
 
   /* Surface Hover State (semantic) */
   .surface-subtle-hover {
-    background-color: #f3f4f6; /* gray-100 creates subtle contrast over subtle */
+    background-color: var(--surface-subtle-hover);
   }
   .dark .surface-subtle-hover {
-    background-color: rgba(31, 41, 55, 0.8);
+    background-color: var(--surface-subtle-hover);
   }
   /* Alias for row/list hover standardization */
   .row-hover:hover {
-    background-color: #f3f4f6;
+    background-color: var(--surface-subtle-hover);
   }
   .dark .row-hover:hover {
-    background-color: rgba(31, 41, 55, 0.8);
+    background-color: var(--surface-subtle-hover);
   }
 
   /* Elevation utilities (token friendly) */

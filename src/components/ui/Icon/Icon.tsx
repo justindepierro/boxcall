@@ -16,7 +16,7 @@ const SIZE_MAP = {
   touch: 44,
 } as const;
 
-export type IconSize = keyof typeof SIZE_MAP;
+export type IconSize = keyof typeof SIZE_MAP | number;
 export type IconColor =
   | "primary"
   | "secondary"
@@ -24,6 +24,7 @@ export type IconColor =
   | "error"
   | "warning"
   | "info"
+  | "navy"
   | "current";
 
 // Essential icons for BoxCall - only what we actually use
@@ -52,6 +53,7 @@ const ICON_MAP = {
   edit: LucideIcons.Edit3,
   delete: LucideIcons.Trash2,
   plus: LucideIcons.Plus,
+  "plus-circle": LucideIcons.PlusCircle,
   minus: LucideIcons.Minus,
 
   // Files & Actions
@@ -63,7 +65,7 @@ const ICON_MAP = {
 
   // Status & Feedback
   check: LucideIcons.Check,
-  warning: LucideIcons.AlertTriangle,
+  "alert-triangle": LucideIcons.AlertTriangle,
   error: LucideIcons.AlertCircle,
   info: LucideIcons.Info,
   alert: LucideIcons.AlertTriangle,
@@ -88,6 +90,7 @@ const ICON_MAP = {
 
   // Files
   file: LucideIcons.File,
+  copy: LucideIcons.Copy,
   folder: LucideIcons.Folder,
   pdf: LucideIcons.FileText,
   database: LucideIcons.Database,
@@ -108,6 +111,8 @@ const ICON_MAP = {
   "arrow-down": LucideIcons.ArrowDown,
   "arrow-left": LucideIcons.ArrowLeft,
   "arrow-right": LucideIcons.ArrowRight,
+  map: LucideIcons.Map,
+  crown: LucideIcons.Crown,
 } as const;
 
 export type IconName = keyof typeof ICON_MAP;
@@ -133,11 +138,24 @@ export const Icon: React.FC<IconProps> = ({
   }
 
   const colorClass =
-    color === "current" ? "" : getComponentColor("icon", color);
+    color === "current"
+      ? ""
+      : getComponentColor(
+          "icon",
+          color === "navy" ? "secondary" : color
+        );
+
+  const resolvedSize =
+    typeof size === "number" ? size : SIZE_MAP[size] ?? SIZE_MAP.md;
+    return (
+      <LucideIcons.HelpCircle
+        size={typeof size === "number" ? size : SIZE_MAP[size] ?? SIZE_MAP.md}
+      />
+    );
 
   return (
     <IconComponent
-      size={SIZE_MAP[size]}
+  size={resolvedSize}
       className={`${colorClass} ${className}`.trim()}
     />
   );
