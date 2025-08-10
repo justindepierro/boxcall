@@ -1,45 +1,210 @@
-import React from "react";
-import { useEvents } from "../../state/calendar/hooks";
+import React, { useRef, useState } from "react";
 import { useAuth } from "../../app/auth-store";
-import { calendarKeys } from "../../state/calendar/queryKeys";
+import { useDevMode } from "../../app/dev-mode-hooks";
+import {
+  useSearchEvents,
+  useCreateEvent,
+  useUpdateEvent,
+  useDeleteEvent,
+} from "../../state/calendar/hooks";
+import type { CalendarEvent, CalendarFilters } from "../../domain/calendar/types";
 import { CalendarStats } from "./CalendarStats";
+import { CalendarFiltersPanel } from "./CalendarFiltersPanel";
+import { CalendarToolbar } from "./CalendarToolbar";
+import { BoxCallCalendar, type BoxCallCalendarRef } from "./BoxCallCalendar";
+import { EventModal } from "./EventModal";
+import { Card, Button } from "../ui"; // adjust relative path if needed
+import Icon from "../ui/Icon/Icon";
+import { CalendarPageSkeleton, CalendarErrorSkeleton } from "./CalendarSkeletons";
 
-// Minimal CalendarShell prototype: fetch events via state hooks and render count.
-// Future: integrate toolbar, filters, stats, and FullCalendar adapter.
+// NOTE: This shell intentionally mirrors logic from legacy CalendarPage; once stable we will remove duplicated code there.
 export const CalendarShell: React.FC = () => {
-  const { user } = useAuth();
-  const userId = user?.id || "dev-user";
-  const { data, isLoading, isError, error } = useEvents({ userId });
+  const { user, profile } = useAuth();
+  const { devMode } = useDevMode();
+  const calendarRef = useRef<BoxCallCalendarRef>(null);
+  // State
+  const [filters, setFilters] = useState<CalendarFilters>({
+    teamIds: [],
+    eventTypes: [],
+    dateRange: {
+      start: new Date().toISOString().split("T")[0],
+      end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
+    },
+  });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentView, setCurrentView] = useState<
+    "dayGridMonth" | "timeGridWeek" | "timeGridDay"
+  >("dayGridMonth");
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [showEventModal, setShowEventModal] = useState(false);
+  const [isCreatingEvent, setIsCreatingEvent] = useState(false);
+  const [isEditingEvent, setIsEditingEvent] = useState(false);
 
-  if (isLoading) return <div>Loading calendar…</div>;
-  if (isError)
-    return (
-      <div>
-        Error loading events:{" "}
-        {error instanceof Error ? error.message : "Unknown error"}
-      </div>
-    );
+  const baseQueryParams = {
+    userId: user?.id || "",
+    devMode,
+    filters: {
+      teamIds: filters.teamIds,
+      eventTypes: filters.eventTypes,
+      dateRange: filters.dateRange,
+    },
+    range: filters.dateRange
+      ? { start: filters.dateRange.start, end: filters.dateRange.end }
+      : undefined,
+  };
+
+  const {
+    data: events = [],
+    isLoading: loading,
+    isError,
+    error: eventsError,
+  } = useSearchEvents(searchQuery, baseQueryParams);
+  const error = isError
+    ? eventsError instanceof Error
+      ? eventsError.message
+      : "Failed to load calendar events"
+    : null;
+
+  const createEventMutation = useCreateEvent(user?.id || "", devMode, baseQueryParams.filters);
+  const deleteEventMutation = useDeleteEvent();
+  const updateEventMutation = useUpdateEvent();
+
+  const handleViewChange = (view: "dayGridMonth" | "timeGridWeek" | "timeGridDay") => {
+    setCurrentView(view);
+    calendarRef.current?.changeView(view);
+  };
+  const handleFilterChange = (newFilters: Partial<CalendarFilters>) => {
+    setFilters((prev) => ({ ...prev, ...newFilters }));
+  };
+  const handleEventClick = (event: CalendarEvent) => {
+    setSelectedEvent(event);
+    setShowEventModal(true);
+  };
+  const handleDateSelect = (selectInfo: { startStr: string; endStr: string }) => {
+    if (profile?.role === "coach" || profile?.role === "admin") {
+      setIsCreatingEvent(true);
+      setSelectedEvent({
+        id: "",
+        title: "",
+        start: selectInfo.startStr,
+        end: selectInfo.endStr,
+        type: "practice",
+        created_at: new Date().toISOString(),
+      } as CalendarEvent);
+      setShowEventModal(true);
+    }
+  };
+  const handleExportCalendar = () => {
+    // placeholder
+    alert("Calendar export coming soon");
+  };
+
+  if (loading) return <CalendarPageSkeleton />;
+  if (error) return <CalendarErrorSkeleton message={error} />;
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-start justify-between gap-8">
-        <div className="flex-1">
-          <h2 className="text-xl font-semibold mb-2">Calendar (Shell)</h2>
-          <p className="text-xs text-gray-500 mb-3">
-            Query Key: <code>{JSON.stringify(calendarKeys.events())}</code>
-          </p>
-          <ul className="list-disc pl-5 space-y-1 text-sm">
-            {(data || []).map((e) => (
-              <li key={e.id}>
-                <span className="font-medium">{e.title}</span> – {e.start}
-              </li>
-            ))}
-          </ul>
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Icon name="calendar" size="xl" className="text-navy-600" />
+          <div>
+            <h2 className="text-2xl font-semibold text-text-primary">Master Calendar (Shell)</h2>
+            <p className="text-sm text-text-secondary mt-1">Experimental shell – feature flag enabled</p>
+          </div>
         </div>
-        <div className="w-52 shrink-0">
-          <CalendarStats events={data} />
+        <div className="flex items-center space-x-3">
+          <Button variant="outline" onClick={handleExportCalendar}>
+            <Icon name="download" size="sm" className="mr-1" /> Export
+          </Button>
+          {(profile?.role === "coach" || profile?.role === "admin") && (
+            <Button
+              variant="primary"
+              onClick={() => {
+                setIsCreatingEvent(true);
+                setSelectedEvent({
+                  id: "",
+                  title: "",
+                  start: new Date().toISOString(),
+                  type: "practice",
+                  created_at: new Date().toISOString(),
+                } as CalendarEvent);
+                setShowEventModal(true);
+              }}
+            >
+              <Icon name="plus" size="sm" className="mr-1" /> Add Event
+            </Button>
+          )}
         </div>
       </div>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="lg:col-span-1 space-y-6">
+          <CalendarFiltersPanel
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
+            onSearch={() => Promise.resolve()}
+            filters={filters}
+            onFilterChange={handleFilterChange}
+          />
+          <Card className="p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Icon name="bar-chart" size="lg" className="text-navy-600" />
+              <h3 className="font-semibold text-text-primary">Stats</h3>
+            </div>
+            <CalendarStats events={events} />
+          </Card>
+        </div>
+        <div className="lg:col-span-3">
+          <Card className="p-6">
+            <CalendarToolbar
+              currentView={currentView}
+              onViewChange={handleViewChange}
+              onToday={() => calendarRef.current?.today()}
+              onPrev={() => calendarRef.current?.prev()}
+              onNext={() => calendarRef.current?.next()}
+            />
+            <div className="h-[600px]">
+              <BoxCallCalendar
+                ref={calendarRef}
+                events={events}
+                onEventClick={handleEventClick}
+                // FullCalendar DateSelectArg includes additional fields; we only need start/end ISO strings.
+                onDateSelect={(arg) =>
+                  handleDateSelect({ startStr: arg.startStr, endStr: arg.endStr })
+                }
+                editable={profile?.role === "coach" || profile?.role === "admin"}
+                selectable={profile?.role === "coach" || profile?.role === "admin"}
+                height="100%"
+                initialView={currentView}
+                className="h-full"
+              />
+            </div>
+          </Card>
+        </div>
+      </div>
+      <EventModal
+        isOpen={showEventModal && !!selectedEvent}
+        onClose={() => {
+          setShowEventModal(false);
+          setSelectedEvent(null);
+          setIsCreatingEvent(false);
+          setIsEditingEvent(false);
+        }}
+        event={selectedEvent}
+        setEvent={setSelectedEvent}
+        isCreating={isCreatingEvent}
+        setIsCreating={setIsCreatingEvent}
+        isEditing={isEditingEvent}
+        setIsEditing={setIsEditingEvent}
+        profile={profile}
+        userId={user?.id}
+        createEventMutation={createEventMutation}
+        updateEventMutation={updateEventMutation}
+        deleteEventMutation={deleteEventMutation}
+        onOpenPracticePlanner={() => {/* future practice planner integration */}}
+      />
     </div>
   );
 };

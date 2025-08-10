@@ -385,6 +385,7 @@ Legend: [x] done, [~] in progress, [ ] pending
 | 2025-08-10 | 3-prog6 | Implemented client-side search hook `useSearchEvents` replacing legacy search path; updated `CalendarPage` integration (commit cf45301).                                                         |
 | 2025-08-10 | 3-done  | Phase 3 complete: skeletons, legacy facade removal, performance & tech notes docs added.                                                                                                         |
 | 2025-08-10 | 4-kick  | Phase 4 started: experimental `CalendarPageShell` + feature flag route toggle (`VITE_CALENDAR_SHELL`); prototype shell fetch + stats; planning URL sync & component extraction.                  |
+| 2025-08-10 | 4-prog  | Expanded `CalendarShell` to include toolbar, filters, stats, calendar grid, and event modal (parity structure). Ready to implement URL state sync next.                                        |
 
 ---
 
