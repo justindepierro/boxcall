@@ -116,8 +116,8 @@ export const PracticeBlockTable = memo<PracticeBlockTableProps>(
     const totalMinutes = totalDuration % 60;
 
     return (
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="px-4 py-3 bg-gray-50 border-b flex items-center justify-between">
+      <div className="surface-card rounded-lg shadow overflow-hidden border-subtle">
+        <div className="px-4 py-3 surface-subtle border-b border-subtle flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Typography variant="headline-sm" as="h3" className="text-gray-900">
               Practice Blocks
@@ -140,8 +140,8 @@ export const PracticeBlockTable = memo<PracticeBlockTableProps>(
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-subtle">
+              <thead className="surface-subtle">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Time
@@ -169,7 +169,7 @@ export const PracticeBlockTable = memo<PracticeBlockTableProps>(
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="surface-card divide-y divide-subtle">
                 {blocks.map((block) => (
                   <PracticeBlockRow
                     key={block.id}
