@@ -170,7 +170,7 @@ Legend: [x] done, [~] in progress, [ ] pending
 
 ---
 
-## Phase 4 – UI Decomposition (Not Started ⛔)
+## Phase 4 – UI Decomposition (In Progress 🚧)
 
 **Objectives**
 
@@ -178,17 +178,25 @@ Legend: [x] done, [~] in progress, [ ] pending
 - [ ] Introduce URL state (query params: `?view=month&date=YYYY-MM-DD&event=ID`)
 - [ ] Ensure deep linking opens modal
 
-**Tasks**
+**Tasks** (legend: [x] done, [~] in progress)
 
-- [ ] New `CalendarShell` orchestrator
-- [ ] `EventModal` extracted; form & details separated
-- [ ] `ViewSwitcher` component with keyboard nav
-- [ ] URL sync hook (pushState + replaceState optimization)
+1. [~] New `CalendarShell` orchestrator (prototype exists: fetch + stats; needs toolbar, filters, calendar adapter integration)
+2. [x] Feature flag & routing: `VITE_CALENDAR_SHELL=1` toggles experimental shell (`/calendar`) with side‑by‑side legacy page for parity
+3. [ ] Extract Toolbar + Filters + Stats into shell composition (legacy page trimmed)
+4. [ ] Implement URL sync hook (`useCalendarUrlState`) handling view/date/event with push vs replace optimization
+5. [ ] Deep link modal open (`?event=ID` opens `EventModal` using cache or prefetch)
+6. [ ] Split `EventModal` internals → `EventForm` + `EventDetails` (folder structure per architecture diagram)
+7. [ ] Add `ViewSwitcher` component (keyboard accessible, roving tabindex, aria-current)
+8. [ ] Prefetch effect: when month changes, prefetch prev/next month ranges (as per Phase 3 perf doc)
+9. [ ] Debounced + highlighted search (enhance `useSearchEvents` with fuse.js or simple substring + <mark> rendering)
+10. [ ] Reduce `CalendarPage` legacy wrapper to just mounting shell (eventually delete after QA sign-off)
 
 **Exit Criteria**
 
-- [ ] Calendar root component < 250 LOC
+- [ ] Calendar root component < 250 LOC (shell orchestrator only)
 - [ ] Opening event via direct URL loads details without extra network round-trip (uses cache or prefetch)
+- [ ] Parity QA checklist passes (navigation, create/update/delete, RSVP, comments) under shell flag
+- [ ] Feature flag default flipped to shell after parity sign-off
 
 ---
 
@@ -341,15 +349,16 @@ Legend: [x] done, [~] in progress, [ ] pending
 
 ---
 
-## Immediate Next (Phase 3 Focus – Updated After Search Hook)
+## Immediate Next (Phase 4 Focus)
 
-1. Loading & error skeleton components spec + initial `CalendarShell` integration using hook statuses (Task 8).
-2. Remove remaining legacy facade/stubs (Task 11) once skeletons + final validation pass.
-3. Draft Phase 3 tech notes (Task 13): query key schema, optimistic lifecycle, rollback recipe, failure injection design; reference `CALENDAR_PHASE3_CLEANUP.md`.
-4. Performance strategy doc (Task 12): range prefetch (prev/next month), selective invalidation, cache hydration for modal deep links.
-5. Comment pagination strategy (Task 4 sub-item): cursor vs timestamp; add placeholder API & hook extension.
-6. Add client-side search debounce + highlight (enhancement to new `useSearchEvents`).
-7. Codemod / lint rule to disallow direct `CalendarService` imports outside legacy folder.
+1. Integrate toolbar, filters, stats into `CalendarShell`; begin trimming legacy `CalendarPage`.
+2. Implement `useCalendarUrlState` (sync view/date/event ↔ query params) + effect to open modal on `event`.
+3. Prefetch prev/next month on view/date change (reuse strategy doc guidelines).
+4. Extract `EventForm` & `EventDetails` from `EventModal` (no behavior change) + add folder structure.
+5. Implement `ViewSwitcher` with keyboard support and aria attributes.
+6. Add debounced (250ms) search + match highlighting.
+7. Create parity QA checklist doc; run under VITE_CALENDAR_SHELL=1 and record deltas.
+8. Update roadmap status & flip flag once parity achieved.
 
 ---
 
@@ -375,6 +384,7 @@ Legend: [x] done, [~] in progress, [ ] pending
 | 2025-08-10 | 3-prog5 | Archived legacy `calendarService` & `useCalendar*` to `src/legacy/calendar`; added deprecation stubs + cleanup doc `CALENDAR_PHASE3_CLEANUP.md`; created `CalendarPageNew` using `useEvents`.    |
 | 2025-08-10 | 3-prog6 | Implemented client-side search hook `useSearchEvents` replacing legacy search path; updated `CalendarPage` integration (commit cf45301).                                                         |
 | 2025-08-10 | 3-done  | Phase 3 complete: skeletons, legacy facade removal, performance & tech notes docs added.                                                                                                         |
+| 2025-08-10 | 4-kick  | Phase 4 started: experimental `CalendarPageShell` + feature flag route toggle (`VITE_CALENDAR_SHELL`); prototype shell fetch + stats; planning URL sync & component extraction.                  |
 
 ---
 
