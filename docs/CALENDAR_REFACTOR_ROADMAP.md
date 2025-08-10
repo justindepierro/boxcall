@@ -253,6 +253,8 @@ src/
 | Date | Phase | Update |
 |------|-------|--------|
 | (init) | 0 | Roadmap created. |
+| 2025-08-10 | 0 | Baseline metrics captured (raw util debt 23 on CalendarPage, stable build, no type errors). |
+| 2025-08-10 | 1-prep | Domain types extracted to `domain/calendar/types.ts` (no functional change) ahead of Phase 1. |
 
 ---
 ## Ownership
