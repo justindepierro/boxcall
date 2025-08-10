@@ -31,7 +31,9 @@ src/
     rsvp.ts
     comments.ts
   state/                  # React Query hooks
-    calendarQueries.ts
+    calendar/
+      queryKeys.ts        # Query key factory (implemented)
+      hooks.ts            # React Query hooks (events, event, create/update/delete, RSVP, comments)
   adapters/fullcalendar/
     FullCalendarAdapter.ts
   components/calendar/
@@ -135,20 +137,33 @@ src/
 
 **Objectives**
 
-- Introduce React Query hooks: `useEvents(range, filters)`, `useEvent(id)`, mutation hooks.
-- Replace local state fetch logic with cached queries.
-- Add optimistic create/update/delete + rollback on failure.
+- Introduce React Query hooks: `useEvents(range, filters)`, `useEvent(id)`, mutation hooks. (events + create/update/delete DONE; RSVP/comment partial)
+- Replace local state fetch logic with cached queries (IN PROGRESS – UI not yet migrated).
+- Add optimistic create/update/delete + rollback on failure (create implemented & tested; others pending tests / refinement).
 
 **Tasks**
 
-1. `state/calendarQueries.ts` + query keys strategy.
-2. Event mutation tests (simulate network failure → rollback).
-3. Loading skeleton components.
+Legend: [x] done, [~] in progress, [ ] pending
+
+1. [x] Query key factory (`state/calendar/queryKeys.ts`).
+2. [x] Core hooks file (`state/calendar/hooks.ts`) with events + single event queries.
+3. [x] Optimistic create mutation (temp ID replacement) + passing test.
+4. [~] Optimistic update/delete logic (implemented, needs dedicated tests + rollback simulation).
+5. [ ] RSVP mutation real implementation (current placeholder) + optimistic status change.
+6. [ ] Comment add optimistic + rollback test; pagination strategy stub.
+7. [ ] Failure simulation tests (network error → rollback for create/update/delete/RSVP/comment).
+8. [ ] Loading & error UI skeleton contract (skeleton components or shimmer placeholders).
+9. [ ] UI migration: replace calendarService usages with hooks (incremental by component).
+10. [ ] Remove legacy `calendarService` after full migration + codemod cleanup.
+11. [ ] Performance: range prefetch & selective invalidation strategy doc.
+12. [ ] Docs: Phase 3 tech notes (cache key strategy, optimistic contract, rollback patterns).
 
 **Exit Criteria**
 
-- All network calls pass through React Query.
-- No stale re-fetch when switching views (cache hit confirmed).
+- All calendar data fetch & mutations in UI components use hooks (no direct service calls).
+- Optimistic flows covered by tests (create/update/delete + RSVP + comment) with rollback verification.
+- No unnecessary refetches when toggling calendar views (cache hit demonstrated in dev tools notes).
+- Legacy `calendarService` fully removed (or retained only as deprecated wrapper exporting nothing new) and flagged for deletion in changelog.
 
 ---
 
@@ -323,11 +338,13 @@ src/
 
 ---
 
-## Immediate Next (Actionable Start)
+## Immediate Next (Phase 3 Focus)
 
-1. Implement Phase 0 baseline report + ensure CalendarPage type import stability.
-2. Create `domain/calendar/types.ts` & move interfaces (Phase 1 prep PR #1).
-3. Add `zod` dependency (if not present) & initial schemas.
+1. Implement real RSVP upsert in `hooks.ts` (replace placeholder) + add optimistic test.
+2. Add tests for optimistic update & delete (success + forced failure rollback).
+3. Add comment add optimistic test + rollback scenario.
+4. Draft Phase 3 tech notes doc (query key strategy & mutation lifecycle).
+5. Begin UI component migration (introduce `CalendarShell` using `useEvents`).
 
 ---
 
@@ -341,6 +358,13 @@ src/
 | 2025-08-10 | 1      | Added zod schemas (schema.ts), comment types, and rules.ts scaffolding.                                                                                                                          |
 | 2025-08-10 | 1-done | Phase 1 complete: all service fetch/mutation paths parsed via zod; rules + schema tests added (17 tests). Domain coverage: schema 97.7% stmts, rules 100%. Ready to begin Phase 2 decomposition. |
 | 2025-08-10 | 2-kick | Phase 2 scaffolding: created infra/calendar (api.ts, ics.ts) + adapter (FullCalendarAdapter.ts) + initial adapter/ICS test.                                                                      |
+| 2025-08-10 | 2-prog | Extracted RSVP & comments infra modules, migrated fetch paths, added adapter edge & ICS validation tests.                                                                                       |
+| 2025-08-10 | 2-prog2 | Expanded CalendarAPI (team, search, upcoming, delete), added infra barrel exports, improved coverage.                                                                                           |
+| 2025-08-10 | 2-prog3 | Slimmed legacy service to delegation facade (<150 LOC), exhaustive infra tests (filters, dev modes, RSVPs, comments).                                                                           |
+| 2025-08-10 | 2-done | Phase 2 exit criteria met (infra >95% coverage, adapter ≥90%, ICS UID enforced). Ready for state layer.                                                                                           |
+| 2025-08-10 | 3-kick | Added query key factory & initial hooks scaffold (events + event + create/update/delete mutations).                                                                                               |
+| 2025-08-10 | 3-prog | Implemented optimistic create + test (temp ID replace), in-memory persistence tweak; updated legacy negative test behavior (Zod errors).                                                           |
+| 2025-08-10 | 3-prog2 | Added update/delete optimistic logic (needs rollback tests), placeholder RSVP mutation, planned next tasks.                                                                                    |
 
 ---
 
