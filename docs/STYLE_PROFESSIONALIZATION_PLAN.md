@@ -125,8 +125,7 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 - [ ] Migrate `row-hover` utility to new `surface-subtle-hover` class (verify parity then remove alias).
 - [x] Add CI gate: fail if raw utility headings / `text-white`; soft baseline watch for raw container `bg-white` (script `style:gate`).
 - [x] Tag primitive rollout (replaced all inline pills) + CI gate for new inline pill patterns.
-- [ ] Draft Badge primitive API + sample variants (neutral, accent, info, danger) and replace any heavy status chips.
-- [x] Implement tooltip / popover inverse surface (primitives added; rollout continuing).
+- [ ] Draft Badge primitive API + sample variants (neutral, accent, info, danger) and replace any heavy status chips. (Variants scaffolded; doc polish pending)
 - [x] Implement tooltip / popover inverse surface (primitives added; rollout continuing).
 - [x] Add smart tooltip collision handling.
 - [x] Add Popover component (inverse) with focus/outside click handling.
@@ -134,15 +133,19 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 - [x] Lint rule scaffold: no-raw-tooltip-bg.
 - [x] Codemods: badge variants, tooltip bg normalization.
 - [x] Introduce unified focus ring utilities (.focus-ring / offset variants).
-- [ ] Extend style-audit to log elevation usage counts & inverse adoption %.
+- [x] Extend style-audit to log elevation usage counts & inverse adoption %.
 - [ ] Begin lint rule scaffold for surface enforcement (no raw bg-neutral on containers).
-- [ ] Integrate tokens:build into predev & prebuild (guaranteed fresh variables).
-- [ ] Add theme build script & generated theme CSS import.
-- [ ] Scaffold Theme Registry (light, dark, high-contrast) + ThemeManager.
-- [ ] Expand contrast matrix to include semantic text tokens vs all surfaces.
+- [x] Integrate tokens:build into predev & prebuild (guaranteed fresh variables).
+- [x] Add theme build script & generated theme CSS import.
+- [x] Scaffold Theme Registry (light, dark, high-contrast) + ThemeManager.
+- [ ] Add theme toggle UI + persistence verification test.
+- [ ] Expand contrast matrix to include semantic text tokens vs all surfaces (current = base subset).
+- [ ] Theme validation script: ensure AA for primary text on every surface across all themes.
 - [ ] Add utility usage manifest generation (fail on unexpected new categories once stable).
 - [ ] Codemod: replace remaining raw color utilities inside core primitives with CSS var classes.
 - [ ] Lint rule: forbid direct hex/rgba in component TSX (outside tokens/config). (Warn → error)
+- [ ] Surface enforcement lint rule (container heuristics) + autofix suggestions.
+- [ ] Escalate radius rule severity (warn → error) after 1 clean audit.
 
 ---
 
@@ -186,4 +189,8 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 
 ---
 
-_Last Updated: 2025-08-10T19:20:00Z_
+| Date (UTC)        | Change Summary                                                                                                        |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------- |
+| 2025-08-10T19:45Z | Integrated automated tokens + themes predev/prebuild, added ThemeManager runtime, updated TODO statuses               |
+
+_Last Updated: 2025-08-10T19:45:00Z_
