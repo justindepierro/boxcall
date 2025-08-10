@@ -191,6 +191,7 @@ PR Checklist Additions (Planned):
 | 2025-08-10 | Logo uploader exemption noted   | Chose to exempt TeamBulletinHeader logo upload control (media upload surface) from Button migration; final non-exempt raw count = 0 (exempt raw = 1)                                                                       |
 | 2025-08-10 | ESLint rule `no-raw-button`     | Added custom ESLint rule enforcing Button/IconButton usage; allowlist covers logo uploader; enables CI gating against regressions                                                    |
 | 2025-08-10 | Contrast baseline (buttons)     | Added `scripts/contrast-check.mjs`; initial 2 violations (primary, warning) → fixed (primary darkened, warning text switched to gray-900). Baseline now 0 violations.                  |
+| 2025-08-10 | Style audit baseline            | Added `scripts/style-audit.mjs`; baseline: text-white 172 (down from 322 earlier heuristic), raw <button> heuristic 1 (exempt), brand-jade usages 24.                                |
 
 ### Exemption Rationale (Interactive Density / Specialized Controls)
 
