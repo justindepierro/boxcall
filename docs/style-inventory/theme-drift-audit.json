@@ -1,0 +1,6430 @@
+{
+  "summary": {
+    "generatedAt": "2025-08-10T14:26:52.267Z",
+    "totalFilesWithFindings": 124,
+    "totalMatches": 1115,
+    "topOffenders": [
+      {
+        "file": "src/index.css",
+        "count": 77
+      },
+      {
+        "file": "src/themes/registry.ts",
+        "count": 64
+      },
+      {
+        "file": "src/design-system/tokens.ts",
+        "count": 49
+      },
+      {
+        "file": "src/styles/tokens.css",
+        "count": 48
+      },
+      {
+        "file": "src/components/playbook/visual/FieldBackgrounds.tsx",
+        "count": 32
+      },
+      {
+        "file": "src/pages/PracticePlanner.tsx",
+        "count": 28
+      },
+      {
+        "file": "src/components/playbook/visual/InteractivePlayBuilder.tsx",
+        "count": 26
+      },
+      {
+        "file": "src/pages/legal/TermsOfServicePage.tsx",
+        "count": 25
+      },
+      {
+        "file": "src/pages/CalendarPage.tsx",
+        "count": 24
+      },
+      {
+        "file": "src/components/practice/components/PracticeBlockEditor.tsx",
+        "count": 24
+      },
+      {
+        "file": "src/pages/CreateCoachAccount.tsx",
+        "count": 21
+      },
+      {
+        "file": "src/components/practice/components/MemoizedPracticeTable.tsx",
+        "count": 21
+      },
+      {
+        "file": "src/pages/ProfilePage.tsx",
+        "count": 17
+      },
+      {
+        "file": "src/pages/legal/PrivacyPolicyPage.tsx",
+        "count": 17
+      },
+      {
+        "file": "src/components/practice/components/modals/AddBlockModal.tsx",
+        "count": 17
+      },
+      {
+        "file": "src/components/playbook/visual/EnhancedFieldCanvas.tsx",
+        "count": 16
+      },
+      {
+        "file": "src/components/practice/components/TimelineAllocation.tsx",
+        "count": 16
+      },
+      {
+        "file": "src/components/practice/PracticePDFExportDialog.tsx",
+        "count": 15
+      },
+      {
+        "file": "src/components/team/PlayerForm.tsx",
+        "count": 15
+      },
+      {
+        "file": "src/components/practice/components/PracticeBlocksList.tsx",
+        "count": 15
+      },
+      {
+        "file": "src/pages/CreateTeam.tsx",
+        "count": 14
+      },
+      {
+        "file": "src/components/ui/Table/Table.tsx",
+        "count": 14
+      },
+      {
+        "file": "src/components/ui/AdvancedErrorBoundary.tsx",
+        "count": 12
+      },
+      {
+        "file": "src/components/ui/Sidebar/Sidebar.tsx",
+        "count": 12
+      },
+      {
+        "file": "src/components/practice/PracticePlannerModal/components/PracticeBlockList.tsx",
+        "count": 12
+      }
+    ]
+  },
+  "results": [
+    {
+      "file": "src/index.css",
+      "count": 77,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 1265
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 2862
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 3016
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 7565
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 7661
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 9046
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 9288
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 9735
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 9814
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 9890
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 9970
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 11131
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 11202
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 11276
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 11350
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 1265
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 2862
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 3016
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 3721
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 7565
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 7661
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 8748
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 9046
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 9288
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 9735
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 9814
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 9890
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 9970
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 11131
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 11202
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 11276
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 11350
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 1296
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 1870
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 2026
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 2729
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 2787
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 2882
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 7265
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 7909
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 8913
+        },
+        {
+          "type": "hex",
+          "match": "#1f2937",
+          "index": 1719
+        },
+        {
+          "type": "hex",
+          "match": "#1f2937",
+          "index": 2286
+        },
+        {
+          "type": "hex",
+          "match": "#1f2937",
+          "index": 2943
+        },
+        {
+          "type": "hex",
+          "match": "#1f2937",
+          "index": 3075
+        },
+        {
+          "type": "hex",
+          "match": "#1f2937",
+          "index": 9434
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 6556
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 6870
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 8169
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 10402
+        },
+        {
+          "type": "hex",
+          "match": "#4b5563",
+          "index": 2450
+        },
+        {
+          "type": "hex",
+          "match": "#4b5563",
+          "index": 7367
+        },
+        {
+          "type": "hex",
+          "match": "#4b5563",
+          "index": 8255
+        },
+        {
+          "type": "hex",
+          "match": "#6b7280",
+          "index": 2599
+        },
+        {
+          "type": "hex",
+          "match": "#6b7280",
+          "index": 7467
+        },
+        {
+          "type": "hex",
+          "match": "#6b7280",
+          "index": 7518
+        },
+        {
+          "type": "hex",
+          "match": "#9ca3af",
+          "index": 2522
+        },
+        {
+          "type": "hex",
+          "match": "#9ca3af",
+          "index": 7422
+        },
+        {
+          "type": "hex",
+          "match": "#d1d5db",
+          "index": 2352
+        },
+        {
+          "type": "hex",
+          "match": "#d1d5db",
+          "index": 8109
+        },
+        {
+          "type": "hex",
+          "match": "#d1d5db",
+          "index": 10109
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 6502
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 7889
+        },
+        {
+          "type": "hex",
+          "match": "#f3f4f6",
+          "index": 1765
+        },
+        {
+          "type": "hex",
+          "match": "#f3f4f6",
+          "index": 2061
+        },
+        {
+          "type": "hex",
+          "match": "#f3f4f6",
+          "index": 2215
+        },
+        {
+          "type": "hex",
+          "match": "#f3f4f6",
+          "index": 2807
+        },
+        {
+          "type": "hex",
+          "match": "#f3f4f6",
+          "index": 2963
+        },
+        {
+          "type": "hex",
+          "match": "#f3f4f6",
+          "index": 7318
+        },
+        {
+          "type": "hex",
+          "match": "#f3f4f6",
+          "index": 8189
+        },
+        {
+          "type": "hex",
+          "match": "#f9fafb",
+          "index": 1836
+        },
+        {
+          "type": "hex",
+          "match": "#f9fafb",
+          "index": 2709
+        },
+        {
+          "type": "hex",
+          "match": "#f9fafb",
+          "index": 3130
+        },
+        {
+          "type": "hex",
+          "match": "#00a86b",
+          "index": 7641
+        },
+        {
+          "type": "hex",
+          "match": "#00a86b",
+          "index": 10243
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 7834
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 9715
+        }
+      ]
+    },
+    {
+      "file": "src/themes/registry.ts",
+      "count": 64,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#FFFFFF",
+          "index": 451
+        },
+        {
+          "type": "hex",
+          "match": "#FFFFFF",
+          "index": 503
+        },
+        {
+          "type": "hex",
+          "match": "#FFFFFF",
+          "index": 2176
+        },
+        {
+          "type": "hex",
+          "match": "#FFFFFF",
+          "index": 2228
+        },
+        {
+          "type": "hex",
+          "match": "#FFF",
+          "index": 451
+        },
+        {
+          "type": "hex",
+          "match": "#FFF",
+          "index": 503
+        },
+        {
+          "type": "hex",
+          "match": "#FFF",
+          "index": 860
+        },
+        {
+          "type": "hex",
+          "match": "#FFF",
+          "index": 2176
+        },
+        {
+          "type": "hex",
+          "match": "#FFF",
+          "index": 2228
+        },
+        {
+          "type": "hex",
+          "match": "#000000",
+          "index": 2092
+        },
+        {
+          "type": "hex",
+          "match": "#000000",
+          "index": 2346
+        },
+        {
+          "type": "hex",
+          "match": "#000",
+          "index": 2092
+        },
+        {
+          "type": "hex",
+          "match": "#000",
+          "index": 2346
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 367
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 621
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 1302
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 1354
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 2122
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 2380
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 2403
+        },
+        {
+          "type": "hex",
+          "match": "#1F2937",
+          "index": 1382
+        },
+        {
+          "type": "hex",
+          "match": "#1F2937",
+          "index": 2148
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 655
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 1406
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 1484
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 1541
+        },
+        {
+          "type": "hex",
+          "match": "#4B5563",
+          "index": 397
+        },
+        {
+          "type": "hex",
+          "match": "#4B5563",
+          "index": 1518
+        },
+        {
+          "type": "hex",
+          "match": "#6B7280",
+          "index": 423
+        },
+        {
+          "type": "hex",
+          "match": "#9CA3AF",
+          "index": 1274
+        },
+        {
+          "type": "hex",
+          "match": "#D1D5DB",
+          "index": 1248
+        },
+        {
+          "type": "hex",
+          "match": "#D1D5DB",
+          "index": 2315
+        },
+        {
+          "type": "hex",
+          "match": "#E5E7EB",
+          "index": 678
+        },
+        {
+          "type": "hex",
+          "match": "#E5E7EB",
+          "index": 2280
+        },
+        {
+          "type": "hex",
+          "match": "#F3F4F6",
+          "index": 555
+        },
+        {
+          "type": "hex",
+          "match": "#F3F4F6",
+          "index": 590
+        },
+        {
+          "type": "hex",
+          "match": "#F3F4F6",
+          "index": 2256
+        },
+        {
+          "type": "hex",
+          "match": "#F9FAFB",
+          "index": 531
+        },
+        {
+          "type": "hex",
+          "match": "#F9FAFB",
+          "index": 1218
+        },
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 280
+        },
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 706
+        },
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 1097
+        },
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 1569
+        },
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 1623
+        },
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 2034
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 309
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 477
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 760
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 1190
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 2064
+        },
+        {
+          "type": "hex",
+          "match": "#065F46",
+          "index": 339
+        },
+        {
+          "type": "hex",
+          "match": "#065F46",
+          "index": 2005
+        },
+        {
+          "type": "hex",
+          "match": "#065F46",
+          "index": 2202
+        },
+        {
+          "type": "hex",
+          "match": "#065F46",
+          "index": 2431
+        },
+        {
+          "type": "hex",
+          "match": "#065F46",
+          "index": 2485
+        },
+        {
+          "type": "hex",
+          "match": "#34D399",
+          "index": 1126
+        },
+        {
+          "type": "hex",
+          "match": "#34D399",
+          "index": 1328
+        },
+        {
+          "type": "hex",
+          "match": "#22C55E",
+          "index": 784
+        },
+        {
+          "type": "hex",
+          "match": "#22C55E",
+          "index": 1647
+        },
+        {
+          "type": "hex",
+          "match": "#F59E0B",
+          "index": 834
+        },
+        {
+          "type": "hex",
+          "match": "#F59E0B",
+          "index": 1697
+        },
+        {
+          "type": "hex",
+          "match": "#EF4444",
+          "index": 734
+        },
+        {
+          "type": "hex",
+          "match": "#EF4444",
+          "index": 882
+        },
+        {
+          "type": "hex",
+          "match": "#EF4444",
+          "index": 1745
+        }
+      ]
+    },
+    {
+      "file": "src/design-system/tokens.ts",
+      "count": 49,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#FFFFFF",
+          "index": 2479
+        },
+        {
+          "type": "hex",
+          "match": "#FFFFFF",
+          "index": 2557
+        },
+        {
+          "type": "hex",
+          "match": "#FFFFFF",
+          "index": 6472
+        },
+        {
+          "type": "hex",
+          "match": "#FFFFFF",
+          "index": 6525
+        },
+        {
+          "type": "hex",
+          "match": "#FFFFFF",
+          "index": 9696
+        },
+        {
+          "type": "hex",
+          "match": "#FFF",
+          "index": 1214
+        },
+        {
+          "type": "hex",
+          "match": "#FFF",
+          "index": 2479
+        },
+        {
+          "type": "hex",
+          "match": "#FFF",
+          "index": 2557
+        },
+        {
+          "type": "hex",
+          "match": "#FFF",
+          "index": 6472
+        },
+        {
+          "type": "hex",
+          "match": "#FFF",
+          "index": 6525
+        },
+        {
+          "type": "hex",
+          "match": "#FFF",
+          "index": 8482
+        },
+        {
+          "type": "hex",
+          "match": "#FFF",
+          "index": 9696
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 1659
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 1716
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 6430
+        },
+        {
+          "type": "hex",
+          "match": "#1F2937",
+          "index": 1639
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 1619
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 6645
+        },
+        {
+          "type": "hex",
+          "match": "#4B5563",
+          "index": 1599
+        },
+        {
+          "type": "hex",
+          "match": "#4B5563",
+          "index": 6787
+        },
+        {
+          "type": "hex",
+          "match": "#6B7280",
+          "index": 1579
+        },
+        {
+          "type": "hex",
+          "match": "#6B7280",
+          "index": 1754
+        },
+        {
+          "type": "hex",
+          "match": "#6B7280",
+          "index": 9331
+        },
+        {
+          "type": "hex",
+          "match": "#9CA3AF",
+          "index": 1559
+        },
+        {
+          "type": "hex",
+          "match": "#9CA3AF",
+          "index": 1788
+        },
+        {
+          "type": "hex",
+          "match": "#9CA3AF",
+          "index": 6838
+        },
+        {
+          "type": "hex",
+          "match": "#D1D5DB",
+          "index": 1539
+        },
+        {
+          "type": "hex",
+          "match": "#D1D5DB",
+          "index": 6700
+        },
+        {
+          "type": "hex",
+          "match": "#E5E7EB",
+          "index": 1519
+        },
+        {
+          "type": "hex",
+          "match": "#F3F4F6",
+          "index": 1499
+        },
+        {
+          "type": "hex",
+          "match": "#F9FAFB",
+          "index": 1479
+        },
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 602
+        },
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 9515
+        },
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 10463
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 645
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 6998
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 9234
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 10674
+        },
+        {
+          "type": "hex",
+          "match": "#065F46",
+          "index": 713
+        },
+        {
+          "type": "hex",
+          "match": "#065F46",
+          "index": 7190
+        },
+        {
+          "type": "hex",
+          "match": "#065F46",
+          "index": 7587
+        },
+        {
+          "type": "hex",
+          "match": "#34D399",
+          "index": 582
+        },
+        {
+          "type": "hex",
+          "match": "#34D399",
+          "index": 7067
+        },
+        {
+          "type": "hex",
+          "match": "#22C55E",
+          "index": 1109
+        },
+        {
+          "type": "hex",
+          "match": "#22C55E",
+          "index": 9379
+        },
+        {
+          "type": "hex",
+          "match": "#F59E0B",
+          "index": 1234
+        },
+        {
+          "type": "hex",
+          "match": "#F59E0B",
+          "index": 9427
+        },
+        {
+          "type": "hex",
+          "match": "#EF4444",
+          "index": 1357
+        },
+        {
+          "type": "hex",
+          "match": "#EF4444",
+          "index": 9471
+        }
+      ]
+    },
+    {
+      "file": "src/styles/tokens.css",
+      "count": 48,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 535
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 622
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 1664
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 1842
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 2702
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 535
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 622
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 1205
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 1664
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 1842
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 2702
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 439
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 856
+        },
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 3294
+        },
+        {
+          "type": "hex",
+          "match": "#1f2937",
+          "index": 3326
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 905
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 3419
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 3498
+        },
+        {
+          "type": "hex",
+          "match": "#4b5563",
+          "index": 473
+        },
+        {
+          "type": "hex",
+          "match": "#4b5563",
+          "index": 3532
+        },
+        {
+          "type": "hex",
+          "match": "#6b7280",
+          "index": 503
+        },
+        {
+          "type": "hex",
+          "match": "#6b7280",
+          "index": 1484
+        },
+        {
+          "type": "hex",
+          "match": "#d1d5db",
+          "index": 3392
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 1002
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 1868
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 2734
+        },
+        {
+          "type": "hex",
+          "match": "#f3f4f6",
+          "index": 682
+        },
+        {
+          "type": "hex",
+          "match": "#f3f4f6",
+          "index": 811
+        },
+        {
+          "type": "hex",
+          "match": "#f9fafb",
+          "index": 654
+        },
+        {
+          "type": "hex",
+          "match": "#f9fafb",
+          "index": 3358
+        },
+        {
+          "type": "hex",
+          "match": "#00a86b",
+          "index": 217
+        },
+        {
+          "type": "hex",
+          "match": "#00a86b",
+          "index": 1034
+        },
+        {
+          "type": "hex",
+          "match": "#00a86b",
+          "index": 1595
+        },
+        {
+          "type": "hex",
+          "match": "#00a86b",
+          "index": 3563
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 250
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 565
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 951
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 1318
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 1435
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 1631
+        },
+        {
+          "type": "hex",
+          "match": "#065f46",
+          "index": 284
+        },
+        {
+          "type": "hex",
+          "match": "#22c55e",
+          "index": 1117
+        },
+        {
+          "type": "hex",
+          "match": "#22c55e",
+          "index": 1511
+        },
+        {
+          "type": "hex",
+          "match": "#f59e0b",
+          "index": 1175
+        },
+        {
+          "type": "hex",
+          "match": "#f59e0b",
+          "index": 1538
+        },
+        {
+          "type": "hex",
+          "match": "#ef4444",
+          "index": 1066
+        },
+        {
+          "type": "hex",
+          "match": "#ef4444",
+          "index": 1231
+        },
+        {
+          "type": "hex",
+          "match": "#ef4444",
+          "index": 1563
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/visual/FieldBackgrounds.tsx",
+      "count": 32,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 998
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 1117
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 1246
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 1753
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 2026
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 2348
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 3221
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 3464
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 5855
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 6499
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 7842
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 8317
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 998
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 1117
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 1246
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 1753
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 2026
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 2348
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 3221
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 3464
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 5855
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 6499
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 7842
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 8317
+        },
+        {
+          "type": "hex",
+          "match": "#9ca3af",
+          "index": 7379
+        },
+        {
+          "type": "hex",
+          "match": "#9ca3af",
+          "index": 7652
+        },
+        {
+          "type": "hex",
+          "match": "#9ca3af",
+          "index": 8167
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 6123
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 6758
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 7061
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 8340
+        },
+        {
+          "type": "hex",
+          "match": "#22c55e",
+          "index": 973
+        }
+      ]
+    },
+    {
+      "file": "src/pages/PracticePlanner.tsx",
+      "count": 28,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 8588
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 10780
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 14993
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 8076
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 8323
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 8532
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 13542
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 17038
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 8171
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 8955
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 8975
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 9412
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 13852
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 17050
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 18018
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 21834
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 25570
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 25861
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 26230
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 26558
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 26895
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 29448
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 29829
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 30327
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 32077
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 8606
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 13526
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 30130
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/visual/InteractivePlayBuilder.tsx",
+      "count": 26,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 2625
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 2540
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 3367
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 3530
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 9778
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 2882
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 2997
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 3724
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 5100
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 6257
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6722
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 7132
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 7353
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 7468
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 8208
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 9958
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 10246
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 2783
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 3550
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 3657
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 5033
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 6190
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 6649
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 7059
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 8152
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 9762
+        }
+      ]
+    },
+    {
+      "file": "src/pages/legal/TermsOfServicePage.tsx",
+      "count": 25,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 10746
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 780
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 1097
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 1575
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 1774
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 2423
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 2633
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3163
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3542
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3686
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4694
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5211
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5488
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5913
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6244
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6765
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 7262
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 7592
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 8045
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 8408
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 8936
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 9517
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 10015
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 10566
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 10817
+        }
+      ]
+    },
+    {
+      "file": "src/pages/CalendarPage.tsx",
+      "count": 24,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 16284
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 16810
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 17332
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 18507
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 18414
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 15902
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 4530
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 5120
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 13356
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 13585
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 14247
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 14542
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 16335
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 16861
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 17383
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 19464
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 21293
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 22759
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 25503
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 28671
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 9404
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 21772
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 23308
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 28590
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/components/PracticeBlockEditor.tsx",
+      "count": 24,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3833
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4335
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5154
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6072
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6994
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 7633
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 8161
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 8664
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 9486
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 10084
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 10884
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 12045
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 13157
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 4101
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 4701
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 5880
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 6788
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 7327
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 7917
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 8436
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 9032
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 9829
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 10503
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 13395
+        }
+      ]
+    },
+    {
+      "file": "src/pages/CreateCoachAccount.tsx",
+      "count": 21,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 18027
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 19662
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 20289
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 20722
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 27585
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 19673
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 8717
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 9327
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 9953
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 10568
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 11517
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 12081
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 12678
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 13311
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 14167
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 15728
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 16637
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 18039
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 18965
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 19635
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 20301
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/components/MemoizedPracticeTable.tsx",
+      "count": 21,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 3798
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 6266
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 3877
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 4833
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 1623
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 1770
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 2039
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 2128
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 2204
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 2317
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 4050
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 4159
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 4384
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 4940
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 5103
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 5270
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 5437
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 5601
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 5768
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 5932
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 6096
+        }
+      ]
+    },
+    {
+      "file": "src/pages/ProfilePage.tsx",
+      "count": 17,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 5647
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 7591
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 9600
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 10712
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 11773
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5394
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 5734
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5919
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6421
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6901
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 7336
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 7689
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 7911
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 8376
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 9286
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 9945
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 8727
+        }
+      ]
+    },
+    {
+      "file": "src/pages/legal/PrivacyPolicyPage.tsx",
+      "count": 17,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 8593
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 767
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 1134
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 1682
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 2233
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 2756
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3278
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4051
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4298
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5296
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5605
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6128
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6302
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 7244
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 7812
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 8394
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 8664
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/components/modals/AddBlockModal.tsx",
+      "count": 17,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 3733
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 3648
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 4295
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4612
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5226
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6356
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 7019
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 7820
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 8459
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 9152
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 4936
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 5610
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 6762
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 7448
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 8145
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 8877
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 9445
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/visual/EnhancedFieldCanvas.tsx",
+      "count": 16,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 8888
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 9654
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 10354
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 11684
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 12797
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 13317
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 12938
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 13003
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 13414
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 3109
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 3835
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 4423
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 3109
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 3835
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 4423
+        },
+        {
+          "type": "hex",
+          "match": "#1f2937",
+          "index": 4435
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/components/TimelineAllocation.tsx",
+      "count": 16,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 9263
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 11267
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 13533
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 13550
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 17699
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 9275
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 10026
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 17851
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 22385
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 10416
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 10739
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 11288
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 12597
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 22076
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 17142
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 17231
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/PracticePDFExportDialog.tsx",
+      "count": 15,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 7905
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 8025
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 9017
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 9658
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 12425
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 13031
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 13630
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 9501
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 9832
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 10264
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 11052
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 11845
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 12885
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 13486
+        },
+        {
+          "type": "utility",
+          "match": "border-white",
+          "index": 15480
+        }
+      ]
+    },
+    {
+      "file": "src/components/team/PlayerForm.tsx",
+      "count": 15,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 4741
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 9379
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 9414
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5611
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6274
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6933
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 7507
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 7974
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 9449
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 10238
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 11072
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 11505
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 12244
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 4990
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 14224
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/components/PracticeBlocksList.tsx",
+      "count": 15,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 12738
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 5531
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 6717
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 7084
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 7432
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 7979
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 11922
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 13152
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 19178
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 19198
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 20110
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 20130
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 11664
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 12767
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 19794
+        }
+      ]
+    },
+    {
+      "file": "src/pages/CreateTeam.tsx",
+      "count": 14,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 28419
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 33385
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 23650
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 24665
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 28995
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 13026
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 13645
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 14204
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 18248
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 18936
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 19578
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 20158
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 20773
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 28388
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Table/Table.tsx",
+      "count": 14,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 3140
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 4053
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 2751
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 3206
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 3651
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 4316
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 5730
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 14431
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 15085
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 2840
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 3096
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 10579
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 11152
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 13419
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/AdvancedErrorBoundary.tsx",
+      "count": 12,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 9388
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 9300
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 10041
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 9598
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 9727
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 10126
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 10285
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 10448
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 10883
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 12016
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 12036
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 12444
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Sidebar/Sidebar.tsx",
+      "count": 12,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 2657
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 2830
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 2978
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 6485
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 6513
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 2764
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 2524
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 2725
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 2805
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 2408
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 6918
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 8200
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/components/PracticeBlockList.tsx",
+      "count": 12,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 10434
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 4565
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 2760
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 6564
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 7067
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 8602
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 8622
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 9032
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 9052
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 11508
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 2744
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 9849
+        }
+      ]
+    },
+    {
+      "file": "src/components/mobile/MobileQuickActions.tsx",
+      "count": 11,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 913
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 984
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 1052
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 1128
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 4694
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 4765
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 4833
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 1171
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 1189
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 1201
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 1946
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/TouchFeedback.tsx",
+      "count": 11,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 4230
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 7990
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 5332
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 5618
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 5393
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 5411
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 5504
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 5423
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5516
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 5537
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 8017
+        }
+      ]
+    },
+    {
+      "file": "src/pages/legal/ContactPage.tsx",
+      "count": 11,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 3652
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 8129
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 2656
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5061
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5684
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6321
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 7282
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 5314
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 5941
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 6556
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 7544
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/visual/FieldCanvas.tsx",
+      "count": 11,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 4790
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 4996
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 9630
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 2621
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 7923
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 8170
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 2621
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 7923
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 8170
+        },
+        {
+          "type": "hex",
+          "match": "#1f2937",
+          "index": 9282
+        },
+        {
+          "type": "hex",
+          "match": "#22c55e",
+          "index": 6877
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Breadcrumb/Breadcrumb.tsx",
+      "count": 11,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 1468
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 1637
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 3120
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 1207
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 1449
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 1573
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 1612
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 1728
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 1839
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 2572
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3081
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/components/modals/EditGroupModal.tsx",
+      "count": 11,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1866
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 1781
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 2387
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 2563
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 2583
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3395
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4014
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4602
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 3716
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 4339
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 4895
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/components/Forms/AddBlockModal.tsx",
+      "count": 11,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3138
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4127
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4658
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5333
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6127
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6691
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 4469
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 5078
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 5683
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 6475
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 7030
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/ErrorBoundary.tsx",
+      "count": 10,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 2276
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 3465
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 2184
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 2664
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 2805
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 3703
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 4952
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4972
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 5334
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 5249
+        }
+      ]
+    },
+    {
+      "file": "src/components/team-dashboard/layout/TeamBulletinHeader.tsx",
+      "count": 10,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 2854
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 2957
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 3615
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 4862
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 5073
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 5429
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 5843
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 2232
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 2817
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 2920
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/QuickFilters.tsx",
+      "count": 9,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1259
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1418
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1585
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1760
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1938
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 2994
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 3447
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 3720
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3740
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/ScriptSelectorModal.tsx",
+      "count": 9,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 2213
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 2122
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 2038
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 7067
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-800",
+          "index": 2050
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 2859
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 7079
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 7354
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 8106
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Skeleton.tsx",
+      "count": 9,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 755
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1681
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 2995
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 3943
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 4620
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 782
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 3013
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 3970
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 4647
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Card/Card.tsx",
+      "count": 9,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 1000
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 1082
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 4282
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 4381
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 4480
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 549
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 1022
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 1853
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 1909
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Input/Input.tsx",
+      "count": 9,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 1852
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 1898
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4836
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 5583
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 6510
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 6529
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 8228
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 1085
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 1977
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/components/modals/AddGroupModal.tsx",
+      "count": 9,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1626
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 1541
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 2151
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 2473
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3092
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3680
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 2794
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 3417
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 3973
+        }
+      ]
+    },
+    {
+      "file": "src/pages/PlaybookPage.tsx",
+      "count": 8,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 11506
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 18640
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 20304
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 22135
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 23114
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 25138
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 25049
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 25400
+        }
+      ]
+    },
+    {
+      "file": "src/pages/TeamsPage.tsx",
+      "count": 8,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 2301
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 668
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 1314
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 1542
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 2287
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 2533
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 2758
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 3008
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/MobileErrorState.tsx",
+      "count": 8,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 2833
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 1654
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 1624
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 3172
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 3324
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 4227
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 4380
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 2849
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/visual/DrawingTools.tsx",
+      "count": 8,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 2057
+        },
+        {
+          "type": "hex",
+          "match": "#000000",
+          "index": 444
+        },
+        {
+          "type": "hex",
+          "match": "#000000",
+          "index": 900
+        },
+        {
+          "type": "hex",
+          "match": "#000000",
+          "index": 3832
+        },
+        {
+          "type": "hex",
+          "match": "#000",
+          "index": 444
+        },
+        {
+          "type": "hex",
+          "match": "#000",
+          "index": 900
+        },
+        {
+          "type": "hex",
+          "match": "#000",
+          "index": 3832
+        },
+        {
+          "type": "hex",
+          "match": "#f59e0b",
+          "index": 3924
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/visual/formationConstants.ts",
+      "count": 8,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#6b7280",
+          "index": 701
+        },
+        {
+          "type": "hex",
+          "match": "#6b7280",
+          "index": 726
+        },
+        {
+          "type": "hex",
+          "match": "#6b7280",
+          "index": 750
+        },
+        {
+          "type": "hex",
+          "match": "#6b7280",
+          "index": 775
+        },
+        {
+          "type": "hex",
+          "match": "#6b7280",
+          "index": 800
+        },
+        {
+          "type": "hex",
+          "match": "#22c55e",
+          "index": 514
+        },
+        {
+          "type": "hex",
+          "match": "#f59e0b",
+          "index": 675
+        },
+        {
+          "type": "hex",
+          "match": "#ef4444",
+          "index": 490
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Auth/Auth.tsx",
+      "count": 8,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 11763
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 6475
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 13758
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 4786
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 6323
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 10133
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 11660
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 13590
+        }
+      ]
+    },
+    {
+      "file": "src/pages/JoinTeam.tsx",
+      "count": 7,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 12555
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 18819
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-800",
+          "index": 18839
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 6223
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 8334
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 10449
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 11499
+        }
+      ]
+    },
+    {
+      "file": "src/styles/responsive-dashboard.css",
+      "count": 7,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#111827",
+          "index": 6117
+        },
+        {
+          "type": "hex",
+          "match": "#1f2937",
+          "index": 3154
+        },
+        {
+          "type": "hex",
+          "match": "#1f2937",
+          "index": 4897
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 3183
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 4922
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 3048
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 4647
+        }
+      ]
+    },
+    {
+      "file": "src/components/dashboard/PersonalTrophyShelf.tsx",
+      "count": 7,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 5999
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 6642
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 7293
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 7966
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 9302
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 3822
+        },
+        {
+          "type": "utility",
+          "match": "border-white",
+          "index": 9352
+        }
+      ]
+    },
+    {
+      "file": "src/components/dashboard/ProfileCard.tsx",
+      "count": 7,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-gray-800",
+          "index": 2270
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 2626
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3014
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3319
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 3602
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 4501
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 1336
+        }
+      ]
+    },
+    {
+      "file": "src/components/team/TeamSettings.tsx",
+      "count": 7,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 4077
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 8732
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 4569
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 2534
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 3958
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 4157
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 10246
+        }
+      ]
+    },
+    {
+      "file": "src/services/pdf/styles.ts",
+      "count": 7,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 848
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 848
+        },
+        {
+          "type": "hex",
+          "match": "#000000",
+          "index": 868
+        },
+        {
+          "type": "hex",
+          "match": "#000",
+          "index": 868
+        },
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 419
+        },
+        {
+          "type": "hex",
+          "match": "#f59e0b",
+          "index": 1523
+        },
+        {
+          "type": "hex",
+          "match": "#ef4444",
+          "index": 1467
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/components/PracticeHeader.tsx",
+      "count": 7,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 3016
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 3702
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 3031
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 3717
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 4577
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 4710
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4730
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Badge/Badge.css",
+      "count": 7,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#d1d5db",
+          "index": 3670
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 3308
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 3657
+        },
+        {
+          "type": "hex",
+          "match": "#f3f4f6",
+          "index": 3296
+        },
+        {
+          "type": "hex",
+          "match": "#f3f4f6",
+          "index": 3645
+        },
+        {
+          "type": "hex",
+          "match": "#f9fafb",
+          "index": 4299
+        },
+        {
+          "type": "hex",
+          "match": "#22c55e",
+          "index": 3455
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/NavBar/NavBar.tsx",
+      "count": 7,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 1859
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 3882
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 3805
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3843
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 3417
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 7644
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 8022
+        }
+      ]
+    },
+    {
+      "file": "src/design-system/utils.ts",
+      "count": 6,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1428
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 1136
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 2177
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 1620
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 2058
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 2084
+        }
+      ]
+    },
+    {
+      "file": "src/components/dashboard/DatabaseDataDisplay.tsx",
+      "count": 6,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 5791
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 5808
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 9381
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 10004
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 11027
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 10016
+        }
+      ]
+    },
+    {
+      "file": "src/components/dashboard/PersonalCalendar.tsx",
+      "count": 6,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 7633
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 4108
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4128
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 2423
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 3666
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 11235
+        }
+      ]
+    },
+    {
+      "file": "src/components/team-dashboard/SeasonStatsCard.tsx",
+      "count": 6,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 5695
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 3382
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 3497
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-800",
+          "index": 5707
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-800",
+          "index": 5930
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 6293
+        }
+      ]
+    },
+    {
+      "file": "src/pages/roles/PlayerDashboardPage.tsx",
+      "count": 6,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 7417
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 8138
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 8860
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 9577
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 4006
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 6770
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/CSVImport/CSVImportModal.tsx",
+      "count": 6,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 13419
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 25529
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 25659
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 26274
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 14671
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-800",
+          "index": 14683
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/visual/PlayerPositionSystem.tsx",
+      "count": 6,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 3866
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 4577
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 3866
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 4577
+        },
+        {
+          "type": "hex",
+          "match": "#1f2937",
+          "index": 4967
+        },
+        {
+          "type": "hex",
+          "match": "#374151",
+          "index": 5756
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Button/Button.tsx",
+      "count": 6,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 531
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 1032
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 1121
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 2604
+        },
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 2956
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 3427
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/components/ScriptSelector/ScriptSelectorModal.tsx",
+      "count": 6,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1603
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 1518
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 2400
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 3499
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 2686
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 4778
+        }
+      ]
+    },
+    {
+      "file": "src/styles/globals.css",
+      "count": 5,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 854
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 912
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 854
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 912
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 3321
+        }
+      ]
+    },
+    {
+      "file": "src/components/calendar/BoxCallCalendar.tsx",
+      "count": 5,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#FFFFFF",
+          "index": 2504
+        },
+        {
+          "type": "hex",
+          "match": "#FFF",
+          "index": 2504
+        },
+        {
+          "type": "hex",
+          "match": "#6B7280",
+          "index": 5240
+        },
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 5085
+        },
+        {
+          "type": "hex",
+          "match": "#F59E0B",
+          "index": 5143
+        }
+      ]
+    },
+    {
+      "file": "src/components/design-system/Typography.tsx",
+      "count": 5,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 4065
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 3513
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 4004
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 4081
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 5562
+        }
+      ]
+    },
+    {
+      "file": "src/components/dev/DevTools.tsx",
+      "count": 5,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 7745
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 9039
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 9074
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 5960
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 8290
+        }
+      ]
+    },
+    {
+      "file": "src/components/team/PlayerList.tsx",
+      "count": 5,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 3515
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 4184
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 4840
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 6588
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 10281
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/RouteLoadingSkeleton.tsx",
+      "count": 5,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 277
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1192
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 228
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 295
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 1219
+        }
+      ]
+    },
+    {
+      "file": "src/pages/legal/AboutPage.tsx",
+      "count": 5,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 5571
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 1175
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 1555
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4950
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5262
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/visual/RouteDrawingSystem.tsx",
+      "count": 5,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 3536
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 3536
+        },
+        {
+          "type": "hex",
+          "match": "#22c55e",
+          "index": 888
+        },
+        {
+          "type": "hex",
+          "match": "#f59e0b",
+          "index": 994
+        },
+        {
+          "type": "hex",
+          "match": "#ef4444",
+          "index": 940
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Badge/Badge.tsx",
+      "count": 5,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 3490
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 3554
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 3502
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-800",
+          "index": 3572
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 3523
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Logo/brand-assets.ts",
+      "count": 5,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 1078
+        },
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 1135
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 1078
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 1135
+        },
+        {
+          "type": "hex",
+          "match": "#047857",
+          "index": 853
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/TextArea/TextArea.tsx",
+      "count": 5,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 575
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 621
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 4633
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 700
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 782
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/components/PracticeTimeline/TimelineContainer.tsx",
+      "count": 5,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 2592
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 2609
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 3328
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 1393
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 2167
+        }
+      ]
+    },
+    {
+      "file": "src/pages/Templates.tsx",
+      "count": 4,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 13476
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 15218
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 13789
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 13514
+        }
+      ]
+    },
+    {
+      "file": "src/types/practice.ts",
+      "count": 4,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#6B7280",
+          "index": 4029
+        },
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 4280
+        },
+        {
+          "type": "hex",
+          "match": "#F59E0B",
+          "index": 3859
+        },
+        {
+          "type": "hex",
+          "match": "#EF4444",
+          "index": 3953
+        }
+      ]
+    },
+    {
+      "file": "src/components/mobile/MobileBottomNavigation.tsx",
+      "count": 4,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1417
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 2238
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 2258
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 1460
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/utils.ts",
+      "count": 4,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 917
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 1036
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-800",
+          "index": 929
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-800",
+          "index": 1048
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Animations/SquareAnimations.tsx",
+      "count": 4,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 952
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 3916
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 1592
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5139
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Tag/Tag.tsx",
+      "count": 4,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-100",
+          "index": 773
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 785
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 845
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 1575
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Select/Select.tsx",
+      "count": 4,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 983
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 2902
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 2961
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 3049
+        }
+      ]
+    },
+    {
+      "file": "src/config/productionConfig.ts",
+      "count": 3,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 4408
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 4408
+        },
+        {
+          "type": "hex",
+          "match": "#1f2937",
+          "index": 4354
+        }
+      ]
+    },
+    {
+      "file": "src/routes/SplitRouter.tsx",
+      "count": 3,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 3422
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 3585
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 3699
+        }
+      ]
+    },
+    {
+      "file": "src/components/calendar/BoxCallCalendar.css",
+      "count": 3,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#ffffff",
+          "index": 553
+        },
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 553
+        },
+        {
+          "type": "hex",
+          "match": "#f9fafb",
+          "index": 522
+        }
+      ]
+    },
+    {
+      "file": "src/components/lazy/LazyRoutes.tsx",
+      "count": 3,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 3059
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 4604
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 4717
+        }
+      ]
+    },
+    {
+      "file": "src/components/onboarding/TeamOnboarding.tsx",
+      "count": 3,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 6360
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 7248
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 8115
+        }
+      ]
+    },
+    {
+      "file": "src/components/team-dashboard/TeamFeed.tsx",
+      "count": 3,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 9516
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 9602
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-800",
+          "index": 1519
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/PlayBuilder/AutocompleteDropdown.tsx",
+      "count": 3,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 4908
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 5814
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 6008
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/PlayBuilder/PlayBuilderCore.tsx",
+      "count": 3,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 5607
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 5791
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 6647
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/PlayBuilder/PlayBuilderWizard.tsx",
+      "count": 3,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 819
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 974
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1891
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/visual/VisualPlayBuilder.tsx",
+      "count": 3,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1376
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 6552
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 1329
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/components/TimeSummary.tsx",
+      "count": 3,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1309
+        },
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 3216
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 1336
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Form/Form.tsx",
+      "count": 3,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 4034
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-700",
+          "index": 5330
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 4570
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Modal/Modal.tsx",
+      "count": 3,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 6608
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 5258
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 6571
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/components/ActionFooter.tsx",
+      "count": 3,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1638
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 1549
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 853
+        }
+      ]
+    },
+    {
+      "file": "src/pages/TeamBulletin.tsx",
+      "count": 2,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 2335
+        },
+        {
+          "type": "hex",
+          "match": "#00A86B",
+          "index": 4371
+        }
+      ]
+    },
+    {
+      "file": "src/components/auth/UserMenu.tsx",
+      "count": 2,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 2421
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 3567
+        }
+      ]
+    },
+    {
+      "file": "src/components/dashboard/PersonalProfile.tsx",
+      "count": 2,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "border-gray-300",
+          "index": 3383
+        },
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 9451
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/PlaybookGlossary.tsx",
+      "count": 2,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 2892
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 5379
+        }
+      ]
+    },
+    {
+      "file": "src/components/dev/tabs/LogsTab.tsx",
+      "count": 2,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 1000
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-900",
+          "index": 1874
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/PlayBuilder/PlayBuilderForm.tsx",
+      "count": 2,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 664
+        },
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1207
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "count": 2,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1953
+        },
+        {
+          "type": "utility",
+          "match": "bg-black",
+          "index": 1673
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Logo/Logo.tsx",
+      "count": 2,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 1682
+        },
+        {
+          "type": "utility",
+          "match": "text-black",
+          "index": 1714
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/components/PracticePlannerHeader.tsx",
+      "count": 2,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 7618
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 7902
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/components/PracticeTimeline/TimelineLegend.tsx",
+      "count": 2,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-50",
+          "index": 1951
+        },
+        {
+          "type": "utility",
+          "match": "text-gray-500",
+          "index": 3873
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/components/PracticeTimeline/TimelineSlider.tsx",
+      "count": 2,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 2650
+        },
+        {
+          "type": "hex",
+          "match": "#e5e7eb",
+          "index": 2697
+        }
+      ]
+    },
+    {
+      "file": "src/dev/contrastDebug.ts",
+      "count": 1,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 1924
+        }
+      ]
+    },
+    {
+      "file": "src/routes/AppRouter.tsx",
+      "count": 1,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 5558
+        }
+      ]
+    },
+    {
+      "file": "src/styles/components.css",
+      "count": 1,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#fff",
+          "index": 4019
+        }
+      ]
+    },
+    {
+      "file": "src/styles/mobile.css",
+      "count": 1,
+      "findings": [
+        {
+          "type": "hex",
+          "match": "#000",
+          "index": 6895
+        }
+      ]
+    },
+    {
+      "file": "src/components/dashboard/TeamFeeds.tsx",
+      "count": 1,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 2686
+        }
+      ]
+    },
+    {
+      "file": "src/components/dev/ToastDemo.tsx",
+      "count": 1,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 1249
+        }
+      ]
+    },
+    {
+      "file": "src/components/layout/Footer.tsx",
+      "count": 1,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 421
+        }
+      ]
+    },
+    {
+      "file": "src/components/onboarding/OnboardingHint.tsx",
+      "count": 1,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-white",
+          "index": 2454
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/PlayCard.tsx",
+      "count": 1,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 2366
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/PlayFilters.tsx",
+      "count": 1,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 1067
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/PlayGrid.tsx",
+      "count": 1,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 6426
+        }
+      ]
+    },
+    {
+      "file": "src/components/practice/LazyPDFExport.tsx",
+      "count": 1,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "text-gray-600",
+          "index": 1402
+        }
+      ]
+    },
+    {
+      "file": "src/pages/roles/CoachManagementPage.tsx",
+      "count": 1,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "border-gray-200",
+          "index": 4437
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/PlayBuilder/PlayBuilderPreview.tsx",
+      "count": 1,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 629
+        }
+      ]
+    },
+    {
+      "file": "src/components/playbook/PlayBuilder/QuickEntry.tsx",
+      "count": 1,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-white",
+          "index": 6592
+        }
+      ]
+    },
+    {
+      "file": "src/components/ui/Icon/ModularIcon.tsx",
+      "count": 1,
+      "findings": [
+        {
+          "type": "utility",
+          "match": "bg-gray-200",
+          "index": 4343
+        }
+      ]
+    }
+  ]
+}

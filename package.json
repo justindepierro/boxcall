@@ -33,6 +33,7 @@
     "tokens:build": "tsx scripts/generate-tokens-css.ts",
     "themes:build": "tsx src/themes/build-themes.ts",
   "themes:validate-contrast": "tsx src/scripts/validate-theme-contrast.ts",
+  "style:theme-drift": "node scripts/theme-drift-audit.mjs",
     "style:contrast-matrix": "node scripts/contrast-matrix.mjs",
     "style:inventory:buttons": "node scripts/inventory-buttons.mjs",
     "style:contrast:buttons": "node scripts/contrast-check.mjs",
