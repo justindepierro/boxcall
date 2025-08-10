@@ -181,6 +181,18 @@ interface PlaybookPageState {
 // Automatic practice script generation from game plan priorities
 ```
 
+### 🎨 UI Primitive Selection (Quick Matrix)
+
+| Need | Use | Notes |
+| ---- | --- | ----- |
+| Taxonomy / category chip | Tag | Lightweight, low elevation |
+| Status / achievement / count | Badge | Elevated, can animate / show progress |
+| Progress (0–100%) | ProgressBadge | Uses fill animation internally |
+| Premium highlight | Badge (premium) | Gradient w/ decorative marker |
+| Inline sentence label | Tag | Keep text ≤ 2 words |
+
+Full decision tree: `docs/BADGE_TAG_GUIDELINES.md`.
+
 ## 🏆 **COMPLETED PHASES**
 
 ### **Phase 4** ✅ **3-View Coaching System**

@@ -103,40 +103,115 @@ export default tseslint.config([
       },
       "boxcall-style": {
         rules: {
-          'no-legacy-badge-variants': {
-            meta: { type: 'problem', docs: { description: 'Disallow legacy Badge variant names' }, schema: [] },
+          "no-legacy-badge-variants": {
+            meta: {
+              type: "problem",
+              docs: { description: "Disallow legacy Badge variant names" },
+              schema: [],
+              fixable: "code",
+            },
             create(context) {
-              const legacy = new Set(['default','urgency','achievement','information','attention']);
+              const legacy = new Set([
+                "default",
+                "urgency",
+                "achievement",
+                "information",
+                "attention",
+              ]);
+              const mapping = {
+                default: "neutral",
+                urgency: "danger",
+                achievement: "success",
+                information: "info",
+                attention: "warning",
+              };
               return {
                 JSXOpeningElement(node) {
-                  if (node.name.type === 'JSXIdentifier' && node.name.name === 'Badge') {
-                    const variantAttr = node.attributes.find(a => a.type === 'JSXAttribute' && a.name.name === 'variant');
-                    if (variantAttr && variantAttr.value && variantAttr.value.type === 'Literal' && legacy.has(variantAttr.value.value)) {
-                      context.report({ node: variantAttr, message: `Legacy Badge variant "${variantAttr.value.value}" — use canonical (neutral, info, success, warning, danger, accent, premium).` });
+                  if (
+                    node.name.type === "JSXIdentifier" &&
+                    node.name.name === "Badge"
+                  ) {
+                    const variantAttr = node.attributes.find(
+                      (a) =>
+                        a.type === "JSXAttribute" && a.name.name === "variant"
+                    );
+                    if (
+                      variantAttr &&
+                      variantAttr.value &&
+                      ((variantAttr.value.type === "Literal" &&
+                        legacy.has(variantAttr.value.value)) ||
+                        (variantAttr.value.type === "JSXExpressionContainer" &&
+                          variantAttr.value.expression.type === "Literal" &&
+                          legacy.has(variantAttr.value.expression.value)))
+                    ) {
+                      const rawValue =
+                        variantAttr.value.type === "Literal"
+                          ? variantAttr.value.value
+                          : variantAttr.value.expression.value;
+                      const replacement = mapping[rawValue];
+                      context.report({
+                        node: variantAttr,
+                        message: `Legacy Badge variant "${rawValue}" — replaced with canonical "${replacement}" (neutral, info, success, warning, danger, accent, premium).`,
+                        fix(fixer) {
+                          if (variantAttr.value.type === "Literal") {
+                            return fixer.replaceText(variantAttr.value, `"${replacement}"`);
+                          } else if (
+                            variantAttr.value.type === "JSXExpressionContainer" &&
+                            variantAttr.value.expression.type === "Literal"
+                          ) {
+                            return fixer.replaceText(
+                              variantAttr.value,
+                              `"${replacement}"`
+                            );
+                          }
+                          return null;
+                        },
+                      });
                     }
                   }
-                }
+                },
               };
-            }
+            },
           },
-          'no-raw-surface-gradients': {
-            meta: { type: 'suggestion', docs: { description: 'Discourage ad-hoc bg-gradient-* containers; prefer semantic surface + utility' }, schema: [] },
+          "no-raw-surface-gradients": {
+            meta: {
+              type: "suggestion",
+              docs: {
+                description:
+                  "Discourage ad-hoc bg-gradient-* containers; prefer semantic surface + utility",
+              },
+              schema: [],
+            },
             create(context) {
               return {
                 JSXAttribute(attr) {
-                  if (attr.name && attr.name.name === 'className' && attr.value && attr.value.type === 'Literal') {
+                  if (
+                    attr.name &&
+                    attr.name.name === "className" &&
+                    attr.value &&
+                    attr.value.type === "Literal"
+                  ) {
                     const v = String(attr.value.value);
                     const filename = context.getFilename();
-                    if (/bg-gradient-to-/.test(v) && !/surface-/.test(v) && !/(decorative-gradient|premium-badge)/.test(v) && !/\/Badge\//.test(filename)) {
-                      context.report({ node: attr, message: 'Raw gradient background without semantic surface-* class. Wrap or replace with surface-card + decorative overlay.' });
+                    if (
+                      /bg-gradient-to-/.test(v) &&
+                      !/surface-/.test(v) &&
+                      !/(decorative-gradient|premium-badge)/.test(v) &&
+                      !/\/Badge\//.test(filename)
+                    ) {
+                      context.report({
+                        node: attr,
+                        message:
+                          "Raw gradient background without semantic surface-* class. Wrap or replace with surface-card + decorative overlay.",
+                      });
                     }
                   }
-                }
+                },
               };
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     },
   },
 ]);
