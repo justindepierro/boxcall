@@ -127,9 +127,16 @@ function professionalDevEvents(userId: string, devMode: string): MockEvent[] {
   return [];
 }
 
-
 // In-memory created events (test/dev only)
 const createdEvents: CalendarEvent[] = [];
+
+// Failure injection flags (testing / dev only)
+const failureFlags: {
+  create?: boolean;
+  update?: boolean;
+  delete?: boolean;
+  comment?: boolean;
+} = {};
 
 export const CalendarAPI = {
   async listUserEvents(
@@ -154,6 +161,7 @@ export const CalendarAPI = {
     return parseCalendarEvents(all.filter((e) => e.team_id === teamId));
   },
   async createEvent(data: CalendarEventCreate) {
+  if (failureFlags.create) throw new Error("Injected failure: createEvent");
     const validated = parseCalendarEventCreate(data);
     const newEvent = parseCalendarEvent({
       id: `mock-${Date.now()}`,
@@ -165,6 +173,7 @@ export const CalendarAPI = {
     return newEvent;
   },
   async updateEvent(_id: string, updates: Partial<CalendarEventCreate>) {
+  if (failureFlags.update) throw new Error("Injected failure: updateEvent");
     if (Object.keys(updates).length === 0) return null;
     try {
       parseCalendarEventUpdate(updates);
@@ -174,6 +183,7 @@ export const CalendarAPI = {
     return null; // mock no-op
   },
   async deleteEvent(_id: string) {
+  if (failureFlags.delete) throw new Error("Injected failure: deleteEvent");
     return true;
   },
   async search(query: string) {
@@ -208,7 +218,16 @@ export const CalendarAPI = {
     return parseCalendarComments([]);
   },
   async addComment(data: { event_id: string; body: string }) {
+    if (failureFlags.comment) throw new Error("Injected failure: addComment");
     parseCalendarCommentCreate(data);
     return parseCalendarComments([]);
+  },
+  __setFailure(partial: typeof failureFlags) {
+    Object.assign(failureFlags, partial);
+  },
+  __resetFailures() {
+    (Object.keys(failureFlags) as Array<keyof typeof failureFlags>).forEach(
+      (k) => delete failureFlags[k]
+    );
   },
 };
