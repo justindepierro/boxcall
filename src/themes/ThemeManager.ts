@@ -1,4 +1,4 @@
-import { themeRegistry, getTheme } from './registry';
+import { getTheme } from './registry';
 
 const THEME_STORAGE_KEY = 'app-theme';
 // Explicit theme id union (keep in sync with registry contents)
@@ -8,15 +8,26 @@ export const DEFAULT_THEME: ThemeName = "light";
 
 export function getStoredTheme(): ThemeName | null {
   const v = localStorage.getItem(THEME_STORAGE_KEY);
-  if (v && v in themeRegistry) return v as ThemeName;
-  return null;
+  if (!v) return null;
+  return (THEME_IDS as readonly string[]).includes(v) ? (v as ThemeName) : null;
 }
 
 export function applyTheme(name: ThemeName) {
   const theme = getTheme(name);
   if (!theme) return;
   const root = document.documentElement;
+  // Data attribute for CSS variable scoping
   root.setAttribute('data-theme', name);
+  // Legacy Tailwind dark variant support (many classes still rely on .dark)
+  // We treat both dark + high-contrast as dark base until full variable migration.
+  if (name === 'dark' || name === 'high-contrast') {
+    root.classList.add('dark');
+  } else {
+    root.classList.remove('dark');
+  }
+  // Optional high-contrast class for future specific overrides
+  root.classList.remove('high-contrast');
+  if (name === 'high-contrast') root.classList.add('high-contrast');
   try {
     localStorage.setItem(THEME_STORAGE_KEY, name);
   } catch { /* ignore storage errors (private mode, etc.) */ }
