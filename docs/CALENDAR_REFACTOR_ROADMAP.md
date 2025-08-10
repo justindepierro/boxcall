@@ -149,9 +149,9 @@ Legend: [x] done, [~] in progress, [ ] pending
 2. [x] Core hooks file (`state/calendar/hooks.ts`) with events + single event queries.
 3. [x] Optimistic create mutation (temp ID replacement) + passing test.
 4. [~] Optimistic update/delete logic (implemented, needs dedicated tests + rollback simulation).
-5. [ ] RSVP mutation real implementation (current placeholder) + optimistic status change.
+5. [x] RSVP upsert implementation + optimistic status change + test (temp -> persisted replacement retained).
 6. [ ] Comment add optimistic + rollback test; pagination strategy stub.
-7. [ ] Failure simulation tests (network error → rollback for create/update/delete/RSVP/comment).
+7. [ ] Failure simulation harness (inject error via dev mode flag) + rollback tests for create/update/delete/RSVP/comment.
 8. [ ] Loading & error UI skeleton contract (skeleton components or shimmer placeholders).
 9. [ ] UI migration: replace calendarService usages with hooks (incremental by component).
 10. [ ] Remove legacy `calendarService` after full migration + codemod cleanup.
@@ -340,31 +340,32 @@ Legend: [x] done, [~] in progress, [ ] pending
 
 ## Immediate Next (Phase 3 Focus)
 
-1. Implement real RSVP upsert in `hooks.ts` (replace placeholder) + add optimistic test.
-2. Add tests for optimistic update & delete (success + forced failure rollback).
-3. Add comment add optimistic test + rollback scenario.
-4. Draft Phase 3 tech notes doc (query key strategy & mutation lifecycle).
+1. Add dedicated tests for optimistic update & delete (success + forced failure rollback).
+2. Implement error injection toggle (e.g. devMode: `fail_mutations`) to exercise rollback paths.
+3. Add comment optimistic add + rollback test (simulate failure) & decide pagination placeholder strategy.
+4. Draft Phase 3 tech notes (query key schema, mutation lifecycle, rollback recipe, failure injection design).
 5. Begin UI component migration (introduce `CalendarShell` using `useEvents`).
 
 ---
 
 ## Status Log
 
-| Date       | Phase  | Update                                                                                                                                                                                           |
-| ---------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| (init)     | 0      | Roadmap created.                                                                                                                                                                                 |
-| 2025-08-10 | 0      | Baseline metrics captured (raw util debt 23 on CalendarPage, stable build, no type errors).                                                                                                      |
-| 2025-08-10 | 1-prep | Domain types extracted to `domain/calendar/types.ts` (no functional change) ahead of Phase 1.                                                                                                    |
-| 2025-08-10 | 1      | Added zod schemas (schema.ts), comment types, and rules.ts scaffolding.                                                                                                                          |
-| 2025-08-10 | 1-done | Phase 1 complete: all service fetch/mutation paths parsed via zod; rules + schema tests added (17 tests). Domain coverage: schema 97.7% stmts, rules 100%. Ready to begin Phase 2 decomposition. |
-| 2025-08-10 | 2-kick | Phase 2 scaffolding: created infra/calendar (api.ts, ics.ts) + adapter (FullCalendarAdapter.ts) + initial adapter/ICS test.                                                                      |
-| 2025-08-10 | 2-prog | Extracted RSVP & comments infra modules, migrated fetch paths, added adapter edge & ICS validation tests.                                                                                       |
-| 2025-08-10 | 2-prog2 | Expanded CalendarAPI (team, search, upcoming, delete), added infra barrel exports, improved coverage.                                                                                           |
-| 2025-08-10 | 2-prog3 | Slimmed legacy service to delegation facade (<150 LOC), exhaustive infra tests (filters, dev modes, RSVPs, comments).                                                                           |
-| 2025-08-10 | 2-done | Phase 2 exit criteria met (infra >95% coverage, adapter ≥90%, ICS UID enforced). Ready for state layer.                                                                                           |
-| 2025-08-10 | 3-kick | Added query key factory & initial hooks scaffold (events + event + create/update/delete mutations).                                                                                               |
-| 2025-08-10 | 3-prog | Implemented optimistic create + test (temp ID replace), in-memory persistence tweak; updated legacy negative test behavior (Zod errors).                                                           |
-| 2025-08-10 | 3-prog2 | Added update/delete optimistic logic (needs rollback tests), placeholder RSVP mutation, planned next tasks.                                                                                    |
+| Date       | Phase   | Update                                                                                                                                                                                           |
+| ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| (init)     | 0       | Roadmap created.                                                                                                                                                                                 |
+| 2025-08-10 | 0       | Baseline metrics captured (raw util debt 23 on CalendarPage, stable build, no type errors).                                                                                                      |
+| 2025-08-10 | 1-prep  | Domain types extracted to `domain/calendar/types.ts` (no functional change) ahead of Phase 1.                                                                                                    |
+| 2025-08-10 | 1       | Added zod schemas (schema.ts), comment types, and rules.ts scaffolding.                                                                                                                          |
+| 2025-08-10 | 1-done  | Phase 1 complete: all service fetch/mutation paths parsed via zod; rules + schema tests added (17 tests). Domain coverage: schema 97.7% stmts, rules 100%. Ready to begin Phase 2 decomposition. |
+| 2025-08-10 | 2-kick  | Phase 2 scaffolding: created infra/calendar (api.ts, ics.ts) + adapter (FullCalendarAdapter.ts) + initial adapter/ICS test.                                                                      |
+| 2025-08-10 | 2-prog  | Extracted RSVP & comments infra modules, migrated fetch paths, added adapter edge & ICS validation tests.                                                                                        |
+| 2025-08-10 | 2-prog2 | Expanded CalendarAPI (team, search, upcoming, delete), added infra barrel exports, improved coverage.                                                                                            |
+| 2025-08-10 | 2-prog3 | Slimmed legacy service to delegation facade (<150 LOC), exhaustive infra tests (filters, dev modes, RSVPs, comments).                                                                            |
+| 2025-08-10 | 2-done  | Phase 2 exit criteria met (infra >95% coverage, adapter ≥90%, ICS UID enforced). Ready for state layer.                                                                                          |
+| 2025-08-10 | 3-kick  | Added query key factory & initial hooks scaffold (events + event + create/update/delete mutations).                                                                                              |
+| 2025-08-10 | 3-prog  | Implemented optimistic create + test (temp ID replace), in-memory persistence tweak; updated legacy negative test behavior (Zod errors).                                                         |
+| 2025-08-10 | 3-prog2 | Added update/delete optimistic logic (needs rollback tests), placeholder RSVP mutation, planned next tasks.                                                                                      |
+| 2025-08-10 | 3-prog3 | Implemented real RSVP upsert + optimistic cache update & test (commit 7a87ff6); updated roadmap tasks & immediate next.                                                                        |
 
 ---
 
