@@ -13,7 +13,12 @@ export type {
   EventRSVP,
   CalendarFilters,
 } from "../domain/calendar/types"; // Re-export for backward compatibility
-import { parseCalendarEvents, parseEventRSVPs } from "../domain/calendar/schema";
+import {
+  parseCalendarEvents,
+  parseEventRSVPs,
+  parseCalendarEventCreate,
+  parseCalendarEvent,
+} from "../domain/calendar/schema";
 
 /**
  * Calendar Service
@@ -103,6 +108,8 @@ export class CalendarService {
     eventData: CalendarEventCreate
   ): Promise<CalendarEvent | null> {
     try {
+  // Validate input shape
+  const validated = parseCalendarEventCreate(eventData);
       // TODO: Implement real database creation
       // const { data, error } = await supabase
       //   .from('calendar_events')
@@ -114,12 +121,12 @@ export class CalendarService {
       //   .single();
 
       // For now, return mock created event
-      const mockEvent: CalendarEvent = {
+      const mockEvent: CalendarEvent = parseCalendarEvent({
         id: `mock-${Date.now()}`,
-        ...eventData,
+        ...validated,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-      };
+      });
 
       return mockEvent;
     } catch (error) {
@@ -136,6 +143,17 @@ export class CalendarService {
     updates: Partial<CalendarEventCreate>
   ): Promise<CalendarEvent | null> {
     try {
+      if (Object.keys(updates).length === 0) {
+        console.warn("updateEvent called with no updates", eventId);
+      }
+      // Best-effort validation: only validate if fields present
+      const candidate = { title: "TEMP", start: new Date().toISOString(), type: "practice", ...updates } as CalendarEventCreate;
+      try {
+        parseCalendarEventCreate(candidate);
+      } catch (e) {
+        console.error("Invalid update payload rejected", e);
+        return null;
+      }
       // TODO: Implement real database update
       // const { data, error } = await supabase
       //   .from('calendar_events')
