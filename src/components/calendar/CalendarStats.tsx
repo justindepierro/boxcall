@@ -6,7 +6,10 @@ interface CalendarStatsProps {
   className?: string;
 }
 
-export const CalendarStats: React.FC<CalendarStatsProps> = ({ events = [], className }) => {
+export const CalendarStats: React.FC<CalendarStatsProps> = ({
+  events = [],
+  className,
+}) => {
   const now = new Date();
   const month = now.getMonth();
   const year = now.getFullYear();

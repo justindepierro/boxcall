@@ -160,7 +160,7 @@ export const CalendarAPI = {
     return parseCalendarEvents(all.filter((e) => e.team_id === teamId));
   },
   async createEvent(data: CalendarEventCreate) {
-  if (failureFlags.create) throw new Error("Injected failure: createEvent");
+    if (failureFlags.create) throw new Error("Injected failure: createEvent");
     const validated = parseCalendarEventCreate(data);
     const newEvent = parseCalendarEvent({
       id: `mock-${Date.now()}`,
@@ -172,7 +172,7 @@ export const CalendarAPI = {
     return newEvent;
   },
   async updateEvent(_id: string, updates: Partial<CalendarEventCreate>) {
-  if (failureFlags.update) throw new Error("Injected failure: updateEvent");
+    if (failureFlags.update) throw new Error("Injected failure: updateEvent");
     if (Object.keys(updates).length === 0) return null;
     try {
       parseCalendarEventUpdate(updates);
@@ -182,7 +182,7 @@ export const CalendarAPI = {
     return null; // mock no-op
   },
   async deleteEvent(_id: string) {
-  if (failureFlags.delete) throw new Error("Injected failure: deleteEvent");
+    if (failureFlags.delete) throw new Error("Injected failure: deleteEvent");
     return true;
   },
   async search(query: string) {

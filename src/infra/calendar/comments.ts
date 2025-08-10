@@ -1,6 +1,9 @@
 // Comments infra module (Phase 2)
 // Provides list/add stub; future: pagination, edit/delete, rate limiting.
-import { parseCalendarComments, parseCalendarCommentCreate } from "../../domain/calendar/schema";
+import {
+  parseCalendarComments,
+  parseCalendarCommentCreate,
+} from "../../domain/calendar/schema";
 import type { CalendarComment } from "../../domain/calendar/types";
 
 // Simple in-memory store per event (dev/test only)
@@ -10,7 +13,10 @@ export const CalendarComments = {
   async list(eventId: string): Promise<CalendarComment[]> {
     return parseCalendarComments(commentStore[eventId] || []);
   },
-  async add(data: { event_id: string; body: string }): Promise<CalendarComment> {
+  async add(data: {
+    event_id: string;
+    body: string;
+  }): Promise<CalendarComment> {
     parseCalendarCommentCreate(data);
     const comment: CalendarComment = {
       id: `c-${Date.now()}`,

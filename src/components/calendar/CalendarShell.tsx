@@ -15,7 +15,8 @@ export const CalendarShell: React.FC = () => {
   if (isError)
     return (
       <div>
-        Error loading events: {error instanceof Error ? error.message : "Unknown error"}
+        Error loading events:{" "}
+        {error instanceof Error ? error.message : "Unknown error"}
       </div>
     );
 

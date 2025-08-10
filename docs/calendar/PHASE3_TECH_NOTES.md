@@ -26,6 +26,7 @@ calendarKeys = {
 ```
 
 Reasons:
+
 - Allows bulk invalidation with `{ queryKey: ["calendar","events"] }` regardless of the parameter object shape.
 - Avoids accidental collisions with ad-hoc arrays.
 - Embedding the filter object keeps variations distinct while still group‑invalidatable via partial matching.
@@ -33,6 +34,7 @@ Reasons:
 ## Optimistic Mutation Patterns
 
 ### Event Create
+
 1. `onMutate` snapshot current list for the canonical (unfiltered) events key.
 2. Append a temp item with `temp-<ts>` id.
 3. On success, map replace temp id -> server id.
@@ -40,14 +42,17 @@ Reasons:
 5. On settled, invalidate the events key for server reconciliation.
 
 ### Event Update / Delete
+
 Because multiple events queries may coexist (different filters), we iterate over the entire query cache selecting keys where `queryKey[0]=="calendar" && queryKey[1]=="events"` and patch each list.
 
 Rollback stores an array of `{ key, data }` snapshots; error restores each.
 
 ### RSVP Upsert
+
 Optimistic in-place update or append. On success we reconcile with server object (ensures timestamps & id). On error rollback to previous array.
 
 ### Comment Add
+
 Optimistic append then either server success persists (same id semantics) or rollback on failure. Tests focus on final state (less brittle than asserting transient state plus rollback).
 
 ## Failure Injection Harness
@@ -62,12 +67,14 @@ CalendarAPI.__resetFailures()
 Tests trigger injected failures to force `onError` paths and ensure snapshots restore.
 
 Reasons for approach vs monkey patching:
+
 - Keeps mutation functions pure and testable without global jest mocks.
 - Allows granular flag combination (e.g., test simultaneous delete+comment failure later).
 
 ## In-Memory Persistence (Dev/Test)
 
 Modules maintain ephemeral arrays:
+
 - `createdEvents[]` in `infra/calendar/api.ts`.
 - RSVP store in `infra/calendar/rsvp.ts`.
 - Comment store in `infra/calendar/comments.ts`.
@@ -79,6 +86,7 @@ These simulate server state so that optimistic updates reconcile with subsequent
 File: `state/calendar/hooks.test.ts`
 
 Covered:
+
 - Events fetch baseline.
 - Optimistic create (length delta, temp replacement).
 - RSVP optimistic update & server reconciliation.
@@ -116,11 +124,11 @@ Deliberately avoided snapshot tests for lists—focused on structural assertions
 
 ## Risks & Mitigations
 
-| Risk | Mitigation |
-| ---- | ---------- |
-| Over-invalidation causing refetch storms | Consistent key factory + partial invalidation targeting `["calendar","events"]` only when necessary. |
-| Growing optimistic code complexity | Consolidate repetitive snapshot logic into small util if additional entities added. |
-| UI migration drift (dual paths lingering) | Add lint rule / codemod to forbid new imports from `calendarService`. |
+| Risk                                      | Mitigation                                                                                           |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Over-invalidation causing refetch storms  | Consistent key factory + partial invalidation targeting `["calendar","events"]` only when necessary. |
+| Growing optimistic code complexity        | Consolidate repetitive snapshot logic into small util if additional entities added.                  |
+| UI migration drift (dual paths lingering) | Add lint rule / codemod to forbid new imports from `calendarService`.                                |
 
 ## Reference Implementation Links
 

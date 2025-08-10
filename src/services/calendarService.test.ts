@@ -13,14 +13,15 @@ describe("CalendarService & schema negative cases", () => {
     ).toThrow();
   });
 
-  it("returns null when creating event with invalid payload (empty title)", async () => {
+  it("rejects when creating event with invalid payload (empty title)", async () => {
     const invalidCreate = {
       title: "",
       start: iso(),
       type: "practice",
     } as unknown as CalendarEventCreate;
-    const result = await CalendarService.createEvent(invalidCreate);
-    expect(result).toBeNull();
+    await expect(
+      CalendarService.createEvent(invalidCreate)
+    ).rejects.toBeTruthy();
   });
 
   it("returns null when updating event with invalid field values (bad type)", async () => {

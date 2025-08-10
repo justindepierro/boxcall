@@ -250,7 +250,8 @@ export function useUpdateRSVP(eventId: string) {
         qc.setQueryData<EventRSVP[]>(key, ensure);
       }
     },
-    onSettled: () => qc.invalidateQueries({ queryKey: calendarKeys.rsvps(eventId) }),
+    onSettled: () =>
+      qc.invalidateQueries({ queryKey: calendarKeys.rsvps(eventId) }),
   });
 }
 
