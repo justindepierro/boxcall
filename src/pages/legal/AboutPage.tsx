@@ -149,7 +149,7 @@ export const AboutPage: React.FC = () => {
           </a>
           <a
             href="/contact"
-            className="inline-flex items-center justify-center px-6 py-3 border-subtle text-base font-medium rounded-md text-text-primary surface-card row-hover transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 border-subtle text-base font-medium rounded-md text-text-primary surface-card surface-subtle-hover transition-colors"
           >
             Contact Us
           </a>

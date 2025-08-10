@@ -350,8 +350,8 @@ export const TouchNavItem: React.FC<TouchNavItemProps> = ({
     transition-all duration-200 ease-out
     ${
       active
-        ? "bg-blue-100 text-team-primary"
-        : "text-text-secondary hover:text-text-primary row-hover"
+  ? "bg-blue-100 text-team-primary"
+  : "text-text-secondary hover:text-text-primary surface-subtle-hover"
     }
   `;
 

@@ -780,7 +780,7 @@ function TemplatesModal({
           {templates.map((template) => (
             <div
               key={template.id}
-              className="border-subtle rounded-lg p-4 row-hover"
+              className="border-subtle rounded-lg p-4 surface-subtle-hover"
             >
               <div className="flex items-center justify-between">
                 <div>

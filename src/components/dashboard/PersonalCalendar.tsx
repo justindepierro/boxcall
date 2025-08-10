@@ -162,7 +162,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                   <div
                     key={event.id}
                     onClick={() => handleEventClick(event)}
-                    className="flex items-start space-x-3 p-3 rounded-lg row-hover transition-colors cursor-pointer border border-gray-100 dark:border-gray-700"
+                    className="flex items-start space-x-3 p-3 rounded-lg surface-subtle-hover transition-colors cursor-pointer border border-gray-100 dark:border-gray-700"
                   >
                     {/* Event Icon */}
                     <div className="flex-shrink-0 mt-1">

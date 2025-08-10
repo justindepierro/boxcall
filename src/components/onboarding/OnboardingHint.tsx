@@ -80,7 +80,7 @@ export const OnboardingHint: React.FC<OnboardingHintProps> = ({
               a.variant === "primary"
                 ? "bg-jade-500 hover:bg-jade-600 text-white"
                 : a.variant === "secondary"
-                  ? "border-subtle row-hover"
+                  ? "border-subtle surface-subtle-hover"
                   : "text-jade-600 dark:text-jade-400 hover:underline";
             if (a.href) {
               return (

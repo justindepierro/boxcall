@@ -179,7 +179,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
                   className={`w-full justify-start px-4 py-2 text-left text-sm flex items-center space-x-3 rounded-none ${
                     isSelected
                       ? "bg-blue-50 text-blue-700 dark:bg-blue-900/40"
-                      : "text-text-secondary row-hover"
+                      : "text-text-secondary surface-subtle-hover"
                   }`}
                 >
                   {isHistory ? (

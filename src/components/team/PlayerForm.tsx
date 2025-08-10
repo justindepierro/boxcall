@@ -374,7 +374,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   className={
                     formData.team_level === level.value
                       ? ""
-                      : "surface-card text-text-primary border-subtle row-hover"
+                      : "surface-card text-text-primary border-subtle surface-subtle-hover"
                   }
                   onClick={() => handleInputChange("team_level", level.value)}
                 >

@@ -140,7 +140,7 @@ const getRowStyles = (
 ) => {
   return [
     "transition-colors duration-200",
-    hoverable && "row-hover",
+  hoverable && "surface-subtle-hover",
     isSelected && "bg-jade-50 dark:bg-navy-900/20",
     striped && isEven && "bg-gray-50 dark:bg-gray-800",
   ]

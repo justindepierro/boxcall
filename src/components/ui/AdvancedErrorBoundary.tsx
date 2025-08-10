@@ -411,7 +411,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
 
           {/* Home button */}
           <TouchFeedback
-            className="w-full py-3 px-4 border-subtle rounded-lg font-medium text-text-primary row-hover transition-all"
+            className="w-full py-3 px-4 border-subtle rounded-lg font-medium text-text-primary surface-subtle-hover transition-all"
             onPress={onGoHome}
           >
             <div className="flex items-center justify-center space-x-2">

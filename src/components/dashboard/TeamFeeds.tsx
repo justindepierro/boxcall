@@ -125,7 +125,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
           {feeds.map((feed) => (
             <div
               key={feed.id}
-              className="flex items-start space-x-3 p-2 rounded-lg row-hover transition-colors cursor-pointer"
+              className="flex items-start space-x-3 p-2 rounded-lg surface-subtle-hover transition-colors cursor-pointer"
             >
               {/* Feed Icon */}
               <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-jade-100 flex items-center justify-center mt-0.5">

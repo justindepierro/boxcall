@@ -235,13 +235,7 @@ body,
   .dark .surface-subtle-hover {
     background-color: var(--surface-subtle-hover);
   }
-  /* Alias for row/list hover standardization */
-  .row-hover:hover {
-    background-color: var(--surface-subtle-hover);
-  }
-  .dark .row-hover:hover {
-    background-color: var(--surface-subtle-hover);
-  }
+  /* Deprecated: row-hover alias removed after migration to surface-subtle-hover */
 
   /* Elevation utilities (token friendly) */
   .elevation-card {
