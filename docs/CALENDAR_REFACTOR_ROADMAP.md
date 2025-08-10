@@ -388,6 +388,7 @@ Legend: [x] done, [~] in progress, [ ] pending
 | 2025-08-10 | 4-prog  | Expanded `CalendarShell` to include toolbar, filters, stats, calendar grid, and event modal (parity structure). Ready to implement URL state sync next.                                        |
 | 2025-08-10 | 4-prog2 | Added URL state sync hook (`useCalendarUrlState`); shell now syncs view changes to query params and opens modal on `?event=ID`. Next: date navigation syncing & prefetch ranges.                |
 | 2025-08-10 | 4-prog3 | Date param sync + preliminary month prefetch (prev/next) added to shell; placeholder queryFn to be replaced with real fetcher.                                            |
+| 2025-08-10 | 4-prog4 | Split `EventModal` into `EventForm` and `EventDetails` components (no behavior change, groundwork for accessibility & future extensions).                               |
 
 ---
 
