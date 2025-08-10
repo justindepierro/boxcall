@@ -85,8 +85,8 @@ export class ErrorBoundary extends Component<Props, State> {
 
       // Default professional error UI with recovery options
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-white rounded-md shadow-lg p-6 mx-4">
+        <div className="min-h-screen surface-app flex items-center justify-center p-4">
+          <div className="max-w-md w-full surface-card elevation-modal rounded-md p-6 mx-4">
             {/* Error Icon and Title */}
             <div className="text-center mb-6">
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
@@ -103,7 +103,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
             {/* Development Error Details */}
             {process.env.NODE_ENV === "development" && this.state.error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div className="mb-6 p-4 surface-subtle border border-red-200 rounded-lg">
                 <details className="text-sm">
                   <summary className="cursor-pointer font-medium text-red-800 mb-2">
                     🔧 Error Details (Development Only)

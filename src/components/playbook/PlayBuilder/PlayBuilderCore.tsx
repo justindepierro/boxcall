@@ -171,9 +171,9 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
         />
 
         {/* Modal */}
-        <div className="inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full max-h-[90vh] overflow-hidden">
+        <div className="inline-block align-bottom surface-card elevation-modal rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full max-h-[90vh] overflow-hidden">
           {/* Header */}
-          <div className="bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+          <div className="surface-subtle px-6 py-4 border-b border-subtle flex items-center justify-between">
             <div>
               <Typography
                 variant="headline-sm"
@@ -198,7 +198,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
           </div>
 
           {/* Content */}
-          <div className="bg-white overflow-y-auto max-h-[calc(90vh-140px)]">
+          <div className="surface-card overflow-y-auto max-h-[calc(90vh-140px)]">
             <div className="grid grid-cols-1 lg:grid-cols-3 bc-grid-gap bc-card-padding">
               {/* Form Section - 2/3 width */}
               <div className="lg:col-span-2">
@@ -228,7 +228,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
+          <div className="surface-subtle px-6 py-4 border-t border-subtle flex items-center justify-between">
             <div className="text-sm text-slate-500">
               {isValid ? (
                 <span className="text-jade-600">✓ Ready to save</span>

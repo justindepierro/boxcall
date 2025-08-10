@@ -20,7 +20,12 @@
   "scripts": {
     "predev": "npm run tokens:build && npm run themes:build && tsx scripts/predev-check.ts",
     "dev": "vite",
-    "dev:full": "npm run predev && vite",
+    "dev:fast": "vite --open",
+    "watch:types": "tsc --noEmit --incremental --watch",
+    "watch:lint": "eslint src --ext .ts,.tsx --cache --cache-location .eslintcache --watch",
+    "watch:test": "vitest --watch",
+    "dev:pro": "concurrently -n TYPES,LINT,TEST,WEB -c cyan,magenta,yellow,green \"npm:watch:types\" \"npm:watch:lint\" \"npm:watch:test\" \"vite --open\"",
+    "dev:full": "npm run predev && npm run dev:pro",
     "validate:deep": "tsx scripts/error-detection.ts",
     "validate:vscode": "tsx scripts/vscode-parity-check.ts",
     "prebuild": "npm run tokens:build && npm run themes:build",
@@ -30,6 +35,10 @@
     "format:check": "prettier --check .",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "test:a11y:smoke": "vitest run --reporter verbose --config vitest.config.ts --dir src/components/ui/__a11y__",
+    "validate:full": "npm run type-check && npm run lint && npm run test && npm run style:gate && npm run tokens:verify && npm run themes:verify && npx ts-unused-exports tsconfig.app.json --ignoreFiles=\"test,spec,stories\" && npx bundlesize",
     "codemod:badge-variants": "node scripts/codemod-badge-variants.mjs",
     "codemod:tooltip-bg": "node scripts/codemod-tooltip-bg.mjs",
     "tokens:build": "tsx scripts/generate-tokens-css.ts && prettier --write src/styles/generated-tokens.css",
@@ -124,8 +133,11 @@
     "vite-bundle-analyzer": "^1.1.0",
     "vite-plugin-pwa": "^1.0.2",
     "vitest": "^3.2.4",
+    "concurrently": "^9.0.0",
+    "husky": "^9.1.6",
     "web-vitals": "^5.1.0"
   },
+  "prepare": "husky install",
   "lint-staged": {
     "*.{ts,tsx}": [
       "eslint --fix",

@@ -355,8 +355,8 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
   isRecovering,
 }) => {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center">
+    <div className="min-h-screen surface-app flex items-center justify-center p-4">
+      <div className="max-w-md w-full surface-card elevation-modal rounded-lg shadow-lg p-6 text-center">
         <div className="mb-4">
           <AlertTriangle className="h-16 w-16 text-red-500 mx-auto mb-4" />
           <Typography variant="headline-md" className="text-gray-900 mb-2">
@@ -370,15 +370,18 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
 
         {/* Error details for development */}
         {process.env.NODE_ENV === "development" && (
-          <div className="mb-4 p-3 bg-gray-100 rounded text-left">
-            <Typography variant="body-sm" className="text-gray-700 font-mono">
+          <div className="mb-4 p-3 surface-subtle rounded text-left">
+            <Typography
+              variant="body-sm"
+              className="text-text-primary font-mono"
+            >
               <strong>Error:</strong> {error.message}
             </Typography>
-            <Typography variant="body-xs" className="text-gray-500 mt-1">
+            <Typography variant="body-xs" className="text-text-secondary mt-1">
               ID: {errorId}
             </Typography>
             {retryCount > 0 && (
-              <Typography variant="body-xs" className="text-gray-500">
+              <Typography variant="body-xs" className="text-text-secondary">
                 Retry attempts: {retryCount}
               </Typography>
             )}

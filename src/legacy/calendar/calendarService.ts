@@ -1,2 +1,4 @@
-// (Removed) legacy calendarService file. Intentionally blank.
-export {};
+// Legacy calendarService removed.
+throw new Error(
+  "legacy/calendarService imported. Use CalendarAPI and related infra modules."
+);

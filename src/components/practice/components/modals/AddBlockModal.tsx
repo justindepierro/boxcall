@@ -117,7 +117,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
   ];
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg bc-card-padding w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div className="surface-card elevation-modal rounded-lg bc-card-padding w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Icon name="plus" size="lg" className="text-jade-600" />

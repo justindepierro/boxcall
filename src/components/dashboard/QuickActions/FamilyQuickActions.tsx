@@ -23,7 +23,7 @@ export const FamilyQuickActions: React.FC = () => {
         My Player&apos;s Progress
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
         className="w-full justify-start"
         onClick={() => console.log("Team Schedule")}
@@ -32,7 +32,7 @@ export const FamilyQuickActions: React.FC = () => {
         Team Schedule
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
         className="w-full justify-start"
         onClick={() => console.log("Message Coach")}
@@ -41,7 +41,7 @@ export const FamilyQuickActions: React.FC = () => {
         Message Coach
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
         className="w-full justify-start"
         onClick={() => console.log("Game Highlights")}

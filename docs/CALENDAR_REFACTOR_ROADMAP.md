@@ -198,7 +198,7 @@ Legend: [x] done, [~] in progress, [ ] pending
 - [x] Legacy page & wrappers removed (no residual imports; lazy route points directly to `CalendarShellPage`)
 - [x] Shell is default route (no feature flag or query param fallback)
 - [x] Prefetch + URL deep link behavior validated (direct event open uses cache)
-- [ ] CalendarShell < 250 LOC (pending second extraction pass; selection & prefetch extracted)
+- [x] CalendarShell < 250 LOC (shell now 140 LOC; logic moved to controller hook)
 - [ ] QA parity checklist executed & documented (navigation, CRUD, RSVP, comments paths) – in progress
 
 ---
@@ -397,6 +397,9 @@ Legend: [x] done, [~] in progress, [ ] pending
 | 2025-08-10 | 4-prog5       | Implemented accessible `ViewSwitcher` (roving tabindex, role=tablist) and integrated into `CalendarToolbar`.                                                                                     |
 | 2025-08-10 | 4-prog6       | Extracted selection & prefetch logic into `useCalendarSelection` & `useCalendarPrefetch`; added debounced search highlighting & month prefetch; began shell slimming.                            |
 | 2025-08-10 | 4-legacy-cull | Deleted legacy calendar pages & services; lazy route now targets `CalendarShellPage` directly; added subtle button variant for low-emphasis controls.                                            |
+| 2025-08-10 | 4-slim1       | Extracted CalendarHeader component; began slimming pass (272 LOC, target <250).                                                                                                                  |
+| 2025-08-10 | 4-slim2       | Introduced useCalendarShellController; CalendarShell reduced to 140 LOC, objective met.                                                                                                          |
+| 2025-08-10 | 4-slim3       | Extracted useCalendarData & useCalendarActions; controller simplified; legacy pages/services replaced by runtime guard throws.                                                                   |
 
 ---
 

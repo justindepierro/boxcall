@@ -74,7 +74,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
 
           <Button
             onClick={() => onBulkAction("batch-edit")}
-            variant="outline"
+            variant="ghost"
             size="sm"
             icon={<Edit3 className="w-4 h-4" />}
             title="Batch edit properties"

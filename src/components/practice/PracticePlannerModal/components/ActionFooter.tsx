@@ -53,7 +53,7 @@ export const ActionFooter: React.FC<ActionFooterProps> = ({
       {/* Overtime Warning Modal */}
       {showOvertimeWarning && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg bc-card-padding max-w-md w-full mx-4">
+          <div className="surface-card elevation-modal rounded-lg bc-card-padding max-w-md w-full mx-4">
             <div className="flex items-center mb-4">
               <Icon name="warning" size="lg" className="text-red-500 mr-3" />
               <Typography variant="headline-md" className="text-red-800">

@@ -83,9 +83,9 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-[95vw] h-[90vh] flex flex-col">
+      <div className="surface-card elevation-modal rounded-lg shadow-xl w-[95vw] h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b border-subtle surface-subtle">
           <div>
             <Typography variant="headline-sm" as="h2" className="text-gray-900">
               Interactive Play Builder
@@ -106,7 +106,7 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
         </div>
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar */}
-          <div className="w-64 bg-gray-50 border-r border-gray-200 flex flex-col">
+          <div className="w-64 surface-subtle border-r border-subtle flex flex-col">
             {/* Mode Controls */}
             <div className="p-4 border-b border-gray-200">
               <h3 className="text-sm font-medium text-gray-900 mb-3">

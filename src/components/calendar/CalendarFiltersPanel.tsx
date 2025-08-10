@@ -130,21 +130,21 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
             </Typography>
             <div className="grid grid-cols-2 gap-2">
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 onClick={() => onFilterChange({ eventTypes: ["game"] })}
               >
                 Games Only
               </Button>
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 onClick={() => onFilterChange({ eventTypes: ["practice"] })}
               >
                 Practices
               </Button>
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 onClick={() => onFilterChange({ eventTypes: [] })}
               >

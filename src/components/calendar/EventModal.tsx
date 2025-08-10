@@ -77,7 +77,7 @@ export const EventModal: React.FC<EventModalProps> = ({
   return (
     <>
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <div className="bg-white rounded-md shadow-xl w-full max-w-xl calendar-event-modal-container">
+        <div className="surface-card elevation-modal rounded-md w-full max-w-xl calendar-event-modal-container">
           <div className="p-5">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">

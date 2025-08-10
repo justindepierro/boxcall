@@ -1,2 +1,4 @@
-// (Removed) CalendarPage shim was here. File intentionally blank; will be deleted.
-export {}; // keep module syntactically valid
+// DO NOT USE: Legacy CalendarPage removed.
+throw new Error(
+  "CalendarPage.tsx imported after legacy removal. Use CalendarShellPage instead."
+);

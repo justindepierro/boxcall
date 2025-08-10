@@ -20,9 +20,9 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
           onClick={onClose}
         />
         {/* Modal */}
-        <div className="inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full">
+        <div className="inline-block align-bottom surface-card elevation-modal rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full">
           {/* Header */}
-          <div className="bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+          <div className="surface-subtle px-6 py-4 border-b border-subtle flex items-center justify-between">
             <div>
               <Typography
                 variant="headline-sm"
@@ -50,7 +50,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
             </Button>
           </div>
           {/* Content */}
-          <div className="bg-white bc-card-padding">
+          <div className="surface-card bc-card-padding">
             <div className="grid grid-cols-1 lg:grid-cols-2 bc-grid-gap">
               {/* Form Section */}
               <div>
@@ -119,7 +119,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                 >
                   Live Preview
                 </Typography>
-                <div className="bg-slate-50 rounded-lg bc-card-padding border-subtle">
+                <div className="surface-subtle rounded-lg bc-card-padding border-subtle">
                   <div className="text-center">
                     <div className="text-slate-400 mb-4">
                       <svg
@@ -146,7 +146,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
             </div>
           </div>
           {/* Footer */}
-          <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
+          <div className="surface-subtle px-6 py-4 border-t border-subtle flex items-center justify-between">
             <Button
               disabled
               variant="ghost"

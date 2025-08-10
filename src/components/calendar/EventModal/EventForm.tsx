@@ -96,7 +96,7 @@ export const EventForm: React.FC<EventFormProps> = ({
               ? "Create Event"
               : "Save Changes"}
         </Button>
-        <Button variant="outline" onClick={onCancel}>
+        <Button variant="secondary" onClick={onCancel}>
           Cancel
         </Button>
       </div>

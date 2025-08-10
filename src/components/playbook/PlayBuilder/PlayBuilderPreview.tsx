@@ -21,9 +21,9 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
   validationErrors,
 }) => {
   return (
-    <div className="bg-white rounded-lg border border-slate-200">
+    <div className="surface-card rounded-lg border-subtle elevation-card">
       {/* Preview Header */}
-      <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+      <div className="surface-subtle px-6 py-4 border-b border-subtle">
         <div className="flex items-center justify-between">
           <Typography variant="headline-sm" as="h3" className="text-slate-900">
             Play Preview

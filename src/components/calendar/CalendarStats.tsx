@@ -27,7 +27,9 @@ export const CalendarStats: React.FC<CalendarStatsProps> = ({
 
   return (
     <div className={`space-y-2 ${className || ""}`.trim()}>
-      <h3 className="text-sm font-semibold text-gray-700">Stats (Shell)</h3>
+      <span className="Typography typography-label-sm text-gray-700">
+        Stats (Shell)
+      </span>
       <dl className="grid grid-cols-2 gap-2 text-xs">
         <div>
           <dt className="text-gray-500">Total</dt>

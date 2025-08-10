@@ -76,7 +76,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
           <div className="flex space-x-2">
             {isEditing ? (
               <>
-                <Button size="sm" variant="outline" onClick={handleCancel}>
+                <Button size="sm" variant="secondary" onClick={handleCancel}>
                   Cancel
                 </Button>
                 <Button size="sm" variant="primary" onClick={handleSave}>
@@ -86,7 +86,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             ) : (
               <Button
                 size="sm"
-                variant="outline"
+                variant="secondary"
                 onClick={() => setIsEditing(true)}
               >
                 Edit

@@ -23,7 +23,7 @@ export const PlayerQuickActions: React.FC = () => {
         View My Stats
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
         className="w-full justify-start"
         onClick={() => console.log("Study Playbook")}
@@ -32,7 +32,7 @@ export const PlayerQuickActions: React.FC = () => {
         Study Playbook
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
         className="w-full justify-start"
         onClick={() => console.log("Check Assignments")}
@@ -41,7 +41,7 @@ export const PlayerQuickActions: React.FC = () => {
         Check Assignments
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
         className="w-full justify-start"
         onClick={() => console.log("Team Chat")}

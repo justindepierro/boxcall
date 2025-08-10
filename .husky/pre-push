@@ -1,0 +1,13 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+printf "\n🔒 Running pre-push validation (validate:full) ...\n"
+# Allow skipping with SKIP_FULL=1 env var
+if [ "$SKIP_FULL" = "1" ]; then
+  echo "⚠️  Skipping full validation (SKIP_FULL=1)";
+  exit 0;
+fi
+
+npm run validate:full || { echo "❌ Pre-push validation failed"; exit 1; }
+
+echo "✅ Pre-push validation passed"

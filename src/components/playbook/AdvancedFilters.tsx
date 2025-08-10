@@ -166,7 +166,9 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Filter className="h-4 w-4 text-text-secondary mr-2" />
-            <h3 className="font-medium text-text-primary">Filters</h3>
+            <span className="Typography typography-label-lg text-text-primary">
+              Filters
+            </span>
             {activeFilters.length > 0 && (
               <span className="ml-2 px-1.5 py-0.5 text-xs bg-blue-100 text-blue-800 rounded">
                 {activeFilters.length}
@@ -185,8 +187,6 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           )}
         </div>
       </div>
-
-      {/* Active Filters */}
       {activeFilters.length > 0 && (
         <div className="p-3 space-y-2">
           {activeFilters.map((filter) => (
@@ -215,9 +215,9 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
         {!showAddFilter ? (
           <Button
             size="xs"
-            variant="outline"
+            variant="ghost"
             onClick={() => setShowAddFilter(true)}
-            className="w-full flex items-center justify-center border-subtle"
+            className="w-full flex items-center justify-center"
           >
             <Plus className="h-3 w-3 mr-1" />
             Add Filter

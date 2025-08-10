@@ -714,8 +714,8 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           className="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity"
           onClick={onClose}
         />
-        <div className="inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-          <div className="bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div className="inline-block align-bottom surface-card elevation-modal rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+          <div className="surface-subtle px-6 py-4 border-b border-subtle flex items-center justify-between">
             <Typography
               variant="headline-sm"
               as="h2"
@@ -733,7 +733,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               className="text-slate-400 hover:text-slate-600"
             />
           </div>
-          <div className="bg-white px-6 py-8">{renderStep()}</div>
+          <div className="surface-card px-6 py-8">{renderStep()}</div>
         </div>
       </div>
     </div>

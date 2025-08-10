@@ -119,16 +119,16 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
             </Button>
           )}
         {(profileRole === "coach" || profileRole === "admin") && event.id && (
-          <Button variant="outline" size="sm" onClick={onEdit}>
+          <Button variant="secondary" size="sm" onClick={onEdit}>
             Edit
           </Button>
         )}
-        <Button variant="outline" size="sm">
+        <Button variant="subtle" size="sm">
           Add to Personal Calendar
         </Button>
         {(profileRole === "coach" || profileRole === "admin") && event.id && (
           <Button
-            variant="outline"
+            variant="danger"
             size="sm"
             disabled={deletePending}
             onClick={async () => {

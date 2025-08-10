@@ -8,6 +8,7 @@ import path from "node:path";
 import { noRawButtonRule } from "./scripts/eslint-rules/no-raw-button.js";
 import { noUnsafeWhiteRule } from "./scripts/eslint-rules/no-unsafe-white.js";
 import { noRadiusViolationsRule } from "./scripts/eslint-rules/no-radius-violations.js";
+import { noOutlineVariantInDisallowedContextsRule } from "./scripts/eslint-rules/no-outline-variant-in-disallowed-contexts.js";
 
 export default tseslint.config([
   {
@@ -91,6 +92,15 @@ export default tseslint.config([
         "warn",
         {
           allowScale: ["", "none", "sm", "md", "lg", "full"],
+        },
+      ],
+      "boxcall-style/no-outline-variant-in-disallowed-contexts": [
+        "error",
+        {
+          allowPatterns: [
+            // Allow outline variant still in RSVP neutral states (handled in EventDetails) for now
+            "EventDetails.tsx$",
+          ],
         },
       ],
     },
@@ -257,6 +267,8 @@ export default tseslint.config([
             },
           },
           "no-radius-violations": noRadiusViolationsRule,
+          "no-outline-variant-in-disallowed-contexts":
+            noOutlineVariantInDisallowedContextsRule,
         },
       },
     },

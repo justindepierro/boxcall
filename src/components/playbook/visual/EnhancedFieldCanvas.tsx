@@ -242,7 +242,7 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
     ];
   return (
     <div
-      className={`relative bg-white rounded-lg border border-slate-200 overflow-hidden ${className}`}
+      className={`relative surface-card rounded-lg border-subtle overflow-hidden ${className}`}
     >
       {/* Field Background */}
       <div
@@ -267,7 +267,7 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
       {!readOnly && (
         <div className="absolute top-4 right-4 z-20 space-y-2">
           {/* Field Mode Selector */}
-          <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-2">
+          <div className="surface-subtle rounded-lg shadow-sm border-subtle p-2">
             <div className="text-xs font-medium text-slate-600 mb-2">
               Background
             </div>
@@ -284,7 +284,7 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
             </select>
           </div>
           {/* Zoom Controls */}
-          <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-2">
+          <div className="surface-subtle rounded-lg shadow-sm border-subtle p-2">
             <div className="flex items-center space-x-1">
               <Button
                 size="xs"
@@ -319,7 +319,7 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
             </div>
           </div>
           {/* Player Controls */}
-          <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-2 space-y-2">
+          <div className="surface-subtle rounded-lg shadow-sm border-subtle p-2 space-y-2">
             <Button
               size="xs"
               variant={isDrawingRoute ? "danger" : "secondary"}

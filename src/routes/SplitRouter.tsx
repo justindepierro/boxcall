@@ -140,7 +140,7 @@ export const SplitRouter: React.FC = () => {
         path="*"
         element={
           <RouteLoader routeName="not-found">
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+            <div className="min-h-screen surface-app flex items-center justify-center p-4">
               <div className="text-center">
                 <Typography
                   variant="headline-md"

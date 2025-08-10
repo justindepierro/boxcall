@@ -68,7 +68,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
   };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+      <div className="surface-card elevation-modal rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
         <div className="bc-card-padding">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">

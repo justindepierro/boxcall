@@ -152,11 +152,11 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
   };
   return (
     <div
-      className={`relative bg-white rounded-lg border border-slate-200 overflow-hidden ${className}`}
+      className={`relative surface-card rounded-lg border-subtle overflow-hidden ${className}`}
     >
       {/* Controls */}
       {!readOnly && (
-        <div className="absolute top-4 right-4 z-10 flex items-center space-x-2 bg-white rounded-lg shadow-sm border border-slate-200 p-2">
+        <div className="absolute top-4 right-4 z-10 flex items-center space-x-2 surface-subtle rounded-lg shadow-sm border-subtle p-2">
           <Button
             onClick={handleZoomIn}
             variant="ghost"

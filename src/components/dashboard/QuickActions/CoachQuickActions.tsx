@@ -32,7 +32,7 @@ export const CoachQuickActions: React.FC = () => {
         Build Practice Script
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
         className="w-full justify-start"
         onClick={() => console.log("Playbook Editor")}
@@ -41,7 +41,7 @@ export const CoachQuickActions: React.FC = () => {
         Playbook Editor
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
         className="w-full justify-start"
         onClick={() => console.log("Team Analytics")}
@@ -50,7 +50,7 @@ export const CoachQuickActions: React.FC = () => {
         Team Analytics
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
         className="w-full justify-start"
         onClick={() => console.log("Send Announcement")}

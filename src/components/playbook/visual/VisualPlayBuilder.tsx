@@ -36,9 +36,9 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
   ];
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-7xl h-full max-h-[90vh] flex flex-col">
+      <div className="surface-card elevation-modal rounded-lg shadow-xl w-full max-w-7xl h-full max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between bc-card-padding border-b border-slate-200">
+        <div className="flex items-center justify-between bc-card-padding border-b border-subtle surface-subtle">
           <div className="flex items-center space-x-4">
             <Typography
               variant="headline-sm"
@@ -71,7 +71,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
           </Button>
         </div>
         {/* View Mode Tabs */}
-        <div className="flex items-center border-b border-slate-200 bc-card-padding">
+        <div className="flex items-center border-b border-subtle bc-card-padding surface-subtle">
           {viewModeButtons.map((button) => {
             const Icon = button.icon;
             return (
@@ -95,7 +95,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
         {/* Content */}
         <div className="flex-1 flex overflow-hidden">
           {/* Sidebar */}
-          <div className="w-80 border-r border-slate-200 bg-slate-50 bc-card-padding overflow-y-auto">
+          <div className="w-80 border-r border-subtle surface-subtle bc-card-padding overflow-y-auto">
             {viewMode === "field" && (
               <div className="space-y-6">
                 <div>

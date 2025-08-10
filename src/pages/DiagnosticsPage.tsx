@@ -34,9 +34,13 @@ export const DiagnosticsPage: React.FC = () => {
   }, []);
   return (
     <div className="p-6 max-w-3xl mx-auto font-sans">
-      <h1 className="text-2xl font-semibold mb-4">Diagnostics (Dev Only)</h1>
+      <div className="Typography typography-headline-md mb-4">
+        Diagnostics (Dev Only)
+      </div>
       <section className="mb-8">
-        <h2 className="text-xl font-medium mb-2">Build Metadata</h2>
+        <div className="Typography typography-headline-xs mb-2">
+          Build Metadata
+        </div>
         <pre className="bg-surface-secondary p-3 rounded text-sm overflow-auto">
           {JSON.stringify(
             {
@@ -49,7 +53,7 @@ export const DiagnosticsPage: React.FC = () => {
         </pre>
       </section>
       <section>
-        <h2 className="text-xl font-medium mb-2">Web Vitals</h2>
+        <div className="Typography typography-headline-xs mb-2">Web Vitals</div>
         {vitals.length === 0 && (
           <p className="text-text-secondary text-sm">Waiting for metrics...</p>
         )}
