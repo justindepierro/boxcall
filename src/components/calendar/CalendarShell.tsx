@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useAuth } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import {
@@ -16,6 +16,7 @@ import { EventModal } from "./EventModal";
 import { Card, Button } from "../ui"; // adjust relative path if needed
 import Icon from "../ui/Icon/Icon";
 import { CalendarPageSkeleton, CalendarErrorSkeleton } from "./CalendarSkeletons";
+import { useCalendarUrlState, mapQueryViewToInternal, mapInternalViewToQuery } from "./hooks/useCalendarUrlState";
 
 // NOTE: This shell intentionally mirrors logic from legacy CalendarPage; once stable we will remove duplicated code there.
 export const CalendarShell: React.FC = () => {
@@ -34,9 +35,7 @@ export const CalendarShell: React.FC = () => {
     },
   });
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentView, setCurrentView] = useState<
-    "dayGridMonth" | "timeGridWeek" | "timeGridDay"
-  >("dayGridMonth");
+  const [currentView, setCurrentView] = useState<"dayGridMonth" | "timeGridWeek" | "timeGridDay">("dayGridMonth");
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [showEventModal, setShowEventModal] = useState(false);
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
@@ -71,6 +70,46 @@ export const CalendarShell: React.FC = () => {
   const deleteEventMutation = useDeleteEvent();
   const updateEventMutation = useUpdateEvent();
 
+  // URL sync
+  const { setState: setUrlState } = useCalendarUrlState({
+    onChange: (s) => {
+      // incoming view param
+      if (s.view) {
+        const internal = mapQueryViewToInternal(s.view);
+        if (internal && internal !== currentView) {
+          setCurrentView(internal as "dayGridMonth" | "timeGridWeek" | "timeGridDay");
+          calendarRef.current?.changeView(internal);
+        }
+      }
+      // incoming date param: if provided and calendar API available, navigate there
+      if (s.date) {
+        const api = calendarRef.current?.getApi();
+        if (api) {
+          const currentDate = api.getDate();
+            const desired = new Date(s.date + "T00:00:00");
+            if (Math.abs(desired.getTime() - currentDate.getTime()) > 1000 * 60 * 60 * 6) {
+              api.gotoDate(desired);
+            }
+        }
+      }
+      // incoming event param: open modal if event found in cache
+      if (s.event && events.length) {
+        const match = events.find((e) => e.id === s.event);
+        if (match) {
+          setSelectedEvent(match);
+          setShowEventModal(true);
+        }
+      }
+    },
+  });
+
+  // Push view changes to URL
+  useEffect(() => {
+    const viewParam = mapInternalViewToQuery(currentView);
+    setUrlState({ view: viewParam }, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentView]);
+
   const handleViewChange = (view: "dayGridMonth" | "timeGridWeek" | "timeGridDay") => {
     setCurrentView(view);
     calendarRef.current?.changeView(view);
@@ -81,6 +120,7 @@ export const CalendarShell: React.FC = () => {
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
     setShowEventModal(true);
+  setUrlState({ event: event.id });
   };
   const handleDateSelect = (selectInfo: { startStr: string; endStr: string }) => {
     if (profile?.role === "coach" || profile?.role === "admin") {
@@ -191,6 +231,7 @@ export const CalendarShell: React.FC = () => {
           setSelectedEvent(null);
           setIsCreatingEvent(false);
           setIsEditingEvent(false);
+          setUrlState({ event: undefined }, true);
         }}
         event={selectedEvent}
         setEvent={setSelectedEvent}
