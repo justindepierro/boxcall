@@ -1,4 +1,4 @@
-# Style System Comprehensive Audit Roadmap
+    # Style System Comprehensive Audit Roadmap
 
 > Living document for consolidating and professionalizing BoxCall UI. Update as phases complete. (Created: 2025-08-09)
 
@@ -15,7 +15,8 @@
 
 | Signal                                                           | Count / Note            | Action Priority                       |
 | ---------------------------------------------------------------- | ----------------------- | ------------------------------------- |
-| `text-white` occurrences                                         | 322                     | Audit surfaces; reduce via primitives |
+| `text-white` occurrences (baseline)                              | 322                     | Audit surfaces; reduce via primitives |
+| `text-white` current (post-codemod)                              | 0                       | Maintain at 0 (allow only via token)  |
 | Legacy `bg-emerald-*`                                            | 33                      | Codemod to jade scale (Phase 0)       |
 | `bg-blue-600` (strong CTAs)                                      | 27                      | Map to semantic primary / secondary   |
 | Direct raw button elements (non-`<Button>`)                      | TBC (script)            | Inventory → migrate                   |
@@ -47,17 +48,17 @@
 
 ### Phase 1 (Unification)
 
-6. ✅ Inventory & migrate all raw `<button>` elements to shared `Button` component (completed; 0 non-exempt remain; ESLint guard in place).
+6. ✅ Inventory & migrate all raw `<button>` elements to shared `Button` component (completed; guard in place; current heuristic count = 1 (documented exemption)).
 7. ⏳ Implement `Badge` & `Tag` primitives; refactor inline pills / status chips (Badge exists; Tag pending).
 8. ✅ Token system centralization (`tokens.ts`) already in place; rename task to "Adopt tokens.ts as canonical palette" (complete).
-9. ⏳ Apply semantic surface classes (`surface-card`, `surface-subtle`) to cards/modals instead of raw `bg-white/bg-gray-*` (next: identify top 15 offenders via style audit extension).
+9. ⏳ Apply semantic surface classes (`surface-card`, `surface-subtle`) to cards/modals instead of raw `bg-white/bg-gray-*` (in progress; remaining high-frequency: trophy case list items, calendar event rows, placeholder panels, gray-50 hovers).
 10. ⏳ Replace ad-hoc heading classes with `<Typography>` usage (script to flag offenders) – planned after surface pass.
 
 ### Phase 2 (Automation & Gates)
 
 11. ✅ `scripts/style-audit.mjs` baseline generated (metrics recorded; to be extended with surface semantic mapping check).
 12. ✅ `scripts/contrast-check.mjs` added; button variants AA baseline = 0 violations.
-13. ⏳ ESLint custom rule: forbid unsafe `text-white` (pending – will use style-audit JSON as source-of-truth to reduce false positives).
+13. ✅ ESLint custom rule: forbid unsafe `text-white` (warn mode). Next: add autofix & escalate to error once residual surface pass completes.
 14. ⏳ Add audit scripts to predev / CI with non-failing mode (after rule 13 drafted).
 15. ⏳ Snapshot baseline diff before enabling fail mode (target after surfaces + Typography migration to avoid churn).
 
@@ -115,7 +116,7 @@ Long Term (Governance & Theming):
 
 | Metric                              | Baseline                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Goal Phase 1   | Goal Phase 2 | Final Target             |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ------------ | ------------------------ |
-| Raw `text-white` occurrences        | 322 (197 flagged heuristically for review)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | <250           | <190         | <150 (mostly primitives) |
+| Raw `text-white` occurrences        | 322 (baseline) → 0 (post codemod)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | <250 (ACH)     | <190 (ACH)   | <150 (ACH)               |
 | Legacy emerald usages               | 33 (→ 0 after codemod)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | 0              | 0            | 0                        |
 | Blue CTA backgrounds (non-semantic) | 27 (→ 1 after codemod)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | <10            | <3           | 0                        |
 | Non-primitive button files          | 78 (baseline) → 74 (after pass 1) → 73 (JoinTeam) → 72 (Templates) → 71 (PracticeBlocksList) → 70 (PlaybookPage) → 69 (CoachManagementPage) → 68 (PersonalCalendar) → 67 (BulkActionsToolbar) → 66 (InteractivePlayBuilder) → 65 (CreateTeam) → 64 (RoleBasedDashboard) → 63 (DataTab) → 62 (CSVImportModal) → 61 (TimelineAllocation & CreateCoachAccount) → 60 (OverviewTab) → 53 (5-count batch: TeamOnboarding, AdvancedFilters, AutocompleteDropdown, PlaybookGlossary, EnhancedFieldCanvas, ScriptSelectorModal, SubscriptionRoute) → 48 (4-count batch: UserMenu, PlayBuilderWizard, QuickEntry, PlayFilters, VisualPlayBuilder) → 38 (3-count batch: PlayBuilderCore, DrawingTools, FieldCanvas, TimelineSlider, AddBlockModal, AddGroupModal, EditGroupModal, Breadcrumb, ErrorBoundary, MobileErrorState) → 35 (4-count batch part 2: PracticeHeader, CalendarPage, PlayerDashboardPage, TimelineAllocation) → 34 (PlayCard workflow buttons) → 29 (2-count batch: DevTools, MobileQuickActions, AdvancedSearchBar, AddNewDropdown, QuickFilters) → 28 (routes & toast batch: Toast, TeamBulletin, AppRouter 404, PermissionRoute, TeamMemberRoute) | <40 (ACHIEVED) | <15          | <5                       |
@@ -125,12 +126,41 @@ Long Term (Governance & Theming):
 ## 7. Immediate Task List (Active)
 
 - [x] (P0) Codemod emerald → jade mapping applied (156 replacements; legacy usages now 0).
-- [ ] (P0) Identify & patch white-on-light risk clusters (197 heuristic candidates; prioritize high-traffic screens first).
+- [x] (P0) Identify & patch white-on-light risk clusters (semantic codemod reduced to 0).
 - [x] (P0) Migrate highest-traffic blue CTAs to `Button` primary variant (blue 500/600 CTAs → jade; 1 remaining in docs README).
 - [x] (P0) Add `.debug-contrast` utility (runtime overlay loaded in dev via import in `main.tsx`).
 - [x] (P0) Commit baseline metrics (this doc).
+- [ ] (P1) Surface remediation: convert residual `bg-gray-50` / `bg-white` event rows & placeholder cards (`TeamCalendar` list items, `TeamTrophyCase` list, onboarding panels) to `surface-subtle` + semantic hover.
+- [ ] (P1) Add white-on-white interaction detection to audit (ghost/transparent buttons on white cards lacking hover contrast or border token).
+- [ ] (P1) Badge/Tooltip dark surface migration: replace raw `bg-gray-900` tooltip panels with semantic `surface-inverse` token (or introduce if missing) + `text-text-inverse`.
+- [ ] (P1) Extend codemod to normalize `text-gray-600 dark:text-gray-300` pairs → `text-text-secondary` (pending residual occurrences).
+- [ ] (P2) ESLint `no-unsafe-white`: add autofix for common pair patterns and escalate to error after surface backlog < 10 raw white/grays.
+- [ ] (P2) Add audit check: flag cards using `bg-white` without `surface-card` (enforce semantic parity).
 
-## 8. Risk & Mitigation
+## 8. White-on-White Interaction Detection (New)
+
+Issue Observed: Low visual affordance where ghost/transparent buttons and light tokens sit on white or near-white (`bg-white`, `bg-gray-50`) cards (e.g., Team Trophy Case action, Team Calendar empty-state or list context) producing minimal contrast or hover differentiation.
+
+Detection Heuristic (to integrate into `style-audit.mjs`):
+1. Parse each JSX class attribute containing Button wrapper markers (e.g., `variant=", class with `inline-flex` + `focus:ring-` patterns).
+2. Inspect surrounding 200 char context for ancestor surface classes containing `bg-white`, `bg-gray-50`, `surface-card` WITHOUT companion border (`border-`, `shadow-`, `divide-`) or hover background token.
+3. Flag as `white-on-white-interaction` if button variant is `ghost` or `outline` AND no `hover:bg-` / `hover:surface-` token present.
+4. Output count + first 20 samples to JSON & Markdown; target reduction to 0 before enabling error gating.
+
+Remediation Strategy:
+- Apply `hover:bg-surface-subtle` or switch to `outline` variant where emphasis needed.
+- Introduce `surface-subtle` background for list rows (`TeamCalendar` events) replacing `bg-gray-50` / dark pair with semantic token + `hover:surface-subtle-hover` (to be defined) for consistent theming.
+- For trophy case placeholder steps: use `text-text-secondary` + lighten background to `surface-subtle` to create 8–12% luminance delta from card root, improving separation without heavy borders.
+
+Planned Token Additions:
+- `surface-inverse` (dark tooltip/popover panel) to replace ad-hoc `bg-gray-900`.
+- `surface-subtle-hover` (transient hover state for subtle rows) → maps to a slightly darker neutral in light mode and lighter overlay in dark mode.
+
+KPIs:
+- White-on-white interaction count initial (TBD after script) → target 0.
+- Tooltip dark surface raw usages → migrate 100% to `surface-inverse`.
+
+## 9. Risk & Mitigation
 
 | Risk                                    | Impact                | Mitigation                                                  |
 | --------------------------------------- | --------------------- | ----------------------------------------------------------- |
@@ -139,14 +169,14 @@ Long Term (Governance & Theming):
 | Performance risk adding dynamic classes | Build size growth     | Consolidate to semantic safelist & purge unused             |
 | Over-restriction from ESLint early      | Dev friction          | Start in warn mode → escalate to error after clean baseline |
 
-## 9. Follow-Up / Stretch Enhancements
+## 10. Follow-Up / Stretch Enhancements
 
 - Team theming (upload palette → dynamic CSS vars).
 - Typography responsive scale refinements (clamp-based fluid sizing).
 - Motion token system (duration, easing, distance) with dark/light adjustments.
 - Global spacing scale tokenization (density already partly done; finalize).
 
-## 10. Ownership & Governance
+## 11. Ownership & Governance
 
 | Area                 | Owner | Backup |
 | -------------------- | ----- | ------ |

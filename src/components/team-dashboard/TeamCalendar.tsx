@@ -106,16 +106,16 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
         />
       )}
       {!!events.length && !isLoading && (
-        <ul className="space-y-2" aria-label="Upcoming team events">
+  <ul className="space-y-2" aria-label="Upcoming team events">
           {events.slice(0, 6).map((ev) => (
             <li
               key={ev.id}
-              className="flex items-center justify-between text-sm bg-gray-50 dark:bg-gray-700 rounded px-3 py-2"
+              className="flex items-center justify-between text-sm surface-subtle rounded px-3 py-2 hover:bg-surface-subtle/70 transition-colors"
             >
-              <span className="font-medium text-gray-800 dark:text-gray-100">
+              <span className="font-medium text-text-primary">
                 {ev.title}
               </span>
-              <span className="text-gray-500 dark:text-gray-300">
+              <span className="text-text-secondary">
                 {new Date(ev.starts_at).toLocaleDateString(undefined, {
                   month: "short",
                   day: "numeric",

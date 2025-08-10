@@ -22,7 +22,7 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = ({ teamId }) => {
         This area will display season goals, helmet stickers, medals, and
         academic/community awards as you begin using the platform.
       </Typography>
-      <ol className="list-decimal list-inside space-y-1 text-sm text-gray-600 dark:text-gray-300 mb-4">
+  <ol className="list-decimal list-inside space-y-1 text-sm text-text-secondary mb-4">
         <li>Record a game or practice result (updates streak & rank)</li>
         <li>Award a player a sticker (coming soon)</li>
         <li>Add a season goal (coming soon)</li>
