@@ -218,45 +218,45 @@ export function PracticePlanner() {
     };
   };
   if (!teamId) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Typography variant="body-lg" className="text-gray-600">
-          Team not found
-        </Typography>
-      </div>
-    );
+      return (
+        <div className="min-h-screen surface-app flex items-center justify-center">
+          <Typography variant="body-lg" className="text-text-secondary">
+            Team not found
+          </Typography>
+        </div>
+      );
   }
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
-      </div>
-    );
+      return (
+        <div className="min-h-screen surface-app flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
+        </div>
+      );
   }
   return (
-    <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen surface-app">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+  <div className="surface-header border-b border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
                 onClick={() => navigate(`/team/${teamId}`)}
-                className="text-gray-600 hover:text-gray-900"
+                  className="text-text-secondary hover:text-text-primary"
               >
                 ← Back to Team
               </Button>
               <Typography
                 variant="headline-lg"
-                className="text-navy-900 font-display"
+                  className="text-text-primary font-display"
               >
                 Practice Schedule
               </Typography>
             </div>
             <div className="flex items-center space-x-4">
               {selectedSchedule && (
-                <div className="text-sm text-gray-600">
+                  <div className="text-sm text-text-secondary">
                   {format(selectedSchedule.date, "MMM d, yyyy")} •{" "}
                   {selectedSchedule.location}
                 </div>
@@ -278,7 +278,7 @@ export function PracticePlanner() {
             <Card className="mb-6">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <Typography variant="headline-md" className="text-navy-900">
+                  <Typography variant="headline-md" className="text-text-primary">
                     Practice Blocks
                   </Typography>
                   <div className="flex items-center space-x-4">
@@ -286,7 +286,7 @@ export function PracticePlanner() {
                     <Button
                       onClick={() => setIsPDFExportOpen(true)}
                       variant="outline"
-                      className="bg-white border-navy-200 text-navy-700 hover:bg-navy-50 flex items-center gap-2"
+                      className="surface-card border-subtle text-text-secondary hover:text-text-primary surface-subtle-hover flex items-center gap-2"
                       disabled={currentBlocks.length === 0}
                     >
                       <Icon name="pdf" size="sm" />
@@ -345,20 +345,20 @@ export function PracticePlanner() {
                         className={`space-y-3 min-h-[200px] p-4 rounded-lg placeholder-zone transition-colors ${
                           snapshot.isDraggingOver
                             ? "border-jade-400 bg-jade-50"
-                            : "border-gray-300 bg-gray-50"
+                            : "border-subtle surface-subtle"
                         }`}
                       >
                         {currentBlocks.length === 0 ? (
                           <div className="text-center py-8">
                             <Typography
                               variant="body-lg"
-                              className="text-gray-500 mb-4"
+                                className="text-text-muted mb-4"
                             >
                               No practice blocks yet
                             </Typography>
                             <Typography
                               variant="body-sm"
-                              className="text-gray-400"
+                                className="text-text-muted"
                             >
                               Add blocks using the quick actions or create
                               custom blocks
@@ -376,7 +376,7 @@ export function PracticePlanner() {
                                 <div
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
-                                  className={`bg-white border rounded-lg p-4 shadow-sm transition-shadow ${
+                                  className={`surface-card border-subtle rounded-lg p-4 shadow-sm transition-shadow ${
                                     snapshot.isDragging
                                       ? "shadow-lg"
                                       : "hover:shadow-md"
@@ -398,7 +398,7 @@ export function PracticePlanner() {
                                         <div className="flex items-center space-x-3">
                                           <Typography
                                             variant="body-lg"
-                                            className="font-semibold text-navy-900"
+                                            className="font-semibold text-text-primary"
                                           >
                                             {block.title}
                                           </Typography>
@@ -409,7 +409,7 @@ export function PracticePlanner() {
                                               className="text-amber-500"
                                             />
                                           )}
-                                          <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-mono">
+                                          <span className="px-2 py-1 surface-subtle text-text-secondary rounded text-sm font-mono">
                                             {block.duration}min
                                           </span>
                                           {practiceStarted && (
@@ -424,7 +424,7 @@ export function PracticePlanner() {
                                         {block.description && (
                                           <Typography
                                             variant="body-sm"
-                                            className="text-gray-600 mt-1"
+                                            className="text-text-secondary mt-1"
                                           >
                                             {block.description}
                                           </Typography>
@@ -492,7 +492,7 @@ export function PracticePlanner() {
                 <div className="p-4">
                   <Typography
                     variant="headline-sm"
-                    className="text-navy-900 mb-4"
+                    className="text-text-primary mb-4"
                   >
                     Quick Add Blocks
                   </Typography>
@@ -502,7 +502,7 @@ export function PracticePlanner() {
                         <div key={key} className="space-y-2">
                           <Typography
                             variant="body-sm"
-                            className="font-medium text-gray-700"
+                            className="font-medium text-text-secondary"
                           >
                             {config.title}
                           </Typography>
@@ -538,7 +538,7 @@ export function PracticePlanner() {
                 <div className="p-4">
                   <Typography
                     variant="headline-sm"
-                    className="text-navy-900 mb-4"
+                    className="text-text-primary mb-4"
                   >
                     Custom Block
                   </Typography>
@@ -556,7 +556,7 @@ export function PracticePlanner() {
                 <div className="p-4">
                   <Typography
                     variant="headline-sm"
-                    className="text-navy-900 mb-4"
+                    className="text-text-primary mb-4"
                   >
                     Practice Templates
                   </Typography>
@@ -590,26 +590,26 @@ export function PracticePlanner() {
                   <div className="p-4">
                     <Typography
                       variant="headline-sm"
-                      className="text-navy-900 mb-4"
+                      className="text-text-primary mb-4"
                     >
                       Practice Info
                     </Typography>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="font-medium text-gray-700">Date:</span>
+                        <span className="font-medium text-text-secondary">Date:</span>
                         <span className="ml-2">
                           {format(selectedSchedule.date, "MMM d, yyyy")}
                         </span>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">Time:</span>
+                        <span className="font-medium text-text-secondary">Time:</span>
                         <span className="ml-2">
                           {format(selectedSchedule.startTime, "h:mm a")} -{" "}
                           {format(selectedSchedule.endTime, "h:mm a")}
                         </span>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-medium text-text-secondary">
                           Location:
                         </span>
                         <span className="ml-2">
@@ -617,7 +617,7 @@ export function PracticePlanner() {
                         </span>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-medium text-text-secondary">
                           Field:
                         </span>
                         <span className="ml-2 capitalize">
@@ -625,7 +625,7 @@ export function PracticePlanner() {
                         </span>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-medium text-text-secondary">
                           Total Duration:
                         </span>
                         <span className="ml-2 font-mono">
@@ -700,12 +700,12 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-6">
-        <Typography variant="headline-md" className="text-navy-900 mb-6">
+  <Typography variant="headline-md" className="text-text-primary mb-6">
           Create Custom Practice Block
         </Typography>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-text-secondary mb-2">
               Block Title
             </label>
             <Input
@@ -717,19 +717,19 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-text-secondary mb-2">
               Description
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of the practice block..."
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-jade-500 focus:border-jade-500"
+              className="w-full p-3 border border-subtle rounded-md focus:ring-jade-500 focus:border-jade-500"
               rows={3}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-text-secondary mb-2">
               Duration (minutes)
             </label>
             <Input
@@ -773,7 +773,7 @@ function TemplatesModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-6">
-        <Typography variant="headline-md" className="text-navy-900 mb-6">
+  <Typography variant="headline-md" className="text-text-primary mb-6">
           Practice Templates
         </Typography>
         <div className="space-y-3">
@@ -787,7 +787,7 @@ function TemplatesModal({
                   <Typography variant="body-lg" className="font-medium">
                     {template.name}
                   </Typography>
-                  <Typography variant="body-sm" className="text-gray-600">
+                  <Typography variant="body-sm" className="text-text-secondary">
                     {template.duration} min • {template.blocks.length} blocks
                   </Typography>
                 </div>
