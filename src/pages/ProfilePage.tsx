@@ -114,7 +114,11 @@ export const ProfilePage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Typography variant="headline-md" as="h1" className="text-red-600 mb-4">
+          <Typography
+            variant="headline-md"
+            as="h1"
+            className="text-red-600 mb-4"
+          >
             Profile Not Found
           </Typography>
           <p className="text-text-secondary">
@@ -246,7 +250,7 @@ export const ProfilePage: React.FC = () => {
                 placeholder="Tell us about yourself..."
                 value={formData.bio}
                 onChange={(e) => handleInputChange("bio", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-text-inverse font-sans"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-text-inverse font-sans"
               />
             </div>
           </div>

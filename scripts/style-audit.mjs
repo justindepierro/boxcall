@@ -46,6 +46,8 @@ const metrics = {
   tooltipInverseSurface: 0,
   popoverInverseTotal: 0,
   popoverInverseSurface: 0,
+  elevationUsage: {},
+  radiusViolations: [],
 };
 
 const brandPatterns = [
@@ -84,7 +86,10 @@ for (const file of files) {
     for (const m of matches) {
       const lineStart = content.lastIndexOf("\n", m.index) + 1;
       const lineEnd = content.indexOf("\n", m.index);
-      const line = content.slice(lineStart, lineEnd === -1 ? undefined : lineEnd);
+      const line = content.slice(
+        lineStart,
+        lineEnd === -1 ? undefined : lineEnd
+      );
       if (/surface-inverse/.test(line)) metrics.popoverInverseSurface++;
     }
   }
@@ -107,6 +112,15 @@ for (const file of files) {
     while ((b = bgRegex.exec(cls))) {
       const key = b[1];
       metrics.bgClasses[key] = (metrics.bgClasses[key] || 0) + 1;
+    }
+    // Elevation utility usage (elevation-* tokens)
+    if (/(^|\s)elevation-/.test(cls)) {
+      for (const token of cls
+        .split(/\s+/)
+        .filter((t) => t.startsWith("elevation-"))) {
+        metrics.elevationUsage[token] =
+          (metrics.elevationUsage[token] || 0) + 1;
+      }
     }
     for (const bp of brandPatterns) {
       if (cls.includes(bp))
@@ -171,9 +185,93 @@ for (const file of files) {
   }
 }
 
+// Radius violation detection pass (second pass so we have line numbers cleanly)
+// Criteria (initial heuristic):
+//  - Any arbitrary value radius: rounded-[...]
+//  - Any token not matching Tailwind core scale /^rounded(-(none|sm|md|lg|xl|2xl|3xl|full))?$/
+//  - Directional radii (rounded-tl-*, etc.) are allowed but only if they use allowed scale tokens
+// We re-read class attributes for simplicity (files already loaded above)
+const allowedRadiusScale = new Set([
+  "none",
+  "sm",
+  "",
+  "md",
+  "lg",
+  "xl",
+  "2xl",
+  "3xl",
+  "full",
+]);
+for (const file of files) {
+  const content = readFileSync(file, "utf8");
+  const twMatches = [...content.matchAll(/class(Name)?="([^"]*)"/g)];
+  for (const m of twMatches) {
+    const cls = m[2];
+    if (!/rounded-/.test(cls)) continue;
+    const upto = content.slice(0, m.index);
+    const line = upto.split(/\n/).length;
+    for (const token of cls
+      .split(/\s+/)
+      .filter((t) => t.startsWith("rounded-"))) {
+      // Arbitrary values
+      if (/rounded-\[/.test(token)) {
+        metrics.radiusViolations.push({
+          file: relative(ROOT, file),
+          line,
+          token,
+          className: cls.slice(0, 140),
+          reason: "arbitrary-value",
+        });
+        continue;
+      }
+      // Directional patterns e.g., rounded-t-md, rounded-tr-lg
+      if (/^rounded-[tblr]{1,2}-/.test(token)) {
+        const scale = token.split("-").slice(-1)[0];
+        if (!allowedRadiusScale.has(scale)) {
+          metrics.radiusViolations.push({
+            file: relative(ROOT, file),
+            line,
+            token,
+            className: cls.slice(0, 140),
+            reason: "unsupported-scale-directional",
+          });
+        }
+        continue;
+      }
+      // Simple scale: rounded, rounded-md, etc.
+      if (/^rounded(-[a-z0-9]+)?$/.test(token)) {
+        const scale = token.includes("-") ? token.split("-")[1] : "";
+        if (!allowedRadiusScale.has(scale)) {
+          metrics.radiusViolations.push({
+            file: relative(ROOT, file),
+            line,
+            token,
+            className: cls.slice(0, 140),
+            reason: "unsupported-scale",
+          });
+        }
+        continue;
+      }
+      // Anything else (like rounded-tl-md) that slipped through
+      if (!/^rounded(-[a-z0-9-]+)*$/.test(token)) {
+        metrics.radiusViolations.push({
+          file: relative(ROOT, file),
+          line,
+          token,
+          className: cls.slice(0, 140),
+          reason: "unrecognized",
+        });
+      }
+    }
+  }
+}
+
 // Sort bg classes by count desc
 const sortedBg = Object.entries(metrics.bgClasses).sort((a, b) => b[1] - a[1]);
 const sortedBrand = Object.entries(metrics.brandClasses).sort(
+  (a, b) => b[1] - a[1]
+);
+const sortedElevation = Object.entries(metrics.elevationUsage).sort(
   (a, b) => b[1] - a[1]
 );
 
@@ -238,6 +336,16 @@ mdLines.push(
   )
 );
 
+if (sortedElevation.length) {
+  mdLines.push("\n## Elevation Utility Usage");
+  mdLines.push(
+    table(
+      sortedElevation.map(([k, v]) => [k, String(v)]),
+      ["Elevation Class", "Count"]
+    )
+  );
+}
+
 mdLines.push("\n## Sample text-white Locations (first 25)");
 mdLines.push(
   table(
@@ -267,6 +375,23 @@ mdLines.push(
     ["File:Line", "ClassName Snip"]
   )
 );
+
+if (metrics.radiusViolations.length) {
+  mdLines.push("\n## Radius Violations (first 25)");
+  mdLines.push(
+    table(
+      metrics.radiusViolations
+        .slice(0, 25)
+        .map((e) => [
+          e.file + ":" + e.line,
+          e.token,
+          e.reason,
+          "`" + e.className + "`",
+        ]),
+      ["File:Line", "Token", "Reason", "Class Snip"]
+    )
+  );
+}
 
 const mdPath = join(outDir, "style-audit.md");
 writeFileSync(mdPath, mdLines.join("\n"));

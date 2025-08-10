@@ -64,7 +64,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
           variant === "subtle" && variantStyles.subtle,
           variant === "ghost" && variantStyles.ghost,
           variant === "danger" && variantStyles.danger,
-          "!rounded-xs !p-0",
+          "!rounded-sm !p-0",
           className
         )}
         title={tooltip}

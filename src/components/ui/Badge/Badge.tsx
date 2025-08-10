@@ -155,7 +155,7 @@ export const Badge: React.FC<BadgeProps> = ({
 
   // Progress badge with filling animation
   const progressElement = progress !== undefined && (
-    <div className="absolute inset-0 overflow-hidden rounded-inherit">
+    <div className="absolute inset-0 overflow-hidden">
       <div
         className="h-full bg-gradient-to-r from-green-400 to-jade-500 transition-all duration-500 ease-out"
         style={{ width: `${progress}%` }}

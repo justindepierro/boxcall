@@ -59,12 +59,14 @@ export const MobileQuickActions: React.FC<MobileQuickActionsProps> = ({
     <div className={`${className}`}>
       {/* Quick Actions Header */}
       <div className="flex items-center justify-between mb-3 px-1">
-        <Typography variant="label-lg" as="h3" className="text-gray-700 dark:text-gray-300">
+        <Typography
+          variant="label-lg"
+          as="h3"
+          className="text-gray-700 dark:text-gray-300"
+        >
           Quick Actions
         </Typography>
-        <span className="text-xs text-text-secondary">
-          Tap to execute
-        </span>
+        <span className="text-xs text-text-secondary">Tap to execute</span>
       </div>
 
       {/* Actions Grid */}
@@ -75,7 +77,7 @@ export const MobileQuickActions: React.FC<MobileQuickActionsProps> = ({
             variant="secondary"
             size="sm"
             onClick={() => handleActionClick(action)}
-            className={`relative flex flex-col items-center justify-center min-h-[80px] p-4 rounded-xl shadow-lg active:shadow-sm transition-all duration-200 ease-out active:scale-95 transform touch-manipulation ${getActionStyles(action.color)} !h-auto`}
+            className={`relative flex flex-col items-center justify-center min-h-[80px] p-4 rounded-md shadow-lg active:shadow-sm transition-all duration-200 ease-out active:scale-95 transform touch-manipulation ${getActionStyles(action.color)} !h-auto`}
             aria-label={action.label}
           >
             {/* Icon */}

@@ -7,6 +7,7 @@ import tseslint from "typescript-eslint";
 import path from "node:path";
 import { noRawButtonRule } from "./scripts/eslint-rules/no-raw-button.js";
 import { noUnsafeWhiteRule } from "./scripts/eslint-rules/no-unsafe-white.js";
+import { noRadiusViolationsRule } from "./scripts/eslint-rules/no-radius-violations.js";
 
 export default tseslint.config([
   {
@@ -86,6 +87,12 @@ export default tseslint.config([
       ],
       "boxcall-style/no-legacy-badge-variants": "warn",
       "boxcall-style/no-raw-surface-gradients": "warn",
+      "boxcall-style/no-radius-violations": [
+        "warn",
+        {
+          allowScale: ["", "none", "sm", "md", "lg", "full"],
+        },
+      ],
     },
   },
   // Plugin injection for custom rule namespace
@@ -232,7 +239,9 @@ export default tseslint.config([
                   ) {
                     const v = String(attr.value.value);
                     if (
-                      /role=\"tooltip\"/.test(context.getSourceCode().getText()) &&
+                      /role=\"tooltip\"/.test(
+                        context.getSourceCode().getText()
+                      ) &&
                       /bg-gray-900/.test(v) &&
                       !/surface-inverse/.test(v)
                     ) {
@@ -247,6 +256,7 @@ export default tseslint.config([
               };
             },
           },
+          "no-radius-violations": noRadiusViolationsRule,
         },
       },
     },

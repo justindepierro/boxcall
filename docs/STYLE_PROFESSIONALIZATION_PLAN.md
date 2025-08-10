@@ -55,19 +55,21 @@
 | ----- | ---------------------------------------------- | ----------------------------- | ---------------------------------------------------------------------- |
 | B1    | Typography sweep codemod                       | All headings (h1–h5)          | 95% adoption                                                           |
 | B2    | Badge & Tag primitives                         | Status chips, filters, counts | 100% Tag adoption (0 inline pills) + Badge canonical variants complete |
-| B3    | Tooltip & Popover refactor (`surface-inverse`) | ComplexityBadge, menus, hints | Tooltip & Popover primitives added; inverse adoption metric tracking  |
+| B3    | Tooltip & Popover refactor (`surface-inverse`) | ComplexityBadge, menus, hints | Tooltip & Popover primitives added; inverse adoption metric tracking   |
 | B4    | Button variant audit & tighten spacing         | Variant map + docs            | No variant drift                                                       |
 | B5    | IconButton variant alignment                   | Danger/ghost/subtle mapping   | Shared interaction tokens                                              |
 | B6    | Add `surface-subtle-hover` token + class       | Row/list hovers               | Replace interim row-hover                                              |
 
 ### Phase C (Week Continuation)
 
-| Theme         | Tasks                                                                       | Tooling Additions                          |
-| ------------- | --------------------------------------------------------------------------- | ------------------------------------------ |
-| Governance    | ESLint autofix for `no-unsafe-white`, radius linter                         | Rule: no raw `rounded-*` outside allowlist |
-| Accessibility | Focus ring unification, reduced-motion fallback, contrast matrix generation | `contrast-matrix.mjs`                      |
-| Theming Prep  | Generate CSS var layer from tokens.ts (build step)                          | `generate-tokens-css.ts`                   |
-| Reporting     | Weekly style delta report                                                   | CI job artifact                            |
+| Theme         | Tasks                                                                                                | Tooling Additions                                    |
+| ------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Governance    | ESLint autofix for `no-unsafe-white`, escalate radius rule → error, surface container lint           | Rules: no raw `rounded-*` (error), no raw neutral bg |
+| Accessibility | Reduced-motion fallback, expanded contrast matrix (full text×surface), keyboard focus audit          | `contrast-matrix.mjs` (expanded)                     |
+| Theming Prep  | Theme registry, dark + high-contrast packs, build-themes script, runtime ThemeManager, prebuild hook | `generate-tokens-css.ts`, `build-themes.mjs`         |
+| Semantic Map  | Codemod raw color utilities in primitives → var classes; introduce semantic radius/spacing helpers   | `codemod-semantic-colors.mjs` (planned)              |
+| Reporting     | Weekly style delta report, theme validation report (contrast, missing tokens)                        | CI job artifact, theme validation script             |
+| Hardening     | Utility usage manifest & CI gate (fail on new disallowed categories), palette drift detector         | `style-audit.mjs` extension                          |
 
 ---
 
@@ -125,15 +127,22 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 - [x] Tag primitive rollout (replaced all inline pills) + CI gate for new inline pill patterns.
 - [ ] Draft Badge primitive API + sample variants (neutral, accent, info, danger) and replace any heavy status chips.
 - [x] Implement tooltip / popover inverse surface (primitives added; rollout continuing).
- - [x] Implement tooltip / popover inverse surface (primitives added; rollout continuing).
- - [x] Add smart tooltip collision handling.
- - [x] Add Popover component (inverse) with focus/outside click handling.
- - [x] Extend audit: tooltip & popover inverse adoption metrics.
- - [x] Lint rule scaffold: no-raw-tooltip-bg.
- - [x] Codemods: badge variants, tooltip bg normalization.
- - [x] Introduce unified focus ring utilities (.focus-ring / offset variants).
+- [x] Implement tooltip / popover inverse surface (primitives added; rollout continuing).
+- [x] Add smart tooltip collision handling.
+- [x] Add Popover component (inverse) with focus/outside click handling.
+- [x] Extend audit: tooltip & popover inverse adoption metrics.
+- [x] Lint rule scaffold: no-raw-tooltip-bg.
+- [x] Codemods: badge variants, tooltip bg normalization.
+- [x] Introduce unified focus ring utilities (.focus-ring / offset variants).
 - [ ] Extend style-audit to log elevation usage counts & inverse adoption %.
 - [ ] Begin lint rule scaffold for surface enforcement (no raw bg-neutral on containers).
+- [ ] Integrate tokens:build into predev & prebuild (guaranteed fresh variables).
+- [ ] Add theme build script & generated theme CSS import.
+- [ ] Scaffold Theme Registry (light, dark, high-contrast) + ThemeManager.
+- [ ] Expand contrast matrix to include semantic text tokens vs all surfaces.
+- [ ] Add utility usage manifest generation (fail on unexpected new categories once stable).
+- [ ] Codemod: replace remaining raw color utilities inside core primitives with CSS var classes.
+- [ ] Lint rule: forbid direct hex/rgba in component TSX (outside tokens/config). (Warn → error)
 
 ---
 
@@ -148,25 +157,33 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 - [x] Row hover standard applied everywhere (interim).
 - [ ] CI gating active for unsafe surfaces & text colors.
 - [ ] Documentation updated (guide + contrast matrix).
+- [ ] Theme registry (light/dark/high-contrast) operational.
+- [ ] Prebuild tokens + themes generation automated.
+- [ ] No raw color utilities inside primitive components.
+- [ ] Contrast matrix AA compliance across semantic text on surfaces.
+- [ ] Radius rule escalated to error after remediation.
+- [ ] Utility manifest stable (no drift week over week).
 
 ---
 
 ## 8. Changelog
 
-| Date (UTC)        | Change Summary                                                                                                       |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------- |
-| 2025-08-10T00:00Z | Plan authored (baseline)                                                                                             |
-| 2025-08-10T15:45Z | Phase A surfaces/elevation complete; doc updated                                                                     |
-| 2025-08-10T15:55Z | Metrics snapshot inserted; next Phase B tasks added                                                                  |
-| 2025-08-10T16:30Z | Typography codemod complete (100% adoption) & plan updated                                                           |
-| 2025-08-10T16:50Z | Added style CI gate script (`style:gate`) for headings/text-white/bg drift                                           |
-| 2025-08-10T17:20Z | Tag primitive rollout complete (0 inline pills) + CI gate extended (inline pill detection)                           |
-| 2025-08-10T17:45Z | Badge system refactored: canonical variants (neutral/info/success/warning/danger/accent/premium) with legacy mapping |
-| 2025-08-10T17:55Z | Added ESLint rules: legacy Badge variant warning + raw gradient guard (with decorative-gradient escape hatch)        |
-| 2025-08-10T18:05Z | Added `BADGE_TAG_GUIDELINES.md` and linked from plan + docs index; Acceptance checklist updated                      |
+| Date (UTC)        | Change Summary                                                                                                        |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------- |
+| 2025-08-10T00:00Z | Plan authored (baseline)                                                                                              |
+| 2025-08-10T15:45Z | Phase A surfaces/elevation complete; doc updated                                                                      |
+| 2025-08-10T15:55Z | Metrics snapshot inserted; next Phase B tasks added                                                                   |
+| 2025-08-10T16:30Z | Typography codemod complete (100% adoption) & plan updated                                                            |
+| 2025-08-10T16:50Z | Added style CI gate script (`style:gate`) for headings/text-white/bg drift                                            |
+| 2025-08-10T17:20Z | Tag primitive rollout complete (0 inline pills) + CI gate extended (inline pill detection)                            |
+| 2025-08-10T17:45Z | Badge system refactored: canonical variants (neutral/info/success/warning/danger/accent/premium) with legacy mapping  |
+| 2025-08-10T17:55Z | Added ESLint rules: legacy Badge variant warning + raw gradient guard (with decorative-gradient escape hatch)         |
+| 2025-08-10T18:05Z | Added `BADGE_TAG_GUIDELINES.md` and linked from plan + docs index; Acceptance checklist updated                       |
 | 2025-08-10T18:30Z | Added Tooltip + Popover components (surface-inverse), style-audit metrics extended (tooltip/popover inverse adoption) |
-| 2025-08-10T18:40Z | Smart tooltip collision handling, focus ring utilities, tooltip bg codemod, lint rule no-raw-tooltip-bg              |
+| 2025-08-10T18:40Z | Smart tooltip collision handling, focus ring utilities, tooltip bg codemod, lint rule no-raw-tooltip-bg               |
+| 2025-08-10T19:00Z | Added elevation & radius metrics to style audit, radius lint rule (warn), contrast matrix script, token CSS import    |
+| 2025-08-10T19:20Z | Theming architecture plan inserted (registry, ThemeManager, build pipeline), edgy radius consolidation documented     |
 
 ---
 
-_Last Updated: 2025-08-10T18:40:00Z_
+_Last Updated: 2025-08-10T19:20:00Z_

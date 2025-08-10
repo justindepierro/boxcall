@@ -53,7 +53,7 @@ const buttonVariants: ButtonStylesConfig = {
     active: "active:text-brand-jade-dark",
     disabled: "disabled:text-brand-jade-light disabled:cursor-not-allowed",
     focus:
-      "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2 focus:rounded-xs",
+      "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2 focus:rounded-sm",
   },
   danger: {
     base: "bg-red-600 text-white border border-red-600",

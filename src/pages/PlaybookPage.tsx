@@ -714,7 +714,7 @@ export const PlaybookPage: React.FC = () => {
       {/* Achievement Celebration Overlay - The reward loop climax */}
       {state.showCelebration && state.recentAchievement && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 max-w-md mx-4 text-center transform animate-bounce-in">
+          <div className="bg-white rounded-md p-8 max-w-md mx-4 text-center transform animate-bounce-in">
             <div className="mb-4">🎉</div>
             <AchievementBadge size="lg">
               {state.recentAchievement}

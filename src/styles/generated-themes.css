@@ -1,0 +1,80 @@
+:root {
+  --semantic-primary: #00A86B;
+  --semantic-primary-hover: #047857;
+  --semantic-primary-active: #065F46;
+  --semantic-text-primary: #111827;
+  --semantic-text-secondary: #4B5563;
+  --semantic-text-muted: #6B7280;
+  --semantic-text-inverse: #FFFFFF;
+  --semantic-text-brand: #047857;
+  --semantic-bg-primary: #FFFFFF;
+  --semantic-bg-secondary: #F9FAFB;
+  --semantic-bg-muted: #F3F4F6;
+  --semantic-surface-subtle-hover: #F3F4F6;
+  --semantic-surface-inverse: #111827;
+  --semantic-surface-inverse-alt: #374151;
+  --semantic-border: #E5E7EB;
+  --semantic-border-focus: #00A86B;
+  --semantic-border-error: #EF4444;
+  --semantic-focus-ring: #047857;
+  --semantic-success: #22C55E;
+  --semantic-success-bg: #F0FDF4;
+  --semantic-warning: #F59E0B;
+  --semantic-warning-bg: #FFFBEB;
+  --semantic-error: #EF4444;
+  --semantic-error-bg: #FEF2F2;
+}
+
+[data-theme="dark"] {
+  --semantic-primary: #00A86B;
+  --semantic-primary-hover: #34D399;
+  --semantic-primary-active: #047857;
+  --semantic-text-primary: #F9FAFB;
+  --semantic-text-secondary: #D1D5DB;
+  --semantic-text-muted: #9CA3AF;
+  --semantic-text-inverse: #111827;
+  --semantic-text-brand: #34D399;
+  --semantic-bg-primary: #111827;
+  --semantic-bg-secondary: #1F2937;
+  --semantic-bg-muted: #374151;
+  --semantic-surface-subtle-hover: rgba(55,65,81,0.85);
+  --semantic-surface-inverse: #374151;
+  --semantic-surface-inverse-alt: #4B5563;
+  --semantic-border: #374151;
+  --semantic-border-focus: #00A86B;
+  --semantic-border-error: #F87171;
+  --semantic-focus-ring: #00A86B;
+  --semantic-success: #22C55E;
+  --semantic-success-bg: #064E3B;
+  --semantic-warning: #F59E0B;
+  --semantic-warning-bg: #78350F;
+  --semantic-error: #EF4444;
+  --semantic-error-bg: #7F1D1D;
+}
+
+[data-theme="high-contrast"] {
+  --semantic-primary: #065F46;
+  --semantic-primary-hover: #00A86B;
+  --semantic-primary-active: #047857;
+  --semantic-text-primary: #000000;
+  --semantic-text-secondary: #111827;
+  --semantic-text-muted: #1F2937;
+  --semantic-text-inverse: #FFFFFF;
+  --semantic-text-brand: #065F46;
+  --semantic-bg-primary: #FFFFFF;
+  --semantic-bg-secondary: #F3F4F6;
+  --semantic-bg-muted: #E5E7EB;
+  --semantic-surface-subtle-hover: #D1D5DB;
+  --semantic-surface-inverse: #000000;
+  --semantic-surface-inverse-alt: #111827;
+  --semantic-border: #111827;
+  --semantic-border-focus: #065F46;
+  --semantic-border-error: #B91C1C;
+  --semantic-focus-ring: #065F46;
+  --semantic-success: #166534;
+  --semantic-success-bg: #BBF7D0;
+  --semantic-warning: #B45309;
+  --semantic-warning-bg: #FDE68A;
+  --semantic-error: #B91C1C;
+  --semantic-error-bg: #FECACA;
+}
