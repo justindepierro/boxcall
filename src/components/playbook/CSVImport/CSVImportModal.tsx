@@ -543,7 +543,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
         {/* Action Buttons */}
         <div className="flex justify-between gap-3">
-          <Button onClick={() => setStep("upload")} variant="outline" size="sm">
+          <Button onClick={() => setStep("upload")} variant="ghost" size="sm">
             Back
           </Button>
           <Button

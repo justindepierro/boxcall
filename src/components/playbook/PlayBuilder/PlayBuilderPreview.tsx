@@ -153,7 +153,7 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
               Complexity: {playData.complexity_score || 1}/5
             </Tag>
             {playData.is_archived && (
-              <Tag variant="outline" size="sm">
+              <Tag variant="neutral" size="sm">
                 Archived
               </Tag>
             )}

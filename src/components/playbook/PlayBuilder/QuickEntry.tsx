@@ -254,11 +254,7 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
           </div>
 
           <div className="flex space-x-2">
-            <Button
-              onClick={() => setQuickInput("")}
-              variant="outline"
-              size="xs"
-            >
+            <Button onClick={() => setQuickInput("")} variant="ghost" size="xs">
               Clear
             </Button>
             <Button

@@ -297,7 +297,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
           <div className="flex space-x-3">
             <Button
               onClick={onClose}
-              variant="outline"
+              variant="ghost"
               size="sm"
               className="inline-flex items-center"
             >

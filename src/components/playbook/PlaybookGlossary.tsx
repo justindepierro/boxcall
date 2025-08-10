@@ -212,7 +212,7 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
                       <Button
                         key={subcategory}
                         size="xs"
-                        variant={isSubSelected ? "outline" : "ghost"}
+                        variant={isSubSelected ? "secondary" : "ghost"}
                         onClick={() =>
                           handleSubcategoryClick(category.id, subcategory)
                         }
@@ -240,8 +240,8 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
         {/* Add Custom Category Button */}
         <Button
           size="xs"
-          variant="outline"
-          className="w-full flex items-center justify-start px-2 py-1.5 mt-3 h-auto text-xs border-subtle"
+          variant="ghost"
+          className="w-full flex items-center justify-start px-2 py-1.5 mt-3 h-auto text-xs"
         >
           <Plus className="h-3 w-3 mr-1" />
           Add Custom Category

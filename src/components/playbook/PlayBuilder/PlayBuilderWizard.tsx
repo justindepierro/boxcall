@@ -158,7 +158,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
             <div className="flex space-x-3">
               <Button
                 onClick={onClose}
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 className="inline-flex items-center"
               >

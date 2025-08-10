@@ -332,7 +332,7 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
             </Button>
             <Button
               size="xs"
-              variant="outline"
+              variant="ghost"
               onClick={resetPlayers}
               fullWidth
               className="h-auto px-3 py-2"

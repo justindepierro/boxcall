@@ -240,7 +240,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
             </div>
 
             <div className="flex space-x-3">
-              <Button onClick={handleCancel} variant="outline" size="sm">
+              <Button onClick={handleCancel} variant="ghost" size="sm">
                 Cancel
               </Button>
               <Button

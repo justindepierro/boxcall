@@ -368,7 +368,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="xs"
                       onClick={() => onAddToPracticeScript?.(play)}
                       title="Add this play to a practice script"
@@ -378,7 +378,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                       Practice Script
                     </Button>
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="xs"
                       onClick={() => onAddToGamePlan?.(play)}
                       title="Add this play to a game plan"
