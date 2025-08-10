@@ -86,7 +86,7 @@
 
 Short Term (Next Working Block):
 - Extend style-audit to flag top N `bg-white/bg-gray-*` containers lacking semantic surface class; produce remediation list.
-- Draft ESLint `no-unsafe-white` rule (warn mode) using allowlist of approved dark backgrounds.
+- Draft ESLint `no-unsafe-white` rule (warn mode) using allowlist of approved dark backgrounds (rule implemented; currently warn-only – next: integrate into CI after remediation batch 1).
 - Introduce `<Typography>` sweep script to compute heading adoption % baseline.
 
 Mid Term (Following Phases):

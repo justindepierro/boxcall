@@ -1,5 +1,5 @@
 # Style Audit Summary
-Generated: 2025-08-10T02:57:33.910Z
+Generated: 2025-08-10T03:00:18.735Z
 
 ## Key Metrics
 | Metric | Value |
@@ -75,3 +75,32 @@ Generated: 2025-08-10T02:57:33.910Z
 | src/components/dashboard/RoleBasedDashboard.tsx:147 | `text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center` |
 | src/components/dashboard/RoleBasedDashboard.tsx:156 | `font-medium text-gray-900 dark:text-white` |
 | src/components/dashboard/RoleBasedDashboard.tsx:164 | `font-medium text-gray-900 dark:text-white` |
+
+## Surface Class Remediation Candidates (first 25)
+| File:Line | ClassName Snip |
+| --- | --- |
+| src/components/auth/UserMenu.tsx:70 | `absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50` |
+| src/components/dashboard/DatabaseDataDisplay.tsx:250 | `p-3 bg-gray-50 rounded-lg` |
+| src/components/dashboard/DatabaseDataDisplay.tsx:293 | `p-3 bg-gray-50 rounded-lg` |
+| src/components/dashboard/PersonalCalendar.tsx:162 | `flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer border border-gray-100` |
+| src/components/dashboard/PersonalCalendar.tsx:225 | `bg-white rounded-lg shadow-xl max-w-md w-full max-h-96 overflow-y-auto` |
+| src/components/dashboard/PersonalProfile.tsx:122 | `w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white` |
+| src/components/dashboard/PersonalTrophyShelf.tsx:180 | `text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg` |
+| src/components/dashboard/PersonalTrophyShelf.tsx:198 | `text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg` |
+| src/components/dashboard/PersonalTrophyShelf.tsx:216 | `text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg` |
+| src/components/dashboard/PersonalTrophyShelf.tsx:234 | `text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg` |
+| src/components/dashboard/PersonalTrophyShelf.tsx:263 | `flex items-center space-x-3 py-2 px-3 h-10 mb-1 bg-white/60 dark:bg-gray-700/40 rounded-lg border border-white/40 dark:border-gray-600/30` |
+| src/components/dashboard/RoleBasedDashboard.tsx:59 | `bg-white dark:bg-gray-800 shadow-sm border-b` |
+| src/components/dashboard/RoleBasedDashboard.tsx:146 | `bg-white dark:bg-gray-800 rounded-lg shadow bc-card-padding` |
+| src/components/dashboard/RoleBasedDashboard.tsx:178 | `bg-white dark:bg-gray-800 rounded-lg shadow bc-card-padding` |
+| src/components/dashboard/RoleBasedDashboard.tsx:197 | `bg-white dark:bg-gray-800 rounded-lg shadow bc-card-padding` |
+| src/components/dashboard/TeamFeeds.tsx:128 | `flex items-start space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer` |
+| src/components/dev/DevTools.tsx:217 | `bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-2xl max-w-md` |
+| src/components/dev/DevTools.tsx:255 | `p-1 h-auto hover:bg-white/20 text-white` |
+| src/components/dev/DevTools.tsx:273 | `flex border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700` |
+| src/components/dev/DevTools.tsx:298 | `p-4 max-h-80 overflow-y-auto bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100` |
+| src/components/dev/tabs/LogsTab.tsx:39 | `text-xs p-2 rounded bg-gray-50 dark:bg-gray-700` |
+| src/components/layout/Footer.tsx:17 | `bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700` |
+| src/components/onboarding/TeamOnboarding.tsx:176 | `bg-white dark:bg-gray-800 rounded-lg bc-card-padding border border-gray-200 dark:border-gray-700 hover:border-jade-300 dark:hover:border-jad` |
+| src/components/onboarding/TeamOnboarding.tsx:200 | `bg-white dark:bg-gray-800 rounded-lg bc-card-padding border border-gray-200 dark:border-gray-700 hover:border-jade-300 dark:hover:border-jad` |
+| src/components/playbook/AdvancedFilters.tsx:163 | `bg-white rounded-lg shadow-sm border border-slate-200` |

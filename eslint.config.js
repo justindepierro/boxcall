@@ -6,6 +6,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 import path from "node:path";
 import { noRawButtonRule } from "./scripts/eslint-rules/no-raw-button.js";
+import { noUnsafeWhiteRule } from "./scripts/eslint-rules/no-unsafe-white.js";
 
 export default tseslint.config([
   {
@@ -43,6 +44,19 @@ export default tseslint.config([
           ],
         },
       ],
+      "contrast/no-unsafe-white": [
+        "warn",
+        {
+          allowBg: [
+            "bg-jade-600","bg-jade-700","bg-jade-800","bg-jade-900",
+            "bg-navy-600","bg-navy-700","bg-navy-800","bg-navy-900",
+            "bg-gray-800","bg-gray-900","bg-black",
+            "bg-red-600","bg-red-700","bg-red-800",
+            "bg-yellow-700","bg-yellow-800","bg-yellow-900",
+            "bg-brand-jade-dark","bg-brand-navy-dark"
+          ]
+        }
+      ],
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true, allowExportNames: ["DevModeProvider"] },
@@ -64,6 +78,11 @@ export default tseslint.config([
       "no-raw-button": {
         rules: {
           "no-raw-button": noRawButtonRule,
+        },
+      },
+      "contrast": {
+        rules: {
+          "no-unsafe-white": noUnsafeWhiteRule,
         },
       },
     },

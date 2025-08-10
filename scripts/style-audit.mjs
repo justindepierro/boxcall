@@ -34,6 +34,7 @@ const metrics = {
   bgClasses: {},
   brandClasses: {},
   rawButtonHeuristic: 0,
+  surfaceCandidates: [],
 };
 
 const brandPatterns = [
@@ -64,6 +65,15 @@ for (const file of files) {
     }
     for (const bp of brandPatterns) {
       if (cls.includes(bp)) metrics.brandClasses[bp] = (metrics.brandClasses[bp] || 0) + 1;
+    }
+    // Surface candidate detection: bg-white / bg-gray-50/100/200 used on containers lacking semantic surface-* class
+    if (/\bbg-(white|gray-(50|100|200))\b/.test(cls) && !/surface-(card|subtle|raised|jade)/.test(cls)) {
+      // heuristic: consider if class string also has padding or shadow or border (container-like)
+      if (/(p-|px-|py-|shadow|border)/.test(cls)) {
+        const upto = content.slice(0, m.index);
+        const line = upto.split(/\n/).length;
+        metrics.surfaceCandidates.push({ file: relative(ROOT, file), line, className: cls.slice(0,140) });
+      }
     }
   }
   // raw <button ...> heuristic (exclude Button.tsx and IconButton)
@@ -107,6 +117,9 @@ mdLines.push(table(sortedBrand.map(([k,v])=>[k,String(v)]), ['Brand Token Class'
 
 mdLines.push('\n## Sample text-white Locations (first 25)');
 mdLines.push(table(metrics.textWhiteEntries.slice(0,25).map(e=>[e.file+':'+e.line, '`'+e.className+'`']), ['File:Line','ClassName Snip']));
+
+mdLines.push('\n## Surface Class Remediation Candidates (first 25)');
+mdLines.push(table(metrics.surfaceCandidates.slice(0,25).map(e=>[e.file+':'+e.line, '`'+e.className+'`']), ['File:Line','ClassName Snip']));
 
 const mdPath = join(outDir, 'style-audit.md');
 writeFileSync(mdPath, mdLines.join('\n'));
