@@ -5,7 +5,12 @@ import Icon from "../ui/Icon/Icon";
 import { Typography } from "../design-system/Typography";
 import type { CalendarEvent, EventRSVP } from "../../domain/calendar/types";
 import { PracticePlannerModal } from "../practice/PracticePlannerModal";
-import { useRSVPs, useUpdateRSVP, useComments, useAddComment } from "../../state/calendar/hooks";
+import {
+  useRSVPs,
+  useUpdateRSVP,
+  useComments,
+  useAddComment,
+} from "../../state/calendar/hooks";
 import { EventForm } from "./EventModal/EventForm";
 import { EventDetails } from "./EventModal/EventDetails";
 import type { Database } from "../../types/database";
@@ -71,9 +76,9 @@ export const EventModal: React.FC<EventModalProps> = ({
 
   return (
     <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div className="bg-white rounded-lg shadow-xl max-w-lg w-full max-h-96 overflow-y-auto">
-          <div className="p-6">
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-md shadow-xl w-full max-w-xl calendar-event-modal-container">
+          <div className="p-5">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Icon
@@ -176,7 +181,10 @@ export const EventModal: React.FC<EventModalProps> = ({
                   onOpenPracticePlanner(event);
                 }}
                 rsvps={rsvps}
-                myRsvpStatus={rsvps.data?.find((r: EventRSVP) => r.user_id === userId)?.status}
+                myRsvpStatus={
+                  rsvps.data?.find((r: EventRSVP) => r.user_id === userId)
+                    ?.status
+                }
                 onRsvp={(status) =>
                   updateRSVPMutation.mutate({ userId: userId || "", status })
                 }

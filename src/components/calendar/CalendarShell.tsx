@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import "./CalendarShell.css";
 import { useAuth } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import {
@@ -7,7 +8,10 @@ import {
   useUpdateEvent,
   useDeleteEvent,
 } from "../../state/calendar/hooks";
-import type { CalendarEvent, CalendarFilters } from "../../domain/calendar/types";
+import type {
+  CalendarEvent,
+  CalendarFilters,
+} from "../../domain/calendar/types";
 import { CalendarStats } from "./CalendarStats";
 import { CalendarFiltersPanel } from "./CalendarFiltersPanel";
 import { CalendarToolbar } from "./CalendarToolbar";
@@ -15,8 +19,15 @@ import { BoxCallCalendar, type BoxCallCalendarRef } from "./BoxCallCalendar";
 import { EventModal } from "./EventModal";
 import { Card, Button } from "../ui"; // adjust relative path if needed
 import Icon from "../ui/Icon/Icon";
-import { CalendarPageSkeleton, CalendarErrorSkeleton } from "./CalendarSkeletons";
-import { useCalendarUrlState, mapQueryViewToInternal, mapInternalViewToQuery } from "./hooks/useCalendarUrlState";
+import {
+  CalendarPageSkeleton,
+  CalendarErrorSkeleton,
+} from "./CalendarSkeletons";
+import {
+  useCalendarUrlState,
+  mapQueryViewToInternal,
+  mapInternalViewToQuery,
+} from "./hooks/useCalendarUrlState";
 import { useDebouncedValue } from "./hooks/useDebouncedValue";
 import { CalendarAPI } from "../../infra/calendar/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -40,8 +51,12 @@ export const CalendarShell: React.FC = () => {
     },
   });
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentView, setCurrentView] = useState<"dayGridMonth" | "timeGridWeek" | "timeGridDay">("dayGridMonth");
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [currentView, setCurrentView] = useState<
+    "dayGridMonth" | "timeGridWeek" | "timeGridDay"
+  >("dayGridMonth");
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
+    null
+  );
   const [showEventModal, setShowEventModal] = useState(false);
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
   const [isEditingEvent, setIsEditingEvent] = useState(false);
@@ -72,7 +87,11 @@ export const CalendarShell: React.FC = () => {
       : "Failed to load calendar events"
     : null;
 
-  const createEventMutation = useCreateEvent(user?.id || "", devMode, baseQueryParams.filters);
+  const createEventMutation = useCreateEvent(
+    user?.id || "",
+    devMode,
+    baseQueryParams.filters
+  );
   const deleteEventMutation = useDeleteEvent();
   const updateEventMutation = useUpdateEvent();
 
@@ -83,7 +102,9 @@ export const CalendarShell: React.FC = () => {
       if (s.view) {
         const internal = mapQueryViewToInternal(s.view);
         if (internal && internal !== currentView) {
-          setCurrentView(internal as "dayGridMonth" | "timeGridWeek" | "timeGridDay");
+          setCurrentView(
+            internal as "dayGridMonth" | "timeGridWeek" | "timeGridDay"
+          );
           calendarRef.current?.changeView(internal);
         }
       }
@@ -92,10 +113,13 @@ export const CalendarShell: React.FC = () => {
         const api = calendarRef.current?.getApi();
         if (api) {
           const currentDate = api.getDate();
-            const desired = new Date(s.date + "T00:00:00");
-            if (Math.abs(desired.getTime() - currentDate.getTime()) > 1000 * 60 * 60 * 6) {
-              api.gotoDate(desired);
-            }
+          const desired = new Date(s.date + "T00:00:00");
+          if (
+            Math.abs(desired.getTime() - currentDate.getTime()) >
+            1000 * 60 * 60 * 6
+          ) {
+            api.gotoDate(desired);
+          }
         }
       }
       // incoming event param: open modal if event found in cache
@@ -116,12 +140,14 @@ export const CalendarShell: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentView]);
 
-  const handleViewChange = (view: "dayGridMonth" | "timeGridWeek" | "timeGridDay") => {
+  const handleViewChange = (
+    view: "dayGridMonth" | "timeGridWeek" | "timeGridDay"
+  ) => {
     setCurrentView(view);
     calendarRef.current?.changeView(view);
-  // sync view immediately (effect also does replace, but ensure responsiveness)
-  const mapped = mapInternalViewToQuery(view);
-  setUrlState({ view: mapped }, true);
+    // sync view immediately (effect also does replace, but ensure responsiveness)
+    const mapped = mapInternalViewToQuery(view);
+    setUrlState({ view: mapped }, true);
   };
   const handleFilterChange = (newFilters: Partial<CalendarFilters>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
@@ -129,9 +155,12 @@ export const CalendarShell: React.FC = () => {
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
     setShowEventModal(true);
-  setUrlState({ event: event.id });
+    setUrlState({ event: event.id });
   };
-  const handleDateSelect = (selectInfo: { startStr: string; endStr: string }) => {
+  const handleDateSelect = (selectInfo: {
+    startStr: string;
+    endStr: string;
+  }) => {
     if (profile?.role === "coach" || profile?.role === "admin") {
       setIsCreatingEvent(true);
       setSelectedEvent({
@@ -157,10 +186,10 @@ export const CalendarShell: React.FC = () => {
       if (currentView === "dayGridMonth") {
         const year = date.getFullYear();
         const month = date.getMonth();
-  const startPrev = new Date(year, month - 1, 1);
-  const startNext = new Date(year, month + 1, 1);
-  const endPrev = new Date(year, month, 0); // last day prev
-  const endNext = new Date(year, month + 2, 0);
+        const startPrev = new Date(year, month - 1, 1);
+        const startNext = new Date(year, month + 1, 1);
+        const endPrev = new Date(year, month, 0); // last day prev
+        const endNext = new Date(year, month + 2, 0);
         const toISO = (d: Date) => d.toISOString().split("T")[0];
         const rangePrev = { start: toISO(startPrev), end: toISO(endPrev) };
         const rangeNext = { start: toISO(startNext), end: toISO(endNext) };
@@ -200,7 +229,17 @@ export const CalendarShell: React.FC = () => {
       handler();
     }, 5000);
     return () => clearInterval(id);
-  }, [currentView, filters.teamIds, filters.eventTypes, filters.dateRange, user?.id, devMode, setUrlState, queryClient, events]);
+  }, [
+    currentView,
+    filters.teamIds,
+    filters.eventTypes,
+    filters.dateRange,
+    user?.id,
+    devMode,
+    setUrlState,
+    queryClient,
+    events,
+  ]);
   const handleExportCalendar = () => {
     // placeholder
     alert("Calendar export coming soon");
@@ -210,23 +249,28 @@ export const CalendarShell: React.FC = () => {
   if (error) return <CalendarErrorSkeleton message={error} />;
 
   return (
-    <div className="space-y-8">
+    <div className="calendar-shell-root space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+  <div className="calendar-shell-header flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Icon name="calendar" size="xl" className="text-navy-600" />
           <div>
-            <h2 className="text-2xl font-semibold text-text-primary">Master Calendar (Shell)</h2>
-            <p className="text-sm text-text-secondary mt-1">Experimental shell – feature flag enabled</p>
+            <h2 className="text-xl font-semibold text-text-primary tracking-tight">
+              Master Calendar
+            </h2>
+            <p className="text-xs text-text-secondary mt-0.5">
+              Unified schedule & event management
+            </p>
           </div>
         </div>
-        <div className="flex items-center space-x-3">
-          <Button variant="outline" onClick={handleExportCalendar}>
+        <div className="flex items-center gap-2">
+          <Button variant="secondary" size="sm" onClick={handleExportCalendar}>
             <Icon name="download" size="sm" className="mr-1" /> Export
           </Button>
           {(profile?.role === "coach" || profile?.role === "admin") && (
             <Button
               variant="primary"
+              size="sm"
               onClick={() => {
                 setIsCreatingEvent(true);
                 setSelectedEvent({
@@ -244,8 +288,8 @@ export const CalendarShell: React.FC = () => {
           )}
         </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-1 space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
+        <div className="lg:col-span-1 space-y-5">
           <CalendarFiltersPanel
             searchQuery={searchQuery}
             onSearchQueryChange={setSearchQuery}
@@ -253,7 +297,7 @@ export const CalendarShell: React.FC = () => {
             filters={filters}
             onFilterChange={handleFilterChange}
           />
-          <Card className="p-6">
+          <Card className="calendar-card">
             <div className="flex items-center gap-2 mb-4">
               <Icon name="bar-chart" size="lg" className="text-navy-600" />
               <h3 className="font-semibold text-text-primary">Stats</h3>
@@ -262,7 +306,7 @@ export const CalendarShell: React.FC = () => {
           </Card>
         </div>
         <div className="lg:col-span-3">
-          <Card className="p-6">
+          <Card className="calendar-card">
             <CalendarToolbar
               currentView={currentView}
               onViewChange={handleViewChange}
@@ -278,10 +322,17 @@ export const CalendarShell: React.FC = () => {
                 onEventClick={handleEventClick}
                 // FullCalendar DateSelectArg includes additional fields; we only need start/end ISO strings.
                 onDateSelect={(arg) =>
-                  handleDateSelect({ startStr: arg.startStr, endStr: arg.endStr })
+                  handleDateSelect({
+                    startStr: arg.startStr,
+                    endStr: arg.endStr,
+                  })
                 }
-                editable={profile?.role === "coach" || profile?.role === "admin"}
-                selectable={profile?.role === "coach" || profile?.role === "admin"}
+                editable={
+                  profile?.role === "coach" || profile?.role === "admin"
+                }
+                selectable={
+                  profile?.role === "coach" || profile?.role === "admin"
+                }
                 height="100%"
                 initialView={currentView}
                 className="h-full"
@@ -310,7 +361,9 @@ export const CalendarShell: React.FC = () => {
         createEventMutation={createEventMutation}
         updateEventMutation={updateEventMutation}
         deleteEventMutation={deleteEventMutation}
-        onOpenPracticePlanner={() => {/* future practice planner integration */}}
+        onOpenPracticePlanner={() => {
+          /* future practice planner integration */
+        }}
       />
     </div>
   );
