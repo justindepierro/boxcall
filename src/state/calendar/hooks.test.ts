@@ -10,6 +10,8 @@ import {
   useUpdateRSVP,
   useUpdateEvent,
   useDeleteEvent,
+  useComments,
+  useAddComment,
 } from "./hooks";
 import { CalendarAPI } from "../../infra/calendar/api";
 
@@ -140,5 +142,55 @@ describe("calendar state hooks", () => {
       expect(after.find((e) => e.id === target!.id)).toBeTruthy();
     });
   TestAPI.__resetFailures();
+  });
+
+  it("rolls back comment add on injected failure", async () => {
+    const { wrapper, qc } = setup();
+    const eventId = "1";
+  const listHook = renderHook(() => useComments(eventId), { wrapper });
+    await waitFor(() => expect(listHook.result.current.isSuccess).toBe(true));
+    const key = calendarKeys.comments(eventId);
+    const before =
+      qc.getQueryData<import("../../domain/calendar/types").CalendarComment[]>(
+        key
+      ) || [];
+    // Inject failure so server add rejects
+    TestAPI.__setFailure({ comment: true });
+  const addHook = renderHook(() => useAddComment(eventId), { wrapper });
+    await act(async () => {
+      addHook.result.current.mutate("Test comment body");
+    });
+    // Optimistic append should be present first
+    await waitFor(() => {
+      const finalState =
+        qc.getQueryData<import("../../domain/calendar/types").CalendarComment[]>(
+          key
+        ) || [];
+      expect(finalState.length).toBe(before.length);
+    });
+    TestAPI.__resetFailures();
+  });
+
+  it("adds comment and persists on success", async () => {
+    const { wrapper, qc } = setup();
+    const eventId = "1";
+  const listHook = renderHook(() => useComments(eventId), { wrapper });
+    await waitFor(() => expect(listHook.result.current.isSuccess).toBe(true));
+    const key = calendarKeys.comments(eventId);
+    const before =
+      qc.getQueryData<import("../../domain/calendar/types").CalendarComment[]>(
+        key
+      ) || [];
+  const addHook = renderHook(() => useAddComment(eventId), { wrapper });
+    await act(async () => {
+      addHook.result.current.mutate("Persistent comment");
+    });
+    await waitFor(() => {
+      const after =
+        qc.getQueryData<import("../../domain/calendar/types").CalendarComment[]>(
+          key
+        ) || [];
+      expect(after.length).toBe(before.length + 1);
+    });
   });
 });

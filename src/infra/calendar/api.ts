@@ -4,11 +4,10 @@ import {
   parseCalendarEvents,
   parseCalendarEventCreate,
   parseCalendarEventUpdate,
-  parseCalendarComments,
-  parseCalendarCommentCreate,
   parseCalendarEvent,
 } from "../../domain/calendar/schema";
 import { CalendarRSVP } from "./rsvp";
+import { CalendarComments } from "./comments";
 import type {
   CalendarEventCreate,
   CalendarComment,
@@ -214,13 +213,12 @@ export const CalendarAPI = {
   async getRSVPs(eventId: string) {
     return CalendarRSVP.list(eventId);
   },
-  async listComments(_eventId: string): Promise<CalendarComment[]> {
-    return parseCalendarComments([]);
+  async listComments(eventId: string): Promise<CalendarComment[]> {
+    return CalendarComments.list(eventId);
   },
   async addComment(data: { event_id: string; body: string }) {
     if (failureFlags.comment) throw new Error("Injected failure: addComment");
-    parseCalendarCommentCreate(data);
-    return parseCalendarComments([]);
+    return CalendarComments.add(data);
   },
   __setFailure(partial: typeof failureFlags) {
     Object.assign(failureFlags, partial);
