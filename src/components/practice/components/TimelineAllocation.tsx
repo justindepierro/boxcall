@@ -137,7 +137,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
               }
               className={`p-3 rounded-lg border-2 transition-all text-center ${
                 selectedCategory === category.key
-                  ? `border-blue-500 ${getCategoryColor(category.key as PracticeBlock["category"])} shadow-md`
+                  ? `border-jade-600 ${getCategoryColor(category.key as PracticeBlock["category"])} shadow-md`
                   : `border-gray-200 ${getCategoryColor(category.key as PracticeBlock["category"])} hover:border-gray-300`
               }`}
             >
@@ -321,7 +321,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                               absoluteMinute >= selectedBlock.start &&
                               absoluteMinute <
                                 selectedBlock.start + selectedBlock.duration
-                                ? "ring-2 ring-blue-500 bg-blue-100 border-t-4 border-t-blue-600"
+                                ? "ring-2 ring-jade-500 bg-blue-100 border-t-4 border-t-blue-600"
                                 : allocation
                                   ? getCategoryColor(allocation.category)
                                       .replace("text-", "border-t-4 border-t-")

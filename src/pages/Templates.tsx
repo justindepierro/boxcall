@@ -56,7 +56,7 @@ export const Templates: React.FC = () => {
                 onClick={() => {
                   // TODO: Implement template action
                 }}
-                className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 text-sm font-medium"
+                className="w-full bg-jade-600 text-white px-4 py-2 rounded-lg hover:bg-jade-600 text-sm font-medium"
               >
                 Download CSV Template
               </button>
@@ -328,7 +328,7 @@ export const Templates: React.FC = () => {
             optimized.
           </Typography>
           <div className="flex flex-wrap gap-4">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 text-sm font-medium">
+            <button className="bg-jade-600 text-white px-4 py-2 rounded-lg hover:bg-jade-600 text-sm font-medium">
               Contact Support
             </button>
             <button className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 text-sm font-medium">

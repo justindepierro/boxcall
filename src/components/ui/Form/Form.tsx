@@ -144,7 +144,7 @@ export function Form({
         {loading && (
           <div className="absolute inset-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg z-10 flex items-center justify-center">
             <div className="flex items-center space-x-2">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-jade-600"></div>
               <Typography variant="body-sm" color="muted">
                 Processing...
               </Typography>

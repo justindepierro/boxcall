@@ -196,7 +196,7 @@ const PlayerDashboardContent: React.FC = () => {
                   <div className="flex items-center">
                     <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-2 w-20 mr-2">
                       <div
-                        className="bg-blue-600 h-2 rounded-full"
+                        className="bg-jade-600 h-2 rounded-full"
                         style={{ width: "78%" }}
                       ></div>
                     </div>
@@ -249,7 +249,7 @@ const PlayerDashboardContent: React.FC = () => {
               Quick Actions
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2">
+              <button className="bg-jade-600 hover:bg-jade-700 text-white p-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2">
                 <Icon name="book" size="sm" />
                 <span>View Playbook</span>
               </button>

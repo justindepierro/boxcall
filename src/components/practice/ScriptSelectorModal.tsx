@@ -95,7 +95,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                 onClick={() => setSelectedCategory("all")}
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
                   selectedCategory === "all"
-                    ? "bg-blue-500 text-white"
+                    ? "bg-jade-600 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
@@ -105,7 +105,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                 onClick={() => setSelectedCategory("offense")}
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
                   selectedCategory === "offense"
-                    ? "bg-blue-500 text-white"
+                    ? "bg-jade-600 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
@@ -115,7 +115,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                 onClick={() => setSelectedCategory("defense")}
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
                   selectedCategory === "defense"
-                    ? "bg-blue-500 text-white"
+                    ? "bg-jade-600 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
@@ -125,7 +125,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                 onClick={() => setSelectedCategory("special-teams")}
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
                   selectedCategory === "special-teams"
-                    ? "bg-blue-500 text-white"
+                    ? "bg-jade-600 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >

@@ -200,7 +200,7 @@ export function LoginForm({
           type="checkbox"
           checked={formData.rememberMe}
           onChange={(e) => handleInputChange("rememberMe", e.target.checked)}
-          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          className="h-4 w-4 text-blue-600 focus:ring-jade-500 border-gray-300 rounded"
           disabled={loading}
         />
         <label
@@ -368,7 +368,7 @@ export function SignupForm({
           onChange={(e) =>
             handleInputChange("role", e.target.value as SignupData["role"])
           }
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           disabled={loading}
         >
           <option value="player">Player</option>
@@ -419,7 +419,7 @@ export function SignupForm({
             type="checkbox"
             checked={formData.acceptTerms}
             onChange={(e) => handleInputChange("acceptTerms", e.target.checked)}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-1"
+            className="h-4 w-4 text-blue-600 focus:ring-jade-500 border-gray-300 rounded mt-1"
             disabled={loading}
           />
           <label

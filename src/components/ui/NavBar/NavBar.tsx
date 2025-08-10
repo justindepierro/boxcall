@@ -61,7 +61,7 @@ const getNavItemStyles = (item: NavBarItem) => {
 const getBadgeStyles = () => {
   return `
     absolute -top-1 -right-1 px-1.5 py-0.5 text-xs font-medium rounded-full
-    bg-blue-500 dark:bg-blue-600 text-white
+    bg-jade-600 dark:bg-jade-600 text-white
   `;
 };
 const NavBarItem: React.FC<{

@@ -136,7 +136,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg 
-                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+                   focus:ring-2 focus:ring-jade-500 focus:border-jade-600 
                    placeholder-gray-500 text-sm transition-colors duration-200
                    bg-white shadow-sm hover:border-gray-400"
         />

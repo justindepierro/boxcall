@@ -22,7 +22,7 @@ const selectStyles: SelectStylesConfig = {
     fullWidth: "w-full",
   },
   trigger: {
-    base: "relative flex items-center justify-between w-full rounded-md border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400",
+    base: "relative flex items-center justify-between w-full rounded-md border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:border-jade-600 dark:focus:border-blue-400 focus:ring-jade-500 dark:focus:ring-blue-400",
     variants: {
       default: "",
       filled: "bg-gray-50 dark:bg-gray-700",
@@ -458,7 +458,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
               </button>
             )}
             {loading ? (
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent" />
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-jade-600 border-t-transparent" />
             ) : (
               <svg
                 className={`w-4 h-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}

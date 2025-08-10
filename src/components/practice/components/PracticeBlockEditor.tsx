@@ -32,7 +32,7 @@ const CATEGORY_OPTIONS = [
     color: "bg-yellow-500",
     icon: "star",
   },
-  { value: "meeting", label: "Meeting", color: "bg-blue-500", icon: "chat" },
+  { value: "meeting", label: "Meeting", color: "bg-jade-600", icon: "chat" },
   {
     value: "conditioning",
     label: "Conditioning",
@@ -145,7 +145,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
               type="text"
               value={editingBlock.title}
               onChange={(e) => updateField("title", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
               placeholder="Practice block title"
             />
           </div>
@@ -162,7 +162,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
                   e.target.value as PracticeBlock["category"]
                 )
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
             >
               {CATEGORY_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -191,7 +191,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
                   date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
                   updateField("startTime", date);
                 }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
               />
             </div>
             <div>
@@ -212,7 +212,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
                   date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
                   updateField("endTime", date);
                 }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
               />
             </div>
           </div>
@@ -227,7 +227,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
               onChange={(e) =>
                 updateField("duration", parseInt(e.target.value) || 0)
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
               min="1"
               max="240"
             />
@@ -244,7 +244,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
               value={editingBlock.description}
               onChange={(e) => updateField("description", e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
               placeholder="Describe the practice block..."
             />
           </div>
@@ -257,7 +257,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
               type="text"
               value={editingBlock.location}
               onChange={(e) => updateField("location", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
               placeholder="Field location"
             />
           </div>
@@ -274,7 +274,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
                   e.target.value as PracticeBlock["intensity"]
                 )
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
             >
               {INTENSITY_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -295,7 +295,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
                 onChange={(e) =>
                   updateField("reps", parseInt(e.target.value) || undefined)
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
                 min="1"
                 placeholder="Optional"
               />
@@ -313,7 +313,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
                     parseInt(e.target.value) || undefined
                   )
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
                 min="1"
                 placeholder="Minutes"
               />
@@ -389,7 +389,7 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
           value={editingBlock.notes}
           onChange={(e) => updateField("notes", e.target.value)}
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
           placeholder="Additional notes for this block..."
         />
       </div>

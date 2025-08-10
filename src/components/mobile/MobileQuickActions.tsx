@@ -31,7 +31,7 @@ export const MobileQuickActions: React.FC<MobileQuickActionsProps> = ({
   const getActionStyles = (color: string = "gray") => {
     const colorMap = {
       jade: "bg-brand-jade hover:bg-brand-jade-dark text-white shadow-jade/25",
-      blue: "bg-blue-500 hover:bg-blue-600 text-white shadow-blue/25",
+      blue: "bg-jade-600 hover:bg-jade-600 text-white shadow-blue/25",
       red: "bg-red-500 hover:bg-red-600 text-white shadow-red/25",
       yellow: "bg-yellow-500 hover:bg-yellow-600 text-white shadow-yellow/25",
       gray: "bg-gray-100 hover:bg-gray-200 text-gray-700 shadow-gray/25 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-300",
@@ -156,7 +156,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   const getColorStyles = () => {
     const colorMap = {
       jade: "bg-brand-jade hover:bg-brand-jade-dark text-white shadow-jade/30",
-      blue: "bg-blue-500 hover:bg-blue-600 text-white shadow-blue/30",
+      blue: "bg-jade-600 hover:bg-jade-600 text-white shadow-blue/30",
       red: "bg-red-500 hover:bg-red-600 text-white shadow-red/30",
     };
 

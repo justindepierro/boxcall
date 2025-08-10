@@ -75,7 +75,7 @@ export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
                 onClick={onTimeAllocationModeToggle}
                 className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
                   timeAllocationMode
-                    ? "bg-blue-500 text-white"
+                    ? "bg-jade-600 text-white"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >

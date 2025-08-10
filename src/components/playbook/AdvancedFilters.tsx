@@ -229,7 +229,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                     value: "",
                   }))
                 }
-                className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-jade-500"
               >
                 <option value="">Select field...</option>
                 {FILTER_FIELDS.map((field) => (
@@ -251,7 +251,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                       operator: e.target.value as "equals" | "contains" | "in",
                     }))
                   }
-                  className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-jade-500"
                 >
                   {availableOperators.map((op) => (
                     <option key={op.id} value={op.id}>
@@ -274,7 +274,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                         value: e.target.value,
                       }))
                     }
-                    className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-jade-500"
                   >
                     <option value="">Select value...</option>
                     {selectedField.options?.map(
@@ -301,7 +301,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                       }))
                     }
                     placeholder="Enter value..."
-                    className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-jade-500"
                   />
                 )}
               </div>
@@ -312,7 +312,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
               <button
                 onClick={addFilter}
                 disabled={!newFilter.field || !newFilter.value}
-                className="flex-1 px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed"
+                className="flex-1 px-2 py-1 text-xs bg-jade-600 text-white rounded hover:bg-jade-700 disabled:bg-slate-300 disabled:cursor-not-allowed"
               >
                 Add
               </button>

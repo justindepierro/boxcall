@@ -199,7 +199,7 @@ export const DevTools: React.FC = () => {
         className="fixed bottom-4 right-4 z-50"
         onMouseEnter={handleMouseEnter}
       >
-        <div className="w-12 h-12 bg-blue-500 hover:bg-blue-600 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-all duration-200 animate-pulse">
+        <div className="w-12 h-12 bg-jade-600 hover:bg-jade-600 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-all duration-200 animate-pulse">
           <span className="text-white text-lg">🛠️</span>
         </div>
       </div>
@@ -276,7 +276,7 @@ export const DevTools: React.FC = () => {
                   }
                   className={`flex-1 px-2 py-2 text-xs text-center transition-colors ${
                     state.activeTab === tab.id
-                      ? "bg-white dark:bg-gray-800 border-b-2 border-blue-500 text-blue-600 dark:text-blue-400"
+                      ? "bg-white dark:bg-gray-800 border-b-2 border-jade-600 text-blue-600 dark:text-blue-400"
                       : "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300"
                   }`}
                   title={tab.title}

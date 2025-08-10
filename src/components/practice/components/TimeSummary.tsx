@@ -100,7 +100,7 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
                 ? "bg-red-500"
                 : progressPercentage === 100
                   ? "bg-green-500"
-                  : "bg-blue-500"
+                  : "bg-jade-600"
             }`}
             style={{ width: `${Math.min(progressPercentage, 100)}%` }}
           />

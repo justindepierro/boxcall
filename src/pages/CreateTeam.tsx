@@ -772,7 +772,7 @@ export const CreateTeam: React.FC = () => {
                     console.log("🏃‍♂️ Redirecting to Coach Account signup");
                     navigate("/create-coach-account");
                   }}
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                  className="w-full bg-jade-600 hover:bg-jade-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
                 >
                   Get Coach Account
                 </button>

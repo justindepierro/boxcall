@@ -81,7 +81,7 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
         <div className="flex space-x-2">
           <button
             onClick={onSaveBlock}
-            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+            className="flex-1 bg-jade-600 text-white py-2 px-4 rounded-lg hover:bg-jade-700 transition-colors flex items-center justify-center"
           >
             <Icon name="check" size="sm" className="mr-2" />
             Save Block

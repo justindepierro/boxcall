@@ -39,7 +39,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
             }
             className={`p-3 rounded-lg border-2 transition-all text-center ${
               selectedCategory === category.key
-                ? `border-blue-500 ${getCategoryColor(category.key as PracticeBlock["category"])} shadow-md`
+                ? `border-jade-600 ${getCategoryColor(category.key as PracticeBlock["category"])} shadow-md`
                 : `border-gray-200 ${getCategoryColor(category.key as PracticeBlock["category"])} hover:border-gray-300`
             }`}
           >

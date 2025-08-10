@@ -143,7 +143,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, title: e.target.value }))
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
               placeholder="e.g., Offensive Line Drills"
               required
             />
@@ -161,7 +161,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
                   category: e.target.value as PracticeBlock["category"],
                 }))
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
               required
             >
               {categoryOptions.map((option) => (
@@ -191,7 +191,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
                     startTime: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
                 disabled={timeAllocationMode && !!selectedBlock}
               />
             </div>
@@ -208,7 +208,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
                     duration: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
                 min="5"
                 max="180"
                 step="5"
@@ -227,7 +227,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, location: e.target.value }))
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
               placeholder="e.g., Practice Field A"
             />
           </div>
@@ -246,7 +246,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
                     assignedCoach: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
                 placeholder="e.g., Coach Johnson"
               />
             </div>
@@ -261,7 +261,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, notes: e.target.value }))
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
               rows={3}
               placeholder="Additional notes or instructions..."
             />
@@ -277,7 +277,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
+              className="flex-1 px-4 py-2 text-white bg-jade-600 rounded-md hover:bg-jade-700 transition-colors"
             >
               Add Block
             </button>

@@ -401,9 +401,9 @@ export const PlaybookPage: React.FC = () => {
               {/* Bulk Operations Toggle */}
               <button
                 onClick={toggleBulkOperations}
-                className={`inline-flex items-center px-4 py-2 border rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+                className={`inline-flex items-center px-4 py-2 border rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-jade-500 ${
                   state.enableBulkOperations
-                    ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
+                    ? "bg-jade-600 text-white border-jade-600 hover:bg-jade-700"
                     : "border-slate-300 text-slate-700 bg-white hover:bg-slate-50"
                 }`}
                 title={

@@ -97,7 +97,7 @@
 | ----------------------------------- | ---------------------- | ------------ | ------------ | ------------------------ |
 | Raw `text-white` occurrences        | 322                    | <250         | <190         | <150 (mostly primitives) |
 | Legacy emerald usages               | 33 (→ 0 after codemod) | 0            | 0            | 0                        |
-| Blue CTA backgrounds (non-semantic) | 27                     | <10          | <3           | 0                        |
+| Blue CTA backgrounds (non-semantic) | 27 (→ 1 after codemod) | <10          | <3           | 0                        |
 | Non-primitive buttons (%)           | TBC                    | <40%         | <15%         | <5%                      |
 | Contrast violations (AA)            | TBD (after first scan) | <10          | 0            | 0                        |
 | Headings using Typography (%)       | TBD                    | >80%         | >95%         | 100%                     |
@@ -106,7 +106,7 @@
 
 - [x] (P0) Codemod emerald → jade mapping applied (156 replacements; legacy usages now 0).
 - [ ] (P0) Identify & patch white-on-light risk clusters.
-- [ ] (P0) Migrate highest-traffic blue CTAs to `Button` primary variant.
+- [x] (P0) Migrate highest-traffic blue CTAs to `Button` primary variant (blue 500/600 CTAs → jade; 1 remaining in docs README).
 - [ ] (P0) Add `.debug-contrast` utility (temporary).
 - [ ] (P0) Commit baseline metrics (this doc).
 
@@ -148,6 +148,7 @@ PR Checklist Additions (Planned):
 | ---------- | ----------------------------- | ---------------------------- |
 | 2025-08-09 | Document created              | Establish baseline & urgency |
 | 2025-08-10 | Codemod run #1 (emerald→jade) | Palette consolidation (156 replacements; legacy emerald utilities removed) |
+| 2025-08-10 | Codemod run #2 (blue CTAs)     | Consolidated high-emphasis blues → jade (158 replacements; 1 doc example retained) |
 | (add)      | Introduced style audit script | Automation foundation        |
 
 ---

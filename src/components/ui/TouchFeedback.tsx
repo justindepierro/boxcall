@@ -198,7 +198,7 @@ export const TouchButton: React.FC<TouchButtonProps> = ({
 }) => {
   const variantStyles = {
     primary:
-      "bg-team-primary hover:bg-blue-700 text-white shadow-md hover:shadow-lg",
+      "bg-team-primary hover:bg-jade-700 text-white shadow-md hover:shadow-lg",
     secondary:
       "bg-gray-100 hover:bg-gray-200 text-gray-900 shadow-sm hover:shadow-md",
     ghost:
@@ -217,7 +217,7 @@ export const TouchButton: React.FC<TouchButtonProps> = ({
     inline-flex items-center justify-center space-x-2
     rounded-lg font-semibold
     transition-all duration-200 ease-out
-    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+    focus:outline-none focus:ring-2 focus:ring-jade-500 focus:ring-offset-2
     disabled:opacity-50 disabled:cursor-not-allowed
     ${variantStyles[variant]}
     ${sizeStyles[size]}

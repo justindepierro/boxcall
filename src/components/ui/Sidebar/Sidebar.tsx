@@ -87,14 +87,14 @@ const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
     return `${baseStyles} text-gray-400 dark:text-gray-500 cursor-not-allowed`;
   }
   if (item.active) {
-    return `${baseStyles} bg-blue-50 dark:bg-gray-700 text-blue-700 dark:text-white border-r-2 border-blue-500`;
+    return `${baseStyles} bg-blue-50 dark:bg-gray-700 text-blue-700 dark:text-white border-r-2 border-jade-600`;
   }
   return `${baseStyles} text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white`;
 };
 const getBadgeStyles = () => {
   return `
     ml-auto px-2 py-0.5 text-xs font-medium rounded-full
-    bg-blue-500 dark:bg-blue-600 text-white
+    bg-jade-600 dark:bg-jade-600 text-white
   `;
 };
 const SidebarItem: React.FC<{

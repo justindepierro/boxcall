@@ -78,7 +78,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       <div
         className={`bg-white rounded-lg border transition-colors shadow-sm ${
           isSelected
-            ? "border-blue-500 ring-2 ring-blue-200"
+            ? "border-jade-600 ring-2 ring-blue-200"
             : "border-slate-200 hover:border-slate-300"
         }`}
       >
@@ -94,7 +94,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   onChange={(e) =>
                     onSelectionChange?.(play.id, e.target.checked)
                   }
-                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-slate-300 text-blue-600 focus:ring-jade-500"
                 />
               </div>
             )}

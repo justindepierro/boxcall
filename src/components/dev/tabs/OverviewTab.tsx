@@ -128,7 +128,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         <div className="grid grid-cols-2 gap-2">
           <button
             onClick={onTestDatabase}
-            className="px-3 py-2 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            className="px-3 py-2 text-xs bg-jade-600 text-white rounded hover:bg-jade-600 transition-colors"
           >
             🔍 Test DB
           </button>

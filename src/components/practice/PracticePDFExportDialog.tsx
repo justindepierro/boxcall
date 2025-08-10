@@ -277,7 +277,7 @@ export const PracticePDFExportDialog: React.FC<
                     checked={exportOptions.includeOffense}
                     onChange={() => handleOptionChange("includeOffense")}
                     disabled={exportOptions.includeEverything}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded disabled:opacity-50"
+                    className="h-4 w-4 text-blue-600 focus:ring-jade-500 border-gray-300 rounded disabled:opacity-50"
                   />
                   <span className="text-sm">Offense</span>
                   <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">

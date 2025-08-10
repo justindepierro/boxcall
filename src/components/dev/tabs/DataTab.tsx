@@ -62,7 +62,7 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
         {/* Create Sample Data Button */}
         <button
           onClick={() => actions.createSampleData()}
-          className="w-full px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded transition-colors"
+          className="w-full px-3 py-1.5 text-xs bg-jade-600 hover:bg-jade-600 text-white rounded transition-colors"
         >
           🌱 Create Sample Data
         </button>
@@ -95,7 +95,7 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
               onClick={() => onModeChange(mode.mode as DevMode)}
               className={`w-full text-left px-2 py-1 text-xs rounded transition-colors ${
                 devMode === mode.mode
-                  ? "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border border-blue-300 dark:border-blue-600"
+                  ? "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border border-blue-300 dark:border-jade-600"
                   : "hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
               }`}
             >

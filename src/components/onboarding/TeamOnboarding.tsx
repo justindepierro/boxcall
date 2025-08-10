@@ -125,7 +125,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => navigate("/create-coach-account")}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                className="bg-jade-600 hover:bg-jade-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
               >
                 Get Coach Account ($19.99)
               </button>

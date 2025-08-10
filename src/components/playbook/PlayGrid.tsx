@@ -194,7 +194,7 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
         <span className="ml-2 text-gray-600">Loading plays...</span>
       </div>
     );
@@ -267,7 +267,7 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
                     selectedPlayIds.size === filteredPlays.length
                   }
                   onChange={handleSelectAll}
-                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-slate-300 text-blue-600 focus:ring-jade-500"
                 />
                 <span>
                   {selectedPlayIds.size > 0

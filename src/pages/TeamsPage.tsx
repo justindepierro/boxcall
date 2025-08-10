@@ -15,7 +15,7 @@ export const TeamsPage: React.FC = () => {
     return (
       <div className="container mx-auto p-6">
         <div className="flex items-center justify-center p-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600"></div>
           <span className="ml-3 text-lg text-gray-600">Loading teams...</span>
         </div>
       </div>

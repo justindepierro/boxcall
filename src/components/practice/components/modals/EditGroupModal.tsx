@@ -105,7 +105,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, name: e.target.value }))
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
               placeholder="e.g., Offensive Line, Running Backs"
               required
             />
@@ -121,7 +121,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, location: e.target.value }))
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
               placeholder="e.g., Field A, Weight Room"
             />
           </div>
@@ -135,7 +135,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, notes: e.target.value }))
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-jade-500"
               rows={3}
               placeholder="Additional notes or instructions..."
             />
@@ -151,7 +151,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
+              className="flex-1 px-4 py-2 text-white bg-jade-600 rounded-md hover:bg-jade-700 transition-colors"
             >
               Update Group
             </button>

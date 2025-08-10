@@ -202,7 +202,7 @@ const AdminDashboard: React.FC = () => {
           <button className="w-full bg-jade-600 hover:bg-jade-700 text-white p-3 rounded-md text-sm font-medium transition-colors">
             Run System Backup
           </button>
-          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-md text-sm font-medium transition-colors">
+          <button className="w-full bg-jade-600 hover:bg-jade-700 text-white p-3 rounded-md text-sm font-medium transition-colors">
             Generate Reports
           </button>
           <button className="w-full bg-orange-600 hover:bg-orange-700 text-white p-3 rounded-md text-sm font-medium transition-colors">
