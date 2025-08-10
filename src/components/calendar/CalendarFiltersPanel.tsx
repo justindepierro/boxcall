@@ -41,7 +41,7 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
         <div className="space-y-3">
           <Input
             type="text"
-            placeholder="Search events, teams, locations..."
+            placeholder="Search events, teams, locations... (debounced)"
             value={searchQuery}
             onChange={(e) => onSearchQueryChange(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && onSearch()}

@@ -17,6 +17,8 @@ import { Card, Button } from "../ui"; // adjust relative path if needed
 import Icon from "../ui/Icon/Icon";
 import { CalendarPageSkeleton, CalendarErrorSkeleton } from "./CalendarSkeletons";
 import { useCalendarUrlState, mapQueryViewToInternal, mapInternalViewToQuery } from "./hooks/useCalendarUrlState";
+import { useDebouncedValue } from "./hooks/useDebouncedValue";
+import { CalendarAPI } from "../../infra/calendar/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { calendarKeys } from "../../state/calendar/queryKeys";
 
@@ -57,12 +59,13 @@ export const CalendarShell: React.FC = () => {
       : undefined,
   };
 
+  const debouncedSearch = useDebouncedValue(searchQuery, 350);
   const {
     data: events = [],
     isLoading: loading,
     isError,
     error: eventsError,
-  } = useSearchEvents(searchQuery, baseQueryParams);
+  } = useSearchEvents(debouncedSearch, baseQueryParams);
   const error = isError
     ? eventsError instanceof Error
       ? eventsError.message
@@ -181,8 +184,11 @@ export const CalendarShell: React.FC = () => {
               r,
               devMode ? "1" : undefined
             ),
-            // Placeholder: reuse currently loaded events; real implementation should call fetcher
-            queryFn: () => Promise.resolve(events.filter(() => true)),
+            queryFn: () =>
+              CalendarAPI.listUserEvents(user?.id || "", devMode, {
+                ...paramsBase.filters,
+                dateRange: { start: r.start, end: r.end },
+              }),
             staleTime: 60_000,
           });
         });
@@ -268,6 +274,7 @@ export const CalendarShell: React.FC = () => {
               <BoxCallCalendar
                 ref={calendarRef}
                 events={events}
+                highlightQuery={searchQuery}
                 onEventClick={handleEventClick}
                 // FullCalendar DateSelectArg includes additional fields; we only need start/end ISO strings.
                 onDateSelect={(arg) =>
