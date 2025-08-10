@@ -382,7 +382,7 @@ export const PlaybookPage: React.FC = () => {
                     {state.playsCreated}/100 plays
                   </ProgressBadge>
                   {state.streakDays > 0 && (
-                    <Badge variant="achievement" size="sm">
+                    <Badge variant="success" size="sm">
                       {state.streakDays} day streak!
                     </Badge>
                   )}
@@ -457,7 +457,7 @@ export const PlaybookPage: React.FC = () => {
                 {/* Next milestone indicator - creates desire for next achievement */}
                 {state.playsCreated < 100 && (
                   <div className="absolute -top-2 -right-2">
-                    <Badge variant="attention" size="sm">
+                    <Badge variant="warning" size="sm">
                       {100 - state.playsCreated} to go!
                     </Badge>
                   </div>

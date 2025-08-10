@@ -15,36 +15,66 @@ const cn = (...classes: (string | undefined | null | false)[]): string => {
   return clsx(classes);
 };
 
+export type CanonicalBadgeVariant =
+  | "neutral"
+  | "info"
+  | "success"
+  | "warning"
+  | "danger"
+  | "accent"
+  | "premium";
+
+// Backwards compatibility legacy variant names still in codebase
+export type LegacyBadgeVariant =
+  | "default"
+  | "urgency"
+  | "achievement"
+  | "information"
+  | "attention";
+
+export type BadgeVariant = CanonicalBadgeVariant | LegacyBadgeVariant;
+
 export interface BadgeProps {
-  /** Badge content - text, number, or React element */
   children: React.ReactNode;
-
-  /** Visual variant based on psychological color system */
-  variant?:
-    | "default"
-    | "urgency"
-    | "achievement"
-    | "information"
-    | "attention"
-    | "premium";
-
-  /** Size variant */
+  variant?: BadgeVariant;
   size?: "sm" | "md" | "lg";
-
-  /** Achievement badge with celebration animation */
-  achievement?: boolean;
-
-  /** Progress badge with filling animation */
+  achievement?: boolean; // kept for backwards compat; triggers bounce + success styling
   progress?: number; // 0-100
-
-  /** Pulsing animation for attention */
   pulse?: boolean;
-
-  /** Additional styling */
   className?: string;
-
-  /** Click handler for interactive badges */
   onClick?: () => void;
+  /** Optional elevated style (slightly stronger shadow) */
+  elevated?: boolean;
+  /** Force pill (rounded-full) even for lg size */
+  pill?: boolean;
+  /** Provide accessible label when badge only contains an icon */
+  ariaLabel?: string;
+}
+
+function normalizeBadgeVariant(variant: BadgeVariant | undefined): CanonicalBadgeVariant {
+  switch (variant) {
+    case "default":
+      return "neutral";
+    case "urgency":
+      return "danger";
+    case "achievement":
+      return "success";
+    case "information":
+      return "info";
+    case "attention":
+      return "warning";
+    case "premium":
+      return "premium";
+    case "neutral":
+    case "info":
+    case "success":
+    case "warning":
+    case "danger":
+    case "accent":
+      return variant;
+    default:
+      return "neutral";
+  }
 }
 
 /**
@@ -55,123 +85,91 @@ export interface BadgeProps {
  */
 export const Badge: React.FC<BadgeProps> = ({
   children,
-  variant = "default",
+  variant = "neutral",
   size = "md",
   achievement = false,
   progress,
   pulse = false,
   className,
   onClick,
+  elevated = false,
+  pill = true,
+  ariaLabel,
 }) => {
+  const canonical = normalizeBadgeVariant(variant);
   // Base styles - the foundation of luxury
   const baseStyles = clsx(
-    // Shape and positioning
-    "inline-flex items-center justify-center",
-    "font-medium tracking-wide",
-    "border border-transparent",
-    "transition-all duration-200 ease-out",
-
-    // The "New Balance touch" - subtle but luxurious details
-    "shadow-sm", // Subtle depth
-    "backdrop-blur-sm", // Slight glass effect
-
-    // Interactive states - responsive and satisfying
-    onClick && [
-      "cursor-pointer",
-      "hover:scale-105", // Subtle growth on hover
-      "active:scale-95", // Satisfying press feedback
-      "hover:shadow-md", // Enhanced depth on interaction
-    ],
-
-    // Pulse animation for attention
+    "inline-flex items-center justify-center font-medium select-none whitespace-nowrap align-middle",
+    "transition-colors duration-200 ease-out",
+    pill && size !== "lg" ? "rounded-full" : "rounded-md",
+    // Elevation (optional)
+    elevated ? "shadow-md" : "shadow-sm",
+    // Interactive
+    onClick && "cursor-pointer active:scale-95",
     pulse && "animate-pulse",
-
-    // Achievement celebration animation
-    achievement && [
-      "animate-bounce-in", // Custom animation defined in CSS
-      "shadow-lg shadow-green-200", // Celebratory glow
-    ]
+    achievement && "animate-bounce-in",
+    // Positioning when progress is present
+    progress !== undefined && "relative overflow-hidden"
   );
 
   // Size variants - purposeful scaling
   const sizeStyles = {
-    sm: "px-2 py-0.5 text-xs rounded-full min-h-[18px]",
-    md: "px-2.5 py-1 text-sm rounded-full min-h-[24px]",
-    lg: "px-3 py-1.5 text-base rounded-lg min-h-[32px]",
-  };
+    sm: "px-2 py-0.5 text-[11px] leading-tight min-h-[18px]",
+    md: "px-2.5 py-0.5 text-xs leading-tight min-h-[22px]",
+    lg: "px-3 py-1 text-sm min-h-[30px]",
+  } as const;
 
   // Color variants using our psychological color system
-  const variantStyles = {
-    default: cn(
-      "bg-gray-100 text-gray-700",
-      "hover:bg-gray-200 hover:text-gray-800",
-      "border-gray-200"
+  const variantStyles: Record<CanonicalBadgeVariant, string> = {
+    neutral: cn(
+      "bg-gray-100 text-gray-700 border border-gray-200",
+      "hover:bg-gray-200 hover:text-gray-800 dark:bg-gray-700/40 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600/50"
     ),
-
-    // 🔴 RED = URGENCY - Immediate attention required
-    urgency: cn(
-      "bg-red-50 text-red-700",
-      "hover:bg-red-100 hover:text-red-800",
-      "border-red-200",
-      "shadow-red-100"
+    info: cn(
+      "bg-blue-50 text-blue-700 border border-blue-200",
+      "hover:bg-blue-100 hover:text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800 dark:hover:bg-blue-900/60"
     ),
-
-    // 🟢 GREEN = ACHIEVEMENT - Success and accomplishment
-    achievement: cn(
-      "bg-green-50 text-green-700",
-      "hover:bg-green-100 hover:text-green-800",
-      "border-green-200",
-      "shadow-green-100"
+    success: cn(
+      "bg-green-50 text-green-700 border border-green-200",
+      "hover:bg-green-100 hover:text-green-800 dark:bg-green-900/40 dark:text-green-300 dark:border-green-800 dark:hover:bg-green-900/60"
     ),
-
-    // 🔵 BLUE = INFORMATION - Neutral, informative content
-    information: cn(
-      "bg-blue-50 text-blue-700",
-      "hover:bg-blue-100 hover:text-blue-800",
-      "border-blue-200",
-      "shadow-blue-100"
+    warning: cn(
+      "bg-yellow-50 text-yellow-700 border border-yellow-200",
+      "hover:bg-yellow-100 hover:text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300 dark:border-yellow-800 dark:hover:bg-yellow-900/60"
     ),
-
-    // 🟡 YELLOW = ATTENTION - Important but not urgent
-    attention: cn(
-      "bg-yellow-50 text-yellow-700",
-      "hover:bg-yellow-100 hover:text-yellow-800",
-      "border-yellow-200",
-      "shadow-yellow-100"
+    danger: cn(
+      "bg-red-50 text-red-700 border border-red-200",
+      "hover:bg-red-100 hover:text-red-800 dark:bg-red-900/40 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-900/60"
     ),
-
-    // 🟣 PURPLE = PREMIUM - Special, elite, exclusive
+    accent: cn(
+      "bg-jade-50 text-jade-700 border border-jade-200",
+      "hover:bg-jade-100 hover:text-jade-800 dark:bg-jade-900/40 dark:text-jade-300 dark:border-jade-800 dark:hover:bg-jade-900/60"
+    ),
     premium: cn(
-      "bg-purple-50 text-purple-700",
-      "hover:bg-purple-100 hover:text-purple-800",
-      "border-purple-200",
-      "shadow-purple-100",
-      "bg-gradient-to-r from-purple-50 to-indigo-50" // Subtle gradient for premium feel
+      "bg-gradient-to-r from-purple-50 to-indigo-50 text-purple-700 border border-purple-200",
+      "hover:from-purple-100 hover:to-indigo-100 hover:text-purple-800 dark:text-purple-200 dark:from-purple-900/40 dark:to-indigo-900/40 dark:border-purple-800"
     ),
   };
 
   // Progress badge with filling animation
-  const progressElement = progress !== undefined && (
-    <div className="absolute inset-0 overflow-hidden rounded-full">
-      <div
-        className="h-full bg-gradient-to-r from-green-400 to-jade-500 transition-all duration-500 ease-out"
-        style={{ width: `${progress}%` }}
-      />
-    </div>
-  );
+  const progressElement =
+    progress !== undefined && (
+      <div className="absolute inset-0 overflow-hidden rounded-inherit">
+        <div
+          className="h-full bg-gradient-to-r from-green-400 to-jade-500 transition-all duration-500 ease-out"
+          style={{ width: `${progress}%` }}
+          aria-hidden="true"
+        />
+      </div>
+    );
 
   return (
     <span
-      className={cn(
-        baseStyles,
-        sizeStyles[size],
-        variantStyles[variant],
-        progress !== undefined && "relative overflow-hidden",
-        className
-      )}
+      className={cn(baseStyles, sizeStyles[size], variantStyles[canonical], className)}
       onClick={onClick}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
+      aria-label={ariaLabel}
     >
       {progressElement}
       <span className="relative z-10">{children}</span>
@@ -187,7 +185,7 @@ export const Badge: React.FC<BadgeProps> = ({
  */
 export const AchievementBadge: React.FC<Omit<BadgeProps, "variant">> = (
   props
-) => <Badge {...props} variant="achievement" achievement={true} />;
+) => <Badge {...props} variant="success" achievement={true} />;
 
 /**
  * Progress Badge - Visual progress indicator
@@ -202,7 +200,7 @@ export const ProgressBadge: React.FC<
     children?: React.ReactNode;
   }
 > = ({ progress, label, children, ...props }) => (
-  <Badge {...props} variant="information" progress={progress}>
+  <Badge {...props} variant="info" progress={progress}>
     {children || label || `${progress}%`}
   </Badge>
 );
@@ -215,7 +213,13 @@ export const ProgressBadge: React.FC<
 export const NotificationBadge: React.FC<
   Omit<BadgeProps, "variant" | "children"> & { count: number }
 > = ({ count, ...props }) => (
-  <Badge {...props} variant="urgency" size="sm" pulse={count > 0}>
+  <Badge
+    {...props}
+    variant="danger"
+    size="sm"
+    pulse={count > 0}
+    ariaLabel={count ? `${count} notifications` : undefined}
+  >
     {count > 99 ? "99+" : count}
   </Badge>
 );
