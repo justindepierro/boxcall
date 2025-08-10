@@ -178,7 +178,7 @@ export const TeamBulletin: React.FC = () => {
               </Button>
               <Button
                 onClick={handleJoinTeam}
-                variant="outline"
+                variant="ghost"
                 className="px-6 py-2 rounded-lg font-medium"
               >
                 Join Team

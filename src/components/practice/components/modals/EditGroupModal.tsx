@@ -148,7 +148,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
           <div className="flex space-x-3 pt-4">
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               size="sm"
               className="flex-1"
               onClick={onClose}

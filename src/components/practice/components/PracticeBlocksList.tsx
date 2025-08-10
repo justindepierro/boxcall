@@ -85,7 +85,7 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
         </div>
         <div className="flex space-x-2">
           {userRole === "head_coach" && (
-            <Button variant="outline" size="sm" onClick={onScaffoldMode}>
+            <Button variant="ghost" size="sm" onClick={onScaffoldMode}>
               <Icon name="clock" size="sm" className="mr-1" />
               Allocate Practice Time
             </Button>
@@ -95,7 +95,7 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
           </Button>
           {userRole === "head_coach" && practiceBlocks.length > 0 && (
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={onAutoAssignCoaches}
               className="ml-2"

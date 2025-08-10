@@ -106,7 +106,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
           </Typography>
         </div>
         <div className="flex space-x-2">
-          <Button variant="outline" size="sm" onClick={onCancel}>
+          <Button variant="ghost" size="sm" onClick={onCancel}>
             Cancel
           </Button>
           <Button variant="primary" size="sm" onClick={onSave}>
@@ -192,7 +192,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
             <div className="flex space-x-2">
               <Button
                 onClick={onRemoveEmpty}
-                variant="outline"
+                variant="ghost"
                 size="xs"
                 icon={<Icon name="activity" size="sm" color="current" />}
               >

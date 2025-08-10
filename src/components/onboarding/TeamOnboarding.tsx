@@ -133,7 +133,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
               </Button>
               <Button
                 size="sm"
-                variant="outline"
+                variant="ghost"
                 onClick={() => navigate("/join-team")}
               >
                 Join a Team
@@ -213,7 +213,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
             <Button
               fullWidth
               size="sm"
-              variant="outline"
+              variant="ghost"
               onClick={() => navigate("/join-team")}
             >
               Join Team
