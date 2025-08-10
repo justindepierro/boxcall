@@ -127,13 +127,13 @@ describe("Calendar Infra Phase 2 scaffolding", () => {
     expect(list.length).toBeGreaterThan(0);
   });
 
-  it("comments list & add stubs execute", async () => {
+  it("comments list returns empty then addComment returns created comment", async () => {
     const initial = await CalendarAPI.listComments("evt-c");
     expect(initial).toEqual([]);
     const added = await CalendarAPI.addComment({
       event_id: "evt-c",
       body: "Test",
     });
-    expect(added).toEqual([]); // current stub returns empty array
+    expect(added).toMatchObject({ event_id: "evt-c", body: "Test" });
   });
 });
