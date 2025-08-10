@@ -2,7 +2,12 @@
 // These mirror existing interfaces in services/calendarService.ts
 // Phase 1 will introduce zod schemas & stricter invariants.
 
-export type CalendarEventType = "game" | "practice" | "meeting" | "film" | "other";
+export type CalendarEventType =
+  | "game"
+  | "practice"
+  | "meeting"
+  | "film"
+  | "other";
 
 export interface CalendarEvent {
   id: string;

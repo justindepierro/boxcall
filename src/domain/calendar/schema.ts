@@ -1,8 +1,14 @@
 // Zod schemas for calendar domain (Phase 1)
 // NOTE: Pure validation layer; no side effects.
-import { z } from 'zod';
+import { z } from "zod";
 
-export const calendarEventTypeEnum = z.enum(["game","practice","meeting","film","other"]);
+export const calendarEventTypeEnum = z.enum([
+  "game",
+  "practice",
+  "meeting",
+  "film",
+  "other",
+]);
 
 export const calendarEventBase = z.object({
   id: z.string().min(1),
@@ -38,11 +44,14 @@ export const calendarEventCreate = z.object({
   tags: calendarEventBase.shape.tags,
 });
 
+// Partial update schema: any subset of creatable fields; empty object disallowed later by service
+export const calendarEventUpdate = calendarEventCreate.partial();
+
 export const eventRSVP = z.object({
   id: z.string(),
   event_id: z.string(),
   user_id: z.string(),
-  status: z.enum(["attending","not_attending","maybe"]),
+  status: z.enum(["attending", "not_attending", "maybe"]),
   note: z.string().optional(),
   created_at: z.string(),
   updated_at: z.string(),
@@ -72,10 +81,19 @@ export const calendarCommentCreate = z.object({
 });
 
 // Helper parse functions (to be used by infra layer later)
-export const parseCalendarEvent = (data: unknown) => calendarEventBase.parse(data);
-export const parseCalendarEvents = (data: unknown) => z.array(calendarEventBase).parse(data);
-export const parseCalendarEventCreate = (data: unknown) => calendarEventCreate.parse(data);
-export const parseCalendarFilters = (data: unknown) => calendarFilters.parse(data);
-export const parseEventRSVPs = (data: unknown) => z.array(eventRSVP).parse(data);
-export const parseCalendarComments = (data: unknown) => z.array(calendarComment).parse(data);
-export const parseCalendarCommentCreate = (data: unknown) => calendarCommentCreate.parse(data);
+export const parseCalendarEvent = (data: unknown) =>
+  calendarEventBase.parse(data);
+export const parseCalendarEvents = (data: unknown) =>
+  z.array(calendarEventBase).parse(data);
+export const parseCalendarEventCreate = (data: unknown) =>
+  calendarEventCreate.parse(data);
+export const parseCalendarEventUpdate = (data: unknown) =>
+  calendarEventUpdate.parse(data);
+export const parseCalendarFilters = (data: unknown) =>
+  calendarFilters.parse(data);
+export const parseEventRSVPs = (data: unknown) =>
+  z.array(eventRSVP).parse(data);
+export const parseCalendarComments = (data: unknown) =>
+  z.array(calendarComment).parse(data);
+export const parseCalendarCommentCreate = (data: unknown) =>
+  calendarCommentCreate.parse(data);

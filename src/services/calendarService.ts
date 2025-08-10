@@ -18,6 +18,7 @@ import {
   parseEventRSVPs,
   parseCalendarEventCreate,
   parseCalendarEvent,
+  parseCalendarEventUpdate,
 } from "../domain/calendar/schema";
 
 /**
@@ -145,11 +146,11 @@ export class CalendarService {
     try {
       if (Object.keys(updates).length === 0) {
         console.warn("updateEvent called with no updates", eventId);
+        return null;
       }
-      // Best-effort validation: only validate if fields present
-      const candidate = { title: "TEMP", start: new Date().toISOString(), type: "practice", ...updates } as CalendarEventCreate;
+      // Validate only supplied fields against partial schema
       try {
-        parseCalendarEventCreate(candidate);
+        parseCalendarEventUpdate(updates);
       } catch (e) {
         console.error("Invalid update payload rejected", e);
         return null;
