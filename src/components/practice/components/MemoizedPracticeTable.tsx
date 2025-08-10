@@ -43,11 +43,9 @@ const getCategoryColor = (category: string): string => {
 };
 
 const formatTime = (timeString: string): string => {
-  if (!timeString) return "";
-  const [hours, minutes] = timeString.split(":");
-  const hour = parseInt(hours, 10);
-  const period = hour >= 12 ? "PM" : "AM";
-  const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+        <Tag variant={mapCategoryToTagVariant(block.category)} size="sm">
+          {block.category}
+        </Tag>
   return `${displayHour}:${minutes} ${period}`;
 };
 

@@ -7,6 +7,7 @@ import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
 import Icon from "../ui/Icon/Icon";
+import { Tag, mapEventTypeToTagVariant } from "../ui/Tag";
 
 interface PersonalCalendarProps {
   userId: string;
@@ -52,17 +53,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
     setShowQuickAdd(false);
   };
 
-  // Get event type badge color
-  const getEventTypeBadge = (type: string) => {
-    const colors = {
-      game: "bg-navy-600 text-white",
-      practice: "bg-jade-600 text-white",
-      meeting: "bg-amber-600 text-white",
-      film: "bg-purple-600 text-white",
-      other: "bg-gray-600 text-white",
-    };
-    return colors[type as keyof typeof colors] || colors.other;
-  };
+  // Deprecated legacy event badge color map replaced by Tag variants
 
   // Format event time
   const formatEventTime = (start?: string, end?: string) => {
@@ -188,13 +179,9 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                         >
                           {event.title}
                         </Typography>
-                        <span
-                          className={`px-2 py-0.5 text-xs font-medium rounded-full ${getEventTypeBadge(
-                            event.type
-                          )}`}
-                        >
+                        <Tag variant={mapEventTypeToTagVariant(event.type)} size="sm">
                           {event.type}
-                        </span>
+                        </Tag>
                       </div>
 
                       <Typography
@@ -247,11 +234,9 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
-                  <span
-                    className={`px-2 py-1 text-xs font-medium rounded-full ${getEventTypeBadge(selectedEvent.type)}`}
-                  >
+                  <Tag variant={mapEventTypeToTagVariant(selectedEvent.type)} size="sm">
                     {selectedEvent.type}
-                  </span>
+                  </Tag>
                   {selectedEvent.is_home && (
                     <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
                       Home
