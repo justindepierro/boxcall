@@ -154,9 +154,13 @@ export default tseslint.config([
                         message: `Legacy Badge variant "${rawValue}" — replaced with canonical "${replacement}" (neutral, info, success, warning, danger, accent, premium).`,
                         fix(fixer) {
                           if (variantAttr.value.type === "Literal") {
-                            return fixer.replaceText(variantAttr.value, `"${replacement}"`);
+                            return fixer.replaceText(
+                              variantAttr.value,
+                              `"${replacement}"`
+                            );
                           } else if (
-                            variantAttr.value.type === "JSXExpressionContainer" &&
+                            variantAttr.value.type ===
+                              "JSXExpressionContainer" &&
                             variantAttr.value.expression.type === "Literal"
                           ) {
                             return fixer.replaceText(

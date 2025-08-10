@@ -69,7 +69,10 @@ for (const file of files) {
     for (const m of matches) {
       const lineStart = content.lastIndexOf("\n", m.index) + 1;
       const lineEnd = content.indexOf("\n", m.index);
-      const line = content.slice(lineStart, lineEnd === -1 ? undefined : lineEnd);
+      const line = content.slice(
+        lineStart,
+        lineEnd === -1 ? undefined : lineEnd
+      );
       if (/surface-inverse/.test(line)) metrics.tooltipInverseSurface++;
     }
   }

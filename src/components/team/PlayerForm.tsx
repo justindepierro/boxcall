@@ -245,7 +245,11 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
           </div>
           {/* Positions */}
           <div>
-            <Typography variant="headline-sm" as="h3" className="mb-4 text-text-primary">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="mb-4 text-text-primary"
+            >
               Positions *
             </Typography>
             <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
@@ -274,7 +278,11 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
           </div>
           {/* Physical Information */}
           <div>
-            <Typography variant="headline-sm" as="h3" className="mb-4 text-text-primary">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="mb-4 text-text-primary"
+            >
               Physical Information
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-4 bc-grid-gap">
@@ -359,7 +367,11 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
           </div>
           {/* Team Level */}
           <div>
-            <Typography variant="headline-sm" as="h3" className="mb-4 text-text-primary">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="mb-4 text-text-primary"
+            >
               Team Level
             </Typography>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

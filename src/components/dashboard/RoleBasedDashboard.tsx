@@ -73,7 +73,9 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
                 </Typography>
               </div>
               <div className="flex items-center space-x-2">
-                <Tag variant="success" size="sm" className="capitalize">{profile.role}</Tag>
+                <Tag variant="success" size="sm" className="capitalize">
+                  {profile.role}
+                </Tag>
               </div>
             </div>
           </div>
@@ -154,7 +156,11 @@ const AdminDashboard: React.FC = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bc-grid-gap">
       {/* System Overview */}
       <div className="surface-card rounded-lg shadow bc-card-padding">
-        <Typography variant="headline-sm" as="h3" className="text-text-primary dark:text-text-inverse mb-4 flex items-center">
+        <Typography
+          variant="headline-sm"
+          as="h3"
+          className="text-text-primary dark:text-text-inverse mb-4 flex items-center"
+        >
           <Icon name="database" className="mr-2" />
           System Overview
         </Typography>
@@ -180,7 +186,11 @@ const AdminDashboard: React.FC = () => {
 
       {/* User Management */}
       <div className="surface-card rounded-lg shadow bc-card-padding">
-        <Typography variant="headline-sm" as="h3" className="text-text-primary dark:text-text-inverse mb-4 flex items-center">
+        <Typography
+          variant="headline-sm"
+          as="h3"
+          className="text-text-primary dark:text-text-inverse mb-4 flex items-center"
+        >
           <Icon name="users" className="mr-2" />
           User Management
         </Typography>
@@ -199,7 +209,11 @@ const AdminDashboard: React.FC = () => {
 
       {/* Quick Actions */}
       <div className="surface-card rounded-lg shadow bc-card-padding">
-        <Typography variant="headline-sm" as="h3" className="text-text-primary dark:text-text-inverse mb-4 flex items-center">
+        <Typography
+          variant="headline-sm"
+          as="h3"
+          className="text-text-primary dark:text-text-inverse mb-4 flex items-center"
+        >
           <Icon name="zap" className="mr-2" />
           Quick Actions
         </Typography>

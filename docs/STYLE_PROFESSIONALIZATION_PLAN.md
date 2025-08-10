@@ -51,14 +51,14 @@
 
 ### Phase B (In Progress)
 
-| Order | Task                                           | Scope                         | Metric                             |
-| ----- | ---------------------------------------------- | ----------------------------- | ---------------------------------- |
-| B1    | Typography sweep codemod                       | All headings (h1–h5)          | 95% adoption                       |
+| Order | Task                                           | Scope                         | Metric                                                                 |
+| ----- | ---------------------------------------------- | ----------------------------- | ---------------------------------------------------------------------- |
+| B1    | Typography sweep codemod                       | All headings (h1–h5)          | 95% adoption                                                           |
 | B2    | Badge & Tag primitives                         | Status chips, filters, counts | 100% Tag adoption (0 inline pills) + Badge canonical variants complete |
-| B3    | Tooltip & Popover refactor (`surface-inverse`) | ComplexityBadge, menus, hints | 0 raw `bg-gray-900`                |
-| B4    | Button variant audit & tighten spacing         | Variant map + docs            | No variant drift                   |
-| B5    | IconButton variant alignment                   | Danger/ghost/subtle mapping   | Shared interaction tokens          |
-| B6    | Add `surface-subtle-hover` token + class       | Row/list hovers               | Replace interim row-hover          |
+| B3    | Tooltip & Popover refactor (`surface-inverse`) | ComplexityBadge, menus, hints | 0 raw `bg-gray-900`                                                    |
+| B4    | Button variant audit & tighten spacing         | Variant map + docs            | No variant drift                                                       |
+| B5    | IconButton variant alignment                   | Danger/ghost/subtle mapping   | Shared interaction tokens                                              |
+| B6    | Add `surface-subtle-hover` token + class       | Row/list hovers               | Replace interim row-hover                                              |
 
 ### Phase C (Week Continuation)
 
@@ -156,7 +156,7 @@ Audit Note: Remaining surfaceCandidates reflect translucent or partial semantic 
 | 2025-08-10T17:20Z | Tag primitive rollout complete (0 inline pills) + CI gate extended (inline pill detection)                           |
 | 2025-08-10T17:45Z | Badge system refactored: canonical variants (neutral/info/success/warning/danger/accent/premium) with legacy mapping |
 | 2025-08-10T17:55Z | Added ESLint rules: legacy Badge variant warning + raw gradient guard (with decorative-gradient escape hatch)        |
-| 2025-08-10T18:05Z | Added `BADGE_TAG_GUIDELINES.md` and linked from plan + docs index; Acceptance checklist updated                    |
+| 2025-08-10T18:05Z | Added `BADGE_TAG_GUIDELINES.md` and linked from plan + docs index; Acceptance checklist updated                      |
 
 ---
 

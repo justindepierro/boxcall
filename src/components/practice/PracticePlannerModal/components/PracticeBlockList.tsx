@@ -181,7 +181,11 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                             {block.assignedCoach && (
                               <div className="ml-10 mt-2">
                                 <Tag variant="info" size="sm">
-                                  <Icon name="user" size="xs" className="mr-1" />
+                                  <Icon
+                                    name="user"
+                                    size="xs"
+                                    className="mr-1"
+                                  />
                                   {block.assignedCoach}
                                 </Tag>
                               </div>

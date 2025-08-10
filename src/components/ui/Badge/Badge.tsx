@@ -51,7 +51,9 @@ export interface BadgeProps {
   ariaLabel?: string;
 }
 
-function normalizeBadgeVariant(variant: BadgeVariant | undefined): CanonicalBadgeVariant {
+function normalizeBadgeVariant(
+  variant: BadgeVariant | undefined
+): CanonicalBadgeVariant {
   switch (variant) {
     case "default":
       return "neutral";
@@ -152,20 +154,24 @@ export const Badge: React.FC<BadgeProps> = ({
   };
 
   // Progress badge with filling animation
-  const progressElement =
-    progress !== undefined && (
-      <div className="absolute inset-0 overflow-hidden rounded-inherit">
-        <div
-          className="h-full bg-gradient-to-r from-green-400 to-jade-500 transition-all duration-500 ease-out"
-          style={{ width: `${progress}%` }}
-          aria-hidden="true"
-        />
-      </div>
-    );
+  const progressElement = progress !== undefined && (
+    <div className="absolute inset-0 overflow-hidden rounded-inherit">
+      <div
+        className="h-full bg-gradient-to-r from-green-400 to-jade-500 transition-all duration-500 ease-out"
+        style={{ width: `${progress}%` }}
+        aria-hidden="true"
+      />
+    </div>
+  );
 
   return (
     <span
-      className={cn(baseStyles, sizeStyles[size], variantStyles[canonical], className)}
+      className={cn(
+        baseStyles,
+        sizeStyles[size],
+        variantStyles[canonical],
+        className
+      )}
       onClick={onClick}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}

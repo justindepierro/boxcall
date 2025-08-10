@@ -58,7 +58,7 @@ const selectStyles: SelectStylesConfig = {
     maxHeight: "max-h-60 overflow-y-auto",
   },
   option: {
-  base: "flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 text-text-primary surface-subtle-hover",
+    base: "flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 text-text-primary surface-subtle-hover",
     states: {
       default: "",
       highlighted:

@@ -78,10 +78,14 @@ export const Tooltip: React.FC<TooltipProps> = ({
           <span
             className={clsx(
               "absolute w-2 h-2 rotate-45 bg-inherit border border-gray-700/40 dark:border-gray-600/40",
-              placement === "top" && "left-1/2 -translate-x-1/2 top-full border-t-0 border-l-0",
-              placement === "bottom" && "left-1/2 -translate-x-1/2 bottom-full border-b-0 border-r-0",
-              placement === "left" && "top-1/2 -translate-y-1/2 left-full border-l-0 border-b-0",
-              placement === "right" && "top-1/2 -translate-y-1/2 right-full border-r-0 border-t-0"
+              placement === "top" &&
+                "left-1/2 -translate-x-1/2 top-full border-t-0 border-l-0",
+              placement === "bottom" &&
+                "left-1/2 -translate-x-1/2 bottom-full border-b-0 border-r-0",
+              placement === "left" &&
+                "top-1/2 -translate-y-1/2 left-full border-l-0 border-b-0",
+              placement === "right" &&
+                "top-1/2 -translate-y-1/2 right-full border-r-0 border-t-0"
             )}
             aria-hidden="true"
           />

@@ -147,7 +147,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
 
   // DASHBOARD CONTEXT: Encourage team creation for full experience
   return (
-  <div className="surface-card decorative-gradient bg-gradient-to-r from-blue-50 to-jade-50 dark:from-blue-900/20 dark:to-jade-900/20 border border-blue-200 dark:border-blue-800 rounded-xl bc-card-padding mb-8">
+    <div className="surface-card decorative-gradient bg-gradient-to-r from-blue-50 to-jade-50 dark:from-blue-900/20 dark:to-jade-900/20 border border-blue-200 dark:border-blue-800 rounded-xl bc-card-padding mb-8">
       <div className="text-center">
         <div className="flex items-center justify-center mb-6">
           <div className="bg-jade-100 dark:bg-jade-900/40 p-4 rounded-full">

@@ -137,42 +137,44 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
         )}
       </Button>
       {/* Error Tooltip */}
-        {error && (
-          <Tooltip
-            content={
-              <div className="flex items-start gap-2">
-                <span className="text-red-300 font-medium">{error}</span>
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  onClick={clearError}
-                  className="text-red-300 hover:text-red-200 !h-auto !p-0"
-                  aria-label="Clear error"
-                >
-                  ×
-                </Button>
-              </div>
-            }
-            placement="bottom"
-            className="surface-inverse border-red-500/30 text-[11px]"
-            maxWidth={240}
-          >
-            <span className="sr-only">Error</span>
-          </Tooltip>
-        )}
+      {error && (
+        <Tooltip
+          content={
+            <div className="flex items-start gap-2">
+              <span className="text-red-300 font-medium">{error}</span>
+              <Button
+                variant="ghost"
+                size="xs"
+                onClick={clearError}
+                className="text-red-300 hover:text-red-200 !h-auto !p-0"
+                aria-label="Clear error"
+              >
+                ×
+              </Button>
+            </div>
+          }
+          placement="bottom"
+          className="surface-inverse border-red-500/30 text-[11px]"
+          maxWidth={240}
+        >
+          <span className="sr-only">Error</span>
+        </Tooltip>
+      )}
       {/* No Data Tooltip */}
-        {!hasValidData && !isExporting && (
-          <Tooltip
-            content={
-              <span className="text-gray-200">Add practice blocks to enable PDF export</span>
-            }
-            placement="bottom"
-            className="surface-inverse text-[11px]"
-            maxWidth={220}
-          >
-            <span className="sr-only">Info</span>
-          </Tooltip>
-        )}
+      {!hasValidData && !isExporting && (
+        <Tooltip
+          content={
+            <span className="text-gray-200">
+              Add practice blocks to enable PDF export
+            </span>
+          }
+          placement="bottom"
+          className="surface-inverse text-[11px]"
+          maxWidth={220}
+        >
+          <span className="sr-only">Info</span>
+        </Tooltip>
+      )}
     </div>
   );
 };

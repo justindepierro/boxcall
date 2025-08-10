@@ -47,7 +47,7 @@ const PracticeBlockRow = memo<{
   onDuplicate: (block: PracticeBlock) => void;
 }>(({ block, onEdit, onDelete, onDuplicate }) => {
   return (
-  <tr className="surface-subtle-hover transition-colors">
+    <tr className="surface-subtle-hover transition-colors">
       <td className="px-4 py-3 text-sm text-gray-600">
         {formatTime(block.startTime)} - {formatTime(block.endTime)}
       </td>

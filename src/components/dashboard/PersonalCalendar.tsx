@@ -179,7 +179,10 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                         >
                           {event.title}
                         </Typography>
-                        <Tag variant={mapEventTypeToTagVariant(event.type)} size="sm">
+                        <Tag
+                          variant={mapEventTypeToTagVariant(event.type)}
+                          size="sm"
+                        >
                           {event.type}
                         </Tag>
                       </div>
@@ -234,7 +237,10 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
-                  <Tag variant={mapEventTypeToTagVariant(selectedEvent.type)} size="sm">
+                  <Tag
+                    variant={mapEventTypeToTagVariant(selectedEvent.type)}
+                    size="sm"
+                  >
                     {selectedEvent.type}
                   </Tag>
                   {selectedEvent.is_home && (

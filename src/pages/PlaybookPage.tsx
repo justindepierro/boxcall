@@ -365,7 +365,7 @@ export const PlaybookPage: React.FC = () => {
   };
 
   return (
-  <div className="min-h-screen surface-app decorative-gradient bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen surface-app decorative-gradient bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -373,7 +373,13 @@ export const PlaybookPage: React.FC = () => {
             <div className="flex items-center space-x-4">
               <FileText className="h-8 w-8 text-jade-600 mr-3" />
               <div className="flex flex-col">
-                <Typography variant="headline-md" as="h1" className="text-slate-900">Playbook</Typography>
+                <Typography
+                  variant="headline-md"
+                  as="h1"
+                  className="text-slate-900"
+                >
+                  Playbook
+                </Typography>
                 {/* Progress indicator - key reward loop element */}
                 <div className="flex items-center space-x-2 mt-1">
                   <ProgressBadge
@@ -475,10 +481,14 @@ export const PlaybookPage: React.FC = () => {
 
       {/* Week 3 Feature: Complexity Challenge System Demo */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-  <div className="surface-card decorative-gradient bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-purple-200">
+        <div className="surface-card decorative-gradient bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-purple-200">
           <div className="flex items-center justify-between">
             <div>
-              <Typography variant="label-lg" as="h3" className="text-purple-900 flex items-center gap-2">
+              <Typography
+                variant="label-lg"
+                as="h3"
+                className="text-purple-900 flex items-center gap-2"
+              >
                 Week 3 Feature: Complexity Challenge System
                 <Badge variant="premium" size="sm">
                   NEW
@@ -632,7 +642,11 @@ export const PlaybookPage: React.FC = () => {
               <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
                 <div className="text-center py-12">
                   <Clock className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                  <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-2">
+                  <Typography
+                    variant="headline-sm"
+                    as="h3"
+                    className="text-slate-900 mb-2"
+                  >
                     Practice Script Builder
                   </Typography>
                   <p className="text-slate-600 mb-6">
@@ -651,7 +665,11 @@ export const PlaybookPage: React.FC = () => {
               <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
                 <div className="text-center py-12">
                   <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                  <Typography variant="headline-sm" as="h3" className="text-slate-900 mb-2">
+                  <Typography
+                    variant="headline-sm"
+                    as="h3"
+                    className="text-slate-900 mb-2"
+                  >
                     Game Plan Organization
                   </Typography>
                   <p className="text-slate-600 mb-6">

@@ -20,13 +20,14 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
   isValid,
   validationErrors,
 }) => {
-
   return (
     <div className="bg-white rounded-lg border border-slate-200">
       {/* Preview Header */}
       <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
         <div className="flex items-center justify-between">
-          <Typography variant="headline-sm" as="h3" className="text-slate-900">Play Preview</Typography>
+          <Typography variant="headline-sm" as="h3" className="text-slate-900">
+            Play Preview
+          </Typography>
           <div className="flex items-center space-x-2">
             {isValid ? (
               <div className="flex items-center text-green-700">
@@ -152,7 +153,9 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
               Complexity: {playData.complexity_score || 1}/5
             </Tag>
             {playData.is_archived && (
-              <Tag variant="outline" size="sm">Archived</Tag>
+              <Tag variant="outline" size="sm">
+                Archived
+              </Tag>
             )}
           </div>
         </div>

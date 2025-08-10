@@ -136,7 +136,8 @@ export const Popover: React.FC<PopoverProps> = ({
       if (!existingRef) return;
       if (typeof existingRef === "function") existingRef(node);
       else if (typeof existingRef === "object")
-        (existingRef as React.MutableRefObject<HTMLElement | null>).current = node;
+        (existingRef as React.MutableRefObject<HTMLElement | null>).current =
+          node;
     };
     return React.cloneElement(t, { ...props, ref: composedRef });
   }, [trigger, isOpen, ariaLabel, setOpen]);

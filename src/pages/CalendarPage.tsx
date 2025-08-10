@@ -634,11 +634,16 @@ export const CalendarPage: React.FC = () => {
                 /* Event Display */
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2">
-                    <Tag variant={mapEventTypeToTagVariant(selectedEvent.type)} size="sm">
+                    <Tag
+                      variant={mapEventTypeToTagVariant(selectedEvent.type)}
+                      size="sm"
+                    >
                       {selectedEvent.type}
                     </Tag>
                     {selectedEvent.is_home && (
-                      <Tag variant="success" size="sm">HOME</Tag>
+                      <Tag variant="success" size="sm">
+                        HOME
+                      </Tag>
                     )}
                   </div>
                   <div className="space-y-2 text-sm text-gray-600">
