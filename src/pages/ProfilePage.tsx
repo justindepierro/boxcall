@@ -165,9 +165,9 @@ export const ProfilePage: React.FC = () => {
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
                   Email Address
-                </label>
+                </Typography>
                 <Input
                   type="email"
                   value={profile.email || ""}
@@ -179,9 +179,9 @@ export const ProfilePage: React.FC = () => {
                 </p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
                   Display Name
-                </label>
+                </Typography>
                 <Input
                   type="text"
                   placeholder="How you'd like to be called"
@@ -192,9 +192,9 @@ export const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
                   Full Name
-                </label>
+                </Typography>
                 <Input
                   type="text"
                   placeholder="Your full name"
@@ -205,9 +205,9 @@ export const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
                   Phone Number
-                </label>
+                </Typography>
                 <Input
                   type="tel"
                   placeholder="(555) 123-4567"
@@ -216,9 +216,9 @@ export const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
                   Role
-                </label>
+                </Typography>
                 <Input
                   type="text"
                   value={profile.role || "Not specified"}
@@ -230,9 +230,9 @@ export const ProfilePage: React.FC = () => {
                 </p>
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
                   Address
-                </label>
+                </Typography>
                 <Input
                   type="text"
                   placeholder="Your address"
@@ -242,9 +242,9 @@ export const ProfilePage: React.FC = () => {
               </div>
             </div>
             <div className="mt-6">
-              <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
                 Bio
-              </label>
+              </Typography>
               <textarea
                 rows={4}
                 placeholder="Tell us about yourself..."
@@ -261,9 +261,9 @@ export const ProfilePage: React.FC = () => {
             </Typography>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
                   Password
-                </label>
+                </Typography>
                 <div className="flex items-center space-x-4">
                   <Input
                     type="password"

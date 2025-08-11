@@ -214,9 +214,9 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
 
       <div className="space-y-3">
         <div>
-          <label className="block text-sm font-medium text-jade-700 mb-2">
+          <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-jade-700 mb-2\">
             Enter play details separated by | or comma:
-          </label>
+          </Typography>
           <input
             type="text"
             value={quickInput}

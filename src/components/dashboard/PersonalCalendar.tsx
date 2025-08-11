@@ -125,7 +125,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                 variant="link"
                 size="sm"
                 onClick={() => setShowQuickAdd(false)}
-                className="text-text-secondary hover:text-gray-700"
+                className="text-text-secondary hover:text-text-primary"
               >
                 Cancel
               </Button>

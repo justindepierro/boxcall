@@ -63,9 +63,9 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                 </Typography>
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-slate-700 mb-2\">
                       Play Name *
-                    </label>
+                    </Typography>
                     <input
                       type="text"
                       placeholder="e.g., Smash Concept, Traffic, Corndog"
@@ -73,9 +73,9 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-slate-700 mb-2\">
                       Play Type *
-                    </label>
+                    </Typography>
                     <div className="grid grid-cols-3 gap-3">
                       {["Pass", "Run", "RPO"].map((type) => (
                         <label
@@ -88,17 +88,17 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                             value={type}
                             className="h-4 w-4 text-jade-600 focus:ring-jade-500"
                           />
-                          <span className="ml-2 text-sm font-medium text-slate-700">
+                          <Typography variant=\"body-sm\" as=\"span\" className=\"ml-2 font-medium text-slate-700\">
                             {type}
-                          </span>
+                          </Typography>
                         </label>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-slate-700 mb-2\">
                       One-Word Call (Audible)
-                    </label>
+                    </Typography>
                     <input
                       type="text"
                       placeholder='e.g., "Corndog", "Traffic", "Alpha"'

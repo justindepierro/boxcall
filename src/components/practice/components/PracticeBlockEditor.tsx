@@ -138,9 +138,9 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
         {/* Basic Info */}
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
               Title *
-            </label>
+            </Typography>
             <input
               type="text"
               value={editingBlock.title}
@@ -151,9 +151,9 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
               Category *
-            </label>
+            </Typography>
             <select
               value={editingBlock.category}
               onChange={(e) =>
@@ -174,9 +174,9 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
                 Start Time
-              </label>
+              </Typography>
               <input
                 type="time"
                 value={
@@ -195,9 +195,9 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
                 End Time
-              </label>
+              </Typography>
               <input
                 type="time"
                 value={
@@ -218,9 +218,9 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
               Duration (minutes)
-            </label>
+            </Typography>
             <input
               type="number"
               value={editingBlock.duration}
@@ -237,9 +237,9 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
         {/* Details */}
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
               Description
-            </label>
+            </Typography>
             <textarea
               value={editingBlock.description}
               onChange={(e) => updateField("description", e.target.value)}
@@ -250,9 +250,9 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
               Location
-            </label>
+            </Typography>
             <input
               type="text"
               value={editingBlock.location}
@@ -263,9 +263,9 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
               Intensity
-            </label>
+            </Typography>
             <select
               value={editingBlock.intensity}
               onChange={(e) =>
@@ -286,9 +286,9 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
                 Reps
-              </label>
+              </Typography>
               <input
                 type="number"
                 value={editingBlock.reps || ""}
@@ -301,9 +301,9 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
                 Total Time
-              </label>
+              </Typography>
               <input
                 type="number"
                 value={editingBlock.totalTime || ""}
@@ -325,9 +325,9 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
       {/* Focus Items */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-text-primary">
+          <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary\">
             Focus Items
-          </label>
+          </Typography>
           <Button variant="ghost" size="sm" onClick={addFocusItem}>
             <Icon name="plus" size="sm" className="mr-1" />
             Add Focus
@@ -358,9 +358,9 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
       {/* Equipment */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-text-primary">
+          <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary\">
             Equipment
-          </label>
+          </Typography>
           <Button variant="ghost" size="sm" onClick={addEquipmentItem}>
             <Icon name="plus" size="sm" className="mr-1" />
             Add Equipment
@@ -390,9 +390,9 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-sm font-medium text-text-primary mb-1">
+        <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
           Notes
-        </label>
+        </Typography>
         <textarea
           value={editingBlock.notes}
           onChange={(e) => updateField("notes", e.target.value)}

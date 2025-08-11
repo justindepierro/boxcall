@@ -138,9 +138,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
               Block Title *
-            </label>
+            </Typography>
             <input
               type="text"
               value={formData.title}
@@ -154,9 +154,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           </div>
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
               Category *
-            </label>
+            </Typography>
             <select
               value={formData.category}
               onChange={(e) =>
@@ -183,9 +183,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           {/* Time and Duration */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
                 Start Time
-              </label>
+              </Typography>
               <input
                 type="time"
                 value={formData.startTime}
@@ -200,9 +200,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
                 Duration (minutes)
-              </label>
+              </Typography>
               <input
                 type="number"
                 value={formData.duration}
@@ -222,9 +222,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           </div>
           {/* Location */}
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
               Location
-            </label>
+            </Typography>
             <input
               type="text"
               value={formData.location}
@@ -238,9 +238,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           {/* Assigned Coach */}
           {userRole === "head_coach" && (
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
                 Assigned Coach
-              </label>
+              </Typography>
               <input
                 type="text"
                 value={formData.assignedCoach}
@@ -257,9 +257,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           )}
           {/* Notes */}
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
               Notes
-            </label>
+            </Typography>
             <textarea
               value={formData.notes}
               onChange={(e) =>

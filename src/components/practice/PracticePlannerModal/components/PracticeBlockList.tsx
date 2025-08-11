@@ -199,7 +199,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => onAddGroup(block.id)}
-                                className="text-text-muted hover:text-gray-700"
+                                className="text-text-muted hover:text-text-primary"
                               >
                                 <Icon name="plus" size="sm" />
                               </Button>
@@ -209,7 +209,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                               variant="ghost"
                               size="sm"
                               onClick={() => onEditBlock(block)}
-                              className="text-text-muted hover:text-gray-700"
+                              className="text-text-muted hover:text-text-primary"
                             >
                               <Icon name="edit" size="sm" />
                             </Button>
@@ -259,7 +259,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="text-gray-400 hover:text-gray-600"
+                                    className="text-gray-400 hover:text-text-secondary"
                                   >
                                     <Icon name="edit" size="xs" />
                                   </Button>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "../../ui/Button";
 import * as fabric from "fabric";
+import { Typography } from "@/components/design-system/Typography";
 interface DrawingToolsProps {
   canvas: fabric.Canvas | null;
   selectedTool: string;
@@ -60,7 +61,7 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
   ];
   return (
     <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-3 space-y-3">
-      <div className="text-sm font-medium text-slate-700">Drawing Tools</div>
+      <Typography variant=\"body-sm\" as=\"div\" className=\"font-medium text-slate-700\">Drawing Tools</Typography>
       {/* Tool Selection */}
       <div className="grid grid-cols-3 gap-1">
         {tools.map((tool) => (

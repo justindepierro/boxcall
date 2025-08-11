@@ -129,12 +129,10 @@ export const ContactPage: React.FC = () => {
 
           <form className="space-y-6">
             <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2"
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\"
               >
                 Name
-              </label>
+              </Typography>
               <input
                 type="text"
                 id="name"
@@ -145,12 +143,10 @@ export const ContactPage: React.FC = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2"
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\"
               >
                 Email
-              </label>
+              </Typography>
               <input
                 type="email"
                 id="email"
@@ -161,12 +157,10 @@ export const ContactPage: React.FC = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="subject"
-                className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2"
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\"
               >
                 Subject
-              </label>
+              </Typography>
               <select
                 id="subject"
                 name="subject"
@@ -182,12 +176,10 @@ export const ContactPage: React.FC = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="message"
-                className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-2"
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\"
               >
                 Message
-              </label>
+              </Typography>
               <textarea
                 id="message"
                 name="message"

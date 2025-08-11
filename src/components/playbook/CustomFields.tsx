@@ -268,7 +268,7 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
       {fieldDefinitions.map((definition) => (
         <div key={definition.field_name} className="space-y-2">
           {definition.field_type !== "boolean" && (
-            <label className="flex items-center space-x-2 text-sm font-medium text-slate-700">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"flex items-center space-x-2 font-medium text-slate-700\">
               {getFieldIcon(definition.field_type)}
               <span>
                 {definition.field_label}
@@ -276,7 +276,7 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
                   <span className="text-red-500 ml-1">*</span>
                 )}
               </span>
-            </label>
+            </Typography>
           )}
 
           {definition.field_description &&

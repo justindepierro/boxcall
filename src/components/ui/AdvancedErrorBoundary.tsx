@@ -425,7 +425,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
 
           {/* Report error button */}
           <TouchFeedback
-            className="w-full py-2 px-4 text-text-muted hover:text-gray-700 transition-colors"
+            className="w-full py-2 px-4 text-text-muted hover:text-text-primary transition-colors"
             onPress={onReportError}
           >
             <div className="flex items-center justify-center space-x-2">

@@ -109,9 +109,9 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                   </Typography>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-slate-700 mb-2\">
                         Play Selection
-                      </label>
+                      </Typography>
                       <select
                         value={selectedPlay?.id || ""}
                         onChange={(e) => {
@@ -265,18 +265,18 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                   </Typography>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-slate-700 mb-2\">
                         Field Orientation
-                      </label>
+                      </Typography>
                       <select className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500">
                         <option>Horizontal</option>
                         <option>Vertical</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-slate-700 mb-2\">
                         Color Scheme
-                      </label>
+                      </Typography>
                       <select className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500">
                         <option>Standard</option>
                         <option>High Contrast</option>

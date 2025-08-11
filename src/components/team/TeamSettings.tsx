@@ -165,9 +165,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-2">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
                 Team Name *
-              </label>
+              </Typography>
               <Input
                 type="text"
                 value={formData.name}
@@ -177,9 +177,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-2">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
                 School/Organization
-              </label>
+              </Typography>
               <Input
                 type="text"
                 value={formData.school}
@@ -188,9 +188,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-2">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
                 Season
-              </label>
+              </Typography>
               <Input
                 type="text"
                 value={formData.season}
@@ -199,9 +199,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-2">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
                 Logo URL
-              </label>
+              </Typography>
               <Input
                 type="url"
                 value={formData.logoUrl}
@@ -223,9 +223,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-2">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
                 Address
-              </label>
+              </Typography>
               <Input
                 type="text"
                 value={formData.address}
@@ -234,9 +234,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-2">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
                 City
-              </label>
+              </Typography>
               <Input
                 type="text"
                 value={formData.city}
@@ -245,9 +245,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-2">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
                 State
-              </label>
+              </Typography>
               <Input
                 type="text"
                 value={formData.state}
@@ -256,9 +256,9 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-2">
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
                 ZIP Code
-              </label>
+              </Typography>
               <Input
                 type="text"
                 value={formData.zipCode}

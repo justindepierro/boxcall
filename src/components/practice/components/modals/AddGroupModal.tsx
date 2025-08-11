@@ -81,9 +81,9 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Group Name */}
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
               Group Name *
-            </label>
+            </Typography>
             <input
               type="text"
               value={formData.name}
@@ -97,9 +97,9 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
           </div>
           {/* Location */}
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
               Location
-            </label>
+            </Typography>
             <input
               type="text"
               value={formData.location}
@@ -112,9 +112,9 @@ export const AddGroupModal: React.FC<AddGroupModalProps> = ({
           </div>
           {/* Notes */}
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
               Notes
-            </label>
+            </Typography>
             <textarea
               value={formData.notes}
               onChange={(e) =>

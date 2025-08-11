@@ -49,7 +49,7 @@ const getBreadcrumbItemStyles = (item: BreadcrumbItem) => {
     return `${baseStyles} text-gray-900 dark:text-white font-medium cursor-default`;
   }
   if (item.onClick || item.href) {
-    return `${baseStyles} text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white cursor-pointer hover:underline`;
+    return `${baseStyles} text-gray-500 dark:text-gray-400 hover:text-text-primary dark:hover:text-white cursor-pointer hover:underline`;
   }
   return `${baseStyles} text-gray-400 dark:text-gray-500`;
 };
@@ -85,7 +85,7 @@ const CollapsedIndicator: React.FC<{
         variant="ghost"
         size="xs"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="px-2 py-1 h-auto hover:text-gray-700 dark:hover:text-text-primary text-text-secondary"
+        className="px-2 py-1 h-auto hover:text-text-primary dark:hover:text-text-primary text-text-secondary"
         aria-label="Show hidden breadcrumb items"
       >
         ...

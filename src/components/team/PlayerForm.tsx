@@ -163,9 +163,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
                   First Name *
-                </label>
+                </Typography>
                 <Input
                   type="text"
                   value={formData.first_name || ""}
@@ -181,9 +181,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
                   Last Name *
-                </label>
+                </Typography>
                 <Input
                   type="text"
                   value={formData.last_name || ""}
@@ -199,9 +199,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
                   Email
-                </label>
+                </Typography>
                 <Input
                   type="email"
                   value={formData.email || ""}
@@ -213,9 +213,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
                   Phone Number
-                </label>
+                </Typography>
                 <Input
                   type="tel"
                   value={formData.phone || ""}
@@ -224,9 +224,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
                   Parent Email
-                </label>
+                </Typography>
                 <Input
                   type="email"
                   value={formData.parent_email || ""}
@@ -287,9 +287,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-4 bc-grid-gap">
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
                   Jersey Number
-                </label>
+                </Typography>
                 <Input
                   type="number"
                   min="0"
@@ -310,9 +310,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
                   Height
-                </label>
+                </Typography>
                 <Input
                   type="text"
                   value={formData.height || ""}
@@ -321,9 +321,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
                   Weight (lbs)
-                </label>
+                </Typography>
                 <Input
                   type="number"
                   min="1"
@@ -341,9 +341,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
                   Graduation Year
-                </label>
+                </Typography>
                 <Input
                   type="number"
                   min={new Date().getFullYear()}

@@ -129,12 +129,11 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
         >
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
-              <label
-                className="block text-sm font-medium mb-1"
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
                 htmlFor="ev-title"
               >
                 Title
-              </label>
+              </Typography>
               <Input
                 id="ev-title"
                 value={form.title}
@@ -147,12 +146,11 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 bc-grid-gap">
               <div>
-                <label
-                  className="block text-sm font-medium mb-1"
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
                   htmlFor="ev-type"
                 >
                   Type
-                </label>
+                </Typography>
                 <Select
                   id="ev-type"
                   value={form.eventType}
@@ -169,12 +167,11 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
                 />
               </div>
               <div>
-                <label
-                  className="block text-sm font-medium mb-1"
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
                   htmlFor="ev-start"
                 >
                   Starts At
-                </label>
+                </Typography>
                 <Input
                   id="ev-start"
                   type="datetime-local"
@@ -187,12 +184,11 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
               </div>
             </div>
             <div>
-              <label
-                className="block text-sm font-medium mb-1"
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
                 htmlFor="ev-location"
               >
                 Location (optional)
-              </label>
+              </Typography>
               <Input
                 id="ev-location"
                 value={form.location}

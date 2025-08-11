@@ -189,7 +189,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                   onClick={togglePasswordVisibility}
                   size="xs"
                   variant="ghost"
-                  className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+                  className="text-gray-400 hover:text-text-secondary dark:text-gray-500 dark:hover:text-text-secondary"
                 >
                   {showPassword ? (
                     <svg

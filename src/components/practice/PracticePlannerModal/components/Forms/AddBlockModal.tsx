@@ -148,9 +148,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
       {/* Form Fields */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1">
+          <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
             Title
-          </label>
+          </Typography>
           <input
             type="text"
             value={newBlock.title || ""}
@@ -162,9 +162,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1">
+          <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
             Duration (minutes)
-          </label>
+          </Typography>
           <input
             type="number"
             value={newBlock.duration || ""}
@@ -183,9 +183,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
 
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1">
+          <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
             Category
-          </label>
+          </Typography>
           <select
             value={newBlock.category || ""}
             onChange={(e) =>
@@ -205,9 +205,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1">
+          <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
             Location
-          </label>
+          </Typography>
           <input
             type="text"
             value={newBlock.location || ""}
@@ -221,9 +221,9 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
       </div>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium text-text-primary mb-1">
+        <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
           Notes
-        </label>
+        </Typography>
         <textarea
           value={newBlock.notes || ""}
           onChange={(e) =>

@@ -712,9 +712,9 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
         </Typography>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
               Block Title
-            </label>
+            </Typography>
             <Input
               type="text"
               value={title}
@@ -724,9 +724,9 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
               Description
-            </label>
+            </Typography>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -736,9 +736,9 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
+            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
               Duration (minutes)
-            </label>
+            </Typography>
             <Input
               type="number"
               value={duration}

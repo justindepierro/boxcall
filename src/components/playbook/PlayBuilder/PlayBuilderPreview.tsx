@@ -32,14 +32,14 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
             {isValid ? (
               <div className="flex items-center text-green-700">
                 <CheckCircle className="h-5 w-5 mr-1" />
-                <span className="text-sm font-medium">Ready to save</span>
+                <Typography variant=\"body-sm\" as=\"span\" className=\"font-medium\">Ready to save</Typography>
               </div>
             ) : (
               <div className="flex items-center text-amber-700">
                 <AlertTriangle className="h-5 w-5 mr-1" />
-                <span className="text-sm font-medium">
+                <Typography variant=\"body-sm\" as=\"span\" className=\"font-medium\">
                   Missing required fields
-                </span>
+                </Typography>
               </div>
             )}
           </div>

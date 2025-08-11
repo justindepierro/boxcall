@@ -62,9 +62,9 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
 
       <div className="space-y-3">
         <div>
-          <label className="block text-sm font-medium text-blue-700 mb-2">
+          <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-blue-700 mb-2\">
             Duration: {sliderValue} minutes
-          </label>
+          </Typography>
           <input
             type="range"
             min="1"

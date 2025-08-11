@@ -266,9 +266,9 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           <div className="flex items-center">
             <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
             <div>
-              <p className="text-sm font-medium text-green-900">
+              <Typography variant="body-sm" as="p" className="font-medium text-green-900">
                 File uploaded: {csvFile.name}
-              </p>
+              </Typography>
               <p className="text-sm text-green-800">
                 Ready to preview and import
               </p>

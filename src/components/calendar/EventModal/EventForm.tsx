@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Input } from "../../ui";
 import type { CalendarEvent } from "../../../domain/calendar/types";
+import { Typography } from "@/components/design-system/Typography";
 
 export interface EventFormProps {
   mode: "create" | "edit";
@@ -43,9 +44,9 @@ export const EventForm: React.FC<EventFormProps> = ({
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1">
+          <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
             Event Type
-          </label>
+          </Typography>
           <select
             value={event.type}
             onChange={(e) =>
@@ -71,9 +72,9 @@ export const EventForm: React.FC<EventFormProps> = ({
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-text-primary mb-1">
+        <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
           Description
-        </label>
+        </Typography>
         <textarea
           value={event.description || ""}
           onChange={(e) => setEvent({ ...event, description: e.target.value })}

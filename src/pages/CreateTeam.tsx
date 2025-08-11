@@ -385,9 +385,9 @@ export const CreateTeam: React.FC = () => {
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
                   School Name *
-                </label>
+                </Typography>
                 <input
                   type="text"
                   value={formData.schoolName}
@@ -400,9 +400,9 @@ export const CreateTeam: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
                   Team Mascot *
-                </label>
+                </Typography>
                 <input
                   type="text"
                   value={formData.teamName}
@@ -415,9 +415,9 @@ export const CreateTeam: React.FC = () => {
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
                   Sport *
-                </label>
+                </Typography>
                 <select
                   value={formData.sport}
                   onChange={(e) =>
@@ -499,9 +499,9 @@ export const CreateTeam: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
                   School Name *
-                </label>
+                </Typography>
                 <input
                   type="text"
                   value={formData.schoolName}
@@ -514,9 +514,9 @@ export const CreateTeam: React.FC = () => {
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
                   School District
-                </label>
+                </Typography>
                 <input
                   type="text"
                   value={formData.schoolDistrict}
@@ -528,9 +528,9 @@ export const CreateTeam: React.FC = () => {
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
                   School Address *
-                </label>
+                </Typography>
                 <input
                   type="text"
                   value={formData.schoolAddress}
@@ -543,7 +543,7 @@ export const CreateTeam: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">City *</label>
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">City *</Typography>
                 <input
                   type="text"
                   value={formData.schoolCity}
@@ -556,9 +556,9 @@ export const CreateTeam: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
                   State *
-                </label>
+                </Typography>
                 <input
                   type="text"
                   value={formData.schoolState}
@@ -624,10 +624,10 @@ export const CreateTeam: React.FC = () => {
               {/* Main Founders Plan */}
               <div className="lg:col-span-2 border-2 border-jade-500 rounded-lg p-6 relative bg-jade-50 dark:bg-jade-900/10">
                 <div className="absolute -top-3 left-6">
-                  <span className="bg-jade-500 text-text-inverse px-4 py-1 rounded-full text-sm font-medium flex items-center gap-1">
+                  <Typography variant=\"body-sm\" as=\"span\" className=\"bg-jade-500 text-text-inverse px-4 py-1 rounded-full font-medium flex items-center gap-1\">
                     <Icon name="star" size="xs" className="text-text-primary" />
                     Founders Price - Limited Time
-                  </span>
+                  </Typography>
                 </div>
 
                 <div className="mt-4">

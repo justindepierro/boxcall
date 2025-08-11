@@ -211,12 +211,11 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 bc-grid-gap">
               <div>
-                <label
-                  className="block text-sm font-medium mb-1"
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
                   htmlFor="gr-date"
                 >
                   Date
-                </label>
+                </Typography>
                 <Input
                   id="gr-date"
                   type="date"
@@ -228,12 +227,11 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 />
               </div>
               <div>
-                <label
-                  className="block text-sm font-medium mb-1"
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
                   htmlFor="gr-site"
                 >
                   Site
-                </label>
+                </Typography>
                 <Select
                   id="gr-site"
                   value={form.site}
@@ -247,12 +245,11 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
               </div>
             </div>
             <div>
-              <label
-                className="block text-sm font-medium mb-1"
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
                 htmlFor="gr-opponent"
               >
                 Opponent
-              </label>
+              </Typography>
               <Input
                 id="gr-opponent"
                 required
@@ -265,12 +262,11 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
             </div>
             <div className="grid grid-cols-2 bc-grid-gap">
               <div>
-                <label
-                  className="block text-sm font-medium mb-1"
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
                   htmlFor="gr-pf"
                 >
                   Points For
-                </label>
+                </Typography>
                 <Input
                   id="gr-pf"
                   type="number"
@@ -283,12 +279,11 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 />
               </div>
               <div>
-                <label
-                  className="block text-sm font-medium mb-1"
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
                   htmlFor="gr-pa"
                 >
                   Points Against
-                </label>
+                </Typography>
                 <Input
                   id="gr-pa"
                   type="number"
@@ -302,12 +297,11 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
               </div>
             </div>
             <div>
-              <label
-                className="block text-sm font-medium mb-1"
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
                 htmlFor="gr-notes"
               >
                 Notes (optional)
-              </label>
+              </Typography>
               <Input
                 id="gr-notes"
                 value={form.notes}

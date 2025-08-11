@@ -199,12 +199,11 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
           >
             <form onSubmit={handleSubmit} className="space-y-4" noValidate>
               <div>
-                <label
-                  className="block text-sm font-medium mb-1"
+                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
                   htmlFor="post-content"
                 >
                   Announcement
-                </label>
+                </Typography>
                 <TextArea
                   id="post-content"
                   value={content}
@@ -260,12 +259,11 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
         <Modal isOpen={open} onClose={() => setOpen(false)} title="Create Post">
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
-              <label
-                className="block text-sm font-medium mb-1"
+              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
                 htmlFor="post-content-inline"
               >
                 Announcement
-              </label>
+              </Typography>
               <TextArea
                 id="post-content-inline"
                 value={content}
