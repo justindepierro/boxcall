@@ -76,7 +76,7 @@ interface PlayGridProps {
   onPlaySelectionChange?: (playIds: Set<string>) => void;
 }
 
-export const PlayGrid: React.FC<PlayGridProps> = ({
+const PlayGridInner: React.FC<PlayGridProps> = ({
   searchQuery,
   filters,
   selectedCategory,
@@ -466,3 +466,54 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
     </div>
   );
 };
+
+// Custom props compare to avoid unnecessary rerenders cascading into Virtuoso
+function arePlayGridPropsEqual(prev: PlayGridProps, next: PlayGridProps) {
+  // Primitive / simple checks
+  if (prev.searchQuery !== next.searchQuery) return false;
+  if (prev.selectedCategory !== next.selectedCategory) return false;
+  if (prev.selectedSubcategory !== next.selectedSubcategory) return false;
+  if (prev.refreshTrigger !== next.refreshTrigger) return false;
+  if (prev.enableBulkOperations !== next.enableBulkOperations) return false;
+  // Filters shallow compare (expected small object)
+  const pf = prev.filters;
+  const nf = next.filters;
+  const filterKeys = new Set([
+    ...Object.keys(pf ?? {}),
+    ...Object.keys(nf ?? {}),
+  ]);
+  for (const k of filterKeys) {
+    // @ts-expect-error index
+    if (pf[k] !== nf[k]) return false;
+  }
+  // Selection set size + membership hash (cheap)
+  const ps = prev.selectedPlayIds;
+  const ns = next.selectedPlayIds;
+  if (ps && ns) {
+    if (ps.size !== ns.size) return false;
+    // Spot check first 10 ids
+    let i = 0;
+    for (const id of ps) {
+      if (!ns.has(id)) return false;
+      if (++i > 10) break; // limit cost
+    }
+  } else if (ps !== ns) return false;
+  // Handlers: we allow new function identities, they seldom cause heavy work; not part of equality (return false only if one exists and other missing)
+  const handlerKeys: (keyof PlayGridProps)[] = [
+    'onEdit','onDuplicate','onCreateDiagram','onAddToPracticeScript','onAddToGamePlan','onPlaySelectionChange','onPlayCountChange'
+  ];
+  for (const hk of handlerKeys) {
+    const a = prev[hk];
+    const b = next[hk];
+    if ((a && !b) || (!a && b)) return false;
+  }
+  return true;
+}
+
+export const PlayGrid = React.memo(PlayGridInner, arePlayGridPropsEqual);
+
+// Dev hint: mark component to avoid why-did-you-render noise (only if that lib is present)
+if (process.env.NODE_ENV === 'development') {
+  interface WdyrMark { whyDidYouRender?: boolean }
+  (PlayGrid as unknown as WdyrMark).whyDidYouRender = false;
+}
