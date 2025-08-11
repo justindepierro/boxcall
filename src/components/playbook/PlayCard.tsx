@@ -1,4 +1,5 @@
 import React, { useState, lazy, Suspense } from "react";
+import { useNavigate } from 'react-router-dom';
 import { Typography } from "../design-system/Typography";
 import {
   Edit,
@@ -49,7 +50,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   onSelectionChange,
   density = "comfortable",
 }) => {
-  const [showVisualBuilder, setShowVisualBuilder] = useState(false);
+  const [showVisualBuilder, setShowVisualBuilder] = useState(false); // legacy modal path
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const isCompact = density === "compact";
   const getPlayTypeColor = (type: string) => {
@@ -82,7 +84,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       .replace('situational', 'Situational');
   })();
   const handleCreateDiagram = () => {
-    setShowVisualBuilder(true);
+    // Route-based diagram pane for better code-splitting
+    navigate(`/playbook/diagram?playId=${play.id}`);
   };
   const handleSaveDiagram = (updatedPlay: PlayType) => {
     setShowVisualBuilder(false);
@@ -437,7 +440,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         </div>
       </div>
       {/* Visual Play Builder Modal */}
-      {showVisualBuilder && (
+  {/* Legacy modal retained for fallback; now diagram uses dedicated route */}
+  {showVisualBuilder && (
         <Suspense
           fallback={
             <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
