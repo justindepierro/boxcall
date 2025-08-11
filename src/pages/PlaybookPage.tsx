@@ -4,6 +4,8 @@ import { FileText, Plus, Upload, Download, Clock, Users } from "lucide-react";
 import { PlayGrid } from "../components/playbook/PlayGrid";
 import { PlaybookGlossary } from "../components/playbook/PlaybookGlossary";
 import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
+import MobileDrawer from "../components/mobile/MobileDrawer";
+import { PlayFilters } from "../components/playbook/PlayFilters";
 import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
 import { PlayBuilderCore } from "../components/playbook/PlayBuilder";
 import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal";
@@ -74,6 +76,9 @@ interface PlaybookPageState {
   filterPresets: ReturnType<typeof listPresets>;
   activePresetId?: string;
   diagramCoverage: number; // % of plays with a diagram (placeholder)
+  // Mobile UI state
+  showMobileFilters: boolean;
+  showMobileGlossary: boolean;
 }
 export const PlaybookPage: React.FC = () => {
   const [state, setState] = useState<PlaybookPageState>({
@@ -101,6 +106,8 @@ export const PlaybookPage: React.FC = () => {
     filterPresets: [],
     activePresetId: undefined,
     diagramCoverage: 0,
+  showMobileFilters: false,
+  showMobileGlossary: false,
   });
 
   // Achievement system - the heart of reward loop psychology
@@ -670,7 +677,7 @@ export const PlaybookPage: React.FC = () => {
         <div className="flex gap-6">
           {/* Reduced from gap-8 to gap-6 */}
           {/* Smart Playbook Glossary */}
-          <aside className="w-80 flex-shrink-0">
+            <aside className="w-80 flex-shrink-0 hidden md:block">
             <PlaybookGlossary
               onCategorySelect={handleCategorySelect}
               selectedCategory={state.selectedCategory}
@@ -679,6 +686,25 @@ export const PlaybookPage: React.FC = () => {
           </aside>
           {/* Play Grid */}
           <main className="flex-1">
+              {/* Mobile bar for filters & glossary triggers */}
+              <div className="md:hidden flex items-center justify-between mb-3 gap-2">
+                <Button
+                  size="xs"
+                  variant="secondary"
+                  onClick={() => setState(p => ({...p, showMobileGlossary: true}))}
+                  className="flex-1"
+                >
+                  Glossary
+                </Button>
+                <Button
+                  size="xs"
+                  variant="secondary"
+                  onClick={() => setState(p => ({...p, showMobileFilters: true}))}
+                  className="flex-1"
+                >
+                  Filters
+                </Button>
+              </div>
             {/* 3-View System Toggle */}
             <div
               className="mb-6 surface-subtle rounded-lg shadow-sm border-subtle p-1"
@@ -747,10 +773,15 @@ export const PlaybookPage: React.FC = () => {
                 <>
                   {/* Advanced Filters */}
                   <div className="surface-card rounded-lg shadow-sm border-subtle p-3 mb-4">
-                    <AdvancedFilters
-                      activeFilters={state.advancedFilters}
-                      onFiltersChange={handleAdvancedFiltersChange}
-                    />
+                    <div className="hidden md:block">
+                      <AdvancedFilters
+                        activeFilters={state.advancedFilters}
+                        onFiltersChange={handleAdvancedFiltersChange}
+                      />
+                    </div>
+                    <div className="md:hidden text-xs text-slate-500">
+                      Use the Filters drawer to refine results
+                    </div>
                   </div>
 
                   {/* Bulk Actions Toolbar */}
@@ -877,6 +908,44 @@ export const PlaybookPage: React.FC = () => {
           }}
         />
       )}
+
+      {/* Mobile Drawers */}
+      <MobileDrawer
+        title="Glossary"
+        isOpen={state.showMobileGlossary}
+        onClose={() => setState(p => ({...p, showMobileGlossary: false}))}
+        side="left"
+      >
+        <PlaybookGlossary
+          onCategorySelect={(cat, sub) => {
+            handleCategorySelect(cat, sub);
+            setState(p => ({...p, showMobileGlossary: false}));
+          }}
+          selectedCategory={state.selectedCategory}
+          selectedSubcategory={state.selectedSubcategory}
+        />
+      </MobileDrawer>
+      <MobileDrawer
+        title="Filters"
+        isOpen={state.showMobileFilters}
+        onClose={() => setState(p => ({...p, showMobileFilters: false}))}
+        side="right"
+      >
+        <PlayFilters
+          selectedFilters={state.selectedFilters}
+          onFilterChange={(f) => setState(p => ({...p, selectedFilters: f}))}
+        />
+        <div className="mt-4">
+          <Button
+            variant="primary"
+            size="sm"
+            className="w-full"
+            onClick={() => setState(p => ({...p, showMobileFilters: false}))}
+          >
+            Apply
+          </Button>
+        </div>
+      </MobileDrawer>
 
       {/* Achievement Celebration Overlay - The reward loop climax */}
       {state.showCelebration && state.recentAchievement && (
