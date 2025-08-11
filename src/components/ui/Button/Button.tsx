@@ -11,14 +11,16 @@ import type {
   ButtonStylesConfig,
 } from "./Button.types";
 // Button variant styles configuration - Updated with jade/navy theme
+// NOTE: Using CSS variables mapped from design tokens (generated-tokens.css)
+// to reduce direct Tailwind color utility coupling. Utilities retained for spacing/structure only.
 const buttonVariants: ButtonStylesConfig = {
   primary: {
-    // Darken base background (jade 600) for AA contrast with white text
-    base: "bg-brand-jade-dark text-white border border-brand-jade-dark",
-    hover: "hover:bg-brand-jade-darker hover:border-brand-jade-darker",
-    active: "active:bg-brand-jade-darker active:border-brand-jade-darker",
+    base: "text-white border" +
+      " bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)]",
+    hover: "hover:bg-[var(--semantic-primary-active)] hover:border-[var(--semantic-primary-active)]",
+    active: "active:bg-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)]",
     disabled:
-      "disabled:bg-brand-jade-light disabled:border-brand-jade-light disabled:cursor-not-allowed",
+      "disabled:bg-[color:var(--color-jade-300)] disabled:border-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   secondary: {
@@ -94,28 +96,27 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   danger: {
-    base: "bg-red-600 text-white border border-red-600",
-    hover: "hover:bg-red-700 hover:border-red-700",
-    active: "active:bg-red-800 active:border-red-800",
+    base: "text-white border bg-[var(--semantic-error)] border-[var(--semantic-error)]",
+    hover: "hover:bg-[color:var(--color-error-600)] hover:border-[color:var(--color-error-600)]",
+    active: "active:bg-[color:var(--color-error-700)] active:border-[color:var(--color-error-700)]",
     disabled:
-      "disabled:bg-red-300 disabled:border-red-300 disabled:cursor-not-allowed",
+      "disabled:bg-[color:var(--color-error-500)]/50 disabled:border-[color:var(--color-error-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   success: {
-    base: "bg-interaction-jade text-white border border-interaction-jade",
-    hover: "hover:bg-brand-jade-dark hover:border-brand-jade-dark",
-    active: "active:bg-brand-jade-darker active:border-brand-jade-darker",
+    base: "text-white border bg-[color:var(--color-success-600)] border-[color:var(--color-success-600)]",
+    hover: "hover:bg-[color:var(--color-success-700)] hover:border-[color:var(--color-success-700)]",
+    active: "active:bg-[color:var(--color-success-700)] active:border-[color:var(--color-success-700)]",
     disabled:
-      "disabled:bg-brand-jade-light disabled:border-brand-jade-light disabled:cursor-not-allowed",
+      "disabled:bg-[color:var(--color-success-500)]/50 disabled:border-[color:var(--color-success-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   warning: {
-    // Use darker background and dark text for AA contrast
-    base: "bg-yellow-600 text-gray-900 border border-yellow-600",
-    hover: "hover:bg-yellow-700 hover:border-yellow-700",
-    active: "active:bg-yellow-700 active:border-yellow-700",
+    base: "text-gray-900 border bg-[color:var(--color-warning-600)] border-[color:var(--color-warning-600)]",
+    hover: "hover:bg-[color:var(--color-warning-700)] hover:border-[color:var(--color-warning-700)]",
+    active: "active:bg-[color:var(--color-warning-700)] active:border-[color:var(--color-warning-700)]",
     disabled:
-      "disabled:bg-yellow-300 disabled:border-yellow-300 disabled:cursor-not-allowed",
+      "disabled:bg-[color:var(--color-warning-500)]/50 disabled:border-[color:var(--color-warning-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
 };

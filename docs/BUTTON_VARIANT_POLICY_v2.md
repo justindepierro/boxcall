@@ -69,6 +69,7 @@ All variants meet AA contrast on standard surfaces (audited). For non‑standard
 1. Refactor `buttonVariants` to consume CSS variable token maps (remove residual utility strings in config) for theme dynamism.
 2. Add IconButton decision matrix doc + when to choose over ghost/neutralLink.
 3. Integrate variant histogram into `style-audit` output and `style:gate` gating.
+ 4. Add CI threshold: flag if any single link variant > +40% week-over-week without explicit changelog tag.
 
 ## Changelog
 | Date (UTC)        | Change                                     |
