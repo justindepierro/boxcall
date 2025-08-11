@@ -63,10 +63,14 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
       <div className="p-4 space-y-6">
         {/* Quick Access */}
         <div>
-          <h4 className="text-sm font-medium text-slate-900 mb-3 flex items-center">
+          <Typography
+            variant="body-sm"
+            as="h4"
+            className="font-medium text-slate-900 mb-3 flex items-center leading-none"
+          >
             <Folder className="h-4 w-4 mr-2" />
             Quick Access
-          </h4>
+          </Typography>
           <div className="space-y-2">
             <Button
               variant="ghost"
@@ -86,7 +90,13 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
         </div>
         {/* Play Type Filter */}
         <div>
-          <h4 className="text-sm font-medium text-slate-900 mb-3">Play Type</h4>
+          <Typography
+            variant="body-sm"
+            as="h4"
+            className="font-medium text-slate-900 mb-3 leading-none"
+          >
+            Play Type
+          </Typography>
           <div className="space-y-2">
             {PLAY_TYPE_OPTIONS.map((option) => (
               <label key={option.value} className="flex items-center">
@@ -119,7 +129,13 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
         </div>
         {/* Formation Filter */}
         <div>
-          <h4 className="text-sm font-medium text-slate-900 mb-3">Formation</h4>
+          <Typography
+            variant="body-sm"
+            as="h4"
+            className="font-medium text-slate-900 mb-3 leading-none"
+          >
+            Formation
+          </Typography>
           <select
             value={selectedFilters.formation || ""}
             onChange={(e) =>
@@ -137,7 +153,13 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
         </div>
         {/* Down & Distance */}
         <div>
-          <h4 className="text-sm font-medium text-slate-900 mb-3">Situation</h4>
+          <Typography
+            variant="body-sm"
+            as="h4"
+            className="font-medium text-slate-900 mb-3 leading-none"
+          >
+            Situation
+          </Typography>
           <div className="space-y-3">
             <div>
               <label className="block text-xs text-slate-600 mb-1">Down</label>
@@ -179,9 +201,13 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
         </div>
         {/* Tags */}
         <div>
-          <h4 className="text-sm font-medium text-slate-900 mb-3">
+          <Typography
+            variant="body-sm"
+            as="h4"
+            className="font-medium text-slate-900 mb-3 leading-none"
+          >
             Common Tags
-          </h4>
+          </Typography>
           <div className="space-y-2">
             {[
               "3rd Down",
