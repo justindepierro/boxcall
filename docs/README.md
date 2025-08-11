@@ -1,78 +1,54 @@
-# 📚 BoxCall Docu### **🎨 Component Documentation**
+# 📚 BoxCall Documentation Index
 
-- [`/components/SMART_ICON_SYSTEM.md`](./components/SMART_ICON_SYSTEM.md) - SmartIconSystem with 300+ intelligent icon selection
-- [`/components/TROPHY_SHELF.md`](./components/TROPHY_SHELF.md) - Personal Trophy Shelf component design and implementation
-- [`/components/DASHBOARD_COMPONENTS.md`](./components/DASHBOARD_COMPONENTS.md) - Dashboard component system overviewation
+Single source for active docs. Legacy & superseded material lives in `docs/archive` or `docs/archives` (to consolidate).
 
-> **Comprehensive documentation for the BoxCall football management platform**
+## 1. Product & Roadmap
+- Unified Roadmap: `product/ROADMAP.md`
+- Current Status: `CURRENT_STATUS.md`
 
-## 📖 **Documentation Structure**
+## 2. Architecture & Design
+- High-Level Architecture: `ARCHITECTURE.md`
+- Component System: `COMPONENT_SYSTEM.md`
+- Style System Audit: `STYLE_SYSTEM_AUDIT.md`
+- Professionalization Plan (legacy): `STYLE_PROFESSIONALIZATION_PLAN.md`
 
-### **🚀 Setup & Getting Started**
+## 3. Database & Migrations
+- Integration Overview: `DATABASE_INTEGRATION.md`
+- Table Inventory: `DATABASE_TABLE_INVENTORY.md`
+- Migration 010 Plan & Counts: `MIGRATION_010_PLAN.md`, `MIGRATION_010_COUNTS.md`
+- NOT NULL Readiness: `database/NOT_NULL_duplicate_key_PLAN.md`
 
-- [`/setup/SUPABASE_SETUP.md`](./setup/SUPABASE_SETUP.md) - Complete Supabase configuration guide
-- [`/setup/clear-localhost.html`](./setup/clear-localhost.html) - Development utility for clearing localhost
+## 4. Search & Telemetry
+- Play Write Path Inventory: `PLAY_WRITE_PATH_INVENTORY.md`
+- (Telemetry schema doc – todo)
 
-### **🗄️ Database Documentation**
+## 5. Performance & Quality
+- Performance Status: `PERFORMANCE_OPTIMIZATION_STATUS.md`
+- Contrast & Style Policies: `BUTTON_VARIANT_POLICY.md`, `BADGE_TAG_GUIDELINES.md`
+- Icon Optimization: `ICON_OPTIMIZATION_COMPLETE.md`
 
-- [`/database/DATABASE_INTEGRATION.md`](./database/DATABASE_INTEGRATION.md) - Database integration overview
-- [`/database/COMPLETE_SCHEMA_REFERENCE.md`](./database/COMPLETE_SCHEMA_REFERENCE.md) - Complete database schema reference
-- [`/database/database-schema.sql`](./database/database-schema.sql) - SQL schema file
+## 6. Development & Setup
+- Setup: `SETUP.md`, `SUPABASE_SETUP.md`
+- Development Guide: `DEVELOPMENT.md`
+- Git Safety: `GIT_SAFETY_GUIDE.md`
 
-### **� Component Documentation**
+## 7. Completed Initiatives (Archive Candidates)
+- Component Refactor: `COMPONENT_REFACTORING_ROADMAP_COMPLETE.md`
+- Practice Planner Refactor: `PRACTICE_PLANNER_REFACTORING_COMPLETE.md`
+- Phase 2 Summary: `PHASE_2_COMPLETE_SUMMARY.md`
 
-- [`/components/TROPHY_SHELF.md`](./components/TROPHY_SHELF.md) - Personal Trophy Shelf component design and implementation
-- [`/components/DASHBOARD_COMPONENTS.md`](./components/DASHBOARD_COMPONENTS.md) - Dashboard component system overview
+## 8. Pending Cleanup Targets
+- Duplicate folder: `archives/` vs `archive/` – merge later
 
-### **�🏗️ Architecture Documentation**
+## 9. Standards
+New docs must:
+1. Start with H1 title.
+2. Include Status line (Active / Archived / Draft).
+3. Stay ≤300 lines (split otherwise).
 
-- [`/architecture/DASHBOARD_INFRASTRUCTURE.md`](./architecture/DASHBOARD_INFRASTRUCTURE.md) - Complete dashboard infrastructure documentation
-
-### **⚡ Development Logs**
-
-- [`/development/CURRENT_STATUS.md`](./development/CURRENT_STATUS.md) - Current development status and milestones
-- [`/development/PHASE_4_AUTH_LOG.md`](./development/PHASE_4_AUTH_LOG.md) - Phase 4 authentication development log
-
-## 🎯 **Quick Navigation**
-
-### **For Developers**
-
-1. **Getting Started**: Start with the main [README.md](../README.md)
-2. **Database Setup**: Follow [SUPABASE_SETUP.md](./setup/SUPABASE_SETUP.md)
-3. **Current Status**: Check [CURRENT_STATUS.md](./development/CURRENT_STATUS.md)
-4. **Database Reference**: Use [COMPLETE_SCHEMA_REFERENCE.md](./database/COMPLETE_SCHEMA_REFERENCE.md)
-5. **Dashboard Architecture**: Review [DASHBOARD_INFRASTRUCTURE.md](./architecture/DASHBOARD_INFRASTRUCTURE.md)
-
-### **For Contributors**
-
-1. **Project Overview**: Main [README.md](../README.md) has full roadmap
-2. **Development Progress**: [PHASE_4_AUTH_LOG.md](./development/PHASE_4_AUTH_LOG.md)
-3. **Database Schema**: [DATABASE_INTEGRATION.md](./database/DATABASE_INTEGRATION.md)
-
-### **For DevOps**
-
-1. **Database Schema**: [database-schema.sql](./database/database-schema.sql)
-2. **Environment Setup**: [SUPABASE_SETUP.md](./setup/SUPABASE_SETUP.md)
-3. **Development Tools**: [clear-localhost.html](./setup/clear-localhost.html)
-
-## 📋 **Documentation Standards**
-
-All BoxCall documentation follows these standards:
-
-- ✅ **Markdown Format** - All docs use GitHub-flavored Markdown
-- ✅ **Clear Structure** - Logical organization with proper headings
-- ✅ **Code Examples** - Practical examples with syntax highlighting
-- ✅ **Status Tracking** - Development progress clearly documented
-- ✅ **Cross-References** - Linked documentation for easy navigation
+## 10. Maintenance
+Run `npm run docs:validate` before PR to ensure no empty docs. Allow intentional empties by adding comment: `<!-- allow-empty -->`.
 
 ---
-
-**Last Updated**: August 10, 2025  
-**Documentation Version**: 1.3  
-**Current Phase**: UI Professionalization (Surfaces / Typography / Badge & Tag)  
-**Project Phase**: 4.4 - Styling & Governance
-
-### 🎨 UI Style System References
-
-- [Style Professionalization Plan](./STYLE_PROFESSIONALIZATION_PLAN.md)
-- [Badge vs Tag Guidelines](./BADGE_TAG_GUIDELINES.md)
+Last Updated: 2025-08-11
+Owner: Documentation Steward (rotate quarterly)
