@@ -20,25 +20,23 @@ Single source for active docs. Legacy & superseded material lives in `docs/archi
 
 ## 4. Search & Telemetry
 - Play Write Path Inventory: `PLAY_WRITE_PATH_INVENTORY.md`
-- (Telemetry schema doc – todo)
+- Telemetry Schema: `quality/TELEMETRY_SCHEMA.md`
 
 ## 5. Performance & Quality
 - Performance Status: `PERFORMANCE_OPTIMIZATION_STATUS.md`
 - Contrast & Style Policies: `BUTTON_VARIANT_POLICY.md`, `BADGE_TAG_GUIDELINES.md`
-- Icon Optimization: `ICON_OPTIMIZATION_COMPLETE.md`
+- Icon Optimization (archived): `archive/ICON_OPTIMIZATION_COMPLETE.md`
 
 ## 6. Development & Setup
 - Setup: `SETUP.md`, `SUPABASE_SETUP.md`
 - Development Guide: `DEVELOPMENT.md`
 - Git Safety: `GIT_SAFETY_GUIDE.md`
 
-## 7. Completed Initiatives (Archive Candidates)
-- Component Refactor: `COMPONENT_REFACTORING_ROADMAP_COMPLETE.md`
-- Practice Planner Refactor: `PRACTICE_PLANNER_REFACTORING_COMPLETE.md`
-- Phase 2 Summary: `PHASE_2_COMPLETE_SUMMARY.md`
+## 7. Archived Initiatives
+- See `archive/` for historical refactor, optimization, and phase completion docs.
 
 ## 8. Pending Cleanup Targets
-- Duplicate folder: `archives/` vs `archive/` – merge later
+- (None currently) – keep index lean.
 
 ## 9. Standards
 New docs must:
