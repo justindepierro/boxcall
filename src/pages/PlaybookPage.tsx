@@ -27,7 +27,13 @@ import {
   applyPreset,
   updatePreset,
 } from "../utils/playbookFilterPresets";
-// TODO: Future enhancement - calculate real play counts with: import { calculatePlayCounts } from "../utils/playbook-categories";
+import {
+  listServerPresets,
+  createServerPreset,
+  updateServerPreset,
+  deleteServerPreset,
+} from "../utils/serverPlaybookViewPresets";
+import type { ServerPlaybookViewPreset } from "../types/playbookViewPreset";
 import type { Play } from "../types/play";
 import {
   Badge,
@@ -80,6 +86,11 @@ interface PlaybookPageState {
   // Mobile UI state
   showMobileFilters: boolean;
   showMobileGlossary: boolean;
+  serverPresets: ServerPlaybookViewPreset[];
+  serverPresetsLoading: boolean;
+  serverPresetsError?: string | null;
+  activeServerPresetId?: string;
+  importedLocalPresets: boolean; // one-time migration flag
 }
 export const PlaybookPage: React.FC = () => {
   const [state, setState] = useState<PlaybookPageState>({
@@ -107,8 +118,13 @@ export const PlaybookPage: React.FC = () => {
     filterPresets: [],
     activePresetId: undefined,
     diagramCoverage: 0,
-  showMobileFilters: false,
-  showMobileGlossary: false,
+    showMobileFilters: false,
+    showMobileGlossary: false,
+    serverPresets: [],
+    serverPresetsLoading: true,
+    serverPresetsError: null,
+    activeServerPresetId: undefined,
+    importedLocalPresets: false,
   });
 
   // Achievement system - the heart of reward loop psychology
@@ -329,66 +345,89 @@ export const PlaybookPage: React.FC = () => {
   };
 
   // Preset Management
-  const refreshPresets = () => {
-    setState((prev) => ({ ...prev, filterPresets: listPresets() }));
-  };
-  const handleSavePreset = () => {
+  const handleSavePreset = async () => {
     const name = prompt("Preset name?");
     if (!name) return;
-    const preset = createPreset({
-      name,
-      filters: {
-        searchQuery: state.searchQuery,
-        formation: state.selectedFilters.formation,
-        playType: state.selectedFilters.playType,
-        category: state.selectedCategory,
-        subcategory: state.selectedSubcategory,
-      },
-    });
-    telemetry.enqueue({
-      type: TelemetryEventTypes.ViewSavedApply,
-      data: { viewId: preset.id, action: 'create' },
-    });
-    refreshPresets();
+    const filters = {
+      searchQuery: state.searchQuery,
+      formation: state.selectedFilters.formation,
+      playType: state.selectedFilters.playType,
+      category: state.selectedCategory,
+      subcategory: state.selectedSubcategory,
+    };
+    try {
+      const created = await createServerPreset({ name, filters });
+      setState(p => ({ ...p, serverPresets: [created, ...p.serverPresets], activeServerPresetId: created.id }));
+      telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedServerCreate, data: { id: created.id } });
+    } catch (_e) {
+      const preset = createPreset({ name, filters });
+      telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedApply, data: { viewId: preset.id, action: "create_local_fallback" } });
+      setState(p => ({ ...p, filterPresets: listPresets(), activePresetId: preset.id }));
+    }
   };
-  const handleApplyPreset = (id: string) => {
-    const preset = listPresets().find((p) => p.id === id);
+  const handleApplyPreset = async (id: string) => {
+    // Determine origin: server or local
+    const server = state.serverPresets.find(p => p.id === id);
+    if (server) {
+      const f = server.filters;
+      setState(prev => ({
+        ...prev,
+        searchQuery: f.searchQuery || "",
+        selectedFilters: { ...prev.selectedFilters, formation: f.formation, playType: f.playType },
+        selectedCategory: f.category,
+        selectedSubcategory: f.subcategory,
+        activeServerPresetId: id,
+        activePresetId: undefined,
+      }));
+      telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedServerApply, data: { id } });
+      return;
+    }
+    const preset = listPresets().find(p => p.id === id);
     if (!preset) return;
     const f = applyPreset(preset);
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
       searchQuery: f.searchQuery || "",
-      selectedFilters: {
-        ...prev.selectedFilters,
-        formation: f.formation,
-        playType: f.playType,
-      },
+      selectedFilters: { ...prev.selectedFilters, formation: f.formation, playType: f.playType },
       selectedCategory: f.category,
       selectedSubcategory: f.subcategory,
       activePresetId: id,
+      activeServerPresetId: undefined,
     }));
-    telemetry.enqueue({
-      type: TelemetryEventTypes.ViewSavedApply,
-      data: { viewId: id },
-    });
+    telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedApply, data: { viewId: id, action: "apply_local" } });
   };
-  const handleDeletePreset = (id: string) => {
+  const handleDeletePreset = async (id: string) => {
     if (!confirm("Delete preset?")) return;
+    const server = state.serverPresets.find(p => p.id === id);
+    if (server) {
+      try {
+        await deleteServerPreset(id);
+        setState(p => ({ ...p, serverPresets: p.serverPresets.filter(sp => sp.id !== id), activeServerPresetId: p.activeServerPresetId === id ? undefined : p.activeServerPresetId }));
+        telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedServerDelete, data: { id } });
+        return;
+      } catch (_e) {
+        // fallback
+      }
+    }
     deletePreset(id);
-    refreshPresets();
-    setState((prev) => ({
-      ...prev,
-      activePresetId:
-        prev.activePresetId === id ? undefined : prev.activePresetId,
-    }));
+    setState(p => ({ ...p, filterPresets: listPresets(), activePresetId: p.activePresetId === id ? undefined : p.activePresetId }));
   };
-  const handleRenamePreset = (id: string) => {
-    const current = listPresets().find(p => p.id === id);
-    if (!current) return;
-    const name = prompt('New name?', current.name);
-    if (!name) return;
-    updatePreset(id, { name });
-    refreshPresets();
+  const handleRenamePreset = async (id: string) => {
+    const newName = prompt("New name?");
+    if (!newName) return;
+    const server = state.serverPresets.find(p => p.id === id);
+    if (server) {
+      try {
+        const updated = await updateServerPreset({ id, name: newName });
+        setState(p => ({ ...p, serverPresets: p.serverPresets.map(sp => sp.id === id ? updated : sp) }));
+        telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedServerRename, data: { id } });
+        return;
+      } catch (_e) {
+        // fall through
+      }
+    }
+    updatePreset(id, { name: newName });
+    setState(p => ({ ...p, filterPresets: listPresets() }));
   };
 
   const handleViewChange = (view: CoachingView) => {
@@ -473,6 +512,40 @@ export const PlaybookPage: React.FC = () => {
       );
     }
   };
+
+  React.useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setState(p => ({ ...p, serverPresetsLoading: true }));
+        const presets = await listServerPresets();
+        if (cancelled) return;
+        // One-time import if server empty
+        if (presets.length === 0) {
+          const local = listPresets();
+          if (local.length) {
+            for (const lp of local) {
+              try {
+                await createServerPreset({ name: lp.name, filters: lp.filters });
+              } catch {
+                /* ignore individual */
+              }
+            }
+            const refreshed = await listServerPresets();
+            if (!cancelled) {
+              setState(p => ({ ...p, serverPresets: refreshed, importedLocalPresets: true }));
+            }
+            telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedServerImport, data: { count: local.length } });
+            return;
+          }
+        }
+        setState(p => ({ ...p, serverPresets: presets, serverPresetsLoading: false }));
+      } catch (_e) {
+        if (!cancelled) setState(p => ({ ...p, serverPresetsLoading: false, serverPresetsError: 'Failed to load presets' }));
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   return (
     <div className="min-h-screen surface-app decorative-gradient bg-gradient-to-br from-slate-50 to-slate-100">
@@ -702,7 +775,7 @@ export const PlaybookPage: React.FC = () => {
         <div className="flex gap-6">
           {/* Reduced from gap-8 to gap-6 */}
           {/* Smart Playbook Glossary */}
-            <aside className="w-80 flex-shrink-0 hidden md:block">
+          <aside className="w-80 flex-shrink-0 hidden md:block">
             <PlaybookGlossary
               onCategorySelect={handleCategorySelect}
               selectedCategory={state.selectedCategory}
@@ -711,25 +784,29 @@ export const PlaybookPage: React.FC = () => {
           </aside>
           {/* Play Grid */}
           <main className="flex-1">
-              {/* Mobile bar for filters & glossary triggers */}
-              <div className="md:hidden flex items-center justify-between mb-3 gap-2">
-                <Button
-                  size="xs"
-                  variant="secondary"
-                  onClick={() => setState(p => ({...p, showMobileGlossary: true}))}
-                  className="flex-1"
-                >
-                  Glossary
-                </Button>
-                <Button
-                  size="xs"
-                  variant="secondary"
-                  onClick={() => setState(p => ({...p, showMobileFilters: true}))}
-                  className="flex-1"
-                >
-                  Filters
-                </Button>
-              </div>
+            {/* Mobile bar for filters & glossary triggers */}
+            <div className="md:hidden flex items-center justify-between mb-3 gap-2">
+              <Button
+                size="xs"
+                variant="secondary"
+                onClick={() =>
+                  setState((p) => ({ ...p, showMobileGlossary: true }))
+                }
+                className="flex-1"
+              >
+                Glossary
+              </Button>
+              <Button
+                size="xs"
+                variant="secondary"
+                onClick={() =>
+                  setState((p) => ({ ...p, showMobileFilters: true }))
+                }
+                className="flex-1"
+              >
+                Filters
+              </Button>
+            </div>
             {/* 3-View System Toggle */}
             <div
               className="mb-6 surface-subtle rounded-lg shadow-sm border-subtle p-1"
@@ -938,13 +1015,13 @@ export const PlaybookPage: React.FC = () => {
       <MobileDrawer
         title="Glossary"
         isOpen={state.showMobileGlossary}
-        onClose={() => setState(p => ({...p, showMobileGlossary: false}))}
+        onClose={() => setState((p) => ({ ...p, showMobileGlossary: false }))}
         side="left"
       >
         <PlaybookGlossary
           onCategorySelect={(cat, sub) => {
             handleCategorySelect(cat, sub);
-            setState(p => ({...p, showMobileGlossary: false}));
+            setState((p) => ({ ...p, showMobileGlossary: false }));
           }}
           selectedCategory={state.selectedCategory}
           selectedSubcategory={state.selectedSubcategory}
@@ -953,19 +1030,23 @@ export const PlaybookPage: React.FC = () => {
       <MobileDrawer
         title="Filters"
         isOpen={state.showMobileFilters}
-        onClose={() => setState(p => ({...p, showMobileFilters: false}))}
+        onClose={() => setState((p) => ({ ...p, showMobileFilters: false }))}
         side="right"
       >
         <PlayFilters
           selectedFilters={state.selectedFilters}
-          onFilterChange={(f) => setState(p => ({...p, selectedFilters: f}))}
+          onFilterChange={(f) =>
+            setState((p) => ({ ...p, selectedFilters: f }))
+          }
         />
         <div className="mt-4">
           <Button
             variant="primary"
             size="sm"
             className="w-full"
-            onClick={() => setState(p => ({...p, showMobileFilters: false}))}
+            onClick={() =>
+              setState((p) => ({ ...p, showMobileFilters: false }))
+            }
           >
             Apply
           </Button>
