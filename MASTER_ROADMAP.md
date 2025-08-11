@@ -1,8 +1,79 @@
-# 📘 MASTER PRODUCT & TECH ROADMAP (2025)
+# 📘 MASTER PRODUCT & TECH ROADMAP (2025) — Modular Index
 
-> Single source of truth unifying feature vision, architecture evolution, data normalization, performance, mobile, quality, and operational readiness.
+> This lean index replaces the prior 1000+ line monolith. Deep dives now live in modular docs under `docs/roadmap/`. Keep this file fast to scan: current top priorities, module map, quick metrics, changelog. Target size: <200 lines.
 
 ---
+
+## A. CURRENT TOP PRIORITIES (Rolling)
+
+1. Finish residual hover/dark gray text cleanup & heading `<Typography />` migration.
+2. Integrate canonicalization in write path; add `duplicate_key` column & backfill.
+3. Draft Migration 010 with counts & parity report.
+4. Implement telemetry dispatcher skeleton (foundation for Web Vitals & onboarding events).
+5. Contrast audit + axe CI harness activation.
+
+Owner Cadence: Mon (KPI snapshot) · Fri (Risk review).
+
+---
+
+## B. MODULAR ROADMAP FILES
+
+| #   | Focus                          | Path                            |
+| --- | ------------------------------ | ------------------------------- |
+| 01  | Vision & Pillars               | docs/roadmap/01_vision.md       |
+| 02  | Core KPIs & Targets            | docs/roadmap/02_kpis.md         |
+| 03  | Architecture Snapshot          | docs/roadmap/03_architecture.md |
+| 04  | Data & Normalization Deep Dive | docs/roadmap/04_data_normalization.md |
+| 05  | Migration Plan & DB Hardening  | docs/roadmap/05_migration_plan.md |
+| 06  | Service Layer & React Query    | docs/roadmap/06_service_layer.md |
+| 07  | Performance & Web Vitals       | docs/roadmap/07_performance.md |
+| 08  | Accessibility & Mobile         | (to create)                     |
+| 09  | Observability & Telemetry      | (to create)                     |
+| 10  | Security & Release Engineering | (to create)                     |
+| 11  | Custom Field Extensibility     | (to create)                     |
+| 12  | Innovation Tracks              | (to create)                     |
+
+---
+
+## C. SNAPSHOT METRICS (Quick View)
+
+| Metric                    | Status              |
+| ------------------------- | ------------------- |
+| Raw Gray Offenders        | 0 (gate enforced)   |
+| Hover Gray Text Utilities | In progress         |
+| Canonical Write Path      | Pilot (PlaybookPage) |
+| duplicate_key Column      | Migration drafted   |
+| Migration 010 Draft       | Concept only        |
+| Telemetry Dispatcher      | Not started         |
+| Contrast/Axe Harness      | Not implemented     |
+
+---
+
+## D. CHANGELOG (Index-Level Only)
+
+- 2025-08-10: Pruned legacy long-form content; index trimmed to essentials. Historical commit: `df21c1c`.
+- 2025-08-10: Modular split initiated (01_vision, 02_kpis, 03_architecture).
+
+Historic narrative & deep dives remain accessible via git history (see commit hash above) and the archive placeholder.
+
+---
+
+## E. CONTRIBUTING NOTES
+
+1. Create new deep-dive: `docs/roadmap/NN_topic.md`; add row in Section B.
+2. Update metrics weekly; remove stale priorities (older than 3 weeks without movement).
+3. Keep acceptance criteria inside the domain module file, not here.
+4. If a module grows >300 lines, consider sub-splitting (e.g. `05a_migrations.md`).
+
+---
+
+## F. LEGACY ARCHIVE
+
+Original monolithic roadmap snapshot placeholder: `docs/roadmap/ARCHIVE_MASTER_ROADMAP_2025-08-10.md` (full text retrievable from git history; see `df21c1c`).
+
+---
+
+> End of index.
 
 ## ✅ PROGRESS SNAPSHOT (As of 2025-08-10)
 
@@ -83,6 +154,50 @@ Next Immediate Focus (Proposed Order)
 3. Integrate canonicalization in write path + add duplicate_key column migration
 4. Draft Migration 010 & row count report
 5. Introduce lightweight telemetry dispatcher (foundation for Web Vitals & onboarding events)
+
+---
+
+## 🔎 Quick Navigation
+
+This roadmap now groups content into three layers: (1) Strategic Essentials you read weekly, (2) Execution Framework (phases, KPIs, risks) you skim as you plan a sprint, and (3) Deep Dives you open only when implementing that domain.
+
+### 1. Strategic Essentials (Read Often)
+
+- [Vision & Pillars](#1-product-vision)
+- [Architecture Snapshot](#2-architecture-snapshot)
+- [Current KPI Targets](#12-core-kpis--targets)
+- [Next 14-Day Plan](#16-next-14-day-execution-plan)
+- [Immediate Next 5 Actions](#3113-immediate-next-5-actions-now)
+
+### 2. Execution Framework
+
+- [Phased Timeline](#11-phased-timeline-reference)
+- [Execution Backlog (Formatted)](#31-execution-backlog-formatted)
+- [Phase 1 Completion Status](#314-phase-1-style--design-system-finalization-days-13-complete) (✅) & remaining pre-Phase-2 gating
+- [Risks & Mitigations](#13-risk-register)
+- [Acceptance Contracts](#3114-acceptance-contracts-reference)
+
+### 3. Deep Dives (Open When Implementing)
+
+- [Custom Field Extensibility](#18-custom-field-extensibility-system)
+- [Style & Design System Audit](#19-style--design-system-consistency-audit-new)
+- [Performance Plan](#20-performance-bottleneck-analysis--plan-new)
+- [Mobile Readiness](#21-mobile-readiness--responsive-strategy-new)
+- [Database Integration & Data Quality](#22-database-integration--data-quality-enhancements-new)
+- [Architecture & Domain Layering](#23-future-proof-architecture--domain-layering-new)
+- [Accessibility Roadmap](#24-accessibility--inclusive-design-new)
+- [Observability Expansion](#25-observability--telemetry-expansion-new)
+- [Security Hardening](#26-security-hardening--governance-new)
+- [Release Engineering](#27-release-engineering--tooling-new)
+- [Innovation Tracks](#28-innovation-tracks-new)
+
+### 4. Reference & History
+
+- [Backlog (Curated)](#14-backlog-curated)
+- [Migration Plan (Retro Normalization)](#15-migration-plan-retro-normalization)
+- [Changelog](#17-summary)
+
+> Tip: Use your editor's outline / symbol navigation or search for `## 31.` to jump directly to the structured execution backlog. Deep dive sections intentionally keep their original rich detail verbatim—only navigation has been layered on top.
 
 ---
 
@@ -870,13 +985,13 @@ Migration Acceptance (Typography Sweep):
 
 ### 31.4 Phase 1: Style & Design System Finalization (Days 1–3) (COMPLETE)
 
-| Workstream                 | Tasks                                               | Status    | Exit Criteria                                            |
-| -------------------------- | --------------------------------------------------- | --------- | -------------------------------------------------------- |
-| Raw Gray Elimination       | Run surface + text codemods; add lint & style gates | ✅        | Zero raw gray offenders; gates enforced                  |
-| Typography Tokens          | Map text-gray-* → semantic tokens; add rule        | ✅ (base) | All base colors semantic; residual hover states migrated |
-| Typography Component Sweep | Replace raw heading utilities with `<Typography />` | ✅        | 0 raw heading utilities outside component lib            |
-| Focus Ring                 | Introduce unified focus-ring utilities              | ✅        | All interactive core components using shared ring        |
-| Contrast & Axe Harness     | Add axe + contrast tests for key pages              | ⏳        | CI fails on <4.5:1 text contrast violations              |
+| Workstream                 | Tasks                                                         | Status    | Exit Criteria                                            |
+| -------------------------- | ------------------------------------------------------------- | --------- | -------------------------------------------------------- |
+| Raw Gray Elimination       | Run surface + text codemods; add lint & style gates           | ✅        | Zero raw gray offenders; gates enforced                  |
+| Typography Tokens          | Map text-gray-\* → semantic tokens; add rule                  | ✅ (base) | All base colors semantic; residual hover states migrated |
+| Typography Component Sweep | Replace raw heading utilities with `<Typography />`           | ✅        | 0 raw heading utilities outside component lib            |
+| Focus Ring                 | Introduce unified focus-ring utilities                        | ✅        | All interactive core components using shared ring        |
+| Contrast & Axe Harness     | Add axe + contrast tests for key pages                        | ⏳        | CI fails on <4.5:1 text contrast violations              |
 | Emoji-to-Icon Audit        | Lint rule forbidding raw emoji in UI; replace with `<Icon />` | ✅        | 0 violations; rule active                                |
 
 Phase 1 Completion Note: All raw gray surfaces & text, raw heading utilities, and emoji glyph usages in interactive UI have been eliminated and are now guarded by ESLint/style gates. The remaining open contrast & axe harness will kick off at start of Phase 2 without blocking data layer work.
@@ -894,22 +1009,22 @@ Phase 1 Completion Note: All raw gray surfaces & text, raw heading utilities, an
 
 ### 31.6 Phase 3: Performance & Bundling (Days 8–10)
 
-| Task                                         | Status | Acceptance                                                  |
-| -------------------------------------------- | ------ | ----------------------------------------------------------- |
-| Manual Chunking (pdf, calendar, playbuilder) | ⏳     | Chunks named & size diff recorded                           |
-| Dynamic Imports (PDF export, heavy panels)   | ⏳     | Initial bundle size reduction documented                    |
-| INP Measurement Script + CI Budget           | ⏳     | CI fails on >X ms delta                                     |
+| Task                                                                                                           | Status | Acceptance                                                  |
+| -------------------------------------------------------------------------------------------------------------- | ------ | ----------------------------------------------------------- |
+| Manual Chunking (pdf, calendar, playbuilder)                                                                   | ⏳     | Chunks named & size diff recorded                           |
+| Dynamic Imports (PDF export, heavy panels)                                                                     | ⏳     | Initial bundle size reduction documented                    |
+| INP Measurement Script + CI Budget                                                                             | ⏳     | CI fails on >X ms delta                                     |
 | Memoization Sweep (useMemo/useCallback) for Practice Planner hot loops; measure rerenders with profiling flag. | ⏳     | Rerenders reduced vs baseline profile                       |
-| Font Preload & Asset Strategy                | ⏳     | Core CLS unaffected; fonts loaded within first paint window |
+| Font Preload & Asset Strategy                                                                                  | ⏳     | Core CLS unaffected; fonts loaded within first paint window |
 
 ### 31.7 Phase 4: Accessibility & Mobile (Days 11–13)
 
-| Task                                | Status | Acceptance                                  |
-| ----------------------------------- | ------ | ------------------------------------------- |
-| Full-Screen Mobile Modals (<640px)  | ⏳     | Key flows adapt layout gracefully           |
-| Touch Target Audit (≥44px)          | ⏳     | Axe + manual audit pass                     |
-| Reduced Motion Support              | ⏳     | Animations respect `prefers-reduced-motion` |
-| Keyboard Navigation (suggest lists) | ⏳     | Arrow + ESC + Enter semantics working       |
+| Task                                                | Status | Acceptance                                  |
+| --------------------------------------------------- | ------ | ------------------------------------------- |
+| Full-Screen Mobile Modals (<640px)                  | ⏳     | Key flows adapt layout gracefully           |
+| Touch Target Audit (≥44px)                          | ⏳     | Axe + manual audit pass                     |
+| Reduced Motion Support                              | ⏳     | Animations respect `prefers-reduced-motion` |
+| Keyboard Navigation (suggest lists)                 | ⏳     | Arrow + ESC + Enter semantics working       |
 | Screen reader live regions for save/loading states. | ⏳     | Screen readers announce saves/errors        |
 
 ### 31.8 Phase 5: Observability & Telemetry (Days 14–15)

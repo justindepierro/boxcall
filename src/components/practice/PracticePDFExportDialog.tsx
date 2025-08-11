@@ -365,7 +365,8 @@ export const PracticePDFExportDialog: React.FC<
                 <strong>Categories:</strong> {getSelectedCategoriesText()}
               </div>
               <div className="mt-1">
-                <Icon name="file" size="xs" className="inline" /> <strong>Content:</strong> Basic timeline
+                <Icon name="file" size="xs" className="inline" />{" "}
+                <strong>Content:</strong> Basic timeline
                 {exportOptions.addScripts && ", Practice scripts"}
                 {exportOptions.addNotes && ", Coach notes"}
               </div>
@@ -395,7 +396,8 @@ export const PracticePDFExportDialog: React.FC<
               </div>
             ) : (
               <>
-                <Icon name="file" size="sm" className="inline mr-1" /> Export to PDF
+                <Icon name="file" size="sm" className="inline mr-1" /> Export to
+                PDF
               </>
             )}
           </Button>

@@ -39,7 +39,11 @@ const PlayerDashboardContent: React.FC = () => {
                 <p className="text-sm font-medium text-text-secondary">
                   Practices Attended
                 </p>
-                <Typography variant="headline-sm" as="p" className="text-text-primary">
+                <Typography
+                  variant="headline-sm"
+                  as="p"
+                  className="text-text-primary"
+                >
                   23/25
                 </Typography>
               </div>
@@ -57,7 +61,11 @@ const PlayerDashboardContent: React.FC = () => {
                 <p className="text-sm font-medium text-text-secondary">
                   Games Played
                 </p>
-                <Typography variant="headline-sm" as="p" className="text-text-primary">
+                <Typography
+                  variant="headline-sm"
+                  as="p"
+                  className="text-text-primary"
+                >
                   8
                 </Typography>
               </div>
@@ -75,7 +83,11 @@ const PlayerDashboardContent: React.FC = () => {
                 <p className="text-sm font-medium text-text-secondary">
                   Skill Rating
                 </p>
-                <Typography variant="headline-sm" as="p" className="text-text-primary">
+                <Typography
+                  variant="headline-sm"
+                  as="p"
+                  className="text-text-primary"
+                >
                   8.5
                 </Typography>
               </div>
@@ -93,7 +105,11 @@ const PlayerDashboardContent: React.FC = () => {
                 <p className="text-sm font-medium text-text-secondary">
                   Improvement
                 </p>
-                <Typography variant="headline-sm" as="p" className="text-text-primary">
+                <Typography
+                  variant="headline-sm"
+                  as="p"
+                  className="text-text-primary"
+                >
                   +2.1
                 </Typography>
               </div>

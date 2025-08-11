@@ -9,7 +9,9 @@ import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal"
 import { AdvancedSearchBar } from "../components/playbook/AdvancedSearchBar";
 import { PracticeScriptService } from "../services/practiceScriptService";
 import { CSVService } from "../services/csv";
-import { PlaysService } from "../services/playsService";
+import { PlaysService } from "../services/playsService"; // legacy direct service (will be phased out)
+import { PlaysDomainService } from "../domain/playsDomainService";
+import { Icon } from "../components/ui/Icon/Icon";
 import { TeamOnboarding } from "../components/onboarding/TeamOnboarding";
 import { Typography } from "../components/design-system/Typography";
 // TODO: Future enhancement - calculate real play counts with: import { calculatePlayCounts } from "../utils/playbook-categories";
@@ -167,7 +169,8 @@ export const PlaybookPage: React.FC = () => {
       console.log("💾 Saving play to database:", playData);
 
       // Save to Supabase database
-      const newPlay = await PlaysService.createPlay(playData);
+  // Route through domain service (canonicalization + future duplicate_key)
+  const { play: newPlay } = await PlaysDomainService.createPlay(playData);
       console.log("✅ Play saved successfully:", newPlay);
 
       // Close the builder
@@ -715,7 +718,10 @@ export const PlaybookPage: React.FC = () => {
       {state.showCelebration && state.recentAchievement && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="surface-card elevation-modal rounded-md p-8 max-w-md mx-4 text-center transform animate-bounce-in">
-            <div className="mb-4">🎉</div>
+            {/* Replaced raw emoji with Icon component per lint governance */}
+            <div className="mb-4">
+              <Icon name="trophy" />
+            </div>
             <AchievementBadge size="lg">
               {state.recentAchievement}
             </AchievementBadge>

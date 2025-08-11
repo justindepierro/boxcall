@@ -322,7 +322,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             </Typography>
           </div>
           <div className="text-center">
-            <Typography variant="headline-sm" as="p" className="text-green-600 mb-1">
+            <Typography
+              variant="headline-sm"
+              as="p"
+              className="text-green-600 mb-1"
+            >
               {summary.validPlays}
             </Typography>
             <Typography variant="caption" className="text-slate-600">
@@ -330,7 +334,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             </Typography>
           </div>
           <div className="text-center">
-            <Typography variant="headline-sm" as="p" className="text-red-600 mb-1">
+            <Typography
+              variant="headline-sm"
+              as="p"
+              className="text-red-600 mb-1"
+            >
               {summary.invalidPlays}
             </Typography>
             <Typography variant="caption" className="text-slate-600">
@@ -338,7 +346,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             </Typography>
           </div>
           <div className="text-center">
-            <Typography variant="headline-sm" as="p" className="text-amber-600 mb-1">
+            <Typography
+              variant="headline-sm"
+              as="p"
+              className="text-amber-600 mb-1"
+            >
               {summary.warnings}
             </Typography>
             <Typography variant="caption" className="text-slate-600">
@@ -631,28 +643,52 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         <div className="bg-slate-50 rounded-lg p-4">
           <div className="grid grid-cols-4 gap-4 text-center">
             <div>
-              <Typography variant="headline-sm" as="p" className="text-green-600 mb-1">
+              <Typography
+                variant="headline-sm"
+                as="p"
+                className="text-green-600 mb-1"
+              >
                 {importResult.importedPlays}
               </Typography>
-              <Typography variant="caption" className="text-slate-600">Plays Added</Typography>
+              <Typography variant="caption" className="text-slate-600">
+                Plays Added
+              </Typography>
             </div>
             <div>
-              <Typography variant="headline-sm" as="p" className="text-blue-600 mb-1">
+              <Typography
+                variant="headline-sm"
+                as="p"
+                className="text-blue-600 mb-1"
+              >
                 {importResult.totalRows}
               </Typography>
-              <Typography variant="caption" className="text-slate-600">Total Rows</Typography>
+              <Typography variant="caption" className="text-slate-600">
+                Total Rows
+              </Typography>
             </div>
             <div>
-              <Typography variant="headline-sm" as="p" className="text-red-600 mb-1">
+              <Typography
+                variant="headline-sm"
+                as="p"
+                className="text-red-600 mb-1"
+              >
                 {importResult.errors.length}
               </Typography>
-              <Typography variant="caption" className="text-slate-600">Errors</Typography>
+              <Typography variant="caption" className="text-slate-600">
+                Errors
+              </Typography>
             </div>
             <div>
-              <Typography variant="headline-sm" as="p" className="text-amber-600 mb-1">
+              <Typography
+                variant="headline-sm"
+                as="p"
+                className="text-amber-600 mb-1"
+              >
                 {importResult.warnings?.length || 0}
               </Typography>
-              <Typography variant="caption" className="text-slate-600">Warnings</Typography>
+              <Typography variant="caption" className="text-slate-600">
+                Warnings
+              </Typography>
             </div>
           </div>
         </div>

@@ -105,8 +105,8 @@ export default tseslint.config([
         },
       ],
       "boxcall-style/no-raw-gray-text": "error",
-  "boxcall-style/no-raw-heading-utilities": "error",
-  "boxcall-style/no-raw-emoji": "error",
+      "boxcall-style/no-raw-heading-utilities": "error",
+      "boxcall-style/no-raw-emoji": "error",
     },
   },
   // Plugin injection for custom rule namespace
@@ -363,7 +363,8 @@ export default tseslint.config([
             },
             create(context) {
               // Basic emoji detection pattern (covers most common pictographs used previously)
-              const emojiRe = /[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/u;
+              const emojiRe =
+                /[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/u;
               return {
                 JSXText(node) {
                   const value = node.value;
