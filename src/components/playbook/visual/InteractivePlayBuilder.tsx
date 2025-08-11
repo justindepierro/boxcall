@@ -113,9 +113,13 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
           <div className="w-64 surface-subtle border-r border-subtle flex flex-col">
             {/* Mode Controls */}
             <div className="p-4 border-b border-subtle">
-              <h3 className="text-sm font-medium text-text-primary mb-3">
+              <Typography
+                variant="label-lg"
+                as="h3"
+                className="text-text-primary mb-3"
+              >
                 Edit Mode
-              </h3>
+              </Typography>
               <div className="space-y-2">
                 <Button
                   onClick={() => handleModeChange("view")}
@@ -148,9 +152,13 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
             </div>
             {/* Animation Controls */}
             <div className="p-4 border-b border-subtle">
-              <h3 className="text-sm font-medium text-text-primary mb-3">
+              <Typography
+                variant="label-lg"
+                as="h3"
+                className="text-text-primary mb-3"
+              >
                 Animation
-              </h3>
+              </Typography>
               <div className="flex gap-2">
                 <Button
                   onClick={handlePlayAnimation}
@@ -180,9 +188,13 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
             </div>
             {/* Display Options */}
             <div className="p-4 border-b border-subtle">
-              <h3 className="text-sm font-medium text-text-primary mb-3">
+              <Typography
+                variant="label-lg"
+                as="h3"
+                className="text-text-primary mb-3"
+              >
                 Display
-              </h3>
+              </Typography>
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-sm">
                   <input
@@ -206,9 +218,13 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
             </div>
             {/* Play Information */}
             <div className="p-4">
-              <h3 className="text-sm font-medium text-text-primary mb-3">
+              <Typography
+                variant="label-lg"
+                as="h3"
+                className="text-text-primary mb-3"
+              >
                 Play Info
-              </h3>
+              </Typography>
               <div className="space-y-2 text-sm text-text-secondary">
                 <div>
                   <span className="font-medium">Type:</span>{" "}
