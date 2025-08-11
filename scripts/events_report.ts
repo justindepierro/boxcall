@@ -43,6 +43,9 @@ async function main() {
   const acceptPositions: number[] = [];
   const vitals: Record<string, number[]> = {};
   const sessions: Record<string, number> = {};
+  const searchLatency: number[] = [];
+  const searchFuzzyLatency: number[] = [];
+  let searchErrors = 0;
   (data || []).forEach((r) => {
     if (!grouped[r.type]) grouped[r.type] = { count: 0 };
     grouped[r.type].count++;
@@ -76,6 +79,21 @@ async function main() {
       } catch {
         /* ignore */
       }
+    }
+    if (r.type === "search:query") {
+      try {
+        const parsed =
+          typeof r.payload === "string" ? JSON.parse(r.payload) : r.payload;
+        if (typeof parsed?.totalDurationMs === "number")
+          searchLatency.push(parsed.totalDurationMs);
+        if (parsed?.usedFuzzy && typeof parsed?.fuzzyDurationMs === "number")
+          searchFuzzyLatency.push(parsed.fuzzyDurationMs);
+      } catch {
+        /* ignore */
+      }
+    }
+    if (r.type === "search:error") {
+      searchErrors++;
     }
   });
   console.log(`EVENTS REPORT (limit=${limit}, since=${sinceMinutes}m)`);
@@ -120,6 +138,31 @@ async function main() {
     console.log(`  accept events: ${suggestionAccept}`);
     console.log(`  accept rate: ${rate}%`);
     console.log(`  avg accepted position: ${avgPos}`);
+  }
+  if (searchLatency.length) {
+    const sorted = searchLatency.sort((a, b) => a - b);
+    const n = sorted.length;
+    const pick = (p: number) =>
+      sorted[Math.min(n - 1, Math.floor(n * p))] ?? sorted[n - 1];
+    const avg = sorted.reduce((s, v) => s + v, 0) / n;
+    const p75 = pick(0.75);
+    const p95 = pick(0.95);
+    console.log("\nSearch Latency:");
+    console.log(
+      `  queries=${n} errors=${searchErrors} avg=${avg.toFixed(1)}ms p75=${p75.toFixed(1)}ms p95=${p95.toFixed(1)}ms`
+    );
+    if (searchFuzzyLatency.length) {
+      const fSorted = searchFuzzyLatency.sort((a, b) => a - b);
+      const fn = fSorted.length;
+      const fpick = (p: number) =>
+        fSorted[Math.min(fn - 1, Math.floor(fn * p))] ?? fSorted[fn - 1];
+      const favg = fSorted.reduce((s, v) => s + v, 0) / fn;
+      const fp75 = fpick(0.75);
+      const fp95 = fpick(0.95);
+      console.log(
+        `  fuzzy (subset) n=${fn} avg=${favg.toFixed(1)}ms p75=${fp75.toFixed(1)}ms p95=${fp95.toFixed(1)}ms`
+      );
+    }
   }
   console.log("\nSamples:");
   Object.entries(grouped)
