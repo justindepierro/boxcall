@@ -10,7 +10,9 @@ import { noUnsafeWhiteRule } from "./scripts/eslint-rules/no-unsafe-white.js";
 import { noRadiusViolationsRule } from "./scripts/eslint-rules/no-radius-violations.js";
 import { noOutlineVariantInDisallowedContextsRule } from "./scripts/eslint-rules/no-outline-variant-in-disallowed-contexts.js";
 
-export default tseslint.config([
+// Allow a relaxed lint mode for rapid iteration (set BC_LINT_MODE=relaxed)
+const RELAXED = process.env.BC_LINT_MODE === "relaxed";
+const configArray = [
   {
     ignores: [
       "node_modules/",
@@ -398,4 +400,27 @@ export default tseslint.config([
       },
     },
   },
-]);
+];
+
+if (RELAXED) {
+  // Override strict rules — convert errors to warnings or disable style gates
+  configArray.push({
+    files: ["**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
+      ],
+      "no-raw-button/no-raw-button": "off",
+      "boxcall-style/no-raw-gray-text": "off",
+      "boxcall-style/no-raw-heading-utilities": "off",
+      "boxcall-style/no-raw-emoji": "off",
+      "boxcall-style/no-outline-variant-in-disallowed-contexts": "off",
+      "boxcall-style/no-legacy-badge-variants": "off",
+      "boxcall-style/no-raw-surface-gradients": "off",
+      "contrast/no-unsafe-white": "off",
+    },
+  });
+}
+
+export default tseslint.config(configArray);
