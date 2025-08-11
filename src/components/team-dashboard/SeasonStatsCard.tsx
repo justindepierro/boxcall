@@ -120,39 +120,39 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
       {stats && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center mb-4">
           <div>
-            <div className="text-xs uppercase tracking-wide text-text-secondary">
+            <Typography variant="label-md" as="div" className="text-text-secondary font-medium">
               Wins
-            </div>
+            </Typography>
             <div className="text-lg font-semibold">{stats.wins}</div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-wide text-text-secondary">
+            <Typography variant="label-md" as="div" className="text-text-secondary font-medium">
               Losses
-            </div>
+            </Typography>
             <div className="text-lg font-semibold">{stats.losses}</div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-wide text-text-secondary">
+            <Typography variant="label-md" as="div" className="text-text-secondary font-medium">
               Win %
-            </div>
+            </Typography>
             <div className="text-lg font-semibold">{winPct}</div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-wide text-text-secondary">
+            <Typography variant="label-md" as="div" className="text-text-secondary font-medium">
               PF
-            </div>
+            </Typography>
             <div className="text-lg font-semibold">{stats.pf_total}</div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-wide text-text-secondary">
+            <Typography variant="label-md" as="div" className="text-text-secondary font-medium">
               PA
-            </div>
+            </Typography>
             <div className="text-lg font-semibold">{stats.pa_total}</div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-wide text-text-secondary">
+            <Typography variant="label-md" as="div" className="text-text-secondary font-medium">
               GP
-            </div>
+            </Typography>
             <div className="text-lg font-semibold">{stats.games_played}</div>
           </div>
         </div>
@@ -211,7 +211,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 bc-grid-gap">
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
+                <Typography variant="body-sm" as="label" className="block font-medium mb-1"
                   htmlFor="gr-date"
                 >
                   Date
@@ -227,7 +227,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 />
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
+                <Typography variant="body-sm" as="label" className="block font-medium mb-1"
                   htmlFor="gr-site"
                 >
                   Site
@@ -245,7 +245,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
               </div>
             </div>
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
+              <Typography variant="body-sm" as="label" className="block font-medium mb-1"
                 htmlFor="gr-opponent"
               >
                 Opponent
@@ -262,7 +262,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
             </div>
             <div className="grid grid-cols-2 bc-grid-gap">
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
+                <Typography variant="body-sm" as="label" className="block font-medium mb-1"
                   htmlFor="gr-pf"
                 >
                   Points For
@@ -279,7 +279,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 />
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
+                <Typography variant="body-sm" as="label" className="block font-medium mb-1"
                   htmlFor="gr-pa"
                 >
                   Points Against
@@ -297,7 +297,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
               </div>
             </div>
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-1\"
+              <Typography variant="body-sm" as="label" className="block font-medium mb-1"
                 htmlFor="gr-notes"
               >
                 Notes (optional)

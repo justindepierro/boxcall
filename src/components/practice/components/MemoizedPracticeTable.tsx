@@ -149,29 +149,29 @@ export const PracticeBlockTable = memo<PracticeBlockTableProps>(
             <table className="min-w-full divide-y divide-subtle">
               <thead className="surface-subtle">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Time
+                  <th className="px-4 py-3 text-left">
+                    <Typography variant="label-md" as="div" className="text-text-muted">Time</Typography>
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Duration
+                  <th className="px-4 py-3 text-left">
+                    <Typography variant="label-md" as="div" className="text-text-muted">Duration</Typography>
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Category
+                  <th className="px-4 py-3 text-left">
+                    <Typography variant="label-md" as="div" className="text-text-muted">Category</Typography>
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Title
+                  <th className="px-4 py-3 text-left">
+                    <Typography variant="label-md" as="div" className="text-text-muted">Title</Typography>
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Location
+                  <th className="px-4 py-3 text-left">
+                    <Typography variant="label-md" as="div" className="text-text-muted">Location</Typography>
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Coach
+                  <th className="px-4 py-3 text-left">
+                    <Typography variant="label-md" as="div" className="text-text-muted">Coach</Typography>
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Notes
+                  <th className="px-4 py-3 text-left">
+                    <Typography variant="label-md" as="div" className="text-text-muted">Notes</Typography>
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Actions
+                  <th className="px-4 py-3 text-left">
+                    <Typography variant="label-md" as="div" className="text-text-muted">Actions</Typography>
                   </th>
                 </tr>
               </thead>

@@ -135,7 +135,7 @@ const defaultElements: Record<TypographyVariant, TypographyElement> = {
  * @param align - Text alignment
  * @param truncate - Whether to truncate text with ellipsis
  */
-export const Typography: React.FC<TypographyProps> = ({
+export const Typography: React.FC<TypographyProps & { htmlFor?: string }> = ({
   variant,
   as,
   children,
@@ -143,6 +143,7 @@ export const Typography: React.FC<TypographyProps> = ({
   color,
   align,
   truncate = false,
+  htmlFor,
   ...restProps
 }) => {
   // Determine the HTML element to render
@@ -157,8 +158,10 @@ export const Typography: React.FC<TypographyProps> = ({
   ]
     .filter(Boolean)
     .join(" ");
+  const extraProps: Record<string, unknown> = {};
+  if (htmlFor && Element === 'label') extraProps.htmlFor = htmlFor;
   return (
-    <Element className={classes} {...restProps}>
+    <Element className={classes} {...extraProps} {...restProps}>
       {children}
     </Element>
   );
