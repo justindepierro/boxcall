@@ -100,7 +100,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Group Name */}
           <div>
-            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
+            <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
               Group Name *
             </Typography>
             <input
@@ -116,7 +116,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
           </div>
           {/* Location */}
           <div>
-            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
+            <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
               Location
             </Typography>
             <input
@@ -131,7 +131,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
           </div>
           {/* Notes */}
           <div>
-            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
+            <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
               Notes
             </Typography>
             <textarea

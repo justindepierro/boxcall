@@ -165,7 +165,7 @@ export const ProfilePage: React.FC = () => {
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-2">
                   Email Address
                 </Typography>
                 <Input
@@ -179,7 +179,7 @@ export const ProfilePage: React.FC = () => {
                 </p>
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-2">
                   Display Name
                 </Typography>
                 <Input
@@ -192,7 +192,7 @@ export const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-2">
                   Full Name
                 </Typography>
                 <Input
@@ -205,7 +205,7 @@ export const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-2">
                   Phone Number
                 </Typography>
                 <Input
@@ -216,7 +216,7 @@ export const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-2">
                   Role
                 </Typography>
                 <Input
@@ -230,7 +230,7 @@ export const ProfilePage: React.FC = () => {
                 </p>
               </div>
               <div className="md:col-span-2">
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-2">
                   Address
                 </Typography>
                 <Input
@@ -242,7 +242,7 @@ export const ProfilePage: React.FC = () => {
               </div>
             </div>
             <div className="mt-6">
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-2">
                 Bio
               </Typography>
               <textarea
@@ -261,7 +261,7 @@ export const ProfilePage: React.FC = () => {
             </Typography>
             <div className="space-y-4">
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-2">
                   Password
                 </Typography>
                 <div className="flex items-center space-x-4">

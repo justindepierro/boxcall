@@ -138,7 +138,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
           <div>
-            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
+            <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
               Block Title *
             </Typography>
             <input
@@ -154,7 +154,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           </div>
           {/* Category */}
           <div>
-            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
+            <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
               Category *
             </Typography>
             <select
@@ -183,7 +183,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           {/* Time and Duration */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
                 Start Time
               </Typography>
               <input
@@ -200,7 +200,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               />
             </div>
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
                 Duration (minutes)
               </Typography>
               <input
@@ -222,7 +222,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           </div>
           {/* Location */}
           <div>
-            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
+            <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
               Location
             </Typography>
             <input
@@ -238,7 +238,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           {/* Assigned Coach */}
           {userRole === "head_coach" && (
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
                 Assigned Coach
               </Typography>
               <input
@@ -257,7 +257,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           )}
           {/* Notes */}
           <div>
-            <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
+            <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
               Notes
             </Typography>
             <textarea

@@ -63,7 +63,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                 </Typography>
                 <div className="space-y-6">
                   <div>
-                    <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-slate-700 mb-2\">
+                    <Typography variant="body-sm" as="label" className="block font-medium text-slate-700 mb-2">
                       Play Name *
                     </Typography>
                     <input
@@ -73,7 +73,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                     />
                   </div>
                   <div>
-                    <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-slate-700 mb-2\">
+                    <Typography variant="body-sm" as="label" className="block font-medium text-slate-700 mb-2">
                       Play Type *
                     </Typography>
                     <div className="grid grid-cols-3 gap-3">
@@ -88,7 +88,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                             value={type}
                             className="h-4 w-4 text-jade-600 focus:ring-jade-500"
                           />
-                          <Typography variant=\"body-sm\" as=\"span\" className=\"ml-2 font-medium text-slate-700\">
+                          <Typography variant="body-sm" as="span" className="ml-2 font-medium text-slate-700">
                             {type}
                           </Typography>
                         </label>
@@ -96,7 +96,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                     </div>
                   </div>
                   <div>
-                    <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-slate-700 mb-2\">
+                    <Typography variant="body-sm" as="label" className="block font-medium text-slate-700 mb-2">
                       One-Word Call (Audible)
                     </Typography>
                     <input

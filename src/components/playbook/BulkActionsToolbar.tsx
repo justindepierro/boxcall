@@ -21,7 +21,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
       <div className="flex items-center space-x-4">
         {/* Selection Count */}
         <div className="flex items-center space-x-2">
-          <Typography variant=\"body-sm\" as=\"span\" className=\"font-medium text-text-primary\">
+          <Typography variant="body-sm" as="span" className="font-medium text-text-primary">
             {selectedCount} play{selectedCount !== 1 ? "s" : ""} selected
           </Typography>
           <Button

@@ -36,7 +36,7 @@ const PlayerDashboardContent: React.FC = () => {
                 />
               </div>
               <div className="ml-4">
-                <Typography variant=\"body-sm\" as=\"p\" className=\"font-medium text-text-secondary\">
+                <Typography variant="body-sm" as="p" className="font-medium text-text-secondary">
                   Practices Attended
                 </Typography>
                 <Typography
@@ -58,7 +58,7 @@ const PlayerDashboardContent: React.FC = () => {
                 />
               </div>
               <div className="ml-4">
-                <Typography variant=\"body-sm\" as=\"p\" className=\"font-medium text-text-secondary\">
+                <Typography variant="body-sm" as="p" className="font-medium text-text-secondary">
                   Games Played
                 </Typography>
                 <Typography
@@ -80,7 +80,7 @@ const PlayerDashboardContent: React.FC = () => {
                 />
               </div>
               <div className="ml-4">
-                <Typography variant=\"body-sm\" as=\"p\" className=\"font-medium text-text-secondary\">
+                <Typography variant="body-sm" as="p" className="font-medium text-text-secondary">
                   Skill Rating
                 </Typography>
                 <Typography
@@ -102,7 +102,7 @@ const PlayerDashboardContent: React.FC = () => {
                 />
               </div>
               <div className="ml-4">
-                <Typography variant=\"body-sm\" as=\"p\" className=\"font-medium text-text-secondary\">
+                <Typography variant="body-sm" as="p" className="font-medium text-text-secondary">
                   Improvement
                 </Typography>
                 <Typography
@@ -137,7 +137,7 @@ const PlayerDashboardContent: React.FC = () => {
                     <Icon name="calendar" size="sm" />
                   </div>
                   <div className="flex-1">
-                    <Typography variant=\"body-sm\" as=\"p\" className=\"font-medium text-text-primary\">
+                    <Typography variant="body-sm" as="p" className="font-medium text-text-primary">
                       Practice Session
                     </Typography>
                     <p className="text-sm text-text-secondary">
@@ -153,7 +153,7 @@ const PlayerDashboardContent: React.FC = () => {
                     <Icon name="flag" size="sm" />
                   </div>
                   <div className="flex-1">
-                    <Typography variant=\"body-sm\" as=\"p\" className=\"font-medium text-text-primary\">
+                    <Typography variant="body-sm" as="p" className="font-medium text-text-primary">
                       Game vs. Eagles
                     </Typography>
                     <p className="text-sm text-text-secondary">
@@ -169,7 +169,7 @@ const PlayerDashboardContent: React.FC = () => {
                     <Icon name="users" size="sm" />
                   </div>
                   <div className="flex-1">
-                    <Typography variant=\"body-sm\" as=\"p\" className=\"font-medium text-text-primary\">
+                    <Typography variant="body-sm" as="p" className="font-medium text-text-primary">
                       Team Meeting
                     </Typography>
                     <p className="text-sm text-text-secondary">
@@ -209,7 +209,7 @@ const PlayerDashboardContent: React.FC = () => {
                         style={{ width: "85%" }}
                       ></div>
                     </div>
-                    <Typography variant=\"body-sm\" as=\"span\" className=\"font-medium text-text-primary\">
+                    <Typography variant="body-sm" as="span" className="font-medium text-text-primary">
                       85%
                     </Typography>
                   </div>
@@ -225,7 +225,7 @@ const PlayerDashboardContent: React.FC = () => {
                         style={{ width: "78%" }}
                       ></div>
                     </div>
-                    <Typography variant=\"body-sm\" as=\"span\" className=\"font-medium text-text-primary\">
+                    <Typography variant="body-sm" as="span" className="font-medium text-text-primary">
                       78%
                     </Typography>
                   </div>
@@ -241,7 +241,7 @@ const PlayerDashboardContent: React.FC = () => {
                         style={{ width: "92%" }}
                       ></div>
                     </div>
-                    <Typography variant=\"body-sm\" as=\"span\" className=\"font-medium text-text-primary\">
+                    <Typography variant="body-sm" as="span" className="font-medium text-text-primary">
                       92%
                     </Typography>
                   </div>
@@ -257,7 +257,7 @@ const PlayerDashboardContent: React.FC = () => {
                         style={{ width: "88%" }}
                       ></div>
                     </div>
-                    <Typography variant=\"body-sm\" as=\"span\" className=\"font-medium text-text-primary\">
+                    <Typography variant="body-sm" as="span" className="font-medium text-text-primary">
                       88%
                     </Typography>
                   </div>

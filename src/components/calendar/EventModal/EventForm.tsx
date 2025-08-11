@@ -44,7 +44,7 @@ export const EventForm: React.FC<EventFormProps> = ({
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
+          <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
             Event Type
           </Typography>
           <select
@@ -72,7 +72,7 @@ export const EventForm: React.FC<EventFormProps> = ({
         />
       </div>
       <div>
-        <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary mb-1\">
+        <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
           Description
         </Typography>
         <textarea

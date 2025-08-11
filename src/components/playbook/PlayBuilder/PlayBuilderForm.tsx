@@ -303,7 +303,7 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
               className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-slate-300 rounded"
             />
             <div>
-              <Typography variant=\"body-sm\" as=\"span\" className=\"font-medium text-slate-700\">
+              <Typography variant="body-sm" as="span" className="font-medium text-slate-700">
                 Archive this play
               </Typography>
               <p className="text-xs text-slate-500">

@@ -157,7 +157,7 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
-      <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-slate-700 mb-2\">
+      <Typography variant="body-sm" as="label" className="block font-medium text-slate-700 mb-2">
         {label} {required && "*"}
       </Typography>
 

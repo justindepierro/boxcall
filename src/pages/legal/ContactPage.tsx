@@ -129,7 +129,7 @@ export const ContactPage: React.FC = () => {
 
           <form className="space-y-6">
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\"
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-2"
               >
                 Name
               </Typography>
@@ -143,7 +143,7 @@ export const ContactPage: React.FC = () => {
             </div>
 
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\"
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-2"
               >
                 Email
               </Typography>
@@ -157,7 +157,7 @@ export const ContactPage: React.FC = () => {
             </div>
 
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\"
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-2"
               >
                 Subject
               </Typography>
@@ -176,7 +176,7 @@ export const ContactPage: React.FC = () => {
             </div>
 
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-2\"
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-2"
               >
                 Message
               </Typography>

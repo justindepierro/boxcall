@@ -109,7 +109,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                   </Typography>
                   <div className="space-y-4">
                     <div>
-                      <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-slate-700 mb-2\">
+                      <Typography variant="body-sm" as="label" className="block font-medium text-slate-700 mb-2">
                         Play Selection
                       </Typography>
                       <select
@@ -265,7 +265,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                   </Typography>
                   <div className="space-y-4">
                     <div>
-                      <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-slate-700 mb-2\">
+                      <Typography variant="body-sm" as="label" className="block font-medium text-slate-700 mb-2">
                         Field Orientation
                       </Typography>
                       <select className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500">
@@ -274,7 +274,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                       </select>
                     </div>
                     <div>
-                      <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-slate-700 mb-2\">
+                      <Typography variant="body-sm" as="label" className="block font-medium text-slate-700 mb-2">
                         Color Scheme
                       </Typography>
                       <select className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500">

@@ -402,7 +402,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
 
           <div className="space-y-3">
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-blue-700 mb-2\">
+              <Typography variant="body-sm" as="label" className="block font-medium text-blue-700 mb-2">
                 Duration: {sliderValue} minutes
               </Typography>
               <input
@@ -516,7 +516,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                         className={`px-3 py-2 rounded-lg border-2 ${getCategoryColor(category as PracticeBlock["category"])} border-opacity-50`}
                       >
                         <div className="flex items-center space-x-2">
-                          <Typography variant=\"body-sm\" as=\"span\" className=\"font-medium capitalize\">
+                          <Typography variant="body-sm" as="span" className="font-medium capitalize">
                             {category.replace("-", " ")}
                             {data.blocks.length > 1 && ` #${blockIndex + 1}`}
                           </Typography>

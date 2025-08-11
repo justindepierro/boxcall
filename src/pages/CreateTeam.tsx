@@ -385,7 +385,7 @@ export const CreateTeam: React.FC = () => {
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
                   School Name *
                 </Typography>
                 <input
@@ -400,7 +400,7 @@ export const CreateTeam: React.FC = () => {
                 />
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
                   Team Mascot *
                 </Typography>
                 <input
@@ -415,7 +415,7 @@ export const CreateTeam: React.FC = () => {
                 />
               </div>
               <div className="md:col-span-2">
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
                   Sport *
                 </Typography>
                 <select
@@ -499,7 +499,7 @@ export const CreateTeam: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
                   School Name *
                 </Typography>
                 <input
@@ -514,7 +514,7 @@ export const CreateTeam: React.FC = () => {
                 />
               </div>
               <div className="md:col-span-2">
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
                   School District
                 </Typography>
                 <input
@@ -528,7 +528,7 @@ export const CreateTeam: React.FC = () => {
                 />
               </div>
               <div className="md:col-span-2">
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
                   School Address *
                 </Typography>
                 <input
@@ -543,7 +543,7 @@ export const CreateTeam: React.FC = () => {
                 />
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">City *</Typography>
+                <Typography variant="body-sm" as="label" className="block font-medium mb-2">City *</Typography>
                 <input
                   type="text"
                   value={formData.schoolCity}
@@ -556,7 +556,7 @@ export const CreateTeam: React.FC = () => {
                 />
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium mb-2\">
+                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
                   State *
                 </Typography>
                 <input
@@ -624,7 +624,7 @@ export const CreateTeam: React.FC = () => {
               {/* Main Founders Plan */}
               <div className="lg:col-span-2 border-2 border-jade-500 rounded-lg p-6 relative bg-jade-50 dark:bg-jade-900/10">
                 <div className="absolute -top-3 left-6">
-                  <Typography variant=\"body-sm\" as=\"span\" className=\"bg-jade-500 text-text-inverse px-4 py-1 rounded-full font-medium flex items-center gap-1\">
+                  <Typography variant="body-sm" as="span" className="bg-jade-500 text-text-inverse px-4 py-1 rounded-full font-medium flex items-center gap-1">
                     <Icon name="star" size="xs" className="text-text-primary" />
                     Founders Price - Limited Time
                   </Typography>

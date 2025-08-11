@@ -100,7 +100,7 @@ export const TimelineLegend: React.FC<TimelineLegendProps> = ({
             >
               <div className="flex items-center space-x-1">
                 <Icon name="clock" size="xs" />
-                <Typography variant=\"body-sm\" as=\"span\" className=\"font-medium\">
+                <Typography variant="body-sm" as="span" className="font-medium">
                   {category
                     .replace("-", " ")
                     .replace(/\b\w/g, (l) => l.toUpperCase())}

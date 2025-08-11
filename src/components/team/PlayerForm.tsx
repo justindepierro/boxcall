@@ -163,7 +163,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-1">
                   First Name *
                 </Typography>
                 <Input
@@ -181,7 +181,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-1">
                   Last Name *
                 </Typography>
                 <Input
@@ -199,7 +199,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-1">
                   Email
                 </Typography>
                 <Input
@@ -213,7 +213,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-1">
                   Phone Number
                 </Typography>
                 <Input
@@ -224,7 +224,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 />
               </div>
               <div className="md:col-span-2">
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-1">
                   Parent Email
                 </Typography>
                 <Input
@@ -287,7 +287,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-4 bc-grid-gap">
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-1">
                   Jersey Number
                 </Typography>
                 <Input
@@ -310,7 +310,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-1">
                   Height
                 </Typography>
                 <Input
@@ -321,7 +321,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 />
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-1">
                   Weight (lbs)
                 </Typography>
                 <Input
@@ -341,7 +341,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
               </div>
               <div>
-                <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-primary dark:text-gray-300 mb-1\">
+                <Typography variant="body-sm" as="label" className="block font-medium text-text-primary dark:text-gray-300 mb-1">
                   Graduation Year
                 </Typography>
                 <Input

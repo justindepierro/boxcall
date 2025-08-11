@@ -339,7 +339,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 <div className="md:col-span-3 pt-2 border-t border-slate-100">
                   {play.notes && (
                     <div className="mb-2">
-                      <Typography variant=\"body-sm\" as=\"span\" className=\"font-medium text-slate-700\">
+                      <Typography variant="body-sm" as="span" className="font-medium text-slate-700">
                         Notes:
                       </Typography>
                       <p className="text-sm text-slate-600 mt-1">

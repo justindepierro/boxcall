@@ -165,7 +165,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
                 Team Name *
               </Typography>
               <Input
@@ -177,7 +177,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
                 School/Organization
               </Typography>
               <Input
@@ -188,7 +188,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
                 Season
               </Typography>
               <Input
@@ -199,7 +199,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
                 Logo URL
               </Typography>
               <Input
@@ -223,7 +223,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
                 Address
               </Typography>
               <Input
@@ -234,7 +234,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
                 City
               </Typography>
               <Input
@@ -245,7 +245,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
                 State
               </Typography>
               <Input
@@ -256,7 +256,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <Typography variant=\"body-sm\" as=\"label\" className=\"block font-medium text-text-secondary mb-2\">
+              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
                 ZIP Code
               </Typography>
               <Input

@@ -61,7 +61,7 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
   ];
   return (
     <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-3 space-y-3">
-      <Typography variant=\"body-sm\" as=\"div\" className=\"font-medium text-slate-700\">Drawing Tools</Typography>
+      <Typography variant="body-sm" as="div" className="font-medium text-slate-700">Drawing Tools</Typography>
       {/* Tool Selection */}
       <div className="grid grid-cols-3 gap-1">
         {tools.map((tool) => (
