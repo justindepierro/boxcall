@@ -89,7 +89,7 @@ const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
   if (item.active) {
     return `${baseStyles} bg-blue-50 dark:bg-gray-700 text-blue-700 dark:text-white border-r-2 border-jade-600`;
   }
-  return `${baseStyles} text-gray-700 dark:text-gray-300 surface-subtle-hover dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white`;
+  return `${baseStyles} text-text-secondary dark:text-text-secondary surface-subtle-hover dark:hover:bg-gray-700 hover:text-text-primary dark:hover:text-text-inverse`;
 };
 const getBadgeStyles = () => {
   return `
