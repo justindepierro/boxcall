@@ -25,6 +25,7 @@ import {
   createPreset,
   deletePreset,
   applyPreset,
+  updatePreset,
 } from "../utils/playbookFilterPresets";
 // TODO: Future enhancement - calculate real play counts with: import { calculatePlayCounts } from "../utils/playbook-categories";
 import type { Play } from "../types/play";
@@ -334,7 +335,7 @@ export const PlaybookPage: React.FC = () => {
   const handleSavePreset = () => {
     const name = prompt("Preset name?");
     if (!name) return;
-    createPreset({
+    const preset = createPreset({
       name,
       filters: {
         searchQuery: state.searchQuery,
@@ -343,6 +344,10 @@ export const PlaybookPage: React.FC = () => {
         category: state.selectedCategory,
         subcategory: state.selectedSubcategory,
       },
+    });
+    telemetry.enqueue({
+      type: TelemetryEventTypes.ViewSavedApply,
+      data: { viewId: preset.id, action: 'create' },
     });
     refreshPresets();
   };
@@ -376,6 +381,14 @@ export const PlaybookPage: React.FC = () => {
       activePresetId:
         prev.activePresetId === id ? undefined : prev.activePresetId,
     }));
+  };
+  const handleRenamePreset = (id: string) => {
+    const current = listPresets().find(p => p.id === id);
+    if (!current) return;
+    const name = prompt('New name?', current.name);
+    if (!name) return;
+    updatePreset(id, { name });
+    refreshPresets();
   };
 
   const handleViewChange = (view: CoachingView) => {
@@ -521,14 +534,26 @@ export const PlaybookPage: React.FC = () => {
                   ))}
                 </select>
                 {state.activePresetId && (
-                  <Button
-                    onClick={() => handleDeletePreset(state.activePresetId!)}
-                    variant="ghost"
-                    size="xs"
-                    className="px-2"
-                  >
-                    ✕
-                  </Button>
+                  <div className="flex items-center space-x-1">
+                    <Button
+                      onClick={() => handleRenamePreset(state.activePresetId!)}
+                      variant="ghost"
+                      size="xs"
+                      className="px-2"
+                      title="Rename preset"
+                    >
+                      Rename
+                    </Button>
+                    <Button
+                      onClick={() => handleDeletePreset(state.activePresetId!)}
+                      variant="ghost"
+                      size="xs"
+                      className="px-2"
+                      title="Delete preset"
+                    >
+                      ✕
+                    </Button>
+                  </div>
                 )}
               </div>
               <Button
