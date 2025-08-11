@@ -9,6 +9,7 @@ Status: Draft
 | suggestion | suggestion:shown, suggestion:accept                    | Search autosuggest lifecycle             |
 | vitals     | vital:cls, vital:inp, vital:lcp, vital:fcp, vital:ttfb | Core Web Vitals (web-vitals lib)         |
 | search     | search:query, search:error                             | Structured latency + outcome metrics     |
+| activation | activation:first_play, activation:first_practice, activation:first_script_export, activation:checklist_step_complete, activation:checklist_completed | Onboarding & activation funnel |
 | error      | error:boundary, error:network                          | Future grouping + severity               |
 
 ## 2. Payload Shape
@@ -39,6 +40,29 @@ interface SearchErrorEvent {
   ftDurationMs: number;   // time spent before error surfaced
   fuzzyTried: boolean;    // whether we attempted fuzzy before failing
   totalDurationMs: number;
+}
+interface ActivationFirstPlayEvent {
+  name: 'activation:first_play';
+  playId?: string;
+  timeFromSignupMs: number; // ms from local signup/start marker
+}
+interface ActivationFirstPracticeEvent {
+  name: 'activation:first_practice';
+  scheduleId?: string;
+  timeFromSignupMs: number;
+}
+interface ActivationFirstScriptExportEvent {
+  name: 'activation:first_script_export';
+  filename?: string;
+  timeFromSignupMs: number;
+}
+interface ActivationChecklistStepCompleteEvent {
+  name: 'activation:checklist_step_complete';
+  stepId: 'team' | 'first_play' | 'first_practice' | 'first_script_export';
+}
+interface ActivationChecklistCompletedEvent {
+  name: 'activation:checklist_completed';
+  totalMs: number; // ms from startedAt to completion
 }
 ```
 

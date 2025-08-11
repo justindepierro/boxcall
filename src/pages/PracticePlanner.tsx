@@ -22,6 +22,7 @@ import type {
   PracticeTemplate,
 } from "../types/practice";
 import { PRACTICE_BLOCK_TYPES, QUICK_TIME_INTERVALS } from "../types/practice";
+import { markFirstPracticeScheduled } from "../components/onboarding/activationHelpers";
 export function PracticePlanner() {
   const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
@@ -98,6 +99,12 @@ export function PracticePlanner() {
     setPracticeStarted(true);
     setLockedSchedule(true);
     startTimer();
+    // Activation: mark first practice (using schedule id)
+    if (selectedScheduleId) {
+      markFirstPracticeScheduled(selectedScheduleId);
+    } else {
+      markFirstPracticeScheduled();
+    }
   };
   const handleStopPractice = () => {
     setPracticeStarted(false);

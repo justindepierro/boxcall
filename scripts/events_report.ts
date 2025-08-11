@@ -46,6 +46,11 @@ async function main() {
   const searchLatency: number[] = [];
   const searchFuzzyLatency: number[] = [];
   let searchErrors = 0;
+  const activationDurations: number[] = []; // timeToFirstPlay
+  let firstPlayCount = 0;
+  let firstPracticeCount = 0;
+  let firstScriptExportCount = 0;
+  let checklistCompletionCount = 0;
   (data || []).forEach((r) => {
     if (!grouped[r.type]) grouped[r.type] = { count: 0 };
     grouped[r.type].count++;
@@ -94,6 +99,22 @@ async function main() {
     }
     if (r.type === "search:error") {
       searchErrors++;
+    }
+    if (r.type.startsWith("activation:")) {
+      try {
+        const parsed = typeof r.payload === 'string' ? JSON.parse(r.payload) : r.payload;
+        if (r.type === 'activation:first_play') {
+          firstPlayCount++;
+          const dur = parsed?.timeFromSignupMs;
+          if (typeof dur === 'number') activationDurations.push(dur);
+        } else if (r.type === 'activation:first_practice') {
+          firstPracticeCount++;
+        } else if (r.type === 'activation:first_script_export') {
+          firstScriptExportCount++;
+        } else if (r.type === 'activation:checklist_completed') {
+          checklistCompletionCount++;
+        }
+      } catch { /* ignore */ }
     }
   });
   console.log(`EVENTS REPORT (limit=${limit}, since=${sinceMinutes}m)`);
@@ -162,6 +183,24 @@ async function main() {
       console.log(
         `  fuzzy (subset) n=${fn} avg=${favg.toFixed(1)}ms p75=${fp75.toFixed(1)}ms p95=${fp95.toFixed(1)}ms`
       );
+    }
+  }
+  if (firstPlayCount || firstPracticeCount || firstScriptExportCount || checklistCompletionCount) {
+    console.log("\nActivation Funnel:");
+    console.log(`  first_play events: ${firstPlayCount}`);
+    if (activationDurations.length) {
+      activationDurations.sort((a,b)=>a-b);
+      const n = activationDurations.length;
+      const pick = (p:number)=> activationDurations[Math.min(n-1, Math.floor(n*p))] ?? activationDurations[n-1];
+      const avg = activationDurations.reduce((s,v)=>s+v,0)/n;
+      console.log(`  time_to_first_play avg=${(avg/1000).toFixed(1)}s p50=${(pick(0.5)/1000).toFixed(1)}s p90=${(pick(0.9)/1000).toFixed(1)}s p95=${(pick(0.95)/1000).toFixed(1)}s`);
+    }
+    console.log(`  first_practice events: ${firstPracticeCount}`);
+    console.log(`  first_script_export events: ${firstScriptExportCount}`);
+    console.log(`  checklist_completed events: ${checklistCompletionCount}`);
+    if (firstPlayCount && checklistCompletionCount) {
+      const completionRate = ((checklistCompletionCount / firstPlayCount) * 100).toFixed(1);
+      console.log(`  checklist completion rate (vs first_play): ${completionRate}%`);
     }
   }
   console.log("\nSamples:");

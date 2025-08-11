@@ -10,6 +10,7 @@ import { Button } from "../ui/Button/Button";
 import { Modal } from "../ui/Modal/Modal";
 import { Typography } from "../design-system/Typography";
 import { usePracticeScriptPDF } from "../../services/pdf/usePracticeScriptPDF";
+import { markFirstScriptExport } from "../onboarding/activationHelpers";
 import type { PracticeBlock } from "./types";
 interface PDFExportOptions {
   includeEverything: boolean;
@@ -156,7 +157,7 @@ export const PracticePDFExportDialog: React.FC<
         }
       }
       const filename = `${filenameParts.join("_")}.pdf`;
-      await downloadPDF(processedData, filename, {
+  await downloadPDF(processedData, filename, {
         format: "Letter",
         orientation: "portrait",
         template: {
@@ -167,6 +168,8 @@ export const PracticePDFExportDialog: React.FC<
         includeHeader: true,
         includeFooter: true,
       });
+  // Activation: mark first script export
+  markFirstScriptExport(filename);
       onClose();
     } catch (error) {
       console.error("PDF export failed:", error);

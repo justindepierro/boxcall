@@ -42,15 +42,15 @@ export const ActivationChecklist: React.FC = () => {
   const [flags, setFlags] = useState<ActivationFlags>(() => loadFlags());
   const [loading, setLoading] = useState(true);
 
-  const updateFlag = useCallback((id: keyof ActivationFlags, val: boolean) => {
+  const updateFlag = useCallback((id: keyof ActivationFlags, val: boolean, emitTelemetry = true) => {
     setFlags(prev => {
       if (prev[id] === val) return prev;
       const next = { ...prev, [id]: val };
-      if (id !== 'startedAt' && id !== 'completedAt') {
+      if (emitTelemetry && id !== 'startedAt' && id !== 'completedAt') {
         telemetry.enqueue({ type: "activation:checklist_step_complete", data: { stepId: id } });
       }
-  const required: (keyof ActivationFlags)[] = ['team','first_play','first_practice','first_script_export'];
-  const allDone = required.every(k => !!next[k]);
+      const required: (keyof ActivationFlags)[] = ['team','first_play','first_practice','first_script_export'];
+      const allDone = required.every(k => !!next[k]);
       if (allDone && !next.completedAt) {
         next.completedAt = Date.now();
         telemetry.enqueue({ type: "activation:checklist_completed", data: { totalMs: next.completedAt - (next.startedAt || Date.now()) } });
@@ -59,6 +59,18 @@ export const ActivationChecklist: React.FC = () => {
       return next;
     });
   }, []);
+
+  // Listen for external activation flag events
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { id?: keyof ActivationFlags } | undefined;
+      if (detail?.id) {
+        updateFlag(detail.id, true, false); // no duplicate telemetry
+      }
+    };
+    window.addEventListener('activation:flag_set', handler);
+    return () => window.removeEventListener('activation:flag_set', handler);
+  }, [updateFlag]);
 
   // Initial detection (team membership + placeholder others)
   useEffect(() => {
