@@ -203,8 +203,8 @@ export const TouchButton: React.FC<TouchButtonProps> = ({
       "surface-subtle surface-subtle-hover text-gray-900 shadow-sm hover:shadow-md",
     ghost:
       "bg-transparent surface-subtle-hover text-gray-700 border border-gray-300 hover:border-gray-400",
-  // Use slightly darker base for improved contrast
-  danger: "bg-red-600 hover:bg-red-700 text-white shadow-md hover:shadow-lg",
+    // Use slightly darker base for improved contrast
+    danger: "bg-red-600 hover:bg-red-700 text-white shadow-md hover:shadow-lg",
   };
 
   const sizeStyles = {

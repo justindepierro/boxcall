@@ -54,7 +54,7 @@ function ensureImport(src: string): string {
   for (let i = 0; i < lines.length; i++)
     if (/^import\s+/.test(lines[i])) lastImportIdx = i;
   const importStmt =
-  'import { Typography } from "@components/design-system/Typography";';
+    'import { Typography } from "@components/design-system/Typography";';
   if (lastImportIdx >= 0) {
     lines.splice(lastImportIdx + 1, 0, importStmt);
     return lines.join("\n");

@@ -409,7 +409,11 @@ if (RELAXED) {
     rules: {
       "@typescript-eslint/no-unused-vars": [
         "warn",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
       ],
       "no-raw-button/no-raw-button": "off",
       "boxcall-style/no-raw-gray-text": "off",

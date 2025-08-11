@@ -15,10 +15,13 @@ import type {
 // to reduce direct Tailwind color utility coupling. Utilities retained for spacing/structure only.
 const buttonVariants: ButtonStylesConfig = {
   primary: {
-    base: "text-white border" +
+    base:
+      "text-white border" +
       " bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)]",
-    hover: "hover:bg-[var(--semantic-primary-active)] hover:border-[var(--semantic-primary-active)]",
-    active: "active:bg-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)]",
+    hover:
+      "hover:bg-[var(--semantic-primary-active)] hover:border-[var(--semantic-primary-active)]",
+    active:
+      "active:bg-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)]",
     disabled:
       "disabled:bg-[color:var(--color-jade-300)] disabled:border-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
@@ -43,10 +46,10 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus-ring focus-ring-offset",
   },
   ghost: {
-  // Strengthen default text color for readability on very light subtle surfaces
-  base: "bg-transparent text-text-tertiary md:text-text-secondary border border-transparent",
-  hover: "hover:bg-surface-neutral hover:text-text-primary",
-  active: "active:bg-surface-neutral-dark active:text-text-primary",
+    // Strengthen default text color for readability on very light subtle surfaces
+    base: "bg-transparent text-text-tertiary md:text-text-secondary border border-transparent",
+    hover: "hover:bg-surface-neutral hover:text-text-primary",
+    active: "active:bg-surface-neutral-dark active:text-text-primary",
     disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
@@ -70,8 +73,7 @@ const buttonVariants: ButtonStylesConfig = {
     base: "bg-transparent text-brand-jade-dark border border-transparent p-0 h-auto font-medium",
     hover: "hover:text-brand-jade-darker hover:underline",
     active: "active:text-brand-jade-darker",
-    disabled:
-      "disabled:text-brand-jade-light disabled:cursor-not-allowed",
+    disabled: "disabled:text-brand-jade-light disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   neutralLink: {
@@ -97,24 +99,30 @@ const buttonVariants: ButtonStylesConfig = {
   },
   danger: {
     base: "text-white border bg-[var(--semantic-error)] border-[var(--semantic-error)]",
-    hover: "hover:bg-[color:var(--color-error-600)] hover:border-[color:var(--color-error-600)]",
-    active: "active:bg-[color:var(--color-error-700)] active:border-[color:var(--color-error-700)]",
+    hover:
+      "hover:bg-[color:var(--color-error-600)] hover:border-[color:var(--color-error-600)]",
+    active:
+      "active:bg-[color:var(--color-error-700)] active:border-[color:var(--color-error-700)]",
     disabled:
       "disabled:bg-[color:var(--color-error-500)]/50 disabled:border-[color:var(--color-error-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   success: {
     base: "text-white border bg-[color:var(--color-success-600)] border-[color:var(--color-success-600)]",
-    hover: "hover:bg-[color:var(--color-success-700)] hover:border-[color:var(--color-success-700)]",
-    active: "active:bg-[color:var(--color-success-700)] active:border-[color:var(--color-success-700)]",
+    hover:
+      "hover:bg-[color:var(--color-success-700)] hover:border-[color:var(--color-success-700)]",
+    active:
+      "active:bg-[color:var(--color-success-700)] active:border-[color:var(--color-success-700)]",
     disabled:
       "disabled:bg-[color:var(--color-success-500)]/50 disabled:border-[color:var(--color-success-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   warning: {
     base: "text-gray-900 border bg-[color:var(--color-warning-600)] border-[color:var(--color-warning-600)]",
-    hover: "hover:bg-[color:var(--color-warning-700)] hover:border-[color:var(--color-warning-700)]",
-    active: "active:bg-[color:var(--color-warning-700)] active:border-[color:var(--color-warning-700)]",
+    hover:
+      "hover:bg-[color:var(--color-warning-700)] hover:border-[color:var(--color-warning-700)]",
+    active:
+      "active:bg-[color:var(--color-warning-700)] active:border-[color:var(--color-warning-700)]",
     disabled:
       "disabled:bg-[color:var(--color-warning-500)]/50 disabled:border-[color:var(--color-warning-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",

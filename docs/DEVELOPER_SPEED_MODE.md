@@ -22,7 +22,7 @@ BC_PREDEV_NO_FORMAT=1 npm run dev
 
 ## What Changes
 
-- Style enforcement rules (custom boxcall-style/*, contrast/no-unsafe-white, raw button) disabled.
+- Style enforcement rules (custom boxcall-style/\*, contrast/no-unsafe-white, raw button) disabled.
 - Unused vars become warnings instead of errors.
 - React refresh & TypeScript correctness still active.
 
@@ -39,4 +39,3 @@ npm run lint && npm run type-check
 ```
 
 Unset variables or open a fresh shell to return to strict mode.
-

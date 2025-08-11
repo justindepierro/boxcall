@@ -49,7 +49,8 @@ export function usePlaySearch(
       setError(undefined);
       let combined: PlaySearchResult[] = [];
       // Timing metrics
-      const t0 = typeof performance !== "undefined" ? performance.now() : Date.now();
+      const t0 =
+        typeof performance !== "undefined" ? performance.now() : Date.now();
       let ftDuration = 0;
       let fuzzyDuration = 0;
       let usedFuzzy = false;
@@ -57,13 +58,17 @@ export function usePlaySearch(
         const supabase = getSupabaseClient();
         type FT = { play_id: string; rank?: number };
         type FZ = { play_id: string; similarity?: number };
-        const ftStart = typeof performance !== "undefined" ? performance.now() : Date.now();
+        const ftStart =
+          typeof performance !== "undefined" ? performance.now() : Date.now();
         const { data: fulltext, error: ftErr } = await supabase.rpc(
           "search_plays",
           { q, lim: limit, playbook: playbookId }
         );
         if (ftErr) throw ftErr;
-        ftDuration = (typeof performance !== "undefined" ? performance.now() : Date.now()) - ftStart;
+        ftDuration =
+          (typeof performance !== "undefined"
+            ? performance.now()
+            : Date.now()) - ftStart;
         combined = Array.isArray(fulltext)
           ? (fulltext as FT[]).map((r: FT) => ({
               ...r,
@@ -71,7 +76,8 @@ export function usePlaySearch(
             }))
           : [];
         if (!combined.length) {
-          const fzStart = typeof performance !== "undefined" ? performance.now() : Date.now();
+          const fzStart =
+            typeof performance !== "undefined" ? performance.now() : Date.now();
           const { data: fuzzy, error: fErr } = await supabase.rpc(
             "search_plays_fuzzy",
             { q, lim: limit, playbook: playbookId }
@@ -85,7 +91,10 @@ export function usePlaySearch(
                 }))
               : [];
           }
-          fuzzyDuration = (typeof performance !== "undefined" ? performance.now() : Date.now()) - fzStart;
+          fuzzyDuration =
+            (typeof performance !== "undefined"
+              ? performance.now()
+              : Date.now()) - fzStart;
           usedFuzzy = true;
         } else {
           setAttemptedFuzzy(false);
@@ -105,7 +114,10 @@ export function usePlaySearch(
             },
           });
         }
-        const totalDuration = (typeof performance !== "undefined" ? performance.now() : Date.now()) - t0;
+        const totalDuration =
+          (typeof performance !== "undefined"
+            ? performance.now()
+            : Date.now()) - t0;
         telemetry.enqueue({
           type: "search:query",
           data: {
@@ -120,7 +132,10 @@ export function usePlaySearch(
         });
       } catch (e) {
         setError(e instanceof Error ? e.message : "search failed");
-        const totalDuration = (typeof performance !== "undefined" ? performance.now() : Date.now()) - t0;
+        const totalDuration =
+          (typeof performance !== "undefined"
+            ? performance.now()
+            : Date.now()) - t0;
         telemetry.enqueue({
           type: "search:error",
           data: {
@@ -136,7 +151,7 @@ export function usePlaySearch(
         setLoading(false);
       }
     },
-  [playbookId, limit, minChars, attemptedFuzzy]
+    [playbookId, limit, minChars, attemptedFuzzy]
   );
 
   useEffect(() => {

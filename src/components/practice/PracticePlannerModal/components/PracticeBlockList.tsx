@@ -253,10 +253,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                                       </Typography>
                                     )}
                                   </div>
-                                  <Button
-                                    variant="neutralLink"
-                                    size="sm"
-                                  >
+                                  <Button variant="neutralLink" size="sm">
                                     <Icon name="edit" size="xs" />
                                   </Button>
                                 </div>

@@ -157,7 +157,7 @@ export const PracticePDFExportDialog: React.FC<
         }
       }
       const filename = `${filenameParts.join("_")}.pdf`;
-  await downloadPDF(processedData, filename, {
+      await downloadPDF(processedData, filename, {
         format: "Letter",
         orientation: "portrait",
         template: {
@@ -168,8 +168,8 @@ export const PracticePDFExportDialog: React.FC<
         includeHeader: true,
         includeFooter: true,
       });
-  // Activation: mark first script export
-  markFirstScriptExport(filename);
+      // Activation: mark first script export
+      markFirstScriptExport(filename);
       onClose();
     } catch (error) {
       console.error("PDF export failed:", error);

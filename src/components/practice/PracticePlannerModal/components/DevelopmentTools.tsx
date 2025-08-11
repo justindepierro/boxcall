@@ -28,11 +28,7 @@ export const DevelopmentTools: React.FC<DevelopmentToolsProps> = ({
           <Icon name="settings" size="sm" className="mr-1" />
           Development Tools
         </Typography>
-        <Button
-          onClick={resetToSampleData}
-          variant="warning"
-          size="xs"
-        >
+        <Button onClick={resetToSampleData} variant="warning" size="xs">
           Reset to Sample Data
         </Button>
       </div>

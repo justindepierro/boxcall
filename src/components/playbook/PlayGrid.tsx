@@ -3,6 +3,8 @@ import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { ToggleLeft, ToggleRight } from "lucide-react";
 import { IconButton } from "../ui";
 import { PlayCard } from "./PlayCard";
+import { Virtuoso } from "react-virtuoso";
+import { Button } from "../ui/Button/Button";
 import { telemetry } from "../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../telemetry/events";
 import { useTeamsData } from "../../hooks/useTeamsData";
@@ -209,7 +211,14 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
         resultCount: filteredPlays.length,
       },
     });
-  }, [searchQuery, filters.formation, filters.playType, selectedCategory, selectedSubcategory, filteredPlays.length]);
+  }, [
+    searchQuery,
+    filters.formation,
+    filters.playType,
+    selectedCategory,
+    selectedSubcategory,
+    filteredPlays.length,
+  ]);
 
   const hasFilters =
     searchQuery ||
@@ -221,29 +230,25 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
 
   const showEmpty = filteredPlays.length === 0 && !loading && !error;
   // Virtualization threshold (avoid overhead for small lists)
-  const VIRTUALIZE_THRESHOLD = 30; // switch to incremental rendering beyond this
-  const disableVirtual = (import.meta as unknown as { env: Record<string,string> }).env?.VITE_DISABLE_VIRTUAL_PLAYGRID === 'true';
-  const INITIAL_COUNT = 40;
-  const CHUNK = 30;
-  const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
-
-  // Reset window when filters/search change
-  useEffect(() => {
-    setVisibleCount(INITIAL_COUNT);
-  }, [searchQuery, filters.formation, filters.playType, selectedCategory, selectedSubcategory]);
-
-  const handleIncrementalScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    const el = e.currentTarget;
-    if (el.scrollHeight - el.scrollTop - el.clientHeight < 240) {
-      setVisibleCount((prev) => (prev < filteredPlays.length ? Math.min(filteredPlays.length, prev + CHUNK) : prev));
-    }
-  }, [filteredPlays.length]);
-
+  const VIRTUALIZE_THRESHOLD = 30; // use simple map below this
+  const disableVirtual =
+    (import.meta as unknown as { env: Record<string, string> }).env
+      ?.VITE_DISABLE_VIRTUAL_PLAYGRID === "true";
+  // Density mode state (comfortable default)
+  const [density, setDensity] = useState<"comfortable" | "compact">(
+    "comfortable"
+  );
+  const toggleDensity = () =>
+    setDensity(density === "comfortable" ? "compact" : "comfortable");
 
   return (
     <div className="space-y-6" aria-live="polite">
       {loading && (
-        <div className="flex items-center justify-center p-8" role="status" aria-label="Loading plays">
+        <div
+          className="flex items-center justify-center p-8"
+          role="status"
+          aria-label="Loading plays"
+        >
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
           <span className="ml-2 text-text-secondary">Loading plays...</span>
         </div>
@@ -336,11 +341,24 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
             )}
           </IconButton>
           <span className="text-sm text-slate-600">Full names</span>
+          <div className="pl-4 ml-4 border-l border-subtle flex items-center space-x-2">
+            <Button
+              variant={density === "compact" ? "secondary" : "ghost"}
+              size="xs"
+              onClick={toggleDensity}
+              aria-pressed={density === "compact"}
+              aria-label="Toggle density mode"
+              className="!h-auto px-2 py-1 text-xs"
+            >
+              {density === "compact" ? "Compact" : "Comfort"}
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Play Grid (virtualized when large) */}
-  {!showEmpty && (disableVirtual || filteredPlays.length < VIRTUALIZE_THRESHOLD) ? (
+      {!showEmpty &&
+      (disableVirtual || filteredPlays.length < VIRTUALIZE_THRESHOLD) ? (
         <div className="space-y-4" role="list">
           {filteredPlays.map((play) => (
             <PlayCard
@@ -352,47 +370,40 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
               onCreateDiagram={onCreateDiagram}
               onAddToPracticeScript={onAddToPracticeScript}
               onAddToGamePlan={onAddToGamePlan}
-              // Bulk Operations
               enableSelection={enableBulkOperations}
               isSelected={selectedPlayIds.has(play.id)}
               onSelectionChange={handlePlaySelect}
+              density={density}
             />
           ))}
         </div>
       ) : !showEmpty ? (
         <div
-          className="relative overflow-y-auto pr-1"
           style={{ height: "calc(100vh - 320px)" }}
-          onScroll={handleIncrementalScroll}
-          role="list"
           aria-label="Play list"
-       >
-          {filteredPlays.slice(0, visibleCount).map((play) => (
-            <div key={play.id} className="mb-4" role="listitem">
-              <PlayCard
-                play={play}
-                showOneWordCalls={showOneWordCalls}
-                onEdit={onEdit}
-                onDuplicate={onDuplicate}
-                onCreateDiagram={onCreateDiagram}
-                onAddToPracticeScript={onAddToPracticeScript}
-                onAddToGamePlan={onAddToGamePlan}
-                enableSelection={enableBulkOperations}
-                isSelected={selectedPlayIds.has(play.id)}
-                onSelectionChange={handlePlaySelect}
-              />
-            </div>
-          ))}
-          {visibleCount < filteredPlays.length && (
-            <div className="py-4 text-center text-xs text-slate-500" role="status">
-              Loading more… ({visibleCount}/{filteredPlays.length})
-            </div>
-          )}
-          {visibleCount >= filteredPlays.length && (
-            <div className="py-4 text-center text-xs text-slate-400">
-              End of playbook • {filteredPlays.length} plays
-            </div>
-          )}
+          role="list"
+        >
+          <Virtuoso
+            data={filteredPlays}
+            overscan={200}
+            itemContent={(index, play) => (
+              <div className="mb-4" role="listitem" data-index={index}>
+                <PlayCard
+                  play={play}
+                  showOneWordCalls={showOneWordCalls}
+                  onEdit={onEdit}
+                  onDuplicate={onDuplicate}
+                  onCreateDiagram={onCreateDiagram}
+                  onAddToPracticeScript={onAddToPracticeScript}
+                  onAddToGamePlan={onAddToGamePlan}
+                  enableSelection={enableBulkOperations}
+                  isSelected={selectedPlayIds.has(play.id)}
+                  onSelectionChange={handlePlaySelect}
+                  density={density}
+                />
+              </div>
+            )}
+          />
         </div>
       ) : null}
     </div>

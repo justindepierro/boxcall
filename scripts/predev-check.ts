@@ -103,14 +103,24 @@ function runUnusedExportsCheck(): CheckResult {
 }
 
 async function main(): Promise<void> {
-  const skip = process.env.BC_SKIP_PREDEV === "1" || process.env.BC_PREDEV_MODE === "skip";
-  const relaxed = process.env.BC_LINT_MODE === "relaxed" || process.env.BC_PREDEV_MODE === "relaxed";
+  const skip =
+    process.env.BC_SKIP_PREDEV === "1" || process.env.BC_PREDEV_MODE === "skip";
+  const relaxed =
+    process.env.BC_LINT_MODE === "relaxed" ||
+    process.env.BC_PREDEV_MODE === "relaxed";
   if (skip) {
-    log("⚡ Predev checks skipped via BC_SKIP_PREDEV/BC_PREDEV_MODE", colors.yellow);
+    log(
+      "⚡ Predev checks skipped via BC_SKIP_PREDEV/BC_PREDEV_MODE",
+      colors.yellow
+    );
     process.exit(0);
   }
 
-  log("🚀 PROFESSIONAL PRE-DEVELOPMENT VALIDATION" + (relaxed ? " (RELAXED)" : ""), colors.bold);
+  log(
+    "🚀 PROFESSIONAL PRE-DEVELOPMENT VALIDATION" +
+      (relaxed ? " (RELAXED)" : ""),
+    colors.bold
+  );
   log("================================================", colors.blue);
 
   const checks: CheckResult[] = [];
@@ -180,7 +190,10 @@ async function main(): Promise<void> {
   }
 
   if (failed.length > 0 && relaxed) {
-    log("\n⚠️  RELAXED MODE: Allowing dev server despite failures", colors.yellow);
+    log(
+      "\n⚠️  RELAXED MODE: Allowing dev server despite failures",
+      colors.yellow
+    );
   }
 
   log("\n🎉 ALL CHECKS PASSED - DEVELOPMENT SERVER READY!", colors.green);

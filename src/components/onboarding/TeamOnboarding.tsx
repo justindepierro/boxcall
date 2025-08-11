@@ -87,7 +87,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
     if (hasCoachAccount) {
       // Coach Account users can use playbook without teams
       return (
-  <div className="surface-subtle border-subtle rounded-lg p-4 mb-6">
+        <div className="surface-subtle border-subtle rounded-lg p-4 mb-6">
           <div className="flex items-center gap-3">
             <Icon name="check-circle" size="md" color="success" />
             <div>
@@ -108,7 +108,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
     } else {
       // Free users need team or coach account for playbook
       return (
-  <div className="surface-subtle border-subtle rounded-lg bc-card-padding mb-8">
+        <div className="surface-subtle border-subtle rounded-lg bc-card-padding mb-8">
           <div className="text-center">
             <Icon
               name="lock"

@@ -141,7 +141,7 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
             onChange={(e) =>
               handleFilterUpdate("formation", e.target.value || undefined)
             }
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
+            className="w-full px-3 py-2 text-sm border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
           >
             <option value="">All Formations</option>
             {FORMATION_OPTIONS.map((formation) => (

@@ -34,8 +34,8 @@ export const MobileQuickActions: React.FC<MobileQuickActionsProps> = ({
     const colorMap = {
       jade: "bg-brand-jade hover:bg-brand-jade-dark text-white shadow-jade/25",
       blue: "bg-jade-600 hover:bg-jade-600 text-white shadow-blue/25",
-  // Darken red & keep white text (red-600 has better contrast vs red-500)
-  red: "bg-red-600 hover:bg-red-700 text-white shadow-red/25",
+      // Darken red & keep white text (red-600 has better contrast vs red-500)
+      red: "bg-red-600 hover:bg-red-700 text-white shadow-red/25",
       // Adjusted yellow for contrast: darker bg w/ dark text to meet WCAG AA
       yellow:
         "bg-yellow-600 hover:bg-yellow-700 text-gray-900 shadow-yellow/25 dark:text-gray-900",
@@ -158,7 +158,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     const colorMap = {
       jade: "bg-brand-jade hover:bg-brand-jade-dark text-white shadow-jade/30",
       blue: "bg-jade-600 hover:bg-jade-600 text-white shadow-blue/30",
-  red: "bg-red-600 hover:bg-red-700 text-white shadow-red/30",
+      red: "bg-red-600 hover:bg-red-700 text-white shadow-red/30",
     };
 
     return colorMap[color];

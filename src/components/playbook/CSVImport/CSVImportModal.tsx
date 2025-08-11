@@ -249,11 +249,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               Your CSV should include columns for: formation, play_name, p_type,
               personnel, one_word_play, etc.
             </p>
-            <Button
-              onClick={downloadSampleCSV}
-              variant="infoLink"
-              size="xs"
-            >
+            <Button onClick={downloadSampleCSV} variant="infoLink" size="xs">
               Download sample CSV template →
             </Button>
           </div>

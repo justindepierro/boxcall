@@ -40,7 +40,9 @@ export function listPresets(): PlaybookFilterPreset[] {
   return loadRaw().sort((a, b) => b.createdAt - a.createdAt);
 }
 
-export function createPreset(preset: Omit<PlaybookFilterPreset, "id" | "createdAt">): PlaybookFilterPreset {
+export function createPreset(
+  preset: Omit<PlaybookFilterPreset, "id" | "createdAt">
+): PlaybookFilterPreset {
   const full: PlaybookFilterPreset = {
     ...preset,
     id: Date.now().toString(),

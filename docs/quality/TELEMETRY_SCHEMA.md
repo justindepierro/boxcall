@@ -4,13 +4,13 @@ Status: Draft
 
 ## 1. Event Categories
 
-| Category   | Examples                                               | Notes                                    |
-| ---------- | ------------------------------------------------------ | ---------------------------------------- |
-| suggestion | suggestion:shown, suggestion:accept                    | Search autosuggest lifecycle             |
-| vitals     | vital:cls, vital:inp, vital:lcp, vital:fcp, vital:ttfb | Core Web Vitals (web-vitals lib)         |
-| search     | search:query, search:error                             | Structured latency + outcome metrics     |
-| activation | activation:first_play, activation:first_practice, activation:first_script_export, activation:checklist_step_complete, activation:checklist_completed | Onboarding & activation funnel |
-| error      | error:boundary, error:network                          | Future grouping + severity               |
+| Category   | Examples                                                                                                                                             | Notes                                |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| suggestion | suggestion:shown, suggestion:accept                                                                                                                  | Search autosuggest lifecycle         |
+| vitals     | vital:cls, vital:inp, vital:lcp, vital:fcp, vital:ttfb                                                                                               | Core Web Vitals (web-vitals lib)     |
+| search     | search:query, search:error                                                                                                                           | Structured latency + outcome metrics |
+| activation | activation:first_play, activation:first_practice, activation:first_script_export, activation:checklist_step_complete, activation:checklist_completed | Onboarding & activation funnel       |
+| error      | error:boundary, error:network                                                                                                                        | Future grouping + severity           |
 
 ## 2. Payload Shape
 
@@ -21,49 +21,51 @@ interface TelemetryEventBase {
   ts: number;
   session_id: string;
 ```
-interface SuggestionShown extends TelemetryEventBase { /* ... */ }
-interface SuggestionAccept extends TelemetryEventBase { /* ... */ }
+
+interface SuggestionShown extends TelemetryEventBase { /_ ... _/ }
+interface SuggestionAccept extends TelemetryEventBase { /_ ... _/ }
 
 interface SearchQueryEvent {
-  name: "search:query";
-  query: string;
-  count: number;          // number of results returned
-  usedFuzzy: boolean;     // whether fuzzy fallback executed
-  ftDurationMs: number;   // full-text phase duration
-  fuzzyDurationMs?: number | null; // fuzzy phase duration if executed
-  totalDurationMs: number; // total end-to-end duration
+name: "search:query";
+query: string;
+count: number; // number of results returned
+usedFuzzy: boolean; // whether fuzzy fallback executed
+ftDurationMs: number; // full-text phase duration
+fuzzyDurationMs?: number | null; // fuzzy phase duration if executed
+totalDurationMs: number; // total end-to-end duration
 }
 interface SearchErrorEvent {
-  name: "search:error";
-  query: string;
-  message: string;        // error message
-  ftDurationMs: number;   // time spent before error surfaced
-  fuzzyTried: boolean;    // whether we attempted fuzzy before failing
-  totalDurationMs: number;
+name: "search:error";
+query: string;
+message: string; // error message
+ftDurationMs: number; // time spent before error surfaced
+fuzzyTried: boolean; // whether we attempted fuzzy before failing
+totalDurationMs: number;
 }
 interface ActivationFirstPlayEvent {
-  name: 'activation:first_play';
-  playId?: string;
-  timeFromSignupMs: number; // ms from local signup/start marker
+name: 'activation:first_play';
+playId?: string;
+timeFromSignupMs: number; // ms from local signup/start marker
 }
 interface ActivationFirstPracticeEvent {
-  name: 'activation:first_practice';
-  scheduleId?: string;
-  timeFromSignupMs: number;
+name: 'activation:first_practice';
+scheduleId?: string;
+timeFromSignupMs: number;
 }
 interface ActivationFirstScriptExportEvent {
-  name: 'activation:first_script_export';
-  filename?: string;
-  timeFromSignupMs: number;
+name: 'activation:first_script_export';
+filename?: string;
+timeFromSignupMs: number;
 }
 interface ActivationChecklistStepCompleteEvent {
-  name: 'activation:checklist_step_complete';
-  stepId: 'team' | 'first_play' | 'first_practice' | 'first_script_export';
+name: 'activation:checklist_step_complete';
+stepId: 'team' | 'first_play' | 'first_practice' | 'first_script_export';
 }
 interface ActivationChecklistCompletedEvent {
-  name: 'activation:checklist_completed';
-  totalMs: number; // ms from startedAt to completion
+name: 'activation:checklist_completed';
+totalMs: number; // ms from startedAt to completion
 }
+
 ```
 
 ## 3. Storage (Supabase)
@@ -94,3 +96,4 @@ Indexes: (name, ts DESC), (ts DESC)
 ---
 
 Update when adding new categories or indexes.
+```

@@ -18,7 +18,12 @@ import { Typography } from "../components/design-system/Typography";
 import { markFirstPlayCreated } from "../components/onboarding/activationHelpers";
 import { telemetry } from "../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../telemetry/events";
-import { listPresets, createPreset, deletePreset, applyPreset } from "../utils/playbookFilterPresets";
+import {
+  listPresets,
+  createPreset,
+  deletePreset,
+  applyPreset,
+} from "../utils/playbookFilterPresets";
 // TODO: Future enhancement - calculate real play counts with: import { calculatePlayCounts } from "../utils/playbook-categories";
 import type { Play } from "../types/play";
 import {
@@ -93,9 +98,9 @@ export const PlaybookPage: React.FC = () => {
     lastPlayCreated: null,
     // Data refresh trigger
     refreshTrigger: 0,
-  filterPresets: [],
-  activePresetId: undefined,
-  diagramCoverage: 0,
+    filterPresets: [],
+    activePresetId: undefined,
+    diagramCoverage: 0,
   });
 
   // Achievement system - the heart of reward loop psychology
@@ -204,7 +209,10 @@ export const PlaybookPage: React.FC = () => {
       // Update diagram coverage placeholder (future: compute real diagrams)
       setState((prev) => ({
         ...prev,
-        diagramCoverage: Math.min(100, Math.round(((prev.playsCreated + 1) / (prev.playsCreated + 1)) * 50)),
+        diagramCoverage: Math.min(
+          100,
+          Math.round(((prev.playsCreated + 1) / (prev.playsCreated + 1)) * 50)
+        ),
       }));
 
       // Trigger celebration
@@ -356,7 +364,11 @@ export const PlaybookPage: React.FC = () => {
     if (!confirm("Delete preset?")) return;
     deletePreset(id);
     refreshPresets();
-    setState((prev) => ({ ...prev, activePresetId: prev.activePresetId === id ? undefined : prev.activePresetId }));
+    setState((prev) => ({
+      ...prev,
+      activePresetId:
+        prev.activePresetId === id ? undefined : prev.activePresetId,
+    }));
   };
 
   const handleViewChange = (view: CoachingView) => {
@@ -668,7 +680,11 @@ export const PlaybookPage: React.FC = () => {
           {/* Play Grid */}
           <main className="flex-1">
             {/* 3-View System Toggle */}
-            <div className="mb-6 surface-subtle rounded-lg shadow-sm border-subtle p-1" role="tablist" aria-label="Playbook views">
+            <div
+              className="mb-6 surface-subtle rounded-lg shadow-sm border-subtle p-1"
+              role="tablist"
+              aria-label="Playbook views"
+            >
               <div className="flex space-x-1">
                 <Button
                   id="tab-playbook"
@@ -677,7 +693,9 @@ export const PlaybookPage: React.FC = () => {
                   aria-selected={state.currentView === "playbook"}
                   tabIndex={state.currentView === "playbook" ? 0 : -1}
                   onClick={() => handleViewChange("playbook")}
-                  variant={state.currentView === "playbook" ? "primary" : "ghost"}
+                  variant={
+                    state.currentView === "playbook" ? "primary" : "ghost"
+                  }
                   size="sm"
                   className="flex-1 flex items-center justify-center"
                 >
@@ -690,7 +708,11 @@ export const PlaybookPage: React.FC = () => {
                   aria-selected={state.currentView === "practice-script"}
                   tabIndex={state.currentView === "practice-script" ? 0 : -1}
                   onClick={() => handleViewChange("practice-script")}
-                  variant={state.currentView === "practice-script" ? "primary" : "ghost"}
+                  variant={
+                    state.currentView === "practice-script"
+                      ? "primary"
+                      : "ghost"
+                  }
                   size="sm"
                   className="flex-1 flex items-center justify-center"
                 >
@@ -703,7 +725,9 @@ export const PlaybookPage: React.FC = () => {
                   aria-selected={state.currentView === "game-plan"}
                   tabIndex={state.currentView === "game-plan" ? 0 : -1}
                   onClick={() => handleViewChange("game-plan")}
-                  variant={state.currentView === "game-plan" ? "primary" : "ghost"}
+                  variant={
+                    state.currentView === "game-plan" ? "primary" : "ghost"
+                  }
                   size="sm"
                   className="flex-1 flex items-center justify-center"
                 >
@@ -721,47 +745,47 @@ export const PlaybookPage: React.FC = () => {
             >
               {state.currentView === "playbook" && (
                 <>
-                {/* Advanced Filters */}
-                <div className="surface-card rounded-lg shadow-sm border-subtle p-3 mb-4">
-                  <AdvancedFilters
-                    activeFilters={state.advancedFilters}
-                    onFiltersChange={handleAdvancedFiltersChange}
-                  />
-                </div>
-
-                {/* Bulk Actions Toolbar */}
-                {state.enableBulkOperations &&
-                  state.selectedPlayIds.size > 0 && (
-                    <BulkActionsToolbar
-                      selectedCount={state.selectedPlayIds.size}
-                      onClearSelection={() =>
-                        setState((prev) => ({
-                          ...prev,
-                          selectedPlayIds: new Set(),
-                        }))
-                      }
-                      onBulkAction={handleBulkAction}
+                  {/* Advanced Filters */}
+                  <div className="surface-card rounded-lg shadow-sm border-subtle p-3 mb-4">
+                    <AdvancedFilters
+                      activeFilters={state.advancedFilters}
+                      onFiltersChange={handleAdvancedFiltersChange}
                     />
-                  )}
+                  </div>
 
-                <PlayGrid
-                  searchQuery={state.searchQuery}
-                  filters={state.selectedFilters}
-                  selectedCategory={state.selectedCategory}
-                  selectedSubcategory={state.selectedSubcategory}
-                  onAddToPracticeScript={handleAddToPracticeScript}
-                  onAddToGamePlan={handleAddToGamePlan}
-                  refreshTrigger={state.refreshTrigger}
-                  enableBulkOperations={state.enableBulkOperations}
-                  selectedPlayIds={state.selectedPlayIds}
-                  onPlaySelectionChange={handlePlaySelectionChange}
-                  onPlayCountChange={(count) => {
-                    setState((prev) => ({
-                      ...prev,
-                      playsCreated: count,
-                    }));
-                  }}
-                />
+                  {/* Bulk Actions Toolbar */}
+                  {state.enableBulkOperations &&
+                    state.selectedPlayIds.size > 0 && (
+                      <BulkActionsToolbar
+                        selectedCount={state.selectedPlayIds.size}
+                        onClearSelection={() =>
+                          setState((prev) => ({
+                            ...prev,
+                            selectedPlayIds: new Set(),
+                          }))
+                        }
+                        onBulkAction={handleBulkAction}
+                      />
+                    )}
+
+                  <PlayGrid
+                    searchQuery={state.searchQuery}
+                    filters={state.selectedFilters}
+                    selectedCategory={state.selectedCategory}
+                    selectedSubcategory={state.selectedSubcategory}
+                    onAddToPracticeScript={handleAddToPracticeScript}
+                    onAddToGamePlan={handleAddToGamePlan}
+                    refreshTrigger={state.refreshTrigger}
+                    enableBulkOperations={state.enableBulkOperations}
+                    selectedPlayIds={state.selectedPlayIds}
+                    onPlaySelectionChange={handlePlaySelectionChange}
+                    onPlayCountChange={(count) => {
+                      setState((prev) => ({
+                        ...prev,
+                        playsCreated: count,
+                      }));
+                    }}
+                  />
                 </>
               )}
             </div>
@@ -774,24 +798,24 @@ export const PlaybookPage: React.FC = () => {
             >
               {state.currentView === "practice-script" && (
                 <div className="surface-card rounded-lg shadow-sm border-subtle p-6">
-                <div className="text-center py-12">
-                  <Clock className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                  <Typography
-                    variant="headline-sm"
-                    as="h3"
-                    className="text-slate-900 mb-2"
-                  >
-                    Practice Script Builder
-                  </Typography>
-                  <p className="text-slate-600 mb-6">
-                    Build practice sessions with plays from your playbook.
-                    Create timelines, add repetitions, and export professional
-                    practice scripts.
-                  </p>
-                  <Button variant="primary" size="sm">
-                    Create New Practice Script
-                  </Button>
-                </div>
+                  <div className="text-center py-12">
+                    <Clock className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                    <Typography
+                      variant="headline-sm"
+                      as="h3"
+                      className="text-slate-900 mb-2"
+                    >
+                      Practice Script Builder
+                    </Typography>
+                    <p className="text-slate-600 mb-6">
+                      Build practice sessions with plays from your playbook.
+                      Create timelines, add repetitions, and export professional
+                      practice scripts.
+                    </p>
+                    <Button variant="primary" size="sm">
+                      Create New Practice Script
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
@@ -804,23 +828,24 @@ export const PlaybookPage: React.FC = () => {
             >
               {state.currentView === "game-plan" && (
                 <div className="surface-card rounded-lg shadow-sm border-subtle p-6">
-                <div className="text-center py-12">
-                  <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                  <Typography
-                    variant="headline-sm"
-                    as="h3"
-                    className="text-slate-900 mb-2"
-                  >
-                    Game Plan Organization
-                  </Typography>
-                  <p className="text-slate-600 mb-6">
-                    Organize plays by game situations using Brian Billick
-                    methodology. Down & Distance, Red Zone, Goal Line, and more.
-                  </p>
-                  <Button variant="primary" size="sm">
-                    Create New Game Plan
-                  </Button>
-                </div>
+                  <div className="text-center py-12">
+                    <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                    <Typography
+                      variant="headline-sm"
+                      as="h3"
+                      className="text-slate-900 mb-2"
+                    >
+                      Game Plan Organization
+                    </Typography>
+                    <p className="text-slate-600 mb-6">
+                      Organize plays by game situations using Brian Billick
+                      methodology. Down & Distance, Red Zone, Goal Line, and
+                      more.
+                    </p>
+                    <Button variant="primary" size="sm">
+                      Create New Game Plan
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>

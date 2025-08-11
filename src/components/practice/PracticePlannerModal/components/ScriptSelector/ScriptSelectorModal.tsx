@@ -121,10 +121,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                       </span>
                     </div>
                   </div>
-                  <Button
-                    variant="infoLink"
-                    size="sm"
-                  >
+                  <Button variant="infoLink" size="sm">
                     <Icon name="plus" size="sm" />
                   </Button>
                 </div>

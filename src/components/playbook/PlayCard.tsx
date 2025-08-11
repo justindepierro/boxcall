@@ -32,6 +32,7 @@ interface PlayCardProps {
   enableSelection?: boolean;
   isSelected?: boolean;
   onSelectionChange?: (playId: string, selected: boolean) => void;
+  density?: "comfortable" | "compact";
 }
 export const PlayCard: React.FC<PlayCardProps> = ({
   play,
@@ -45,9 +46,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   enableSelection = false,
   isSelected = false,
   onSelectionChange,
+  density = "comfortable",
 }) => {
   const [showVisualBuilder, setShowVisualBuilder] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const isCompact = density === "compact";
   const getPlayTypeColor = (type: string) => {
     switch (type) {
       case "Pass":
@@ -89,9 +92,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
           isSelected
             ? "border-jade-600 ring-2 ring-blue-200"
             : "border-subtle hover:border-slate-300"
-        }`}
+        } ${isCompact ? "text-[13px]" : ""}`}
       >
-        <div className="p-4 sm:p-6">
+        <div className={isCompact ? "p-3 sm:p-4" : "p-4 sm:p-6"}>
           {/* Collapsed/Skinny Mode */}
           <div className="flex items-center justify-between">
             {/* Selection Checkbox */}
@@ -111,7 +114,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             <div className="flex-1">
               {/* Play Name with MonoCode Font */}
               <h3
-                className={`font-mono font-bold text-lg ${
+                className={`font-mono font-bold ${isCompact ? "text-base" : "text-lg"} ${
                   showOneWordCalls && play.one_word_play
                     ? "text-blue-600"
                     : "text-slate-900"
@@ -121,12 +124,14 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               </h3>
               {/* Subtitle in italics for one-word plays */}
               {subtitleText && (
-                <p className="text-xs text-slate-500 mt-1 italic font-light">
+                <p className={`text-xs text-slate-500 mt-1 italic font-light`}>
                   {subtitleText}
                 </p>
               )}
               {/* Play Type and additional info - Mobile-friendly badges */}
-              <div className="flex flex-wrap items-center gap-2 mt-3">
+              <div
+                className={`flex flex-wrap items-center gap-2 ${isCompact ? "mt-2" : "mt-3"}`}
+              >
                 <span
                   className={`px-3 py-1.5 rounded-full text-sm font-medium ${getPlayTypeColor(play.p_type)}`}
                 >
@@ -162,7 +167,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 aria-expanded={isExpanded}
                 aria-controls={`play-details-${play.id}`}
                 title={isExpanded ? "Collapse" : "Expand details"}
-                className="p-3 !h-auto min-w-[48px] min-h-[48px]"
+                className={`p-3 !h-auto ${isCompact ? "min-w-[40px] min-h-[40px]" : "min-w-[48px] min-h-[48px]"}`}
               />
               <Button
                 onClick={() => onEdit?.(play)}
@@ -172,7 +177,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 iconPosition="only"
                 aria-label="Edit play"
                 title="Edit play"
-                className="p-3 !h-auto min-w-[48px] min-h-[48px]"
+                className={`p-3 !h-auto ${isCompact ? "min-w-[40px] min-h-[40px]" : "min-w-[48px] min-h-[48px]"}`}
               />
               <Button
                 onClick={() => onDuplicate?.(play)}
@@ -182,7 +187,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 iconPosition="only"
                 aria-label="Duplicate play"
                 title="Duplicate play"
-                className="p-3 !h-auto min-w-[48px] min-h-[48px]"
+                className={`p-3 !h-auto ${isCompact ? "min-w-[40px] min-h-[40px]" : "min-w-[48px] min-h-[48px]"}`}
               />
               <Button
                 onClick={handleCreateDiagram}
@@ -192,13 +197,18 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 iconPosition="only"
                 aria-label="Create diagram"
                 title="Create diagram"
-                className="p-3 !h-auto min-w-[48px] min-h-[48px]"
+                className={`p-3 !h-auto ${isCompact ? "min-w-[40px] min-h-[40px]" : "min-w-[48px] min-h-[48px]"}`}
               />
             </div>
           </div>
           {/* Expanded Details */}
           {isExpanded && (
-            <div id={`play-details-${play.id}`} className="mt-4 pt-4 border-t border-subtle grid grid-cols-1 md:grid-cols-3 gap-4" role="region" aria-label={`Details for ${displayName}`}> 
+            <div
+              id={`play-details-${play.id}`}
+              className="mt-4 pt-4 border-t border-subtle grid grid-cols-1 md:grid-cols-3 gap-4"
+              role="region"
+              aria-label={`Details for ${displayName}`}
+            >
               {/* Formation Details */}
               <div className="space-y-2">
                 <Typography

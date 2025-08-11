@@ -581,12 +581,7 @@ export const JoinTeam: React.FC = () => {
               Need help joining your team?
             </Typography>
             <div className="space-x-4">
-              <Button
-                type="button"
-                variant="brandLink"
-                size="sm"
-                className=""
-              >
+              <Button type="button" variant="brandLink" size="sm" className="">
                 Contact Support
               </Button>
               <span className="text-gray-300">•</span>

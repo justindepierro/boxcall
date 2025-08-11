@@ -3,6 +3,7 @@
 # (Deprecated) Button Variant Policy v1
 
 This legacy version has been superseded. Highlights of v2 changes:
+
 - Added brandLink / neutralLink / infoLink / dangerLink variants.
 - Inline Button color utilities banned & enforced by script.
 - Calendar Clear action now neutralLink (not ghost).
