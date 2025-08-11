@@ -1,13 +1,8 @@
-# 🏈 BoxCall - Professional Football Team Management
+# 🏈 BoxCall
 
-> **Elite football coaching platform** with intelligent playbook management, visual play builder, and comprehensive team management tools.
+Elite coaching platform – play lifecycle (Ideate → Author → Rehearse → Deploy → Analyze) with quality + performance gates.
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18.3.1-61dafb)](https://reactjs.org/)
-[![Fabric.js](https://img.shields.io/badge/Fabric.js-6.7.1-orange)](https://fabricjs.com/)
-[![Storybook](https://img.shields.io/badge/Storybook-9.1.0-ff4785)](https://storybook.js.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.7-38b2ac)](https://tailwindcss.com/)
-[![Vite](https://img.shields.io/badge/Vite-7.0.6-646cff)](https://vitejs.dev/)
+Badges: TypeScript · React · Tailwind · Vite
 
 <div align="center">
   <img src="/assets/boxcall-logo-text.svg" alt="BoxCall" width="300"/>
@@ -15,36 +10,11 @@
   **Professional football management platform built for coaches, by coaches**
 </div>
 
-## ⚡ **CURRENT STATUS: v0.6.0 - Performance Optimized & Production Ready**
+## Status
 
-🎯 **Latest Achievement**: **Performance Optimized + Database Architecture Complete**
+See unified product & tech roadmap: `docs/product/ROADMAP.md`.
 
-✨ **Phase 2 Complete - Ready for Production**:
-
-- ✅ **PERFORMANCE OPTIMIZED** - 58% bundle reduction (648KB → 272KB), 95% component optimization
-- ✅ **MODULAR ARCHITECTURE** - DevTools refactored (946→297 lines), professional toast system
-- ✅ **20+ Table Database Architecture** - Complete team management from organizational level to individual players
-- ✅ **Modular Migration System** - Zero-downtime deployments with stepped migrations (006, 007, 008)
-- ✅ **Complete Practice Planning** - 7-table system with 8-box layout and real-time execution tracking
-- ✅ **Player Performance Analytics** - Individual tracking, progress monitoring, achievement recognition
-- ✅ **Enhanced Team Management** - Organizational hierarchy, coaching staff roles, roster management
-- ✅ **Parent/Guardian Communication** - Family engagement tracking and communication preferences
-- ✅ **Row Level Security** - Team-based data isolation with role-based access controls
-- ✅ **Performance Optimization** - Sub-10ms queries with strategic composite indexes + 975KB gzipped bundle
-- ✅ **Service Layer Ready** - 90% of TypeScript services already implemented (DataSyncService, PracticeService, GamePlanService)
-
-🚀 **Next Phase: 30-Minute Production Activation** - Ready to activate Supabase integration and remove mock data
-
-### **🎯 Current Focus: Phase 3 Production Deployment**
-
-Following our **DATABASE_AUTH_AUDIT.md**, we have successfully completed both our enterprise-grade database foundation AND performance optimization. With our sophisticated service layer already 90% complete and optimized bundle sizes, we're ready for Phase 3:
-
-**IMMEDIATE NEXT STEPS (30 minutes)**:
-
-1. **Mock Data Cleanup** - Remove `src/data/mock-team-data.ts` and dev mock logic
-2. **Supabase Activation** - Create project, import schema, configure environment
-3. **Auth Provider Integration** - Connect existing auth components to live database
-4. **Production Testing** - Validate real authentication flow
+## Quick Start
 
 **PERFORMANCE STATS**:
 
@@ -53,7 +23,7 @@ Following our **DATABASE_AUTH_AUDIT.md**, we have successfully completed both ou
 - 🚀 **Ready**: Sub-100ms data loading with offline-first architecture
 - 🧹 **Mock Data**: 4 areas identified for cleanup (mock-team-data.ts, demoPlays.ts, service dev modes)
 
-## 📊 **PERFORMANCE ACHIEVEMENTS**
+## Key Scripts
 
 ### **Bundle Optimization Complete** ✅
 
@@ -76,7 +46,7 @@ Following our **DATABASE_AUTH_AUDIT.md**, we have successfully completed both ou
 - **DataResolutionService**: 630 lines of clean data orchestration
 - **Authentication**: Complete auth store (227 lines) with session management
 
-## 🏆 **REVOLUTIONARY 3-VIEW COACHING SYSTEM**
+## Architecture & Docs
 
 BoxCall revolutionizes football coaching with a professional workflow system that mirrors how elite coaches actually prepare their teams.
 
@@ -133,7 +103,7 @@ Playbook View → Practice Script View → Game Plan View
 - Complete audit trails and execution tracking
 - Scalable architecture supporting team growth
 
-## 🛠️ **TECHNICAL ARCHITECTURE**
+Full architecture: `docs/ARCHITECTURE.md`
 
 ### **Service Layer Architecture**
 
@@ -193,7 +163,7 @@ interface PlaybookPageState {
 
 Full decision tree: `docs/BADGE_TAG_GUIDELINES.md`.
 
-## 🏆 **COMPLETED PHASES**
+## Quality Gates
 
 ### **Phase 4** ✅ **3-View Coaching System**
 
@@ -227,7 +197,7 @@ Professional legal compliance, enhanced team creation experience, and comprehens
 
 Enterprise-grade centralized data loading system with context-aware resolution, clean React hooks architecture, and professional development environment with data source transparency.
 
-## 🎨 **Professional Features**
+## Telemetry & Search
 
 ### **📐 Visual Play Builder**
 
@@ -408,7 +378,8 @@ Planned extensions: per-route LCP/INP thresholds, image weight budgets, PDF bund
 - Event polling interface for team-wide decision making
 - Bulk operations for efficient team administration
 
-## 🛠️ Development Status
+## Contributing
+Conventional commits required. Run validation before PR: `npm run validate:full`.
 
 ### 🎉 **Recently Completed**
 
@@ -519,7 +490,8 @@ WARNING: You are currently running a version of TypeScript which is not official
 - **TypeScript architecture** with strict typing and interfaces
 - **Supabase integration** with database helpers and configuration
 
-## 📚 Documentation
+## Documentation Index
+See `docs/README.md` (to be added) for categorized references.
 
 - **[Workspace Optimization Guide](WORKSPACE_OPTIMIZATION_COMPLETE.md)** - Complete transformation documentation
 - **[Architecture](docs/architecture/)** - System design and technical decisions
@@ -528,7 +500,7 @@ WARNING: You are currently running a version of TypeScript which is not official
 - **[Phase Documentation](docs/phases/)** - Implementation phases and roadmaps
 - **[Setup Guide](docs/SUPABASE_SETUP.md)** - Environment setup instructions
 
-## 📊 **Scripts & Automation**
+## Scripts
 
 ```bash
 # Development workflow
@@ -556,7 +528,8 @@ npm run preview          # Preview production build
 ./scripts/clear-stale-references.sh # Clear stale file references from Problems panel
 ```
 
-## 🎯 Development Priorities
+## License
+Proprietary – All rights reserved.
 
 ### 🔥 **Immediate Focus**
 
@@ -574,7 +547,8 @@ npm run preview          # Preview production build
 - **TTFB (Time to First Byte)**: < 800 milliseconds
 - **Bundle Size**: < 150KB initial load
 
-## 🤝 Contributing
+---
+Historical verbose README retained in git history (slimmed 2025-08-11).
 
 ### 🛡️ **Quality Standards** (Automated)
 
@@ -622,6 +596,4 @@ git commit -m "feat: description"  # Conventional commit format
 
 ---
 
-**Status**: 🎯 **Production-Ready Workspace** - Enterprise development practices implemented
-
-_Building the future of football team management with industry-leading development standards_ 🏈
+_Building the future of football coaching operations._ 🏈
