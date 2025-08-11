@@ -1,4 +1,10 @@
-import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 // (Removed unused RefreshCw, Search imports after log text simplification)
 import { ToggleLeft, ToggleRight } from "lucide-react";
 import { IconButton } from "../ui";
@@ -252,6 +258,61 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
   const toggleDensity = () =>
     setDensity(density === "comfortable" ? "compact" : "comfortable");
 
+  // --- Dev-only render diagnostics (no state updates) ---
+  if (process.env.NODE_ENV === "development") {
+    const selfAny = PlayGrid as unknown as {
+      __renderInfo?: { count: number; start: number };
+    };
+    if (!selfAny.__renderInfo) {
+      selfAny.__renderInfo = { count: 0, start: performance.now() };
+    }
+    selfAny.__renderInfo.count += 1;
+    const { count, start } = selfAny.__renderInfo;
+    if (count % 100 === 0) {
+      const elapsed = performance.now() - start;
+      if (elapsed < 8000) {
+        console.warn(
+          `[PlayGrid] High render frequency: ${count} renders in ${elapsed.toFixed(
+            0
+          )}ms (filteredPlays=${filteredPlays.length})`
+        );
+      }
+    }
+  }
+
+  // Stable callback for item rendering (prevents new function each render)
+  const renderPlayItem = useCallback(
+    (index: number, play: Play) => (
+      <div className="mb-4" role="listitem" data-index={index}>
+        <PlayCard
+          play={play}
+          showOneWordCalls={showOneWordCalls}
+          onEdit={onEdit}
+          onDuplicate={onDuplicate}
+          onCreateDiagram={onCreateDiagram}
+          onAddToPracticeScript={onAddToPracticeScript}
+          onAddToGamePlan={onAddToGamePlan}
+          enableSelection={enableBulkOperations}
+          isSelected={selectedPlayIds.has(play.id)}
+          onSelectionChange={handlePlaySelect}
+          density={density}
+        />
+      </div>
+    ),
+    [
+      showOneWordCalls,
+      onEdit,
+      onDuplicate,
+      onCreateDiagram,
+      onAddToPracticeScript,
+      onAddToGamePlan,
+      enableBulkOperations,
+      selectedPlayIds,
+      handlePlaySelect,
+      density,
+    ]
+  );
+
   return (
     <div className="space-y-6" aria-live="polite">
       {loading && (
@@ -397,23 +458,8 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
           <Virtuoso
             data={filteredPlays}
             overscan={200}
-            itemContent={(index, play) => (
-              <div className="mb-4" role="listitem" data-index={index}>
-                <PlayCard
-                  play={play}
-                  showOneWordCalls={showOneWordCalls}
-                  onEdit={onEdit}
-                  onDuplicate={onDuplicate}
-                  onCreateDiagram={onCreateDiagram}
-                  onAddToPracticeScript={onAddToPracticeScript}
-                  onAddToGamePlan={onAddToGamePlan}
-                  enableSelection={enableBulkOperations}
-                  isSelected={selectedPlayIds.has(play.id)}
-                  onSelectionChange={handlePlaySelect}
-                  density={density}
-                />
-              </div>
-            )}
+            computeItemKey={(_, play) => play.id}
+            itemContent={renderPlayItem}
           />
         </div>
       ) : null}
