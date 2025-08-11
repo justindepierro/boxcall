@@ -4,11 +4,12 @@ Status: Draft
 
 ## 1. Event Categories
 
-| Category   | Examples                            | Notes                            |
-| ---------- | ----------------------------------- | -------------------------------- |
-| suggestion | suggestion:shown, suggestion:accept | Search autosuggest lifecycle     |
-| vitals     | vitals:CLS, vitals:INP, vitals:LCP  | Core Web Vitals (web-vitals lib) |
-| error      | error:boundary, error:network       | Future grouping + severity       |
+| Category   | Examples                                               | Notes                                    |
+| ---------- | ------------------------------------------------------ | ---------------------------------------- |
+| suggestion | suggestion:shown, suggestion:accept                    | Search autosuggest lifecycle             |
+| vitals     | vital:cls, vital:inp, vital:lcp, vital:fcp, vital:ttfb | Core Web Vitals (web-vitals lib)         |
+| search     | search:query, search:error                             | Structured latency + outcome metrics     |
+| error      | error:boundary, error:network                          | Future grouping + severity               |
 
 ## 2. Payload Shape
 
@@ -18,18 +19,26 @@ interface TelemetryEventBase {
   name: string;
   ts: number;
   session_id: string;
-}
-interface SuggestionShown extends TelemetryEventBase {
-  name: "suggestion:shown";
+```
+interface SuggestionShown extends TelemetryEventBase { /* ... */ }
+interface SuggestionAccept extends TelemetryEventBase { /* ... */ }
+
+interface SearchQueryEvent {
+  name: "search:query";
   query: string;
-  rank: number;
-  fuzzy: boolean;
+  count: number;          // number of results returned
+  usedFuzzy: boolean;     // whether fuzzy fallback executed
+  ftDurationMs: number;   // full-text phase duration
+  fuzzyDurationMs?: number | null; // fuzzy phase duration if executed
+  totalDurationMs: number; // total end-to-end duration
 }
-interface SuggestionAccept extends TelemetryEventBase {
-  name: "suggestion:accept";
+interface SearchErrorEvent {
+  name: "search:error";
   query: string;
-  rank: number;
-  fuzzy: boolean;
+  message: string;        // error message
+  ftDurationMs: number;   // time spent before error surfaced
+  fuzzyTried: boolean;    // whether we attempted fuzzy before failing
+  totalDurationMs: number;
 }
 ```
 
@@ -55,7 +64,8 @@ Indexes: (name, ts DESC), (ts DESC)
 
 1. Error grouping & severity taxonomy
 2. Search blend scoring metrics (rank vs similarity usage)
-3. Latency buckets (suggestion response time)
+3. Latency buckets (suggestion response time) – IMPLEMENTED via search:query durations
+4. Add percentile aggregation scripts for search latency
 
 ---
 
