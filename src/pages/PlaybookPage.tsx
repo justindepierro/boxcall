@@ -15,6 +15,7 @@ import { PlaysDomainService } from "../domain/playsDomainService";
 import { Icon } from "../components/ui/Icon/Icon";
 import { TeamOnboarding } from "../components/onboarding/TeamOnboarding";
 import { Typography } from "../components/design-system/Typography";
+import { markFirstPlayCreated } from "../components/onboarding/activationHelpers";
 // TODO: Future enhancement - calculate real play counts with: import { calculatePlayCounts } from "../utils/playbook-categories";
 import type { Play } from "../types/play";
 import {
@@ -173,6 +174,14 @@ export const PlaybookPage: React.FC = () => {
       // Route through domain service (canonicalization + future duplicate_key)
       const { play: newPlay } = await PlaysDomainService.createPlay(playData);
       console.log("✅ Play saved successfully:", newPlay);
+
+      // Activation: record first play creation (id may be undefined if service didn't return yet)
+      if (newPlay?.id) {
+        markFirstPlayCreated(newPlay.id);
+      } else {
+        // Fallback still mark without id (ensures event fires once)
+        markFirstPlayCreated();
+      }
 
       // Close the builder
       handleCloseBuilder();
