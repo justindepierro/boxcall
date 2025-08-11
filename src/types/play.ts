@@ -102,6 +102,8 @@ export interface Play {
   complexity_score?: number; // integer
   search_vector?: string; // tsvector (auto-generated, read-only)
   duplicate_key?: string; // canonical duplication key (nullable until enforced)
+  // Installation lifecycle phase (not yet in DB - forward compatibility)
+  install_phase?: string; // e.g., 'install1','install2','install3','situational','gameplan'
 }
 
 // DEPRECATED - Legacy interface with extra fields not in database
@@ -308,3 +310,13 @@ export const PLAY_TYPE_OPTIONS: {
   { value: "Run", label: "Run", description: "Running plays" },
   { value: "RPO", label: "RPO", description: "Run-Pass Options" },
 ];
+
+// Forward-looking standard install phase taxonomy (UI + future DB enum)
+export const INSTALL_PHASES = [
+  'install1',
+  'install2',
+  'install3',
+  'situational',
+  'gameplan'
+] as const;
+export type InstallPhase = typeof INSTALL_PHASES[number];

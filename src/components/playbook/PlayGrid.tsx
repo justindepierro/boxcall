@@ -42,6 +42,7 @@ const mapDatabasePlayToFullPlay = (dbPlay: {
   created_by: "system", // Default value
   created_at: new Date(dbPlay.created_at),
   updated_at: new Date(dbPlay.updated_at),
+  install_phase: undefined, // placeholder until DB field exists
 });
 interface PlayGridProps {
   searchQuery: string;

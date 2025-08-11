@@ -20,6 +20,7 @@ import { TelemetryEventTypes } from "../../telemetry/events";
 import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button/Button";
+import { INSTALL_PHASES, type InstallPhase } from "../../types/play";
 interface PlayCardProps {
   play: PlayType;
   showOneWordCalls?: boolean;
@@ -70,6 +71,16 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     if (confidence >= 60) return "text-yellow-600";
     return "text-red-600";
   };
+  const phaseLabel = ((): string | null => {
+    if (!play.install_phase) return null;
+    const value = play.install_phase as string;
+    const isPhase = (val: string): val is InstallPhase => (INSTALL_PHASES as readonly string[]).includes(val);
+    if (!isPhase(value)) return null;
+    return value
+      .replace('install', 'Install ')
+      .replace('gameplan', 'Game Plan')
+      .replace('situational', 'Situational');
+  })();
   const handleCreateDiagram = () => {
     setShowVisualBuilder(true);
   };
@@ -140,6 +151,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 {play.f_type && (
                   <span className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-full text-sm">
                     {play.f_type}
+                  </span>
+                )}
+                {phaseLabel && (
+                  <span className="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-[11px] font-medium tracking-wide uppercase">
+                    {phaseLabel}
                   </span>
                 )}
                 <span
