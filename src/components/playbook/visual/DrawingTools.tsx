@@ -60,7 +60,7 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
     { id: "player-TE", label: "TE", icon: "🟠" },
   ];
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-3 space-y-3">
+    <div className="bg-white rounded-lg shadow-sm border border-subtle p-3 space-y-3">
       <Typography
         variant="body-sm"
         as="div"
@@ -76,7 +76,7 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
             onClick={() => onToolChange(tool.id)}
             variant={selectedTool === tool.id ? "primary" : "ghost"}
             size="xs"
-            className="p-2 h-auto flex flex-col border border-slate-200"
+            className="p-2 h-auto flex flex-col border border-subtle"
             title={tool.label}
           >
             <span className="text-center leading-none mb-1">{tool.icon}</span>
@@ -136,7 +136,7 @@ export const DrawingTools: React.FC<DrawingToolsProps> = ({
               onClick={() => addTextAnnotation(item.text, item.style)}
               variant="ghost"
               size="xs"
-              className="px-2 py-1 text-xs border border-slate-200 bg-slate-100 hover:bg-slate-200"
+              className="px-2 py-1 text-xs border border-subtle bg-slate-100 hover:bg-slate-200"
             >
               {item.text}
             </Button>

@@ -33,7 +33,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (showDevModeWarning) {
     return (
-      <Card className="bc-card-padding surface-card border-orange-200 bg-orange-50">
+      <Card className="bc-card-padding surface-card border-subtle surface-subtle">
         <div className="flex items-center">
           <Icon name="warning" size="md" color="warning" className="mr-3" />
           <div>
@@ -69,7 +69,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (error) {
     return (
-      <Card className="bc-card-padding surface-card border-red-200 bg-red-50">
+      <Card className="bc-card-padding surface-card border-subtle surface-subtle">
         <div className="flex items-center">
           <Icon name="warning" size="md" color="error" className="mr-3" />
           <div>
@@ -112,7 +112,7 @@ export const DatabaseDataDisplay: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Summary Card */}
-      <Card className="bc-card-padding surface-card bg-gradient-to-r from-jade-50 to-blue-50 border-jade-200">
+      <Card className="bc-card-padding surface-card bg-gradient-to-r from-jade-50 to-blue-50 border-subtle">
         <div className="flex items-center justify-between">
           <div>
             <Typography variant="headline-md" className="text-jade-800 mb-1">
@@ -168,7 +168,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                   size="sm"
                   className={`w-full justify-start px-3 py-3 ${
                     isActive
-                      ? "bg-jade-50 border border-jade-300 shadow-sm"
+                      ? "surface-subtle border border-jade-300 shadow-sm"
                       : "surface-subtle surface-subtle-hover"
                   }`}
                 >
@@ -197,7 +197,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
           {/* Selected Team Details */}
           {selectedTeam && (
-            <div className="mt-4 p-4 bg-jade-50 border border-jade-200 rounded-lg">
+            <div className="mt-4 p-4 surface-subtle border border-subtle rounded-lg">
               <Typography variant="headline-sm" className="text-jade-900 mb-3">
                 {selectedTeam.name} Details
               </Typography>
@@ -226,7 +226,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                     {selectedTeam.season_year}
                   </Typography>
                 </div>
-                <div className="mt-3 pt-2 border-t border-jade-200">
+                <div className="mt-3 pt-2 border-t border-subtle">
                   <Typography variant="body-xs" className="text-jade-700">
                     <Lightbulb
                       aria-label="idea"
@@ -327,7 +327,7 @@ export const DatabaseDataDisplay: React.FC = () => {
       </div>
 
       {/* Next Steps */}
-      <Card className="bc-card-padding surface-card bg-blue-50 border-blue-200">
+      <Card className="bc-card-padding surface-card surface-subtle border-subtle">
         <Typography variant="headline-sm" className="text-blue-800 mb-3">
           <Rocket
             aria-label="launch"

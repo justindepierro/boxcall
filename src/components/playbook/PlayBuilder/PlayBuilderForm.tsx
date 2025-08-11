@@ -22,9 +22,9 @@ interface PlayBuilderFormProps {
 // Shared form styles for consistency
 const formStyles = {
   section:
-    "bg-white rounded-none border border-slate-200 bc-card-padding space-y-4",
+    "bg-white rounded-none border border-subtle bc-card-padding space-y-4",
   sectionTitle:
-    "text-lg font-semibold text-slate-900 pb-2 border-b border-slate-200",
+    "text-lg font-semibold text-slate-900 pb-2 border-b border-subtle",
   label: "block text-sm font-medium text-slate-700 mb-1.5",
   required: "text-red-500 ml-1",
   input:
@@ -294,7 +294,7 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
         </div>
 
         {/* Archive Toggle */}
-        <div className="pt-4 border-t border-slate-200">
+        <div className="pt-4 border-t border-subtle">
           <label className="flex items-center space-x-3 cursor-pointer">
             <input
               type="checkbox"

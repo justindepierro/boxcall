@@ -123,7 +123,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   // Show loading state
   if (loading) {
     return (
-      <Card className="compact-card surface-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
+      <Card className="compact-card surface-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-subtle dark:border-jade-800">
         <div className="flex items-center justify-center h-24">
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-jade-600"></div>
         </div>
@@ -133,7 +133,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   // Show error state
   if (error) {
     return (
-      <Card className="compact-card surface-card bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-red-200 dark:border-red-800">
+      <Card className="compact-card surface-card bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-subtle dark:border-red-800">
         <Typography
           variant="headline-md"
           className="text-red-600 dark:text-red-400 text-center"
@@ -144,7 +144,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
     );
   }
   return (
-    <Card className="compact-card surface-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-jade-200 dark:border-jade-800">
+    <Card className="compact-card surface-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-subtle dark:border-jade-800">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
@@ -284,7 +284,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
                       </Typography>
                     </div>
                     {achievement.earned && (
-                      <div className="w-1.5 h-1.5 bg-jade-500 rounded-full flex-shrink-0"></div>
+                      <div className="w-1.5 h-1.5 surface-subtle0 rounded-full flex-shrink-0"></div>
                     )}
                   </div>
                 ))

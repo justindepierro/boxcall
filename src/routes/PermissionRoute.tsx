@@ -207,7 +207,7 @@ export const PermissionRoute: React.FC<PermissionRouteProps> = ({
           </div>
           {/* Debug info for super admins */}
           {accessData?.isSuperAdmin && (
-            <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900 rounded-md text-sm">
+            <div className="mt-4 p-3 surface-subtle dark:bg-yellow-900 rounded-md text-sm">
               <strong>Debug Info:</strong> {JSON.stringify(accessData, null, 2)}
             </div>
           )}

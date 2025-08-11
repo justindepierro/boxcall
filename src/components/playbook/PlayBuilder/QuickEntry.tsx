@@ -168,7 +168,7 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
   }
 
   return (
-    <div className="mb-6 bg-jade-50 border border-jade-200 rounded-lg p-4">
+    <div className="mb-6 surface-subtle border border-subtle rounded-lg p-4">
       <div className="flex items-center justify-between mb-3">
         <Typography
           variant="headline-sm"
@@ -192,9 +192,9 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
         </Typography>
         <Button
           onClick={onToggle}
-          variant="ghost"
+          variant="brandLink"
           size="xs"
-          className="text-jade-600 hover:text-jade-700 p-1 h-auto w-auto"
+          className="p-1 h-auto w-auto"
         >
           <svg
             className="w-5 h-5"

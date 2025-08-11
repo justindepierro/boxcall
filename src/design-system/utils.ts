@@ -77,9 +77,9 @@ export const tokenClasses = {
     "hover:bg-interaction-jade hover:text-white transition-colors cursor-pointer",
 
   // Status styles
-  success: "bg-green-50 text-green-800 border border-green-200",
-  warning: "bg-yellow-50 text-yellow-800 border border-yellow-200",
-  error: "bg-red-50 text-red-800 border border-red-200",
+  success: "surface-subtle text-green-800 border border-subtle",
+  warning: "surface-subtle text-yellow-800 border border-subtle",
+  error: "surface-subtle text-red-800 border border-subtle",
 
   // Icon color standardization - Professional consistency
   iconBrand: `text-[${componentTokens.icon.jade}]`,

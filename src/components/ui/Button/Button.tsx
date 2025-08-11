@@ -41,9 +41,10 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus-ring focus-ring-offset",
   },
   ghost: {
-    base: "bg-transparent text-text-secondary border border-transparent",
-    hover: "hover:bg-surface-neutral hover:text-text-primary",
-    active: "active:bg-surface-neutral-dark active:text-text-primary",
+  // Strengthen default text color for readability on very light subtle surfaces
+  base: "bg-transparent text-text-tertiary md:text-text-secondary border border-transparent",
+  hover: "hover:bg-surface-neutral hover:text-text-primary",
+  active: "active:bg-surface-neutral-dark active:text-text-primary",
     disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
@@ -60,6 +61,36 @@ const buttonVariants: ButtonStylesConfig = {
     hover: "hover:text-brand-jade-dark hover:underline",
     active: "active:text-brand-jade-dark",
     disabled: "disabled:text-brand-jade-light disabled:cursor-not-allowed",
+    focus: "focus-ring focus-ring-offset focus:rounded-sm",
+  },
+  // Brand link style with slightly stronger weight (used where prior inline text-jade-* overrides existed)
+  brandLink: {
+    base: "bg-transparent text-brand-jade-dark border border-transparent p-0 h-auto font-medium",
+    hover: "hover:text-brand-jade-darker hover:underline",
+    active: "active:text-brand-jade-darker",
+    disabled:
+      "disabled:text-brand-jade-light disabled:cursor-not-allowed",
+    focus: "focus-ring focus-ring-offset focus:rounded-sm",
+  },
+  neutralLink: {
+    base: "bg-transparent text-text-secondary border border-transparent p-0 h-auto",
+    hover: "hover:text-text-primary hover:underline",
+    active: "active:text-text-primary",
+    disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
+    focus: "focus-ring focus-ring-offset focus:rounded-sm",
+  },
+  infoLink: {
+    base: "bg-transparent text-blue-700 border border-transparent p-0 h-auto",
+    hover: "hover:text-blue-800 hover:underline",
+    active: "active:text-blue-800",
+    disabled: "disabled:text-blue-300 disabled:cursor-not-allowed",
+    focus: "focus-ring focus-ring-offset focus:rounded-sm",
+  },
+  dangerLink: {
+    base: "bg-transparent text-red-600 border border-transparent p-0 h-auto",
+    hover: "hover:text-red-700 hover:underline",
+    active: "active:text-red-700",
+    disabled: "disabled:text-red-300 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   danger: {

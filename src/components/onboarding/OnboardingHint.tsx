@@ -78,7 +78,7 @@ export const OnboardingHint: React.FC<OnboardingHintProps> = ({
           {actions.map((a, i) => {
             const base =
               a.variant === "primary"
-                ? "bg-jade-500 hover:bg-jade-600 text-white"
+                ? "bg-jade-600 hover:bg-brand-jade-dark text-white"
                 : a.variant === "secondary"
                   ? "border-subtle surface-subtle-hover"
                   : "text-jade-600 dark:text-jade-400 hover:underline";

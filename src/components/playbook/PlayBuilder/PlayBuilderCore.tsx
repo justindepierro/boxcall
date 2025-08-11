@@ -193,10 +193,10 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
               </p>
             </div>
             <Button
-              variant="ghost"
+              variant="neutralLink"
               size="xs"
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg h-auto"
+              className="p-2 rounded-lg h-auto"
               aria-label="Close play builder"
               icon={<X className="h-5 w-5" />}
               iconPosition="only"

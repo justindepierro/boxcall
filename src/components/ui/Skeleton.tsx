@@ -56,7 +56,7 @@ export const DashboardCardSkeleton: React.FC = () => (
  * PlayCard Skeleton - Matches playbook card structure
  */
 export const PlayCardSkeleton: React.FC = () => (
-  <div className="bg-white rounded-lg border border-slate-200 p-4 sm:p-6 shadow-sm">
+  <div className="bg-white rounded-lg border border-subtle p-4 sm:p-6 shadow-sm">
     <div className="flex items-start justify-between gap-4">
       <div className="flex-1 min-w-0 space-y-3">
         {/* Play name */}

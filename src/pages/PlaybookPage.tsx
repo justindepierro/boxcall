@@ -16,6 +16,9 @@ import { Icon } from "../components/ui/Icon/Icon";
 import { TeamOnboarding } from "../components/onboarding/TeamOnboarding";
 import { Typography } from "../components/design-system/Typography";
 import { markFirstPlayCreated } from "../components/onboarding/activationHelpers";
+import { telemetry } from "../telemetry/dispatcher";
+import { TelemetryEventTypes } from "../telemetry/events";
+import { listPresets, createPreset, deletePreset, applyPreset } from "../utils/playbookFilterPresets";
 // TODO: Future enhancement - calculate real play counts with: import { calculatePlayCounts } from "../utils/playbook-categories";
 import type { Play } from "../types/play";
 import {
@@ -63,6 +66,9 @@ interface PlaybookPageState {
   lastPlayCreated: Date | null;
   // Data refresh trigger
   refreshTrigger: number;
+  filterPresets: ReturnType<typeof listPresets>;
+  activePresetId?: string;
+  diagramCoverage: number; // % of plays with a diagram (placeholder)
 }
 export const PlaybookPage: React.FC = () => {
   const [state, setState] = useState<PlaybookPageState>({
@@ -87,6 +93,9 @@ export const PlaybookPage: React.FC = () => {
     lastPlayCreated: null,
     // Data refresh trigger
     refreshTrigger: 0,
+  filterPresets: [],
+  activePresetId: undefined,
+  diagramCoverage: 0,
   });
 
   // Achievement system - the heart of reward loop psychology
@@ -178,6 +187,10 @@ export const PlaybookPage: React.FC = () => {
       // Activation: record first play creation (id may be undefined if service didn't return yet)
       if (newPlay?.id) {
         markFirstPlayCreated(newPlay.id);
+        telemetry.enqueue({
+          type: TelemetryEventTypes.PlayCreate,
+          data: { playId: newPlay.id, source: "builder", hasDiagram: false },
+        });
       } else {
         // Fallback still mark without id (ensures event fires once)
         markFirstPlayCreated();
@@ -188,6 +201,11 @@ export const PlaybookPage: React.FC = () => {
 
       // Refresh the plays list
       refreshPlays();
+      // Update diagram coverage placeholder (future: compute real diagrams)
+      setState((prev) => ({
+        ...prev,
+        diagramCoverage: Math.min(100, Math.round(((prev.playsCreated + 1) / (prev.playsCreated + 1)) * 50)),
+      }));
 
       // Trigger celebration
       handlePlayCreated();
@@ -292,6 +310,53 @@ export const PlaybookPage: React.FC = () => {
     filters: typeof state.advancedFilters
   ) => {
     setState((prev) => ({ ...prev, advancedFilters: filters }));
+  };
+
+  // Preset Management
+  const refreshPresets = () => {
+    setState((prev) => ({ ...prev, filterPresets: listPresets() }));
+  };
+  const handleSavePreset = () => {
+    const name = prompt("Preset name?");
+    if (!name) return;
+    createPreset({
+      name,
+      filters: {
+        searchQuery: state.searchQuery,
+        formation: state.selectedFilters.formation,
+        playType: state.selectedFilters.playType,
+        category: state.selectedCategory,
+        subcategory: state.selectedSubcategory,
+      },
+    });
+    refreshPresets();
+  };
+  const handleApplyPreset = (id: string) => {
+    const preset = listPresets().find((p) => p.id === id);
+    if (!preset) return;
+    const f = applyPreset(preset);
+    setState((prev) => ({
+      ...prev,
+      searchQuery: f.searchQuery || "",
+      selectedFilters: {
+        ...prev.selectedFilters,
+        formation: f.formation,
+        playType: f.playType,
+      },
+      selectedCategory: f.category,
+      selectedSubcategory: f.subcategory,
+      activePresetId: id,
+    }));
+    telemetry.enqueue({
+      type: TelemetryEventTypes.ViewSavedApply,
+      data: { viewId: id },
+    });
+  };
+  const handleDeletePreset = (id: string) => {
+    if (!confirm("Delete preset?")) return;
+    deletePreset(id);
+    refreshPresets();
+    setState((prev) => ({ ...prev, activePresetId: prev.activePresetId === id ? undefined : prev.activePresetId }));
   };
 
   const handleViewChange = (view: CoachingView) => {
@@ -400,6 +465,9 @@ export const PlaybookPage: React.FC = () => {
                   >
                     {state.playsCreated}/100 plays
                   </ProgressBadge>
+                  <Badge variant="info" size="sm">
+                    Diagram {state.diagramCoverage}%
+                  </Badge>
                   {state.streakDays > 0 && (
                     <Badge variant="success" size="sm">
                       {state.streakDays} day streak!
@@ -419,6 +487,39 @@ export const PlaybookPage: React.FC = () => {
             </div>
             {/* Action Buttons with Reward Loop Psychology */}
             <div className="flex items-center space-x-3">
+              {/* Preset Dropdown */}
+              <div className="flex items-center space-x-1">
+                <select
+                  value={state.activePresetId || ""}
+                  onChange={(e) => handleApplyPreset(e.target.value)}
+                  className="text-sm border-slate-300 rounded px-2 py-1"
+                >
+                  <option value="">Presets...</option>
+                  {state.filterPresets.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+                {state.activePresetId && (
+                  <Button
+                    onClick={() => handleDeletePreset(state.activePresetId!)}
+                    variant="ghost"
+                    size="xs"
+                    className="px-2"
+                  >
+                    ✕
+                  </Button>
+                )}
+              </div>
+              <Button
+                onClick={handleSavePreset}
+                variant="ghost"
+                size="sm"
+                className="px-3"
+              >
+                Save Preset
+              </Button>
               {/* Bulk Operations Toggle */}
               <Button
                 onClick={toggleBulkOperations}
@@ -494,7 +595,7 @@ export const PlaybookPage: React.FC = () => {
 
       {/* Week 3 Feature: Complexity Challenge System Demo */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-        <div className="surface-card decorative-gradient bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-purple-200">
+        <div className="surface-card decorative-gradient bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-subtle">
           <div className="flex items-center justify-between">
             <div>
               <Typography
@@ -567,35 +668,42 @@ export const PlaybookPage: React.FC = () => {
           {/* Play Grid */}
           <main className="flex-1">
             {/* 3-View System Toggle */}
-            <div className="mb-6 surface-subtle rounded-lg shadow-sm border-subtle p-1">
+            <div className="mb-6 surface-subtle rounded-lg shadow-sm border-subtle p-1" role="tablist" aria-label="Playbook views">
               <div className="flex space-x-1">
                 <Button
+                  id="tab-playbook"
+                  role="tab"
+                  aria-controls="panel-playbook"
+                  aria-selected={state.currentView === "playbook"}
+                  tabIndex={state.currentView === "playbook" ? 0 : -1}
                   onClick={() => handleViewChange("playbook")}
-                  variant={
-                    state.currentView === "playbook" ? "primary" : "ghost"
-                  }
+                  variant={state.currentView === "playbook" ? "primary" : "ghost"}
                   size="sm"
                   className="flex-1 flex items-center justify-center"
                 >
                   <FileText className="h-4 w-4 mr-2" /> Playbook View
                 </Button>
                 <Button
+                  id="tab-practice-script"
+                  role="tab"
+                  aria-controls="panel-practice-script"
+                  aria-selected={state.currentView === "practice-script"}
+                  tabIndex={state.currentView === "practice-script" ? 0 : -1}
                   onClick={() => handleViewChange("practice-script")}
-                  variant={
-                    state.currentView === "practice-script"
-                      ? "primary"
-                      : "ghost"
-                  }
+                  variant={state.currentView === "practice-script" ? "primary" : "ghost"}
                   size="sm"
                   className="flex-1 flex items-center justify-center"
                 >
                   <Clock className="h-4 w-4 mr-2" /> Practice Script View
                 </Button>
                 <Button
+                  id="tab-game-plan"
+                  role="tab"
+                  aria-controls="panel-game-plan"
+                  aria-selected={state.currentView === "game-plan"}
+                  tabIndex={state.currentView === "game-plan" ? 0 : -1}
                   onClick={() => handleViewChange("game-plan")}
-                  variant={
-                    state.currentView === "game-plan" ? "primary" : "ghost"
-                  }
+                  variant={state.currentView === "game-plan" ? "primary" : "ghost"}
                   size="sm"
                   className="flex-1 flex items-center justify-center"
                 >
@@ -605,8 +713,14 @@ export const PlaybookPage: React.FC = () => {
             </div>
 
             {/* Conditional View Rendering */}
-            {state.currentView === "playbook" && (
-              <>
+            <div
+              id="panel-playbook"
+              role="tabpanel"
+              aria-labelledby="tab-playbook"
+              hidden={state.currentView !== "playbook"}
+            >
+              {state.currentView === "playbook" && (
+                <>
                 {/* Advanced Filters */}
                 <div className="surface-card rounded-lg shadow-sm border-subtle p-3 mb-4">
                   <AdvancedFilters
@@ -648,11 +762,18 @@ export const PlaybookPage: React.FC = () => {
                     }));
                   }}
                 />
-              </>
-            )}
+                </>
+              )}
+            </div>
 
-            {state.currentView === "practice-script" && (
-              <div className="surface-card rounded-lg shadow-sm border-subtle p-6">
+            <div
+              id="panel-practice-script"
+              role="tabpanel"
+              aria-labelledby="tab-practice-script"
+              hidden={state.currentView !== "practice-script"}
+            >
+              {state.currentView === "practice-script" && (
+                <div className="surface-card rounded-lg shadow-sm border-subtle p-6">
                 <div className="text-center py-12">
                   <Clock className="h-12 w-12 text-slate-400 mx-auto mb-4" />
                   <Typography
@@ -671,11 +792,18 @@ export const PlaybookPage: React.FC = () => {
                     Create New Practice Script
                   </Button>
                 </div>
-              </div>
-            )}
+                </div>
+              )}
+            </div>
 
-            {state.currentView === "game-plan" && (
-              <div className="surface-card rounded-lg shadow-sm border-subtle p-6">
+            <div
+              id="panel-game-plan"
+              role="tabpanel"
+              aria-labelledby="tab-game-plan"
+              hidden={state.currentView !== "game-plan"}
+            >
+              {state.currentView === "game-plan" && (
+                <div className="surface-card rounded-lg shadow-sm border-subtle p-6">
                 <div className="text-center py-12">
                   <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
                   <Typography
@@ -693,8 +821,9 @@ export const PlaybookPage: React.FC = () => {
                     Create New Game Plan
                   </Button>
                 </div>
-              </div>
-            )}
+                </div>
+              )}
+            </div>
           </main>
         </div>
       </div>

@@ -220,7 +220,7 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                 )}
                                 {/* Block Script */}
                                 {block.scriptId && (
-                                  <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+                                  <div className="mt-2 p-2 surface-subtle border border-subtle rounded-md">
                                     <div className="flex items-center gap-2">
                                       <Icon
                                         name="file"
@@ -376,7 +376,7 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                     )}
                                     {/* Group Script */}
                                     {group.scriptId ? (
-                                      <div className="flex items-center justify-between p-2 bg-green-50 border border-green-200 rounded">
+                                      <div className="flex items-center justify-between p-2 surface-subtle border border-subtle rounded">
                                         <Typography
                                           variant="body-xs"
                                           className="text-green-800"

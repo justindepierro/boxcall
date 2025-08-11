@@ -41,7 +41,7 @@ export const BoxCall: React.FC = () => {
             The ultimate game management platform for coaches. Coordinate plays,
             communicate with your team, and manage game strategy in real-time.
           </Typography>
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 inline-block">
+          <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg p-4 inline-block">
             <Typography
               variant="body-sm"
               className="text-blue-700 dark:text-blue-300 flex items-center gap-2"

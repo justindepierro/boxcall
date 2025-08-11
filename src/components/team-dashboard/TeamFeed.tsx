@@ -311,7 +311,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
         </ul>
       )}
       {!!error && (
-        <div className="rounded border border-red-200 dark:border-red-700 bg-red-50 dark:bg-red-900/30 p-4 text-sm text-red-700 dark:text-red-300">
+        <div className="rounded border border-subtle dark:border-red-700 surface-subtle dark:bg-red-900/30 p-4 text-sm text-red-700 dark:text-red-300">
           Failed to load posts.
           <Button
             type="button"

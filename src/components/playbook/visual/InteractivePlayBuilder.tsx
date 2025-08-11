@@ -265,7 +265,7 @@ export const InteractivePlayBuilder: React.FC<InteractivePlayBuilderProps> = ({
           <div className="flex-1 flex flex-col">
             {/* Field Canvas */}
             <div className="flex-1 p-6">
-              <div className="h-full surface-subtle decorative-gradient bg-gradient-to-b from-green-50 to-green-100 rounded-lg border-2 border-green-200 overflow-hidden shadow-inner">
+              <div className="h-full surface-subtle decorative-gradient bg-gradient-to-b from-green-50 to-green-100 rounded-lg border-2 border-subtle overflow-hidden shadow-inner">
                 <EnhancedFieldCanvas
                   play={currentPlay}
                   readOnly={editMode === "view"}

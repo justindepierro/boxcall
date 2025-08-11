@@ -168,7 +168,7 @@ export const CreateCoachAccount: React.FC = () => {
             </Typography>
 
             {/* Value Proposition */}
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-8">
+            <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg p-6 mb-8">
               <Typography
                 variant="headline-md"
                 className="mb-4 text-blue-700 dark:text-blue-300"
@@ -234,7 +234,7 @@ export const CreateCoachAccount: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+            <div className="surface-subtle dark:bg-green-900/20 border border-subtle dark:border-green-800 rounded-lg p-4">
               <Typography
                 variant="body-md"
                 className="font-medium text-green-700 dark:text-green-300"
@@ -543,7 +543,7 @@ export const CreateCoachAccount: React.FC = () => {
               </div>
 
               {formData.hasSchoolCode && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 surface-subtle dark:bg-blue-900/20 rounded-lg">
                   <div>
                     <Typography
                       variant="body-sm"
@@ -626,7 +626,7 @@ export const CreateCoachAccount: React.FC = () => {
             </Typography>
 
             {/* Payment System Coming Soon Notice */}
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
+            <div className="surface-subtle dark:bg-yellow-900/20 border border-subtle dark:border-yellow-800 rounded-lg p-4 mb-6">
               <div className="flex items-start gap-2">
                 <Icon
                   name="warning"
@@ -661,7 +661,7 @@ export const CreateCoachAccount: React.FC = () => {
             )}
 
             {/* Coach Account Package */}
-            <div className="border-2 border-jade-600 rounded-lg p-6 bg-blue-50 dark:bg-blue-900/10">
+            <div className="border-2 border-jade-600 rounded-lg p-6 surface-subtle dark:bg-blue-900/10">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <Typography variant="headline-lg" className="mb-2">

@@ -123,7 +123,7 @@ export const AddNewDropdown: React.FC<AddNewDropdownProps> = ({
           {allowCustom && (
             <option
               value="__ADD_NEW__"
-              className="border-t border-slate-200 font-medium text-jade-600"
+              className="border-t border-subtle font-medium text-jade-600"
             >
               + Add New {label}...
             </option>

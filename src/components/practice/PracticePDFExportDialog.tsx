@@ -266,7 +266,7 @@ export const PracticePDFExportDialog: React.FC<
                   type="checkbox"
                   checked={exportOptions.includeEverything}
                   onChange={() => handleOptionChange("includeEverything")}
-                  className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-gray-300 rounded"
+                  className="h-4 w-4 focus:ring-jade-500 border-gray-300 rounded"
                 />
                 <Typography variant="body-sm" as="span" className="font-medium">
                   Everything
@@ -282,7 +282,7 @@ export const PracticePDFExportDialog: React.FC<
                     checked={exportOptions.includeOffense}
                     onChange={() => handleOptionChange("includeOffense")}
                     disabled={exportOptions.includeEverything}
-                    className="h-4 w-4 text-blue-600 focus:ring-jade-500 border-gray-300 rounded disabled:opacity-50"
+                    className="h-4 w-4 focus:ring-jade-500 border-gray-300 rounded disabled:opacity-50"
                   />
                   <span className="text-sm">Offense</span>
                   <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
@@ -296,7 +296,7 @@ export const PracticePDFExportDialog: React.FC<
                     checked={exportOptions.includeDefense}
                     onChange={() => handleOptionChange("includeDefense")}
                     disabled={exportOptions.includeEverything}
-                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded disabled:opacity-50"
+                    className="h-4 w-4 focus:ring-red-500 border-gray-300 rounded disabled:opacity-50"
                   />
                   <span className="text-sm">Defense</span>
                   <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded">
@@ -310,7 +310,7 @@ export const PracticePDFExportDialog: React.FC<
                     checked={exportOptions.includeSpecial}
                     onChange={() => handleOptionChange("includeSpecial")}
                     disabled={exportOptions.includeEverything}
-                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded disabled:opacity-50"
+                    className="h-4 w-4 focus:ring-green-500 border-gray-300 rounded disabled:opacity-50"
                   />
                   <span className="text-sm">Special Teams</span>
                   <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">
@@ -335,7 +335,7 @@ export const PracticePDFExportDialog: React.FC<
                   type="checkbox"
                   checked={exportOptions.addScripts}
                   onChange={() => handleOptionChange("addScripts")}
-                  className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-gray-300 rounded"
+                  className="h-4 w-4 focus:ring-jade-500 border-gray-300 rounded"
                 />
                 <span className="text-sm">Add Scripts</span>
                 <span className="text-xs text-text-muted">
@@ -347,7 +347,7 @@ export const PracticePDFExportDialog: React.FC<
                   type="checkbox"
                   checked={exportOptions.addNotes}
                   onChange={() => handleOptionChange("addNotes")}
-                  className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-gray-300 rounded"
+                  className="h-4 w-4 focus:ring-jade-500 border-gray-300 rounded"
                 />
                 <span className="text-sm">Add Notes</span>
                 <span className="text-xs text-text-muted">
@@ -357,7 +357,7 @@ export const PracticePDFExportDialog: React.FC<
             </div>
           </div>
           {/* Preview Summary */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="surface-subtle border border-subtle rounded-lg p-4">
             <Typography
               variant="body-sm"
               className="font-medium text-blue-900 mb-2"
@@ -392,7 +392,6 @@ export const PracticePDFExportDialog: React.FC<
             variant="primary"
             onClick={handleExport}
             disabled={isExporting || getFilteredBlocks().length === 0}
-            className="bg-jade-600 hover:bg-jade-700"
           >
             {isExporting ? (
               <div className="flex items-center space-x-2">

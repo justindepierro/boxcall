@@ -1,8 +1,10 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 // (Removed unused RefreshCw, Search imports after log text simplification)
 import { ToggleLeft, ToggleRight } from "lucide-react";
 import { IconButton } from "../ui";
 import { PlayCard } from "./PlayCard";
+import { telemetry } from "../../telemetry/dispatcher";
+import { TelemetryEventTypes } from "../../telemetry/events";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import type { Play } from "../../types/play";
 import { Typography } from "../design-system/Typography";
@@ -130,17 +132,16 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
   }, [plays]);
 
   // Bulk Operations Handlers
-  const handlePlaySelect = (playId: string, selected: boolean) => {
-    if (!onPlaySelectionChange) return;
-
-    const newSelection = new Set(selectedPlayIds);
-    if (selected) {
-      newSelection.add(playId);
-    } else {
-      newSelection.delete(playId);
-    }
-    onPlaySelectionChange(newSelection);
-  };
+  const handlePlaySelect = useCallback(
+    (playId: string, selected: boolean) => {
+      if (!onPlaySelectionChange) return;
+      const newSelection = new Set(selectedPlayIds);
+      if (selected) newSelection.add(playId);
+      else newSelection.delete(playId);
+      onPlaySelectionChange(newSelection);
+    },
+    [onPlaySelectionChange, selectedPlayIds]
+  );
 
   const handleSelectAll = () => {
     if (!onPlaySelectionChange) return;
@@ -194,22 +195,21 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
     });
   }, [plays, searchQuery, filters, selectedCategory, selectedSubcategory]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
-        <span className="ml-2 text-text-secondary">Loading plays...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="text-center p-8">
-        <p className="text-red-600">Error loading plays: {error}</p>
-      </div>
-    );
-  }
+  // Telemetry: emit filter.apply when filter state changes (debounced via useEffect on dependencies)
+  useEffect(() => {
+    telemetry.enqueue({
+      type: TelemetryEventTypes.FilterApply,
+      data: {
+        search: searchQuery ? true : false,
+        searchLength: searchQuery?.length || 0,
+        formation: filters.formation ? 1 : 0,
+        playType: filters.playType ? 1 : 0,
+        selectedCategory: selectedCategory || null,
+        selectedSubcategory: selectedSubcategory || null,
+        resultCount: filteredPlays.length,
+      },
+    });
+  }, [searchQuery, filters.formation, filters.playType, selectedCategory, selectedSubcategory, filteredPlays.length]);
 
   const hasFilters =
     searchQuery ||
@@ -219,28 +219,58 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
       (f) => f && (Array.isArray(f) ? f.length > 0 : true)
     );
 
-  if (filteredPlays.length === 0) {
-    return (
-      <div className="text-center py-16">
-        <div className="text-slate-400 text-lg mb-4">
-          {hasFilters
-            ? selectedCategory && selectedSubcategory
-              ? `No plays found in "${selectedSubcategory}" under "${selectedCategory}"`
-              : selectedCategory
-                ? `No plays found in "${selectedCategory}" category`
-                : "No plays match your search criteria"
-            : "No plays in your playbook yet"}
-        </div>
-        <p className="text-slate-500 text-sm">
-          {hasFilters
-            ? "Try adjusting your search or filters"
-            : "Create your first play or import existing plays to get started"}
-        </p>
-      </div>
-    );
-  }
+  const showEmpty = filteredPlays.length === 0 && !loading && !error;
+  // Virtualization threshold (avoid overhead for small lists)
+  const VIRTUALIZE_THRESHOLD = 30; // switch to incremental rendering beyond this
+  const disableVirtual = (import.meta as unknown as { env: Record<string,string> }).env?.VITE_DISABLE_VIRTUAL_PLAYGRID === 'true';
+  const INITIAL_COUNT = 40;
+  const CHUNK = 30;
+  const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
+
+  // Reset window when filters/search change
+  useEffect(() => {
+    setVisibleCount(INITIAL_COUNT);
+  }, [searchQuery, filters.formation, filters.playType, selectedCategory, selectedSubcategory]);
+
+  const handleIncrementalScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    if (el.scrollHeight - el.scrollTop - el.clientHeight < 240) {
+      setVisibleCount((prev) => (prev < filteredPlays.length ? Math.min(filteredPlays.length, prev + CHUNK) : prev));
+    }
+  }, [filteredPlays.length]);
+
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" aria-live="polite">
+      {loading && (
+        <div className="flex items-center justify-center p-8" role="status" aria-label="Loading plays">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
+          <span className="ml-2 text-text-secondary">Loading plays...</span>
+        </div>
+      )}
+      {error && !loading && (
+        <div className="text-center p-8" role="alert">
+          <p className="text-red-600">Error loading plays: {error}</p>
+        </div>
+      )}
+      {showEmpty && (
+        <div className="text-center py-16">
+          <div className="text-slate-400 text-lg mb-4">
+            {hasFilters
+              ? selectedCategory && selectedSubcategory
+                ? `No plays found in "${selectedSubcategory}" under "${selectedCategory}"`
+                : selectedCategory
+                  ? `No plays found in "${selectedCategory}" category`
+                  : "No plays match your search criteria"
+              : "No plays in your playbook yet"}
+          </div>
+          <p className="text-slate-500 text-sm">
+            {hasFilters
+              ? "Try adjusting your search or filters"
+              : "Create your first play or import existing plays to get started"}
+          </p>
+        </div>
+      )}
       {/* Results Header with Toggle */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
@@ -309,25 +339,62 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
         </div>
       </div>
 
-      {/* Play Grid */}
-      <div className="space-y-4">
-        {filteredPlays.map((play) => (
-          <PlayCard
-            key={play.id}
-            play={play}
-            showOneWordCalls={showOneWordCalls}
-            onEdit={onEdit}
-            onDuplicate={onDuplicate}
-            onCreateDiagram={onCreateDiagram}
-            onAddToPracticeScript={onAddToPracticeScript}
-            onAddToGamePlan={onAddToGamePlan}
-            // Bulk Operations
-            enableSelection={enableBulkOperations}
-            isSelected={selectedPlayIds.has(play.id)}
-            onSelectionChange={handlePlaySelect}
-          />
-        ))}
-      </div>
+      {/* Play Grid (virtualized when large) */}
+  {!showEmpty && (disableVirtual || filteredPlays.length < VIRTUALIZE_THRESHOLD) ? (
+        <div className="space-y-4" role="list">
+          {filteredPlays.map((play) => (
+            <PlayCard
+              key={play.id}
+              play={play}
+              showOneWordCalls={showOneWordCalls}
+              onEdit={onEdit}
+              onDuplicate={onDuplicate}
+              onCreateDiagram={onCreateDiagram}
+              onAddToPracticeScript={onAddToPracticeScript}
+              onAddToGamePlan={onAddToGamePlan}
+              // Bulk Operations
+              enableSelection={enableBulkOperations}
+              isSelected={selectedPlayIds.has(play.id)}
+              onSelectionChange={handlePlaySelect}
+            />
+          ))}
+        </div>
+      ) : !showEmpty ? (
+        <div
+          className="relative overflow-y-auto pr-1"
+          style={{ height: "calc(100vh - 320px)" }}
+          onScroll={handleIncrementalScroll}
+          role="list"
+          aria-label="Play list"
+       >
+          {filteredPlays.slice(0, visibleCount).map((play) => (
+            <div key={play.id} className="mb-4" role="listitem">
+              <PlayCard
+                play={play}
+                showOneWordCalls={showOneWordCalls}
+                onEdit={onEdit}
+                onDuplicate={onDuplicate}
+                onCreateDiagram={onCreateDiagram}
+                onAddToPracticeScript={onAddToPracticeScript}
+                onAddToGamePlan={onAddToGamePlan}
+                enableSelection={enableBulkOperations}
+                isSelected={selectedPlayIds.has(play.id)}
+                onSelectionChange={handlePlaySelect}
+              />
+            </div>
+          ))}
+          {visibleCount < filteredPlays.length && (
+            <div className="py-4 text-center text-xs text-slate-500" role="status">
+              Loading more… ({visibleCount}/{filteredPlays.length})
+            </div>
+          )}
+          {visibleCount >= filteredPlays.length && (
+            <div className="py-4 text-center text-xs text-slate-400">
+              End of playbook • {filteredPlays.length} plays
+            </div>
+          )}
+        </div>
+      ) : null}
     </div>
   );
 };

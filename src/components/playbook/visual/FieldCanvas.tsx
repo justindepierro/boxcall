@@ -294,7 +294,7 @@ export const FieldCanvas: React.FC<FieldCanvasProps> = ({
         </svg>
       </div>
       {/* Field Info */}
-      <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-sm border border-slate-200 p-3">
+      <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-sm border border-subtle p-3">
         <div className="text-xs text-slate-600 space-y-1">
           <div>Zoom: {Math.round(zoom * 100)}%</div>
           <div>Field: 120 × 53.3 yards</div>

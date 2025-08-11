@@ -197,7 +197,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       <div
         className={`relative placeholder-zone rounded-lg p-8 text-center transition-colors ${
           dragActive
-            ? "border-jade-400 bg-jade-50"
+            ? "border-jade-400 surface-subtle"
             : "border-slate-300 hover:border-slate-400"
         }`}
         onDragEnter={handleDrag}
@@ -234,7 +234,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         )}
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <div className="surface-subtle border border-subtle rounded-lg p-4">
         <div className="flex items-start">
           <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
           <div>
@@ -251,9 +251,8 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             </p>
             <Button
               onClick={downloadSampleCSV}
-              variant="link"
+              variant="infoLink"
               size="xs"
-              className="text-blue-700 hover:text-blue-800"
             >
               Download sample CSV template →
             </Button>
@@ -262,7 +261,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       </div>
 
       {csvFile && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+        <div className="surface-subtle border border-subtle rounded-lg p-4">
           <div className="flex items-center">
             <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
             <div>
@@ -321,7 +320,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         </div>
 
         {/* Summary Stats */}
-        <div className="grid grid-cols-4 gap-4 bg-slate-50 rounded-lg p-4">
+        <div className="grid grid-cols-4 gap-4 surface-subtle rounded-lg p-4">
           <div className="text-center">
             <Typography variant="headline-sm" as="p" className="mb-1">
               {summary.totalRows}
@@ -370,7 +369,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
         {/* Column Mapping Info */}
         {Object.keys(summary.suggestedMappings).length > 0 && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="surface-subtle border border-subtle rounded-lg p-4">
             <div className="flex items-start">
               <Info className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
               <div>
@@ -405,8 +404,8 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         )}
 
         {/* Plays Table */}
-        <div className="border border-slate-200 rounded-lg overflow-hidden">
-          <div className="bg-slate-50 px-4 py-2 border-b border-slate-200">
+        <div className="border border-subtle rounded-lg overflow-hidden">
+          <div className="surface-subtle px-4 py-2 border-b border-subtle">
             <Typography
               variant="body-sm"
               as="h4"
@@ -418,7 +417,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
           <div className="max-h-80 overflow-y-auto">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 sticky top-0">
+              <thead className="surface-subtle sticky top-0">
                 <tr>
                   <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 w-8"></th>
                   <th className="px-3 py-2 text-left text-xs font-medium text-slate-500">
@@ -445,7 +444,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                 {previews.map((preview) => (
                   <React.Fragment key={preview.rowNumber}>
                     <tr
-                      className={`${preview.isValid ? "bg-white" : "bg-red-50"} hover:bg-slate-50`}
+                      className={`${preview.isValid ? "bg-white" : "surface-subtle"} hover:surface-subtle`}
                     >
                       <td className="px-3 py-2 text-xs text-slate-500">
                         {preview.rowNumber}
@@ -489,7 +488,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                       <td className="px-3 py-2">
                         <Button
                           onClick={() => toggleRowExpansion(preview.rowNumber)}
-                          variant="ghost"
+                          variant="neutralLink"
                           size="xs"
                           icon={
                             expandedRows.has(preview.rowNumber) ? (
@@ -504,14 +503,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                               ? "Collapse row"
                               : "Expand row"
                           }
-                          className="text-slate-400 hover:text-slate-600"
                         />
                       </td>
                     </tr>
 
                     {/* Expanded Details */}
                     {expandedRows.has(preview.rowNumber) && (
-                      <tr className="bg-slate-50">
+                      <tr className="surface-subtle">
                         <td colSpan={7} className="px-3 py-4">
                           <div className="space-y-3">
                             {/* Additional Play Details */}
@@ -544,7 +542,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
                             {/* Errors */}
                             {preview.errors.length > 0 && (
-                              <div className="bg-red-100 border border-red-200 rounded p-2">
+                              <div className="bg-red-100 border border-subtle rounded p-2">
                                 <p className="text-xs font-medium text-red-800 mb-1">
                                   Errors:
                                 </p>
@@ -558,7 +556,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
                             {/* Warnings */}
                             {preview.warnings.length > 0 && (
-                              <div className="bg-amber-100 border border-amber-200 rounded p-2">
+                              <div className="bg-amber-100 border border-subtle rounded p-2">
                                 <p className="text-xs font-medium text-amber-800 mb-1">
                                   Warnings:
                                 </p>
@@ -613,7 +611,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           Processing your CSV file and adding plays to the database
         </p>
       </div>
-      <div className="bg-blue-50 rounded-lg p-4">
+      <div className="surface-subtle rounded-lg p-4">
         <p className="text-sm text-blue-800">
           Please wait while we process your plays. This may take a moment for
           large files.
@@ -659,7 +657,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       </div>
 
       {importResult && (
-        <div className="bg-slate-50 rounded-lg p-4">
+        <div className="surface-subtle rounded-lg p-4">
           <div className="grid grid-cols-4 gap-4 text-center">
             <div>
               <Typography
@@ -714,7 +712,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       )}
 
       {importResult?.warnings && importResult.warnings.length > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-left">
+        <div className="surface-subtle border border-subtle rounded-lg p-4 text-left">
           <Typography
             variant="body-sm"
             as="h4"
@@ -736,7 +734,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       )}
 
       {importResult?.errors && importResult.errors.length > 0 && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-left">
+        <div className="surface-subtle border border-subtle rounded-lg p-4 text-left">
           <Typography
             variant="body-sm"
             as="h4"
@@ -802,12 +800,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             </Typography>
             <Button
               onClick={onClose}
-              variant="ghost"
+              variant="neutralLink"
               size="sm"
               icon={<X className="h-6 w-6" />}
               iconPosition="only"
               aria-label="Close modal"
-              className="text-slate-400 hover:text-slate-600"
             />
           </div>
           <div className="surface-card px-6 py-8">{renderStep()}</div>

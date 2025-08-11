@@ -86,7 +86,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
         </div>
         {/* Script Assignment Display */}
         {editingGroup.group.scriptId && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+          <div className="mb-4 p-3 surface-subtle border border-subtle rounded-md">
             <div className="flex items-center gap-2">
               <Icon name="file" size="sm" className="text-blue-600" />
               <Typography variant="body-sm" className="text-blue-800">

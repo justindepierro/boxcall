@@ -11,7 +11,10 @@ export type ButtonVariant =
   | "ghost" // Minimal ghost button
   | "subtle" // Low-emphasis neutral button
   | "link" // Text link style
-  | "danger" // Destructive action button
+  | "brandLink" // Strong brand-colored textual link button
+  | "neutralLink" // Neutral gray textual link
+  | "infoLink" // Informational blue textual link
+  | "dangerLink" // Destructive textual link
   | "success" // Success/confirmation button
   | "warning"; // Warning/caution button
 export type ButtonSize =

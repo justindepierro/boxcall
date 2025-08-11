@@ -67,7 +67,7 @@ export const About: React.FC = () => {
               Need help getting started or have questions? We're here to support
               your team's success.
             </Typography>
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+            <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg p-3">
               <Typography
                 variant="body-sm"
                 className="text-blue-700 dark:text-blue-300 flex items-center"
@@ -89,7 +89,7 @@ export const About: React.FC = () => {
               You're using the latest version of BoxCall with all the newest
               features and improvements.
             </Typography>
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
+            <div className="surface-subtle dark:bg-green-900/20 border border-subtle dark:border-green-800 rounded-lg p-3">
               <Typography
                 variant="body-sm"
                 className="text-green-700 dark:text-green-300"

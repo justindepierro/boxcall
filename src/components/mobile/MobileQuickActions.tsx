@@ -34,8 +34,11 @@ export const MobileQuickActions: React.FC<MobileQuickActionsProps> = ({
     const colorMap = {
       jade: "bg-brand-jade hover:bg-brand-jade-dark text-white shadow-jade/25",
       blue: "bg-jade-600 hover:bg-jade-600 text-white shadow-blue/25",
-      red: "bg-red-500 hover:bg-red-600 text-white shadow-red/25",
-      yellow: "bg-yellow-500 hover:bg-yellow-600 text-white shadow-yellow/25",
+  // Darken red & keep white text (red-600 has better contrast vs red-500)
+  red: "bg-red-600 hover:bg-red-700 text-white shadow-red/25",
+      // Adjusted yellow for contrast: darker bg w/ dark text to meet WCAG AA
+      yellow:
+        "bg-yellow-600 hover:bg-yellow-700 text-gray-900 shadow-yellow/25 dark:text-gray-900",
       gray: "surface-subtle surface-subtle-hover text-gray-700 shadow-gray/25 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-300",
     };
 
@@ -105,7 +108,7 @@ export const MobileQuickActions: React.FC<MobileQuickActionsProps> = ({
             {/* Badge */}
             {action.badge && action.badge > 0 && (
               <div className="absolute -top-1 -right-1">
-                <div className="flex items-center justify-center w-5 h-5 bg-red-500 rounded-full">
+                <div className="flex items-center justify-center w-5 h-5 surface-subtle0 rounded-full">
                   <span className="text-xs font-bold text-text-primary">
                     {action.badge > 9 ? "9+" : action.badge}
                   </span>
@@ -155,7 +158,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     const colorMap = {
       jade: "bg-brand-jade hover:bg-brand-jade-dark text-white shadow-jade/30",
       blue: "bg-jade-600 hover:bg-jade-600 text-white shadow-blue/30",
-      red: "bg-red-500 hover:bg-red-600 text-white shadow-red/30",
+  red: "bg-red-600 hover:bg-red-700 text-white shadow-red/30",
     };
 
     return colorMap[color];

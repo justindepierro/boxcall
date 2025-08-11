@@ -129,7 +129,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
             onClick={handleRetry}
             variant="ghost"
             size="xs"
-            className="flex-shrink-0 p-2 h-auto text-team-primary hover:bg-blue-50"
+            className="flex-shrink-0 p-2 h-auto text-team-primary hover:surface-subtle"
             icon={<RefreshCw className="h-4 w-4" />}
             iconPosition="only"
             aria-label="Retry"

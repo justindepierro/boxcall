@@ -156,9 +156,9 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
           {/* Show More */}
           <div className="pt-2 border-t border-subtle dark:border-gray-700">
             <Button
-              variant="link"
+              variant="brandLink"
               size="sm"
-              className="w-full justify-center text-jade-600 hover:text-jade-700"
+              className="w-full justify-center"
             >
               View All Team Updates
             </Button>

@@ -29,15 +29,15 @@ const sizeStyles: Record<NonNullable<TagProps["size"]>, string> = {
 const variantStyles: Record<TagVariant, string> = {
   neutral:
     "surface-subtle text-gray-700 dark:bg-gray-700/60 dark:text-gray-200 border border-subtle dark:border-gray-600",
-  info: "bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-700",
+  info: "surface-subtle text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border border-subtle dark:border-blue-700",
   success:
-    "bg-green-50 text-green-700 dark:bg-green-900/40 dark:text-green-300 border border-green-200 dark:border-green-700",
+    "surface-subtle text-green-700 dark:bg-green-900/40 dark:text-green-300 border border-subtle dark:border-green-700",
   warning:
-    "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700",
+    "surface-subtle text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300 border border-subtle dark:border-yellow-700",
   danger:
-    "bg-red-50 text-red-700 dark:bg-red-900/40 dark:text-red-300 border border-red-200 dark:border-red-700",
+    "surface-subtle text-red-700 dark:bg-red-900/40 dark:text-red-300 border border-subtle dark:border-red-700",
   accent:
-    "bg-jade-50 text-jade-700 dark:bg-jade-900/30 dark:text-jade-300 border border-jade-200 dark:border-jade-700",
+    "surface-subtle text-jade-700 dark:bg-jade-900/30 dark:text-jade-300 border border-subtle dark:border-jade-700",
   outline:
     "bg-transparent text-text-secondary border border-gray-300 dark:border-gray-600 dark:text-gray-300",
 };

@@ -98,9 +98,9 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
           <div
             className={`h-2.5 rounded-full transition-all duration-300 ${
               isOverScheduled
-                ? "bg-red-500"
+                ? "surface-subtle0"
                 : progressPercentage === 100
-                  ? "bg-green-500"
+                  ? "surface-subtle0"
                   : "bg-jade-600"
             }`}
             style={{ width: `${Math.min(progressPercentage, 100)}%` }}

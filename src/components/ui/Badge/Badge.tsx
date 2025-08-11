@@ -128,27 +128,27 @@ export const Badge: React.FC<BadgeProps> = ({
       "surface-subtle-hover hover:text-text-primary dark:bg-gray-700/40 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600/50"
     ),
     info: cn(
-      "bg-blue-50 text-blue-700 border border-blue-200",
+      "surface-subtle text-blue-700 border border-subtle",
       "hover:bg-blue-100 hover:text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800 dark:hover:bg-blue-900/60"
     ),
     success: cn(
-      "bg-green-50 text-green-700 border border-green-200",
+      "surface-subtle text-green-700 border border-subtle",
       "hover:bg-green-100 hover:text-green-800 dark:bg-green-900/40 dark:text-green-300 dark:border-green-800 dark:hover:bg-green-900/60"
     ),
     warning: cn(
-      "bg-yellow-50 text-yellow-700 border border-yellow-200",
+      "surface-subtle text-yellow-700 border border-subtle",
       "hover:bg-yellow-100 hover:text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300 dark:border-yellow-800 dark:hover:bg-yellow-900/60"
     ),
     danger: cn(
-      "bg-red-50 text-red-700 border border-red-200",
+      "surface-subtle text-red-700 border border-subtle",
       "hover:bg-red-100 hover:text-red-800 dark:bg-red-900/40 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-900/60"
     ),
     accent: cn(
-      "bg-jade-50 text-jade-700 border border-jade-200",
+      "surface-subtle text-jade-700 border border-subtle",
       "hover:bg-jade-100 hover:text-jade-800 dark:bg-jade-900/40 dark:text-jade-300 dark:border-jade-800 dark:hover:bg-jade-900/60"
     ),
     premium: cn(
-      "premium-badge decorative-gradient bg-gradient-to-r from-purple-50 to-indigo-50 text-purple-700 border border-purple-200",
+      "premium-badge decorative-gradient bg-gradient-to-r from-purple-50 to-indigo-50 text-purple-700 border border-subtle",
       "hover:from-purple-100 hover:to-indigo-100 hover:text-purple-800 dark:text-purple-200 dark:from-purple-900/40 dark:to-indigo-900/40 dark:border-purple-800"
     ),
   };

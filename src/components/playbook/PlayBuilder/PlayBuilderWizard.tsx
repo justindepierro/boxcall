@@ -47,10 +47,10 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
               </div>
             </div>
             <Button
-              variant="ghost"
+              variant="neutralLink"
               size="xs"
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-600 p-1 h-auto w-auto"
+              className="p-1 h-auto w-auto"
             >
               <X className="h-6 w-6" />
             </Button>
@@ -94,7 +94,7 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                       {["Pass", "Run", "RPO"].map((type) => (
                         <label
                           key={type}
-                          className="flex items-center p-3 border border-slate-300 rounded-md cursor-pointer hover:bg-slate-50"
+                          className="flex items-center p-3 border border-slate-300 rounded-md cursor-pointer hover:surface-subtle"
                         >
                           <input
                             type="radio"
@@ -171,9 +171,9 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
           <div className="surface-subtle px-6 py-4 border-t border-subtle flex items-center justify-between">
             <Button
               disabled
-              variant="ghost"
+              variant="neutralLink"
               size="sm"
-              className="text-slate-400 cursor-not-allowed"
+              className="cursor-not-allowed"
             >
               <ArrowLeft className="h-4 w-4 mr-2" /> Previous
             </Button>

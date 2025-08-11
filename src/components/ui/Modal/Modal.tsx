@@ -45,9 +45,9 @@ const getModalTypeStyles = (type: ModalProps["type"]) => {
   const baseStyles = "rounded-lg shadow-xl border-2"; // Square corners, stronger shadows
   switch (type) {
     case "alert":
-      return `${baseStyles} bg-red-50 dark:bg-red-900/20 border-red-400 dark:border-red-500`;
+      return `${baseStyles} surface-subtle dark:bg-red-900/20 border-red-400 dark:border-red-500`;
     case "confirm":
-      return `${baseStyles} bg-yellow-50 dark:bg-yellow-900/20 border-yellow-400 dark:border-yellow-500`;
+      return `${baseStyles} surface-subtle dark:bg-yellow-900/20 border-yellow-400 dark:border-yellow-500`;
     default:
       return `${baseStyles} surface-card elevation-modal border-subtle`;
   }

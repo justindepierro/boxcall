@@ -17,7 +17,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
   if (selectedCount === 0) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 surface-card rounded-lg shadow-lg border border-slate-200 dark:border-gray-700 p-3 z-50">
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 surface-card rounded-lg shadow-lg border border-subtle dark:border-gray-700 p-3 z-50">
       <div className="flex items-center space-x-4">
         {/* Selection Count */}
         <div className="flex items-center space-x-2">

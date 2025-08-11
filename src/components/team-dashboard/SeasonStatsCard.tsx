@@ -225,7 +225,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
         >
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {!!errors.length && (
-              <div className="rounded border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/30 p-3 text-sm text-red-700 dark:text-red-300">
+              <div className="rounded border border-subtle dark:border-red-800 surface-subtle dark:bg-red-900/30 p-3 text-sm text-red-700 dark:text-red-300">
                 <ul className="list-disc list-inside space-y-0.5">
                   {errors.map((er) => (
                     <li key={er}>{er}</li>

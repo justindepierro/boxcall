@@ -203,7 +203,8 @@ export const TouchButton: React.FC<TouchButtonProps> = ({
       "surface-subtle surface-subtle-hover text-gray-900 shadow-sm hover:shadow-md",
     ghost:
       "bg-transparent surface-subtle-hover text-gray-700 border border-gray-300 hover:border-gray-400",
-    danger: "bg-red-500 hover:bg-red-600 text-white shadow-md hover:shadow-lg",
+  // Use slightly darker base for improved contrast
+  danger: "bg-red-600 hover:bg-red-700 text-white shadow-md hover:shadow-lg",
   };
 
   const sizeStyles = {
@@ -364,7 +365,7 @@ export const TouchNavItem: React.FC<TouchNavItemProps> = ({
       <div className="relative">
         {icon && <div className="flex-shrink-0">{icon}</div>}
         {badge && badge > 0 && (
-          <div className="absolute -top-1 -right-1 bg-red-500 text-text-inverse text-xs rounded-full w-5 h-5 flex items-center justify-center">
+          <div className="absolute -top-1 -right-1 surface-subtle0 text-text-inverse text-xs rounded-full w-5 h-5 flex items-center justify-center">
             {badge > 99 ? "99+" : badge}
           </div>
         )}

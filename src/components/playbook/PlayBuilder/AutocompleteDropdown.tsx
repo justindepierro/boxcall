@@ -181,10 +181,10 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
         {/* Dropdown arrow */}
         <Button
           type="button"
-          variant="ghost"
+          variant="neutralLink"
           size="xs"
           onClick={() => setIsOpen(!isOpen)}
-          className="absolute inset-y-0 right-0 px-2 h-auto text-slate-400 hover:text-slate-600"
+          className="absolute inset-y-0 right-0 px-2 h-auto"
         >
           <ChevronDown
             className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
@@ -195,10 +195,10 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
         {showAddNewOption && (
           <Button
             type="button"
-            variant="ghost"
+            variant="brandLink"
             size="xs"
             onClick={handleAddNew}
-            className="absolute inset-y-0 right-8 px-1 h-auto text-jade-500 hover:text-jade-600 z-10"
+            className="absolute inset-y-0 right-8 px-1 h-auto z-10"
             title={`Add new ${label.toLowerCase()}: "${inputValue}"`}
           >
             <Plus className="h-4 w-4 bg-white rounded-full border border-jade-500" />
@@ -218,8 +218,8 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
                   variant="ghost"
                   size="xs"
                   onClick={() => handleOptionClick(option)}
-                  className={`w-full justify-start px-3 py-2 h-auto hover:bg-jade-50 focus:bg-jade-50 focus:outline-none ${
-                    index === highlightedIndex ? "bg-jade-50" : ""
+                  className={`w-full justify-start px-3 py-2 h-auto hover:surface-subtle focus:surface-subtle focus:outline-none ${
+                    index === highlightedIndex ? "surface-subtle" : ""
                   }`}
                 >
                   {option}
@@ -229,13 +229,13 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
               {/* Add new option at bottom if applicable */}
               {showAddNewOption && (
                 <>
-                  <div className="border-t border-slate-200"></div>
+                  <div className="border-t border-subtle"></div>
                   <Button
                     type="button"
-                    variant="ghost"
+                    variant="brandLink"
                     size="xs"
                     onClick={handleAddNew}
-                    className="w-full justify-start px-3 py-2 h-auto text-jade-600 hover:bg-jade-50 focus:bg-jade-50 focus:outline-none font-medium flex items-center"
+                    className="w-full justify-start px-3 py-2 h-auto font-medium flex items-center"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Add "{inputValue}"
@@ -248,10 +248,10 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
               {showAddNewOption ? (
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant="brandLink"
                   size="xs"
                   onClick={handleAddNew}
-                  className="w-full justify-start text-jade-600 hover:text-jade-700 font-medium flex items-center h-auto"
+                  className="w-full justify-start font-medium flex items-center h-auto"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Add "{inputValue}"

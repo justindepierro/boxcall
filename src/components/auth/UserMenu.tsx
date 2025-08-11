@@ -50,7 +50,7 @@ export const UserMenu: React.FC = () => {
         <Typography
           variant="body-sm"
           as="div"
-          className="w-8 h-8 bg-jade-500 rounded-full flex items-center justify-center text-text-inverse font-medium"
+          className="w-8 h-8 surface-subtle0 rounded-full flex items-center justify-center text-text-inverse font-medium"
         >
           {userName.charAt(0).toUpperCase()}
         </Typography>

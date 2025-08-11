@@ -99,7 +99,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
               variant="secondary"
               size="xs"
               onClick={() => setShowQuickAdd(!showQuickAdd)}
-              className="border-jade-200 text-jade-600 hover:text-jade-700"
+              className="border-subtle text-jade-600 hover:text-jade-700"
             >
               + Add
             </Button>
@@ -108,7 +108,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
         {/* Quick Add Event Form */}
         {showQuickAdd && (
-          <div className="mb-4 p-3 bg-jade-50 rounded-lg border border-jade-200">
+          <div className="mb-4 p-3 surface-subtle rounded-lg border border-subtle">
             <div className="flex space-x-2">
               <input
                 type="text"

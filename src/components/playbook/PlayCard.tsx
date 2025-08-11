@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { Typography } from "../design-system/Typography";
 import {
   Edit,
@@ -13,7 +13,10 @@ import {
   Gamepad2,
 } from "lucide-react";
 import type { Play as PlayType } from "../../types/play";
-import { VisualPlayBuilder } from "./visual/VisualPlayBuilder";
+// Code-split heavy builder
+const VisualPlayBuilder = lazy(() => import("./visual/VisualPlayBuilder"));
+import { telemetry } from "../../telemetry/dispatcher";
+import { TelemetryEventTypes } from "../../telemetry/events";
 import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button/Button";
@@ -72,6 +75,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     if (onCreateDiagram) {
       onCreateDiagram(updatedPlay);
     }
+    telemetry.enqueue({
+      type: TelemetryEventTypes.PlayDiagramUpdated,
+      data: { playId: updatedPlay.id },
+    });
   };
   const displayName = getDisplayName(play, showOneWordCalls);
   const subtitleText = getSubtitleText(play, showOneWordCalls);
@@ -81,7 +88,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         className={`bg-white rounded-lg border transition-colors shadow-sm ${
           isSelected
             ? "border-jade-600 ring-2 ring-blue-200"
-            : "border-slate-200 hover:border-slate-300"
+            : "border-subtle hover:border-slate-300"
         }`}
       >
         <div className="p-4 sm:p-6">
@@ -152,6 +159,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 }
                 iconPosition="only"
                 aria-label={isExpanded ? "Collapse details" : "Expand details"}
+                aria-expanded={isExpanded}
+                aria-controls={`play-details-${play.id}`}
                 title={isExpanded ? "Collapse" : "Expand details"}
                 className="p-3 !h-auto min-w-[48px] min-h-[48px]"
               />
@@ -189,7 +198,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
           </div>
           {/* Expanded Details */}
           {isExpanded && (
-            <div className="mt-4 pt-4 border-t border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div id={`play-details-${play.id}`} className="mt-4 pt-4 border-t border-subtle grid grid-cols-1 md:grid-cols-3 gap-4" role="region" aria-label={`Details for ${displayName}`}> 
               {/* Formation Details */}
               <div className="space-y-2">
                 <Typography
@@ -376,7 +385,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                       size="xs"
                       onClick={() => onAddToPracticeScript?.(play)}
                       title="Add this play to a practice script"
-                      className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-transparent"
+                      className="surface-subtle hover:bg-blue-100 text-blue-700 border-transparent"
                     >
                       <Calendar className="h-3 w-3 mr-1" />
                       Practice Script
@@ -386,7 +395,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                       size="xs"
                       onClick={() => onAddToGamePlan?.(play)}
                       title="Add this play to a game plan"
-                      className="bg-jade-50 hover:bg-jade-100 text-jade-700 border-transparent"
+                      className="surface-subtle hover:bg-jade-100 text-jade-700 border-transparent"
                     >
                       <Gamepad2 className="h-3 w-3 mr-1" />
                       Game Plan
@@ -403,12 +412,22 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       </div>
       {/* Visual Play Builder Modal */}
       {showVisualBuilder && (
-        <VisualPlayBuilder
-          isOpen={showVisualBuilder}
-          play={play}
-          onSave={handleSaveDiagram}
-          onClose={() => setShowVisualBuilder(false)}
-        />
+        <Suspense
+          fallback={
+            <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+              <div className="bg-white rounded-md shadow p-6 text-center">
+                <p className="text-sm text-slate-600">Loading builder...</p>
+              </div>
+            </div>
+          }
+        >
+          <VisualPlayBuilder
+            isOpen={showVisualBuilder}
+            play={play}
+            onSave={handleSaveDiagram}
+            onClose={() => setShowVisualBuilder(false)}
+          />
+        </Suspense>
       )}
     </>
   );

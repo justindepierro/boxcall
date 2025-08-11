@@ -2,6 +2,10 @@
 export const TelemetryEventTypes = {
   PlayCreate: "play.create",
   PlayUpdate: "play.update",
+  PlayDiagramUpdated: "play.diagram_updated",
+  PlayDuplicate: "play.duplicate",
+  FilterApply: "filter.apply",
+  ViewSavedApply: "view.saved_apply",
   ErrorBoundary: "error.boundary",
   VitalCLS: "vital:CLS",
   VitalINP: "vital:INP",

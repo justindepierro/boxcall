@@ -63,7 +63,7 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
 
         {/* Core Information Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          <div className="bg-slate-50 rounded-lg p-4">
+          <div className="surface-subtle rounded-lg p-4">
             <Typography
               variant="label-lg"
               as="h4"
@@ -76,7 +76,7 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
             </p>
           </div>
 
-          <div className="bg-slate-50 rounded-lg p-4">
+          <div className="surface-subtle rounded-lg p-4">
             <Typography
               variant="label-lg"
               as="h4"
@@ -89,7 +89,7 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
             </p>
           </div>
 
-          <div className="bg-slate-50 rounded-lg p-4">
+          <div className="surface-subtle rounded-lg p-4">
             <Typography
               variant="label-lg"
               as="h4"
@@ -192,7 +192,7 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
             >
               Notes
             </Typography>
-            <div className="bg-slate-50 rounded-lg p-4">
+            <div className="surface-subtle rounded-lg p-4">
               <p className="text-slate-700 whitespace-pre-wrap">
                 {playData.notes}
               </p>
@@ -202,7 +202,7 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
 
         {/* Validation Errors */}
         {!isValid && validationErrors.length > 0 && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div className="surface-subtle border border-subtle rounded-lg p-4">
             <div className="flex items-start">
               <AlertTriangle className="h-5 w-5 text-amber-400 mt-0.5 mr-3 flex-shrink-0" />
               <div>
@@ -224,7 +224,7 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
 
         {/* Success State */}
         {isValid && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div className="surface-subtle border border-subtle rounded-lg p-4">
             <div className="flex items-center">
               <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
               <div>

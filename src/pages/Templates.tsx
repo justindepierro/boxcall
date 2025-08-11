@@ -243,7 +243,7 @@ export const Templates: React.FC = () => {
                 Step-by-step wizard for importing CSV data into BoxCall.
                 Validates data and prevents common import errors.
               </Typography>
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+              <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg p-3">
                 <div className="flex items-center gap-1">
                   <Icon name="zap" size="sm" color="info" />
                   <Typography
@@ -270,7 +270,7 @@ export const Templates: React.FC = () => {
                 Export your team data, plays, and scripts to CSV format for
                 backup or transfer to other systems.
               </Typography>
-              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
+              <div className="surface-subtle dark:bg-green-900/20 border border-subtle dark:border-green-800 rounded-lg p-3">
                 <div className="flex items-center gap-1">
                   <Icon name="zap" size="sm" color="success" />
                   <Typography
@@ -306,7 +306,7 @@ export const Templates: React.FC = () => {
                 Create custom CSV templates based on your specific team needs
                 and data structure requirements.
               </Typography>
-              <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-3">
+              <div className="surface-subtle dark:bg-purple-900/20 border border-subtle dark:border-purple-800 rounded-lg p-3">
                 <div className="flex items-center gap-1">
                   <Icon name="zap" size="sm" color="current" />
                   <Typography

@@ -87,7 +87,8 @@ const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
     return `${baseStyles} text-gray-400 dark:text-gray-500 cursor-not-allowed`;
   }
   if (item.active) {
-    return `${baseStyles} bg-blue-50 dark:bg-gray-700 text-blue-700 dark:text-white border-r-2 border-jade-600`;
+    // Strengthened active contrast (previously blue-50 background with blue-700 text could blend into light surfaces)
+    return `${baseStyles} bg-brand-navy text-white dark:bg-gray-700 dark:text-white border-r-2 border-brand-jade-dark`;
   }
   return `${baseStyles} text-text-secondary dark:text-text-secondary surface-subtle-hover dark:hover:bg-gray-700 hover:text-text-primary dark:hover:text-text-inverse`;
 };

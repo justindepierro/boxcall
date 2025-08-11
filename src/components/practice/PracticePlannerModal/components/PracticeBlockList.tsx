@@ -73,7 +73,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
               ref={provided.innerRef}
               className={`space-y-3 min-h-[200px] p-4 rounded-lg placeholder-zone transition-colors ${
                 snapshot.isDraggingOver
-                  ? "border-blue-400 bg-blue-50"
+                  ? "border-blue-400 surface-subtle"
                   : "border-gray-300 surface-subtle"
               }`}
             >
@@ -196,29 +196,26 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                           <div className="flex items-center space-x-2 ml-4">
                             {userRole === "head_coach" && (
                               <Button
-                                variant="ghost"
+                                variant="neutralLink"
                                 size="sm"
                                 onClick={() => onAddGroup(block.id)}
-                                className="text-text-muted hover:text-text-primary"
                               >
                                 <Icon name="plus" size="sm" />
                               </Button>
                             )}
 
                             <Button
-                              variant="ghost"
+                              variant="neutralLink"
                               size="sm"
                               onClick={() => onEditBlock(block)}
-                              className="text-text-muted hover:text-text-primary"
                             >
                               <Icon name="edit" size="sm" />
                             </Button>
 
                             <Button
-                              variant="ghost"
+                              variant="dangerLink"
                               size="sm"
                               onClick={() => onDeleteBlock(block.id)}
-                              className="text-red-500 hover:text-red-700"
                             >
                               <Icon name="close" size="sm" />
                             </Button>
@@ -257,9 +254,8 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                                     )}
                                   </div>
                                   <Button
-                                    variant="ghost"
+                                    variant="neutralLink"
                                     size="sm"
-                                    className="text-gray-400 hover:text-text-secondary"
                                   >
                                     <Icon name="edit" size="xs" />
                                   </Button>

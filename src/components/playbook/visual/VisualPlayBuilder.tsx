@@ -169,7 +169,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                     </div>
                   </div>
                 </div>
-                <div className="bg-white rounded-lg bc-card-padding border border-slate-200">
+                <div className="bg-white rounded-lg bc-card-padding border border-subtle">
                   <h4 className="font-medium text-slate-900 mb-2">Play Info</h4>
                   {selectedPlay && (
                     <div className="space-y-2 text-sm">
@@ -218,7 +218,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                     Drag and drop players to adjust their positions on the
                     field.
                   </p>
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                  <div className="surface-subtle border border-subtle rounded-lg p-3">
                     <p className="text-sm text-amber-800">
                       <Construction
                         aria-label="construction"
@@ -244,7 +244,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                   <p className="text-sm text-slate-600 mb-4">
                     Click and drag to draw routes for each receiver.
                   </p>
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                  <div className="surface-subtle border border-subtle rounded-lg p-3">
                     <p className="text-sm text-amber-800">
                       <Construction
                         aria-label="construction"
@@ -310,7 +310,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
           </div>
         </div>
         {/* Footer */}
-        <div className="border-t border-slate-200 bc-card-padding flex items-center justify-between">
+        <div className="border-t border-subtle bc-card-padding flex items-center justify-between">
           <div className="text-sm text-slate-600">
             Phase 2: Visual Play Builder - Interactive field canvas with player
             positions
@@ -338,3 +338,6 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
     </div>
   );
 };
+
+// Provide default export for code-splitting compatibility
+export default VisualPlayBuilder;

@@ -141,12 +141,12 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
         <Tooltip
           content={
             <div className="flex items-start gap-2">
-              <span className="text-red-300 font-medium">{error}</span>
+              <span className="font-medium">{error}</span>
               <Button
-                variant="ghost"
+                variant="dangerLink"
                 size="xs"
                 onClick={clearError}
-                className="text-red-300 hover:text-red-200 !h-auto !p-0"
+                className="!h-auto !p-0"
                 aria-label="Clear error"
               >
                 ×
@@ -154,7 +154,7 @@ export const PDFExportButton: React.FC<PDFExportButtonProps> = ({
             </div>
           }
           placement="bottom"
-          className="surface-inverse border-red-500/30 text-[11px]"
+          className="surface-inverse text-[11px]"
           maxWidth={240}
         >
           <span className="sr-only">Error</span>

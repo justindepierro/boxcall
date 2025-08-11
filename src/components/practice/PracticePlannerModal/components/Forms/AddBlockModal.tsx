@@ -113,7 +113,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
   };
 
   return (
-    <Card className="p-4 mb-6 border-2 border-blue-200">
+    <Card className="p-4 mb-6 border-2 border-subtle">
       <Typography variant="headline-md" className="mb-4">
         Add Practice Block
       </Typography>

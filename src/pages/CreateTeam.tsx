@@ -321,7 +321,7 @@ export const CreateTeam: React.FC = () => {
               ready to use all of BoxCall's features.
             </Typography>
             {isSuperAdmin && (
-              <div className="bg-jade-50 dark:bg-jade-900/20 border border-jade-200 dark:border-jade-800 rounded-lg p-4 mb-6">
+              <div className="surface-subtle dark:bg-jade-900/20 border border-subtle dark:border-jade-800 rounded-lg p-4 mb-6">
                 <div className="flex items-center gap-2 text-jade-700 dark:text-jade-300">
                   <Icon name="unlock" size="sm" />
                   <Typography variant="body-sm" className="font-medium">
@@ -457,7 +457,7 @@ export const CreateTeam: React.FC = () => {
             </div>
 
             {/* Season automatically set - shows current school year */}
-            <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+            <div className="mt-6 p-4 surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg">
               <div className="flex items-start gap-2">
                 <Icon name="info" size="sm" color="info" className="mt-0.5" />
                 <div>
@@ -490,7 +490,7 @@ export const CreateTeam: React.FC = () => {
             </Typography>
 
             {/* TODO: Implement school search/verification system */}
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+            <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg p-4 mb-6">
               <div className="flex items-start gap-2">
                 <Icon name="info" size="sm" color="info" className="mt-0.5" />
                 <div>
@@ -620,7 +620,7 @@ export const CreateTeam: React.FC = () => {
             </Typography>
 
             {/* TODO: Implement actual payment system */}
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
+            <div className="surface-subtle dark:bg-yellow-900/20 border border-subtle dark:border-yellow-800 rounded-lg p-4 mb-6">
               <div className="flex items-start gap-2">
                 <Icon
                   name="warning"
@@ -644,7 +644,7 @@ export const CreateTeam: React.FC = () => {
             </div>
 
             {isSuperAdmin && (
-              <div className="bg-jade-50 dark:bg-jade-900/20 border border-jade-200 dark:border-jade-800 rounded-lg p-4 mb-6">
+              <div className="surface-subtle dark:bg-jade-900/20 border border-subtle dark:border-jade-800 rounded-lg p-4 mb-6">
                 <div className="flex items-center gap-2 text-jade-700 dark:text-jade-300">
                   <Icon name="unlock" size="sm" />
                   <Typography variant="body-sm" className="font-medium">
@@ -656,12 +656,12 @@ export const CreateTeam: React.FC = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Main Founders Plan */}
-              <div className="lg:col-span-2 border-2 border-jade-500 rounded-lg p-6 relative bg-jade-50 dark:bg-jade-900/10">
+              <div className="lg:col-span-2 border-2 border-jade-500 rounded-lg p-6 relative surface-subtle dark:bg-jade-900/10">
                 <div className="absolute -top-3 left-6">
                   <Typography
                     variant="body-sm"
                     as="span"
-                    className="bg-jade-500 text-text-inverse px-4 py-1 rounded-full font-medium flex items-center gap-1"
+                    className="surface-subtle0 text-text-inverse px-4 py-1 rounded-full font-medium flex items-center gap-1"
                   >
                     <Icon name="star" size="xs" className="text-text-primary" />
                     Founders Price - Limited Time
@@ -768,7 +768,7 @@ export const CreateTeam: React.FC = () => {
                   Not Ready to Create a Team?
                 </Typography>
 
-                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+                <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg p-4 mb-4">
                   <Typography variant="body-md" className="font-medium mb-2">
                     Try our Coach Account
                   </Typography>
@@ -894,7 +894,7 @@ export const CreateTeam: React.FC = () => {
             </div>
             <div className="w-full surface-subtle rounded-full h-2">
               <div
-                className="bg-jade-500 h-2 rounded-full transition-all duration-300"
+                className="surface-subtle0 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -949,7 +949,7 @@ export const CreateTeam: React.FC = () => {
         )}
 
         {createError && (
-          <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
+          <div className="mt-4 p-4 surface-subtle dark:bg-red-900/20 border border-subtle dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
             Error creating team: {createError}
           </div>
         )}

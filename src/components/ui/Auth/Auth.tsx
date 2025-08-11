@@ -142,7 +142,7 @@ export function LoginForm({
     >
       {/* Error Message */}
       {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div className="p-3 surface-subtle dark:bg-red-900/20 border border-subtle dark:border-red-800 rounded-lg">
           <Typography
             variant="body-sm"
             className="text-red-700 dark:text-red-400"
@@ -312,7 +312,7 @@ export function SignupForm({
     >
       {/* Error Message */}
       {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div className="p-3 surface-subtle dark:bg-red-900/20 border border-subtle dark:border-red-800 rounded-lg">
           <Typography
             variant="body-sm"
             className="text-red-700 dark:text-red-400"
@@ -555,7 +555,7 @@ export function ResetPasswordForm({
     >
       {/* Error Message */}
       {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div className="p-3 surface-subtle dark:bg-red-900/20 border border-subtle dark:border-red-800 rounded-lg">
           <Typography
             variant="body-sm"
             className="text-red-700 dark:text-red-400"

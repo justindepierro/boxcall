@@ -354,7 +354,7 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
       )}
       {/* Status Display */}
       {selectedPlayer && (
-        <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-sm border border-slate-200 p-3 z-20">
+        <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-sm border border-subtle p-3 z-20">
           <div className="text-sm">
             <div className="font-medium text-text-primary">Selected Player</div>
             <div className="text-text-secondary">{selectedPlayer}</div>
@@ -367,7 +367,7 @@ export const EnhancedFieldCanvas: React.FC<EnhancedFieldCanvasProps> = ({
         </div>
       )}
       {/* Field Info */}
-      <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-sm border border-slate-200 p-3 z-20">
+      <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-sm border border-subtle p-3 z-20">
         <div className="text-xs text-text-secondary space-y-1">
           <div className="font-medium capitalize">
             {fieldMode.replace("-", " ")} Mode
