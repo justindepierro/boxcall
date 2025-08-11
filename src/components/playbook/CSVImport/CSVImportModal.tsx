@@ -238,9 +238,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         <div className="flex items-start">
           <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
           <div>
-            <h4 className="text-sm font-medium text-blue-900 mb-1">
+            <Typography
+              variant="body-sm"
+              as="h4"
+              className="font-medium text-blue-900 mb-1 tracking-tight"
+            >
               Expected CSV Format
-            </h4>
+            </Typography>
             <p className="text-sm text-blue-800 mb-2">
               Your CSV should include columns for: formation, play_name, p_type,
               personnel, one_word_play, etc.
@@ -366,9 +370,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <div className="flex items-start">
               <Info className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
               <div>
-                <h4 className="text-sm font-medium text-blue-900 mb-1">
+                <Typography
+                  variant="body-sm"
+                  as="h4"
+                  className="font-medium text-blue-900 mb-1 tracking-tight"
+                >
                   Smart Column Mapping Applied
-                </h4>
+                </Typography>
                 <p className="text-sm text-blue-800 mb-2">
                   We automatically detected and mapped your columns:
                 </p>
@@ -395,7 +403,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         {/* Plays Table */}
         <div className="border border-slate-200 rounded-lg overflow-hidden">
           <div className="bg-slate-50 px-4 py-2 border-b border-slate-200">
-            <h4 className="text-sm font-medium text-slate-900">Play Details</h4>
+            <Typography
+              variant="body-sm"
+              as="h4"
+              className="font-medium text-slate-900 tracking-tight"
+            >
+              Play Details
+            </Typography>
           </div>
 
           <div className="max-h-80 overflow-y-auto">
@@ -697,9 +711,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
       {importResult?.warnings && importResult.warnings.length > 0 && (
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-left">
-          <h4 className="text-sm font-medium text-amber-900 mb-2">
+          <Typography
+            variant="body-sm"
+            as="h4"
+            className="font-medium text-amber-900 mb-2 tracking-tight"
+          >
             Import Warnings:
-          </h4>
+          </Typography>
           <ul className="text-sm text-amber-800 list-disc list-inside space-y-1">
             {importResult.warnings
               .slice(0, 5)
@@ -715,9 +733,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
       {importResult?.errors && importResult.errors.length > 0 && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-left">
-          <h4 className="text-sm font-medium text-red-900 mb-2">
+          <Typography
+            variant="body-sm"
+            as="h4"
+            className="font-medium text-red-900 mb-2 tracking-tight"
+          >
             Import Errors:
-          </h4>
+          </Typography>
           <ul className="text-sm text-red-800 list-disc list-inside space-y-1">
             {importResult.errors
               .slice(0, 5)

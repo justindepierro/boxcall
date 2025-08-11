@@ -62,27 +62,39 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
         {/* Core Information Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
           <div className="bg-slate-50 rounded-lg p-4">
-            <h4 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-2">
+            <Typography
+              variant="label-lg"
+              as="h4"
+              className="text-slate-500 mb-2"
+            >
               Play Type
-            </h4>
+            </Typography>
             <p className="text-lg font-semibold text-slate-900">
               {playData.p_type || "Not specified"}
             </p>
           </div>
 
           <div className="bg-slate-50 rounded-lg p-4">
-            <h4 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-2">
+            <Typography
+              variant="label-lg"
+              as="h4"
+              className="text-slate-500 mb-2"
+            >
               Formation
-            </h4>
+            </Typography>
             <p className="text-lg font-semibold text-slate-900">
               {playData.formation || "Not specified"}
             </p>
           </div>
 
           <div className="bg-slate-50 rounded-lg p-4">
-            <h4 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-2">
+            <Typography
+              variant="label-lg"
+              as="h4"
+              className="text-slate-500 mb-2"
+            >
               Personnel
-            </h4>
+            </Typography>
             <p className="text-lg font-semibold text-slate-900">
               {playData.personnel || "Not specified"}
             </p>
@@ -92,9 +104,13 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
         {/* Formation Details */}
         {(playData.f_type || playData.f_dir || playData.protection) && (
           <div className="mb-6">
-            <h4 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-3">
+            <Typography
+              variant="label-lg"
+              as="h4"
+              className="text-slate-500 mb-3"
+            >
               Formation Details
-            </h4>
+            </Typography>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {playData.f_type && (
                 <div>
@@ -120,9 +136,13 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
 
         {/* Performance Metrics */}
         <div className="mb-6">
-          <h4 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-3">
+          <Typography
+            variant="label-lg"
+            as="h4"
+            className="text-slate-500 mb-3"
+          >
             Performance
-          </h4>
+          </Typography>
           <div className="flex flex-wrap gap-3">
             <Tag
               variant={
@@ -163,9 +183,13 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
         {/* Notes */}
         {playData.notes && (
           <div className="mb-6">
-            <h4 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-2">
+            <Typography
+              variant="label-lg"
+              as="h4"
+              className="text-slate-500 mb-2"
+            >
               Notes
-            </h4>
+            </Typography>
             <div className="bg-slate-50 rounded-lg p-4">
               <p className="text-slate-700 whitespace-pre-wrap">
                 {playData.notes}
