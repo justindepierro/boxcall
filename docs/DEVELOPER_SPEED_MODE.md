@@ -9,6 +9,15 @@ BC_LINT_MODE=relaxed npm run dev
 # or
 export BC_LINT_MODE=relaxed
 npm run dev
+
+# Skip all predev checks entirely:
+BC_SKIP_PREDEV=1 npm run dev
+
+# Alternative combined flag (relaxed lint + relaxed predev enforcement):
+BC_PREDEV_MODE=relaxed npm run dev
+
+# Skip only Prettier check inside predev:
+BC_PREDEV_NO_FORMAT=1 npm run dev
 ```
 
 ## What Changes
@@ -28,4 +37,6 @@ Always run a strict pass before committing:
 ```bash
 npm run lint && npm run type-check
 ```
+
+Unset variables or open a fresh shell to return to strict mode.
 
