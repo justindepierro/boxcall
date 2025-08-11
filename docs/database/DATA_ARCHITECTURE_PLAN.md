@@ -1,124 +1,26 @@
-# 🏗️ **DATA ARCHITECTURE PLAN - 3-VIEW COACHING SYSTEM**
+# Data Architecture Plan (Archived Summary)
 
-## 🎯 **OBJECTIVES**
+Condensed during Aug 2025 cleanup to meet doc size policy. Full schema definitions live in `database/schema.sql` and `docs/database/COMPLETE_SCHEMA_REFERENCE.md`.
 
-- **Performance**: Sub-100ms response times for all operations
-- **Security**: Multi-layer backup system with zero data loss tolerance
-- **Scalability**: Handle 10,000+ plays per team without performance degradation
-- **Offline Capability**: Core functionality works without internet connection
+Principles:
+- RLS everywhere; capability-driven policies.
+- Indexed search vector + trigram fallback for plays.
+- Views for aggregates (season stats) to avoid heavy joins in UI.
+- Migrations verified via `database/verify_*.sql` scripts.
+- Delay partitioning & denormalization until observed bottlenecks.
 
-## 🚀 **SUPABASE SCHEMA DESIGN**
+Monitoring KPIs:
+- p95 query latency < 500ms (target <100ms for primary reads)
+- 0 policy bypass incidents
+- Successful nightly backups & weekly restore drill
 
-### **Core Tables**
+Recover full historical doc:
+```
+git log --follow -- docs/database/DATA_ARCHITECTURE_PLAN.md
+git show <commit>:docs/database/DATA_ARCHITECTURE_PLAN.md > /tmp/DATA_ARCH_PLAN_full.md
+```
 
-```sql
--- Teams table (existing, enhanced)
-CREATE TABLE teams (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name TEXT NOT NULL,
-  school_name TEXT,
-  mascot TEXT,
-  season_year INTEGER DEFAULT EXTRACT(YEAR FROM NOW()),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  -- Performance optimization
-  play_count INTEGER DEFAULT 0,
-  last_backup_at TIMESTAMPTZ,
-  backup_version INTEGER DEFAULT 1
-);
-
--- Playbooks table (new - separates concerns)
-CREATE TABLE playbooks (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
-  name TEXT NOT NULL DEFAULT 'Main Playbook',
-  description TEXT,
-  is_active BOOLEAN DEFAULT true,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  -- Performance indexes
-  play_count INTEGER DEFAULT 0,
-  last_modified_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Plays table (enhanced for performance)
-CREATE TABLE plays (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  playbook_id UUID REFERENCES playbooks(id) ON DELETE CASCADE,
-
-  -- Core play data
-  formation TEXT NOT NULL,
-  play_name TEXT NOT NULL,
-  one_word_play TEXT,
-  p_type TEXT NOT NULL CHECK (p_type IN ('Pass', 'Run', 'RPO', 'Play Action')),
-
-  -- Formation details
-  personnel TEXT,
-  f_type TEXT,
-  f_dir TEXT,
-
-  -- Play details
-  protection TEXT,
-  p_dir TEXT,
-  r_str TEXT,
-  p_str TEXT,
-
-  -- Preferences
-  pref_down TEXT,
-  pref_dis TEXT,
-  pref_hash TEXT,
-  pref_cov TEXT,
-  pref_front TEXT,
-
-  -- Tags and categorization
-  ftag1 TEXT,
-  ftag2 TEXT,
-  p_tag1 TEXT,
-  p_tag2 TEXT,
-
-  -- Additional data
-  back_align TEXT,
-  shift TEXT,
-  motion TEXT,
-  key_player1 TEXT,
-  key_player2 TEXT,
-  check_into TEXT,
-  notes TEXT,
-
-  -- Performance metrics
-  confidence_base INTEGER DEFAULT 70,
-  times_called INTEGER DEFAULT 0,
-  times_successful INTEGER DEFAULT 0,
-
-  -- Metadata
-  created_by TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-
-  -- Performance optimization
-  is_archived BOOLEAN DEFAULT false,
-  last_used_at TIMESTAMPTZ,
-  complexity_score INTEGER,
-
-  -- Full-text search optimization
-  search_vector tsvector GENERATED ALWAYS AS (
-    to_tsvector('english',
-      COALESCE(play_name, '') || ' ' ||
-      COALESCE(formation, '') || ' ' ||
-      COALESCE(p_type, '') || ' ' ||
-      COALESCE(notes, '')
-    )
-  ) STORED
-);
-
--- Practice Scripts table (new)
-CREATE TABLE practice_scripts (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  description TEXT,
-  date_planned DATE,
-  total_duration INTEGER, -- in minutes
+<!-- allow-empty -->
   created_by TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),

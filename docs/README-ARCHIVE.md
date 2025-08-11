@@ -1,33 +1,21 @@
-# 🏈 BoxCall - Enterprise-Grade Communication Platform
+# Archived Legacy README (Superseded)
 
-> **Professional, scalable, hair-preserving development strategy**
+This file previously contained an expansive project vision and architecture primer now replaced by focused documentation:
 
-## 🎯 **Vision Statement**
+- `docs/README.md` (current curated index)
+- `docs/ARCHITECTURE.md` (authoritative architecture overview)
+- `docs/product/ROADMAP.md` (product direction)
 
-BoxCall is a football program management tool. The app is used to organize and connect teammates and coaches, share and make playbooks, develop gameplans and practice scripts, give real time analysis and play calling assistance to sideline coaches, schedule team activities, highlight acheivements, help keep parents on track, give managers responsibilties, and reach and acheive new goals. This and so much more. It's meant to be everything Hudl is not. Collaborative, social, program manager, and live game time and practice time assistance. Lastly the app is meant to grow the sport and help new players and new coaches learn about the game with tips and tricks, blogs, masterclasses, and more.
+Reason for archival: exceeded 300-line policy, duplicated newer canonical docs, and contained stale placeholders.
 
-BoxCall has 3 tier business model. Free for all users with base level functions. $19.99 one time purchase for coaches looking to use BoxCall to make and store playbooks. And a $199.99 annual subscription for a full team/program account.
+To recover any prior content for historical review:
 
-BoxCall should be both used on desktop, tablet, and mobile devices. Data should be able to be tranferable via CSV and mimic data input from MaxPreps and Hudl. We do not gatekeep data, and let coaches know their plays are their property. Having the ability to make smart playbook templates and layouts for printable files or pdf export is a nice feature.
+```
+git log --follow -- docs/README-ARCHIVE.md
+git show <commit>:docs/README-ARCHIVE.md > /tmp/README_LEGACY.md
+```
 
-BoxCall offers a customizable dashboard interface, including a trophy shelf to display your individual and team acheivements (Trophies, medals and helmet stickers).
-
-BoxCall is an enterprise-grade communication platform built with modern web technologies, designed for scalability, maintainability, and developer sanity. We follow industry best practices from companies like Netflix, Amazon, and Google.
-
-## 🎯 **Current Status**
-
-- **Phase:** 1 (Foundation)
-- **Day:** 1 (Project Setup)
-- **Last Updated:** [Date]
-- **Next Priority:** Initialize project with Vite + React + TypeScript
-
-## 🏗️ **Architecture Overview**
-
-### **Clean Architecture Principles**
-
-- **Domain-Driven Design** - Organized by business concepts
-- **Dependency Inversion** - Core logic independent of frameworks
-- **Separation of Concerns** - Clear boundaries between layers
+<!-- allow-empty -->
 - **Progressive Enhancement** - Build incrementally without breaking
 
 ### **Project Structure**

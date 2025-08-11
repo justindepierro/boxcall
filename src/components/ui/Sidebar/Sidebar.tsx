@@ -263,7 +263,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         )}
         {/* Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div
+          className="flex-1 overflow-y-auto focus-scroll"
+          role="navigation"
+          aria-label="Primary navigation"
+          tabIndex={0}
+        >
           <nav className="py-4">
             {items.map((item) => (
               <SidebarItem

@@ -379,6 +379,7 @@ Planned extensions: per-route LCP/INP thresholds, image weight budgets, PDF bund
 - Bulk operations for efficient team administration
 
 ## Contributing
+
 Conventional commits required. Run validation before PR: `npm run validate:full`.
 
 ### 🎉 **Recently Completed**
@@ -491,6 +492,7 @@ WARNING: You are currently running a version of TypeScript which is not official
 - **Supabase integration** with database helpers and configuration
 
 ## Documentation Index
+
 See `docs/README.md` (to be added) for categorized references.
 
 - **[Workspace Optimization Guide](WORKSPACE_OPTIMIZATION_COMPLETE.md)** - Complete transformation documentation
@@ -529,6 +531,7 @@ npm run preview          # Preview production build
 ```
 
 ## License
+
 Proprietary – All rights reserved.
 
 ### 🔥 **Immediate Focus**
@@ -548,6 +551,7 @@ Proprietary – All rights reserved.
 - **Bundle Size**: < 150KB initial load
 
 ---
+
 Historical verbose README retained in git history (slimmed 2025-08-11).
 
 ### 🛡️ **Quality Standards** (Automated)

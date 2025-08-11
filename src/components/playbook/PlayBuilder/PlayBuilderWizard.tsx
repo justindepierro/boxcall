@@ -12,7 +12,13 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
 }) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+    <div
+      className="fixed inset-0 z-50 overflow-y-auto focus-scroll"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Play builder wizard"
+      tabIndex={0}
+    >
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         {/* Backdrop */}
         <div
@@ -63,7 +69,11 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                 </Typography>
                 <div className="space-y-6">
                   <div>
-                    <Typography variant="body-sm" as="label" className="block font-medium text-slate-700 mb-2">
+                    <Typography
+                      variant="body-sm"
+                      as="label"
+                      className="block font-medium text-slate-700 mb-2"
+                    >
                       Play Name *
                     </Typography>
                     <input
@@ -73,7 +83,11 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                     />
                   </div>
                   <div>
-                    <Typography variant="body-sm" as="label" className="block font-medium text-slate-700 mb-2">
+                    <Typography
+                      variant="body-sm"
+                      as="label"
+                      className="block font-medium text-slate-700 mb-2"
+                    >
                       Play Type *
                     </Typography>
                     <div className="grid grid-cols-3 gap-3">
@@ -88,7 +102,11 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                             value={type}
                             className="h-4 w-4 text-jade-600 focus:ring-jade-500"
                           />
-                          <Typography variant="body-sm" as="span" className="ml-2 font-medium text-slate-700">
+                          <Typography
+                            variant="body-sm"
+                            as="span"
+                            className="ml-2 font-medium text-slate-700"
+                          >
                             {type}
                           </Typography>
                         </label>
@@ -96,7 +114,11 @@ export const PlayBuilderWizard: React.FC<PlayBuilderWizardProps> = ({
                     </div>
                   </div>
                   <div>
-                    <Typography variant="body-sm" as="label" className="block font-medium text-slate-700 mb-2">
+                    <Typography
+                      variant="body-sm"
+                      as="label"
+                      className="block font-medium text-slate-700 mb-2"
+                    >
                       One-Word Call (Audible)
                     </Typography>
                     <input

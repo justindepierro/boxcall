@@ -266,7 +266,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           <div className="flex items-center">
             <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
             <div>
-              <Typography variant="body-sm" as="p" className="font-medium text-green-900">
+              <Typography
+                variant="body-sm"
+                as="p"
+                className="font-medium text-green-900"
+              >
                 File uploaded: {csvFile.name}
               </Typography>
               <p className="text-sm text-green-800">
@@ -775,7 +779,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+    <div
+      className="fixed inset-0 z-50 overflow-y-auto focus-scroll"
+      role="dialog"
+      aria-modal="true"
+      aria-label="CSV import modal"
+      tabIndex={0}
+    >
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div
           className="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity"

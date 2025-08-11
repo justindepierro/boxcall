@@ -150,28 +150,76 @@ export const PracticeBlockTable = memo<PracticeBlockTableProps>(
               <thead className="surface-subtle">
                 <tr>
                   <th className="px-4 py-3 text-left">
-                    <Typography variant="label-md" as="div" className="text-text-muted">Time</Typography>
+                    <Typography
+                      variant="label-md"
+                      as="div"
+                      className="text-text-muted"
+                    >
+                      Time
+                    </Typography>
                   </th>
                   <th className="px-4 py-3 text-left">
-                    <Typography variant="label-md" as="div" className="text-text-muted">Duration</Typography>
+                    <Typography
+                      variant="label-md"
+                      as="div"
+                      className="text-text-muted"
+                    >
+                      Duration
+                    </Typography>
                   </th>
                   <th className="px-4 py-3 text-left">
-                    <Typography variant="label-md" as="div" className="text-text-muted">Category</Typography>
+                    <Typography
+                      variant="label-md"
+                      as="div"
+                      className="text-text-muted"
+                    >
+                      Category
+                    </Typography>
                   </th>
                   <th className="px-4 py-3 text-left">
-                    <Typography variant="label-md" as="div" className="text-text-muted">Title</Typography>
+                    <Typography
+                      variant="label-md"
+                      as="div"
+                      className="text-text-muted"
+                    >
+                      Title
+                    </Typography>
                   </th>
                   <th className="px-4 py-3 text-left">
-                    <Typography variant="label-md" as="div" className="text-text-muted">Location</Typography>
+                    <Typography
+                      variant="label-md"
+                      as="div"
+                      className="text-text-muted"
+                    >
+                      Location
+                    </Typography>
                   </th>
                   <th className="px-4 py-3 text-left">
-                    <Typography variant="label-md" as="div" className="text-text-muted">Coach</Typography>
+                    <Typography
+                      variant="label-md"
+                      as="div"
+                      className="text-text-muted"
+                    >
+                      Coach
+                    </Typography>
                   </th>
                   <th className="px-4 py-3 text-left">
-                    <Typography variant="label-md" as="div" className="text-text-muted">Notes</Typography>
+                    <Typography
+                      variant="label-md"
+                      as="div"
+                      className="text-text-muted"
+                    >
+                      Notes
+                    </Typography>
                   </th>
                   <th className="px-4 py-3 text-left">
-                    <Typography variant="label-md" as="div" className="text-text-muted">Actions</Typography>
+                    <Typography
+                      variant="label-md"
+                      as="div"
+                      className="text-text-muted"
+                    >
+                      Actions
+                    </Typography>
                   </th>
                 </tr>
               </thead>

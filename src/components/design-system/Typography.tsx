@@ -159,7 +159,7 @@ export const Typography: React.FC<TypographyProps & { htmlFor?: string }> = ({
     .filter(Boolean)
     .join(" ");
   const extraProps: Record<string, unknown> = {};
-  if (htmlFor && Element === 'label') extraProps.htmlFor = htmlFor;
+  if (htmlFor && Element === "label") extraProps.htmlFor = htmlFor;
   return (
     <Element className={classes} {...extraProps} {...restProps}>
       {children}

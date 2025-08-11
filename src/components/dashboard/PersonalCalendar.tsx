@@ -135,7 +135,12 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
         {/* Content */}
         <div className="flex-1 overflow-hidden">
-          <div className="overflow-y-auto">
+          <div
+            className="overflow-y-auto focus-scroll"
+            role="region"
+            aria-label="Upcoming events list"
+            tabIndex={0}
+          >
             <div className="space-y-tight">
               {upcomingEvents.length === 0 ? (
                 <div className="text-center py-8">

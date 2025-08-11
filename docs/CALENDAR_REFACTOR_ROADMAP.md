@@ -1,29 +1,22 @@
-# Calendar Refactor & Enhancement Roadmap
+# Calendar Refactor Roadmap (Archived Summary)
 
-Goal: Transform the Calendar feature into a modular, scalable, accessible scheduling platform supporting events (practice, game, meeting, film, training, team event), scripts/gameplans, tagging, comments, RSVP, recurrence, export (ICS / WebCal), and mobile/calendar integration—while aligning with the design system & theming.
+Original detailed multi-phase roadmap archived to reduce doc bulk. Key retained points:
 
----
+- Modular domain layer (`domain/calendar/*`) with schema validation (zod) and recurrence expansion.
+- Incremental migration strategy (no big bang) with always-green tests.
+- Accessibility & keyboard support prioritized early.
+- Semantic theming + design system primitives only.
+- Telemetry + performance instrumentation baked into iteration.
 
-## Guiding Principles
+Next Active Focus (if revived): finalize recurrence rules + RSVP model, then ICS export.
 
-1. Separation of concerns (domain / infra / state / UI / adapter).
-2. Incremental, always‑green migration (no big bang).
-3. Strong typing & schema validation boundaries (zod).
-4. Optimistic UX + offline resilience (React Query cache strategy).
-5. Accessibility & keyboard coverage from early phases.
-6. Semantic theming only (no raw gray/navy utilities).
-7. Observability: log + measure usage, performance, error rates.
-
----
-
-## High-Level Architecture End State
-
+Recovery for full phased plan:
 ```
-src/
-  domain/calendar/        # Pure types, rules, recurrence expansion
-    types.ts
-    schema.ts
-    rules.ts
+git log --follow -- docs/CALENDAR_REFACTOR_ROADMAP.md
+git show <commit>:docs/CALENDAR_REFACTOR_ROADMAP.md > /tmp/CALENDAR_ROADMAP_FULL.md
+```
+
+<!-- allow-empty -->
     recurrence.ts
   infra/calendar/         # API adapters, ICS generation, RSVP, comments
     api.ts
