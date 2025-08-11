@@ -19,6 +19,7 @@ Master table for all game plans with comprehensive preparation data:
 ```sql
 
 ```
+
 # Database Integration (Condensed)
 
 This guide was condensed to satisfy the 300-line documentation policy. Detailed schema definitions now live in:

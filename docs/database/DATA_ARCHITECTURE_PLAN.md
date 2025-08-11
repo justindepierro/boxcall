@@ -3,6 +3,7 @@
 Condensed during Aug 2025 cleanup to meet doc size policy. Full schema definitions live in `database/schema.sql` and `docs/database/COMPLETE_SCHEMA_REFERENCE.md`.
 
 Principles:
+
 - RLS everywhere; capability-driven policies.
 - Indexed search vector + trigram fallback for plays.
 - Views for aggregates (season stats) to avoid heavy joins in UI.
@@ -10,82 +11,86 @@ Principles:
 - Delay partitioning & denormalization until observed bottlenecks.
 
 Monitoring KPIs:
+
 - p95 query latency < 500ms (target <100ms for primary reads)
 - 0 policy bypass incidents
 - Successful nightly backups & weekly restore drill
 
 Recover full historical doc:
+
 ```
 git log --follow -- docs/database/DATA_ARCHITECTURE_PLAN.md
 git show <commit>:docs/database/DATA_ARCHITECTURE_PLAN.md > /tmp/DATA_ARCH_PLAN_full.md
 ```
 
 <!-- allow-empty -->
-  created_by TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  is_template BOOLEAN DEFAULT false,
-  tags TEXT[],
-  -- Performance optimization
-  play_count INTEGER DEFAULT 0
+
+created_by TEXT NOT NULL,
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW(),
+is_template BOOLEAN DEFAULT false,
+tags TEXT[],
+-- Performance optimization
+play_count INTEGER DEFAULT 0
 );
 
 -- Practice Script Plays (junction table with ordering)
 CREATE TABLE practice_script_plays (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  script_id UUID REFERENCES practice_scripts(id) ON DELETE CASCADE,
-  play_id UUID REFERENCES plays(id) ON DELETE CASCADE,
-  order_number INTEGER NOT NULL,
-  repetitions INTEGER DEFAULT 1,
-  estimated_time INTEGER DEFAULT 4, -- in minutes
-  notes TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+script_id UUID REFERENCES practice_scripts(id) ON DELETE CASCADE,
+play_id UUID REFERENCES plays(id) ON DELETE CASCADE,
+order_number INTEGER NOT NULL,
+repetitions INTEGER DEFAULT 1,
+estimated_time INTEGER DEFAULT 4, -- in minutes
+notes TEXT,
+created_at TIMESTAMPTZ DEFAULT NOW(),
 
-  UNIQUE(script_id, order_number)
+UNIQUE(script_id, order_number)
 );
 
 -- Game Plans table (new)
 CREATE TABLE game_plans (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  week_number INTEGER,
-  opponent TEXT,
-  game_date DATE,
-  created_by TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  is_template BOOLEAN DEFAULT false,
-  tags TEXT[],
-  notes TEXT,
-  -- Performance optimization
-  total_plays INTEGER DEFAULT 0
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
+name TEXT NOT NULL,
+week_number INTEGER,
+opponent TEXT,
+game_date DATE,
+created_by TEXT NOT NULL,
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW(),
+is_template BOOLEAN DEFAULT false,
+tags TEXT[],
+notes TEXT,
+-- Performance optimization
+total_plays INTEGER DEFAULT 0
 );
 
 -- Game Plan Situations (Brian Billick methodology)
 CREATE TABLE game_plan_situations (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  game_plan_id UUID REFERENCES game_plans(id) ON DELETE CASCADE,
-  name TEXT NOT NULL, -- "1st & 10", "Red Zone", etc.
-  description TEXT,
-  category TEXT NOT NULL, -- "down_distance", "red_zone", "special"
-  priority INTEGER DEFAULT 5,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+game_plan_id UUID REFERENCES game_plans(id) ON DELETE CASCADE,
+name TEXT NOT NULL, -- "1st & 10", "Red Zone", etc.
+description TEXT,
+category TEXT NOT NULL, -- "down_distance", "red_zone", "special"
+priority INTEGER DEFAULT 5,
+created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Game Plan Plays (junction with situational context)
 CREATE TABLE game_plan_plays (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  situation_id UUID REFERENCES game_plan_situations(id) ON DELETE CASCADE,
-  play_id UUID REFERENCES plays(id) ON DELETE CASCADE,
-  priority INTEGER NOT NULL CHECK (priority BETWEEN 1 AND 5), -- 1=primary, 5=check-down
-  notes TEXT,
-  times_used INTEGER DEFAULT 0,
-  added_at TIMESTAMPTZ DEFAULT NOW(),
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+situation_id UUID REFERENCES game_plan_situations(id) ON DELETE CASCADE,
+play_id UUID REFERENCES plays(id) ON DELETE CASCADE,
+priority INTEGER NOT NULL CHECK (priority BETWEEN 1 AND 5), -- 1=primary, 5=check-down
+notes TEXT,
+times_used INTEGER DEFAULT 0,
+added_at TIMESTAMPTZ DEFAULT NOW(),
 
-  UNIQUE(situation_id, play_id)
+UNIQUE(situation_id, play_id)
 );
-```
+
+````
 
 ### **PERFORMANCE INDEXES**
 
@@ -105,7 +110,7 @@ CREATE INDEX idx_script_plays_order ON practice_script_plays(script_id, order_nu
 -- Game plan optimization
 CREATE INDEX idx_game_plans_team_week ON game_plans(team_id, week_number DESC);
 CREATE INDEX idx_situation_plays_priority ON game_plan_plays(situation_id, priority);
-```
+````
 
 ## 🚀 **PERFORMANCE OPTIMIZATION STRATEGIES**
 

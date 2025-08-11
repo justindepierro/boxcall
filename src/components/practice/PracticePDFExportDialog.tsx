@@ -265,7 +265,9 @@ export const PracticePDFExportDialog: React.FC<
                   onChange={() => handleOptionChange("includeEverything")}
                   className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-gray-300 rounded"
                 />
-                <Typography variant="body-sm" as="span" className="font-medium">Everything</Typography>
+                <Typography variant="body-sm" as="span" className="font-medium">
+                  Everything
+                </Typography>
                 <span className="text-xs text-text-muted">
                   (All practice blocks and activities)
                 </span>

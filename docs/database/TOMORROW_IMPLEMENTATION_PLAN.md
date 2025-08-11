@@ -12,6 +12,7 @@ Next Focus (Post-Migration): production telemetry, search result enrichment, RLS
 Full granular hour-by-hour log available via git history if needed.
 
 Recovery:
+
 ```
 git log --follow -- docs/database/TOMORROW_IMPLEMENTATION_PLAN.md
 git show <commit>:docs/database/TOMORROW_IMPLEMENTATION_PLAN.md > /tmp/MIGRATION_DAY_PLAN.md

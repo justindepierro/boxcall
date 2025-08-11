@@ -9,6 +9,7 @@ Original comprehensive report archived. Highlights retained:
 See `docs/archive/PRACTICE_PLANNER_REFACTORING_COMPLETE.md` in history for full narrative.
 
 Recovery:
+
 ```
 git log --follow -- docs/PRACTICE_PLANNER_REFACTORING_COMPLETE.md
 git show <commit>:docs/PRACTICE_PLANNER_REFACTORING_COMPLETE.md > /tmp/PRACTICE_REFACTOR_FULL.md

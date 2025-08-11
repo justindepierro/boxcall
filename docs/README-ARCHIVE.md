@@ -16,6 +16,7 @@ git show <commit>:docs/README-ARCHIVE.md > /tmp/README_LEGACY.md
 ```
 
 <!-- allow-empty -->
+
 - **Progressive Enhancement** - Build incrementally without breaking
 
 ### **Project Structure**

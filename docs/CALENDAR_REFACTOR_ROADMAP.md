@@ -11,38 +11,42 @@ Original detailed multi-phase roadmap archived to reduce doc bulk. Key retained 
 Next Active Focus (if revived): finalize recurrence rules + RSVP model, then ICS export.
 
 Recovery for full phased plan:
+
 ```
 git log --follow -- docs/CALENDAR_REFACTOR_ROADMAP.md
 git show <commit>:docs/CALENDAR_REFACTOR_ROADMAP.md > /tmp/CALENDAR_ROADMAP_FULL.md
 ```
 
 <!-- allow-empty -->
+
     recurrence.ts
-  infra/calendar/         # API adapters, ICS generation, RSVP, comments
-    api.ts
-    ics.ts
-    rsvp.ts
-    comments.ts
-  state/                  # React Query hooks
-    calendar/
-      queryKeys.ts        # Query key factory (implemented)
-      hooks.ts            # React Query hooks (events, event, create/update/delete, RSVP, comments)
-  adapters/fullcalendar/
-    FullCalendarAdapter.ts
-  components/calendar/
-    CalendarShell.tsx
-    CalendarToolbar.tsx
-    ViewSwitcher.tsx
-    CalendarFiltersPanel.tsx
-    CalendarStats.tsx
-    EventModal/
-      index.ts
-      EventForm.tsx
-      EventDetails.tsx
-    RSVPPanel.tsx
-    CommentThread.tsx
-    PracticeLaunchButton.tsx
-    GamePlanLaunchButton.tsx
+
+infra/calendar/ # API adapters, ICS generation, RSVP, comments
+api.ts
+ics.ts
+rsvp.ts
+comments.ts
+state/ # React Query hooks
+calendar/
+queryKeys.ts # Query key factory (implemented)
+hooks.ts # React Query hooks (events, event, create/update/delete, RSVP, comments)
+adapters/fullcalendar/
+FullCalendarAdapter.ts
+components/calendar/
+CalendarShell.tsx
+CalendarToolbar.tsx
+ViewSwitcher.tsx
+CalendarFiltersPanel.tsx
+CalendarStats.tsx
+EventModal/
+index.ts
+EventForm.tsx
+EventDetails.tsx
+RSVPPanel.tsx
+CommentThread.tsx
+PracticeLaunchButton.tsx
+GamePlanLaunchButton.tsx
+
 ```
 
 ---
@@ -334,6 +338,7 @@ Legend: [x] done, [~] in progress, [ ] pending
 ## Phase Kickoff Checklist Template
 
 ```
+
 1. Confirm scope vs out-of-scope list.
 2. Create tracking issue(s) & link to roadmap section.
 3. Add metrics instrumentation (if new dimension introduced).
@@ -341,6 +346,7 @@ Legend: [x] done, [~] in progress, [ ] pending
 5. Execute tasks (small PRs, feature flags if needed).
 6. Validate: tests + manual QA script.
 7. Update roadmap status & close issues.
+
 ```
 
 ---
@@ -417,3 +423,4 @@ Contributors: Design System, Backend (export feeds, recurrence persistence), QA 
 ## Definition of Done (Overall Initiative)
 
 All phases 0–9 exit criteria met, baseline metrics improved (perf, a11y), feature coverage (RSVP, comments, scripts integration, recurrence, export) stable in production for at least one iteration with <1% error rate and documented runbooks.
+```

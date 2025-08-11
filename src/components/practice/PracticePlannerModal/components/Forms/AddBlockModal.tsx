@@ -148,7 +148,11 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
       {/* Form Fields */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
+          <Typography
+            variant="body-sm"
+            as="label"
+            className="block font-medium text-text-primary mb-1"
+          >
             Title
           </Typography>
           <input
@@ -162,7 +166,11 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           />
         </div>
         <div>
-          <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
+          <Typography
+            variant="body-sm"
+            as="label"
+            className="block font-medium text-text-primary mb-1"
+          >
             Duration (minutes)
           </Typography>
           <input
@@ -183,7 +191,11 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
 
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
+          <Typography
+            variant="body-sm"
+            as="label"
+            className="block font-medium text-text-primary mb-1"
+          >
             Category
           </Typography>
           <select
@@ -205,7 +217,11 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
           </select>
         </div>
         <div>
-          <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
+          <Typography
+            variant="body-sm"
+            as="label"
+            className="block font-medium text-text-primary mb-1"
+          >
             Location
           </Typography>
           <input
@@ -221,7 +237,11 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
       </div>
 
       <div className="mb-4">
-        <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
+        <Typography
+          variant="body-sm"
+          as="label"
+          className="block font-medium text-text-primary mb-1"
+        >
           Notes
         </Typography>
         <textarea

@@ -1,4 +1,5 @@
 <!-- allow-empty -->
+
 # Mobile Optimization Strategy (Stub)
 
 Planned content: responsive breakpoints audit, adaptive density tokens, touch target sizing, INP regression gate.

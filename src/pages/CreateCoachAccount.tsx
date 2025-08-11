@@ -253,7 +253,11 @@ export const CreateCoachAccount: React.FC = () => {
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-2"
+                >
                   First Name *
                 </Typography>
                 <input
@@ -268,7 +272,11 @@ export const CreateCoachAccount: React.FC = () => {
                 />
               </div>
               <div>
-                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-2"
+                >
                   Last Name *
                 </Typography>
                 <input
@@ -283,7 +291,11 @@ export const CreateCoachAccount: React.FC = () => {
                 />
               </div>
               <div>
-                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-2"
+                >
                   Email Address *
                 </Typography>
                 <input
@@ -298,7 +310,11 @@ export const CreateCoachAccount: React.FC = () => {
                 />
               </div>
               <div>
-                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-2"
+                >
                   Phone Number *
                 </Typography>
                 <input
@@ -324,7 +340,11 @@ export const CreateCoachAccount: React.FC = () => {
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
-                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-2"
+                >
                   Street Address *
                 </Typography>
                 <input
@@ -339,7 +359,13 @@ export const CreateCoachAccount: React.FC = () => {
                 />
               </div>
               <div>
-                <Typography variant="body-sm" as="label" className="block font-medium mb-2">City *</Typography>
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-2"
+                >
+                  City *
+                </Typography>
                 <input
                   type="text"
                   value={formData.city}
@@ -352,7 +378,11 @@ export const CreateCoachAccount: React.FC = () => {
                 />
               </div>
               <div>
-                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-2"
+                >
                   State *
                 </Typography>
                 <input
@@ -367,7 +397,11 @@ export const CreateCoachAccount: React.FC = () => {
                 />
               </div>
               <div className="md:col-span-2">
-                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-2"
+                >
                   Zip Code *
                 </Typography>
                 <input
@@ -393,7 +427,11 @@ export const CreateCoachAccount: React.FC = () => {
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-2"
+                >
                   Primary Sport *
                 </Typography>
                 <select
@@ -421,7 +459,11 @@ export const CreateCoachAccount: React.FC = () => {
                 </select>
               </div>
               <div>
-                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-2"
+                >
                   Years of Experience *
                 </Typography>
                 <select
@@ -442,7 +484,11 @@ export const CreateCoachAccount: React.FC = () => {
                 </select>
               </div>
               <div className="md:col-span-2">
-                <Typography variant="body-sm" as="label" className="block font-medium mb-2">
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-2"
+                >
                   Coaching Level *
                 </Typography>
                 <select
@@ -487,7 +533,11 @@ export const CreateCoachAccount: React.FC = () => {
                   }
                   className="w-4 h-4 text-blue-600 surface-subtle border-gray-300 rounded focus:ring-jade-500"
                 />
-                <Typography variant="body-sm" as="label" className="font-medium">
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="font-medium"
+                >
                   I have a school/team code
                 </Typography>
               </div>
@@ -495,7 +545,11 @@ export const CreateCoachAccount: React.FC = () => {
               {formData.hasSchoolCode && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                   <div>
-                    <Typography variant="body-sm" as="label" className="block font-medium mb-2">
+                    <Typography
+                      variant="body-sm"
+                      as="label"
+                      className="block font-medium mb-2"
+                    >
                       School/Team Code
                     </Typography>
                     <input
@@ -509,7 +563,11 @@ export const CreateCoachAccount: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <Typography variant="body-sm" as="label" className="block font-medium mb-2">
+                    <Typography
+                      variant="body-sm"
+                      as="label"
+                      className="block font-medium mb-2"
+                    >
                       School Name (Auto-filled)
                     </Typography>
                     <input

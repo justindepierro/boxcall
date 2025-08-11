@@ -3,19 +3,25 @@
 > concise, imperative summary (e.g., feat(search): add fuzzy fallback)
 
 ## Summary
+
 What changed & why (1–3 sentences).
 
 ## Changes
-- 
+
+-
 
 ## Validation
+
 Local pipeline:
+
 ```
 npm run validate:full
 ```
+
 Results: (paste PASS summary or key failures & resolutions)
 
 ## Migrations (if any)
+
 - File: `database/migrations/NNN_name.sql`
 - Verification: (commands / scripts)
 - Rollback: (brief steps)
@@ -23,13 +29,16 @@ Results: (paste PASS summary or key failures & resolutions)
 ## Screenshots / Clips (UI only)
 
 ## Risk & Mitigation
-- Risk: 
-- Mitigation: 
+
+- Risk:
+- Mitigation:
 
 ## Follow-Ups (optional)
-- 
+
+-
 
 ## Checklist
+
 - [ ] Types pass (type-check)
 - [ ] Lint passes (no new warnings)
 - [ ] Tests added/updated

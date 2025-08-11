@@ -24,7 +24,9 @@ beforeAll(() => {
     created_at: new Date(),
     updated_at: new Date(),
   };
-  vi.spyOn(PlaysServiceModule.PlaysService, "createPlay").mockResolvedValue(mockPlay as Play);
+  vi.spyOn(PlaysServiceModule.PlaysService, "createPlay").mockResolvedValue(
+    mockPlay as Play
+  );
 });
 
 describe("PlaysDomainService duplicate enforcement", () => {
@@ -34,7 +36,9 @@ describe("PlaysDomainService duplicate enforcement", () => {
       formation: "I Right",
       p_type: "Run",
     };
-    const { duplicateKey } = await PlaysDomainService.createPlay(input as unknown as InboundPlay);
+    const { duplicateKey } = await PlaysDomainService.createPlay(
+      input as unknown as InboundPlay
+    );
     expect(duplicateKey).toBeDefined();
   });
 });
