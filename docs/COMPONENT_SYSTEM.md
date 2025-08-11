@@ -330,7 +330,7 @@ Brief description of the component and its purpose.
 ## Usage
 
 ```tsx
-import { ComponentName } from "@/components/category/ComponentName";
+import { ComponentName } from "@components/category/ComponentName";
 
 function MyComponent() {
   return (

@@ -5,7 +5,7 @@
  * - Removes the redundant text-sm token (handled by variant)
  * - Preserves other utility classes (spacing, color, layout, font-medium retained if present)
  * - Skips any className containing 'uppercase' (likely should become label-* variant later)
- * - Adds import { Typography } from "@/components/design-system/Typography" if not present
+ * - Adds import { Typography } from "@components/design-system/Typography" if not present
  * Usage:
  *   ts-node scripts/codemod-label-text-sm-font-medium-to-typography.ts --dry-run
  *   ts-node scripts/codemod-label-text-sm-font-medium-to-typography.ts
@@ -54,7 +54,7 @@ function ensureImport(src: string): string {
   for (let i = 0; i < lines.length; i++)
     if (/^import\s+/.test(lines[i])) lastImportIdx = i;
   const importStmt =
-    'import { Typography } from "@/components/design-system/Typography";';
+  'import { Typography } from "@components/design-system/Typography";';
   if (lastImportIdx >= 0) {
     lines.splice(lastImportIdx + 1, 0, importStmt);
     return lines.join("\n");

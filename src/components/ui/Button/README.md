@@ -23,7 +23,7 @@ Professional button component with multiple variants, sizes, and states for the 
 ## Usage
 
 ```tsx
-import { Button } from '@/components/ui/Button';
+import { Button } from '@components/ui/Button';
 
 // Basic usage
 <Button>Click me</Button>

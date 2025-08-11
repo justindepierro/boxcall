@@ -20,7 +20,7 @@ Professional logo component system with intelligent sizing, color modes, and usa
 ### **Basic Usage**
 
 ```tsx
-import { Logo } from "@/components/ui/Logo";
+import { Logo } from "@components/ui/Logo";
 
 // Default: icon variant, medium size, brand color
 <Logo />
@@ -40,7 +40,7 @@ import {
   AuthLogo,
   SidebarLogo,
   HeroLogo
-} from "@/components/ui/Logo";
+} from "@components/ui/Logo";
 
 <NavbarLogo />  // Perfect for navigation bars
 <AuthLogo />    // Optimized for login/register forms
