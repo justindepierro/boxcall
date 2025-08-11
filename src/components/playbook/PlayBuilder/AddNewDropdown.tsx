@@ -6,7 +6,7 @@
 import React, { useState } from "react";
 import { Button } from "../../ui";
 import { X, Check } from "lucide-react";
-import { Typography } from "@/components/design-system/Typography";
+import { Typography } from "@components/design-system/Typography";
 
 interface AddNewDropdownProps {
   value: string;
@@ -68,7 +68,11 @@ export const AddNewDropdown: React.FC<AddNewDropdownProps> = ({
 
   return (
     <div className={className}>
-      <Typography variant="body-sm" as="label" className="block font-medium text-slate-700 mb-2">
+      <Typography
+        variant="body-sm"
+        as="label"
+        className="block font-medium text-slate-700 mb-2"
+      >
         {label} {required && "*"}
       </Typography>
 

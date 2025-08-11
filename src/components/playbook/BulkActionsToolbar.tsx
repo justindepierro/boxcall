@@ -1,7 +1,7 @@
 import React from "react";
 import { Trash2, Tag, Download, Plus, Copy, Edit3, X } from "lucide-react";
 import { Button } from "../ui/Button/Button";
-import { Typography } from "@/components/design-system/Typography";
+import { Typography } from "@components/design-system/Typography";
 
 interface BulkActionsToolbarProps {
   selectedCount: number;
@@ -21,7 +21,11 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
       <div className="flex items-center space-x-4">
         {/* Selection Count */}
         <div className="flex items-center space-x-2">
-          <Typography variant="body-sm" as="span" className="font-medium text-text-primary">
+          <Typography
+            variant="body-sm"
+            as="span"
+            className="font-medium text-text-primary"
+          >
             {selectedCount} play{selectedCount !== 1 ? "s" : ""} selected
           </Typography>
           <Button

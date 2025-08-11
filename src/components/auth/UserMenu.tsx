@@ -6,7 +6,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "../ui/Button/Button";
 import { useAuth } from "../../app/auth-store";
-import { Typography } from "@/components/design-system/Typography";
+import { Typography } from "@components/design-system/Typography";
 
 export const UserMenu: React.FC = () => {
   const { user, profile, signOut, loading } = useAuth();
@@ -47,7 +47,11 @@ export const UserMenu: React.FC = () => {
         disabled={loading}
       >
         {/* Simple avatar circle */}
-        <Typography variant="body-sm" as="div" className="w-8 h-8 bg-jade-500 rounded-full flex items-center justify-center text-text-inverse font-medium">
+        <Typography
+          variant="body-sm"
+          as="div"
+          className="w-8 h-8 bg-jade-500 rounded-full flex items-center justify-center text-text-inverse font-medium"
+        >
           {userName.charAt(0).toUpperCase()}
         </Typography>
         <span className="hidden sm:block max-w-32 truncate">{userName}</span>
@@ -72,7 +76,11 @@ export const UserMenu: React.FC = () => {
           <div className="py-1">
             {/* User Info */}
             <div className="px-4 py-2 border-b border-subtle dark:border-gray-700">
-              <Typography variant="body-sm" as="p" className="font-medium text-text-primary dark:text-text-inverse">
+              <Typography
+                variant="body-sm"
+                as="p"
+                className="font-medium text-text-primary dark:text-text-inverse"
+              >
                 {userName}
               </Typography>
               <p className="text-sm text-text-secondary truncate">

@@ -7,7 +7,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Button } from "../../ui/Button/Button";
 import { Plus, Check, ChevronDown } from "lucide-react";
 import { useToast } from "./useToast";
-import { Typography } from "@/components/design-system/Typography";
+import { Typography } from "@components/design-system/Typography";
 
 interface AutocompleteDropdownProps {
   value: string;
@@ -157,7 +157,11 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
-      <Typography variant="body-sm" as="label" className="block font-medium text-slate-700 mb-2">
+      <Typography
+        variant="body-sm"
+        as="label"
+        className="block font-medium text-slate-700 mb-2"
+      >
         {label} {required && "*"}
       </Typography>
 
