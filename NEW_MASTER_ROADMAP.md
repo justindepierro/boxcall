@@ -4,15 +4,15 @@
 >
 > Update Discipline: Edit DURING execution (not after). Each merged change that alters scope touches this file.
 
-Last Updated: 2025-08-10
+Last Updated: 2025-08-11
 Lines Budget Guideline: Keep <350 (prune when adding). Current placeholder — adjust as content evolves.
 
 ---
 
 ## 0. TL;DR (One Screen)
 
-- NOW: Finish residual hover gray cleanup + heading `<Typography />` migration (blocker removal for accessibility & contrast gate).
-- NEXT: Canonical write path 100% coverage → Migration 010 prep (counts + draft) → Telemetry persistence → Contrast/Axe gate.
+- NOW: Canonical write path inventory & patching (UI token + heading/label debt cleared).
+- NEXT: Migration 010 prep (counts + draft) → Telemetry persistence → Contrast/Axe gate.
 - GUARDED: duplicate_key uniqueness (partial index) + readiness script (NOT NULL staging pending 3 green runs).
 - KPI DRIVERS (Near-Term): Duplicate variant rate ↓, Play create time ↓, Bundle size ↓, INP ↓, A11y score ↑.
 
@@ -55,7 +55,7 @@ Lines Budget Guideline: Keep <350 (prune when adding). Current placeholder — a
 
 ## 4. CRITICAL PATH (Sequence That Unlocks Others)
 
-1. UI Token Debt Elimination (hover gray + typography) → unblocks contrast audit.
+1. (DONE) UI Token Debt Elimination (hover gray + typography) – contrast audit unblocked.
 2. Canonical Write Path Audit & Patch → ensures data integrity before migrations.
 3. Migration 010 Preparation (counts + dry run) → safe data backfill.
 4. Telemetry Persistence (DB schema + flush endpoint) → enables perf & reliability metrics.
@@ -70,8 +70,8 @@ Lines Budget Guideline: Keep <350 (prune when adding). Current placeholder — a
 
 | #   | Type  | Item                                          | Owner | ETA | Blockers           | Definition of Done                       |
 | --- | ----- | --------------------------------------------- | ----- | --- | ------------------ | ---------------------------------------- |
-| 1   | UI    | Hover gray cleanup (all states)               | TBD   | D2  | None               | grep=0, lint clean                       |
-| 2   | UI    | Heading migration `<Typography />`            | TBD   | D2  | #1 partial overlap | No raw heading utilities                 |
+| 1   | UI    | Hover gray cleanup (all states)               | TBD   | D2  | None               | DONE (grep=0)                            |
+| 2   | UI    | Heading migration `<Typography />`            | TBD   | D2  | #1 done            | DONE (no raw heading utilities)          |
 | 3   | Data  | Write path inventory (plays)                  | TBD   | D3  | None               | List + gap map committed                 |
 | 4   | Data  | Patch stray write paths                       | TBD   | D4  | #3                 | All create/update funnel through service |
 | 5   | Mig   | Migration 010 row counts report               | TBD   | D5  | Inventory access   | JSON + markdown committed                |
@@ -104,7 +104,7 @@ Color Code (mental): UI → Data → Migration → Telemetry → Quality → Per
 | Guard                 | State   | Notes                         |
 | --------------------- | ------- | ----------------------------- |
 | TypeScript Strict     | Active  | Passing predev script         |
-| ESLint Zero Raw Gray  | Active  | Hover states still pending    |
+| ESLint Zero Raw Gray  | Active  | Passing (no offenders)        |
 | Duplicate Key Health  | Active  | Script integrated             |
 | Readiness (NOT NULL)  | Active  | Need 3 consecutive greens     |
 | Bundle Size Budgets   | Active  | baseline JSON present         |
@@ -161,11 +161,14 @@ Next 5 Steps:
 
 Debt Remaining:
 
-- Hover gray state utilities (~50) → map to semantic tokens.
-- Heading utilities outside `<Typography />`.
-- Contrast unknown (no systematic scan).
-  Post-Sprint Goal: 0 offenders + initial contrast issue list triaged.
-  Guard Plan: ESLint rule (exists) + add axe/contrast CI job.
+- Contrast unknown (no systematic scan yet).
+- Need automated contrast + axe gate.
+  Post-Sprint Goal: Baseline issue list triaged.
+  Guard Plan: ESLint semantic tokens + add axe/contrast CI job.
+
+Completed This Sprint (UI):
+- Hover gray state utilities → 0 offenders (codemod + manual cleanup).
+- Headings & label spans migrated to `<Typography />` variants.
 
 ---
 
@@ -211,7 +214,7 @@ Near-Term Only (defer rest):
 | ---------------------------- | ------- | ---------- | -------------------------------- |
 | duplicate_key conflicts      | 0       | High       | Continue monitoring              |
 | missing duplicate_key events | 0       | Medium     | Validate event capture post sink |
-| Hover gray offenders         | ~50     | High       | Complete codemod & grep=0        |
+| Hover gray offenders         | 0       | High       | Guard in ESLint + periodic scan  |
 | Telemetry events persisted   | 0       | High       | Implement sink                   |
 | A11y contrast issues         | Unknown | Low        | Run baseline scan                |
 
