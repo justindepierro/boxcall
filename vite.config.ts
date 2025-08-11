@@ -92,7 +92,11 @@ export default defineConfig({
             "@fullcalendar/react",
             "@fullcalendar/timegrid",
           ],
-          pdf: ["@react-pdf/renderer", "jspdf", "html2canvas"],
+          // Split former monolithic 'pdf' chunk (1.5MB) into smaller pieces for better
+          // caching + parallel download. Renderer rarely needed concurrently with
+          // html2canvas/jspdf capture utilities.
+          pdfRenderer: ["@react-pdf/renderer"],
+          pdfCapture: ["jspdf", "html2canvas"],
 
           // Database and API
           data: [
