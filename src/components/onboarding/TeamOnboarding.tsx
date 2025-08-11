@@ -126,16 +126,14 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
             <div className="flex gap-3 justify-center">
               <Button
                 size="sm"
-                variant="outline"
-                className="!bg-surface-jade !text-brand-jade-dark !border-surface-jade-dark hover:!bg-surface-jade-dark hover:!text-brand-jade-darker"
+                variant="brandLink"
                 onClick={() => navigate("/create-coach-account")}
               >
                 Get Coach Account ($19.99)
+              </Button>
               <Button
                 size="sm"
                 variant="neutralLink"
-                onClick={() => navigate("/join-team")}
-              >
                 onClick={() => navigate("/join-team")}
               >
                 Join a Team

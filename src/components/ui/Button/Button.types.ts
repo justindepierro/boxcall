@@ -15,6 +15,7 @@ export type ButtonVariant =
   | "neutralLink" // Neutral gray textual link
   | "infoLink" // Informational blue textual link
   | "dangerLink" // Destructive textual link
+  | "danger" // High-emphasis destructive commit button
   | "success" // Success/confirmation button
   | "warning"; // Warning/caution button
 export type ButtonSize =
