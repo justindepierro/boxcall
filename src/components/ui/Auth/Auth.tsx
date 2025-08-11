@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "lucide-react";
 import Icon from "../Icon/Icon";
 import { Typography } from "../../design-system";
 import { Button } from "../Button";
@@ -154,7 +155,12 @@ export function LoginForm({
       {showSocialLogin && (
         <div className="space-y-3">
           <Button variant="secondary" className="w-full" disabled={loading}>
-            <span className="mr-2">🔗</span>
+            <span className="mr-2">
+              <Link
+                aria-label="link"
+                className="inline h-4 w-4 align-middle text-current"
+              />
+            </span>
             Continue with Google
           </Button>
           <div className="relative">
@@ -319,7 +325,12 @@ export function SignupForm({
       {showSocialSignup && (
         <div className="space-y-3">
           <Button variant="secondary" className="w-full" disabled={loading}>
-            <span className="mr-2">🔗</span>
+            <span className="mr-2">
+              <Link
+                aria-label="link"
+                className="inline h-4 w-4 align-middle text-current"
+              />
+            </span>
             Sign up with Google
           </Button>
           <div className="relative">

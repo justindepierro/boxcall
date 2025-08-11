@@ -1,51 +1,145 @@
-# 📘 MASTER PRODUCT & TECH ROADMAP (2025) — Modular Index
+﻿# 📘 MASTER PRODUCT & TECH ROADMAP (2025) — Concise Index
 
-> This lean index replaces the prior 1000+ line monolith. Deep dives now live in modular docs under `docs/roadmap/`. Keep this file fast to scan: current top priorities, module map, quick metrics, changelog. Target size: <200 lines.
+> Slim index (<200 lines). Deep dives: `docs/roadmap/`. This file holds priority ordering, status snapshot, risks, and near-term execution ladder.
 
----
-
-## A. CURRENT TOP PRIORITIES (Rolling)
-
-1. Finish residual hover/dark gray text cleanup & heading `<Typography />` migration.
-2. Integrate canonicalization in write path; add `duplicate_key` column & backfill.
-3. Draft Migration 010 with counts & parity report.
-4. Implement telemetry dispatcher skeleton (foundation for Web Vitals & onboarding events).
-5. Contrast audit + axe CI harness activation.
-
-Owner Cadence: Mon (KPI snapshot) · Fri (Risk review).
+Last Updated: 2025-08-10
 
 ---
 
-## B. MODULAR ROADMAP FILES
+## 1. TOP PRIORITIES (Ordered)
 
-| #   | Focus                          | Path                            |
-| --- | ------------------------------ | ------------------------------- |
-| 01  | Vision & Pillars               | docs/roadmap/01_vision.md       |
-| 02  | Core KPIs & Targets            | docs/roadmap/02_kpis.md         |
-| 03  | Architecture Snapshot          | docs/roadmap/03_architecture.md |
-| 04  | Data & Normalization Deep Dive | docs/roadmap/04_data_normalization.md |
-| 05  | Migration Plan & DB Hardening  | docs/roadmap/05_migration_plan.md |
-| 06  | Service Layer & React Query    | docs/roadmap/06_service_layer.md |
-| 07  | Performance & Web Vitals       | docs/roadmap/07_performance.md |
-| 08  | Accessibility & Mobile         | (to create)                     |
-| 09  | Observability & Telemetry      | (to create)                     |
-| 10  | Security & Release Engineering | (to create)                     |
-| 11  | Custom Field Extensibility     | (to create)                     |
-| 12  | Innovation Tracks              | (to create)                     |
+1. UI Token Cleanup: remove remaining hover/dark raw gray text utilities (~50 refs) + migrate headings to `<Typography />`.
+2. Canonical Write Path Expansion: ensure ALL play create/update vectors use `PlaysDomainService`.
+3. Migration 010 (Recognitions): counts parity report + idempotent INSERT…SELECT with lineage.
+4. Telemetry Phase 2: persist Web Vitals + error events & alert on `play.duplicate_key.missing`.
+5. Contrast & Accessibility Gate: contrast audit + axe smoke CI.
+6. Search Enablement: integrate search doc builder + fuzzy formation/personnel suggestions.
+7. NOT NULL (duplicate_key): 3 green readiness runs → apply constraint.
+8. Performance Hardening: route-level code splitting & standardized Suspense skeletons.
 
 ---
 
-## C. SNAPSHOT METRICS (Quick View)
+## 2. STATUS SNAPSHOT
 
-| Metric                    | Status              |
-| ------------------------- | ------------------- |
-| Raw Gray Offenders        | 0 (gate enforced)   |
-| Hover Gray Text Utilities | In progress         |
-| Canonical Write Path      | Pilot (PlaybookPage) |
-| duplicate_key Column      | Migration drafted   |
-| Migration 010 Draft       | Concept only        |
-| Telemetry Dispatcher      | Not started         |
-| Contrast/Axe Harness      | Not implemented     |
+| Area                     | Status                  | Next Action                      |
+| ------------------------ | ----------------------- | -------------------------------- |
+| Hover Gray Text Cleanup  | In progress (~50 refs)  | Codemod + map to semantic tokens |
+| Typography Migration     | Pending                 | Replace heading utilities        |
+| Canonicalization         | Domain service + pilot  | Audit remaining write paths      |
+| duplicate_key Index      | Live, conflicts zero    | Monitor readiness script         |
+| NOT NULL Readiness       | Script in CI            | 3 consecutive green runs         |
+| Telemetry Dispatcher     | Skeleton + events wired | Choose persistence sink          |
+| Web Vitals               | Buffered only           | Persist + dashboard proto        |
+| Error Boundary Telemetry | Emits event             | Severity + grouping strategy     |
+| Migration 010            | Concept only            | Produce counts & draft SQL       |
+| Search Doc Builder       | Utility idle            | Hook into create/update & query  |
+| Contrast/Axe             | Not implemented         | Add CI smoke test                |
+| Dispatcher Tests         | Basic flush tests       | Add canonicalization tests       |
+
+---
+
+## 3. RECENT ACCOMPLISHMENTS
+
+- duplicate_key column added, backfilled; conflicts auto-archived; partial unique index live.
+- Health + auto-archive scripts (`dup:health`, `dup:fix`) & readiness script (`dup:readiness`).
+- Telemetry dispatcher/provider + event constants (play create/update, vitals, error boundary).
+- Missing duplicate key guard telemetry event.
+- Dispatcher unit tests.
+- Initial hover gray refactor started.
+- Slimmed roadmap (this concise rewrite).
+
+---
+
+## 4. EXECUTION LADDER
+
+| Step | Scope                 | Deliverable                   | Exit Criteria              |
+| ---- | --------------------- | ----------------------------- | -------------------------- |
+| 1    | Hover Gray Cleanup    | Codemod + manual fixes        | 0 raw hover gray utilities |
+| 2    | Typography Migration  | Headings use `<Typography />` | Snapshot diff clean        |
+| 3    | Canonical Path Audit  | Inventory + patch gaps        | Readiness stays green      |
+| 4    | Migration 010 Prep    | Counts + parity JSON          | Reviewed & committed       |
+| 5    | Migration 010 Draft   | SQL migration idempotent      | Dry run clean              |
+| 6    | Telemetry Persistence | Schema + flush endpoint       | Events stored & queryable  |
+| 7    | Search Integration    | Doc build + fuzzy hooks       | Working demo in UI         |
+| 8    | NOT NULL Enforcement  | ALTER TABLE migration         | 0 errors 48h post deploy   |
+| 9    | Contrast/Axe Gate     | CI checks added               | Fails on regression        |
+
+---
+
+## 5. RISK WATCHLIST
+
+| Risk                     | Mitigation                | Signal                              |
+| ------------------------ | ------------------------- | ----------------------------------- |
+| Hidden write path bypass | Audit & tests             | Readiness drift / missing key event |
+| Telemetry buffer growth  | Implement sink soon       | Large flush batches                 |
+| Migration 010 skew       | Pre-count + hash sampling | >0.5% mismatch                      |
+| Performance regress      | Bundle budgets            | CI budget fail                      |
+
+---
+
+## 6. METRICS (LIGHT)
+
+| Metric                       | Current | Target          |
+| ---------------------------- | ------- | --------------- |
+| Duplicate active conflicts   | 0       | 0               |
+| Active missing duplicate_key | 0       | 0               |
+| Hover gray refs              | ~50     | 0               |
+| Median play create time      | (TBD)   | ≤30s mobile     |
+| Vitals persistence           | Not yet | Persist + query |
+
+---
+
+## 7. MODULE MAP
+
+| #   | Module                               | Path                                  |
+| --- | ------------------------------------ | ------------------------------------- |
+| 01  | Vision & Pillars                     | docs/roadmap/01_vision.md             |
+| 02  | KPIs                                 | docs/roadmap/02_kpis.md               |
+| 03  | Architecture                         | docs/roadmap/03_architecture.md       |
+| 04  | Data Normalization                   | docs/roadmap/04_data_normalization.md |
+| 05  | Migration Plan                       | docs/roadmap/05_migration_plan.md     |
+| 06  | Service Layer                        | docs/roadmap/06_service_layer.md      |
+| 07  | Performance                          | docs/roadmap/07_performance.md        |
+| 09  | (Planned) Observability & Telemetry  | (to create)                           |
+| 11  | (Planned) Custom Field Extensibility | (to create)                           |
+
+---
+
+## 8. ACCEPTANCE SNAPSHOT
+
+Done when:
+
+- Hover gray utilities = 0; headings standardized.
+- Migration 010 merged; parity report stored.
+- Telemetry events persisted & query script exists.
+- duplicate_key NOT NULL applied; 48h stable.
+
+---
+
+## 9. CHANGELOG (Index Scope)
+
+| Date       | Change                                                                   |
+| ---------- | ------------------------------------------------------------------------ |
+| 2025-08-10 | Telemetry skeleton, readiness script, dispatcher tests, concise rewrite. |
+| 2025-08-10 | duplicate_key index live; hover gray cleanup initiated.                  |
+
+---
+
+## 10. QUICK NAV
+
+Search: `TOP PRIORITIES`, `EXECUTION LADDER`. Deep dives in `docs/roadmap/`.
+
+---
+
+> End of concise index.
+> | ------------------------- | -------------------------- |
+> | Raw Gray Offenders | 0 (gate enforced) |
+> | Hover Gray Text Utilities | In progress (~50 refs) |
+> | Canonical Write Path | Domain service + pilot |
+> | duplicate_key Column | Backfilled + index live (readiness script in CI) |
+> | Migration 010 Draft | Concept only |
+> | Telemetry Dispatcher | Skeleton (provider + queue) |
+> | Contrast/Axe Harness | Not implemented |
 
 ---
 
@@ -93,13 +187,13 @@ Performance & Delivery
 - [x] Performance budget gate wired (JS bundle size thresholds enforced)
 - [ ] Route-level lazy loading for heavy practice / export flows (planned)
 - [ ] Suspense boundaries + skeleton states standardization (skeleton components partially present; consolidation pending)
-- [ ] Web Vitals capture & telemetry emission (not started)
+- [ ] Web Vitals capture wired to telemetry dispatcher (skeleton present)
 
 Data & Normalization
 
 - [x] Canonicalization utilities created (canonicalizePlayInput, duplicate key compute)
-- [ ] Service layer enforcement (write path always canonicalizes) — pending integration
-- [ ] duplicate_key column + backfill migration (not yet applied)
+- [ ] Service layer enforcement (write path always canonicalizes) — expansion in progress (pilot + domain service)
+- [x] duplicate_key column added, backfilled & conflicts archived (index live)
 - [ ] Retro normalization analyzer & diff reports (not started)
 
 Migrations & Database
@@ -107,7 +201,8 @@ Migrations & Database
 - [x] Wave 1 scaffolding migration 009 COMPLETE
 - [x] RLS & immutability migration 011 COMPLETE
 - [ ] Migration 010 (recognitions backfill) — drafted conceptually, implementation pending
-- [ ] Add duplicate_key column & unique index (queued after canonical write path live)
+- [x] Add duplicate_key column & backfill (conflicts archived)
+- [x] Create partial unique index (015) & monitor (NOT NULL staging pending)
 
 Search & Assistive Features
 
@@ -123,9 +218,9 @@ Mobile UX & Accessibility
 
 Telemetry & Observability
 
-- [ ] Event dispatcher (queue + batching) (not started)
-- [ ] Web Vitals instrumentation (not started)
-- [ ] Error boundary → telemetry integration (not started)
+- [x] Event dispatcher skeleton (queue + batching in-memory)
+- [ ] Web Vitals instrumentation (hook existing web-vitals to dispatcher)
+- [ ] Error boundary → telemetry integration (replace console.log with dispatcher event)
 
 Testing & Quality
 

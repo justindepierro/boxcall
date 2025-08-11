@@ -3,6 +3,7 @@
  * Part of Phase 3A: Critical Performance & Error Handling
  */
 import React, { useState, useEffect } from "react";
+import { Satellite, Snail } from "lucide-react";
 import { useNetworkStatus } from "../../hooks/useNetworkStatus";
 import { useMobileErrorHandler } from "../../hooks/useMobileErrorHandler";
 import {
@@ -138,7 +139,11 @@ export const MobileLoadingStrategy: React.FC<LoadingStrategyProps> = ({
       return (
         <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
           <Typography variant="body-sm" className="text-yellow-800 text-center">
-            📡 You're offline. Content will sync when connection returns.
+            <Satellite
+              aria-label="satellite"
+              className="inline h-4 w-4 align-middle text-current"
+            />{" "}
+            You're offline. Content will sync when connection returns.
           </Typography>
         </div>
       );
@@ -148,7 +153,11 @@ export const MobileLoadingStrategy: React.FC<LoadingStrategyProps> = ({
       return (
         <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <Typography variant="body-sm" className="text-blue-800 text-center">
-            🐌 Slow connection detected. This might take a moment...
+            <Snail
+              aria-label="slow"
+              className="inline h-4 w-4 align-middle text-current"
+            />{" "}
+            Slow connection detected. This might take a moment...
           </Typography>
         </div>
       );

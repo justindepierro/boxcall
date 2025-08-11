@@ -4,6 +4,7 @@ import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 import { AuthProvider } from "../components/auth/AuthProvider";
 import { ToastProvider } from "../components/ui/Toast";
 import { queryClient } from "./queryClient";
+import { TelemetryProvider } from "../telemetry/context";
 interface AppProvidersProps {
   children: ReactNode;
 }
@@ -18,12 +19,14 @@ interface AppProvidersProps {
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <ToastProvider>
-          <AuthProvider>{children}</AuthProvider>
-        </ToastProvider>
-        {/* React Query Devtools will be added when we install the devtools package */}
-      </QueryClientProvider>
+      <TelemetryProvider>
+        <QueryClientProvider client={queryClient}>
+          <ToastProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </ToastProvider>
+          {/* React Query Devtools will be added when we install the devtools package */}
+        </QueryClientProvider>
+      </TelemetryProvider>
     </ErrorBoundary>
   );
 }

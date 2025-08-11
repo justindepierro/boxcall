@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// Removed unused RefreshCw import
 import { FileText, Plus, Upload, Download, Clock, Users } from "lucide-react";
 import { PlayGrid } from "../components/playbook/PlayGrid";
 import { PlaybookGlossary } from "../components/playbook/PlaybookGlossary";
@@ -169,8 +170,8 @@ export const PlaybookPage: React.FC = () => {
       console.log("💾 Saving play to database:", playData);
 
       // Save to Supabase database
-  // Route through domain service (canonicalization + future duplicate_key)
-  const { play: newPlay } = await PlaysDomainService.createPlay(playData);
+      // Route through domain service (canonicalization + future duplicate_key)
+      const { play: newPlay } = await PlaysDomainService.createPlay(playData);
       console.log("✅ Play saved successfully:", newPlay);
 
       // Close the builder
@@ -307,7 +308,7 @@ export const PlaybookPage: React.FC = () => {
 
   const handleBulkAction = async (action: string) => {
     const selectedPlays = Array.from(state.selectedPlayIds);
-    console.log(`🔄 Bulk action: ${action}`, selectedPlays);
+    console.log(`Bulk action: ${action}`, selectedPlays);
 
     try {
       switch (action) {

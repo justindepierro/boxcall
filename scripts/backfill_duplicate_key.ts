@@ -9,10 +9,18 @@
 import { supabase } from "../src/lib/supabase";
 import { computeDuplicateKey } from "../src/utils/playDataStandardization";
 
-interface PlayRow { id: string; play_name: string | null; formation: string | null; duplicate_key?: string | null; team_id?: string | null; }
+interface PlayRow {
+  id: string;
+  play_name: string | null;
+  formation: string | null;
+  duplicate_key?: string | null;
+  team_id?: string | null;
+}
 
 async function loadPlays(): Promise<PlayRow[]> {
-  const { data, error } = await supabase.from("plays").select("id, play_name, formation, duplicate_key, team_id");
+  const { data, error } = await supabase
+    .from("plays")
+    .select("id, play_name, formation, duplicate_key, team_id");
   if (error) throw error;
   return data as PlayRow[];
 }
@@ -20,7 +28,10 @@ async function loadPlays(): Promise<PlayRow[]> {
 function groupByDuplicateKey(rows: PlayRow[]) {
   const map = new Map<string, PlayRow[]>();
   for (const r of rows) {
-    const key = computeDuplicateKey({ play_name: r.play_name || undefined, formation: r.formation || undefined });
+    const key = computeDuplicateKey({
+      play_name: r.play_name || undefined,
+      formation: r.formation || undefined,
+    });
     if (!map.has(key)) map.set(key, []);
     map.get(key)!.push(r);
   }
@@ -30,9 +41,11 @@ function groupByDuplicateKey(rows: PlayRow[]) {
 async function dryRun(rows: PlayRow[]) {
   const groups = groupByDuplicateKey(rows);
   const clusters = [...groups.entries()].filter(([, arr]) => arr.length > 1);
-  console.log(`Found ${clusters.length} potential duplicate clusters (>1 play sharing key)`);
+  console.log(
+    `Found ${clusters.length} potential duplicate clusters (>1 play sharing key)`
+  );
   for (const [key, arr] of clusters.slice(0, 20)) {
-    console.log(`Key: ${key} -> ${arr.map(p => p.id).join(", ")}`);
+    console.log(`Key: ${key} -> ${arr.map((p) => p.id).join(", ")}`);
   }
   console.log("(Showing up to first 20 clusters; run with --full to list all)");
 }
@@ -40,8 +53,16 @@ async function dryRun(rows: PlayRow[]) {
 async function execute(rows: PlayRow[]) {
   let updated = 0;
   for (const batch of chunk(rows, 200)) {
-    const updates = batch.map(r => ({ id: r.id, duplicate_key: computeDuplicateKey({ play_name: r.play_name || undefined, formation: r.formation || undefined }) }));
-    const { error } = await supabase.from("plays").upsert(updates, { onConflict: "id" });
+    const updates = batch.map((r) => ({
+      id: r.id,
+      duplicate_key: computeDuplicateKey({
+        play_name: r.play_name || undefined,
+        formation: r.formation || undefined,
+      }),
+    }));
+    const { error } = await supabase
+      .from("plays")
+      .upsert(updates, { onConflict: "id" });
     if (error) throw error;
     updated += updates.length;
     process.stdout.write(`Updated ${updated}\r`);
@@ -49,7 +70,11 @@ async function execute(rows: PlayRow[]) {
   console.log(`\nBackfill complete. Updated ${updated} rows.`);
 }
 
-function chunk<T>(arr: T[], size: number): T[][] { const out: T[][] = []; for (let i=0;i<arr.length;i+=size) out.push(arr.slice(i,i+size)); return out; }
+function chunk<T>(arr: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
 
 async function main() {
   const dry = process.argv.includes("--dry");
@@ -61,4 +86,7 @@ async function main() {
   }
 }
 
-main().catch(e => { console.error(e); process.exit(1); });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

@@ -217,6 +217,12 @@ export class PlaysService {
         created_by: user.id, // Use actual authenticated user ID
         created_at: new Date(),
         updated_at: new Date(),
+        // Duplicate key supplied by domain layer when enforcing canonical uniqueness (optional)
+        duplicate_key:
+          typeof (playData as unknown as { duplicate_key?: string })
+            .duplicate_key === "string"
+            ? (playData as unknown as { duplicate_key?: string }).duplicate_key
+            : undefined,
       };
 
       console.log("🎯 Creating play in database:", newPlay);
@@ -255,6 +261,11 @@ export class PlaysService {
       }
 
       if (error) {
+        if (error.code === "23505") {
+          const dupErr = new Error("Duplicate play (name + formation) exists.");
+          (dupErr as { code?: string }).code = "23505";
+          throw dupErr;
+        }
         console.error("❌ Error creating play:", error);
         throw new Error(`Failed to create play: ${error.message}`);
       }

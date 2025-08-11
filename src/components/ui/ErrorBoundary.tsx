@@ -1,4 +1,7 @@
 import type { ErrorInfo, ReactNode } from "react";
+import { Wrench } from "lucide-react";
+import { telemetry } from "../../telemetry/dispatcher";
+import { TelemetryEventTypes } from "../../telemetry/events";
 import React, { Component } from "react";
 import { AlertTriangle, RefreshCw, Home, MessageCircle } from "lucide-react";
 import { Button } from "./Button";
@@ -65,6 +68,14 @@ export class ErrorBoundary extends Component<Props, State> {
     };
 
     console.log("Error report:", errorReport);
+    try {
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ErrorBoundary,
+        data: errorReport,
+      });
+    } catch (_) {
+      // swallow telemetry errors
+    }
     // Example: sendToErrorService(errorReport);
   };
 
@@ -109,7 +120,11 @@ export class ErrorBoundary extends Component<Props, State> {
               <div className="mb-6 p-4 surface-subtle border border-red-200 rounded-lg">
                 <details className="text-sm">
                   <summary className="cursor-pointer font-medium text-red-800 mb-2">
-                    🔧 Error Details (Development Only)
+                    <Wrench
+                      aria-label="wrench"
+                      className="inline h-4 w-4 align-middle text-current"
+                    />{" "}
+                    Error Details (Development Only)
                   </summary>
                   <div className="mt-2 p-3 bg-white border rounded text-xs font-mono">
                     <div className="text-red-600 mb-2">
@@ -152,7 +167,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 onClick={() => window.location.reload()}
                 variant="ghost"
                 size="sm"
-                className="w-full flex items-center justify-center text-text-muted hover:text-gray-700"
+                className="w-full flex items-center justify-center text-text-muted hover:text-text-primary"
                 icon={<MessageCircle className="h-4 w-4" />}
                 iconPosition="left"
               >

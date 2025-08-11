@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// (Removed unused Search import after log text simplification)
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../app/auth-store";
 import { Typography } from "../components/design-system";
@@ -150,7 +151,7 @@ export const JoinTeam: React.FC = () => {
     setIsLoading(true);
 
     // TODO: Implement actual team search API
-    console.log("🔍 Searching for teams:", searchQuery);
+    console.log("Searching for teams:", searchQuery);
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000));

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+// (Removed unused RefreshCw, Search imports after log text simplification)
 import { ToggleLeft, ToggleRight } from "lucide-react";
 import { IconButton } from "../ui";
 import { PlayCard } from "./PlayCard";
@@ -91,7 +92,7 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
   // Refresh data when refreshTrigger changes
   useEffect(() => {
     if (refreshTrigger > 0) {
-      console.log("🔄 Refreshing plays data due to trigger:", refreshTrigger);
+      console.log("Refreshing plays data due to trigger:", refreshTrigger);
       refreshData();
     }
   }, [refreshTrigger, refreshData]);
@@ -115,7 +116,7 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
       console.group("🏈 Playbook Database Integration Test");
       console.log("📊 Total Plays Loaded:", plays.length);
       console.log("🏟️ Sample Play:", plays[0]);
-      console.log("🔍 Available Formations:", [
+      console.log("Available Formations:", [
         ...new Set(plays.map((p) => p.formation)),
       ]);
       console.log("⚡ Available Play Types:", [

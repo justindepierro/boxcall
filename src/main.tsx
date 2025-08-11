@@ -13,15 +13,22 @@ import "./styles/responsive-dashboard.css";
 import "./styles/density.css";
 // Development-only contrast debugging overlay (activated via localStorage 'debugContrast')
 import "./dev/contrastDebug";
+import { trackVital } from "./telemetry/vitals";
+import { TelemetryEventTypes } from "./telemetry/events";
 
 // Web Vitals monitoring for production
 if (process.env.NODE_ENV === "production") {
   import("web-vitals").then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
-    onCLS(console.log);
-    onINP(console.log);
-    onFCP(console.log);
-    onLCP(console.log);
-    onTTFB(console.log);
+    const wrap =
+      (eventType: string) =>
+      (metric: { name: string; value: number; id: string }) => {
+        trackVital(eventType, metric.value, { id: metric.id });
+      };
+    onCLS(wrap(TelemetryEventTypes.VitalCLS));
+    onINP(wrap(TelemetryEventTypes.VitalINP));
+    onFCP(wrap(TelemetryEventTypes.VitalFCP));
+    onLCP(wrap(TelemetryEventTypes.VitalLCP));
+    onTTFB(wrap(TelemetryEventTypes.VitalTTFB));
   });
 }
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Construction } from "lucide-react";
 import { Button } from "../../ui/Button/Button";
 import { X, Save, Eye, Users, Route, Palette } from "lucide-react";
 import type { Play } from "../../../types/play";
@@ -215,7 +216,11 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                   </p>
                   <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
                     <p className="text-sm text-amber-800">
-                      🚧 <strong>Coming Soon:</strong> Interactive player
+                      <Construction
+                        aria-label="construction"
+                        className="inline h-4 w-4 align-middle text-current"
+                      />{" "}
+                      <strong>Coming Soon:</strong> Interactive player
                       positioning with drag-and-drop functionality.
                     </p>
                   </div>
@@ -237,7 +242,11 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
                   </p>
                   <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
                     <p className="text-sm text-amber-800">
-                      🚧 <strong>Coming Soon:</strong> Interactive route drawing
+                      <Construction
+                        aria-label="construction"
+                        className="inline h-4 w-4 align-middle text-current"
+                      />{" "}
+                      <strong>Coming Soon:</strong> Interactive route drawing
                       with timing and depth indicators.
                     </p>
                   </div>

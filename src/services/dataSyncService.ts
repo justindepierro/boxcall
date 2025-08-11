@@ -15,6 +15,10 @@ import type { PracticeScript } from "./practiceScriptService";
 import type { GamePlan } from "./gamePlanService";
 import { CSVService } from "./csv";
 import { normalizePlayName, normalizeText } from "../utils/textNormalization";
+import {
+  canonicalizePlayInput,
+  computeDuplicateKey,
+} from "../utils/playDataStandardization";
 
 interface CachedData<T = unknown> {
   data: T;
@@ -280,25 +284,30 @@ export class DataSyncService {
       }
 
       // Prepare plays for insertion
-      const playsToInsert = plays.map((play) => ({
-        ...play,
-        // Normalize text fields for consistency
-        play_name: normalizePlayName(play.play_name),
-        one_word_play: play.one_word_play
-          ? normalizeText(play.one_word_play)
-          : play.one_word_play,
-        formation: normalizeText(play.formation),
-        // Database fields
-        playbook_id: playbookId,
-        created_by: user.id, // Required field for database schema
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        // Ensure required numeric fields have defaults if missing
-        confidence_base: play.confidence_base ?? 70,
-        times_called: play.times_called ?? 0,
-        times_successful: play.times_successful ?? 0,
-      }));
-
+      const playsToInsert = plays.map((play) => {
+        const canonical = canonicalizePlayInput({
+          play_name: play.play_name,
+          formation: play.formation,
+          p_type: (play as unknown as { p_type?: string }).p_type || "Pass",
+          one_word_play: play.one_word_play,
+          personnel: (play as unknown as { personnel?: string }).personnel,
+        });
+        const dupKey = computeDuplicateKey(canonical);
+        return {
+          ...play,
+          play_name: canonical.play_name,
+          one_word_play: canonical.one_word_play,
+          formation: canonical.formation,
+          duplicate_key: dupKey,
+          playbook_id: playbookId,
+          created_by: user.id,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          confidence_base: play.confidence_base ?? 70,
+          times_called: play.times_called ?? 0,
+          times_successful: play.times_successful ?? 0,
+        };
+      });
       // Bulk insert to Supabase (batch size 100 for reliability)
       const batchSize = 100;
       for (let i = 0; i < playsToInsert.length; i += batchSize) {
@@ -318,6 +327,12 @@ export class DataSyncService {
           .select();
 
         if (error) {
+          if (error.code === "23505") {
+            errors.push(
+              "Duplicate play detected in batch (name + formation). Skipping batch."
+            );
+            continue;
+          }
           console.error("❌ Supabase insert error:", error);
           console.error("📊 Error details:", {
             code: error.code,

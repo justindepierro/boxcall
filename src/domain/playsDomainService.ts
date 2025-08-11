@@ -8,6 +8,7 @@ import {
   computeDuplicateKey,
   type InboundPlay,
 } from "../utils/playDataStandardization";
+import { TelemetryEventTypes } from "../telemetry/events";
 
 export interface DomainCreateResult {
   play: Play;
@@ -23,9 +24,49 @@ export class PlaysDomainService {
   static async createPlay(input: InboundPlay): Promise<DomainCreateResult> {
     const canonical = canonicalizePlayInput(input);
     const duplicateKey = computeDuplicateKey(canonical);
-    // Persist using existing raw service (no duplicate_key field yet)
-    const play = await PlaysService.createPlay({ ...canonical });
-    return { play, duplicateKey, diffs: {} }; // TODO: surface diffs if needed
+    if (!duplicateKey) {
+      try {
+        (await import("../telemetry/dispatcher")).telemetry.enqueue({
+          type: "play.duplicate_key.missing",
+          data: {
+            path: "createPlay",
+            inputSnapshot: {
+              play_name: input.play_name,
+              formation: input.formation,
+            },
+          },
+        });
+      } catch {
+        /* ignore */
+      }
+    }
+    try {
+      const play = await PlaysService.createPlay({
+        ...canonical,
+        duplicate_key: duplicateKey,
+      });
+      // Lightweight telemetry event (buffered)
+      try {
+        (await import("../telemetry/dispatcher")).telemetry.enqueue({
+          type: TelemetryEventTypes.PlayCreate,
+          data: { duplicateKey, id: play.id },
+        });
+      } catch (_e) {
+        // ignore telemetry failures
+      }
+      return { play, duplicateKey, diffs: {} };
+    } catch (err: unknown) {
+      const e = err as { code?: string; message?: string };
+      if (
+        e?.code === "23505" ||
+        /duplicate key value/.test(String(e?.message))
+      ) {
+        throw new Error(
+          "Duplicate play detected: a play with the same name & formation already exists (active)."
+        );
+      }
+      throw err;
+    }
   }
 
   /**
@@ -33,8 +74,49 @@ export class PlaysDomainService {
    */
   static async updatePlay(id: string, updates: InboundPlay): Promise<Play> {
     const canonical = canonicalizePlayInput(updates);
-    // duplicateKey computed for future use; ignored until column exists
-    // const duplicateKey = computeDuplicateKey(canonical);
-    return PlaysService.updatePlay(id, { ...canonical });
+    const duplicateKey = computeDuplicateKey(canonical);
+    if (!duplicateKey) {
+      try {
+        (await import("../telemetry/dispatcher")).telemetry.enqueue({
+          type: "play.duplicate_key.missing",
+          data: {
+            path: "updatePlay",
+            id,
+            updatesSnapshot: {
+              play_name: updates.play_name,
+              formation: updates.formation,
+            },
+          },
+        });
+      } catch {
+        /* ignore */
+      }
+    }
+    try {
+      const updated = await PlaysService.updatePlay(id, {
+        ...canonical,
+        duplicate_key: duplicateKey,
+      });
+      try {
+        (await import("../telemetry/dispatcher")).telemetry.enqueue({
+          type: TelemetryEventTypes.PlayUpdate,
+          data: { duplicateKey, id },
+        });
+      } catch (_e) {
+        // ignore telemetry failures
+      }
+      return updated;
+    } catch (err: unknown) {
+      const e = err as { code?: string; message?: string };
+      if (
+        e?.code === "23505" ||
+        /duplicate key value/.test(String(e?.message))
+      ) {
+        throw new Error(
+          "Duplicate play conflict on update: another active play already has this name & formation."
+        );
+      }
+      throw err;
+    }
   }
 }

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Camera } from "lucide-react";
 import { Icon } from "../ui/Icon/Icon";
 import type { TeamSettings as TeamSettingsType } from "../../types/team-management";
 import { Button } from "../ui/Button";
@@ -140,7 +141,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                 variant="secondary"
                 onClick={handleLogoUpload}
               >
-                📸 Upload Logo
+                <Camera
+                  aria-label="camera"
+                  className="inline h-4 w-4 align-middle text-current"
+                />{" "}
+                Upload Logo
               </Button>
               <p className="text-xs text-text-muted mt-1">
                 JPG, PNG or SVG. Max file size 2MB.

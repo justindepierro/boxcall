@@ -1,4 +1,5 @@
 import { Typography } from "../design-system";
+import { Lightbulb, PartyPopper, Rocket } from "lucide-react";
 /**
  * Database Data Display
  * Shows the loaded demo data from the database with interactive team selector
@@ -115,7 +116,11 @@ export const DatabaseDataDisplay: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <Typography variant="headline-md" className="text-jade-800 mb-1">
-              🎉 Demo Data Loaded Successfully!
+              <PartyPopper
+                aria-label="celebration"
+                className="inline h-4 w-4 align-middle text-current"
+              />{" "}
+              Demo Data Loaded Successfully!
             </Typography>
             <Typography variant="body-md" className="text-jade-700">
               Your BoxCall database is now populated with sample data
@@ -223,9 +228,13 @@ export const DatabaseDataDisplay: React.FC = () => {
                 </div>
                 <div className="mt-3 pt-2 border-t border-jade-200">
                   <Typography variant="body-xs" className="text-jade-700">
-                    💡 In a full app, selecting a team would switch your
-                    workspace context, filter playbooks/plays, and update all
-                    data to this team's information.
+                    <Lightbulb
+                      aria-label="idea"
+                      className="inline h-4 w-4 align-middle text-current"
+                    />{" "}
+                    In a full app, selecting a team would switch your workspace
+                    context, filter playbooks/plays, and update all data to this
+                    team's information.
                   </Typography>
                 </div>
               </div>
@@ -320,7 +329,11 @@ export const DatabaseDataDisplay: React.FC = () => {
       {/* Next Steps */}
       <Card className="bc-card-padding surface-card bg-blue-50 border-blue-200">
         <Typography variant="headline-sm" className="text-blue-800 mb-3">
-          🚀 Next Steps
+          <Rocket
+            aria-label="launch"
+            className="inline h-4 w-4 align-middle text-current"
+          />{" "}
+          Next Steps
         </Typography>
         <div className="space-y-2">
           <Typography variant="body-sm" className="text-blue-700">

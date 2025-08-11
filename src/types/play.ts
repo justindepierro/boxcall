@@ -101,6 +101,7 @@ export interface Play {
   last_used_at?: Date; // timestamptz
   complexity_score?: number; // integer
   search_vector?: string; // tsvector (auto-generated, read-only)
+  duplicate_key?: string; // canonical duplication key (nullable until enforced)
 }
 
 // DEPRECATED - Legacy interface with extra fields not in database

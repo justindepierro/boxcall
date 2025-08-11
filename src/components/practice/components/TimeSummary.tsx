@@ -1,4 +1,5 @@
 import { Typography } from "../../design-system";
+import { Calendar } from "lucide-react";
 /**
  * TimeSummary Component
  *
@@ -130,7 +131,11 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
       {/* Event Details */}
       <div className="mt-4 pt-4 border-t border-subtle">
         <Typography variant="body-sm" color="muted">
-          📅 {event.title} • {new Date(event.start).toLocaleDateString()} •
+          <Calendar
+            aria-label="calendar"
+            className="inline h-4 w-4 align-middle text-current"
+          />{" "}
+          {event.title} • {new Date(event.start).toLocaleDateString()} •
           {new Date(event.start).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",

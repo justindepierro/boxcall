@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// (Removed unused Rocket, Wrench imports after log text simplification)
 import { Typography } from "../../design-system/Typography";
 import {
   X,
@@ -106,13 +107,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     setIsProcessing(true);
 
     try {
-      console.log("🚀 Starting CSV import...");
+      console.log("Starting CSV import...");
 
       // Get or create a real playbook for the current user
       let actualPlaybookId = playbookId;
 
       if (!playbookId || playbookId === "demo-playbook-id") {
-        console.log("🔧 Getting real playbook for user...");
+        console.log("Getting real playbook for user...");
         actualPlaybookId = await PlaysService.ensureUserHasPlaybook();
         console.log("✅ Using playbook ID:", actualPlaybookId);
       }

@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { MapPin } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEvents } from "../../state/calendar/hooks";
@@ -205,7 +206,11 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                           variant="body-xs"
                           className="text-text-muted truncate"
                         >
-                          📍 {event.location}
+                          <MapPin
+                            aria-label="location"
+                            className="inline h-4 w-4 align-middle text-current"
+                          />{" "}
+                          {event.location}
                         </Typography>
                       )}
                     </div>

@@ -1,4 +1,5 @@
 import { Typography } from "../design-system";
+import { Wrench } from "lucide-react";
 /**
  * Development Tools Panel
  * Clean, modular development tools with better error handling
@@ -201,7 +202,13 @@ export const DevTools: React.FC = () => {
         onMouseEnter={handleMouseEnter}
       >
         <div className="w-12 h-12 bg-jade-600 hover:bg-jade-600 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-all duration-200 animate-pulse">
-          <span className="text-text-inverse text-lg">🛠️</span>
+          <span className="text-text-inverse text-lg">
+            <Wrench
+              aria-label="tools"
+              className="inline h-4 w-4 align-middle text-current"
+            />
+            ️
+          </span>
         </div>
       </div>
     );
@@ -228,7 +235,14 @@ export const DevTools: React.FC = () => {
               variant="body-sm"
               className="font-medium text-text-inverse"
             >
-              {state.isExpanded ? "BoxCall Dev Tools" : "🛠️"}
+              {state.isExpanded ? (
+                "BoxCall Dev Tools"
+              ) : (
+                <Wrench
+                  aria-label="tools"
+                  className="inline h-4 w-4 align-middle text-current"
+                />
+              )}
             </Typography>
           </div>
           <div className="flex items-center gap-2">

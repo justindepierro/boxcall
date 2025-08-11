@@ -38,7 +38,7 @@
     "test": "vitest run",
     "test:watch": "vitest --watch",
     "test:a11y:smoke": "vitest run --reporter verbose --config vitest.config.ts --dir src/components/ui/__a11y__",
-    "validate:full": "npm run type-check && npm run lint && npm run test && npm run style:gate && npm run tokens:verify && npm run themes:verify && npx ts-unused-exports tsconfig.app.json --ignoreFiles=\"test,spec,stories\" && npx bundlesize",
+    "validate:full": "npm run type-check && npm run lint && npm run test && npm run style:gate && npm run dup:health && npm run dup:readiness && npm run tokens:verify && npm run themes:verify && npx ts-unused-exports tsconfig.app.json --ignoreFiles=\"test,spec,stories\" && npx bundlesize",
     "codemod:badge-variants": "node scripts/codemod-badge-variants.mjs",
     "codemod:tooltip-bg": "node scripts/codemod-tooltip-bg.mjs",
     "codemod:raw-gray": "node scripts/codemod-raw-gray.mjs",
@@ -58,7 +58,11 @@
     "diagnostics:open": "vite --open /dev/diagnostics",
     "release:version": "tsx scripts/release-version.ts",
     "baseline:create": "node scripts/create-baseline.mjs",
-    "perf:budgets": "node scripts/perf-budget-check.mjs"
+    "perf:budgets": "node scripts/perf-budget-check.mjs",
+    "dup:health": "tsx scripts/verify_duplicate_key_health.ts",
+    "dup:fix": "tsx scripts/auto_archive_duplicate_key_conflicts.ts",
+    "dup:fix:dry": "tsx scripts/auto_archive_duplicate_key_conflicts.ts --dry",
+    "dup:readiness": "tsx scripts/duplicate_key_readiness.ts"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.18",

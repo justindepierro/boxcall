@@ -1,4 +1,5 @@
 import { Typography } from "../design-system/Typography";
+// (Removed unused lucide-react icon imports after emoji cleanup)
 /**
  * Custom Fields Component
  * Renders team-specific custom fields in the Play Builder
@@ -348,7 +349,7 @@ export const CustomFieldsGrouped: React.FC<CustomFieldsGroupedProps> = ({
     conditions: "🌤️",
     formation: "🏈",
     general: "📋",
-  };
+  } as const;
 
   if (loading) {
     return (

@@ -1,4 +1,5 @@
 import React from "react";
+import { Wrench } from "lucide-react";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
 /**
@@ -44,7 +45,11 @@ export const TeamSettings: React.FC = () => {
               variant="body-sm"
               className="text-purple-700 dark:text-purple-300"
             >
-              🔧 Coming Soon - Advanced team management and configuration tools
+              <Wrench
+                aria-label="wrench"
+                className="inline h-4 w-4 align-middle text-current"
+              />{" "}
+              Coming Soon - Advanced team management and configuration tools
             </Typography>
           </div>
         </Card>

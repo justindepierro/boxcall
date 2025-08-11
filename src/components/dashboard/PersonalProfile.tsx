@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Circle, GraduationCap, Hand, Shield, Shirt } from "lucide-react";
 import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system";
 import { Button, Card, Input } from "../ui";
@@ -188,12 +189,22 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
               variant="body-sm"
               className="font-semibold mb-3 text-text-primary"
             >
-              👕 My Gear (Drip)
+              <Shirt
+                aria-label="jersey"
+                className="inline h-4 w-4 align-middle text-current"
+              />{" "}
+              My Gear (Drip)
             </Typography>
             {isEditing ? (
               <div className="space-y-3">
                 <Input
-                  label="🪖 Helmet"
+                  label="Helmet"
+                  leftIcon={
+                    <Shield
+                      aria-label="helmet"
+                      className="inline h-4 w-4 align-middle text-current"
+                    />
+                  }
                   value={editedProfile.gear.helmet}
                   onChange={(e) =>
                     setEditedProfile((prev) => ({
@@ -204,7 +215,13 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                   placeholder="Riddell SpeedFlex"
                 />
                 <Input
-                  label="🧤 Gloves"
+                  label="Gloves"
+                  leftIcon={
+                    <Hand
+                      aria-label="glove"
+                      className="inline h-4 w-4 align-middle text-current"
+                    />
+                  }
                   value={editedProfile.gear.gloves}
                   onChange={(e) =>
                     setEditedProfile((prev) => ({
@@ -215,7 +232,13 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                   placeholder="Nike Vapor Jet 6.0"
                 />
                 <Input
-                  label="👟 Cleats"
+                  label="Cleats"
+                  leftIcon={
+                    <Circle
+                      aria-label="shoe"
+                      className="inline h-4 w-4 align-middle text-current"
+                    />
+                  }
                   value={editedProfile.gear.cleats}
                   onChange={(e) =>
                     setEditedProfile((prev) => ({
@@ -229,19 +252,37 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             ) : (
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-text-secondary">🪖 Helmet:</span>
+                  <span className="text-text-secondary">
+                    <Shield
+                      aria-label="helmet"
+                      className="inline h-4 w-4 align-middle text-current"
+                    />{" "}
+                    Helmet:
+                  </span>
                   <span className="font-semibold">
                     {editedProfile.gear.helmet || "Not set"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-text-secondary">🧤 Gloves:</span>
+                  <span className="text-text-secondary">
+                    <Hand
+                      aria-label="glove"
+                      className="inline h-4 w-4 align-middle text-current"
+                    />{" "}
+                    Gloves:
+                  </span>
                   <span className="font-semibold">
                     {editedProfile.gear.gloves || "Not set"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-text-secondary">👟 Cleats:</span>
+                  <span className="text-text-secondary">
+                    <Circle
+                      aria-label="shoe"
+                      className="inline h-4 w-4 align-middle text-current"
+                    />{" "}
+                    Cleats:
+                  </span>
                   <span className="font-semibold">
                     {editedProfile.gear.cleats || "Not set"}
                   </span>
@@ -257,7 +298,11 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
               variant="body-sm"
               className="font-semibold mb-3 text-text-primary"
             >
-              🎓 Coaching Background
+              <GraduationCap
+                aria-label="graduation"
+                className="inline h-4 w-4 align-middle text-current"
+              />{" "}
+              Coaching Background
             </Typography>
             <div className="space-y-2">
               <div className="flex justify-between">

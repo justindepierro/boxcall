@@ -1,4 +1,5 @@
 import { Typography } from "../design-system";
+import { PartyPopper, Wrench } from "lucide-react";
 /**
  * Toast Demo Component
  * Quick demo to show the new toast system working
@@ -28,7 +29,11 @@ export const ToastDemo: React.FC = () => {
   return (
     <Card className="p-6 m-4">
       <Typography variant="headline-md" className="mb-4">
-        🎉 Toast System Demo
+        <PartyPopper
+          aria-label="celebration"
+          className="inline h-4 w-4 align-middle text-current"
+        />{" "}
+        Toast System Demo
       </Typography>
       <Typography variant="body-md" className="mb-4">
         The new professional toast system is ready! This provides much better
@@ -45,7 +50,13 @@ export const ToastDemo: React.FC = () => {
       <div className="mt-4 text-sm text-text-secondary">
         <p>✅ Toast system fully implemented</p>
         <p>✅ Database loading issue fixed</p>
-        <p>🔧 DevPanel improvements ready (pending DevTools syntax fix)</p>
+        <p>
+          <Wrench
+            aria-label="wrench"
+            className="inline h-4 w-4 align-middle text-current"
+          />{" "}
+          DevPanel improvements ready (pending DevTools syntax fix)
+        </p>
       </div>
     </Card>
   );

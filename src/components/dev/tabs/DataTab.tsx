@@ -1,4 +1,5 @@
 import { Typography } from "../../design-system";
+import { ClipboardList, Search, Sprout, Users } from "lucide-react";
 /**
  * DevTools Data & Modes Tab
  * Database status and role switching
@@ -59,7 +60,11 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
           size="xs"
           fullWidth
         >
-          🔍 Check Demo Data
+          <Search
+            aria-label="search"
+            className="inline h-4 w-4 align-middle text-current"
+          />{" "}
+          Check Demo Data
         </Button>
 
         {/* Create Sample Data Button */}
@@ -69,7 +74,11 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
           size="xs"
           fullWidth
         >
-          🌱 Create Sample Data
+          <Sprout
+            aria-label="growth"
+            className="inline h-4 w-4 align-middle text-current"
+          />{" "}
+          Create Sample Data
         </Button>
 
         {/* Navigation Buttons */}
@@ -79,14 +88,22 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
             variant="success"
             size="xs"
           >
-            👥 Teams
+            <Users
+              aria-label="team"
+              className="inline h-4 w-4 align-middle text-current"
+            />{" "}
+            Teams
           </Button>
           <Button
             onClick={() => actions.navigateToPlaybook()}
             variant="secondary"
             size="xs"
           >
-            📋 Playbook
+            <ClipboardList
+              aria-label="clipboard"
+              className="inline h-4 w-4 align-middle text-current"
+            />{" "}
+            Playbook
           </Button>
         </div>
       </div>
