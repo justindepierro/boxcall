@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from "react";
+import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
 // (Removed unused RefreshCw, Search imports after log text simplification)
 import { ToggleLeft, ToggleRight } from "lucide-react";
 import { IconButton } from "../ui";
@@ -198,28 +198,38 @@ export const PlayGrid: React.FC<PlayGridProps> = ({
     });
   }, [plays, searchQuery, filters, selectedCategory, selectedSubcategory]);
 
-  // Telemetry: emit filter.apply when filter state changes (debounced via useEffect on dependencies)
-  useEffect(() => {
-    telemetry.enqueue({
-      type: TelemetryEventTypes.FilterApply,
-      data: {
-        search: searchQuery ? true : false,
+  // Telemetry: emit filter.apply when filter state meaningfully changes.
+  // Guard against infinite loops if telemetry enqueue triggers a context update that re-renders PlayGrid.
+  const lastFilterSignatureRef = useRef<string | null>(null);
+  const filterSignature = useMemo(
+    () =>
+      JSON.stringify({
+        search: !!searchQuery,
         searchLength: searchQuery?.length || 0,
-        formation: filters.formation ? 1 : 0,
-        playType: filters.playType ? 1 : 0,
+        formation: filters.formation || null,
+        playType: filters.playType || null,
         selectedCategory: selectedCategory || null,
         selectedSubcategory: selectedSubcategory || null,
         resultCount: filteredPlays.length,
-      },
+      }),
+    [
+      searchQuery,
+      filters.formation,
+      filters.playType,
+      selectedCategory,
+      selectedSubcategory,
+      filteredPlays.length,
+    ]
+  );
+
+  useEffect(() => {
+    if (lastFilterSignatureRef.current === filterSignature) return; // no meaningful change
+    lastFilterSignatureRef.current = filterSignature;
+    telemetry.enqueue({
+      type: TelemetryEventTypes.FilterApply,
+      data: JSON.parse(filterSignature),
     });
-  }, [
-    searchQuery,
-    filters.formation,
-    filters.playType,
-    selectedCategory,
-    selectedSubcategory,
-    filteredPlays.length,
-  ]);
+  }, [filterSignature]);
 
   const hasFilters =
     searchQuery ||
