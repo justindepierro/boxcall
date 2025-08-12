@@ -320,6 +320,34 @@ export const PlaybookPage: React.FC = () => {
       alert("Failed to export playbook. Please try again.");
     }
   };
+  // Quick actions under the pinned header
+  const handleQuickNewPracticeScript = async () => {
+    try {
+      const teamId = "demo-team-1"; // TODO: wire to actual team context
+      const script = await PracticeScriptService.createPracticeScript({
+        name: `Practice Script ${new Date().toLocaleDateString()}`,
+        description: "Quickly created from Playbook header",
+        teamId,
+        tags: ["quick-create"],
+      });
+      alert(`Created practice script: ${script.name}`);
+      // Optional: switch view to practice script area
+      setState((p) => ({ ...p, currentView: "practice-script" }));
+    } catch (e) {
+      console.error(e);
+      alert("Failed to create practice script");
+    }
+  };
+  const handleQuickNewInstall = () => {
+    // Placeholder until Install entity/flow is defined
+    telemetry.enqueue({
+      type: TelemetryEventTypes.UIAction,
+      data: { area: "playbook_header", action: "quick_new_install" },
+    });
+    alert(
+      "Install creation coming soon. We'll let you define Install phases and assign plays."
+    );
+  };
   const handleSearch = (query: string) => {
     setState((prev) => ({ ...prev, searchQuery: query }));
   };
@@ -643,7 +671,7 @@ export const PlaybookPage: React.FC = () => {
   return (
     <div className="min-h-screen surface-app decorative-gradient bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
-      <header className="surface-subtle shadow-sm border-b border-subtle">
+      <header className="surface-subtle shadow-sm border-b border-subtle sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
@@ -825,6 +853,42 @@ export const PlaybookPage: React.FC = () => {
                 )}
               </div>
             </div>
+          </div>
+          {/* Quick actions bar under header */}
+          <div className="flex items-center justify-between py-2 border-t border-subtle">
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={handleQuickNewPracticeScript}
+                variant="secondary"
+                size="xs"
+              >
+                <Plus className="h-3 w-3 mr-1" /> New Practice Script
+              </Button>
+              <Button onClick={handleQuickNewInstall} variant="ghost" size="xs">
+                <Plus className="h-3 w-3 mr-1" /> New Install
+              </Button>
+            </div>
+            {state.enableBulkOperations && (
+              <div className="text-xs text-slate-600 flex items-center gap-3">
+                <span>
+                  Selected: <strong>{state.selectedPlayIds.size}</strong>
+                </span>
+                <span className="text-slate-400">
+                  (persists across searches)
+                </span>
+                {state.selectedPlayIds.size > 0 && (
+                  <Button
+                    onClick={() =>
+                      setState((p) => ({ ...p, selectedPlayIds: new Set() }))
+                    }
+                    variant="ghost"
+                    size="xs"
+                  >
+                    Clear
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </header>

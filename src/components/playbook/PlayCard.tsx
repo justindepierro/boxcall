@@ -248,7 +248,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             >
               {/* Overview bar */}
               <div className="flex flex-wrap items-center gap-2">
-                <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${getPlayTypeColor(play.p_type)}`}>
+                <span
+                  className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${getPlayTypeColor(play.p_type)}`}
+                >
                   {play.p_type}
                 </span>
                 {play.personnel && (
@@ -266,7 +268,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     Code: {play.one_word_play.toUpperCase()}
                   </span>
                 )}
-                <span className={`ml-auto text-xs font-medium ${getConfidenceColor(play.confidence_base)}`}>
+                <span
+                  className={`ml-auto text-xs font-medium ${getConfidenceColor(play.confidence_base)}`}
+                >
                   Confidence {play.confidence_base}%
                 </span>
               </div>
@@ -275,7 +279,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Formation */}
                 <div className="surface-subtle rounded-md p-3">
-                  <Typography variant="label-lg" as="h4" className="text-slate-700 flex items-center mb-2">
+                  <Typography
+                    variant="label-lg"
+                    as="h4"
+                    className="text-slate-700 flex items-center mb-2"
+                  >
                     <Target className="h-4 w-4 mr-1" /> Formation
                   </Typography>
                   <dl className="space-y-1 text-sm">
@@ -326,7 +334,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
 
                 {/* Play details */}
                 <div className="surface-subtle rounded-md p-3">
-                  <Typography variant="label-lg" as="h4" className="text-slate-700 flex items-center mb-2">
+                  <Typography
+                    variant="label-lg"
+                    as="h4"
+                    className="text-slate-700 flex items-center mb-2"
+                  >
                     <Hash className="h-4 w-4 mr-1" /> Play Details
                   </Typography>
                   <dl className="space-y-1 text-sm">
@@ -358,11 +370,15 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                       <div className="flex justify-between gap-2">
                         <dt className="text-text-secondary">Tags</dt>
                         <dd className="text-text-primary">
-                          {[play.p_tag1, play.p_tag2].filter(Boolean).join(", ")}
+                          {[play.p_tag1, play.p_tag2]
+                            .filter(Boolean)
+                            .join(", ")}
                         </dd>
                       </div>
                     )}
-                    {(play.check_into || play.key_player1 || play.key_player2) && (
+                    {(play.check_into ||
+                      play.key_player1 ||
+                      play.key_player2) && (
                       <div className="flex justify-between gap-2">
                         <dt className="text-text-secondary">Keys</dt>
                         <dd className="text-text-primary">
@@ -377,7 +393,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
 
                 {/* Preferences */}
                 <div className="surface-subtle rounded-md p-3">
-                  <Typography variant="label-lg" as="h4" className="text-slate-700 flex items-center mb-2">
+                  <Typography
+                    variant="label-lg"
+                    as="h4"
+                    className="text-slate-700 flex items-center mb-2"
+                  >
                     Preferences
                   </Typography>
                   <dl className="space-y-1 text-sm">
@@ -416,7 +436,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
 
                 {/* Usage & Stats */}
                 <div className="surface-subtle rounded-md p-3">
-                  <Typography variant="label-lg" as="h4" className="text-slate-700 flex items-center mb-2">
+                  <Typography
+                    variant="label-lg"
+                    as="h4"
+                    className="text-slate-700 flex items-center mb-2"
+                  >
                     <Clock className="h-4 w-4 mr-1" /> Usage & Stats
                   </Typography>
                   <dl className="space-y-1 text-sm">
@@ -426,7 +450,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     </div>
                     <div className="flex justify-between gap-2">
                       <dt className="text-text-secondary">Times Successful</dt>
-                      <dd className="text-text-primary">{play.times_successful}</dd>
+                      <dd className="text-text-primary">
+                        {play.times_successful}
+                      </dd>
                     </div>
                     {play.last_used_at && (
                       <div className="flex justify-between gap-2">
@@ -443,17 +469,27 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               {/* Notes */}
               {play.notes && (
                 <div className="surface-subtle rounded-md p-3">
-                  <Typography variant="label-lg" as="h4" className="text-slate-700 mb-1">
+                  <Typography
+                    variant="label-lg"
+                    as="h4"
+                    className="text-slate-700 mb-1"
+                  >
                     Notes
                   </Typography>
-                  <p className="text-sm text-slate-700 whitespace-pre-line">{play.notes}</p>
+                  <p className="text-sm text-slate-700 whitespace-pre-line">
+                    {play.notes}
+                  </p>
                 </div>
               )}
 
               {/* Tags & Roles (summary + editor) */}
               <div className="surface-subtle rounded-md p-3">
                 <div className="flex items-center justify-between">
-                  <Typography variant="label-lg" as="h4" className="text-slate-700">
+                  <Typography
+                    variant="label-lg"
+                    as="h4"
+                    className="text-slate-700"
+                  >
                     Tags & Roles
                   </Typography>
                   <Button
@@ -467,18 +503,31 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 </div>
                 {/* Summary chips */}
                 <div className="mt-2 flex flex-wrap gap-1">
-                  {[...flags.positions.map((x) => `Position:${x}`),
+                  {[
+                    ...flags.positions.map((x) => `Position:${x}`),
                     ...flags.players.map((x) => `Player:${x}`),
-                    ...flags.flags.map((x) => `Flag:${x}`)]
+                    ...flags.flags.map((x) => `Flag:${x}`),
+                  ]
                     .slice(0, 8)
                     .map((chip) => (
-                      <span key={chip} className="px-2 py-0.5 text-[11px] rounded bg-slate-100 text-slate-700">
+                      <span
+                        key={chip}
+                        className="px-2 py-0.5 text-[11px] rounded bg-slate-100 text-slate-700"
+                      >
                         {chip}
                       </span>
                     ))}
-                  {flags.positions.length + flags.players.length + flags.flags.length > 8 && (
-                    <span className="text-xs text-slate-500">+
-                      {flags.positions.length + flags.players.length + flags.flags.length - 8} more
+                  {flags.positions.length +
+                    flags.players.length +
+                    flags.flags.length >
+                    8 && (
+                    <span className="text-xs text-slate-500">
+                      +
+                      {flags.positions.length +
+                        flags.players.length +
+                        flags.flags.length -
+                        8}{" "}
+                      more
                     </span>
                   )}
                 </div>
@@ -486,7 +535,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
                     {/* Positions */}
                     <div>
-                      <div className="text-xs text-slate-500 mb-1">Positions</div>
+                      <div className="text-xs text-slate-500 mb-1">
+                        Positions
+                      </div>
                       <div className="flex flex-wrap gap-1">
                         {flags.positions.map((pos) => (
                           <Button
@@ -494,7 +545,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                             size="xs"
                             variant="subtle"
                             className="!h-auto px-2 py-0.5 text-[11px]"
-                            onClick={() => setFlags(removeFlag(play.id, "positions", pos))}
+                            onClick={() =>
+                              setFlags(removeFlag(play.id, "positions", pos))
+                            }
                             title="Remove"
                           >
                             {pos} ×
@@ -519,7 +572,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                           variant="secondary"
                           onClick={() => {
                             if (!newPosition) return;
-                            const next = addFlag(play.id, "positions", newPosition);
+                            const next = addFlag(
+                              play.id,
+                              "positions",
+                              newPosition
+                            );
                             setFlags(next);
                             setNewPosition("");
                           }}
@@ -538,7 +595,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                             size="xs"
                             variant="subtle"
                             className="!h-auto px-2 py-0.5 text-[11px]"
-                            onClick={() => setFlags(removeFlag(play.id, "players", pl))}
+                            onClick={() =>
+                              setFlags(removeFlag(play.id, "players", pl))
+                            }
                             title="Remove"
                           >
                             {pl} ×
@@ -557,7 +616,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                           variant="secondary"
                           onClick={() => {
                             if (!newPlayer.trim()) return;
-                            const next = addFlag(play.id, "players", newPlayer.trim());
+                            const next = addFlag(
+                              play.id,
+                              "players",
+                              newPlayer.trim()
+                            );
                             setFlags(next);
                             setNewPlayer("");
                           }}
@@ -576,7 +639,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                             size="xs"
                             variant="subtle"
                             className="!h-auto px-2 py-0.5 text-[11px]"
-                            onClick={() => setFlags(removeFlag(play.id, "flags", fl))}
+                            onClick={() =>
+                              setFlags(removeFlag(play.id, "flags", fl))
+                            }
                             title="Remove"
                           >
                             {fl} ×
@@ -595,7 +660,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                           variant="secondary"
                           onClick={() => {
                             if (!newFlag.trim()) return;
-                            const next = addFlag(play.id, "flags", newFlag.trim());
+                            const next = addFlag(
+                              play.id,
+                              "flags",
+                              newFlag.trim()
+                            );
                             setFlags(next);
                             setNewFlag("");
                           }}
@@ -611,10 +680,16 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               {/* Workflow actions */}
               <div className="flex items-center justify-between">
                 <div>
-                  <Typography variant="label-lg" as="h4" className="text-slate-700 mb-1">
+                  <Typography
+                    variant="label-lg"
+                    as="h4"
+                    className="text-slate-700 mb-1"
+                  >
                     Add to Workflow
                   </Typography>
-                  <p className="text-xs text-slate-500">Build practice scripts and game plans from this play</p>
+                  <p className="text-xs text-slate-500">
+                    Build practice scripts and game plans from this play
+                  </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
@@ -635,7 +710,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   >
                     <Gamepad2 className="h-3 w-3 mr-1" /> Game Plan
                   </Button>
-                  <Badge variant="premium" size="sm">Week 3</Badge>
+                  <Badge variant="premium" size="sm">
+                    Week 3
+                  </Badge>
                 </div>
               </div>
             </div>

@@ -5,6 +5,7 @@ export const TelemetryEventTypes = {
   PlayDiagramUpdated: "play.diagram_updated",
   PlayDuplicate: "play.duplicate",
   FilterApply: "filter.apply",
+  UIAction: "ui.action",
   ViewSavedApply: "view.saved_apply",
   ViewSavedServerCreate: "view.saved_server_create",
   ViewSavedServerApply: "view.saved_server_apply",

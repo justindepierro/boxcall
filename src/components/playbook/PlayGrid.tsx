@@ -170,14 +170,20 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   const handleSelectAll = () => {
     if (!onPlaySelectionChange) return;
+    const currentIds = new Set(filteredPlays.map((p) => p.id));
+    const allVisibleSelected = filteredPlays.every((p) =>
+      selectedPlayIds.has(p.id)
+    );
 
-    if (selectedPlayIds.size === filteredPlays.length) {
-      // Deselect all
-      onPlaySelectionChange(new Set());
+    const next = new Set(selectedPlayIds);
+    if (allVisibleSelected) {
+      // Deselect only visible plays, keep hidden ones selected
+      for (const id of currentIds) next.delete(id);
     } else {
-      // Select all filtered plays
-      onPlaySelectionChange(new Set(filteredPlays.map((p) => p.id)));
+      // Select all visible plays, keep any previously selected hidden plays
+      for (const id of currentIds) next.add(id);
     }
+    onPlaySelectionChange(next);
   };
 
   // Apply filters to plays
@@ -436,8 +442,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 <input
                   type="checkbox"
                   checked={
-                    selectedPlayIds.size > 0 &&
-                    selectedPlayIds.size === filteredPlays.length
+                    filteredPlays.length > 0 &&
+                    filteredPlays.every((p) => selectedPlayIds.has(p.id))
                   }
                   onChange={handleSelectAll}
                   className="rounded border-slate-300 text-blue-600 focus:ring-jade-500"
