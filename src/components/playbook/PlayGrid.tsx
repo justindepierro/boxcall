@@ -15,6 +15,7 @@ import { telemetry } from "../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../telemetry/events";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import type { Play } from "../../types/play";
+import { getPlayFlags } from "@utils/localPlayFlags";
 import { Typography } from "../design-system/Typography";
 import {
   validatePlaybookData,
@@ -188,7 +189,19 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         const matchesName = play.play_name.toLowerCase().includes(query);
         const matchesFormation = play.formation.toLowerCase().includes(query);
         const matchesNotes = play.notes?.toLowerCase().includes(query);
-        if (!matchesName && !matchesFormation && !matchesNotes) return false;
+        let matchesFlags = false;
+        if (!matchesName && !matchesFormation && !matchesNotes) {
+          const flags = getPlayFlags(play.id);
+          const haystack = [
+            ...flags.positions,
+            ...flags.players,
+            ...flags.flags,
+          ]
+            .join("\n")
+            .toLowerCase();
+          matchesFlags = haystack.includes(query);
+          if (!matchesFlags) return false;
+        }
       }
 
       // Category-based filtering from Smart Playbook Glossary

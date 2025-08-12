@@ -19,6 +19,13 @@ const VisualPlayBuilder = lazy(() => import("./visual/VisualPlayBuilder"));
 import { telemetry } from "../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../telemetry/events";
 import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
+import {
+  getPlayFlags,
+  addFlag,
+  removeFlag,
+  POSITION_OPTIONS,
+  type PlayFlags,
+} from "../../utils/localPlayFlags";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button/Button";
 import { INSTALL_PHASES, type InstallPhase } from "../../types/play";
@@ -100,6 +107,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   };
   const displayName = getDisplayName(play, showOneWordCalls);
   const subtitleText = getSubtitleText(play, showOneWordCalls);
+  const [flags, setFlags] = useState<PlayFlags>(() => getPlayFlags(play.id));
+  const [newFlag, setNewFlag] = useState("");
+  const [newPlayer, setNewPlayer] = useState("");
+  const [newPosition, setNewPosition] = useState("");
   return (
     <>
       <div
@@ -126,44 +137,49 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               </div>
             )}
 
-            <div className="flex-1">
-              {/* Play Name with MonoCode Font */}
-              <h3
-                className={`font-mono font-bold ${isCompact ? "text-base" : "text-lg"} ${
-                  showOneWordCalls && play.one_word_play
-                    ? "text-blue-600"
-                    : "text-slate-900"
+            <div className="flex-1 min-w-0">
+              {/* Title bar: Primary + small secondary on one line when space allows */}
+              <div className="flex items-baseline gap-2 min-w-0">
+                <h3
+                  className={`truncate font-mono font-bold ${
+                    isCompact ? "text-base" : "text-lg"
+                  } ${
+                    showOneWordCalls && play.one_word_play
+                      ? "text-blue-600"
+                      : "text-slate-900"
+                  } text-left`}
+                >
+                  {displayName}
+                </h3>
+                {subtitleText && (
+                  <span className="shrink-0 text-[11px] text-slate-500 italic">
+                    {subtitleText}
+                  </span>
+                )}
+              </div>
+              {/* Badges row */}
+              <div
+                className={`flex flex-wrap items-center gap-2 ${
+                  isCompact ? "mt-1" : "mt-2"
                 }`}
               >
-                {displayName}
-              </h3>
-              {/* Subtitle in italics for one-word plays */}
-              {subtitleText && (
-                <p className={`text-xs text-slate-500 mt-1 italic font-light`}>
-                  {subtitleText}
-                </p>
-              )}
-              {/* Play Type and additional info - Mobile-friendly badges */}
-              <div
-                className={`flex flex-wrap items-center gap-2 ${isCompact ? "mt-2" : "mt-3"}`}
-              >
                 <span
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium ${getPlayTypeColor(play.p_type)}`}
+                  className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${getPlayTypeColor(play.p_type)}`}
                 >
                   {play.p_type}
                 </span>
                 {play.f_type && (
-                  <span className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-full text-sm">
+                  <span className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-full text-[11px]">
                     {play.f_type}
                   </span>
                 )}
                 {phaseLabel && (
-                  <span className="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-[11px] font-medium tracking-wide uppercase">
+                  <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-[10px] font-semibold tracking-wide uppercase">
                     {phaseLabel}
                   </span>
                 )}
                 <span
-                  className={`text-sm font-medium ${getConfidenceColor(play.confidence_base)}`}
+                  className={`text-xs font-medium ${getConfidenceColor(play.confidence_base)}`}
                 >
                   {play.confidence_base}%
                 </span>
@@ -229,6 +245,134 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               role="region"
               aria-label={`Details for ${displayName}`}
             >
+              {/* Quick Flags - searchable, taggable (local, pre-roster) */}
+              <div className="md:col-span-3 -mt-2">
+                <Typography variant="label-lg" as="h4" className="text-slate-700 flex items-center">
+                  Tags & Roles
+                </Typography>
+                <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {/* Positions */}
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1">Positions</div>
+                    <div className="flex flex-wrap gap-1">
+                      {flags.positions.map((pos) => (
+                        <Button
+                          key={pos}
+                          size="xs"
+                          variant="subtle"
+                          className="!h-auto px-2 py-0.5 text-[11px]"
+                          onClick={() => setFlags(removeFlag(play.id, "positions", pos))}
+                          title="Remove"
+                        >
+                          {pos} ×
+                        </Button>
+                      ))}
+                    </div>
+                    <div className="mt-2 flex items-center gap-2">
+                      <select
+                        value={newPosition}
+                        onChange={(e) => setNewPosition(e.target.value)}
+                        className="border-subtle rounded px-2 py-1 text-xs"
+                      >
+                        <option value="">Select…</option>
+                        {POSITION_OPTIONS.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+                      <Button
+                        size="xs"
+                        variant="secondary"
+                        onClick={() => {
+                          if (!newPosition) return;
+                          const next = addFlag(play.id, "positions", newPosition);
+                          setFlags(next);
+                          setNewPosition("");
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  </div>
+                  {/* Players */}
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1">Players</div>
+                    <div className="flex flex-wrap gap-1">
+                      {flags.players.map((pl => (
+                        <Button
+                          key={pl}
+                          size="xs"
+                          variant="subtle"
+                          className="!h-auto px-2 py-0.5 text-[11px]"
+                          onClick={() => setFlags(removeFlag(play.id, "players", pl))}
+                          title="Remove"
+                        >
+                          {pl} ×
+                        </Button>
+                      )))}
+                    </div>
+                    <div className="mt-2 flex items-center gap-2">
+                      <input
+                        value={newPlayer}
+                        onChange={(e) => setNewPlayer(e.target.value)}
+                        placeholder="Add player (e.g., Z, WR1)"
+                        className="border-subtle rounded px-2 py-1 text-xs flex-1"
+                      />
+                      <Button
+                        size="xs"
+                        variant="secondary"
+                        onClick={() => {
+                          if (!newPlayer.trim()) return;
+                          const next = addFlag(play.id, "players", newPlayer.trim());
+                          setFlags(next);
+                          setNewPlayer("");
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  </div>
+                  {/* Flags */}
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1">Flags</div>
+                    <div className="flex flex-wrap gap-1">
+                      {flags.flags.map((fl) => (
+                        <Button
+                          key={fl}
+                          size="xs"
+                          variant="subtle"
+                          className="!h-auto px-2 py-0.5 text-[11px]"
+                          onClick={() => setFlags(removeFlag(play.id, "flags", fl))}
+                          title="Remove"
+                        >
+                          {fl} ×
+                        </Button>
+                      ))}
+                    </div>
+                    <div className="mt-2 flex items-center gap-2">
+                      <input
+                        value={newFlag}
+                        onChange={(e) => setNewFlag(e.target.value)}
+                        placeholder="Add flag (e.g., Red Zone, 3rd&Short)"
+                        className="border-subtle rounded px-2 py-1 text-xs flex-1"
+                      />
+                      <Button
+                        size="xs"
+                        variant="secondary"
+                        onClick={() => {
+                          if (!newFlag.trim()) return;
+                          const next = addFlag(play.id, "flags", newFlag.trim());
+                          setFlags(next);
+                          setNewFlag("");
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
               {/* Formation Details */}
               <div className="space-y-2">
                 <Typography
