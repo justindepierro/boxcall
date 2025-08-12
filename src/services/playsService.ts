@@ -465,4 +465,22 @@ export class PlaysService {
       throw error;
     }
   }
+
+  /** Restore previously archived plays */
+  static async restorePlays(ids: string[]): Promise<void> {
+    if (!ids.length) return;
+    try {
+      const { error } = await supabase
+        .from("plays")
+        .update({ is_archived: false, updated_at: new Date() })
+        .in("id", ids);
+      if (error) {
+        console.error("❌ Error restoring plays:", error);
+        throw new Error(`Failed to restore plays: ${error.message}`);
+      }
+    } catch (error) {
+      console.error("❌ PlaysService.restorePlays failed:", error);
+      throw error;
+    }
+  }
 }

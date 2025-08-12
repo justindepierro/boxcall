@@ -39,6 +39,7 @@ import { PlaybookActionsBar } from "../components/playbook/page/PlaybookActionsB
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 import { PlaybookProvider, usePlaybook } from "../contexts/PlaybookContext";
 import { useConfirm } from "../contexts/ConfirmContext";
+import { useUndoQueue } from "../contexts/UndoQueueContext";
 import { useToast } from "../hooks/useToast";
 
 const PlaybookPageInner: React.FC = () => {
@@ -49,6 +50,7 @@ const PlaybookPageInner: React.FC = () => {
     info: toastInfo,
   } = useToast();
   const confirmDialog = useConfirm();
+  const { pushUndo } = useUndoQueue();
 
   // Achievement handling
   const achievementTitles: Record<number, string> = {
@@ -465,13 +467,30 @@ const PlaybookPageInner: React.FC = () => {
                             case "delete": {
                               const confirmed = await confirmDialog({
                                 title: "Delete Plays",
-                                message: `Delete ${selectedPlays.length} selected plays? This cannot be undone.`,
+                                message: `Delete ${selectedPlays.length} selected play${selectedPlays.length === 1 ? "" : "s"}? You can undo for a few seconds.`,
                                 tone: "danger",
                                 confirmLabel: "Delete",
                               });
                               if (confirmed) {
-                                await PlaysService.deletePlays(selectedPlays);
-                                toastSuccess(`${selectedPlays.length} plays deleted successfully`);
+                                const ids = [...selectedPlays];
+                                await PlaysService.deletePlays(ids);
+                                pushUndo({
+                                  label: `${ids.length} play${ids.length === 1 ? "" : "s"} deleted`,
+                                  payload: { ids },
+                                  apply: () => {},
+                                  restore: async ({ ids }: { ids: string[] }) => {
+                                    try {
+                                      await PlaysService.restorePlays(ids);
+                                      toastSuccess(`Restored ${ids.length} play${ids.length === 1 ? "" : "s"}`);
+                                    } catch (e) {
+                                      console.error("Undo restore failed", e);
+                                      toastError("Failed to restore plays");
+                                    } finally {
+                                      refreshPlays();
+                                    }
+                                  },
+                                });
+                                toastSuccess(`${ids.length} play${ids.length === 1 ? "" : "s"} deleted`);
                                 refreshPlays();
                                 handleClearSelection();
                               }
