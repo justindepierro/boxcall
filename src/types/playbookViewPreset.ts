@@ -18,13 +18,13 @@ export interface ServerPlaybookViewPreset {
 
 export type CreateServerPlaybookViewPresetInput = {
   name: string;
-  filters: ServerPlaybookViewPreset['filters'];
+  filters: ServerPlaybookViewPreset["filters"];
   team_id?: string | null;
 };
 
 export type UpdateServerPlaybookViewPresetInput = {
   id: string;
   name?: string;
-  filters?: ServerPlaybookViewPreset['filters'];
+  filters?: ServerPlaybookViewPreset["filters"];
   archived?: boolean;
 };

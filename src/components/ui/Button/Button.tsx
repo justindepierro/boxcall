@@ -28,7 +28,8 @@ const buttonVariants: ButtonStylesConfig = {
   },
   secondary: {
     base: "bg-transparent text-[var(--color-navy-700)] border-2 border-[var(--color-navy-700)]",
-    hover: "hover:bg-[var(--color-navy-700)] hover:text-white hover:border-[var(--color-navy-700)]",
+    hover:
+      "hover:bg-[var(--color-navy-700)] hover:text-white hover:border-[var(--color-navy-700)]",
     active:
       "active:bg-[var(--color-navy-800)] active:text-white active:border-[var(--color-navy-800)]",
     disabled:
@@ -47,15 +48,20 @@ const buttonVariants: ButtonStylesConfig = {
   },
   ghost: {
     base: "bg-transparent text-[var(--semantic-text-secondary)] border border-transparent",
-    hover: "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
-    active: "active:bg-[color:var(--color-gray-200)] active:text-[var(--semantic-text-primary)]",
-    disabled: "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
+    hover:
+      "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
+    active:
+      "active:bg-[color:var(--color-gray-200)] active:text-[var(--semantic-text-primary)]",
+    disabled:
+      "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   subtle: {
     base: "bg-[var(--semantic-bg-secondary)] text-[var(--semantic-text-secondary)] border border-[var(--semantic-border)]",
-    hover: "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
-    active: "active:bg-[color:var(--color-gray-200)] active:text-[var(--semantic-text-primary)]",
+    hover:
+      "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
+    active:
+      "active:bg-[color:var(--color-gray-200)] active:text-[var(--semantic-text-primary)]",
     disabled:
       "disabled:bg-[var(--semantic-bg-secondary)] disabled:text-[var(--semantic-text-muted)] disabled:border-[var(--semantic-border)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
@@ -64,7 +70,8 @@ const buttonVariants: ButtonStylesConfig = {
     base: "bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto",
     hover: "hover:text-[var(--semantic-primary-active)] hover:underline",
     active: "active:text-[var(--semantic-primary-active)]",
-    disabled: "disabled:text-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
+    disabled:
+      "disabled:text-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   // Brand link style with slightly stronger weight (used where prior inline text-jade-* overrides existed)
@@ -72,28 +79,32 @@ const buttonVariants: ButtonStylesConfig = {
     base: "bg-transparent text-[var(--semantic-primary-active)] border border-transparent p-0 h-auto font-medium",
     hover: "hover:text-[color:var(--color-jade-800)] hover:underline",
     active: "active:text-[color:var(--color-jade-800)]",
-    disabled: "disabled:text-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
+    disabled:
+      "disabled:text-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   neutralLink: {
     base: "bg-transparent text-[var(--semantic-text-secondary)] border border-transparent p-0 h-auto",
     hover: "hover:text-[var(--semantic-text-primary)] hover:underline",
     active: "active:text-[var(--semantic-text-primary)]",
-    disabled: "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
+    disabled:
+      "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   infoLink: {
     base: "bg-transparent text-[color:var(--color-navy-600)] border border-transparent p-0 h-auto",
     hover: "hover:text-[color:var(--color-navy-700)] hover:underline",
     active: "active:text-[color:var(--color-navy-700)]",
-    disabled: "disabled:text-[color:var(--color-navy-300)] disabled:cursor-not-allowed",
+    disabled:
+      "disabled:text-[color:var(--color-navy-300)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   dangerLink: {
     base: "bg-transparent text-[color:var(--color-error-600)] border border-transparent p-0 h-auto",
     hover: "hover:text-[color:var(--color-error-700)] hover:underline",
     active: "active:text-[color:var(--color-error-700)]",
-    disabled: "disabled:text-[color:var(--color-error-300,#fca5a5)] disabled:cursor-not-allowed",
+    disabled:
+      "disabled:text-[color:var(--color-error-300,#fca5a5)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   danger: {

@@ -25,7 +25,12 @@ const CATEGORY_OPTIONS = [
     color: "surface-subtle0",
     icon: "football",
   },
-  { value: "defense", label: "Defense", color: "surface-subtle0", icon: "shield" },
+  {
+    value: "defense",
+    label: "Defense",
+    color: "surface-subtle0",
+    icon: "shield",
+  },
   {
     value: "special-teams",
     label: "Special Teams",

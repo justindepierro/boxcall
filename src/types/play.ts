@@ -313,10 +313,10 @@ export const PLAY_TYPE_OPTIONS: {
 
 // Forward-looking standard install phase taxonomy (UI + future DB enum)
 export const INSTALL_PHASES = [
-  'install1',
-  'install2',
-  'install3',
-  'situational',
-  'gameplan'
+  "install1",
+  "install2",
+  "install3",
+  "situational",
+  "gameplan",
 ] as const;
-export type InstallPhase = typeof INSTALL_PHASES[number];
+export type InstallPhase = (typeof INSTALL_PHASES)[number];

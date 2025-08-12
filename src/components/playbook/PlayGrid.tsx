@@ -236,10 +236,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           filteredPlays.length === 0
             ? "0"
             : filteredPlays.length <= 10
-            ? "1-10"
-            : filteredPlays.length <= 50
-            ? "11-50"
-            : ">50",
+              ? "1-10"
+              : filteredPlays.length <= 50
+                ? "11-50"
+                : ">50",
       }),
     [
       searchQuery,
@@ -383,7 +383,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           </p>
           {!hasFilters && (
             <div className="mt-6">
-              <Button variant="primary" size="sm" onClick={() => _onOpenBuilder?.()}>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => _onOpenBuilder?.()}
+              >
                 Create your first play
               </Button>
             </div>

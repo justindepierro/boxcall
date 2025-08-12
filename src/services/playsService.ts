@@ -444,4 +444,25 @@ export class PlaysService {
       throw error;
     }
   }
+
+  /**
+   * Batch archive multiple plays in one request for efficiency
+   */
+  static async deletePlays(ids: string[]): Promise<void> {
+    if (!ids.length) return;
+    try {
+      const { error } = await supabase
+        .from("plays")
+        .update({ is_archived: true, updated_at: new Date() })
+        .in("id", ids);
+
+      if (error) {
+        console.error("❌ Error batch archiving plays:", error);
+        throw new Error(`Failed to archive plays: ${error.message}`);
+      }
+    } catch (error) {
+      console.error("❌ PlaysService.deletePlays failed:", error);
+      throw error;
+    }
+  }
 }

@@ -1,5 +1,5 @@
 import React, { useState, lazy, Suspense } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { Typography } from "../design-system/Typography";
 import {
   Edit,
@@ -76,12 +76,13 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const phaseLabel = ((): string | null => {
     if (!play.install_phase) return null;
     const value = play.install_phase as string;
-    const isPhase = (val: string): val is InstallPhase => (INSTALL_PHASES as readonly string[]).includes(val);
+    const isPhase = (val: string): val is InstallPhase =>
+      (INSTALL_PHASES as readonly string[]).includes(val);
     if (!isPhase(value)) return null;
     return value
-      .replace('install', 'Install ')
-      .replace('gameplan', 'Game Plan')
-      .replace('situational', 'Situational');
+      .replace("install", "Install ")
+      .replace("gameplan", "Game Plan")
+      .replace("situational", "Situational");
   })();
   const handleCreateDiagram = () => {
     // Route-based diagram pane for better code-splitting
@@ -440,8 +441,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         </div>
       </div>
       {/* Visual Play Builder Modal */}
-  {/* Legacy modal retained for fallback; now diagram uses dedicated route */}
-  {showVisualBuilder && (
+      {/* Legacy modal retained for fallback; now diagram uses dedicated route */}
+      {showVisualBuilder && (
         <Suspense
           fallback={
             <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">

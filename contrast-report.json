@@ -8,37 +8,28 @@
   "results": [
     {
       "file": "src/design-system/utils.ts",
-      "lightBg": [
-        "bg-white"
-      ],
+      "lightBg": ["bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/pages/PlaybookPage.tsx",
-      "lightBg": [
-        "bg-opacity-50"
-      ],
+      "lightBg": ["bg-opacity-50"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/pages/PracticePlanner.tsx",
-      "lightBg": [
-        "bg-jade-100",
-        "bg-jade-100"
-      ],
+      "lightBg": ["bg-jade-100", "bg-jade-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/calendar/CalendarSkeletons.tsx",
-      "lightBg": [
-        "bg-red-100"
-      ],
+      "lightBg": ["bg-red-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
@@ -57,107 +48,77 @@
     },
     {
       "file": "src/components/dashboard/PersonalCalendar.tsx",
-      "lightBg": [
-        "bg-opacity-50",
-        "bg-green-100"
-      ],
+      "lightBg": ["bg-opacity-50", "bg-green-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/dashboard/PersonalTrophyShelf.tsx",
-      "lightBg": [
-        "bg-white",
-        "bg-white",
-        "bg-white",
-        "bg-white",
-        "bg-white"
-      ],
+      "lightBg": ["bg-white", "bg-white", "bg-white", "bg-white", "bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/dashboard/ProfileCard.tsx",
-      "lightBg": [
-        "bg-jade-100"
-      ],
+      "lightBg": ["bg-jade-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/dashboard/TeamFeeds.tsx",
-      "lightBg": [
-        "bg-jade-100"
-      ],
+      "lightBg": ["bg-jade-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/dev/DevTools.tsx",
-      "lightBg": [
-        "bg-white"
-      ],
+      "lightBg": ["bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/layout/Layout.tsx",
-      "lightBg": [
-        "bg-amber-100"
-      ],
+      "lightBg": ["bg-amber-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/mobile/MobileBottomNavigation.tsx",
-      "lightBg": [
-        "bg-white"
-      ],
+      "lightBg": ["bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/onboarding/ActivationChecklist.tsx",
-      "lightBg": [
-        "bg-white"
-      ],
+      "lightBg": ["bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/onboarding/TeamOnboarding.tsx",
-      "lightBg": [
-        "bg-blue-200",
-        "bg-blue-200",
-        "bg-jade-100"
-      ],
+      "lightBg": ["bg-blue-200", "bg-blue-200", "bg-jade-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/playbook/AdvancedFilters.tsx",
-      "lightBg": [
-        "bg-blue-100"
-      ],
+      "lightBg": ["bg-blue-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/playbook/BulkActionsToolbar.tsx",
-      "lightBg": [
-        "bg-slate-200",
-        "bg-slate-200"
-      ],
+      "lightBg": ["bg-slate-200", "bg-slate-200"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
@@ -197,9 +158,7 @@
     },
     {
       "file": "src/components/playbook/PlayFilters.tsx",
-      "lightBg": [
-        "bg-white"
-      ],
+      "lightBg": ["bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
@@ -251,23 +210,14 @@
     },
     {
       "file": "src/components/practice/PracticePDFExportDialog.tsx",
-      "lightBg": [
-        "bg-blue-100",
-        "bg-red-100",
-        "bg-green-100"
-      ],
+      "lightBg": ["bg-blue-100", "bg-red-100", "bg-green-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/ScriptSelectorModal.tsx",
-      "lightBg": [
-        "bg-blue-100",
-        "bg-red-100",
-        "bg-green-100",
-        "bg-opacity-50"
-      ],
+      "lightBg": ["bg-blue-100", "bg-red-100", "bg-green-100", "bg-opacity-50"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
@@ -288,19 +238,14 @@
     },
     {
       "file": "src/components/team/PlayerForm.tsx",
-      "lightBg": [
-        "bg-opacity-50"
-      ],
+      "lightBg": ["bg-opacity-50"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/ui/ErrorBoundary.tsx",
-      "lightBg": [
-        "bg-red-100",
-        "bg-white"
-      ],
+      "lightBg": ["bg-red-100", "bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
@@ -320,64 +265,42 @@
     },
     {
       "file": "src/components/ui/RouteLoadingSkeleton.tsx",
-      "lightBg": [
-        "bg-white",
-        "bg-white"
-      ],
+      "lightBg": ["bg-white", "bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/ui/Skeleton.tsx",
-      "lightBg": [
-        "bg-white",
-        "bg-white",
-        "bg-white",
-        "bg-white",
-        "bg-white"
-      ],
+      "lightBg": ["bg-white", "bg-white", "bg-white", "bg-white", "bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/ui/TouchFeedback.tsx",
-      "lightBg": [
-        "bg-white",
-        "bg-white",
-        "bg-blue-100"
-      ],
+      "lightBg": ["bg-white", "bg-white", "bg-blue-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/team-dashboard/SeasonStatsCard.tsx",
-      "lightBg": [
-        "bg-green-100",
-        "bg-red-100"
-      ],
+      "lightBg": ["bg-green-100", "bg-red-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/team-dashboard/TeamFeed.tsx",
-      "lightBg": [
-        "bg-amber-200"
-      ],
+      "lightBg": ["bg-amber-200"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/pages/roles/CoachManagementPage.tsx",
-      "lightBg": [
-        "bg-blue-100",
-        "bg-green-100",
-        "bg-purple-100"
-      ],
+      "lightBg": ["bg-blue-100", "bg-green-100", "bg-purple-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
@@ -416,21 +339,14 @@
     },
     {
       "file": "src/components/playbook/PlayBuilder/AutocompleteDropdown.tsx",
-      "lightBg": [
-        "bg-white",
-        "bg-white",
-        "bg-white"
-      ],
+      "lightBg": ["bg-white", "bg-white", "bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/playbook/PlayBuilder/PlayBuilderCore.tsx",
-      "lightBg": [
-        "bg-opacity-50",
-        "bg-slate-100"
-      ],
+      "lightBg": ["bg-opacity-50", "bg-slate-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": [
@@ -439,20 +355,14 @@
     },
     {
       "file": "src/components/playbook/PlayBuilder/PlayBuilderForm.tsx",
-      "lightBg": [
-        "bg-white",
-        "bg-white"
-      ],
+      "lightBg": ["bg-white", "bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/playbook/PlayBuilder/PlayBuilderWizard.tsx",
-      "lightBg": [
-        "bg-opacity-50",
-        "bg-slate-200"
-      ],
+      "lightBg": ["bg-opacity-50", "bg-slate-200"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
@@ -472,11 +382,7 @@
     },
     {
       "file": "src/components/playbook/visual/DrawingTools.tsx",
-      "lightBg": [
-        "bg-white",
-        "bg-slate-100",
-        "bg-slate-200"
-      ],
+      "lightBg": ["bg-white", "bg-slate-100", "bg-slate-200"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
@@ -500,100 +406,70 @@
     },
     {
       "file": "src/components/playbook/visual/FieldCanvas.tsx",
-      "lightBg": [
-        "bg-white"
-      ],
+      "lightBg": ["bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/playbook/visual/InteractivePlayBuilder.tsx",
-      "lightBg": [
-        "bg-opacity-50"
-      ],
+      "lightBg": ["bg-opacity-50"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/playbook/visual/VisualPlayBuilder.tsx",
-      "lightBg": [
-        "bg-opacity-50",
-        "bg-white"
-      ],
+      "lightBg": ["bg-opacity-50", "bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/PracticePlannerModal/index.tsx",
-      "lightBg": [
-        "bg-blue-100",
-        "bg-opacity-50"
-      ],
+      "lightBg": ["bg-blue-100", "bg-opacity-50"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/components/PracticeBlockEditor.tsx",
-      "lightBg": [
-        "bg-blue-100",
-        "bg-green-100"
-      ],
+      "lightBg": ["bg-blue-100", "bg-green-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/components/PracticeHeader.tsx",
-      "lightBg": [
-        "bg-blue-100",
-        "bg-green-100"
-      ],
+      "lightBg": ["bg-blue-100", "bg-green-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/components/TimeSummary.tsx",
-      "lightBg": [
-        "bg-white"
-      ],
+      "lightBg": ["bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/components/TimelineAllocation.tsx",
-      "lightBg": [
-        "bg-blue-100",
-        "bg-blue-200",
-        "bg-blue-200"
-      ],
+      "lightBg": ["bg-blue-100", "bg-blue-200", "bg-blue-200"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/ui/Animations/SquareAnimations.tsx",
-      "lightBg": [
-        "bg-jade-100",
-        "bg-navy-100",
-        "bg-jade-100",
-        "bg-green-100"
-      ],
+      "lightBg": ["bg-jade-100", "bg-navy-100", "bg-jade-100", "bg-green-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/ui/Auth/Auth.tsx",
-      "lightBg": [
-        "bg-white",
-        "bg-green-100"
-      ],
+      "lightBg": ["bg-white", "bg-green-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
@@ -613,54 +489,42 @@
     },
     {
       "file": "src/components/ui/Form/Form.tsx",
-      "lightBg": [
-        "bg-white"
-      ],
+      "lightBg": ["bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/ui/IconButton/IconButton.tsx",
-      "lightBg": [
-        "bg-red-100"
-      ],
+      "lightBg": ["bg-red-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/ui/Select/Select.tsx",
-      "lightBg": [
-        "bg-blue-100"
-      ],
+      "lightBg": ["bg-blue-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/ui/Sidebar/Sidebar.tsx",
-      "lightBg": [
-        "bg-opacity-50"
-      ],
+      "lightBg": ["bg-opacity-50"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/PracticePlannerModal/components/ActionFooter.tsx",
-      "lightBg": [
-        "bg-opacity-50"
-      ],
+      "lightBg": ["bg-opacity-50"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/PracticePlannerModal/components/DevelopmentTools.tsx",
-      "lightBg": [
-        "bg-yellow-200"
-      ],
+      "lightBg": ["bg-yellow-200"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": [
@@ -669,64 +533,49 @@
     },
     {
       "file": "src/components/practice/PracticePlannerModal/components/PracticeBlockList.tsx",
-      "lightBg": [
-        "bg-white"
-      ],
+      "lightBg": ["bg-white"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/PracticePlannerModal/components/PracticePlannerHeader.tsx",
-      "lightBg": [
-        "bg-blue-100",
-        "bg-green-100"
-      ],
+      "lightBg": ["bg-blue-100", "bg-green-100"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/components/modals/AddBlockModal.tsx",
-      "lightBg": [
-        "bg-opacity-50"
-      ],
+      "lightBg": ["bg-opacity-50"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/components/modals/AddGroupModal.tsx",
-      "lightBg": [
-        "bg-opacity-50"
-      ],
+      "lightBg": ["bg-opacity-50"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/components/modals/EditGroupModal.tsx",
-      "lightBg": [
-        "bg-opacity-50"
-      ],
+      "lightBg": ["bg-opacity-50"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/PracticePlannerModal/components/PracticeTimeline/TimelineContainer.tsx",
-      "lightBg": [
-        "bg-blue-200"
-      ],
+      "lightBg": ["bg-blue-200"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []
     },
     {
       "file": "src/components/practice/PracticePlannerModal/components/PracticeTimeline/TimelineSlider.tsx",
-      "lightBg": [
-        "bg-blue-200"
-      ],
+      "lightBg": ["bg-blue-200"],
       "whiteOnLightPairs": 0,
       "midToneWhite": [],
       "lightBgButtons": []

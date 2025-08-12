@@ -357,77 +357,125 @@ export const PlaybookPage: React.FC = () => {
     };
     try {
       const created = await createServerPreset({ name, filters });
-      setState(p => ({ ...p, serverPresets: [created, ...p.serverPresets], activeServerPresetId: created.id }));
-      telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedServerCreate, data: { id: created.id } });
+      setState((p) => ({
+        ...p,
+        serverPresets: [created, ...p.serverPresets],
+        activeServerPresetId: created.id,
+      }));
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ViewSavedServerCreate,
+        data: { id: created.id },
+      });
     } catch (_e) {
       const preset = createPreset({ name, filters });
-      telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedApply, data: { viewId: preset.id, action: "create_local_fallback" } });
-      setState(p => ({ ...p, filterPresets: listPresets(), activePresetId: preset.id }));
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ViewSavedApply,
+        data: { viewId: preset.id, action: "create_local_fallback" },
+      });
+      setState((p) => ({
+        ...p,
+        filterPresets: listPresets(),
+        activePresetId: preset.id,
+      }));
     }
   };
   const handleApplyPreset = async (id: string) => {
     // Determine origin: server or local
-    const server = state.serverPresets.find(p => p.id === id);
+    const server = state.serverPresets.find((p) => p.id === id);
     if (server) {
       const f = server.filters;
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         searchQuery: f.searchQuery || "",
-        selectedFilters: { ...prev.selectedFilters, formation: f.formation, playType: f.playType },
+        selectedFilters: {
+          ...prev.selectedFilters,
+          formation: f.formation,
+          playType: f.playType,
+        },
         selectedCategory: f.category,
         selectedSubcategory: f.subcategory,
         activeServerPresetId: id,
         activePresetId: undefined,
       }));
-      telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedServerApply, data: { id } });
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ViewSavedServerApply,
+        data: { id },
+      });
       return;
     }
-    const preset = listPresets().find(p => p.id === id);
+    const preset = listPresets().find((p) => p.id === id);
     if (!preset) return;
     const f = applyPreset(preset);
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       searchQuery: f.searchQuery || "",
-      selectedFilters: { ...prev.selectedFilters, formation: f.formation, playType: f.playType },
+      selectedFilters: {
+        ...prev.selectedFilters,
+        formation: f.formation,
+        playType: f.playType,
+      },
       selectedCategory: f.category,
       selectedSubcategory: f.subcategory,
       activePresetId: id,
       activeServerPresetId: undefined,
     }));
-    telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedApply, data: { viewId: id, action: "apply_local" } });
+    telemetry.enqueue({
+      type: TelemetryEventTypes.ViewSavedApply,
+      data: { viewId: id, action: "apply_local" },
+    });
   };
   const handleDeletePreset = async (id: string) => {
     if (!confirm("Delete preset?")) return;
-    const server = state.serverPresets.find(p => p.id === id);
+    const server = state.serverPresets.find((p) => p.id === id);
     if (server) {
       try {
         await deleteServerPreset(id);
-        setState(p => ({ ...p, serverPresets: p.serverPresets.filter(sp => sp.id !== id), activeServerPresetId: p.activeServerPresetId === id ? undefined : p.activeServerPresetId }));
-        telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedServerDelete, data: { id } });
+        setState((p) => ({
+          ...p,
+          serverPresets: p.serverPresets.filter((sp) => sp.id !== id),
+          activeServerPresetId:
+            p.activeServerPresetId === id ? undefined : p.activeServerPresetId,
+        }));
+        telemetry.enqueue({
+          type: TelemetryEventTypes.ViewSavedServerDelete,
+          data: { id },
+        });
         return;
       } catch (_e) {
         // fallback
       }
     }
     deletePreset(id);
-    setState(p => ({ ...p, filterPresets: listPresets(), activePresetId: p.activePresetId === id ? undefined : p.activePresetId }));
+    setState((p) => ({
+      ...p,
+      filterPresets: listPresets(),
+      activePresetId: p.activePresetId === id ? undefined : p.activePresetId,
+    }));
   };
   const handleRenamePreset = async (id: string) => {
     const newName = prompt("New name?");
     if (!newName) return;
-    const server = state.serverPresets.find(p => p.id === id);
+    const server = state.serverPresets.find((p) => p.id === id);
     if (server) {
       try {
         const updated = await updateServerPreset({ id, name: newName });
-        setState(p => ({ ...p, serverPresets: p.serverPresets.map(sp => sp.id === id ? updated : sp) }));
-        telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedServerRename, data: { id } });
+        setState((p) => ({
+          ...p,
+          serverPresets: p.serverPresets.map((sp) =>
+            sp.id === id ? updated : sp
+          ),
+        }));
+        telemetry.enqueue({
+          type: TelemetryEventTypes.ViewSavedServerRename,
+          data: { id },
+        });
         return;
       } catch (_e) {
         // fall through
       }
     }
     updatePreset(id, { name: newName });
-    setState(p => ({ ...p, filterPresets: listPresets() }));
+    setState((p) => ({ ...p, filterPresets: listPresets() }));
   };
 
   const handleViewChange = (view: CoachingView) => {
@@ -463,20 +511,44 @@ export const PlaybookPage: React.FC = () => {
               `Delete ${selectedPlays.length} selected plays? This cannot be undone.`
             )
           ) {
-            // TODO: Implement bulk delete
-            for (const playId of selectedPlays) {
-              await PlaysService.deletePlay(playId);
-            }
+            // Batch archive in one request
+            await PlaysService.deletePlays(selectedPlays);
             alert(`${selectedPlays.length} plays deleted successfully`);
             refreshPlays();
             handleClearSelection();
           }
           break;
 
-        case "export":
-          // TODO: Implement bulk export using CSVService
-          alert(`Exporting ${selectedPlays.length} plays...`);
+        case "export": {
+          if (selectedPlays.length === 0) {
+            alert("No plays selected to export.");
+            return;
+          }
+          // Fetch selected plays, then export to CSV
+          const fetched: Play[] = [];
+          for (const id of selectedPlays) {
+            const p = await PlaysService.getPlay(id);
+            if (p) fetched.push(p);
+          }
+          if (fetched.length === 0) {
+            alert("Unable to load selected plays to export.");
+            return;
+          }
+          const csvContent = CSVService.exportPlaysToCSV(fetched, {
+            includePrivateNotes: true,
+            formatForCoach: true,
+          });
+          const ts = new Date()
+            .toISOString()
+            .replace(/[:T]/g, "-")
+            .split(".")[0];
+          CSVService.downloadCSV(
+            csvContent,
+            `plays-export-${fetched.length}-${ts}.csv`
+          );
+          alert(`Exported ${fetched.length} plays to CSV.`);
           break;
+        }
 
         case "add-to-practice":
           // TODO: Implement bulk add to practice
@@ -517,7 +589,7 @@ export const PlaybookPage: React.FC = () => {
     let cancelled = false;
     (async () => {
       try {
-        setState(p => ({ ...p, serverPresetsLoading: true }));
+        setState((p) => ({ ...p, serverPresetsLoading: true }));
         const presets = await listServerPresets();
         if (cancelled) return;
         // One-time import if server empty
@@ -526,25 +598,46 @@ export const PlaybookPage: React.FC = () => {
           if (local.length) {
             for (const lp of local) {
               try {
-                await createServerPreset({ name: lp.name, filters: lp.filters });
+                await createServerPreset({
+                  name: lp.name,
+                  filters: lp.filters,
+                });
               } catch {
                 /* ignore individual */
               }
             }
             const refreshed = await listServerPresets();
             if (!cancelled) {
-              setState(p => ({ ...p, serverPresets: refreshed, importedLocalPresets: true }));
+              setState((p) => ({
+                ...p,
+                serverPresets: refreshed,
+                importedLocalPresets: true,
+              }));
             }
-            telemetry.enqueue({ type: TelemetryEventTypes.ViewSavedServerImport, data: { count: local.length } });
+            telemetry.enqueue({
+              type: TelemetryEventTypes.ViewSavedServerImport,
+              data: { count: local.length },
+            });
             return;
           }
         }
-        setState(p => ({ ...p, serverPresets: presets, serverPresetsLoading: false }));
+        setState((p) => ({
+          ...p,
+          serverPresets: presets,
+          serverPresetsLoading: false,
+        }));
       } catch (_e) {
-        if (!cancelled) setState(p => ({ ...p, serverPresetsLoading: false, serverPresetsError: 'Failed to load presets' }));
+        if (!cancelled)
+          setState((p) => ({
+            ...p,
+            serverPresetsLoading: false,
+            serverPresetsError: "Failed to load presets",
+          }));
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
@@ -595,14 +688,18 @@ export const PlaybookPage: React.FC = () => {
               {/* Preset Dropdown */}
               <div className="flex items-center space-x-1">
                 <select
-                  value={state.activeServerPresetId || state.activePresetId || ""}
+                  value={
+                    state.activeServerPresetId || state.activePresetId || ""
+                  }
                   onChange={(e) => handleApplyPreset(e.target.value)}
                   className="text-sm border-slate-300 rounded px-2 py-1 min-w-[200px]"
                   disabled={state.serverPresetsLoading}
                   aria-busy={state.serverPresetsLoading}
                 >
                   <option value="" disabled={state.serverPresetsLoading}>
-                    {state.serverPresetsLoading ? "Loading presets…" : "Presets…"}
+                    {state.serverPresetsLoading
+                      ? "Loading presets…"
+                      : "Presets…"}
                   </option>
                   {state.serverPresets.length > 0 && (
                     <optgroup label="Cloud presets">

@@ -17,7 +17,6 @@ import {
   LazyCreateCoachAccount,
   LazyBoxCall,
   LazyPlaybookPage,
-  
   LazyTeamSettings,
   LazyAboutPage,
   LazyPrivacyPolicyPage,
