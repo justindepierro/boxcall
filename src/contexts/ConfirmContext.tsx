@@ -1,5 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useCallback, useContext, useRef, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 import { Button } from "../components/ui/Button/Button";
 
 export interface ConfirmOptions {
@@ -23,7 +29,9 @@ interface ConfirmContextValue {
 
 const ConfirmContext = createContext<ConfirmContextValue | null>(null);
 
-export const ConfirmProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ConfirmProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [active, setActive] = useState<InternalRequest | null>(null);
   const queueRef = useRef<InternalRequest[]>([]);
 
@@ -46,7 +54,7 @@ export const ConfirmProvider: React.FC<{ children: React.ReactNode }> = ({ child
         processNext();
       });
     },
-  [processNext]
+    [processNext]
   );
 
   const handleClose = (result: boolean) => {
@@ -62,10 +70,22 @@ export const ConfirmProvider: React.FC<{ children: React.ReactNode }> = ({ child
       {children}
       {active && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/40" aria-hidden="true" onClick={() => handleClose(false)} />
-          <div role="dialog" aria-modal="true" aria-labelledby={`${active.id}-title`} className="relative surface-card elevation-modal max-w-sm w-full mx-4 rounded-md border-subtle p-6 animate-scale-in">
+          <div
+            className="absolute inset-0 bg-black/40"
+            aria-hidden="true"
+            onClick={() => handleClose(false)}
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`${active.id}-title`}
+            className="relative surface-card elevation-modal max-w-sm w-full mx-4 rounded-md border-subtle p-6 animate-scale-in"
+          >
             {active.options.title && (
-              <h2 id={`${active.id}-title`} className="text-base font-semibold mb-3 text-slate-900">
+              <h2
+                id={`${active.id}-title`}
+                className="text-base font-semibold mb-3 text-slate-900"
+              >
                 {active.options.title}
               </h2>
             )}
@@ -81,12 +101,15 @@ export const ConfirmProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 {active.options.cancelLabel || "Cancel"}
               </Button>
               <Button
-                variant={active.options.tone === "danger" ? "danger" : "primary"}
+                variant={
+                  active.options.tone === "danger" ? "danger" : "primary"
+                }
                 size="sm"
                 autoFocus
                 onClick={() => handleClose(true)}
               >
-                {active.options.confirmLabel || (active.options.tone === "danger" ? "Delete" : "Confirm")}
+                {active.options.confirmLabel ||
+                  (active.options.tone === "danger" ? "Delete" : "Confirm")}
               </Button>
             </div>
           </div>

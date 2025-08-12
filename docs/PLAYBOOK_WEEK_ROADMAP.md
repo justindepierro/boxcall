@@ -32,19 +32,24 @@ Purpose: Accelerate the Playbook module from "solid refactor" to the best-in-cla
 ## Progress Update (Aug 12, 2025)
 
 Completed:
+
 - Step 1: Replaced native confirm() calls with promise-based ConfirmProvider and added UndoQueueProvider. Bulk play deletions now: confirm dialog → archive → toast with Undo (restores archived plays). Lint/type clean; integrated at provider root.
 
 In Flight / Next Up:
+
 - Step 2: Implement PlayGrid state differentiation (loading skeleton, no-results vs total-empty CTA, and error retry). Will introduce lightweight SkeletonCard component and conditional rendering logic keyed off loading flag + filtered count.
 - Step 3: Autosave & draft recovery (PlayBuilder): plan is debounced local persistence (localStorage first; optional IndexedDB later) + draft banner and clear-on-successful-save.
 
 Planned Adjustments (no scope change):
+
 - Add telemetry events for undo actions (DeleteInitiated, DeleteUndone, DeleteCommitted) when telemetry schema (Step 18) is addressed—deferred until schema consolidation to avoid churn.
 
 Risk Notes:
+
 - Undo restore currently limited to archived plays only; race condition protection (prevent double-delete during undo window) to be added alongside PlayGrid enhancements (minor).
 
 Immediate Focus:
+
 1. Scaffold skeleton & empty state variants in PlayGrid.
 2. Add basic error boundary path for failed play fetch (ties into future Step 4 central error mapping).
 3. Then proceed to autosave scaffolding in builder.

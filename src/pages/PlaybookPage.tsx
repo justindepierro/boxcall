@@ -272,7 +272,8 @@ const PlaybookPageInner: React.FC = () => {
   const handleDeletePreset = async (id: string) => {
     const confirmed = await confirmDialog({
       title: "Delete Preset",
-      message: "Are you sure you want to delete this preset? This cannot be undone.",
+      message:
+        "Are you sure you want to delete this preset? This cannot be undone.",
       tone: "danger",
       confirmLabel: "Delete",
     });
@@ -478,10 +479,16 @@ const PlaybookPageInner: React.FC = () => {
                                   label: `${ids.length} play${ids.length === 1 ? "" : "s"} deleted`,
                                   payload: { ids },
                                   apply: () => {},
-                                  restore: async ({ ids }: { ids: string[] }) => {
+                                  restore: async ({
+                                    ids,
+                                  }: {
+                                    ids: string[];
+                                  }) => {
                                     try {
                                       await PlaysService.restorePlays(ids);
-                                      toastSuccess(`Restored ${ids.length} play${ids.length === 1 ? "" : "s"}`);
+                                      toastSuccess(
+                                        `Restored ${ids.length} play${ids.length === 1 ? "" : "s"}`
+                                      );
                                     } catch (e) {
                                       console.error("Undo restore failed", e);
                                       toastError("Failed to restore plays");
@@ -490,11 +497,14 @@ const PlaybookPageInner: React.FC = () => {
                                     }
                                   },
                                 });
-                                toastSuccess(`${ids.length} play${ids.length === 1 ? "" : "s"} deleted`);
+                                toastSuccess(
+                                  `${ids.length} play${ids.length === 1 ? "" : "s"} deleted`
+                                );
                                 refreshPlays();
                                 handleClearSelection();
                               }
-                              break; }
+                              break;
+                            }
                             case "export": {
                               if (!selectedPlays.length) {
                                 toastInfo("No plays selected to export.");
