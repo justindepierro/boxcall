@@ -18,6 +18,8 @@ import {
   normalizeFormation,
 } from "../../../utils/textNormalization";
 import { PlaysService } from "../../../services/playsService";
+import { telemetry } from "../../../telemetry/dispatcher";
+import { TelemetryEventTypes } from "../../../telemetry/events";
 
 interface PlayBuilderCoreProps {
   isOpen: boolean;
@@ -84,6 +86,10 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
       const payload = JSON.stringify({ data, ts: Date.now() });
       localStorage.setItem(DRAFT_STORAGE_KEY, payload);
       setLastAutosave(Date.now());
+  telemetry.enqueue({ 
+        type: TelemetryEventTypes.PlayDraftAutosave,
+        data: { fields: Object.keys(data).length },
+      });
     } catch {
       // ignore quota / private mode errors
     }
@@ -91,6 +97,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   const clearDraft = () => {
     try {
       localStorage.removeItem(DRAFT_STORAGE_KEY);
+      telemetry.enqueue({ type: TelemetryEventTypes.PlayDraftClear });
     } catch {
       /* noop */
     }
@@ -105,6 +112,10 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
       setPlayData((prev) => ({ ...prev, ...draft.data }));
       setRestoredFromDraft(true);
       setLastAutosave(draft.ts);
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDraftRestore,
+        data: { ageMs: Date.now() - draft.ts },
+      });
     } else {
       setRestoredFromDraft(false);
     }
@@ -214,6 +225,10 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   console.log("💾 Saving (normalized) play data:", normalized);
   onSave(normalized);
   clearDraft();
+  telemetry.enqueue({
+    type: TelemetryEventTypes.PlayDraftFinalize,
+    data: { hasDiagram: false },
+  });
   onClose();
   };
 
@@ -241,6 +256,10 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   const validationErrors: string[] = [];
   if (!playData.play_name?.trim())
     validationErrors.push("Play name is required");
+        telemetry.enqueue({
+          type: TelemetryEventTypes.PlayDraftFinalize,
+          data: { hasDiagram: false },
+        });
   if (!playData.p_type) validationErrors.push("Play type is required");
   if (!playData.formation?.trim())
     validationErrors.push("Formation is required");
