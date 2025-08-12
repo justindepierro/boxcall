@@ -38,7 +38,6 @@ interface PlayCardProps {
   onAddToPracticeScript?: (play: PlayType) => void;
   onAddToGamePlan?: (play: PlayType) => void;
   // Bulk Operations
-  enableSelection?: boolean;
   isSelected?: boolean;
   onSelectionChange?: (playId: string, selected: boolean) => void;
   density?: "comfortable" | "compact";
@@ -52,7 +51,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   onAddToPracticeScript,
   onAddToGamePlan,
   // Bulk Operations
-  enableSelection = false,
   isSelected = false,
   onSelectionChange,
   density = "comfortable",
@@ -124,19 +122,16 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         <div className={isCompact ? "p-3 sm:p-4" : "p-4 sm:p-6"}>
           {/* Collapsed/Skinny Mode */}
           <div className="flex items-center justify-between">
-            {/* Selection Checkbox */}
-            {enableSelection && (
-              <div className="flex items-center mr-3">
-                <input
-                  type="checkbox"
-                  checked={isSelected}
-                  onChange={(e) =>
-                    onSelectionChange?.(play.id, e.target.checked)
-                  }
-                  className="rounded border-slate-300 text-blue-600 focus:ring-jade-500"
-                />
-              </div>
-            )}
+            {/* Selection Checkbox: always available for quick selection */}
+            <div className="flex items-center mr-3">
+              <input
+                type="checkbox"
+                checked={Boolean(isSelected)}
+                onChange={(e) => onSelectionChange?.(play.id, e.target.checked)}
+                className="rounded border-slate-300 text-blue-600 focus:ring-jade-500"
+                title="Select play"
+              />
+            </div>
 
             <div className="flex-1 min-w-0">
               {/* Title bar: Primary + small secondary on one line when space allows */}

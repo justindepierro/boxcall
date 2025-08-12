@@ -346,7 +346,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           onCreateDiagram={onCreateDiagram}
           onAddToPracticeScript={onAddToPracticeScript}
           onAddToGamePlan={onAddToGamePlan}
-          enableSelection={enableBulkOperations}
           isSelected={selectedPlayIds.has(play.id)}
           onSelectionChange={handlePlaySelect}
           density={density}
@@ -360,7 +359,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       onCreateDiagram,
       onAddToPracticeScript,
       onAddToGamePlan,
-      enableBulkOperations,
       selectedPlayIds,
       handlePlaySelect,
       density,
@@ -507,7 +505,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               onCreateDiagram={onCreateDiagram}
               onAddToPracticeScript={onAddToPracticeScript}
               onAddToGamePlan={onAddToGamePlan}
-              enableSelection={enableBulkOperations}
               isSelected={selectedPlayIds.has(play.id)}
               onSelectionChange={handlePlaySelect}
               density={density}
