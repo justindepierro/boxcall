@@ -111,6 +111,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const [newFlag, setNewFlag] = useState("");
   const [newPlayer, setNewPlayer] = useState("");
   const [newPosition, setNewPosition] = useState("");
+  const [showTagsEditor, setShowTagsEditor] = useState(false);
   return (
     <>
       <div
@@ -241,343 +242,400 @@ export const PlayCard: React.FC<PlayCardProps> = ({
           {isExpanded && (
             <div
               id={`play-details-${play.id}`}
-              className="mt-4 pt-4 border-t border-subtle grid grid-cols-1 md:grid-cols-3 gap-4"
+              className="mt-4 pt-4 border-t border-subtle space-y-4"
               role="region"
               aria-label={`Details for ${displayName}`}
             >
-              {/* Quick Flags - searchable, taggable (local, pre-roster) */}
-              <div className="md:col-span-3 -mt-2">
-                <Typography variant="label-lg" as="h4" className="text-slate-700 flex items-center">
-                  Tags & Roles
-                </Typography>
-                <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-3">
-                  {/* Positions */}
-                  <div>
-                    <div className="text-xs text-slate-500 mb-1">Positions</div>
-                    <div className="flex flex-wrap gap-1">
-                      {flags.positions.map((pos) => (
-                        <Button
-                          key={pos}
-                          size="xs"
-                          variant="subtle"
-                          className="!h-auto px-2 py-0.5 text-[11px]"
-                          onClick={() => setFlags(removeFlag(play.id, "positions", pos))}
-                          title="Remove"
-                        >
-                          {pos} ×
-                        </Button>
-                      ))}
+              {/* Overview bar */}
+              <div className="flex flex-wrap items-center gap-2">
+                <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${getPlayTypeColor(play.p_type)}`}>
+                  {play.p_type}
+                </span>
+                {play.personnel && (
+                  <span className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-full text-[11px]">
+                    Personnel: {play.personnel}
+                  </span>
+                )}
+                {phaseLabel && (
+                  <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-[10px] font-semibold uppercase">
+                    {phaseLabel}
+                  </span>
+                )}
+                {play.one_word_play && !showOneWordCalls && (
+                  <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full text-[11px]">
+                    Code: {play.one_word_play.toUpperCase()}
+                  </span>
+                )}
+                <span className={`ml-auto text-xs font-medium ${getConfidenceColor(play.confidence_base)}`}>
+                  Confidence {play.confidence_base}%
+                </span>
+              </div>
+
+              {/* Main details grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Formation */}
+                <div className="surface-subtle rounded-md p-3">
+                  <Typography variant="label-lg" as="h4" className="text-slate-700 flex items-center mb-2">
+                    <Target className="h-4 w-4 mr-1" /> Formation
+                  </Typography>
+                  <dl className="space-y-1 text-sm">
+                    <div className="flex justify-between gap-2">
+                      <dt className="text-text-secondary">Base</dt>
+                      <dd className="text-text-primary">{play.formation}</dd>
                     </div>
-                    <div className="mt-2 flex items-center gap-2">
-                      <select
-                        value={newPosition}
-                        onChange={(e) => setNewPosition(e.target.value)}
-                        className="border-subtle rounded px-2 py-1 text-xs"
-                      >
-                        <option value="">Select…</option>
-                        {POSITION_OPTIONS.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
-                      <Button
-                        size="xs"
-                        variant="secondary"
-                        onClick={() => {
-                          if (!newPosition) return;
-                          const next = addFlag(play.id, "positions", newPosition);
-                          setFlags(next);
-                          setNewPosition("");
-                        }}
-                      >
-                        Add
-                      </Button>
+                    {play.f_type && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Type</dt>
+                        <dd className="text-text-primary">{play.f_type}</dd>
+                      </div>
+                    )}
+                    {play.f_dir && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Direction</dt>
+                        <dd className="text-text-primary">{play.f_dir}</dd>
+                      </div>
+                    )}
+                    {play.back_align && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Back Align</dt>
+                        <dd className="text-text-primary">{play.back_align}</dd>
+                      </div>
+                    )}
+                    {play.shift && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Shift</dt>
+                        <dd className="text-text-primary">{play.shift}</dd>
+                      </div>
+                    )}
+                    {play.motion && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Motion</dt>
+                        <dd className="text-text-primary">{play.motion}</dd>
+                      </div>
+                    )}
+                    {(play.ftag1 || play.ftag2) && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Tags</dt>
+                        <dd className="text-text-primary">
+                          {[play.ftag1, play.ftag2].filter(Boolean).join(", ")}
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
+
+                {/* Play details */}
+                <div className="surface-subtle rounded-md p-3">
+                  <Typography variant="label-lg" as="h4" className="text-slate-700 flex items-center mb-2">
+                    <Hash className="h-4 w-4 mr-1" /> Play Details
+                  </Typography>
+                  <dl className="space-y-1 text-sm">
+                    <div className="flex justify-between gap-2">
+                      <dt className="text-text-secondary">Core</dt>
+                      <dd className="text-text-primary">{play.play_name}</dd>
                     </div>
-                  </div>
-                  {/* Players */}
-                  <div>
-                    <div className="text-xs text-slate-500 mb-1">Players</div>
-                    <div className="flex flex-wrap gap-1">
-                      {flags.players.map((pl => (
-                        <Button
-                          key={pl}
-                          size="xs"
-                          variant="subtle"
-                          className="!h-auto px-2 py-0.5 text-[11px]"
-                          onClick={() => setFlags(removeFlag(play.id, "players", pl))}
-                          title="Remove"
-                        >
-                          {pl} ×
-                        </Button>
-                      )))}
+                    {play.protection && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Protection</dt>
+                        <dd className="text-text-primary">{play.protection}</dd>
+                      </div>
+                    )}
+                    {play.p_dir && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Direction</dt>
+                        <dd className="text-text-primary">{play.p_dir}</dd>
+                      </div>
+                    )}
+                    {(play.r_str || play.p_str) && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Strength</dt>
+                        <dd className="text-text-primary">
+                          {[play.r_str, play.p_str].filter(Boolean).join(", ")}
+                        </dd>
+                      </div>
+                    )}
+                    {(play.p_tag1 || play.p_tag2) && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Tags</dt>
+                        <dd className="text-text-primary">
+                          {[play.p_tag1, play.p_tag2].filter(Boolean).join(", ")}
+                        </dd>
+                      </div>
+                    )}
+                    {(play.check_into || play.key_player1 || play.key_player2) && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Keys</dt>
+                        <dd className="text-text-primary">
+                          {[play.check_into, play.key_player1, play.key_player2]
+                            .filter(Boolean)
+                            .join(", ")}
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
+
+                {/* Preferences */}
+                <div className="surface-subtle rounded-md p-3">
+                  <Typography variant="label-lg" as="h4" className="text-slate-700 flex items-center mb-2">
+                    Preferences
+                  </Typography>
+                  <dl className="space-y-1 text-sm">
+                    {play.pref_down && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Down</dt>
+                        <dd className="text-text-primary">{play.pref_down}</dd>
+                      </div>
+                    )}
+                    {play.pref_dis && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Distance</dt>
+                        <dd className="text-text-primary">{play.pref_dis}</dd>
+                      </div>
+                    )}
+                    {play.pref_hash && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Hash</dt>
+                        <dd className="text-text-primary">{play.pref_hash}</dd>
+                      </div>
+                    )}
+                    {play.pref_cov && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Coverage</dt>
+                        <dd className="text-text-primary">{play.pref_cov}</dd>
+                      </div>
+                    )}
+                    {play.pref_front && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Front</dt>
+                        <dd className="text-text-primary">{play.pref_front}</dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
+
+                {/* Usage & Stats */}
+                <div className="surface-subtle rounded-md p-3">
+                  <Typography variant="label-lg" as="h4" className="text-slate-700 flex items-center mb-2">
+                    <Clock className="h-4 w-4 mr-1" /> Usage & Stats
+                  </Typography>
+                  <dl className="space-y-1 text-sm">
+                    <div className="flex justify-between gap-2">
+                      <dt className="text-text-secondary">Times Called</dt>
+                      <dd className="text-text-primary">{play.times_called}</dd>
                     </div>
-                    <div className="mt-2 flex items-center gap-2">
-                      <input
-                        value={newPlayer}
-                        onChange={(e) => setNewPlayer(e.target.value)}
-                        placeholder="Add player (e.g., Z, WR1)"
-                        className="border-subtle rounded px-2 py-1 text-xs flex-1"
-                      />
-                      <Button
-                        size="xs"
-                        variant="secondary"
-                        onClick={() => {
-                          if (!newPlayer.trim()) return;
-                          const next = addFlag(play.id, "players", newPlayer.trim());
-                          setFlags(next);
-                          setNewPlayer("");
-                        }}
-                      >
-                        Add
-                      </Button>
+                    <div className="flex justify-between gap-2">
+                      <dt className="text-text-secondary">Times Successful</dt>
+                      <dd className="text-text-primary">{play.times_successful}</dd>
                     </div>
-                  </div>
-                  {/* Flags */}
-                  <div>
-                    <div className="text-xs text-slate-500 mb-1">Flags</div>
-                    <div className="flex flex-wrap gap-1">
-                      {flags.flags.map((fl) => (
-                        <Button
-                          key={fl}
-                          size="xs"
-                          variant="subtle"
-                          className="!h-auto px-2 py-0.5 text-[11px]"
-                          onClick={() => setFlags(removeFlag(play.id, "flags", fl))}
-                          title="Remove"
-                        >
-                          {fl} ×
-                        </Button>
-                      ))}
-                    </div>
-                    <div className="mt-2 flex items-center gap-2">
-                      <input
-                        value={newFlag}
-                        onChange={(e) => setNewFlag(e.target.value)}
-                        placeholder="Add flag (e.g., Red Zone, 3rd&Short)"
-                        className="border-subtle rounded px-2 py-1 text-xs flex-1"
-                      />
-                      <Button
-                        size="xs"
-                        variant="secondary"
-                        onClick={() => {
-                          if (!newFlag.trim()) return;
-                          const next = addFlag(play.id, "flags", newFlag.trim());
-                          setFlags(next);
-                          setNewFlag("");
-                        }}
-                      >
-                        Add
-                      </Button>
-                    </div>
-                  </div>
+                    {play.last_used_at && (
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-text-secondary">Last Used</dt>
+                        <dd className="text-text-primary">
+                          {new Date(play.last_used_at).toLocaleDateString()}
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
                 </div>
               </div>
-              {/* Formation Details */}
-              <div className="space-y-2">
-                <Typography
-                  variant="label-lg"
-                  as="h4"
-                  className="text-slate-700 flex items-center"
-                >
-                  <Target className="h-4 w-4 mr-1" />
-                  Formation
-                </Typography>
-                <div className="space-y-1 text-sm text-slate-600">
-                  <div>
-                    <span className="font-medium">Base:</span> {play.formation}
-                  </div>
-                  {play.f_dir && (
-                    <div>
-                      <span className="font-medium">Direction:</span>{" "}
-                      {play.f_dir}
-                    </div>
-                  )}
-                  {play.ftag1 && (
-                    <div>
-                      <span className="font-medium">Tag 1:</span> {play.ftag1}
-                    </div>
-                  )}
-                  {play.ftag2 && (
-                    <div>
-                      <span className="font-medium">Tag 2:</span> {play.ftag2}
-                    </div>
-                  )}
-                  {play.back_align && (
-                    <div>
-                      <span className="font-medium">Back Align:</span>{" "}
-                      {play.back_align}
-                    </div>
-                  )}
-                  {play.shift && (
-                    <div>
-                      <span className="font-medium">Shift:</span> {play.shift}
-                    </div>
-                  )}
-                  {play.motion && (
-                    <div>
-                      <span className="font-medium">Motion:</span> {play.motion}
-                    </div>
-                  )}
-                </div>
-              </div>
-              {/* Play Details */}
-              <div className="space-y-2">
-                <Typography
-                  variant="label-lg"
-                  as="h4"
-                  className="text-slate-700 flex items-center"
-                >
-                  <Hash className="h-4 w-4 mr-1" />
-                  Play Details
-                </Typography>
-                <div className="space-y-1 text-sm text-slate-600">
-                  <div>
-                    <span className="font-medium">Core:</span> {play.play_name}
-                  </div>
-                  {play.p_dir && (
-                    <div>
-                      <span className="font-medium">Direction:</span>{" "}
-                      {play.p_dir}
-                    </div>
-                  )}
-                  {play.protection && (
-                    <div>
-                      <span className="font-medium">Protection:</span>{" "}
-                      {play.protection}
-                    </div>
-                  )}
-                  {play.p_tag1 && (
-                    <div>
-                      <span className="font-medium">Tag 1:</span> {play.p_tag1}
-                    </div>
-                  )}
-                  {play.p_tag2 && (
-                    <div>
-                      <span className="font-medium">Tag 2:</span> {play.p_tag2}
-                    </div>
-                  )}
-                  {play.r_str && (
-                    <div>
-                      <span className="font-medium">Run Strength:</span>{" "}
-                      {play.r_str}
-                    </div>
-                  )}
-                  {play.p_str && (
-                    <div>
-                      <span className="font-medium">Pass Strength:</span>{" "}
-                      {play.p_str}
-                    </div>
-                  )}
-                </div>
-              </div>
-              {/* Situational & Stats */}
-              <div className="space-y-2">
-                <Typography
-                  variant="label-lg"
-                  as="h4"
-                  className="text-slate-700 flex items-center"
-                >
-                  <Clock className="h-4 w-4 mr-1" />
-                  Usage & Stats
-                </Typography>
-                <div className="space-y-1 text-sm text-slate-600">
-                  {/* Success rate removed: deprecated legacy field */}
-                  <div>
-                    <span className="font-medium">Times Called:</span>{" "}
-                    {play.times_called}
-                  </div>
-                  <div>
-                    <span className="font-medium">Times Successful:</span>{" "}
-                    {play.times_successful}
-                  </div>
-                  {play.pref_down && (
-                    <div>
-                      <span className="font-medium">Pref Down:</span>{" "}
-                      {play.pref_down}
-                    </div>
-                  )}
-                  {play.pref_dis && (
-                    <div>
-                      <span className="font-medium">Pref Distance:</span>{" "}
-                      {play.pref_dis}
-                    </div>
-                  )}
-                  {play.pref_hash && (
-                    <div>
-                      <span className="font-medium">Pref Hash:</span>{" "}
-                      {play.pref_hash}
-                    </div>
-                  )}
-                  {play.pref_cov && (
-                    <div>
-                      <span className="font-medium">Pref Coverage:</span>{" "}
-                      {play.pref_cov}
-                    </div>
-                  )}
-                </div>
-              </div>
-              {/* Notes & Tags */}
+
+              {/* Notes */}
               {play.notes && (
-                <div className="md:col-span-3 pt-2 border-t border-slate-100">
-                  {play.notes && (
-                    <div className="mb-2">
-                      <Typography
-                        variant="body-sm"
-                        as="span"
-                        className="font-medium text-slate-700"
-                      >
-                        Notes:
-                      </Typography>
-                      <p className="text-sm text-slate-600 mt-1">
-                        {play.notes}
-                      </p>
-                    </div>
-                  )}
-                  {/* Tags removed: deprecated legacy field */}
+                <div className="surface-subtle rounded-md p-3">
+                  <Typography variant="label-lg" as="h4" className="text-slate-700 mb-1">
+                    Notes
+                  </Typography>
+                  <p className="text-sm text-slate-700 whitespace-pre-line">{play.notes}</p>
                 </div>
               )}
 
-              {/* 3-Part Workflow Actions - Week 3 Feature */}
-              <div className="md:col-span-3 pt-4 border-t border-slate-100">
+              {/* Tags & Roles (summary + editor) */}
+              <div className="surface-subtle rounded-md p-3">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <Typography
-                      variant="label-lg"
-                      as="h4"
-                      className="text-slate-700 mb-1"
-                    >
-                      Add to Workflow
-                    </Typography>
-                    <p className="text-xs text-slate-500">
-                      Build practice scripts and game plans from this play
-                    </p>
+                  <Typography variant="label-lg" as="h4" className="text-slate-700">
+                    Tags & Roles
+                  </Typography>
+                  <Button
+                    size="xs"
+                    variant="ghost"
+                    onClick={() => setShowTagsEditor((s) => !s)}
+                    aria-expanded={showTagsEditor}
+                  >
+                    {showTagsEditor ? "Hide" : "Edit"}
+                  </Button>
+                </div>
+                {/* Summary chips */}
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {[...flags.positions.map((x) => `Position:${x}`),
+                    ...flags.players.map((x) => `Player:${x}`),
+                    ...flags.flags.map((x) => `Flag:${x}`)]
+                    .slice(0, 8)
+                    .map((chip) => (
+                      <span key={chip} className="px-2 py-0.5 text-[11px] rounded bg-slate-100 text-slate-700">
+                        {chip}
+                      </span>
+                    ))}
+                  {flags.positions.length + flags.players.length + flags.flags.length > 8 && (
+                    <span className="text-xs text-slate-500">+
+                      {flags.positions.length + flags.players.length + flags.flags.length - 8} more
+                    </span>
+                  )}
+                </div>
+                {showTagsEditor && (
+                  <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {/* Positions */}
+                    <div>
+                      <div className="text-xs text-slate-500 mb-1">Positions</div>
+                      <div className="flex flex-wrap gap-1">
+                        {flags.positions.map((pos) => (
+                          <Button
+                            key={pos}
+                            size="xs"
+                            variant="subtle"
+                            className="!h-auto px-2 py-0.5 text-[11px]"
+                            onClick={() => setFlags(removeFlag(play.id, "positions", pos))}
+                            title="Remove"
+                          >
+                            {pos} ×
+                          </Button>
+                        ))}
+                      </div>
+                      <div className="mt-2 flex items-center gap-2">
+                        <select
+                          value={newPosition}
+                          onChange={(e) => setNewPosition(e.target.value)}
+                          className="border-subtle rounded px-2 py-1 text-xs"
+                        >
+                          <option value="">Select…</option>
+                          {POSITION_OPTIONS.map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
+                        <Button
+                          size="xs"
+                          variant="secondary"
+                          onClick={() => {
+                            if (!newPosition) return;
+                            const next = addFlag(play.id, "positions", newPosition);
+                            setFlags(next);
+                            setNewPosition("");
+                          }}
+                        >
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+                    {/* Players */}
+                    <div>
+                      <div className="text-xs text-slate-500 mb-1">Players</div>
+                      <div className="flex flex-wrap gap-1">
+                        {flags.players.map((pl) => (
+                          <Button
+                            key={pl}
+                            size="xs"
+                            variant="subtle"
+                            className="!h-auto px-2 py-0.5 text-[11px]"
+                            onClick={() => setFlags(removeFlag(play.id, "players", pl))}
+                            title="Remove"
+                          >
+                            {pl} ×
+                          </Button>
+                        ))}
+                      </div>
+                      <div className="mt-2 flex items-center gap-2">
+                        <input
+                          value={newPlayer}
+                          onChange={(e) => setNewPlayer(e.target.value)}
+                          placeholder="Add player (e.g., Z, WR1)"
+                          className="border-subtle rounded px-2 py-1 text-xs flex-1"
+                        />
+                        <Button
+                          size="xs"
+                          variant="secondary"
+                          onClick={() => {
+                            if (!newPlayer.trim()) return;
+                            const next = addFlag(play.id, "players", newPlayer.trim());
+                            setFlags(next);
+                            setNewPlayer("");
+                          }}
+                        >
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+                    {/* Flags */}
+                    <div>
+                      <div className="text-xs text-slate-500 mb-1">Flags</div>
+                      <div className="flex flex-wrap gap-1">
+                        {flags.flags.map((fl) => (
+                          <Button
+                            key={fl}
+                            size="xs"
+                            variant="subtle"
+                            className="!h-auto px-2 py-0.5 text-[11px]"
+                            onClick={() => setFlags(removeFlag(play.id, "flags", fl))}
+                            title="Remove"
+                          >
+                            {fl} ×
+                          </Button>
+                        ))}
+                      </div>
+                      <div className="mt-2 flex items-center gap-2">
+                        <input
+                          value={newFlag}
+                          onChange={(e) => setNewFlag(e.target.value)}
+                          placeholder="Add flag (e.g., Red Zone, 3rd&Short)"
+                          className="border-subtle rounded px-2 py-1 text-xs flex-1"
+                        />
+                        <Button
+                          size="xs"
+                          variant="secondary"
+                          onClick={() => {
+                            if (!newFlag.trim()) return;
+                            const next = addFlag(play.id, "flags", newFlag.trim());
+                            setFlags(next);
+                            setNewFlag("");
+                          }}
+                        >
+                          Add
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="secondary"
-                      size="xs"
-                      onClick={() => onAddToPracticeScript?.(play)}
-                      title="Add this play to a practice script"
-                      className="surface-subtle hover:bg-blue-100 text-blue-700 border-transparent"
-                    >
-                      <Calendar className="h-3 w-3 mr-1" />
-                      Practice Script
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="xs"
-                      onClick={() => onAddToGamePlan?.(play)}
-                      title="Add this play to a game plan"
-                      className="surface-subtle hover:bg-jade-100 text-jade-700 border-transparent"
-                    >
-                      <Gamepad2 className="h-3 w-3 mr-1" />
-                      Game Plan
-                    </Button>
-                    <Badge variant="premium" size="sm">
-                      Week 3
-                    </Badge>
-                  </div>
+                )}
+              </div>
+
+              {/* Workflow actions */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <Typography variant="label-lg" as="h4" className="text-slate-700 mb-1">
+                    Add to Workflow
+                  </Typography>
+                  <p className="text-xs text-slate-500">Build practice scripts and game plans from this play</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="secondary"
+                    size="xs"
+                    onClick={() => onAddToPracticeScript?.(play)}
+                    title="Add this play to a practice script"
+                    className="surface-subtle hover:bg-blue-100 text-blue-700 border-transparent"
+                  >
+                    <Calendar className="h-3 w-3 mr-1" /> Practice Script
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="xs"
+                    onClick={() => onAddToGamePlan?.(play)}
+                    title="Add this play to a game plan"
+                    className="surface-subtle hover:bg-jade-100 text-jade-700 border-transparent"
+                  >
+                    <Gamepad2 className="h-3 w-3 mr-1" /> Game Plan
+                  </Button>
+                  <Badge variant="premium" size="sm">Week 3</Badge>
                 </div>
               </div>
             </div>
