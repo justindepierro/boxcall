@@ -39,9 +39,12 @@ Completed:
 - Step 3: PlayBuilder autosave & draft recovery (debounced 1.2s, visibility flush, restore banner, clear draft) ✅
 - Step 4: DomainErrorMapper scaffold + mapped save/add/export/create flows to uniform toasts & telemetry ✅
 
-In Flight / Next Up (Phase 2 Start):
+Phase 2 Progress:
 
-- Step 5: Active filter chips (removable) + keyboard add stub.
+- Step 5: Active filter chips (removable + clear-all + telemetry events) ✅
+
+Upcoming:
+
 - Step 6: Preset grouping (Recent, Cloud, Local) data shaping.
 - Step 7: Bulk Tagging modal scaffold (data model + placeholder apply logic).
 - Step 8: Export submenu (Selected / Current View / All) refinement.
@@ -56,12 +59,11 @@ Risk Notes / New:
 - Undo: still limited to simple archive/restore; add exclusion guard for concurrent deletes (pending quick follow-up).
 - Autosave storage growth: single draft key only (OK for now); multi-draft cleanup needed if edit mode adds version history (Step 14 linkage).
 
-Immediate Focus (Tomorrow Start of Phase 2):
+Immediate Focus (Next):
 
-1. Implement Filter Chip bar (removal + clear-all) & expose events.
-2. Restructure preset menu (group sections + recent list logic).
-3. Bulk Tagging modal skeleton (UI + multi-select stub, no backend persistence yet).
-4. Export submenu (current filters slice) + consistent filename convention.
+1. Restructure preset menu (group sections + recent list logic). (Step 6)
+2. Bulk Tagging modal skeleton (UI + multi-select stub, no backend persistence yet). (Step 7)
+3. Export submenu (current filters slice) + consistent filename convention. (Step 8)
 
 ---
 

@@ -35,6 +35,7 @@ import { AchievementBadge } from "../components/ui/Badge";
 import { Button } from "../components/ui/Button/Button";
 import { PlaybookHeader } from "../components/playbook/page/PlaybookHeader";
 import { PlaybookActionsBar } from "../components/playbook/page/PlaybookActionsBar";
+import ActiveFilterChips from "../components/playbook/page/ActiveFilterChips";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 import { PlaybookProvider, usePlaybook } from "../contexts/PlaybookContext";
 import { useConfirm } from "../contexts/ConfirmContext";
@@ -107,7 +108,11 @@ const PlaybookPageInner: React.FC = () => {
       toastError(mapped.userMessage);
       telemetry.enqueue({
         type: TelemetryEventTypes.ErrorBoundary,
-        data: { code: mapped.code, area: "play.save", retryable: mapped.retryable },
+        data: {
+          code: mapped.code,
+          area: "play.save",
+          retryable: mapped.retryable,
+        },
       });
     }
   };
@@ -155,7 +160,10 @@ const PlaybookPageInner: React.FC = () => {
     } catch (e) {
       const mapped = mapError(e);
       toastError(mapped.userMessage);
-      telemetry.enqueue({ type: TelemetryEventTypes.ErrorBoundary, data: { code: mapped.code, area: "export.csv" } });
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ErrorBoundary,
+        data: { code: mapped.code, area: "export.csv" },
+      });
     }
   };
   const handleQuickNewPracticeScript = async () => {
@@ -171,7 +179,10 @@ const PlaybookPageInner: React.FC = () => {
     } catch (e) {
       const mapped = mapError(e);
       toastError(mapped.userMessage);
-      telemetry.enqueue({ type: TelemetryEventTypes.ErrorBoundary, data: { code: mapped.code, area: "practiceScript.create" } });
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ErrorBoundary,
+        data: { code: mapped.code, area: "practiceScript.create" },
+      });
     }
   };
   const handleQuickNewInstall = () => {
@@ -423,7 +434,41 @@ const PlaybookPageInner: React.FC = () => {
         onOpenBuilder={handleOpenBuilder}
         selectedCount={state.selectedPlayIds.size}
         onClearSelection={handleClearSelection}
-        extraLeft={null}
+        extraLeft={
+          <div className="hidden lg:block max-w-sm">
+            <ActiveFilterChips
+              searchQuery={state.searchQuery}
+              selectedFilters={state.selectedFilters}
+              selectedCategory={state.selectedCategory}
+              selectedSubcategory={state.selectedSubcategory}
+              advancedFilters={state.advancedFilters}
+              onChange={(partial) => {
+                if (partial.searchQuery !== undefined)
+                  dispatch({ type: "SET_SEARCH", query: partial.searchQuery });
+                if (partial.selectedFilters !== undefined)
+                  dispatch({
+                    type: "SET_SELECTED_FILTERS",
+                    filters: partial.selectedFilters,
+                  });
+                if (
+                  partial.selectedCategory !== undefined ||
+                  partial.selectedSubcategory !== undefined
+                )
+                  dispatch({
+                    type: "SET_CATEGORY",
+                    category: partial.selectedCategory,
+                    subcategory: partial.selectedSubcategory,
+                  });
+                if (partial.advancedFilters !== undefined)
+                  dispatch({
+                    type: "SET_ADVANCED_FILTERS",
+                    filters: partial.advancedFilters,
+                  });
+                dispatch({ type: "INCREMENT_REFRESH" });
+              }}
+            />
+          </div>
+        }
         extraRight={
           <div className="flex items-center gap-2">
             {/* Future extension buttons */}
