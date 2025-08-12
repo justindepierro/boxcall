@@ -4,7 +4,7 @@ import { Typography } from "../../design-system/Typography";
  * Database-aligned with clean architecture
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { X, Save } from "lucide-react";
 import { Button } from "../../ui/Button";
 import type { Play } from "../../../types/play";
@@ -25,6 +25,9 @@ interface PlayBuilderCoreProps {
   onSave: (play: Partial<Play>) => void;
   initialPlay?: Partial<Play>;
 }
+
+// Local storage key helper (single draft for now; future: key by user/team)
+const DRAFT_STORAGE_KEY = "bc_playbuilder_draft_v1";
 
 export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   isOpen,
@@ -60,6 +63,87 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   const [isQuickEntryVisible, setIsQuickEntryVisible] = useState(false);
   const [existingNames, setExistingNames] = useState<Set<string>>(new Set());
   const [attemptedSave, setAttemptedSave] = useState(false);
+  const [lastAutosave, setLastAutosave] = useState<number | null>(null);
+  const [restoredFromDraft, setRestoredFromDraft] = useState(false);
+  const autosaveTimerRef = useRef<number | null>(null);
+  const dirtyRef = useRef(false);
+
+  // --- Draft Persistence Helpers ---
+  const loadDraft = () => {
+    try {
+      const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw) as { data: Partial<Play>; ts: number };
+      return parsed;
+    } catch {
+      return null;
+    }
+  };
+  const persistDraft = (data: Partial<Play>) => {
+    try {
+      const payload = JSON.stringify({ data, ts: Date.now() });
+      localStorage.setItem(DRAFT_STORAGE_KEY, payload);
+      setLastAutosave(Date.now());
+    } catch {
+      // ignore quota / private mode errors
+    }
+  };
+  const clearDraft = () => {
+    try {
+      localStorage.removeItem(DRAFT_STORAGE_KEY);
+    } catch {
+      /* noop */
+    }
+  };
+
+  // When modal opens, attempt to load draft if not editing an existing play
+  useEffect(() => {
+    if (!isOpen) return;
+    if (initialPlay?.id) return; // editing existing play: skip draft restore
+    const draft = loadDraft();
+    if (draft && draft.data) {
+      setPlayData((prev) => ({ ...prev, ...draft.data }));
+      setRestoredFromDraft(true);
+      setLastAutosave(draft.ts);
+    } else {
+      setRestoredFromDraft(false);
+    }
+  }, [isOpen, initialPlay?.id]);
+
+  // Track changes to playData to schedule autosave
+  useEffect(() => {
+    if (!isOpen) return;
+    dirtyRef.current = true;
+    if (autosaveTimerRef.current) window.clearTimeout(autosaveTimerRef.current);
+    autosaveTimerRef.current = window.setTimeout(() => {
+      if (dirtyRef.current) {
+        // Minimal validation before autosave: only save if at least one field has content
+        const hasContent = Object.values(playData).some(
+          (v) => typeof v === "string" ? v.trim().length > 0 : v !== undefined
+        );
+        if (hasContent) {
+          persistDraft(playData);
+          dirtyRef.current = false;
+        }
+      }
+    }, 1200); // debounce 1.2s
+    return () => {
+      if (autosaveTimerRef.current) window.clearTimeout(autosaveTimerRef.current);
+    };
+  }, [playData, isOpen]);
+
+  // Save draft on blur / visibility change as a safety net
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleVisibility = () => {
+      if (document.visibilityState === "hidden" && dirtyRef.current) {
+        persistDraft(playData);
+        dirtyRef.current = false;
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, [isOpen, playData]);
 
   // Load existing play names for duplicate detection when modal opens
   useEffect(() => {
@@ -127,13 +211,14 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
       return;
     }
 
-    console.log("💾 Saving (normalized) play data:", normalized);
-    onSave(normalized);
-    onClose();
+  console.log("💾 Saving (normalized) play data:", normalized);
+  onSave(normalized);
+  clearDraft();
+  onClose();
   };
 
   const handleCancel = () => {
-    onClose();
+  onClose();
   };
 
   if (!isOpen) return null;
@@ -191,6 +276,32 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
               <p className="text-sm text-slate-500 mt-1">
                 Build your play with proper database fields
               </p>
+              {!initialPlay?.id && (
+                <div className="mt-2 text-xs text-slate-500 flex items-center gap-2">
+                  {restoredFromDraft && (
+                    <span className="text-amber-600 font-medium">Draft restored</span>
+                  )}
+                  {lastAutosave && (
+                    <span>
+                      Autosaved {new Date(lastAutosave).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </span>
+                  )}
+                  {lastAutosave && (
+                    <Button
+                      variant="ghost"
+                      size="xs"
+                      onClick={() => {
+                        clearDraft();
+                        setRestoredFromDraft(false);
+                        setLastAutosave(null);
+                      }}
+                      className="h-auto px-1 py-0 text-xs text-slate-400 hover:text-slate-600"
+                    >
+                      Clear draft
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
             <Button
               variant="neutralLink"
