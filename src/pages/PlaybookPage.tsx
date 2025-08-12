@@ -38,6 +38,7 @@ import { PlaybookHeader } from "../components/playbook/page/PlaybookHeader";
 import { PlaybookActionsBar } from "../components/playbook/page/PlaybookActionsBar";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 import { PlaybookProvider, usePlaybook } from "../contexts/PlaybookContext";
+import { useConfirm } from "../contexts/ConfirmContext";
 import { useToast } from "../hooks/useToast";
 
 const PlaybookPageInner: React.FC = () => {
@@ -47,6 +48,7 @@ const PlaybookPageInner: React.FC = () => {
     error: toastError,
     info: toastInfo,
   } = useToast();
+  const confirmDialog = useConfirm();
 
   // Achievement handling
   const achievementTitles: Record<number, string> = {
@@ -266,7 +268,13 @@ const PlaybookPageInner: React.FC = () => {
     });
   };
   const handleDeletePreset = async (id: string) => {
-    if (!confirm("Delete preset?")) return;
+    const confirmed = await confirmDialog({
+      title: "Delete Preset",
+      message: "Are you sure you want to delete this preset? This cannot be undone.",
+      tone: "danger",
+      confirmLabel: "Delete",
+    });
+    if (!confirmed) return;
     const server = state.serverPresets.find((p) => p.id === id);
     if (server) {
       try {
@@ -454,20 +462,20 @@ const PlaybookPageInner: React.FC = () => {
                         const selectedPlays = Array.from(state.selectedPlayIds);
                         try {
                           switch (action) {
-                            case "delete":
-                              if (
-                                confirm(
-                                  `Delete ${selectedPlays.length} selected plays? This cannot be undone.`
-                                )
-                              ) {
+                            case "delete": {
+                              const confirmed = await confirmDialog({
+                                title: "Delete Plays",
+                                message: `Delete ${selectedPlays.length} selected plays? This cannot be undone.`,
+                                tone: "danger",
+                                confirmLabel: "Delete",
+                              });
+                              if (confirmed) {
                                 await PlaysService.deletePlays(selectedPlays);
-                                toastSuccess(
-                                  `${selectedPlays.length} plays deleted successfully`
-                                );
+                                toastSuccess(`${selectedPlays.length} plays deleted successfully`);
                                 refreshPlays();
                                 handleClearSelection();
                               }
-                              break;
+                              break; }
                             case "export": {
                               if (!selectedPlays.length) {
                                 toastInfo("No plays selected to export.");
