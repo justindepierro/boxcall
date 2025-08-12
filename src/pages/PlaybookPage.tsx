@@ -702,193 +702,192 @@ export const PlaybookPage: React.FC = () => {
                 </div>
               </div>
             </div>
-            {/* Advanced Search Bar */}
-            <div className="flex-1 max-w-lg mx-8">
-              <AdvancedSearchBar
-                plays={[]} // TODO: Get actual plays from Supabase/PlayGrid
-                searchQuery={state.searchQuery}
-                onSearchChange={handleSearch}
-                placeholder="Search plays, formations, or tags..."
-              />
-            </div>
-            {/* Action Buttons with Reward Loop Psychology */}
-            <div className="flex items-center space-x-3">
-              {/* Preset Dropdown */}
-              <div className="flex items-center space-x-1">
-                <select
-                  value={
-                    state.activeServerPresetId || state.activePresetId || ""
-                  }
-                  onChange={(e) => handleApplyPreset(e.target.value)}
-                  className="text-sm border-slate-300 rounded px-2 py-1 min-w-[200px]"
-                  disabled={state.serverPresetsLoading}
-                  aria-busy={state.serverPresetsLoading}
-                >
-                  <option value="" disabled={state.serverPresetsLoading}>
-                    {state.serverPresetsLoading
-                      ? "Loading presets…"
-                      : "Presets…"}
-                  </option>
-                  {state.serverPresets.length > 0 && (
-                    <optgroup label="Cloud presets">
-                      {state.serverPresets.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name} ☁
-                        </option>
-                      ))}
-                    </optgroup>
-                  )}
-                  {state.filterPresets.length > 0 && (
-                    <optgroup label="Local presets">
-                      {state.filterPresets.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name} (local)
-                        </option>
-                      ))}
-                    </optgroup>
-                  )}
-                </select>
-                {(state.activeServerPresetId || state.activePresetId) && (
-                  <div className="flex items-center space-x-1">
-                    <Button
-                      onClick={() =>
-                        state.activeServerPresetId
-                          ? handleRenamePreset(state.activeServerPresetId)
-                          : handleRenamePreset(state.activePresetId!)
-                      }
-                      variant="ghost"
-                      size="xs"
-                      className="px-2"
-                      title="Rename preset"
-                      disabled={state.serverPresetsLoading}
-                    >
-                      Rename
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        state.activeServerPresetId
-                          ? handleDeletePreset(state.activeServerPresetId)
-                          : handleDeletePreset(state.activePresetId!)
-                      }
-                      variant="ghost"
-                      size="xs"
-                      className="px-2"
-                      title="Delete preset"
-                      disabled={state.serverPresetsLoading}
-                    >
-                      ✕
-                    </Button>
-                  </div>
-                )}
-              </div>
-              <Button
-                onClick={handleSavePreset}
-                variant="ghost"
-                size="sm"
-                className="px-3"
-              >
-                Save Preset
-              </Button>
-              {/* Bulk Operations Toggle */}
-              <Button
-                onClick={toggleBulkOperations}
-                variant={state.enableBulkOperations ? "primary" : "ghost"}
-                size="sm"
-                title={
-                  state.enableBulkOperations
-                    ? "Disable bulk operations"
-                    : "Enable bulk operations"
-                }
-                className="px-4 py-2 hover:scale-105 transition-transform"
-              >
-                <input
-                  type="checkbox"
-                  checked={state.enableBulkOperations}
-                  onChange={() => {}}
-                  className="h-4 w-4 mr-2 rounded border-slate-300 text-blue-600"
-                />
-                Bulk Edit
-              </Button>
-
-              {/* Export button */}
-              <Button
-                onClick={handleExportCSV}
-                variant="subtle"
-                size="sm"
-                className="px-4 py-2 hover:scale-105 transition-transform"
-              >
-                <Download className="h-4 w-4 mr-2" /> Export CSV
-              </Button>
-
-              {/* Import button with subtle enhancement */}
-              <Button
-                onClick={handleOpenImport}
-                variant="subtle"
-                size="sm"
-                className="px-4 py-2 hover:scale-105 transition-transform"
-              >
-                <Upload className="h-4 w-4 mr-2" /> Import CSV
-              </Button>
-
-              {/* New Play button - primary action with celebration potential */}
-              <div className="relative">
-                <Button
-                  onClick={() => {
-                    handleOpenBuilder();
-                  }}
-                  variant="primary"
-                  size="sm"
-                  className="px-4 py-2 hover:scale-105 transition-transform"
-                >
-                  <Plus className="h-4 w-4 mr-2" /> New Play
-                </Button>
-
-                {/* Next milestone indicator - creates desire for next achievement */}
-                {state.playsCreated < 100 && (
-                  <div className="absolute -top-2 -right-2">
-                    <Badge variant="warning" size="sm">
-                      {100 - state.playsCreated} to go!
-                    </Badge>
-                  </div>
-                )}
-              </div>
-            </div>
+            {/* Controls moved to sticky bar below */}
+            <div />
           </div>
-          {/* Quick actions bar under header */}
-          <div className="flex items-center justify-between py-2 border-t border-subtle">
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={handleQuickNewPracticeScript}
-                variant="secondary"
-                size="xs"
-              >
-                <Plus className="h-3 w-3 mr-1" /> New Practice Script
-              </Button>
-              <Button onClick={handleQuickNewInstall} variant="ghost" size="xs">
-                <Plus className="h-3 w-3 mr-1" /> New Install
-              </Button>
-            </div>
-            {state.enableBulkOperations && (
-              <div className="text-xs text-slate-600 flex items-center gap-3">
-                <span>
-                  Selected: <strong>{state.selectedPlayIds.size}</strong>
-                </span>
-                <span className="text-slate-400">
-                  (persists across searches)
-                </span>
-                {state.selectedPlayIds.size > 0 && (
-                  <Button
-                    onClick={() =>
-                      setState((p) => ({ ...p, selectedPlayIds: new Set() }))
+          {/* Quick actions sticky bar: all controls consolidated here */}
+          <div className="py-2 border-t border-subtle">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <div className="w-full max-w-lg">
+                  <AdvancedSearchBar
+                    plays={[]}
+                    searchQuery={state.searchQuery}
+                    onSearchChange={handleSearch}
+                    placeholder="Search plays, formations, or tags..."
+                  />
+                </div>
+                <Button
+                  onClick={handleQuickNewPracticeScript}
+                  variant="secondary"
+                  size="xs"
+                  className="shrink-0"
+                >
+                  <Plus className="h-3 w-3 mr-1" /> New Practice Script
+                </Button>
+                <Button
+                  onClick={handleQuickNewInstall}
+                  variant="ghost"
+                  size="xs"
+                  className="shrink-0"
+                >
+                  <Plus className="h-3 w-3 mr-1" /> New Install
+                </Button>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap justify-end">
+                <div className="flex items-center space-x-1">
+                  <select
+                    value={
+                      state.activeServerPresetId || state.activePresetId || ""
                     }
-                    variant="ghost"
-                    size="xs"
+                    onChange={(e) => handleApplyPreset(e.target.value)}
+                    className="text-sm border-slate-300 rounded px-2 py-1 min-w-[200px]"
+                    disabled={state.serverPresetsLoading}
+                    aria-busy={state.serverPresetsLoading}
                   >
-                    Clear
+                    <option value="" disabled={state.serverPresetsLoading}>
+                      {state.serverPresetsLoading
+                        ? "Loading presets…"
+                        : "Presets…"}
+                    </option>
+                    {state.serverPresets.length > 0 && (
+                      <optgroup label="Cloud presets">
+                        {state.serverPresets.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.name} ☁
+                          </option>
+                        ))}
+                      </optgroup>
+                    )}
+                    {state.filterPresets.length > 0 && (
+                      <optgroup label="Local presets">
+                        {state.filterPresets.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.name} (local)
+                          </option>
+                        ))}
+                      </optgroup>
+                    )}
+                  </select>
+                  {(state.activeServerPresetId || state.activePresetId) && (
+                    <div className="flex items-center space-x-1">
+                      <Button
+                        onClick={() =>
+                          state.activeServerPresetId
+                            ? handleRenamePreset(state.activeServerPresetId)
+                            : handleRenamePreset(state.activePresetId!)
+                        }
+                        variant="ghost"
+                        size="xs"
+                        className="px-2"
+                        title="Rename preset"
+                        disabled={state.serverPresetsLoading}
+                      >
+                        Rename
+                      </Button>
+                      <Button
+                        onClick={() =>
+                          state.activeServerPresetId
+                            ? handleDeletePreset(state.activeServerPresetId)
+                            : handleDeletePreset(state.activePresetId!)
+                        }
+                        variant="ghost"
+                        size="xs"
+                        className="px-2"
+                        title="Delete preset"
+                        disabled={state.serverPresetsLoading}
+                      >
+                        ✕
+                      </Button>
+                    </div>
+                  )}
+                </div>
+                <Button
+                  onClick={handleSavePreset}
+                  variant="ghost"
+                  size="sm"
+                  className="px-3"
+                >
+                  Save Preset
+                </Button>
+                <Button
+                  onClick={toggleBulkOperations}
+                  variant={state.enableBulkOperations ? "primary" : "ghost"}
+                  size="sm"
+                  title={
+                    state.enableBulkOperations
+                      ? "Disable bulk operations"
+                      : "Enable bulk operations"
+                  }
+                  className="px-4 py-2"
+                >
+                  <input
+                    type="checkbox"
+                    checked={state.enableBulkOperations}
+                    onChange={() => {}}
+                    className="h-4 w-4 mr-2 rounded border-slate-300 text-blue-600"
+                  />
+                  Bulk Edit
+                </Button>
+                <Button
+                  onClick={handleExportCSV}
+                  variant="subtle"
+                  size="sm"
+                  className="px-4 py-2"
+                >
+                  <Download className="h-4 w-4 mr-2" /> Export CSV
+                </Button>
+                <Button
+                  onClick={handleOpenImport}
+                  variant="subtle"
+                  size="sm"
+                  className="px-4 py-2"
+                >
+                  <Upload className="h-4 w-4 mr-2" /> Import CSV
+                </Button>
+                <div className="relative">
+                  <Button
+                    onClick={handleOpenBuilder}
+                    variant="primary"
+                    size="sm"
+                    className="px-4 py-2"
+                  >
+                    <Plus className="h-4 w-4 mr-2" /> New Play
                   </Button>
+                  {state.playsCreated < 100 && (
+                    <div className="absolute -top-2 -right-2">
+                      <Badge variant="warning" size="sm">
+                        {100 - state.playsCreated} to go!
+                      </Badge>
+                    </div>
+                  )}
+                </div>
+                {state.enableBulkOperations && (
+                  <div className="text-xs text-slate-600 flex items-center gap-3 ml-2">
+                    <span>
+                      Selected: <strong>{state.selectedPlayIds.size}</strong>
+                    </span>
+                    <span className="text-slate-400">
+                      (persists across searches)
+                    </span>
+                    {state.selectedPlayIds.size > 0 && (
+                      <Button
+                        onClick={() =>
+                          setState((p) => ({
+                            ...p,
+                            selectedPlayIds: new Set(),
+                          }))
+                        }
+                        variant="ghost"
+                        size="xs"
+                      >
+                        Clear
+                      </Button>
+                    )}
+                  </div>
                 )}
               </div>
-            )}
+            </div>
           </div>
           {/* Feature Achievements (moved up to sticky header) */}
           <div className="mt-2 surface-card decorative-gradient bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-subtle">
