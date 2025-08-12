@@ -365,21 +365,85 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     ]
   );
 
+  // --- Skeleton Loading State ---
+  const SkeletonCard: React.FC<{ idx: number }> = ({ idx }) => (
+    <div
+      className="rounded-md border border-subtle bg-white p-4 shadow-sm animate-pulse"
+      aria-label={`Loading play placeholder ${idx + 1}`}
+    >
+      <div className="h-4 w-1/3 bg-slate-200 rounded mb-3" />
+      <div className="h-3 w-1/2 bg-slate-100 rounded mb-2" />
+      <div className="h-3 w-2/5 bg-slate-100 rounded mb-4" />
+      <div className="flex gap-2">
+        <div className="h-6 w-14 bg-slate-100 rounded" />
+        <div className="h-6 w-10 bg-slate-100 rounded" />
+        <div className="h-6 w-16 bg-slate-100 rounded" />
+      </div>
+    </div>
+  );
+
+  // --- Derived empty helper actions (not dispatching to parent yet) ---
+  const EmptyActions = () => {
+    if (!hasFilters) {
+      return (
+        <Button variant="primary" size="sm" onClick={() => _onOpenBuilder?.()}>
+          Create your first play
+        </Button>
+      );
+    }
+    return (
+      <div className="flex flex-col items-center gap-3">
+        <div className="text-xs text-slate-500">Adjust your criteria</div>
+        <div className="flex gap-2">
+          {searchQuery && (
+            <Button
+              variant="secondary"
+              size="xs"
+              onClick={() => {
+                // Fire a custom event the parent PlaybookPage can listen to if desired
+                document.dispatchEvent(new CustomEvent("playgrid:clear-search"));
+              }}
+            >
+              Clear search
+            </Button>
+          )}
+          {/* Placeholder: parent can add event listener to clear filters */}
+          <Button
+            variant="ghost"
+            size="xs"
+            onClick={() => {
+              document.dispatchEvent(new CustomEvent("playgrid:open-filters"));
+            }}
+          >
+            Modify filters
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6" aria-live="polite">
       {loading && (
-        <div
-          className="flex items-center justify-center p-8"
-          role="status"
-          aria-label="Loading plays"
-        >
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
-          <span className="ml-2 text-text-secondary">Loading plays...</span>
+        <div aria-busy="true" aria-label="Loading plays" role="status">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mt-2" role="list">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div role="listitem" key={i}>
+                <SkeletonCard idx={i} />
+              </div>
+            ))}
+          </div>
         </div>
       )}
       {error && !loading && (
-        <div className="text-center p-8" role="alert">
-          <p className="text-red-600">Error loading plays: {error}</p>
+        <div className="text-center p-10 border rounded-md border-red-200 bg-red-50" role="alert">
+          <p className="text-red-600 font-medium mb-3">Error loading plays</p>
+          <p className="text-xs text-red-500 mb-4">{error}</p>
+          <div className="flex justify-center">
+            <Button size="sm" variant="secondary" onClick={() => refreshData()}>
+              Retry
+            </Button>
+          </div>
         </div>
       )}
       {showEmpty && (
@@ -390,25 +454,17 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 ? `No plays found in "${selectedSubcategory}" under "${selectedCategory}"`
                 : selectedCategory
                   ? `No plays found in "${selectedCategory}" category`
-                  : "No plays match your search criteria"
+                  : searchQuery
+                    ? "No plays match your search keywords"
+                    : "No plays match your current filters"
               : "No plays in your playbook yet"}
           </div>
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-500 text-sm mb-8">
             {hasFilters
-              ? "Try adjusting your search or filters"
+              ? "Refine or clear filters to broaden results"
               : "Create your first play or import existing plays to get started"}
           </p>
-          {!hasFilters && (
-            <div className="mt-6">
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => _onOpenBuilder?.()}
-              >
-                Create your first play
-              </Button>
-            </div>
-          )}
+          <EmptyActions />
         </div>
       )}
       {/* Results Header with Toggle */}
