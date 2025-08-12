@@ -36,6 +36,7 @@ export interface PlaybookPresetState {
   serverPresetsError?: string | null;
   activePresetId?: string;
   activeServerPresetId?: string;
+  recentViews: { id: string; scope: "server" | "local" }[]; // MRU applied presets (server or local)
 }
 
 export interface PlaybookMetricsState {
@@ -77,6 +78,7 @@ const initialState: PlaybookState = {
   serverPresetsError: null,
   activePresetId: undefined,
   activeServerPresetId: undefined,
+  recentViews: [],
   playsCreated: 0,
   diagramCoverage: 0,
   streakDays: 0,
@@ -112,6 +114,8 @@ export type PlaybookAction =
   | { type: "SET_SERVER_PRESETS_ERROR"; error?: string | null }
   | { type: "SET_ACTIVE_PRESET"; id?: string }
   | { type: "SET_ACTIVE_SERVER_PRESET"; id?: string }
+  | { type: "ADD_RECENT_VIEW"; id: string; scope: "server" | "local" }
+  | { type: "REMOVE_RECENT_VIEW"; id: string }
   | { type: "SET_VIEW"; view: CoachingView }
   | { type: "SET_SHOW_BUILDER"; value: boolean }
   | { type: "SET_SHOW_IMPORT"; value: boolean }
@@ -169,6 +173,20 @@ function reducer(state: PlaybookState, action: PlaybookAction): PlaybookState {
         activeServerPresetId: action.id,
         activePresetId: undefined,
       };
+    case "ADD_RECENT_VIEW": {
+      const existing = state.recentViews.filter((v) => v.id !== action.id);
+      const next = [{ id: action.id, scope: action.scope }, ...existing].slice(
+        0,
+        5
+      );
+      return { ...state, recentViews: next };
+    }
+    case "REMOVE_RECENT_VIEW": {
+      return {
+        ...state,
+        recentViews: state.recentViews.filter((v) => v.id !== action.id),
+      };
+    }
     case "SET_VIEW":
       return { ...state, currentView: action.view };
     case "SET_SHOW_BUILDER":

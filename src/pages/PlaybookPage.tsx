@@ -267,9 +267,10 @@ const PlaybookPageInner: React.FC = () => {
         subcategory: f.subcategory,
       });
       dispatch({ type: "SET_ACTIVE_SERVER_PRESET", id });
+      dispatch({ type: "ADD_RECENT_VIEW", id, scope: "server" });
       telemetry.enqueue({
         type: TelemetryEventTypes.ViewSavedServerApply,
-        data: { id },
+        data: { id, origin: "server" },
       });
       return;
     }
@@ -291,9 +292,10 @@ const PlaybookPageInner: React.FC = () => {
       subcategory: f.subcategory,
     });
     dispatch({ type: "SET_ACTIVE_PRESET", id });
+    dispatch({ type: "ADD_RECENT_VIEW", id, scope: "local" });
     telemetry.enqueue({
       type: TelemetryEventTypes.ViewSavedApply,
-      data: { viewId: id, action: "apply_local" },
+      data: { viewId: id, action: "apply_local", origin: "local" },
     });
   };
   const handleDeletePreset = async (id: string) => {
@@ -434,6 +436,7 @@ const PlaybookPageInner: React.FC = () => {
         onOpenBuilder={handleOpenBuilder}
         selectedCount={state.selectedPlayIds.size}
         onClearSelection={handleClearSelection}
+  recentViews={state.recentViews}
         extraLeft={
           <div className="hidden lg:block max-w-sm">
             <ActiveFilterChips

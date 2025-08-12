@@ -31,6 +31,7 @@ export type PlaybookActionsBarProps = {
   extraLeft?: React.ReactNode;
   /** Optional slot rendered at far right end (after default right controls). */
   extraRight?: React.ReactNode;
+  recentViews?: { id: string; scope: "server" | "local" }[];
 };
 
 export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
@@ -57,7 +58,17 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
   onClearSelection,
   extraLeft,
   extraRight,
+  recentViews = [],
 }) => {
+  // Derive grouped options
+  const recentServer = recentViews
+    .filter((v) => v.scope === "server")
+    .map((v) => serverPresets.find((p) => p.id === v.id))
+    .filter(Boolean) as ServerPlaybookViewPreset[];
+  const recentLocal = recentViews
+    .filter((v) => v.scope === "local")
+    .map((v) => filterPresets.find((p) => p.id === v.id))
+    .filter(Boolean) as { id: string; name: string }[];
   return (
     <div className="surface-subtle border-b border-subtle sticky top-0 z-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -95,15 +106,29 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 <select
                   value={activeServerPresetId || activePresetId || ""}
                   onChange={(e) => onApplyPreset(e.target.value)}
-                  className="text-sm border-slate-300 rounded px-2 py-1 min-w-[200px]"
+                  className="text-sm border-slate-300 rounded px-2 py-1 min-w-[240px]"
                   disabled={serverPresetsLoading}
                   aria-busy={serverPresetsLoading}
                 >
                   <option value="" disabled={serverPresetsLoading}>
                     {serverPresetsLoading ? "Loading presets…" : "Presets…"}
                   </option>
+                  {(recentServer.length > 0 || recentLocal.length > 0) && (
+                    <optgroup label="Recent">
+                      {recentServer.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name} ☁ (recent)
+                        </option>
+                      ))}
+                      {recentLocal.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name} (local recent)
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
                   {serverPresets.length > 0 && (
-                    <optgroup label="Cloud presets">
+                    <optgroup label="Cloud">
                       {serverPresets.map((p) => (
                         <option key={p.id} value={p.id}>
                           {p.name} ☁
@@ -112,7 +137,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                     </optgroup>
                   )}
                   {filterPresets.length > 0 && (
-                    <optgroup label="Local presets">
+                    <optgroup label="Local">
                       {filterPresets.map((p) => (
                         <option key={p.id} value={p.id}>
                           {p.name} (local)

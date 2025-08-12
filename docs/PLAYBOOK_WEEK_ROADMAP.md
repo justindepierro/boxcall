@@ -42,10 +42,10 @@ Completed:
 Phase 2 Progress:
 
 - Step 5: Active filter chips (removable + clear-all + telemetry events) ✅
+- Step 6: Preset grouping (Recent, Cloud, Local) + origin telemetry ✅
 
 Upcoming:
 
-- Step 6: Preset grouping (Recent, Cloud, Local) data shaping.
 - Step 7: Bulk Tagging modal scaffold (data model + placeholder apply logic).
 - Step 8: Export submenu (Selected / Current View / All) refinement.
 
@@ -61,9 +61,8 @@ Risk Notes / New:
 
 Immediate Focus (Next):
 
-1. Restructure preset menu (group sections + recent list logic). (Step 6)
-2. Bulk Tagging modal skeleton (UI + multi-select stub, no backend persistence yet). (Step 7)
-3. Export submenu (current filters slice) + consistent filename convention. (Step 8)
+1. Bulk Tagging modal skeleton (UI + multi-select stub, no backend persistence yet). (Step 7)
+2. Export submenu (current filters slice) + consistent filename convention. (Step 8)
 
 ---
 
