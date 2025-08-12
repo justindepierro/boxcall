@@ -74,6 +74,7 @@ interface PlayGridProps {
   enableBulkOperations?: boolean;
   selectedPlayIds?: Set<string>;
   onPlaySelectionChange?: (playIds: Set<string>) => void;
+  onOpenBuilder?: () => void;
 }
 
 const PlayGridInner: React.FC<PlayGridProps> = ({
@@ -93,9 +94,23 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   enableBulkOperations = false,
   selectedPlayIds = new Set(),
   onPlaySelectionChange,
+  onOpenBuilder: _onOpenBuilder,
 }) => {
   // Toggle for play name display mode (true = one-word calls, false = full names)
-  const [showOneWordCalls, setShowOneWordCalls] = useState(false);
+  const [showOneWordCalls, setShowOneWordCalls] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem("bc_playgrid_oneword") === "1";
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem("bc_playgrid_oneword", showOneWordCalls ? "1" : "0");
+    } catch {
+      // ignore persistence errors (private browsing, etc.)
+    }
+  }, [showOneWordCalls]);
 
   // Get real data from database with refresh capability
   const { plays: allPlays, loading, error, refreshData } = useTeamsData();
@@ -217,6 +232,14 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         selectedCategory: selectedCategory || null,
         selectedSubcategory: selectedSubcategory || null,
         resultCount: filteredPlays.length,
+        resultBucket:
+          filteredPlays.length === 0
+            ? "0"
+            : filteredPlays.length <= 10
+            ? "1-10"
+            : filteredPlays.length <= 50
+            ? "11-50"
+            : ">50",
       }),
     [
       searchQuery,
@@ -252,11 +275,23 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     (import.meta as unknown as { env: Record<string, string> }).env
       ?.VITE_DISABLE_VIRTUAL_PLAYGRID === "true";
   // Density mode state (comfortable default)
-  const [density, setDensity] = useState<"comfortable" | "compact">(
-    "comfortable"
-  );
+  const [density, setDensity] = useState<"comfortable" | "compact">(() => {
+    try {
+      const v = localStorage.getItem("bc_playgrid_density");
+      return v === "compact" ? "compact" : "comfortable";
+    } catch {
+      return "comfortable";
+    }
+  });
   const toggleDensity = () =>
     setDensity(density === "comfortable" ? "compact" : "comfortable");
+  useEffect(() => {
+    try {
+      localStorage.setItem("bc_playgrid_density", density);
+    } catch {
+      // ignore persistence errors
+    }
+  }, [density]);
 
   // --- Dev-only render diagnostics (no state updates) ---
   if (process.env.NODE_ENV === "development") {
@@ -346,6 +381,13 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               ? "Try adjusting your search or filters"
               : "Create your first play or import existing plays to get started"}
           </p>
+          {!hasFilters && (
+            <div className="mt-6">
+              <Button variant="primary" size="sm" onClick={() => _onOpenBuilder?.()}>
+                Create your first play
+              </Button>
+            </div>
+          )}
         </div>
       )}
       {/* Results Header with Toggle */}
@@ -500,7 +542,13 @@ function arePlayGridPropsEqual(prev: PlayGridProps, next: PlayGridProps) {
   } else if (ps !== ns) return false;
   // Handlers: we allow new function identities, they seldom cause heavy work; not part of equality (return false only if one exists and other missing)
   const handlerKeys: (keyof PlayGridProps)[] = [
-    'onEdit','onDuplicate','onCreateDiagram','onAddToPracticeScript','onAddToGamePlan','onPlaySelectionChange','onPlayCountChange'
+    "onEdit",
+    "onDuplicate",
+    "onCreateDiagram",
+    "onAddToPracticeScript",
+    "onAddToGamePlan",
+    "onPlaySelectionChange",
+    "onPlayCountChange",
   ];
   for (const hk of handlerKeys) {
     const a = prev[hk];
@@ -513,7 +561,9 @@ function arePlayGridPropsEqual(prev: PlayGridProps, next: PlayGridProps) {
 export const PlayGrid = React.memo(PlayGridInner, arePlayGridPropsEqual);
 
 // Dev hint: mark component to avoid why-did-you-render noise (only if that lib is present)
-if (process.env.NODE_ENV === 'development') {
-  interface WdyrMark { whyDidYouRender?: boolean }
+if (process.env.NODE_ENV === "development") {
+  interface WdyrMark {
+    whyDidYouRender?: boolean;
+  }
   (PlayGrid as unknown as WdyrMark).whyDidYouRender = false;
 }

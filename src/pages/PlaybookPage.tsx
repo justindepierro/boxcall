@@ -595,34 +595,61 @@ export const PlaybookPage: React.FC = () => {
               {/* Preset Dropdown */}
               <div className="flex items-center space-x-1">
                 <select
-                  value={state.activePresetId || ""}
+                  value={state.activeServerPresetId || state.activePresetId || ""}
                   onChange={(e) => handleApplyPreset(e.target.value)}
-                  className="text-sm border-slate-300 rounded px-2 py-1"
+                  className="text-sm border-slate-300 rounded px-2 py-1 min-w-[200px]"
+                  disabled={state.serverPresetsLoading}
+                  aria-busy={state.serverPresetsLoading}
                 >
-                  <option value="">Presets...</option>
-                  {state.filterPresets.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
+                  <option value="" disabled={state.serverPresetsLoading}>
+                    {state.serverPresetsLoading ? "Loading presets…" : "Presets…"}
+                  </option>
+                  {state.serverPresets.length > 0 && (
+                    <optgroup label="Cloud presets">
+                      {state.serverPresets.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name} ☁
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
+                  {state.filterPresets.length > 0 && (
+                    <optgroup label="Local presets">
+                      {state.filterPresets.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name} (local)
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
                 </select>
-                {state.activePresetId && (
+                {(state.activeServerPresetId || state.activePresetId) && (
                   <div className="flex items-center space-x-1">
                     <Button
-                      onClick={() => handleRenamePreset(state.activePresetId!)}
+                      onClick={() =>
+                        state.activeServerPresetId
+                          ? handleRenamePreset(state.activeServerPresetId)
+                          : handleRenamePreset(state.activePresetId!)
+                      }
                       variant="ghost"
                       size="xs"
                       className="px-2"
                       title="Rename preset"
+                      disabled={state.serverPresetsLoading}
                     >
                       Rename
                     </Button>
                     <Button
-                      onClick={() => handleDeletePreset(state.activePresetId!)}
+                      onClick={() =>
+                        state.activeServerPresetId
+                          ? handleDeletePreset(state.activeServerPresetId)
+                          : handleDeletePreset(state.activePresetId!)
+                      }
                       variant="ghost"
                       size="xs"
                       className="px-2"
                       title="Delete preset"
+                      disabled={state.serverPresetsLoading}
                     >
                       ✕
                     </Button>
