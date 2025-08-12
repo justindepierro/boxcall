@@ -19,9 +19,10 @@ Purpose: Accelerate the Playbook module from "solid refactor" to the best-in-cla
 
 - ✅ Refactored monolith into header, actions bar, view tabs, context-managed state.
 - ✅ Alerts replaced with toasts (initial pass).
-- ✅ Step 1 (Confirm Dialog + Undo for bulk delete) implemented: reusable ConfirmProvider + UndoQueue; bulk delete now offers timed undo restore.
-- ⏳ Step 2 (PlayGrid empty / skeleton / error states) not started.
-- ⏳ Step 3 (Autosave + draft recovery) not started.
+- ✅ Step 1 (Confirm Dialog + Undo for bulk delete) implemented (ConfirmProvider + UndoQueue; timed undo restore).
+- ✅ Step 2 (PlayGrid: skeleton loaders, differentiated empty states, error retry + refresh).
+- ✅ Step 3 (Autosave + draft recovery: debounced localStorage, restore banner, clear + telemetry events).
+- ✅ Step 4 (Domain error mapper scaffold + integrated error→toast + telemetry for core actions).
 - ❌ Diagram tool still placeholder; coverage metric still synthetic.
 - ❌ Preset UX minimal (no grouping / sharing yet).
 - ❌ No tagging assistant or batch tagging workflow.
@@ -29,30 +30,38 @@ Purpose: Accelerate the Playbook module from "solid refactor" to the best-in-cla
 
 ---
 
-## Progress Update (Aug 12, 2025)
+## Progress Update (Aug 12, 2025 - Evening)
 
 Completed:
 
-- Step 1: Replaced native confirm() calls with promise-based ConfirmProvider and added UndoQueueProvider. Bulk play deletions now: confirm dialog → archive → toast with Undo (restores archived plays). Lint/type clean; integrated at provider root.
+- Step 1: Confirm + Undo baseline (dialog + undo queue) ✅
+- Step 2: PlayGrid skeleton, contextual empty states, retryable error block ✅
+- Step 3: PlayBuilder autosave & draft recovery (debounced 1.2s, visibility flush, restore banner, clear draft) ✅
+- Step 4: DomainErrorMapper scaffold + mapped save/add/export/create flows to uniform toasts & telemetry ✅
 
-In Flight / Next Up:
+In Flight / Next Up (Phase 2 Start):
 
-- Step 2: Implement PlayGrid state differentiation (loading skeleton, no-results vs total-empty CTA, and error retry). Will introduce lightweight SkeletonCard component and conditional rendering logic keyed off loading flag + filtered count.
-- Step 3: Autosave & draft recovery (PlayBuilder): plan is debounced local persistence (localStorage first; optional IndexedDB later) + draft banner and clear-on-successful-save.
+- Step 5: Active filter chips (removable) + keyboard add stub.
+- Step 6: Preset grouping (Recent, Cloud, Local) data shaping.
+- Step 7: Bulk Tagging modal scaffold (data model + placeholder apply logic).
+- Step 8: Export submenu (Selected / Current View / All) refinement.
 
 Planned Adjustments (no scope change):
 
-- Add telemetry events for undo actions (DeleteInitiated, DeleteUndone, DeleteCommitted) when telemetry schema (Step 18) is addressed—deferred until schema consolidation to avoid churn.
+- Add undo telemetry events (DeleteInitiated/Undone/Committed) with unified schema (defer until Step 18 to avoid churn).
+- Introduce play diagram presence flag into autosave finalize event once diagram MVP lands (Step 9).
 
-Risk Notes:
+Risk Notes / New:
 
-- Undo restore currently limited to archived plays only; race condition protection (prevent double-delete during undo window) to be added alongside PlayGrid enhancements (minor).
+- Undo: still limited to simple archive/restore; add exclusion guard for concurrent deletes (pending quick follow-up).
+- Autosave storage growth: single draft key only (OK for now); multi-draft cleanup needed if edit mode adds version history (Step 14 linkage).
 
-Immediate Focus:
+Immediate Focus (Tomorrow Start of Phase 2):
 
-1. Scaffold skeleton & empty state variants in PlayGrid.
-2. Add basic error boundary path for failed play fetch (ties into future Step 4 central error mapping).
-3. Then proceed to autosave scaffolding in builder.
+1. Implement Filter Chip bar (removal + clear-all) & expose events.
+2. Restructure preset menu (group sections + recent list logic).
+3. Bulk Tagging modal skeleton (UI + multi-select stub, no backend persistence yet).
+4. Export submenu (current filters slice) + consistent filename convention.
 
 ---
 
