@@ -45,6 +45,11 @@ import { useToast } from "../hooks/useToast";
 import { mapError } from "../domain/errors/domainErrorMapper";
 import { telemetry } from "../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../telemetry/events";
+import {
+  getPlayCategory,
+  playMatchesSubcategory,
+} from "../utils/playbook-categories";
+import { getPlayFlags } from "@utils/localPlayFlags";
 
 const PlaybookPageInner: React.FC = () => {
   const { state, dispatch } = usePlaybook();
@@ -148,25 +153,124 @@ const PlaybookPageInner: React.FC = () => {
   };
   const handleAddToGamePlan = (play: Play) =>
     toastInfo(`"${play.play_name}" added to game plan (placeholder)`);
-  const handleExportCSV = () => {
+  // Legacy single export kept for fallback (now replaced by scoped export submenu)
+  const handleExportCSV = () => handleExportScope("selected");
+
+  const handleExportScope = async (scope: "selected" | "current" | "all") => {
     try {
-      const plays: Play[] = []; // TODO: supply real list
+      let plays: Play[] = [];
+      // Optional helper (not all environments may expose ensureUserHasPlaybook)
+      const ensureUserHasPlaybook: (() => Promise<string>) | undefined = (
+        PlaysService as unknown as {
+          ensureUserHasPlaybook?: () => Promise<string>;
+        }
+      ).ensureUserHasPlaybook;
+      if (scope === "selected") {
+        if (state.selectedPlayIds.size === 0) {
+          toastInfo("No selected plays to export.");
+          return;
+        }
+        for (const id of state.selectedPlayIds) {
+          const p = await PlaysService.getPlay(id);
+          if (p) plays.push(p);
+        }
+      } else if (scope === "current") {
+        // Fetch all then client-filter (future: push down to server)
+        const playbookId = ensureUserHasPlaybook
+          ? await ensureUserHasPlaybook()
+          : undefined;
+        if (playbookId) {
+          const all = await PlaysService.getPlaysByPlaybook(playbookId);
+          const {
+            selectedFilters,
+            searchQuery,
+            selectedCategory,
+            selectedSubcategory,
+          } = state;
+          plays = all.filter((play) => {
+            // Search query logic mirrors PlayGrid (name, formation, notes, flags fallback)
+            if (searchQuery) {
+              const q = searchQuery.toLowerCase();
+              const matchesName = play.play_name.toLowerCase().includes(q);
+              const matchesFormation = play.formation.toLowerCase().includes(q);
+              const matchesNotes = play.notes?.toLowerCase().includes(q);
+              if (!matchesName && !matchesFormation && !matchesNotes) {
+                const flags = getPlayFlags(play.id);
+                const haystack = [
+                  ...flags.positions,
+                  ...flags.players,
+                  ...flags.flags,
+                ]
+                  .join("\n")
+                  .toLowerCase();
+                if (!haystack.includes(q)) return false;
+              }
+            }
+            // Category filtering via helper utilities (same as PlayGrid)
+            if (selectedCategory) {
+              const categories = getPlayCategory(play);
+              if (!categories.includes(selectedCategory)) return false;
+              if (
+                selectedSubcategory &&
+                !playMatchesSubcategory(play, selectedSubcategory)
+              )
+                return false;
+            }
+            if (
+              selectedFilters.formation &&
+              play.formation !== selectedFilters.formation
+            )
+              return false;
+            if (
+              selectedFilters.playType &&
+              play.p_type !== selectedFilters.playType
+            )
+              return false;
+            return true;
+          });
+        }
+      } else {
+        const playbookId = ensureUserHasPlaybook
+          ? await ensureUserHasPlaybook()
+          : undefined;
+        if (playbookId)
+          plays = await PlaysService.getPlaysByPlaybook(playbookId);
+      }
       if (!plays.length) {
-        toastInfo("No plays to export yet.");
+        toastInfo("No plays found for export.");
         return;
       }
-      const csv = CSVService.exportPlaysToCSV(plays, {
+      const csvContent = CSVService.exportPlaysToCSV(plays, {
         includePrivateNotes: true,
         formatForCoach: true,
       });
-      const ts = new Date().toISOString().split("T")[0];
-      CSVService.downloadCSV(csv, `playbook-export-${ts}.csv`);
+      const stamp = new Date()
+        .toISOString()
+        .slice(0, 16)
+        .replace(/[-:T]/g, "")
+        .slice(0, 12); // YYYYMMDDHHMM
+      CSVService.downloadCSV(csvContent, `plays-export-${scope}-${stamp}.csv`);
+      toastSuccess(`Exported ${plays.length} plays (${scope}).`);
+      // Telemetry for export scope
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ExportScope,
+        data: {
+          scope,
+          count: plays.length,
+          selectedCount: state.selectedPlayIds.size,
+          hadFilters:
+            !!state.searchQuery ||
+            !!state.selectedCategory ||
+            !!state.selectedSubcategory ||
+            Object.values(state.selectedFilters).some(Boolean),
+        },
+      });
     } catch (e) {
       const mapped = mapError(e);
-      toastError(mapped.userMessage);
+      toastError(mapped.userMessage || "Export failed");
       telemetry.enqueue({
         type: TelemetryEventTypes.ErrorBoundary,
-        data: { code: mapped.code, area: "export.csv" },
+        data: { code: mapped.code, area: "export.scoped" },
       });
     }
   };
@@ -435,6 +539,7 @@ const PlaybookPageInner: React.FC = () => {
         enableBulkOperations={state.enableBulkOperations}
         onToggleBulk={toggleBulkOperations}
         onExportCSV={handleExportCSV}
+        onExportScope={handleExportScope}
         onOpenImport={handleOpenImport}
         playsCreated={state.playsCreated}
         onOpenBuilder={handleOpenBuilder}

@@ -22,6 +22,7 @@ export const TelemetryEventTypes = {
   VitalFCP: "vital:FCP",
   VitalLCP: "vital:LCP",
   VitalTTFB: "vital:TTFB",
+  ExportScope: "export.scope",
 } as const;
 
 export type TelemetryEventType =

@@ -24,9 +24,10 @@ Purpose: Accelerate the Playbook module from "solid refactor" to the best-in-cla
 - ✅ Step 3 (Autosave + draft recovery: debounced localStorage, restore banner, clear + telemetry events).
 - ✅ Step 4 (Domain error mapper scaffold + integrated error→toast + telemetry for core actions).
 - ❌ Diagram tool still placeholder; coverage metric still synthetic.
-- ❌ Preset UX minimal (no grouping / sharing yet).
-- ❌ No tagging assistant or batch tagging workflow.
-- ❌ Complexity metrics static (hard‑coded examples only).
+- ✅ Preset UX upgraded (grouping: Recent / Cloud / Local + MRU tracking & origin telemetry).
+- ✅ Bulk tagging modal scaffold (tag multi-select + suggestions) – persistence service not yet wired.
+- ✅ Export submenu (Selected / Current View / All) w/ filter-aligned slice + telemetry.
+- ❌ Complexity metrics still static (hard‑coded examples only).
 
 ---
 
@@ -44,10 +45,13 @@ Phase 2 Progress:
 - Step 5: Active filter chips (removable + clear-all + telemetry events) ✅
 - Step 6: Preset grouping (Recent, Cloud, Local) + origin telemetry ✅
 - Step 7: Bulk Tagging modal scaffold (multi-select + suggestions + summary) ✅
+- Step 8: Export submenu (Selected / Current View / All) + unified filename + export.scope telemetry ✅
 
-Upcoming:
+Upcoming (Phase 3 Kickoff):
 
-- Step 8: Export submenu (Selected / Current View / All) refinement.
+- Step 9: Diagram Maker MVP canvas integration.
+- Step 10: Dynamic complexity metrics engine.
+- Step 11: Achievement & streak refinement (link diagram + complexity events).
 
 Planned Adjustments (no scope change):
 
@@ -61,7 +65,10 @@ Risk Notes / New:
 
 Immediate Focus (Next):
 
-1. Export submenu (current filters slice) + consistent filename convention. (Step 8)
+1. Diagram Maker MVP scaffold (lightweight SVG/Fabric canvas, basic route drawing). (Step 9)
+2. Persist diagram JSON + attach simple presence flag to play record + include in autosave + export scope (placeholder for thumbnail). (Step 9)
+3. Telemetry: add play.diagram_updated event + extend autosave finalize to mark hasDiagram. (Step 9)
+4. Prepare complexity metric inputs (enumerate diagram element counts) for Step 10.
 
 ---
 
@@ -103,10 +110,11 @@ Immediate Focus (Next):
    Goal: Select plays → "Add Tags" → searchable multi-select + preview count.  
    Rationale: Tag normalization increases retrieval quality.  
    Success: Adds tags to all selected; toast summarizing (# new tags, duplicates ignored).
-8. Batch Export Enhancements (Filter → CSV / PDF stub)  
+8. Batch Export Enhancements (Filter → CSV / PDF stub) ✅  
    Goal: Export respects active filters even w/o selection; unify naming & file metadata.  
    Rationale: Coaches often want current slice.  
-   Success: Export button offers submenu: Selected / Current View / All.
+   Success: Export button offers submenu: Selected / Current View / All.  
+   Delivered: Added submenu; scope-respecting export (selected / current filtered slice / all), consistent filename `plays-export-<scope>-YYYYMMDDHHMM.csv`, `export.scope` telemetry event with counts & filter context.
 
 ### Phase 3: Creation Excellence (Day 3–4)
 
@@ -201,8 +209,10 @@ Immediate Focus (Next):
 
 ## Immediate Next Actions (Tomorrow Morning)
 
-1. Scaffold ConfirmDialog + Undo queue (Step 1).
-2. Implement Empty / Loading skeleton variants in `PlayGrid` (Step 2).
-3. Draft reducer additions for version history & autosave metadata (support Steps 3 & 14).
+1. Implement Diagram Maker MVP container + toolbar (draw route, drag player icon) (Step 9).
+2. Add diagram JSON persistence + integrate into PlayBuilder autosave pipeline (Step 9).
+3. Fire `play.diagram_updated` telemetry on save/update (Step 9).
+4. Add hasDiagram flag into export + future complexity computation scaffolding (prep Step 10).
+5. Outline complexity metric schema (counts, diversity score) ready for implementation (Step 10).
 
 Let's execute.

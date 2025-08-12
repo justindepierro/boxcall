@@ -1,5 +1,5 @@
 import React from "react";
-import { Plus, Upload, Download } from "lucide-react";
+import { Plus, Upload, Download, ChevronDown } from "lucide-react";
 import { Button } from "../../ui/Button/Button";
 import { Badge } from "../../ui/Badge";
 import { AdvancedSearchBar } from "../../playbook/AdvancedSearchBar";
@@ -22,6 +22,7 @@ export type PlaybookActionsBarProps = {
   enableBulkOperations: boolean;
   onToggleBulk: () => void;
   onExportCSV: () => void;
+  onExportScope?: (scope: "selected" | "current" | "all") => void; // new scoped export handler
   onOpenImport: () => void;
   playsCreated: number;
   onOpenBuilder: () => void;
@@ -51,6 +52,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
   enableBulkOperations,
   onToggleBulk,
   onExportCSV,
+  onExportScope,
   onOpenImport,
   playsCreated,
   onOpenBuilder,
@@ -206,14 +208,47 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 />
                 Bulk Edit
               </Button>
-              <Button
-                onClick={onExportCSV}
-                variant="subtle"
-                size="sm"
-                className="px-4 py-2"
-              >
-                <Download className="h-4 w-4 mr-2" /> Export CSV
-              </Button>
+              <div className="relative group">
+                <Button
+                  onClick={() =>
+                    onExportScope ? onExportScope("selected") : onExportCSV()
+                  }
+                  variant="subtle"
+                  size="sm"
+                  className="px-3 py-2 pr-2 flex items-center"
+                  aria-haspopup="menu"
+                  aria-expanded="false"
+                >
+                  <Download className="h-4 w-4 mr-2" /> Export
+                  <ChevronDown className="h-3 w-3 ml-1 text-slate-500" />
+                </Button>
+                <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition pointer-events-none group-hover:pointer-events-auto absolute right-0 mt-1 min-w-[180px] surface-popover rounded-md shadow-lg border border-subtle py-1 z-40">
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    className="w-full justify-start !px-3 !py-1.5 text-xs"
+                    onClick={() => onExportScope && onExportScope("selected")}
+                  >
+                    Selected Plays
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    className="w-full justify-start !px-3 !py-1.5 text-xs"
+                    onClick={() => onExportScope && onExportScope("current")}
+                  >
+                    Current View
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    className="w-full justify-start !px-3 !py-1.5 text-xs"
+                    onClick={() => onExportScope && onExportScope("all")}
+                  >
+                    All Plays
+                  </Button>
+                </div>
+              </div>
               <Button
                 onClick={onOpenImport}
                 variant="subtle"

@@ -401,7 +401,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               size="xs"
               onClick={() => {
                 // Fire a custom event the parent PlaybookPage can listen to if desired
-                document.dispatchEvent(new CustomEvent("playgrid:clear-search"));
+                document.dispatchEvent(
+                  new CustomEvent("playgrid:clear-search")
+                );
               }}
             >
               Clear search
@@ -426,7 +428,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     <div className="space-y-6" aria-live="polite">
       {loading && (
         <div aria-busy="true" aria-label="Loading plays" role="status">
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mt-2" role="list">
+          <div
+            className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mt-2"
+            role="list"
+          >
             {Array.from({ length: 8 }).map((_, i) => (
               <div role="listitem" key={i}>
                 <SkeletonCard idx={i} />
@@ -436,7 +441,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         </div>
       )}
       {error && !loading && (
-        <div className="text-center p-10 border rounded-md border-red-200 bg-red-50" role="alert">
+        <div
+          className="text-center p-10 border rounded-md border-red-200 bg-red-50"
+          role="alert"
+        >
           <p className="text-red-600 font-medium mb-3">Error loading plays</p>
           <p className="text-xs text-red-500 mb-4">{error}</p>
           <div className="flex justify-center">

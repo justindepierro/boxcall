@@ -179,7 +179,9 @@ export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
             variant="ghost"
             onClick={chip.remove}
             aria-label={`Remove filter: ${chip.label}`}
-            className={removeBtnClass + " !p-0 !bg-transparent hover:!bg-transparent"}
+            className={
+              removeBtnClass + " !p-0 !bg-transparent hover:!bg-transparent"
+            }
           >
             ×
           </Button>

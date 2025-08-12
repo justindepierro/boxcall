@@ -10,6 +10,9 @@ import { Button } from "../../ui/Button";
 import type { Play } from "../../../types/play";
 import { PlayBuilderForm } from "./PlayBuilderForm";
 import { PlayBuilderPreview } from "./PlayBuilderPreview";
+import { DiagramEditorMVP } from "./DiagramEditorMVP";
+import { VisualPlayBuilderV2 } from "../diagram-v2/VisualPlayBuilderV2";
+import type { DiagramModel } from "./DiagramEditorMVP";
 import { QuickEntry } from "./QuickEntry";
 // Explicit normalization to guarantee consistency BEFORE hitting service layer
 import {
@@ -29,7 +32,8 @@ interface PlayBuilderCoreProps {
 }
 
 // Local storage key helper (single draft for now; future: key by user/team)
-const DRAFT_STORAGE_KEY = "bc_playbuilder_draft_v1";
+const DRAFT_STORAGE_KEY = "bc_playbuilder_draft_v1"; // legacy without diagram
+const DRAFT_STORAGE_KEY_V2 = "bc_playbuilder_draft_v2"; // includes diagram
 
 export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   isOpen,
@@ -64,6 +68,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
 
   const [isQuickEntryVisible, setIsQuickEntryVisible] = useState(false);
   const [existingNames, setExistingNames] = useState<Set<string>>(new Set());
+  const [diagram, setDiagram] = useState<DiagramModel | null>(null);
   const [attemptedSave, setAttemptedSave] = useState(false);
   const [lastAutosave, setLastAutosave] = useState<number | null>(null);
   const [restoredFromDraft, setRestoredFromDraft] = useState(false);
@@ -73,6 +78,15 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   // --- Draft Persistence Helpers ---
   const loadDraft = () => {
     try {
+      const rawV2 = localStorage.getItem(DRAFT_STORAGE_KEY_V2);
+      if (rawV2) {
+        const parsed = JSON.parse(rawV2) as {
+          data: Partial<Play>;
+          diagram?: DiagramModel;
+          ts: number;
+        };
+        return parsed;
+      }
       const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
       if (!raw) return null;
       const parsed = JSON.parse(raw) as { data: Partial<Play>; ts: number };
@@ -81,22 +95,30 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
       return null;
     }
   };
-  const persistDraft = (data: Partial<Play>) => {
+  const persistDraft = (
+    data: Partial<Play>,
+    diagramModel: DiagramModel | null
+  ) => {
     try {
-      const payload = JSON.stringify({ data, ts: Date.now() });
-      localStorage.setItem(DRAFT_STORAGE_KEY, payload);
+      const payload = JSON.stringify({
+        data,
+        diagram: diagramModel,
+        ts: Date.now(),
+      });
+      localStorage.setItem(DRAFT_STORAGE_KEY_V2, payload);
       setLastAutosave(Date.now());
-  telemetry.enqueue({ 
+      telemetry.enqueue({
         type: TelemetryEventTypes.PlayDraftAutosave,
-        data: { fields: Object.keys(data).length },
+        data: { fields: Object.keys(data).length, hasDiagram: !!diagramModel },
       });
     } catch {
-      // ignore quota / private mode errors
+      /* ignore */
     }
   };
   const clearDraft = () => {
     try {
       localStorage.removeItem(DRAFT_STORAGE_KEY);
+      localStorage.removeItem(DRAFT_STORAGE_KEY_V2);
       telemetry.enqueue({ type: TelemetryEventTypes.PlayDraftClear });
     } catch {
       /* noop */
@@ -110,15 +132,20 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
     const draft = loadDraft();
     if (draft && draft.data) {
       setPlayData((prev) => ({ ...prev, ...draft.data }));
+      type DraftV2 = {
+        data: Partial<Play>;
+        diagram?: DiagramModel;
+        ts: number;
+      };
+      const d2 = draft as DraftV2;
+      if (d2.diagram) setDiagram(d2.diagram);
       setRestoredFromDraft(true);
       setLastAutosave(draft.ts);
       telemetry.enqueue({
         type: TelemetryEventTypes.PlayDraftRestore,
-        data: { ageMs: Date.now() - draft.ts },
+        data: { ageMs: Date.now() - draft.ts, hasDiagram: !!d2.diagram },
       });
-    } else {
-      setRestoredFromDraft(false);
-    }
+    } else setRestoredFromDraft(false);
   }, [isOpen, initialPlay?.id]);
 
   // Track changes to playData to schedule autosave
@@ -129,32 +156,34 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
     autosaveTimerRef.current = window.setTimeout(() => {
       if (dirtyRef.current) {
         // Minimal validation before autosave: only save if at least one field has content
-        const hasContent = Object.values(playData).some(
-          (v) => typeof v === "string" ? v.trim().length > 0 : v !== undefined
+        const hasContent = Object.values(playData).some((v) =>
+          typeof v === "string" ? v.trim().length > 0 : v !== undefined
         );
         if (hasContent) {
-          persistDraft(playData);
+          persistDraft(playData, diagram);
           dirtyRef.current = false;
         }
       }
     }, 1200); // debounce 1.2s
     return () => {
-      if (autosaveTimerRef.current) window.clearTimeout(autosaveTimerRef.current);
+      if (autosaveTimerRef.current)
+        window.clearTimeout(autosaveTimerRef.current);
     };
-  }, [playData, isOpen]);
+  }, [playData, isOpen, diagram]);
 
   // Save draft on blur / visibility change as a safety net
   useEffect(() => {
     if (!isOpen) return;
     const handleVisibility = () => {
       if (document.visibilityState === "hidden" && dirtyRef.current) {
-        persistDraft(playData);
+        persistDraft(playData, diagram);
         dirtyRef.current = false;
       }
     };
     document.addEventListener("visibilitychange", handleVisibility);
-    return () => document.removeEventListener("visibilitychange", handleVisibility);
-  }, [isOpen, playData]);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibility);
+  }, [isOpen, playData, diagram]);
 
   // Load existing play names for duplicate detection when modal opens
   useEffect(() => {
@@ -222,18 +251,18 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
       return;
     }
 
-  console.log("💾 Saving (normalized) play data:", normalized);
-  onSave(normalized);
-  clearDraft();
-  telemetry.enqueue({
-    type: TelemetryEventTypes.PlayDraftFinalize,
-    data: { hasDiagram: false },
-  });
-  onClose();
+    console.log("💾 Saving (normalized) play data:", normalized);
+    onSave(normalized);
+    clearDraft();
+    telemetry.enqueue({
+      type: TelemetryEventTypes.PlayDraftFinalize,
+      data: { hasDiagram: !!diagram },
+    });
+    onClose();
   };
 
   const handleCancel = () => {
-  onClose();
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -256,10 +285,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   const validationErrors: string[] = [];
   if (!playData.play_name?.trim())
     validationErrors.push("Play name is required");
-        telemetry.enqueue({
-          type: TelemetryEventTypes.PlayDraftFinalize,
-          data: { hasDiagram: false },
-        });
+  // (Removed duplicate finalize telemetry)
   if (!playData.p_type) validationErrors.push("Play type is required");
   if (!playData.formation?.trim())
     validationErrors.push("Formation is required");
@@ -298,11 +324,17 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
               {!initialPlay?.id && (
                 <div className="mt-2 text-xs text-slate-500 flex items-center gap-2">
                   {restoredFromDraft && (
-                    <span className="text-amber-600 font-medium">Draft restored</span>
+                    <span className="text-amber-600 font-medium">
+                      Draft restored
+                    </span>
                   )}
                   {lastAutosave && (
                     <span>
-                      Autosaved {new Date(lastAutosave).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      Autosaved{" "}
+                      {new Date(lastAutosave).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </span>
                   )}
                   {lastAutosave && (
@@ -337,7 +369,50 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
           <div className="surface-card overflow-y-auto max-h-[calc(90vh-140px)]">
             <div className="grid grid-cols-1 lg:grid-cols-3 bc-grid-gap bc-card-padding">
               {/* Form Section - 2/3 width */}
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2 space-y-4">
+                <div>
+                  {import.meta.env.VITE_ENABLE_PLAY_DIAGRAM_V2 ? (
+                    <>
+                      <Typography
+                        variant="label-lg"
+                        as="h4"
+                        className="text-slate-500 mb-2"
+                      >
+                        Diagram (V2 Experimental)
+                      </Typography>
+                      <div className="mb-4 border border-dashed border-slate-300 rounded">
+                        <VisualPlayBuilderV2 />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <Typography
+                        variant="label-lg"
+                        as="h4"
+                        className="text-slate-500 mb-2"
+                      >
+                        Diagram (MVP)
+                      </Typography>
+                      <DiagramEditorMVP
+                        value={diagram || undefined}
+                        onChange={(m) => {
+                          setDiagram(m);
+                          // derive lightweight complexity proxy
+                          const complexity = Math.min(
+                            5,
+                            Math.ceil((m.players.length + m.routes.length) / 3)
+                          );
+                          setPlayData((prev) => ({
+                            ...prev,
+                            complexity_score: complexity,
+                          }));
+                          dirtyRef.current = true;
+                        }}
+                        className="mb-4"
+                      />
+                    </>
+                  )}
+                </div>
                 <QuickEntry
                   onPlayParsed={handleQuickEntryParsed}
                   isVisible={isQuickEntryVisible}
@@ -359,6 +434,12 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
                   isValid={isValid}
                   validationErrors={validationErrors}
                 />
+                {diagram && (
+                  <div className="mt-4 text-xs text-slate-500">
+                    Diagram: {diagram.players.length} players /{" "}
+                    {diagram.routes.length} routes (complexity auto-set)
+                  </div>
+                )}
               </div>
             </div>
           </div>

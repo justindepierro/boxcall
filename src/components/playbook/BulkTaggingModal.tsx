@@ -32,7 +32,10 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
   const [input, setInput] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [applied, setApplied] = useState<{ added: number; skipped: number } | null>(null);
+  const [applied, setApplied] = useState<{
+    added: number;
+    skipped: number;
+  } | null>(null);
 
   const normalized = (t: string) => t.trim().replace(/\s+/g, "-");
 
@@ -80,11 +83,16 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
       <div className="relative surface-card elevation-modal rounded-md shadow-lg w-full max-w-lg mx-4 p-6 animate-fade-in">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <Typography variant="headline-sm" as="h3" className="text-text-primary">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="text-text-primary"
+            >
               Add Tags to {playIds.length} Play{playIds.length === 1 ? "" : "s"}
             </Typography>
             <p className="text-xs text-text-secondary mt-1">
-              Tags will be appended. Duplicates are ignored automatically (future enhancement).
+              Tags will be appended. Duplicates are ignored automatically
+              (future enhancement).
             </p>
           </div>
           <Button
