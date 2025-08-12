@@ -36,6 +36,7 @@ import { Button } from "../components/ui/Button/Button";
 import { PlaybookHeader } from "../components/playbook/page/PlaybookHeader";
 import { PlaybookActionsBar } from "../components/playbook/page/PlaybookActionsBar";
 import ActiveFilterChips from "../components/playbook/page/ActiveFilterChips";
+import BulkTaggingModal from "../components/playbook/BulkTaggingModal";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 import { PlaybookProvider, usePlaybook } from "../contexts/PlaybookContext";
 import { useConfirm } from "../contexts/ConfirmContext";
@@ -54,6 +55,9 @@ const PlaybookPageInner: React.FC = () => {
   } = useToast();
   const confirmDialog = useConfirm();
   const { pushUndo } = useUndoQueue();
+
+  // Bulk Tagging Modal state
+  const [showBulkTagging, setShowBulkTagging] = React.useState(false);
 
   // Achievement handling
   const achievementTitles: Record<number, string> = {
@@ -436,7 +440,7 @@ const PlaybookPageInner: React.FC = () => {
         onOpenBuilder={handleOpenBuilder}
         selectedCount={state.selectedPlayIds.size}
         onClearSelection={handleClearSelection}
-  recentViews={state.recentViews}
+        recentViews={state.recentViews}
         extraLeft={
           <div className="hidden lg:block max-w-sm">
             <ActiveFilterChips
@@ -611,13 +615,7 @@ const PlaybookPageInner: React.FC = () => {
                               );
                               break;
                             case "add-tags": {
-                              const tag = prompt(
-                                "Enter tag to add to selected plays:"
-                              );
-                              if (tag)
-                                toastInfo(
-                                  `Adding tag "${tag}" to ${selectedPlays.length} plays...`
-                                );
+                              setShowBulkTagging(true);
                               break;
                             }
                             case "duplicate":
@@ -741,6 +739,20 @@ const PlaybookPageInner: React.FC = () => {
               refreshPlays();
             }
             handleCloseImport();
+          }}
+        />
+      )}
+      {showBulkTagging && (
+        <BulkTaggingModal
+          isOpen={showBulkTagging}
+          onClose={() => setShowBulkTagging(false)}
+          playIds={Array.from(state.selectedPlayIds)}
+          onApply={async (tags) => {
+            // Placeholder: In future, call service to append tags for each play.
+            toastInfo(
+              `Queued adding ${tags.length} tag${tags.length === 1 ? "" : "s"} to ${state.selectedPlayIds.size} plays (simulation).`
+            );
+            setShowBulkTagging(false);
           }}
         />
       )}
