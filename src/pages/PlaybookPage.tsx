@@ -16,8 +16,7 @@ import { PlaysDomainService } from "../domain/playsDomainService";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system/Typography";
 import { markFirstPlayCreated } from "../components/onboarding/activationHelpers";
-import { telemetry } from "../telemetry/dispatcher";
-import { TelemetryEventTypes } from "../telemetry/events";
+// telemetry already imported above in original file; avoid duplicate import (cleanup)
 import {
   listPresets,
   createPreset,
@@ -41,6 +40,9 @@ import { PlaybookProvider, usePlaybook } from "../contexts/PlaybookContext";
 import { useConfirm } from "../contexts/ConfirmContext";
 import { useUndoQueue } from "../contexts/UndoQueueContext";
 import { useToast } from "../hooks/useToast";
+import { mapError } from "../domain/errors/domainErrorMapper";
+import { telemetry } from "../telemetry/dispatcher";
+import { TelemetryEventTypes } from "../telemetry/events";
 
 const PlaybookPageInner: React.FC = () => {
   const { state, dispatch } = usePlaybook();
@@ -100,8 +102,13 @@ const PlaybookPageInner: React.FC = () => {
       handlePlayCreated();
       toastSuccess(`Play "${playData.play_name}" saved!`);
     } catch (e) {
-      console.error(e);
-      toastError("Failed to save play");
+      const mapped = mapError(e);
+      console.error("Play save failed", e);
+      toastError(mapped.userMessage);
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ErrorBoundary,
+        data: { code: mapped.code, area: "play.save", retryable: mapped.retryable },
+      });
     }
   };
 
@@ -121,8 +128,13 @@ const PlaybookPageInner: React.FC = () => {
         play
       );
       toastSuccess(`Added to practice script: ${script.name}`);
-    } catch {
-      toastError("Failed to add to script");
+    } catch (e) {
+      const mapped = mapError(e);
+      toastError(mapped.userMessage);
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ErrorBoundary,
+        data: { code: mapped.code, area: "practiceScript.add" },
+      });
     }
   };
   const handleAddToGamePlan = (play: Play) =>
@@ -140,8 +152,10 @@ const PlaybookPageInner: React.FC = () => {
       });
       const ts = new Date().toISOString().split("T")[0];
       CSVService.downloadCSV(csv, `playbook-export-${ts}.csv`);
-    } catch {
-      toastError("Failed export");
+    } catch (e) {
+      const mapped = mapError(e);
+      toastError(mapped.userMessage);
+      telemetry.enqueue({ type: TelemetryEventTypes.ErrorBoundary, data: { code: mapped.code, area: "export.csv" } });
     }
   };
   const handleQuickNewPracticeScript = async () => {
@@ -154,8 +168,10 @@ const PlaybookPageInner: React.FC = () => {
       });
       toastSuccess(`Created practice script: ${script.name}`);
       dispatch({ type: "SET_VIEW", view: "practice-script" });
-    } catch {
-      toastError("Failed to create practice script");
+    } catch (e) {
+      const mapped = mapError(e);
+      toastError(mapped.userMessage);
+      telemetry.enqueue({ type: TelemetryEventTypes.ErrorBoundary, data: { code: mapped.code, area: "practiceScript.create" } });
     }
   };
   const handleQuickNewInstall = () => {
