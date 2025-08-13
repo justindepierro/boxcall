@@ -79,7 +79,11 @@ export type DiagramEditorAction =
   | { type: "SET_SELECTION"; ids: string[] }
   | { type: "TOGGLE_SELECT"; id: string }
   | { type: "CLEAR_SELECTION" }
-  | { type: "MOVE_SELECTION"; patches: { id: string; x: number; y: number }[] }
+  | {
+      type: "MOVE_SELECTION";
+      patches: { id: string; x: number; y: number }[];
+      mode?: "nudge" | "drag"; // interaction modality (keyboard nudge vs mouse drag)
+    }
   | { type: "COMMIT_MOVE" }
   | { type: "ADD_PLAYER"; player: DiagramPlayer }
   | { type: "MOVE_PLAYER"; id: string; x: number; y: number }

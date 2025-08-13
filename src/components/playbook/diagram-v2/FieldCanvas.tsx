@@ -22,11 +22,12 @@ export const FieldCanvas: React.FC<{
   }, []);
 
   const dragRef = useRef<{
-    id: string;
+    id: string; // primary dragged id
     startX: number;
     startY: number;
-    offX: number;
-    offY: number;
+    moved: boolean;
+    // For group drag: snapshot of original positions in absolute px
+    originals: { id: string; xAbs: number; yAbs: number }[];
   } | null>(null);
   const panRef = useRef<{
     startX: number;
@@ -66,13 +67,21 @@ export const FieldCanvas: React.FC<{
         start: { x: player.x, y: player.y },
       });
     }
-    const abs = pctToAbs(player.x, player.y);
+    // Build group snapshot (selected players) for potential group drag
+    const selected = state.ui.selectedIds || [id];
+    const originals = selected
+      .map((pid) => doc.players.find((p) => p.id === pid))
+      .filter(Boolean)
+      .map((p) => {
+        const abs = pctToAbs(p!.x, p!.y);
+        return { id: p!.id, xAbs: abs.x, yAbs: abs.y };
+      });
     dragRef.current = {
       id,
       startX: e.clientX,
       startY: e.clientY,
-      offX: abs.x,
-      offY: abs.y,
+      moved: false,
+      originals,
     };
   };
 
@@ -114,16 +123,22 @@ export const FieldCanvas: React.FC<{
       if (!dragRef.current) return;
       const dx = e.clientX - dragRef.current.startX;
       const dy = e.clientY - dragRef.current.startY;
-      const nx = dragRef.current.offX + dx;
-      const ny = dragRef.current.offY + dy;
-      const pct = absToPct(nx, ny);
-      // Move only the active dragged player (others could later be group-moved)
-      dispatch({
-        type: "MOVE_PLAYER",
-        id: dragRef.current.id,
-        x: Math.min(100, Math.max(0, snapPct(pct.x))),
-        y: Math.min(100, Math.max(0, snapPct(pct.y))),
+      if (Math.abs(dx) > 0 || Math.abs(dy) > 0) dragRef.current.moved = true;
+      const patches: { id: string; x: number; y: number }[] = [];
+      const { originals } = dragRef.current;
+      originals.forEach((o) => {
+        const nx = o.xAbs + dx;
+        const ny = o.yAbs + dy;
+        const pct = absToPct(nx, ny);
+        patches.push({
+          id: o.id,
+          x: Math.min(100, Math.max(0, snapPct(pct.x))),
+          y: Math.min(100, Math.max(0, snapPct(pct.y))),
+        });
       });
+      if (patches.length) {
+        dispatch({ type: "MOVE_SELECTION", patches, mode: "drag" });
+      }
     },
     [dispatch, snapPct]
   );
@@ -141,6 +156,10 @@ export const FieldCanvas: React.FC<{
     }
     selectionDragRef.current = null;
     setSelectionBox(null);
+    if (dragRef.current?.moved) {
+      // commit history snapshot once per drag interaction
+      dispatch({ type: "COMMIT_MOVE" });
+    }
     dragRef.current = null;
   }, [doc.players, selectionBox, dispatch]);
 

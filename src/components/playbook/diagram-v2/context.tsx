@@ -78,6 +78,9 @@ function reducer(
       };
     case "MOVE_SELECTION": {
       const map = new Map(action.patches.map((p) => [p.id, p]));
+      const prevPositions = new Map(
+        state.doc.players.map((p) => [p.id, { x: p.x, y: p.y }])
+      );
       const nextDoc: DiagramDocument = {
         ...state.doc,
         players: state.doc.players.map((p) =>
@@ -85,11 +88,37 @@ function reducer(
         ),
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
-      // Lightweight telemetry sample (no flood): only emit when patch count > 1
       if (action.patches.length > 1) {
+        // Aggregate distance moved (max of centroid shift)
+        const ids = action.patches.map((p) => p.id);
+        const beforeCentroid = ids.reduce(
+          (acc, id) => {
+            const prev = prevPositions.get(id)!;
+            return { x: acc.x + prev.x, y: acc.y + prev.y };
+          },
+          { x: 0, y: 0 }
+        );
+        beforeCentroid.x /= ids.length;
+        beforeCentroid.y /= ids.length;
+        const afterCentroid = ids.reduce(
+          (acc, id) => {
+            const now = map.get(id)!;
+            return { x: acc.x + now.x, y: acc.y + now.y };
+          },
+          { x: 0, y: 0 }
+        );
+        afterCentroid.x /= ids.length;
+        afterCentroid.y /= ids.length;
+        const dx = afterCentroid.x - beforeCentroid.x;
+        const dy = afterCentroid.y - beforeCentroid.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
         telemetry.enqueue({
           type: TelemetryEventTypes.PlayDiagramMoveGroup,
-          data: { count: action.patches.length, mode: "nudge" },
+          data: {
+            count: action.patches.length,
+            mode: action.mode || "nudge",
+            dist: Number(dist.toFixed(2)),
+          },
         });
       }
       return { ...state, doc: nextDoc, dirty: true };
