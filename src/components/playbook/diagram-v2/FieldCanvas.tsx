@@ -62,7 +62,26 @@ export const FieldCanvas: React.FC<{
     y: (y / 900) * 100,
   });
 
+  // Map client mouse event to SVG world coordinates (0..1600 x 0..900), accounting for pan/zoom
+  const clientToWorld = useCallback(
+    (evt: { clientX: number; clientY: number }) => {
+      const svg = svgRef.current;
+      if (!svg) return { x: 0, y: 0 };
+      const rect = svg.getBoundingClientRect();
+      // Position within the SVG's viewBox space
+      const xView = ((evt.clientX - rect.left) / rect.width) * 1600;
+      const yView = ((evt.clientY - rect.top) / rect.height) * 900;
+      // Invert the inner group transform translate(pan) scale(zoom)
+      const xWorld = (xView - state.ui.panX) / state.ui.zoom;
+      const yWorld = (yView - state.ui.panY) / state.ui.zoom;
+      return { x: xWorld, y: yWorld };
+    },
+    [state.ui.panX, state.ui.panY, state.ui.zoom]
+  );
+
   const handleMouseDownPlayer = (e: React.MouseEvent, id: string) => {
+    // Prevent canvas-level mousedown from clearing selection
+    e.stopPropagation();
     const player = doc.players.find((p) => p.id === id);
     if (!player) return;
     if (e.detail === 2) {
@@ -89,10 +108,11 @@ export const FieldCanvas: React.FC<{
         const abs = pctToAbs(p!.x, p!.y);
         return { id: p!.id, xAbs: abs.x, yAbs: abs.y };
       });
+    const start = clientToWorld(e);
     dragRef.current = {
       id,
-      startX: e.clientX,
-      startY: e.clientY,
+      startX: start.x,
+      startY: start.y,
       moved: false,
       originals,
     };
@@ -110,32 +130,34 @@ export const FieldCanvas: React.FC<{
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       if (panRef.current) {
-        const dx = e.clientX - panRef.current.startX;
-        const dy = e.clientY - panRef.current.startY;
-        dispatch({ type: "PAN", dx, dy });
+  // Convert pixel delta to SVG world (viewBox) units
+  const svg = svgRef.current;
+  const rect = svg?.getBoundingClientRect();
+  const dxPx = e.clientX - panRef.current.startX;
+  const dyPx = e.clientY - panRef.current.startY;
+  const dx = rect ? (dxPx / rect.width) * 1600 : dxPx;
+  const dy = rect ? (dyPx / rect.height) * 900 : dyPx;
+  dispatch({ type: "PAN", dx, dy });
         panRef.current.startX = e.clientX; // incremental
         panRef.current.startY = e.clientY;
         return;
       }
       if (selectionDragRef.current) {
-        const rect = svgRef.current?.getBoundingClientRect();
-        if (rect) {
-          const sx = selectionDragRef.current.startX - rect.left;
-          const sy = selectionDragRef.current.startY - rect.top;
-          const w = e.clientX - selectionDragRef.current.startX;
-          const h = e.clientY - selectionDragRef.current.startY;
-          setSelectionBox({
-            x: Math.min(sx, sx + w),
-            y: Math.min(sy, sy + h),
-            w: Math.abs(w),
-            h: Math.abs(h),
-          });
-        }
+  const curr = clientToWorld(e);
+  const sx = selectionDragRef.current.startX;
+  const sy = selectionDragRef.current.startY;
+  const x1 = Math.min(sx, curr.x);
+  const y1 = Math.min(sy, curr.y);
+  const x2 = Math.max(sx, curr.x);
+  const y2 = Math.max(sy, curr.y);
+  setSelectionBox({ x: x1, y: y1, w: x2 - x1, h: y2 - y1 });
         return;
       }
       if (!dragRef.current) return;
-      const dx = e.clientX - dragRef.current.startX;
-      const dy = e.clientY - dragRef.current.startY;
+      // Compute delta in world coordinates
+      const now = clientToWorld(e);
+      const dx = now.x - dragRef.current.startX;
+      const dy = now.y - dragRef.current.startY;
       if (Math.abs(dx) > 0 || Math.abs(dy) > 0) dragRef.current.moved = true;
       const patches: { id: string; x: number; y: number }[] = [];
       const { originals } = dragRef.current;
@@ -153,7 +175,7 @@ export const FieldCanvas: React.FC<{
         dispatch({ type: "MOVE_SELECTION", patches, mode: "drag" });
       }
     },
-    [dispatch, snapPct]
+  [dispatch, snapPct, clientToWorld]
   );
 
   const handleMouseUp = useCallback(() => {
@@ -185,14 +207,9 @@ export const FieldCanvas: React.FC<{
         panY: state.ui.panY,
       };
     } else if (state.ui.tool === "select") {
-      const rect = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
-      selectionDragRef.current = { startX: e.clientX, startY: e.clientY };
-      setSelectionBox({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-        w: 0,
-        h: 0,
-      });
+      const start = clientToWorld(e);
+  selectionDragRef.current = { startX: start.x, startY: start.y };
+      setSelectionBox({ x: start.x, y: start.y, w: 0, h: 0 });
       dispatch({ type: "CLEAR_SELECTION" });
     }
   };
@@ -215,9 +232,9 @@ export const FieldCanvas: React.FC<{
 
   const handleCanvasClick = (e: React.MouseEvent<SVGSVGElement>) => {
     if (state.ui.tool !== "route") return;
-    const rect = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
-    const x = snapPct(((e.clientX - rect.left) / rect.width) * 100);
-    const y = snapPct(((e.clientY - rect.top) / rect.height) * 100);
+    const world = clientToWorld(e);
+    const x = snapPct((world.x / 1600) * 100);
+    const y = snapPct((world.y / 900) * 100);
     if (!state.ui.drawing) return;
     // If shift or right-click (?) finalize
     if (e.detail >= 2) {
@@ -230,9 +247,9 @@ export const FieldCanvas: React.FC<{
 
   const handleMouseMoveCanvas = (e: React.MouseEvent<SVGSVGElement>) => {
     if (state.ui.tool !== "route" || !state.ui.drawing) return;
-    const rect = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
-    const x = snapPct(((e.clientX - rect.left) / rect.width) * 100);
-    const y = snapPct(((e.clientY - rect.top) / rect.height) * 100);
+    const world = clientToWorld(e);
+    const x = snapPct((world.x / 1600) * 100);
+    const y = snapPct((world.y / 900) * 100);
     dispatch({ type: "PREVIEW_ROUTE", point: { x, y } });
   };
 

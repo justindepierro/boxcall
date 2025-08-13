@@ -9,6 +9,7 @@ export interface DiagramPlayer {
   color?: string;
   outlineColor?: string; // stroke / outline color
   locked?: boolean; // disallow move
+  assignment?: string; // freeform assignment/notes
 }
 
 export interface RoutePoint {

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { FieldCanvas } from "../FieldCanvas";
+import { ActionBar } from "./ActionBar";
 
 /**
  * CanvasPane
@@ -19,6 +20,7 @@ export const CanvasPane: React.FC<{
         <div className="absolute inset-0">
           <FieldCanvas className="w-full h-full" />
           <CaptureSvgRef targetRef={svgRef} />
+          <ActionBar svgRef={svgRef} />
         </div>
       </div>
     </div>
