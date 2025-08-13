@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useCallback, useState } from "react";
 import { useDiagramEditor } from "./context";
 
 // Simple SVG field canvas with zoom/pan transforms (placeholder)
@@ -34,6 +34,16 @@ export const FieldCanvas: React.FC<{
     panX: number;
     panY: number;
   } | null>(null);
+  const selectionDragRef = useRef<{
+    startX: number;
+    startY: number;
+  } | null>(null);
+  const [selectionBox, setSelectionBox] = useState<null | {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  }>(null);
 
   const pctToAbs = (xPct: number, yPct: number) => ({
     x: (xPct / 100) * 1600,
@@ -47,6 +57,8 @@ export const FieldCanvas: React.FC<{
   const handleMouseDownPlayer = (e: React.MouseEvent, id: string) => {
     const player = doc.players.find((p) => p.id === id);
     if (!player) return;
+    if (e.metaKey || e.shiftKey) dispatch({ type: "TOGGLE_SELECT", id });
+    else dispatch({ type: "SET_SELECTION", ids: [id] });
     if (state.ui.tool === "route" && !state.ui.drawing) {
       dispatch({
         type: "START_ROUTE",
@@ -83,12 +95,29 @@ export const FieldCanvas: React.FC<{
         panRef.current.startY = e.clientY;
         return;
       }
+      if (selectionDragRef.current) {
+        const rect = svgRef.current?.getBoundingClientRect();
+        if (rect) {
+          const sx = selectionDragRef.current.startX - rect.left;
+          const sy = selectionDragRef.current.startY - rect.top;
+          const w = e.clientX - selectionDragRef.current.startX;
+          const h = e.clientY - selectionDragRef.current.startY;
+          setSelectionBox({
+            x: Math.min(sx, sx + w),
+            y: Math.min(sy, sy + h),
+            w: Math.abs(w),
+            h: Math.abs(h),
+          });
+        }
+        return;
+      }
       if (!dragRef.current) return;
       const dx = e.clientX - dragRef.current.startX;
       const dy = e.clientY - dragRef.current.startY;
       const nx = dragRef.current.offX + dx;
       const ny = dragRef.current.offY + dy;
       const pct = absToPct(nx, ny);
+      // Move only the active dragged player (others could later be group-moved)
       dispatch({
         type: "MOVE_PLAYER",
         id: dragRef.current.id,
@@ -100,8 +129,21 @@ export const FieldCanvas: React.FC<{
   );
 
   const handleMouseUp = useCallback(() => {
+    if (selectionDragRef.current && selectionBox) {
+      const { x, y, w, h } = selectionBox;
+      const ids: string[] = [];
+      doc.players.forEach((p) => {
+        const abs = pctToAbs(p.x, p.y);
+        if (abs.x >= x && abs.x <= x + w && abs.y >= y && abs.y <= y + h)
+          ids.push(p.id);
+      });
+      if (ids.length) dispatch({ type: "SET_SELECTION", ids });
+    }
+    selectionDragRef.current = null;
+    setSelectionBox(null);
     dragRef.current = null;
-  }, []);
+  }, [doc.players, selectionBox, dispatch]);
+
   const handleCanvasMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
     if (state.ui.tool === "pan") {
       panRef.current = {
@@ -110,6 +152,16 @@ export const FieldCanvas: React.FC<{
         panX: state.ui.panX,
         panY: state.ui.panY,
       };
+    } else if (state.ui.tool === "select") {
+      const rect = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
+      selectionDragRef.current = { startX: e.clientX, startY: e.clientY };
+      setSelectionBox({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        w: 0,
+        h: 0,
+      });
+      dispatch({ type: "CLEAR_SELECTION" });
     }
   };
   const endPan = () => {
@@ -152,7 +204,7 @@ export const FieldCanvas: React.FC<{
     dispatch({ type: "PREVIEW_ROUTE", point: { x, y } });
   };
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts + arrow key nudging
   useEffect(() => {
     const keyHandler = (e: KeyboardEvent) => {
       if (e.key === "Escape" && state.ui.drawing) {
@@ -165,10 +217,31 @@ export const FieldCanvas: React.FC<{
         else dispatch({ type: "UNDO" });
         e.preventDefault();
       }
+      const selected = state.ui.selectedIds || [];
+      if (
+        selected.length &&
+        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)
+      ) {
+        e.preventDefault();
+        const delta = e.shiftKey ? 2 : 0.5;
+        const patches: { id: string; x: number; y: number }[] = [];
+        selected.forEach((id) => {
+          const p = doc.players.find((pl) => pl.id === id);
+          if (!p) return;
+          let nx = p.x;
+          let ny = p.y;
+          if (e.key === "ArrowUp") ny = Math.max(0, p.y - delta);
+          if (e.key === "ArrowDown") ny = Math.min(100, p.y + delta);
+          if (e.key === "ArrowLeft") nx = Math.max(0, p.x - delta);
+          if (e.key === "ArrowRight") nx = Math.min(100, p.x + delta);
+          patches.push({ id, x: nx, y: ny });
+        });
+        if (patches.length) dispatch({ type: "MOVE_SELECTION", patches });
+      }
     };
     window.addEventListener("keydown", keyHandler);
     return () => window.removeEventListener("keydown", keyHandler);
-  }, [dispatch, state.ui.drawing]);
+  }, [dispatch, state.ui.drawing, state.ui.selectedIds, doc.players]);
 
   return (
     <div className={className}>
@@ -185,52 +258,46 @@ export const FieldCanvas: React.FC<{
         <g
           transform={`translate(${state.ui.panX} ${state.ui.panY}) scale(${state.ui.zoom})`}
         >
+          {/* Field background */}
           {(() => {
             const theme = doc.field.theme || "classic";
-    if (theme === "classic") {
+            if (theme === "classic")
               return (
                 <rect
                   x={0}
                   y={0}
                   width={1600}
                   height={900}
-      fill="#1e7a44" /* lighter green */
-      fillOpacity={0.55}
+                  fill="#1e7a44"
+                  fillOpacity={0.55}
                 />
               );
-            }
-            if (theme === "mono-light") {
+            if (theme === "mono-light")
               return (
-                <rect
-                  x={0}
-                  y={0}
-                  width={1600}
-                  height={900}
-                  fill="#f4f5f6" /* off white */
-                  fillOpacity={1}
-                />
+                <rect x={0} y={0} width={1600} height={900} fill="#f4f5f6" />
               );
-            }
-            if (theme === "mono-dark") {
+            if (theme === "mono-dark")
               return (
-                <rect
-                  x={0}
-                  y={0}
-                  width={1600}
-                  height={900}
-                  fill="#1d1f20" /* soft near-black */
-                  fillOpacity={1}
-                />
+                <rect x={0} y={0} width={1600} height={900} fill="#1d1f20" />
               );
-            }
           })()}
-          {/* Line of Scrimmage (LOS) custom yard marker within forward slice */}
+          {/* LOS */}
           {(() => {
-            const losYards = doc.field.losYards ?? 20; // yard line to highlight within forward view
+            const losYards = doc.field.losYards ?? 20;
             const y = (losYards / doc.field.forwardYards) * 900;
-            return <rect x={0} y={y - 3} width={1600} height={6} fill="#064e3b" opacity={0.95} rx={2} />;
+            return (
+              <rect
+                x={0}
+                y={y - 3}
+                width={1600}
+                height={6}
+                fill="#064e3b"
+                opacity={0.95}
+                rx={2}
+              />
+            );
           })()}
-          {/* Yard lines based on vertical orientation slice (always vertical downfield) */}
+          {/* Yard Lines */}
           {doc.field.showYardLines &&
             Array.from({ length: doc.field.forwardYards / 5 + 1 }).map(
               (_, i) => (
@@ -246,105 +313,159 @@ export const FieldCanvas: React.FC<{
                 />
               )
             )}
-          {/* Hash marks simplified for vertical view */}
-          {doc.field.showHashMarks && (() => {
-            // Realistic hash spacing by level; using full field width 160ft mapped to 1600px (10px/ft)
-            // High School: each hash 53'4" (53.333ft) from sideline → inner edges? We'll approximate center of hash.
-            const layout = doc.field.hashLayout || 'highschool';
-            const FT_PER_FIELD = 160; // width in feet
-            const PX_PER_FT = 1600 / FT_PER_FIELD; // 10
-            // Distances from each sideline to hash center by level
-            const hashDistances: Record<string, [number, number]> = {
-              highschool: [53 + 4/12, FT_PER_FIELD - (53 + 4/12)], // symmetrical
-              college: [60, FT_PER_FIELD - 60], // NCAA ~60ft from sidelines
-              nfl: [70 + 9/12, FT_PER_FIELD - (70 + 9/12)], // 70'9" (per older reference; NFL currently narrower hash but we approximate)
-            };
-            const [leftHashFt, rightHashFt] = hashDistances[layout];
-            const leftHashX = leftHashFt * PX_PER_FT;
-            const rightHashX = rightHashFt * PX_PER_FT;
-            const middleX = 1600 / 2;
-            const theme = doc.field.theme || 'classic';
-            const hashColor = theme === 'mono-dark' ? '#374151' : theme === 'mono-light' ? '#9ca3af' : '#064e3b';
-            const midColor = theme === 'classic' ? '#065f46' : hashColor;
-            const marks: React.ReactNode[] = [];
-            const hashWidth = 10; // widened from 6
-            const hashHeight = 3;
-            // Sideline marks 1 yard (3ft) from each sideline
-            const sideOffsetFt = 3; // one yard
-            const sideCenterX = sideOffsetFt * PX_PER_FT; // 30px
-            const sideRightCenterX = 1600 - sideCenterX;
-            for (let yrd = 0; yrd <= doc.field.forwardYards; yrd++) {
-              const y = (yrd / doc.field.forwardYards) * 900;
-              marks.push(
-                <g key={`h${yrd}`}>
-                  {/* Inner hashes */}
-                  <rect x={leftHashX - hashWidth / 2} y={y - hashHeight / 2} width={hashWidth} height={hashHeight} fill={hashColor} opacity={0.55} />
-                  <rect x={rightHashX - hashWidth / 2} y={y - hashHeight / 2} width={hashWidth} height={hashHeight} fill={hashColor} opacity={0.55} />
-                  {/* Middle indicator if ball hash middle */}
-                  {doc.field.ballHash === 'middle' && (
-                    <rect x={middleX - 3} y={y - hashHeight / 2} width={6} height={hashHeight} fill={midColor} opacity={0.35} />
-                  )}
-                  {/* Sideline hashes (outer) */}
-                  <rect x={sideCenterX - hashWidth / 2} y={y - hashHeight / 2} width={hashWidth} height={hashHeight} fill={hashColor} opacity={0.45} />
-                  <rect x={sideRightCenterX - hashWidth / 2} y={y - hashHeight / 2} width={hashWidth} height={hashHeight} fill={hashColor} opacity={0.45} />
+          {/* Hashes */}
+          {doc.field.showHashMarks &&
+            (() => {
+              const layout = doc.field.hashLayout || "highschool";
+              const FT = 160;
+              const PXPF = 1600 / FT;
+              const hashDistances: Record<string, [number, number]> = {
+                highschool: [53 + 4 / 12, FT - (53 + 4 / 12)],
+                college: [60, FT - 60],
+                nfl: [70 + 9 / 12, FT - (70 + 9 / 12)],
+              };
+              const [lFt, rFt] = hashDistances[layout];
+              const lX = lFt * PXPF;
+              const rX = rFt * PXPF;
+              const mid = 800;
+              const theme = doc.field.theme || "classic";
+              const hashColor =
+                theme === "mono-dark"
+                  ? "#374151"
+                  : theme === "mono-light"
+                    ? "#9ca3af"
+                    : "#064e3b";
+              const midColor = theme === "classic" ? "#065f46" : hashColor;
+              const marks: React.ReactNode[] = [];
+              const w = 10;
+              const h = 3;
+              const sideOffsetFt = 3;
+              const sideCenterX = sideOffsetFt * PXPF;
+              const sideRightCenterX = 1600 - sideCenterX;
+              for (let yrd = 0; yrd <= doc.field.forwardYards; yrd++) {
+                const y = (yrd / doc.field.forwardYards) * 900;
+                marks.push(
+                  <g key={yrd}>
+                    <rect
+                      x={lX - w / 2}
+                      y={y - h / 2}
+                      width={w}
+                      height={h}
+                      fill={hashColor}
+                      opacity={0.55}
+                    />
+                    <rect
+                      x={rX - w / 2}
+                      y={y - h / 2}
+                      width={w}
+                      height={h}
+                      fill={hashColor}
+                      opacity={0.55}
+                    />
+                    {doc.field.ballHash === "middle" && (
+                      <rect
+                        x={mid - 3}
+                        y={y - h / 2}
+                        width={6}
+                        height={h}
+                        fill={midColor}
+                        opacity={0.35}
+                      />
+                    )}
+                    <rect
+                      x={sideCenterX - w / 2}
+                      y={y - h / 2}
+                      width={w}
+                      height={h}
+                      fill={hashColor}
+                      opacity={0.45}
+                    />
+                    <rect
+                      x={sideRightCenterX - w / 2}
+                      y={y - h / 2}
+                      width={w}
+                      height={h}
+                      fill={hashColor}
+                      opacity={0.45}
+                    />
+                  </g>
+                );
+              }
+              return marks;
+            })()}
+          {/* Yard Numbers */}
+          {Array.from({ length: doc.field.forwardYards / 5 + 1 }).map(
+            (_, i) => {
+              const y = i * (900 / (doc.field.forwardYards / 5));
+              if (i === 0) return null;
+              const yardValue = i * 5;
+              if (yardValue === 50) return null;
+              const theme = doc.field.theme || "classic";
+              const baseColor =
+                theme === "classic"
+                  ? "#ecfdf5"
+                  : theme === "mono-light"
+                    ? "#444"
+                    : "#e5e7eb";
+              const opacity = theme === "classic" ? 0.24 : 0.32;
+              const feetFromSideline = 9 * 3;
+              const leftX = feetFromSideline * 10;
+              const rightX = 1600 - leftX;
+              const numberY = y + 26;
+              const digits = String(yardValue).split("");
+              const halfSpacing = 24;
+              return (
+                <g key={i} opacity={opacity}>
+                  <g
+                    transform={`translate(${leftX},${numberY}) rotate(90)`}
+                    style={{ pointerEvents: "none", userSelect: "none" }}
+                  >
+                    {digits.map((d, di) => (
+                      <text
+                        key={di}
+                        fontSize={50}
+                        fontWeight={700}
+                        fill={baseColor}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        x={di === 0 ? -halfSpacing : halfSpacing}
+                      >
+                        {d}
+                      </text>
+                    ))}
+                  </g>
+                  <g
+                    transform={`translate(${rightX},${numberY}) rotate(-90)`}
+                    style={{ pointerEvents: "none", userSelect: "none" }}
+                  >
+                    {digits.map((d, di) => (
+                      <text
+                        key={di}
+                        fontSize={50}
+                        fontWeight={700}
+                        fill={baseColor}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        x={di === 0 ? -halfSpacing : halfSpacing}
+                      >
+                        {d}
+                      </text>
+                    ))}
+                  </g>
                 </g>
               );
             }
-            return marks;
-          })()}
-          {/* Yard numbers stacked (approx every 5 yards) below LOS area */}
-          {Array.from({ length: doc.field.forwardYards / 5 + 1 }).map((_, i) => {
-            const y = i * (900 / (doc.field.forwardYards / 5));
-            if (i === 0) return null;
-            const yardValue = i * 5;
-            if (yardValue === 50) return null;
-            const theme = doc.field.theme || "classic";
-            const baseColor = theme === "classic" ? "#ecfdf5" : theme === "mono-light" ? "#444" : "#e5e7eb";
-            const opacity = theme === "classic" ? 0.24 : 0.32;
-            // 9 yards (27ft) from each sideline; field width 160ft → 10px/ft
-            const feetFromSideline = 9 * 3; // 27ft
-            const leftX = feetFromSideline * 10;
-            const rightX = 1600 - feetFromSideline * 10;
-            // Shift numbers so yard line (y) passes between digits; raise group so center gap straddles line.
-            const numberY = y + 26; // was y+38; lifted for split effect
-            const digits = String(yardValue).split(""); // expect 2 digits
-            const halfSpacing = 24; // center-to-center offset for each digit from origin
-            return (
-              <g key={`yn${i}`} opacity={opacity}>
-                {/* Left side digits */}
-                <g
-                  transform={`translate(${leftX},${numberY}) rotate(90)`}
-                  style={{ pointerEvents: "none", userSelect: "none" }}
-                >
-                  {digits.map((d, di) => (
-                    <text key={di} fontSize={50} fontWeight={700} fill={baseColor} textAnchor="middle" dominantBaseline="middle" x={di === 0 ? -halfSpacing : halfSpacing} y={0}>
-                      {d}
-                    </text>
-                  ))}
-                </g>
-                {/* Right side digits (mirrored rotation) */}
-                <g
-                  transform={`translate(${rightX},${numberY}) rotate(-90)`}
-                  style={{ pointerEvents: "none", userSelect: "none" }}
-                >
-                  {digits.map((d, di) => (
-                    <text key={di} fontSize={50} fontWeight={700} fill={baseColor} textAnchor="middle" dominantBaseline="middle" x={di === 0 ? -halfSpacing : halfSpacing} y={0}>
-                      {d}
-                    </text>
-                  ))}
-                </g>
-              </g>
-            );
-          })}
-          {/* Ball marker removed (center implies snap) */}
+          )}
           {/* Players */}
           {doc.players
             .filter((p) => doc.field.showDefensePlayers || p.side !== "D")
             .map((p) => {
               const isCenter = p.label === "C" || p.role === "C";
-              const theme = doc.field.theme || 'classic';
-              const defaultOutline = theme === 'mono-light' ? '#1f2937' : '#ffffff';
+              const theme = doc.field.theme || "classic";
+              const defaultOutline =
+                theme === "mono-light" ? "#1f2937" : "#ffffff";
               const strokeColor = p.outlineColor || defaultOutline;
+              const selected = (state.ui.selectedIds || []).includes(p.id);
               return (
                 <g
                   key={p.id}
@@ -356,17 +477,33 @@ export const FieldCanvas: React.FC<{
                   }}
                 >
                   {isCenter ? (
-                    <rect x={-24} y={-16} width={48} height={32} rx={4} ry={4} fill={p.color || "#1e3a8a"} stroke={strokeColor} strokeWidth={2} />
+                    <rect
+                      x={-24}
+                      y={-16}
+                      width={48}
+                      height={32}
+                      rx={4}
+                      ry={4}
+                      fill={p.color || "#1e3a8a"}
+                      stroke={selected ? "#fbbf24" : strokeColor}
+                      strokeWidth={selected ? 4 : 2}
+                    />
                   ) : (
-                    <ellipse rx={26} ry={18} fill={p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")} stroke={strokeColor} strokeWidth={2} />
-                  )}
+                    <ellipse
+                      rx={26}
+                      ry={18}
+                      fill={p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")}
+                      stroke={selected ? "#fbbf24" : strokeColor}
+                      strokeWidth={selected ? 4 : 2}
+                    />
+                  )}{" "}
                   {doc.field.showPlayerLabels && (
                     <text
                       x={0}
                       y={4}
                       fontSize={18}
                       fontWeight={700}
-                      fill={theme === 'mono-light' ? '#111827' : '#ffffff'}
+                      fill={theme === "mono-light" ? "#111827" : "#ffffff"}
                       textAnchor="middle"
                       style={{ pointerEvents: "none", userSelect: "none" }}
                     >
@@ -376,7 +513,7 @@ export const FieldCanvas: React.FC<{
                 </g>
               );
             })}
-          {/* In-progress drawing polyline */}
+          {/* Route drawing preview */}
           {state.ui.drawing && (
             <polyline
               points={[
@@ -391,6 +528,18 @@ export const FieldCanvas: React.FC<{
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeDasharray="8 6"
+            />
+          )}
+          {selectionBox && (
+            <rect
+              x={selectionBox.x}
+              y={selectionBox.y}
+              width={selectionBox.w}
+              height={selectionBox.h}
+              fill="rgba(250,204,21,0.15)"
+              stroke="#fbbf24"
+              strokeWidth={1.5}
+              strokeDasharray="4 3"
             />
           )}
         </g>

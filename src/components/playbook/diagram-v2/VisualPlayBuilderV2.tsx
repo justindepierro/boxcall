@@ -192,7 +192,12 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
               </select>
             )}
           </div>
-          <Button size="xs" variant="primary" onClick={addPlayer} className="shrink-0">
+          <Button
+            size="xs"
+            variant="primary"
+            onClick={addPlayer}
+            className="shrink-0"
+          >
             Add Player
           </Button>
           <div className="flex items-center gap-1 border-l border-r border-subtle pl-2 pr-2">
@@ -235,7 +240,12 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
               <option value="trips-right">Trips Right</option>
             </select>
           </div>
-          <Button size="xs" variant="secondary" disabled={!state.dirty} className="shrink-0">
+          <Button
+            size="xs"
+            variant="secondary"
+            disabled={!state.dirty}
+            className="shrink-0"
+          >
             Save (stub)
           </Button>
           <Button
@@ -296,7 +306,10 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
                   onChange={(e) =>
                     dispatch({
                       type: "SET_FIELD_THEME",
-                      theme: e.target.value as "classic" | "mono-light" | "mono-dark",
+                      theme: e.target.value as
+                        | "classic"
+                        | "mono-light"
+                        | "mono-dark",
                     })
                   }
                 >
@@ -309,11 +322,14 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
                 <span className="shrink-0">Hashes</span>
                 <select
                   className="flex-1 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
-                  value={state.doc.field.hashLayout || 'highschool'}
+                  value={state.doc.field.hashLayout || "highschool"}
                   onChange={(e) =>
                     dispatch({
-                      type: 'SET_FIELD_HASH_LAYOUT',
-                      layout: e.target.value as 'highschool' | 'college' | 'nfl'
+                      type: "SET_FIELD_HASH_LAYOUT",
+                      layout: e.target.value as
+                        | "highschool"
+                        | "college"
+                        | "nfl",
                     })
                   }
                 >
@@ -472,34 +488,61 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
                       <select
                         className="w-16 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
                         aria-label="Player color"
-                        value={p.color || (p.side === 'D' ? '#b91c1c' : '#1e3a8a')}
+                        value={
+                          p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")
+                        }
                         onChange={(e) =>
                           dispatch({
-                            type: 'UPDATE_PLAYER',
+                            type: "UPDATE_PLAYER",
                             id: p.id,
                             patch: { color: e.target.value },
                           })
                         }
                       >
-                        {['#1e3a8a','#2563eb','#312e81','#047857','#16a34a','#92400e','#b91c1c','#dc2626','#0d9488','#7c3aed','#6366f1','#374151'].map(c => (
-                          <option key={c} value={c}>{c}</option>
+                        {[
+                          "#1e3a8a",
+                          "#2563eb",
+                          "#312e81",
+                          "#047857",
+                          "#16a34a",
+                          "#92400e",
+                          "#b91c1c",
+                          "#dc2626",
+                          "#0d9488",
+                          "#7c3aed",
+                          "#6366f1",
+                          "#374151",
+                        ].map((c) => (
+                          <option key={c} value={c}>
+                            {c}
+                          </option>
                         ))}
                       </select>
                       <select
                         className="w-16 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
                         aria-label="Outline color"
-                        value={p.outlineColor || ''}
+                        value={p.outlineColor || ""}
                         onChange={(e) =>
                           dispatch({
-                            type: 'UPDATE_PLAYER',
+                            type: "UPDATE_PLAYER",
                             id: p.id,
-                            patch: { outlineColor: e.target.value || undefined },
+                            patch: {
+                              outlineColor: e.target.value || undefined,
+                            },
                           })
                         }
                       >
                         <option value="">Auto</option>
-                        {['#ffffff','#f8fafc','#1f2937','#111827','#000000'].map(c => (
-                          <option key={c} value={c}>{c}</option>
+                        {[
+                          "#ffffff",
+                          "#f8fafc",
+                          "#1f2937",
+                          "#111827",
+                          "#000000",
+                        ].map((c) => (
+                          <option key={c} value={c}>
+                            {c}
+                          </option>
                         ))}
                       </select>
                       <Button
@@ -579,10 +622,14 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
 };
 
 // Helper component to locate the first SVG in parent and store ref
-const CaptureSvgRef: React.FC<{ targetRef: React.MutableRefObject<SVGSVGElement | null> }> = ({ targetRef }) => {
+const CaptureSvgRef: React.FC<{
+  targetRef: React.MutableRefObject<SVGSVGElement | null>;
+}> = ({ targetRef }) => {
   useEffect(() => {
     if (!targetRef.current) {
-      const svg = document.querySelector<SVGSVGElement>("svg[aria-label='Diagram field']");
+      const svg = document.querySelector<SVGSVGElement>(
+        "svg[aria-label='Diagram field']"
+      );
       if (svg) targetRef.current = svg;
     }
   });

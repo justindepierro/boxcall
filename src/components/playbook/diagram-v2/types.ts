@@ -50,7 +50,8 @@ export type DiagramDocument = DiagramDocumentV1; // future union
 
 export interface EditorToolState {
   tool: "select" | "pan" | "add-player" | "route" | "motion" | "delete";
-  activePlayerId?: string;
+  activePlayerId?: string; // deprecated single selection for backwards compat
+  selectedIds?: string[]; // multi-selection
   zoom: number; // 1 = 100%
   panX: number; // px offset
   panY: number; // px offset
@@ -75,6 +76,12 @@ export type DiagramEditorAction =
   | { type: "INIT"; doc: DiagramDocument }
   | { type: "SET_TOOL"; tool: EditorToolState["tool"] }
   | { type: "SET_ACTIVE_PLAYER"; id?: string }
+  | { type: "SET_SELECTION"; ids: string[] }
+  | { type: "TOGGLE_SELECT"; id: string }
+  | { type: "CLEAR_SELECTION" }
+  | { type: "MOVE_SELECTION"; patches: { id: string; x: number; y: number }[] }
+  | { type: "COMMIT_MOVE" }
+  | { type: "COMMIT_MOVE" }
   | { type: "ADD_PLAYER"; player: DiagramPlayer }
   | { type: "MOVE_PLAYER"; id: string; x: number; y: number }
   | { type: "ADD_ROUTE_SEGMENT"; playerId: string; segment: RouteSegment }
@@ -82,8 +89,11 @@ export type DiagramEditorAction =
   | { type: "PAN"; dx: number; dy: number }
   | { type: "TOGGLE_FIELD_FLAG"; flag: keyof DiagramFieldConfig }
   | { type: "SET_BALL_HASH"; hash: DiagramFieldConfig["ballHash"] }
-  | { type: "SET_FIELD_THEME"; theme: NonNullable<DiagramFieldConfig['theme']> }
-  | { type: "SET_FIELD_HASH_LAYOUT"; layout: NonNullable<DiagramFieldConfig['hashLayout']> }
+  | { type: "SET_FIELD_THEME"; theme: NonNullable<DiagramFieldConfig["theme"]> }
+  | {
+      type: "SET_FIELD_HASH_LAYOUT";
+      layout: NonNullable<DiagramFieldConfig["hashLayout"]>;
+    }
   | { type: "START_ROUTE"; playerId: string; start: RoutePoint }
   | { type: "PREVIEW_ROUTE"; point: RoutePoint }
   | { type: "ADD_ROUTE_POINT"; point: RoutePoint }
@@ -106,14 +116,14 @@ export const createEmptyDocument = (): DiagramDocument => ({
     orientation: "vertical",
     backYards: 10,
     forwardYards: 30,
-  losYards: 20,
+    losYards: 20,
     showYardLines: true,
     showHashMarks: true,
     showPlayerLabels: true,
     showDefensePlayers: true,
     ballHash: "middle",
-  theme: "classic",
-  hashLayout: "highschool",
+    theme: "classic",
+    hashLayout: "highschool",
   },
   // Default 11 personnel 2x2 formation (LT LG C RG RT, QB shallow, RB deeper, X/Z outside, Y/H slots)
   players: (() => {
@@ -136,15 +146,63 @@ export const createEmptyDocument = (): DiagramDocument => ({
         y: losY,
         color: "#1e3a8a",
       })),
-      { id: "QB", label: "QB", role: "QB", side: "O" as const, x: 50, y: qbY, color: "#047857" },
+      {
+        id: "QB",
+        label: "QB",
+        role: "QB",
+        side: "O" as const,
+        x: 50,
+        y: qbY,
+        color: "#047857",
+      },
       // Running Back 4 yards behind QB
-      { id: "RB", label: "RB", role: "RB", side: "O" as const, x: 50, y: Math.min(99, qbY + 4 * scalePctPerYard), color: "#92400e" },
+      {
+        id: "RB",
+        label: "RB",
+        role: "RB",
+        side: "O" as const,
+        x: 50,
+        y: Math.min(99, qbY + 4 * scalePctPerYard),
+        color: "#92400e",
+      },
       // Outside Receivers X (left) and Z (right)
-      { id: "X", label: "X", role: "WR", side: "O" as const, x: 25, y: losY + 2 * scalePctPerYard, color: "#2563eb" },
-      { id: "Z", label: "Z", role: "WR", side: "O" as const, x: 75, y: losY + 2 * scalePctPerYard, color: "#2563eb" },
+      {
+        id: "X",
+        label: "X",
+        role: "WR",
+        side: "O" as const,
+        x: 25,
+        y: losY + 2 * scalePctPerYard,
+        color: "#2563eb",
+      },
+      {
+        id: "Z",
+        label: "Z",
+        role: "WR",
+        side: "O" as const,
+        x: 75,
+        y: losY + 2 * scalePctPerYard,
+        color: "#2563eb",
+      },
       // Slot Receivers Y (left slot) and H (right slot)
-      { id: "Y", label: "Y", role: "WR", side: "O" as const, x: 38, y: losY + 1 * scalePctPerYard, color: "#1e3a8a" },
-      { id: "H", label: "H", role: "WR", side: "O" as const, x: 62, y: losY + 1 * scalePctPerYard, color: "#1e3a8a" },
+      {
+        id: "Y",
+        label: "Y",
+        role: "WR",
+        side: "O" as const,
+        x: 38,
+        y: losY + 1 * scalePctPerYard,
+        color: "#1e3a8a",
+      },
+      {
+        id: "H",
+        label: "H",
+        role: "WR",
+        side: "O" as const,
+        x: 62,
+        y: losY + 1 * scalePctPerYard,
+        color: "#1e3a8a",
+      },
     ];
     return players;
   })(),

@@ -47,6 +47,41 @@ function reducer(
       return { ...state, ui: { ...state.ui, tool: action.tool } };
     case "SET_ACTIVE_PLAYER":
       return { ...state, ui: { ...state.ui, activePlayerId: action.id } };
+    case "SET_SELECTION":
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          selectedIds: [...action.ids],
+          activePlayerId: action.ids[0],
+        },
+      };
+    case "TOGGLE_SELECT": {
+      const current = new Set(state.ui.selectedIds || []);
+      if (current.has(action.id)) current.delete(action.id);
+      else current.add(action.id);
+      const ids = Array.from(current);
+      return {
+        ...state,
+        ui: { ...state.ui, selectedIds: ids, activePlayerId: ids[0] },
+      };
+    }
+    case "CLEAR_SELECTION":
+      return {
+        ...state,
+        ui: { ...state.ui, selectedIds: [], activePlayerId: undefined },
+      };
+    case "MOVE_SELECTION": {
+      const map = new Map(action.patches.map((p) => [p.id, p]));
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: state.doc.players.map((p) =>
+          map.has(p.id) ? { ...p, x: map.get(p.id)!.x, y: map.get(p.id)!.y } : p
+        ),
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      return { ...state, doc: nextDoc, dirty: true };
+    }
     case "START_ROUTE":
       return {
         ...state,
@@ -282,7 +317,10 @@ function reducer(
       };
       telemetry.enqueue({
         type: TelemetryEventTypes.PlayDiagramMirror,
-        data: { players: nextDoc.players.length, routes: nextDoc.routes.length },
+        data: {
+          players: nextDoc.players.length,
+          routes: nextDoc.routes.length,
+        },
       });
       return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
@@ -347,7 +385,10 @@ function reducer(
         };
         telemetry.enqueue({
           type: TelemetryEventTypes.PlayDiagramFormationApply,
-          data: { formation: action.formation, players: nextDoc.players.length },
+          data: {
+            formation: action.formation,
+            players: nextDoc.players.length,
+          },
         });
         return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
       }
