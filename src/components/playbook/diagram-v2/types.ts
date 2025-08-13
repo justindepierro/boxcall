@@ -26,10 +26,13 @@ export interface PlayerRoute {
   color?: string;
 }
 export interface DiagramFieldConfig {
-  orientation: "horizontal" | "vertical";
+  orientation: "vertical"; // fixed perspective: behind QB looking downfield
+  backYards: number; // yards shown behind line of scrimmage (e.g., 10)
+  forwardYards: number; // yards shown downfield (e.g., 30)
   showYardLines: boolean;
   showHashMarks: boolean;
   showPlayerLabels: boolean;
+  showDefensePlayers: boolean; // toggle to display defensive players
 }
 export interface DiagramDocumentV1 {
   version: 1;
@@ -51,12 +54,16 @@ export interface EditorToolState {
     anchorPoints: RoutePoint[]; // committed anchor points (first is start)
     preview?: RoutePoint; // current hover point
   };
+  snap: boolean;
+  snapGrid: number; // percent units (e.g., 2 => every 2%)
 }
 
 export interface DiagramEditorState {
   doc: DiagramDocument;
   ui: EditorToolState;
   dirty: boolean;
+  history: DiagramDocument[];
+  historyIndex: number; // points to current doc (history[historyIndex])
 }
 
 export type DiagramEditorAction =
@@ -77,15 +84,22 @@ export type DiagramEditorAction =
   | { type: "DELETE_ROUTE"; routeId: string }
   | { type: "UPDATE_PLAYER"; id: string; patch: Partial<DiagramPlayer> }
   | { type: "REMOVE_PLAYER"; id: string }
+  | { type: "SET_SNAP"; enabled: boolean }
+  | { type: "SET_SNAP_GRID"; size: number }
+  | { type: "UNDO" }
+  | { type: "REDO" }
   | { type: "MARK_SAVED" };
 
 export const createEmptyDocument = (): DiagramDocument => ({
   version: 1,
   field: {
-    orientation: "horizontal",
+    orientation: "vertical",
+    backYards: 10,
+    forwardYards: 30,
     showYardLines: true,
     showHashMarks: true,
     showPlayerLabels: true,
+    showDefensePlayers: true,
   },
   players: [],
   routes: [],

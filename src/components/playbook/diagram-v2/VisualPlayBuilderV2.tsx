@@ -159,7 +159,47 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
             <div className="text-xs font-semibold text-slate-600 tracking-wide mb-1">
               FIELD OPTIONS
             </div>
-            <p className="text-xs text-slate-500">(Coming soon)</p>
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-[11px]">
+                <input
+                  type="checkbox"
+                  className="accent-blue-600"
+                  checked={state.doc.field.showYardLines}
+                  onChange={() => dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showYardLines" })}
+                />
+                <span>Yard Lines</span>
+              </label>
+              <label className="flex items-center gap-2 text-[11px]">
+                <input
+                  type="checkbox"
+                  className="accent-blue-600"
+                  checked={state.doc.field.showHashMarks}
+                  onChange={() => dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showHashMarks" })}
+                />
+                <span>Hash Marks</span>
+              </label>
+              <label className="flex items-center gap-2 text-[11px]">
+                <input
+                  type="checkbox"
+                  className="accent-blue-600"
+                  checked={state.doc.field.showPlayerLabels}
+                  onChange={() => dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showPlayerLabels" })}
+                />
+                <span>Player Labels</span>
+              </label>
+              <label className="flex items-center gap-2 text-[11px]">
+                <input
+                  type="checkbox"
+                  className="accent-blue-600"
+                  checked={state.doc.field.showDefensePlayers}
+                  onChange={() => dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showDefensePlayers" })}
+                />
+                <span>Show Defense</span>
+              </label>
+              <div className="text-[10px] text-slate-500 pt-1">
+                View: {state.doc.field.backYards}yd behind LOS / {state.doc.field.forwardYards}yd downfield
+              </div>
+            </div>
           </div>
           <div className="text-xs text-slate-500">
             Players: {state.doc.players.length}
