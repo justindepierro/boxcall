@@ -1,6 +1,8 @@
-## Diagram Builder v2 (Rewrite Plan)
+## Diagram Builder v2 (Rewrite Plan & Status)
 
 Goal: Replace the current MVP `DiagramEditorMVP` with a modular, extensible visual editor that matches professional play design tools (multi‑tab UI, zoom/pan, player role management, route authoring, settings, export/thumbnail, telemetry + complexity metrics).
+
+Updated: Implementation has progressed beyond the original Phase 1 scope; this document now tracks what is DONE vs. REMAINING.
 
 ### Non‑Goals (Phase 1)
 
@@ -51,31 +53,86 @@ Future: weight by intersections, motion shifts, formation spread index.
 
 ### Telemetry Events
 
-- `play.diagram_updated` { players, routes, segments, tool }
-- `play.diagram_route_add` { playerId, segments }
+Current (emitted via dispatcher):
 - `play.diagram_player_add` { role }
-- `play.diagram_export_thumbnail` { w, h, durationMs }
+- `play.diagram_route_add` { playerId, segments }
+- `play.diagram_updated` { players, routes, segments, tool }
+- `play.draft.autosave` { fields, hasDiagram, v2 }
+- `play.draft.restore` { ageMs, hasDiagram, v2 }
+- `play.draft.finalize` { hasDiagram, v2 }
+- (Planned) `play.diagram_export_thumbnail` { w, h, durationMs }
 
-### Phased Delivery
+Planned Additions:
+- `play.diagram_flag_toggle` { flag, value }
+- `play.diagram_history` { action: 'undo'|'redo', index, length }
+- `play.diagram_player_update` { fields }
 
-| Phase | Deliverables                                                                                   | Notes                           |
-| ----- | ---------------------------------------------------------------------------------------------- | ------------------------------- |
-| 1     | Core shell + context + move players + draw single line route + zoom/pan + autosave integration | Replace MVP behind feature flag |
-| 2     | Multiple segments per route, delete route, player metadata panel, complexity calc extracted    | Remove MVP code                 |
-| 3     | Thumbnail export + PNG integration into PlayGrid + CSV/PDF exports                             | Adds raster utility             |
-| 4     | Curved routes (quadratic), route editing handles, snapping                                     | UX polish                       |
-| 5     | Defensive templates + preset formations                                                        | Future                          |
+### Phased Delivery (Revised with Status)
+
+| Phase | Deliverables (Original + Revisions)                                                                                              | Status        | Notes |
+|-------|-----------------------------------------------------------------------------------------------------------------------------------|---------------|-------|
+| 1     | Core shell, context, move players, single route drawing, zoom/pan, feature flag, autosave integration                            | DONE          | Landed with draft persistence + complexity seed |
+| 2     | Multi‑segment routes, route listing + delete, complexity calc extraction, undo/redo history, snapping grid toggle & resolution   | DONE (expanded) | History + snapping pulled forward from later phases |
+| 2b    | Player metadata panel (labels/roles/colors), field layer toggles UI, settings panel wiring                                       | IN PROGRESS   | Data model supports flags; UI pending |
+| 3     | Thumbnail export (SVG→PNG), integrate into PlayGrid cards, telemetry for export                                                   | TODO          | Needs `thumbnail.ts` utility |
+| 4     | Curved (quadratic) segments, segment editing handles (insert/remove), history size bounding                                       | TODO          | Refine reducer invariants |
+| 5     | Defensive templates, preset formations, player role presets                                                                      | FUTURE        | Possibly separate spec |
+| 6     | Advanced analytics (spread index, intersections), improved complexity model                                                       | FUTURE        | Extend computeComplexityScore |
+
+Completed scope exceeds original Phase 1 (we fast‑tracked multi‑segment, delete, undo/redo, snapping, complexity integration).
 
 ### Feature Flag
 
 `VITE_ENABLE_PLAY_DIAGRAM_V2` – when true, PlayBuilderCore now renders the experimental VisualPlayBuilderV2 in place of the legacy MVP diagram editor. (Implemented: feature flag check added in PlayBuilderCore.) Add `VITE_ENABLE_PLAY_DIAGRAM_V2=1` to your `.env.local` (or export in shell before `npm run dev`).
 
-### Integration Plan
+### Unified Entry Points (Implemented)
 
-1. Land scaffolding (this commit) inert (not referenced) → zero regression risk.
-2. Add feature flag gating and route to open full-screen VisualPlayBuilderV2.
-3. Wire serialization into Play save payload (store JSON in placeholder field or local-only until backend schema ready).
-4. Replace MVP once Phase 1 parity achieved.
+The top-level Playbook header "Diagram" button now routes to the same builder experience as the per-play card "Create diagram" action when `VITE_ENABLE_PLAY_DIAGRAM_V2` is enabled. Both navigate to `/playbook/diagram` (optionally with `?playId=<id>`). If the flag is off, play cards fall back to the legacy modal while the header button remains disabled/presenting a toast. This keeps free-draw sketches and play-linked diagrams aligned and reduces duplicate UI paths.
+
+### Integration Plan (Updated)
+
+1. (Done) Land scaffolding & feature flag.
+2. (Done) Route integration from Playbook header & play cards → unified experience when flag enabled.
+3. (Done) Local autosave persistence extended to store `diagram_v2` in unified draft payload.
+4. (In Progress) Upstream persistence: add `diagram_v2` JSON field to backend Play entity (currently attached ad‑hoc via partial object on save).
+5. (Todo) Replace MVP editor entirely once player metadata + field toggles + thumbnail export are delivered (ensuring parity + value add).
+6. (Future) Remove legacy draft key (`bc_playbuilder_draft_v1`) after migration window.
+
+### Current Implementation Details
+
+Delivered Mechanics:
+- Player add & drag (with snapping optional; grid resolution: 1,2,4,5,10%).
+- Multi‑segment route drawing (double‑click to commit / ESC to cancel actively drawing route).
+- Route listing with delete per route.
+- Undo / Redo with bounded history stack (unbounded currently; needs cap) for discrete doc mutations (add/remove player, commit/delete route, update player, remove player).
+- Pan & zoom (with reset) and tool switching (select, player, route, pan).
+- Complexity scoring displayed live; stored into play on save (v2 doc path).
+- Draft autosave & restore merged with existing PlayBuilder draft (stores diagram_v2 alongside legacy diagram when present).
+- Telemetry for add player / add route / diagram updates + draft lifecycle + finalize.
+- Upward doc propagation (onDocumentChange) integrated into `PlayBuilderCore` for live complexity + autosave.
+
+Not Yet Implemented (UI placeholders or planned):
+- Player metadata panel (edit label/role/color) & player delete via panel.
+- Field layer toggles (hash marks, yard lines, labels visibility) – reducer flags exist but no settings panel UI.
+- Thumbnail export & integration into grids / exports.
+- History size cap & pruning strategy.
+- Curved routes and segment editing handles.
+- Defensive formation templates & presets.
+- Enhanced complexity model (intersections, spread index, motion counts).
+
+Technical Notes:
+- History currently stores full document snapshots; optimize (structural sharing or patch compression) after size measurement.
+- Complexity computation is pure & deterministic; exported from types for test coverage.
+- Snapping performed during pointer move events; grid percent applies to field width/height scaling.
+- ESC handler cancels active route capture without polluting history.
+
+Immediate Next Steps:
+1. Implement Player Metadata panel (CRUD + color selection, side/role tags) with related telemetry.
+2. Add Settings panel with field layer toggles and snap controls (moving snap UI out of toolbar cluster) + telemetry for toggles.
+3. Introduce history cap (e.g., 100 states) & telemetry for undo/redo events.
+4. Add thumbnail export utility; surface save/export button & integrate into Play save flow (store reference / blob pipeline decision).
+5. Backend schema extension for `diagram_v2` (JSONB) & migration path for existing plays.
+6. Remove MVP diagram pathway post‑parity and cleanup dead code.
 
 ### Open Questions
 
@@ -91,4 +148,4 @@ Future: weight by intersections, motion shifts, formation spread index.
 
 ---
 
-This document will evolve; treat as living spec until Phase 2 locked.
+This document will evolve; treat as living spec until Phase 2b is complete. Last updated after integrating undo/redo, snapping, and draft persistence (see Current Implementation Details).

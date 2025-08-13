@@ -1,20 +1,14 @@
-import { Typography } from "../../design-system/Typography";
-/**
- * Core Play Builder - Main container component
- * Database-aligned with clean architecture
- */
-
+// Fully reconstructed PlayBuilderCore with diagram v2 draft persistence
 import React, { useState, useEffect, useRef } from "react";
 import { X, Save } from "lucide-react";
+import { Typography } from "../../design-system/Typography";
 import { Button } from "../../ui/Button";
 import type { Play } from "../../../types/play";
 import { PlayBuilderForm } from "./PlayBuilderForm";
 import { PlayBuilderPreview } from "./PlayBuilderPreview";
-import { DiagramEditorMVP } from "./DiagramEditorMVP";
+import { DiagramEditorMVP, type DiagramModel } from "./DiagramEditorMVP";
 import { VisualPlayBuilderV2 } from "../diagram-v2/VisualPlayBuilderV2";
-import type { DiagramModel } from "./DiagramEditorMVP";
 import { QuickEntry } from "./QuickEntry";
-// Explicit normalization to guarantee consistency BEFORE hitting service layer
 import {
   normalizePlayName,
   normalizeText,
@@ -23,6 +17,8 @@ import {
 import { PlaysService } from "../../../services/playsService";
 import { telemetry } from "../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../telemetry/events";
+import type { DiagramDocument } from "../diagram-v2/types";
+import { computeComplexityScore } from "../diagram-v2/types";
 
 interface PlayBuilderCoreProps {
   isOpen: boolean;
@@ -30,10 +26,8 @@ interface PlayBuilderCoreProps {
   onSave: (play: Partial<Play>) => void;
   initialPlay?: Partial<Play>;
 }
-
-// Local storage key helper (single draft for now; future: key by user/team)
-const DRAFT_STORAGE_KEY = "bc_playbuilder_draft_v1"; // legacy without diagram
-const DRAFT_STORAGE_KEY_V2 = "bc_playbuilder_draft_v2"; // includes diagram
+const DRAFT_STORAGE_KEY = "bc_playbuilder_draft_v1";
+const DRAFT_STORAGE_KEY_V2 = "bc_playbuilder_draft_v2";
 
 export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   isOpen,
@@ -41,75 +35,76 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   onSave,
   initialPlay = {},
 }) => {
-  // Database-aligned play state (only valid fields)
   const [playData, setPlayData] = useState<Partial<Play>>({
-    // Core required fields
     play_name: initialPlay.play_name || "",
     p_type: initialPlay.p_type || "Pass",
     formation: initialPlay.formation || "",
-
-    // Optional database fields
     one_word_play: initialPlay.one_word_play || "",
     notes: initialPlay.notes || "",
     personnel: initialPlay.personnel || "",
     f_type: initialPlay.f_type || "",
     f_dir: initialPlay.f_dir || "",
     protection: initialPlay.protection || "",
-
-    // Performance metrics
     confidence_base: initialPlay.confidence_base || 70,
     times_called: initialPlay.times_called || 0,
-    times_successful: initialPlay.times_successful || 0,
     complexity_score: initialPlay.complexity_score || 1,
-
-    // Metadata
     is_archived: initialPlay.is_archived || false,
   });
-
+  const [diagram, setDiagram] = useState<DiagramModel | null>(null);
+  const [diagramV2Doc, setDiagramV2Doc] = useState<DiagramDocument | null>(
+    null
+  );
   const [isQuickEntryVisible, setIsQuickEntryVisible] = useState(false);
   const [existingNames, setExistingNames] = useState<Set<string>>(new Set());
-  const [diagram, setDiagram] = useState<DiagramModel | null>(null);
   const [attemptedSave, setAttemptedSave] = useState(false);
   const [lastAutosave, setLastAutosave] = useState<number | null>(null);
   const [restoredFromDraft, setRestoredFromDraft] = useState(false);
   const autosaveTimerRef = useRef<number | null>(null);
   const dirtyRef = useRef(false);
 
-  // --- Draft Persistence Helpers ---
-  const loadDraft = () => {
+  interface DraftPayloadV2 {
+    data: Partial<Play>;
+    diagram?: DiagramModel | null;
+    diagram_v2?: DiagramDocument | null;
+    ts: number;
+  }
+  interface DraftPayloadLegacy {
+    data: Partial<Play>;
+    ts: number;
+  }
+  type DraftPayload = DraftPayloadV2 | DraftPayloadLegacy | null;
+  const loadDraft = React.useCallback((): DraftPayload => {
     try {
       const rawV2 = localStorage.getItem(DRAFT_STORAGE_KEY_V2);
-      if (rawV2) {
-        const parsed = JSON.parse(rawV2) as {
-          data: Partial<Play>;
-          diagram?: DiagramModel;
-          ts: number;
-        };
-        return parsed;
-      }
-      const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
-      if (!raw) return null;
-      const parsed = JSON.parse(raw) as { data: Partial<Play>; ts: number };
-      return parsed;
+      if (rawV2) return JSON.parse(rawV2) as DraftPayloadV2;
+      const rawLegacy = localStorage.getItem(DRAFT_STORAGE_KEY);
+      if (rawLegacy) return JSON.parse(rawLegacy) as DraftPayloadLegacy;
+      return null;
     } catch {
       return null;
     }
-  };
+  }, []);
   const persistDraft = (
     data: Partial<Play>,
-    diagramModel: DiagramModel | null
+    diagramModel: DiagramModel | null,
+    diagramDoc: DiagramDocument | null
   ) => {
     try {
       const payload = JSON.stringify({
         data,
         diagram: diagramModel,
+        diagram_v2: diagramDoc,
         ts: Date.now(),
       });
       localStorage.setItem(DRAFT_STORAGE_KEY_V2, payload);
       setLastAutosave(Date.now());
       telemetry.enqueue({
         type: TelemetryEventTypes.PlayDraftAutosave,
-        data: { fields: Object.keys(data).length, hasDiagram: !!diagramModel },
+        data: {
+          fields: Object.keys(data).length,
+          hasDiagram: !!diagramModel || !!diagramDoc,
+          v2: !!diagramDoc,
+        },
       });
     } catch {
       /* ignore */
@@ -121,71 +116,36 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
       localStorage.removeItem(DRAFT_STORAGE_KEY_V2);
       telemetry.enqueue({ type: TelemetryEventTypes.PlayDraftClear });
     } catch {
-      /* noop */
+      /* ignore */
     }
   };
 
-  // When modal opens, attempt to load draft if not editing an existing play
   useEffect(() => {
     if (!isOpen) return;
     if (initialPlay?.id) return; // editing existing play: skip draft restore
     const draft = loadDraft();
     if (draft && draft.data) {
-      setPlayData((prev) => ({ ...prev, ...draft.data }));
-      type DraftV2 = {
-        data: Partial<Play>;
-        diagram?: DiagramModel;
-        ts: number;
-      };
-      const d2 = draft as DraftV2;
-      if (d2.diagram) setDiagram(d2.diagram);
+      setPlayData((p) => ({ ...p, ...draft.data }));
+      if ("diagram" in draft && draft.diagram) setDiagram(draft.diagram);
+      if ("diagram_v2" in draft && draft.diagram_v2)
+        setDiagramV2Doc(draft.diagram_v2);
+      if ("ts" in draft) setLastAutosave(draft.ts);
       setRestoredFromDraft(true);
-      setLastAutosave(draft.ts);
       telemetry.enqueue({
         type: TelemetryEventTypes.PlayDraftRestore,
-        data: { ageMs: Date.now() - draft.ts, hasDiagram: !!d2.diagram },
+        data: {
+          ageMs: draft.ts ? Date.now() - draft.ts : 0,
+          hasDiagram:
+            ("diagram" in draft && !!draft.diagram) ||
+            ("diagram_v2" in draft && !!(draft as DraftPayloadV2).diagram_v2),
+          v2: "diagram_v2" in draft && !!(draft as DraftPayloadV2).diagram_v2,
+        },
       });
-    } else setRestoredFromDraft(false);
-  }, [isOpen, initialPlay?.id]);
+    } else {
+      setRestoredFromDraft(false);
+    }
+  }, [isOpen, initialPlay?.id, loadDraft]);
 
-  // Track changes to playData to schedule autosave
-  useEffect(() => {
-    if (!isOpen) return;
-    dirtyRef.current = true;
-    if (autosaveTimerRef.current) window.clearTimeout(autosaveTimerRef.current);
-    autosaveTimerRef.current = window.setTimeout(() => {
-      if (dirtyRef.current) {
-        // Minimal validation before autosave: only save if at least one field has content
-        const hasContent = Object.values(playData).some((v) =>
-          typeof v === "string" ? v.trim().length > 0 : v !== undefined
-        );
-        if (hasContent) {
-          persistDraft(playData, diagram);
-          dirtyRef.current = false;
-        }
-      }
-    }, 1200); // debounce 1.2s
-    return () => {
-      if (autosaveTimerRef.current)
-        window.clearTimeout(autosaveTimerRef.current);
-    };
-  }, [playData, isOpen, diagram]);
-
-  // Save draft on blur / visibility change as a safety net
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleVisibility = () => {
-      if (document.visibilityState === "hidden" && dirtyRef.current) {
-        persistDraft(playData, diagram);
-        dirtyRef.current = false;
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibility);
-    return () =>
-      document.removeEventListener("visibilitychange", handleVisibility);
-  }, [isOpen, playData, diagram]);
-
-  // Load existing play names for duplicate detection when modal opens
   useEffect(() => {
     if (!isOpen) return;
     (async () => {
@@ -205,68 +165,93 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
     })();
   }, [isOpen]);
 
-  const updateField = (field: keyof Play, value: string | number | boolean) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    dirtyRef.current = true;
+    if (autosaveTimerRef.current) window.clearTimeout(autosaveTimerRef.current);
+    autosaveTimerRef.current = window.setTimeout(() => {
+      if (dirtyRef.current) {
+        const hasContent = Object.values(playData).some((v) =>
+          typeof v === "string" ? v.trim().length > 0 : v !== undefined
+        );
+        if (hasContent) {
+          persistDraft(playData, diagram, diagramV2Doc);
+          dirtyRef.current = false;
+        }
+      }
+    }, 1200);
+    return () => {
+      if (autosaveTimerRef.current)
+        window.clearTimeout(autosaveTimerRef.current);
+    };
+  }, [playData, diagram, diagramV2Doc, isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handle = () => {
+      if (document.visibilityState === "hidden" && dirtyRef.current) {
+        persistDraft(playData, diagram, diagramV2Doc);
+        dirtyRef.current = false;
+      }
+    };
+    document.addEventListener("visibilitychange", handle);
+    return () => document.removeEventListener("visibilitychange", handle);
+  }, [isOpen, playData, diagram, diagramV2Doc]);
+
+  const updateField = (field: keyof Play, value: string | number | boolean) =>
     setPlayData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleQuickEntryParsed = (parsedData: Partial<Play>) => {
-    setPlayData((prev) => ({ ...prev, ...parsedData }));
-  };
-
+  const handleQuickEntryParsed = (parsed: Partial<Play>) =>
+    setPlayData((prev) => ({ ...prev, ...parsed }));
   const handleSave = () => {
-    // Validate required fields (raw first)
-    if (!playData.play_name?.trim()) {
-      setAttemptedSave(true);
-      return; // inline validation handles message
-    }
-    if (!playData.p_type) {
-      setAttemptedSave(true);
-      return;
-    }
-    if (!playData.formation?.trim()) {
+    if (
+      !playData.play_name?.trim() ||
+      !playData.p_type ||
+      !playData.formation?.trim()
+    ) {
       setAttemptedSave(true);
       return;
     }
-
-    // Apply normalization before persisting (defensive even though service also normalizes)
     const normalized: Partial<Play> = {
       ...playData,
-      play_name: normalizePlayName(playData.play_name),
+      play_name: normalizePlayName(playData.play_name || ""),
       formation: normalizeFormation(playData.formation || ""),
       one_word_play: playData.one_word_play
         ? normalizeText(playData.one_word_play)
         : "",
     };
-
-    // Duplicate detection (exclude if editing the same play)
     const currentNorm = (normalized.play_name || "").toLowerCase();
     const initialNorm = normalizePlayName(
       initialPlay.play_name || ""
     ).toLowerCase();
-    const isDuplicate =
+    const duplicate =
       existingNames.has(currentNorm) &&
       (!initialPlay?.id || currentNorm !== initialNorm);
-    if (isDuplicate) {
+    if (duplicate) {
       setAttemptedSave(true);
       return;
     }
-
-    console.log("💾 Saving (normalized) play data:", normalized);
+    if (diagramV2Doc) {
+      normalized.complexity_score = computeComplexityScore(diagramV2Doc);
+      // Extend with diagram_v2 field (not yet in Play type)
+      (
+        normalized as Partial<Play> & { diagram_v2?: DiagramDocument }
+      ).diagram_v2 = diagramV2Doc;
+    } else if (diagram) {
+      normalized.complexity_score = Math.min(
+        5,
+        Math.ceil((diagram.players.length + diagram.routes.length) / 3)
+      );
+    }
     onSave(normalized);
     clearDraft();
     telemetry.enqueue({
       type: TelemetryEventTypes.PlayDraftFinalize,
-      data: { hasDiagram: !!diagram },
+      data: { hasDiagram: !!diagram || !!diagramV2Doc, v2: !!diagramV2Doc },
     });
     onClose();
   };
-
-  const handleCancel = () => {
-    onClose();
-  };
-
+  const handleCancel = () => onClose();
   if (!isOpen) return null;
-
   const normalizedName = normalizePlayName(playData.play_name || "");
   const isDuplicateName =
     !!normalizedName &&
@@ -274,22 +259,20 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
     (!initialPlay?.id ||
       normalizePlayName(initialPlay.play_name || "").toLowerCase() !==
         normalizedName.toLowerCase());
-
   const isValid = !!(
     playData.play_name?.trim() &&
     playData.p_type &&
     playData.formation?.trim() &&
     !isDuplicateName
   );
-
   const validationErrors: string[] = [];
   if (!playData.play_name?.trim())
     validationErrors.push("Play name is required");
-  // (Removed duplicate finalize telemetry)
   if (!playData.p_type) validationErrors.push("Play type is required");
   if (!playData.formation?.trim())
     validationErrors.push("Formation is required");
   if (isDuplicateName) validationErrors.push("Duplicate play name in playbook");
+  // Cleaned legacy remnants removed.
 
   return (
     <div
@@ -381,7 +364,16 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
                         Diagram (V2 Experimental)
                       </Typography>
                       <div className="mb-4 border border-dashed border-slate-300 rounded">
-                        <VisualPlayBuilderV2 />
+                        <VisualPlayBuilderV2
+                          onDocumentChange={(doc) => {
+                            setDiagramV2Doc(doc);
+                            setPlayData((prev) => ({
+                              ...prev,
+                              complexity_score: computeComplexityScore(doc),
+                            }));
+                            dirtyRef.current = true;
+                          }}
+                        />
                       </div>
                     </>
                   ) : (
