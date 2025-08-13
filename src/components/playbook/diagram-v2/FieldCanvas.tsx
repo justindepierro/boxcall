@@ -306,30 +306,29 @@ export const FieldCanvas: React.FC<{
             const feetFromSideline = 9 * 3; // 27ft
             const leftX = feetFromSideline * 10;
             const rightX = 1600 - feetFromSideline * 10;
+            const numberY = y + 38;
             return (
               <g key={`yn${i}`} opacity={opacity}>
-                {/* Left side number */}
+                {/* Left side number rotated +90° so top faces center */}
                 <text
-                  x={leftX}
-                  y={y + 38}
                   fontSize={54}
                   fontWeight={700}
                   fill={baseColor}
                   textAnchor="middle"
                   dominantBaseline="middle"
+                  transform={`translate(${leftX},${numberY}) rotate(90)`}
                   style={{ pointerEvents: "none", userSelect: "none" }}
                 >
                   {yardValue}
                 </text>
-                {/* Right side number (mirrored orientation not addressed yet) */}
+                {/* Right side number rotated -90° so top faces center */}
                 <text
-                  x={rightX}
-                  y={y + 38}
                   fontSize={54}
                   fontWeight={700}
                   fill={baseColor}
                   textAnchor="middle"
                   dominantBaseline="middle"
+                  transform={`translate(${rightX},${numberY}) rotate(-90)`}
                   style={{ pointerEvents: "none", userSelect: "none" }}
                 >
                   {yardValue}
