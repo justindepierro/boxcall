@@ -224,23 +224,11 @@ export const FieldCanvas: React.FC<{
               );
             }
           })()}
-          {/* Line of Scrimmage (LOS) at y = proportional to backYards buffer (centered conceptually at middle) */}
+          {/* Line of Scrimmage (LOS) custom yard marker within forward slice */}
           {(() => {
-            const totalSlice = doc.field.backYards + doc.field.forwardYards; // vertical coverage in yards
-            const losRatio = doc.field.backYards / totalSlice; // portion from top
-            const losY = losRatio * 900;
-            return (
-              <line
-                x1={0}
-                x2={1600}
-                y1={losY}
-                y2={losY}
-                stroke="#fef08a"
-                strokeWidth={8}
-                strokeLinecap="round"
-                opacity={0.9}
-              />
-            );
+            const losYards = doc.field.losYards ?? 20; // yard line to highlight within forward view
+            const y = (losYards / doc.field.forwardYards) * 900;
+            return <rect x={0} y={y - 3} width={1600} height={6} fill="#064e3b" opacity={0.95} rx={2} />;
           })()}
           {/* Yard lines based on vertical orientation slice (always vertical downfield) */}
           {doc.field.showYardLines &&
@@ -337,35 +325,7 @@ export const FieldCanvas: React.FC<{
               </g>
             );
           })}
-          {/* Ball marker at selected hash */}
-          {(() => {
-            const totalSlice = doc.field.backYards + doc.field.forwardYards;
-            const losRatio = doc.field.backYards / totalSlice;
-            const losY = losRatio * 900;
-            // Compute hash X using layout distances
-            const layout = doc.field.hashLayout || 'highschool';
-            const FT_PER_FIELD = 160;
-            const PX_PER_FT = 1600 / FT_PER_FIELD;
-            const hashDistances: Record<string, [number, number]> = {
-              highschool: [53 + 4/12, FT_PER_FIELD - (53 + 4/12)],
-              college: [60, FT_PER_FIELD - 60],
-              nfl: [70 + 9/12, FT_PER_FIELD - (70 + 9/12)],
-            };
-            const [leftHashFt, rightHashFt] = hashDistances[layout];
-            const leftHashX = leftHashFt * PX_PER_FT;
-            const rightHashX = rightHashFt * PX_PER_FT;
-            const hashX = doc.field.ballHash === 'left' ? leftHashX : doc.field.ballHash === 'right' ? rightHashX : 800;
-            return (
-              <circle
-                cx={hashX}
-                cy={losY - 16}
-                r={14}
-                fill="#fef3c7"
-                stroke="#92400e"
-                strokeWidth={4}
-              />
-            );
-          })()}
+          {/* Ball marker removed (center implies snap) */}
           {/* Players */}
           {doc.players
             .filter((p) => doc.field.showDefensePlayers || p.side !== "D")

@@ -30,6 +30,7 @@ export interface DiagramFieldConfig {
   orientation: "vertical"; // fixed perspective: behind QB looking downfield
   backYards: number; // yards shown behind line of scrimmage (e.g., 10)
   forwardYards: number; // yards shown downfield (e.g., 30)
+  losYards?: number; // yard marker within forward slice to render LOS (e.g., 20)
   showYardLines: boolean;
   showHashMarks: boolean;
   showPlayerLabels: boolean;
@@ -105,6 +106,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
     orientation: "vertical",
     backYards: 10,
     forwardYards: 30,
+  losYards: 20,
     showYardLines: true,
     showHashMarks: true,
     showPlayerLabels: true,
@@ -113,42 +115,38 @@ export const createEmptyDocument = (): DiagramDocument => ({
   theme: "classic",
   hashLayout: "highschool",
   },
-  // Default offensive line template (LT LG C RG RT + QB behind center)
+  // Default 11 personnel 2x2 formation (LT LG C RG RT, QB shallow, RB deeper, X/Z outside, Y/H slots)
   players: (() => {
     const back = 10;
     const forward = 30;
     const total = back + forward; // 40
-    const losY = (forward / total) * 100; // percent from top
-    const qbDepthYards = 3; // typical shotgun depth baseline; adjust later
+    const losY = (forward / total) * 100; // percent from top (baseline reference)
+    const qbDepthYards = 0.5; // much closer per request
     const scalePctPerYard = 100 / total; // 2.5% per yard for 40 yard window
     const qbY = Math.min(99, losY + qbDepthYards * scalePctPerYard);
     const lineXs = [42, 46, 50, 54, 58];
     const labels = ["LT", "LG", "C", "RG", "RT"] as const;
-    return [
+    const players = [
       ...lineXs.map((x, i) => ({
         id: labels[i],
         label: labels[i],
-        role:
-          labels[i] === "C"
-            ? "C"
-            : labels[i].startsWith("L") || labels[i].startsWith("R")
-              ? labels[i].slice(1)
-              : undefined,
+        role: labels[i] === "C" ? "C" : labels[i].slice(1),
         side: "O" as const,
         x,
         y: losY,
         color: "#1e3a8a",
       })),
-      {
-        id: "QB",
-        label: "QB",
-        role: "QB",
-        side: "O" as const,
-        x: 50,
-        y: qbY,
-        color: "#047857",
-      },
+      { id: "QB", label: "QB", role: "QB", side: "O" as const, x: 50, y: qbY, color: "#047857" },
+      // Running Back 4 yards behind QB
+      { id: "RB", label: "RB", role: "RB", side: "O" as const, x: 50, y: Math.min(99, qbY + 4 * scalePctPerYard), color: "#92400e" },
+      // Outside Receivers X (left) and Z (right)
+      { id: "X", label: "X", role: "WR", side: "O" as const, x: 25, y: losY + 2 * scalePctPerYard, color: "#2563eb" },
+      { id: "Z", label: "Z", role: "WR", side: "O" as const, x: 75, y: losY + 2 * scalePctPerYard, color: "#2563eb" },
+      // Slot Receivers Y (left slot) and H (right slot)
+      { id: "Y", label: "Y", role: "WR", side: "O" as const, x: 38, y: losY + 1 * scalePctPerYard, color: "#1e3a8a" },
+      { id: "H", label: "H", role: "WR", side: "O" as const, x: 62, y: losY + 1 * scalePctPerYard, color: "#1e3a8a" },
     ];
+    return players;
   })(),
   routes: [],
   meta: { createdAt: Date.now(), updatedAt: Date.now() },
