@@ -7,6 +7,7 @@ export interface DiagramPlayer {
   x: number; // 0..100 percent
   y: number; // 0..100 percent
   color?: string;
+  outlineColor?: string; // stroke / outline color
   locked?: boolean; // disallow move
 }
 

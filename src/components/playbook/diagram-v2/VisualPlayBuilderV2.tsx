@@ -469,21 +469,39 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
                         <option value="D">D</option>
                         <option value="ST">ST</option>
                       </select>
-                      <input
-                        type="color"
-                        className="w-8 h-6 p-0 border border-subtle rounded cursor-pointer"
-                        value={
-                          p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")
-                        }
+                      <select
+                        className="w-16 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
                         aria-label="Player color"
+                        value={p.color || (p.side === 'D' ? '#b91c1c' : '#1e3a8a')}
                         onChange={(e) =>
                           dispatch({
-                            type: "UPDATE_PLAYER",
+                            type: 'UPDATE_PLAYER',
                             id: p.id,
                             patch: { color: e.target.value },
                           })
                         }
-                      />
+                      >
+                        {['#1e3a8a','#2563eb','#312e81','#047857','#16a34a','#92400e','#b91c1c','#dc2626','#0d9488','#7c3aed','#6366f1','#374151'].map(c => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
+                      <select
+                        className="w-16 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
+                        aria-label="Outline color"
+                        value={p.outlineColor || ''}
+                        onChange={(e) =>
+                          dispatch({
+                            type: 'UPDATE_PLAYER',
+                            id: p.id,
+                            patch: { outlineColor: e.target.value || undefined },
+                          })
+                        }
+                      >
+                        <option value="">Auto</option>
+                        {['#ffffff','#f8fafc','#1f2937','#111827','#000000'].map(c => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
                       <Button
                         size="xs"
                         variant="ghost"

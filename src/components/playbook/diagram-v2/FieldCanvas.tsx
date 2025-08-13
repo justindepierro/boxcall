@@ -187,15 +187,15 @@ export const FieldCanvas: React.FC<{
         >
           {(() => {
             const theme = doc.field.theme || "classic";
-            if (theme === "classic") {
+    if (theme === "classic") {
               return (
                 <rect
                   x={0}
                   y={0}
                   width={1600}
                   height={900}
-                  fill="#0f5e2e" /* softer green */
-                  fillOpacity={0.82}
+      fill="#1e7a44" /* lighter green */
+      fillOpacity={0.55}
                 />
               );
             }
@@ -306,7 +306,8 @@ export const FieldCanvas: React.FC<{
             const feetFromSideline = 9 * 3; // 27ft
             const leftX = feetFromSideline * 10;
             const rightX = 1600 - feetFromSideline * 10;
-            const numberY = y + 38;
+            // Shift numbers so yard line (y) passes between digits; raise group so center gap straddles line.
+            const numberY = y + 26; // was y+38; lifted for split effect
             const digits = String(yardValue).split(""); // expect 2 digits
             const halfSpacing = 24; // center-to-center offset for each digit from origin
             return (
@@ -317,16 +318,7 @@ export const FieldCanvas: React.FC<{
                   style={{ pointerEvents: "none", userSelect: "none" }}
                 >
                   {digits.map((d, di) => (
-                    <text
-                      key={di}
-                      fontSize={54}
-                      fontWeight={700}
-                      fill={baseColor}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      x={di === 0 ? -halfSpacing : halfSpacing}
-                      y={0}
-                    >
+                    <text key={di} fontSize={50} fontWeight={700} fill={baseColor} textAnchor="middle" dominantBaseline="middle" x={di === 0 ? -halfSpacing : halfSpacing} y={0}>
                       {d}
                     </text>
                   ))}
@@ -337,16 +329,7 @@ export const FieldCanvas: React.FC<{
                   style={{ pointerEvents: "none", userSelect: "none" }}
                 >
                   {digits.map((d, di) => (
-                    <text
-                      key={di}
-                      fontSize={54}
-                      fontWeight={700}
-                      fill={baseColor}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      x={di === 0 ? -halfSpacing : halfSpacing}
-                      y={0}
-                    >
+                    <text key={di} fontSize={50} fontWeight={700} fill={baseColor} textAnchor="middle" dominantBaseline="middle" x={di === 0 ? -halfSpacing : halfSpacing} y={0}>
                       {d}
                     </text>
                   ))}
@@ -388,6 +371,9 @@ export const FieldCanvas: React.FC<{
             .filter((p) => doc.field.showDefensePlayers || p.side !== "D")
             .map((p) => {
               const isCenter = p.label === "C" || p.role === "C";
+              const theme = doc.field.theme || 'classic';
+              const defaultOutline = theme === 'mono-light' ? '#1f2937' : '#ffffff';
+              const strokeColor = p.outlineColor || defaultOutline;
               return (
                 <g
                   key={p.id}
@@ -399,33 +385,17 @@ export const FieldCanvas: React.FC<{
                   }}
                 >
                   {isCenter ? (
-                    <rect
-                      x={-24}
-                      y={-16}
-                      width={48}
-                      height={32}
-                      rx={4}
-                      ry={4}
-                      fill={p.color || "#1e3a8a"}
-                      stroke="#fff"
-                      strokeWidth={2}
-                    />
+                    <rect x={-24} y={-16} width={48} height={32} rx={4} ry={4} fill={p.color || "#1e3a8a"} stroke={strokeColor} strokeWidth={2} />
                   ) : (
-                    <ellipse
-                      rx={26}
-                      ry={18}
-                      fill={p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")}
-                      stroke="#fff"
-                      strokeWidth={2}
-                    />
+                    <ellipse rx={26} ry={18} fill={p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")} stroke={strokeColor} strokeWidth={2} />
                   )}
                   {doc.field.showPlayerLabels && (
                     <text
                       x={0}
-                      y={5}
-                      fontSize={isCenter ? 20 : 20}
-                      fontWeight={600}
-                      fill="#fff"
+                      y={4}
+                      fontSize={18}
+                      fontWeight={700}
+                      fill={theme === 'mono-light' ? '#111827' : '#ffffff'}
                       textAnchor="middle"
                       style={{ pointerEvents: "none", userSelect: "none" }}
                     >
