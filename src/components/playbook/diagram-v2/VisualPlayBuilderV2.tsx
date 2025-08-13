@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import {
   DiagramEditorProvider,
   useDiagramEditor,
@@ -19,6 +19,38 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [thumbBusy, setThumbBusy] = useState(false);
   const [thumbUrl, setThumbUrl] = useState<string | null>(null);
+  // Sidebar (left panel) resizable width
+  const [sidebarWidth, setSidebarWidth] = useState<number>(260);
+  const resizingRef = useRef(false);
+  const startXRef = useRef(0);
+  const startWidthRef = useRef(260);
+
+  const handleResizeMouseDown = (e: React.MouseEvent) => {
+    resizingRef.current = true;
+    startXRef.current = e.clientX;
+    startWidthRef.current = sidebarWidth;
+    document.body.classList.add("select-none", "cursor-col-resize");
+  };
+  const handleGlobalMouseMove = useCallback((e: MouseEvent) => {
+    if (!resizingRef.current) return;
+    const delta = e.clientX - startXRef.current;
+    const next = Math.min(420, Math.max(200, startWidthRef.current + delta));
+    setSidebarWidth(next);
+  }, []);
+  const handleGlobalMouseUp = useCallback(() => {
+    if (resizingRef.current) {
+      resizingRef.current = false;
+      document.body.classList.remove("select-none", "cursor-col-resize");
+    }
+  }, []);
+  useEffect(() => {
+    window.addEventListener("mousemove", handleGlobalMouseMove);
+    window.addEventListener("mouseup", handleGlobalMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", handleGlobalMouseMove);
+      window.removeEventListener("mouseup", handleGlobalMouseUp);
+    };
+  }, [handleGlobalMouseMove, handleGlobalMouseUp]);
   const addPlayer = useAddPlayer();
   const complexity = computeComplexityScore(state.doc);
   // Propagate document changes upward (debounced lightly by React render)
@@ -26,12 +58,13 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
     if (onDocumentChange) onDocumentChange(state.doc);
   }, [state.doc, onDocumentChange]);
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between border-b border-subtle px-4 py-2 bg-white/80 backdrop-blur z-10">
-        <div className="font-medium text-slate-700">
-          Visual Play Builder v2 (Prototype)
+    <div className="flex flex-col h-full min-h-[620px]">
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-subtle px-4 py-2 bg-white/80 backdrop-blur z-10">
+        <div className="font-medium text-slate-700 mr-4 whitespace-nowrap">
+          Diagram Builder v2
         </div>
-        <div className="flex items-center gap-2 text-xs">
+        <div className="flex items-center gap-2 text-xs flex-wrap">
           <div className="flex items-center gap-1 pr-3 border-r border-subtle">
             <Button
               size="xs"
@@ -159,7 +192,7 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
               </select>
             )}
           </div>
-          <Button size="xs" variant="primary" onClick={addPlayer}>
+          <Button size="xs" variant="primary" onClick={addPlayer} className="shrink-0">
             Add Player
           </Button>
           <div className="flex items-center gap-1 border-l border-r border-subtle pl-2 pr-2">
@@ -202,7 +235,7 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
               <option value="trips-right">Trips Right</option>
             </select>
           </div>
-          <Button size="xs" variant="secondary" disabled={!state.dirty}>
+          <Button size="xs" variant="secondary" disabled={!state.dirty} className="shrink-0">
             Save (stub)
           </Button>
           <Button
@@ -239,9 +272,12 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
           </span>
         </div>
       </div>
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left side options (placeholder) */}
-        <div className="w-64 border-r border-subtle p-3 space-y-4 bg-white/60 overflow-y-auto">
+      <div className="flex flex-1 overflow-hidden min-h-0">
+        {/* Sidebar (Resizable) */}
+        <div
+          className="border-r border-subtle p-3 space-y-4 bg-white/60 overflow-y-auto shrink-0"
+          style={{ width: sidebarWidth }}
+        >
           <div>
             <div className="text-xs font-semibold text-slate-600 tracking-wide mb-1">
               FIELD OPTIONS
@@ -456,22 +492,28 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
             </div>
           )}
         </div>
-        <div className="flex-1 p-4">
-          <div
-            className="relative w-full h-full"
-            style={{ aspectRatio: "16 / 9" }}
-          >
-            {/* Attach ref to underlying SVG via wrapper div query */}
-            <FieldCanvas className="absolute inset-0" />
-            {/* Hidden grab of SVG element after mount */}
-            <CaptureSvgRef targetRef={svgRef} />
-            {thumbUrl && (
-              <img
-                src={thumbUrl}
-                alt="Diagram thumbnail"
-                className="absolute bottom-2 right-2 w-32 h-auto ring-2 ring-white shadow-lg rounded"
-              />
-            )}
+        {/* Resize Handle */}
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          onMouseDown={handleResizeMouseDown}
+          className="w-1 cursor-col-resize bg-transparent hover:bg-blue-200 active:bg-blue-300 transition-colors"
+        />
+        {/* Canvas Area */}
+        <div className="flex-1 min-w-0 flex flex-col p-3">
+          <div className="relative flex-1 min-h-0 rounded-md bg-emerald-800/60">
+            <div className="absolute inset-0">
+              {/* Attach ref to underlying SVG via wrapper div query */}
+              <FieldCanvas className="w-full h-full" />
+              <CaptureSvgRef targetRef={svgRef} />
+              {thumbUrl && (
+                <img
+                  src={thumbUrl}
+                  alt="Diagram thumbnail"
+                  className="absolute bottom-2 right-2 w-32 h-auto ring-2 ring-white shadow-lg rounded bg-white/30 backdrop-blur"
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
