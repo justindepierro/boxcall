@@ -84,6 +84,33 @@ function reducer(
         ui: { ...state.ui, drawing: undefined },
       };
     }
+    case "DELETE_ROUTE": {
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        routes: state.doc.routes.filter((r) => r.id !== action.routeId),
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      return { ...state, doc: nextDoc, dirty: true };
+    }
+    case "UPDATE_PLAYER": {
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: state.doc.players.map((p) =>
+          p.id === action.id ? { ...p, ...action.patch } : p
+        ),
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      return { ...state, doc: nextDoc, dirty: true };
+    }
+    case "REMOVE_PLAYER": {
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: state.doc.players.filter((p) => p.id !== action.id),
+        routes: state.doc.routes.filter((r) => r.playerId !== action.id),
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      return { ...state, doc: nextDoc, dirty: true };
+    }
     case "ADD_PLAYER": {
       const nextDoc: DiagramDocument = {
         ...state.doc,

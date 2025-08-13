@@ -22,6 +22,7 @@ export const FieldCanvas: React.FC<{
   }, []);
 
   const dragRef = useRef<{ id: string; startX: number; startY: number; offX: number; offY: number } | null>(null);
+  const panRef = useRef<{ startX: number; startY: number; panX: number; panY: number } | null>(null);
 
   const pctToAbs = (xPct: number, yPct: number) => ({ x: (xPct / 100) * 1600, y: (yPct / 100) * 900 });
   const absToPct = (x: number, y: number) => ({ x: (x / 1600) * 100, y: (y / 900) * 100 });
@@ -37,6 +38,14 @@ export const FieldCanvas: React.FC<{
   };
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (panRef.current) {
+      const dx = e.clientX - panRef.current.startX;
+      const dy = e.clientY - panRef.current.startY;
+      dispatch({ type: "PAN", dx, dy });
+      panRef.current.startX = e.clientX; // incremental
+      panRef.current.startY = e.clientY;
+      return;
+    }
     if (!dragRef.current) return;
     const dx = e.clientX - dragRef.current.startX;
     const dy = e.clientY - dragRef.current.startY;
@@ -52,6 +61,16 @@ export const FieldCanvas: React.FC<{
   }, [dispatch]);
 
   const handleMouseUp = useCallback(() => { dragRef.current = null; }, []);
+  const handleCanvasMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (state.ui.tool === "pan") {
+      panRef.current = { startX: e.clientX, startY: e.clientY, panX: state.ui.panX, panY: state.ui.panY };
+    }
+  };
+  const endPan = () => { panRef.current = null; };
+  useEffect(() => {
+    window.addEventListener("mouseup", endPan);
+    return () => window.removeEventListener("mouseup", endPan);
+  }, []);
 
   useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove);
@@ -95,7 +114,9 @@ export const FieldCanvas: React.FC<{
         aria-label="Diagram field"
         onClick={handleCanvasClick}
         onMouseMove={handleMouseMoveCanvas}
+  onMouseDown={handleCanvasMouseDown}
       >
+        <g transform={`translate(${state.ui.panX} ${state.ui.panY}) scale(${state.ui.zoom})`}>
         {/* Yard lines (every 5) */}
         {doc.field.showYardLines &&
           Array.from({ length: 21 }).map((_, i) => (
@@ -128,7 +149,7 @@ export const FieldCanvas: React.FC<{
             </g>
           ))}
         {/* Players */}
-        {doc.players.map((p) => (
+  {doc.players.map((p) => (
           <g
             key={p.id}
             transform={`translate(${(p.x / 100) * 1600},${(p.y / 100) * 900})`}
@@ -160,7 +181,7 @@ export const FieldCanvas: React.FC<{
           </g>
         ))}
         {/* In-progress drawing polyline */}
-        {state.ui.drawing && (
+  {state.ui.drawing && (
           <polyline
             points={[
               ...state.ui.drawing.anchorPoints,
@@ -176,6 +197,7 @@ export const FieldCanvas: React.FC<{
             strokeDasharray="8 6"
           />
         )}
+  </g>
       </svg>
     </div>
   );

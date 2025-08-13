@@ -74,6 +74,9 @@ export type DiagramEditorAction =
   | { type: "ADD_ROUTE_POINT"; point: RoutePoint }
   | { type: "COMMIT_ROUTE" }
   | { type: "CANCEL_ROUTE" }
+  | { type: "DELETE_ROUTE"; routeId: string }
+  | { type: "UPDATE_PLAYER"; id: string; patch: Partial<DiagramPlayer> }
+  | { type: "REMOVE_PLAYER"; id: string }
   | { type: "MARK_SAVED" };
 
 export const createEmptyDocument = (): DiagramDocument => ({
