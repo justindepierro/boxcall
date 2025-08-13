@@ -1,10 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   DiagramEditorProvider,
   useDiagramEditor,
   useAddPlayer,
 } from "./context";
 import { FieldCanvas } from "./FieldCanvas";
+import { svgElementToDataUrl } from "./thumbnail";
+import { telemetry } from "../../../telemetry/dispatcher";
+import { TelemetryEventTypes } from "../../../telemetry/events";
 import { computeComplexityScore, type DiagramDocument } from "./types";
 import { Button } from "../../ui/Button";
 
@@ -13,6 +16,9 @@ interface ShellProps {
 }
 const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
   const { state, dispatch } = useDiagramEditor();
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const [thumbBusy, setThumbBusy] = useState(false);
+  const [thumbUrl, setThumbUrl] = useState<string | null>(null);
   const addPlayer = useAddPlayer();
   const complexity = computeComplexityScore(state.doc);
   // Propagate document changes upward (debounced lightly by React render)
@@ -198,6 +204,35 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
           </div>
           <Button size="xs" variant="secondary" disabled={!state.dirty}>
             Save (stub)
+          </Button>
+          <Button
+            size="xs"
+            variant="ghost"
+            disabled={thumbBusy}
+            onClick={async () => {
+              if (!svgRef.current) return;
+              setThumbBusy(true);
+              const start = performance.now();
+              try {
+                const dataUrl = await svgElementToDataUrl(svgRef.current, {
+                  width: 480,
+                  background: "#065f46",
+                });
+                setThumbUrl(dataUrl);
+                telemetry.enqueue({
+                  type: TelemetryEventTypes.PlayDiagramExportThumbnail,
+                  data: {
+                    w: 480,
+                    h: Math.round(480 * (9 / 16)),
+                    durationMs: Math.round(performance.now() - start),
+                  },
+                });
+              } finally {
+                setThumbBusy(false);
+              }
+            }}
+          >
+            {thumbBusy ? "Rendering…" : "Thumbnail"}
           </Button>
           <span className="text-[10px] text-slate-500 ml-2">
             Complexity: {complexity}
@@ -426,12 +461,33 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
             className="relative w-full h-full"
             style={{ aspectRatio: "16 / 9" }}
           >
+            {/* Attach ref to underlying SVG via wrapper div query */}
             <FieldCanvas className="absolute inset-0" />
+            {/* Hidden grab of SVG element after mount */}
+            <CaptureSvgRef targetRef={svgRef} />
+            {thumbUrl && (
+              <img
+                src={thumbUrl}
+                alt="Diagram thumbnail"
+                className="absolute bottom-2 right-2 w-32 h-auto ring-2 ring-white shadow-lg rounded"
+              />
+            )}
           </div>
         </div>
       </div>
     </div>
   );
+};
+
+// Helper component to locate the first SVG in parent and store ref
+const CaptureSvgRef: React.FC<{ targetRef: React.MutableRefObject<SVGSVGElement | null> }> = ({ targetRef }) => {
+  useEffect(() => {
+    if (!targetRef.current) {
+      const svg = document.querySelector<SVGSVGElement>("svg[aria-label='Diagram field']");
+      if (svg) targetRef.current = svg;
+    }
+  });
+  return null;
 };
 
 export const VisualPlayBuilderV2: React.FC<{
