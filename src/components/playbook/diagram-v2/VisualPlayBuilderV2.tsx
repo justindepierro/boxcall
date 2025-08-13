@@ -305,6 +305,23 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
                   <option value="mono-dark">Mono Dark</option>
                 </select>
               </div>
+              <div className="flex items-center gap-2 text-[11px]">
+                <span className="shrink-0">Hashes</span>
+                <select
+                  className="flex-1 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
+                  value={state.doc.field.hashLayout || 'highschool'}
+                  onChange={(e) =>
+                    dispatch({
+                      type: 'SET_FIELD_HASH_LAYOUT',
+                      layout: e.target.value as 'highschool' | 'college' | 'nfl'
+                    })
+                  }
+                >
+                  <option value="highschool">High School</option>
+                  <option value="college">College</option>
+                  <option value="nfl">NFL</option>
+                </select>
+              </div>
               <label className="flex items-center gap-2 text-[11px]">
                 <input
                   type="checkbox"

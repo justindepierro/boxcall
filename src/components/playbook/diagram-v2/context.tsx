@@ -250,6 +250,18 @@ function reducer(
       });
       return { ...state, doc: nextDoc, dirty: true };
     }
+    case "SET_FIELD_HASH_LAYOUT": {
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        field: { ...state.doc.field, hashLayout: action.layout },
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramFlagToggle,
+        data: { flag: "hashLayout", value: action.layout },
+      });
+      return { ...state, doc: nextDoc, dirty: true };
+    }
     case "MIRROR": {
       const mirroredPlayers = state.doc.players.map((p) => ({
         ...p,

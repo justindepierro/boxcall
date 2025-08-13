@@ -259,48 +259,40 @@ export const FieldCanvas: React.FC<{
               )
             )}
           {/* Hash marks simplified for vertical view */}
-          {doc.field.showHashMarks &&
-            (() => {
-              // College style approx hash groupings every yard within visible forward slice
-              const marks = [] as React.ReactNode[];
-              for (let yrd = 0; yrd <= doc.field.forwardYards; yrd++) {
-                const y = (yrd / doc.field.forwardYards) * 900;
-                marks.push(
-                  <g key={`h${yrd}`}>
-                    {" "}
-                    {/* Left & Right hashes plus middle guideline if selected */}
-                    <rect
-                      x={1600 * 0.3 - 3}
-                      y={y - 1}
-                      width={6}
-                      height={3}
-                      fill="#064e3b"
-                      opacity={0.55}
-                    />
-                    <rect
-                      x={1600 * 0.7 - 3}
-                      y={y - 1}
-                      width={6}
-                      height={3}
-                      fill="#064e3b"
-                      opacity={0.55}
-                    />
-                    {/* Optional midpoint reference for middle hash placement */}
-                    {doc.field.ballHash === "middle" && (
-                      <rect
-                        x={1600 * 0.5 - 2}
-                        y={y - 1}
-                        width={4}
-                        height={3}
-                        fill="#065f46"
-                        opacity={0.35}
-                      />
-                    )}
-                  </g>
-                );
-              }
-              return marks;
-            })()}
+          {doc.field.showHashMarks && (() => {
+            // Realistic hash spacing by level; using full field width 160ft mapped to 1600px (10px/ft)
+            // High School: each hash 53'4" (53.333ft) from sideline → inner edges? We'll approximate center of hash.
+            const layout = doc.field.hashLayout || 'highschool';
+            const FT_PER_FIELD = 160; // width in feet
+            const PX_PER_FT = 1600 / FT_PER_FIELD; // 10
+            // Distances from each sideline to hash center by level
+            const hashDistances: Record<string, [number, number]> = {
+              highschool: [53 + 4/12, FT_PER_FIELD - (53 + 4/12)], // symmetrical
+              college: [60, FT_PER_FIELD - 60], // NCAA ~60ft from sidelines
+              nfl: [70 + 9/12, FT_PER_FIELD - (70 + 9/12)], // 70'9" (per older reference; NFL currently narrower hash but we approximate)
+            };
+            const [leftHashFt, rightHashFt] = hashDistances[layout];
+            const leftHashX = leftHashFt * PX_PER_FT;
+            const rightHashX = rightHashFt * PX_PER_FT;
+            const middleX = 1600 / 2;
+            const theme = doc.field.theme || 'classic';
+            const hashColor = theme === 'mono-dark' ? '#374151' : theme === 'mono-light' ? '#9ca3af' : '#064e3b';
+            const midColor = theme === 'classic' ? '#065f46' : hashColor;
+            const marks: React.ReactNode[] = [];
+            for (let yrd = 0; yrd <= doc.field.forwardYards; yrd++) {
+              const y = (yrd / doc.field.forwardYards) * 900;
+              marks.push(
+                <g key={`h${yrd}`}>
+                  <rect x={leftHashX - 3} y={y - 1} width={6} height={3} fill={hashColor} opacity={0.55} />
+                  <rect x={rightHashX - 3} y={y - 1} width={6} height={3} fill={hashColor} opacity={0.55} />
+                  {doc.field.ballHash === 'middle' && (
+                    <rect x={middleX - 2} y={y - 1} width={4} height={3} fill={midColor} opacity={0.35} />
+                  )}
+                </g>
+              );
+            }
+            return marks;
+          })()}
           {/* Yard numbers stacked (approx every 5 yards) below LOS area */}
           {Array.from({ length: doc.field.forwardYards / 5 + 1 }).map((_, i) => {
             const y = i * (900 / (doc.field.forwardYards / 5));
@@ -344,12 +336,19 @@ export const FieldCanvas: React.FC<{
             const totalSlice = doc.field.backYards + doc.field.forwardYards;
             const losRatio = doc.field.backYards / totalSlice;
             const losY = losRatio * 900;
-            const hashX =
-              doc.field.ballHash === "left"
-                ? 1600 * 0.3
-                : doc.field.ballHash === "right"
-                  ? 1600 * 0.7
-                  : 800;
+            // Compute hash X using layout distances
+            const layout = doc.field.hashLayout || 'highschool';
+            const FT_PER_FIELD = 160;
+            const PX_PER_FT = 1600 / FT_PER_FIELD;
+            const hashDistances: Record<string, [number, number]> = {
+              highschool: [53 + 4/12, FT_PER_FIELD - (53 + 4/12)],
+              college: [60, FT_PER_FIELD - 60],
+              nfl: [70 + 9/12, FT_PER_FIELD - (70 + 9/12)],
+            };
+            const [leftHashFt, rightHashFt] = hashDistances[layout];
+            const leftHashX = leftHashFt * PX_PER_FT;
+            const rightHashX = rightHashFt * PX_PER_FT;
+            const hashX = doc.field.ballHash === 'left' ? leftHashX : doc.field.ballHash === 'right' ? rightHashX : 800;
             return (
               <circle
                 cx={hashX}
