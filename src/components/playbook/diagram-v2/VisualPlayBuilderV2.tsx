@@ -207,6 +207,74 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
           <div className="text-xs text-slate-500">
             Routes: {state.doc.routes.length}
           </div>
+          {/* Player Metadata Panel */}
+          {state.doc.players.length > 0 && (
+            <div>
+              <div className="text-[11px] font-semibold text-slate-600 mt-3 mb-1 flex items-center justify-between">
+                <span>PLAYERS</span>
+                <span className="text-[10px] font-normal text-slate-400">
+                  {state.doc.players.filter(p=>p.side!=="D").length} O / {state.doc.players.filter(p=>p.side==="D").length} D
+                </span>
+              </div>
+              <ul className="space-y-2">
+                {state.doc.players.map((p) => (
+                  <li key={p.id} className="bg-white/80 rounded border border-subtle p-2 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <input
+                        className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
+                        value={p.label}
+                        aria-label="Player label"
+                        onChange={(e) =>
+                          dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { label: e.target.value.toUpperCase().slice(0,3) } })
+                        }
+                      />
+                      <select
+                        className="flex-1 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
+                        value={p.role || ""}
+                        aria-label="Player role"
+                        onChange={(e) =>
+                          dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { role: e.target.value || undefined } })
+                        }
+                      >
+                        <option value="">Role</option>
+                        {['QB','RB','WR','TE','OL','DL','LB','CB','S','K','P'].map(r => <option key={r} value={r}>{r}</option>)}
+                      </select>
+                      <select
+                        className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
+                        value={p.side || 'O'}
+                        aria-label="Player side"
+                        onChange={(e) => {
+                          const val = e.target.value as 'O' | 'D' | 'ST';
+                          dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { side: val } });
+                        }}
+                      >
+                        <option value="O">O</option>
+                        <option value="D">D</option>
+                        <option value="ST">ST</option>
+                      </select>
+                      <input
+                        type="color"
+                        className="w-8 h-6 p-0 border border-subtle rounded cursor-pointer"
+                        value={p.color || (p.side==='D' ? '#b91c1c' : '#1e3a8a')}
+                        aria-label="Player color"
+                        onChange={(e) =>
+                          dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { color: e.target.value } })
+                        }
+                      />
+                      <Button
+                        size="xs"
+                        variant="ghost"
+                        onClick={() => dispatch({ type: "REMOVE_PLAYER", id: p.id })}
+                        aria-label="Remove player"
+                      >
+                        ✕
+                      </Button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           {state.doc.routes.length > 0 && (
             <div>
               <div className="text-[11px] font-semibold text-slate-600 mt-2 mb-1">
