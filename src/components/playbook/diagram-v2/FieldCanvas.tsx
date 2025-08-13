@@ -267,15 +267,26 @@ export const FieldCanvas: React.FC<{
             const hashColor = theme === 'mono-dark' ? '#374151' : theme === 'mono-light' ? '#9ca3af' : '#064e3b';
             const midColor = theme === 'classic' ? '#065f46' : hashColor;
             const marks: React.ReactNode[] = [];
+            const hashWidth = 10; // widened from 6
+            const hashHeight = 3;
+            // Sideline marks 1 yard (3ft) from each sideline
+            const sideOffsetFt = 3; // one yard
+            const sideCenterX = sideOffsetFt * PX_PER_FT; // 30px
+            const sideRightCenterX = 1600 - sideCenterX;
             for (let yrd = 0; yrd <= doc.field.forwardYards; yrd++) {
               const y = (yrd / doc.field.forwardYards) * 900;
               marks.push(
                 <g key={`h${yrd}`}>
-                  <rect x={leftHashX - 3} y={y - 1} width={6} height={3} fill={hashColor} opacity={0.55} />
-                  <rect x={rightHashX - 3} y={y - 1} width={6} height={3} fill={hashColor} opacity={0.55} />
+                  {/* Inner hashes */}
+                  <rect x={leftHashX - hashWidth / 2} y={y - hashHeight / 2} width={hashWidth} height={hashHeight} fill={hashColor} opacity={0.55} />
+                  <rect x={rightHashX - hashWidth / 2} y={y - hashHeight / 2} width={hashWidth} height={hashHeight} fill={hashColor} opacity={0.55} />
+                  {/* Middle indicator if ball hash middle */}
                   {doc.field.ballHash === 'middle' && (
-                    <rect x={middleX - 2} y={y - 1} width={4} height={3} fill={midColor} opacity={0.35} />
+                    <rect x={middleX - 3} y={y - hashHeight / 2} width={6} height={hashHeight} fill={midColor} opacity={0.35} />
                   )}
+                  {/* Sideline hashes (outer) */}
+                  <rect x={sideCenterX - hashWidth / 2} y={y - hashHeight / 2} width={hashWidth} height={hashHeight} fill={hashColor} opacity={0.45} />
+                  <rect x={sideRightCenterX - hashWidth / 2} y={y - hashHeight / 2} width={hashWidth} height={hashHeight} fill={hashColor} opacity={0.45} />
                 </g>
               );
             }
