@@ -57,6 +57,7 @@ export interface EditorToolState {
   zoom: number; // 1 = 100%
   panX: number; // px offset
   panY: number; // px offset
+  dragging?: boolean; // true while user is dragging (pan/selection/player)
   drawing?: {
     playerId: string;
     anchorPoints: RoutePoint[]; // committed anchor points (first is start)

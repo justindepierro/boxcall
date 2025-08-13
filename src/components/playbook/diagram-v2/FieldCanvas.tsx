@@ -84,14 +84,24 @@ export const FieldCanvas: React.FC<{
     e.stopPropagation();
     const player = doc.players.find((p) => p.id === id);
     if (!player) return;
+    // Compute what the selection will be after this click so drag can start immediately
+    const prev = new Set(state.ui.selectedIds || []);
+    let nextSelectedIds: string[] = [];
     if (e.detail === 2) {
       // Double-click: select all players on same side (offense vs defense) for quick bulk moves
-      const sameSide = doc.players
+      nextSelectedIds = doc.players
         .filter((p) => (player.side || "O") === (p.side || "O"))
         .map((p) => p.id);
-      dispatch({ type: "SET_SELECTION", ids: sameSide });
-    } else if (e.metaKey || e.shiftKey) dispatch({ type: "TOGGLE_SELECT", id });
-    else dispatch({ type: "SET_SELECTION", ids: [id] });
+      dispatch({ type: "SET_SELECTION", ids: nextSelectedIds });
+    } else if (e.metaKey || e.shiftKey) {
+      if (prev.has(id)) prev.delete(id);
+      else prev.add(id);
+      nextSelectedIds = Array.from(prev);
+      dispatch({ type: "TOGGLE_SELECT", id });
+    } else {
+      nextSelectedIds = [id];
+      dispatch({ type: "SET_SELECTION", ids: nextSelectedIds });
+    }
     if (state.ui.tool === "route" && !state.ui.drawing) {
       dispatch({
         type: "START_ROUTE",
@@ -100,7 +110,7 @@ export const FieldCanvas: React.FC<{
       });
     }
     // Build group snapshot (selected players) for potential group drag
-    const selected = state.ui.selectedIds || [id];
+    const selected = nextSelectedIds.length ? nextSelectedIds : [id];
     const originals = selected
       .map((pid) => doc.players.find((p) => p.id === pid))
       .filter(Boolean)

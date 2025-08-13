@@ -4,7 +4,7 @@ import { Button } from "../../../ui/Button";
 
 export const ActionBar: React.FC<{
   svgRef: React.MutableRefObject<SVGSVGElement | null>;
-}> = ({ svgRef }) => {
+}> = ({ svgRef: _svgRef }) => {
   const { state, dispatch } = useDiagramEditor();
   const sel = useMemo(() => state.ui.selectedIds || [], [state.ui.selectedIds]);
   const player = useMemo(
@@ -21,40 +21,36 @@ export const ActionBar: React.FC<{
   }, [player?.label, player?.assignment]);
 
   if (!player || sel.length === 0) return null;
-
-  // Convert player's world coords to container-relative pixels
-  const svg = svgRef.current;
-  if (!svg) return null;
-  const rect = svg.getBoundingClientRect();
-  const worldX = (player.x / 100) * 1600;
-  const worldY = (player.y / 100) * 900;
-  const vx = state.ui.panX + state.ui.zoom * worldX;
-  const vy = state.ui.panY + state.ui.zoom * worldY;
-  const left = (vx / 1600) * rect.width;
-  const top = (vy / 900) * rect.height;
+  const isDragging = !!state.ui.dragging;
 
   const colors = ["#1e3a8a", "#2563eb", "#047857", "#92400e", "#b91c1c"];
   const roles = ["QB", "RB", "WR", "TE", "OL", "DL", "LB", "DB", "C"];
 
   return (
-    <div
-      ref={containerRef}
-      className="absolute z-20"
-      style={{ left: Math.round(left) - 60, top: Math.round(top) - 56 }}
-    >
-      <div className="bg-white/95 backdrop-blur rounded-md shadow-lg border border-slate-200 px-2 py-2 w-[180px]">
-        <div className="text-xs font-medium text-slate-700 mb-1">{player.id}</div>
-  <div className="flex items-center gap-1 mb-2">
+    <>
+      {/* subtle bottom gradient to separate from field (decorative) */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-14 z-10 surface-subtle/0 [mask-image:linear-gradient(to_top,black,transparent)]"
+        style={{ backgroundColor: "rgba(0,0,0,0.14)" }}
+      />
+      <div
+        ref={containerRef}
+        className={`absolute inset-x-3 bottom-3 z-20 pointer-events-auto transition-opacity duration-150 ${isDragging ? "opacity-0" : "opacity-100"}`}
+      >
+      <div className="bg-white/95 backdrop-blur rounded-md shadow-lg border border-slate-200 px-3 py-2">
+        <div className="text-xs font-medium text-slate-700 mb-2">Selected: {player.id}</div>
+        <div className="flex flex-wrap items-center gap-2">
           <input
             value={label}
             onChange={(e) => setLabel(e.target.value)}
             onBlur={() => dispatch({ type: "UPDATE_PLAYER", id: player.id, patch: { label } })}
-            className="w-20 text-xs border border-slate-300 rounded px-1 py-0.5"
+            className="w-24 text-xs border border-slate-300 rounded px-2 py-1"
             placeholder="Label"
             aria-label="Player label"
           />
           <select
-            className="text-xs border border-slate-300 rounded px-1 py-0.5"
+            className="text-xs border border-slate-300 rounded px-2 py-1"
             value={player.role || ""}
             onChange={(e) => dispatch({ type: "UPDATE_PLAYER", id: player.id, patch: { role: e.target.value } })}
             aria-label="Role"
@@ -66,20 +62,19 @@ export const ActionBar: React.FC<{
               </option>
             ))}
           </select>
-        </div>
-        <div className="mb-2">
+          <div className="grow min-w-[180px]">
           <input
             value={assignment}
             onChange={(e) => setAssignment(e.target.value)}
             onBlur={() =>
               dispatch({ type: "UPDATE_PLAYER", id: player.id, patch: { assignment } })
             }
-            className="w-full text-xs border border-slate-300 rounded px-1 py-0.5"
+            className="w-full text-xs border border-slate-300 rounded px-2 py-1"
             placeholder="Assignment / note"
             aria-label="Assignment"
           />
-        </div>
-        <div className="flex items-center gap-1">
+          </div>
+          <div className="flex items-center gap-1">
           {colors.map((c) => (
             <Button
               key={c}
@@ -94,8 +89,10 @@ export const ActionBar: React.FC<{
               style={{ background: c }}
             />
           ))}
+          </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };

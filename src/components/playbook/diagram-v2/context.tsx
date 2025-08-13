@@ -100,7 +100,7 @@ function reducer(
         ...state,
         ui: { ...state.ui, selectedIds: [], activePlayerId: undefined },
       };
-    case "MOVE_SELECTION": {
+  case "MOVE_SELECTION": {
       const map = new Map(action.patches.map((p) => [p.id, p]));
       const prevPositions = new Map(
         state.doc.players.map((p) => [p.id, { x: p.x, y: p.y }])
@@ -145,11 +145,12 @@ function reducer(
           },
         });
       }
-      return { ...state, doc: nextDoc, dirty: true };
+  return { ...state, doc: nextDoc, dirty: true, ui: { ...state.ui, dragging: action.mode === "drag" ? true : state.ui.dragging } };
     }
     case "COMMIT_MOVE": {
       // Push current doc snapshot to history (for grouped nudges / drags)
-      return pushHistory(state, state.doc);
+  const after = pushHistory(state, state.doc);
+  return { ...after, ui: { ...after.ui, dragging: false } };
     }
     case "START_ROUTE":
       return {
@@ -397,6 +398,7 @@ function reducer(
           ...state.ui,
           panX: state.ui.panX + action.dx,
           panY: state.ui.panY + action.dy,
+          dragging: true,
         },
       };
     case "SET_BALL_HASH": {
