@@ -302,28 +302,34 @@ export const FieldCanvas: React.FC<{
             const theme = doc.field.theme || "classic";
             const baseColor = theme === "classic" ? "#ecfdf5" : theme === "mono-light" ? "#444" : "#e5e7eb";
             const opacity = theme === "classic" ? 0.24 : 0.32;
-            const leftX = 1600 * 0.18; // beyond left hash (~0.3)
-            const rightX = 1600 * 0.82; // beyond right hash (~0.7)
+            // 9 yards (27ft) from each sideline; field width 160ft → 10px/ft
+            const feetFromSideline = 9 * 3; // 27ft
+            const leftX = feetFromSideline * 10;
+            const rightX = 1600 - feetFromSideline * 10;
             return (
               <g key={`yn${i}`} opacity={opacity}>
+                {/* Left side number */}
                 <text
                   x={leftX}
-                  y={y + 40}
-                  fontSize={46}
+                  y={y + 38}
+                  fontSize={54}
                   fontWeight={700}
                   fill={baseColor}
                   textAnchor="middle"
+                  dominantBaseline="middle"
                   style={{ pointerEvents: "none", userSelect: "none" }}
                 >
                   {yardValue}
                 </text>
+                {/* Right side number (mirrored orientation not addressed yet) */}
                 <text
                   x={rightX}
-                  y={y + 40}
-                  fontSize={46}
+                  y={y + 38}
+                  fontSize={54}
                   fontWeight={700}
                   fill={baseColor}
                   textAnchor="middle"
+                  dominantBaseline="middle"
                   style={{ pointerEvents: "none", userSelect: "none" }}
                 >
                   {yardValue}
