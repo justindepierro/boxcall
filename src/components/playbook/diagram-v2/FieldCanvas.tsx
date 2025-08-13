@@ -58,7 +58,13 @@ export const FieldCanvas: React.FC<{
   const handleMouseDownPlayer = (e: React.MouseEvent, id: string) => {
     const player = doc.players.find((p) => p.id === id);
     if (!player) return;
-    if (e.metaKey || e.shiftKey) dispatch({ type: "TOGGLE_SELECT", id });
+    if (e.detail === 2) {
+      // Double-click: select all players on same side (offense vs defense) for quick bulk moves
+      const sameSide = doc.players
+        .filter((p) => (player.side || "O") === (p.side || "O"))
+        .map((p) => p.id);
+      dispatch({ type: "SET_SELECTION", ids: sameSide });
+    } else if (e.metaKey || e.shiftKey) dispatch({ type: "TOGGLE_SELECT", id });
     else dispatch({ type: "SET_SELECTION", ids: [id] });
     if (state.ui.tool === "route" && !state.ui.drawing) {
       dispatch({

@@ -1,6 +1,6 @@
 ## Playbook Diagram Platform Unified Roadmap (V2 Implementation + Competitive Positioning)
 
-Updated: 2025-08-12 (evening pass – post multi‑select & field theming)
+Updated: 2025-08-13 (post group drag & move batching)
 Status Legend: DONE (merged to main), PARTIAL (scaffold or partial UI), TODO (planned / prioritized), FUTURE (later phase / out-of-scope now)
 
 ### 1. Vision
@@ -35,7 +35,8 @@ See original detailed competitive matrix (superseded) in prior doc; this table r
 | ----------------------------------------------- | ------------------- | ------------------------------------------------------------------- |
 | Player placement & dragging                     | DONE                | Snapping enabled; grid resolution supported                         |
 | Multi‑segment route drawing                     | DONE                | Straight line segments; double‑click commit                         |
-| Multi‑selection + keyboard nudge                | DONE (new)          | Shift/Meta toggle, drag box, arrow move (0.5% / 2% w/ Shift)        |
+| Multi‑selection + keyboard nudge                | DONE                | Shift/Meta toggle, drag box, arrow move (0.5% / 2% w/ Shift)        |
+| Group drag multi‑selection                      | DONE (new)          | Drag any selected moves all; centroid distance telemetry           |
 | Player outline & curated color palette          | DONE (baseline)     | 12 color palette + optional outlineColor + auto contrast            |
 | Field themes (classic / mono‑light / mono‑dark) | DONE                | Themed background + adaptive hash/number colors                     |
 | Realistic hashes + sideline hashes              | DONE                | HS/College/NFL spacing, widened, added sideline markers              |
@@ -53,7 +54,7 @@ See original detailed competitive matrix (superseded) in prior doc; this table r
 | Route list & deletion                           | DONE                | Per‑route removal                                                   |
 | Field settings panel (consolidated controls)    | PARTIAL             | Theme/hash controls in toolbar; dedicated panel not built           |
 | History size bound                              | TODO                | Target 100 snapshots ring buffer                                    |
-| Group move history commit (COMMIT_MOVE)         | TODO                | Debounced commit so nudges coalesce                                |
+| Group move history commit (COMMIT_MOVE)         | DONE                | Debounced commit + drag commit snapshot                            |
 | Thumbnail export (PNG)                          | PARTIAL             | SVG→PNG utility + UI button; needs persistence + card integration   |
 | Curved / editable segments                      | FUTURE              | Quadratic / handles; affects complexity weights                     |
 | Motion tool                                     | FUTURE (spec)       | Distinct style + timing metadata                                    |
@@ -105,8 +106,8 @@ Planned (next sprint additions / refinements):
 - PlayDiagramHistory { action, index, length }
 - PlayDiagramFlagToggle (partially in use for hash layout)
 - PlayDiagramExportThumbnail { w, h, durationMs }
-- PlayDiagramSelection (selectCount, multi: boolean, method: 'click'|'box'|'nudge')
-- PlayDiagramMoveGroup (count, dx, dy, aggregateDist)
+- PlayDiagramSelection (selectCount, multi: boolean, method: 'click'|'box'|'toggle'|'clear')
+- PlayDiagramMoveGroup (count, mode: 'nudge'|'drag', dist)
 
 Telemetry Gaps:
 - Mirror event lacks before/after spread metrics
@@ -185,6 +186,7 @@ Follow-ups:
 
 | Date       | Change                                                                                                           |
 | ---------- | ---------------------------------------------------------------------------------------------------------------- |
+| 2025-08-13 | Group drag multi-select, debounced COMMIT_MOVE history snapshots, move group telemetry w/ distance metric |
 | 2025-08-12 | Multi-select (click / box), keyboard nudge, field themes, realistic hashes + sideline hashes, yard numbers, LOS, 11-man seed, palette & outlines, thumbnail utility/button |
 | 2025-08-12 | Removed feature flag & legacy MVP editor; unified draft persistence (V2 only)                                    |
 | 2025-08-11 | Added mirror, formation apply placeholder, hash selection, LOS & yard markers enhancements                       |
