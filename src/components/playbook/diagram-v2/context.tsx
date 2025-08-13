@@ -48,25 +48,30 @@ function reducer(
     case "SET_ACTIVE_PLAYER":
       return { ...state, ui: { ...state.ui, activePlayerId: action.id } };
     case "SET_SELECTION":
-      return {
-        ...state,
-        ui: {
-          ...state.ui,
-          selectedIds: [...action.ids],
-          activePlayerId: action.ids[0],
-        },
-      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramSelection,
+        data: { method: "set", count: action.ids.length, multi: action.ids.length > 1 },
+      });
+      return { ...state, ui: { ...state.ui, selectedIds: [...action.ids], activePlayerId: action.ids[0] } };
     case "TOGGLE_SELECT": {
       const current = new Set(state.ui.selectedIds || []);
       if (current.has(action.id)) current.delete(action.id);
       else current.add(action.id);
       const ids = Array.from(current);
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramSelection,
+        data: { method: "toggle", count: ids.length, multi: ids.length > 1 },
+      });
       return {
         ...state,
         ui: { ...state.ui, selectedIds: ids, activePlayerId: ids[0] },
       };
     }
     case "CLEAR_SELECTION":
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramSelection,
+        data: { method: "clear", count: 0, multi: false },
+      });
       return {
         ...state,
         ui: { ...state.ui, selectedIds: [], activePlayerId: undefined },
@@ -80,7 +85,18 @@ function reducer(
         ),
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
+      // Lightweight telemetry sample (no flood): only emit when patch count > 1
+      if (action.patches.length > 1) {
+        telemetry.enqueue({
+          type: TelemetryEventTypes.PlayDiagramMoveGroup,
+          data: { count: action.patches.length, mode: "nudge" },
+        });
+      }
       return { ...state, doc: nextDoc, dirty: true };
+    }
+    case "COMMIT_MOVE": {
+      // Push current doc snapshot to history (for grouped nudges / drags)
+      return pushHistory(state, state.doc);
     }
     case "START_ROUTE":
       return {

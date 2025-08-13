@@ -204,6 +204,16 @@ export const FieldCanvas: React.FC<{
     dispatch({ type: "PREVIEW_ROUTE", point: { x, y } });
   };
 
+  // Debounce commit after keyboard nudges
+  const commitMoveTimer = useRef<number | null>(null);
+  const scheduleCommitMove = useCallback(() => {
+    if (commitMoveTimer.current) window.clearTimeout(commitMoveTimer.current);
+    commitMoveTimer.current = window.setTimeout(() => {
+      dispatch({ type: "COMMIT_MOVE" });
+      commitMoveTimer.current = null;
+    }, 300);
+  }, [dispatch]);
+
   // Keyboard shortcuts + arrow key nudging
   useEffect(() => {
     const keyHandler = (e: KeyboardEvent) => {
@@ -236,12 +246,15 @@ export const FieldCanvas: React.FC<{
           if (e.key === "ArrowRight") nx = Math.min(100, p.x + delta);
           patches.push({ id, x: nx, y: ny });
         });
-        if (patches.length) dispatch({ type: "MOVE_SELECTION", patches });
+        if (patches.length) {
+          dispatch({ type: "MOVE_SELECTION", patches });
+          scheduleCommitMove();
+        }
       }
     };
     window.addEventListener("keydown", keyHandler);
     return () => window.removeEventListener("keydown", keyHandler);
-  }, [dispatch, state.ui.drawing, state.ui.selectedIds, doc.players]);
+  }, [dispatch, state.ui.drawing, state.ui.selectedIds, doc.players, scheduleCommitMove]);
 
   return (
     <div className={className}>

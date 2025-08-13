@@ -81,7 +81,6 @@ export type DiagramEditorAction =
   | { type: "CLEAR_SELECTION" }
   | { type: "MOVE_SELECTION"; patches: { id: string; x: number; y: number }[] }
   | { type: "COMMIT_MOVE" }
-  | { type: "COMMIT_MOVE" }
   | { type: "ADD_PLAYER"; player: DiagramPlayer }
   | { type: "MOVE_PLAYER"; id: string; x: number; y: number }
   | { type: "ADD_ROUTE_SEGMENT"; playerId: string; segment: RouteSegment }

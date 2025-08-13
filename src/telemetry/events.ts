@@ -14,6 +14,8 @@ export const TelemetryEventTypes = {
   PlayDiagramBallHash: "play.diagram_ball_hash",
   PlayDiagramExportThumbnail: "play.diagram_export_thumbnail",
   PlayDiagramFieldTheme: "play.diagram_field_theme",
+  PlayDiagramSelection: "play.diagram_selection",
+  PlayDiagramMoveGroup: "play.diagram_move_group",
   PlayDuplicate: "play.duplicate",
   FilterApply: "filter.apply",
   UIAction: "ui.action",
