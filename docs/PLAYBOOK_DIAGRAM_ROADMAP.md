@@ -1,6 +1,6 @@
 ## Playbook Diagram Platform Unified Roadmap (V2 Implementation + Competitive Positioning)
 
-Updated: 2025-08-13 (legacy MVP editor scheduled for deletion; starting V2 modular refactor)
+Updated: 2025-08-13 (post‑legacy removal & modular extraction pass complete – Toolbar, PlayerSidebar, RoutesPanel, CanvasPane, a11y, telemetry sampling)
 Status Legend: DONE (merged to main), PARTIAL (scaffold or partial UI), TODO (planned / prioritized), FUTURE (later phase / out-of-scope now)
 
 ### 1. Vision
@@ -54,10 +54,15 @@ See original detailed competitive matrix (superseded) in prior doc; this table r
 | Player metadata panel                           | DONE                 | Grouped headers, inline color & outline pickers, bulk edit (roles/color/outline), drag & button reorder |
 | Route list & deletion                           | DONE                 | Per‑route removal                                                                                       |
 | Field settings panel (consolidated controls)    | DONE                 | Theme/hash/snap/formation/mirror + red zone toggle consolidated                                         |
+| Field settings controls (in-toolbar baseline)    | DONE (baseline)      | Theme/hash/snap/hash layout + mirror + formation + red zone toggle present (needs dedicated panel UX)   |
 | History size bound                              | DONE                 | 100 snapshot cap with trim telemetry                                                                    |
 | Group move history commit (COMMIT_MOVE)         | DONE                 | Debounced commit + drag commit snapshot                                                                 |
 | Thumbnail export (PNG)                          | PARTIAL              | UI button + success/failure telemetry + download; pending persistence & cards                           |
 | Red zone field slice toggle                     | DONE                 | Highlight overlay + slice switch (25yd view) w/ restore + telemetry                                     |
+| Red zone field slice toggle                     | DONE                 | Highlight overlay + slice switch (25yd view) w/ restore + telemetry                                     |
+| Discard changes modal (custom)                  | DONE                 | Replaced window.confirm with accessible modal + focus trap                                             |
+| Keyboard-accessible sidebar resize              | DONE                 | Separator now focusable ( Home / End / Arrow adjust + aria values )                                    |
+| Nudge telemetry sampling & batch aggregation    | DONE                 | Individual (sampled 20%) + 1.5s batch event                                                            |
 | Curved / editable segments                      | TODO (reprioritized) | Quadratic / handles; affects complexity weights                                                         |
 | Motion tool                                     | FUTURE (spec)        | Distinct style + timing metadata                                                                        |
 | Templates / Stencils                            | FUTURE (spec)        | Serialize selected subset + placement offset (elevated)                                                 |
@@ -98,38 +103,44 @@ Stage 4: Predictive difficulty (historical success rates once data available).
 
 Current events (emitted):
 
-- PlayDiagramPlayerAdd
-- PlayDiagramPlayerRemove
-- PlayDiagramPlayerUpdate
-- PlayDiagramRouteAdd
+- PlayDiagramPlayerAdd / Remove / Update
+- PlayDiagramRouteAdd / Delete (implicit via updated)
 - PlayDiagramUpdated
 - PlayDiagramBallHash
-- PlayDiagramFieldTheme (new)
-- PlayDiagramMirror
+- PlayDiagramFieldTheme
+- PlayDiagramMirror (enriched spread metrics)
 - PlayDiagramFormationApply (prototype)
+- PlayDiagramPlayerReorder (per drag / button)
+- PlayDiagramPlayerReorderStats (aggregated avg / max / listHeight)
+- PlayDiagramPlayerBulkEdit
+- PlayDiagramRedZoneToggle
+- PlayDiagramNudge (sampled ~20%)
+- PlayDiagramNudgeBatch (aggregated window)
 
 Planned (next sprint additions / refinements):
 
-- PlayDiagramHistory { action, index, length } (PARTIAL: cap-trim, undo/redo)
-- PlayDiagramFlagToggle (emitted for field flag changes inc. hash layout / red zone)
-- PlayDiagramExportThumbnail { w, h, durationMs }
-- PlayDiagramSelection (method, count, multi)
+- PlayDiagramHistory { action, index, length } (PARTIAL now – cap trim done; add undo/redo emit)
+- PlayDiagramFlagToggle (field toggles consolidated; wire explicit flag event)
+- PlayDiagramExportThumbnail { w, h, durationMs } (prototype button emits; add persistence context)
+- PlayDiagramSelection (method: click/box/shift/meta, count, multi)
 - PlayDiagramMoveGroup (count, mode, dist)
-- PlayDiagramRedZoneToggle { enabled }
 - PlayDiagramProgressionDefine { count }
 - PlayDiagramOLShadingToggle { technique, enabled }
 - PlayDiagramFormationLegality { valid, losCount, backfieldCount }
 - PlayDiagramTemplateApply { templateId }
+- PlayDiagramRouteBurst { added, removed, windowMs } (aggregation)
 
 Telemetry Gaps (post recent enrichments):
 
-- Need sampling / throttling on rapid nudge sequences
-- (Optional) Route add/remove aggregation (burst metrics)
-- Consider 95th percentile for player reorder duration (avg/max already captured)
+- Add 95th percentile for reorder duration (have avg/max)
+- Route add/remove burst aggregation (planned PlayDiagramRouteBurst)
+- Selection event emission (method granularity)
+- History undo/redo emit (currently only cap/trim tracked)
+- Formation apply success / duplicate-skip metrics
 
 ### 7. Near-Term Priority Backlog (Next 4–6 Weeks)
 
-Refactor / Cleanup Track (new):
+Refactor / Cleanup Track (phase 1 complete – additional polish queued):
 
 | Priority | Task                                     | Effort | Definition of Done |
 | -------- | ---------------------------------------- | ------ | ------------------ |
@@ -140,6 +151,21 @@ Refactor / Cleanup Track (new):
 | P2       | Extract CanvasPane (Field wrapper)       | 0.5d   | DONE (CanvasPane.tsx with CaptureSvgRef) |
 | P2       | Add accessibility focus trap to modal    | 0.5d   | Tab cycling contained; escape preserved |
 | P3       | Component tests / stories                | 1d     | Visual regression + interaction smoke tests |
+| Priority | Task                                      | Effort | Status  | Definition of Done / Notes                                       |
+| -------- | ----------------------------------------- | ------ | ------- | --------------------------------------------------------------- |
+| P1       | Remove legacy /visual directory           | 0.25d  | DONE    | Legacy files deleted; roadmap & doc updated                     |
+| P1       | Extract Toolbar                           | 0.5d   | DONE    | Toolbar.tsx                                                     |
+| P1       | Extract PlayerSidebar                     | 1d     | DONE    | PlayerSidebar.tsx (grouping, bulk edit, reorder telemetry)      |
+| P2       | Extract RoutesPanel                       | 0.5d   | DONE    | RoutesPanel.tsx isolated                                        |
+| P2       | Extract CanvasPane (Field wrapper)        | 0.5d   | DONE    | CanvasPane.tsx + CaptureSvgRef                                  |
+| P2       | Add accessibility focus trap (modal)      | 0.5d   | DONE    | Discard modal traps focus & ESC closes                          |
+| P2       | Keyboard resize handle (sidebar)          | 0.25d  | DONE    | Arrow/Home/End + aria-valuenow                                 |
+| P2       | Nudge telemetry sampling & batch          | 0.5d   | DONE    | PlayDiagramNudge / NudgeBatch events                            |
+| P3       | Component smoke tests (core)              | 0.5d   | PARTIAL | Toolbar & PlayerSidebar tests; expand RoutesPanel next          |
+| P3       | Field Settings standalone panel           | 1d     | TODO    | Move theme/hash/snap/mirror/formation/red zone out of toolbar   |
+| P3       | Sidebar resize aria-live announcements    | 0.25d  | TODO    | Polite region announcing new width                             |
+| P3       | Player reorder p95 metric                 | 0.25d  | TODO    | Compute per flush & emit in stats event                        |
+| P3       | Route add/remove burst aggregation        | 0.5d   | TODO    | Windowed event PlayDiagramRouteBurst                           |
 
 Feature Track:
 
@@ -147,9 +173,15 @@ Feature Track:
 | -------- | --------------------------------------- | ------------ | ---------------------------------------------------------- |
 | P1       | Player Metadata Panel                   | 2d           | Edit labels/roles/colors, delete player, telemetry hooks   |
 | P1       | Field Settings Panel                    | 1.5d         | Move theme/hash/snap + red zone toggle, telemetry          |
+| P1       | Field Settings Panel                    | 1.5d         | TODO (currently inline in Toolbar; extract dedicated panel) |
 | P1       | History Cap + Telemetry                 | 0.5d         | Ring buffer (100), emits diagram_history events            |
+| P1       | History Cap + Telemetry                 | 0.5d         | DONE (cap & trim). TODO: add undo/redo emit                 |
 | P1       | Red Zone Field Slice Toggle             | 0.5d         | Midfield ↔ red zone switch & red line, telemetry          |
+| P1       | Red Zone Field Slice Toggle             | 0.5d         | DONE: slice toggle + overlay + telemetry                   |
 | P2       | Thumbnail Export + PlayCard Integration | 2d           | PNG stored + displayed; export event logged (button done) |
+| P2       | Thumbnail Export + PlayCard Integration | 2d           | PARTIAL: button + telemetry done; persistence & card render pending |
+| P2       | Mirror Telemetry & UI Polish            | 0.5d         | Spread metrics DONE; button clarity TBD                    |
+| P2       | Mirror Telemetry & UI Polish            | 0.5d         | DONE (spread metrics). UI label iteration TBD              |
 | P2       | Formation Library (5–8 presets)         | 2d           | Apply w/out duplication; formation apply telemetry         |
 | P2       | Auto Formation Detection & Snap         | 2.5d         | Classify LOS/backfield, enforce 7 LOS / ≤4 backfield, snap |
 | P2       | Curved Route Segments                   | 4d           | Quadratic segments + editing handles                       |
@@ -218,6 +250,8 @@ Follow-ups:
 
 | Date       | Change                                                                                                                                                                     |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2025-08-13 | Group drag multi-select, debounced COMMIT_MOVE history snapshots, move group telemetry w/ distance metric                                                                  |
+| 2025-08-13 | Legacy /visual directory removed; a11y focus trap & keyboard resize added; nudge sampling + batch telemetry; CanvasPane extraction                                        |
 | 2025-08-13 | Group drag multi-select, debounced COMMIT_MOVE history snapshots, move group telemetry w/ distance metric                                                                  |
 | 2025-08-13 | Roadmap: Added automatic formation detection & legality assist feature                                                                                                     |
 | 2025-08-13 | Roadmap reprioritized (curved routes & templates elevated; added red zone toggle, progressions, OL shading, branding, legality telemetry events)                           |

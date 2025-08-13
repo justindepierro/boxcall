@@ -732,6 +732,9 @@ export const DiagramEditorProvider: React.FC<{ children: React.ReactNode }> = ({
       }
       reorderAggRef.current.count += 1;
       reorderAggRef.current.totalDur += detail.durMs;
+      (reorderAggRef.current as any).samples = (
+        (reorderAggRef.current as any).samples || []
+      ).concat(detail.durMs);
       reorderAggRef.current.maxDur = Math.max(
         reorderAggRef.current.maxDur,
         detail.durMs
@@ -741,16 +744,29 @@ export const DiagramEditorProvider: React.FC<{ children: React.ReactNode }> = ({
       // Emit aggregate every 10 events or 5s window
       const agg = reorderAggRef.current;
       if (agg.count >= 10 || performance.now() - agg.started > 5000) {
+        const samples: number[] = (agg as any).samples || [];
+        const p95 = samples.length
+          ? (() => {
+              const sorted = [...samples].sort((a, b) => a - b);
+              const idx = Math.min(
+                sorted.length - 1,
+                Math.floor(sorted.length * 0.95)
+              );
+              return sorted[idx];
+            })()
+          : undefined;
         telemetry.enqueue({
           type: TelemetryEventTypes.PlayDiagramPlayerReorderStats,
           data: {
             count: agg.count,
             avgDurMs: Math.round(agg.totalDur / agg.count),
             maxDurMs: Math.round(agg.maxDur),
+            p95DurMs: p95 !== undefined ? Math.round(p95) : undefined,
             windowMs: Math.round(performance.now() - agg.started),
             avgListHeight: agg.heights.length
               ? Math.round(
-                  agg.heights.reduce((a, b) => a + b, 0) / agg.heights.length
+                  agg.heights.reduce((a: number, b: number) => a + b, 0) /
+                    agg.heights.length
                 )
               : undefined,
             minListHeight: agg.heights.length
@@ -774,19 +790,32 @@ export const DiagramEditorProvider: React.FC<{ children: React.ReactNode }> = ({
   // Flush on unmount
   useEffect(() => {
     return () => {
-      const agg = reorderAggRef.current;
+      const agg = reorderAggRef.current as any;
       if (agg && agg.count > 0) {
+        const samples: number[] = agg.samples || [];
+        const p95 = samples.length
+          ? (() => {
+              const sorted = [...samples].sort((a, b) => a - b);
+              const idx = Math.min(
+                sorted.length - 1,
+                Math.floor(sorted.length * 0.95)
+              );
+              return sorted[idx];
+            })()
+          : undefined;
         telemetry.enqueue({
           type: TelemetryEventTypes.PlayDiagramPlayerReorderStats,
           data: {
             count: agg.count,
             avgDurMs: Math.round(agg.totalDur / agg.count),
             maxDurMs: Math.round(agg.maxDur),
+            p95DurMs: p95 !== undefined ? Math.round(p95) : undefined,
             windowMs: Math.round(performance.now() - agg.started),
             final: true,
             avgListHeight: agg.heights.length
               ? Math.round(
-                  agg.heights.reduce((a, b) => a + b, 0) / agg.heights.length
+                  agg.heights.reduce((a: number, b: number) => a + b, 0) /
+                    agg.heights.length
                 )
               : undefined,
             minListHeight: agg.heights.length
