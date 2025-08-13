@@ -307,32 +307,50 @@ export const FieldCanvas: React.FC<{
             const leftX = feetFromSideline * 10;
             const rightX = 1600 - feetFromSideline * 10;
             const numberY = y + 38;
+            const digits = String(yardValue).split(""); // expect 2 digits
+            const halfSpacing = 24; // center-to-center offset for each digit from origin
             return (
               <g key={`yn${i}`} opacity={opacity}>
-                {/* Left side number rotated +90° so top faces center */}
-                <text
-                  fontSize={54}
-                  fontWeight={700}
-                  fill={baseColor}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
+                {/* Left side digits */}
+                <g
                   transform={`translate(${leftX},${numberY}) rotate(90)`}
                   style={{ pointerEvents: "none", userSelect: "none" }}
                 >
-                  {yardValue}
-                </text>
-                {/* Right side number rotated -90° so top faces center */}
-                <text
-                  fontSize={54}
-                  fontWeight={700}
-                  fill={baseColor}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
+                  {digits.map((d, di) => (
+                    <text
+                      key={di}
+                      fontSize={54}
+                      fontWeight={700}
+                      fill={baseColor}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      x={di === 0 ? -halfSpacing : halfSpacing}
+                      y={0}
+                    >
+                      {d}
+                    </text>
+                  ))}
+                </g>
+                {/* Right side digits (mirrored rotation) */}
+                <g
                   transform={`translate(${rightX},${numberY}) rotate(-90)`}
                   style={{ pointerEvents: "none", userSelect: "none" }}
                 >
-                  {yardValue}
-                </text>
+                  {digits.map((d, di) => (
+                    <text
+                      key={di}
+                      fontSize={54}
+                      fontWeight={700}
+                      fill={baseColor}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      x={di === 0 ? -halfSpacing : halfSpacing}
+                      y={0}
+                    >
+                      {d}
+                    </text>
+                  ))}
+                </g>
               </g>
             );
           })}
