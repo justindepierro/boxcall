@@ -5,8 +5,10 @@ import React, {
   useReducer,
   useCallback,
 } from "react";
-import type { DiagramEditorState, DiagramEditorAction } from "./types";
-import { createEmptyDocument } from "./types";
+import type { DiagramEditorState, DiagramEditorAction, DiagramDocument } from "./types";
+import { createEmptyDocument, computeComplexityScore } from "./types";
+import { telemetry } from "../../../telemetry/dispatcher";
+import { TelemetryEventTypes } from "../../../telemetry/events";
 
 const initialState: DiagramEditorState = {
   doc: createEmptyDocument(),
@@ -25,16 +27,18 @@ function reducer(
       return { ...state, ui: { ...state.ui, tool: action.tool } };
     case "SET_ACTIVE_PLAYER":
       return { ...state, ui: { ...state.ui, activePlayerId: action.id } };
-    case "ADD_PLAYER":
-      return {
-        ...state,
-        doc: {
-          ...state.doc,
-          players: [...state.doc.players, action.player],
-          meta: { ...state.doc.meta!, updatedAt: Date.now() },
-        },
-        dirty: true,
+    case "ADD_PLAYER": {
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: [...state.doc.players, action.player],
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramPlayerAdd,
+        data: { count: nextDoc.players.length },
+      });
+      return { ...state, doc: nextDoc, dirty: true };
+    }
     case "MOVE_PLAYER":
       return {
         ...state,
@@ -47,23 +51,34 @@ function reducer(
         },
         dirty: true,
       };
-    case "ADD_ROUTE_SEGMENT":
-      return {
-        ...state,
-        doc: {
-          ...state.doc,
-          routes: [
-            ...state.doc.routes,
-            {
-              id: action.segment.id,
-              playerId: action.playerId,
-              segments: [action.segment],
-            },
-          ],
-          meta: { ...state.doc.meta!, updatedAt: Date.now() },
-        },
-        dirty: true,
+    case "ADD_ROUTE_SEGMENT": {
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        routes: [
+          ...state.doc.routes,
+          {
+            id: action.segment.id,
+            playerId: action.playerId,
+            segments: [action.segment],
+          },
+        ],
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramRouteAdd,
+        data: { playerId: action.playerId, segments: nextDoc.routes.length },
+      });
+      // also emit periodic aggregate update
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramUpdated,
+        data: {
+          players: nextDoc.players.length,
+            routes: nextDoc.routes.length,
+            complexity: computeComplexityScore(nextDoc),
+        },
+      });
+      return { ...state, doc: nextDoc, dirty: true };
+    }
     case "SET_ZOOM":
       return { ...state, ui: { ...state.ui, zoom: action.zoom } };
     case "PAN":

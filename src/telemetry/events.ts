@@ -3,6 +3,8 @@ export const TelemetryEventTypes = {
   PlayCreate: "play.create",
   PlayUpdate: "play.update",
   PlayDiagramUpdated: "play.diagram_updated",
+  PlayDiagramRouteAdd: "play.diagram_route_add",
+  PlayDiagramPlayerAdd: "play.diagram_player_add",
   PlayDuplicate: "play.duplicate",
   FilterApply: "filter.apply",
   UIAction: "ui.action",

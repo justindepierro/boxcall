@@ -5,11 +5,13 @@ import {
   useAddPlayer,
 } from "./context";
 import { FieldCanvas } from "./FieldCanvas";
+import { computeComplexityScore } from "./types";
 import { Button } from "../../ui/Button";
 
 const Shell: React.FC = () => {
-  const { state } = useDiagramEditor();
+  const { state, dispatch } = useDiagramEditor();
   const addPlayer = useAddPlayer();
+  const complexity = computeComplexityScore(state.doc);
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between border-b border-subtle px-4 py-2 bg-white/80 backdrop-blur z-10">
@@ -17,12 +19,19 @@ const Shell: React.FC = () => {
           Visual Play Builder v2 (Prototype)
         </div>
         <div className="flex items-center gap-2 text-xs">
+          <div className="flex items-center gap-1 pr-3 border-r border-subtle">
+            <Button size="xs" variant={state.ui.tool === "select" ? "secondary" : "ghost"} onClick={() => dispatch({ type: "SET_TOOL", tool: "select" })}>Select</Button>
+            <Button size="xs" variant={state.ui.tool === "add-player" ? "secondary" : "ghost"} onClick={addPlayer}>Player</Button>
+            <Button size="xs" variant={state.ui.tool === "route" ? "secondary" : "ghost"} onClick={() => dispatch({ type: "SET_TOOL", tool: "route" })}>Route</Button>
+            <Button size="xs" variant={state.ui.tool === "pan" ? "secondary" : "ghost"} onClick={() => dispatch({ type: "SET_TOOL", tool: "pan" })}>Pan</Button>
+          </div>
           <Button size="xs" variant="primary" onClick={addPlayer}>
             Add Player
           </Button>
           <Button size="xs" variant="secondary" disabled={!state.dirty}>
             Save (stub)
           </Button>
+          <span className="text-[10px] text-slate-500 ml-2">Complexity: {complexity}</span>
         </div>
       </div>
       <div className="flex flex-1 overflow-hidden">
