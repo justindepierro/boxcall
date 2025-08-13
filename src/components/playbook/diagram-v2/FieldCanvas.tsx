@@ -6,7 +6,7 @@ export const FieldCanvas: React.FC<{
   className?: string;
   onPlayerMouseDown?: (id: string, e: React.MouseEvent) => void;
 }> = ({ className, onPlayerMouseDown }) => {
-  const { state } = useDiagramEditor();
+  const { state, dispatch } = useDiagramEditor();
   const { doc } = state;
   const svgRef = useRef<SVGSVGElement | null>(null);
 
@@ -29,11 +29,12 @@ export const FieldCanvas: React.FC<{
   const handleMouseDownPlayer = (e: React.MouseEvent, id: string) => {
     const player = doc.players.find((p) => p.id === id);
     if (!player) return;
+    if (state.ui.tool === "route" && !state.ui.drawing) {
+      dispatch({ type: "START_ROUTE", playerId: id, start: { x: player.x, y: player.y } });
+    }
     const abs = pctToAbs(player.x, player.y);
     dragRef.current = { id, startX: e.clientX, startY: e.clientY, offX: abs.x, offY: abs.y };
   };
-
-  const { dispatch } = useDiagramEditor();
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!dragRef.current) return;
@@ -61,6 +62,29 @@ export const FieldCanvas: React.FC<{
     };
   }, [handleMouseMove, handleMouseUp]);
 
+  const handleCanvasClick = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (state.ui.tool !== "route") return;
+    const rect = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    if (!state.ui.drawing) return;
+    // If shift or right-click (?) finalize
+    if (e.detail >= 2) {
+      dispatch({ type: "ADD_ROUTE_POINT", point: { x, y } });
+      dispatch({ type: "COMMIT_ROUTE" });
+    } else {
+      dispatch({ type: "ADD_ROUTE_POINT", point: { x, y } });
+    }
+  };
+
+  const handleMouseMoveCanvas = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (state.ui.tool !== "route" || !state.ui.drawing) return;
+    const rect = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    dispatch({ type: "PREVIEW_ROUTE", point: { x, y } });
+  };
+
   return (
     <div className={className}>
       <svg
@@ -69,6 +93,8 @@ export const FieldCanvas: React.FC<{
         className="w-full h-full bg-emerald-700/90 rounded-md shadow-inner select-none"
         role="img"
         aria-label="Diagram field"
+        onClick={handleCanvasClick}
+        onMouseMove={handleMouseMoveCanvas}
       >
         {/* Yard lines (every 5) */}
         {doc.field.showYardLines &&
@@ -133,6 +159,23 @@ export const FieldCanvas: React.FC<{
             )}
           </g>
         ))}
+        {/* In-progress drawing polyline */}
+        {state.ui.drawing && (
+          <polyline
+            points={[
+              ...state.ui.drawing.anchorPoints,
+              ...(state.ui.drawing.preview ? [state.ui.drawing.preview] : []),
+            ]
+              .map((p) => `${(p.x / 100) * 1600},${(p.y / 100) * 900}`)
+              .join(" ")}
+            fill="none"
+            stroke="#fbbf24"
+            strokeWidth={6}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeDasharray="8 6"
+          />
+        )}
       </svg>
     </div>
   );

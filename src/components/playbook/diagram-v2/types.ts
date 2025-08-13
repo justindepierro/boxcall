@@ -46,6 +46,11 @@ export interface EditorToolState {
   zoom: number; // 1 = 100%
   panX: number; // px offset
   panY: number; // px offset
+  drawing?: {
+    playerId: string;
+    anchorPoints: RoutePoint[]; // committed anchor points (first is start)
+    preview?: RoutePoint; // current hover point
+  };
 }
 
 export interface DiagramEditorState {
@@ -64,6 +69,11 @@ export type DiagramEditorAction =
   | { type: "SET_ZOOM"; zoom: number }
   | { type: "PAN"; dx: number; dy: number }
   | { type: "TOGGLE_FIELD_FLAG"; flag: keyof DiagramFieldConfig }
+  | { type: "START_ROUTE"; playerId: string; start: RoutePoint }
+  | { type: "PREVIEW_ROUTE"; point: RoutePoint }
+  | { type: "ADD_ROUTE_POINT"; point: RoutePoint }
+  | { type: "COMMIT_ROUTE" }
+  | { type: "CANCEL_ROUTE" }
   | { type: "MARK_SAVED" };
 
 export const createEmptyDocument = (): DiagramDocument => ({

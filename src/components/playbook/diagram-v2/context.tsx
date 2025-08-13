@@ -27,6 +27,63 @@ function reducer(
       return { ...state, ui: { ...state.ui, tool: action.tool } };
     case "SET_ACTIVE_PLAYER":
       return { ...state, ui: { ...state.ui, activePlayerId: action.id } };
+    case "START_ROUTE":
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          drawing: { playerId: action.playerId, anchorPoints: [action.start] },
+          tool: "route",
+        },
+      };
+    case "PREVIEW_ROUTE":
+      if (!state.ui.drawing) return state;
+      return {
+        ...state,
+        ui: { ...state.ui, drawing: { ...state.ui.drawing, preview: action.point } },
+      };
+    case "ADD_ROUTE_POINT":
+      if (!state.ui.drawing) return state;
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          drawing: {
+            ...state.ui.drawing,
+            anchorPoints: [...state.ui.drawing.anchorPoints, action.point],
+            preview: undefined,
+          },
+        },
+      };
+    case "CANCEL_ROUTE":
+      return { ...state, ui: { ...state.ui, drawing: undefined } };
+    case "COMMIT_ROUTE": {
+      if (!state.ui.drawing || state.ui.drawing.anchorPoints.length < 2)
+        return { ...state, ui: { ...state.ui, drawing: undefined } };
+      const seg = {
+        id: `seg_${Date.now()}`,
+        type: "line" as const,
+        points: state.ui.drawing.anchorPoints,
+      };
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        routes: [
+          ...state.doc.routes,
+          { id: `r_${Date.now()}`, playerId: state.ui.drawing.playerId, segments: [seg] },
+        ],
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramRouteAdd,
+        data: { playerId: state.ui.drawing.playerId, length: seg.points.length },
+      });
+      return {
+        ...state,
+        doc: nextDoc,
+        dirty: true,
+        ui: { ...state.ui, drawing: undefined },
+      };
+    }
     case "ADD_PLAYER": {
       const nextDoc: DiagramDocument = {
         ...state.doc,
