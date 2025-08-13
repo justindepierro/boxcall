@@ -1,6 +1,6 @@
 ## Playbook Diagram Platform Unified Roadmap (V2 Implementation + Competitive Positioning)
 
-Updated: 2025-08-13 (post group drag & move batching)
+Updated: 2025-08-13 (post group drag & move batching; competitive adjustments vs CHLK)
 Status Legend: DONE (merged to main), PARTIAL (scaffold or partial UI), TODO (planned / prioritized), FUTURE (later phase / out-of-scope now)
 
 ### 1. Vision
@@ -57,9 +57,13 @@ See original detailed competitive matrix (superseded) in prior doc; this table r
 | History size bound                              | TODO                | Target 100 snapshots ring buffer                                    |
 | Group move history commit (COMMIT_MOVE)         | DONE                | Debounced commit + drag commit snapshot                            |
 | Thumbnail export (PNG)                          | PARTIAL             | SVG→PNG utility + UI button; needs persistence + card integration   |
-| Curved / editable segments                      | FUTURE              | Quadratic / handles; affects complexity weights                     |
+| Red zone field slice toggle                     | TODO                | Midfield ↔ red zone slice focus & red line (parity)                  |
+| Curved / editable segments                      | TODO (reprioritized)| Quadratic / handles; affects complexity weights                     |
 | Motion tool                                     | FUTURE (spec)       | Distinct style + timing metadata                                    |
-| Templates / Stencils                            | FUTURE (spec)       | Serialize selected subset + placement offset                        |
+| Templates / Stencils                            | FUTURE (spec)       | Serialize selected subset + placement offset (elevated)             |
+| QB progression overlay                          | FUTURE              | Numbered read path markers (1‑2‑3)                                  |
+| Offensive line technique shading                | FUTURE              | Click-through technique shading for OL gaps                         |
+| Branding / export theming                       | FUTURE              | Team colors & logo injection on exports                             |
 | Defensive templates                             | FUTURE              | Extend player roles & color semantics                               |
 | Enhanced analytics (spread / intersections)     | FUTURE              | Build after route richness increases                                |
 
@@ -109,6 +113,11 @@ Planned (next sprint additions / refinements):
 - PlayDiagramExportThumbnail { w, h, durationMs }
 - PlayDiagramSelection (selectCount, multi: boolean, method: 'click'|'box'|'toggle'|'clear')
 - PlayDiagramMoveGroup (count, mode: 'nudge'|'drag', dist)
+ - PlayDiagramRedZoneToggle { enabled }
+ - PlayDiagramProgressionDefine { count }
+ - PlayDiagramOLShadingToggle { technique, enabled }
+ - PlayDiagramFormationLegality { valid, losCount, backfieldCount }
+ - PlayDiagramTemplateApply { templateId }
 
 Telemetry Gaps:
 - Mirror event lacks before/after spread metrics
@@ -120,14 +129,18 @@ Telemetry Gaps:
 | Priority | Feature                                 | Effort (est) | Definition of Done                                       |
 | -------- | --------------------------------------- | ------------ | -------------------------------------------------------- |
 | P1       | Player Metadata Panel                   | 2d           | Edit labels/roles/colors, delete player, telemetry hooks |
-| P1       | Field Settings Panel                    | 1.5d         | Toggles + snap controls moved from toolbar, telemetry    |
+| P1       | Field Settings Panel                    | 1.5d         | Move theme/hash/snap + red zone toggle, telemetry        |
 | P1       | History Cap + Telemetry                 | 0.5d         | Ring buffer (100), emits diagram_history events          |
+| P1       | Red Zone Field Slice Toggle             | 0.5d         | Midfield ↔ red zone switch & red line, telemetry         |
 | P2       | Thumbnail Export + PlayCard Integration | 2d           | PNG stored + displayed; export event logged              |
 | P2       | Formation Library (5–8 presets)         | 2d           | Apply w/out duplication; formation apply telemetry       |
-| P2       | Auto Formation Detection & Snap         | 2.5d         | Classify LOS vs backfield, enforce 7-on-line & ≤4 backfield, grid snap, violation indicators |
-| P2       | Mirror Telemetry & UI Polish            | 0.5d         | Event emission + button state/tooltip clarity            |
-| P3       | Templates / Stencils MVP                | 3d           | Save/apply subset; template events                       |
-| P3       | Curved Route Segments                   | 4d           | Quadratic segments + editing handles                     |
+| P2       | Auto Formation Detection & Snap         | 2.5d         | Classify LOS/backfield, enforce 7 LOS / ≤4 backfield, snap |
+| P2       | Curved Route Segments                   | 4d           | Quadratic segments + editing handles                     |
+| P2       | Templates / Stencils MVP                | 3d           | Save/apply subset; template events                       |
+| P2       | Mirror Telemetry & UI Polish            | 0.5d         | Event enrichment + button clarity                        |
+| P3       | QB Progression Overlay                  | 1.5d         | Numbered read path markers + telemetry                   |
+| P3       | Offensive Line Technique Shading        | 1d           | Technique shading toggle + telemetry                     |
+| P3       | Branding / Export Theming               | 2d           | Team colors/logo on exports                              |
 | P3       | Player / Route Color Picker UI          | 1d           | Integrated into metadata panel                           |
 
 ### 8. Longer-Horizon Initiatives
@@ -190,6 +203,7 @@ Follow-ups:
 | ---------- | ---------------------------------------------------------------------------------------------------------------- |
 | 2025-08-13 | Group drag multi-select, debounced COMMIT_MOVE history snapshots, move group telemetry w/ distance metric |
 | 2025-08-13 | Roadmap: Added automatic formation detection & legality assist feature                                      |
+| 2025-08-13 | Roadmap reprioritized (curved routes & templates elevated; added red zone toggle, progressions, OL shading, branding, legality telemetry events) |
 | 2025-08-12 | Multi-select (click / box), keyboard nudge, field themes, realistic hashes + sideline hashes, yard numbers, LOS, 11-man seed, palette & outlines, thumbnail utility/button |
 | 2025-08-12 | Removed feature flag & legacy MVP editor; unified draft persistence (V2 only)                                    |
 | 2025-08-11 | Added mirror, formation apply placeholder, hash selection, LOS & yard markers enhancements                       |
