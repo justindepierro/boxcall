@@ -50,6 +50,7 @@ See original detailed competitive matrix (superseded) in prior doc; this table r
 | Mirror (flip) play                              | DONE (baseline)     | Implemented reducer action; telemetry partial (improve payload)     |
 | Ball hash selection & field hashes              | DONE (baseline)     | Hash toggle + center reposition                                     |
 | Formation apply (example)                       | PARTIAL             | Single sample (trips-right); need library & idempotency             |
+| Automatic formation detection & legality assist | FUTURE              | Auto grid snap to legal alignment (7 on LOS, ≤4 backfield), highlight violations |
 | Player metadata panel                           | TODO                | Roles, colors, delete, ordering, bulk edit                          |
 | Route list & deletion                           | DONE                | Per‑route removal                                                   |
 | Field settings panel (consolidated controls)    | PARTIAL             | Theme/hash controls in toolbar; dedicated panel not built           |
@@ -123,6 +124,7 @@ Telemetry Gaps:
 | P1       | History Cap + Telemetry                 | 0.5d         | Ring buffer (100), emits diagram_history events          |
 | P2       | Thumbnail Export + PlayCard Integration | 2d           | PNG stored + displayed; export event logged              |
 | P2       | Formation Library (5–8 presets)         | 2d           | Apply w/out duplication; formation apply telemetry       |
+| P2       | Auto Formation Detection & Snap         | 2.5d         | Classify LOS vs backfield, enforce 7-on-line & ≤4 backfield, grid snap, violation indicators |
 | P2       | Mirror Telemetry & UI Polish            | 0.5d         | Event emission + button state/tooltip clarity            |
 | P3       | Templates / Stencils MVP                | 3d           | Save/apply subset; template events                       |
 | P3       | Curved Route Segments                   | 4d           | Quadratic segments + editing handles                     |
@@ -187,6 +189,7 @@ Follow-ups:
 | Date       | Change                                                                                                           |
 | ---------- | ---------------------------------------------------------------------------------------------------------------- |
 | 2025-08-13 | Group drag multi-select, debounced COMMIT_MOVE history snapshots, move group telemetry w/ distance metric |
+| 2025-08-13 | Roadmap: Added automatic formation detection & legality assist feature                                      |
 | 2025-08-12 | Multi-select (click / box), keyboard nudge, field themes, realistic hashes + sideline hashes, yard numbers, LOS, 11-man seed, palette & outlines, thumbnail utility/button |
 | 2025-08-12 | Removed feature flag & legacy MVP editor; unified draft persistence (V2 only)                                    |
 | 2025-08-11 | Added mirror, formation apply placeholder, hash selection, LOS & yard markers enhancements                       |
