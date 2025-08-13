@@ -279,7 +279,13 @@ export const FieldCanvas: React.FC<{
     };
     window.addEventListener("keydown", keyHandler);
     return () => window.removeEventListener("keydown", keyHandler);
-  }, [dispatch, state.ui.drawing, state.ui.selectedIds, doc.players, scheduleCommitMove]);
+  }, [
+    dispatch,
+    state.ui.drawing,
+    state.ui.selectedIds,
+    doc.players,
+    scheduleCommitMove,
+  ]);
 
   return (
     <div className={className}>
@@ -335,6 +341,17 @@ export const FieldCanvas: React.FC<{
               />
             );
           })()}
+          {/* Red Zone Highlight (top 20 yards of visible slice) */}
+          {doc.field.showRedZone && doc.field.forwardYards >= 20 && (
+            <rect
+              x={0}
+              y={0}
+              width={1600}
+              height={(20 / doc.field.forwardYards) * 900}
+              fill="#ef4444"
+              opacity={0.08}
+            />
+          )}
           {/* Yard Lines */}
           {doc.field.showYardLines &&
             Array.from({ length: doc.field.forwardYards / 5 + 1 }).map(

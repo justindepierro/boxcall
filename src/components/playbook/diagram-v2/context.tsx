@@ -4,11 +4,14 @@ import React, {
   useContext,
   useReducer,
   useCallback,
+  useEffect,
 } from "react";
 import type {
   DiagramEditorState,
   DiagramEditorAction,
   DiagramDocument,
+  DiagramFieldConfig,
+  DiagramPlayer,
 } from "./types";
 import { createEmptyDocument, computeComplexityScore } from "./types";
 import { telemetry } from "../../../telemetry/dispatcher";
@@ -27,7 +30,17 @@ function pushHistory(state: DiagramEditorState, nextDoc: DiagramDocument) {
   const trimmed = state.history.slice(0, state.historyIndex + 1);
   let newHistory = [...trimmed, nextDoc];
   if (newHistory.length > HISTORY_CAP) {
+    const before = newHistory.length;
     newHistory = newHistory.slice(newHistory.length - HISTORY_CAP);
+    telemetry.enqueue({
+      type: TelemetryEventTypes.PlayDiagramHistory,
+      data: {
+        action: "cap-trim",
+        dropped: before - newHistory.length,
+        length: newHistory.length,
+        cap: HISTORY_CAP,
+      },
+    });
   }
   return {
     ...state,
@@ -50,9 +63,20 @@ function reducer(
     case "SET_SELECTION":
       telemetry.enqueue({
         type: TelemetryEventTypes.PlayDiagramSelection,
-        data: { method: "set", count: action.ids.length, multi: action.ids.length > 1 },
+        data: {
+          method: "set",
+          count: action.ids.length,
+          multi: action.ids.length > 1,
+        },
       });
-      return { ...state, ui: { ...state.ui, selectedIds: [...action.ids], activePlayerId: action.ids[0] } };
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          selectedIds: [...action.ids],
+          activePlayerId: action.ids[0],
+        },
+      };
     case "TOGGLE_SELECT": {
       const current = new Set(state.ui.selectedIds || []);
       if (current.has(action.id)) current.delete(action.id);
@@ -228,6 +252,77 @@ function reducer(
       });
       return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
+    case "SET_PENDING_DELETE":
+      return {
+        ...state,
+        ui: { ...state.ui, pendingDeleteId: action.id },
+      };
+    case "SET_PENDING_BULK_DELETE":
+      return {
+        ...state,
+        ui: { ...state.ui, pendingBulkDelete: action.pending },
+      };
+    case "REMOVE_PLAYERS": {
+      const idSet = new Set(action.ids);
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: state.doc.players.filter((p) => !idSet.has(p.id)),
+        routes: state.doc.routes.filter((r) => !idSet.has(r.playerId)),
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramPlayerRemove,
+        data: { playerIds: action.ids, bulk: true },
+      });
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+    }
+    case "REORDER_PLAYER": {
+      const idx = state.doc.players.findIndex((p) => p.id === action.id);
+      if (idx === -1) return state;
+      const swapWith = action.direction === "up" ? idx - 1 : idx + 1;
+      if (swapWith < 0 || swapWith >= state.doc.players.length) return state;
+      const newPlayers = [...state.doc.players];
+      const tmp = newPlayers[idx];
+      newPlayers[idx] = newPlayers[swapWith];
+      newPlayers[swapWith] = tmp;
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: newPlayers,
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramPlayerUpdate,
+        data: {
+          reorder: true,
+          playerId: action.id,
+          direction: action.direction,
+        },
+      });
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+    }
+    case "MOVE_PLAYER_INDEX": {
+      const from = state.doc.players.findIndex((p) => p.id === action.id);
+      if (
+        from === -1 ||
+        action.toIndex < 0 ||
+        action.toIndex >= state.doc.players.length
+      )
+        return state;
+      if (from === action.toIndex) return state;
+      const newPlayers = [...state.doc.players];
+      const [item] = newPlayers.splice(from, 1);
+      newPlayers.splice(action.toIndex, 0, item);
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: newPlayers,
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramPlayerUpdate,
+        data: { reorder: true, playerId: action.id, toIndex: action.toIndex },
+      });
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+    }
     case "UPDATE_PLAYERS_BULK": {
       const set = new Set(action.ids);
       const nextDoc: DiagramDocument = {
@@ -238,7 +333,7 @@ function reducer(
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
       telemetry.enqueue({
-        type: TelemetryEventTypes.PlayDiagramPlayerUpdate,
+        type: TelemetryEventTypes.PlayDiagramPlayerBulkEdit,
         data: { playerIds: action.ids, fields: Object.keys(action.patch) },
       });
       return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
@@ -358,6 +453,16 @@ function reducer(
       return { ...state, doc: nextDoc, dirty: true };
     }
     case "MIRROR": {
+      const computeSpread = (players: DiagramPlayer[]) => {
+        if (!players.length) return { spread: 0, center: 0, min: 0, max: 0 };
+        const xs = players.map((p) => p.x);
+        const min = Math.min(...xs);
+        const max = Math.max(...xs);
+        const spread = +(max - min).toFixed(2);
+        const center = +(xs.reduce((a, b) => a + b, 0) / xs.length).toFixed(2);
+        return { spread, center, min, max };
+      };
+      const beforeMetrics = computeSpread(state.doc.players);
       const mirroredPlayers = state.doc.players.map((p) => ({
         ...p,
         x: 100 - p.x,
@@ -375,72 +480,110 @@ function reducer(
         routes: mirroredRoutes,
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
+      const afterMetrics = computeSpread(nextDoc.players);
       telemetry.enqueue({
         type: TelemetryEventTypes.PlayDiagramMirror,
         data: {
           players: nextDoc.players.length,
           routes: nextDoc.routes.length,
+          before: beforeMetrics,
+          after: afterMetrics,
+          deltaSpread: +(afterMetrics.spread - beforeMetrics.spread).toFixed(2),
         },
       });
       return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
     case "APPLY_FORMATION": {
-      // Simple example formation; future: formation library
+      // Idempotent application for known formations (library WIP)
       if (action.formation === "trips-right") {
-        const baseY = state.doc.players.find((p) => p.role === "C")?.y || 50;
-        const updated = state.doc.players.map((p) => {
-          if (p.role === "QB") return { ...p, x: 50 };
-          if (p.label === "LT") return { ...p, x: 44 };
-          if (p.label === "LG") return { ...p, x: 47 };
-          if (p.label === "C")
-            return {
-              ...p,
-              x:
-                state.doc.field.ballHash === "left"
-                  ? 40
-                  : state.doc.field.ballHash === "right"
-                    ? 60
-                    : 50,
-            };
-          if (p.label === "RG") return { ...p, x: 53 };
-          if (p.label === "RT") return { ...p, x: 56 };
-          return p;
+        // Derive center X based on hash
+        const centerX = state.doc.field.ballHash === "left" ? 40 : state.doc.field.ballHash === "right" ? 60 : 50;
+        // Anchor Y (use existing center or average OL Y)
+        const lineYs = state.doc.players.filter(p => ["C","LT","LG","RG","RT"].includes(p.label)).map(p => p.y);
+        const baseY = lineYs.length ? lineYs.reduce((a,b)=>a+b,0)/lineYs.length : (state.doc.players.find(p=>p.role==="C")?.y || 50);
+        const spec: Record<string,{x:number;y:number;role:string;color:string}> = {
+          LT: { x: centerX - 6, y: baseY, role: "OL", color: "#1e3a8a" },
+          LG: { x: centerX - 3, y: baseY, role: "OL", color: "#1e3a8a" },
+          C:  { x: centerX,     y: baseY, role: "C",  color: "#1e3a8a" },
+          RG: { x: centerX + 3, y: baseY, role: "OL", color: "#1e3a8a" },
+          RT: { x: centerX + 6, y: baseY, role: "OL", color: "#1e3a8a" },
+          QB: { x: centerX,     y: Math.min(99, baseY + 1.25), role: "QB", color: "#047857" },
+          RB: { x: centerX,     y: Math.min(99, baseY + 4), role: "RB", color: "#92400e" },
+          X:  { x: centerX - 25, y: baseY + 1, role: "WR", color: "#2563eb" }, // isolated left
+          Y:  { x: centerX + 12, y: baseY + 1, role: "WR", color: "#1e3a8a" }, // trips cluster
+          Z:  { x: centerX + 18, y: baseY + 1, role: "WR", color: "#1e3a8a" },
+        };
+        const specLabels = new Set(Object.keys(spec));
+        const byLabel: Record<string, DiagramPlayer[]> = {};
+        state.doc.players.forEach(p => {
+          if (specLabels.has(p.label)) {
+            (byLabel[p.label] ||= []).push(p);
+          }
         });
-        const extra = [
-          {
-            id: `X${Date.now()}`,
-            label: "X",
-            role: "WR",
-            side: "O" as const,
-            x: 30,
-            y: baseY,
-            color: "#1e3a8a",
-          },
-          {
-            id: `Y${Date.now() + 1}`,
-            label: "Y",
-            role: "WR",
-            side: "O" as const,
-            x: 65,
-            y: baseY,
-            color: "#1e3a8a",
-          },
-          {
-            id: `Z${Date.now() + 2}`,
-            label: "Z",
-            role: "WR",
-            side: "O" as const,
-            x: 70,
-            y: baseY,
-            color: "#1e3a8a",
-          },
-        ];
+        const players: DiagramPlayer[] = [];
+        let created = 0, updated = 0, removedDup = 0;
+        // Keep non-spec players as-is for now
+        const nonSpec = state.doc.players.filter(p => !specLabels.has(p.label));
+        // Canonical spec players
+        Object.entries(spec).forEach(([label, cfg]) => {
+          const existingGroup = byLabel[label] || [];
+            let canonical = existingGroup.find(p => p.id === label) || existingGroup[0];
+          if (canonical) {
+            // Update position (idempotent if unchanged)
+            if (canonical.x !== cfg.x || canonical.y !== cfg.y || canonical.role !== cfg.role) {
+              canonical = { ...canonical, x: cfg.x, y: cfg.y, role: cfg.role };
+              updated++;
+            }
+            players.push(canonical);
+          } else {
+            players.push({
+              id: label,
+              label,
+              role: cfg.role,
+              side: "O",
+              x: cfg.x,
+              y: cfg.y,
+              color: cfg.color,
+            });
+            created++;
+          }
+          // Remove duplicate extras with same label that have no routes
+          if (existingGroup.length > 1) {
+            const canonicalId = players[players.length - 1].id;
+            const dupes = existingGroup.filter(p => p.id !== canonicalId);
+            dupes.forEach(d => {
+              const hasRoute = state.doc.routes.some(r => r.playerId === d.id);
+              if (!hasRoute) {
+                removedDup++;
+              } else {
+                // If duplicate has route we retain it to avoid data loss
+                players.push(d);
+              }
+            });
+          }
+        });
+        players.push(...nonSpec);
+        // If we removed duplicates (route-less) we need to filter them out; above only incremented count, not pushed them.
+        const uniqueIds = new Set<string>();
+        const finalPlayers: DiagramPlayer[] = [];
+        for (const p of players) {
+          if (uniqueIds.has(p.id)) continue; // guard against accidental repeats
+          uniqueIds.add(p.id);
+          finalPlayers.push(p);
+        }
+        const removedIds: string[] = [];
+        // Determine which original players are no longer present and were duplicates without routes
+        state.doc.players.forEach(p => {
+          if (!finalPlayers.some(fp => fp.id === p.id)) {
+            const hasRoute = state.doc.routes.some(r => r.playerId === p.id);
+            if (!hasRoute) removedIds.push(p.id);
+          }
+        });
+        const nextRoutes = state.doc.routes.filter(r => !removedIds.includes(r.playerId));
         const nextDoc: DiagramDocument = {
           ...state.doc,
-          players: [
-            ...updated.filter((p) => !["X", "Y", "Z"].includes(p.label)),
-            ...extra,
-          ],
+          players: finalPlayers,
+          routes: nextRoutes,
           meta: { ...state.doc.meta!, updatedAt: Date.now() },
         };
         telemetry.enqueue({
@@ -448,6 +591,9 @@ function reducer(
           data: {
             formation: action.formation,
             players: nextDoc.players.length,
+            created,
+            updated,
+            removedDuplicates: removedDup,
           },
         });
         return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
@@ -489,14 +635,44 @@ function reducer(
       return newState;
     }
     case "TOGGLE_FIELD_FLAG":
+      let nextFieldVal = !state.doc.field[action.flag];
+      let nextDocField = {
+        ...state.doc.field,
+        [action.flag]: nextFieldVal,
+      } as DiagramFieldConfig;
+      let nextUi = { ...state.ui };
+      // Special handling: red zone slice toggle
+      if (action.flag === "showRedZone") {
+        if (nextFieldVal) {
+          // entering red zone mode: store previous slice
+          (nextUi as any).prevSlice = {
+            backYards: state.doc.field.backYards,
+            forwardYards: state.doc.field.forwardYards,
+            losYards: state.doc.field.losYards,
+          };
+          nextDocField = {
+            ...nextDocField,
+            backYards: 0,
+            forwardYards: 25, // focus inside 25
+            losYards: 25 - 5, // LOS 5 yards from goal for viewpoint
+          } as DiagramFieldConfig;
+        } else if (state.ui.prevSlice) {
+          // restore
+          nextDocField = {
+            ...nextDocField,
+            backYards: state.ui.prevSlice.backYards,
+            forwardYards: state.ui.prevSlice.forwardYards,
+            losYards: state.ui.prevSlice.losYards,
+          } as DiagramFieldConfig;
+          (nextUi as any).prevSlice = undefined;
+        }
+      }
       const toggled = {
         ...state,
+        ui: nextUi,
         doc: {
           ...state.doc,
-          field: {
-            ...state.doc.field,
-            [action.flag]: !state.doc.field[action.flag],
-          },
+          field: nextDocField,
           meta: { ...state.doc.meta!, updatedAt: Date.now() },
         },
         dirty: true,
@@ -508,6 +684,12 @@ function reducer(
           value: (toggled.doc.field as any)[action.flag],
         },
       });
+      if (action.flag === "showRedZone") {
+        telemetry.enqueue({
+          type: TelemetryEventTypes.PlayDiagramRedZoneToggle,
+          data: { enabled: (toggled.doc.field as any)[action.flag] },
+        });
+      }
       return toggled;
     case "MARK_SAVED":
       return { ...state, dirty: false };
@@ -525,6 +707,99 @@ export const DiagramEditorProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  // Local aggregation for reorder performance (drag based) to reduce event spam and provide summary stats.
+  const reorderAggRef = React.useRef<{
+    count: number;
+    totalDur: number;
+    maxDur: number;
+    started: number;
+    heights: number[];
+  } | null>(null);
+  useEffect(() => {
+    // scan telemetry queue? Instead we patch dispatch sites to also push into this ref via a custom window event.
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ durMs: number; listHeight?: number }>)
+        .detail;
+      if (!detail) return;
+      if (!reorderAggRef.current) {
+        reorderAggRef.current = {
+          count: 0,
+          totalDur: 0,
+          maxDur: 0,
+          started: performance.now(),
+          heights: [],
+        };
+      }
+      reorderAggRef.current.count += 1;
+      reorderAggRef.current.totalDur += detail.durMs;
+      reorderAggRef.current.maxDur = Math.max(
+        reorderAggRef.current.maxDur,
+        detail.durMs
+      );
+      if (typeof detail.listHeight === "number")
+        reorderAggRef.current.heights.push(detail.listHeight);
+      // Emit aggregate every 10 events or 5s window
+      const agg = reorderAggRef.current;
+      if (agg.count >= 10 || performance.now() - agg.started > 5000) {
+        telemetry.enqueue({
+          type: TelemetryEventTypes.PlayDiagramPlayerReorderStats,
+          data: {
+            count: agg.count,
+            avgDurMs: Math.round(agg.totalDur / agg.count),
+            maxDurMs: Math.round(agg.maxDur),
+            windowMs: Math.round(performance.now() - agg.started),
+            avgListHeight: agg.heights.length
+              ? Math.round(
+                  agg.heights.reduce((a, b) => a + b, 0) / agg.heights.length
+                )
+              : undefined,
+            minListHeight: agg.heights.length
+              ? Math.min(...agg.heights)
+              : undefined,
+            maxListHeight: agg.heights.length
+              ? Math.max(...agg.heights)
+              : undefined,
+          },
+        });
+        reorderAggRef.current = null;
+      }
+    };
+    window.addEventListener("diagram:player-reorder", handler as EventListener);
+    return () =>
+      window.removeEventListener(
+        "diagram:player-reorder",
+        handler as EventListener
+      );
+  }, []);
+  // Flush on unmount
+  useEffect(() => {
+    return () => {
+      const agg = reorderAggRef.current;
+      if (agg && agg.count > 0) {
+        telemetry.enqueue({
+          type: TelemetryEventTypes.PlayDiagramPlayerReorderStats,
+          data: {
+            count: agg.count,
+            avgDurMs: Math.round(agg.totalDur / agg.count),
+            maxDurMs: Math.round(agg.maxDur),
+            windowMs: Math.round(performance.now() - agg.started),
+            final: true,
+            avgListHeight: agg.heights.length
+              ? Math.round(
+                  agg.heights.reduce((a, b) => a + b, 0) / agg.heights.length
+                )
+              : undefined,
+            minListHeight: agg.heights.length
+              ? Math.min(...agg.heights)
+              : undefined,
+            maxListHeight: agg.heights.length
+              ? Math.max(...agg.heights)
+              : undefined,
+          },
+        });
+      }
+    };
+  }, []);
   return (
     <DiagramEditorContext.Provider value={{ state, dispatch }}>
       {children}

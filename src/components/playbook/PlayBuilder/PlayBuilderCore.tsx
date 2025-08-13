@@ -1,5 +1,5 @@
 // Fully reconstructed PlayBuilderCore with diagram v2 draft persistence
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { X, Save } from "lucide-react";
 import { Typography } from "../../design-system/Typography";
 import { Button } from "../../ui/Button";
@@ -60,6 +60,9 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   const [restoredFromDraft, setRestoredFromDraft] = useState(false);
   const autosaveTimerRef = useRef<number | null>(null);
   const dirtyRef = useRef(false);
+  // Hash snapshot to detect unsaved changes for close confirmation
+  const [savedHash, setSavedHash] = useState<string>("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   interface DraftPayloadV2Only {
     data: Partial<Play>;
@@ -67,26 +70,59 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
     ts: number;
   }
   type DraftPayload = DraftPayloadV2Only | null;
-  const loadDraft = React.useCallback((): DraftPayload => {
+  const loadDraft = useCallback((): DraftPayload => {
     try {
       const rawV2 = localStorage.getItem(DRAFT_STORAGE_KEY_V2);
-      if (rawV2) return JSON.parse(rawV2) as DraftPayloadV2Only;
-      // Fallback: if an old legacy draft exists, just hydrate play data (diagram discarded)
+      if (rawV2) {
+        const parsed = JSON.parse(rawV2) as DraftPayloadV2Only;
+        return parsed;
+      }
       const rawLegacy = localStorage.getItem(DRAFT_STORAGE_KEY);
       if (rawLegacy) {
-        const legacy = JSON.parse(rawLegacy) as {
-          data?: Partial<Play>;
-          ts?: number;
-        };
-        return legacy?.data
-          ? { data: legacy.data, diagram_v2: null, ts: legacy.ts || Date.now() }
-          : null;
+        const legacy = JSON.parse(rawLegacy) as { data?: Partial<Play>; ts?: number };
+        return legacy?.data ? { data: legacy.data, diagram_v2: null, ts: legacy.ts || Date.now() } : null;
       }
       return null;
     } catch {
       return null;
     }
   }, []);
+
+  // Compute a stable hash of current draft state (play + diagram)
+  const computeCurrentHash = useCallback(() => {
+    return JSON.stringify({
+      play: playData,
+      diagram: diagramV2Doc,
+    });
+  }, [playData, diagramV2Doc]);
+
+  // Initialize saved hash when modal first opens (after any draft restore) if unset
+  useEffect(() => {
+    if (isOpen && !savedHash) {
+      setSavedHash(computeCurrentHash());
+    }
+  }, [isOpen, savedHash, computeCurrentHash]);
+
+  const isDirty = useCallback(() => {
+    if (!isOpen) return false;
+    const current = computeCurrentHash();
+    return current !== savedHash;
+  }, [computeCurrentHash, savedHash, isOpen]);
+
+  const attemptClose = useCallback(() => {
+    if (isDirty()) {
+  setConfirmOpen(true);
+  return;
+    }
+    onClose();
+  }, [isDirty, onClose]);
+
+  // ESC key close (uses attemptClose)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') attemptClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [attemptClose]);
   const persistDraft = (
     data: Partial<Play>,
     diagramDoc: DiagramDocument | null
@@ -240,9 +276,11 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
       type: TelemetryEventTypes.PlayDraftFinalize,
       data: { hasDiagram: !!diagramV2Doc, v2: !!diagramV2Doc },
     });
+    // Update saved snapshot then close
+    setSavedHash(computeCurrentHash());
     onClose();
   };
-  const handleCancel = () => onClose();
+  const handleCancel = useCallback(() => attemptClose(), [attemptClose]);
   if (!isOpen) return null;
   const normalizedName = normalizePlayName(playData.play_name || "");
   const isDuplicateName =
@@ -267,6 +305,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   // Cleaned legacy remnants removed.
 
   return (
+    <>
     <div
       className="fixed inset-0 z-50 overflow-y-auto focus-scroll"
       role="dialog"
@@ -278,7 +317,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
         {/* Backdrop */}
         <div
           className="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity"
-          onClick={onClose}
+          onClick={attemptClose}
         />
 
         {/* Modal */}
@@ -332,7 +371,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
             <Button
               variant="neutralLink"
               size="xs"
-              onClick={onClose}
+              onClick={attemptClose}
               className="p-2 rounded-lg h-auto"
               aria-label="Close play builder"
               icon={<X className="h-5 w-5" />}
@@ -356,6 +395,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
                     </Typography>
                     <div className="mb-4 border border-dashed border-slate-300 rounded">
                       <VisualPlayBuilderV2
+                        onClose={attemptClose}
                         onDocumentChange={(doc) => {
                           setDiagramV2Doc(doc);
                           setPlayData((prev) => ({
@@ -420,10 +460,34 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
               >
                 {initialPlay?.id ? "Update Play" : "Create Play"}
               </Button>
+              {/* Optional explicit Save & Close identical to primary (visible when valid and editing) */}
+              {initialPlay?.id && (
+                <Button
+                  onClick={handleSave}
+                  disabled={!isValid}
+                  variant="secondary"
+                  size="sm"
+                >
+                  Save & Close
+                </Button>
+              )}
             </div>
           </div>
         </div>
       </div>
     </div>
+    {confirmOpen && (
+      <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40" role="alertdialog" aria-modal="true" aria-labelledby="discard-changes-title" aria-describedby="discard-changes-desc">
+  <div className="bg-white rounded-md shadow-lg w-full max-w-sm p-5 space-y-4">
+          <h3 id="discard-changes-title" className="text-sm font-semibold text-slate-800">Discard changes?</h3>
+          <p id="discard-changes-desc" className="text-xs text-slate-600 leading-relaxed">You have unsaved edits to this play. If you leave now, those changes will be lost.</p>
+          <div className="flex justify-end gap-2 pt-1">
+            <Button size="xs" variant="ghost" onClick={() => setConfirmOpen(false)} autoFocus>Stay</Button>
+            <Button size="xs" variant="danger" onClick={() => { setConfirmOpen(false); onClose(); }}>Discard</Button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 };

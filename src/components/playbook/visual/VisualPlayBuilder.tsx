@@ -1,3 +1,6 @@
+// LEGACY: Deprecated VisualPlayBuilder (superseded by diagram-v2/VisualPlayBuilderV2)
+// Retained temporarily for reference; scheduled for deletion in repo cleanup.
+// Confirmed: no active imports remain referencing this component.
 import React, { useState } from "react";
 import { Construction } from "lucide-react";
 import { Button } from "../../ui/Button/Button";

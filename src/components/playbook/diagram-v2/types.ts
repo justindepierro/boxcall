@@ -35,6 +35,7 @@ export interface DiagramFieldConfig {
   showHashMarks: boolean;
   showPlayerLabels: boolean;
   showDefensePlayers: boolean; // toggle to display defensive players
+  showRedZone?: boolean; // highlight red zone (top 20 yards of slice)
   ballHash: "left" | "middle" | "right"; // positioning of ball/center
   theme?: "classic" | "mono-light" | "mono-dark"; // visual theme style
   hashLayout?: "highschool" | "college" | "nfl"; // governs hash spacing
@@ -62,6 +63,9 @@ export interface EditorToolState {
   };
   snap: boolean;
   snapGrid: number; // percent units (e.g., 2 => every 2%)
+  prevSlice?: { backYards: number; forwardYards: number; losYards?: number }; // remember previous slice when entering red zone mode
+  pendingDeleteId?: string; // player id awaiting delete confirmation
+  pendingBulkDelete?: boolean; // awaiting confirmation for multi-delete
 }
 
 export interface DiagramEditorState {
@@ -105,7 +109,16 @@ export type DiagramEditorAction =
   | { type: "DELETE_ROUTE"; routeId: string }
   | { type: "UPDATE_PLAYER"; id: string; patch: Partial<DiagramPlayer> }
   | { type: "REMOVE_PLAYER"; id: string }
-  | { type: "UPDATE_PLAYERS_BULK"; ids: string[]; patch: Partial<DiagramPlayer> }
+  | { type: "REORDER_PLAYER"; id: string; direction: "up" | "down" }
+  | { type: "MOVE_PLAYER_INDEX"; id: string; toIndex: number }
+  | { type: "REMOVE_PLAYERS"; ids: string[] }
+  | { type: "SET_PENDING_BULK_DELETE"; pending: boolean }
+  | { type: "SET_PENDING_DELETE"; id?: string }
+  | {
+      type: "UPDATE_PLAYERS_BULK";
+      ids: string[];
+      patch: Partial<DiagramPlayer>;
+    }
   | { type: "SET_SNAP"; enabled: boolean }
   | { type: "SET_SNAP_GRID"; size: number }
   | { type: "MIRROR" }
@@ -125,6 +138,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
     showHashMarks: true,
     showPlayerLabels: true,
     showDefensePlayers: true,
+    showRedZone: false,
     ballHash: "middle",
     theme: "classic",
     hashLayout: "highschool",
