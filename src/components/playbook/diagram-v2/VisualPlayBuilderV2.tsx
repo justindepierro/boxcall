@@ -50,6 +50,18 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
             </Button>
             <Button
               size="xs"
+              variant={state.ui.tool === "motion" ? "secondary" : "ghost"}
+              onClick={() =>
+                dispatch({
+                  type: "SET_TOOL",
+                  tool: "motion" as unknown as typeof state.ui.tool,
+                })
+              }
+            >
+              Motion
+            </Button>
+            <Button
+              size="xs"
               variant={state.ui.tool === "pan" ? "secondary" : "ghost"}
               onClick={() => dispatch({ type: "SET_TOOL", tool: "pan" })}
             >
@@ -144,6 +156,46 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
           <Button size="xs" variant="primary" onClick={addPlayer}>
             Add Player
           </Button>
+          <div className="flex items-center gap-1 border-l border-r border-subtle pl-2 pr-2">
+            <span className="text-[10px]">Hash:</span>
+            <select
+              className="text-[10px] border border-subtle rounded px-1 py-0.5 bg-white"
+              value={state.doc.field.ballHash || "middle"}
+              onChange={(e) =>
+                dispatch({
+                  type: "SET_BALL_HASH",
+                  hash: e.target.value as "left" | "right" | "middle",
+                })
+              }
+            >
+              <option value="left">Left</option>
+              <option value="middle">Middle</option>
+              <option value="right">Right</option>
+            </select>
+            <Button
+              size="xs"
+              variant="ghost"
+              onClick={() => dispatch({ type: "MIRROR" })}
+            >
+              Mirror
+            </Button>
+            <select
+              className="text-[10px] border border-subtle rounded px-1 py-0.5 bg-white"
+              defaultValue=""
+              onChange={(e) => {
+                if (e.target.value) {
+                  dispatch({
+                    type: "APPLY_FORMATION",
+                    formation: e.target.value,
+                  });
+                  e.target.value = "";
+                }
+              }}
+            >
+              <option value="">Formation</option>
+              <option value="trips-right">Trips Right</option>
+            </select>
+          </div>
           <Button size="xs" variant="secondary" disabled={!state.dirty}>
             Save (stub)
           </Button>

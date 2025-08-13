@@ -1,4 +1,8 @@
-## Diagram Builder v2 (Rewrite Plan & Status)
+## Diagram Builder v2 (Superseded)
+
+NOTE: This document is archived. See `PLAYBOOK_DIAGRAM_ROADMAP.md` for the active unified roadmap (implementation + competitive context). Content below retained for historical reference.
+
+## (Archived) Diagram Builder v2 (Rewrite Plan & Status)
 
 Goal: Replace the current MVP `DiagramEditorMVP` with a modular, extensible visual editor that matches professional play design tools (multi‑tab UI, zoom/pan, player role management, route authoring, settings, export/thumbnail, telemetry + complexity metrics).
 

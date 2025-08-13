@@ -6,7 +6,6 @@ import { Button } from "../../ui/Button";
 import type { Play } from "../../../types/play";
 import { PlayBuilderForm } from "./PlayBuilderForm";
 import { PlayBuilderPreview } from "./PlayBuilderPreview";
-import { DiagramEditorMVP, type DiagramModel } from "./DiagramEditorMVP";
 import { VisualPlayBuilderV2 } from "../diagram-v2/VisualPlayBuilderV2";
 import { QuickEntry } from "./QuickEntry";
 import {
@@ -50,7 +49,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
     complexity_score: initialPlay.complexity_score || 1,
     is_archived: initialPlay.is_archived || false,
   });
-  const [diagram, setDiagram] = useState<DiagramModel | null>(null);
+  // V2 diagram document (sole supported editor)
   const [diagramV2Doc, setDiagramV2Doc] = useState<DiagramDocument | null>(
     null
   );
@@ -62,23 +61,27 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   const autosaveTimerRef = useRef<number | null>(null);
   const dirtyRef = useRef(false);
 
-  interface DraftPayloadV2 {
+  interface DraftPayloadV2Only {
     data: Partial<Play>;
-    diagram?: DiagramModel | null;
     diagram_v2?: DiagramDocument | null;
     ts: number;
   }
-  interface DraftPayloadLegacy {
-    data: Partial<Play>;
-    ts: number;
-  }
-  type DraftPayload = DraftPayloadV2 | DraftPayloadLegacy | null;
+  type DraftPayload = DraftPayloadV2Only | null;
   const loadDraft = React.useCallback((): DraftPayload => {
     try {
       const rawV2 = localStorage.getItem(DRAFT_STORAGE_KEY_V2);
-      if (rawV2) return JSON.parse(rawV2) as DraftPayloadV2;
+      if (rawV2) return JSON.parse(rawV2) as DraftPayloadV2Only;
+      // Fallback: if an old legacy draft exists, just hydrate play data (diagram discarded)
       const rawLegacy = localStorage.getItem(DRAFT_STORAGE_KEY);
-      if (rawLegacy) return JSON.parse(rawLegacy) as DraftPayloadLegacy;
+      if (rawLegacy) {
+        const legacy = JSON.parse(rawLegacy) as {
+          data?: Partial<Play>;
+          ts?: number;
+        };
+        return legacy?.data
+          ? { data: legacy.data, diagram_v2: null, ts: legacy.ts || Date.now() }
+          : null;
+      }
       return null;
     } catch {
       return null;
@@ -86,13 +89,11 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   }, []);
   const persistDraft = (
     data: Partial<Play>,
-    diagramModel: DiagramModel | null,
     diagramDoc: DiagramDocument | null
   ) => {
     try {
       const payload = JSON.stringify({
         data,
-        diagram: diagramModel,
         diagram_v2: diagramDoc,
         ts: Date.now(),
       });
@@ -102,7 +103,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
         type: TelemetryEventTypes.PlayDraftAutosave,
         data: {
           fields: Object.keys(data).length,
-          hasDiagram: !!diagramModel || !!diagramDoc,
+          hasDiagram: !!diagramDoc,
           v2: !!diagramDoc,
         },
       });
@@ -126,7 +127,6 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
     const draft = loadDraft();
     if (draft && draft.data) {
       setPlayData((p) => ({ ...p, ...draft.data }));
-      if ("diagram" in draft && draft.diagram) setDiagram(draft.diagram);
       if ("diagram_v2" in draft && draft.diagram_v2)
         setDiagramV2Doc(draft.diagram_v2);
       if ("ts" in draft) setLastAutosave(draft.ts);
@@ -135,10 +135,8 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
         type: TelemetryEventTypes.PlayDraftRestore,
         data: {
           ageMs: draft.ts ? Date.now() - draft.ts : 0,
-          hasDiagram:
-            ("diagram" in draft && !!draft.diagram) ||
-            ("diagram_v2" in draft && !!(draft as DraftPayloadV2).diagram_v2),
-          v2: "diagram_v2" in draft && !!(draft as DraftPayloadV2).diagram_v2,
+          hasDiagram: "diagram_v2" in draft && !!draft.diagram_v2,
+          v2: "diagram_v2" in draft && !!draft.diagram_v2,
         },
       });
     } else {
@@ -175,7 +173,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
           typeof v === "string" ? v.trim().length > 0 : v !== undefined
         );
         if (hasContent) {
-          persistDraft(playData, diagram, diagramV2Doc);
+          persistDraft(playData, diagramV2Doc);
           dirtyRef.current = false;
         }
       }
@@ -184,19 +182,19 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
       if (autosaveTimerRef.current)
         window.clearTimeout(autosaveTimerRef.current);
     };
-  }, [playData, diagram, diagramV2Doc, isOpen]);
+  }, [playData, diagramV2Doc, isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
     const handle = () => {
       if (document.visibilityState === "hidden" && dirtyRef.current) {
-        persistDraft(playData, diagram, diagramV2Doc);
+        persistDraft(playData, diagramV2Doc);
         dirtyRef.current = false;
       }
     };
     document.addEventListener("visibilitychange", handle);
     return () => document.removeEventListener("visibilitychange", handle);
-  }, [isOpen, playData, diagram, diagramV2Doc]);
+  }, [isOpen, playData, diagramV2Doc]);
 
   const updateField = (field: keyof Play, value: string | number | boolean) =>
     setPlayData((prev) => ({ ...prev, [field]: value }));
@@ -232,21 +230,15 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
     }
     if (diagramV2Doc) {
       normalized.complexity_score = computeComplexityScore(diagramV2Doc);
-      // Extend with diagram_v2 field (not yet in Play type)
       (
         normalized as Partial<Play> & { diagram_v2?: DiagramDocument }
       ).diagram_v2 = diagramV2Doc;
-    } else if (diagram) {
-      normalized.complexity_score = Math.min(
-        5,
-        Math.ceil((diagram.players.length + diagram.routes.length) / 3)
-      );
     }
     onSave(normalized);
     clearDraft();
     telemetry.enqueue({
       type: TelemetryEventTypes.PlayDraftFinalize,
-      data: { hasDiagram: !!diagram || !!diagramV2Doc, v2: !!diagramV2Doc },
+      data: { hasDiagram: !!diagramV2Doc, v2: !!diagramV2Doc },
     });
     onClose();
   };
@@ -354,56 +346,27 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
               {/* Form Section - 2/3 width */}
               <div className="lg:col-span-2 space-y-4">
                 <div>
-                  {import.meta.env.VITE_ENABLE_PLAY_DIAGRAM_V2 ? (
-                    <>
-                      <Typography
-                        variant="label-lg"
-                        as="h4"
-                        className="text-slate-500 mb-2"
-                      >
-                        Diagram (V2 Experimental)
-                      </Typography>
-                      <div className="mb-4 border border-dashed border-slate-300 rounded">
-                        <VisualPlayBuilderV2
-                          onDocumentChange={(doc) => {
-                            setDiagramV2Doc(doc);
-                            setPlayData((prev) => ({
-                              ...prev,
-                              complexity_score: computeComplexityScore(doc),
-                            }));
-                            dirtyRef.current = true;
-                          }}
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <Typography
-                        variant="label-lg"
-                        as="h4"
-                        className="text-slate-500 mb-2"
-                      >
-                        Diagram (MVP)
-                      </Typography>
-                      <DiagramEditorMVP
-                        value={diagram || undefined}
-                        onChange={(m) => {
-                          setDiagram(m);
-                          // derive lightweight complexity proxy
-                          const complexity = Math.min(
-                            5,
-                            Math.ceil((m.players.length + m.routes.length) / 3)
-                          );
+                  <>
+                    <Typography
+                      variant="label-lg"
+                      as="h4"
+                      className="text-slate-500 mb-2"
+                    >
+                      Diagram Builder
+                    </Typography>
+                    <div className="mb-4 border border-dashed border-slate-300 rounded">
+                      <VisualPlayBuilderV2
+                        onDocumentChange={(doc) => {
+                          setDiagramV2Doc(doc);
                           setPlayData((prev) => ({
                             ...prev,
-                            complexity_score: complexity,
+                            complexity_score: computeComplexityScore(doc),
                           }));
                           dirtyRef.current = true;
                         }}
-                        className="mb-4"
                       />
-                    </>
-                  )}
+                    </div>
+                  </>
                 </div>
                 <QuickEntry
                   onPlayParsed={handleQuickEntryParsed}
@@ -426,12 +389,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
                   isValid={isValid}
                   validationErrors={validationErrors}
                 />
-                {diagram && (
-                  <div className="mt-4 text-xs text-slate-500">
-                    Diagram: {diagram.players.length} players /{" "}
-                    {diagram.routes.length} routes (complexity auto-set)
-                  </div>
-                )}
+                {/* Legacy diagram preview removed; V2 complexity shown within editor */}
               </div>
             </div>
           </div>

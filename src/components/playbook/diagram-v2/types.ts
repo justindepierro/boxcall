@@ -33,6 +33,7 @@ export interface DiagramFieldConfig {
   showHashMarks: boolean;
   showPlayerLabels: boolean;
   showDefensePlayers: boolean; // toggle to display defensive players
+  ballHash: "left" | "middle" | "right"; // positioning of ball/center
 }
 export interface DiagramDocumentV1 {
   version: 1;
@@ -44,7 +45,7 @@ export interface DiagramDocumentV1 {
 export type DiagramDocument = DiagramDocumentV1; // future union
 
 export interface EditorToolState {
-  tool: "select" | "pan" | "add-player" | "route" | "delete";
+  tool: "select" | "pan" | "add-player" | "route" | "motion" | "delete";
   activePlayerId?: string;
   zoom: number; // 1 = 100%
   panX: number; // px offset
@@ -76,6 +77,7 @@ export type DiagramEditorAction =
   | { type: "SET_ZOOM"; zoom: number }
   | { type: "PAN"; dx: number; dy: number }
   | { type: "TOGGLE_FIELD_FLAG"; flag: keyof DiagramFieldConfig }
+  | { type: "SET_BALL_HASH"; hash: DiagramFieldConfig["ballHash"] }
   | { type: "START_ROUTE"; playerId: string; start: RoutePoint }
   | { type: "PREVIEW_ROUTE"; point: RoutePoint }
   | { type: "ADD_ROUTE_POINT"; point: RoutePoint }
@@ -86,6 +88,8 @@ export type DiagramEditorAction =
   | { type: "REMOVE_PLAYER"; id: string }
   | { type: "SET_SNAP"; enabled: boolean }
   | { type: "SET_SNAP_GRID"; size: number }
+  | { type: "MIRROR" }
+  | { type: "APPLY_FORMATION"; formation: string }
   | { type: "UNDO" }
   | { type: "REDO" }
   | { type: "MARK_SAVED" };
@@ -100,6 +104,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
     showHashMarks: true,
     showPlayerLabels: true,
     showDefensePlayers: true,
+    ballHash: "middle",
   },
   // Default offensive line template (LT LG C RG RT + QB behind center)
   players: (() => {
@@ -116,7 +121,12 @@ export const createEmptyDocument = (): DiagramDocument => ({
       ...lineXs.map((x, i) => ({
         id: labels[i],
         label: labels[i],
-        role: labels[i] === "C" ? "C" : labels[i].startsWith("L") || labels[i].startsWith("R") ? labels[i].slice(1) : undefined,
+        role:
+          labels[i] === "C"
+            ? "C"
+            : labels[i].startsWith("L") || labels[i].startsWith("R")
+              ? labels[i].slice(1)
+              : undefined,
         side: "O" as const,
         x,
         y: losY,

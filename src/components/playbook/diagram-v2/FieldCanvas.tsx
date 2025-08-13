@@ -185,6 +185,24 @@ export const FieldCanvas: React.FC<{
         <g
           transform={`translate(${state.ui.panX} ${state.ui.panY}) scale(${state.ui.zoom})`}
         >
+          {/* Line of Scrimmage (LOS) at y = proportional to backYards buffer (centered conceptually at middle) */}
+          {(() => {
+            const totalSlice = doc.field.backYards + doc.field.forwardYards; // vertical coverage in yards
+            const losRatio = doc.field.backYards / totalSlice; // portion from top
+            const losY = losRatio * 900;
+            return (
+              <line
+                x1={0}
+                x2={1600}
+                y1={losY}
+                y2={losY}
+                stroke="#fef08a"
+                strokeWidth={8}
+                strokeLinecap="round"
+                opacity={0.9}
+              />
+            );
+          })()}
           {/* Yard lines based on vertical orientation slice (always vertical downfield) */}
           {doc.field.showYardLines &&
             Array.from({ length: doc.field.forwardYards / 5 + 1 }).map(
@@ -203,31 +221,110 @@ export const FieldCanvas: React.FC<{
             )}
           {/* Hash marks simplified for vertical view */}
           {doc.field.showHashMarks &&
-            Array.from({ length: doc.field.forwardYards }).map((_, i) => (
-              <g key={`h${i}`}>
-                <rect
-                  x={1600 * 0.3}
-                  y={(i / doc.field.forwardYards) * 900}
-                  width={6}
-                  height={3}
-                  fill="#047857"
-                  opacity={0.45}
-                />
-                <rect
-                  x={1600 * 0.7}
-                  y={(i / doc.field.forwardYards) * 900}
-                  width={6}
-                  height={3}
-                  fill="#047857"
-                  opacity={0.45}
-                />
-              </g>
-            ))}
+            (() => {
+              // College style approx hash groupings every yard within visible forward slice
+              const marks = [] as React.ReactNode[];
+              for (let yrd = 0; yrd <= doc.field.forwardYards; yrd++) {
+                const y = (yrd / doc.field.forwardYards) * 900;
+                marks.push(
+                  <g key={`h${yrd}`}>
+                    {" "}
+                    {/* Left & Right hashes plus middle guideline if selected */}
+                    <rect
+                      x={1600 * 0.3 - 3}
+                      y={y - 1}
+                      width={6}
+                      height={3}
+                      fill="#064e3b"
+                      opacity={0.55}
+                    />
+                    <rect
+                      x={1600 * 0.7 - 3}
+                      y={y - 1}
+                      width={6}
+                      height={3}
+                      fill="#064e3b"
+                      opacity={0.55}
+                    />
+                    {/* Optional midpoint reference for middle hash placement */}
+                    {doc.field.ballHash === "middle" && (
+                      <rect
+                        x={1600 * 0.5 - 2}
+                        y={y - 1}
+                        width={4}
+                        height={3}
+                        fill="#065f46"
+                        opacity={0.35}
+                      />
+                    )}
+                  </g>
+                );
+              }
+              return marks;
+            })()}
+          {/* Yard numbers stacked (approx every 5 yards) below LOS area */}
+          {Array.from({ length: doc.field.forwardYards / 5 + 1 }).map(
+            (_, i) => {
+              const y = i * (900 / (doc.field.forwardYards / 5));
+              if (i === 0) return null; // skip LOS immediate number
+              const yardValue = i * 5; // simple incremental numbering forward
+              if (yardValue === 50) return null; // skip midfield typical style
+              return (
+                <g
+                  key={`yn${i}`}
+                  transform={`translate(800,${y + 12})`}
+                  opacity={0.28}
+                >
+                  <text
+                    fontSize={40}
+                    fontWeight={700}
+                    fill="#ecfdf5"
+                    textAnchor="middle"
+                    style={{ pointerEvents: "none", userSelect: "none" }}
+                  >
+                    {yardValue}
+                  </text>
+                  <text
+                    fontSize={40}
+                    fontWeight={700}
+                    fill="#ecfdf5"
+                    textAnchor="middle"
+                    dy={34}
+                    style={{ pointerEvents: "none", userSelect: "none" }}
+                  >
+                    {yardValue}
+                  </text>
+                </g>
+              );
+            }
+          )}
+          {/* Ball marker at selected hash */}
+          {(() => {
+            const totalSlice = doc.field.backYards + doc.field.forwardYards;
+            const losRatio = doc.field.backYards / totalSlice;
+            const losY = losRatio * 900;
+            const hashX =
+              doc.field.ballHash === "left"
+                ? 1600 * 0.3
+                : doc.field.ballHash === "right"
+                  ? 1600 * 0.7
+                  : 800;
+            return (
+              <circle
+                cx={hashX}
+                cy={losY - 16}
+                r={14}
+                fill="#fef3c7"
+                stroke="#92400e"
+                strokeWidth={4}
+              />
+            );
+          })()}
           {/* Players */}
           {doc.players
             .filter((p) => doc.field.showDefensePlayers || p.side !== "D")
             .map((p) => {
-              const isCenter = p.label === 'C' || p.role === 'C';
+              const isCenter = p.label === "C" || p.role === "C";
               return (
                 <g
                   key={p.id}
@@ -254,7 +351,7 @@ export const FieldCanvas: React.FC<{
                     <ellipse
                       rx={26}
                       ry={18}
-                      fill={p.color || (p.side === 'D' ? '#b91c1c' : '#1e3a8a')}
+                      fill={p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")}
                       stroke="#fff"
                       strokeWidth={2}
                     />

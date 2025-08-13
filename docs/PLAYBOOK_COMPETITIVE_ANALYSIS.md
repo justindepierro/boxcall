@@ -1,4 +1,6 @@
-# Playbook Feature Competitive Analysis
+# Playbook Feature Competitive Analysis (Superseded)
+
+NOTE: Superseded by `PLAYBOOK_DIAGRAM_ROADMAP.md` (unified roadmap + competitive summary). Retained for historical reference.
 
 Competitor Reference: FirstDown PlayBook (public marketing site)
 Date: 2025-08-12

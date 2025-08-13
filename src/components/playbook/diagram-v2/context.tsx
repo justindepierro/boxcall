@@ -209,6 +209,113 @@ function reducer(
           panY: state.ui.panY + action.dy,
         },
       };
+    case "SET_BALL_HASH": {
+      return {
+        ...state,
+        doc: {
+          ...state.doc,
+          field: { ...state.doc.field, ballHash: action.hash },
+          players: state.doc.players.map((p) =>
+            p.role === "C"
+              ? {
+                  ...p,
+                  x:
+                    action.hash === "left"
+                      ? 40
+                      : action.hash === "right"
+                        ? 60
+                        : 50,
+                }
+              : p
+          ),
+          meta: { ...state.doc.meta!, updatedAt: Date.now() },
+        },
+        dirty: true,
+      };
+    }
+    case "MIRROR": {
+      const mirroredPlayers = state.doc.players.map((p) => ({
+        ...p,
+        x: 100 - p.x,
+      }));
+      const mirroredRoutes = state.doc.routes.map((r) => ({
+        ...r,
+        segments: r.segments.map((s) => ({
+          ...s,
+          points: s.points.map((pt) => ({ x: 100 - pt.x, y: pt.y })),
+        })),
+      }));
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: mirroredPlayers,
+        routes: mirroredRoutes,
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+    }
+    case "APPLY_FORMATION": {
+      // Simple example formation; future: formation library
+      if (action.formation === "trips-right") {
+        const baseY = state.doc.players.find((p) => p.role === "C")?.y || 50;
+        const updated = state.doc.players.map((p) => {
+          if (p.role === "QB") return { ...p, x: 50 };
+          if (p.label === "LT") return { ...p, x: 44 };
+          if (p.label === "LG") return { ...p, x: 47 };
+          if (p.label === "C")
+            return {
+              ...p,
+              x:
+                state.doc.field.ballHash === "left"
+                  ? 40
+                  : state.doc.field.ballHash === "right"
+                    ? 60
+                    : 50,
+            };
+          if (p.label === "RG") return { ...p, x: 53 };
+          if (p.label === "RT") return { ...p, x: 56 };
+          return p;
+        });
+        const extra = [
+          {
+            id: `X${Date.now()}`,
+            label: "X",
+            role: "WR",
+            side: "O" as const,
+            x: 30,
+            y: baseY,
+            color: "#1e3a8a",
+          },
+          {
+            id: `Y${Date.now() + 1}`,
+            label: "Y",
+            role: "WR",
+            side: "O" as const,
+            x: 65,
+            y: baseY,
+            color: "#1e3a8a",
+          },
+          {
+            id: `Z${Date.now() + 2}`,
+            label: "Z",
+            role: "WR",
+            side: "O" as const,
+            x: 70,
+            y: baseY,
+            color: "#1e3a8a",
+          },
+        ];
+        const nextDoc: DiagramDocument = {
+          ...state.doc,
+          players: [
+            ...updated.filter((p) => !["X", "Y", "Z"].includes(p.label)),
+            ...extra,
+          ],
+          meta: { ...state.doc.meta!, updatedAt: Date.now() },
+        };
+        return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+      }
+      return state;
+    }
     case "SET_SNAP":
       return { ...state, ui: { ...state.ui, snap: action.enabled } };
     case "SET_SNAP_GRID":

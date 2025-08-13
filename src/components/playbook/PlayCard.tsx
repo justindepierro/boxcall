@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "../design-system/Typography";
 import {
@@ -14,10 +14,6 @@ import {
   Gamepad2,
 } from "lucide-react";
 import type { Play as PlayType } from "../../types/play";
-// Code-split heavy builder
-const VisualPlayBuilder = lazy(() => import("./visual/VisualPlayBuilder"));
-import { telemetry } from "../../telemetry/dispatcher";
-import { TelemetryEventTypes } from "../../telemetry/events";
 import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
 import {
   getPlayFlags,
@@ -34,7 +30,6 @@ interface PlayCardProps {
   showOneWordCalls?: boolean;
   onEdit?: (play: PlayType) => void;
   onDuplicate?: (play: PlayType) => void;
-  onCreateDiagram?: (play: PlayType) => void;
   onAddToPracticeScript?: (play: PlayType) => void;
   onAddToGamePlan?: (play: PlayType) => void;
   // Bulk Operations
@@ -47,7 +42,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   showOneWordCalls = false,
   onEdit,
   onDuplicate,
-  onCreateDiagram,
   onAddToPracticeScript,
   onAddToGamePlan,
   // Bulk Operations
@@ -55,7 +49,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   onSelectionChange,
   density = "comfortable",
 }) => {
-  const [showVisualBuilder, setShowVisualBuilder] = useState(false); // legacy modal path
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const isCompact = density === "compact";
@@ -90,23 +83,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       .replace("situational", "Situational");
   })();
   const handleCreateDiagram = () => {
-    // If experimental v2 flag enabled, use route-based builder (unified entry)
-    if (import.meta.env.VITE_ENABLE_PLAY_DIAGRAM_V2) {
-      navigate(`/playbook/diagram?playId=${play.id}`);
-      return;
-    }
-    // Fallback legacy modal (MVP) if flag disabled
-    setShowVisualBuilder(true);
-  };
-  const handleSaveDiagram = (updatedPlay: PlayType) => {
-    setShowVisualBuilder(false);
-    if (onCreateDiagram) {
-      onCreateDiagram(updatedPlay);
-    }
-    telemetry.enqueue({
-      type: TelemetryEventTypes.PlayDiagramUpdated,
-      data: { playId: updatedPlay.id },
-    });
+    navigate(`/playbook/diagram?playId=${play.id}`);
   };
   const displayName = getDisplayName(play, showOneWordCalls);
   const subtitleText = getSubtitleText(play, showOneWordCalls);
@@ -719,26 +696,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
           )}
         </div>
       </div>
-      {/* Visual Play Builder Modal */}
-      {/* Legacy modal retained for fallback; now diagram uses dedicated route */}
-      {showVisualBuilder && (
-        <Suspense
-          fallback={
-            <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-              <div className="bg-white rounded-md shadow p-6 text-center">
-                <p className="text-sm text-slate-600">Loading builder...</p>
-              </div>
-            </div>
-          }
-        >
-          <VisualPlayBuilder
-            isOpen={showVisualBuilder}
-            play={play}
-            onSave={handleSaveDiagram}
-            onClose={() => setShowVisualBuilder(false)}
-          />
-        </Suspense>
-      )}
+      {/* Legacy VisualPlayBuilder modal removed (always-on V2 route). */}
     </>
   );
 };
