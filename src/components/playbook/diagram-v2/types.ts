@@ -105,6 +105,7 @@ export type DiagramEditorAction =
   | { type: "DELETE_ROUTE"; routeId: string }
   | { type: "UPDATE_PLAYER"; id: string; patch: Partial<DiagramPlayer> }
   | { type: "REMOVE_PLAYER"; id: string }
+  | { type: "UPDATE_PLAYERS_BULK"; ids: string[]; patch: Partial<DiagramPlayer> }
   | { type: "SET_SNAP"; enabled: boolean }
   | { type: "SET_SNAP_GRID"; size: number }
   | { type: "MIRROR" }

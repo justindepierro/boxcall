@@ -416,6 +416,65 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
                   {state.doc.players.filter((p) => p.side === "D").length} D
                 </span>
               </div>
+              {state.ui.selectedIds && state.ui.selectedIds.length > 1 && (
+                <div className="mb-2 p-2 rounded border border-amber-300 bg-amber-50/70 space-y-2">
+                  <div className="text-[10px] font-medium text-amber-800 tracking-wide">
+                    {state.ui.selectedIds.length} selected – bulk edit
+                  </div>
+                  <div className="flex flex-wrap gap-2 items-center">
+                    <select
+                      className="px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
+                      onChange={(e) => {
+                        if (!e.target.value) return;
+                        dispatch({
+                          type: "UPDATE_PLAYERS_BULK",
+                          ids: state.ui.selectedIds || [],
+                          patch: { role: e.target.value },
+                        });
+                        e.target.value = "";
+                      }}
+                      defaultValue=""
+                    >
+                      <option value="">Role…</option>
+                      {["QB","RB","WR","TE","OL","DL","LB","CB","S","K","P"].map((r) => (
+                        <option key={r} value={r}>{r}</option>
+                      ))}
+                    </select>
+                    <select
+                      className="px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
+                      onChange={(e) => {
+                        if (!e.target.value) return;
+                        dispatch({
+                          type: "UPDATE_PLAYERS_BULK",
+                          ids: state.ui.selectedIds || [],
+                          patch: { color: e.target.value },
+                        });
+                        e.target.value = "";
+                      }}
+                      defaultValue=""
+                    >
+                      <option value="">Color…</option>
+                      {["#1e3a8a","#2563eb","#312e81","#047857","#16a34a","#92400e","#b91c1c","#dc2626","#0d9488","#7c3aed","#6366f1","#374151"].map(c => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                    <Button
+                      size="xs"
+                      variant="ghost"
+                      onClick={() =>
+                        dispatch({
+                          type: "UPDATE_PLAYERS_BULK",
+                          ids: state.ui.selectedIds || [],
+                          patch: { outlineColor: undefined },
+                        })
+                      }
+                      className="text-[10px]"
+                    >
+                      Clear Outline
+                    </Button>
+                  </div>
+                </div>
+              )}
               <ul className="space-y-2">
                 {state.doc.players.map((p) => (
                   <li

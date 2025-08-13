@@ -228,6 +228,21 @@ function reducer(
       });
       return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
+    case "UPDATE_PLAYERS_BULK": {
+      const set = new Set(action.ids);
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: state.doc.players.map((p) =>
+          set.has(p.id) ? { ...p, ...action.patch } : p
+        ),
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramPlayerUpdate,
+        data: { playerIds: action.ids, fields: Object.keys(action.patch) },
+      });
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+    }
     case "ADD_PLAYER": {
       const nextDoc: DiagramDocument = {
         ...state.doc,
