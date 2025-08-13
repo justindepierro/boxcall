@@ -14,7 +14,7 @@ export const PlayerSidebar: React.FC = () => {
   }, [state.doc]);
   if (!state.doc) return null;
   return (
-    <>
+  <div data-testid="player-sidebar-root">
       <div className="text-xs text-slate-500">Complexity: {complexity}</div>
       <div className="text-xs text-slate-500">Players: {state.doc.players.length}</div>
       <div className="text-xs text-slate-500">Routes: {state.doc.routes.length}</div>
@@ -344,6 +344,6 @@ export const PlayerSidebar: React.FC = () => {
           </ul>
         </div>
       )}
-    </>
+  </div>
   );
 };

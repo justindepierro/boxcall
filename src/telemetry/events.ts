@@ -20,6 +20,8 @@ export const TelemetryEventTypes = {
   PlayDiagramPlayerReorder: "play.diagram_player_reorder",
   PlayDiagramPlayerBulkEdit: "play.diagram_player_bulk_edit",
   PlayDiagramPlayerReorderStats: "play.diagram_player_reorder_stats",
+  PlayDiagramNudge: "play.diagram_nudge", // individual arrow key move (sampled)
+  PlayDiagramNudgeBatch: "play.diagram_nudge_batch", // aggregated after throttle window
   PlayDuplicate: "play.duplicate",
   FilterApply: "filter.apply",
   UIAction: "ui.action",

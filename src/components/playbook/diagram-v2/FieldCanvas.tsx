@@ -1,5 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import { useDiagramEditor } from "./context";
+import { telemetry } from "../../../telemetry/dispatcher";
+import { TelemetryEventTypes } from "../../../telemetry/events";
 
 // Simple SVG field canvas with zoom/pan transforms (placeholder)
 export const FieldCanvas: React.FC<{
@@ -39,6 +41,11 @@ export const FieldCanvas: React.FC<{
     startX: number;
     startY: number;
   } | null>(null);
+  const nudgeBatchRef = useRef<{ events: number; playersMoved: number; timer: number | null }>({
+    events: 0,
+    playersMoved: 0,
+    timer: null,
+  });
   const [selectionBox, setSelectionBox] = useState<null | {
     x: number;
     y: number;
@@ -274,6 +281,25 @@ export const FieldCanvas: React.FC<{
         if (patches.length) {
           dispatch({ type: "MOVE_SELECTION", patches });
           scheduleCommitMove();
+          // Nudge telemetry (sample individual events at ~1/5 rate)
+          if (Math.random() < 0.2) {
+            telemetry.enqueue({
+              type: TelemetryEventTypes.PlayDiagramNudge,
+              data: { count: selected.length, dx: patches[0] ? patches[0].x : 0, dy: patches[0] ? patches[0].y : 0 }
+            });
+          }
+          // Aggregate into batch buffer
+          nudgeBatchRef.current.events++;
+          nudgeBatchRef.current.playersMoved = Math.max(nudgeBatchRef.current.playersMoved, selected.length);
+          if (!nudgeBatchRef.current.timer) {
+            nudgeBatchRef.current.timer = window.setTimeout(() => {
+              telemetry.enqueue({
+                type: TelemetryEventTypes.PlayDiagramNudgeBatch,
+                data: { events: nudgeBatchRef.current.events, maxPlayers: nudgeBatchRef.current.playersMoved }
+              });
+              nudgeBatchRef.current = { events: 0, playersMoved: 0, timer: null };
+            }, 1500);
+          }
         }
       }
     };

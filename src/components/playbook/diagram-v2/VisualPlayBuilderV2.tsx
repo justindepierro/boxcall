@@ -25,6 +25,19 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange, onClose }) => {
     startWidthRef.current = sidebarWidth;
     document.body.classList.add("select-none", "cursor-col-resize");
   };
+  const handleResizeKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return;
+    e.preventDefault();
+    setSidebarWidth((w) => {
+      let next = w;
+      const step = e.shiftKey ? 32 : 16; // coarse vs fine
+      if (e.key === 'ArrowLeft') next = w - step;
+      if (e.key === 'ArrowRight') next = w + step;
+      if (e.key === 'Home') next = 200;
+      if (e.key === 'End') next = 420;
+      return Math.min(420, Math.max(200, next));
+    });
+  };
   const handleGlobalMouseMove = useCallback((e: MouseEvent) => {
     if (!resizingRef.current) return;
     const delta = e.clientX - startXRef.current;
@@ -80,8 +93,14 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange, onClose }) => {
         <div
           role="separator"
           aria-orientation="vertical"
+          aria-label="Resize sidebar"
+          aria-valuemin={200}
+          aria-valuemax={420}
+          aria-valuenow={sidebarWidth}
+          tabIndex={0}
+          onKeyDown={handleResizeKey}
           onMouseDown={handleResizeMouseDown}
-          className="w-1 cursor-col-resize bg-transparent hover:bg-blue-200 active:bg-blue-300 transition-colors"
+          className="w-1 cursor-col-resize bg-transparent hover:bg-blue-200 active:bg-blue-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
   <CanvasPane svgRef={svgRef} className="flex-1 min-w-0 flex flex-col p-3" />
       </div>

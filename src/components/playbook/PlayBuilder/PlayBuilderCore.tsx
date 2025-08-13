@@ -63,6 +63,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   // Hash snapshot to detect unsaved changes for close confirmation
   const [savedHash, setSavedHash] = useState<string>("");
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const confirmRef = useRef<HTMLDivElement | null>(null);
 
   interface DraftPayloadV2Only {
     data: Partial<Play>;
@@ -478,12 +479,51 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
     </div>
     {confirmOpen && (
       <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40" role="alertdialog" aria-modal="true" aria-labelledby="discard-changes-title" aria-describedby="discard-changes-desc">
-  <div className="bg-white rounded-md shadow-lg w-full max-w-sm p-5 space-y-4">
+        <div
+          ref={confirmRef}
+          className="bg-white rounded-md shadow-lg w-full max-w-sm p-5 space-y-4"
+          tabIndex={-1}
+          onKeyDown={(e) => {
+            if (e.key === 'Tab' && confirmRef.current) {
+              const focusables = Array.from(confirmRef.current.querySelectorAll<HTMLElement>(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+              )).filter(el => !el.hasAttribute('disabled'));
+              if (focusables.length === 0) return;
+              const first = focusables[0];
+              const last = focusables[focusables.length - 1];
+              if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+              } else if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+              }
+            } else if (e.key === 'Escape') {
+              setConfirmOpen(false);
+            }
+          }}
+        >
           <h3 id="discard-changes-title" className="text-sm font-semibold text-slate-800">Discard changes?</h3>
           <p id="discard-changes-desc" className="text-xs text-slate-600 leading-relaxed">You have unsaved edits to this play. If you leave now, those changes will be lost.</p>
           <div className="flex justify-end gap-2 pt-1">
-            <Button size="xs" variant="ghost" onClick={() => setConfirmOpen(false)} autoFocus>Stay</Button>
-            <Button size="xs" variant="danger" onClick={() => { setConfirmOpen(false); onClose(); }}>Discard</Button>
+            <Button
+              size="xs"
+              variant="ghost"
+              onClick={() => setConfirmOpen(false)}
+              autoFocus
+            >
+              Stay
+            </Button>
+            <Button
+              size="xs"
+              variant="danger"
+              onClick={() => {
+                setConfirmOpen(false);
+                onClose();
+              }}
+            >
+              Discard
+            </Button>
           </div>
         </div>
       </div>
