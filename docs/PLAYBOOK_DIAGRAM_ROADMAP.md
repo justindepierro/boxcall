@@ -133,7 +133,7 @@ Refactor / Cleanup Track (new):
 
 | Priority | Task                                     | Effort | Definition of Done |
 | -------- | ---------------------------------------- | ------ | ------------------ |
-| P1       | Remove legacy /visual directory          | 0.25d  | All legacy files deleted; docs updated |
+| P1       | Remove legacy /visual directory          | 0.25d  | DONE (legacy files deleted; docs updated) |
 | P1       | Extract Toolbar from VisualPlayBuilderV2 | 0.5d   | Toolbar.tsx; no functional diff |
 | P1       | Extract PlayerSidebar component          | 1d     | PlayerSidebar.tsx; grouping & bulk edit intact |
 | P2       | Extract RoutesPanel                      | 0.5d   | RoutesPanel.tsx isolated |
