@@ -5,16 +5,36 @@ import React, {
   useReducer,
   useCallback,
 } from "react";
-import type { DiagramEditorState, DiagramEditorAction, DiagramDocument } from "./types";
+import type {
+  DiagramEditorState,
+  DiagramEditorAction,
+  DiagramDocument,
+} from "./types";
 import { createEmptyDocument, computeComplexityScore } from "./types";
 import { telemetry } from "../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../telemetry/events";
 
+const HISTORY_CAP = 100;
 const initialState: DiagramEditorState = {
   doc: createEmptyDocument(),
-  ui: { tool: "select", zoom: 1, panX: 0, panY: 0 },
+  ui: { tool: "select", zoom: 1, panX: 0, panY: 0, snap: false, snapGrid: 2 },
   dirty: false,
+  history: [],
+  historyIndex: -1,
 };
+
+function pushHistory(state: DiagramEditorState, nextDoc: DiagramDocument) {
+  const trimmed = state.history.slice(0, state.historyIndex + 1);
+  let newHistory = [...trimmed, nextDoc];
+  if (newHistory.length > HISTORY_CAP) {
+    newHistory = newHistory.slice(newHistory.length - HISTORY_CAP);
+  }
+  return {
+    ...state,
+    history: newHistory,
+    historyIndex: newHistory.length - 1,
+  };
+}
 
 function reducer(
   state: DiagramEditorState,
@@ -40,7 +60,10 @@ function reducer(
       if (!state.ui.drawing) return state;
       return {
         ...state,
-        ui: { ...state.ui, drawing: { ...state.ui.drawing, preview: action.point } },
+        ui: {
+          ...state.ui,
+          drawing: { ...state.ui.drawing, preview: action.point },
+        },
       };
     case "ADD_ROUTE_POINT":
       if (!state.ui.drawing) return state;
@@ -69,20 +92,26 @@ function reducer(
         ...state.doc,
         routes: [
           ...state.doc.routes,
-          { id: `r_${Date.now()}`, playerId: state.ui.drawing.playerId, segments: [seg] },
+          {
+            id: `r_${Date.now()}`,
+            playerId: state.ui.drawing.playerId,
+            segments: [seg],
+          },
         ],
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
       telemetry.enqueue({
         type: TelemetryEventTypes.PlayDiagramRouteAdd,
-        data: { playerId: state.ui.drawing.playerId, length: seg.points.length },
+        data: {
+          playerId: state.ui.drawing.playerId,
+          length: seg.points.length,
+        },
       });
-      return {
-        ...state,
-        doc: nextDoc,
-        dirty: true,
-        ui: { ...state.ui, drawing: undefined },
-      };
+      const after = pushHistory(
+        { ...state, doc: nextDoc, dirty: true },
+        nextDoc
+      );
+      return { ...after, ui: { ...after.ui, drawing: undefined } };
     }
     case "DELETE_ROUTE": {
       const nextDoc: DiagramDocument = {
@@ -90,7 +119,7 @@ function reducer(
         routes: state.doc.routes.filter((r) => r.id !== action.routeId),
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
-      return { ...state, doc: nextDoc, dirty: true };
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
     case "UPDATE_PLAYER": {
       const nextDoc: DiagramDocument = {
@@ -100,7 +129,11 @@ function reducer(
         ),
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
-      return { ...state, doc: nextDoc, dirty: true };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramPlayerUpdate,
+        data: { playerId: action.id, fields: Object.keys(action.patch) },
+      });
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
     case "REMOVE_PLAYER": {
       const nextDoc: DiagramDocument = {
@@ -109,7 +142,11 @@ function reducer(
         routes: state.doc.routes.filter((r) => r.playerId !== action.id),
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
-      return { ...state, doc: nextDoc, dirty: true };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramPlayerRemove,
+        data: { playerId: action.id },
+      });
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
     case "ADD_PLAYER": {
       const nextDoc: DiagramDocument = {
@@ -121,20 +158,18 @@ function reducer(
         type: TelemetryEventTypes.PlayDiagramPlayerAdd,
         data: { count: nextDoc.players.length },
       });
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+    }
+    case "MOVE_PLAYER": {
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: state.doc.players.map((p) =>
+          p.id === action.id ? { ...p, x: action.x, y: action.y } : p
+        ),
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
       return { ...state, doc: nextDoc, dirty: true };
     }
-    case "MOVE_PLAYER":
-      return {
-        ...state,
-        doc: {
-          ...state.doc,
-          players: state.doc.players.map((p) =>
-            p.id === action.id ? { ...p, x: action.x, y: action.y } : p
-          ),
-          meta: { ...state.doc.meta!, updatedAt: Date.now() },
-        },
-        dirty: true,
-      };
     case "ADD_ROUTE_SEGMENT": {
       const nextDoc: DiagramDocument = {
         ...state.doc,
@@ -157,11 +192,11 @@ function reducer(
         type: TelemetryEventTypes.PlayDiagramUpdated,
         data: {
           players: nextDoc.players.length,
-            routes: nextDoc.routes.length,
-            complexity: computeComplexityScore(nextDoc),
+          routes: nextDoc.routes.length,
+          complexity: computeComplexityScore(nextDoc),
         },
       });
-      return { ...state, doc: nextDoc, dirty: true };
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
     case "SET_ZOOM":
       return { ...state, ui: { ...state.ui, zoom: action.zoom } };
@@ -174,8 +209,42 @@ function reducer(
           panY: state.ui.panY + action.dy,
         },
       };
+    case "SET_SNAP":
+      return { ...state, ui: { ...state.ui, snap: action.enabled } };
+    case "SET_SNAP_GRID":
+      return { ...state, ui: { ...state.ui, snapGrid: action.size } };
+    case "UNDO": {
+      if (state.historyIndex <= 0) return state;
+      const idx = state.historyIndex - 1;
+      const newState = {
+        ...state,
+        doc: state.history[idx],
+        historyIndex: idx,
+        dirty: true,
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramHistory,
+        data: { action: "undo", index: idx, length: state.history.length },
+      });
+      return newState;
+    }
+    case "REDO": {
+      if (state.historyIndex >= state.history.length - 1) return state;
+      const idx = state.historyIndex + 1;
+      const newState = {
+        ...state,
+        doc: state.history[idx],
+        historyIndex: idx,
+        dirty: true,
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramHistory,
+        data: { action: "redo", index: idx, length: state.history.length },
+      });
+      return newState;
+    }
     case "TOGGLE_FIELD_FLAG":
-      return {
+      const toggled = {
         ...state,
         doc: {
           ...state.doc,
@@ -187,6 +256,11 @@ function reducer(
         },
         dirty: true,
       };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramFlagToggle,
+        data: { flag: action.flag, value: (toggled.doc.field as any)[action.flag] },
+      });
+      return toggled;
     case "MARK_SAVED":
       return { ...state, dirty: false };
     default:
