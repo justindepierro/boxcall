@@ -210,28 +210,45 @@ function reducer(
         },
       };
     case "SET_BALL_HASH": {
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        field: { ...state.doc.field, ballHash: action.hash },
+        players: state.doc.players.map((p) =>
+          p.role === "C"
+            ? {
+                ...p,
+                x:
+                  action.hash === "left"
+                    ? 40
+                    : action.hash === "right"
+                      ? 60
+                      : 50,
+              }
+            : p
+        ),
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramBallHash,
+        data: { hash: action.hash },
+      });
       return {
         ...state,
-        doc: {
-          ...state.doc,
-          field: { ...state.doc.field, ballHash: action.hash },
-          players: state.doc.players.map((p) =>
-            p.role === "C"
-              ? {
-                  ...p,
-                  x:
-                    action.hash === "left"
-                      ? 40
-                      : action.hash === "right"
-                        ? 60
-                        : 50,
-                }
-              : p
-          ),
-          meta: { ...state.doc.meta!, updatedAt: Date.now() },
-        },
+        doc: nextDoc,
         dirty: true,
       };
+    }
+    case "SET_FIELD_THEME": {
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        field: { ...state.doc.field, theme: action.theme },
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramFieldTheme,
+        data: { theme: action.theme },
+      });
+      return { ...state, doc: nextDoc, dirty: true };
     }
     case "MIRROR": {
       const mirroredPlayers = state.doc.players.map((p) => ({
@@ -251,6 +268,10 @@ function reducer(
         routes: mirroredRoutes,
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramMirror,
+        data: { players: nextDoc.players.length, routes: nextDoc.routes.length },
+      });
       return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
     case "APPLY_FORMATION": {
@@ -312,6 +333,10 @@ function reducer(
           ],
           meta: { ...state.doc.meta!, updatedAt: Date.now() },
         };
+        telemetry.enqueue({
+          type: TelemetryEventTypes.PlayDiagramFormationApply,
+          data: { formation: action.formation, players: nextDoc.players.length },
+        });
         return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
       }
       return state;

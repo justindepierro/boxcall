@@ -249,7 +249,12 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
               try {
                 const dataUrl = await svgElementToDataUrl(svgRef.current, {
                   width: 480,
-                  background: "#065f46",
+                  background:
+                    state.doc.field.theme === "mono-light"
+                      ? "#f4f5f6"
+                      : state.doc.field.theme === "mono-dark"
+                        ? "#1d1f20"
+                        : "#0f5e2e",
                 });
                 setThumbUrl(dataUrl);
                 telemetry.enqueue({
@@ -283,6 +288,23 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
               FIELD OPTIONS
             </div>
             <div className="space-y-2">
+              <div className="flex items-center gap-2 text-[11px]">
+                <span className="shrink-0">Theme</span>
+                <select
+                  className="flex-1 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
+                  value={state.doc.field.theme || "classic"}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "SET_FIELD_THEME",
+                      theme: e.target.value as "classic" | "mono-light" | "mono-dark",
+                    })
+                  }
+                >
+                  <option value="classic">Classic</option>
+                  <option value="mono-light">Mono Light</option>
+                  <option value="mono-dark">Mono Dark</option>
+                </select>
+              </div>
               <label className="flex items-center gap-2 text-[11px]">
                 <input
                   type="checkbox"

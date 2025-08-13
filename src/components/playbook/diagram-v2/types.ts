@@ -34,6 +34,7 @@ export interface DiagramFieldConfig {
   showPlayerLabels: boolean;
   showDefensePlayers: boolean; // toggle to display defensive players
   ballHash: "left" | "middle" | "right"; // positioning of ball/center
+  theme?: "classic" | "mono-light" | "mono-dark"; // visual theme style
 }
 export interface DiagramDocumentV1 {
   version: 1;
@@ -78,6 +79,7 @@ export type DiagramEditorAction =
   | { type: "PAN"; dx: number; dy: number }
   | { type: "TOGGLE_FIELD_FLAG"; flag: keyof DiagramFieldConfig }
   | { type: "SET_BALL_HASH"; hash: DiagramFieldConfig["ballHash"] }
+  | { type: "SET_FIELD_THEME"; theme: NonNullable<DiagramFieldConfig['theme']> }
   | { type: "START_ROUTE"; playerId: string; start: RoutePoint }
   | { type: "PREVIEW_ROUTE"; point: RoutePoint }
   | { type: "ADD_ROUTE_POINT"; point: RoutePoint }
@@ -105,6 +107,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
     showPlayerLabels: true,
     showDefensePlayers: true,
     ballHash: "middle",
+  theme: "classic",
   },
   // Default offensive line template (LT LG C RG RT + QB behind center)
   players: (() => {

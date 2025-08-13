@@ -175,7 +175,7 @@ export const FieldCanvas: React.FC<{
       <svg
         ref={svgRef}
         viewBox="0 0 1600 900"
-        className="w-full h-full bg-emerald-700/90 rounded-md shadow-inner select-none"
+        className="w-full h-full rounded-md shadow-inner select-none"
         role="img"
         aria-label="Diagram field"
         onClick={handleCanvasClick}
@@ -185,6 +185,45 @@ export const FieldCanvas: React.FC<{
         <g
           transform={`translate(${state.ui.panX} ${state.ui.panY}) scale(${state.ui.zoom})`}
         >
+          {(() => {
+            const theme = doc.field.theme || "classic";
+            if (theme === "classic") {
+              return (
+                <rect
+                  x={0}
+                  y={0}
+                  width={1600}
+                  height={900}
+                  fill="#0f5e2e" /* softer green */
+                  fillOpacity={0.82}
+                />
+              );
+            }
+            if (theme === "mono-light") {
+              return (
+                <rect
+                  x={0}
+                  y={0}
+                  width={1600}
+                  height={900}
+                  fill="#f4f5f6" /* off white */
+                  fillOpacity={1}
+                />
+              );
+            }
+            if (theme === "mono-dark") {
+              return (
+                <rect
+                  x={0}
+                  y={0}
+                  width={1600}
+                  height={900}
+                  fill="#1d1f20" /* soft near-black */
+                  fillOpacity={1}
+                />
+              );
+            }
+          })()}
           {/* Line of Scrimmage (LOS) at y = proportional to backYards buffer (centered conceptually at middle) */}
           {(() => {
             const totalSlice = doc.field.backYards + doc.field.forwardYards; // vertical coverage in yards
@@ -263,41 +302,43 @@ export const FieldCanvas: React.FC<{
               return marks;
             })()}
           {/* Yard numbers stacked (approx every 5 yards) below LOS area */}
-          {Array.from({ length: doc.field.forwardYards / 5 + 1 }).map(
-            (_, i) => {
-              const y = i * (900 / (doc.field.forwardYards / 5));
-              if (i === 0) return null; // skip LOS immediate number
-              const yardValue = i * 5; // simple incremental numbering forward
-              if (yardValue === 50) return null; // skip midfield typical style
-              return (
-                <g
-                  key={`yn${i}`}
-                  transform={`translate(800,${y + 12})`}
-                  opacity={0.28}
+          {Array.from({ length: doc.field.forwardYards / 5 + 1 }).map((_, i) => {
+            const y = i * (900 / (doc.field.forwardYards / 5));
+            if (i === 0) return null;
+            const yardValue = i * 5;
+            if (yardValue === 50) return null;
+            const theme = doc.field.theme || "classic";
+            const baseColor = theme === "classic" ? "#ecfdf5" : theme === "mono-light" ? "#444" : "#e5e7eb";
+            const opacity = theme === "classic" ? 0.24 : 0.32;
+            const leftX = 1600 * 0.18; // beyond left hash (~0.3)
+            const rightX = 1600 * 0.82; // beyond right hash (~0.7)
+            return (
+              <g key={`yn${i}`} opacity={opacity}>
+                <text
+                  x={leftX}
+                  y={y + 40}
+                  fontSize={46}
+                  fontWeight={700}
+                  fill={baseColor}
+                  textAnchor="middle"
+                  style={{ pointerEvents: "none", userSelect: "none" }}
                 >
-                  <text
-                    fontSize={40}
-                    fontWeight={700}
-                    fill="#ecfdf5"
-                    textAnchor="middle"
-                    style={{ pointerEvents: "none", userSelect: "none" }}
-                  >
-                    {yardValue}
-                  </text>
-                  <text
-                    fontSize={40}
-                    fontWeight={700}
-                    fill="#ecfdf5"
-                    textAnchor="middle"
-                    dy={34}
-                    style={{ pointerEvents: "none", userSelect: "none" }}
-                  >
-                    {yardValue}
-                  </text>
-                </g>
-              );
-            }
-          )}
+                  {yardValue}
+                </text>
+                <text
+                  x={rightX}
+                  y={y + 40}
+                  fontSize={46}
+                  fontWeight={700}
+                  fill={baseColor}
+                  textAnchor="middle"
+                  style={{ pointerEvents: "none", userSelect: "none" }}
+                >
+                  {yardValue}
+                </text>
+              </g>
+            );
+          })}
           {/* Ball marker at selected hash */}
           {(() => {
             const totalSlice = doc.field.backYards + doc.field.forwardYards;
