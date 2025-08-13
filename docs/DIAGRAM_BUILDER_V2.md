@@ -54,6 +54,7 @@ Future: weight by intersections, motion shifts, formation spread index.
 ### Telemetry Events
 
 Current (emitted via dispatcher):
+
 - `play.diagram_player_add` { role }
 - `play.diagram_route_add` { playerId, segments }
 - `play.diagram_updated` { players, routes, segments, tool }
@@ -63,21 +64,22 @@ Current (emitted via dispatcher):
 - (Planned) `play.diagram_export_thumbnail` { w, h, durationMs }
 
 Planned Additions:
+
 - `play.diagram_flag_toggle` { flag, value }
 - `play.diagram_history` { action: 'undo'|'redo', index, length }
 - `play.diagram_player_update` { fields }
 
 ### Phased Delivery (Revised with Status)
 
-| Phase | Deliverables (Original + Revisions)                                                                                              | Status        | Notes |
-|-------|-----------------------------------------------------------------------------------------------------------------------------------|---------------|-------|
-| 1     | Core shell, context, move players, single route drawing, zoom/pan, feature flag, autosave integration                            | DONE          | Landed with draft persistence + complexity seed |
-| 2     | Multi‑segment routes, route listing + delete, complexity calc extraction, undo/redo history, snapping grid toggle & resolution   | DONE (expanded) | History + snapping pulled forward from later phases |
-| 2b    | Player metadata panel (labels/roles/colors), field layer toggles UI, settings panel wiring                                       | IN PROGRESS   | Data model supports flags; UI pending |
-| 3     | Thumbnail export (SVG→PNG), integrate into PlayGrid cards, telemetry for export                                                   | TODO          | Needs `thumbnail.ts` utility |
-| 4     | Curved (quadratic) segments, segment editing handles (insert/remove), history size bounding                                       | TODO          | Refine reducer invariants |
-| 5     | Defensive templates, preset formations, player role presets                                                                      | FUTURE        | Possibly separate spec |
-| 6     | Advanced analytics (spread index, intersections), improved complexity model                                                       | FUTURE        | Extend computeComplexityScore |
+| Phase | Deliverables (Original + Revisions)                                                                                            | Status          | Notes                                               |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------ | --------------- | --------------------------------------------------- |
+| 1     | Core shell, context, move players, single route drawing, zoom/pan, feature flag, autosave integration                          | DONE            | Landed with draft persistence + complexity seed     |
+| 2     | Multi‑segment routes, route listing + delete, complexity calc extraction, undo/redo history, snapping grid toggle & resolution | DONE (expanded) | History + snapping pulled forward from later phases |
+| 2b    | Player metadata panel (labels/roles/colors), field layer toggles UI, settings panel wiring                                     | IN PROGRESS     | Data model supports flags; UI pending               |
+| 3     | Thumbnail export (SVG→PNG), integrate into PlayGrid cards, telemetry for export                                                | TODO            | Needs `thumbnail.ts` utility                        |
+| 4     | Curved (quadratic) segments, segment editing handles (insert/remove), history size bounding                                    | TODO            | Refine reducer invariants                           |
+| 5     | Defensive templates, preset formations, player role presets                                                                    | FUTURE          | Possibly separate spec                              |
+| 6     | Advanced analytics (spread index, intersections), improved complexity model                                                    | FUTURE          | Extend computeComplexityScore                       |
 
 Completed scope exceeds original Phase 1 (we fast‑tracked multi‑segment, delete, undo/redo, snapping, complexity integration).
 
@@ -101,6 +103,7 @@ The top-level Playbook header "Diagram" button now routes to the same builder ex
 ### Current Implementation Details
 
 Delivered Mechanics:
+
 - Player add & drag (with snapping optional; grid resolution: 1,2,4,5,10%).
 - Multi‑segment route drawing (double‑click to commit / ESC to cancel actively drawing route).
 - Route listing with delete per route.
@@ -112,6 +115,7 @@ Delivered Mechanics:
 - Upward doc propagation (onDocumentChange) integrated into `PlayBuilderCore` for live complexity + autosave.
 
 Not Yet Implemented (UI placeholders or planned):
+
 - Player metadata panel (edit label/role/color) & player delete via panel.
 - Field layer toggles (hash marks, yard lines, labels visibility) – reducer flags exist but no settings panel UI.
 - Thumbnail export & integration into grids / exports.
@@ -121,12 +125,14 @@ Not Yet Implemented (UI placeholders or planned):
 - Enhanced complexity model (intersections, spread index, motion counts).
 
 Technical Notes:
+
 - History currently stores full document snapshots; optimize (structural sharing or patch compression) after size measurement.
 - Complexity computation is pure & deterministic; exported from types for test coverage.
 - Snapping performed during pointer move events; grid percent applies to field width/height scaling.
 - ESC handler cancels active route capture without polluting history.
 
 Immediate Next Steps:
+
 1. Implement Player Metadata panel (CRUD + color selection, side/role tags) with related telemetry.
 2. Add Settings panel with field layer toggles and snap controls (moving snap UI out of toolbar cluster) + telemetry for toggles.
 3. Introduce history cap (e.g., 100 states) & telemetry for undo/redo events.

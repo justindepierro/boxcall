@@ -187,18 +187,20 @@ export const FieldCanvas: React.FC<{
         >
           {/* Yard lines based on vertical orientation slice (always vertical downfield) */}
           {doc.field.showYardLines &&
-            Array.from({ length: doc.field.forwardYards / 5 + 1 }).map((_, i) => (
-              <line
-                key={i}
-                x1={0}
-                x2={1600}
-                y1={i * (900 / (doc.field.forwardYards / 5))}
-                y2={i * (900 / (doc.field.forwardYards / 5))}
-                stroke="#065f46"
-                strokeWidth={i % 2 === 0 ? 3 : 1}
-                opacity={0.6}
-              />
-            ))}
+            Array.from({ length: doc.field.forwardYards / 5 + 1 }).map(
+              (_, i) => (
+                <line
+                  key={i}
+                  x1={0}
+                  x2={1600}
+                  y1={i * (900 / (doc.field.forwardYards / 5))}
+                  y2={i * (900 / (doc.field.forwardYards / 5))}
+                  stroke="#065f46"
+                  strokeWidth={i % 2 === 0 ? 3 : 1}
+                  opacity={0.6}
+                />
+              )
+            )}
           {/* Hash marks simplified for vertical view */}
           {doc.field.showHashMarks &&
             Array.from({ length: doc.field.forwardYards }).map((_, i) => (
@@ -222,37 +224,57 @@ export const FieldCanvas: React.FC<{
               </g>
             ))}
           {/* Players */}
-      {doc.players.filter(p => doc.field.showDefensePlayers || p.side !== 'D').map((p) => (
-            <g
-              key={p.id}
-              transform={`translate(${(p.x / 100) * 1600},${(p.y / 100) * 900})`}
-              className="cursor-pointer"
-              onMouseDown={(e) => {
-                onPlayerMouseDown?.(p.id, e);
-                handleMouseDownPlayer(e, p.id);
-              }}
-            >
-              <circle
-                r={20}
-        fill={p.color || (p.side === 'D' ? '#b91c1c' : '#1e3a8a')}
-                stroke="#fff"
-                strokeWidth={2}
-              />
-              {doc.field.showPlayerLabels && (
-                <text
-                  x={0}
-                  y={5}
-                  fontSize={26}
-                  fontWeight={600}
-                  fill="#fff"
-                  textAnchor="middle"
-                  style={{ pointerEvents: "none", userSelect: "none" }}
+          {doc.players
+            .filter((p) => doc.field.showDefensePlayers || p.side !== "D")
+            .map((p) => {
+              const isCenter = p.label === 'C' || p.role === 'C';
+              return (
+                <g
+                  key={p.id}
+                  transform={`translate(${(p.x / 100) * 1600},${(p.y / 100) * 900})`}
+                  className="cursor-pointer"
+                  onMouseDown={(e) => {
+                    onPlayerMouseDown?.(p.id, e);
+                    handleMouseDownPlayer(e, p.id);
+                  }}
                 >
-                  {p.label}
-                </text>
-              )}
-            </g>
-          ))}
+                  {isCenter ? (
+                    <rect
+                      x={-24}
+                      y={-16}
+                      width={48}
+                      height={32}
+                      rx={4}
+                      ry={4}
+                      fill={p.color || "#1e3a8a"}
+                      stroke="#fff"
+                      strokeWidth={2}
+                    />
+                  ) : (
+                    <ellipse
+                      rx={26}
+                      ry={18}
+                      fill={p.color || (p.side === 'D' ? '#b91c1c' : '#1e3a8a')}
+                      stroke="#fff"
+                      strokeWidth={2}
+                    />
+                  )}
+                  {doc.field.showPlayerLabels && (
+                    <text
+                      x={0}
+                      y={5}
+                      fontSize={isCenter ? 20 : 20}
+                      fontWeight={600}
+                      fill="#fff"
+                      textAnchor="middle"
+                      style={{ pointerEvents: "none", userSelect: "none" }}
+                    >
+                      {p.label}
+                    </text>
+                  )}
+                </g>
+              );
+            })}
           {/* In-progress drawing polyline */}
           {state.ui.drawing && (
             <polyline

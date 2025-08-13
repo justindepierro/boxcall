@@ -1,5 +1,6 @@
 // Clean consolidated PlaybookPage implementation (legacy duplicated fragments removed)
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Clock, Users } from "lucide-react";
 import { PlayGrid } from "../components/playbook/PlayGrid";
 import { PlaybookGlossary } from "../components/playbook/PlaybookGlossary";
@@ -53,6 +54,7 @@ import { getPlayFlags } from "@utils/localPlayFlags";
 
 const PlaybookPageInner: React.FC = () => {
   const { state, dispatch } = usePlaybook();
+  const navigate = useNavigate();
   const {
     success: toastSuccess,
     error: toastError,
@@ -587,8 +589,12 @@ const PlaybookPageInner: React.FC = () => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => toastInfo("Diagram maker coming soon")}
-              title="Open Diagram Maker"
+              onClick={() => {
+                // Navigate to free-draw diagram builder (same experience as play card button)
+                // Opens route-based VisualPlayBuilder; when no playId provided it's a blank canvas.
+                navigate("/playbook/diagram");
+              }}
+              title="Open Diagram Builder"
             >
               Diagram
             </Button>

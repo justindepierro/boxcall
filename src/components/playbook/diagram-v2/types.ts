@@ -101,7 +101,38 @@ export const createEmptyDocument = (): DiagramDocument => ({
     showPlayerLabels: true,
     showDefensePlayers: true,
   },
-  players: [],
+  // Default offensive line template (LT LG C RG RT + QB behind center)
+  players: (() => {
+    const back = 10;
+    const forward = 30;
+    const total = back + forward; // 40
+    const losY = (forward / total) * 100; // percent from top
+    const qbDepthYards = 3; // typical shotgun depth baseline; adjust later
+    const scalePctPerYard = 100 / total; // 2.5% per yard for 40 yard window
+    const qbY = Math.min(99, losY + qbDepthYards * scalePctPerYard);
+    const lineXs = [42, 46, 50, 54, 58];
+    const labels = ["LT", "LG", "C", "RG", "RT"] as const;
+    return [
+      ...lineXs.map((x, i) => ({
+        id: labels[i],
+        label: labels[i],
+        role: labels[i] === "C" ? "C" : labels[i].startsWith("L") || labels[i].startsWith("R") ? labels[i].slice(1) : undefined,
+        side: "O" as const,
+        x,
+        y: losY,
+        color: "#1e3a8a",
+      })),
+      {
+        id: "QB",
+        label: "QB",
+        role: "QB",
+        side: "O" as const,
+        x: 50,
+        y: qbY,
+        color: "#047857",
+      },
+    ];
+  })(),
   routes: [],
   meta: { createdAt: Date.now(), updatedAt: Date.now() },
 });

@@ -165,7 +165,12 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
                   type="checkbox"
                   className="accent-blue-600"
                   checked={state.doc.field.showYardLines}
-                  onChange={() => dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showYardLines" })}
+                  onChange={() =>
+                    dispatch({
+                      type: "TOGGLE_FIELD_FLAG",
+                      flag: "showYardLines",
+                    })
+                  }
                 />
                 <span>Yard Lines</span>
               </label>
@@ -174,7 +179,12 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
                   type="checkbox"
                   className="accent-blue-600"
                   checked={state.doc.field.showHashMarks}
-                  onChange={() => dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showHashMarks" })}
+                  onChange={() =>
+                    dispatch({
+                      type: "TOGGLE_FIELD_FLAG",
+                      flag: "showHashMarks",
+                    })
+                  }
                 />
                 <span>Hash Marks</span>
               </label>
@@ -183,7 +193,12 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
                   type="checkbox"
                   className="accent-blue-600"
                   checked={state.doc.field.showPlayerLabels}
-                  onChange={() => dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showPlayerLabels" })}
+                  onChange={() =>
+                    dispatch({
+                      type: "TOGGLE_FIELD_FLAG",
+                      flag: "showPlayerLabels",
+                    })
+                  }
                 />
                 <span>Player Labels</span>
               </label>
@@ -192,12 +207,18 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
                   type="checkbox"
                   className="accent-blue-600"
                   checked={state.doc.field.showDefensePlayers}
-                  onChange={() => dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showDefensePlayers" })}
+                  onChange={() =>
+                    dispatch({
+                      type: "TOGGLE_FIELD_FLAG",
+                      flag: "showDefensePlayers",
+                    })
+                  }
                 />
                 <span>Show Defense</span>
               </label>
               <div className="text-[10px] text-slate-500 pt-1">
-                View: {state.doc.field.backYards}yd behind LOS / {state.doc.field.forwardYards}yd downfield
+                View: {state.doc.field.backYards}yd behind LOS /{" "}
+                {state.doc.field.forwardYards}yd downfield
               </div>
             </div>
           </div>
@@ -213,19 +234,29 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
               <div className="text-[11px] font-semibold text-slate-600 mt-3 mb-1 flex items-center justify-between">
                 <span>PLAYERS</span>
                 <span className="text-[10px] font-normal text-slate-400">
-                  {state.doc.players.filter(p=>p.side!=="D").length} O / {state.doc.players.filter(p=>p.side==="D").length} D
+                  {state.doc.players.filter((p) => p.side !== "D").length} O /{" "}
+                  {state.doc.players.filter((p) => p.side === "D").length} D
                 </span>
               </div>
               <ul className="space-y-2">
                 {state.doc.players.map((p) => (
-                  <li key={p.id} className="bg-white/80 rounded border border-subtle p-2 space-y-1">
+                  <li
+                    key={p.id}
+                    className="bg-white/80 rounded border border-subtle p-2 space-y-1"
+                  >
                     <div className="flex items-center gap-2">
                       <input
                         className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
                         value={p.label}
                         aria-label="Player label"
                         onChange={(e) =>
-                          dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { label: e.target.value.toUpperCase().slice(0,3) } })
+                          dispatch({
+                            type: "UPDATE_PLAYER",
+                            id: p.id,
+                            patch: {
+                              label: e.target.value.toUpperCase().slice(0, 3),
+                            },
+                          })
                         }
                       />
                       <select
@@ -233,19 +264,43 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
                         value={p.role || ""}
                         aria-label="Player role"
                         onChange={(e) =>
-                          dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { role: e.target.value || undefined } })
+                          dispatch({
+                            type: "UPDATE_PLAYER",
+                            id: p.id,
+                            patch: { role: e.target.value || undefined },
+                          })
                         }
                       >
                         <option value="">Role</option>
-                        {['QB','RB','WR','TE','OL','DL','LB','CB','S','K','P'].map(r => <option key={r} value={r}>{r}</option>)}
+                        {[
+                          "QB",
+                          "RB",
+                          "WR",
+                          "TE",
+                          "OL",
+                          "DL",
+                          "LB",
+                          "CB",
+                          "S",
+                          "K",
+                          "P",
+                        ].map((r) => (
+                          <option key={r} value={r}>
+                            {r}
+                          </option>
+                        ))}
                       </select>
                       <select
                         className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
-                        value={p.side || 'O'}
+                        value={p.side || "O"}
                         aria-label="Player side"
                         onChange={(e) => {
-                          const val = e.target.value as 'O' | 'D' | 'ST';
-                          dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { side: val } });
+                          const val = e.target.value as "O" | "D" | "ST";
+                          dispatch({
+                            type: "UPDATE_PLAYER",
+                            id: p.id,
+                            patch: { side: val },
+                          });
                         }}
                       >
                         <option value="O">O</option>
@@ -255,16 +310,24 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange }) => {
                       <input
                         type="color"
                         className="w-8 h-6 p-0 border border-subtle rounded cursor-pointer"
-                        value={p.color || (p.side==='D' ? '#b91c1c' : '#1e3a8a')}
+                        value={
+                          p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")
+                        }
                         aria-label="Player color"
                         onChange={(e) =>
-                          dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { color: e.target.value } })
+                          dispatch({
+                            type: "UPDATE_PLAYER",
+                            id: p.id,
+                            patch: { color: e.target.value },
+                          })
                         }
                       />
                       <Button
                         size="xs"
                         variant="ghost"
-                        onClick={() => dispatch({ type: "REMOVE_PLAYER", id: p.id })}
+                        onClick={() =>
+                          dispatch({ type: "REMOVE_PLAYER", id: p.id })
+                        }
                         aria-label="Remove player"
                       >
                         ✕

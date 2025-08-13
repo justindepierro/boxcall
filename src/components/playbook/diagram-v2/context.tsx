@@ -258,7 +258,10 @@ function reducer(
       };
       telemetry.enqueue({
         type: TelemetryEventTypes.PlayDiagramFlagToggle,
-        data: { flag: action.flag, value: (toggled.doc.field as any)[action.flag] },
+        data: {
+          flag: action.flag,
+          value: (toggled.doc.field as any)[action.flag],
+        },
       });
       return toggled;
     case "MARK_SAVED":

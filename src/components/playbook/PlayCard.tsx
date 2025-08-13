@@ -90,8 +90,13 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       .replace("situational", "Situational");
   })();
   const handleCreateDiagram = () => {
-    // Route-based diagram pane for better code-splitting
-    navigate(`/playbook/diagram?playId=${play.id}`);
+    // If experimental v2 flag enabled, use route-based builder (unified entry)
+    if (import.meta.env.VITE_ENABLE_PLAY_DIAGRAM_V2) {
+      navigate(`/playbook/diagram?playId=${play.id}`);
+      return;
+    }
+    // Fallback legacy modal (MVP) if flag disabled
+    setShowVisualBuilder(true);
   };
   const handleSaveDiagram = (updatedPlay: PlayType) => {
     setShowVisualBuilder(false);
