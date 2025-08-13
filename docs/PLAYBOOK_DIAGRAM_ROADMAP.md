@@ -1,6 +1,6 @@
 ## Playbook Diagram Platform Unified Roadmap (V2 Implementation + Competitive Positioning)
 
-Updated: 2025-08-12
+Updated: 2025-08-12 (evening pass – post multi‑select & field theming)
 Status Legend: DONE (merged to main), PARTIAL (scaffold or partial UI), TODO (planned / prioritized), FUTURE (later phase / out-of-scope now)
 
 ### 1. Vision
@@ -31,27 +31,35 @@ See original detailed competitive matrix (superseded) in prior doc; this table r
 
 ### 3. Implementation Status (V2 Diagram Builder)
 
-| Capability                                  | Status          | Notes                                                   |
-| ------------------------------------------- | --------------- | ------------------------------------------------------- |
-| Player placement & dragging                 | DONE            | Snapping enabled; grid resolution supported             |
-| Multi‑segment route drawing                 | DONE            | Straight line segments; double‑click commit             |
-| Undo / Redo history                         | DONE            | Needs cap + telemetry instrumentation                   |
-| Complexity scoring                          | DONE            | Basic heuristic; extend later                           |
-| Zoom & Pan                                  | DONE            | Wheel + drag; add preset zoom shortcuts later           |
-| Autosave / Restore (draft)                  | DONE            | V2 only; legacy key soft‑retired (still read once)      |
-| Mirror (flip) play                          | DONE (baseline) | Implemented reducer action; add telemetry + UI polish   |
-| Ball hash selection & field hashes          | DONE (baseline) | Hash toggle + center reposition                         |
-| Formation apply (example)                   | PARTIAL         | Single sample (trips-right); need library & idempotency |
-| Player metadata panel                       | TODO            | Roles, colors, delete, ordering                         |
-| Route list & deletion                       | DONE            | Per‑route removal                                       |
-| Field layer toggles UI                      | TODO            | Flags exist in state; missing settings panel            |
-| History size bound                          | TODO            | Target 100 snapshots ring buffer                        |
-| Thumbnail export (PNG)                      | TODO            | Offscreen canvas from minimized SVG                     |
-| Curved / editable segments                  | FUTURE          | Quadratic / handles; affects complexity weights         |
-| Motion tool                                 | FUTURE (spec)   | Distinct style + timing metadata                        |
-| Templates / Stencils                        | FUTURE (spec)   | Serialize selected subset + placement offset            |
-| Defensive templates                         | FUTURE          | Must extend player roles & color semantics              |
-| Enhanced analytics (spread / intersections) | FUTURE          | Build after route richness increases                    |
+| Capability                                      | Status              | Notes                                                               |
+| ----------------------------------------------- | ------------------- | ------------------------------------------------------------------- |
+| Player placement & dragging                     | DONE                | Snapping enabled; grid resolution supported                         |
+| Multi‑segment route drawing                     | DONE                | Straight line segments; double‑click commit                         |
+| Multi‑selection + keyboard nudge                | DONE (new)          | Shift/Meta toggle, drag box, arrow move (0.5% / 2% w/ Shift)        |
+| Player outline & curated color palette          | DONE (baseline)     | 12 color palette + optional outlineColor + auto contrast            |
+| Field themes (classic / mono‑light / mono‑dark) | DONE                | Themed background + adaptive hash/number colors                     |
+| Realistic hashes + sideline hashes              | DONE                | HS/College/NFL spacing, widened, added sideline markers              |
+| Yard numbers rotation & placement               | DONE                | Split digits, correct 9 yd (27 ft) from sideline, rotated ±90°      |
+| LOS bar customization (dark green @ yard)       | DONE                | Configurable losYards marker                                        |
+| 11‑man default 2x2 formation seed               | DONE                | Accurate relative depths (QB shallow, RB deeper)                    |
+| Undo / Redo history                             | DONE                | Needs cap + per‑action telemetry                                    |
+| Complexity scoring                              | DONE                | Basic heuristic; extend later                                       |
+| Zoom & Pan                                      | DONE                | Wheel + drag; add preset zoom shortcuts later                       |
+| Autosave / Restore (draft)                      | DONE                | V2 only; legacy key soft‑retired (still read once)                  |
+| Mirror (flip) play                              | DONE (baseline)     | Implemented reducer action; telemetry partial (improve payload)     |
+| Ball hash selection & field hashes              | DONE (baseline)     | Hash toggle + center reposition                                     |
+| Formation apply (example)                       | PARTIAL             | Single sample (trips-right); need library & idempotency             |
+| Player metadata panel                           | TODO                | Roles, colors, delete, ordering, bulk edit                          |
+| Route list & deletion                           | DONE                | Per‑route removal                                                   |
+| Field settings panel (consolidated controls)    | PARTIAL             | Theme/hash controls in toolbar; dedicated panel not built           |
+| History size bound                              | TODO                | Target 100 snapshots ring buffer                                    |
+| Group move history commit (COMMIT_MOVE)         | TODO                | Debounced commit so nudges coalesce                                |
+| Thumbnail export (PNG)                          | PARTIAL             | SVG→PNG utility + UI button; needs persistence + card integration   |
+| Curved / editable segments                      | FUTURE              | Quadratic / handles; affects complexity weights                     |
+| Motion tool                                     | FUTURE (spec)       | Distinct style + timing metadata                                    |
+| Templates / Stencils                            | FUTURE (spec)       | Serialize selected subset + placement offset                        |
+| Defensive templates                             | FUTURE              | Extend player roles & color semantics                               |
+| Enhanced analytics (spread / intersections)     | FUTURE              | Build after route richness increases                                |
 
 ### 4. Data Model (Planned Evolution)
 
@@ -82,16 +90,28 @@ Stage 4: Predictive difficulty (historical success rates once data available).
 
 ### 6. Telemetry (Current & Additions)
 
-Current events: player_add, route_add, diagram_updated, draft.autosave, draft.restore, draft.finalize.
+Current events (emitted):
+- PlayDiagramPlayerAdd
+- PlayDiagramPlayerRemove
+- PlayDiagramPlayerUpdate
+- PlayDiagramRouteAdd
+- PlayDiagramUpdated
+- PlayDiagramBallHash
+- PlayDiagramFieldTheme (new)
+- PlayDiagramMirror
+- PlayDiagramFormationApply (prototype)
 
-Planned (next sprint):
+Planned (next sprint additions / refinements):
+- PlayDiagramHistory { action, index, length }
+- PlayDiagramFlagToggle (partially in use for hash layout)
+- PlayDiagramExportThumbnail { w, h, durationMs }
+- PlayDiagramSelection (selectCount, multi: boolean, method: 'click'|'box'|'nudge')
+- PlayDiagramMoveGroup (count, dx, dy, aggregateDist)
 
-- diagram_history { action, index, length }
-- diagram_flag_toggle { flag, value }
-- diagram_player_update { playerId, fields }
-- diagram_mirror { players, routes }
-- diagram_formation_apply { formationId, playersAffected }
-- diagram_export_thumbnail { w, h, durationMs }
+Telemetry Gaps:
+- Mirror event lacks before/after spread metrics
+- No error channel around thumbnail failures
+- Need sampling / throttling on rapid nudge sequences
 
 ### 7. Near-Term Priority Backlog (Next 4–6 Weeks)
 
@@ -146,12 +166,13 @@ Follow-ups:
 
 ### 12. Operational Metrics (Initial Targets)
 
-| Metric                        | Target (Post-P1) | Rationale                 |
-| ----------------------------- | ---------------- | ------------------------- |
-| Avg. time to first saved play | < 3 min          | Onboarding effectiveness  |
-| Undo/Redo latency             | < 16ms           | Smooth editing experience |
-| Thumbnail generation median   | < 150ms          | Snappy grid visuals       |
-| Draft restore success rate    | > 99%            | Data reliability          |
+| Metric                         | Target (Post-P1) | Rationale                               |
+| ------------------------------ | ---------------- | --------------------------------------- |
+| Avg. time to first saved play  | < 3 min          | Onboarding effectiveness                |
+| Undo/Redo latency              | < 16ms           | Smooth editing experience               |
+| Thumbnail generation median    | < 150ms          | Snappy grid visuals                     |
+| Multi-select drag/nudge latency| < 24ms frame     | Maintain fluid feedback during bulk ops |
+| Draft restore success rate     | > 99%            | Data reliability                        |
 
 ### 13. Implementation Notes (Selective)
 
@@ -162,13 +183,14 @@ Follow-ups:
 
 ### 14. Change Log (Recent)
 
-| Date       | Change                                                                                     |
-| ---------- | ------------------------------------------------------------------------------------------ |
-| 2025-08-12 | Removed feature flag & legacy MVP editor; unified draft persistence (V2 only)              |
-| 2025-08-11 | Added mirror, formation apply placeholder, hash selection, LOS & yard markers enhancements |
-| 2025-08-09 | Added undo/redo & snapping; integrated complexity score computation                        |
-| 2025-08-07 | Multi-segment routing implemented                                                          |
-| 2025-08-05 | Initial V2 shell & basic player/route placement landed                                     |
+| Date       | Change                                                                                                           |
+| ---------- | ---------------------------------------------------------------------------------------------------------------- |
+| 2025-08-12 | Multi-select (click / box), keyboard nudge, field themes, realistic hashes + sideline hashes, yard numbers, LOS, 11-man seed, palette & outlines, thumbnail utility/button |
+| 2025-08-12 | Removed feature flag & legacy MVP editor; unified draft persistence (V2 only)                                    |
+| 2025-08-11 | Added mirror, formation apply placeholder, hash selection, LOS & yard markers enhancements                       |
+| 2025-08-09 | Added undo/redo & snapping; integrated complexity score computation                                              |
+| 2025-08-07 | Multi-segment routing implemented                                                                                |
+| 2025-08-05 | Initial V2 shell & basic player/route placement landed                                                           |
 
 ---
 
