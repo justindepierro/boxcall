@@ -2,26 +2,35 @@ import React from "react";
 import { useDiagramEditor } from "../context";
 import Icon from "../../../ui/Icon/Icon";
 import { Button } from "../../../ui/Button";
+import { Tooltip } from "../../../ui/Tooltip/Tooltip";
+import { UserPreferencesService } from "../../../../services/userPreferencesService";
 
 export const ToolPalette: React.FC = () => {
   const { state, dispatch } = useDiagramEditor();
   const isDraw = state.ui.tool === "draw";
+  const showTooltips = React.useMemo(
+    () => UserPreferencesService.loadPreferences().ui.showTooltips,
+    []
+  );
   const Btn: React.FC<{
     active?: boolean;
     label: string;
     onClick: () => void;
     icon: React.ReactNode;
-  }> = ({ active, label, onClick, icon }) => (
-    <Button
-      size="sm"
-      variant={active ? "secondary" : "ghost"}
-      onClick={onClick}
-      aria-pressed={!!active}
-      title={label}
-      className="w-11 h-11 p-0 flex items-center justify-center"
-    >
-      {icon}
-    </Button>
+    tooltip?: React.ReactNode;
+  }> = ({ active, label, onClick, icon, tooltip }) => (
+    <Tooltip content={tooltip || label} disabled={!showTooltips}>
+      <Button
+        size="sm"
+        variant={active ? "secondary" : "ghost"}
+        onClick={onClick}
+        aria-pressed={!!active}
+        title={label}
+        className="w-11 h-11 p-0 flex items-center justify-center"
+      >
+        {icon}
+      </Button>
+    </Tooltip>
   );
   return (
     <div className="absolute left-3 right-3 top-3 z-20 pointer-events-none">
@@ -35,30 +44,60 @@ export const ToolPalette: React.FC = () => {
             active={state.ui.tool === "select"}
             onClick={() => dispatch({ type: "SET_TOOL", tool: "select" })}
             icon={<Icon name="pointer" size="lg" />}
+            tooltip={
+              <span>
+                Select
+                <span className="opacity-70 ml-1">• Shortcut: V</span>
+              </span>
+            }
           />
           <Btn
             label="Pan"
             active={state.ui.tool === "pan"}
             onClick={() => dispatch({ type: "SET_TOOL", tool: "pan" })}
             icon={<Icon name="move" size="lg" />}
+            tooltip={
+              <span>
+                Pan
+                <span className="opacity-70 ml-1">• Hold Space</span>
+              </span>
+            }
           />
           <Btn
             label="Add Player"
             active={state.ui.tool === "add-player"}
             onClick={() => dispatch({ type: "SET_TOOL", tool: "add-player" })}
             icon={<Icon name="plus" size="lg" />}
+            tooltip={
+              <span>
+                Add Player
+                <span className="opacity-70 ml-1">• Shortcut: P</span>
+              </span>
+            }
           />
           <Btn
             label="Route"
             active={state.ui.tool === "route"}
             onClick={() => dispatch({ type: "SET_TOOL", tool: "route" })}
             icon={<Icon name="map" size="lg" />}
+            tooltip={
+              <span>
+                Route
+                <span className="opacity-70 ml-1">• Shortcut: R</span>
+              </span>
+            }
           />
           <Btn
             label="Draw"
             active={state.ui.tool === "draw"}
             onClick={() => dispatch({ type: "SET_TOOL", tool: "draw" })}
             icon={<Icon name="edit" size="lg" />}
+            tooltip={
+              <span>
+                Draw
+                <span className="opacity-70 ml-1">• Enter to commit • Shift to 45°</span>
+              </span>
+            }
           />
         </div>
         {isDraw && (
@@ -68,12 +107,24 @@ export const ToolPalette: React.FC = () => {
               active={state.ui.drawMode === "line"}
               onClick={() => dispatch({ type: "SET_DRAW_MODE", mode: "line" })}
               icon={<Icon name="minus" size="lg" />}
+              tooltip={
+                <span>
+                  Line
+                  <span className="opacity-70 ml-1">• Enter to commit • Shift to 45°</span>
+                </span>
+              }
             />
             <Btn
               label="Arrow"
               active={state.ui.drawMode === "arrow"}
               onClick={() => dispatch({ type: "SET_DRAW_MODE", mode: "arrow" })}
               icon={<Icon name="arrow-right" size="lg" />}
+              tooltip={
+                <span>
+                  Arrow
+                  <span className="opacity-70 ml-1">• Enter to commit</span>
+                </span>
+              }
             />
             <Btn
               label="Dashed"
@@ -82,6 +133,7 @@ export const ToolPalette: React.FC = () => {
                 dispatch({ type: "SET_DRAW_MODE", mode: "dashed" })
               }
               icon={<Icon name="activity" size="lg" />}
+              tooltip={<span>Dashed</span>}
             />
             <Btn
               label="Dotted"
@@ -90,12 +142,19 @@ export const ToolPalette: React.FC = () => {
                 dispatch({ type: "SET_DRAW_MODE", mode: "dotted" })
               }
               icon={<Icon name="grid" size="lg" />}
+              tooltip={<span>Dotted</span>}
             />
             <Btn
               label="Curve"
               active={state.ui.drawMode === "curve"}
               onClick={() => dispatch({ type: "SET_DRAW_MODE", mode: "curve" })}
               icon={<Icon name="activity" size="lg" />}
+              tooltip={
+                <span>
+                  Curve
+                  <span className="opacity-70 ml-1">• Use last anchor as control • Enter to commit</span>
+                </span>
+              }
             />
             <Btn
               label="Freehand"
@@ -104,6 +163,7 @@ export const ToolPalette: React.FC = () => {
                 dispatch({ type: "SET_DRAW_MODE", mode: "freehand" })
               }
               icon={<Icon name="edit" size="lg" />}
+              tooltip={<span>Freehand<span className="opacity-70 ml-1"> • Release to commit</span></span>}
             />
             <Btn
               label="Connector"
@@ -112,6 +172,7 @@ export const ToolPalette: React.FC = () => {
                 dispatch({ type: "SET_DRAW_MODE", mode: "connector" })
               }
               icon={<Icon name="link" size="lg" />}
+              tooltip={<span>Connector<span className="opacity-70 ml-1"> • Click player → player • Esc to cancel</span></span>}
             />
             <div className="mx-1 w-px h-6 bg-slate-200" />
             <select

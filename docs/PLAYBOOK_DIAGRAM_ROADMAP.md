@@ -1,7 +1,130 @@
 ## Playbook Diagram Platform Unified Roadmap (V2 Implementation + Competitive Positioning)
 
-Updated: 2025-08-13 (post‑legacy removal & modular extraction pass complete – Toolbar, PlayerSidebar, RoutesPanel, CanvasPane, a11y, telemetry sampling; curved routes + thumbnail persistence delivered)
+Updated: 2025-08-14 (post‑legacy removal & modular extraction pass complete – Toolbar, PlayerSidebar, RoutesPanel, CanvasPane, a11y, telemetry sampling; curved routes + thumbnail persistence delivered)
 Status Legend: DONE (merged to main), PARTIAL (scaffold or partial UI), TODO (planned / prioritized), FUTURE (later phase / out-of-scope now)
+
+### Current Sprint: 20 UX/Delight Improvements (Intuitive • Easy • Beautiful • Fun)
+
+Scope: fast wins we can land in a day to increase usability, clarity, and delight without large refactors. Each item includes a simple Done definition.
+
+1. [x] Spacebar pan (temporary tool)
+
+- Done: Holding Space temporarily switches to Pan; releasing returns to previous tool; cursor updates.
+
+2. [x] Alt-drag to duplicate selection
+
+- Done: While dragging, holding Alt creates a duplicate of current selection; IDs regenerated; history entry created.
+
+3. [x] Fit/Zoom presets + wheel focal zoom
+
+- Done: Toolbar gets Fit, 100%, 200%; wheel zoom centers on cursor; smooth zoom easing.
+
+4. [x] Quick help overlay (press ?)
+
+- Done: Full-screen shortcut sheet with major tools/gestures; esc closes; first-run shows once with “Don’t show again”.
+
+5. [x] Selection count badge on marquee
+
+- Done: Drag-box shows a small badge with live count; snaps to top-right of marquee.
+
+<!-- Items 6–20 moved to Priority Queue below for focused scheduling -->
+
+Notes:
+
+- All animations respect reduced-motion preference.
+- Defaults are subtle and can be toggled in Settings → Accessibility & Effects.
+
+### Priority Queue: Unimplemented (ordered by urgency)
+
+P1
+
+- Field Settings Panel (dedicated panel extraction from toolbar; telemetry for toggles)
+- History telemetry: emit undo/redo events alongside cap/trim
+
+P2
+
+- Auto Formation Detection & Legality Assist (7 on LOS / ≤4 backfield; snap + highlight)
+- Templates / Stencils MVP (save/apply selected subset; template events)
+- Telemetry: selection events (method granularity) and export thumbnail metrics
+
+P3
+
+- Sidebar resize aria-live announcements (polite region)
+- Route add/remove burst aggregation (PlayDiagramRouteBurst)
+- Player reorder p95 metric in aggregated stats
+- QB Progression Overlay (numbered read path markers)
+- Offensive Line Technique Shading (gap technique overlay)
+- Branding / Export Theming (team colors/logo on exports)
+- Defensive templates (roles & color semantics)
+- Enhanced analytics (spread/intersections)
+
+From 20-step sprint (re-prioritized)
+
+P1
+
+6. [x] Snap halo + micro-bump animation
+
+- Done: When a point snaps, show a brief glow pulse and slight easing to snap position; toggle in Settings; respects reduced motion.
+
+7. [x] Sticky tooltips with shortcuts
+
+- Done: All palette buttons show labels and shortcut hints on hover/focus; no layout shift; respects user tooltip preference setting.
+
+8. [x] Inline label edit (double‑click player)
+
+- Done: Double‑click a player opens an inline text field; Enter commits, Esc cancels; auto-selects text.
+
+9. [x] Lock indicator and quick toggle
+
+- Done: Locked players show a subtle lock glyph; click toggles; included in multi-select bulk lock.
+
+10. [x] Grid overlay toggle + density
+
+- Done: Keyboard G toggles a dashed percent grid; density follows Snap Grid (1% / 2% / 5%); respects theme colors; pointer‑events off; persisted in localStorage and restored on load.
+
+P2
+
+11. [x] Minimap navigator (corner overview)
+
+- Done: Bottom-right minimap reflects the full field with a live viewport rectangle; click/drag pans the main canvas; auto-hides at 100% zoom; theme-aware and lightweight.
+
+12. [x] Route endpoint affordances
+
+- Done: Larger, contrast-aware endpoint handles; hover/drag shows dotted attach/snap preview to nearest player within threshold; respects theme and reduced-motion.
+
+13. [x] Route/annotation quick style cycle (J/K)
+
+- Done: J cycles stroke width presets (1,2,3,4,6,8); K cycles arrowhead (none/start/end/both). Applies to selected annotation if any, otherwise updates draw defaults; prevents default and is safe during draw/annotate.
+
+14. [x] Contextual HUD for align/distribute
+
+- Done: When multi-selecting ≥3, a small floating HUD near selection offers align (L/C/R, T/M/B) and distribute (H/V) actions; positioned above the selection box; non-interfering with canvas events.
+
+15. [x] Better cursor states per tool
+
+- Done: Pointer, crosshair (draw), hand/grab+grabbing (pan), pen (route via theme-aware SVG cursor), move (drag). High-DPI SVG cursors; player groups no longer force pointer so route pen is visible.
+
+16. [x] Nudge granularity with Alt
+
+- Done: Arrow = 0.5%; Shift+Arrow = 2%; Alt+Arrow = 0.1%; respects bounds; telemetry now includes step and modifier.
+
+P3
+
+17. [x] Confetti-on-first-save (daily)
+
+- Done: First successful save of the day triggers a small confetti burst overlay; daily-gated via localStorage; respects prefers-reduced-motion; dismissible with an inline control to disable permanently via Settings → Effects.
+
+18. [x] Gentle selection pulse
+
+- Done: Selected players and annotations get a subtle, theme-aware breathing outline that respects reduced-motion and adds no pointer interference.
+
+19. [x] Canvas center and edges guide polish
+
+- Done: Center/edge guides fade in/out smoothly (live fade-in + brief fade-out trail); “Center” label appears briefly when snapping to center axes.
+
+20. [x] On-canvas “Press H for help” hint
+
+- Done: Tiny, low-contrast hint in bottom-right fades after ~5s and hides once help is viewed or dismissed; reduced-motion friendly; also opens help with H.
 
 ### 1. Vision
 
@@ -288,83 +411,83 @@ This unified roadmap supersedes: `DIAGRAM_BUILDER_V2.md` and `PLAYBOOK_COMPETITI
 
 Scope: fast wins we can land in a day to increase usability, clarity, and delight without large refactors. Each item includes a simple Done definition.
 
-1. Spacebar pan (temporary tool)
+1. [x] Spacebar pan (temporary tool)
 
 - Done: Holding Space temporarily switches to Pan; releasing returns to previous tool; cursor updates.
 
-2. Alt-drag to duplicate selection
+2. [x] Alt-drag to duplicate selection
 
 - Done: While dragging, holding Alt creates a duplicate of current selection; IDs regenerated; history entry created.
 
-3. Fit/Zoom presets + wheel focal zoom
+3. [x] Fit/Zoom presets + wheel focal zoom
 
 - Done: Toolbar gets Fit, 100%, 200%; wheel zoom centers on cursor; smooth zoom easing.
 
-4. Quick help overlay (press ?)
+4. [x] Quick help overlay (press ?)
 
 - Done: Full-screen shortcut sheet with major tools/gestures; esc closes; first-run shows once with “Don’t show again”.
 
-5. Selection count badge on marquee
+5. [x] Selection count badge on marquee
 
 - Done: Drag-box shows a small badge with live count; snaps to top-right of marquee.
 
-6. Snap halo + micro-bump animation
+6. [ ] Snap halo + micro-bump animation
 
 - Done: When a point snaps, show a brief glow pulse and slight easing to snap position; toggle in Settings.
 
-7. Sticky tooltips with shortcuts
+7. [ ] Sticky tooltips with shortcuts
 
 - Done: All palette buttons show labels and shortcut hints on hover/focus; no layout shift.
 
-8. Inline label edit (double‑click player)
+8. [ ] Inline label edit (double‑click player)
 
 - Done: Double‑click a player opens an inline text field; Enter commits, Esc cancels; auto-selects text.
 
-9. Lock indicator and quick toggle
+9. [ ] Lock indicator and quick toggle
 
 - Done: Locked players show a subtle lock glyph; click toggles; included in multi-select bulk lock.
 
-10. Grid overlay toggle + density
+10. [ ] Grid overlay toggle + density
 
 - Done: Keyboard G toggles grid overlay; small density selector (1%, 2%, 5%); persists per session.
 
-11. Minimap navigator (corner overview)
+11. [ ] Minimap navigator (corner overview)
 
 - Done: Optional mini-map at bottom-right; drag the viewport rectangle; hides when fully zoomed out.
 
-12. Route endpoint affordances
+12. [ ] Route endpoint affordances
 
 - Done: Larger, contrast-aware handles; hover shows attach/snap targets with dotted preview.
 
-13. Route/annotation quick style cycle (J/K)
+13. [ ] Route/annotation quick style cycle (J/K)
 
 - Done: J cycles through stroke widths; K cycles arrowhead (none/start/end/both); emits style update.
 
-14. Contextual HUD for align/distribute
+14. [ ] Contextual HUD for align/distribute
 
 - Done: When multi-selecting ≥3, a small floating HUD near selection offers align/distribute actions.
 
-15. Better cursor states per tool
+15. [ ] Better cursor states per tool
 
 - Done: Pointer, crosshair (draw), hand (pan), pen (route), move (drag); high-DPI SVG cursors.
 
-16. Nudge granularity with Alt
+16. [ ] Nudge granularity with Alt
 
 - Done: Arrow = 0.5%; Shift+Arrow = 2%; Alt+Arrow = 0.1%; respects bounds; telemetry notes granularity.
 
-17. Confetti-on-first-save (daily)
+17. [ ] Confetti-on-first-save (daily)
 
 - Done: First successful save of the day triggers a small confetti burst; can be disabled in Settings.
 
-18. Gentle selection pulse
+18. [ ] Gentle selection pulse
 
 - Done: Selected items get a very subtle breathing outline to aid tracking without visual noise.
 
-19. Canvas center and edges guide polish
+19. [ ] Canvas center and edges guide polish
 
 - Done: Center/edge guides fade in/out smoothly; label “Center” appears briefly when snapping.
 
-20. On-canvas “Press H for help” hint
+20. [ ] On-canvas “Press H for help” hint
 
 - Done: Tiny, low-contrast hint in bottom-right fades after 5s and hides once help viewed.
 

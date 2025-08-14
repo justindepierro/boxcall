@@ -153,6 +153,7 @@ export const ActionBar: React.FC<{
                 size="xs"
                 variant={allLocked ? "secondary" : "ghost"}
                 aria-label={allLocked ? "Unlock players" : "Lock players"}
+                title={allLocked ? "Unlock selected players" : "Lock selected players"}
                 onClick={() => {
                   const next = !allLocked;
                   if (multi)

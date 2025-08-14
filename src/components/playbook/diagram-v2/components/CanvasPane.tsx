@@ -3,6 +3,7 @@ import { FieldCanvas } from "../FieldCanvas";
 import { ActionBar } from "./ActionBar";
 import { ToolPalette } from "./ToolPalette";
 import { TipsOverlay } from "./TipsOverlay";
+import { HelpHint } from "./HelpHint";
 
 /**
  * CanvasPane
@@ -27,6 +28,7 @@ export const CanvasPane: React.FC<{
           <CaptureSvgRef targetRef={svgRef} />
           <ActionBar svgRef={svgRef} />
           <TipsOverlay />
+          <HelpHint />
         </div>
       </div>
     </div>

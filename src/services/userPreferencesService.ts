@@ -12,6 +12,7 @@ export interface UserPreferences {
   ui: {
     showTooltips: boolean;
     compactMode: boolean;
+  showConfetti: boolean; // Show celebratory confetti on first successful save per day
   };
 }
 
@@ -30,6 +31,7 @@ export class UserPreferencesService {
       ui: {
         showTooltips: true,
         compactMode: false,
+  showConfetti: true,
       },
     };
   }

@@ -107,6 +107,16 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
           >
             Snap {state.ui.snap ? "On" : "Off"}
           </Button>
+          <label className="ml-2 inline-flex items-center gap-1 text-xs text-slate-700">
+            <input
+              type="checkbox"
+              checked={!!state.ui.effectsSnapPulse}
+              onChange={(e) =>
+                dispatch({ type: "SET_SNAP_PULSE", enabled: e.target.checked })
+              }
+            />
+            Halo
+          </label>
           <select
             className="text-xs border border-slate-300 rounded px-2 py-1"
             value={state.ui.snapGrid}
@@ -329,6 +339,47 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
               </option>
             ))}
           </select>
+          <div className="mx-2 w-px h-5 bg-slate-200" />
+          {/* Zoom presets */}
+          <div
+            className="inline-flex items-center gap-1"
+            role="group"
+            aria-label="Zoom"
+          >
+            <Button
+              size="xs"
+              variant="ghost"
+              onClick={() => {
+                // Fit: reset to default zoom/pan for full field view
+                dispatch({ type: "SET_VIEWPORT", zoom: 1, panX: 0, panY: 0 });
+              }}
+              aria-label="Fit"
+              title="Fit"
+            >
+              Fit
+            </Button>
+            <Button
+              size="xs"
+              variant="ghost"
+              onClick={() => dispatch({ type: "SET_VIEWPORT", zoom: 1 })}
+              aria-label="100%"
+              title="100%"
+            >
+              100%
+            </Button>
+            <Button
+              size="xs"
+              variant="ghost"
+              onClick={() => dispatch({ type: "SET_VIEWPORT", zoom: 2 })}
+              aria-label="200%"
+              title="200%"
+            >
+              200%
+            </Button>
+            <span className="ml-1 text-[11px] text-slate-600 tabular-nums">
+              {Math.round((state.ui.zoom || 1) * 100)}%
+            </span>
+          </div>
           <div className="mx-2 w-px h-5 bg-slate-200" />
           <Button
             size="xs"

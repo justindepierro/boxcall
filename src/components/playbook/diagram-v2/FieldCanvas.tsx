@@ -1,5 +1,6 @@
-import React, { useRef, useEffect, useCallback, useState } from "react";
+import React, { useRef, useEffect, useCallback, useState, useMemo } from "react";
 import { useDiagramEditor } from "./context";
+import { Button } from "../../ui/Button/Button";
 import type { DiagramAnnotation, DiagramAnnotationConnector } from "./types";
 import { telemetry } from "../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../telemetry/events";
@@ -9,20 +10,48 @@ export const FieldCanvas: React.FC<{
   className?: string;
   onPlayerMouseDown?: (id: string, e: React.MouseEvent) => void;
 }> = ({ className, onPlayerMouseDown }) => {
+  // Ephemeral attach/snap preview while dragging a route point
+  const [attachPreview, setAttachPreview] = React.useState<
+    | { x1: number; y1: number; x2: number; y2: number; targetId?: string }
+    | undefined
+  >(undefined);
   const { state, dispatch } = useDiagramEditor();
   const { doc } = state;
   const svgRef = useRef<SVGSVGElement | null>(null);
 
+  // Clamp helper for zoom range
+  const clamp = (v: number, min: number, max: number) =>
+    Math.max(min, Math.min(max, v));
+  // Focal wheel zoom (Ctrl/Cmd + wheel) centered on cursor; also prevent default pinch zoom
   useEffect(() => {
     const el = svgRef.current;
     if (!el) return;
     const handler = (e: WheelEvent) => {
+      // allow trackpad pinch-zoom (which sets ctrlKey on mac) and Ctrl+wheel
       if (!e.ctrlKey) return;
       e.preventDefault();
+      const rect = el.getBoundingClientRect();
+      const xView = ((e.clientX - rect.left) / rect.width) * 1600;
+      const yView = ((e.clientY - rect.top) / rect.height) * 900;
+      // Convert view coords to world under current transform
+      const worldX = (xView - state.ui.panX) / state.ui.zoom;
+      const worldY = (yView - state.ui.panY) / state.ui.zoom;
+      // Zoom step factor
+      const factor = e.deltaY < 0 ? 1.1 : 1 / 1.1;
+      const targetZoom = clamp(state.ui.zoom * factor, 0.25, 4);
+      // Compute new pan so that world point stays under cursor
+      const newPanX = xView - worldX * targetZoom;
+      const newPanY = yView - worldY * targetZoom;
+      dispatch({
+        type: "SET_VIEWPORT",
+        zoom: targetZoom,
+        panX: newPanX,
+        panY: newPanY,
+      });
     };
     el.addEventListener("wheel", handler, { passive: false });
     return () => el.removeEventListener("wheel", handler);
-  }, []);
+  }, [dispatch, state.ui.panX, state.ui.panY, state.ui.zoom]);
 
   // Minimum pixels (client) before a drag is considered started
   const DRAG_THRESHOLD_PX = 5;
@@ -77,10 +106,56 @@ export const FieldCanvas: React.FC<{
     y: number;
     show: boolean;
   }>({ x: 0, y: 0, show: false });
+  // Snap pulse visuals: store recent pulses with start time
+  const [snapPulses, setSnapPulses] = useState<
+    { id: number; x: number; y: number; t0: number }[]
+  >([]);
+  const prefersReducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const showSelectionPulse = !prefersReducedMotion; // respect reduced motion
   const [alignGuides, setAlignGuides] = useState<null | {
     vertical?: number[]; // x positions in px
     horizontal?: number[]; // y positions in px
   }>(null);
+  // Smooth guide visuals: live opacity for fade-in, and a brief fade-out trail when guides turn off
+  const [guideLiveOpacity, setGuideLiveOpacity] = useState<number>(0);
+  const lastGuidesRef = useRef<
+    | {
+        guides: { vertical?: number[]; horizontal?: number[] };
+        hasCenterX?: boolean;
+        hasCenterY?: boolean;
+      }
+    | null
+  >(null);
+  const [guideFade, setGuideFade] = useState<
+    | {
+        guides: { vertical?: number[]; horizontal?: number[] };
+        hasCenterX?: boolean;
+        hasCenterY?: boolean;
+        t0: number;
+      }
+    | null
+  >(null);
+  // Center snap flash label state
+  const [centerFlash, setCenterFlash] = useState<
+    | { x?: boolean; y?: boolean; t0: number }
+    | null
+  >(null);
+  // Live count of players within marquee selection (updates while dragging)
+  const marqueeCount = useMemo(() => {
+    if (!selectionBox) return 0;
+    const { x, y, w, h } = selectionBox;
+    let count = 0;
+    for (const p of doc.players) {
+      const abs = pctToAbs(p.x, p.y);
+      if (abs.x >= x && abs.x <= x + w && abs.y >= y && abs.y <= y + h) {
+        count++;
+      }
+    }
+    return count;
+  }, [selectionBox, doc.players]);
   // Suppress canvas click after a drag/pan to avoid unintended add-point/clear-selection
   const suppressClickRef = useRef(false);
   // Spacebar-hold-to-pan state
@@ -142,7 +217,7 @@ export const FieldCanvas: React.FC<{
       }
       return;
     }
-  // Compute what the selection will be after this click so drag can start immediately
+    // Compute what the selection will be after this click so drag can start immediately
     const prev = new Set(state.ui.selectedIds || []);
     let nextSelectedIds: string[] = [];
     if (e.detail === 2) {
@@ -174,7 +249,17 @@ export const FieldCanvas: React.FC<{
     // Alt key: duplicate selection, then drag duplicates (IDs regenerated)
     if (e.altKey) {
       const uniqueTs = Date.now();
-      const clones: { id: string; label: string; x: number; y: number; color?: string; outlineColor?: string; side?: "O" | "D" | "ST"; role?: string; locked?: boolean }[] = [];
+      const clones: {
+        id: string;
+        label: string;
+        x: number;
+        y: number;
+        color?: string;
+        outlineColor?: string;
+        side?: "O" | "D" | "ST";
+        role?: string;
+        locked?: boolean;
+      }[] = [];
       const mapOldToNew = new Map<string, string>();
       selected.forEach((pid, i) => {
         const src = doc.players.find((p) => p.id === pid);
@@ -216,7 +301,7 @@ export const FieldCanvas: React.FC<{
         const abs = pctToAbs(p.x, p.y);
         return { id: p.id, xAbs: abs.x, yAbs: abs.y };
       });
-  if (!originals.length) return; // nothing draggable (all locked)
+    if (!originals.length) return; // nothing draggable (all locked)
     const start = clientToWorld(e);
     dragRef.current = {
       id,
@@ -224,7 +309,7 @@ export const FieldCanvas: React.FC<{
       startY: start.y,
       startClientX: e.clientX,
       startClientY: e.clientY,
-  hasStarted: false,
+      hasStarted: false,
       moved: false,
       originals,
     };
@@ -516,7 +601,7 @@ export const FieldCanvas: React.FC<{
         const y2 = Math.max(sy, curr.y);
         setSelectionBox({ x: x1, y: y1, w: x2 - x1, h: y2 - y1 });
         return;
-  }
+      }
       if (!dragRef.current) return;
       // Compute delta in world coordinates
       const now = clientToWorld(e);
@@ -527,8 +612,8 @@ export const FieldCanvas: React.FC<{
         if (Math.hypot(dxPx, dyPx) < DRAG_THRESHOLD_PX) {
           return; // don't move yet
         }
-  dragRef.current.hasStarted = true;
-  suppressClickRef.current = true;
+        dragRef.current.hasStarted = true;
+        suppressClickRef.current = true;
       }
       const dx = now.x - dragRef.current.startX;
       const dy = now.y - dragRef.current.startY;
@@ -551,11 +636,21 @@ export const FieldCanvas: React.FC<{
             originals.map((o) => o.id)
           )
         : { x: undefined, y: undefined, guides: {} };
-      setAlignGuides(
+      const hasGuides = !!(
         state.ui.snap && guides && (guides.vertical || guides.horizontal)
-          ? guides
-          : null
       );
+      const hasCenterX = !!(guides.vertical || [])?.some((x) => Math.abs(x - 800) < 0.5);
+      const hasCenterY = !!(guides.horizontal || [])?.some((y) => Math.abs(y - 450) < 0.5);
+      setAlignGuides(hasGuides ? guides : null);
+      if (hasGuides) {
+        lastGuidesRef.current = { guides, hasCenterX, hasCenterY };
+        // Smooth fade-in
+        setGuideLiveOpacity((op) => (op < 0.8 ? 0.8 : op));
+      }
+      // Center snap label flash when snapping to center axes
+      if ((ax === 50 && hasCenterX) || (ay === 50 && hasCenterY)) {
+        setCenterFlash({ x: ax === 50 && hasCenterX, y: ay === 50 && hasCenterY, t0: performance.now() });
+      }
       originals.forEach((o) => {
         let nx = o.xAbs + dx;
         let ny = o.yAbs + dy;
@@ -617,7 +712,18 @@ export const FieldCanvas: React.FC<{
       dispatch({ type: "COMMIT_MOVE" });
     }
     dragRef.current = null;
+    // Begin fade-out for alignment guides if any were active
     setAlignGuides(null);
+    if (lastGuidesRef.current) {
+      setGuideFade({
+        guides: lastGuidesRef.current.guides,
+        hasCenterX: lastGuidesRef.current.hasCenterX,
+        hasCenterY: lastGuidesRef.current.hasCenterY,
+        t0: performance.now(),
+      });
+      // Reset live opacity for next appearance
+      setGuideLiveOpacity(0);
+    }
     // Allow clicks again after this mouseup completes
     setTimeout(() => {
       suppressClickRef.current = false;
@@ -634,6 +740,42 @@ export const FieldCanvas: React.FC<{
     state.ui.annotating,
     state.ui.selectedAnnotationId,
   ]);
+
+  // Drive fade-out lifecycle for guides (out over ~250ms)
+  const [, setGuideFadeTick] = useState(0);
+  useEffect(() => {
+    if (!guideFade) return;
+    let raf = 0;
+    const tick = () => {
+      const elapsed = performance.now() - guideFade.t0;
+      if (elapsed > 260) {
+        setGuideFade(null);
+        return;
+      }
+      setGuideFadeTick(elapsed);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [guideFade]);
+
+  // Expire center snap flash after ~800ms
+  const [, setCenterFlashTick] = useState(0);
+  useEffect(() => {
+    if (!centerFlash) return;
+    let raf = 0;
+    const tick = () => {
+      const elapsed = performance.now() - centerFlash.t0;
+      if (elapsed > 800) {
+        setCenterFlash(null);
+        return;
+      }
+      setCenterFlashTick(elapsed);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [centerFlash]);
 
   const handleCanvasMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
     if (e.button !== 0) return; // left-button only
@@ -718,7 +860,16 @@ export const FieldCanvas: React.FC<{
       snapped: boolean;
     };
     if (snapped) {
-      setSnapViz({ x: (x / 100) * 1600, y: (y / 100) * 900, show: true });
+      const sx = (x / 100) * 1600;
+      const sy = (y / 100) * 900;
+      setSnapViz({ x: sx, y: sy, show: true });
+      // Record a pulse when crossing into snapped state
+      if (state.ui.effectsSnapPulse && !prefersReducedMotion) {
+        setSnapPulses((arr) => [
+          ...arr,
+          { id: Date.now() + Math.random(), x: sx, y: sy, t0: performance.now() },
+        ]);
+      }
     } else if (snapViz.show) {
       setSnapViz({ x: 0, y: 0, show: false });
     }
@@ -756,6 +907,16 @@ export const FieldCanvas: React.FC<{
     }
   };
 
+  // Cleanup expired snap pulses (300ms lifetime)
+  useEffect(() => {
+    if (!snapPulses.length) return;
+    const raf = requestAnimationFrame(() => {
+      const now = performance.now();
+      setSnapPulses((arr) => arr.filter((p) => now - p.t0 < 300));
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [snapPulses]);
+
   // Debounce commit after keyboard nudges
   const commitMoveTimer = useRef<number | null>(null);
   const scheduleCommitMove = useCallback(() => {
@@ -769,6 +930,71 @@ export const FieldCanvas: React.FC<{
   // Keyboard shortcuts + arrow key nudging
   useEffect(() => {
     const keyHandler = (e: KeyboardEvent) => {
+      // Quick tool shortcuts (avoid when typing in inputs/textareas)
+      const ae = document.activeElement as HTMLElement | null;
+      const tag = (ae?.tagName || "").toLowerCase();
+      const typing = tag === "input" || tag === "textarea" || ae?.isContentEditable;
+      if (!typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        const k = e.key.toLowerCase();
+        if (k === "v") {
+          dispatch({ type: "SET_TOOL", tool: "select" });
+          e.preventDefault();
+        } else if (k === "p") {
+          dispatch({ type: "SET_TOOL", tool: "add-player" });
+          e.preventDefault();
+        } else if (k === "r") {
+          dispatch({ type: "SET_TOOL", tool: "route" });
+          e.preventDefault();
+        } else if (k === "m") {
+          dispatch({ type: "SET_TOOL", tool: "pan" });
+          e.preventDefault();
+        }
+        // Grid overlay toggle (G)
+        if (k === "g") {
+          dispatch({ type: "SET_GRID_OVERLAY", enabled: !state.ui.showGridOverlay });
+          e.preventDefault();
+        }
+      }
+      // Zoom shortcuts: Cmd/Ctrl + '+' or '-' (and '=' for '+')
+      const meta = e.metaKey || e.ctrlKey;
+      if (meta && (e.key === "+" || e.key === "=")) {
+        const rect = svgRef.current?.getBoundingClientRect();
+        const cx = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
+        const cy = rect ? rect.top + rect.height / 2 : window.innerHeight / 2;
+        const xView = rect ? ((cx - rect.left) / rect.width) * 1600 : 800;
+        const yView = rect ? ((cy - rect.top) / rect.height) * 900 : 450;
+        const worldX = (xView - state.ui.panX) / state.ui.zoom;
+        const worldY = (yView - state.ui.panY) / state.ui.zoom;
+        const targetZoom = clamp(state.ui.zoom * 1.1, 0.25, 4);
+        const newPanX = xView - worldX * targetZoom;
+        const newPanY = yView - worldY * targetZoom;
+        dispatch({
+          type: "SET_VIEWPORT",
+          zoom: targetZoom,
+          panX: newPanX,
+          panY: newPanY,
+        });
+        e.preventDefault();
+      }
+      if (meta && e.key === "-") {
+        const rect = svgRef.current?.getBoundingClientRect();
+        const cx = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
+        const cy = rect ? rect.top + rect.height / 2 : window.innerHeight / 2;
+        const xView = rect ? ((cx - rect.left) / rect.width) * 1600 : 800;
+        const yView = rect ? ((cy - rect.top) / rect.height) * 900 : 450;
+        const worldX = (xView - state.ui.panX) / state.ui.zoom;
+        const worldY = (yView - state.ui.panY) / state.ui.zoom;
+        const targetZoom = clamp(state.ui.zoom / 1.1, 0.25, 4);
+        const newPanX = xView - worldX * targetZoom;
+        const newPanY = yView - worldY * targetZoom;
+        dispatch({
+          type: "SET_VIEWPORT",
+          zoom: targetZoom,
+          panX: newPanX,
+          panY: newPanY,
+        });
+        e.preventDefault();
+      }
       if (e.key === "Escape" && state.ui.drawing) {
         dispatch({ type: "CANCEL_ROUTE" });
       }
@@ -856,8 +1082,8 @@ export const FieldCanvas: React.FC<{
         e.preventDefault();
       }
       // Undo / Redo
-      const meta = e.metaKey || e.ctrlKey;
-      if (meta && e.key.toLowerCase() === "z") {
+      const meta2 = e.metaKey || e.ctrlKey;
+      if (meta2 && e.key.toLowerCase() === "z") {
         if (e.shiftKey) dispatch({ type: "REDO" });
         else dispatch({ type: "UNDO" });
         e.preventDefault();
@@ -868,7 +1094,8 @@ export const FieldCanvas: React.FC<{
         ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)
       ) {
         e.preventDefault();
-        const delta = e.shiftKey ? 2 : 0.5;
+  // Nudge step granularity: Alt = 0.1%, Shift = 2%, default = 0.5%
+  const delta = e.altKey ? 0.1 : e.shiftKey ? 2 : 0.5;
         const patches: { id: string; x: number; y: number }[] = [];
         selected.forEach((id) => {
           const p = doc.players.find((pl) => pl.id === id);
@@ -892,6 +1119,8 @@ export const FieldCanvas: React.FC<{
                 count: selected.length,
                 dx: patches[0] ? patches[0].x : 0,
                 dy: patches[0] ? patches[0].y : 0,
+    step: delta,
+    modifier: e.altKey ? "alt" : e.shiftKey ? "shift" : "base",
               },
             });
           }
@@ -966,8 +1195,47 @@ export const FieldCanvas: React.FC<{
           e.preventDefault();
         }
       }
+
+      // Quick style cycles: J cycles stroke width, K cycles arrowhead
+      if (e.key.toLowerCase() === "j") {
+        const widths = [1, 2, 3, 4, 6, 8];
+        const selectedAnnId = state.ui.selectedAnnotationId;
+        let currentWidth = state.ui.drawWidth || 3;
+        if (selectedAnnId) {
+          const ann = (doc.annotations || []).find((a) => a.id === selectedAnnId);
+          if (ann && typeof (ann as { width?: number }).width === "number") {
+            currentWidth = (ann as { width?: number }).width || currentWidth;
+          }
+        }
+        const idx = widths.indexOf(currentWidth);
+        const next = widths[(idx >= 0 ? idx + 1 : 0) % widths.length];
+        if (selectedAnnId) {
+          dispatch({ type: "UPDATE_ANNOT_STYLE", id: selectedAnnId, patch: { width: next } });
+        } else {
+          dispatch({ type: "SET_DRAW_WIDTH", width: next });
+        }
+        e.preventDefault();
+      }
+      if (e.key.toLowerCase() === "k") {
+        const order: Array<"none" | "start" | "end" | "both"> = ["none", "start", "end", "both"];
+        const selectedAnnId = state.ui.selectedAnnotationId;
+        let current: "none" | "start" | "end" | "both" = state.ui.drawArrowHead || "end";
+        if (selectedAnnId) {
+          const ann = (doc.annotations || []).find((a) => a.id === selectedAnnId);
+          const ah = (ann as { arrowHead?: "none" | "start" | "end" | "both" } | undefined)?.arrowHead;
+          if (ah) current = ah;
+        }
+        const ni = (order.indexOf(current) + 1) % order.length;
+        const next = order[ni];
+        if (selectedAnnId) {
+          dispatch({ type: "UPDATE_ANNOT_STYLE", id: selectedAnnId, patch: { arrowHead: next } });
+        } else {
+          dispatch({ type: "SET_DRAW_ARROW_HEAD", arrowHead: next });
+        }
+        e.preventDefault();
+      }
     };
-    window.addEventListener("keydown", keyHandler);
+  window.addEventListener("keydown", keyHandler);
     const keyUp = (e: KeyboardEvent) => {
       const isSpace = e.code === "Space" || e.key === " ";
       if (isSpace && spaceHeldRef.current) {
@@ -992,17 +1260,77 @@ export const FieldCanvas: React.FC<{
     state.ui.selectedIds,
     state.ui.selectedAnnotationId,
     doc.players,
+    doc.annotations,
     scheduleCommitMove,
     state.ui.distributeSpacing,
     state.ui.tool,
+    state.ui.panX,
+    state.ui.panY,
+    state.ui.zoom,
+  state.ui.showGridOverlay,
+  state.ui.drawWidth,
+  state.ui.drawArrowHead,
   ]);
 
+  // Minimap drag tracking
+  const miniDragRef = useRef<{
+    dragging: boolean;
+  }>({ dragging: false });
+
+  // Convert a minimap client click/drag into a viewport pan
+  const moveViewportFromMinimap = useCallback(
+    (container: HTMLDivElement, clientX: number, clientY: number) => {
+      const rect = container.getBoundingClientRect();
+      const xMini = clientX - rect.left;
+      const yMini = clientY - rect.top;
+      // Minimap size (in px). Keep in sync with rendered size below.
+      const MINI_W = 160;
+      const scale = MINI_W / 1600; // 0.1
+      // Convert to world coords
+      const xWorld = xMini / scale;
+      const yWorld = yMini / scale;
+      const widthWorld = 1600 / state.ui.zoom;
+      const heightWorld = 900 / state.ui.zoom;
+      // Center viewport around the pointer
+      let xTL = xWorld - widthWorld / 2;
+      let yTL = yWorld - heightWorld / 2;
+      // Clamp to world bounds
+      xTL = Math.max(0, Math.min(1600 - widthWorld, xTL));
+      yTL = Math.max(0, Math.min(900 - heightWorld, yTL));
+      // Convert desired top-left back to pan in view space
+      const panX = -xTL * state.ui.zoom;
+      const panY = -yTL * state.ui.zoom;
+      dispatch({ type: "SET_VIEWPORT", panX, panY });
+    },
+    [dispatch, state.ui.zoom]
+  );
+
   return (
-    <div className={className}>
+    <div className={`${className ?? ""} relative`}>
       <svg
         ref={svgRef}
         viewBox="0 0 1600 900"
-        className={`w-full h-full rounded-md shadow-inner select-none ${state.ui.tool === "pan" ? "cursor-grab" : state.ui.tool === "draw" ? "cursor-crosshair" : "cursor-default"}`}
+        className={`w-full h-full rounded-md shadow-inner select-none`}
+        style={{
+          // Context-specific cursor states
+          cursor: (() => {
+            // Pan: grab/grabbing while mouse is down
+            if (state.ui.tool === "pan") {
+              return panRef.current ? "grabbing" : "grab";
+            }
+            // Draw tool: precision
+            if (state.ui.tool === "draw") return "crosshair";
+            // Route tool: custom pen cursor (theme-aware), fallback crosshair
+            if (state.ui.tool === "route") {
+              const theme = doc.field.theme || "classic";
+              const stroke = theme === "mono-light" ? "#111827" : "#f9fafb";
+              const svg = `<?xml version='1.0' encoding='UTF-8'?>\n<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'>\n  <g fill='none' stroke='${stroke}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>\n    <path d='M4 28l6-2 16-16a3 3 0 0 0-4.24-4.24L5.76 21.76z'/>\n    <path d='M18 6l8 8'/>\n    <path d='M4 28l2-6'/>\n  </g>\n</svg>`;
+              const data = `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}") 4 28, crosshair`;
+              return data;
+            }
+            return "default";
+          })(),
+        }}
         role="img"
         aria-label="Diagram field"
         onClick={handleCanvasClick}
@@ -1221,6 +1549,51 @@ export const FieldCanvas: React.FC<{
               );
             }
           )}
+          {/* Grid Overlay */}
+          {state.ui.showGridOverlay && (() => {
+            const g = Math.max(1, state.ui.snapGrid || 1);
+            const theme = doc.field.theme || "classic";
+            const color = theme === "mono-dark" ? "#6b7280" : theme === "mono-light" ? "#9ca3af" : "#10b981";
+            const opacity = theme === "classic" ? 0.2 : 0.25;
+            const stepX = (1600 * g) / 100;
+            const stepY = (900 * g) / 100;
+            const nodes: React.ReactNode[] = [];
+            // Vertical lines
+            for (let x = 0; x <= 1600; x += stepX) {
+              nodes.push(
+                <line
+                  key={`gv-${x}`}
+                  x1={x}
+                  y1={0}
+                  x2={x}
+                  y2={900}
+                  stroke={color}
+                  strokeWidth={1}
+                  opacity={opacity}
+                  strokeDasharray="4 6"
+                  style={{ pointerEvents: "none" }}
+                />
+              );
+            }
+            // Horizontal lines
+            for (let y = 0; y <= 900; y += stepY) {
+              nodes.push(
+                <line
+                  key={`gh-${y}`}
+                  x1={0}
+                  y1={y}
+                  x2={1600}
+                  y2={y}
+                  stroke={color}
+                  strokeWidth={1}
+                  opacity={opacity}
+                  strokeDasharray="4 6"
+                  style={{ pointerEvents: "none" }}
+                />
+              );
+            }
+            return <g>{nodes}</g>;
+          })()}
           {/* Players */}
           {doc.players
             .filter((p) => doc.field.showDefensePlayers || p.side !== "D")
@@ -1236,14 +1609,30 @@ export const FieldCanvas: React.FC<{
                 <g
                   key={p.id}
                   transform={`translate(${(p.x / 100) * 1600},${(p.y / 100) * 900})`}
-                  className={
-                    locked ? "cursor-not-allowed opacity-70" : "cursor-pointer"
-                  }
+                  className={locked ? "cursor-not-allowed opacity-70" : undefined}
                   onMouseDown={(e) => {
                     onPlayerMouseDown?.(p.id, e);
                     handleMouseDownPlayer(e, p.id);
                   }}
+                  onDoubleClick={(e) => {
+                    e.stopPropagation();
+                    if (locked) return;
+                    dispatch({ type: "START_INLINE_EDIT", playerId: p.id });
+                  }}
                 >
+                  {/* Gentle selection pulse halo */}
+                  {selected && showSelectionPulse && (
+                    <circle
+                      cx={0}
+                      cy={0}
+                      r={isCenter ? 28 : 30}
+                      fill="none"
+                      stroke="#fbbf24"
+                      strokeWidth={3}
+                      opacity={0.55}
+                      className="animate-selectedBreathe"
+                    />
+                  )}
                   {isCenter ? (
                     <rect
                       x={-24}
@@ -1273,11 +1662,59 @@ export const FieldCanvas: React.FC<{
                       fontWeight={700}
                       fill={theme === "mono-light" ? "#111827" : "#ffffff"}
                       textAnchor="middle"
-                      style={{ pointerEvents: "none", userSelect: "none" }}
+                      style={{ userSelect: "none" }}
                     >
                       {p.label}
                     </text>
                   )}
+                  {/* Lock toggle (top-right of glyph) */}
+                  <g
+                    transform="translate(20,-22)"
+                    onMouseDown={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      dispatch({
+                        type: "UPDATE_PLAYER",
+                        id: p.id,
+                        patch: { locked: !p.locked },
+                      });
+                    }}
+                    className="cursor-pointer"
+                  >
+                    {/* subtle circular hit area */}
+                    <circle
+                      cx={0}
+                      cy={0}
+                      r={10}
+                      fill={theme === "mono-light" ? "#f9fafb" : "#111827"}
+                      opacity={p.locked ? 0.85 : 0.25}
+                      stroke={theme === "mono-light" ? "#cbd5e1" : "#374151"}
+                      strokeWidth={1}
+                    />
+                    {/* padlock icon */}
+                    <rect
+                      x={-4.5}
+                      y={-1}
+                      width={9}
+                      height={7}
+                      rx={1.5}
+                      ry={1.5}
+                      fill={p.locked ? (theme === "mono-light" ? "#334155" : "#e5e7eb") : "none"}
+                      stroke={theme === "mono-light" ? "#334155" : "#e5e7eb"}
+                      strokeWidth={1.2}
+                    />
+                    <path
+                      d="M -3 -1 v -2.5 a3 3 0 0 1 6 0 V -1"
+                      fill="none"
+                      stroke={theme === "mono-light" ? "#334155" : "#e5e7eb"}
+                      strokeWidth={1.2}
+                      strokeLinecap="round"
+                    />
+                    <title>{p.locked ? "Unlock player" : "Lock player"}</title>
+                  </g>
                 </g>
               );
             })}
@@ -1302,13 +1739,104 @@ export const FieldCanvas: React.FC<{
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       />
-                      {pts.map((p, pi) => (
+                      {pts.map((p, pi) => {
+                        const isEndpoint = pi === 0 || pi === pts.length - 1;
+                        const radius = pi === 1 ? 10 : isEndpoint ? 12 : 10;
+                        const fill = pi === 1 ? "#34d399" : "#fbbf24";
+                        return (
+                          <circle
+                            key={pi}
+                            cx={p.x}
+                            cy={p.y}
+                            r={radius}
+                            fill={fill}
+                            stroke="#1f2937"
+                            strokeWidth={2}
+                            className="cursor-move"
+                            onMouseDown={(e) => {
+                              e.stopPropagation();
+                              const start = clientToWorld(e);
+                              const startPt = { x: p.x, y: p.y };
+                              const move = (me: MouseEvent) => {
+                                const now = clientToWorld(me);
+                                const dx = now.x - start.x;
+                                const dy = now.y - start.y;
+                                const nx = Math.min(
+                                  100,
+                                  Math.max(
+                                    0,
+                                    snapPct(((startPt.x + dx) / 1600) * 100)
+                                  )
+                                );
+                                const ny = Math.min(
+                                  100,
+                                  Math.max(
+                                    0,
+                                    snapPct(((startPt.y + dy) / 900) * 100)
+                                  )
+                                );
+                                // Update point
+                                dispatch({
+                                  type: "UPDATE_ROUTE_POINT",
+                                  routeId: r.id,
+                                  segIndex: si,
+                                  pointIndex: pi,
+                                  point: { x: nx, y: ny },
+                                });
+                                // Attach preview to nearest player when dragging endpoints
+                                if (isEndpoint) {
+                                  const cx = (nx / 100) * 1600;
+                                  const cy = (ny / 100) * 900;
+                                  let best: { id: string; x: number; y: number; d: number } | undefined;
+                                  for (const pl of doc.players) {
+                                    const px = (pl.x / 100) * 1600;
+                                    const py = (pl.y / 100) * 900;
+                                    const d = Math.hypot(px - cx, py - cy);
+                                    if (!best || d < best.d) best = { id: pl.id, x: px, y: py, d };
+                                  }
+                                  const thresh = 24; // px threshold for attach preview
+                                  if (best && best.d <= thresh) {
+                                    setAttachPreview({ x1: cx, y1: cy, x2: best.x, y2: best.y, targetId: best.id });
+                                  } else {
+                                    setAttachPreview(undefined);
+                                  }
+                                }
+                              };
+                              const up = () => {
+                                window.removeEventListener("mousemove", move);
+                                window.removeEventListener("mouseup", up);
+                                setAttachPreview(undefined);
+                                dispatch({ type: "COMMIT_ROUTE_EDIT" });
+                              };
+                              window.addEventListener("mousemove", move);
+                              window.addEventListener("mouseup", up);
+                            }}
+                          />
+                        );
+                      })}
+                    </g>
+                  );
+                }
+                // default line polyline
+                return (
+                  <g key={s.id}>
+                    <polyline
+                      points={pts.map((p) => `${p.x},${p.y}`).join(" ")}
+                      fill="none"
+                      stroke="#2563eb"
+                      strokeWidth={6}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    {pts.map((p, pi) => {
+                      const isEndpoint = pi === 0 || pi === pts.length - 1;
+                      return (
                         <circle
                           key={pi}
                           cx={p.x}
                           cy={p.y}
-                          r={pi === 1 ? 8 : 9}
-                          fill={pi === 1 ? "#34d399" : "#fbbf24"}
+                          r={isEndpoint ? 12 : 10}
+                          fill="#fbbf24"
                           stroke="#1f2937"
                           strokeWidth={2}
                           className="cursor-move"
@@ -1341,81 +1869,37 @@ export const FieldCanvas: React.FC<{
                                 pointIndex: pi,
                                 point: { x: nx, y: ny },
                               });
+                              // Attach preview for endpoints
+                              if (isEndpoint) {
+                                const cx = (nx / 100) * 1600;
+                                const cy = (ny / 100) * 900;
+                                let best: { id: string; x: number; y: number; d: number } | undefined;
+                                for (const pl of doc.players) {
+                                  const px = (pl.x / 100) * 1600;
+                                  const py = (pl.y / 100) * 900;
+                                  const d = Math.hypot(px - cx, py - cy);
+                                  if (!best || d < best.d) best = { id: pl.id, x: px, y: py, d };
+                                }
+                                const thresh = 24;
+                                if (best && best.d <= thresh) {
+                                  setAttachPreview({ x1: cx, y1: cy, x2: best.x, y2: best.y, targetId: best.id });
+                                } else {
+                                  setAttachPreview(undefined);
+                                }
+                              }
                             };
                             const up = () => {
                               window.removeEventListener("mousemove", move);
                               window.removeEventListener("mouseup", up);
+                              setAttachPreview(undefined);
                               dispatch({ type: "COMMIT_ROUTE_EDIT" });
                             };
                             window.addEventListener("mousemove", move);
                             window.addEventListener("mouseup", up);
                           }}
                         />
-                      ))}
-                    </g>
-                  );
-                }
-                // default line polyline
-                return (
-                  <g key={s.id}>
-                    <polyline
-                      points={pts.map((p) => `${p.x},${p.y}`).join(" ")}
-                      fill="none"
-                      stroke="#2563eb"
-                      strokeWidth={6}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    {pts.map((p, pi) => (
-                      <circle
-                        key={pi}
-                        cx={p.x}
-                        cy={p.y}
-                        r={9}
-                        fill="#fbbf24"
-                        stroke="#1f2937"
-                        strokeWidth={2}
-                        className="cursor-move"
-                        onMouseDown={(e) => {
-                          e.stopPropagation();
-                          const start = clientToWorld(e);
-                          const startPt = { x: p.x, y: p.y };
-                          const move = (me: MouseEvent) => {
-                            const now = clientToWorld(me);
-                            const dx = now.x - start.x;
-                            const dy = now.y - start.y;
-                            const nx = Math.min(
-                              100,
-                              Math.max(
-                                0,
-                                snapPct(((startPt.x + dx) / 1600) * 100)
-                              )
-                            );
-                            const ny = Math.min(
-                              100,
-                              Math.max(
-                                0,
-                                snapPct(((startPt.y + dy) / 900) * 100)
-                              )
-                            );
-                            dispatch({
-                              type: "UPDATE_ROUTE_POINT",
-                              routeId: r.id,
-                              segIndex: si,
-                              pointIndex: pi,
-                              point: { x: nx, y: ny },
-                            });
-                          };
-                          const up = () => {
-                            window.removeEventListener("mousemove", move);
-                            window.removeEventListener("mouseup", up);
-                            dispatch({ type: "COMMIT_ROUTE_EDIT" });
-                          };
-                          window.addEventListener("mousemove", move);
-                          window.addEventListener("mouseup", up);
-                        }}
-                      />
-                    ))}
+                      );
+                    })}
                   </g>
                 );
               })}
@@ -1468,6 +1952,20 @@ export const FieldCanvas: React.FC<{
                   }}
                   {...commonEvents}
                 >
+                  {/* Breathing selection outline for selected connector */}
+                  {isSelected && showSelectionPulse && (
+                    <line
+                      x1={x1}
+                      y1={y1}
+                      x2={x2}
+                      y2={y2}
+                      stroke="#3b82f6"
+                      strokeWidth={(width || 3) + 10}
+                      opacity={0.35}
+                      strokeLinecap="round"
+                      className="animate-selectedBreathe"
+                    />
+                  )}
                   {highlightStroke && (
                     <line
                       x1={x1}
@@ -1556,6 +2054,19 @@ export const FieldCanvas: React.FC<{
                   }}
                   {...commonEvents}
                 >
+                  {/* Breathing selection outline for selected curved annotation */}
+                  {isSelected && showSelectionPulse && (
+                    <path
+                      d={d}
+                      fill="none"
+                      stroke="#3b82f6"
+                      strokeWidth={(width || 3) + 10}
+                      opacity={0.35}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="animate-selectedBreathe"
+                    />
+                  )}
                   {highlightStroke && (
                     <path
                       d={d}
@@ -1587,6 +2098,19 @@ export const FieldCanvas: React.FC<{
                 }}
                 {...commonEvents}
               >
+                {/* Breathing selection outline for selected polyline/arrow/dashed/dotted */}
+                {isSelected && showSelectionPulse && (
+                  <polyline
+                    points={abs}
+                    fill="none"
+                    stroke="#3b82f6"
+                    strokeWidth={(width || 3) + 10}
+                    opacity={0.35}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="animate-selectedBreathe"
+                  />
+                )}
                 {highlightStroke && (
                   <polyline
                     points={abs}
@@ -1668,6 +2192,7 @@ export const FieldCanvas: React.FC<{
             if (sel.length !== 1) return null;
             const player = doc.players.find((p) => p.id === sel[0]);
             if (!player) return null;
+            if (state.ui.inlineEdit && state.ui.inlineEdit.playerId === player.id) return null;
             const px = (player.x / 100) * 1600;
             const py = (player.y / 100) * 900;
             const popW = 280;
@@ -1727,6 +2252,39 @@ export const FieldCanvas: React.FC<{
               </foreignObject>
             );
           })()}
+          {/* Inline label editor */}
+          {state.ui.inlineEdit && (() => {
+            const ie = state.ui.inlineEdit!;
+            const player = doc.players.find((pp) => pp.id === ie.playerId);
+            if (!player) return null;
+            const px = (player.x / 100) * 1600;
+            const py = (player.y / 100) * 900;
+            const w = 100;
+            const h = 30;
+            return (
+              <foreignObject x={px - w / 2} y={py - h / 2} width={w} height={h}>
+                <div className="pointer-events-auto" onMouseDown={(e) => e.stopPropagation()}>
+                  <input
+                    type="text"
+                    aria-label="Edit player label"
+                    autoFocus
+                    value={ie.draft}
+                    onFocus={(e) => e.currentTarget.select()}
+                    onChange={(e) => dispatch({ type: "UPDATE_INLINE_EDIT", draft: e.target.value })}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        dispatch({ type: "COMMIT_INLINE_EDIT" });
+                      } else if (e.key === "Escape") {
+                        dispatch({ type: "CANCEL_INLINE_EDIT" });
+                      }
+                    }}
+                    onBlur={() => dispatch({ type: "COMMIT_INLINE_EDIT" })}
+                    className="w-full h-full text-center text-[14px] font-semibold border border-slate-300 rounded bg-white shadow-sm"
+                  />
+                </div>
+              </foreignObject>
+            );
+          })()}
           {/* Snap indicator */}
           {snapViz.show && (
             <g pointerEvents="none">
@@ -1748,9 +2306,35 @@ export const FieldCanvas: React.FC<{
               />
             </g>
           )}
-          {/* Alignment guides */}
+          {/* Snap pulse animation (micro-bump halo) */}
+          {state.ui.effectsSnapPulse && !prefersReducedMotion && snapPulses.length > 0 && (
+            <g pointerEvents="none">
+              {snapPulses.map((p) => {
+                const prog = Math.min(1, (performance.now() - p.t0) / 300);
+                const r = 6 + prog * 14; // expand 6 -> 20
+                const op = 0.35 * (1 - prog);
+                return (
+                  <circle
+                    key={p.id}
+                    cx={p.x}
+                    cy={p.y}
+                    r={r}
+                    fill="none"
+                    stroke="#22d3ee"
+                    strokeWidth={2}
+                    opacity={op}
+                  />
+                );
+              })}
+            </g>
+          )}
+          {/* Alignment guides (live, with fade-in) */}
           {alignGuides && (
-            <g pointerEvents="none" opacity={0.6}>
+            <g
+              pointerEvents="none"
+              opacity={guideLiveOpacity}
+              style={{ transition: "opacity 120ms ease" }}
+            >
               {alignGuides.vertical?.map((x, i) => (
                 <line
                   key={`vg${i}`}
@@ -1777,6 +2361,64 @@ export const FieldCanvas: React.FC<{
               ))}
             </g>
           )}
+          {/* Alignment guides fade-out trail */}
+          {(!alignGuides && guideFade) && (() => {
+            const elapsed = performance.now() - guideFade.t0;
+            const op = Math.max(0, 0.6 * (1 - elapsed / 260));
+            return (
+              <g pointerEvents="none" opacity={op}>
+                {guideFade.guides.vertical?.map((x, i) => (
+                  <line
+                    key={`vgf${i}`}
+                    x1={x}
+                    x2={x}
+                    y1={0}
+                    y2={900}
+                    stroke="#22c55e"
+                    strokeWidth={2}
+                    strokeDasharray="6 4"
+                  />
+                ))}
+                {guideFade.guides.horizontal?.map((y, i) => (
+                  <line
+                    key={`hgf${i}`}
+                    x1={0}
+                    x2={1600}
+                    y1={y}
+                    y2={y}
+                    stroke="#22c55e"
+                    strokeWidth={2}
+                    strokeDasharray="6 4"
+                  />
+                ))}
+              </g>
+            );
+          })()}
+          {/* Center label flash when snapping to center axes */}
+          {centerFlash && (() => {
+            const elapsed = performance.now() - centerFlash.t0;
+            const op = Math.max(0, 0.9 * (1 - elapsed / 800));
+            const nodes: React.ReactNode[] = [];
+            if (centerFlash.x) {
+              // Vertical center label near top
+              nodes.push(
+                <g key="cxl" pointerEvents="none" opacity={op}>
+                  <rect x={800 - 26} y={6} width={52} height={18} rx={9} ry={9} fill="#0f172a" opacity={0.7} />
+                  <text x={800} y={19} fontSize={11} fontWeight={700} fill="#a7f3d0" textAnchor="middle">Center</text>
+                </g>
+              );
+            }
+            if (centerFlash.y) {
+              // Horizontal center label near right side
+              nodes.push(
+                <g key="cyl" pointerEvents="none" opacity={op}>
+                  <rect x={1600 - 66} y={450 - 9} width={60} height={18} rx={9} ry={9} fill="#0f172a" opacity={0.7} />
+                  <text x={1600 - 36} y={450 + 4} fontSize={11} fontWeight={700} fill="#a7f3d0" textAnchor="middle">Center</text>
+                </g>
+              );
+            }
+            return <g>{nodes}</g>;
+          })()}
           {/* Annotation selection handles */}
           {state.ui.selectedAnnotationId &&
             (() => {
@@ -1990,35 +2632,162 @@ export const FieldCanvas: React.FC<{
                   ey = (end.y / 100) * 900;
                 const d = `M ${sx},${sy} Q ${cx},${cy} ${ex},${ey}`;
                 return (
-                  <path
-                    d={d}
-                    fill="none"
-                    stroke="#fbbf24"
-                    strokeWidth={6}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeDasharray="8 6"
-                  />
+                  <g>
+                    <path
+                      d={d}
+                      fill="none"
+                      stroke="#fbbf24"
+                      strokeWidth={6}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeDasharray="8 6"
+                    />
+                    {(() => {
+                      // Attach preview when near a player with current end point
+                      const endPt = end;
+                      const ex2 = (endPt.x / 100) * 1600;
+                      const ey2 = (endPt.y / 100) * 900;
+                      let best: { x: number; y: number; d: number } | undefined;
+                      for (const pl of doc.players) {
+                        const px = (pl.x / 100) * 1600;
+                        const py = (pl.y / 100) * 900;
+                        const d = Math.hypot(px - ex2, py - ey2);
+                        if (!best || d < best.d) best = { x: px, y: py, d };
+                      }
+                      if (best && best.d <= 24) {
+                        return (
+                          <g pointerEvents="none">
+                            <line x1={ex2} y1={ey2} x2={best.x} y2={best.y} stroke="#f59e0b" strokeWidth={3} strokeDasharray="2 6" opacity={0.9} />
+                            <circle cx={best.x} cy={best.y} r={8} fill="none" stroke="#f59e0b" strokeWidth={2} strokeDasharray="2 6" opacity={0.9} />
+                          </g>
+                        );
+                      }
+                      return null;
+                    })()}
+                  </g>
                 );
               })()
             ) : (
-              <polyline
-                points={[
+              (() => {
+                const points = [
                   ...state.ui.drawing.anchorPoints,
-                  ...(state.ui.drawing.preview
-                    ? [state.ui.drawing.preview]
-                    : []),
-                ]
+                  ...(state.ui.drawing.preview ? [state.ui.drawing.preview] : []),
+                ];
+                const poly = points
                   .map((p) => `${(p.x / 100) * 1600},${(p.y / 100) * 900}`)
-                  .join(" ")}
-                fill="none"
-                stroke="#fbbf24"
-                strokeWidth={6}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeDasharray="8 6"
-              />
+                  .join(" ");
+                const endPt = points[points.length - 1];
+                const ex2 = endPt ? (endPt.x / 100) * 1600 : undefined;
+                const ey2 = endPt ? (endPt.y / 100) * 900 : undefined;
+                let attach: { x: number; y: number; d: number } | undefined;
+                if (ex2 !== undefined && ey2 !== undefined) {
+                  for (const pl of doc.players) {
+                    const px = (pl.x / 100) * 1600;
+                    const py = (pl.y / 100) * 900;
+                    const d = Math.hypot(px - ex2, py - ey2);
+                    if (!attach || d < attach.d) attach = { x: px, y: py, d };
+                  }
+                }
+                return (
+                  <g>
+                    <polyline
+                      points={poly}
+                      fill="none"
+                      stroke="#fbbf24"
+                      strokeWidth={6}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeDasharray="8 6"
+                    />
+                    {attach && attach.d <= 24 && ex2 !== undefined && ey2 !== undefined && (
+                      <g pointerEvents="none">
+                        <line x1={ex2} y1={ey2} x2={attach.x} y2={attach.y} stroke="#f59e0b" strokeWidth={3} strokeDasharray="2 6" opacity={0.9} />
+                        <circle cx={attach.x} cy={attach.y} r={8} fill="none" stroke="#f59e0b" strokeWidth={2} strokeDasharray="2 6" opacity={0.9} />
+                      </g>
+                    )}
+                  </g>
+                );
+              })()
             ))}
+          {/* Contextual HUD for align/distribute (shows when selecting >=3 players) */}
+          {(() => {
+            const ids = state.ui.selectedIds || [];
+            if (ids.length < 3) return null;
+            const sel = doc.players.filter((p) => ids.includes(p.id));
+            if (!sel.length) return null;
+            const xs = sel.map((p) => (p.x / 100) * 1600);
+            const ys = sel.map((p) => (p.y / 100) * 900);
+            const minX = Math.min(...xs);
+            const maxX = Math.max(...xs);
+            const minY = Math.min(...ys);
+            const boxW = maxX - minX;
+            const hudW = 280;
+            const hudH = 34;
+            const pad = 8;
+            const dockX = Math.max(pad, Math.min(1600 - hudW - pad, minX + boxW / 2 - hudW / 2));
+            const dockY = Math.max(pad, minY - hudH - 10);
+            const btn = (label: string, title: string, onClick: () => void, key: string) => (
+              <Button
+                key={key}
+                size="xs"
+                variant="secondary"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  onClick();
+                }}
+                title={title}
+              >
+                {label}
+              </Button>
+            );
+            return (
+              <foreignObject x={dockX} y={dockY} width={hudW} height={hudH}>
+                <div className="pointer-events-auto" onMouseDown={(e) => e.stopPropagation()}>
+                  <div className="panel-cupertino inline-flex items-center gap-1 px-2 py-1">
+                    {/* Align X */}
+                    {btn("L", "Align left edges", () => dispatch({ type: "ALIGN_SELECTION", axis: "x", align: "start" }), "ax-l")}
+                    {btn("C", "Align vertical centers", () => dispatch({ type: "ALIGN_SELECTION", axis: "x", align: "center" }), "ax-c")}
+                    {btn("R", "Align right edges", () => dispatch({ type: "ALIGN_SELECTION", axis: "x", align: "end" }), "ax-r")}
+                    <span className="w-px h-4 bg-slate-200 mx-1" />
+                    {/* Align Y */}
+                    {btn("T", "Align top edges", () => dispatch({ type: "ALIGN_SELECTION", axis: "y", align: "start" }), "ay-t")}
+                    {btn("M", "Align horizontal middles", () => dispatch({ type: "ALIGN_SELECTION", axis: "y", align: "center" }), "ay-m")}
+                    {btn("B", "Align bottom edges", () => dispatch({ type: "ALIGN_SELECTION", axis: "y", align: "end" }), "ay-b")}
+                    <span className="w-px h-4 bg-slate-200 mx-1" />
+                    {/* Distribute */}
+                    {btn("H", "Distribute horizontally", () => dispatch({ type: "DISTRIBUTE_SELECTION", axis: "x" }), "d-h")}
+                    {btn("V", "Distribute vertically", () => dispatch({ type: "DISTRIBUTE_SELECTION", axis: "y" }), "d-v")}
+                  </div>
+                </div>
+              </foreignObject>
+            );
+          })()}
+          {/* Attach/Snap dotted preview while dragging an existing route endpoint */}
+          {attachPreview && (
+            <g pointerEvents="none">
+              <line
+                x1={attachPreview.x1}
+                y1={attachPreview.y1}
+                x2={attachPreview.x2}
+                y2={attachPreview.y2}
+                stroke="#f59e0b"
+                strokeWidth={3}
+                strokeDasharray="2 6"
+                opacity={0.9}
+              />
+              <circle
+                cx={attachPreview.x2}
+                cy={attachPreview.y2}
+                r={8}
+                fill="none"
+                stroke="#f59e0b"
+                strokeWidth={2}
+                strokeDasharray="2 6"
+                opacity={0.9}
+              />
+            </g>
+          )}
           {/* Annotation preview */}
           {state.ui.annotating &&
             (() => {
@@ -2093,19 +2862,117 @@ export const FieldCanvas: React.FC<{
               );
             })()}
           {selectionBox && (
-            <rect
-              x={selectionBox.x}
-              y={selectionBox.y}
-              width={selectionBox.w}
-              height={selectionBox.h}
-              fill="rgba(250,204,21,0.15)"
-              stroke="#fbbf24"
-              strokeWidth={1.5}
-              strokeDasharray="4 3"
-            />
+            <g>
+              <rect
+                x={selectionBox.x}
+                y={selectionBox.y}
+                width={selectionBox.w}
+                height={selectionBox.h}
+                fill="rgba(250,204,21,0.15)"
+                stroke="#fbbf24"
+                strokeWidth={1.5}
+                strokeDasharray="4 3"
+              />
+              {/* Count badge at top-right of marquee */}
+              <g
+                transform={`translate(${selectionBox.x + selectionBox.w}, ${selectionBox.y})`}
+                style={{ pointerEvents: "none", userSelect: "none" }}
+              >
+                {/* offset to avoid overlapping the border */}
+                <g transform="translate(6, -10)">
+                  <rect
+                    x={-22}
+                    y={-14}
+                    width={44}
+                    height={22}
+                    rx={11}
+                    ry={11}
+                    fill="#111827"
+                    opacity={0.9}
+                  />
+                  <text
+                    x={0}
+                    y={-3}
+                    fontSize={12}
+                    fontWeight={700}
+                    fill="#fbbf24"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                  >
+                    {marqueeCount}
+                  </text>
+                </g>
+              </g>
+            </g>
           )}
         </g>
       </svg>
+      {/* Minimap Navigator (bottom-right) */}
+      {(() => {
+        const showMini = state.ui.zoom > 1.001; // hide when fully zoomed out
+        if (!showMini) return null;
+  const MINI_W = 160;
+        const border = 1;
+        // Compute viewport rect in world coords
+        const widthWorld = 1600 / state.ui.zoom;
+        const heightWorld = 900 / state.ui.zoom;
+        let xWorld = -state.ui.panX / state.ui.zoom;
+        let yWorld = -state.ui.panY / state.ui.zoom;
+        xWorld = Math.max(0, Math.min(1600 - widthWorld, xWorld));
+        yWorld = Math.max(0, Math.min(900 - heightWorld, yWorld));
+        const scale = MINI_W / 1600; // 0.1
+        const rx = xWorld * scale;
+        const ry = yWorld * scale;
+        const rw = widthWorld * scale;
+        const rh = heightWorld * scale;
+        const theme = doc.field.theme || "classic";
+        const bg = theme === "mono-dark" ? "#111827" : theme === "mono-light" ? "#f9fafb" : "#064e3b";
+        const frame = theme === "mono-dark" ? "#6b7280" : theme === "mono-light" ? "#9ca3af" : "#10b981";
+
+        const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+          e.preventDefault();
+          e.stopPropagation();
+          miniDragRef.current.dragging = true;
+          moveViewportFromMinimap(e.currentTarget, e.clientX, e.clientY);
+          const move = (ev: MouseEvent) => {
+            if (!miniDragRef.current.dragging) return;
+            moveViewportFromMinimap(e.currentTarget, ev.clientX, ev.clientY);
+          };
+          const up = () => {
+            miniDragRef.current.dragging = false;
+            window.removeEventListener("mousemove", move);
+            window.removeEventListener("mouseup", up);
+          };
+          window.addEventListener("mousemove", move);
+          window.addEventListener("mouseup", up);
+        };
+
+        return (
+          <div
+            className="absolute bottom-2 right-2 select-none"
+            style={{ width: MINI_W + 2 * border, height: (MINI_W * 0.5625) + 2 * border }}
+            onMouseDown={onMouseDown}
+            role="presentation"
+            aria-hidden
+          >
+            <svg
+              width={MINI_W + 2 * border}
+              height={(MINI_W * 0.5625) + 2 * border}
+              viewBox={`0 0 ${MINI_W + 2 * border} ${(MINI_W * 0.5625) + 2 * border}`}
+              style={{ display: "block", cursor: "pointer" }}
+            >
+              {/* frame */}
+              <rect x={0} y={0} width={MINI_W + 2 * border} height={(MINI_W * 0.5625) + 2 * border} rx={6} fill="#ffffff" opacity={0.8} />
+              <g transform={`translate(${border} ${border})`}>
+                {/* field */}
+                <rect x={0} y={0} width={MINI_W} height={MINI_W * 0.5625} fill={bg} opacity={theme === "classic" ? 0.6 : 0.8} />
+                {/* viewport */}
+                <rect x={rx} y={ry} width={rw} height={rh} fill="none" stroke={frame} strokeWidth={2} />
+              </g>
+            </svg>
+          </div>
+        );
+      })()}
     </div>
   );
 };

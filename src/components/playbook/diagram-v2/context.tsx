@@ -37,7 +37,9 @@ const initialState: DiagramEditorState = {
     panY: 0,
     snap: false,
     snapGrid: 2,
-    distributeSpacing: 5,
+  effectsSnapPulse: true,
+  showGridOverlay: false,
+  distributeSpacing: 5,
   },
   dirty: false,
   history: [],
@@ -126,7 +128,12 @@ function reducer(
       });
       return {
         ...state,
-        ui: { ...state.ui, selectedIds: [], activePlayerId: undefined },
+        ui: {
+          ...state.ui,
+          selectedIds: [],
+          activePlayerId: undefined,
+          inlineEdit: undefined,
+        },
       };
     case "MOVE_SELECTION": {
       const map = new Map(action.patches.map((p) => [p.id, p]));
@@ -187,6 +194,44 @@ function reducer(
       // Push current doc snapshot to history (for grouped nudges / drags)
       const after = pushHistory(state, state.doc);
       return { ...after, ui: { ...after.ui, dragging: false } };
+    }
+    // ===== Inline label editing =====
+    case "START_INLINE_EDIT": {
+      const player = state.doc.players.find((p) => p.id === action.playerId);
+      if (!player) return state;
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          inlineEdit: { playerId: action.playerId, draft: action.initial ?? player.label },
+          selectedIds: [action.playerId],
+          activePlayerId: action.playerId,
+        },
+      };
+    }
+    case "UPDATE_INLINE_EDIT": {
+      if (!state.ui.inlineEdit) return state;
+      return { ...state, ui: { ...state.ui, inlineEdit: { ...state.ui.inlineEdit, draft: action.draft } } };
+    }
+    case "CANCEL_INLINE_EDIT": {
+      return { ...state, ui: { ...state.ui, inlineEdit: undefined } };
+    }
+    case "COMMIT_INLINE_EDIT": {
+      const ie = state.ui.inlineEdit;
+      if (!ie) return state;
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: state.doc.players.map((p) =>
+          p.id === ie.playerId ? { ...p, label: ie.draft } : p
+        ),
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramPlayerUpdate,
+        data: { playerId: ie.playerId, fields: ["label"], inline: true },
+      });
+      const after = pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+      return { ...after, ui: { ...after.ui, inlineEdit: undefined } };
     }
     case "START_ROUTE":
       return {
@@ -705,6 +750,30 @@ function reducer(
           dragging: true,
         },
       };
+    case "SET_VIEWPORT": {
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          zoom: action.zoom !== undefined ? action.zoom : state.ui.zoom,
+          panX: action.panX !== undefined ? action.panX : state.ui.panX,
+          panY: action.panY !== undefined ? action.panY : state.ui.panY,
+        },
+      };
+    }
+    case "SET_SNAP_PULSE":
+      return { ...state, ui: { ...state.ui, effectsSnapPulse: action.enabled } };
+    case "SET_GRID_OVERLAY": {
+      if (typeof window !== "undefined") {
+        try {
+          window.localStorage.setItem(
+            "diagram.grid.overlay",
+            action.enabled ? "1" : "0"
+          );
+        } catch {}
+      }
+      return { ...state, ui: { ...state.ui, showGridOverlay: action.enabled } };
+    }
     case "SET_BALL_HASH": {
       const nextDoc: DiagramDocument = {
         ...state.doc,
@@ -1079,6 +1148,16 @@ export const DiagramEditorProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  // Initialize persisted flags on mount (e.g., grid overlay)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const grid = window.localStorage.getItem("diagram.grid.overlay");
+      if (grid === "1" || grid === "0") {
+        dispatch({ type: "SET_GRID_OVERLAY", enabled: grid === "1" });
+      }
+    } catch {}
+  }, []);
   // Local aggregation for reorder performance (drag based) to reduce event spam and provide summary stats.
   const reorderAggRef = React.useRef<{
     count: number;

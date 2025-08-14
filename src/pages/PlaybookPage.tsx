@@ -9,6 +9,9 @@ import MobileDrawer from "../components/mobile/MobileDrawer";
 import { PlayFilters } from "../components/playbook/PlayFilters";
 import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
 import { PlayBuilderCore } from "../components/playbook/PlayBuilder";
+import { ConfettiBurst } from "../components/ui/ConfettiBurst";
+import { hasShownToday, markShownToday } from "../components/ui/confetti";
+import { UserPreferencesService } from "../services/userPreferencesService";
 import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal";
 import { PracticeScriptService } from "../services/practiceScriptService";
 import { CSVService } from "../services/csv";
@@ -130,6 +133,18 @@ const PlaybookPageInner: React.FC = () => {
       });
       handlePlayCreated();
       toastSuccess(`Play "${playData.play_name}" saved!`);
+
+      // Confetti-on-first-save-per-day (if enabled)
+      try {
+        const prefs = UserPreferencesService.loadPreferences();
+        const enabled = !!prefs.ui.showConfetti;
+        if (enabled && !hasShownToday("play_save")) {
+          dispatch({ type: "SHOW_CONFETTI_OVERLAY" });
+          markShownToday("play_save");
+        }
+      } catch {
+        // ignore
+      }
     } catch (e) {
       const mapped = mapError(e);
       console.error("Play save failed", e);
@@ -857,6 +872,50 @@ const PlaybookPageInner: React.FC = () => {
           onSave={handleSavePlay}
         />
       )}
+      {/* Confetti overlay with small controls */}
+      {(() => {
+        const prefs = UserPreferencesService.loadPreferences();
+        const enabled = !!prefs.ui.showConfetti;
+        return (
+          <>
+            <ConfettiBurst
+              open={state.showConfettiOverlay === true && enabled}
+              onClose={() => dispatch({ type: "HIDE_CONFETTI_OVERLAY" })}
+              particleCount={64}
+              durationMs={1600}
+            />
+            {state.showConfettiOverlay && enabled && (
+              <div className="fixed inset-x-0 bottom-4 z-[71] flex justify-center pointer-events-none">
+                <div className="pointer-events-auto surface-card shadow-md rounded-full px-3 py-1 text-xs text-text-secondary flex items-center gap-2">
+                  <Icon name="sparkles" />
+                  <span>Nice save!</span>
+                  <Button
+                    variant="link"
+                    size="xs"
+                    onClick={() => {
+                      const p = UserPreferencesService.loadPreferences();
+                      p.ui.showConfetti = false;
+                      UserPreferencesService.savePreferences(p);
+                      dispatch({ type: "HIDE_CONFETTI_OVERLAY" });
+                    }}
+                  >
+                    Don't show confetti
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => dispatch({ type: "HIDE_CONFETTI_OVERLAY" })}
+                    aria-label="Dismiss"
+                    title="Dismiss"
+                  >
+                    Dismiss
+                  </Button>
+                </div>
+              </div>
+            )}
+          </>
+        );
+      })()}
       {state.showImport && (
         <CSVImportModal
           isOpen={state.showImport}

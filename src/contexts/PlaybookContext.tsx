@@ -55,6 +55,7 @@ export interface PlaybookUIState {
   refreshTrigger: number;
   showCelebration: boolean;
   recentAchievement: string | null;
+  showConfettiOverlay: boolean;
 }
 
 export interface PlaybookState
@@ -91,6 +92,7 @@ const initialState: PlaybookState = {
   refreshTrigger: 0,
   showCelebration: false,
   recentAchievement: null,
+  showConfettiOverlay: false,
 };
 
 // ACTION TYPES
@@ -127,6 +129,8 @@ export type PlaybookAction =
   | { type: "SET_STREAK_DAYS"; days: number }
   | { type: "TRIGGER_CELEBRATION"; achievement: string }
   | { type: "HIDE_CELEBRATION" }
+  | { type: "SHOW_CONFETTI_OVERLAY" }
+  | { type: "HIDE_CONFETTI_OVERLAY" }
   | { type: "SET_IMPORTED_LOCAL_PRESETS"; value: boolean };
 
 function reducer(state: PlaybookState, action: PlaybookAction): PlaybookState {
@@ -213,6 +217,10 @@ function reducer(state: PlaybookState, action: PlaybookAction): PlaybookState {
       };
     case "HIDE_CELEBRATION":
       return { ...state, showCelebration: false };
+    case "SHOW_CONFETTI_OVERLAY":
+      return { ...state, showConfettiOverlay: true };
+    case "HIDE_CONFETTI_OVERLAY":
+      return { ...state, showConfettiOverlay: false };
     case "SET_IMPORTED_LOCAL_PRESETS":
       return { ...state, importedLocalPresets: action.value };
     default:

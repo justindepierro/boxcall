@@ -230,6 +230,27 @@
   animation: squareSpin 1s linear infinite;
 }
 
+/* === SELECTION BREATHING === */
+/* Subtle breathing outline for selected elements */
+@keyframes selectedBreathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.25;
+  }
+}
+
+.animate-selectedBreathe {
+  animation: selectedBreathe 1.8s var(--timing-square-ease) infinite;
+  /* Ensure transforms behave predictably on SVG */
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
 /* === BUTTON ENHANCEMENTS === */
 /* Confident interaction feedback */
 @keyframes buttonPress {
@@ -384,6 +405,10 @@
     animation: none;
     opacity: 1;
     transform: none;
+  }
+  .animate-selectedBreathe {
+    animation: none !important;
+    opacity: 0.55; /* static subtle outline */
   }
 }
 

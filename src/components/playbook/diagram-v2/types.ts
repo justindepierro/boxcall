@@ -101,6 +101,12 @@ export interface EditorToolState {
   prevSlice?: { backYards: number; forwardYards: number; losYards?: number }; // remember previous slice when entering red zone mode
   pendingDeleteId?: string; // player id awaiting delete confirmation
   pendingBulkDelete?: boolean; // awaiting confirmation for multi-delete
+  // Visual effects toggles
+  effectsSnapPulse?: boolean; // show snap halo pulse when snapping
+  // Inline editing state for player labels
+  inlineEdit?: { playerId: string; draft: string };
+  // Grid overlay visibility
+  showGridOverlay?: boolean;
 }
 
 export interface DiagramEditorState {
@@ -146,6 +152,8 @@ export type DiagramEditorAction =
   | { type: "ADD_ROUTE_SEGMENT"; playerId: string; segment: RouteSegment }
   | { type: "SET_ZOOM"; zoom: number }
   | { type: "PAN"; dx: number; dy: number }
+  | { type: "SET_VIEWPORT"; zoom?: number; panX?: number; panY?: number }
+  | { type: "SET_SNAP_PULSE"; enabled: boolean }
   | { type: "TOGGLE_FIELD_FLAG"; flag: keyof DiagramFieldConfig }
   | { type: "SET_BALL_HASH"; hash: DiagramFieldConfig["ballHash"] }
   | { type: "SET_FIELD_THEME"; theme: NonNullable<DiagramFieldConfig["theme"]> }
@@ -207,7 +215,13 @@ export type DiagramEditorAction =
     }
   | { type: "SET_SNAP"; enabled: boolean }
   | { type: "SET_SNAP_GRID"; size: number }
+  | { type: "SET_GRID_OVERLAY"; enabled: boolean }
   | { type: "SET_DISTRIBUTE_SPACING"; spacing: number }
+  // Inline label editing
+  | { type: "START_INLINE_EDIT"; playerId: string; initial?: string }
+  | { type: "UPDATE_INLINE_EDIT"; draft: string }
+  | { type: "CANCEL_INLINE_EDIT" }
+  | { type: "COMMIT_INLINE_EDIT" }
   // Alignment and distribution of selected players
   | {
       type: "ALIGN_SELECTION";
