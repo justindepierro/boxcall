@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { FieldCanvas } from "../FieldCanvas";
 import { ActionBar } from "./ActionBar";
 import { ToolPalette } from "./ToolPalette";
+import { TipsOverlay } from "./TipsOverlay";
 
 /**
  * CanvasPane
@@ -25,6 +26,7 @@ export const CanvasPane: React.FC<{
           <FieldCanvas className="w-full h-full" />
           <CaptureSvgRef targetRef={svgRef} />
           <ActionBar svgRef={svgRef} />
+          <TipsOverlay />
         </div>
       </div>
     </div>
