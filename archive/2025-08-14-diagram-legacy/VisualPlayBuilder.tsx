@@ -8,7 +8,8 @@ import { X, Save, Eye, Users, Route, Palette } from "lucide-react";
 import { SegmentedControl } from "../../src/components/ui/SegmentedControl/SegmentedControl";
 import type { Play } from "../../src/types/play";
 // Use the archived shim to keep this self-contained
-import { FieldCanvas } from "./FieldCanvas.legacy-shim";
+// Explicit extension to satisfy TS in archive context
+import { FieldCanvas } from "./FieldCanvas.legacy-shim.tsx";
 import { Typography } from "../../src/components/design-system/Typography";
 
 interface VisualPlayBuilderProps {

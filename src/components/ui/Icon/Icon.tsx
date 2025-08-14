@@ -120,6 +120,8 @@ const ICON_MAP = {
   move: LucideIcons.Move,
   "pen-tool": LucideIcons.PenTool,
   link: LucideIcons.Link,
+  // Delight
+  sparkles: LucideIcons.Sparkles,
 } as const;
 
 export type IconName = keyof typeof ICON_MAP;
