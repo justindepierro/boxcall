@@ -14,16 +14,21 @@ export const PlayerSidebar: React.FC = () => {
   }, [state.doc]);
   if (!state.doc) return null;
   return (
-  <div data-testid="player-sidebar-root">
+    <div data-testid="player-sidebar-root">
       <div className="text-xs text-slate-500">Complexity: {complexity}</div>
-      <div className="text-xs text-slate-500">Players: {state.doc.players.length}</div>
-      <div className="text-xs text-slate-500">Routes: {state.doc.routes.length}</div>
+      <div className="text-xs text-slate-500">
+        Players: {state.doc.players.length}
+      </div>
+      <div className="text-xs text-slate-500">
+        Routes: {state.doc.routes.length}
+      </div>
       {state.doc.players.length > 0 && (
         <div>
           <div className="text-[11px] font-semibold text-slate-600 mt-3 mb-1 flex items-center justify-between">
             <span>PLAYERS</span>
             <span className="text-[10px] font-normal text-slate-400">
-              {state.doc.players.filter((p) => p.side !== "D").length} O / {state.doc.players.filter((p) => p.side === "D").length} D
+              {state.doc.players.filter((p) => p.side !== "D").length} O /{" "}
+              {state.doc.players.filter((p) => p.side === "D").length} D
             </span>
           </div>
           {state.ui.selectedIds && state.ui.selectedIds.length > 1 && (
@@ -84,8 +89,22 @@ export const PlayerSidebar: React.FC = () => {
                   defaultValue=""
                 >
                   <option value="">Role…</option>
-                  {["QB","RB","WR","TE","OL","DL","LB","CB","S","K","P"].map((r) => (
-                    <option key={r} value={r}>{r}</option>
+                  {[
+                    "QB",
+                    "RB",
+                    "WR",
+                    "TE",
+                    "OL",
+                    "DL",
+                    "LB",
+                    "CB",
+                    "S",
+                    "K",
+                    "P",
+                  ].map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
                   ))}
                 </select>
                 <Button
@@ -154,11 +173,22 @@ export const PlayerSidebar: React.FC = () => {
           )}
           <ul className="space-y-2">
             {(() => {
-              interface Category { label: string; match: (p: DiagramPlayer) => boolean }
+              interface Category {
+                label: string;
+                match: (p: DiagramPlayer) => boolean;
+              }
               const categories: Category[] = [
                 { label: "QUARTERBACK", match: (p) => p.role === "QB" },
-                { label: "SKILL", match: (p) => ["RB", "WR", "TE"].includes(p.role || "") },
-                { label: "OFFENSIVE LINE", match: (p) => p.role === "OL" || ["LT","LG","C","RG","RT"].includes(p.label) },
+                {
+                  label: "SKILL",
+                  match: (p) => ["RB", "WR", "TE"].includes(p.role || ""),
+                },
+                {
+                  label: "OFFENSIVE LINE",
+                  match: (p) =>
+                    p.role === "OL" ||
+                    ["LT", "LG", "C", "RG", "RT"].includes(p.label),
+                },
                 { label: "DEFENSE", match: (p) => p.side === "D" },
               ];
               const rendered: React.ReactNode[] = [];
@@ -174,35 +204,68 @@ export const PlayerSidebar: React.FC = () => {
                   </li>
                 );
                 group.forEach((gp) => {
-                  const i = state.doc.players.findIndex((pl) => pl.id === gp.id);
+                  const i = state.doc.players.findIndex(
+                    (pl) => pl.id === gp.id
+                  );
                   const pending = state.ui.pendingDeleteId === gp.id;
                   rendered.push(
                     <li
                       key={gp.id}
-                      className="bg-white/80 rounded border border-subtle p-2 space-y-1"
+                      className="bg-white/70 rounded border border-subtle p-2 space-y-1"
                       draggable
                       onDragStart={(e) => {
                         e.dataTransfer.setData("text/player-id", gp.id);
                         e.dataTransfer.effectAllowed = "move";
-                        (e.dataTransfer as unknown as { _dragStartTs?: number })._dragStartTs = performance.now();
+                        (
+                          e.dataTransfer as unknown as { _dragStartTs?: number }
+                        )._dragStartTs = performance.now();
                       }}
-                      onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = "move"; }}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = "move";
+                      }}
                       onDrop={(e) => {
                         e.preventDefault();
                         const id = e.dataTransfer.getData("text/player-id");
                         if (!id || id === gp.id) return;
-                        const from = state.doc.players.findIndex((pl) => pl.id === id);
+                        const from = state.doc.players.findIndex(
+                          (pl) => pl.id === id
+                        );
                         if (from === -1) return;
                         const to = i;
-                        const start = (e.dataTransfer as unknown as { _dragStartTs?: number })._dragStartTs || performance.now();
-                        dispatch({ type: "MOVE_PLAYER_INDEX", id, toIndex: to });
+                        const start =
+                          (
+                            e.dataTransfer as unknown as {
+                              _dragStartTs?: number;
+                            }
+                          )._dragStartTs || performance.now();
+                        dispatch({
+                          type: "MOVE_PLAYER_INDEX",
+                          id,
+                          toIndex: to,
+                        });
                         telemetry.enqueue({
                           type: TelemetryEventTypes.PlayDiagramPlayerReorder,
-                          data: { method: "drag", playerId: id, from, to, durMs: Math.round(performance.now() - start) },
+                          data: {
+                            method: "drag",
+                            playerId: id,
+                            from,
+                            to,
+                            durMs: Math.round(performance.now() - start),
+                          },
                         });
                         const listEl = document.querySelector("ul.space-y-2");
-                        const listHeight = listEl ? (listEl as HTMLElement).clientHeight : undefined;
-                        window.dispatchEvent(new CustomEvent("diagram:player-reorder", { detail: { durMs: Math.round(performance.now() - start), listHeight } }));
+                        const listHeight = listEl
+                          ? (listEl as HTMLElement).clientHeight
+                          : undefined;
+                        window.dispatchEvent(
+                          new CustomEvent("diagram:player-reorder", {
+                            detail: {
+                              durMs: Math.round(performance.now() - start),
+                              listHeight,
+                            },
+                          })
+                        );
                       }}
                     >
                       <div className="flex items-center gap-2">
@@ -210,23 +273,57 @@ export const PlayerSidebar: React.FC = () => {
                           className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
                           value={gp.label}
                           onChange={(e) =>
-                            dispatch({ type: "UPDATE_PLAYER", id: gp.id, patch: { label: e.target.value.toUpperCase().slice(0, 3) } })
+                            dispatch({
+                              type: "UPDATE_PLAYER",
+                              id: gp.id,
+                              patch: {
+                                label: e.target.value.toUpperCase().slice(0, 3),
+                              },
+                            })
                           }
                         />
                         <select
                           className="flex-1 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
                           value={gp.role || ""}
-                          onChange={(e) => dispatch({ type: "UPDATE_PLAYER", id: gp.id, patch: { role: e.target.value || undefined } })}
+                          onChange={(e) =>
+                            dispatch({
+                              type: "UPDATE_PLAYER",
+                              id: gp.id,
+                              patch: { role: e.target.value || undefined },
+                            })
+                          }
                         >
                           <option value="">Role</option>
-                          {["QB","RB","WR","TE","OL","DL","LB","CB","S","K","P"].map((r) => (
-                            <option key={r} value={r}>{r}</option>
+                          {[
+                            "QB",
+                            "RB",
+                            "WR",
+                            "TE",
+                            "OL",
+                            "DL",
+                            "LB",
+                            "CB",
+                            "S",
+                            "K",
+                            "P",
+                          ].map((r) => (
+                            <option key={r} value={r}>
+                              {r}
+                            </option>
                           ))}
                         </select>
                         <select
                           className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
                           value={gp.side || "O"}
-                          onChange={(e) => dispatch({ type: "UPDATE_PLAYER", id: gp.id, patch: { side: e.target.value as "O" | "D" | "ST" } })}
+                          onChange={(e) =>
+                            dispatch({
+                              type: "UPDATE_PLAYER",
+                              id: gp.id,
+                              patch: {
+                                side: e.target.value as "O" | "D" | "ST",
+                              },
+                            })
+                          }
                         >
                           <option value="O">O</option>
                           <option value="D">D</option>
@@ -236,8 +333,17 @@ export const PlayerSidebar: React.FC = () => {
                           <input
                             type="color"
                             className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
-                            value={gp.color || (gp.side === "D" ? "#b91c1c" : "#1e3a8a")}
-                            onChange={(e) => dispatch({ type: "UPDATE_PLAYER", id: gp.id, patch: { color: e.target.value } })}
+                            value={
+                              gp.color ||
+                              (gp.side === "D" ? "#b91c1c" : "#1e3a8a")
+                            }
+                            onChange={(e) =>
+                              dispatch({
+                                type: "UPDATE_PLAYER",
+                                id: gp.id,
+                                patch: { color: e.target.value },
+                              })
+                            }
                           />
                         </label>
                         <div className="flex items-center gap-1">
@@ -245,29 +351,114 @@ export const PlayerSidebar: React.FC = () => {
                             type="color"
                             className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
                             value={gp.outlineColor || "#ffffff"}
-                            onChange={(e) => dispatch({ type: "UPDATE_PLAYER", id: gp.id, patch: { outlineColor: e.target.value } })}
+                            onChange={(e) =>
+                              dispatch({
+                                type: "UPDATE_PLAYER",
+                                id: gp.id,
+                                patch: { outlineColor: e.target.value },
+                              })
+                            }
                           />
                           <select
                             className="w-16 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
                             value={gp.outlineColor || ""}
-                            onChange={(e) => dispatch({ type: "UPDATE_PLAYER", id: gp.id, patch: { outlineColor: e.target.value || undefined } })}
+                            onChange={(e) =>
+                              dispatch({
+                                type: "UPDATE_PLAYER",
+                                id: gp.id,
+                                patch: {
+                                  outlineColor: e.target.value || undefined,
+                                },
+                              })
+                            }
                           >
                             <option value="">Auto</option>
-                            {["#ffffff","#f8fafc","#1f2937","#111827","#000000"].map((c) => (
-                              <option key={c} value={c}>{c}</option>
+                            {[
+                              "#ffffff",
+                              "#f8fafc",
+                              "#1f2937",
+                              "#111827",
+                              "#000000",
+                            ].map((c) => (
+                              <option key={c} value={c}>
+                                {c}
+                              </option>
                             ))}
                           </select>
                         </div>
                         <div className="flex items-center gap-1 ml-1">
-                          <Button size="xs" variant="ghost" disabled={i === 0} onClick={() => dispatch({ type: "REORDER_PLAYER", id: gp.id, direction: "up" })}>↑</Button>
-                          <Button size="xs" variant="ghost" disabled={i === state.doc.players.length - 1} onClick={() => dispatch({ type: "REORDER_PLAYER", id: gp.id, direction: "down" })}>↓</Button>
+                          <Button
+                            size="xs"
+                            variant="ghost"
+                            disabled={i === 0}
+                            onClick={() =>
+                              dispatch({
+                                type: "REORDER_PLAYER",
+                                id: gp.id,
+                                direction: "up",
+                              })
+                            }
+                          >
+                            ↑
+                          </Button>
+                          <Button
+                            size="xs"
+                            variant="ghost"
+                            disabled={i === state.doc.players.length - 1}
+                            onClick={() =>
+                              dispatch({
+                                type: "REORDER_PLAYER",
+                                id: gp.id,
+                                direction: "down",
+                              })
+                            }
+                          >
+                            ↓
+                          </Button>
                           {!pending && (
-                            <Button size="xs" variant="ghost" onClick={() => dispatch({ type: "SET_PENDING_DELETE", id: gp.id })}>✕</Button>
+                            <Button
+                              size="xs"
+                              variant="ghost"
+                              onClick={() =>
+                                dispatch({
+                                  type: "SET_PENDING_DELETE",
+                                  id: gp.id,
+                                })
+                              }
+                            >
+                              ✕
+                            </Button>
                           )}
                           {pending && (
                             <div className="flex items-center gap-1">
-                              <Button size="xs" variant="secondary" onClick={() => { dispatch({ type: "REMOVE_PLAYER", id: gp.id }); dispatch({ type: "SET_PENDING_DELETE", id: undefined }); }}>Del?</Button>
-                              <Button size="xs" variant="ghost" onClick={() => dispatch({ type: "SET_PENDING_DELETE", id: undefined })}>Cancel</Button>
+                              <Button
+                                size="xs"
+                                variant="secondary"
+                                onClick={() => {
+                                  dispatch({
+                                    type: "REMOVE_PLAYER",
+                                    id: gp.id,
+                                  });
+                                  dispatch({
+                                    type: "SET_PENDING_DELETE",
+                                    id: undefined,
+                                  });
+                                }}
+                              >
+                                Del?
+                              </Button>
+                              <Button
+                                size="xs"
+                                variant="ghost"
+                                onClick={() =>
+                                  dispatch({
+                                    type: "SET_PENDING_DELETE",
+                                    id: undefined,
+                                  })
+                                }
+                              >
+                                Cancel
+                              </Button>
                             </div>
                           )}
                         </div>
@@ -284,54 +475,238 @@ export const PlayerSidebar: React.FC = () => {
                 const startHandler = (e: React.DragEvent) => {
                   e.dataTransfer.setData("text/player-id", p.id);
                   e.dataTransfer.effectAllowed = "move";
-                  (e.dataTransfer as unknown as { _dragStartTs?: number })._dragStartTs = performance.now();
+                  (
+                    e.dataTransfer as unknown as { _dragStartTs?: number }
+                  )._dragStartTs = performance.now();
                 };
                 const dropHandler = (e: React.DragEvent) => {
                   e.preventDefault();
                   const id = e.dataTransfer.getData("text/player-id");
                   if (!id || id === p.id) return;
-                  const from = state.doc.players.findIndex((pl) => pl.id === id);
+                  const from = state.doc.players.findIndex(
+                    (pl) => pl.id === id
+                  );
                   if (from === -1) return;
                   const to = i;
-                  const start = (e.dataTransfer as unknown as { _dragStartTs?: number })._dragStartTs || performance.now();
+                  const start =
+                    (e.dataTransfer as unknown as { _dragStartTs?: number })
+                      ._dragStartTs || performance.now();
                   const dur = Math.round(performance.now() - start);
                   dispatch({ type: "MOVE_PLAYER_INDEX", id, toIndex: to });
-                  telemetry.enqueue({ type: TelemetryEventTypes.PlayDiagramPlayerReorder, data: { method: "drag", playerId: id, from, to, durMs: dur } });
+                  telemetry.enqueue({
+                    type: TelemetryEventTypes.PlayDiagramPlayerReorder,
+                    data: {
+                      method: "drag",
+                      playerId: id,
+                      from,
+                      to,
+                      durMs: dur,
+                    },
+                  });
                   const listEl = document.querySelector("ul.space-y-2");
-                  const listHeight = listEl ? (listEl as HTMLElement).clientHeight : undefined;
-                  window.dispatchEvent(new CustomEvent("diagram:player-reorder", { detail: { durMs: dur, listHeight } }));
+                  const listHeight = listEl
+                    ? (listEl as HTMLElement).clientHeight
+                    : undefined;
+                  window.dispatchEvent(
+                    new CustomEvent("diagram:player-reorder", {
+                      detail: { durMs: dur, listHeight },
+                    })
+                  );
                 };
                 rendered.push(
-                  <li key={p.id} className="bg-white/80 rounded border border-subtle p-2 space-y-1" draggable onDragStart={startHandler} onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = "move"; }} onDrop={dropHandler}>
+                  <li
+                    key={p.id}
+                    className="bg-white/80 rounded border border-subtle p-2 space-y-1"
+                    draggable
+                    onDragStart={startHandler}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = "move";
+                    }}
+                    onDrop={dropHandler}
+                  >
                     <div className="flex items-center gap-2">
-                      <input className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white" value={p.label} onChange={(e) => dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { label: e.target.value.toUpperCase().slice(0, 3) } })} />
-                      <select className="flex-1 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white" value={p.role || ""} onChange={(e) => dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { role: e.target.value || undefined } })}>
+                      <input
+                        className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
+                        value={p.label}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "UPDATE_PLAYER",
+                            id: p.id,
+                            patch: {
+                              label: e.target.value.toUpperCase().slice(0, 3),
+                            },
+                          })
+                        }
+                      />
+                      <select
+                        className="flex-1 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
+                        value={p.role || ""}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "UPDATE_PLAYER",
+                            id: p.id,
+                            patch: { role: e.target.value || undefined },
+                          })
+                        }
+                      >
                         <option value="">Role</option>
-                        {["QB","RB","WR","TE","OL","DL","LB","CB","S","K","P"].map((r) => (<option key={r} value={r}>{r}</option>))}
+                        {[
+                          "QB",
+                          "RB",
+                          "WR",
+                          "TE",
+                          "OL",
+                          "DL",
+                          "LB",
+                          "CB",
+                          "S",
+                          "K",
+                          "P",
+                        ].map((r) => (
+                          <option key={r} value={r}>
+                            {r}
+                          </option>
+                        ))}
                       </select>
-                      <select className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white" value={p.side || "O"} onChange={(e) => dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { side: e.target.value as "O" | "D" | "ST" } })}>
+                      <select
+                        className="w-14 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
+                        value={p.side || "O"}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "UPDATE_PLAYER",
+                            id: p.id,
+                            patch: { side: e.target.value as "O" | "D" | "ST" },
+                          })
+                        }
+                      >
                         <option value="O">O</option>
                         <option value="D">D</option>
                         <option value="ST">ST</option>
                       </select>
                       <label className="flex items-center gap-1">
-                        <input type="color" className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer" value={p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")} onChange={(e) => dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { color: e.target.value } })} />
+                        <input
+                          type="color"
+                          className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
+                          value={
+                            p.color || (p.side === "D" ? "#b91c1c" : "#1e3a8a")
+                          }
+                          onChange={(e) =>
+                            dispatch({
+                              type: "UPDATE_PLAYER",
+                              id: p.id,
+                              patch: { color: e.target.value },
+                            })
+                          }
+                        />
                       </label>
                       <div className="flex items-center gap-1">
-                        <input type="color" className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer" value={p.outlineColor || "#ffffff"} onChange={(e) => dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { outlineColor: e.target.value } })} />
-                        <select className="w-16 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white" value={p.outlineColor || ""} onChange={(e) => dispatch({ type: "UPDATE_PLAYER", id: p.id, patch: { outlineColor: e.target.value || undefined } })}>
+                        <input
+                          type="color"
+                          className="h-6 w-6 p-0 border border-subtle rounded cursor-pointer"
+                          value={p.outlineColor || "#ffffff"}
+                          onChange={(e) =>
+                            dispatch({
+                              type: "UPDATE_PLAYER",
+                              id: p.id,
+                              patch: { outlineColor: e.target.value },
+                            })
+                          }
+                        />
+                        <select
+                          className="w-16 px-1 py-0.5 text-[11px] border border-subtle rounded bg-white"
+                          value={p.outlineColor || ""}
+                          onChange={(e) =>
+                            dispatch({
+                              type: "UPDATE_PLAYER",
+                              id: p.id,
+                              patch: {
+                                outlineColor: e.target.value || undefined,
+                              },
+                            })
+                          }
+                        >
                           <option value="">Auto</option>
-                          {["#ffffff","#f8fafc","#1f2937","#111827","#000000"].map((c) => (<option key={c} value={c}>{c}</option>))}
+                          {[
+                            "#ffffff",
+                            "#f8fafc",
+                            "#1f2937",
+                            "#111827",
+                            "#000000",
+                          ].map((c) => (
+                            <option key={c} value={c}>
+                              {c}
+                            </option>
+                          ))}
                         </select>
                       </div>
                       <div className="flex items-center gap-1 ml-1">
-                        <Button size="xs" variant="ghost" disabled={i === 0} onClick={() => dispatch({ type: "REORDER_PLAYER", id: p.id, direction: "up" })}>↑</Button>
-                        <Button size="xs" variant="ghost" disabled={i === state.doc.players.length - 1} onClick={() => dispatch({ type: "REORDER_PLAYER", id: p.id, direction: "down" })}>↓</Button>
-                        {!pending && (<Button size="xs" variant="ghost" onClick={() => dispatch({ type: "SET_PENDING_DELETE", id: p.id })}>✕</Button>)}
+                        <Button
+                          size="xs"
+                          variant="ghost"
+                          disabled={i === 0}
+                          onClick={() =>
+                            dispatch({
+                              type: "REORDER_PLAYER",
+                              id: p.id,
+                              direction: "up",
+                            })
+                          }
+                        >
+                          ↑
+                        </Button>
+                        <Button
+                          size="xs"
+                          variant="ghost"
+                          disabled={i === state.doc.players.length - 1}
+                          onClick={() =>
+                            dispatch({
+                              type: "REORDER_PLAYER",
+                              id: p.id,
+                              direction: "down",
+                            })
+                          }
+                        >
+                          ↓
+                        </Button>
+                        {!pending && (
+                          <Button
+                            size="xs"
+                            variant="ghost"
+                            onClick={() =>
+                              dispatch({ type: "SET_PENDING_DELETE", id: p.id })
+                            }
+                          >
+                            ✕
+                          </Button>
+                        )}
                         {pending && (
                           <div className="flex items-center gap-1">
-                            <Button size="xs" variant="secondary" onClick={() => { dispatch({ type: "REMOVE_PLAYER", id: p.id }); dispatch({ type: "SET_PENDING_DELETE", id: undefined }); }}>Del?</Button>
-                            <Button size="xs" variant="ghost" onClick={() => dispatch({ type: "SET_PENDING_DELETE", id: undefined })}>Cancel</Button>
+                            <Button
+                              size="xs"
+                              variant="secondary"
+                              onClick={() => {
+                                dispatch({ type: "REMOVE_PLAYER", id: p.id });
+                                dispatch({
+                                  type: "SET_PENDING_DELETE",
+                                  id: undefined,
+                                });
+                              }}
+                            >
+                              Del?
+                            </Button>
+                            <Button
+                              size="xs"
+                              variant="ghost"
+                              onClick={() =>
+                                dispatch({
+                                  type: "SET_PENDING_DELETE",
+                                  id: undefined,
+                                })
+                              }
+                            >
+                              Cancel
+                            </Button>
                           </div>
                         )}
                       </div>
@@ -344,6 +719,6 @@ export const PlayerSidebar: React.FC = () => {
           </ul>
         </div>
       )}
-  </div>
+    </div>
   );
 };

@@ -16,11 +16,12 @@ import type {
 import { createEmptyDocument, computeComplexityScore } from "./types";
 import { telemetry } from "../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../telemetry/events";
+import { getFormationSpec, applyFormationIdempotent, type FormationId } from "./formations";
 
 const HISTORY_CAP = 100;
 const initialState: DiagramEditorState = {
   doc: createEmptyDocument(),
-  ui: { tool: "select", zoom: 1, panX: 0, panY: 0, snap: false, snapGrid: 2 },
+  ui: { tool: "select", routeMode: "line", drawMode: "line", drawColor: "#111827", drawWidth: 3, drawArrowHead: "end", zoom: 1, panX: 0, panY: 0, snap: false, snapGrid: 2 },
   dirty: false,
   history: [],
   historyIndex: -1,
@@ -58,6 +59,16 @@ function reducer(
       return { ...state, doc: action.doc, dirty: false };
     case "SET_TOOL":
       return { ...state, ui: { ...state.ui, tool: action.tool } };
+    case "SET_ROUTE_MODE":
+      return { ...state, ui: { ...state.ui, routeMode: action.mode } };
+    case "SET_DRAW_MODE":
+      return { ...state, ui: { ...state.ui, drawMode: action.mode } };
+    case "SET_DRAW_COLOR":
+      return { ...state, ui: { ...state.ui, drawColor: action.color } };
+    case "SET_DRAW_WIDTH":
+      return { ...state, ui: { ...state.ui, drawWidth: action.width } };
+    case "SET_DRAW_ARROW_HEAD":
+      return { ...state, ui: { ...state.ui, drawArrowHead: action.arrowHead } };
     case "SET_ACTIVE_PLAYER":
       return { ...state, ui: { ...state.ui, activePlayerId: action.id } };
     case "SET_SELECTION":
@@ -100,7 +111,7 @@ function reducer(
         ...state,
         ui: { ...state.ui, selectedIds: [], activePlayerId: undefined },
       };
-  case "MOVE_SELECTION": {
+    case "MOVE_SELECTION": {
       const map = new Map(action.patches.map((p) => [p.id, p]));
       const prevPositions = new Map(
         state.doc.players.map((p) => [p.id, { x: p.x, y: p.y }])
@@ -145,12 +156,20 @@ function reducer(
           },
         });
       }
-  return { ...state, doc: nextDoc, dirty: true, ui: { ...state.ui, dragging: action.mode === "drag" ? true : state.ui.dragging } };
+      return {
+        ...state,
+        doc: nextDoc,
+        dirty: true,
+        ui: {
+          ...state.ui,
+          dragging: action.mode === "drag" ? true : state.ui.dragging,
+        },
+      };
     }
     case "COMMIT_MOVE": {
       // Push current doc snapshot to history (for grouped nudges / drags)
-  const after = pushHistory(state, state.doc);
-  return { ...after, ui: { ...after.ui, dragging: false } };
+      const after = pushHistory(state, state.doc);
+      return { ...after, ui: { ...after.ui, dragging: false } };
     }
     case "START_ROUTE":
       return {
@@ -183,14 +202,30 @@ function reducer(
           },
         },
       };
+    case "POP_ROUTE_POINT":
+      if (!state.ui.drawing) return state;
+      if (state.ui.drawing.anchorPoints.length === 0) return state;
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          drawing: {
+            ...state.ui.drawing,
+            anchorPoints: state.ui.drawing.anchorPoints.slice(0, -1),
+            preview: undefined,
+          },
+        },
+      };
     case "CANCEL_ROUTE":
       return { ...state, ui: { ...state.ui, drawing: undefined } };
     case "COMMIT_ROUTE": {
       if (!state.ui.drawing || state.ui.drawing.anchorPoints.length < 2)
         return { ...state, ui: { ...state.ui, drawing: undefined } };
+      const isCurve = state.ui.routeMode === "curve";
+      const segType: "line" | "curve" = isCurve ? "curve" : "line";
       const seg = {
         id: `seg_${Date.now()}`,
-        type: "line" as const,
+        type: segType,
         points: state.ui.drawing.anchorPoints,
       };
       const nextDoc: DiagramDocument = {
@@ -205,11 +240,12 @@ function reducer(
         ],
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
-      telemetry.enqueue({
+    telemetry.enqueue({
         type: TelemetryEventTypes.PlayDiagramRouteAdd,
         data: {
           playerId: state.ui.drawing.playerId,
-          length: seg.points.length,
+      length: seg.points.length,
+      type: seg.type,
         },
       });
       const after = pushHistory(
@@ -225,6 +261,153 @@ function reducer(
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
       return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+    }
+    case "UPDATE_ROUTE_POINT": {
+      const routes = state.doc.routes.map((r) => {
+        if (r.id !== action.routeId) return r;
+        const segs = r.segments.map((s, i) => {
+          if (i !== action.segIndex) return s;
+          const pts = s.points.map((pt, pi) => (pi === action.pointIndex ? action.point : pt));
+          return { ...s, points: pts };
+        });
+        return { ...r, segments: segs };
+      });
+      const nextDoc: DiagramDocument = { ...state.doc, routes, meta: { ...state.doc.meta!, updatedAt: Date.now() } };
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+    }
+    case "COMMIT_ROUTE_EDIT":
+      return pushHistory(state, state.doc);
+    // ===== Annotation reducer cases =====
+    case "START_ANNOTATION": {
+      const nextUi = {
+        ...state.ui,
+        annotating: {
+          type: action.drawType,
+          points: action.start ? [action.start] : [],
+          preview: undefined,
+          fromPlayerId: action.fromPlayerId,
+          freehand: action.drawType === "freehand",
+        },
+        tool: "draw" as const,
+      };
+      return { ...state, ui: nextUi };
+    }
+    case "PREVIEW_ANNOTATION": {
+      if (!state.ui.annotating) return state;
+      return {
+        ...state,
+        ui: { ...state.ui, annotating: { ...state.ui.annotating, preview: action.point } },
+      };
+    }
+    case "ADD_ANNOTATION_POINT": {
+      if (!state.ui.annotating) return state;
+      const ann = state.ui.annotating;
+      return {
+        ...state,
+        ui: { ...state.ui, annotating: { ...ann, points: [...ann.points, action.point], preview: undefined } },
+      };
+    }
+    case "ADD_FREEHAND_POINT": {
+      if (!state.ui.annotating || !state.ui.annotating.freehand) return state;
+      const ann = state.ui.annotating;
+      return { ...state, ui: { ...state.ui, annotating: { ...ann, points: [...ann.points, action.point] } } };
+    }
+    case "SET_ANNOTATION_TO": {
+      if (!state.ui.annotating) return state;
+      return { ...state, ui: { ...state.ui, annotating: { ...state.ui.annotating, toPlayerId: action.toPlayerId } } };
+    }
+    case "POP_ANNOTATION_POINT": {
+      if (!state.ui.annotating || !state.ui.annotating.points.length) return state;
+      const ann = state.ui.annotating;
+      return {
+        ...state,
+        ui: { ...state.ui, annotating: { ...ann, points: ann.points.slice(0, -1), preview: undefined } },
+      };
+    }
+    case "CANCEL_ANNOTATION":
+      return { ...state, ui: { ...state.ui, annotating: undefined } };
+    case "COMMIT_ANNOTATION": {
+      if (!state.ui.annotating) return { ...state, ui: { ...state.ui, annotating: undefined } };
+      const a = state.ui.annotating;
+      const id = `ann_${Date.now()}`;
+  const color = state.ui.drawColor || "#111827";
+  const width = state.ui.drawWidth || 3;
+  const arrowHead = state.ui.drawArrowHead || "end";
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        annotations: [
+          ...(state.doc.annotations || []),
+      a.type === "connector"
+    ? ({ id, type: "connector", fromPlayerId: a.fromPlayerId!, toPlayerId: a.toPlayerId!, color, width, arrowHead } as any)
+    : ({ id, type: a.type, points: a.points, color, width, arrowHead } as any),
+        ],
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramUpdated,
+        data: { players: nextDoc.players.length, routes: nextDoc.routes.length, annotations: (nextDoc.annotations || []).length },
+      });
+      const after = pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+      return { ...after, ui: { ...after.ui, annotating: undefined } };
+    }
+    case "SELECT_ANNOTATION":
+      return { ...state, ui: { ...state.ui, selectedAnnotationId: action.id } };
+    case "DELETE_ANNOTATION": {
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        annotations: (state.doc.annotations || []).filter((ann) => ann.id !== action.id),
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      return pushHistory({ ...state, doc: nextDoc, dirty: true, ui: { ...state.ui, selectedAnnotationId: undefined } }, nextDoc);
+    }
+    case "UPDATE_ANNOT_POINT": {
+      const anns = (state.doc.annotations || []).map((ann) => {
+        if (ann.id !== action.id) return ann as any;
+        if (!("points" in ann)) return ann as any;
+        const pts = [...ann.points];
+        pts[action.pointIndex] = action.point;
+        return { ...ann, points: pts } as any;
+      });
+      const nextDoc: DiagramDocument = { ...state.doc, annotations: anns as any, meta: { ...state.doc.meta!, updatedAt: Date.now() } };
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+    }
+    case "COMMIT_ANNOT_EDIT":
+      return pushHistory(state, state.doc);
+    case "UPDATE_ANNOT_STYLE": {
+      const anns = (state.doc.annotations || []).map((ann) =>
+        ann.id === action.id ? ({ ...ann, ...action.patch } as any) : (ann as any)
+      );
+      const nextDoc: DiagramDocument = { ...state.doc, annotations: anns as any, meta: { ...state.doc.meta!, updatedAt: Date.now() } };
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+    }
+    case "MOVE_ANNOTATION": {
+      const anns = (state.doc.annotations || []).map((ann) => {
+        if (ann.id !== action.id) return ann as any;
+        if (!("points" in ann)) return ann as any;
+        const dxPct = (action.dx / 1600) * 100;
+        const dyPct = (action.dy / 900) * 100;
+        return { ...ann, points: ann.points.map((p) => ({ x: Math.min(100, Math.max(0, p.x + dxPct)), y: Math.min(100, Math.max(0, p.y + dyPct)) })) } as any;
+      });
+      const nextDoc: DiagramDocument = { ...state.doc, annotations: anns as any, meta: { ...state.doc.meta!, updatedAt: Date.now() } };
+      return { ...state, doc: nextDoc, dirty: true };
+    }
+    case "DUPLICATE_ANNOTATION": {
+      const src = (state.doc.annotations || []).find((a) => a.id === action.id);
+      if (!src) return state;
+      const id = `ann_${Date.now()}`;
+      let dup: any;
+      if (src.type === "connector") {
+        dup = { ...src, id };
+      } else if ("points" in src) {
+        // offset slightly for visibility
+        dup = {
+          ...src,
+          id,
+          points: src.points.map((p) => ({ x: Math.min(100, p.x + 1), y: Math.min(100, p.y + 1) })),
+        };
+      }
+      const nextDoc: DiagramDocument = { ...state.doc, annotations: [ ...(state.doc.annotations || []), dup ], meta: { ...state.doc.meta!, updatedAt: Date.now() } };
+      return pushHistory({ ...state, doc: nextDoc, dirty: true, ui: { ...state.ui, selectedAnnotationId: id } }, nextDoc);
     }
     case "UPDATE_PLAYER": {
       const nextDoc: DiagramDocument = {
@@ -496,116 +679,100 @@ function reducer(
       return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
     case "APPLY_FORMATION": {
-      // Idempotent application for known formations (library WIP)
-      if (action.formation === "trips-right") {
-        // Derive center X based on hash
-        const centerX = state.doc.field.ballHash === "left" ? 40 : state.doc.field.ballHash === "right" ? 60 : 50;
-        // Anchor Y (use existing center or average OL Y)
-        const lineYs = state.doc.players.filter(p => ["C","LT","LG","RG","RT"].includes(p.label)).map(p => p.y);
-        const baseY = lineYs.length ? lineYs.reduce((a,b)=>a+b,0)/lineYs.length : (state.doc.players.find(p=>p.role==="C")?.y || 50);
-        const spec: Record<string,{x:number;y:number;role:string;color:string}> = {
-          LT: { x: centerX - 6, y: baseY, role: "OL", color: "#1e3a8a" },
-          LG: { x: centerX - 3, y: baseY, role: "OL", color: "#1e3a8a" },
-          C:  { x: centerX,     y: baseY, role: "C",  color: "#1e3a8a" },
-          RG: { x: centerX + 3, y: baseY, role: "OL", color: "#1e3a8a" },
-          RT: { x: centerX + 6, y: baseY, role: "OL", color: "#1e3a8a" },
-          QB: { x: centerX,     y: Math.min(99, baseY + 1.25), role: "QB", color: "#047857" },
-          RB: { x: centerX,     y: Math.min(99, baseY + 4), role: "RB", color: "#92400e" },
-          X:  { x: centerX - 25, y: baseY + 1, role: "WR", color: "#2563eb" }, // isolated left
-          Y:  { x: centerX + 12, y: baseY + 1, role: "WR", color: "#1e3a8a" }, // trips cluster
-          Z:  { x: centerX + 18, y: baseY + 1, role: "WR", color: "#1e3a8a" },
-        };
-        const specLabels = new Set(Object.keys(spec));
-        const byLabel: Record<string, DiagramPlayer[]> = {};
-        state.doc.players.forEach(p => {
-          if (specLabels.has(p.label)) {
-            (byLabel[p.label] ||= []).push(p);
-          }
-        });
-        const players: DiagramPlayer[] = [];
-        let created = 0, updated = 0, removedDup = 0;
-        // Keep non-spec players as-is for now
-        const nonSpec = state.doc.players.filter(p => !specLabels.has(p.label));
-        // Canonical spec players
-        Object.entries(spec).forEach(([label, cfg]) => {
-          const existingGroup = byLabel[label] || [];
-            let canonical = existingGroup.find(p => p.id === label) || existingGroup[0];
-          if (canonical) {
-            // Update position (idempotent if unchanged)
-            if (canonical.x !== cfg.x || canonical.y !== cfg.y || canonical.role !== cfg.role) {
-              canonical = { ...canonical, x: cfg.x, y: cfg.y, role: cfg.role };
-              updated++;
-            }
-            players.push(canonical);
-          } else {
-            players.push({
-              id: label,
-              label,
-              role: cfg.role,
-              side: "O",
-              x: cfg.x,
-              y: cfg.y,
-              color: cfg.color,
-            });
-            created++;
-          }
-          // Remove duplicate extras with same label that have no routes
-          if (existingGroup.length > 1) {
-            const canonicalId = players[players.length - 1].id;
-            const dupes = existingGroup.filter(p => p.id !== canonicalId);
-            dupes.forEach(d => {
-              const hasRoute = state.doc.routes.some(r => r.playerId === d.id);
-              if (!hasRoute) {
-                removedDup++;
-              } else {
-                // If duplicate has route we retain it to avoid data loss
-                players.push(d);
-              }
-            });
-          }
-        });
-        players.push(...nonSpec);
-        // If we removed duplicates (route-less) we need to filter them out; above only incremented count, not pushed them.
-        const uniqueIds = new Set<string>();
-        const finalPlayers: DiagramPlayer[] = [];
-        for (const p of players) {
-          if (uniqueIds.has(p.id)) continue; // guard against accidental repeats
-          uniqueIds.add(p.id);
-          finalPlayers.push(p);
-        }
-        const removedIds: string[] = [];
-        // Determine which original players are no longer present and were duplicates without routes
-        state.doc.players.forEach(p => {
-          if (!finalPlayers.some(fp => fp.id === p.id)) {
-            const hasRoute = state.doc.routes.some(r => r.playerId === p.id);
-            if (!hasRoute) removedIds.push(p.id);
-          }
-        });
-        const nextRoutes = state.doc.routes.filter(r => !removedIds.includes(r.playerId));
-        const nextDoc: DiagramDocument = {
-          ...state.doc,
-          players: finalPlayers,
-          routes: nextRoutes,
-          meta: { ...state.doc.meta!, updatedAt: Date.now() },
-        };
-        telemetry.enqueue({
-          type: TelemetryEventTypes.PlayDiagramFormationApply,
-          data: {
-            formation: action.formation,
-            players: nextDoc.players.length,
-            created,
-            updated,
-            removedDuplicates: removedDup,
-          },
-        });
-        return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
-      }
-      return state;
+      const formation = action.formation as FormationId;
+      const centerX =
+        state.doc.field.ballHash === "left"
+          ? 40
+          : state.doc.field.ballHash === "right"
+            ? 60
+            : 50;
+      const lineYs = state.doc.players
+        .filter((p) => ["C", "LT", "LG", "RG", "RT"].includes(p.label))
+        .map((p) => p.y);
+      const baseY = lineYs.length
+        ? lineYs.reduce((a, b) => a + b, 0) / lineYs.length
+        : state.doc.players.find((p) => p.role === "C")?.y || 50;
+      const spec = getFormationSpec(formation, centerX, baseY);
+      if (!spec) return state;
+      const { players, removedIds, created, updated, removedDup } = applyFormationIdempotent(
+        state.doc.players,
+        state.doc.routes,
+        spec
+      );
+      const nextRoutes = state.doc.routes.filter((r) => !removedIds.includes(r.playerId));
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players,
+        routes: nextRoutes,
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramFormationApply,
+        data: {
+          formation,
+          players: nextDoc.players.length,
+          created,
+          updated,
+          removedDuplicates: removedDup,
+        },
+      });
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
     case "SET_SNAP":
       return { ...state, ui: { ...state.ui, snap: action.enabled } };
     case "SET_SNAP_GRID":
       return { ...state, ui: { ...state.ui, snapGrid: action.size } };
+    case "ALIGN_SELECTION": {
+      const ids = state.ui.selectedIds || [];
+      if (ids.length < 2) return state;
+      const players = state.doc.players.filter((p) => ids.includes(p.id));
+      if (!players.length) return state;
+      // Compute reference from selection bounds
+      const xs = players.map((p) => p.x);
+      const ys = players.map((p) => p.y);
+      const minX = Math.min(...xs), maxX = Math.max(...xs);
+      const minY = Math.min(...ys), maxY = Math.max(...ys);
+      const centerX = +(xs.reduce((a, b) => a + b, 0) / xs.length).toFixed(2);
+      const centerY = +(ys.reduce((a, b) => a + b, 0) / ys.length).toFixed(2);
+      let nextPlayers = state.doc.players.map((p) => {
+        if (!ids.includes(p.id)) return p;
+        if (action.axis === "x") {
+          const target = action.align === "start" ? minX : action.align === "center" ? centerX : maxX;
+          return { ...p, x: Math.min(100, Math.max(0, target)) };
+        } else {
+          const target = action.align === "start" ? minY : action.align === "center" ? centerY : maxY;
+          return { ...p, y: Math.min(100, Math.max(0, target)) };
+        }
+      });
+      const nextDoc: DiagramDocument = { ...state.doc, players: nextPlayers, meta: { ...state.doc.meta!, updatedAt: Date.now() } };
+  telemetry.enqueue({ type: TelemetryEventTypes.UIAction, data: { action: "align", axis: action.axis, align: action.align, count: ids.length } });
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+    }
+    case "DISTRIBUTE_SELECTION": {
+      const ids = state.ui.selectedIds || [];
+      if (ids.length < 3) return state; // need at least 3 to distribute between ends
+      const sel = state.doc.players.filter((p) => ids.includes(p.id));
+      if (sel.length < 3) return state;
+      // Sort by axis value
+      const sorted = [...sel].sort((a, b) => (action.axis === "x" ? a.x - b.x : a.y - b.y));
+      const first = sorted[0];
+      const last = sorted[sorted.length - 1];
+      const span = (action.axis === "x" ? last.x - first.x : last.y - first.y);
+      if (span <= 0) return state;
+      const step = span / (sorted.length - 1);
+      const desired: Record<string, number> = {};
+      sorted.forEach((p, i) => {
+        desired[p.id] = (action.axis === "x" ? first.x : first.y) + step * i;
+      });
+      const nextPlayers = state.doc.players.map((p) => {
+        if (!ids.includes(p.id)) return p;
+        if (action.axis === "x") return { ...p, x: Math.min(100, Math.max(0, +desired[p.id].toFixed(2))) };
+        return { ...p, y: Math.min(100, Math.max(0, +desired[p.id].toFixed(2))) };
+      });
+      const nextDoc: DiagramDocument = { ...state.doc, players: nextPlayers, meta: { ...state.doc.meta!, updatedAt: Date.now() } };
+  telemetry.enqueue({ type: TelemetryEventTypes.UIAction, data: { action: "distribute", axis: action.axis, count: ids.length } });
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+    }
     case "UNDO": {
       if (state.historyIndex <= 0) return state;
       const idx = state.historyIndex - 1;

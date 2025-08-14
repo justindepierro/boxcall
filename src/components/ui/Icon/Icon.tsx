@@ -114,6 +114,12 @@ const ICON_MAP = {
   "arrow-right": LucideIcons.ArrowRight,
   map: LucideIcons.Map,
   crown: LucideIcons.Crown,
+  // Builder tools
+  pointer: LucideIcons.MousePointer,
+  hand: LucideIcons.Hand,
+  move: LucideIcons.Move,
+  "pen-tool": LucideIcons.PenTool,
+  link: LucideIcons.Link,
 } as const;
 
 export type IconName = keyof typeof ICON_MAP;

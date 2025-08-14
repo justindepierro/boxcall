@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { Construction } from "lucide-react";
 import { Button } from "../../ui/Button/Button";
 import { X, Save, Eye, Users, Route, Palette } from "lucide-react";
+import { SegmentedControl } from "../../ui/SegmentedControl/SegmentedControl";
 import type { Play } from "../../../types/play";
 import { FieldCanvas } from "./FieldCanvas";
 import { Typography } from "../../design-system/Typography";
@@ -42,7 +43,7 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="surface-card elevation-modal rounded-lg shadow-xl w-full max-w-7xl h-full max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between bc-card-padding border-b border-subtle surface-subtle">
+        <div className="flex items-center justify-between bc-card-padding panel-cupertino">
           <div className="flex items-center space-x-4">
             <Typography
               variant="headline-sm"
@@ -74,32 +75,19 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
             <X className="h-6 w-6" />
           </Button>
         </div>
-        {/* View Mode Tabs */}
-        <div className="flex items-center border-b border-subtle bc-card-padding surface-subtle">
-          {viewModeButtons.map((button) => {
-            const Icon = button.icon;
-            return (
-              <Button
-                key={button.id}
-                onClick={() => setViewMode(button.id)}
-                variant={viewMode === button.id ? "primary" : "ghost"}
-                size="xs"
-                className={`flex items-center px-4 py-2 h-auto font-medium border-b-2 rounded-none ${
-                  viewMode === button.id
-                    ? "border-jade-500"
-                    : "border-transparent"
-                }`}
-              >
-                <Icon className="h-4 w-4 mr-2" />
-                {button.label}
-              </Button>
-            );
-          })}
+        {/* View Mode Segmented Control */}
+        <div className="flex items-center bc-card-padding panel-cupertino">
+          <SegmentedControl
+            ariaLabel="View mode"
+            options={viewModeButtons.map((b) => ({ id: b.id, label: b.label, icon: <b.icon className="w-4 h-4" /> }))}
+            value={viewMode}
+            onChange={(v) => setViewMode(v)}
+          />
         </div>
         {/* Content */}
         <div className="flex-1 flex overflow-hidden">
           {/* Sidebar */}
-          <div className="w-80 border-r border-subtle surface-subtle bc-card-padding overflow-y-auto">
+          <div className="w-80 bc-card-padding overflow-y-auto panel-cupertino">
             {viewMode === "field" && (
               <div className="space-y-6">
                 <div>

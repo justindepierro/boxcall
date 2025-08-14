@@ -7,7 +7,9 @@ export const RoutesPanel: React.FC = () => {
   if (!state.doc.routes.length) return null;
   return (
     <div className="mt-4">
-      <div className="text-[11px] font-semibold text-slate-600 mt-2 mb-1">ROUTES</div>
+      <div className="text-[11px] font-semibold text-slate-600 mt-2 mb-1">
+        ROUTES
+      </div>
       <ul className="space-y-1">
         {state.doc.routes.map((r) => (
           <li
@@ -15,7 +17,8 @@ export const RoutesPanel: React.FC = () => {
             className="flex items-center justify-between text-[11px] bg-white/70 rounded px-2 py-1 border border-subtle"
           >
             <span>
-              {r.playerId} · {r.segments.reduce((a, s) => a + s.points.length - 1, 0)} pts
+              {r.playerId} ·{" "}
+              {r.segments.reduce((a, s) => a + s.points.length - 1, 0)} pts
             </span>
             <Button
               size="xs"

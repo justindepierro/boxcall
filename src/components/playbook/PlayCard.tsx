@@ -102,6 +102,17 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         } ${isCompact ? "text-[13px]" : ""}`}
       >
         <div className={isCompact ? "p-3 sm:p-4" : "p-4 sm:p-6"}>
+          {play.diagram_url && (
+            <div className="mb-3 -mt-1">
+              <img
+                src={play.diagram_url}
+                alt={`${displayName} diagram preview`}
+                className="w-full h-40 object-cover rounded-md border border-subtle"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          )}
           {/* Collapsed/Skinny Mode */}
           <div className="flex items-center justify-between">
             {/* Selection Checkbox: always available for quick selection */}

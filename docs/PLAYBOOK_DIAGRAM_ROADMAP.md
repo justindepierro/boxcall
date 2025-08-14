@@ -1,6 +1,6 @@
 ## Playbook Diagram Platform Unified Roadmap (V2 Implementation + Competitive Positioning)
 
-Updated: 2025-08-13 (post‑legacy removal & modular extraction pass complete – Toolbar, PlayerSidebar, RoutesPanel, CanvasPane, a11y, telemetry sampling)
+Updated: 2025-08-13 (post‑legacy removal & modular extraction pass complete – Toolbar, PlayerSidebar, RoutesPanel, CanvasPane, a11y, telemetry sampling; curved routes + thumbnail persistence delivered)
 Status Legend: DONE (merged to main), PARTIAL (scaffold or partial UI), TODO (planned / prioritized), FUTURE (later phase / out-of-scope now)
 
 ### 1. Vision
@@ -23,7 +23,7 @@ Legacy MVP editor has been decommissioned; V2 is now the single source of truth 
 | Practice / Prep    | Cards, scripts, wristbands        | Not started                                              | Export engine (cards)                  |
 | Media & Enrichment | Video pairing, coaching points    | Notes only                                               | Media attachment model                 |
 | Collaboration      | Multi‑user roles, comments        | Basic ownership                                          | RBAC + comments                        |
-| Export             | PNG, PDF, batch                   | PNG (planned)                                            | Thumbnail + PDF pipeline               |
+| Export             | PNG, PDF, batch                   | PNG/SVG exports + thumbnail persisted to cards           | PDF pipeline + batch exports           |
 | Mobile / Offline   | Native + offline                  | Web only                                                 | PWA + offline cache                    |
 | Analytics          | Internal metrics tooling          | Telemetry base                                           | Enhanced complexity + adoption metrics |
 
@@ -49,21 +49,21 @@ See original detailed competitive matrix (superseded) in prior doc; this table r
 | Autosave / Restore (draft)                      | DONE                 | V2 only; legacy key soft‑retired (still read once)                                                      |
 | Mirror (flip) play                              | DONE                 | Reducer action + telemetry enriched (before/after spread/center metrics)                                |
 | Ball hash selection & field hashes              | DONE (baseline)      | Hash toggle + center reposition                                                                         |
-| Formation apply (example)                       | PARTIAL              | Single sample (trips-right); need library & idempotency                                                 |
+| Formation apply (library)                       | DONE                 | Library of 5 presets with idempotent apply (no duplicates)                                              |
 | Automatic formation detection & legality assist | FUTURE               | Auto grid snap to legal alignment (7 on LOS, ≤4 backfield), highlight violations                        |
 | Player metadata panel                           | DONE                 | Grouped headers, inline color & outline pickers, bulk edit (roles/color/outline), drag & button reorder |
 | Route list & deletion                           | DONE                 | Per‑route removal                                                                                       |
 | Field settings panel (consolidated controls)    | DONE                 | Theme/hash/snap/formation/mirror + red zone toggle consolidated                                         |
-| Field settings controls (in-toolbar baseline)    | DONE (baseline)      | Theme/hash/snap/hash layout + mirror + formation + red zone toggle present (needs dedicated panel UX)   |
+| Field settings controls (in-toolbar baseline)   | DONE (baseline)      | Theme/hash/snap/hash layout + mirror + formation + red zone toggle present (needs dedicated panel UX)   |
 | History size bound                              | DONE                 | 100 snapshot cap with trim telemetry                                                                    |
 | Group move history commit (COMMIT_MOVE)         | DONE                 | Debounced commit + drag commit snapshot                                                                 |
-| Thumbnail export (PNG)                          | PARTIAL              | UI button + success/failure telemetry + download; pending persistence & cards                           |
+| Thumbnail export (PNG)                          | DONE                 | Full-frame export wired; persisted to plays.diagram_url and rendered on PlayCard                        |
 | Red zone field slice toggle                     | DONE                 | Highlight overlay + slice switch (25yd view) w/ restore + telemetry                                     |
 | Red zone field slice toggle                     | DONE                 | Highlight overlay + slice switch (25yd view) w/ restore + telemetry                                     |
-| Discard changes modal (custom)                  | DONE                 | Replaced window.confirm with accessible modal + focus trap                                             |
-| Keyboard-accessible sidebar resize              | DONE                 | Separator now focusable ( Home / End / Arrow adjust + aria values )                                    |
-| Nudge telemetry sampling & batch aggregation    | DONE                 | Individual (sampled 20%) + 1.5s batch event                                                            |
-| Curved / editable segments                      | TODO (reprioritized) | Quadratic / handles; affects complexity weights                                                         |
+| Discard changes modal (custom)                  | DONE                 | Replaced window.confirm with accessible modal + focus trap                                              |
+| Keyboard-accessible sidebar resize              | DONE                 | Separator now focusable ( Home / End / Arrow adjust + aria values )                                     |
+| Nudge telemetry sampling & batch aggregation    | DONE                 | Individual (sampled 20%) + 1.5s batch event                                                             |
+| Curved / editable segments                      | DONE                 | Quadratic segments + control handles; route mode toggle; preview supports curves                        |
 | Motion tool                                     | FUTURE (spec)        | Distinct style + timing metadata                                                                        |
 | Templates / Stencils                            | FUTURE (spec)        | Serialize selected subset + placement offset (elevated)                                                 |
 | QB progression overlay                          | FUTURE               | Numbered read path markers (1‑2‑3)                                                                      |
@@ -142,55 +142,55 @@ Telemetry Gaps (post recent enrichments):
 
 Refactor / Cleanup Track (phase 1 complete – additional polish queued):
 
-| Priority | Task                                     | Effort | Definition of Done |
-| -------- | ---------------------------------------- | ------ | ------------------ |
-| P1       | Remove legacy /visual directory          | 0.25d  | DONE (legacy files deleted; docs updated) |
-| P1       | Extract Toolbar from VisualPlayBuilderV2 | 0.5d   | Toolbar.tsx; no functional diff |
-| P1       | Extract PlayerSidebar component          | 1d     | PlayerSidebar.tsx; grouping & bulk edit intact |
-| P2       | Extract RoutesPanel                      | 0.5d   | RoutesPanel.tsx isolated |
-| P2       | Extract CanvasPane (Field wrapper)       | 0.5d   | DONE (CanvasPane.tsx with CaptureSvgRef) |
-| P2       | Add accessibility focus trap to modal    | 0.5d   | Tab cycling contained; escape preserved |
-| P3       | Component tests / stories                | 1d     | Visual regression + interaction smoke tests |
-| Priority | Task                                      | Effort | Status  | Definition of Done / Notes                                       |
-| -------- | ----------------------------------------- | ------ | ------- | --------------------------------------------------------------- |
-| P1       | Remove legacy /visual directory           | 0.25d  | DONE    | Legacy files deleted; roadmap & doc updated                     |
-| P1       | Extract Toolbar                           | 0.5d   | DONE    | Toolbar.tsx                                                     |
-| P1       | Extract PlayerSidebar                     | 1d     | DONE    | PlayerSidebar.tsx (grouping, bulk edit, reorder telemetry)      |
-| P2       | Extract RoutesPanel                       | 0.5d   | DONE    | RoutesPanel.tsx isolated                                        |
-| P2       | Extract CanvasPane (Field wrapper)        | 0.5d   | DONE    | CanvasPane.tsx + CaptureSvgRef                                  |
-| P2       | Add accessibility focus trap (modal)      | 0.5d   | DONE    | Discard modal traps focus & ESC closes                          |
-| P2       | Keyboard resize handle (sidebar)          | 0.25d  | DONE    | Arrow/Home/End + aria-valuenow                                 |
-| P2       | Nudge telemetry sampling & batch          | 0.5d   | DONE    | PlayDiagramNudge / NudgeBatch events                            |
-| P3       | Component smoke tests (core)              | 0.5d   | PARTIAL | Toolbar & PlayerSidebar tests; expand RoutesPanel next          |
-| P3       | Field Settings standalone panel           | 1d     | TODO    | Move theme/hash/snap/mirror/formation/red zone out of toolbar   |
-| P3       | Sidebar resize aria-live announcements    | 0.25d  | TODO    | Polite region announcing new width                             |
-| P3       | Player reorder p95 metric                 | 0.25d  | TODO    | Compute per flush & emit in stats event                        |
-| P3       | Route add/remove burst aggregation        | 0.5d   | TODO    | Windowed event PlayDiagramRouteBurst                           |
+| Priority | Task                                      | Effort | Definition of Done                             |
+| -------- | ----------------------------------------- | ------ | ---------------------------------------------- | --------------------------------------------------------------- |
+| P1       | Remove legacy /visual directory           | 0.25d  | DONE (legacy files deleted; docs updated)      |
+| P1       | Extract Toolbar from VisualPlayBuilderV2  | 0.5d   | Toolbar.tsx; no functional diff                |
+| P1       | Extract PlayerSidebar component           | 1d     | PlayerSidebar.tsx; grouping & bulk edit intact |
+| P2       | Extract RoutesPanel                       | 0.5d   | RoutesPanel.tsx isolated                       |
+| P2       | Extract CanvasPane (Field wrapper)        | 0.5d   | DONE (CanvasPane.tsx with CaptureSvgRef)       |
+| P2       | Add accessibility focus trap to modal     | 0.5d   | Tab cycling contained; escape preserved        |
+| P3       | Component tests / stories                 | 1d     | Visual regression + interaction smoke tests    |
+| Priority | Task                                      | Effort | Status                                         | Definition of Done / Notes                                      |
+| -------- | ----------------------------------------- | ------ | -------                                        | --------------------------------------------------------------- |
+| P1       | Remove legacy /visual directory           | 0.25d  | DONE                                           | Legacy files deleted; roadmap & doc updated                     |
+| P1       | Extract Toolbar                           | 0.5d   | DONE                                           | Toolbar.tsx                                                     |
+| P1       | Extract PlayerSidebar                     | 1d     | DONE                                           | PlayerSidebar.tsx (grouping, bulk edit, reorder telemetry)      |
+| P2       | Extract RoutesPanel                       | 0.5d   | DONE                                           | RoutesPanel.tsx isolated                                        |
+| P2       | Extract CanvasPane (Field wrapper)        | 0.5d   | DONE                                           | CanvasPane.tsx + CaptureSvgRef                                  |
+| P2       | Add accessibility focus trap (modal)      | 0.5d   | DONE                                           | Discard modal traps focus & ESC closes                          |
+| P2       | Keyboard resize handle (sidebar)          | 0.25d  | DONE                                           | Arrow/Home/End + aria-valuenow                                  |
+| P2       | Nudge telemetry sampling & batch          | 0.5d   | DONE                                           | PlayDiagramNudge / NudgeBatch events                            |
+| P3       | Component smoke tests (core)              | 0.5d   | PARTIAL                                        | Toolbar & PlayerSidebar tests; expand RoutesPanel next          |
+| P3       | Field Settings standalone panel           | 1d     | TODO                                           | Move theme/hash/snap/mirror/formation/red zone out of toolbar   |
+| P3       | Sidebar resize aria-live announcements    | 0.25d  | TODO                                           | Polite region announcing new width                              |
+| P3       | Player reorder p95 metric                 | 0.25d  | TODO                                           | Compute per flush & emit in stats event                         |
+| P3       | Route add/remove burst aggregation        | 0.5d   | TODO                                           | Windowed event PlayDiagramRouteBurst                            |
 
 Feature Track:
 
-| Priority | Feature                                 | Effort (est) | Definition of Done                                         |
-| -------- | --------------------------------------- | ------------ | ---------------------------------------------------------- |
-| P1       | Player Metadata Panel                   | 2d           | Edit labels/roles/colors, delete player, telemetry hooks   |
-| P1       | Field Settings Panel                    | 1.5d         | Move theme/hash/snap + red zone toggle, telemetry          |
-| P1       | Field Settings Panel                    | 1.5d         | TODO (currently inline in Toolbar; extract dedicated panel) |
-| P1       | History Cap + Telemetry                 | 0.5d         | Ring buffer (100), emits diagram_history events            |
-| P1       | History Cap + Telemetry                 | 0.5d         | DONE (cap & trim). TODO: add undo/redo emit                 |
-| P1       | Red Zone Field Slice Toggle             | 0.5d         | Midfield ↔ red zone switch & red line, telemetry          |
-| P1       | Red Zone Field Slice Toggle             | 0.5d         | DONE: slice toggle + overlay + telemetry                   |
-| P2       | Thumbnail Export + PlayCard Integration | 2d           | PNG stored + displayed; export event logged (button done) |
-| P2       | Thumbnail Export + PlayCard Integration | 2d           | PARTIAL: button + telemetry done; persistence & card render pending |
-| P2       | Mirror Telemetry & UI Polish            | 0.5d         | Spread metrics DONE; button clarity TBD                    |
-| P2       | Mirror Telemetry & UI Polish            | 0.5d         | DONE (spread metrics). UI label iteration TBD              |
-| P2       | Formation Library (5–8 presets)         | 2d           | Apply w/out duplication; formation apply telemetry         |
-| P2       | Auto Formation Detection & Snap         | 2.5d         | Classify LOS/backfield, enforce 7 LOS / ≤4 backfield, snap |
-| P2       | Curved Route Segments                   | 4d           | Quadratic segments + editing handles                       |
-| P2       | Templates / Stencils MVP                | 3d           | Save/apply subset; template events                         |
-| P2       | Mirror Telemetry & UI Polish            | 0.5d         | Spread metrics DONE; button clarity TBD                    |
-| P3       | QB Progression Overlay                  | 1.5d         | Numbered read path markers + telemetry                     |
-| P3       | Offensive Line Technique Shading        | 1d           | Technique shading toggle + telemetry                       |
-| P3       | Branding / Export Theming               | 2d           | Team colors/logo on exports                                |
-| P3       | Player / Route Color Picker UI          | 1d           | Integrated into metadata panel                             |
+| Priority | Feature                                 | Effort (est) | Definition of Done                                                  |
+| -------- | --------------------------------------- | ------------ | ------------------------------------------------------------------- |
+| P1       | Player Metadata Panel                   | 2d           | Edit labels/roles/colors, delete player, telemetry hooks            |
+| P1       | Field Settings Panel                    | 1.5d         | Move theme/hash/snap + red zone toggle, telemetry                   |
+| P1       | Field Settings Panel                    | 1.5d         | TODO (currently inline in Toolbar; extract dedicated panel)         |
+| P1       | History Cap + Telemetry                 | 0.5d         | Ring buffer (100), emits diagram_history events                     |
+| P1       | History Cap + Telemetry                 | 0.5d         | DONE (cap & trim). TODO: add undo/redo emit                         |
+| P1       | Red Zone Field Slice Toggle             | 0.5d         | Midfield ↔ red zone switch & red line, telemetry                   |
+| P1       | Red Zone Field Slice Toggle             | 0.5d         | DONE: slice toggle + overlay + telemetry                            |
+| P2       | Thumbnail Export + PlayCard Integration | 2d           | PNG stored + displayed; export event logged (button done)           |
+| P2       | Thumbnail Export + PlayCard Integration | 2d           | DONE: thumbnail generated on save, stored in diagram_url, and displayed in PlayCard |
+| P2       | Mirror Telemetry & UI Polish            | 0.5d         | Spread metrics DONE; button clarity TBD                             |
+| P2       | Mirror Telemetry & UI Polish            | 0.5d         | DONE (spread metrics). UI label iteration TBD                       |
+| P2       | Formation Library (5–8 presets)         | 2d           | DONE: 5 presets implemented with idempotent apply + telemetry       |
+| P2       | Auto Formation Detection & Snap         | 2.5d         | Classify LOS/backfield, enforce 7 LOS / ≤4 backfield, snap          |
+| P2       | Curved Route Segments                   | 4d           | DONE: quadratic segments + control point handles + mode toggle      |
+| P2       | Templates / Stencils MVP                | 3d           | Save/apply subset; template events                                  |
+| P2       | Mirror Telemetry & UI Polish            | 0.5d         | Spread metrics DONE; button clarity TBD                             |
+| P3       | QB Progression Overlay                  | 1.5d         | Numbered read path markers + telemetry                              |
+| P3       | Offensive Line Technique Shading        | 1d           | Technique shading toggle + telemetry                                |
+| P3       | Branding / Export Theming               | 2d           | Team colors/logo on exports                                         |
+| P3       | Player / Route Color Picker UI          | 1d           | Integrated into metadata panel                                      |
 
 ### 8. Longer-Horizon Initiatives
 
@@ -251,7 +251,10 @@ Follow-ups:
 | Date       | Change                                                                                                                                                                     |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 2025-08-13 | Group drag multi-select, debounced COMMIT_MOVE history snapshots, move group telemetry w/ distance metric                                                                  |
-| 2025-08-13 | Legacy /visual directory removed; a11y focus trap & keyboard resize added; nudge sampling + batch telemetry; CanvasPane extraction                                        |
+| 2025-08-13 | Curved routes implemented (quadratic segments with control handles and mode toggle); preview and editing handles added                                                      |
+| 2025-08-13 | Full-size PNG/SVG export wired via Toolbar; thumbnail generation persisted on save and rendered in PlayCard (plays.diagram_url)                                            |
+| 2025-08-13 | Formation library (5 presets) added with idempotent apply to avoid duplicates; toolbar selector integrated                                                                 |
+| 2025-08-13 | Legacy /visual directory removed; a11y focus trap & keyboard resize added; nudge sampling + batch telemetry; CanvasPane extraction                                         |
 | 2025-08-13 | Group drag multi-select, debounced COMMIT_MOVE history snapshots, move group telemetry w/ distance metric                                                                  |
 | 2025-08-13 | Roadmap: Added automatic formation detection & legality assist feature                                                                                                     |
 | 2025-08-13 | Roadmap reprioritized (curved routes & templates elevated; added red zone toggle, progressions, OL shading, branding, legality telemetry events)                           |
@@ -270,13 +273,13 @@ This unified roadmap supersedes: `DIAGRAM_BUILDER_V2.md` and `PLAYBOOK_COMPETITI
 
 ### 15. Imminent Polish Queue (Next Pass)
 
-| Item                                    | Status | Notes / Acceptance                                                                             |
-| --------------------------------------- | ------ | ---------------------------------------------------------------------------------------------- |
-| Inline color picker (player color)      | DONE   | Native input[type=color] integrated alongside palette select                                   |
-| Inline outline color picker             | DONE   | Color input + select; Auto option retained                                                     |
-| Role grouping headers (QB / Skill / OL) | DONE   | Implemented grouped rendering with headers + drag reorder                                      |
-| Keyboard Delete (selected players)      | DONE   | Global key listener triggers single or bulk confirm flows w/ telemetry                         |
-| Multi-select role bulk set UX refine    | DONE   | Mixed role summary + inline bulk color/outline + role apply                                    |
-| Drag reorder performance measure        | DONE   | Per-drag duration + aggregated avg/max + list height stats (rolling window + flush on unmount) |
-| Auto contrast outline helper            | FUTURE | Suggest outlineColor based on fill luminance                                                   |
-| Formation apply idempotency             | PARTIAL | trips-right implementation: idempotent apply (create/update/remove duplicates)                  |
+| Item                                    | Status  | Notes / Acceptance                                                                             |
+| --------------------------------------- | ------- | ---------------------------------------------------------------------------------------------- |
+| Inline color picker (player color)      | DONE    | Native input[type=color] integrated alongside palette select                                   |
+| Inline outline color picker             | DONE    | Color input + select; Auto option retained                                                     |
+| Role grouping headers (QB / Skill / OL) | DONE    | Implemented grouped rendering with headers + drag reorder                                      |
+| Keyboard Delete (selected players)      | DONE    | Global key listener triggers single or bulk confirm flows w/ telemetry                         |
+| Multi-select role bulk set UX refine    | DONE    | Mixed role summary + inline bulk color/outline + role apply                                    |
+| Drag reorder performance measure        | DONE    | Per-drag duration + aggregated avg/max + list height stats (rolling window + flush on unmount) |
+| Auto contrast outline helper            | FUTURE  | Suggest outlineColor based on fill luminance                                                   |
+| Formation apply idempotency             | PARTIAL | trips-right implementation: idempotent apply (create/update/remove duplicates)                 |

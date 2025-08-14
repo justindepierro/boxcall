@@ -234,10 +234,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseClasses = [
       // Base button styles - square, confident
       "inline-flex items-center justify-center",
-      "font-sans rounded-sm", // Square corners for masculine feel
-      "transition-square hover-lift active-press focus-square",
-      "focus:outline-none",
-      "shadow-sm hover:shadow-md", // Stronger shadows for depth
+  "font-sans", // radius via CSS var
+  "transition-square hover-lift active-press focus-square",
+  "focus:outline-none",
       // Variant styles
       variantStyles.base,
       !isDisabled && variantStyles.hover,
@@ -289,6 +288,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={isDisabled}
         className={baseClasses}
+        style={{
+          borderRadius: "var(--button-border-radius)",
+          boxShadow: "var(--button-shadow)",
+        }}
         {...restProps}
       >
         {renderLoadingSpinner()}

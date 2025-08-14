@@ -9,9 +9,10 @@ import type { DiagramDocument } from "./types";
 interface ShellProps {
   onDocumentChange?: (doc: DiagramDocument) => void;
   onClose?: () => void;
+  onRequestExport?: (exporter: () => Promise<string | null>) => void; // provides a way to export current SVG to PNG data URL
 }
 
-const Shell: React.FC<ShellProps> = ({ onDocumentChange, onClose }) => {
+const Shell: React.FC<ShellProps> = ({ onDocumentChange, onClose, onRequestExport }) => {
   const { state, dispatch } = useDiagramEditor();
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [sidebarWidth, setSidebarWidth] = useState<number>(260);
@@ -26,15 +27,15 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange, onClose }) => {
     document.body.classList.add("select-none", "cursor-col-resize");
   };
   const handleResizeKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return;
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
     e.preventDefault();
     setSidebarWidth((w) => {
       let next = w;
       const step = e.shiftKey ? 32 : 16; // coarse vs fine
-      if (e.key === 'ArrowLeft') next = w - step;
-      if (e.key === 'ArrowRight') next = w + step;
-      if (e.key === 'Home') next = 200;
-      if (e.key === 'End') next = 420;
+      if (e.key === "ArrowLeft") next = w - step;
+      if (e.key === "ArrowRight") next = w + step;
+      if (e.key === "Home") next = 200;
+      if (e.key === "End") next = 420;
       return Math.min(420, Math.max(200, next));
     });
   };
@@ -79,12 +80,35 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange, onClose }) => {
     if (onDocumentChange) onDocumentChange(state.doc);
   }, [state.doc, onDocumentChange]);
 
+  // Provide export function to parent when requested
+  useEffect(() => {
+    if (!onRequestExport) return;
+    const makeExporter = async (): Promise<string | null> => {
+      const svg = svgRef.current;
+      if (!svg) return null;
+      try {
+        const { svgFullToPngDataUrl } = await import("./thumbnail");
+        const dataUrl = await svgFullToPngDataUrl(svg, {
+          width: 800,
+          height: 450,
+          background: "#0a0f1a",
+          type: "image/png",
+          quality: 0.92,
+        });
+        return dataUrl;
+      } catch {
+        return null;
+      }
+    };
+    onRequestExport(() => makeExporter());
+  }, [onRequestExport]);
+
   return (
-    <div className="flex flex-col h-full min-h-[620px]">
+  <div className="flex flex-col h-full min-h-[620px]">
       <Toolbar onClose={onClose} svgRef={svgRef} />
-      <div className="flex flex-1 min-h-0" style={{ width: "100%" }}>
+  <div className="flex flex-1 min-h-0 mt-2" style={{ width: "100%" }}>
         <div
-          className="flex flex-col border-r border-subtle bg-slate-50/60 backdrop-blur px-3 py-2 overflow-y-auto"
+      className="flex flex-col panel-cupertino px-3 py-2 overflow-y-auto"
           style={{ width: sidebarWidth }}
         >
           <PlayerSidebar />
@@ -100,9 +124,9 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange, onClose }) => {
           tabIndex={0}
           onKeyDown={handleResizeKey}
           onMouseDown={handleResizeMouseDown}
-          className="w-1 cursor-col-resize bg-transparent hover:bg-blue-200 active:bg-blue-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+    className="w-2 cursor-col-resize bg-transparent hover:bg-blue-200 active:bg-blue-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-  <CanvasPane svgRef={svgRef} className="flex-1 min-w-0 flex flex-col p-3" />
+  <CanvasPane svgRef={svgRef} className="flex-1 min-w-0 flex flex-col p-4" />
       </div>
     </div>
   );
@@ -111,8 +135,9 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange, onClose }) => {
 export const VisualPlayBuilderV2: React.FC<{
   onDocumentChange?: (doc: DiagramDocument) => void;
   onClose?: () => void;
-}> = ({ onDocumentChange, onClose }) => (
+  onRequestExport?: (exporter: () => Promise<string | null>) => void;
+}> = ({ onDocumentChange, onClose, onRequestExport }) => (
   <DiagramEditorProvider>
-    <Shell onDocumentChange={onDocumentChange} onClose={onClose} />
+    <Shell onDocumentChange={onDocumentChange} onClose={onClose} onRequestExport={onRequestExport} />
   </DiagramEditorProvider>
 );

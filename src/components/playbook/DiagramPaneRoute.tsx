@@ -26,8 +26,17 @@ export const DiagramPaneRoute: React.FC = () => {
   // (future) optionally load play by id here if needed
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onMouseDown={(e) => { if (e.target === e.currentTarget) handleClose(); }}>
-      <div className="bg-white rounded-md p-0 shadow-lg w-full max-w-7xl h-full max-h-[90vh] flex flex-col overflow-hidden relative" role="dialog" aria-modal="true">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) handleClose();
+      }}
+    >
+      <div
+        className="bg-white rounded-md p-0 shadow-lg w-full max-w-7xl h-full max-h-[90vh] flex flex-col overflow-hidden relative"
+        role="dialog"
+        aria-modal="true"
+      >
         <VisualPlayBuilderV2
           onDocumentChange={(doc) => {
             telemetry.enqueue({

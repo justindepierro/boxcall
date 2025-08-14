@@ -104,6 +104,9 @@ export interface Play {
   duplicate_key?: string; // canonical duplication key (nullable until enforced)
   // Installation lifecycle phase (not yet in DB - forward compatibility)
   install_phase?: string; // e.g., 'install1','install2','install3','situational','gameplan'
+
+  // Media/visuals
+  diagram_url?: string; // thumbnail or full diagram image (data URL or remote URL)
 }
 
 // DEPRECATED - Legacy interface with extra fields not in database

@@ -14,6 +14,7 @@ import { PracticeScriptService } from "../services/practiceScriptService";
 import { CSVService } from "../services/csv";
 import { PlaysService } from "../services/playsService";
 import { PlaysDomainService } from "../domain/playsDomainService";
+import { ThumbnailUploadService } from "../services/thumbnailUploadService";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system/Typography";
 import { markFirstPlayCreated } from "../components/onboarding/activationHelpers";
@@ -92,6 +93,20 @@ const PlaybookPageInner: React.FC = () => {
   const handleSavePlay = async (playData: Partial<Play>) => {
     try {
       const { play: newPlay } = await PlaysDomainService.createPlay(playData);
+      // If we have an inline data URL thumbnail, upload and patch play with public URL
+      if (playData.diagram_url && playData.diagram_url.startsWith("data:")) {
+        try {
+          const publicUrl = await ThumbnailUploadService.uploadPlayThumbnail(
+            newPlay.id,
+            playData.diagram_url
+          );
+          if (publicUrl && publicUrl !== playData.diagram_url) {
+            await PlaysService.updatePlay(newPlay.id, { diagram_url: publicUrl });
+          }
+  } catch (_e) {
+          // Non-fatal; keep data URL
+        }
+      }
       if (newPlay?.id) {
         markFirstPlayCreated(newPlay.id);
         telemetry.enqueue({

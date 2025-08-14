@@ -18,7 +18,7 @@ export interface RoutePoint {
 }
 export interface RouteSegment {
   id: string;
-  type: "line"; // future: 'curve','block','motion'
+  type: "line" | "curve"; // 'curve' uses quadratic segments with [start, control, end]
   points: RoutePoint[]; // first point is segment start reference
 }
 export interface PlayerRoute {
@@ -46,14 +46,22 @@ export interface DiagramDocumentV1 {
   field: DiagramFieldConfig;
   players: DiagramPlayer[];
   routes: PlayerRoute[];
+  // Optional generic annotations (lines/arrows/freehand/connectors)
+  annotations?: DiagramAnnotation[];
   meta?: { createdAt: number; updatedAt: number };
 }
 export type DiagramDocument = DiagramDocumentV1; // future union
 
 export interface EditorToolState {
-  tool: "select" | "pan" | "add-player" | "route" | "motion" | "delete";
+  tool: "select" | "pan" | "add-player" | "route" | "draw" | "motion" | "delete";
+  routeMode?: "line" | "curve"; // how new route segments should be created
+  drawMode?: "line" | "arrow" | "freehand" | "connector" | "curve" | "dashed" | "dotted"; // drawing subtype
+  drawColor?: string;
+  drawWidth?: number;
+  drawArrowHead?: "none" | "start" | "end" | "both";
   activePlayerId?: string; // deprecated single selection for backwards compat
   selectedIds?: string[]; // multi-selection
+  selectedAnnotationId?: string; // single annotation selection for editing
   zoom: number; // 1 = 100%
   panX: number; // px offset
   panY: number; // px offset
@@ -62,6 +70,16 @@ export interface EditorToolState {
     playerId: string;
     anchorPoints: RoutePoint[]; // committed anchor points (first is start)
     preview?: RoutePoint; // current hover point
+  };
+  // Annotation in-progress (line/arrow/freehand/connector)
+  annotating?: {
+    type: NonNullable<EditorToolState["drawMode"]>;
+    points: RoutePoint[]; // committed points
+    preview?: RoutePoint; // hover point when applicable
+    // For connectors
+    fromPlayerId?: string;
+    toPlayerId?: string;
+    freehand?: boolean; // capture continuous points
   };
   snap: boolean;
   snapGrid: number; // percent units (e.g., 2 => every 2%)
@@ -81,6 +99,12 @@ export interface DiagramEditorState {
 export type DiagramEditorAction =
   | { type: "INIT"; doc: DiagramDocument }
   | { type: "SET_TOOL"; tool: EditorToolState["tool"] }
+  | { type: "SET_ROUTE_MODE"; mode: NonNullable<EditorToolState["routeMode"]> }
+  | { type: "SET_DRAW_MODE"; mode: NonNullable<EditorToolState["drawMode"]> }
+  | { type: "SET_DRAW_COLOR"; color: string }
+  | { type: "SET_DRAW_WIDTH"; width: number }
+  | { type: "SET_DRAW_ARROW_HEAD"; arrowHead: NonNullable<EditorToolState["drawArrowHead"]> }
+  | { type: "UPDATE_ANNOT_STYLE"; id: string; patch: { color?: string; width?: number; arrowHead?: "none" | "start" | "end" | "both" } }
   | { type: "SET_ACTIVE_PLAYER"; id?: string }
   | { type: "SET_SELECTION"; ids: string[] }
   | { type: "TOGGLE_SELECT"; id: string }
@@ -108,7 +132,25 @@ export type DiagramEditorAction =
   | { type: "ADD_ROUTE_POINT"; point: RoutePoint }
   | { type: "COMMIT_ROUTE" }
   | { type: "CANCEL_ROUTE" }
+  | { type: "POP_ROUTE_POINT" }
+  | { type: "UPDATE_ROUTE_POINT"; routeId: string; segIndex: number; pointIndex: number; point: RoutePoint }
+  | { type: "COMMIT_ROUTE_EDIT" }
   | { type: "DELETE_ROUTE"; routeId: string }
+  // Annotation actions
+  | { type: "START_ANNOTATION"; drawType: NonNullable<EditorToolState["drawMode"]>; start?: RoutePoint; fromPlayerId?: string }
+  | { type: "PREVIEW_ANNOTATION"; point: RoutePoint }
+  | { type: "ADD_ANNOTATION_POINT"; point: RoutePoint }
+  | { type: "ADD_FREEHAND_POINT"; point: RoutePoint }
+  | { type: "SET_ANNOTATION_TO"; toPlayerId: string }
+  | { type: "COMMIT_ANNOTATION" }
+  | { type: "CANCEL_ANNOTATION" }
+  | { type: "POP_ANNOTATION_POINT" }
+  | { type: "SELECT_ANNOTATION"; id?: string }
+  | { type: "DELETE_ANNOTATION"; id: string }
+  | { type: "UPDATE_ANNOT_POINT"; id: string; pointIndex: number; point: RoutePoint }
+  | { type: "COMMIT_ANNOT_EDIT"; id: string }
+  | { type: "MOVE_ANNOTATION"; id: string; dx: number; dy: number }
+  | { type: "DUPLICATE_ANNOTATION"; id: string }
   | { type: "UPDATE_PLAYER"; id: string; patch: Partial<DiagramPlayer> }
   | { type: "REMOVE_PLAYER"; id: string }
   | { type: "REORDER_PLAYER"; id: string; direction: "up" | "down" }
@@ -123,6 +165,9 @@ export type DiagramEditorAction =
     }
   | { type: "SET_SNAP"; enabled: boolean }
   | { type: "SET_SNAP_GRID"; size: number }
+  // Alignment and distribution of selected players
+  | { type: "ALIGN_SELECTION"; axis: "x" | "y"; align: "start" | "center" | "end" }
+  | { type: "DISTRIBUTE_SELECTION"; axis: "x" | "y" }
   | { type: "MIRROR" }
   | { type: "APPLY_FORMATION"; formation: string }
   | { type: "UNDO" }
@@ -227,6 +272,7 @@ export const createEmptyDocument = (): DiagramDocument => ({
     return players;
   })(),
   routes: [],
+  annotations: [],
   meta: { createdAt: Date.now(), updatedAt: Date.now() },
 });
 
@@ -239,3 +285,40 @@ export const computeComplexityScore = (doc: DiagramDocument): number => {
   const raw = Math.ceil((routeSegments + playersWithRoutes) / 3);
   return Math.min(5, Math.max(1, raw || 1));
 };
+
+// ===== Annotations =====
+export type AnnotationType = "line" | "arrow" | "freehand" | "connector" | "dashed" | "dotted" | "curve";
+export interface DiagramAnnotationBase {
+  id: string;
+  type: AnnotationType;
+  color?: string;
+  width?: number; // stroke width
+  arrowHead?: "none" | "start" | "end" | "both";
+}
+export interface DiagramAnnotationLine extends DiagramAnnotationBase {
+  type: "line" | "dashed" | "dotted";
+  points: RoutePoint[]; // polyline
+}
+export interface DiagramAnnotationArrow extends DiagramAnnotationBase {
+  type: "arrow";
+  points: RoutePoint[]; // start -> end (polyline allowed)
+}
+export interface DiagramAnnotationCurve extends DiagramAnnotationBase {
+  type: "curve";
+  points: RoutePoint[]; // quadratic [start, control, end]
+}
+export interface DiagramAnnotationFreehand extends DiagramAnnotationBase {
+  type: "freehand";
+  points: RoutePoint[]; // many points captured while dragging
+}
+export interface DiagramAnnotationConnector extends DiagramAnnotationBase {
+  type: "connector";
+  fromPlayerId: string;
+  toPlayerId: string;
+}
+export type DiagramAnnotation =
+  | DiagramAnnotationLine
+  | DiagramAnnotationArrow
+  | DiagramAnnotationCurve
+  | DiagramAnnotationFreehand
+  | DiagramAnnotationConnector;
