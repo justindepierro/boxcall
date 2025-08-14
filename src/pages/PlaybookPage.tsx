@@ -101,9 +101,11 @@ const PlaybookPageInner: React.FC = () => {
             playData.diagram_url
           );
           if (publicUrl && publicUrl !== playData.diagram_url) {
-            await PlaysService.updatePlay(newPlay.id, { diagram_url: publicUrl });
+            await PlaysService.updatePlay(newPlay.id, {
+              diagram_url: publicUrl,
+            });
           }
-  } catch (_e) {
+        } catch (_e) {
           // Non-fatal; keep data URL
         }
       }

@@ -58,7 +58,9 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
   const [attemptedSave, setAttemptedSave] = useState(false);
   const [lastAutosave, setLastAutosave] = useState<number | null>(null);
   const [restoredFromDraft, setRestoredFromDraft] = useState(false);
-  const exportThumbnailRef = useRef<null | (() => Promise<string | null>)>(null);
+  const exportThumbnailRef = useRef<null | (() => Promise<string | null>)>(
+    null
+  );
   const autosaveTimerRef = useRef<number | null>(null);
   const dirtyRef = useRef(false);
   // Hash snapshot to detect unsaved changes for close confirmation

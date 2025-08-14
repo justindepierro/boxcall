@@ -104,7 +104,10 @@ export const highContrastTheme: ThemeDefinition = {
 };
 
 export const themeRegistry: ThemeRegistryExport = {
-  themes: [lightTheme, darkTheme, highContrastTheme,
+  themes: [
+    lightTheme,
+    darkTheme,
+    highContrastTheme,
     {
       id: "cupertino-light",
       label: "Cupertino Light",
@@ -149,7 +152,8 @@ export const themeRegistry: ThemeRegistryExport = {
           shadow: "0 1px 2px rgba(0,0,0,0.06), 0 3px 8px rgba(0,0,0,0.06)",
         },
       },
-      description: "Soft, translucent panels with subtle borders and generous radius.",
+      description:
+        "Soft, translucent panels with subtle borders and generous radius.",
     },
     {
       id: "cupertino-dark",
@@ -195,8 +199,9 @@ export const themeRegistry: ThemeRegistryExport = {
           shadow: "0 1px 2px rgba(0,0,0,0.3), 0 3px 8px rgba(0,0,0,0.3)",
         },
       },
-      description: "Translucent dark panels and refined contrast in the Cupertino spirit.",
-    }
+      description:
+        "Translucent dark panels and refined contrast in the Cupertino spirit.",
+    },
   ],
   baseId: "light",
 };

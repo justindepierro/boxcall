@@ -16,12 +16,29 @@ import type {
 import { createEmptyDocument, computeComplexityScore } from "./types";
 import { telemetry } from "../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../telemetry/events";
-import { getFormationSpec, applyFormationIdempotent, type FormationId } from "./formations";
+import {
+  getFormationSpec,
+  applyFormationIdempotent,
+  type FormationId,
+} from "./formations";
 
 const HISTORY_CAP = 100;
 const initialState: DiagramEditorState = {
   doc: createEmptyDocument(),
-  ui: { tool: "select", routeMode: "line", drawMode: "line", drawColor: "#111827", drawWidth: 3, drawArrowHead: "end", zoom: 1, panX: 0, panY: 0, snap: false, snapGrid: 2 },
+  ui: {
+    tool: "select",
+    routeMode: "line",
+    drawMode: "line",
+    drawColor: "#111827",
+    drawWidth: 3,
+    drawArrowHead: "end",
+    zoom: 1,
+    panX: 0,
+    panY: 0,
+    snap: false,
+    snapGrid: 2,
+    distributeSpacing: 5,
+  },
   dirty: false,
   history: [],
   historyIndex: -1,
@@ -240,12 +257,12 @@ function reducer(
         ],
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
-    telemetry.enqueue({
+      telemetry.enqueue({
         type: TelemetryEventTypes.PlayDiagramRouteAdd,
         data: {
           playerId: state.ui.drawing.playerId,
-      length: seg.points.length,
-      type: seg.type,
+          length: seg.points.length,
+          type: seg.type,
         },
       });
       const after = pushHistory(
@@ -267,12 +284,18 @@ function reducer(
         if (r.id !== action.routeId) return r;
         const segs = r.segments.map((s, i) => {
           if (i !== action.segIndex) return s;
-          const pts = s.points.map((pt, pi) => (pi === action.pointIndex ? action.point : pt));
+          const pts = s.points.map((pt, pi) =>
+            pi === action.pointIndex ? action.point : pt
+          );
           return { ...s, points: pts };
         });
         return { ...r, segments: segs };
       });
-      const nextDoc: DiagramDocument = { ...state.doc, routes, meta: { ...state.doc.meta!, updatedAt: Date.now() } };
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        routes,
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
       return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
     case "COMMIT_ROUTE_EDIT":
@@ -296,7 +319,10 @@ function reducer(
       if (!state.ui.annotating) return state;
       return {
         ...state,
-        ui: { ...state.ui, annotating: { ...state.ui.annotating, preview: action.point } },
+        ui: {
+          ...state.ui,
+          annotating: { ...state.ui.annotating, preview: action.point },
+        },
       };
     }
     case "ADD_ANNOTATION_POINT": {
@@ -304,50 +330,100 @@ function reducer(
       const ann = state.ui.annotating;
       return {
         ...state,
-        ui: { ...state.ui, annotating: { ...ann, points: [...ann.points, action.point], preview: undefined } },
+        ui: {
+          ...state.ui,
+          annotating: {
+            ...ann,
+            points: [...ann.points, action.point],
+            preview: undefined,
+          },
+        },
       };
     }
     case "ADD_FREEHAND_POINT": {
       if (!state.ui.annotating || !state.ui.annotating.freehand) return state;
       const ann = state.ui.annotating;
-      return { ...state, ui: { ...state.ui, annotating: { ...ann, points: [...ann.points, action.point] } } };
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          annotating: { ...ann, points: [...ann.points, action.point] },
+        },
+      };
     }
     case "SET_ANNOTATION_TO": {
       if (!state.ui.annotating) return state;
-      return { ...state, ui: { ...state.ui, annotating: { ...state.ui.annotating, toPlayerId: action.toPlayerId } } };
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          annotating: { ...state.ui.annotating, toPlayerId: action.toPlayerId },
+        },
+      };
     }
     case "POP_ANNOTATION_POINT": {
-      if (!state.ui.annotating || !state.ui.annotating.points.length) return state;
+      if (!state.ui.annotating || !state.ui.annotating.points.length)
+        return state;
       const ann = state.ui.annotating;
       return {
         ...state,
-        ui: { ...state.ui, annotating: { ...ann, points: ann.points.slice(0, -1), preview: undefined } },
+        ui: {
+          ...state.ui,
+          annotating: {
+            ...ann,
+            points: ann.points.slice(0, -1),
+            preview: undefined,
+          },
+        },
       };
     }
     case "CANCEL_ANNOTATION":
       return { ...state, ui: { ...state.ui, annotating: undefined } };
     case "COMMIT_ANNOTATION": {
-      if (!state.ui.annotating) return { ...state, ui: { ...state.ui, annotating: undefined } };
+      if (!state.ui.annotating)
+        return { ...state, ui: { ...state.ui, annotating: undefined } };
       const a = state.ui.annotating;
       const id = `ann_${Date.now()}`;
-  const color = state.ui.drawColor || "#111827";
-  const width = state.ui.drawWidth || 3;
-  const arrowHead = state.ui.drawArrowHead || "end";
+      const color = state.ui.drawColor || "#111827";
+      const width = state.ui.drawWidth || 3;
+      const arrowHead = state.ui.drawArrowHead || "end";
       const nextDoc: DiagramDocument = {
         ...state.doc,
         annotations: [
           ...(state.doc.annotations || []),
-      a.type === "connector"
-    ? ({ id, type: "connector", fromPlayerId: a.fromPlayerId!, toPlayerId: a.toPlayerId!, color, width, arrowHead } as any)
-    : ({ id, type: a.type, points: a.points, color, width, arrowHead } as any),
+          a.type === "connector"
+            ? ({
+                id,
+                type: "connector",
+                fromPlayerId: a.fromPlayerId!,
+                toPlayerId: a.toPlayerId!,
+                color,
+                width,
+                arrowHead,
+              } as any)
+            : ({
+                id,
+                type: a.type,
+                points: a.points,
+                color,
+                width,
+                arrowHead,
+              } as any),
         ],
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
       telemetry.enqueue({
         type: TelemetryEventTypes.PlayDiagramUpdated,
-        data: { players: nextDoc.players.length, routes: nextDoc.routes.length, annotations: (nextDoc.annotations || []).length },
+        data: {
+          players: nextDoc.players.length,
+          routes: nextDoc.routes.length,
+          annotations: (nextDoc.annotations || []).length,
+        },
       });
-      const after = pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+      const after = pushHistory(
+        { ...state, doc: nextDoc, dirty: true },
+        nextDoc
+      );
       return { ...after, ui: { ...after.ui, annotating: undefined } };
     }
     case "SELECT_ANNOTATION":
@@ -355,10 +431,20 @@ function reducer(
     case "DELETE_ANNOTATION": {
       const nextDoc: DiagramDocument = {
         ...state.doc,
-        annotations: (state.doc.annotations || []).filter((ann) => ann.id !== action.id),
+        annotations: (state.doc.annotations || []).filter(
+          (ann) => ann.id !== action.id
+        ),
         meta: { ...state.doc.meta!, updatedAt: Date.now() },
       };
-      return pushHistory({ ...state, doc: nextDoc, dirty: true, ui: { ...state.ui, selectedAnnotationId: undefined } }, nextDoc);
+      return pushHistory(
+        {
+          ...state,
+          doc: nextDoc,
+          dirty: true,
+          ui: { ...state.ui, selectedAnnotationId: undefined },
+        },
+        nextDoc
+      );
     }
     case "UPDATE_ANNOT_POINT": {
       const anns = (state.doc.annotations || []).map((ann) => {
@@ -368,16 +454,26 @@ function reducer(
         pts[action.pointIndex] = action.point;
         return { ...ann, points: pts } as any;
       });
-      const nextDoc: DiagramDocument = { ...state.doc, annotations: anns as any, meta: { ...state.doc.meta!, updatedAt: Date.now() } };
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        annotations: anns as any,
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
       return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
     case "COMMIT_ANNOT_EDIT":
       return pushHistory(state, state.doc);
     case "UPDATE_ANNOT_STYLE": {
       const anns = (state.doc.annotations || []).map((ann) =>
-        ann.id === action.id ? ({ ...ann, ...action.patch } as any) : (ann as any)
+        ann.id === action.id
+          ? ({ ...ann, ...action.patch } as any)
+          : (ann as any)
       );
-      const nextDoc: DiagramDocument = { ...state.doc, annotations: anns as any, meta: { ...state.doc.meta!, updatedAt: Date.now() } };
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        annotations: anns as any,
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
       return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
     case "MOVE_ANNOTATION": {
@@ -386,9 +482,19 @@ function reducer(
         if (!("points" in ann)) return ann as any;
         const dxPct = (action.dx / 1600) * 100;
         const dyPct = (action.dy / 900) * 100;
-        return { ...ann, points: ann.points.map((p) => ({ x: Math.min(100, Math.max(0, p.x + dxPct)), y: Math.min(100, Math.max(0, p.y + dyPct)) })) } as any;
+        return {
+          ...ann,
+          points: ann.points.map((p) => ({
+            x: Math.min(100, Math.max(0, p.x + dxPct)),
+            y: Math.min(100, Math.max(0, p.y + dyPct)),
+          })),
+        } as any;
       });
-      const nextDoc: DiagramDocument = { ...state.doc, annotations: anns as any, meta: { ...state.doc.meta!, updatedAt: Date.now() } };
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        annotations: anns as any,
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
       return { ...state, doc: nextDoc, dirty: true };
     }
     case "DUPLICATE_ANNOTATION": {
@@ -403,11 +509,26 @@ function reducer(
         dup = {
           ...src,
           id,
-          points: src.points.map((p) => ({ x: Math.min(100, p.x + 1), y: Math.min(100, p.y + 1) })),
+          points: src.points.map((p) => ({
+            x: Math.min(100, p.x + 1),
+            y: Math.min(100, p.y + 1),
+          })),
         };
       }
-      const nextDoc: DiagramDocument = { ...state.doc, annotations: [ ...(state.doc.annotations || []), dup ], meta: { ...state.doc.meta!, updatedAt: Date.now() } };
-      return pushHistory({ ...state, doc: nextDoc, dirty: true, ui: { ...state.ui, selectedAnnotationId: id } }, nextDoc);
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        annotations: [...(state.doc.annotations || []), dup],
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      return pushHistory(
+        {
+          ...state,
+          doc: nextDoc,
+          dirty: true,
+          ui: { ...state.ui, selectedAnnotationId: id },
+        },
+        nextDoc
+      );
     }
     case "UPDATE_PLAYER": {
       const nextDoc: DiagramDocument = {
@@ -694,12 +815,11 @@ function reducer(
         : state.doc.players.find((p) => p.role === "C")?.y || 50;
       const spec = getFormationSpec(formation, centerX, baseY);
       if (!spec) return state;
-      const { players, removedIds, created, updated, removedDup } = applyFormationIdempotent(
-        state.doc.players,
-        state.doc.routes,
-        spec
+      const { players, removedIds, created, updated, removedDup } =
+        applyFormationIdempotent(state.doc.players, state.doc.routes, spec);
+      const nextRoutes = state.doc.routes.filter(
+        (r) => !removedIds.includes(r.playerId)
       );
-      const nextRoutes = state.doc.routes.filter((r) => !removedIds.includes(r.playerId));
       const nextDoc: DiagramDocument = {
         ...state.doc,
         players,
@@ -722,6 +842,11 @@ function reducer(
       return { ...state, ui: { ...state.ui, snap: action.enabled } };
     case "SET_SNAP_GRID":
       return { ...state, ui: { ...state.ui, snapGrid: action.size } };
+    case "SET_DISTRIBUTE_SPACING":
+      return {
+        ...state,
+        ui: { ...state.ui, distributeSpacing: action.spacing },
+      };
     case "ALIGN_SELECTION": {
       const ids = state.ui.selectedIds || [];
       if (ids.length < 2) return state;
@@ -730,22 +855,46 @@ function reducer(
       // Compute reference from selection bounds
       const xs = players.map((p) => p.x);
       const ys = players.map((p) => p.y);
-      const minX = Math.min(...xs), maxX = Math.max(...xs);
-      const minY = Math.min(...ys), maxY = Math.max(...ys);
+      const minX = Math.min(...xs),
+        maxX = Math.max(...xs);
+      const minY = Math.min(...ys),
+        maxY = Math.max(...ys);
       const centerX = +(xs.reduce((a, b) => a + b, 0) / xs.length).toFixed(2);
       const centerY = +(ys.reduce((a, b) => a + b, 0) / ys.length).toFixed(2);
       let nextPlayers = state.doc.players.map((p) => {
         if (!ids.includes(p.id)) return p;
         if (action.axis === "x") {
-          const target = action.align === "start" ? minX : action.align === "center" ? centerX : maxX;
+          const target =
+            action.align === "start"
+              ? minX
+              : action.align === "center"
+                ? centerX
+                : maxX;
           return { ...p, x: Math.min(100, Math.max(0, target)) };
         } else {
-          const target = action.align === "start" ? minY : action.align === "center" ? centerY : maxY;
+          const target =
+            action.align === "start"
+              ? minY
+              : action.align === "center"
+                ? centerY
+                : maxY;
           return { ...p, y: Math.min(100, Math.max(0, target)) };
         }
       });
-      const nextDoc: DiagramDocument = { ...state.doc, players: nextPlayers, meta: { ...state.doc.meta!, updatedAt: Date.now() } };
-  telemetry.enqueue({ type: TelemetryEventTypes.UIAction, data: { action: "align", axis: action.axis, align: action.align, count: ids.length } });
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: nextPlayers,
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.UIAction,
+        data: {
+          action: "align",
+          axis: action.axis,
+          align: action.align,
+          count: ids.length,
+        },
+      });
       return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
     case "DISTRIBUTE_SELECTION": {
@@ -754,10 +903,12 @@ function reducer(
       const sel = state.doc.players.filter((p) => ids.includes(p.id));
       if (sel.length < 3) return state;
       // Sort by axis value
-      const sorted = [...sel].sort((a, b) => (action.axis === "x" ? a.x - b.x : a.y - b.y));
+      const sorted = [...sel].sort((a, b) =>
+        action.axis === "x" ? a.x - b.x : a.y - b.y
+      );
       const first = sorted[0];
       const last = sorted[sorted.length - 1];
-      const span = (action.axis === "x" ? last.x - first.x : last.y - first.y);
+      const span = action.axis === "x" ? last.x - first.x : last.y - first.y;
       if (span <= 0) return state;
       const step = span / (sorted.length - 1);
       const desired: Record<string, number> = {};
@@ -766,11 +917,63 @@ function reducer(
       });
       const nextPlayers = state.doc.players.map((p) => {
         if (!ids.includes(p.id)) return p;
-        if (action.axis === "x") return { ...p, x: Math.min(100, Math.max(0, +desired[p.id].toFixed(2))) };
-        return { ...p, y: Math.min(100, Math.max(0, +desired[p.id].toFixed(2))) };
+        if (action.axis === "x")
+          return {
+            ...p,
+            x: Math.min(100, Math.max(0, +desired[p.id].toFixed(2))),
+          };
+        return {
+          ...p,
+          y: Math.min(100, Math.max(0, +desired[p.id].toFixed(2))),
+        };
       });
-      const nextDoc: DiagramDocument = { ...state.doc, players: nextPlayers, meta: { ...state.doc.meta!, updatedAt: Date.now() } };
-  telemetry.enqueue({ type: TelemetryEventTypes.UIAction, data: { action: "distribute", axis: action.axis, count: ids.length } });
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: nextPlayers,
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.UIAction,
+        data: { action: "distribute", axis: action.axis, count: ids.length },
+      });
+      return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+    }
+    case "DISTRIBUTE_SELECTION_FIXED": {
+      const ids = state.ui.selectedIds || [];
+      if (ids.length < 2) return state; // can place at least 2
+      const sel = state.doc.players.filter((p) => ids.includes(p.id));
+      if (sel.length < 2) return state;
+      // Sort by axis value and use the first as origin
+      const axis = action.axis;
+      const sorted = [...sel].sort((a, b) =>
+        axis === "x" ? a.x - b.x : a.y - b.y
+      );
+      const origin = sorted[0];
+      const spacing = Math.max(0, action.spacing);
+      const desired: Record<string, number> = {
+        [origin.id]: axis === "x" ? origin.x : origin.y,
+      };
+      for (let i = 1; i < sorted.length; i++) {
+        const prevId = sorted[i - 1].id;
+        const prevVal = desired[prevId];
+        desired[sorted[i].id] = Math.min(100, prevVal + spacing);
+      }
+      const nextPlayers = state.doc.players.map((p) => {
+        if (!ids.includes(p.id)) return p;
+        const target = +Number(desired[p.id]).toFixed(2);
+        if (axis === "x")
+          return { ...p, x: Math.min(100, Math.max(0, target)) };
+        return { ...p, y: Math.min(100, Math.max(0, target)) };
+      });
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        players: nextPlayers,
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.UIAction,
+        data: { action: "distribute-fixed", axis, count: ids.length, spacing },
+      });
       return pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
     }
     case "UNDO": {

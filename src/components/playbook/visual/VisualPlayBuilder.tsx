@@ -79,7 +79,11 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
         <div className="flex items-center bc-card-padding panel-cupertino">
           <SegmentedControl
             ariaLabel="View mode"
-            options={viewModeButtons.map((b) => ({ id: b.id, label: b.label, icon: <b.icon className="w-4 h-4" /> }))}
+            options={viewModeButtons.map((b) => ({
+              id: b.id,
+              label: b.label,
+              icon: <b.icon className="w-4 h-4" />,
+            }))}
             value={viewMode}
             onChange={(v) => setViewMode(v)}
           />

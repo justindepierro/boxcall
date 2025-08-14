@@ -53,9 +53,23 @@ export interface DiagramDocumentV1 {
 export type DiagramDocument = DiagramDocumentV1; // future union
 
 export interface EditorToolState {
-  tool: "select" | "pan" | "add-player" | "route" | "draw" | "motion" | "delete";
+  tool:
+    | "select"
+    | "pan"
+    | "add-player"
+    | "route"
+    | "draw"
+    | "motion"
+    | "delete";
   routeMode?: "line" | "curve"; // how new route segments should be created
-  drawMode?: "line" | "arrow" | "freehand" | "connector" | "curve" | "dashed" | "dotted"; // drawing subtype
+  drawMode?:
+    | "line"
+    | "arrow"
+    | "freehand"
+    | "connector"
+    | "curve"
+    | "dashed"
+    | "dotted"; // drawing subtype
   drawColor?: string;
   drawWidth?: number;
   drawArrowHead?: "none" | "start" | "end" | "both";
@@ -83,6 +97,7 @@ export interface EditorToolState {
   };
   snap: boolean;
   snapGrid: number; // percent units (e.g., 2 => every 2%)
+  distributeSpacing?: number; // fixed spacing in percent for distribute-fixed
   prevSlice?: { backYards: number; forwardYards: number; losYards?: number }; // remember previous slice when entering red zone mode
   pendingDeleteId?: string; // player id awaiting delete confirmation
   pendingBulkDelete?: boolean; // awaiting confirmation for multi-delete
@@ -103,8 +118,19 @@ export type DiagramEditorAction =
   | { type: "SET_DRAW_MODE"; mode: NonNullable<EditorToolState["drawMode"]> }
   | { type: "SET_DRAW_COLOR"; color: string }
   | { type: "SET_DRAW_WIDTH"; width: number }
-  | { type: "SET_DRAW_ARROW_HEAD"; arrowHead: NonNullable<EditorToolState["drawArrowHead"]> }
-  | { type: "UPDATE_ANNOT_STYLE"; id: string; patch: { color?: string; width?: number; arrowHead?: "none" | "start" | "end" | "both" } }
+  | {
+      type: "SET_DRAW_ARROW_HEAD";
+      arrowHead: NonNullable<EditorToolState["drawArrowHead"]>;
+    }
+  | {
+      type: "UPDATE_ANNOT_STYLE";
+      id: string;
+      patch: {
+        color?: string;
+        width?: number;
+        arrowHead?: "none" | "start" | "end" | "both";
+      };
+    }
   | { type: "SET_ACTIVE_PLAYER"; id?: string }
   | { type: "SET_SELECTION"; ids: string[] }
   | { type: "TOGGLE_SELECT"; id: string }
@@ -133,11 +159,22 @@ export type DiagramEditorAction =
   | { type: "COMMIT_ROUTE" }
   | { type: "CANCEL_ROUTE" }
   | { type: "POP_ROUTE_POINT" }
-  | { type: "UPDATE_ROUTE_POINT"; routeId: string; segIndex: number; pointIndex: number; point: RoutePoint }
+  | {
+      type: "UPDATE_ROUTE_POINT";
+      routeId: string;
+      segIndex: number;
+      pointIndex: number;
+      point: RoutePoint;
+    }
   | { type: "COMMIT_ROUTE_EDIT" }
   | { type: "DELETE_ROUTE"; routeId: string }
   // Annotation actions
-  | { type: "START_ANNOTATION"; drawType: NonNullable<EditorToolState["drawMode"]>; start?: RoutePoint; fromPlayerId?: string }
+  | {
+      type: "START_ANNOTATION";
+      drawType: NonNullable<EditorToolState["drawMode"]>;
+      start?: RoutePoint;
+      fromPlayerId?: string;
+    }
   | { type: "PREVIEW_ANNOTATION"; point: RoutePoint }
   | { type: "ADD_ANNOTATION_POINT"; point: RoutePoint }
   | { type: "ADD_FREEHAND_POINT"; point: RoutePoint }
@@ -147,7 +184,12 @@ export type DiagramEditorAction =
   | { type: "POP_ANNOTATION_POINT" }
   | { type: "SELECT_ANNOTATION"; id?: string }
   | { type: "DELETE_ANNOTATION"; id: string }
-  | { type: "UPDATE_ANNOT_POINT"; id: string; pointIndex: number; point: RoutePoint }
+  | {
+      type: "UPDATE_ANNOT_POINT";
+      id: string;
+      pointIndex: number;
+      point: RoutePoint;
+    }
   | { type: "COMMIT_ANNOT_EDIT"; id: string }
   | { type: "MOVE_ANNOTATION"; id: string; dx: number; dy: number }
   | { type: "DUPLICATE_ANNOTATION"; id: string }
@@ -165,9 +207,15 @@ export type DiagramEditorAction =
     }
   | { type: "SET_SNAP"; enabled: boolean }
   | { type: "SET_SNAP_GRID"; size: number }
+  | { type: "SET_DISTRIBUTE_SPACING"; spacing: number }
   // Alignment and distribution of selected players
-  | { type: "ALIGN_SELECTION"; axis: "x" | "y"; align: "start" | "center" | "end" }
+  | {
+      type: "ALIGN_SELECTION";
+      axis: "x" | "y";
+      align: "start" | "center" | "end";
+    }
   | { type: "DISTRIBUTE_SELECTION"; axis: "x" | "y" }
+  | { type: "DISTRIBUTE_SELECTION_FIXED"; axis: "x" | "y"; spacing: number }
   | { type: "MIRROR" }
   | { type: "APPLY_FORMATION"; formation: string }
   | { type: "UNDO" }
@@ -287,7 +335,14 @@ export const computeComplexityScore = (doc: DiagramDocument): number => {
 };
 
 // ===== Annotations =====
-export type AnnotationType = "line" | "arrow" | "freehand" | "connector" | "dashed" | "dotted" | "curve";
+export type AnnotationType =
+  | "line"
+  | "arrow"
+  | "freehand"
+  | "connector"
+  | "dashed"
+  | "dotted"
+  | "curve";
 export interface DiagramAnnotationBase {
   id: string;
   type: AnnotationType;

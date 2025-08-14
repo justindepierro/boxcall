@@ -224,8 +224,8 @@ export class PlaysService {
             ? (playData as unknown as { duplicate_key?: string }).duplicate_key
             : undefined,
 
-  // Media
-  diagram_url: playData.diagram_url || null,
+        // Media
+        diagram_url: playData.diagram_url || null,
       };
 
       console.log("🎯 Creating play in database:", newPlay);
@@ -396,8 +396,8 @@ export class PlaysService {
         is_archived: updates.is_archived,
         updated_at: new Date(),
 
-  // Media
-  diagram_url: updates.diagram_url,
+        // Media
+        diagram_url: updates.diagram_url,
       };
 
       // Remove undefined values

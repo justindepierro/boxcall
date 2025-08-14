@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { DiagramEditorProvider, useDiagramEditor } from "./context";
 import { Toolbar } from "./components/Toolbar";
-import { PlayerSidebar } from "./components/PlayerSidebar";
-import { RoutesPanel } from "./components/RoutesPanel";
+// Sidebar hidden for on-canvas editing; keep imports commented for quick restore
+// import { PlayerSidebar } from "./components/PlayerSidebar";
+// import { RoutesPanel } from "./components/RoutesPanel";
 import { CanvasPane } from "./components/CanvasPane";
 import type { DiagramDocument } from "./types";
 
@@ -12,53 +13,14 @@ interface ShellProps {
   onRequestExport?: (exporter: () => Promise<string | null>) => void; // provides a way to export current SVG to PNG data URL
 }
 
-const Shell: React.FC<ShellProps> = ({ onDocumentChange, onClose, onRequestExport }) => {
+const Shell: React.FC<ShellProps> = ({
+  onDocumentChange,
+  onClose,
+  onRequestExport,
+}) => {
   const { state, dispatch } = useDiagramEditor();
   const svgRef = useRef<SVGSVGElement | null>(null);
-  const [sidebarWidth, setSidebarWidth] = useState<number>(260);
-  const resizingRef = useRef(false);
-  const startXRef = useRef(0);
-  const startWidthRef = useRef(260);
-
-  const handleResizeMouseDown = (e: React.MouseEvent) => {
-    resizingRef.current = true;
-    startXRef.current = e.clientX;
-    startWidthRef.current = sidebarWidth;
-    document.body.classList.add("select-none", "cursor-col-resize");
-  };
-  const handleResizeKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
-    e.preventDefault();
-    setSidebarWidth((w) => {
-      let next = w;
-      const step = e.shiftKey ? 32 : 16; // coarse vs fine
-      if (e.key === "ArrowLeft") next = w - step;
-      if (e.key === "ArrowRight") next = w + step;
-      if (e.key === "Home") next = 200;
-      if (e.key === "End") next = 420;
-      return Math.min(420, Math.max(200, next));
-    });
-  };
-  const handleGlobalMouseMove = useCallback((e: MouseEvent) => {
-    if (!resizingRef.current) return;
-    const delta = e.clientX - startXRef.current;
-    const next = Math.min(420, Math.max(200, startWidthRef.current + delta));
-    setSidebarWidth(next);
-  }, []);
-  const handleGlobalMouseUp = useCallback(() => {
-    if (resizingRef.current) {
-      resizingRef.current = false;
-      document.body.classList.remove("select-none", "cursor-col-resize");
-    }
-  }, []);
-  useEffect(() => {
-    window.addEventListener("mousemove", handleGlobalMouseMove);
-    window.addEventListener("mouseup", handleGlobalMouseUp);
-    return () => {
-      window.removeEventListener("mousemove", handleGlobalMouseMove);
-      window.removeEventListener("mouseup", handleGlobalMouseUp);
-    };
-  }, [handleGlobalMouseMove, handleGlobalMouseUp]);
+  const [sidebarWidth] = useState<number>(0);
 
   // Keyboard delete handler (bulk or single)
   useEffect(() => {
@@ -104,29 +66,15 @@ const Shell: React.FC<ShellProps> = ({ onDocumentChange, onClose, onRequestExpor
   }, [onRequestExport]);
 
   return (
-  <div className="flex flex-col h-full min-h-[620px]">
+    <div className="flex flex-col h-full min-h-[620px]">
       <Toolbar onClose={onClose} svgRef={svgRef} />
-  <div className="flex flex-1 min-h-0 mt-2" style={{ width: "100%" }}>
-        <div
-      className="flex flex-col panel-cupertino px-3 py-2 overflow-y-auto"
-          style={{ width: sidebarWidth }}
-        >
-          <PlayerSidebar />
-          <RoutesPanel />
-        </div>
-        <div
-          role="separator"
-          aria-orientation="vertical"
-          aria-label="Resize sidebar"
-          aria-valuemin={200}
-          aria-valuemax={420}
-          aria-valuenow={sidebarWidth}
-          tabIndex={0}
-          onKeyDown={handleResizeKey}
-          onMouseDown={handleResizeMouseDown}
-    className="w-2 cursor-col-resize bg-transparent hover:bg-blue-200 active:bg-blue-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+      <div className="flex flex-1 min-h-0 mt-2" style={{ width: "100%" }}>
+  {/* Sidebar hidden */}
+  <div className="hidden" style={{ width: sidebarWidth }} />
+        <CanvasPane
+          svgRef={svgRef}
+          className="flex-1 min-w-0 flex flex-col p-4"
         />
-  <CanvasPane svgRef={svgRef} className="flex-1 min-w-0 flex flex-col p-4" />
       </div>
     </div>
   );
@@ -138,6 +86,10 @@ export const VisualPlayBuilderV2: React.FC<{
   onRequestExport?: (exporter: () => Promise<string | null>) => void;
 }> = ({ onDocumentChange, onClose, onRequestExport }) => (
   <DiagramEditorProvider>
-    <Shell onDocumentChange={onDocumentChange} onClose={onClose} onRequestExport={onRequestExport} />
+    <Shell
+      onDocumentChange={onDocumentChange}
+      onClose={onClose}
+      onRequestExport={onRequestExport}
+    />
   </DiagramEditorProvider>
 );

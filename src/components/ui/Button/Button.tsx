@@ -234,9 +234,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseClasses = [
       // Base button styles - square, confident
       "inline-flex items-center justify-center",
-  "font-sans", // radius via CSS var
-  "transition-square hover-lift active-press focus-square",
-  "focus:outline-none",
+      "font-sans", // radius via CSS var
+      "transition-square hover-lift active-press focus-square",
+      "focus:outline-none",
       // Variant styles
       variantStyles.base,
       !isDisabled && variantStyles.hover,

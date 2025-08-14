@@ -3,7 +3,11 @@ import { Button } from "../../../ui/Button";
 import { useDiagramEditor, useAddPlayer } from "../context";
 import { TelemetryEventTypes } from "../../../../telemetry/events";
 import { telemetry } from "../../../../telemetry/dispatcher";
-import { svgElementToDataUrl, svgFullToPngDataUrl, svgFullToString } from "../thumbnail";
+import {
+  svgElementToDataUrl,
+  svgFullToPngDataUrl,
+  svgFullToString,
+} from "../thumbnail";
 import { FORMATION_OPTIONS } from "../formations";
 import type { DiagramFieldConfig } from "../types";
 
@@ -29,7 +33,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
           </Button>
         )}
       </div>
-  <div className="flex items-center gap-2 text-xs flex-wrap">
+      <div className="flex items-center gap-2 text-xs flex-wrap">
         <div className="flex items-center gap-1 pr-3 border-r border-subtle">
           <Button
             size="xs"
@@ -54,18 +58,26 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
           </Button>
           {/* Draw controls moved to on-canvas ToolPalette */}
           {state.ui.tool === "route" && (
-            <div className="inline-flex items-center gap-1 ml-1" role="group" aria-label="Route mode">
+            <div
+              className="inline-flex items-center gap-1 ml-1"
+              role="group"
+              aria-label="Route mode"
+            >
               <Button
                 size="xs"
                 variant={state.ui.routeMode === "line" ? "secondary" : "ghost"}
-                onClick={() => dispatch({ type: "SET_ROUTE_MODE", mode: "line" })}
+                onClick={() =>
+                  dispatch({ type: "SET_ROUTE_MODE", mode: "line" })
+                }
               >
                 Line
               </Button>
               <Button
                 size="xs"
                 variant={state.ui.routeMode === "curve" ? "secondary" : "ghost"}
-                onClick={() => dispatch({ type: "SET_ROUTE_MODE", mode: "curve" })}
+                onClick={() =>
+                  dispatch({ type: "SET_ROUTE_MODE", mode: "curve" })
+                }
               >
                 Curve
               </Button>
@@ -87,7 +99,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
           <Button
             size="xs"
             variant={state.ui.snap ? "secondary" : "ghost"}
-            onClick={() => dispatch({ type: "SET_SNAP", enabled: !state.ui.snap })}
+            onClick={() =>
+              dispatch({ type: "SET_SNAP", enabled: !state.ui.snap })
+            }
             aria-pressed={state.ui.snap}
             aria-label="Toggle snap to grid"
           >
@@ -96,7 +110,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
           <select
             className="text-xs border border-slate-300 rounded px-2 py-1"
             value={state.ui.snapGrid}
-            onChange={(e) => dispatch({ type: "SET_SNAP_GRID", size: Number(e.target.value) })}
+            onChange={(e) =>
+              dispatch({ type: "SET_SNAP_GRID", size: Number(e.target.value) })
+            }
             aria-label="Snap grid size"
           >
             <option value={1}>1%</option>
@@ -195,7 +211,11 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
                   background: "#0f5132",
                 });
                 const { jsPDF } = await import("jspdf");
-                const pdf = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+                const pdf = new jsPDF({
+                  orientation: "landscape",
+                  unit: "pt",
+                  format: "a4",
+                });
                 const pageW = pdf.internal.pageSize.getWidth();
                 const pageH = pdf.internal.pageSize.getHeight();
                 // Maintain 16:9 fit within page with small margin
@@ -206,7 +226,16 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
                 const imgH = Math.min(maxH, (maxW * 9) / 16);
                 const x = (pageW - imgW) / 2;
                 const y = (pageH - imgH) / 2;
-                pdf.addImage(dataUrl, "PNG", x, y, imgW, imgH, undefined, "FAST");
+                pdf.addImage(
+                  dataUrl,
+                  "PNG",
+                  x,
+                  y,
+                  imgW,
+                  imgH,
+                  undefined,
+                  "FAST"
+                );
                 pdf.save(`diagram-${Date.now()}.pdf`);
                 telemetry.enqueue({
                   type: TelemetryEventTypes.ExportScope,
@@ -244,7 +273,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
                   width,
                   background: "#0f5132",
                 });
-                const blob = new Blob([svgText], { type: "image/svg+xml;charset=utf-8" });
+                const blob = new Blob([svgText], {
+                  type: "image/svg+xml;charset=utf-8",
+                });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
@@ -329,7 +360,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
             <input
               type="checkbox"
               checked={state.doc.field.showYardLines}
-              onChange={() => dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showYardLines" })}
+              onChange={() =>
+                dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showYardLines" })
+              }
             />
             <span>Lines</span>
           </label>
@@ -337,7 +370,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
             <input
               type="checkbox"
               checked={state.doc.field.showHashMarks}
-              onChange={() => dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showHashMarks" })}
+              onChange={() =>
+                dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showHashMarks" })
+              }
             />
             <span>Hashes</span>
           </label>
@@ -345,7 +380,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
             <input
               type="checkbox"
               checked={state.doc.field.showPlayerLabels}
-              onChange={() => dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showPlayerLabels" })}
+              onChange={() =>
+                dispatch({
+                  type: "TOGGLE_FIELD_FLAG",
+                  flag: "showPlayerLabels",
+                })
+              }
             />
             <span>Labels</span>
           </label>
@@ -353,7 +393,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
             <input
               type="checkbox"
               checked={state.doc.field.showDefensePlayers}
-              onChange={() => dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showDefensePlayers" })}
+              onChange={() =>
+                dispatch({
+                  type: "TOGGLE_FIELD_FLAG",
+                  flag: "showDefensePlayers",
+                })
+              }
             />
             <span>Defense</span>
           </label>
@@ -361,7 +406,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
             <input
               type="checkbox"
               checked={!!state.doc.field.showRedZone}
-              onChange={() => dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showRedZone" })}
+              onChange={() =>
+                dispatch({ type: "TOGGLE_FIELD_FLAG", flag: "showRedZone" })
+              }
             />
             <span>Red Zone</span>
           </label>
@@ -372,7 +419,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
             onChange={(e) =>
               dispatch({
                 type: "SET_FIELD_THEME",
-                theme: e.target.value as NonNullable<DiagramFieldConfig["theme"]>,
+                theme: e.target.value as NonNullable<
+                  DiagramFieldConfig["theme"]
+                >,
               })
             }
             aria-label="Field theme"
@@ -387,7 +436,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
             onChange={(e) =>
               dispatch({
                 type: "SET_FIELD_HASH_LAYOUT",
-                layout: e.target.value as NonNullable<DiagramFieldConfig["hashLayout"]>,
+                layout: e.target.value as NonNullable<
+                  DiagramFieldConfig["hashLayout"]
+                >,
               })
             }
             aria-label="Hash layout"
@@ -396,24 +447,36 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
             <option value="college">College</option>
             <option value="nfl">NFL</option>
           </select>
-          <div className="flex items-center gap-1" role="group" aria-label="Ball hash">
+          <div
+            className="flex items-center gap-1"
+            role="group"
+            aria-label="Ball hash"
+          >
             <Button
               size="xs"
-              variant={state.doc.field.ballHash === "left" ? "secondary" : "ghost"}
+              variant={
+                state.doc.field.ballHash === "left" ? "secondary" : "ghost"
+              }
               onClick={() => dispatch({ type: "SET_BALL_HASH", hash: "left" })}
             >
               Hash L
             </Button>
             <Button
               size="xs"
-              variant={state.doc.field.ballHash === "middle" ? "secondary" : "ghost"}
-              onClick={() => dispatch({ type: "SET_BALL_HASH", hash: "middle" })}
+              variant={
+                state.doc.field.ballHash === "middle" ? "secondary" : "ghost"
+              }
+              onClick={() =>
+                dispatch({ type: "SET_BALL_HASH", hash: "middle" })
+              }
             >
               Hash M
             </Button>
             <Button
               size="xs"
-              variant={state.doc.field.ballHash === "right" ? "secondary" : "ghost"}
+              variant={
+                state.doc.field.ballHash === "right" ? "secondary" : "ghost"
+              }
               onClick={() => dispatch({ type: "SET_BALL_HASH", hash: "right" })}
             >
               Hash R

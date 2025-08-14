@@ -46,8 +46,12 @@ export function getFormationSpec(
     RG: { x: centerX + 3, y: baseY, role: "OL", color: c.ol },
     RT: { x: centerX + 6, y: baseY, role: "OL", color: c.ol },
   } satisfies FormationSpec;
-  const QB = { QB: { x: centerX, y: Math.min(99, baseY + 1.25), role: "QB", color: c.qb } } as FormationSpec;
-  const RB = { RB: { x: centerX, y: Math.min(99, baseY + 4), role: "RB", color: c.rb } } as FormationSpec;
+  const QB = {
+    QB: { x: centerX, y: Math.min(99, baseY + 1.25), role: "QB", color: c.qb },
+  } as FormationSpec;
+  const RB = {
+    RB: { x: centerX, y: Math.min(99, baseY + 4), role: "RB", color: c.rb },
+  } as FormationSpec;
 
   if (id === "trips-right") {
     return {
@@ -109,7 +113,13 @@ export function applyFormationIdempotent(
   players: DiagramPlayer[],
   routes: { playerId: string }[],
   spec: FormationSpec
-): { players: DiagramPlayer[]; removedIds: string[]; created: number; updated: number; removedDup: number } {
+): {
+  players: DiagramPlayer[];
+  removedIds: string[];
+  created: number;
+  updated: number;
+  removedDup: number;
+} {
   const specLabels = new Set(Object.keys(spec));
   const byLabel: Record<string, DiagramPlayer[]> = {};
   players.forEach((p) => {
@@ -124,15 +134,28 @@ export function applyFormationIdempotent(
   const nonSpec = players.filter((p) => !specLabels.has(p.label));
   Object.entries(spec).forEach(([label, cfg]) => {
     const existingGroup = byLabel[label] || [];
-    let canonical = existingGroup.find((p) => p.id === label) || existingGroup[0];
+    let canonical =
+      existingGroup.find((p) => p.id === label) || existingGroup[0];
     if (canonical) {
-      if (canonical.x !== cfg.x || canonical.y !== cfg.y || canonical.role !== cfg.role) {
+      if (
+        canonical.x !== cfg.x ||
+        canonical.y !== cfg.y ||
+        canonical.role !== cfg.role
+      ) {
         canonical = { ...canonical, x: cfg.x, y: cfg.y, role: cfg.role };
         updated++;
       }
       out.push(canonical);
     } else {
-      out.push({ id: label, label, role: cfg.role, side: "O", x: cfg.x, y: cfg.y, color: cfg.color });
+      out.push({
+        id: label,
+        label,
+        role: cfg.role,
+        side: "O",
+        x: cfg.x,
+        y: cfg.y,
+        color: cfg.color,
+      });
       created++;
     }
     if (existingGroup.length > 1) {

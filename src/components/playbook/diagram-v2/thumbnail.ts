@@ -148,6 +148,10 @@ export function svgFullToString(
 ): string {
   const width = opts.width || 1600;
   const height = opts.height || Math.round(width * (9 / 16));
-  const prepared = cloneSvgFullFrame(svg, { width, height, background: opts.background });
+  const prepared = cloneSvgFullFrame(svg, {
+    width,
+    height,
+    background: opts.background,
+  });
   return new XMLSerializer().serializeToString(prepared);
 }
