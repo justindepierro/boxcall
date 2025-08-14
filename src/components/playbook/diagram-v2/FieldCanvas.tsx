@@ -142,7 +142,7 @@ export const FieldCanvas: React.FC<{
       }
       return;
     }
-    // Compute what the selection will be after this click so drag can start immediately
+  // Compute what the selection will be after this click so drag can start immediately
     const prev = new Set(state.ui.selectedIds || []);
     let nextSelectedIds: string[] = [];
     if (e.detail === 2) {
@@ -168,8 +168,46 @@ export const FieldCanvas: React.FC<{
       });
       return; // don't start player drag in route tool
     }
+    // Build group snapshot target list (may be replaced if Alt-duplicate below)
+    let selected = nextSelectedIds.length ? nextSelectedIds : [id];
+
+    // Alt key: duplicate selection, then drag duplicates (IDs regenerated)
+    if (e.altKey) {
+      const uniqueTs = Date.now();
+      const clones: { id: string; label: string; x: number; y: number; color?: string; outlineColor?: string; side?: "O" | "D" | "ST"; role?: string; locked?: boolean }[] = [];
+      const mapOldToNew = new Map<string, string>();
+      selected.forEach((pid, i) => {
+        const src = doc.players.find((p) => p.id === pid);
+        if (!src) return;
+        const newId = `p_${uniqueTs}_${i}`;
+        mapOldToNew.set(pid, newId);
+        clones.push({
+          id: newId,
+          label: src.label,
+          role: src.role,
+          side: src.side,
+          x: src.x,
+          y: src.y,
+          color: src.color,
+          outlineColor: src.outlineColor,
+          locked: src.locked,
+        });
+      });
+      // Add clones to document
+      clones.forEach((c) => dispatch({ type: "ADD_PLAYER", player: c }));
+      // Switch selection to clones
+      const newIds = clones.map((c) => c.id);
+      if (newIds.length) {
+        dispatch({ type: "SET_SELECTION", ids: newIds });
+        selected = newIds;
+        // If the clicked id is part of selection, remap primary to its clone
+        if (mapOldToNew.has(id)) {
+          id = mapOldToNew.get(id)!;
+        }
+      }
+    }
+
     // Build group snapshot (selected players) for potential group drag, excluding locked players
-    const selected = nextSelectedIds.length ? nextSelectedIds : [id];
     const originals = selected
       .map((pid) => doc.players.find((p) => p.id === pid))
       .filter((p): p is NonNullable<typeof p> => !!p)
