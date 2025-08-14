@@ -83,6 +83,9 @@ export const FieldCanvas: React.FC<{
   }>(null);
   // Suppress canvas click after a drag/pan to avoid unintended add-point/clear-selection
   const suppressClickRef = useRef(false);
+  // Spacebar-hold-to-pan state
+  const spaceHeldRef = useRef(false);
+  const prevToolRef = useRef<null | typeof state.ui.tool>(null);
 
   const pctToAbs = (xPct: number, yPct: number) => ({
     x: (xPct / 100) * 1600,
@@ -734,6 +737,26 @@ export const FieldCanvas: React.FC<{
       if (e.key === "Escape" && state.ui.annotating) {
         dispatch({ type: "CANCEL_ANNOTATION" });
       }
+      // Spacebar: temporary pan tool (hold-to-pan)
+      const isSpace = e.code === "Space" || e.key === " ";
+      if (isSpace) {
+        // ignore when typing in inputs/textareas/contentEditable
+        const ae = document.activeElement as HTMLElement | null;
+        const tag = (ae?.tagName || "").toLowerCase();
+        const typing =
+          tag === "input" || tag === "textarea" || ae?.isContentEditable;
+        if (!typing && !spaceHeldRef.current) {
+          spaceHeldRef.current = true;
+          if (state.ui.tool !== "pan") {
+            prevToolRef.current = state.ui.tool;
+            dispatch({ type: "SET_TOOL", tool: "pan" });
+          } else {
+            // Already in pan; don't override explicit user choice
+            prevToolRef.current = null;
+          }
+          e.preventDefault();
+        }
+      }
       if (e.key === "Enter" && state.ui.drawing) {
         // Commit current preview as final point if present
         if (state.ui.drawing.preview) {
@@ -907,7 +930,23 @@ export const FieldCanvas: React.FC<{
       }
     };
     window.addEventListener("keydown", keyHandler);
-    return () => window.removeEventListener("keydown", keyHandler);
+    const keyUp = (e: KeyboardEvent) => {
+      const isSpace = e.code === "Space" || e.key === " ";
+      if (isSpace && spaceHeldRef.current) {
+        spaceHeldRef.current = false;
+        // Restore only if we switched due to space
+        if (prevToolRef.current && state.ui.tool === "pan") {
+          dispatch({ type: "SET_TOOL", tool: prevToolRef.current });
+        }
+        prevToolRef.current = null;
+        e.preventDefault();
+      }
+    };
+    window.addEventListener("keyup", keyUp);
+    return () => {
+      window.removeEventListener("keydown", keyHandler);
+      window.removeEventListener("keyup", keyUp);
+    };
   }, [
     dispatch,
     state.ui.drawing,
@@ -917,6 +956,7 @@ export const FieldCanvas: React.FC<{
     doc.players,
     scheduleCommitMove,
     state.ui.distributeSpacing,
+    state.ui.tool,
   ]);
 
   return (
