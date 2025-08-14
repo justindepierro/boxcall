@@ -288,66 +288,87 @@ This unified roadmap supersedes: `DIAGRAM_BUILDER_V2.md` and `PLAYBOOK_COMPETITI
 
 Scope: fast wins we can land in a day to increase usability, clarity, and delight without large refactors. Each item includes a simple Done definition.
 
-1) Spacebar pan (temporary tool)
-  - Done: Holding Space temporarily switches to Pan; releasing returns to previous tool; cursor updates.
+1. Spacebar pan (temporary tool)
 
-2) Alt-drag to duplicate selection
-  - Done: While dragging, holding Alt creates a duplicate of current selection; IDs regenerated; history entry created.
+- Done: Holding Space temporarily switches to Pan; releasing returns to previous tool; cursor updates.
 
-3) Fit/Zoom presets + wheel focal zoom
-  - Done: Toolbar gets Fit, 100%, 200%; wheel zoom centers on cursor; smooth zoom easing.
+2. Alt-drag to duplicate selection
 
-4) Quick help overlay (press ?)
-  - Done: Full-screen shortcut sheet with major tools/gestures; esc closes; first-run shows once with “Don’t show again”.
+- Done: While dragging, holding Alt creates a duplicate of current selection; IDs regenerated; history entry created.
 
-5) Selection count badge on marquee
-  - Done: Drag-box shows a small badge with live count; snaps to top-right of marquee.
+3. Fit/Zoom presets + wheel focal zoom
 
-6) Snap halo + micro-bump animation
-  - Done: When a point snaps, show a brief glow pulse and slight easing to snap position; toggle in Settings.
+- Done: Toolbar gets Fit, 100%, 200%; wheel zoom centers on cursor; smooth zoom easing.
 
-7) Sticky tooltips with shortcuts
-  - Done: All palette buttons show labels and shortcut hints on hover/focus; no layout shift.
+4. Quick help overlay (press ?)
 
-8) Inline label edit (double‑click player)
-  - Done: Double‑click a player opens an inline text field; Enter commits, Esc cancels; auto-selects text.
+- Done: Full-screen shortcut sheet with major tools/gestures; esc closes; first-run shows once with “Don’t show again”.
 
-9) Lock indicator and quick toggle
-  - Done: Locked players show a subtle lock glyph; click toggles; included in multi-select bulk lock.
+5. Selection count badge on marquee
 
-10) Grid overlay toggle + density
-  - Done: Keyboard G toggles grid overlay; small density selector (1%, 2%, 5%); persists per session.
+- Done: Drag-box shows a small badge with live count; snaps to top-right of marquee.
 
-11) Minimap navigator (corner overview)
-  - Done: Optional mini-map at bottom-right; drag the viewport rectangle; hides when fully zoomed out.
+6. Snap halo + micro-bump animation
 
-12) Route endpoint affordances
-  - Done: Larger, contrast-aware handles; hover shows attach/snap targets with dotted preview.
+- Done: When a point snaps, show a brief glow pulse and slight easing to snap position; toggle in Settings.
 
-13) Route/annotation quick style cycle (J/K)
-  - Done: J cycles through stroke widths; K cycles arrowhead (none/start/end/both); emits style update.
+7. Sticky tooltips with shortcuts
 
-14) Contextual HUD for align/distribute
-  - Done: When multi-selecting ≥3, a small floating HUD near selection offers align/distribute actions.
+- Done: All palette buttons show labels and shortcut hints on hover/focus; no layout shift.
 
-15) Better cursor states per tool
-  - Done: Pointer, crosshair (draw), hand (pan), pen (route), move (drag); high-DPI SVG cursors.
+8. Inline label edit (double‑click player)
 
-16) Nudge granularity with Alt
-  - Done: Arrow = 0.5%; Shift+Arrow = 2%; Alt+Arrow = 0.1%; respects bounds; telemetry notes granularity.
+- Done: Double‑click a player opens an inline text field; Enter commits, Esc cancels; auto-selects text.
 
-17) Confetti-on-first-save (daily)
-  - Done: First successful save of the day triggers a small confetti burst; can be disabled in Settings.
+9. Lock indicator and quick toggle
 
-18) Gentle selection pulse
-  - Done: Selected items get a very subtle breathing outline to aid tracking without visual noise.
+- Done: Locked players show a subtle lock glyph; click toggles; included in multi-select bulk lock.
 
-19) Canvas center and edges guide polish
-  - Done: Center/edge guides fade in/out smoothly; label “Center” appears briefly when snapping.
+10. Grid overlay toggle + density
 
-20) On-canvas “Press H for help” hint
-  - Done: Tiny, low-contrast hint in bottom-right fades after 5s and hides once help viewed.
+- Done: Keyboard G toggles grid overlay; small density selector (1%, 2%, 5%); persists per session.
+
+11. Minimap navigator (corner overview)
+
+- Done: Optional mini-map at bottom-right; drag the viewport rectangle; hides when fully zoomed out.
+
+12. Route endpoint affordances
+
+- Done: Larger, contrast-aware handles; hover shows attach/snap targets with dotted preview.
+
+13. Route/annotation quick style cycle (J/K)
+
+- Done: J cycles through stroke widths; K cycles arrowhead (none/start/end/both); emits style update.
+
+14. Contextual HUD for align/distribute
+
+- Done: When multi-selecting ≥3, a small floating HUD near selection offers align/distribute actions.
+
+15. Better cursor states per tool
+
+- Done: Pointer, crosshair (draw), hand (pan), pen (route), move (drag); high-DPI SVG cursors.
+
+16. Nudge granularity with Alt
+
+- Done: Arrow = 0.5%; Shift+Arrow = 2%; Alt+Arrow = 0.1%; respects bounds; telemetry notes granularity.
+
+17. Confetti-on-first-save (daily)
+
+- Done: First successful save of the day triggers a small confetti burst; can be disabled in Settings.
+
+18. Gentle selection pulse
+
+- Done: Selected items get a very subtle breathing outline to aid tracking without visual noise.
+
+19. Canvas center and edges guide polish
+
+- Done: Center/edge guides fade in/out smoothly; label “Center” appears briefly when snapping.
+
+20. On-canvas “Press H for help” hint
+
+- Done: Tiny, low-contrast hint in bottom-right fades after 5s and hides once help viewed.
 
 Notes:
+
 - All animations respect reduced-motion preference.
 - Defaults are subtle and can be toggled in Settings → Accessibility & Effects.

@@ -28,19 +28,13 @@ export const TipsOverlay: React.FC = () => {
     if (tool === "pan") {
       return {
         title: "Pan",
-        lines: [
-          "Drag to move the canvas",
-          "Use toolbar to adjust zoom",
-        ],
+        lines: ["Drag to move the canvas", "Use toolbar to adjust zoom"],
       } as const;
     }
     if (tool === "add-player") {
       return {
         title: "Add Player",
-        lines: [
-          "Click to add a player",
-          ...common,
-        ],
+        lines: ["Click to add a player", ...common],
       } as const;
     }
     if (tool === "route") {
@@ -58,18 +52,12 @@ export const TipsOverlay: React.FC = () => {
         case "freehand":
           return {
             title: "Draw (freehand)",
-            lines: [
-              "Drag to draw; release to finish",
-              "Esc: cancel",
-            ],
+            lines: ["Drag to draw; release to finish", "Esc: cancel"],
           } as const;
         case "connector":
           return {
             title: "Draw (connector)",
-            lines: [
-              "Click a player, then another to connect",
-              "Esc: cancel",
-            ],
+            lines: ["Click a player, then another to connect", "Esc: cancel"],
           } as const;
         case "curve":
           return {

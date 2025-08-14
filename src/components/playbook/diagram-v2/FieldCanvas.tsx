@@ -24,10 +24,16 @@ export const FieldCanvas: React.FC<{
     return () => el.removeEventListener("wheel", handler);
   }, []);
 
+  // Minimum pixels (client) before a drag is considered started
+  const DRAG_THRESHOLD_PX = 5;
+
   const dragRef = useRef<{
     id: string; // primary dragged id
-    startX: number;
-    startY: number;
+    startX: number; // world coords
+    startY: number; // world coords
+    startClientX: number; // client px
+    startClientY: number; // client px
+    hasStarted: boolean; // surpassed threshold
     moved: boolean;
     // For group drag: snapshot of original positions in absolute px
     originals: { id: string; xAbs: number; yAbs: number }[];
@@ -44,8 +50,11 @@ export const FieldCanvas: React.FC<{
     startY: number;
   } | null>(null);
   const selectionDragRef = useRef<{
-    startX: number;
-    startY: number;
+    startX: number; // world coords
+    startY: number; // world coords
+    startClientX: number; // client px
+    startClientY: number; // client px
+    hasMoved: boolean;
   } | null>(null);
   const nudgeBatchRef = useRef<{
     events: number;
@@ -72,6 +81,8 @@ export const FieldCanvas: React.FC<{
     vertical?: number[]; // x positions in px
     horizontal?: number[]; // y positions in px
   }>(null);
+  // Suppress canvas click after a drag/pan to avoid unintended add-point/clear-selection
+  const suppressClickRef = useRef(false);
 
   const pctToAbs = (xPct: number, yPct: number) => ({
     x: (xPct / 100) * 1600,
@@ -100,10 +111,20 @@ export const FieldCanvas: React.FC<{
   );
 
   const handleMouseDownPlayer = (e: React.MouseEvent, id: string) => {
-    // Prevent canvas-level mousedown from clearing selection
-    e.stopPropagation();
+    if (e.button !== 0) return; // left-button only
     const player = doc.players.find((p) => p.id === id);
     if (!player) return;
+    // In draw (non-connector) and pan/add-player tools, don't intercept; let canvas handle
+    if (
+      (state.ui.tool === "draw" && state.ui.drawMode !== "connector") ||
+      state.ui.tool === "pan" ||
+      state.ui.tool === "add-player"
+    ) {
+      return; // allow event to bubble to canvas
+    }
+    // From here on, we will handle and stop propagation
+    e.stopPropagation();
+    e.preventDefault();
     // Connector tool: click player to set from/to endpoints
     if (state.ui.tool === "draw" && state.ui.drawMode === "connector") {
       if (!state.ui.annotating) {
@@ -142,6 +163,7 @@ export const FieldCanvas: React.FC<{
         playerId: id,
         start: { x: player.x, y: player.y },
       });
+      return; // don't start player drag in route tool
     }
     // Build group snapshot (selected players) for potential group drag, excluding locked players
     const selected = nextSelectedIds.length ? nextSelectedIds : [id];
@@ -153,12 +175,15 @@ export const FieldCanvas: React.FC<{
         const abs = pctToAbs(p.x, p.y);
         return { id: p.id, xAbs: abs.x, yAbs: abs.y };
       });
-    if (!originals.length) return; // nothing draggable (all locked)
+  if (!originals.length) return; // nothing draggable (all locked)
     const start = clientToWorld(e);
     dragRef.current = {
       id,
       startX: start.x,
       startY: start.y,
+      startClientX: e.clientX,
+      startClientY: e.clientY,
+  hasStarted: false,
       moved: false,
       originals,
     };
@@ -423,22 +448,47 @@ export const FieldCanvas: React.FC<{
         dispatch({ type: "PAN", dx, dy });
         panRef.current.startX = e.clientX; // incremental
         panRef.current.startY = e.clientY;
+        suppressClickRef.current = true;
         return;
       }
       if (selectionDragRef.current) {
+        // Don't create a marquee until threshold is exceeded
+        const s = selectionDragRef.current;
+        if (!s.hasMoved) {
+          const dxPx = e.clientX - s.startClientX;
+          const dyPx = e.clientY - s.startClientY;
+          if (Math.hypot(dxPx, dyPx) < DRAG_THRESHOLD_PX) {
+            return;
+          }
+          // Begin marquee and clear selection only once movement is intentional
+          s.hasMoved = true;
+          setSelectionBox({ x: s.startX, y: s.startY, w: 0, h: 0 });
+          dispatch({ type: "CLEAR_SELECTION" });
+          suppressClickRef.current = true;
+        }
         const curr = clientToWorld(e);
-        const sx = selectionDragRef.current.startX;
-        const sy = selectionDragRef.current.startY;
+        const sx = s.startX;
+        const sy = s.startY;
         const x1 = Math.min(sx, curr.x);
         const y1 = Math.min(sy, curr.y);
         const x2 = Math.max(sx, curr.x);
         const y2 = Math.max(sy, curr.y);
         setSelectionBox({ x: x1, y: y1, w: x2 - x1, h: y2 - y1 });
         return;
-      }
+  }
       if (!dragRef.current) return;
       // Compute delta in world coordinates
       const now = clientToWorld(e);
+      // Gate player/group drag until threshold is exceeded
+      if (!dragRef.current.hasStarted) {
+        const dxPx = e.clientX - dragRef.current.startClientX;
+        const dyPx = e.clientY - dragRef.current.startClientY;
+        if (Math.hypot(dxPx, dyPx) < DRAG_THRESHOLD_PX) {
+          return; // don't move yet
+        }
+  dragRef.current.hasStarted = true;
+  suppressClickRef.current = true;
+      }
       const dx = now.x - dragRef.current.startX;
       const dy = now.y - dragRef.current.startY;
       if (Math.abs(dx) > 0 || Math.abs(dy) > 0) dragRef.current.moved = true;
@@ -501,24 +551,36 @@ export const FieldCanvas: React.FC<{
         id: state.ui.selectedAnnotationId!,
       });
     }
-    if (selectionDragRef.current && selectionBox) {
-      const { x, y, w, h } = selectionBox;
-      const ids: string[] = [];
-      doc.players.forEach((p) => {
-        const abs = pctToAbs(p.x, p.y);
-        if (abs.x >= x && abs.x <= x + w && abs.y >= y && abs.y <= y + h)
-          ids.push(p.id);
-      });
-      if (ids.length) dispatch({ type: "SET_SELECTION", ids });
+    if (selectionDragRef.current) {
+      const s = selectionDragRef.current;
+      if (selectionBox && s.hasMoved) {
+        const { x, y, w, h } = selectionBox;
+        const ids: string[] = [];
+        doc.players.forEach((p) => {
+          const abs = pctToAbs(p.x, p.y);
+          if (abs.x >= x && abs.x <= x + w && abs.y >= y && abs.y <= y + h)
+            ids.push(p.id);
+        });
+        if (ids.length) dispatch({ type: "SET_SELECTION", ids });
+      } else {
+        // Clicked empty canvas without dragging: clear selection in select tool
+        if (state.ui.tool === "select") {
+          dispatch({ type: "CLEAR_SELECTION" });
+        }
+      }
+      selectionDragRef.current = null;
+      setSelectionBox(null);
     }
-    selectionDragRef.current = null;
-    setSelectionBox(null);
     if (dragRef.current?.moved) {
       // commit history snapshot once per drag interaction
       dispatch({ type: "COMMIT_MOVE" });
     }
     dragRef.current = null;
     setAlignGuides(null);
+    // Allow clicks again after this mouseup completes
+    setTimeout(() => {
+      suppressClickRef.current = false;
+    }, 0);
     // If in freehand draw mode, commit on mouse up
     if (state.ui.tool === "draw" && state.ui.annotating?.freehand) {
       dispatch({ type: "COMMIT_ANNOTATION" });
@@ -533,6 +595,7 @@ export const FieldCanvas: React.FC<{
   ]);
 
   const handleCanvasMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (e.button !== 0) return; // left-button only
     if (state.ui.tool === "pan") {
       panRef.current = {
         startX: e.clientX,
@@ -542,9 +605,14 @@ export const FieldCanvas: React.FC<{
       };
     } else if (state.ui.tool === "select") {
       const start = clientToWorld(e);
-      selectionDragRef.current = { startX: start.x, startY: start.y };
-      setSelectionBox({ x: start.x, y: start.y, w: 0, h: 0 });
-      dispatch({ type: "CLEAR_SELECTION" });
+      selectionDragRef.current = {
+        startX: start.x,
+        startY: start.y,
+        startClientX: e.clientX,
+        startClientY: e.clientY,
+        hasMoved: false,
+      };
+      // Don't clear selection yet; wait to see if this becomes a marquee drag.
     }
   };
   const endPan = () => {
@@ -565,6 +633,7 @@ export const FieldCanvas: React.FC<{
   }, [handleMouseMove, handleMouseUp]);
 
   const handleCanvasClick = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (suppressClickRef.current) return; // ignore click after drag/pan
     const world = clientToWorld(e);
     const snap = snapToAnchorPct(world.x, world.y);
     const { x, y } = snap;
@@ -790,10 +859,10 @@ export const FieldCanvas: React.FC<{
         }
       }
 
-  // Alignment shortcuts (Meta+Alt + arrows/letters). Hold Shift for fixed-spacing distribute.
-  const metaKey = e.metaKey || e.ctrlKey;
+      // Alignment shortcuts (Meta+Alt + arrows/letters). Hold Shift for fixed-spacing distribute.
+      const metaKey = e.metaKey || e.ctrlKey;
       const alt = e.altKey;
-  if ((state.ui.selectedIds || []).length >= 1 && metaKey && alt) {
+      if ((state.ui.selectedIds || []).length >= 1 && metaKey && alt) {
         if (e.key === "ArrowLeft") {
           dispatch({ type: "ALIGN_SELECTION", axis: "x", align: "start" });
           e.preventDefault();
@@ -1530,14 +1599,21 @@ export const FieldCanvas: React.FC<{
             const dockY = Math.max(pad, Math.min(900 - popH - pad, py - 10));
             return (
               <foreignObject x={dockX} y={dockY} width={popW} height={popH}>
-                <div className="pointer-events-auto" onMouseDown={(e) => e.stopPropagation()}>
+                <div
+                  className="pointer-events-auto"
+                  onMouseDown={(e) => e.stopPropagation()}
+                >
                   <div className="inline-flex items-center gap-2 panel-cupertino px-2.5 py-1.5">
                     <input
                       type="text"
                       aria-label="Player label"
                       value={player.label}
                       onChange={(e) =>
-                        dispatch({ type: "UPDATE_PLAYER", id: player.id, patch: { label: e.target.value } })
+                        dispatch({
+                          type: "UPDATE_PLAYER",
+                          id: player.id,
+                          patch: { label: e.target.value },
+                        })
                       }
                       className="w-20 text-[12px] border border-slate-300 rounded px-2 py-1"
                       title="Label"
@@ -1547,7 +1623,11 @@ export const FieldCanvas: React.FC<{
                       aria-label="Player color"
                       value={player.color || "#1e3a8a"}
                       onChange={(e) =>
-                        dispatch({ type: "UPDATE_PLAYER", id: player.id, patch: { color: e.target.value } })
+                        dispatch({
+                          type: "UPDATE_PLAYER",
+                          id: player.id,
+                          patch: { color: e.target.value },
+                        })
                       }
                       className="w-9 h-9 p-0 border border-slate-300 rounded"
                       title="Color"
