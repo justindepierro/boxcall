@@ -11,7 +11,10 @@ export const HelpHint: React.FC = () => {
   const prefersReduced = useMemo(() => {
     if (typeof window === "undefined") return false;
     try {
-      return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      return (
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      );
     } catch {
       return false;
     }
@@ -20,7 +23,8 @@ export const HelpHint: React.FC = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
-      const dismissed = window.localStorage.getItem("diagram.help.dismissed") === "1";
+      const dismissed =
+        window.localStorage.getItem("diagram.help.dismissed") === "1";
       const viewed = window.localStorage.getItem("diagram.help.viewed") === "1";
       if (!dismissed && !viewed) {
         setVisible(true);
@@ -50,8 +54,14 @@ export const HelpHint: React.FC = () => {
     };
     raf = requestAnimationFrame(loop);
     return () => {
-      window.removeEventListener("diagram:help-opened", onOpened as EventListener);
-      window.removeEventListener("diagram:help-closed", onClosed as EventListener);
+      window.removeEventListener(
+        "diagram:help-opened",
+        onOpened as EventListener
+      );
+      window.removeEventListener(
+        "diagram:help-closed",
+        onClosed as EventListener
+      );
       cancelAnimationFrame(raf);
     };
   }, [visible, t0]);
@@ -67,7 +77,10 @@ export const HelpHint: React.FC = () => {
   })();
 
   return (
-    <div className="pointer-events-none absolute bottom-3 right-3 z-20 select-none" aria-hidden>
+    <div
+      className="pointer-events-none absolute bottom-3 right-3 z-20 select-none"
+      aria-hidden
+    >
       <div
         className="text-[11px] font-medium tracking-wide"
         style={{

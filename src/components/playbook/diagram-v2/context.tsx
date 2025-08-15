@@ -37,9 +37,9 @@ const initialState: DiagramEditorState = {
     panY: 0,
     snap: false,
     snapGrid: 2,
-  effectsSnapPulse: true,
-  showGridOverlay: false,
-  distributeSpacing: 5,
+    effectsSnapPulse: true,
+    showGridOverlay: false,
+    distributeSpacing: 5,
   },
   dirty: false,
   history: [],
@@ -203,7 +203,10 @@ function reducer(
         ...state,
         ui: {
           ...state.ui,
-          inlineEdit: { playerId: action.playerId, draft: action.initial ?? player.label },
+          inlineEdit: {
+            playerId: action.playerId,
+            draft: action.initial ?? player.label,
+          },
           selectedIds: [action.playerId],
           activePlayerId: action.playerId,
         },
@@ -211,7 +214,13 @@ function reducer(
     }
     case "UPDATE_INLINE_EDIT": {
       if (!state.ui.inlineEdit) return state;
-      return { ...state, ui: { ...state.ui, inlineEdit: { ...state.ui.inlineEdit, draft: action.draft } } };
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          inlineEdit: { ...state.ui.inlineEdit, draft: action.draft },
+        },
+      };
     }
     case "CANCEL_INLINE_EDIT": {
       return { ...state, ui: { ...state.ui, inlineEdit: undefined } };
@@ -230,7 +239,10 @@ function reducer(
         type: TelemetryEventTypes.PlayDiagramPlayerUpdate,
         data: { playerId: ie.playerId, fields: ["label"], inline: true },
       });
-      const after = pushHistory({ ...state, doc: nextDoc, dirty: true }, nextDoc);
+      const after = pushHistory(
+        { ...state, doc: nextDoc, dirty: true },
+        nextDoc
+      );
       return { ...after, ui: { ...after.ui, inlineEdit: undefined } };
     }
     case "START_ROUTE":
@@ -762,7 +774,10 @@ function reducer(
       };
     }
     case "SET_SNAP_PULSE":
-      return { ...state, ui: { ...state.ui, effectsSnapPulse: action.enabled } };
+      return {
+        ...state,
+        ui: { ...state.ui, effectsSnapPulse: action.enabled },
+      };
     case "SET_GRID_OVERLAY": {
       if (typeof window !== "undefined") {
         try {

@@ -5,7 +5,11 @@ import type { Play } from "../../src/types/play";
 import { FieldCanvas as DiagramV2FieldCanvas } from "../../src/components/playbook/diagram-v2/FieldCanvas";
 import { DiagramEditorProvider } from "../../src/components/playbook/diagram-v2/context";
 
-export const FieldCanvas: React.FC<{ play?: Play; readOnly?: boolean; className?: string }> = ({ className }) => {
+export const FieldCanvas: React.FC<{
+  play?: Play;
+  readOnly?: boolean;
+  className?: string;
+}> = ({ className }) => {
   return (
     <DiagramEditorProvider>
       <DiagramV2FieldCanvas className={className} />

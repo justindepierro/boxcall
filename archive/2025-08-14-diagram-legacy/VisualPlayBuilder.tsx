@@ -54,20 +54,33 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between bc-card-padding panel-cupertino">
           <div className="flex items-center space-x-4">
-            <Typography variant="headline-sm" as="h2" className="text-slate-900">
+            <Typography
+              variant="headline-sm"
+              as="h2"
+              className="text-slate-900"
+            >
               Visual Play Builder
             </Typography>
             {selectedPlay && (
               <div className="text-sm text-slate-600">
                 <span className="font-medium">{selectedPlay.play_name}</span>
-                {selectedPlay.formation && <span className="ml-2">• {selectedPlay.formation}</span>}
+                {selectedPlay.formation && (
+                  <span className="ml-2">• {selectedPlay.formation}</span>
+                )}
                 {selectedPlay.one_word_play && (
-                  <span className="ml-2 text-jade-600">• "{selectedPlay.one_word_play}"</span>
+                  <span className="ml-2 text-jade-600">
+                    • "{selectedPlay.one_word_play}"
+                  </span>
                 )}
               </div>
             )}
           </div>
-          <Button onClick={onClose} variant="ghost" size="xs" className="text-slate-400 hover:text-slate-600 p-1 h-auto w-auto">
+          <Button
+            onClick={onClose}
+            variant="ghost"
+            size="xs"
+            className="text-slate-400 hover:text-slate-600 p-1 h-auto w-auto"
+          >
             <X className="h-6 w-6" />
           </Button>
         </div>
@@ -76,7 +89,11 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
         <div className="flex items-center bc-card-padding panel-cupertino">
           <SegmentedControl
             ariaLabel="View mode"
-            options={viewModeButtons.map((b) => ({ id: b.id, label: b.label, icon: <b.icon className="w-4 h-4" /> }))}
+            options={viewModeButtons.map((b) => ({
+              id: b.id,
+              label: b.label,
+              icon: <b.icon className="w-4 h-4" />,
+            }))}
             value={viewMode}
             onChange={(v) => setViewMode(v)}
           />
@@ -91,18 +108,35 @@ export const VisualPlayBuilder: React.FC<VisualPlayBuilderProps> = ({
 
           {/* Main Field Canvas */}
           <div className="flex-1 bc-card-padding">
-            <FieldCanvas play={selectedPlay} readOnly={false} className="w-full h-full" />
+            <FieldCanvas
+              play={selectedPlay}
+              readOnly={false}
+              className="w-full h-full"
+            />
           </div>
         </div>
 
         {/* Footer */}
         <div className="border-t border-subtle bc-card-padding flex items-center justify-between">
-          <div className="text-sm text-slate-600">Phase 2: Visual Play Builder - Interactive field canvas with player positions</div>
+          <div className="text-sm text-slate-600">
+            Phase 2: Visual Play Builder - Interactive field canvas with player
+            positions
+          </div>
           <div className="flex space-x-3">
-            <Button onClick={onClose} variant="ghost" size="sm" className="inline-flex items-center">
+            <Button
+              onClick={onClose}
+              variant="ghost"
+              size="sm"
+              className="inline-flex items-center"
+            >
               Cancel
             </Button>
-            <Button onClick={handleSave} variant="primary" size="sm" className="inline-flex items-center">
+            <Button
+              onClick={handleSave}
+              variant="primary"
+              size="sm"
+              className="inline-flex items-center"
+            >
               <Save className="h-4 w-4 mr-2" /> Save Diagram
             </Button>
           </div>

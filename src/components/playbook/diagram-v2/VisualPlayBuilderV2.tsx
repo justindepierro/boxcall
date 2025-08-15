@@ -40,7 +40,10 @@ const Shell: React.FC<ShellProps> = ({
     const onKey = (e: KeyboardEvent) => {
       // 'H' or '?' opens help if not in an input
       const openHelpKey =
-        (e.key.toLowerCase() === "h" && !e.metaKey && !e.ctrlKey && !e.altKey) ||
+        (e.key.toLowerCase() === "h" &&
+          !e.metaKey &&
+          !e.ctrlKey &&
+          !e.altKey) ||
         e.key === "?" ||
         (e.key === "/" && e.shiftKey);
       if (openHelpKey && !helpOpen) {

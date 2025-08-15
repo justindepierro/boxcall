@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useCallback, useState, useMemo } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useCallback,
+  useState,
+  useMemo,
+} from "react";
 import { useDiagramEditor } from "./context";
 import { Button } from "../../ui/Button/Button";
 import type { DiagramAnnotation, DiagramAnnotationConnector } from "./types";
@@ -121,28 +127,23 @@ export const FieldCanvas: React.FC<{
   }>(null);
   // Smooth guide visuals: live opacity for fade-in, and a brief fade-out trail when guides turn off
   const [guideLiveOpacity, setGuideLiveOpacity] = useState<number>(0);
-  const lastGuidesRef = useRef<
-    | {
-        guides: { vertical?: number[]; horizontal?: number[] };
-        hasCenterX?: boolean;
-        hasCenterY?: boolean;
-      }
-    | null
-  >(null);
-  const [guideFade, setGuideFade] = useState<
-    | {
-        guides: { vertical?: number[]; horizontal?: number[] };
-        hasCenterX?: boolean;
-        hasCenterY?: boolean;
-        t0: number;
-      }
-    | null
-  >(null);
+  const lastGuidesRef = useRef<{
+    guides: { vertical?: number[]; horizontal?: number[] };
+    hasCenterX?: boolean;
+    hasCenterY?: boolean;
+  } | null>(null);
+  const [guideFade, setGuideFade] = useState<{
+    guides: { vertical?: number[]; horizontal?: number[] };
+    hasCenterX?: boolean;
+    hasCenterY?: boolean;
+    t0: number;
+  } | null>(null);
   // Center snap flash label state
-  const [centerFlash, setCenterFlash] = useState<
-    | { x?: boolean; y?: boolean; t0: number }
-    | null
-  >(null);
+  const [centerFlash, setCenterFlash] = useState<{
+    x?: boolean;
+    y?: boolean;
+    t0: number;
+  } | null>(null);
   // Live count of players within marquee selection (updates while dragging)
   const marqueeCount = useMemo(() => {
     if (!selectionBox) return 0;
@@ -162,14 +163,18 @@ export const FieldCanvas: React.FC<{
   const spaceHeldRef = useRef(false);
   const prevToolRef = useRef<null | typeof state.ui.tool>(null);
 
-  const pctToAbs = (xPct: number, yPct: number) => ({
-    x: (xPct / 100) * 1600,
-    y: (yPct / 100) * 900,
-  });
-  const absToPct = (x: number, y: number) => ({
-    x: (x / 1600) * 100,
-    y: (y / 900) * 100,
-  });
+  function pctToAbs(xPct: number, yPct: number) {
+    return {
+      x: (xPct / 100) * 1600,
+      y: (yPct / 100) * 900,
+    };
+  }
+  function absToPct(x: number, y: number) {
+    return {
+      x: (x / 1600) * 100,
+      y: (y / 900) * 100,
+    };
+  }
 
   // Map client mouse event to SVG world coordinates (0..1600 x 0..900), accounting for pan/zoom
   const clientToWorld = useCallback(
@@ -637,10 +642,16 @@ export const FieldCanvas: React.FC<{
           )
         : { x: undefined, y: undefined, guides: {} };
       const hasGuides = !!(
-        state.ui.snap && guides && (guides.vertical || guides.horizontal)
+        state.ui.snap &&
+        guides &&
+        (guides.vertical || guides.horizontal)
       );
-      const hasCenterX = !!(guides.vertical || [])?.some((x) => Math.abs(x - 800) < 0.5);
-      const hasCenterY = !!(guides.horizontal || [])?.some((y) => Math.abs(y - 450) < 0.5);
+      const hasCenterX = !!(guides.vertical || [])?.some(
+        (x) => Math.abs(x - 800) < 0.5
+      );
+      const hasCenterY = !!(guides.horizontal || [])?.some(
+        (y) => Math.abs(y - 450) < 0.5
+      );
       setAlignGuides(hasGuides ? guides : null);
       if (hasGuides) {
         lastGuidesRef.current = { guides, hasCenterX, hasCenterY };
@@ -649,7 +660,11 @@ export const FieldCanvas: React.FC<{
       }
       // Center snap label flash when snapping to center axes
       if ((ax === 50 && hasCenterX) || (ay === 50 && hasCenterY)) {
-        setCenterFlash({ x: ax === 50 && hasCenterX, y: ay === 50 && hasCenterY, t0: performance.now() });
+        setCenterFlash({
+          x: ax === 50 && hasCenterX,
+          y: ay === 50 && hasCenterY,
+          t0: performance.now(),
+        });
       }
       originals.forEach((o) => {
         let nx = o.xAbs + dx;
@@ -867,7 +882,12 @@ export const FieldCanvas: React.FC<{
       if (state.ui.effectsSnapPulse && !prefersReducedMotion) {
         setSnapPulses((arr) => [
           ...arr,
-          { id: Date.now() + Math.random(), x: sx, y: sy, t0: performance.now() },
+          {
+            id: Date.now() + Math.random(),
+            x: sx,
+            y: sy,
+            t0: performance.now(),
+          },
         ]);
       }
     } else if (snapViz.show) {
@@ -933,7 +953,8 @@ export const FieldCanvas: React.FC<{
       // Quick tool shortcuts (avoid when typing in inputs/textareas)
       const ae = document.activeElement as HTMLElement | null;
       const tag = (ae?.tagName || "").toLowerCase();
-      const typing = tag === "input" || tag === "textarea" || ae?.isContentEditable;
+      const typing =
+        tag === "input" || tag === "textarea" || ae?.isContentEditable;
       if (!typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
         const k = e.key.toLowerCase();
         if (k === "v") {
@@ -951,7 +972,10 @@ export const FieldCanvas: React.FC<{
         }
         // Grid overlay toggle (G)
         if (k === "g") {
-          dispatch({ type: "SET_GRID_OVERLAY", enabled: !state.ui.showGridOverlay });
+          dispatch({
+            type: "SET_GRID_OVERLAY",
+            enabled: !state.ui.showGridOverlay,
+          });
           e.preventDefault();
         }
       }
@@ -1094,8 +1118,8 @@ export const FieldCanvas: React.FC<{
         ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)
       ) {
         e.preventDefault();
-  // Nudge step granularity: Alt = 0.1%, Shift = 2%, default = 0.5%
-  const delta = e.altKey ? 0.1 : e.shiftKey ? 2 : 0.5;
+        // Nudge step granularity: Alt = 0.1%, Shift = 2%, default = 0.5%
+        const delta = e.altKey ? 0.1 : e.shiftKey ? 2 : 0.5;
         const patches: { id: string; x: number; y: number }[] = [];
         selected.forEach((id) => {
           const p = doc.players.find((pl) => pl.id === id);
@@ -1119,8 +1143,8 @@ export const FieldCanvas: React.FC<{
                 count: selected.length,
                 dx: patches[0] ? patches[0].x : 0,
                 dy: patches[0] ? patches[0].y : 0,
-    step: delta,
-    modifier: e.altKey ? "alt" : e.shiftKey ? "shift" : "base",
+                step: delta,
+                modifier: e.altKey ? "alt" : e.shiftKey ? "shift" : "base",
               },
             });
           }
@@ -1202,7 +1226,9 @@ export const FieldCanvas: React.FC<{
         const selectedAnnId = state.ui.selectedAnnotationId;
         let currentWidth = state.ui.drawWidth || 3;
         if (selectedAnnId) {
-          const ann = (doc.annotations || []).find((a) => a.id === selectedAnnId);
+          const ann = (doc.annotations || []).find(
+            (a) => a.id === selectedAnnId
+          );
           if (ann && typeof (ann as { width?: number }).width === "number") {
             currentWidth = (ann as { width?: number }).width || currentWidth;
           }
@@ -1210,32 +1236,50 @@ export const FieldCanvas: React.FC<{
         const idx = widths.indexOf(currentWidth);
         const next = widths[(idx >= 0 ? idx + 1 : 0) % widths.length];
         if (selectedAnnId) {
-          dispatch({ type: "UPDATE_ANNOT_STYLE", id: selectedAnnId, patch: { width: next } });
+          dispatch({
+            type: "UPDATE_ANNOT_STYLE",
+            id: selectedAnnId,
+            patch: { width: next },
+          });
         } else {
           dispatch({ type: "SET_DRAW_WIDTH", width: next });
         }
         e.preventDefault();
       }
       if (e.key.toLowerCase() === "k") {
-        const order: Array<"none" | "start" | "end" | "both"> = ["none", "start", "end", "both"];
+        const order: Array<"none" | "start" | "end" | "both"> = [
+          "none",
+          "start",
+          "end",
+          "both",
+        ];
         const selectedAnnId = state.ui.selectedAnnotationId;
-        let current: "none" | "start" | "end" | "both" = state.ui.drawArrowHead || "end";
+        let current: "none" | "start" | "end" | "both" =
+          state.ui.drawArrowHead || "end";
         if (selectedAnnId) {
-          const ann = (doc.annotations || []).find((a) => a.id === selectedAnnId);
-          const ah = (ann as { arrowHead?: "none" | "start" | "end" | "both" } | undefined)?.arrowHead;
+          const ann = (doc.annotations || []).find(
+            (a) => a.id === selectedAnnId
+          );
+          const ah = (
+            ann as { arrowHead?: "none" | "start" | "end" | "both" } | undefined
+          )?.arrowHead;
           if (ah) current = ah;
         }
         const ni = (order.indexOf(current) + 1) % order.length;
         const next = order[ni];
         if (selectedAnnId) {
-          dispatch({ type: "UPDATE_ANNOT_STYLE", id: selectedAnnId, patch: { arrowHead: next } });
+          dispatch({
+            type: "UPDATE_ANNOT_STYLE",
+            id: selectedAnnId,
+            patch: { arrowHead: next },
+          });
         } else {
           dispatch({ type: "SET_DRAW_ARROW_HEAD", arrowHead: next });
         }
         e.preventDefault();
       }
     };
-  window.addEventListener("keydown", keyHandler);
+    window.addEventListener("keydown", keyHandler);
     const keyUp = (e: KeyboardEvent) => {
       const isSpace = e.code === "Space" || e.key === " ";
       if (isSpace && spaceHeldRef.current) {
@@ -1267,9 +1311,9 @@ export const FieldCanvas: React.FC<{
     state.ui.panX,
     state.ui.panY,
     state.ui.zoom,
-  state.ui.showGridOverlay,
-  state.ui.drawWidth,
-  state.ui.drawArrowHead,
+    state.ui.showGridOverlay,
+    state.ui.drawWidth,
+    state.ui.drawArrowHead,
   ]);
 
   // Minimap drag tracking
@@ -1550,50 +1594,56 @@ export const FieldCanvas: React.FC<{
             }
           )}
           {/* Grid Overlay */}
-          {state.ui.showGridOverlay && (() => {
-            const g = Math.max(1, state.ui.snapGrid || 1);
-            const theme = doc.field.theme || "classic";
-            const color = theme === "mono-dark" ? "#6b7280" : theme === "mono-light" ? "#9ca3af" : "#10b981";
-            const opacity = theme === "classic" ? 0.2 : 0.25;
-            const stepX = (1600 * g) / 100;
-            const stepY = (900 * g) / 100;
-            const nodes: React.ReactNode[] = [];
-            // Vertical lines
-            for (let x = 0; x <= 1600; x += stepX) {
-              nodes.push(
-                <line
-                  key={`gv-${x}`}
-                  x1={x}
-                  y1={0}
-                  x2={x}
-                  y2={900}
-                  stroke={color}
-                  strokeWidth={1}
-                  opacity={opacity}
-                  strokeDasharray="4 6"
-                  style={{ pointerEvents: "none" }}
-                />
-              );
-            }
-            // Horizontal lines
-            for (let y = 0; y <= 900; y += stepY) {
-              nodes.push(
-                <line
-                  key={`gh-${y}`}
-                  x1={0}
-                  y1={y}
-                  x2={1600}
-                  y2={y}
-                  stroke={color}
-                  strokeWidth={1}
-                  opacity={opacity}
-                  strokeDasharray="4 6"
-                  style={{ pointerEvents: "none" }}
-                />
-              );
-            }
-            return <g>{nodes}</g>;
-          })()}
+          {state.ui.showGridOverlay &&
+            (() => {
+              const g = Math.max(1, state.ui.snapGrid || 1);
+              const theme = doc.field.theme || "classic";
+              const color =
+                theme === "mono-dark"
+                  ? "#6b7280"
+                  : theme === "mono-light"
+                    ? "#9ca3af"
+                    : "#10b981";
+              const opacity = theme === "classic" ? 0.2 : 0.25;
+              const stepX = (1600 * g) / 100;
+              const stepY = (900 * g) / 100;
+              const nodes: React.ReactNode[] = [];
+              // Vertical lines
+              for (let x = 0; x <= 1600; x += stepX) {
+                nodes.push(
+                  <line
+                    key={`gv-${x}`}
+                    x1={x}
+                    y1={0}
+                    x2={x}
+                    y2={900}
+                    stroke={color}
+                    strokeWidth={1}
+                    opacity={opacity}
+                    strokeDasharray="4 6"
+                    style={{ pointerEvents: "none" }}
+                  />
+                );
+              }
+              // Horizontal lines
+              for (let y = 0; y <= 900; y += stepY) {
+                nodes.push(
+                  <line
+                    key={`gh-${y}`}
+                    x1={0}
+                    y1={y}
+                    x2={1600}
+                    y2={y}
+                    stroke={color}
+                    strokeWidth={1}
+                    opacity={opacity}
+                    strokeDasharray="4 6"
+                    style={{ pointerEvents: "none" }}
+                  />
+                );
+              }
+              return <g>{nodes}</g>;
+            })()}
           {/* Players */}
           {doc.players
             .filter((p) => doc.field.showDefensePlayers || p.side !== "D")
@@ -1609,7 +1659,9 @@ export const FieldCanvas: React.FC<{
                 <g
                   key={p.id}
                   transform={`translate(${(p.x / 100) * 1600},${(p.y / 100) * 900})`}
-                  className={locked ? "cursor-not-allowed opacity-70" : undefined}
+                  className={
+                    locked ? "cursor-not-allowed opacity-70" : undefined
+                  }
                   onMouseDown={(e) => {
                     onPlayerMouseDown?.(p.id, e);
                     handleMouseDownPlayer(e, p.id);
@@ -1702,7 +1754,13 @@ export const FieldCanvas: React.FC<{
                       height={7}
                       rx={1.5}
                       ry={1.5}
-                      fill={p.locked ? (theme === "mono-light" ? "#334155" : "#e5e7eb") : "none"}
+                      fill={
+                        p.locked
+                          ? theme === "mono-light"
+                            ? "#334155"
+                            : "#e5e7eb"
+                          : "none"
+                      }
                       stroke={theme === "mono-light" ? "#334155" : "#e5e7eb"}
                       strokeWidth={1.2}
                     />
@@ -1787,16 +1845,30 @@ export const FieldCanvas: React.FC<{
                                 if (isEndpoint) {
                                   const cx = (nx / 100) * 1600;
                                   const cy = (ny / 100) * 900;
-                                  let best: { id: string; x: number; y: number; d: number } | undefined;
+                                  let best:
+                                    | {
+                                        id: string;
+                                        x: number;
+                                        y: number;
+                                        d: number;
+                                      }
+                                    | undefined;
                                   for (const pl of doc.players) {
                                     const px = (pl.x / 100) * 1600;
                                     const py = (pl.y / 100) * 900;
                                     const d = Math.hypot(px - cx, py - cy);
-                                    if (!best || d < best.d) best = { id: pl.id, x: px, y: py, d };
+                                    if (!best || d < best.d)
+                                      best = { id: pl.id, x: px, y: py, d };
                                   }
                                   const thresh = 24; // px threshold for attach preview
                                   if (best && best.d <= thresh) {
-                                    setAttachPreview({ x1: cx, y1: cy, x2: best.x, y2: best.y, targetId: best.id });
+                                    setAttachPreview({
+                                      x1: cx,
+                                      y1: cy,
+                                      x2: best.x,
+                                      y2: best.y,
+                                      targetId: best.id,
+                                    });
                                   } else {
                                     setAttachPreview(undefined);
                                   }
@@ -1873,16 +1945,30 @@ export const FieldCanvas: React.FC<{
                               if (isEndpoint) {
                                 const cx = (nx / 100) * 1600;
                                 const cy = (ny / 100) * 900;
-                                let best: { id: string; x: number; y: number; d: number } | undefined;
+                                let best:
+                                  | {
+                                      id: string;
+                                      x: number;
+                                      y: number;
+                                      d: number;
+                                    }
+                                  | undefined;
                                 for (const pl of doc.players) {
                                   const px = (pl.x / 100) * 1600;
                                   const py = (pl.y / 100) * 900;
                                   const d = Math.hypot(px - cx, py - cy);
-                                  if (!best || d < best.d) best = { id: pl.id, x: px, y: py, d };
+                                  if (!best || d < best.d)
+                                    best = { id: pl.id, x: px, y: py, d };
                                 }
                                 const thresh = 24;
                                 if (best && best.d <= thresh) {
-                                  setAttachPreview({ x1: cx, y1: cy, x2: best.x, y2: best.y, targetId: best.id });
+                                  setAttachPreview({
+                                    x1: cx,
+                                    y1: cy,
+                                    x2: best.x,
+                                    y2: best.y,
+                                    targetId: best.id,
+                                  });
                                 } else {
                                   setAttachPreview(undefined);
                                 }
@@ -2192,7 +2278,11 @@ export const FieldCanvas: React.FC<{
             if (sel.length !== 1) return null;
             const player = doc.players.find((p) => p.id === sel[0]);
             if (!player) return null;
-            if (state.ui.inlineEdit && state.ui.inlineEdit.playerId === player.id) return null;
+            if (
+              state.ui.inlineEdit &&
+              state.ui.inlineEdit.playerId === player.id
+            )
+              return null;
             const px = (player.x / 100) * 1600;
             const py = (player.y / 100) * 900;
             const popW = 280;
@@ -2253,38 +2343,52 @@ export const FieldCanvas: React.FC<{
             );
           })()}
           {/* Inline label editor */}
-          {state.ui.inlineEdit && (() => {
-            const ie = state.ui.inlineEdit!;
-            const player = doc.players.find((pp) => pp.id === ie.playerId);
-            if (!player) return null;
-            const px = (player.x / 100) * 1600;
-            const py = (player.y / 100) * 900;
-            const w = 100;
-            const h = 30;
-            return (
-              <foreignObject x={px - w / 2} y={py - h / 2} width={w} height={h}>
-                <div className="pointer-events-auto" onMouseDown={(e) => e.stopPropagation()}>
-                  <input
-                    type="text"
-                    aria-label="Edit player label"
-                    autoFocus
-                    value={ie.draft}
-                    onFocus={(e) => e.currentTarget.select()}
-                    onChange={(e) => dispatch({ type: "UPDATE_INLINE_EDIT", draft: e.target.value })}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        dispatch({ type: "COMMIT_INLINE_EDIT" });
-                      } else if (e.key === "Escape") {
-                        dispatch({ type: "CANCEL_INLINE_EDIT" });
+          {state.ui.inlineEdit &&
+            (() => {
+              const ie = state.ui.inlineEdit!;
+              const player = doc.players.find((pp) => pp.id === ie.playerId);
+              if (!player) return null;
+              const px = (player.x / 100) * 1600;
+              const py = (player.y / 100) * 900;
+              const w = 100;
+              const h = 30;
+              return (
+                <foreignObject
+                  x={px - w / 2}
+                  y={py - h / 2}
+                  width={w}
+                  height={h}
+                >
+                  <div
+                    className="pointer-events-auto"
+                    onMouseDown={(e) => e.stopPropagation()}
+                  >
+                    <input
+                      type="text"
+                      aria-label="Edit player label"
+                      autoFocus
+                      value={ie.draft}
+                      onFocus={(e) => e.currentTarget.select()}
+                      onChange={(e) =>
+                        dispatch({
+                          type: "UPDATE_INLINE_EDIT",
+                          draft: e.target.value,
+                        })
                       }
-                    }}
-                    onBlur={() => dispatch({ type: "COMMIT_INLINE_EDIT" })}
-                    className="w-full h-full text-center text-[14px] font-semibold border border-slate-300 rounded bg-white shadow-sm"
-                  />
-                </div>
-              </foreignObject>
-            );
-          })()}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          dispatch({ type: "COMMIT_INLINE_EDIT" });
+                        } else if (e.key === "Escape") {
+                          dispatch({ type: "CANCEL_INLINE_EDIT" });
+                        }
+                      }}
+                      onBlur={() => dispatch({ type: "COMMIT_INLINE_EDIT" })}
+                      className="w-full h-full text-center text-[14px] font-semibold border border-slate-300 rounded bg-white shadow-sm"
+                    />
+                  </div>
+                </foreignObject>
+              );
+            })()}
           {/* Snap indicator */}
           {snapViz.show && (
             <g pointerEvents="none">
@@ -2307,27 +2411,29 @@ export const FieldCanvas: React.FC<{
             </g>
           )}
           {/* Snap pulse animation (micro-bump halo) */}
-          {state.ui.effectsSnapPulse && !prefersReducedMotion && snapPulses.length > 0 && (
-            <g pointerEvents="none">
-              {snapPulses.map((p) => {
-                const prog = Math.min(1, (performance.now() - p.t0) / 300);
-                const r = 6 + prog * 14; // expand 6 -> 20
-                const op = 0.35 * (1 - prog);
-                return (
-                  <circle
-                    key={p.id}
-                    cx={p.x}
-                    cy={p.y}
-                    r={r}
-                    fill="none"
-                    stroke="#22d3ee"
-                    strokeWidth={2}
-                    opacity={op}
-                  />
-                );
-              })}
-            </g>
-          )}
+          {state.ui.effectsSnapPulse &&
+            !prefersReducedMotion &&
+            snapPulses.length > 0 && (
+              <g pointerEvents="none">
+                {snapPulses.map((p) => {
+                  const prog = Math.min(1, (performance.now() - p.t0) / 300);
+                  const r = 6 + prog * 14; // expand 6 -> 20
+                  const op = 0.35 * (1 - prog);
+                  return (
+                    <circle
+                      key={p.id}
+                      cx={p.x}
+                      cy={p.y}
+                      r={r}
+                      fill="none"
+                      stroke="#22d3ee"
+                      strokeWidth={2}
+                      opacity={op}
+                    />
+                  );
+                })}
+              </g>
+            )}
           {/* Alignment guides (live, with fade-in) */}
           {alignGuides && (
             <g
@@ -2362,63 +2468,102 @@ export const FieldCanvas: React.FC<{
             </g>
           )}
           {/* Alignment guides fade-out trail */}
-          {(!alignGuides && guideFade) && (() => {
-            const elapsed = performance.now() - guideFade.t0;
-            const op = Math.max(0, 0.6 * (1 - elapsed / 260));
-            return (
-              <g pointerEvents="none" opacity={op}>
-                {guideFade.guides.vertical?.map((x, i) => (
-                  <line
-                    key={`vgf${i}`}
-                    x1={x}
-                    x2={x}
-                    y1={0}
-                    y2={900}
-                    stroke="#22c55e"
-                    strokeWidth={2}
-                    strokeDasharray="6 4"
-                  />
-                ))}
-                {guideFade.guides.horizontal?.map((y, i) => (
-                  <line
-                    key={`hgf${i}`}
-                    x1={0}
-                    x2={1600}
-                    y1={y}
-                    y2={y}
-                    stroke="#22c55e"
-                    strokeWidth={2}
-                    strokeDasharray="6 4"
-                  />
-                ))}
-              </g>
-            );
-          })()}
+          {!alignGuides &&
+            guideFade &&
+            (() => {
+              const elapsed = performance.now() - guideFade.t0;
+              const op = Math.max(0, 0.6 * (1 - elapsed / 260));
+              return (
+                <g pointerEvents="none" opacity={op}>
+                  {guideFade.guides.vertical?.map((x, i) => (
+                    <line
+                      key={`vgf${i}`}
+                      x1={x}
+                      x2={x}
+                      y1={0}
+                      y2={900}
+                      stroke="#22c55e"
+                      strokeWidth={2}
+                      strokeDasharray="6 4"
+                    />
+                  ))}
+                  {guideFade.guides.horizontal?.map((y, i) => (
+                    <line
+                      key={`hgf${i}`}
+                      x1={0}
+                      x2={1600}
+                      y1={y}
+                      y2={y}
+                      stroke="#22c55e"
+                      strokeWidth={2}
+                      strokeDasharray="6 4"
+                    />
+                  ))}
+                </g>
+              );
+            })()}
           {/* Center label flash when snapping to center axes */}
-          {centerFlash && (() => {
-            const elapsed = performance.now() - centerFlash.t0;
-            const op = Math.max(0, 0.9 * (1 - elapsed / 800));
-            const nodes: React.ReactNode[] = [];
-            if (centerFlash.x) {
-              // Vertical center label near top
-              nodes.push(
-                <g key="cxl" pointerEvents="none" opacity={op}>
-                  <rect x={800 - 26} y={6} width={52} height={18} rx={9} ry={9} fill="#0f172a" opacity={0.7} />
-                  <text x={800} y={19} fontSize={11} fontWeight={700} fill="#a7f3d0" textAnchor="middle">Center</text>
-                </g>
-              );
-            }
-            if (centerFlash.y) {
-              // Horizontal center label near right side
-              nodes.push(
-                <g key="cyl" pointerEvents="none" opacity={op}>
-                  <rect x={1600 - 66} y={450 - 9} width={60} height={18} rx={9} ry={9} fill="#0f172a" opacity={0.7} />
-                  <text x={1600 - 36} y={450 + 4} fontSize={11} fontWeight={700} fill="#a7f3d0" textAnchor="middle">Center</text>
-                </g>
-              );
-            }
-            return <g>{nodes}</g>;
-          })()}
+          {centerFlash &&
+            (() => {
+              const elapsed = performance.now() - centerFlash.t0;
+              const op = Math.max(0, 0.9 * (1 - elapsed / 800));
+              const nodes: React.ReactNode[] = [];
+              if (centerFlash.x) {
+                // Vertical center label near top
+                nodes.push(
+                  <g key="cxl" pointerEvents="none" opacity={op}>
+                    <rect
+                      x={800 - 26}
+                      y={6}
+                      width={52}
+                      height={18}
+                      rx={9}
+                      ry={9}
+                      fill="#0f172a"
+                      opacity={0.7}
+                    />
+                    <text
+                      x={800}
+                      y={19}
+                      fontSize={11}
+                      fontWeight={700}
+                      fill="#a7f3d0"
+                      textAnchor="middle"
+                    >
+                      Center
+                    </text>
+                  </g>
+                );
+              }
+              if (centerFlash.y) {
+                // Horizontal center label near right side
+                nodes.push(
+                  <g key="cyl" pointerEvents="none" opacity={op}>
+                    <rect
+                      x={1600 - 66}
+                      y={450 - 9}
+                      width={60}
+                      height={18}
+                      rx={9}
+                      ry={9}
+                      fill="#0f172a"
+                      opacity={0.7}
+                    />
+                    <text
+                      x={1600 - 36}
+                      y={450 + 4}
+                      fontSize={11}
+                      fontWeight={700}
+                      fill="#a7f3d0"
+                      textAnchor="middle"
+                    >
+                      Center
+                    </text>
+                  </g>
+                );
+              }
+              return <g>{nodes}</g>;
+            })()}
           {/* Annotation selection handles */}
           {state.ui.selectedAnnotationId &&
             (() => {
@@ -2617,98 +2762,139 @@ export const FieldCanvas: React.FC<{
           {/* Route drawing preview */}
           {state.ui.drawing &&
             (state.ui.routeMode === "curve" &&
-            state.ui.drawing.anchorPoints.length >= 2 ? (
-              // For curve preview: need 3 points (start, control, end). Use preview as end while last anchor is control.
-              (() => {
-                const anchors = state.ui.drawing.anchorPoints;
-                const start = anchors[0];
-                const control = anchors[anchors.length - 1];
-                const end = state.ui.drawing.preview || control;
-                const sx = (start.x / 100) * 1600,
-                  sy = (start.y / 100) * 900,
-                  cx = (control.x / 100) * 1600,
-                  cy = (control.y / 100) * 900,
-                  ex = (end.x / 100) * 1600,
-                  ey = (end.y / 100) * 900;
-                const d = `M ${sx},${sy} Q ${cx},${cy} ${ex},${ey}`;
-                return (
-                  <g>
-                    <path
-                      d={d}
-                      fill="none"
-                      stroke="#fbbf24"
-                      strokeWidth={6}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeDasharray="8 6"
-                    />
-                    {(() => {
-                      // Attach preview when near a player with current end point
-                      const endPt = end;
-                      const ex2 = (endPt.x / 100) * 1600;
-                      const ey2 = (endPt.y / 100) * 900;
-                      let best: { x: number; y: number; d: number } | undefined;
-                      for (const pl of doc.players) {
-                        const px = (pl.x / 100) * 1600;
-                        const py = (pl.y / 100) * 900;
-                        const d = Math.hypot(px - ex2, py - ey2);
-                        if (!best || d < best.d) best = { x: px, y: py, d };
-                      }
-                      if (best && best.d <= 24) {
-                        return (
-                          <g pointerEvents="none">
-                            <line x1={ex2} y1={ey2} x2={best.x} y2={best.y} stroke="#f59e0b" strokeWidth={3} strokeDasharray="2 6" opacity={0.9} />
-                            <circle cx={best.x} cy={best.y} r={8} fill="none" stroke="#f59e0b" strokeWidth={2} strokeDasharray="2 6" opacity={0.9} />
-                          </g>
-                        );
-                      }
-                      return null;
-                    })()}
-                  </g>
-                );
-              })()
-            ) : (
-              (() => {
-                const points = [
-                  ...state.ui.drawing.anchorPoints,
-                  ...(state.ui.drawing.preview ? [state.ui.drawing.preview] : []),
-                ];
-                const poly = points
-                  .map((p) => `${(p.x / 100) * 1600},${(p.y / 100) * 900}`)
-                  .join(" ");
-                const endPt = points[points.length - 1];
-                const ex2 = endPt ? (endPt.x / 100) * 1600 : undefined;
-                const ey2 = endPt ? (endPt.y / 100) * 900 : undefined;
-                let attach: { x: number; y: number; d: number } | undefined;
-                if (ex2 !== undefined && ey2 !== undefined) {
-                  for (const pl of doc.players) {
-                    const px = (pl.x / 100) * 1600;
-                    const py = (pl.y / 100) * 900;
-                    const d = Math.hypot(px - ex2, py - ey2);
-                    if (!attach || d < attach.d) attach = { x: px, y: py, d };
+            state.ui.drawing.anchorPoints.length >= 2
+              ? // For curve preview: need 3 points (start, control, end). Use preview as end while last anchor is control.
+                (() => {
+                  const anchors = state.ui.drawing.anchorPoints;
+                  const start = anchors[0];
+                  const control = anchors[anchors.length - 1];
+                  const end = state.ui.drawing.preview || control;
+                  const sx = (start.x / 100) * 1600,
+                    sy = (start.y / 100) * 900,
+                    cx = (control.x / 100) * 1600,
+                    cy = (control.y / 100) * 900,
+                    ex = (end.x / 100) * 1600,
+                    ey = (end.y / 100) * 900;
+                  const d = `M ${sx},${sy} Q ${cx},${cy} ${ex},${ey}`;
+                  return (
+                    <g>
+                      <path
+                        d={d}
+                        fill="none"
+                        stroke="#fbbf24"
+                        strokeWidth={6}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeDasharray="8 6"
+                      />
+                      {(() => {
+                        // Attach preview when near a player with current end point
+                        const endPt = end;
+                        const ex2 = (endPt.x / 100) * 1600;
+                        const ey2 = (endPt.y / 100) * 900;
+                        let best:
+                          | { x: number; y: number; d: number }
+                          | undefined;
+                        for (const pl of doc.players) {
+                          const px = (pl.x / 100) * 1600;
+                          const py = (pl.y / 100) * 900;
+                          const d = Math.hypot(px - ex2, py - ey2);
+                          if (!best || d < best.d) best = { x: px, y: py, d };
+                        }
+                        if (best && best.d <= 24) {
+                          return (
+                            <g pointerEvents="none">
+                              <line
+                                x1={ex2}
+                                y1={ey2}
+                                x2={best.x}
+                                y2={best.y}
+                                stroke="#f59e0b"
+                                strokeWidth={3}
+                                strokeDasharray="2 6"
+                                opacity={0.9}
+                              />
+                              <circle
+                                cx={best.x}
+                                cy={best.y}
+                                r={8}
+                                fill="none"
+                                stroke="#f59e0b"
+                                strokeWidth={2}
+                                strokeDasharray="2 6"
+                                opacity={0.9}
+                              />
+                            </g>
+                          );
+                        }
+                        return null;
+                      })()}
+                    </g>
+                  );
+                })()
+              : (() => {
+                  const points = [
+                    ...state.ui.drawing.anchorPoints,
+                    ...(state.ui.drawing.preview
+                      ? [state.ui.drawing.preview]
+                      : []),
+                  ];
+                  const poly = points
+                    .map((p) => `${(p.x / 100) * 1600},${(p.y / 100) * 900}`)
+                    .join(" ");
+                  const endPt = points[points.length - 1];
+                  const ex2 = endPt ? (endPt.x / 100) * 1600 : undefined;
+                  const ey2 = endPt ? (endPt.y / 100) * 900 : undefined;
+                  let attach: { x: number; y: number; d: number } | undefined;
+                  if (ex2 !== undefined && ey2 !== undefined) {
+                    for (const pl of doc.players) {
+                      const px = (pl.x / 100) * 1600;
+                      const py = (pl.y / 100) * 900;
+                      const d = Math.hypot(px - ex2, py - ey2);
+                      if (!attach || d < attach.d) attach = { x: px, y: py, d };
+                    }
                   }
-                }
-                return (
-                  <g>
-                    <polyline
-                      points={poly}
-                      fill="none"
-                      stroke="#fbbf24"
-                      strokeWidth={6}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeDasharray="8 6"
-                    />
-                    {attach && attach.d <= 24 && ex2 !== undefined && ey2 !== undefined && (
-                      <g pointerEvents="none">
-                        <line x1={ex2} y1={ey2} x2={attach.x} y2={attach.y} stroke="#f59e0b" strokeWidth={3} strokeDasharray="2 6" opacity={0.9} />
-                        <circle cx={attach.x} cy={attach.y} r={8} fill="none" stroke="#f59e0b" strokeWidth={2} strokeDasharray="2 6" opacity={0.9} />
-                      </g>
-                    )}
-                  </g>
-                );
-              })()
-            ))}
+                  return (
+                    <g>
+                      <polyline
+                        points={poly}
+                        fill="none"
+                        stroke="#fbbf24"
+                        strokeWidth={6}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeDasharray="8 6"
+                      />
+                      {attach &&
+                        attach.d <= 24 &&
+                        ex2 !== undefined &&
+                        ey2 !== undefined && (
+                          <g pointerEvents="none">
+                            <line
+                              x1={ex2}
+                              y1={ey2}
+                              x2={attach.x}
+                              y2={attach.y}
+                              stroke="#f59e0b"
+                              strokeWidth={3}
+                              strokeDasharray="2 6"
+                              opacity={0.9}
+                            />
+                            <circle
+                              cx={attach.x}
+                              cy={attach.y}
+                              r={8}
+                              fill="none"
+                              stroke="#f59e0b"
+                              strokeWidth={2}
+                              strokeDasharray="2 6"
+                              opacity={0.9}
+                            />
+                          </g>
+                        )}
+                    </g>
+                  );
+                })())}
           {/* Contextual HUD for align/distribute (shows when selecting >=3 players) */}
           {(() => {
             const ids = state.ui.selectedIds || [];
@@ -2724,9 +2910,17 @@ export const FieldCanvas: React.FC<{
             const hudW = 280;
             const hudH = 34;
             const pad = 8;
-            const dockX = Math.max(pad, Math.min(1600 - hudW - pad, minX + boxW / 2 - hudW / 2));
+            const dockX = Math.max(
+              pad,
+              Math.min(1600 - hudW - pad, minX + boxW / 2 - hudW / 2)
+            );
             const dockY = Math.max(pad, minY - hudH - 10);
-            const btn = (label: string, title: string, onClick: () => void, key: string) => (
+            const btn = (
+              label: string,
+              title: string,
+              onClick: () => void,
+              key: string
+            ) => (
               <Button
                 key={key}
                 size="xs"
@@ -2743,21 +2937,96 @@ export const FieldCanvas: React.FC<{
             );
             return (
               <foreignObject x={dockX} y={dockY} width={hudW} height={hudH}>
-                <div className="pointer-events-auto" onMouseDown={(e) => e.stopPropagation()}>
+                <div
+                  className="pointer-events-auto"
+                  onMouseDown={(e) => e.stopPropagation()}
+                >
                   <div className="panel-cupertino inline-flex items-center gap-1 px-2 py-1">
                     {/* Align X */}
-                    {btn("L", "Align left edges", () => dispatch({ type: "ALIGN_SELECTION", axis: "x", align: "start" }), "ax-l")}
-                    {btn("C", "Align vertical centers", () => dispatch({ type: "ALIGN_SELECTION", axis: "x", align: "center" }), "ax-c")}
-                    {btn("R", "Align right edges", () => dispatch({ type: "ALIGN_SELECTION", axis: "x", align: "end" }), "ax-r")}
+                    {btn(
+                      "L",
+                      "Align left edges",
+                      () =>
+                        dispatch({
+                          type: "ALIGN_SELECTION",
+                          axis: "x",
+                          align: "start",
+                        }),
+                      "ax-l"
+                    )}
+                    {btn(
+                      "C",
+                      "Align vertical centers",
+                      () =>
+                        dispatch({
+                          type: "ALIGN_SELECTION",
+                          axis: "x",
+                          align: "center",
+                        }),
+                      "ax-c"
+                    )}
+                    {btn(
+                      "R",
+                      "Align right edges",
+                      () =>
+                        dispatch({
+                          type: "ALIGN_SELECTION",
+                          axis: "x",
+                          align: "end",
+                        }),
+                      "ax-r"
+                    )}
                     <span className="w-px h-4 bg-slate-200 mx-1" />
                     {/* Align Y */}
-                    {btn("T", "Align top edges", () => dispatch({ type: "ALIGN_SELECTION", axis: "y", align: "start" }), "ay-t")}
-                    {btn("M", "Align horizontal middles", () => dispatch({ type: "ALIGN_SELECTION", axis: "y", align: "center" }), "ay-m")}
-                    {btn("B", "Align bottom edges", () => dispatch({ type: "ALIGN_SELECTION", axis: "y", align: "end" }), "ay-b")}
+                    {btn(
+                      "T",
+                      "Align top edges",
+                      () =>
+                        dispatch({
+                          type: "ALIGN_SELECTION",
+                          axis: "y",
+                          align: "start",
+                        }),
+                      "ay-t"
+                    )}
+                    {btn(
+                      "M",
+                      "Align horizontal middles",
+                      () =>
+                        dispatch({
+                          type: "ALIGN_SELECTION",
+                          axis: "y",
+                          align: "center",
+                        }),
+                      "ay-m"
+                    )}
+                    {btn(
+                      "B",
+                      "Align bottom edges",
+                      () =>
+                        dispatch({
+                          type: "ALIGN_SELECTION",
+                          axis: "y",
+                          align: "end",
+                        }),
+                      "ay-b"
+                    )}
                     <span className="w-px h-4 bg-slate-200 mx-1" />
                     {/* Distribute */}
-                    {btn("H", "Distribute horizontally", () => dispatch({ type: "DISTRIBUTE_SELECTION", axis: "x" }), "d-h")}
-                    {btn("V", "Distribute vertically", () => dispatch({ type: "DISTRIBUTE_SELECTION", axis: "y" }), "d-v")}
+                    {btn(
+                      "H",
+                      "Distribute horizontally",
+                      () =>
+                        dispatch({ type: "DISTRIBUTE_SELECTION", axis: "x" }),
+                      "d-h"
+                    )}
+                    {btn(
+                      "V",
+                      "Distribute vertically",
+                      () =>
+                        dispatch({ type: "DISTRIBUTE_SELECTION", axis: "y" }),
+                      "d-v"
+                    )}
                   </div>
                 </div>
               </foreignObject>
@@ -2911,7 +3180,7 @@ export const FieldCanvas: React.FC<{
       {(() => {
         const showMini = state.ui.zoom > 1.001; // hide when fully zoomed out
         if (!showMini) return null;
-  const MINI_W = 160;
+        const MINI_W = 160;
         const border = 1;
         // Compute viewport rect in world coords
         const widthWorld = 1600 / state.ui.zoom;
@@ -2926,8 +3195,18 @@ export const FieldCanvas: React.FC<{
         const rw = widthWorld * scale;
         const rh = heightWorld * scale;
         const theme = doc.field.theme || "classic";
-        const bg = theme === "mono-dark" ? "#111827" : theme === "mono-light" ? "#f9fafb" : "#064e3b";
-        const frame = theme === "mono-dark" ? "#6b7280" : theme === "mono-light" ? "#9ca3af" : "#10b981";
+        const bg =
+          theme === "mono-dark"
+            ? "#111827"
+            : theme === "mono-light"
+              ? "#f9fafb"
+              : "#064e3b";
+        const frame =
+          theme === "mono-dark"
+            ? "#6b7280"
+            : theme === "mono-light"
+              ? "#9ca3af"
+              : "#10b981";
 
         const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
           e.preventDefault();
@@ -2950,24 +3229,50 @@ export const FieldCanvas: React.FC<{
         return (
           <div
             className="absolute bottom-2 right-2 select-none"
-            style={{ width: MINI_W + 2 * border, height: (MINI_W * 0.5625) + 2 * border }}
+            style={{
+              width: MINI_W + 2 * border,
+              height: MINI_W * 0.5625 + 2 * border,
+            }}
             onMouseDown={onMouseDown}
             role="presentation"
             aria-hidden
           >
             <svg
               width={MINI_W + 2 * border}
-              height={(MINI_W * 0.5625) + 2 * border}
-              viewBox={`0 0 ${MINI_W + 2 * border} ${(MINI_W * 0.5625) + 2 * border}`}
+              height={MINI_W * 0.5625 + 2 * border}
+              viewBox={`0 0 ${MINI_W + 2 * border} ${MINI_W * 0.5625 + 2 * border}`}
               style={{ display: "block", cursor: "pointer" }}
             >
               {/* frame */}
-              <rect x={0} y={0} width={MINI_W + 2 * border} height={(MINI_W * 0.5625) + 2 * border} rx={6} fill="#ffffff" opacity={0.8} />
+              <rect
+                x={0}
+                y={0}
+                width={MINI_W + 2 * border}
+                height={MINI_W * 0.5625 + 2 * border}
+                rx={6}
+                fill="#ffffff"
+                opacity={0.8}
+              />
               <g transform={`translate(${border} ${border})`}>
                 {/* field */}
-                <rect x={0} y={0} width={MINI_W} height={MINI_W * 0.5625} fill={bg} opacity={theme === "classic" ? 0.6 : 0.8} />
+                <rect
+                  x={0}
+                  y={0}
+                  width={MINI_W}
+                  height={MINI_W * 0.5625}
+                  fill={bg}
+                  opacity={theme === "classic" ? 0.6 : 0.8}
+                />
                 {/* viewport */}
-                <rect x={rx} y={ry} width={rw} height={rh} fill="none" stroke={frame} strokeWidth={2} />
+                <rect
+                  x={rx}
+                  y={ry}
+                  width={rw}
+                  height={rh}
+                  fill="none"
+                  stroke={frame}
+                  strokeWidth={2}
+                />
               </g>
             </svg>
           </div>

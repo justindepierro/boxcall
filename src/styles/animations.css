@@ -233,7 +233,8 @@
 /* === SELECTION BREATHING === */
 /* Subtle breathing outline for selected elements */
 @keyframes selectedBreathe {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.55;
   }

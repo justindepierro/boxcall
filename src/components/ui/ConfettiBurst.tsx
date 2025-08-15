@@ -25,7 +25,10 @@ export const ConfettiBurst: React.FC<ConfettiBurstProps> = ({
   className,
 }) => {
   const prefersReduced = useMemo(
-    () => typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     []
   );
   const [visible, setVisible] = useState(open && !prefersReduced);
@@ -59,7 +62,8 @@ export const ConfettiBurst: React.FC<ConfettiBurstProps> = ({
   return (
     <div
       className={
-        "pointer-events-none fixed inset-0 z-[70] overflow-hidden " + (className || "")
+        "pointer-events-none fixed inset-0 z-[70] overflow-hidden " +
+        (className || "")
       }
       aria-hidden
     >
@@ -71,7 +75,10 @@ export const ConfettiBurst: React.FC<ConfettiBurstProps> = ({
           const rotate = rand(-90, 90);
           const delay = rand(0, 150);
           const duration = rand(900, 1400);
-          const bez = Math.random() > 0.5 ? "cubic-bezier(0.22,1,0.36,1)" : "cubic-bezier(0.17,0.67,0.83,0.67)";
+          const bez =
+            Math.random() > 0.5
+              ? "cubic-bezier(0.22,1,0.36,1)"
+              : "cubic-bezier(0.17,0.67,0.83,0.67)";
           return (
             <span
               key={i}
@@ -85,7 +92,8 @@ export const ConfettiBurst: React.FC<ConfettiBurstProps> = ({
                 transform: `rotate(${rotate}deg)`,
                 borderRadius: 2,
                 filter: "saturate(1.1)",
-                animation: (`bc-confetti-fall ${duration}ms ${bez} ${delay}ms forwards` as unknown as string),
+                animation:
+                  `bc-confetti-fall ${duration}ms ${bez} ${delay}ms forwards` as unknown as string,
               }}
             />
           );

@@ -95,7 +95,9 @@ export const ToolPalette: React.FC = () => {
             tooltip={
               <span>
                 Draw
-                <span className="opacity-70 ml-1">• Enter to commit • Shift to 45°</span>
+                <span className="opacity-70 ml-1">
+                  • Enter to commit • Shift to 45°
+                </span>
               </span>
             }
           />
@@ -110,7 +112,9 @@ export const ToolPalette: React.FC = () => {
               tooltip={
                 <span>
                   Line
-                  <span className="opacity-70 ml-1">• Enter to commit • Shift to 45°</span>
+                  <span className="opacity-70 ml-1">
+                    • Enter to commit • Shift to 45°
+                  </span>
                 </span>
               }
             />
@@ -152,7 +156,9 @@ export const ToolPalette: React.FC = () => {
               tooltip={
                 <span>
                   Curve
-                  <span className="opacity-70 ml-1">• Use last anchor as control • Enter to commit</span>
+                  <span className="opacity-70 ml-1">
+                    • Use last anchor as control • Enter to commit
+                  </span>
                 </span>
               }
             />
@@ -163,7 +169,12 @@ export const ToolPalette: React.FC = () => {
                 dispatch({ type: "SET_DRAW_MODE", mode: "freehand" })
               }
               icon={<Icon name="edit" size="lg" />}
-              tooltip={<span>Freehand<span className="opacity-70 ml-1"> • Release to commit</span></span>}
+              tooltip={
+                <span>
+                  Freehand
+                  <span className="opacity-70 ml-1"> • Release to commit</span>
+                </span>
+              }
             />
             <Btn
               label="Connector"
@@ -172,7 +183,15 @@ export const ToolPalette: React.FC = () => {
                 dispatch({ type: "SET_DRAW_MODE", mode: "connector" })
               }
               icon={<Icon name="link" size="lg" />}
-              tooltip={<span>Connector<span className="opacity-70 ml-1"> • Click player → player • Esc to cancel</span></span>}
+              tooltip={
+                <span>
+                  Connector
+                  <span className="opacity-70 ml-1">
+                    {" "}
+                    • Click player → player • Esc to cancel
+                  </span>
+                </span>
+              }
             />
             <div className="mx-1 w-px h-6 bg-slate-200" />
             <select
