@@ -1,5 +1,5 @@
 import { Typography } from "../../design-system";
-import { Calendar } from "lucide-react";
+import Icon from "../../ui/Icon/Icon";
 /**
  * TimeSummary Component
  *
@@ -21,7 +21,6 @@ import { Calendar } from "lucide-react";
 import React from "react";
 import { getCategoryColor, formatDuration } from "../utils";
 import type { TimeSummaryProps, PracticeBlock } from "../types";
-import Icon from "../../ui/Icon/Icon";
 export const TimeSummary: React.FC<TimeSummaryProps> = ({
   scheduledDuration,
   totalDuration,
@@ -131,8 +130,8 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
       {/* Event Details */}
       <div className="mt-4 pt-4 border-t border-subtle">
         <Typography variant="body-sm" color="muted">
-          <Calendar
-            aria-label="calendar"
+          <Icon
+            name="calendar"
             className="inline h-4 w-4 align-middle text-current"
           />{" "}
           {event.title} • {new Date(event.start).toLocaleDateString()} •

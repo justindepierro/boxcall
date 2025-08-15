@@ -1,18 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "../design-system/Typography";
-import {
-  Edit,
-  Copy,
-  Image,
-  ChevronDown,
-  ChevronUp,
-  Target,
-  Hash,
-  Clock,
-  Calendar,
-  Gamepad2,
-} from "lucide-react";
+import Icon from "../ui/Icon/Icon";
 import type { Play as PlayType } from "../../types/play";
 import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
 import {
@@ -30,6 +19,7 @@ interface PlayCardProps {
   showOneWordCalls?: boolean;
   onEdit?: (play: PlayType) => void;
   onDuplicate?: (play: PlayType) => void;
+  onCreateDiagram?: (play: PlayType) => void;
   onAddToPracticeScript?: (play: PlayType) => void;
   onAddToGamePlan?: (play: PlayType) => void;
   // Bulk Operations
@@ -42,6 +32,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   showOneWordCalls = false,
   onEdit,
   onDuplicate,
+  onCreateDiagram,
   onAddToPracticeScript,
   onAddToGamePlan,
   // Bulk Operations
@@ -83,6 +74,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       .replace("situational", "Situational");
   })();
   const handleCreateDiagram = () => {
+    if (onCreateDiagram) {
+      onCreateDiagram(play);
+      return;
+    }
     navigate(`/playbook/diagram?playId=${play.id}`);
   };
   const displayName = getDisplayName(play, showOneWordCalls);
@@ -182,9 +177,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 size="sm"
                 icon={
                   isExpanded ? (
-                    <ChevronUp className="h-5 w-5" />
+                    <Icon name="chevron-up" className="h-5 w-5" />
                   ) : (
-                    <ChevronDown className="h-5 w-5" />
+                    <Icon name="chevron-down" className="h-5 w-5" />
                   )
                 }
                 iconPosition="only"
@@ -198,7 +193,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 onClick={() => onEdit?.(play)}
                 variant="ghost"
                 size="sm"
-                icon={<Edit className="h-5 w-5" />}
+                icon={<Icon name="edit" className="h-5 w-5" />}
                 iconPosition="only"
                 aria-label="Edit play"
                 title="Edit play"
@@ -208,7 +203,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 onClick={() => onDuplicate?.(play)}
                 variant="ghost"
                 size="sm"
-                icon={<Copy className="h-5 w-5" />}
+                icon={<Icon name="copy" className="h-5 w-5" />}
                 iconPosition="only"
                 aria-label="Duplicate play"
                 title="Duplicate play"
@@ -218,7 +213,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 onClick={handleCreateDiagram}
                 variant="ghost"
                 size="sm"
-                icon={<Image className="h-5 w-5" />}
+                icon={<Icon name="image" className="h-5 w-5" />}
                 iconPosition="only"
                 aria-label="Create diagram"
                 title="Create diagram"
@@ -272,7 +267,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     as="h4"
                     className="text-slate-700 flex items-center mb-2"
                   >
-                    <Target className="h-4 w-4 mr-1" /> Formation
+                    <Icon name="target" className="h-4 w-4 mr-1" /> Formation
                   </Typography>
                   <dl className="space-y-1 text-sm">
                     <div className="flex justify-between gap-2">
@@ -327,7 +322,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     as="h4"
                     className="text-slate-700 flex items-center mb-2"
                   >
-                    <Hash className="h-4 w-4 mr-1" /> Play Details
+                    <Icon name="hash" className="h-4 w-4 mr-1" /> Play Details
                   </Typography>
                   <dl className="space-y-1 text-sm">
                     <div className="flex justify-between gap-2">
@@ -429,7 +424,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     as="h4"
                     className="text-slate-700 flex items-center mb-2"
                   >
-                    <Clock className="h-4 w-4 mr-1" /> Usage & Stats
+                    <Icon name="clock" className="h-4 w-4 mr-1" /> Usage & Stats
                   </Typography>
                   <dl className="space-y-1 text-sm">
                     <div className="flex justify-between gap-2">
@@ -687,7 +682,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     title="Add this play to a practice script"
                     className="surface-subtle hover:bg-blue-100 text-blue-700 border-transparent"
                   >
-                    <Calendar className="h-3 w-3 mr-1" /> Practice Script
+                    <Icon name="calendar" className="h-3 w-3 mr-1" /> Practice
+                    Script
                   </Button>
                   <Button
                     variant="secondary"
@@ -696,7 +692,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     title="Add this play to a game plan"
                     className="surface-subtle hover:bg-jade-100 text-jade-700 border-transparent"
                   >
-                    <Gamepad2 className="h-3 w-3 mr-1" /> Game Plan
+                    <Icon name="gamepad-2" className="h-3 w-3 mr-1" /> Game Plan
                   </Button>
                   <Badge variant="premium" size="sm">
                     Week 3

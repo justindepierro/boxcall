@@ -8,8 +8,8 @@ export const securityHeaders = {
   "Content-Security-Policy": [
     "default-src 'self'",
     "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com",
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "font-src 'self' https://fonts.gstatic.com",
+    "style-src 'self' 'unsafe-inline'",
+    "font-src 'self' data:",
     "img-src 'self' data: https: blob:",
     "media-src 'self' https: blob:",
     "connect-src 'self' https://api.boxcall.com https://www.google-analytics.com",
@@ -30,19 +30,26 @@ export const performanceConfig = {
   resourceHints: {
     preload: [
       {
-        href: "/assets/fonts/inter-var.woff2",
+        href: "/assets/fonts/Inter-500.woff2",
         as: "font",
         type: "font/woff2",
         crossOrigin: true,
       },
-      { href: "/assets/critical.css", as: "style" },
+      {
+        href: "/assets/fonts/Inter-600.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: true,
+      },
+      {
+        href: "/assets/fonts/Jetbrains-Mono-400.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: true,
+      },
     ],
     prefetch: ["/api/user/profile", "/api/teams/recent"],
-    preconnect: [
-      "https://fonts.googleapis.com",
-      "https://fonts.gstatic.com",
-      "https://api.boxcall.com",
-    ],
+    preconnect: ["https://api.boxcall.com"],
   },
 
   // Bundle splitting strategy

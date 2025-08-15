@@ -7,96 +7,129 @@
  * Separated from main icon system for better tree shaking
  */
 
-// Type imports for icon names
-import type { NavigationIconName } from "./categories/NavigationIcons";
-import type { ActionIconName } from "./categories/ActionIcons";
-import type { CalendarIconName } from "./categories/CalendarIcons";
-import type { SportsIconName } from "./categories/SportsIcons";
-import type { BusinessIconName } from "./categories/BusinessIcons";
-import type { MediaIconName } from "./categories/MediaIcons";
-import type { SystemIconName } from "./categories/SystemIcons";
+// Use the modular icon union to avoid importing legacy lucide-react categories
+import type { ModularIconName } from "./ModularIcon";
 
-// Combined icon type
-type SmartIconName =
-  | NavigationIconName
-  | ActionIconName
-  | CalendarIconName
-  | SportsIconName
-  | BusinessIconName
-  | MediaIconName
-  | SystemIconName;
+// Narrowed set used by SmartIconSystem suggestions
+type SmartIconName = Extract<
+  ModularIconName,
+  | "trophy"
+  | "award"
+  | "star"
+  | "crown"
+  | "check"
+  | "check-circle"
+  | "users"
+  | "user"
+  | "user-plus"
+  | "list"
+  | "file"
+  | "calendar"
+  | "clock"
+  | "target"
+  | "activity"
+  | "message"
+  | "mail"
+  | "alert"
+  | "alert-triangle"
+  | "info"
+  | "trending-up"
+  | "database"
+  | "plus"
+  | "plus-circle"
+  | "edit"
+  | "delete"
+  | "save"
+  | "download"
+  | "upload"
+  | "link"
+  | "arrow-left"
+  | "chevron-left"
+  | "arrow-right"
+  | "chevron-right"
+  | "arrow-up"
+  | "chevron-up"
+  | "arrow-down"
+  | "chevron-down"
+  | "grid"
+  | "menu"
+  | "home"
+  | "team"
+  | "play"
+  | "close"
+  | "phone"
+>;
 
 export class SmartIconSystem {
   private static contentPatterns: { [key: string]: SmartIconName[] } = {
     // Achievement & Success patterns
-    achievement: ["trophy", "medal", "award", "star", "crown"],
-    success: ["check", "check-circle", "trophy", "thumbs-up"],
-    victory: ["trophy", "crown", "flame", "star"],
-    medal: ["medal", "award", "star"],
+    achievement: ["trophy", "award", "star", "crown"],
+    success: ["check", "check-circle", "trophy"],
+    victory: ["trophy", "crown", "star"],
     trophy: ["trophy", "crown", "award"],
     winner: ["crown", "trophy", "star"],
-    champion: ["crown", "trophy", "medal"],
+    champion: ["crown", "trophy", "award"],
 
     // Team & People patterns
-    team: ["team", "users", "user-plus", "briefcase"],
-    player: ["user", "user-check", "star"],
-    coach: ["user", "crown", "briefcase"],
+    team: ["team", "users", "user-plus"],
+    player: ["user", "star"],
+    coach: ["user", "crown"],
     captain: ["crown", "user", "star"],
     roster: ["users", "list", "file"],
     member: ["user", "user-plus", "team"],
 
     // Calendar & Time patterns
-    schedule: ["calendar", "clock", "calendar-clock"],
-    event: ["calendar", "calendar-plus", "clock"],
+    schedule: ["calendar", "clock"],
+    event: ["calendar", "clock"],
     practice: ["calendar", "target", "activity"],
     game: ["calendar", "trophy", "target"],
     meeting: ["calendar", "users", "message"],
-    deadline: ["calendar-x", "clock", "alert"],
-    time: ["clock", "timer", "watch"],
-    date: ["calendar", "calendar-days"],
+    deadline: ["calendar", "clock", "alert"],
+    time: ["clock"],
+    date: ["calendar"],
 
     // Communication patterns
-    message: ["message", "message-circle", "mail"],
-    chat: ["message-circle", "comment", "users"],
-    notification: ["bell", "bell-ring", "alert"],
-    announcement: ["bell", "bell-ring", "message"],
-    email: ["mail", "send", "message"],
-    call: ["phone", "mic", "users"],
+    message: ["message", "mail"],
+    chat: ["message", "users"],
+    notification: ["alert"],
+    announcement: ["message"],
+    email: ["mail", "message"],
+    call: ["phone", "users"],
 
     // Sports & Activities patterns
     football: ["target", "activity", "trophy"],
     sport: ["activity", "target", "trophy"],
-    exercise: ["activity", "heart", "energy"],
+    exercise: ["activity"],
     training: ["target", "activity", "trending-up"],
-    drill: ["target", "crosshair", "activity"],
+    drill: ["target", "activity"],
     play: ["play", "activity", "target"],
-    strategy: ["target", "crosshair", "activity"],
+    strategy: ["target", "activity"],
 
     // Performance & Analytics patterns
-    stats: ["bar-chart", "line-chart", "activity"],
-    performance: ["trending-up", "bar-chart", "activity"],
-    progress: ["trending-up", "bar-chart", "percent"],
-    analytics: ["line-chart", "bar-chart", "database"],
-    report: ["file", "bar-chart", "line-chart"],
-    data: ["database", "bar-chart", "line-chart"],
+    stats: ["trending-up", "activity"],
+    performance: ["trending-up", "activity"],
+    progress: ["trending-up", "activity"],
+    analytics: ["trending-up", "database"],
+    report: ["file", "trending-up"],
+    data: ["database", "trending-up"],
 
     // Actions & Status patterns
     add: ["plus", "plus-circle", "user-plus"],
-    create: ["plus", "edit", "file-plus"],
-    edit: ["edit", "save", "file-edit"],
-    delete: ["delete", "x-circle", "minus-circle"],
+    create: ["plus", "edit"],
+    edit: ["edit", "save"],
+    delete: ["delete", "alert"],
     save: ["save", "check", "download"],
-    export: ["export", "download", "share"],
-    import: ["upload", "file-plus", "download"],
-    share: ["share", "share-2", "link"],
+    export: ["download", "link"],
+    import: ["upload", "download"],
+    share: ["link"],
 
     // Navigation patterns
-    back: ["arrow-left", "chevron-left", "undo"],
-    forward: ["arrow-right", "chevron-right", "redo"],
+    back: ["arrow-left", "chevron-left"],
+    forward: ["arrow-right", "chevron-right"],
     up: ["arrow-up", "chevron-up", "trending-up"],
-    down: ["arrow-down", "chevron-down", "trending-down"],
+    down: ["arrow-down", "chevron-down"],
     menu: ["menu", "grid", "list"],
-    close: ["close", "x-circle", "minus-circle"],
+    close: ["close", "alert"],
 
     // Default fallbacks for common words
     default: ["star", "info", "activity"],
@@ -198,16 +231,13 @@ export class SmartIconSystem {
     // Context-specific overrides
     if (
       context === "achievement" &&
-      !["trophy", "medal", "award", "crown", "star"].includes(smartIcon)
+      !["trophy", "award", "crown", "star"].includes(smartIcon)
     ) {
       const achievementIcons = this.contentPatterns.achievement || ["trophy"];
       return achievementIcons[0];
     }
 
-    if (
-      context === "calendar" &&
-      !["calendar", "clock", "timer"].includes(smartIcon)
-    ) {
+    if (context === "calendar" && !["calendar", "clock"].includes(smartIcon)) {
       return "calendar";
     }
 

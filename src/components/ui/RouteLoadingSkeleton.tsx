@@ -7,7 +7,7 @@ import React from "react";
 export const RouteLoadingSkeleton: React.FC = () => {
   return (
     <div className="min-h-screen surface-subtle animate-pulse">
-  <div className="surface-card border-b border-subtle">
+      <div className="surface-card border-b border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="h-8 w-32 bg-gray-300 rounded"></div>

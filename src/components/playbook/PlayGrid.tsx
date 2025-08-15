@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from "react";
 // (Removed unused RefreshCw, Search imports after log text simplification)
-import { ToggleLeft, ToggleRight } from "lucide-react";
+import { Icon } from "../ui/Icon/Icon";
 import { IconButton } from "../ui";
 import { PlayCard } from "./PlayCard";
 import { Virtuoso } from "react-virtuoso";
@@ -534,9 +534,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
             size="sm"
           >
             {showOneWordCalls ? (
-              <ToggleRight className="h-5 w-5 text-blue-600" />
+              <Icon name="toggle-right" className="h-5 w-5 text-blue-600" />
             ) : (
-              <ToggleLeft className="h-5 w-5 text-slate-400" />
+              <Icon name="toggle-left" className="h-5 w-5 text-slate-400" />
             )}
           </IconButton>
           <span className="text-sm text-slate-600">Full names</span>

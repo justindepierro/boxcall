@@ -119,3 +119,6 @@ const mediaIcons = {
 
 // Register media icons on module load
 registerIconCategory("media", mediaIcons);
+
+// Deprecated legacy MediaIcons. Do not import.
+export {};

@@ -5,7 +5,7 @@
 
 import React, { useState } from "react";
 import { Button } from "../../ui";
-import { X, Check } from "lucide-react";
+import { Icon } from "../../ui/Icon/Icon";
 import { Typography } from "@components/design-system/Typography";
 
 interface AddNewDropdownProps {
@@ -95,7 +95,7 @@ export const AddNewDropdown: React.FC<AddNewDropdownProps> = ({
             className="p-2 h-auto"
             title="Add"
           >
-            <Check className="h-4 w-4" />
+            <Icon name="check" className="h-4 w-4" />
           </Button>
           <Button
             type="button"
@@ -105,7 +105,7 @@ export const AddNewDropdown: React.FC<AddNewDropdownProps> = ({
             className="p-2 h-auto"
             title="Cancel"
           >
-            <X className="h-4 w-4" />
+            <Icon name="close" className="h-4 w-4" />
           </Button>
         </div>
       ) : (

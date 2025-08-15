@@ -6,7 +6,6 @@
  */
 // Core services and utilities
 export { BasePDFService, PDFServiceFactory, PDFUtils } from "./BasePDFService";
-export { PracticeScriptPDFService } from "./PracticeScriptPDFService";
 // Types
 export type {
   PDFDocument,
@@ -30,15 +29,24 @@ export {
  * Quick access functions for common PDF operations
  */
 import { PDFServiceFactory } from "./BasePDFService";
-import { PracticeScriptPDFService } from "./PracticeScriptPDFService";
 import type {
   PracticeScriptPDFData,
   PDFExportOptions,
   PDFTemplate,
   PDFBranding,
 } from "./types";
-// Initialize services
-PDFServiceFactory.registerService("practice-script", PracticeScriptPDFService);
+// Lazy registration to keep heavy PDF libraries out of initial bundles
+let practiceServiceRegistered = false;
+async function ensurePracticeServiceRegistered() {
+  if (practiceServiceRegistered) return;
+  const module = await import("./PracticeScriptPDFService");
+  const PracticeScriptPDFService = module.PracticeScriptPDFService;
+  PDFServiceFactory.registerService(
+    "practice-script",
+    PracticeScriptPDFService
+  );
+  practiceServiceRegistered = true;
+}
 /**
  * Quick export function for practice scripts
  */
@@ -46,9 +54,8 @@ export const exportPracticeScriptToPDF = async (
   data: PracticeScriptPDFData,
   options: PDFExportOptions = {}
 ): Promise<Blob> => {
-  const service = PDFServiceFactory.createService(
-    "practice-script"
-  ) as PracticeScriptPDFService;
+  await ensurePracticeServiceRegistered();
+  const service = PDFServiceFactory.createService("practice-script");
   return await service.exportToPDF(data, options);
 };
 /**
@@ -59,9 +66,8 @@ export const downloadPracticeScriptPDF = async (
   filename?: string,
   options: PDFExportOptions = {}
 ): Promise<void> => {
-  const service = PDFServiceFactory.createService(
-    "practice-script"
-  ) as PracticeScriptPDFService;
+  await ensurePracticeServiceRegistered();
+  const service = PDFServiceFactory.createService("practice-script");
   return await service.downloadPDF(data, filename || "", options);
 };
 /**
@@ -71,9 +77,8 @@ export const previewPracticeScriptPDF = async (
   data: PracticeScriptPDFData,
   options: PDFExportOptions = {}
 ): Promise<string> => {
-  const service = PDFServiceFactory.createService(
-    "practice-script"
-  ) as PracticeScriptPDFService;
+  await ensurePracticeServiceRegistered();
+  const service = PDFServiceFactory.createService("practice-script");
   return await service.previewPDF(data, options);
 };
 /**

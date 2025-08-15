@@ -1,6 +1,6 @@
 import React, { useId } from "react";
 import { usePlaySearch } from "../../hooks/usePlaySearch";
-import { Search, Loader2, AlertCircle } from "lucide-react";
+import Icon from "../ui/Icon/Icon";
 import { Button } from "../ui";
 
 /**
@@ -48,7 +48,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
       </label>
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-4 w-4 text-text-muted" />
+          <Icon name="search" className="h-4 w-4 text-text-muted" />
         </div>
         <input
           id={inputId}
@@ -62,7 +62,10 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
         />
         {loading && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-            <Loader2 className="h-4 w-4 animate-spin text-text-muted" />
+            <Icon
+              name="refresh-cw"
+              className="h-4 w-4 animate-spin text-text-muted"
+            />
           </div>
         )}
       </div>
@@ -71,7 +74,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
           <div className="py-1">
             {error && (
               <div className="px-3 py-2 text-xs text-error flex items-center gap-2">
-                <AlertCircle className="h-3 w-3" /> {error}
+                <Icon name="error" className="h-3 w-3" /> {error}
               </div>
             )}
             {!error && !loading && results.length === 0 && (

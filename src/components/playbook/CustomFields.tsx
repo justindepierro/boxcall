@@ -6,15 +6,7 @@ import { Typography } from "../design-system/Typography";
  */
 
 import React, { useState, useEffect } from "react";
-import {
-  Calendar,
-  Hash,
-  Type,
-  ToggleLeft,
-  Link,
-  List,
-  Settings,
-} from "lucide-react";
+import { Icon } from "../ui/Icon/Icon";
 import { customFieldsService } from "../../services/customFieldsService";
 import type {
   CustomFieldDefinition,
@@ -82,20 +74,20 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
   const getFieldIcon = (fieldType: string) => {
     switch (fieldType) {
       case "text":
-        return <Type className="h-4 w-4" />;
+        return <Icon name="type" className="h-4 w-4" />;
       case "number":
-        return <Hash className="h-4 w-4" />;
+        return <Icon name="hash" className="h-4 w-4" />;
       case "boolean":
-        return <ToggleLeft className="h-4 w-4" />;
+        return <Icon name="toggle-left" className="h-4 w-4" />;
       case "date":
-        return <Calendar className="h-4 w-4" />;
+        return <Icon name="calendar" className="h-4 w-4" />;
       case "url":
-        return <Link className="h-4 w-4" />;
+        return <Icon name="link" className="h-4 w-4" />;
       case "select":
       case "multi_select":
-        return <List className="h-4 w-4" />;
+        return <Icon name="list" className="h-4 w-4" />;
       default:
-        return <Settings className="h-4 w-4" />;
+        return <Icon name="settings" className="h-4 w-4" />;
     }
   };
 
@@ -256,7 +248,7 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
   if (fieldDefinitions.length === 0) {
     return (
       <div className={`text-center py-6 text-slate-500 ${className}`}>
-        <Settings className="h-8 w-8 mx-auto mb-2 text-slate-400" />
+        <Icon name="settings" className="h-8 w-8 mx-auto mb-2 text-slate-400" />
         <p className="text-sm">No custom fields defined for this category.</p>
         <p className="text-xs mt-1">Contact your admin to add custom fields.</p>
       </div>

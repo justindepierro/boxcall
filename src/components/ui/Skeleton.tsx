@@ -137,7 +137,7 @@ export const ListSkeleton: React.FC<ListSkeletonProps> = ({
     {Array.from({ length: items }).map((_, i) => (
       <div
         key={i}
-  className="flex items-center space-x-3 p-4 surface-card rounded-lg border border-subtle"
+        className="flex items-center space-x-3 p-4 surface-card rounded-lg border border-subtle"
       >
         {showAvatar && (
           <SkeletonBase
@@ -161,7 +161,7 @@ export const ListSkeleton: React.FC<ListSkeletonProps> = ({
  */
 export const PageLoadingSkeleton: React.FC = () => {
   const CardSkeleton = () => (
-  <div className="surface-card rounded-lg border border-subtle p-6 shadow-sm">
+    <div className="surface-card rounded-lg border border-subtle p-6 shadow-sm">
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">

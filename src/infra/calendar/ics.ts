@@ -4,10 +4,15 @@ import type { CalendarEvent } from "../../domain/calendar/types";
 
 export function eventToICS(event: CalendarEvent): string {
   const dtStamp =
-    new Date().toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-  const start = event.start.replace(/[-:]/g, "").split(".")[0] + "Z";
+    new Date().toISOString().replace(/-/g, "").replace(/:/g, "").split(".")[0] +
+    "Z";
+  const start =
+    event.start.replace(/-/g, "").replace(/:/g, "").split(".")[0] + "Z";
   const end =
-    (event.end ?? event.start).replace(/[-:]/g, "").split(".")[0] + "Z";
+    (event.end ?? event.start)
+      .replace(/-/g, "")
+      .replace(/:/g, "")
+      .split(".")[0] + "Z";
   const uid = `${event.id}@boxcall`;
   const summary = escapeICS(event.title);
   const location = event.location

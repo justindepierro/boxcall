@@ -1,17 +1,7 @@
 import React, { useState } from "react";
 // (Removed unused Rocket, Wrench imports after log text simplification)
 import { Typography } from "../../design-system/Typography";
-import {
-  X,
-  Upload,
-  AlertCircle,
-  CheckCircle,
-  Loader2,
-  ChevronDown,
-  ChevronRight,
-  Info,
-  AlertTriangle,
-} from "lucide-react";
+import { Icon } from "../../ui/Icon/Icon";
 import { DataSyncService } from "../../../services/dataSyncService";
 import { CSVService, type CSVParseResult } from "../../../services/csv";
 import { PlaysService } from "../../../services/playsService";
@@ -207,12 +197,15 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       >
         {isProcessing ? (
           <div className="space-y-4">
-            <Loader2 className="h-12 w-12 text-jade-600 mx-auto animate-spin" />
+            <Icon
+              name="refresh-cw"
+              className="h-12 w-12 text-jade-600 mx-auto animate-spin"
+            />
             <p className="text-slate-600">Processing your CSV file...</p>
           </div>
         ) : (
           <div className="space-y-4">
-            <Upload className="h-12 w-12 text-slate-400 mx-auto" />
+            <Icon name="upload" className="h-12 w-12 text-slate-400 mx-auto" />
             <div>
               <p className="text-slate-600">
                 Drag and drop your CSV file here, or{" "}
@@ -236,7 +229,10 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
       <div className="surface-subtle border border-subtle rounded-lg p-4">
         <div className="flex items-start">
-          <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+          <Icon
+            name="info"
+            className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0"
+          />
           <div>
             <Typography
               variant="body-sm"
@@ -259,7 +255,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       {csvFile && (
         <div className="surface-subtle border border-subtle rounded-lg p-4">
           <div className="flex items-center">
-            <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
+            <Icon name="check-circle" className="h-5 w-5 text-green-600 mr-3" />
             <div>
               <Typography
                 variant="body-sm"
@@ -292,7 +288,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     if (!parseResult) {
       return (
         <div className="text-center py-8">
-          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <Icon name="error" className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <p className="text-slate-600">No data to preview</p>
         </div>
       );
@@ -367,7 +363,10 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         {Object.keys(summary.suggestedMappings).length > 0 && (
           <div className="surface-subtle border border-subtle rounded-lg p-4">
             <div className="flex items-start">
-              <Info className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+              <Icon
+                name="info"
+                className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0"
+              />
               <div>
                 <Typography
                   variant="body-sm"
@@ -472,12 +471,21 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                       <td className="px-3 py-2">
                         <div className="flex items-center space-x-1">
                           {preview.isValid ? (
-                            <CheckCircle className="h-4 w-4 text-green-500" />
+                            <Icon
+                              name="check-circle"
+                              className="h-4 w-4 text-green-500"
+                            />
                           ) : (
-                            <AlertCircle className="h-4 w-4 text-red-500" />
+                            <Icon
+                              name="error"
+                              className="h-4 w-4 text-red-500"
+                            />
                           )}
                           {preview.warnings.length > 0 && (
-                            <AlertTriangle className="h-4 w-4 text-amber-500" />
+                            <Icon
+                              name="alert-triangle"
+                              className="h-4 w-4 text-amber-500"
+                            />
                           )}
                         </div>
                       </td>
@@ -488,9 +496,9 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                           size="xs"
                           icon={
                             expandedRows.has(preview.rowNumber) ? (
-                              <ChevronDown className="h-4 w-4" />
+                              <Icon name="chevron-down" className="h-4 w-4" />
                             ) : (
-                              <ChevronRight className="h-4 w-4" />
+                              <Icon name="chevron-right" className="h-4 w-4" />
                             )
                           }
                           iconPosition="only"
@@ -595,7 +603,10 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   const renderImportingStep = () => (
     <div className="text-center space-y-6">
       <div>
-        <Loader2 className="h-16 w-16 text-jade-600 mx-auto mb-4 animate-spin" />
+        <Icon
+          name="refresh-cw"
+          className="h-16 w-16 text-jade-600 mx-auto mb-4 animate-spin"
+        />
         <Typography
           variant="headline-sm"
           as="h3"
@@ -621,7 +632,10 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       <div>
         {importResult?.success ? (
           <>
-            <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
+            <Icon
+              name="check-circle"
+              className="h-16 w-16 text-green-600 mx-auto mb-4"
+            />
             <Typography
               variant="headline-sm"
               as="h3"
@@ -636,7 +650,10 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           </>
         ) : (
           <>
-            <AlertCircle className="h-16 w-16 text-red-600 mx-auto mb-4" />
+            <Icon
+              name="error"
+              className="h-16 w-16 text-red-600 mx-auto mb-4"
+            />
             <Typography
               variant="headline-sm"
               as="h3"
@@ -798,7 +815,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               onClick={onClose}
               variant="neutralLink"
               size="sm"
-              icon={<X className="h-6 w-6" />}
+              icon={<Icon name="close" className="h-6 w-6" />}
               iconPosition="only"
               aria-label="Close modal"
             />

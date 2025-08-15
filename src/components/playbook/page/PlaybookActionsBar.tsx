@@ -1,5 +1,5 @@
 import React from "react";
-import { Plus, Upload, Download, ChevronDown } from "lucide-react";
+import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
 import { Badge } from "../../ui/Badge";
 import { AdvancedSearchBar } from "../../playbook/AdvancedSearchBar";
@@ -91,7 +91,8 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 size="xs"
                 className="shrink-0"
               >
-                <Plus className="h-3 w-3 mr-1" /> New Practice Script
+                <Icon name="plus" className="h-3 w-3 mr-1" /> New Practice
+                Script
               </Button>
               <Button
                 onClick={onQuickNewInstall}
@@ -99,7 +100,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 size="xs"
                 className="shrink-0"
               >
-                <Plus className="h-3 w-3 mr-1" /> New Install
+                <Icon name="plus" className="h-3 w-3 mr-1" /> New Install
               </Button>
               {extraLeft}
             </div>
@@ -219,8 +220,11 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                   aria-haspopup="menu"
                   aria-expanded="false"
                 >
-                  <Download className="h-4 w-4 mr-2" /> Export
-                  <ChevronDown className="h-3 w-3 ml-1 text-slate-500" />
+                  <Icon name="download" className="h-4 w-4 mr-2" /> Export
+                  <Icon
+                    name="chevron-down"
+                    className="h-3 w-3 ml-1 text-slate-500"
+                  />
                 </Button>
                 <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition pointer-events-none group-hover:pointer-events-auto absolute right-0 mt-1 min-w-[180px] surface-popover rounded-md shadow-lg border border-subtle py-1 z-40">
                   <Button
@@ -255,7 +259,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 size="sm"
                 className="px-4 py-2"
               >
-                <Upload className="h-4 w-4 mr-2" /> Import CSV
+                <Icon name="upload" className="h-4 w-4 mr-2" /> Import CSV
               </Button>
               <div className="relative">
                 <Button
@@ -264,7 +268,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                   size="sm"
                   className="px-4 py-2"
                 >
-                  <Plus className="h-4 w-4 mr-2" /> New Play
+                  <Icon name="plus" className="h-4 w-4 mr-2" /> New Play
                 </Button>
                 {playsCreated < 100 && (
                   <div className="absolute -top-2 -right-2">

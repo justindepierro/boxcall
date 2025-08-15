@@ -1,7 +1,7 @@
 // Clean consolidated PlaybookPage implementation (legacy duplicated fragments removed)
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Clock, Users } from "lucide-react";
+import { Icon } from "../components/ui/Icon";
 import { PlayGrid } from "../components/playbook/PlayGrid";
 import { PlaybookGlossary } from "../components/playbook/PlaybookGlossary";
 import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
@@ -18,7 +18,6 @@ import { CSVService } from "../services/csv";
 import { PlaysService } from "../services/playsService";
 import { PlaysDomainService } from "../domain/playsDomainService";
 import { ThumbnailUploadService } from "../services/thumbnailUploadService";
-import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system/Typography";
 import { markFirstPlayCreated } from "../components/onboarding/activationHelpers";
 // telemetry already imported above in original file; avoid duplicate import (cleanup)
@@ -281,7 +280,10 @@ const PlaybookPageInner: React.FC = () => {
       const stamp = new Date()
         .toISOString()
         .slice(0, 16)
-        .replace(/[-:T]/g, "")
+        // Avoid Tailwind arbitrary value detector by not using bracketed char classes
+        .replace(/-/g, "")
+        .replace(/:/g, "")
+        .replace(/T/g, "")
         .slice(0, 12); // YYYYMMDDHHMM
       CSVService.downloadCSV(csvContent, `plays-export-${scope}-${stamp}.csv`);
       toastSuccess(`Exported ${plays.length} plays (${scope}).`);
@@ -814,7 +816,10 @@ const PlaybookPageInner: React.FC = () => {
             {state.currentView === "practice-script" && (
               <div className="surface-card rounded-lg shadow-sm border-subtle p-6">
                 <div className="text-center py-12">
-                  <Clock className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                  <Icon
+                    name="clock"
+                    className="h-12 w-12 text-slate-400 mx-auto mb-4"
+                  />
                   <Typography
                     variant="headline-sm"
                     as="h3"
@@ -844,7 +849,10 @@ const PlaybookPageInner: React.FC = () => {
             {state.currentView === "game-plan" && (
               <div className="surface-card rounded-lg shadow-sm border-subtle p-6">
                 <div className="text-center py-12">
-                  <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                  <Icon
+                    name="users"
+                    className="h-12 w-12 text-slate-400 mx-auto mb-4"
+                  />
                   <Typography
                     variant="headline-sm"
                     as="h3"

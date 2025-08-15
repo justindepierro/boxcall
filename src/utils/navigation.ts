@@ -196,51 +196,13 @@ export const toSidebarItems = (
         : undefined,
       onClick: item.divider
         ? undefined
-        : () => {
-            if (item.id === "logout") {
-              // Handle logout specially
-              handleLogout();
-            } else {
-              window.location.href = item.href;
-            }
-          },
+        : () => (window.location.href = item.href),
       divider: item.divider,
       badge: item.badge,
       children: item.children
         ? toSidebarItems(item.children, userRole)
         : undefined,
     }));
-};
-/**
- * Handle logout functionality
- */
-const handleLogout = async () => {
-  try {
-    console.log("Navigation utils: Starting logout process...");
-
-    // Import auth store dynamically to avoid circular imports
-    const { useAuth } = await import("../app/auth-store");
-
-    // Use auth store for proper state management
-    console.log("Navigation utils: Getting auth state...");
-    const { signOut } = useAuth.getState();
-
-    console.log("Navigation utils: Calling signOut...");
-    await signOut();
-
-    console.log("Navigation utils: Auth state cleared, redirecting...");
-
-    // Small delay to ensure state updates are processed
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    // Force redirect to login
-    window.location.replace("/login");
-  } catch (error) {
-    console.error("Navigation utils: Error during logout:", error);
-    // Fallback: force redirect to login
-    console.log("Navigation utils: Forcing redirect due to error");
-    window.location.replace("/login");
-  }
 };
 /**
  * Get primary navigation items for the top navigation bar

@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Button } from "../ui";
-import { Search, X, Clock, TrendingUp } from "lucide-react";
+import { Icon } from "../ui/Icon/Icon";
 import { PlaybookSearchService } from "../../services/playbookSearchService";
 import type { Play } from "../../types/play";
 
@@ -124,7 +124,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
       {/* Search Input */}
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-4 w-4 text-text-muted" />
+          <Icon name="search" className="h-4 w-4 text-text-muted" />
         </div>
 
         <input
@@ -151,7 +151,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
             type="button"
             aria-label="Clear search"
           >
-            <X className="h-4 w-4" />
+            <Icon name="close" className="h-4 w-4" />
           </Button>
         )}
       </div>
@@ -183,9 +183,12 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
                   }`}
                 >
                   {isHistory ? (
-                    <Clock className="h-3 w-3 text-text-muted" />
+                    <Icon name="clock" className="h-3 w-3 text-text-muted" />
                   ) : (
-                    <TrendingUp className="h-3 w-3 text-text-muted" />
+                    <Icon
+                      name="trending-up"
+                      className="h-3 w-3 text-text-muted"
+                    />
                   )}
                   <span className="truncate">{suggestion}</span>
                   {isHistory && (

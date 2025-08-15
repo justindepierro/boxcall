@@ -1,7 +1,7 @@
 import React from "react";
 import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button/Button";
-import { Filter, Star, Clock, Folder } from "lucide-react";
+import { Icon } from "../ui/Icon/Icon";
 import {
   FORMATION_OPTIONS,
   PLAY_TYPE_OPTIONS,
@@ -43,7 +43,7 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
       <div className="p-4 border-b border-subtle">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <Filter className="h-5 w-5 text-slate-500 mr-2" />
+            <Icon name="filter" className="h-5 w-5 text-slate-500 mr-2" />
             <Typography variant="headline-sm" as="h3">
               Filters
             </Typography>
@@ -68,7 +68,7 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
             as="h4"
             className="font-medium text-slate-900 mb-3 flex items-center leading-none"
           >
-            <Folder className="h-4 w-4 mr-2" />
+            <Icon name="folder" className="h-4 w-4 mr-2" />
             Quick Access
           </Typography>
           <div className="space-y-2">
@@ -77,14 +77,16 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
               size="xs"
               className="w-full justify-start px-3 py-2 h-auto"
             >
-              <Star className="h-4 w-4 mr-2 text-yellow-500" /> Favorites
+              <Icon name="star" className="h-4 w-4 mr-2 text-yellow-500" />{" "}
+              Favorites
             </Button>
             <Button
               variant="ghost"
               size="xs"
               className="w-full justify-start px-3 py-2 h-auto"
             >
-              <Clock className="h-4 w-4 mr-2 text-blue-500" /> Recent
+              <Icon name="clock" className="h-4 w-4 mr-2 text-blue-500" />{" "}
+              Recent
             </Button>
           </div>
         </div>

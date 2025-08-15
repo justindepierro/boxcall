@@ -5,7 +5,7 @@
 
 import React from "react";
 import { Button } from "../ui";
-import { X } from "lucide-react";
+import { Icon } from "../ui/Icon/Icon";
 import {
   PlaybookSearchService,
   type QuickFilter,
@@ -80,13 +80,24 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
               <span className="text-sm">{filter.icon}</span>
               <span>{filter.label}</span>
               {isActive && (
-                <X
-                  className="h-3 w-3 ml-1 hover:bg-black hover:bg-opacity-10 rounded-full p-0.5"
+                <span
+                  role="button"
+                  tabIndex={0}
+                  className="inline-flex items-center justify-center ml-1 rounded-full hover:bg-black hover:bg-opacity-10 p-0.5"
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleFilter(filter.id);
                   }}
-                />
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggleFilter(filter.id);
+                    }
+                  }}
+                >
+                  <Icon name="close" className="h-3 w-3" />
+                </span>
               )}
             </Button>
           );

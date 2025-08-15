@@ -85,7 +85,7 @@ export const ConfirmProvider: React.FC<{ children: React.ReactNode }> = ({
             {active.options.title && (
               <Typography
                 id={`${active.id}-title`}
-                variant="headline-xs"
+                variant="headline-sm"
                 as="h2"
                 className="mb-3"
               >

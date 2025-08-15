@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Circle, GraduationCap, Hand, Shield, Shirt } from "lucide-react";
 import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system";
 import { Button, Card, Input } from "../ui";
@@ -189,8 +188,8 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
               variant="body-sm"
               className="font-semibold mb-3 text-text-primary"
             >
-              <Shirt
-                aria-label="jersey"
+              <Icon
+                name="shirt"
                 className="inline h-4 w-4 align-middle text-current"
               />{" "}
               My Gear (Drip)
@@ -200,8 +199,8 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                 <Input
                   label="Helmet"
                   leftIcon={
-                    <Shield
-                      aria-label="helmet"
+                    <Icon
+                      name="shield"
                       className="inline h-4 w-4 align-middle text-current"
                     />
                   }
@@ -217,8 +216,8 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                 <Input
                   label="Gloves"
                   leftIcon={
-                    <Hand
-                      aria-label="glove"
+                    <Icon
+                      name="hand"
                       className="inline h-4 w-4 align-middle text-current"
                     />
                   }
@@ -234,8 +233,8 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                 <Input
                   label="Cleats"
                   leftIcon={
-                    <Circle
-                      aria-label="shoe"
+                    <Icon
+                      name="circle"
                       className="inline h-4 w-4 align-middle text-current"
                     />
                   }
@@ -253,8 +252,8 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-text-secondary">
-                    <Shield
-                      aria-label="helmet"
+                    <Icon
+                      name="shield"
                       className="inline h-4 w-4 align-middle text-current"
                     />{" "}
                     Helmet:
@@ -265,8 +264,8 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-text-secondary">
-                    <Hand
-                      aria-label="glove"
+                    <Icon
+                      name="hand"
                       className="inline h-4 w-4 align-middle text-current"
                     />{" "}
                     Gloves:
@@ -277,8 +276,8 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-text-secondary">
-                    <Circle
-                      aria-label="shoe"
+                    <Icon
+                      name="circle"
                       className="inline h-4 w-4 align-middle text-current"
                     />{" "}
                     Cleats:
@@ -298,8 +297,8 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
               variant="body-sm"
               className="font-semibold mb-3 text-text-primary"
             >
-              <GraduationCap
-                aria-label="graduation"
+              <Icon
+                name="graduation-cap"
                 className="inline h-4 w-4 align-middle text-current"
               />{" "}
               Coaching Background

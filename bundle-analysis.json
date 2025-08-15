@@ -1,0 +1,3110 @@
+{
+  "generatedAt": "2025-08-15T16:33:11.330Z",
+  "totals": {
+    "files": 139,
+    "rawBytes": 3347367,
+    "gzipBytes": 1045569
+  },
+  "topByGzip": [
+    {
+      "file": "pdfRenderer-BWTXHva9.js",
+      "ext": "js",
+      "chunk": "pdfRenderer",
+      "rawBytes": 1497312,
+      "gzipBytes": 499425,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_vendor-PjTuLirS.js"
+      ]
+    },
+    {
+      "file": "index-CniWsJHj.js",
+      "ext": "js",
+      "chunk": "index",
+      "rawBytes": 389487,
+      "gzipBytes": 116783,
+      "isEntry": true,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-BWTXHva9.js",
+        "_vendor-PjTuLirS.js",
+        "_pdfCapture-BXl3LOEh.js",
+        "_data-zJ1Wl4cw.js",
+        "_clsx-B-dksMZM.js",
+        "_utils-B-0dHpkk.js"
+      ]
+    },
+    {
+      "file": "calendar-CGDsXsAj.js",
+      "ext": "js",
+      "chunk": "calendar",
+      "rawBytes": 259152,
+      "gzipBytes": 76613,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": [
+        "_vendor-PjTuLirS.js"
+      ]
+    },
+    {
+      "file": "Playbook-vMnCGwPN.js",
+      "ext": "js",
+      "chunk": "Playbook",
+      "rawBytes": 217744,
+      "gzipBytes": 61592,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-BWTXHva9.js",
+        "_vendor-PjTuLirS.js",
+        "index.html",
+        "_Badge-CaOtd1Na.js",
+        "_Tag-esRyNU7Y.js",
+        "_pdfCapture-BXl3LOEh.js",
+        "_activationHelpers-BZZsG_Lu.js",
+        "_utils-B-0dHpkk.js",
+        "_data-zJ1Wl4cw.js",
+        "_clsx-B-dksMZM.js"
+      ]
+    },
+    {
+      "file": "data-zJ1Wl4cw.js",
+      "ext": "js",
+      "chunk": "data",
+      "rawBytes": 153211,
+      "gzipBytes": 42405,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": [
+        "_vendor-PjTuLirS.js",
+        "_pdfCapture-BXl3LOEh.js",
+        "_pdfRenderer-BWTXHva9.js"
+      ]
+    },
+    {
+      "file": "dnd-Ch0H9PXq.js",
+      "ext": "js",
+      "chunk": "dnd",
+      "rawBytes": 97351,
+      "gzipBytes": 30420,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": [
+        "_vendor-PjTuLirS.js"
+      ]
+    },
+    {
+      "file": "jszip.min-CTS-CI1v.js",
+      "ext": "js",
+      "chunk": "jszip.min",
+      "rawBytes": 97011,
+      "gzipBytes": 30070,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_vendor-PjTuLirS.js",
+        "_pdfRenderer-BWTXHva9.js"
+      ]
+    },
+    {
+      "file": "utils-B-0dHpkk.js",
+      "ext": "js",
+      "chunk": "utils",
+      "rawBytes": 81635,
+      "gzipBytes": 23834,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": [
+        "_vendor-PjTuLirS.js"
+      ]
+    },
+    {
+      "file": "index-Bd-nEGwZ.css",
+      "ext": "css",
+      "chunk": "index",
+      "rawBytes": 125846,
+      "gzipBytes": 21026,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": []
+    },
+    {
+      "file": "vendor-PjTuLirS.js",
+      "ext": "js",
+      "chunk": "vendor",
+      "rawBytes": 45343,
+      "gzipBytes": 16223,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": []
+    },
+    {
+      "file": "TeamBulletin-CfvcVkF2.js",
+      "ext": "js",
+      "chunk": "TeamBulletin",
+      "rawBytes": 44612,
+      "gzipBytes": 12011,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-BWTXHva9.js",
+        "_vendor-PjTuLirS.js",
+        "index.html",
+        "_data-zJ1Wl4cw.js",
+        "_usePermissions-Bvt4OwPg.js",
+        "_telemetry-Bkg_1a5t.js",
+        "_Modal-BHRWQiEt.js",
+        "_pdfCapture-BXl3LOEh.js",
+        "_clsx-B-dksMZM.js",
+        "_utils-B-0dHpkk.js"
+      ]
+    },
+    {
+      "file": "DashboardPage-D0OjRvaO.js",
+      "ext": "js",
+      "chunk": "DashboardPage",
+      "rawBytes": 41648,
+      "gzipBytes": 10745,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-BWTXHva9.js",
+        "_vendor-PjTuLirS.js",
+        "index.html",
+        "_mapping-DT3cmFZP.js",
+        "_Tag-esRyNU7Y.js",
+        "_utils-B-0dHpkk.js",
+        "_Badge-CaOtd1Na.js",
+        "_pdfCapture-BXl3LOEh.js",
+        "_data-zJ1Wl4cw.js",
+        "_clsx-B-dksMZM.js"
+      ]
+    },
+    {
+      "file": "CalendarShellPage-DUjuZKsk.js",
+      "ext": "js",
+      "chunk": "CalendarShellPage",
+      "rawBytes": 29139,
+      "gzipBytes": 8532,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-BWTXHva9.js",
+        "_vendor-PjTuLirS.js",
+        "index.html",
+        "_calendar-CGDsXsAj.js",
+        "src/components/practice/PracticePlannerModal/index.tsx",
+        "_mapping-DT3cmFZP.js",
+        "_Tag-esRyNU7Y.js",
+        "_data-zJ1Wl4cw.js",
+        "_pdfCapture-BXl3LOEh.js",
+        "_clsx-B-dksMZM.js",
+        "_utils-B-0dHpkk.js",
+        "_LazyPDFExport-BvR0ETsg.js",
+        "_dnd-Ch0H9PXq.js"
+      ]
+    },
+    {
+      "file": "index-0gTEDOeN.js",
+      "ext": "js",
+      "chunk": "index",
+      "rawBytes": 29858,
+      "gzipBytes": 7894,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-BWTXHva9.js",
+        "_vendor-PjTuLirS.js",
+        "index.html",
+        "_LazyPDFExport-BvR0ETsg.js",
+        "_Tag-esRyNU7Y.js",
+        "_dnd-Ch0H9PXq.js",
+        "_pdfCapture-BXl3LOEh.js",
+        "_data-zJ1Wl4cw.js",
+        "_clsx-B-dksMZM.js",
+        "_utils-B-0dHpkk.js"
+      ]
+    },
+    {
+      "file": "PracticePlanner-CPBhE4Gv.js",
+      "ext": "js",
+      "chunk": "PracticePlanner",
+      "rawBytes": 24878,
+      "gzipBytes": 6752,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-BWTXHva9.js",
+        "_dnd-Ch0H9PXq.js",
+        "_vendor-PjTuLirS.js",
+        "index.html",
+        "_Modal-BHRWQiEt.js",
+        "_LazyPDFExport-BvR0ETsg.js",
+        "_activationHelpers-BZZsG_Lu.js",
+        "_utils-B-0dHpkk.js",
+        "_pdfCapture-BXl3LOEh.js",
+        "_data-zJ1Wl4cw.js",
+        "_clsx-B-dksMZM.js"
+      ]
+    },
+    {
+      "file": "PracticePDFExportDialog-l0NcWJ-O.js",
+      "ext": "js",
+      "chunk": "PracticePDFExportDialog",
+      "rawBytes": 17447,
+      "gzipBytes": 5373,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-BWTXHva9.js",
+        "_vendor-PjTuLirS.js",
+        "index.html",
+        "_Modal-BHRWQiEt.js",
+        "_pdfCapture-BXl3LOEh.js",
+        "_activationHelpers-BZZsG_Lu.js"
+      ]
+    },
+    {
+      "file": "CreateTeam-B8X6ayv0.js",
+      "ext": "js",
+      "chunk": "CreateTeam",
+      "rawBytes": 20491,
+      "gzipBytes": 4768,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-BWTXHva9.js",
+        "_vendor-PjTuLirS.js",
+        "index.html",
+        "_usePermissions-Bvt4OwPg.js",
+        "_telemetry-Bkg_1a5t.js",
+        "_pdfCapture-BXl3LOEh.js",
+        "_data-zJ1Wl4cw.js",
+        "_clsx-B-dksMZM.js",
+        "_utils-B-0dHpkk.js"
+      ]
+    },
+    {
+      "file": "CreateCoachAccount-Cesf7A6x.js",
+      "ext": "js",
+      "chunk": "CreateCoachAccount",
+      "rawBytes": 17734,
+      "gzipBytes": 3779,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-BWTXHva9.js",
+        "_vendor-PjTuLirS.js",
+        "index.html",
+        "_usePermissions-Bvt4OwPg.js",
+        "_pdfCapture-BXl3LOEh.js",
+        "_data-zJ1Wl4cw.js",
+        "_clsx-B-dksMZM.js",
+        "_utils-B-0dHpkk.js"
+      ]
+    },
+    {
+      "file": "mapping-DT3cmFZP.js",
+      "ext": "js",
+      "chunk": "mapping",
+      "rawBytes": 11248,
+      "gzipBytes": 3469,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": [
+        "_data-zJ1Wl4cw.js",
+        "_vendor-PjTuLirS.js",
+        "_utils-B-0dHpkk.js"
+      ]
+    },
+    {
+      "file": "JoinTeam-BVo_F8nr.js",
+      "ext": "js",
+      "chunk": "JoinTeam",
+      "rawBytes": 10288,
+      "gzipBytes": 3110,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-BWTXHva9.js",
+        "_vendor-PjTuLirS.js",
+        "index.html",
+        "_Tag-esRyNU7Y.js",
+        "_pdfCapture-BXl3LOEh.js",
+        "_data-zJ1Wl4cw.js",
+        "_clsx-B-dksMZM.js",
+        "_utils-B-0dHpkk.js"
+      ]
+    }
+  ],
+  "byChunk": [
+    {
+      "chunk": "pdfRenderer",
+      "files": [
+        {
+          "file": "pdfRenderer-BWTXHva9.js",
+          "ext": "js",
+          "chunk": "pdfRenderer",
+          "rawBytes": 1497312,
+          "gzipBytes": 499425,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 1497312,
+      "gzipBytes": 499425
+    },
+    {
+      "chunk": "index",
+      "files": [
+        {
+          "file": "index-CniWsJHj.js",
+          "ext": "js",
+          "chunk": "index",
+          "rawBytes": 389487,
+          "gzipBytes": 116783,
+          "isEntry": true,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        },
+        {
+          "file": "index-Bd-nEGwZ.css",
+          "ext": "css",
+          "chunk": "index",
+          "rawBytes": 125846,
+          "gzipBytes": 21026,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": []
+        },
+        {
+          "file": "index-0gTEDOeN.js",
+          "ext": "js",
+          "chunk": "index",
+          "rawBytes": 29858,
+          "gzipBytes": 7894,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_LazyPDFExport-BvR0ETsg.js",
+            "_Tag-esRyNU7Y.js",
+            "_dnd-Ch0H9PXq.js",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 545191,
+      "gzipBytes": 145703
+    },
+    {
+      "chunk": "calendar",
+      "files": [
+        {
+          "file": "calendar-CGDsXsAj.js",
+          "ext": "js",
+          "chunk": "calendar",
+          "rawBytes": 259152,
+          "gzipBytes": 76613,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "calendar-C57t-DO5.js",
+          "ext": "js",
+          "chunk": "calendar",
+          "rawBytes": 492,
+          "gzipBytes": 345,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 259644,
+      "gzipBytes": 76958
+    },
+    {
+      "chunk": "Playbook",
+      "files": [
+        {
+          "file": "Playbook-vMnCGwPN.js",
+          "ext": "js",
+          "chunk": "Playbook",
+          "rawBytes": 217744,
+          "gzipBytes": 61592,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_Badge-CaOtd1Na.js",
+            "_Tag-esRyNU7Y.js",
+            "_pdfCapture-BXl3LOEh.js",
+            "_activationHelpers-BZZsG_Lu.js",
+            "_utils-B-0dHpkk.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 217744,
+      "gzipBytes": 61592
+    },
+    {
+      "chunk": "data",
+      "files": [
+        {
+          "file": "data-zJ1Wl4cw.js",
+          "ext": "js",
+          "chunk": "data",
+          "rawBytes": 153211,
+          "gzipBytes": 42405,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_vendor-PjTuLirS.js",
+            "_pdfCapture-BXl3LOEh.js",
+            "_pdfRenderer-BWTXHva9.js"
+          ]
+        }
+      ],
+      "rawBytes": 153211,
+      "gzipBytes": 42405
+    },
+    {
+      "chunk": "dnd",
+      "files": [
+        {
+          "file": "dnd-Ch0H9PXq.js",
+          "ext": "js",
+          "chunk": "dnd",
+          "rawBytes": 97351,
+          "gzipBytes": 30420,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 97351,
+      "gzipBytes": 30420
+    },
+    {
+      "chunk": "jszip.min",
+      "files": [
+        {
+          "file": "jszip.min-CTS-CI1v.js",
+          "ext": "js",
+          "chunk": "jszip.min",
+          "rawBytes": 97011,
+          "gzipBytes": 30070,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_vendor-PjTuLirS.js",
+            "_pdfRenderer-BWTXHva9.js"
+          ]
+        }
+      ],
+      "rawBytes": 97011,
+      "gzipBytes": 30070
+    },
+    {
+      "chunk": "utils",
+      "files": [
+        {
+          "file": "utils-B-0dHpkk.js",
+          "ext": "js",
+          "chunk": "utils",
+          "rawBytes": 81635,
+          "gzipBytes": 23834,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 81635,
+      "gzipBytes": 23834
+    },
+    {
+      "chunk": "vendor",
+      "files": [
+        {
+          "file": "vendor-PjTuLirS.js",
+          "ext": "js",
+          "chunk": "vendor",
+          "rawBytes": 45343,
+          "gzipBytes": 16223,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": []
+        }
+      ],
+      "rawBytes": 45343,
+      "gzipBytes": 16223
+    },
+    {
+      "chunk": "TeamBulletin",
+      "files": [
+        {
+          "file": "TeamBulletin-CfvcVkF2.js",
+          "ext": "js",
+          "chunk": "TeamBulletin",
+          "rawBytes": 44612,
+          "gzipBytes": 12011,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_data-zJ1Wl4cw.js",
+            "_usePermissions-Bvt4OwPg.js",
+            "_telemetry-Bkg_1a5t.js",
+            "_Modal-BHRWQiEt.js",
+            "_pdfCapture-BXl3LOEh.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 44612,
+      "gzipBytes": 12011
+    },
+    {
+      "chunk": "DashboardPage",
+      "files": [
+        {
+          "file": "DashboardPage-D0OjRvaO.js",
+          "ext": "js",
+          "chunk": "DashboardPage",
+          "rawBytes": 41648,
+          "gzipBytes": 10745,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_mapping-DT3cmFZP.js",
+            "_Tag-esRyNU7Y.js",
+            "_utils-B-0dHpkk.js",
+            "_Badge-CaOtd1Na.js",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 41648,
+      "gzipBytes": 10745
+    },
+    {
+      "chunk": "CalendarShellPage",
+      "files": [
+        {
+          "file": "CalendarShellPage-DUjuZKsk.js",
+          "ext": "js",
+          "chunk": "CalendarShellPage",
+          "rawBytes": 29139,
+          "gzipBytes": 8532,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_calendar-CGDsXsAj.js",
+            "src/components/practice/PracticePlannerModal/index.tsx",
+            "_mapping-DT3cmFZP.js",
+            "_Tag-esRyNU7Y.js",
+            "_data-zJ1Wl4cw.js",
+            "_pdfCapture-BXl3LOEh.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js",
+            "_LazyPDFExport-BvR0ETsg.js",
+            "_dnd-Ch0H9PXq.js"
+          ]
+        },
+        {
+          "file": "CalendarShellPage-C0_tWXi1.css",
+          "ext": "css",
+          "chunk": "CalendarShellPage",
+          "rawBytes": 95,
+          "gzipBytes": 109,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": []
+        }
+      ],
+      "rawBytes": 29234,
+      "gzipBytes": 8641
+    },
+    {
+      "chunk": "PracticePlanner",
+      "files": [
+        {
+          "file": "PracticePlanner-CPBhE4Gv.js",
+          "ext": "js",
+          "chunk": "PracticePlanner",
+          "rawBytes": 24878,
+          "gzipBytes": 6752,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_dnd-Ch0H9PXq.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_Modal-BHRWQiEt.js",
+            "_LazyPDFExport-BvR0ETsg.js",
+            "_activationHelpers-BZZsG_Lu.js",
+            "_utils-B-0dHpkk.js",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 24878,
+      "gzipBytes": 6752
+    },
+    {
+      "chunk": "PracticePDFExportDialog",
+      "files": [
+        {
+          "file": "PracticePDFExportDialog-l0NcWJ-O.js",
+          "ext": "js",
+          "chunk": "PracticePDFExportDialog",
+          "rawBytes": 17447,
+          "gzipBytes": 5373,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_Modal-BHRWQiEt.js",
+            "_pdfCapture-BXl3LOEh.js",
+            "_activationHelpers-BZZsG_Lu.js"
+          ]
+        }
+      ],
+      "rawBytes": 17447,
+      "gzipBytes": 5373
+    },
+    {
+      "chunk": "CreateTeam",
+      "files": [
+        {
+          "file": "CreateTeam-B8X6ayv0.js",
+          "ext": "js",
+          "chunk": "CreateTeam",
+          "rawBytes": 20491,
+          "gzipBytes": 4768,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_usePermissions-Bvt4OwPg.js",
+            "_telemetry-Bkg_1a5t.js",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 20491,
+      "gzipBytes": 4768
+    },
+    {
+      "chunk": "CreateCoachAccount",
+      "files": [
+        {
+          "file": "CreateCoachAccount-Cesf7A6x.js",
+          "ext": "js",
+          "chunk": "CreateCoachAccount",
+          "rawBytes": 17734,
+          "gzipBytes": 3779,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_usePermissions-Bvt4OwPg.js",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 17734,
+      "gzipBytes": 3779
+    },
+    {
+      "chunk": "mapping",
+      "files": [
+        {
+          "file": "mapping-DT3cmFZP.js",
+          "ext": "js",
+          "chunk": "mapping",
+          "rawBytes": 11248,
+          "gzipBytes": 3469,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_data-zJ1Wl4cw.js",
+            "_vendor-PjTuLirS.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 11248,
+      "gzipBytes": 3469
+    },
+    {
+      "chunk": "JoinTeam",
+      "files": [
+        {
+          "file": "JoinTeam-BVo_F8nr.js",
+          "ext": "js",
+          "chunk": "JoinTeam",
+          "rawBytes": 10288,
+          "gzipBytes": 3110,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_Tag-esRyNU7Y.js",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 10288,
+      "gzipBytes": 3110
+    },
+    {
+      "chunk": "TermsOfServicePage",
+      "files": [
+        {
+          "file": "TermsOfServicePage-CFLDwHPZ.js",
+          "ext": "js",
+          "chunk": "TermsOfServicePage",
+          "rawBytes": 9868,
+          "gzipBytes": 2777,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 9868,
+      "gzipBytes": 2777
+    },
+    {
+      "chunk": "Badge",
+      "files": [
+        {
+          "file": "Badge-CaOtd1Na.js",
+          "ext": "js",
+          "chunk": "Badge",
+          "rawBytes": 3301,
+          "gzipBytes": 1316,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        },
+        {
+          "file": "Badge-BHrTeo1A.css",
+          "ext": "css",
+          "chunk": "Badge",
+          "rawBytes": 3168,
+          "gzipBytes": 1077,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": []
+        }
+      ],
+      "rawBytes": 6469,
+      "gzipBytes": 2393
+    },
+    {
+      "chunk": "ProfilePage",
+      "files": [
+        {
+          "file": "ProfilePage-Bfs0ELX9.js",
+          "ext": "js",
+          "chunk": "ProfilePage",
+          "rawBytes": 7391,
+          "gzipBytes": 2197,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 7391,
+      "gzipBytes": 2197
+    },
+    {
+      "chunk": "PrivacyPolicyPage",
+      "files": [
+        {
+          "file": "PrivacyPolicyPage-CZfcnw33.js",
+          "ext": "js",
+          "chunk": "PrivacyPolicyPage",
+          "rawBytes": 8044,
+          "gzipBytes": 2127,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 8044,
+      "gzipBytes": 2127
+    },
+    {
+      "chunk": "LoginPage",
+      "files": [
+        {
+          "file": "LoginPage-iGhioSeu.js",
+          "ext": "js",
+          "chunk": "LoginPage",
+          "rawBytes": 6972,
+          "gzipBytes": 1957,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 6972,
+      "gzipBytes": 1957
+    },
+    {
+      "chunk": "PracticeScriptPDFService",
+      "files": [
+        {
+          "file": "PracticeScriptPDFService-BtfPYQn2.js",
+          "ext": "js",
+          "chunk": "PracticeScriptPDFService",
+          "rawBytes": 6114,
+          "gzipBytes": 1786,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_vendor-PjTuLirS.js",
+            "_pdfRenderer-BWTXHva9.js",
+            "_PracticePDFExportDialog-l0NcWJ-O.js",
+            "index.html",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js",
+            "_Modal-BHRWQiEt.js",
+            "_activationHelpers-BZZsG_Lu.js"
+          ]
+        }
+      ],
+      "rawBytes": 6114,
+      "gzipBytes": 1786
+    },
+    {
+      "chunk": "AboutPage",
+      "files": [
+        {
+          "file": "AboutPage-DgNiZQPO.js",
+          "ext": "js",
+          "chunk": "AboutPage",
+          "rawBytes": 5397,
+          "gzipBytes": 1619,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 5397,
+      "gzipBytes": 1619
+    },
+    {
+      "chunk": "ContactPage",
+      "files": [
+        {
+          "file": "ContactPage-DJCH2tp8.js",
+          "ext": "js",
+          "chunk": "ContactPage",
+          "rawBytes": 6633,
+          "gzipBytes": 1595,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 6633,
+      "gzipBytes": 1595
+    },
+    {
+      "chunk": "PlayerDashboardPage",
+      "files": [
+        {
+          "file": "PlayerDashboardPage-gN2VeWpL.js",
+          "ext": "js",
+          "chunk": "PlayerDashboardPage",
+          "rawBytes": 8528,
+          "gzipBytes": 1537,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 8528,
+      "gzipBytes": 1537
+    },
+    {
+      "chunk": "Modal",
+      "files": [
+        {
+          "file": "Modal-BHRWQiEt.js",
+          "ext": "js",
+          "chunk": "Modal",
+          "rawBytes": 3137,
+          "gzipBytes": 1382,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html"
+          ]
+        }
+      ],
+      "rawBytes": 3137,
+      "gzipBytes": 1382
+    },
+    {
+      "chunk": "arrow",
+      "files": [
+        {
+          "file": "arrow-left-D8Q9saTw.js",
+          "ext": "js",
+          "chunk": "arrow",
+          "rawBytes": 400,
+          "gzipBytes": 305,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "arrow-right-D6xGqVIz.js",
+          "ext": "js",
+          "chunk": "arrow",
+          "rawBytes": 400,
+          "gzipBytes": 305,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "arrow-down-BMImLTU6.js",
+          "ext": "js",
+          "chunk": "arrow",
+          "rawBytes": 400,
+          "gzipBytes": 303,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "arrow-up-hUWT6dVz.js",
+          "ext": "js",
+          "chunk": "arrow",
+          "rawBytes": 397,
+          "gzipBytes": 303,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 1597,
+      "gzipBytes": 1216
+    },
+    {
+      "chunk": "chevron",
+      "files": [
+        {
+          "file": "chevron-left-B2XIFfWj.js",
+          "ext": "js",
+          "chunk": "chevron",
+          "rawBytes": 365,
+          "gzipBytes": 286,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "chevron-right-BFB711XR.js",
+          "ext": "js",
+          "chunk": "chevron",
+          "rawBytes": 365,
+          "gzipBytes": 285,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "chevron-up-B0vX92Rh.js",
+          "ext": "js",
+          "chunk": "chevron",
+          "rawBytes": 363,
+          "gzipBytes": 284,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "chevron-down-5df2lFf_.js",
+          "ext": "js",
+          "chunk": "chevron",
+          "rawBytes": 363,
+          "gzipBytes": 283,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 1456,
+      "gzipBytes": 1138
+    },
+    {
+      "chunk": "CoachManagementPage",
+      "files": [
+        {
+          "file": "CoachManagementPage-ewQrDOYJ.js",
+          "ext": "js",
+          "chunk": "CoachManagementPage",
+          "rawBytes": 4323,
+          "gzipBytes": 1057,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 4323,
+      "gzipBytes": 1057
+    },
+    {
+      "chunk": "usePermissions",
+      "files": [
+        {
+          "file": "usePermissions-Bvt4OwPg.js",
+          "ext": "js",
+          "chunk": "usePermissions",
+          "rawBytes": 2121,
+          "gzipBytes": 1016,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_vendor-PjTuLirS.js",
+            "index.html"
+          ]
+        }
+      ],
+      "rawBytes": 2121,
+      "gzipBytes": 1016
+    },
+    {
+      "chunk": "TeamsPage",
+      "files": [
+        {
+          "file": "TeamsPage-pqIJV-y0.js",
+          "ext": "js",
+          "chunk": "TeamsPage",
+          "rawBytes": 2402,
+          "gzipBytes": 880,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "index.html",
+            "_vendor-PjTuLirS.js",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 2402,
+      "gzipBytes": 880
+    },
+    {
+      "chunk": "LazyPDFExport",
+      "files": [
+        {
+          "file": "LazyPDFExport-BvR0ETsg.js",
+          "ext": "js",
+          "chunk": "LazyPDFExport",
+          "rawBytes": 1673,
+          "gzipBytes": 872,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_pdfCapture-BXl3LOEh.js",
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html"
+          ]
+        }
+      ],
+      "rawBytes": 1673,
+      "gzipBytes": 872
+    },
+    {
+      "chunk": "createLucideIcon",
+      "files": [
+        {
+          "file": "createLucideIcon-S58UcF9O.js",
+          "ext": "js",
+          "chunk": "createLucideIcon",
+          "rawBytes": 1858,
+          "gzipBytes": 798,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 1858,
+      "gzipBytes": 798
+    },
+    {
+      "chunk": "map",
+      "files": [
+        {
+          "file": "map-DeE5gjzo.js",
+          "ext": "js",
+          "chunk": "map",
+          "rawBytes": 660,
+          "gzipBytes": 418,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "map-pin-3B0VLmQv.js",
+          "ext": "js",
+          "chunk": "map",
+          "rawBytes": 489,
+          "gzipBytes": 367,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 1149,
+      "gzipBytes": 785
+    },
+    {
+      "chunk": "eye",
+      "files": [
+        {
+          "file": "eye-off-CRubB63g.js",
+          "ext": "js",
+          "chunk": "eye",
+          "rawBytes": 665,
+          "gzipBytes": 419,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "eye-C8sHOhek.js",
+          "ext": "js",
+          "chunk": "eye",
+          "rawBytes": 486,
+          "gzipBytes": 340,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 1151,
+      "gzipBytes": 759
+    },
+    {
+      "chunk": "user",
+      "files": [
+        {
+          "file": "user-plus-Bm-S7KCU.js",
+          "ext": "js",
+          "chunk": "user",
+          "rawBytes": 545,
+          "gzipBytes": 379,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "user-DMUAkIZD.js",
+          "ext": "js",
+          "chunk": "user",
+          "rawBytes": 431,
+          "gzipBytes": 323,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 976,
+      "gzipBytes": 702
+    },
+    {
+      "chunk": "TeamSettings",
+      "files": [
+        {
+          "file": "TeamSettings-B1CJUqgQ.js",
+          "ext": "js",
+          "chunk": "TeamSettings",
+          "rawBytes": 1476,
+          "gzipBytes": 701,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 1476,
+      "gzipBytes": 701
+    },
+    {
+      "chunk": "file",
+      "files": [
+        {
+          "file": "file-text-NCeXTDq2.js",
+          "ext": "js",
+          "chunk": "file",
+          "rawBytes": 568,
+          "gzipBytes": 360,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "file-DCn7KGyw.js",
+          "ext": "js",
+          "chunk": "file",
+          "rawBytes": 453,
+          "gzipBytes": 321,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 1021,
+      "gzipBytes": 681
+    },
+    {
+      "chunk": "BoxCall",
+      "files": [
+        {
+          "file": "BoxCall-BBFCmIC2.js",
+          "ext": "js",
+          "chunk": "BoxCall",
+          "rawBytes": 1432,
+          "gzipBytes": 675,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "index.html",
+            "_pdfCapture-BXl3LOEh.js",
+            "_data-zJ1Wl4cw.js",
+            "_clsx-B-dksMZM.js",
+            "_utils-B-0dHpkk.js"
+          ]
+        }
+      ],
+      "rawBytes": 1432,
+      "gzipBytes": 675
+    },
+    {
+      "chunk": "alert",
+      "files": [
+        {
+          "file": "alert-triangle-D-g8vb7L.js",
+          "ext": "js",
+          "chunk": "alert",
+          "rawBytes": 484,
+          "gzipBytes": 344,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "alert-circle-CLGCGaUd.js",
+          "ext": "js",
+          "chunk": "alert",
+          "rawBytes": 469,
+          "gzipBytes": 321,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 953,
+      "gzipBytes": 665
+    },
+    {
+      "chunk": "toggle",
+      "files": [
+        {
+          "file": "toggle-left-BBF2j-i2.js",
+          "ext": "js",
+          "chunk": "toggle",
+          "rawBytes": 434,
+          "gzipBytes": 331,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "toggle-right-DnKOykRH.js",
+          "ext": "js",
+          "chunk": "toggle",
+          "rawBytes": 436,
+          "gzipBytes": 330,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 870,
+      "gzipBytes": 661
+    },
+    {
+      "chunk": "pdfCapture",
+      "files": [
+        {
+          "file": "pdfCapture-BXl3LOEh.js",
+          "ext": "js",
+          "chunk": "pdfCapture",
+          "rawBytes": 1110,
+          "gzipBytes": 650,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": []
+        }
+      ],
+      "rawBytes": 1110,
+      "gzipBytes": 650
+    },
+    {
+      "chunk": "Tag",
+      "files": [
+        {
+          "file": "Tag-esRyNU7Y.js",
+          "ext": "js",
+          "chunk": "Tag",
+          "rawBytes": 1485,
+          "gzipBytes": 645,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_pdfRenderer-BWTXHva9.js",
+            "_vendor-PjTuLirS.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 1485,
+      "gzipBytes": 645
+    },
+    {
+      "chunk": "plus",
+      "files": [
+        {
+          "file": "plus-circle-B2eZ8D6D.js",
+          "ext": "js",
+          "chunk": "plus",
+          "rawBytes": 421,
+          "gzipBytes": 309,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "plus-FVxZurOY.js",
+          "ext": "js",
+          "chunk": "plus",
+          "rawBytes": 388,
+          "gzipBytes": 294,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 809,
+      "gzipBytes": 603
+    },
+    {
+      "chunk": "check",
+      "files": [
+        {
+          "file": "check-circle-BbGrA5eL.js",
+          "ext": "js",
+          "chunk": "check",
+          "rawBytes": 408,
+          "gzipBytes": 312,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        },
+        {
+          "file": "check-J45RNbUp.js",
+          "ext": "js",
+          "chunk": "check",
+          "rawBytes": 354,
+          "gzipBytes": 281,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 762,
+      "gzipBytes": 593
+    },
+    {
+      "chunk": "party",
+      "files": [
+        {
+          "file": "party-popper-HjFMO-ba.js",
+          "ext": "js",
+          "chunk": "party",
+          "rawBytes": 965,
+          "gzipBytes": 560,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 965,
+      "gzipBytes": 560
+    },
+    {
+      "chunk": "gamepad",
+      "files": [
+        {
+          "file": "gamepad-2-ZrPyl9w4.js",
+          "ext": "js",
+          "chunk": "gamepad",
+          "rawBytes": 856,
+          "gzipBytes": 530,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 856,
+      "gzipBytes": 530
+    },
+    {
+      "chunk": "bug",
+      "files": [
+        {
+          "file": "bug-BSwhv7QM.js",
+          "ext": "js",
+          "chunk": "bug",
+          "rawBytes": 901,
+          "gzipBytes": 515,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 901,
+      "gzipBytes": 515
+    },
+    {
+      "chunk": "rocket",
+      "files": [
+        {
+          "file": "rocket-0Ue6qo_j.js",
+          "ext": "js",
+          "chunk": "rocket",
+          "rawBytes": 687,
+          "gzipBytes": 453,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 687,
+      "gzipBytes": 453
+    },
+    {
+      "chunk": "pen",
+      "files": [
+        {
+          "file": "pen-tool-BOdf_9JJ.js",
+          "ext": "js",
+          "chunk": "pen",
+          "rawBytes": 706,
+          "gzipBytes": 445,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 706,
+      "gzipBytes": 445
+    },
+    {
+      "chunk": "star",
+      "files": [
+        {
+          "file": "star-CXDAAXTC.js",
+          "ext": "js",
+          "chunk": "star",
+          "rawBytes": 707,
+          "gzipBytes": 445,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 707,
+      "gzipBytes": 445
+    },
+    {
+      "chunk": "sparkles",
+      "files": [
+        {
+          "file": "sparkles-Dpp-yHMf.js",
+          "ext": "js",
+          "chunk": "sparkles",
+          "rawBytes": 729,
+          "gzipBytes": 428,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 729,
+      "gzipBytes": 428
+    },
+    {
+      "chunk": "activationHelpers",
+      "files": [
+        {
+          "file": "activationHelpers-BZZsG_Lu.js",
+          "ext": "js",
+          "chunk": "activationHelpers",
+          "rawBytes": 771,
+          "gzipBytes": 425,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "index.html"
+          ]
+        }
+      ],
+      "rawBytes": 771,
+      "gzipBytes": 425
+    },
+    {
+      "chunk": "trophy",
+      "files": [
+        {
+          "file": "trophy-B_dOp3rr.js",
+          "ext": "js",
+          "chunk": "trophy",
+          "rawBytes": 711,
+          "gzipBytes": 422,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 711,
+      "gzipBytes": 422
+    },
+    {
+      "chunk": "wifi",
+      "files": [
+        {
+          "file": "wifi-off-CPCthJVD.js",
+          "ext": "js",
+          "chunk": "wifi",
+          "rawBytes": 695,
+          "gzipBytes": 417,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 695,
+      "gzipBytes": 417
+    },
+    {
+      "chunk": "clipboard",
+      "files": [
+        {
+          "file": "clipboard-list-D1L0Kj6t.js",
+          "ext": "js",
+          "chunk": "clipboard",
+          "rawBytes": 646,
+          "gzipBytes": 405,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 646,
+      "gzipBytes": 405
+    },
+    {
+      "chunk": "crown",
+      "files": [
+        {
+          "file": "crown-C8ybdH_v.js",
+          "ext": "js",
+          "chunk": "crown",
+          "rawBytes": 597,
+          "gzipBytes": 404,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 597,
+      "gzipBytes": 404
+    },
+    {
+      "chunk": "hand",
+      "files": [
+        {
+          "file": "hand-Cp4IhroU.js",
+          "ext": "js",
+          "chunk": "hand",
+          "rawBytes": 641,
+          "gzipBytes": 399,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 641,
+      "gzipBytes": 399
+    },
+    {
+      "chunk": "settings",
+      "files": [
+        {
+          "file": "settings-9km3WQOF.js",
+          "ext": "js",
+          "chunk": "settings",
+          "rawBytes": 717,
+          "gzipBytes": 399,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 717,
+      "gzipBytes": 399
+    },
+    {
+      "chunk": "graduation",
+      "files": [
+        {
+          "file": "graduation-cap-BC8SRPJl.js",
+          "ext": "js",
+          "chunk": "graduation",
+          "rawBytes": 567,
+          "gzipBytes": 391,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 567,
+      "gzipBytes": 391
+    },
+    {
+      "chunk": "mouse",
+      "files": [
+        {
+          "file": "mouse-pointer-CwPR8Gp4.js",
+          "ext": "js",
+          "chunk": "mouse",
+          "rawBytes": 541,
+          "gzipBytes": 389,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 541,
+      "gzipBytes": 389
+    },
+    {
+      "chunk": "tag",
+      "files": [
+        {
+          "file": "tag-Ce1tm5ZA.js",
+          "ext": "js",
+          "chunk": "tag",
+          "rawBytes": 556,
+          "gzipBytes": 389,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 556,
+      "gzipBytes": 389
+    },
+    {
+      "chunk": "wrench",
+      "files": [
+        {
+          "file": "wrench-B0Lk_8tJ.js",
+          "ext": "js",
+          "chunk": "wrench",
+          "rawBytes": 533,
+          "gzipBytes": 383,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 533,
+      "gzipBytes": 383
+    },
+    {
+      "chunk": "phone",
+      "files": [
+        {
+          "file": "phone-BguvsVIw.js",
+          "ext": "js",
+          "chunk": "phone",
+          "rawBytes": 557,
+          "gzipBytes": 376,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 557,
+      "gzipBytes": 376
+    },
+    {
+      "chunk": "inbox",
+      "files": [
+        {
+          "file": "inbox-BOE22Pb0.js",
+          "ext": "js",
+          "chunk": "inbox",
+          "rawBytes": 521,
+          "gzipBytes": 375,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 521,
+      "gzipBytes": 375
+    },
+    {
+      "chunk": "flask",
+      "files": [
+        {
+          "file": "flask-conical-BDDRYixR.js",
+          "ext": "js",
+          "chunk": "flask",
+          "rawBytes": 537,
+          "gzipBytes": 372,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 537,
+      "gzipBytes": 372
+    },
+    {
+      "chunk": "shield",
+      "files": [
+        {
+          "file": "shield-DOEAsfpJ.js",
+          "ext": "js",
+          "chunk": "shield",
+          "rawBytes": 507,
+          "gzipBytes": 372,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 507,
+      "gzipBytes": 372
+    },
+    {
+      "chunk": "shirt",
+      "files": [
+        {
+          "file": "shirt-Ch6-oqwH.js",
+          "ext": "js",
+          "chunk": "shirt",
+          "rawBytes": 521,
+          "gzipBytes": 371,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 521,
+      "gzipBytes": 371
+    },
+    {
+      "chunk": "award",
+      "files": [
+        {
+          "file": "award-Cf5k4wsL.js",
+          "ext": "js",
+          "chunk": "award",
+          "rawBytes": 509,
+          "gzipBytes": 370,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 509,
+      "gzipBytes": 370
+    },
+    {
+      "chunk": "refresh",
+      "files": [
+        {
+          "file": "refresh-cw-Goc0j2-7.js",
+          "ext": "js",
+          "chunk": "refresh",
+          "rawBytes": 556,
+          "gzipBytes": 370,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 556,
+      "gzipBytes": 370
+    },
+    {
+      "chunk": "save",
+      "files": [
+        {
+          "file": "save-BVUeejJ5.js",
+          "ext": "js",
+          "chunk": "save",
+          "rawBytes": 562,
+          "gzipBytes": 368,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 562,
+      "gzipBytes": 368
+    },
+    {
+      "chunk": "users",
+      "files": [
+        {
+          "file": "users-C_MWl7JB.js",
+          "ext": "js",
+          "chunk": "users",
+          "rawBytes": 541,
+          "gzipBytes": 368,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 541,
+      "gzipBytes": 368
+    },
+    {
+      "chunk": "lightbulb",
+      "files": [
+        {
+          "file": "lightbulb-BAUZN5ox.js",
+          "ext": "js",
+          "chunk": "lightbulb",
+          "rawBytes": 521,
+          "gzipBytes": 367,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 521,
+      "gzipBytes": 367
+    },
+    {
+      "chunk": "sprout",
+      "files": [
+        {
+          "file": "sprout-B1OFeEiK.js",
+          "ext": "js",
+          "chunk": "sprout",
+          "rawBytes": 544,
+          "gzipBytes": 366,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 544,
+      "gzipBytes": 366
+    },
+    {
+      "chunk": "image",
+      "files": [
+        {
+          "file": "image-CMD4xuyc.js",
+          "ext": "js",
+          "chunk": "image",
+          "rawBytes": 504,
+          "gzipBytes": 364,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 504,
+      "gzipBytes": 364
+    },
+    {
+      "chunk": "server",
+      "files": [
+        {
+          "file": "server-fTH8U54I.js",
+          "ext": "js",
+          "chunk": "server",
+          "rawBytes": 573,
+          "gzipBytes": 360,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 573,
+      "gzipBytes": 360
+    },
+    {
+      "chunk": "key",
+      "files": [
+        {
+          "file": "key-CsJQ64LI.js",
+          "ext": "js",
+          "chunk": "key",
+          "rawBytes": 499,
+          "gzipBytes": 357,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 499,
+      "gzipBytes": 357
+    },
+    {
+      "chunk": "trash",
+      "files": [
+        {
+          "file": "trash-2-YN9jxxZn.js",
+          "ext": "js",
+          "chunk": "trash",
+          "rawBytes": 563,
+          "gzipBytes": 357,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 563,
+      "gzipBytes": 357
+    },
+    {
+      "chunk": "edit",
+      "files": [
+        {
+          "file": "edit-3-DlwSX1mI.js",
+          "ext": "js",
+          "chunk": "edit",
+          "rawBytes": 496,
+          "gzipBytes": 356,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 496,
+      "gzipBytes": 356
+    },
+    {
+      "chunk": "zap",
+      "files": [
+        {
+          "file": "zap-C5xF_oHL.js",
+          "ext": "js",
+          "chunk": "zap",
+          "rawBytes": 497,
+          "gzipBytes": 355,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 497,
+      "gzipBytes": 355
+    },
+    {
+      "chunk": "message",
+      "files": [
+        {
+          "file": "message-circle-CNUzh0xy.js",
+          "ext": "js",
+          "chunk": "message",
+          "rawBytes": 476,
+          "gzipBytes": 354,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 476,
+      "gzipBytes": 354
+    },
+    {
+      "chunk": "move",
+      "files": [
+        {
+          "file": "move-CCJZlkLK.js",
+          "ext": "js",
+          "chunk": "move",
+          "rawBytes": 555,
+          "gzipBytes": 353,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 555,
+      "gzipBytes": 353
+    },
+    {
+      "chunk": "camera",
+      "files": [
+        {
+          "file": "camera-BdGVMbTF.js",
+          "ext": "js",
+          "chunk": "camera",
+          "rawBytes": 483,
+          "gzipBytes": 351,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 483,
+      "gzipBytes": 351
+    },
+    {
+      "chunk": "flag",
+      "files": [
+        {
+          "file": "flag-CHsw-kOM.js",
+          "ext": "js",
+          "chunk": "flag",
+          "rawBytes": 489,
+          "gzipBytes": 351,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 489,
+      "gzipBytes": 351
+    },
+    {
+      "chunk": "telemetry",
+      "files": [
+        {
+          "file": "telemetry-Bkg_1a5t.js",
+          "ext": "js",
+          "chunk": "telemetry",
+          "rawBytes": 757,
+          "gzipBytes": 351,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": []
+        }
+      ],
+      "rawBytes": 757,
+      "gzipBytes": 351
+    },
+    {
+      "chunk": "copy",
+      "files": [
+        {
+          "file": "copy-0_zxL_8A.js",
+          "ext": "js",
+          "chunk": "copy",
+          "rawBytes": 466,
+          "gzipBytes": 348,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 466,
+      "gzipBytes": 348
+    },
+    {
+      "chunk": "home",
+      "files": [
+        {
+          "file": "home-CP_16wPn.js",
+          "ext": "js",
+          "chunk": "home",
+          "rawBytes": 508,
+          "gzipBytes": 347,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 508,
+      "gzipBytes": 347
+    },
+    {
+      "chunk": "database",
+      "files": [
+        {
+          "file": "database-NGchxSqS.js",
+          "ext": "js",
+          "chunk": "database",
+          "rawBytes": 478,
+          "gzipBytes": 345,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 478,
+      "gzipBytes": 345
+    },
+    {
+      "chunk": "filter",
+      "files": [
+        {
+          "file": "filter-E90DDQer.js",
+          "ext": "js",
+          "chunk": "filter",
+          "rawBytes": 475,
+          "gzipBytes": 344,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 475,
+      "gzipBytes": 344
+    },
+    {
+      "chunk": "mail",
+      "files": [
+        {
+          "file": "mail-DedkSvRI.js",
+          "ext": "js",
+          "chunk": "mail",
+          "rawBytes": 448,
+          "gzipBytes": 344,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 448,
+      "gzipBytes": 344
+    },
+    {
+      "chunk": "grid",
+      "files": [
+        {
+          "file": "grid-1zTqXh95.js",
+          "ext": "js",
+          "chunk": "grid",
+          "rawBytes": 514,
+          "gzipBytes": 343,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 514,
+      "gzipBytes": 343
+    },
+    {
+      "chunk": "activity",
+      "files": [
+        {
+          "file": "activity-BHBxjm6m.js",
+          "ext": "js",
+          "chunk": "activity",
+          "rawBytes": 469,
+          "gzipBytes": 342,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 469,
+      "gzipBytes": 342
+    },
+    {
+      "chunk": "help",
+      "files": [
+        {
+          "file": "help-circle-DMHKf-JW.js",
+          "ext": "js",
+          "chunk": "help",
+          "rawBytes": 462,
+          "gzipBytes": 339,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 462,
+      "gzipBytes": 339
+    },
+    {
+      "chunk": "hash",
+      "files": [
+        {
+          "file": "hash-CfrbuIsD.js",
+          "ext": "js",
+          "chunk": "hash",
+          "rawBytes": 531,
+          "gzipBytes": 336,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 531,
+      "gzipBytes": 336
+    },
+    {
+      "chunk": "link",
+      "files": [
+        {
+          "file": "link-jkpYpKQX.js",
+          "ext": "js",
+          "chunk": "link",
+          "rawBytes": 491,
+          "gzipBytes": 336,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 491,
+      "gzipBytes": 336
+    },
+    {
+      "chunk": "download",
+      "files": [
+        {
+          "file": "download-CNZk7LXB.js",
+          "ext": "js",
+          "chunk": "download",
+          "rawBytes": 467,
+          "gzipBytes": 335,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 467,
+      "gzipBytes": 335
+    },
+    {
+      "chunk": "lock",
+      "files": [
+        {
+          "file": "lock-Cs3a65ZO.js",
+          "ext": "js",
+          "chunk": "lock",
+          "rawBytes": 441,
+          "gzipBytes": 335,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 441,
+      "gzipBytes": 335
+    },
+    {
+      "chunk": "upload",
+      "files": [
+        {
+          "file": "upload-BYhW6VbL.js",
+          "ext": "js",
+          "chunk": "upload",
+          "rawBytes": 465,
+          "gzipBytes": 334,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 465,
+      "gzipBytes": 334
+    },
+    {
+      "chunk": "folder",
+      "files": [
+        {
+          "file": "folder-DT8tKkVy.js",
+          "ext": "js",
+          "chunk": "folder",
+          "rawBytes": 463,
+          "gzipBytes": 332,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 463,
+      "gzipBytes": 332
+    },
+    {
+      "chunk": "list",
+      "files": [
+        {
+          "file": "list-Cgh-XB5C.js",
+          "ext": "js",
+          "chunk": "list",
+          "rawBytes": 537,
+          "gzipBytes": 330,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 537,
+      "gzipBytes": 330
+    },
+    {
+      "chunk": "unlock",
+      "files": [
+        {
+          "file": "unlock-Ym92WUdm.js",
+          "ext": "js",
+          "chunk": "unlock",
+          "rawBytes": 429,
+          "gzipBytes": 328,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 429,
+      "gzipBytes": 328
+    },
+    {
+      "chunk": "type",
+      "files": [
+        {
+          "file": "type-BYeXqrGO.js",
+          "ext": "js",
+          "chunk": "type",
+          "rawBytes": 455,
+          "gzipBytes": 324,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 455,
+      "gzipBytes": 324
+    },
+    {
+      "chunk": "play",
+      "files": [
+        {
+          "file": "play-C0AAM9bI.js",
+          "ext": "js",
+          "chunk": "play",
+          "rawBytes": 425,
+          "gzipBytes": 322,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 425,
+      "gzipBytes": 322
+    },
+    {
+      "chunk": "book",
+      "files": [
+        {
+          "file": "book-DQO0f9V6.js",
+          "ext": "js",
+          "chunk": "book",
+          "rawBytes": 429,
+          "gzipBytes": 321,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 429,
+      "gzipBytes": 321
+    },
+    {
+      "chunk": "info",
+      "files": [
+        {
+          "file": "info-Brz-xJ3_.js",
+          "ext": "js",
+          "chunk": "info",
+          "rawBytes": 439,
+          "gzipBytes": 318,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 439,
+      "gzipBytes": 318
+    },
+    {
+      "chunk": "trending",
+      "files": [
+        {
+          "file": "trending-up-DfiSI5qw.js",
+          "ext": "js",
+          "chunk": "trending",
+          "rawBytes": 410,
+          "gzipBytes": 312,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 410,
+      "gzipBytes": 312
+    },
+    {
+      "chunk": "pause",
+      "files": [
+        {
+          "file": "pause-BdoMbcYK.js",
+          "ext": "js",
+          "chunk": "pause",
+          "rawBytes": 446,
+          "gzipBytes": 310,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 446,
+      "gzipBytes": 310
+    },
+    {
+      "chunk": "clock",
+      "files": [
+        {
+          "file": "clock-CrlsERh_.js",
+          "ext": "js",
+          "chunk": "clock",
+          "rawBytes": 399,
+          "gzipBytes": 309,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 399,
+      "gzipBytes": 309
+    },
+    {
+      "chunk": "power",
+      "files": [
+        {
+          "file": "power-CS5kTFvW.js",
+          "ext": "js",
+          "chunk": "power",
+          "rawBytes": 408,
+          "gzipBytes": 309,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 408,
+      "gzipBytes": 309
+    },
+    {
+      "chunk": "search",
+      "files": [
+        {
+          "file": "search-CqiPdigP.js",
+          "ext": "js",
+          "chunk": "search",
+          "rawBytes": 404,
+          "gzipBytes": 309,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 404,
+      "gzipBytes": 309
+    },
+    {
+      "chunk": "target",
+      "files": [
+        {
+          "file": "target-i3WRvz6-.js",
+          "ext": "js",
+          "chunk": "target",
+          "rawBytes": 456,
+          "gzipBytes": 302,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 456,
+      "gzipBytes": 302
+    },
+    {
+      "chunk": "menu",
+      "files": [
+        {
+          "file": "menu-E49ubuyG.js",
+          "ext": "js",
+          "chunk": "menu",
+          "rawBytes": 424,
+          "gzipBytes": 301,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 424,
+      "gzipBytes": 301
+    },
+    {
+      "chunk": "x",
+      "files": [
+        {
+          "file": "x-TOgxxWmS.js",
+          "ext": "js",
+          "chunk": "x",
+          "rawBytes": 389,
+          "gzipBytes": 294,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 389,
+      "gzipBytes": 294
+    },
+    {
+      "chunk": "minus",
+      "files": [
+        {
+          "file": "minus-DbbHeczk.js",
+          "ext": "js",
+          "chunk": "minus",
+          "rawBytes": 352,
+          "gzipBytes": 279,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 352,
+      "gzipBytes": 279
+    },
+    {
+      "chunk": "circle",
+      "files": [
+        {
+          "file": "circle-BAu_neNX.js",
+          "ext": "js",
+          "chunk": "circle",
+          "rawBytes": 360,
+          "gzipBytes": 275,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_createLucideIcon-S58UcF9O.js",
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 360,
+      "gzipBytes": 275
+    },
+    {
+      "chunk": "clsx",
+      "files": [
+        {
+          "file": "clsx-B-dksMZM.js",
+          "ext": "js",
+          "chunk": "clsx",
+          "rawBytes": 374,
+          "gzipBytes": 238,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": []
+        }
+      ],
+      "rawBytes": 374,
+      "gzipBytes": 238
+    },
+    {
+      "chunk": "editor",
+      "files": [
+        {
+          "file": "editor-BJD30tF3.js",
+          "ext": "js",
+          "chunk": "editor",
+          "rawBytes": 30,
+          "gzipBytes": 50,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 30,
+      "gzipBytes": 50
+    },
+    {
+      "chunk": "forms",
+      "files": [
+        {
+          "file": "forms-BJD30tF3.js",
+          "ext": "js",
+          "chunk": "forms",
+          "rawBytes": 30,
+          "gzipBytes": 50,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_vendor-PjTuLirS.js"
+          ]
+        }
+      ],
+      "rawBytes": 30,
+      "gzipBytes": 50
+    }
+  ]
+}

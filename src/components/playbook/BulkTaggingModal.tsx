@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { X, Tag, Plus } from "lucide-react";
+import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
 
@@ -100,7 +100,7 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
             size="xs"
             onClick={onClose}
             aria-label="Close"
-            icon={<X className="w-4 h-4" />}
+            icon={<Icon name="close" className="w-4 h-4" />}
             iconPosition="only"
           />
         </div>
@@ -126,7 +126,7 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
               variant="secondary"
               onClick={() => handleAddTag(input)}
               disabled={!input.trim()}
-              icon={<Plus className="w-4 h-4" />}
+              icon={<Icon name="plus" className="w-4 h-4" />}
             >
               Add
             </Button>
@@ -176,7 +176,7 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
         )}
         <div className="mt-6 flex items-center justify-between">
           <div className="text-xs text-text-secondary flex items-center gap-1">
-            <Tag className="w-3 h-3" />
+            <Icon name="tag" className="w-3 h-3" />
             {selectedTags.length === 0
               ? "No tags added yet"
               : `${selectedTags.length} tag${selectedTags.length === 1 ? "" : "s"} ready`}

@@ -1,5 +1,4 @@
 import { Typography } from "../design-system";
-import { Lightbulb, PartyPopper, Rocket } from "lucide-react";
 /**
  * Database Data Display
  * Shows the loaded demo data from the database with interactive team selector
@@ -116,8 +115,8 @@ export const DatabaseDataDisplay: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <Typography variant="headline-md" className="text-jade-800 mb-1">
-              <PartyPopper
-                aria-label="celebration"
+              <Icon
+                name="party-popper"
                 className="inline h-4 w-4 align-middle text-current"
               />{" "}
               Demo Data Loaded Successfully!
@@ -228,8 +227,8 @@ export const DatabaseDataDisplay: React.FC = () => {
                 </div>
                 <div className="mt-3 pt-2 border-t border-subtle">
                   <Typography variant="body-xs" className="text-jade-700">
-                    <Lightbulb
-                      aria-label="idea"
+                    <Icon
+                      name="lightbulb"
                       className="inline h-4 w-4 align-middle text-current"
                     />{" "}
                     In a full app, selecting a team would switch your workspace
@@ -329,8 +328,8 @@ export const DatabaseDataDisplay: React.FC = () => {
       {/* Next Steps */}
       <Card className="bc-card-padding surface-card surface-subtle border-subtle">
         <Typography variant="headline-sm" className="text-blue-800 mb-3">
-          <Rocket
-            aria-label="launch"
+          <Icon
+            name="rocket"
             className="inline h-4 w-4 align-middle text-current"
           />{" "}
           Next Steps

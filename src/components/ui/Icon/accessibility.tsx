@@ -7,21 +7,16 @@
 
 import React from "react";
 import { Icon } from "./Icon";
-import type { IconProps } from "./types";
+import type { IconProps, IconName } from "./Icon";
 
 // Ensure required icon categories are loaded
-import "./categories/ActionIcons";
-import "./categories/NavigationIcons";
-import "./categories/BusinessIcons";
-import type { IconName } from "./types";
+// Category preloads removed to avoid mixed dynamic+static import warnings.
 
 // Coach-friendly accessibility components
 export const CoachActionIcon: React.FC<{
   name: IconName;
   color?: IconProps["color"];
-}> = ({ name, color = "slate" }) => (
-  <Icon name={name} size="lg" color={color} />
-);
+}> = ({ name, color = "navy" }) => <Icon name={name} size="lg" color={color} />;
 
 export const HeaderIcon: React.FC<{
   name: IconName;

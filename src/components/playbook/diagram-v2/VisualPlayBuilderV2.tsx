@@ -7,6 +7,7 @@ import { Toolbar } from "./components/Toolbar";
 import { CanvasPane } from "./components/CanvasPane";
 import type { DiagramDocument } from "./types";
 import { HelpOverlay } from "./components/HelpOverlay";
+import { svgFullToPngDataUrl } from "./thumbnail";
 
 interface ShellProps {
   onDocumentChange?: (doc: DiagramDocument) => void;
@@ -90,7 +91,6 @@ const Shell: React.FC<ShellProps> = ({
       const svg = svgRef.current;
       if (!svg) return null;
       try {
-        const { svgFullToPngDataUrl } = await import("./thumbnail");
         const dataUrl = await svgFullToPngDataUrl(svg, {
           width: 800,
           height: 450,

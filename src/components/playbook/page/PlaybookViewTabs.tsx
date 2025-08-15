@@ -1,5 +1,5 @@
 import React from "react";
-import { FileText, Clock, Users } from "lucide-react";
+import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
 
 export type CoachingView = "playbook" | "practice-script" | "game-plan";
@@ -31,7 +31,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
           size="sm"
           className="flex-1 flex items-center justify-center"
         >
-          <FileText className="h-4 w-4 mr-2" /> Playbook View
+          <Icon name="file" className="h-4 w-4 mr-2" /> Playbook View
         </Button>
         <Button
           id="tab-practice-script"
@@ -44,7 +44,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
           size="sm"
           className="flex-1 flex items-center justify-center"
         >
-          <Clock className="h-4 w-4 mr-2" /> Practice Script View
+          <Icon name="clock" className="h-4 w-4 mr-2" /> Practice Script View
         </Button>
         <Button
           id="tab-game-plan"
@@ -57,7 +57,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
           size="sm"
           className="flex-1 flex items-center justify-center"
         >
-          <Users className="h-4 w-4 mr-2" /> Game Plan View
+          <Icon name="users" className="h-4 w-4 mr-2" /> Game Plan View
         </Button>
       </div>
     </div>

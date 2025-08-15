@@ -1,6 +1,6 @@
 // Fully reconstructed PlayBuilderCore with diagram v2 draft persistence
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { X, Save } from "lucide-react";
+import { Icon } from "../../ui/Icon";
 import { Typography } from "../../design-system/Typography";
 import { Button } from "../../ui/Button";
 import type { Play } from "../../../types/play";
@@ -398,7 +398,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
                 onClick={attemptClose}
                 className="p-2 rounded-lg h-auto"
                 aria-label="Close play builder"
-                icon={<X className="h-5 w-5" />}
+                icon={<Icon name="close" size={20} />}
                 iconPosition="only"
               />
             </div>
@@ -484,7 +484,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
                   disabled={!isValid}
                   variant="primary"
                   size="sm"
-                  icon={<Save className="h-4 w-4" />}
+                  icon={<Icon name="save" size={16} />}
                   iconPosition="left"
                 >
                   {initialPlay?.id ? "Update Play" : "Create Play"}

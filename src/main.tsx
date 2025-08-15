@@ -15,6 +15,12 @@ import "./styles/density.css";
 import "./dev/contrastDebug";
 import { initWebVitals } from "./telemetry/initWebVitals";
 if (process.env.NODE_ENV === "production") initWebVitals();
+// Opportunistic route prefetch (opt-in via env)
+import { initRoutePrefetch } from "./routes/prefetch";
+if (import.meta.env.VITE_PREFETCH_ROUTES === "true") {
+  // Run after next tick to avoid competing with initial render
+  setTimeout(() => initRoutePrefetch(), 0);
+}
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

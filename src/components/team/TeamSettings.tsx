@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Camera } from "lucide-react";
 import { Icon } from "../ui/Icon/Icon";
 import type { TeamSettings as TeamSettingsType } from "../../types/team-management";
 import { Button } from "../ui/Button";
@@ -141,8 +140,8 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                 variant="secondary"
                 onClick={handleLogoUpload}
               >
-                <Camera
-                  aria-label="camera"
+                <Icon
+                  name="camera"
                   className="inline h-4 w-4 align-middle text-current"
                 />{" "}
                 Upload Logo

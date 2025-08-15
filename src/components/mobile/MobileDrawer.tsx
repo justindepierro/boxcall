@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { X } from "lucide-react";
+import { ModularIcon as Icon } from "../ui/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
 
@@ -61,7 +61,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
             className="p-1 h-auto w-auto"
             aria-label="Close drawer"
           >
-            <X className="h-4 w-4" />
+            <Icon name="close" size="sm" />
           </Button>
         </div>
         <div className="flex-1 overflow-y-auto p-3 pb-24">{children}</div>

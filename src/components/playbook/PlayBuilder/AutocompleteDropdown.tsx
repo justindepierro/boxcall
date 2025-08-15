@@ -5,7 +5,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "../../ui/Button/Button";
-import { Plus, Check, ChevronDown } from "lucide-react";
+import { Icon } from "../../ui/Icon/Icon";
 import { useToast } from "./useToast";
 import { Typography } from "@components/design-system/Typography";
 
@@ -186,7 +186,8 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
           onClick={() => setIsOpen(!isOpen)}
           className="absolute inset-y-0 right-0 px-2 h-auto"
         >
-          <ChevronDown
+          <Icon
+            name="chevron-down"
             className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
           />
         </Button>
@@ -201,14 +202,17 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
             className="absolute inset-y-0 right-8 px-1 h-auto z-10"
             title={`Add new ${label.toLowerCase()}: "${inputValue}"`}
           >
-            <Plus className="h-4 w-4 surface-card rounded-full border border-jade-500" />
+            <Icon
+              name="plus"
+              className="h-4 w-4 surface-card rounded-full border border-jade-500"
+            />
           </Button>
         )}
       </div>
 
       {/* Dropdown options */}
       {isOpen && (
-  <div className="absolute z-50 w-full mt-1 surface-card border border-slate-300 rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-50 w-full mt-1 surface-card border border-slate-300 rounded-md shadow-lg max-h-60 overflow-auto">
           {filteredOptions.length > 0 ? (
             <>
               {filteredOptions.map((option, index) => (
@@ -237,7 +241,7 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
                     onClick={handleAddNew}
                     className="w-full justify-start px-3 py-2 h-auto font-medium flex items-center"
                   >
-                    <Plus className="h-4 w-4 mr-2" />
+                    <Icon name="plus" className="h-4 w-4 mr-2" />
                     Add "{inputValue}"
                   </Button>
                 </>
@@ -253,7 +257,7 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
                   onClick={handleAddNew}
                   className="w-full justify-start font-medium flex items-center h-auto"
                 >
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Icon name="plus" className="h-4 w-4 mr-2" />
                   Add "{inputValue}"
                 </Button>
               ) : (
@@ -267,7 +271,7 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
       {/* Show current custom value indicator */}
       {value && !options.includes(value) && (
         <p className="text-xs text-jade-600 mt-1 flex items-center">
-          <Check className="h-3 w-3 mr-1" />
+          <Icon name="check" className="h-3 w-3 mr-1" />
           Custom {label.toLowerCase()}: "{value}"
         </p>
       )}

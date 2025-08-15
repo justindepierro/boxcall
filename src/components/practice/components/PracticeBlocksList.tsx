@@ -1,5 +1,4 @@
 import { Typography } from "../../design-system";
-import { ClipboardList, Lightbulb, Users } from "lucide-react";
 /**
  * PracticeBlocksList Component (Regular Mode)
  *
@@ -80,8 +79,8 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
           <Typography variant="headline-md">Practice Schedule</Typography>
           {practiceBlocks.length > 0 && (
             <Typography variant="body-sm" color="muted" className="mt-1">
-              <Lightbulb
-                aria-label="idea"
+              <Icon
+                name="lightbulb"
                 className="inline h-4 w-4 align-middle text-current"
               />{" "}
               Drag the ⋮⋮ handle to reorder practice blocks
@@ -105,8 +104,8 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
               onClick={onAutoAssignCoaches}
               className="ml-2"
             >
-              <Users
-                aria-label="team"
+              <Icon
+                name="users"
                 className="inline h-4 w-4 align-middle text-current"
               />{" "}
               Auto-Assign Coaches
@@ -279,8 +278,8 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                   variant="body-md"
                                   className="font-medium text-text-primary"
                                 >
-                                  <Users
-                                    aria-label="team"
+                                  <Icon
+                                    name="users"
                                     className="inline h-4 w-4 align-middle text-current"
                                   />{" "}
                                   Groups ({block.groups.length})
@@ -381,8 +380,8 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                           variant="body-xs"
                                           className="text-green-800"
                                         >
-                                          <ClipboardList
-                                            aria-label="clipboard"
+                                          <Icon
+                                            name="clipboard-list"
                                             className="inline h-4 w-4 align-middle text-current"
                                           />{" "}
                                           {group.scriptTitle ||
@@ -432,8 +431,8 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                 fullWidth
                                 className="border-dashed text-text-secondary hover:text-text-primary"
                               >
-                                <Users
-                                  aria-label="team"
+                                <Icon
+                                  name="users"
                                   className="inline h-4 w-4 align-middle text-current"
                                 />{" "}
                                 Add Groups to This Block

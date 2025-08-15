@@ -1,0 +1,11 @@
+{
+  "largestNonPdf": {
+    "file": "pdfRenderer-BWTXHva9.js",
+    "size": 498528
+  },
+  "initialTotal": 140495,
+  "budgets": {
+    "largestNonPdfChunkGzipTarget": 184320,
+    "initialJsGzipTarget": 256000
+  }
+}

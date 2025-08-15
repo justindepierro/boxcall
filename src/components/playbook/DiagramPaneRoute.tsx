@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { telemetry } from "../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../telemetry/events";
 import { Button } from "../ui/Button/Button";
-import { X } from "lucide-react";
+import { Icon } from "../ui/Icon/Icon";
 
 import { VisualPlayBuilderV2 } from "./diagram-v2/VisualPlayBuilderV2";
 
@@ -52,7 +52,7 @@ export const DiagramPaneRoute: React.FC = () => {
           className="absolute top-3 right-3 surface-subtle/70 backdrop-blur p-1 h-auto w-auto"
           aria-label="Close diagram"
         >
-          <X className="h-5 w-5" />
+          <Icon name="close" className="h-5 w-5" />
         </Button>
       </div>
     </div>

@@ -73,3 +73,6 @@ const calendarIcons = {
 
 // Register calendar icons on module load
 registerIconCategory("calendar", calendarIcons);
+
+// Deprecated legacy CalendarIcons. Do not import.
+export {};

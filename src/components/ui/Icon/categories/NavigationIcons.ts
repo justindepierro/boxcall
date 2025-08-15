@@ -103,3 +103,6 @@ const navigationIcons = {
 
 // Register navigation icons on module load
 registerIconCategory("navigation", navigationIcons);
+
+// Deprecated legacy NavigationIcons. Do not import.
+export {};

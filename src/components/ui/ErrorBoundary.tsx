@@ -1,9 +1,9 @@
 import type { ErrorInfo, ReactNode } from "react";
-import { Wrench } from "lucide-react";
+import { ModularIcon as Icon } from "./Icon";
 import { telemetry } from "../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../telemetry/events";
 import React, { Component } from "react";
-import { AlertTriangle, RefreshCw, Home, MessageCircle } from "lucide-react";
+// Use ModularIcon for lightweight, per-icon dynamic imports
 import { Button } from "./Button";
 import { Typography } from "../design-system";
 
@@ -101,7 +101,7 @@ export class ErrorBoundary extends Component<Props, State> {
             {/* Error Icon and Title */}
             <div className="text-center mb-6">
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
+                <Icon name="alert-triangle" className="h-6 w-6 text-red-600" />
               </div>
               <Typography
                 variant="headline-lg"
@@ -120,7 +120,8 @@ export class ErrorBoundary extends Component<Props, State> {
               <div className="mb-6 p-4 surface-subtle border border-subtle rounded-lg">
                 <details className="text-sm">
                   <summary className="cursor-pointer font-medium text-red-800 mb-2">
-                    <Wrench
+                    <Icon
+                      name="wrench"
                       aria-label="wrench"
                       className="inline h-4 w-4 align-middle text-current"
                     />{" "}
@@ -146,7 +147,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 variant="primary"
                 size="sm"
                 className="w-full flex items-center justify-center"
-                icon={<RefreshCw className="h-4 w-4" />}
+                icon={<Icon name="refresh-cw" className="h-4 w-4" />}
                 iconPosition="left"
               >
                 Try Again
@@ -157,7 +158,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 variant="secondary"
                 size="sm"
                 className="w-full flex items-center justify-center"
-                icon={<Home className="h-4 w-4" />}
+                icon={<Icon name="home" className="h-4 w-4" />}
                 iconPosition="left"
               >
                 Go to Dashboard
@@ -168,7 +169,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 variant="ghost"
                 size="sm"
                 className="w-full flex items-center justify-center text-text-muted hover:text-text-primary"
-                icon={<MessageCircle className="h-4 w-4" />}
+                icon={<Icon name="message" className="h-4 w-4" />}
                 iconPosition="left"
               >
                 Reload Page

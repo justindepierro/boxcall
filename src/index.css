@@ -1,6 +1,8 @@
 /* Import centralized design tokens first */
 @import "./styles/tokens.css";
 @import "./styles/mobile.css";
+/* Self-hosted fonts (optional until WOFF2 files are added) */
+@import "./styles/fonts.css";
 /* Generated CSS variables (design tokens) */
 @import "./styles/generated-tokens.css";
 @import "./styles/generated-themes.css";

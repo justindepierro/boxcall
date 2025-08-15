@@ -84,3 +84,6 @@ const sportsIcons = {
 
 // Register sports icons on module load
 registerIconCategory("sports", sportsIcons);
+
+// Deprecated legacy SportsIcons. Do not import.
+export {};

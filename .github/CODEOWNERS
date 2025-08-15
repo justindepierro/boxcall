@@ -1,8 +1,11 @@
 # See https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
 # Global owners
-* @justindepierro
+
+- @justindepierro
 
 # Paths (extend as team grows)
+
 /src/ @justindepierro
 /scripts/ @justindepierro
 /docs/ @justindepierro

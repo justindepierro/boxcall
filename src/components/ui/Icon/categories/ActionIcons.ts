@@ -113,3 +113,6 @@ const actionIcons = {
 
 // Register action icons on module load
 registerIconCategory("actions", actionIcons);
+
+// Deprecated legacy ActionIcons. Do not import.
+export {};

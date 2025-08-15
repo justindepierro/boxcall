@@ -1,23 +1,13 @@
 import React, { useState } from "react";
 import { Button } from "../ui/Button/Button";
 import { Tag } from "../ui/Tag";
-import {
-  Book,
-  ChevronDown,
-  ChevronRight,
-  Plus,
-  Settings,
-  Target,
-  Zap,
-  Clock,
-  MapPin,
-} from "lucide-react";
+import Icon from "../ui/Icon/Icon";
 
 const DEFAULT_CATEGORIES = [
   {
     id: "runs",
     name: "Runs",
-    icon: Target,
+    iconName: "target" as const,
     color: "bg-blue-100 text-blue-700 border-subtle",
     subcategories: [
       "Power",
@@ -31,7 +21,7 @@ const DEFAULT_CATEGORIES = [
   {
     id: "passes",
     name: "Passes",
-    icon: Zap,
+    iconName: "zap" as const,
     color: "bg-jade-100 text-jade-700 border-subtle",
     subcategories: [
       "Quick Game",
@@ -44,7 +34,7 @@ const DEFAULT_CATEGORIES = [
   {
     id: "rpos",
     name: "RPOs",
-    icon: Book,
+    iconName: "book" as const,
     color: "bg-purple-100 text-purple-700 border-subtle",
     subcategories: [
       "Bubble",
@@ -57,7 +47,7 @@ const DEFAULT_CATEGORIES = [
   {
     id: "play-action",
     name: "Play Action",
-    icon: MapPin,
+    iconName: "map-pin" as const,
     color: "bg-orange-100 text-orange-700 border-subtle",
     subcategories: [
       "Boot",
@@ -70,7 +60,7 @@ const DEFAULT_CATEGORIES = [
   {
     id: "situational",
     name: "Situational",
-    icon: Clock,
+    iconName: "clock" as const,
     color: "bg-red-100 text-red-700 border-subtle",
     subcategories: [
       "Red Zone",
@@ -115,11 +105,11 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
   const allCategories = [...DEFAULT_CATEGORIES, ..._customCategories];
 
   return (
-  <div className="surface-card rounded-lg shadow-sm border border-subtle">
+    <div className="surface-card rounded-lg shadow-sm border border-subtle">
       <div className="p-3 border-b border-subtle">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <Book className="h-4 w-4 text-slate-500 mr-2" />
+            <Icon name="book" className="h-4 w-4 text-slate-500 mr-2" />
             <h3 className="font-medium text-slate-900">Playbook</h3>
           </div>
           <Button
@@ -128,7 +118,7 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
             className="p-1 h-auto w-auto"
             title="Manage Categories"
           >
-            <Settings className="h-4 w-4" />
+            <Icon name="settings" className="h-4 w-4" />
           </Button>
         </div>
         <p className="text-xs text-slate-500 mt-1">
@@ -140,7 +130,7 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
           const isExpanded = expandedCategories.has(category.id);
           const isSelected = selectedCategory === category.id;
           const playCount = playCounts[category.id] || 0;
-          const IconComponent = category.icon;
+          const iconName = category.iconName;
           return (
             <div key={category.id} className="mb-1">
               <div className="flex items-center group">
@@ -151,9 +141,15 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
                   className="p-0.5 h-auto w-auto mr-1"
                 >
                   {isExpanded ? (
-                    <ChevronDown className="h-3 w-3 text-slate-500" />
+                    <Icon
+                      name="chevron-down"
+                      className="h-3 w-3 text-slate-500"
+                    />
                   ) : (
-                    <ChevronRight className="h-3 w-3 text-slate-500" />
+                    <Icon
+                      name="chevron-right"
+                      className="h-3 w-3 text-slate-500"
+                    />
                   )}
                 </Button>
                 <Button
@@ -162,7 +158,7 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
                   onClick={() => onCategorySelect(category.id)}
                   className="flex-1 justify-start px-2 py-1.5 h-auto font-medium"
                 >
-                  <IconComponent className="h-3 w-3 mr-2" />
+                  <Icon name={iconName} className="h-3 w-3 mr-2" />
                   <span className="flex-1 text-left">{category.name}</span>
                   {playCount > 0 && (
                     <Tag
@@ -214,7 +210,7 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
           variant="ghost"
           className="w-full flex items-center justify-start px-2 py-1.5 mt-3 h-auto text-xs"
         >
-          <Plus className="h-3 w-3 mr-1" />
+          <Icon name="plus" className="h-3 w-3 mr-1" />
           Add Custom Category
         </Button>
       </div>

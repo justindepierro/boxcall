@@ -4,7 +4,7 @@
  */
 import React from "react";
 import { Button } from "./Button";
-import { AlertTriangle, RefreshCw, Home, WifiOff, Server } from "lucide-react";
+import { ModularIcon as Icon } from "./Icon";
 import { Typography } from "../design-system/Typography";
 
 export interface MobileErrorStateProps {
@@ -32,14 +32,14 @@ export interface MobileErrorStateProps {
 
 const ERROR_CONFIGURATIONS = {
   network: {
-    icon: WifiOff,
+    icon: "wifi-off" as const,
     defaultTitle: "Network Error",
     defaultMessage: "Please check your internet connection and try again.",
     color: "text-orange-600",
     bgColor: "bg-orange-100",
   },
   server: {
-    icon: Server,
+    icon: "server" as const,
     defaultTitle: "Server Error",
     defaultMessage:
       "Our servers are experiencing issues. Please try again in a moment.",
@@ -47,7 +47,7 @@ const ERROR_CONFIGURATIONS = {
     bgColor: "bg-red-100",
   },
   offline: {
-    icon: WifiOff,
+    icon: "wifi-off" as const,
     defaultTitle: "You're Offline",
     defaultMessage:
       "Check your connection and try again when you're back online.",
@@ -55,14 +55,14 @@ const ERROR_CONFIGURATIONS = {
     bgColor: "surface-subtle",
   },
   timeout: {
-    icon: RefreshCw,
+    icon: "refresh-cw" as const,
     defaultTitle: "Request Timeout",
     defaultMessage: "This is taking longer than usual. Please try again.",
     color: "text-yellow-600",
     bgColor: "bg-yellow-100",
   },
   generic: {
-    icon: AlertTriangle,
+    icon: "alert-triangle" as const,
     defaultTitle: "Something went wrong",
     defaultMessage: "We encountered an unexpected error. Please try again.",
     color: "text-red-600",
@@ -83,7 +83,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
   className = "",
 }) => {
   const config = ERROR_CONFIGURATIONS[type];
-  const IconComponent = config.icon;
+  const IconName = config.icon;
 
   const handleRetry = () => {
     if (onRetry) {
@@ -110,7 +110,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
       >
         <div className="flex items-center space-x-3">
           <div className={`p-2 rounded-full ${config.bgColor}`}>
-            <IconComponent className={`h-4 w-4 ${config.color}`} />
+            <Icon name={IconName} size="sm" className={config.color} />
           </div>
           <div>
             <Typography
@@ -130,7 +130,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
             variant="ghost"
             size="xs"
             className="flex-shrink-0 p-2 h-auto text-team-primary hover:surface-subtle"
-            icon={<RefreshCw className="h-4 w-4" />}
+            icon={<Icon name="refresh-cw" size="sm" />}
             iconPosition="only"
             aria-label="Retry"
           />
@@ -145,7 +145,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
       <div
         className={`mx-auto flex items-center justify-center h-12 w-12 rounded-full ${config.bgColor} mb-4`}
       >
-        <IconComponent className={`h-6 w-6 ${config.color}`} />
+        <Icon name={IconName} size="lg" className={config.color} />
       </div>
 
       {/* Error Content */}
@@ -169,7 +169,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
             variant="primary"
             size="sm"
             className="w-full flex items-center justify-center"
-            icon={<RefreshCw className="h-4 w-4" />}
+            icon={<Icon name="refresh-cw" size="sm" />}
             iconPosition="left"
           >
             Try Again
@@ -182,7 +182,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
             variant="secondary"
             size="sm"
             className="w-full flex items-center justify-center"
-            icon={<Home className="h-4 w-4" />}
+            icon={<Icon name="home" size="sm" />}
             iconPosition="left"
           >
             Go Home

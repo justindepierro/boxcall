@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "lucide-react";
 import Icon from "../Icon/Icon";
 import { Typography } from "../../design-system";
 import { Button } from "../Button";
@@ -156,8 +155,8 @@ export function LoginForm({
         <div className="space-y-3">
           <Button variant="secondary" className="w-full" disabled={loading}>
             <span className="mr-2">
-              <Link
-                aria-label="link"
+              <Icon
+                name="link"
                 className="inline h-4 w-4 align-middle text-current"
               />
             </span>
@@ -326,8 +325,8 @@ export function SignupForm({
         <div className="space-y-3">
           <Button variant="secondary" className="w-full" disabled={loading}>
             <span className="mr-2">
-              <Link
-                aria-label="link"
+              <Icon
+                name="link"
                 className="inline h-4 w-4 align-middle text-current"
               />
             </span>

@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { MapPin } from "lucide-react";
+import { Icon as LegacyIcon } from "../ui/Icon/Icon";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEvents } from "../../state/calendar/hooks";
@@ -144,7 +144,11 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
             <div className="space-y-tight">
               {upcomingEvents.length === 0 ? (
                 <div className="text-center py-8">
-                  <Icon name="calendar" size="xl" className="text-text-muted mx-auto mb-3" />
+                  <Icon
+                    name="calendar"
+                    size="xl"
+                    className="text-text-muted mx-auto mb-3"
+                  />
                   <Typography
                     variant="body-lg"
                     className="text-text-secondary mb-2"
@@ -207,9 +211,10 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                           variant="body-xs"
                           className="text-text-muted truncate"
                         >
-                          <MapPin
-                            aria-label="location"
-                            className="inline h-4 w-4 align-middle text-current"
+                          <LegacyIcon
+                            name="map-pin"
+                            size="sm"
+                            className="inline align-middle"
                           />{" "}
                           {event.location}
                         </Typography>
@@ -255,7 +260,9 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                     {selectedEvent.type}
                   </Tag>
                   {selectedEvent.is_home && (
-                    <Tag variant="success" size="sm">Home</Tag>
+                    <Tag variant="success" size="sm">
+                      Home
+                    </Tag>
                   )}
                 </div>
 

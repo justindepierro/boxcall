@@ -9,13 +9,19 @@ interface VitalsMetric {
   id: string;
 }
 
+// 10% sampling by default to reduce volume
+const SAMPLE_RATE = Number(import.meta.env?.VITE_VITALS_SAMPLE_RATE ?? 0.1);
+const shouldSample = () => Math.random() < SAMPLE_RATE;
+
 function send(metric: VitalsMetric) {
+  if (!shouldSample()) return;
   telemetry.enqueue({
     type: `vital:${metric.name.toLowerCase()}`,
     data: {
       value: metric.value,
       rating: metric.rating,
       id: metric.id,
+      url: typeof location !== "undefined" ? location.pathname : undefined,
     },
     context: { session_id: getSessionId() },
   });
