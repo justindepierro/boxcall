@@ -4,7 +4,8 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
 import { Typography } from "../../../design-system";
 import { Button, Card } from "../../../../components/ui";
-import { Icon, type IconName } from "../../../../components/ui/Icon/Icon";
+import { ModularIcon as Icon } from "../../../../components/ui/Icon";
+import type { ModularIconName } from "../../../../components/ui/Icon";
 import type { PracticeBlock } from "../types";
 
 interface PracticeBlockListProps {
@@ -127,7 +128,9 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                               <div className="flex items-center space-x-2">
                                 <Icon
                                   name={
-                                    getCategoryIcon(block.category) as IconName
+                                    getCategoryIcon(
+                                      block.category
+                                    ) as ModularIconName
                                   }
                                   size="md"
                                 />

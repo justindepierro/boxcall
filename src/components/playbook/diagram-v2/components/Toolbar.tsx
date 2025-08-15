@@ -25,7 +25,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
             onClick={onClose}
             aria-label="Close builder"
           >
-            ✕
+            X
           </Button>
         )}
   </div>
@@ -147,7 +147,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
                 });
                 const a = document.createElement("a");
                 a.href = dataUrl;
-                a.download = `diagram-${Date.now()}.png`;
+                a.download = "diagram-" + Date.now() + ".png";
                 a.click();
               } catch (err: unknown) {
                 telemetry.enqueue({
@@ -188,7 +188,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
                 });
                 const a = document.createElement("a");
                 a.href = dataUrl;
-                a.download = `diagram-full-${Date.now()}.png`;
+                a.download = "diagram-full-" + Date.now() + ".png";
                 a.click();
               } catch (err: unknown) {
                 telemetry.enqueue({
@@ -244,7 +244,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
                   undefined,
                   "FAST"
                 );
-                pdf.save(`diagram-${Date.now()}.pdf`);
+                pdf.save("diagram-" + Date.now() + ".pdf");
                 telemetry.enqueue({
                   type: TelemetryEventTypes.ExportScope,
                   data: {
@@ -288,7 +288,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = `diagram-full-${Date.now()}.svg`;
+                a.download = "diagram-full-" + Date.now() + ".svg";
                 a.click();
                 URL.revokeObjectURL(url);
                 telemetry.enqueue({
@@ -330,7 +330,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
             aria-label="Apply formation"
           >
             <option value="" disabled>
-              Choose…
+              Choose...
             </option>
             {FORMATION_OPTIONS.map((f) => (
               <option key={f.id} value={f.id}>

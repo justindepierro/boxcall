@@ -8,6 +8,8 @@
 // Core icon component and types (always needed)
 export { Icon } from "./Icon";
 export type { IconName, IconProps } from "./types";
+export { ModularIcon } from "./ModularIcon";
+export type { ModularIconProps } from "./ModularIcon";
 
 // Smart icon system for intelligent selection
 export { SmartIconSystem } from "./SmartIconSystem";

@@ -8,7 +8,7 @@ import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
-import Icon from "../ui/Icon/Icon";
+import { ModularIcon as Icon } from "../ui/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../ui/Tag";
 
 interface PersonalCalendarProps {
@@ -144,11 +144,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
             <div className="space-y-tight">
               {upcomingEvents.length === 0 ? (
                 <div className="text-center py-8">
-                  <Icon
-                    name="calendar"
-                    size="xl"
-                    className="text-text-muted mx-auto mb-3"
-                  />
+                  <Icon name="calendar" size="xl" className="text-text-muted mx-auto mb-3" />
                   <Typography
                     variant="body-lg"
                     className="text-text-secondary mb-2"

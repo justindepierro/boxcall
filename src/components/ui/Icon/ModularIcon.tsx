@@ -18,6 +18,8 @@ export interface ModularIconProps {
   className?: string;
   color?:
     | "current"
+  | "primary"
+  | "secondary"
     | "jade"
     | "navy"
     | "slate"
@@ -33,14 +35,26 @@ export type ModularIconName =
   | "menu"
   | "close"
   | "plus"
+  | "plus-circle"
   | "edit"
   | "delete"
   | "check"
+  | "alert-triangle"
   | "calendar"
   | "clock"
   | "users"
   | "user"
   | "target"
+  | "trophy"
+  | "award"
+  | "star"
+  | "zap"
+  | "flag"
+  | "shield"
+  | "activity"
+  | "map"
+  | "map-pin"
+  | "message"
   | "arrow-left"
   | "arrow-right"
   | "chevron-down"
@@ -61,9 +75,12 @@ const iconLoaders = {
 
   // Actions
   plus: () => import("lucide-react").then((m) => m.Plus),
+  "plus-circle": () => import("lucide-react").then((m) => m.PlusCircle),
   edit: () => import("lucide-react").then((m) => m.Edit3),
   delete: () => import("lucide-react").then((m) => m.Trash2),
   check: () => import("lucide-react").then((m) => m.Check),
+  "alert-triangle": () =>
+    import("lucide-react").then((m) => m.AlertTriangle),
 
   // Calendar & Time
   calendar: () => import("lucide-react").then((m) => m.Calendar),
@@ -75,6 +92,16 @@ const iconLoaders = {
   users: () => import("lucide-react").then((m) => m.Users),
   user: () => import("lucide-react").then((m) => m.User),
   target: () => import("lucide-react").then((m) => m.Target),
+  trophy: () => import("lucide-react").then((m) => m.Trophy),
+  award: () => import("lucide-react").then((m) => m.Award),
+  star: () => import("lucide-react").then((m) => m.Star),
+  zap: () => import("lucide-react").then((m) => m.Zap),
+  flag: () => import("lucide-react").then((m) => m.Flag),
+  shield: () => import("lucide-react").then((m) => m.Shield),
+  activity: () => import("lucide-react").then((m) => m.Activity),
+  map: () => import("lucide-react").then((m) => m.Map),
+  "map-pin": () => import("lucide-react").then((m) => m.MapPin),
+  message: () => import("lucide-react").then((m) => m.MessageCircle),
 
   // System
   settings: () => import("lucide-react").then((m) => m.Settings),
@@ -106,6 +133,8 @@ const sizeMap = {
 // Color mapping
 const colorMap = {
   current: "currentColor",
+  primary: getComponentColor("icon", "primary"),
+  secondary: getComponentColor("icon", "secondary"),
   jade: getComponentColor("icon", "jade"),
   navy: getComponentColor("icon", "navy"),
   slate: getComponentColor("icon", "slate"),
@@ -144,7 +173,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
     }
 
     // Load the icon dynamically
-    const loader = iconLoaders[name];
+  const loader = iconLoaders[name] || (() => import("lucide-react").then((m) => m.HelpCircle));
     if (loader && !loading) {
       setLoading(true);
       loader()
