@@ -1,0 +1,16 @@
+* text=auto eol=lf
+
+# Treat lockfiles and binaries appropriately
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+
+# Mark generated assets as such for GitHub linguist
+/dist/* linguist-generated=true
+/coverage/* linguist-generated=true
+/src/styles/generated-*.css linguist-generated=true

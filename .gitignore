@@ -94,3 +94,10 @@ src/components/playbook/visual/FabricFieldCanvas.tsx
 
 # Local Netlify folder
 .netlify
+
+# Environment files
+.env
+.env.*.local
+
+# ESLint cache
+.eslintcache
