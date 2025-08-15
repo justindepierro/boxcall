@@ -174,7 +174,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       <div className="flex gap-3 h-full">
         {/* Left: Vertical Stats Stack */}
         <div className="flex flex-col gap-2 w-20">
-          <div className="text-center p-2 surface-card/50 dark:surface-card/30 bg-white/50 dark:bg-gray-700/30 rounded-lg">
+          <div className="text-center p-2 surface-card/50 dark:surface-card/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
               <Icon name="zap" size="sm" className="text-orange-500" />
             </div>
@@ -192,7 +192,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
               Streak
             </Typography>
           </div>
-          <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
+          <div className="text-center p-2 surface-card/50 dark:surface-card/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
               <Icon name="star" size="sm" className="text-jade-600" />
             </div>
@@ -210,7 +210,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
               Stickers
             </Typography>
           </div>
-          <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
+          <div className="text-center p-2 surface-card/50 dark:surface-card/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
               <Icon name="award" size="sm" className="text-blue-600" />
             </div>
@@ -228,7 +228,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
               Medals
             </Typography>
           </div>
-          <div className="text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg">
+          <div className="text-center p-2 surface-card/50 dark:surface-card/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
               <Icon name="target" size="sm" className="text-purple-600" />
             </div>
@@ -257,7 +257,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
                 allAchievements.map((achievement) => (
                   <div
                     key={`${achievement.type}-${achievement.id}`}
-                    className="flex items-center space-x-3 py-2 px-3 h-10 mb-1 bg-white/60 dark:bg-gray-700/40 rounded-lg border border-white/40 dark:border-gray-600/30"
+                    className="flex items-center space-x-3 py-2 px-3 h-10 mb-1 surface-card/60 dark:surface-card/40 rounded-lg border border-subtle dark:border-gray-600/30"
                   >
                     <div
                       className={`flex-shrink-0 w-4 h-4 flex items-center justify-center ${achievement.earned ? "" : "grayscale opacity-50"}`}

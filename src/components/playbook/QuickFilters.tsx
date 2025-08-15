@@ -45,19 +45,19 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
     const colorMap = {
       red: isActive
         ? "bg-red-100 text-red-800 border-red-300 hover:bg-red-200"
-        : "bg-white text-red-600 border-subtle hover:surface-subtle",
+        : "surface-card text-red-600 border-subtle hover:surface-subtle",
       blue: isActive
         ? "bg-blue-100 text-blue-800 border-blue-300 hover:bg-blue-200"
-        : "bg-white text-blue-600 border-subtle hover:surface-subtle",
+        : "surface-card text-blue-600 border-subtle hover:surface-subtle",
       green: isActive
         ? "bg-green-100 text-green-800 border-green-300 hover:bg-green-200"
-        : "bg-white text-green-600 border-subtle hover:surface-subtle",
+        : "surface-card text-green-600 border-subtle hover:surface-subtle",
       orange: isActive
         ? "bg-orange-100 text-orange-800 border-orange-300 hover:bg-orange-200"
-        : "bg-white text-orange-600 border-subtle hover:surface-subtle",
+        : "surface-card text-orange-600 border-subtle hover:surface-subtle",
       purple: isActive
         ? "bg-purple-100 text-purple-800 border-purple-300 hover:bg-purple-200"
-        : "bg-white text-purple-600 border-subtle hover:surface-subtle",
+        : "surface-card text-purple-600 border-subtle hover:surface-subtle",
     };
     return colorMap[filter.color];
   };

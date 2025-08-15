@@ -53,7 +53,7 @@ export const tokenClasses = {
     "bg-surface-jade hover:bg-surface-jade-dark text-brand-jade-dark font-semibold py-2 px-4 rounded border border-surface-jade-dark transition-colors",
 
   // Card styles
-  card: "bg-white border border-surface-jade-dark rounded-lg shadow-sm",
+  card: "surface-card border border-surface-jade-dark rounded-lg shadow-sm",
   cardHover:
     "hover:shadow-md hover:border-brand-jade transition-all duration-200",
 

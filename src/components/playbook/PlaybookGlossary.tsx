@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../ui/Button/Button";
+import { Tag } from "../ui/Tag";
 import {
   Book,
   ChevronDown,
@@ -164,11 +165,13 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
                   <IconComponent className="h-3 w-3 mr-2" />
                   <span className="flex-1 text-left">{category.name}</span>
                   {playCount > 0 && (
-                    <span
-                      className={`ml-2 px-1.5 py-0.5 text-xs rounded ${isSelected ? "bg-white bg-opacity-50" : "bg-slate-100 text-slate-600"}`}
+                    <Tag
+                      size="sm"
+                      variant={isSelected ? "accent" : "neutral"}
+                      className="ml-2"
                     >
                       {playCount}
-                    </span>
+                    </Tag>
                   )}
                 </Button>
               </div>
@@ -194,9 +197,9 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
                       >
                         <span>{subcategory}</span>
                         {subPlayCount > 0 && (
-                          <span className="px-1 py-0.5 text-xs bg-slate-200 text-slate-600 rounded">
+                          <Tag size="sm" variant="neutral">
                             {subPlayCount}
-                          </span>
+                          </Tag>
                         )}
                       </Button>
                     );

@@ -95,7 +95,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   return (
     <>
       <div
-        className={`bg-white rounded-lg border transition-colors shadow-sm ${
+        className={`surface-card rounded-lg border transition-colors shadow-sm ${
           isSelected
             ? "border-jade-600 ring-2 ring-blue-200"
             : "border-subtle hover:border-slate-300"

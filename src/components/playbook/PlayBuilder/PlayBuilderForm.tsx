@@ -22,7 +22,7 @@ interface PlayBuilderFormProps {
 // Shared form styles for consistency
 const formStyles = {
   section:
-    "bg-white rounded-none border border-subtle bc-card-padding space-y-4",
+    "surface-card rounded-none border border-subtle bc-card-padding space-y-4",
   sectionTitle:
     "text-lg font-semibold text-slate-900 pb-2 border-b border-subtle",
   label: "block text-sm font-medium text-slate-700 mb-1.5",
@@ -30,7 +30,7 @@ const formStyles = {
   input:
     "playbuilder-input w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 transition-colors",
   select:
-    "w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 bg-white transition-colors",
+    "w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 surface-card transition-colors",
   textarea:
     "playbuilder-input w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 resize-none transition-colors",
   helpText: "text-xs text-slate-500 mt-1",
