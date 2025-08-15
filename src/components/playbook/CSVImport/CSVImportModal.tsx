@@ -440,7 +440,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                 {previews.map((preview) => (
                   <React.Fragment key={preview.rowNumber}>
                     <tr
-                      className={`${preview.isValid ? "bg-white" : "surface-subtle"} hover:surface-subtle`}
+                      className={`${preview.isValid ? "surface-card" : "surface-subtle"} hover:surface-subtle`}
                     >
                       <td className="px-3 py-2 text-xs text-slate-500">
                         {preview.rowNumber}

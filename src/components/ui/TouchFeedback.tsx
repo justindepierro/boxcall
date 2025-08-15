@@ -150,7 +150,7 @@ export const TouchFeedback: React.FC<TouchFeedbackProps> = ({
               height: 20,
             }}
           >
-            <div className="w-full h-full bg-white bg-opacity-30 rounded-full animate-ping" />
+            <div className="w-full h-full surface-subtle0 opacity-30 rounded-full animate-ping" />
           </div>
         ))}
     </Element>
@@ -297,7 +297,7 @@ export const TouchCard: React.FC<TouchCardProps> = ({
   };
 
   const cardStyles = `
-    bg-white rounded-lg border border-subtle
+  surface-card rounded-lg border border-subtle
     transition-all duration-200 ease-out
     ${hoverElevation ? "hover:shadow-md hover:-translate-y-0.5" : "shadow-sm"}
     ${pressable ? "cursor-pointer" : ""}
