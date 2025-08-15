@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { X } from "lucide-react";
 import { Button } from "../ui/Button/Button";
+import { Typography } from "../design-system/Typography";
 
 interface MobileDrawerProps {
   title: string;
@@ -50,7 +51,9 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
         className={`absolute top-0 bottom-0 ${side === "right" ? "right-0" : "left-0"} ${widthClass} surface-card shadow-xl border-l border-subtle flex flex-col animate-slide-in`}
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-subtle">
-          <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+          <Typography variant="label-md" as="h2" className="text-text-primary">
+            {title}
+          </Typography>
           <Button
             variant="ghost"
             size="xs"

@@ -7,7 +7,7 @@ import React from "react";
 export const RouteLoadingSkeleton: React.FC = () => {
   return (
     <div className="min-h-screen surface-subtle animate-pulse">
-      <div className="bg-white border-b border-subtle">
+  <div className="surface-card border-b border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="h-8 w-32 bg-gray-300 rounded"></div>
@@ -28,7 +28,7 @@ export const RouteLoadingSkeleton: React.FC = () => {
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="bg-white rounded-lg border border-subtle p-6"
+              className="surface-card rounded-lg border border-subtle p-6"
             >
               <div className="h-6 w-3/4 bg-gray-300 rounded mb-4"></div>
               <div className="space-y-2">

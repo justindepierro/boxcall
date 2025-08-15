@@ -114,7 +114,7 @@ export const PlaybookGlossary: React.FC<PlaybookGlossaryProps> = ({
   const allCategories = [...DEFAULT_CATEGORIES, ..._customCategories];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-subtle">
+  <div className="surface-card rounded-lg shadow-sm border border-subtle">
       <div className="p-3 border-b border-subtle">
         <div className="flex items-center justify-between">
           <div className="flex items-center">

@@ -2383,7 +2383,7 @@ export const FieldCanvas: React.FC<{
                         }
                       }}
                       onBlur={() => dispatch({ type: "COMMIT_INLINE_EDIT" })}
-                      className="w-full h-full text-center text-[14px] font-semibold border border-slate-300 rounded bg-white shadow-sm"
+                      className="w-full h-full text-center text-[14px] font-semibold border border-subtle rounded surface-card shadow-sm"
                     />
                   </div>
                 </foreignObject>

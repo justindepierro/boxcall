@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "../../../ui/Button";
+import { Typography } from "../../../design-system/Typography";
 
 interface HelpOverlayProps {
   open: boolean;
@@ -33,9 +34,14 @@ export const HelpOverlay: React.FC<HelpOverlayProps> = ({
             ×
           </Button>
         </div>
-        <h2 id="diagram-help-title" className="text-lg font-semibold mb-3">
+        <Typography
+          id="diagram-help-title"
+          variant="headline-sm"
+          as="h2"
+          className="mb-3"
+        >
           Diagram Builder — Shortcuts & Tips
-        </h2>
+        </Typography>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <section>
             <h3 className="font-medium text-slate-700 mb-1">Navigation</h3>

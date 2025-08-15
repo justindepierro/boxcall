@@ -20,7 +20,7 @@ const configArray = [
       "build/",
       "coverage/",
       ".vscode/",
-  "archive/**",
+      "archive/**",
       ".codemod-backups/",
       "*.log",
       "!shared/",

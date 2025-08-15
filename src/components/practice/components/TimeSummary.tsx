@@ -44,7 +44,7 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
   const isOverScheduled = totalDuration > scheduledDuration;
   const remainingTime = scheduledDuration - totalDuration;
   return (
-    <div className="bg-white rounded-lg border border-subtle p-4 mb-6">
+    <div className="surface-card rounded-lg border border-subtle p-4 mb-6">
       <div className="flex items-center gap-2 mb-3">
         <Icon name="clock" size="lg" className="text-navy-700" />
         <Typography variant="headline-sm" className="text-navy-900">

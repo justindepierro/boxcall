@@ -33,7 +33,7 @@ export const DiagramPaneRoute: React.FC = () => {
       }}
     >
       <div
-        className="bg-white rounded-md p-0 shadow-lg w-full max-w-7xl h-full max-h-[90vh] flex flex-col overflow-hidden relative"
+        className="surface-card rounded-md p-0 shadow-lg w-full max-w-7xl h-full max-h-[90vh] flex flex-col overflow-hidden relative border border-subtle"
         role="dialog"
         aria-modal="true"
       >
@@ -49,7 +49,7 @@ export const DiagramPaneRoute: React.FC = () => {
           variant="ghost"
           size="xs"
           onClick={handleClose}
-          className="absolute top-3 right-3 bg-white/70 backdrop-blur p-1 h-auto w-auto"
+          className="absolute top-3 right-3 surface-subtle/70 backdrop-blur p-1 h-auto w-auto"
           aria-label="Close diagram"
         >
           <X className="h-5 w-5" />

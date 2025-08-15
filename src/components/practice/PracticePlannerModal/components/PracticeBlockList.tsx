@@ -235,7 +235,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                               {block.groups.map((group) => (
                                 <div
                                   key={group.id}
-                                  className="flex items-center justify-between p-2 bg-white/50 rounded"
+                                  className="flex items-center justify-between p-2 surface-card/50 rounded"
                                 >
                                   <div className="flex-1">
                                     <Typography

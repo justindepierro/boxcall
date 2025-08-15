@@ -515,7 +515,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
         >
           <div
             ref={confirmRef}
-            className="bg-white rounded-md shadow-lg w-full max-w-sm p-5 space-y-4"
+            className="surface-card rounded-md shadow-lg w-full max-w-sm p-5 space-y-4 border border-subtle"
             tabIndex={-1}
             onKeyDown={(e) => {
               if (e.key === "Tab" && confirmRef.current) {
@@ -539,12 +539,14 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
               }
             }}
           >
-            <h3
+            <Typography
               id="discard-changes-title"
-              className="text-sm font-semibold text-slate-800"
+              variant="label-md"
+              as="h3"
+              className="text-text-primary"
             >
               Discard changes?
-            </h3>
+            </Typography>
             <p
               id="discard-changes-desc"
               className="text-xs text-slate-600 leading-relaxed"

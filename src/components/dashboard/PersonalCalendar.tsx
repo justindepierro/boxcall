@@ -259,9 +259,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                     {selectedEvent.type}
                   </Tag>
                   {selectedEvent.is_home && (
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                      Home
-                    </span>
+                    <Tag variant="success" size="sm">Home</Tag>
                   )}
                 </div>
 

@@ -274,7 +274,7 @@ export const DevTools: React.FC = () => {
                   isExpanded: !prev.isExpanded,
                 }))
               }
-              className="p-1 h-auto hover:bg-white/20 text-text-inverse"
+              className="p-1 h-auto hover:surface-subtle-hover text-text-inverse"
               aria-label={
                 state.isExpanded ? "Collapse dev tools" : "Expand dev tools"
               }

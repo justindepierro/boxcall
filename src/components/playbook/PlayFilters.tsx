@@ -38,7 +38,7 @@ export const PlayFilters: React.FC<PlayFiltersProps> = ({
     (filter) => filter && (Array.isArray(filter) ? filter.length > 0 : true)
   );
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-subtle">
+    <div className="surface-card rounded-lg shadow-sm border border-subtle">
       {/* Header */}
       <div className="p-4 border-b border-subtle">
         <div className="flex items-center justify-between">

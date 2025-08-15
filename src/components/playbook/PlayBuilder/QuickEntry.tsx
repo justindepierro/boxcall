@@ -227,7 +227,7 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
             onChange={(e) => setQuickInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Power O | I-Form | Run | 21 Personnel"
-            className="playbuilder-input w-full px-4 py-3 bg-white border-2 border-jade-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 text-base"
+            className="playbuilder-input w-full px-4 py-3 surface-card border-2 border-jade-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 text-base"
             autoFocus
           />
         </div>

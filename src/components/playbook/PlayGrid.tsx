@@ -368,7 +368,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // --- Skeleton Loading State ---
   const SkeletonCard: React.FC<{ idx: number }> = ({ idx }) => (
     <div
-      className="rounded-md border border-subtle bg-white p-4 shadow-sm animate-pulse"
+      className="rounded-md border border-subtle surface-card p-4 shadow-sm animate-pulse"
       aria-label={`Loading play placeholder ${idx + 1}`}
     >
       <div className="h-4 w-1/3 bg-slate-200 rounded mb-3" />

@@ -174,7 +174,7 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
           onFocus={handleInputFocus}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="w-full px-3 py-2 pr-10 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 bg-white"
+          className="w-full px-3 py-2 pr-10 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 surface-card"
           autoComplete="off"
         />
 
@@ -201,14 +201,14 @@ export const AutocompleteDropdown: React.FC<AutocompleteDropdownProps> = ({
             className="absolute inset-y-0 right-8 px-1 h-auto z-10"
             title={`Add new ${label.toLowerCase()}: "${inputValue}"`}
           >
-            <Plus className="h-4 w-4 bg-white rounded-full border border-jade-500" />
+            <Plus className="h-4 w-4 surface-card rounded-full border border-jade-500" />
           </Button>
         )}
       </div>
 
       {/* Dropdown options */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-slate-300 rounded-md shadow-lg max-h-60 overflow-auto">
+  <div className="absolute z-50 w-full mt-1 surface-card border border-slate-300 rounded-md shadow-lg max-h-60 overflow-auto">
           {filteredOptions.length > 0 ? (
             <>
               {filteredOptions.map((option, index) => (

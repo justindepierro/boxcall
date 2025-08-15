@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { Button } from "../components/ui/Button/Button";
+import { Typography } from "../components/design-system/Typography";
 
 export interface ConfirmOptions {
   title?: string;
@@ -82,14 +83,16 @@ export const ConfirmProvider: React.FC<{ children: React.ReactNode }> = ({
             className="relative surface-card elevation-modal max-w-sm w-full mx-4 rounded-md border-subtle p-6 animate-scale-in"
           >
             {active.options.title && (
-              <h2
+              <Typography
                 id={`${active.id}-title`}
-                className="text-base font-semibold mb-3 text-slate-900"
+                variant="headline-xs"
+                as="h2"
+                className="mb-3"
               >
                 {active.options.title}
-              </h2>
+              </Typography>
             )}
-            <div className="text-sm text-slate-600 mb-6">
+            <div className="text-text-secondary mb-6 text-sm">
               {active.options.message}
             </div>
             <div className="flex justify-end gap-2">
