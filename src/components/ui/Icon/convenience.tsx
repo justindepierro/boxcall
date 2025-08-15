@@ -8,12 +8,9 @@
 import React from "react";
 import { Icon } from "./Icon";
 
-// Ensure required icon categories are loaded
-import "./categories/ActionIcons";
-import "./categories/CalendarIcons";
-import "./categories/SportsIcons";
-import "./categories/NavigationIcons";
-import "./categories/BusinessIcons";
+// Categories are no longer preloaded here to preserve proper code-splitting.
+// The base Icon component directly maps required lucide icons, avoiding mixed
+// dynamic+static imports and reducing bundle warnings.
 
 // Common convenience components
 export const PlayIcon: React.FC = () => <Icon name="play" color="primary" />;

@@ -3,11 +3,7 @@ import { Button } from "../../../ui/Button";
 import { useDiagramEditor, useAddPlayer } from "../context";
 import { TelemetryEventTypes } from "../../../../telemetry/events";
 import { telemetry } from "../../../../telemetry/dispatcher";
-import {
-  svgElementToDataUrl,
-  svgFullToPngDataUrl,
-  svgFullToString,
-} from "../thumbnail";
+// Thumbnail helpers are loaded on-demand to keep bundle size down
 import { FORMATION_OPTIONS } from "../formations";
 import type { DiagramFieldConfig } from "../types";
 
@@ -32,8 +28,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
             ✕
           </Button>
         )}
-      </div>
-      <div className="flex items-center gap-2 text-xs flex-wrap">
+  </div>
         <div className="flex items-center gap-1 pr-3 border-r border-subtle">
           <Button
             size="xs"
@@ -136,6 +131,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
               if (!svgRef.current) return;
               const started = performance.now();
               try {
+                const { svgElementToDataUrl } = await import("../thumbnail");
                 const dataUrl = await svgElementToDataUrl(svgRef.current, {
                   width: 480,
                   background: "#0f5132",
@@ -175,6 +171,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
               const started = performance.now();
               try {
                 const width = 1600;
+                const { svgFullToPngDataUrl } = await import("../thumbnail");
                 const dataUrl = await svgFullToPngDataUrl(svgRef.current, {
                   width,
                   background: "#0f5132",
@@ -216,6 +213,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
               const started = performance.now();
               try {
                 const width = 1600;
+                const { svgFullToPngDataUrl } = await import("../thumbnail");
                 const dataUrl = await svgFullToPngDataUrl(svgRef.current, {
                   width,
                   background: "#0f5132",
@@ -274,11 +272,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onClose, svgRef }) => {
           <Button
             size="xs"
             variant="ghost"
-            onClick={() => {
+            onClick={async () => {
               if (!svgRef.current) return;
               const started = performance.now();
               try {
                 const width = 1600;
+                const { svgFullToString } = await import("../thumbnail");
                 const svgText = svgFullToString(svgRef.current, {
                   width,
                   background: "#0f5132",
