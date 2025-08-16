@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import "./App.css";
 import { DevModeProvider } from "./app/dev-mode-store.tsx";
 import { DevHealthCheck } from "./components/ui/DevHealthCheck";
@@ -6,7 +7,9 @@ import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { useTheme } from "./hooks/useTheme";
 import { testDatabaseConnection } from "./lib/database-helpers";
 import { AppRouter } from "./routes/AppRouter";
+
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 import { initWebVitals } from "./utils/performance/webVitals";
 /**
  * App Component

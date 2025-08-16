@@ -1,18 +1,20 @@
 import React from "react";
+
 import "./CalendarShell.css";
 // (migrated logic now inside controller hook)
-import { CalendarStats } from "./CalendarStats";
-import { CalendarFiltersPanel } from "./CalendarFiltersPanel";
-import { CalendarToolbar } from "./CalendarToolbar";
-import { BoxCallCalendar } from "./BoxCallCalendar";
-import { EventModal } from "./EventModal";
 import { Card } from "../ui"; // adjust relative path if needed
 import Icon from "../ui/Icon/Icon";
+
+import { BoxCallCalendar } from "./BoxCallCalendar";
+import { CalendarFiltersPanel } from "./CalendarFiltersPanel";
 import { CalendarHeader } from "./CalendarHeader";
 import {
   CalendarPageSkeleton,
   CalendarErrorSkeleton,
 } from "./CalendarSkeletons";
+import { CalendarStats } from "./CalendarStats";
+import { CalendarToolbar } from "./CalendarToolbar";
+import { EventModal } from "./EventModal";
 // url state handled inside controller
 // Consolidated controller hook (data, filters, selection, navigation, url, mutations)
 import { useCalendarShellController } from "./hooks/useCalendarShellController";

@@ -3,7 +3,9 @@
  * Preserves the existing Icon API but delegates rendering to the tree-shakeable ModularIcon.
  */
 import React from "react";
+
 import { getComponentColor } from "../../../design-system/tokens";
+
 import {
   ModularIcon,
   type ModularIconName,

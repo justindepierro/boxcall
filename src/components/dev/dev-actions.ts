@@ -3,8 +3,10 @@
  */
 
 import { supabase } from "../../lib/supabase";
-import type { ActionResult, DevMode } from "../../types/dev";
+
 import { devLogger } from "./dev-logger";
+
+import type { ActionResult, DevMode } from "../../types/dev";
 
 export class DevActions {
   async switchMode(newMode: DevMode): Promise<ActionResult> {

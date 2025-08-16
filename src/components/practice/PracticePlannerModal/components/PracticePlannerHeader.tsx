@@ -1,9 +1,11 @@
 import React from "react";
-import { Typography } from "../../../design-system/Typography";
+
 import { Button } from "../../../../components/ui";
 import { Icon } from "../../../../components/ui/Icon/Icon";
-import type { CalendarEvent } from "../../../../domain/calendar/types";
+import { Typography } from "../../../design-system/Typography";
 import { PDFExportTrigger } from "../../LazyPDFExport";
+
+import type { CalendarEvent } from "../../../../domain/calendar/types";
 import type {
   PracticeBlock,
   TimelineAllocation,

@@ -4,9 +4,10 @@
  */
 
 import { supabase } from "../lib/supabase";
-import type { Play } from "../types/play";
 import { DatabaseDebug } from "../utils/databaseDebug";
 import { normalizePlayName, normalizeText } from "../utils/textNormalization";
+
+import type { Play } from "../types/play";
 
 export class PlaysService {
   /**

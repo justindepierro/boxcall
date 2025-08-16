@@ -1,9 +1,10 @@
 import React from "react";
-import { Card } from "../../ui";
+
 import { Typography } from "../../design-system";
-import { TeamTrophyCase } from "../TeamTrophyCase";
-import { TeamQuickActions } from "../TeamQuickActions";
+import { Card } from "../../ui";
 import { SeasonStatsCard } from "../SeasonStatsCard";
+import { TeamQuickActions } from "../TeamQuickActions";
+import { TeamTrophyCase } from "../TeamTrophyCase";
 
 interface LeftPanelProps {
   teamId: string | undefined;

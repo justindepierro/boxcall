@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
+
+import { useAuth } from "../../app/auth-store";
+import { supabase } from "../../lib/supabase";
+import { telemetry } from "../../telemetry/dispatcher";
 import { Typography } from "../design-system";
 import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
-import { telemetry } from "../../telemetry/dispatcher";
-import { useAuth } from "../../app/auth-store";
-import { supabase } from "../../lib/supabase";
 
 interface ActivationFlags {
   team?: boolean;

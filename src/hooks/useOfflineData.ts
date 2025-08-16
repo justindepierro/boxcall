@@ -3,10 +3,12 @@
  * Part of Phase 3B: Offline Architecture
  */
 import { useState, useEffect, useCallback } from "react";
+
 import {
   offlineDataManager,
   type OfflineData,
 } from "../services/offlineDataManager";
+
 import { useNetworkStatus } from "./useNetworkStatus";
 
 // Hook for offline-first data fetching

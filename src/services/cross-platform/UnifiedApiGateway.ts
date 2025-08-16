@@ -5,11 +5,6 @@
  * ensuring consistent behavior across web, mobile, and external integrations.
  */
 import { supabase } from "../../lib/supabase";
-import type {
-  CalendarEvent,
-  CalendarEventCreate,
-  CalendarEventUpdate,
-} from "../../types/calendar";
 import {
   AttendanceAnalyticsService,
   type AttendanceAnalytics,
@@ -29,6 +24,12 @@ import {
   type SchedulingConstraints,
   type TimeSuggestion,
 } from "../phase3/SmartSchedulingOptimizer";
+
+import type {
+  CalendarEvent,
+  CalendarEventCreate,
+  CalendarEventUpdate,
+} from "../../types/calendar";
 // ============================================================================
 // UNIFIED API TYPES
 // ============================================================================

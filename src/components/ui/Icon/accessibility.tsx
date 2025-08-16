@@ -6,7 +6,9 @@
  */
 
 import React from "react";
+
 import { Icon } from "./Icon";
+
 import type { IconProps, IconName } from "./Icon";
 
 // Ensure required icon categories are loaded

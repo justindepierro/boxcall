@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+
 import type {
   CreatePracticeBlockData,
   CreatePracticeScheduleData,

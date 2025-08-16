@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { Typography } from "../../design-system/Typography";
 /**
  * Memoized Practice Block Table
@@ -5,10 +7,9 @@ import { Typography } from "../../design-system/Typography";
  * High-performance table component with React.memo optimization
  * Prevents unnecessary re-renders when practice data hasn't changed
  */
-import { memo } from "react";
-import { Tag, mapCategoryToTagVariant } from "../../ui/Tag";
-import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
+import { Icon } from "../../ui/Icon/Icon";
+import { Tag, mapCategoryToTagVariant } from "../../ui/Tag";
 
 interface PracticeBlock {
   id: string;

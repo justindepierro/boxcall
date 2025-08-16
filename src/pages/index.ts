@@ -13,7 +13,7 @@ export { default as TeamSettings } from "./TeamSettings";
 export { default as About } from "./About";
 export { default as Templates } from "./Templates";
 // Legal pages
-export { AboutPage } from "./legal/AboutPage";
+export { default as AboutPage } from "./legal/AboutPage";
 export { PrivacyPolicyPage } from "./legal/PrivacyPolicyPage";
 export { TermsOfServicePage } from "./legal/TermsOfServicePage";
 export { ContactPage } from "./legal/ContactPage";

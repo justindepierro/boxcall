@@ -5,10 +5,12 @@
  * only when the user actually wants to export, reducing initial bundle size by ~1.4MB
  */
 import React, { Suspense, lazy } from "react";
-import { Icon } from "../ui/Icon/Icon";
-import type { IconName } from "../ui/Icon/Icon";
+
 import { Button } from "../ui/Button/Button";
+import { Icon } from "../ui/Icon/Icon";
+
 import type { PracticeBlock } from "./types";
+import type { IconName } from "../ui/Icon/Icon";
 
 // Lazy load the heavy PDF components
 const PracticePDFExportDialog = lazy(() =>

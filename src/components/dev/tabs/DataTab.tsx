@@ -1,18 +1,20 @@
+import React from "react";
+
+import { useDevMode } from "../../../app/dev-mode-hooks";
+import { useUI } from "../../../app/store";
+import { useTeamsData } from "../../../hooks/useTeamsData";
 import { Typography } from "../../design-system";
+import { Button } from "../../ui/Button/Button";
 import { Icon } from "../../ui/Icon/Icon";
 /**
  * DevTools Data & Modes Tab
  * Database status and role switching
  */
-import React from "react";
-import { Button } from "../../ui/Button/Button";
-import { useDevMode } from "../../../app/dev-mode-hooks";
-import { useTeamsData } from "../../../hooks/useTeamsData";
+import { DevToolsActions } from "../services/DevToolsActions";
 import { DEV_MODES } from "../types";
+
 import type { DevMode } from "../../../app/dev-mode-types";
 
-import { DevToolsActions } from "../services/DevToolsActions";
-import { useUI } from "../../../app/store";
 
 interface DataTabProps {
   onModeChange: (mode: DevMode) => void;

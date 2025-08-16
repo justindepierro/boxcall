@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
+
+import { useDevMode } from "../app/dev-mode-hooks";
 import {
   AchievementService,
   type AchievementData,
 } from "../services/achievementService";
-import { useDevMode } from "../app/dev-mode-hooks";
 /**
  * Hook for managing user achievements
  */

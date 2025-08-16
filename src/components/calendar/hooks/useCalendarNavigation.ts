@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+
+import { mapInternalViewToQuery } from "./useCalendarUrlState";
+
 import type { CalendarEvent } from "../../../domain/calendar/types";
 import type { BoxCallCalendarRef } from "../BoxCallCalendar";
-import { mapInternalViewToQuery } from "./useCalendarUrlState";
 
 interface UseCalendarNavigationArgs {
   calendarRef: React.RefObject<BoxCallCalendarRef | null>;

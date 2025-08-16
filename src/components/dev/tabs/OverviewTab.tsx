@@ -1,15 +1,16 @@
-import { Typography } from "../../design-system";
-import { Icon } from "../../ui/Icon/Icon";
 /**
  * DevTools Overview Tab
  * System status and quick actions
  */
 import React from "react";
-import { Card } from "../../ui";
-import { Button } from "../../ui/Button/Button";
+
 import { useAuth } from "../../../app/auth-store";
 import { useDevMode } from "../../../app/dev-mode-hooks";
 import { useTeamsData } from "../../../hooks/useTeamsData";
+import { Typography } from "../../design-system";
+import { Card } from "../../ui";
+import { Button } from "../../ui/Button/Button";
+import { Icon } from "../../ui/Icon/Icon";
 import { DEV_MODES, type DevToolsState, type DevLog } from "../types";
 
 interface OverviewTabProps {

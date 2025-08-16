@@ -5,10 +5,11 @@
  * Combines modular profile definitions into a single configuration object.
  */
 
-import type { DevMode, DevProfileConfig } from "../../../types/dev-profiles";
 import { coreProfiles } from "./coreProfiles";
 import { devRoleProfiles } from "./devRoleProfiles";
 import { legacyProfiles } from "./legacyProfiles";
+
+import type { DevMode, DevProfileConfig } from "../../../types/dev-profiles";
 
 /**
  * Complete development profile configuration registry

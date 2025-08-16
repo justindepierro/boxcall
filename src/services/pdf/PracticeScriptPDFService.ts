@@ -4,21 +4,25 @@
  * Specialized PDF service for generating practice script documents.
  * Handles practice planning exports with timeline visualization.
  */
-import React from "react";
 import { Document, Page, Text, View } from "@react-pdf/renderer";
+import React from "react";
+
 import { BasePDFService, PDFServiceFactory } from "./BasePDFService";
-import type {
-  PracticeScriptPDFData,
-  PDFExportOptions,
-  PDFBranding,
-} from "./types";
-import { PDFError } from "./types";
 import {
   PDFBaseStyles,
   PDFColors,
   getCategoryColor,
   formatTimeForPDF,
 } from "./styles";
+import { PDFError } from "./types";
+
+import type {
+  PracticeScriptPDFData,
+  PDFExportOptions,
+  PDFBranding,
+} from "./types";
+
+
 export class PracticeScriptPDFService extends BasePDFService {
   /**
    * Export practice script to PDF blob

@@ -4,9 +4,11 @@
  * Abstract base class for all PDF generation services.
  * Provides common functionality and consistent interface.
  */
-import type { PDFExportOptions, PDFTemplate, PDFBranding } from "./types";
-import { PDFError } from "./types";
 import { PDFColors, PDFFonts } from "./styles";
+import { PDFError } from "./types";
+
+import type { PDFExportOptions, PDFTemplate, PDFBranding } from "./types";
+
 export abstract class BasePDFService {
   protected template: PDFTemplate;
   protected branding?: PDFBranding;

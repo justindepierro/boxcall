@@ -1,8 +1,10 @@
 import React from "react";
-import { Icon } from "../../ui/Icon/Icon";
-import { Button } from "../../ui/Button/Button";
-import { Badge } from "../../ui/Badge";
+
 import { AdvancedSearchBar } from "../../playbook/AdvancedSearchBar";
+import { Badge } from "../../ui/Badge";
+import { Button } from "../../ui/Button/Button";
+import { Icon } from "../../ui/Icon/Icon";
+
 import type { ServerPlaybookViewPreset } from "../../../types/playbookViewPreset";
 
 export type PlaybookActionsBarProps = {

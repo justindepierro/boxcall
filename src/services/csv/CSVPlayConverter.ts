@@ -4,9 +4,10 @@
  * Handles conversion between CSV data and Play objects
  */
 
-import type { Play } from "../../types/play";
-import type { CSVPlayPreview, CSVImportResult } from "./types";
 import { UserPreferencesService } from "../userPreferencesService";
+
+import type { CSVPlayPreview, CSVImportResult } from "./types";
+import type { Play } from "../../types/play";
 
 export class CSVPlayConverter {
   /**

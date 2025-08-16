@@ -2,6 +2,7 @@
  * BoxCall Card Component Types
  */
 import type { HTMLAttributes, ReactNode } from "react";
+
 export type CardVariant =
   | "default" // Standard card
   | "elevated" // Card with shadow

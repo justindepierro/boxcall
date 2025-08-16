@@ -5,10 +5,12 @@
  * Extracted from the massive PracticePlannerModal for better maintainability
  */
 import React, { useState } from "react";
-import { Icon } from "../../ui/Icon/Icon";
+
+import { Typography } from "../../design-system/Typography";
 import { Button } from "../../ui/Button/Button";
 import Card from "../../ui/Card/Card";
-import { Typography } from "../../design-system/Typography";
+import { Icon } from "../../ui/Icon/Icon";
+
 import type { PracticeBlock } from "../../../types/practice";
 
 interface PracticeBlockEditorProps {

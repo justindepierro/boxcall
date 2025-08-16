@@ -4,6 +4,7 @@
  * TypeScript definitions for the Input component system
  */
 import type { InputHTMLAttributes, ReactNode } from "react";
+
 export type InputVariant =
   | "text" // Standard text input
   | "email" // Email input with validation

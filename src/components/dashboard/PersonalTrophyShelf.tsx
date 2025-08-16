@@ -1,8 +1,10 @@
 import React from "react";
+
 import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { ModularIcon as Icon, SmartIconSystem } from "../ui/Icon";
+
 interface PersonalTrophyShelfProps {
   userId: string;
   userRole?: string; // Optional for future role-based features

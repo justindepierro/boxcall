@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
+
+import { supabase } from "../../../lib/supabase";
 import { Typography } from "../../design-system";
 import { LogoIcon } from "../../ui/Logo";
 // Removed old inline edit button import usage after redesign
-import { supabase } from "../../../lib/supabase";
 
 export interface TeamBulletinHeaderProps {
   teamId: string | undefined;

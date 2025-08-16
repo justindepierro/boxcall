@@ -4,8 +4,9 @@
  */
 
 import Fuse from "fuse.js";
-import type { FuseResultMatch, IFuseOptions } from "fuse.js";
+
 import type { Play } from "../types/play";
+import type { FuseResultMatch, IFuseOptions } from "fuse.js";
 
 export interface SearchResult<T> {
   item: T;

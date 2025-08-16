@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+
 import type { TelemetryEvent } from "./dispatcher";
 
 interface TelemetryContext {

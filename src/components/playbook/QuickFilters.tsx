@@ -4,12 +4,13 @@
  */
 
 import React from "react";
-import { Button } from "../ui";
-import { Icon } from "../ui/Icon/Icon";
+
 import {
   PlaybookSearchService,
   type QuickFilter,
 } from "../../services/playbookSearchService";
+import { Button } from "../ui";
+import { Icon } from "../ui/Icon/Icon";
 
 interface QuickFiltersProps {
   activeFilters: string[];

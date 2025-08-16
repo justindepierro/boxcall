@@ -1,7 +1,8 @@
 import React from "react";
+
+import { Typography } from "../design-system/Typography";
 import { Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
-import { Typography } from "../design-system/Typography";
 
 export interface QuickAction {
   id: string;

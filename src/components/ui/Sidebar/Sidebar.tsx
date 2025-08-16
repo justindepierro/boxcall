@@ -1,6 +1,9 @@
-import type { ReactNode } from "react";
 import React, { useEffect, useRef } from "react";
+
 import { Button } from "../Button";
+
+import type { ReactNode } from "react";
+
 export interface SidebarItem {
   /** Unique identifier for the sidebar item */
   id: string;

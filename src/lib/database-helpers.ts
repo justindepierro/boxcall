@@ -1,3 +1,5 @@
+import { supabase } from "./supabase";
+
 import type {
   Game,
   Play,
@@ -9,7 +11,6 @@ import type {
   TeamGoal,
   UserProfile,
 } from "../types/database";
-import { supabase } from "./supabase";
 // Test connection and verify table access
 export async function testDatabaseConnection() {
   try {

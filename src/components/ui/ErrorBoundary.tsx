@@ -1,11 +1,14 @@
-import type { ErrorInfo, ReactNode } from "react";
-import { ModularIcon as Icon } from "./Icon";
+import React, { Component } from "react";
+
 import { telemetry } from "../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../telemetry/events";
-import React, { Component } from "react";
 // Use ModularIcon for lightweight, per-icon dynamic imports
-import { Button } from "./Button";
 import { Typography } from "../design-system";
+
+import { Button } from "./Button";
+import { ModularIcon as Icon } from "./Icon";
+
+import type { ErrorInfo, ReactNode } from "react";
 
 interface Props {
   children: ReactNode;

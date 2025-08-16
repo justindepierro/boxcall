@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+
 import { FullCalendarAdapter } from "./FullCalendarAdapter";
 
 describe("FullCalendarAdapter edge cases", () => {

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
+
 import { useAuthLoading, useIsAuthenticated } from "../app/auth-store";
-import { Icon } from "../components/ui/Icon/Icon";
-import { Button } from "../components/ui/Button/Button";
-import { supabase } from "../lib/supabase";
-import type { Database } from "../types/database";
 import { Typography } from "../components/design-system/Typography";
+import { Button } from "../components/ui/Button/Button";
+import { Icon } from "../components/ui/Icon/Icon";
+import { supabase } from "../lib/supabase";
+
+import type { Database } from "../types/database";
+
 // Subscription tier type
 type SubscriptionTier =
   Database["public"]["Tables"]["teams"]["Row"]["subscription_tier"];

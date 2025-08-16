@@ -1,19 +1,24 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
-import type { QueryKey } from "@tanstack/react-query";
-import { calendarKeys, type EventFilters } from "./queryKeys";
-import { CalendarAPI } from "../../infra/calendar/api";
-import { CalendarRSVP } from "../../infra/calendar/rsvp";
-import type {
-  CalendarEventCreate,
-  EventRSVP,
-  CalendarEvent,
-} from "../../domain/calendar/types";
+
 import {
   CalendarEventSchema,
   EventRSVPSchema,
   CalendarCommentSchema,
 } from "../../domain/calendar/types";
+import { CalendarAPI } from "../../infra/calendar/api";
+import { CalendarRSVP } from "../../infra/calendar/rsvp";
+
+import { calendarKeys, type EventFilters } from "./queryKeys";
+
+import type {
+  CalendarEventCreate,
+  EventRSVP,
+  CalendarEvent,
+} from "../../domain/calendar/types";
+import type { QueryKey } from "@tanstack/react-query";
+
+
 
 // Types for ranges & params
 export interface EventsQueryParams {

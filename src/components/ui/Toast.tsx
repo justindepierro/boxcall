@@ -1,12 +1,16 @@
+import React, { useState, useEffect, useCallback } from "react";
+
+import { ToastContext, type Toast } from "../../contexts/ToastContext";
 import { Typography } from "../design-system";
+
 /**
  * Toast Component System
  *
  * Professional toast notifications with animations and auto-dismiss
  */
-import React, { useState, useEffect, useCallback } from "react";
 import { Icon } from "./Icon/Icon";
-import { ToastContext, type Toast } from "../../contexts/ToastContext";
+
+
 import { Button } from "./index";
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({

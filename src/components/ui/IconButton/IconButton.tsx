@@ -2,9 +2,11 @@
  * IconButton - lightweight chromeless icon action control
  * Purpose: internal UI chrome (close modal, clear input, toggle visibility)
  */
-import React, { forwardRef } from "react";
 import clsx from "clsx";
+import React, { forwardRef } from "react";
+
 import { Button } from "../Button";
+
 import type { ButtonProps } from "../Button/Button.types";
 
 export interface IconButtonProps

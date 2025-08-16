@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+
+import { Typography } from "../../design-system/Typography";
 import { Button } from "../../ui";
 import Icon from "../../ui/Icon/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../../ui/Tag";
-import { Typography } from "../../design-system/Typography";
+
 import type {
   CalendarEvent,
   EventRSVP,

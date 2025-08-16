@@ -3,8 +3,9 @@
  * Replacement for the deleted dev-mode-store with essential functionality only
  */
 import React, { createContext, useContext, useState } from "react";
-import type { ReactNode } from "react";
+
 import type { DevMode } from "./dev-mode-types";
+import type { ReactNode } from "react";
 
 // Dev mode context
 interface DevModeContextType {

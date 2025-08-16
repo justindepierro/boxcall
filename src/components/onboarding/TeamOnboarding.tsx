@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { useAuth } from "../../app/auth-store";
+import { supabase } from "../../lib/supabase";
 import { Typography } from "../design-system";
 import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
-import { supabase } from "../../lib/supabase";
 
 interface TeamOnboardingProps {
   /** Show only on dashboard, not in playbook */

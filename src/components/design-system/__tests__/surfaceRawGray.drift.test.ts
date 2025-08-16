@@ -1,6 +1,7 @@
-import { describe, it, expect } from "vitest";
 import fs from "fs";
 import path from "path";
+
+import { describe, it, expect } from "vitest";
 
 const RAW_BG_REGEX = /bg-gray-(50|100|200)\b/;
 const RAW_BORDER_REGEX = /border-gray-(100|200)\b/;

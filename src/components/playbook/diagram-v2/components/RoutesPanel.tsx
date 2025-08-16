@@ -1,6 +1,7 @@
 import React from "react";
-import { useDiagramEditor } from "../context";
+
 import { Button } from "../../../ui/Button";
+import { useDiagramEditor } from "../context";
 
 export const RoutesPanel: React.FC = () => {
   const { state, dispatch } = useDiagramEditor();

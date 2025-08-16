@@ -1,9 +1,12 @@
 import React from "react";
+
 import { useRoster } from "../../hooks/useRoster";
-import { PlayerList } from "./PlayerList";
 import { Button } from "../ui";
-import type { TeamPlayer } from "../../types/team-management";
+
+import { PlayerList } from "./PlayerList";
+
 import type { RosterPlayerView } from "../../services/rosterService";
+import type { TeamPlayer } from "../../types/team-management";
 
 type ExtendedRosterPlayer = RosterPlayerView & {
   first_name?: string;

@@ -1,23 +1,26 @@
 // Fully reconstructed PlayBuilderCore with diagram v2 draft persistence
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Icon } from "../../ui/Icon";
-import { Typography } from "../../design-system/Typography";
-import { Button } from "../../ui/Button";
-import type { Play } from "../../../types/play";
-import { PlayBuilderForm } from "./PlayBuilderForm";
-import { PlayBuilderPreview } from "./PlayBuilderPreview";
-import { VisualPlayBuilderV2 } from "../diagram-v2/VisualPlayBuilderV2";
-import { QuickEntry } from "./QuickEntry";
+
+import { PlaysService } from "../../../services/playsService";
+import { telemetry } from "../../../telemetry/dispatcher";
+import { TelemetryEventTypes } from "../../../telemetry/events";
 import {
   normalizePlayName,
   normalizeText,
   normalizeFormation,
 } from "../../../utils/textNormalization";
-import { PlaysService } from "../../../services/playsService";
-import { telemetry } from "../../../telemetry/dispatcher";
-import { TelemetryEventTypes } from "../../../telemetry/events";
-import type { DiagramDocument } from "../diagram-v2/types";
+import { Typography } from "../../design-system/Typography";
+import { Button } from "../../ui/Button";
+import { Icon } from "../../ui/Icon";
 import { computeComplexityScore } from "../diagram-v2/types";
+import { VisualPlayBuilderV2 } from "../diagram-v2/VisualPlayBuilderV2";
+
+import { PlayBuilderForm } from "./PlayBuilderForm";
+import { PlayBuilderPreview } from "./PlayBuilderPreview";
+import { QuickEntry } from "./QuickEntry";
+
+import type { Play } from "../../../types/play";
+import type { DiagramDocument } from "../diagram-v2/types";
 
 interface PlayBuilderCoreProps {
   isOpen: boolean;

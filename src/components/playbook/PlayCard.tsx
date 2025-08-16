@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography } from "../design-system/Typography";
-import Icon from "../ui/Icon/Icon";
-import type { Play as PlayType } from "../../types/play";
-import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
+
+import { INSTALL_PHASES, type InstallPhase } from "../../types/play";
 import {
   getPlayFlags,
   addFlag,
@@ -11,9 +9,14 @@ import {
   POSITION_OPTIONS,
   type PlayFlags,
 } from "../../utils/localPlayFlags";
+import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
+import { Typography } from "../design-system/Typography";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button/Button";
-import { INSTALL_PHASES, type InstallPhase } from "../../types/play";
+import Icon from "../ui/Icon/Icon";
+
+import type { Play as PlayType } from "../../types/play";
+
 interface PlayCardProps {
   play: PlayType;
   showOneWordCalls?: boolean;

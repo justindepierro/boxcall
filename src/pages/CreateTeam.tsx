@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { useAuth } from "../app/auth-store";
-import { usePermissions } from "../hooks/usePermissions";
 import { Typography } from "../components/design-system";
-import { Icon } from "../components/ui/Icon/Icon";
 import { Button } from "../components/ui/Button/Button";
+import { Icon } from "../components/ui/Icon/Icon";
+import { usePermissions } from "../hooks/usePermissions";
 import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";
 

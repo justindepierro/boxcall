@@ -1,21 +1,24 @@
-import { Typography } from "../design-system";
-import { Icon } from "../ui/Icon/Icon";
 /**
  * Development Tools Panel
  * Clean, modular development tools with better error handling
  * Refactored from 946-line monolithic component into modular architecture
  */
 import React, { useState, useEffect } from "react";
-import { Button } from "../ui";
+
 import { useAuth } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import { useToast } from "../../hooks/useToast";
-import { OverviewTab } from "./tabs/OverviewTab";
+import { Typography } from "../design-system";
+import { Button } from "../ui";
+import { Icon } from "../ui/Icon/Icon";
+
+import { DevToolsActions } from "./services/DevToolsActions";
 import { DataTab } from "./tabs/DataTab";
 import { LogsTab } from "./tabs/LogsTab";
-import { DevToolsActions } from "./services/DevToolsActions";
+import { OverviewTab } from "./tabs/OverviewTab";
 import { DEV_MODES, type DevToolsState, type DevLog } from "./types";
+
 // import { checkDatabaseData } from "../../utils/demo-data-check";
 import type { DevMode } from "../../app/dev-mode-types";
 

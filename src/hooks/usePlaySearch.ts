@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+
 import { getSupabaseClient } from "../lib/supabaseClient";
 import { telemetry } from "../telemetry/dispatcher";
 

@@ -5,13 +5,16 @@
  * Includes category filters, content options, and export settings.
  */
 import React, { useState } from "react";
-import { Icon } from "../ui/Icon/Icon";
-import { Button } from "../ui/Button/Button";
-import { Modal } from "../ui/Modal/Modal";
-import { Typography } from "../design-system/Typography";
+
 import { usePracticeScriptPDF } from "../../services/pdf/usePracticeScriptPDF";
+import { Typography } from "../design-system/Typography";
 import { markFirstScriptExport } from "../onboarding/activationHelpers";
+import { Button } from "../ui/Button/Button";
+import { Icon } from "../ui/Icon/Icon";
+import { Modal } from "../ui/Modal/Modal";
+
 import type { PracticeBlock } from "./types";
+
 interface PDFExportOptions {
   includeEverything: boolean;
   includeOffense: boolean;

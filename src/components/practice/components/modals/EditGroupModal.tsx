@@ -1,4 +1,7 @@
+import React, { useState, useEffect } from "react";
+
 import { Typography } from "../../../design-system";
+
 /**
  * EditGroupModal Component
  *
@@ -17,10 +20,12 @@ import { Typography } from "../../../design-system";
  *   onUpdateGroup={handleUpdateGroup}
  * />
  */
-import React, { useState, useEffect } from "react";
-import type { EditingGroup, PracticeGroup } from "../../types";
-import Icon from "../../../ui/Icon/Icon";
 import { Button } from "../../../ui/Button";
+import Icon from "../../../ui/Icon/Icon";
+
+import type { EditingGroup, PracticeGroup } from "../../types";
+
+
 interface EditGroupModalProps {
   isOpen: boolean;
   editingGroup: EditingGroup | null;

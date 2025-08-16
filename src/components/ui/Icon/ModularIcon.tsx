@@ -9,6 +9,7 @@
  */
 
 import React from "react";
+
 import { getComponentColor } from "../../../design-system/tokens";
 
 // Core types

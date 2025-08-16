@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Typography } from "../../design-system";
 /**
  * TimelineAllocation Component (Scaffold Mode)
@@ -32,10 +34,10 @@ import { Typography } from "../../design-system";
  * />
  */
 
-import React from "react";
 import { Button, Card } from "../../ui";
-import { getCategoryColor } from "../utils";
 import { Icon, type IconName } from "../../ui/Icon/Icon";
+import { getCategoryColor } from "../utils";
+
 import type {
   PracticeBlock,
   TimelineAllocation as TimelineAllocationType,

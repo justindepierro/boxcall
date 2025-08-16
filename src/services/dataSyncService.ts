@@ -10,13 +10,16 @@
  */
 
 import { SupabaseClient } from "@supabase/supabase-js";
-import type { Play } from "../types/play";
-import type { PracticeScript } from "./practiceScriptService";
-import type { GamePlan } from "./gamePlanService";
-import { CSVService } from "./csv";
-import { normalizePlayName, normalizeText } from "../utils/textNormalization";
+
 import { PlaysDomainService } from "../domain/playsDomainService";
+import { normalizePlayName, normalizeText } from "../utils/textNormalization";
+
+import { CSVService } from "./csv";
 import { PlaysService } from "./playsService";
+
+import type { GamePlan } from "./gamePlanService";
+import type { PracticeScript } from "./practiceScriptService";
+import type { Play } from "../types/play";
 import type { InboundPlay } from "../utils/playDataStandardization";
 
 interface CachedData<T = unknown> {

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+
 import { useAuth } from "../../app/auth-store";
 import { Typography } from "../design-system";
 import { Button, Card, Input } from "../ui";
 import { AuthLogo } from "../ui/Logo";
+
 interface LoginFormProps {
   onSuccess?: () => void;
   onSwitchToRegister?: () => void;

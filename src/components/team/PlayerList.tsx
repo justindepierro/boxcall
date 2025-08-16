@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { Typography } from "../design-system/Typography";
-import type { TeamPlayer } from "../../types/team-management";
+
 import { TEAM_LEVELS } from "../../types/team-management";
+import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button";
-import { Input } from "../ui/Input";
 import { Icon } from "../ui/Icon/Icon";
+import { Input } from "../ui/Input";
+
+import type { TeamPlayer } from "../../types/team-management";
+
 interface PlayerListProps {
   players: TeamPlayer[];
   onEditPlayer: (player: TeamPlayer) => void;

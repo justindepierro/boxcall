@@ -1,8 +1,11 @@
-import type { ReactNode } from "react";
 import React, { useEffect, useRef, useState } from "react";
+
+import { prefetchOnHover } from "../../../routes/prefetch";
 import { Button } from "../Button";
 import { ThemeToggle } from "../ThemeToggle/ThemeToggle";
-import { prefetchOnHover } from "../../../routes/prefetch";
+
+import type { ReactNode } from "react";
+
 export interface NavBarItem {
   /** Unique identifier for the nav item */
   id: string;

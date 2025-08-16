@@ -1,4 +1,5 @@
 import React from "react";
+
 import { CalendarShell } from "../components/calendar/CalendarShell";
 
 // CalendarShellPage: final calendar page after legacy removal

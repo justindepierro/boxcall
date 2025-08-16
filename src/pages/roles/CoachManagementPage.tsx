@@ -1,8 +1,9 @@
 import React from "react";
+
+import { Typography } from "../../components/design-system/Typography";
+import { Button } from "../../components/ui/Button/Button";
 import { Icon } from "../../components/ui/Icon/Icon";
 import { RoleProtectedRoute } from "../../routes/RoleProtectedRoute";
-import { Button } from "../../components/ui/Button/Button";
-import { Typography } from "../../components/design-system/Typography";
 
 /**
  * Coach Management Page - Only accessible by coaches and admins

@@ -3,9 +3,13 @@
  * Part of Phase 3A: Critical Performance & Error Handling
  */
 import React, { useState, useEffect } from "react";
-import { Icon } from "./Icon/Icon";
-import { useNetworkStatus } from "../../hooks/useNetworkStatus";
+
 import { useMobileErrorHandler } from "../../hooks/useMobileErrorHandler";
+import { useNetworkStatus } from "../../hooks/useNetworkStatus";
+import { Typography } from "../design-system/Typography";
+
+import { Icon } from "./Icon/Icon";
+import { MobileErrorState, OfflineErrorState } from "./MobileErrorState";
 import {
   DashboardCardSkeleton,
   PlayCardSkeleton,
@@ -13,8 +17,7 @@ import {
   NavigationSkeleton,
   PageLoadingSkeleton,
 } from "./Skeleton.tsx";
-import { MobileErrorState, OfflineErrorState } from "./MobileErrorState";
-import { Typography } from "../design-system/Typography";
+
 
 interface LoadingStrategyProps {
   /** Loading state */

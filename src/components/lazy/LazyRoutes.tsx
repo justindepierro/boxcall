@@ -1,3 +1,5 @@
+import React, { lazy } from "react";
+
 import { Typography } from "../design-system/Typography";
 /**
  * Lazy Route Components
@@ -5,7 +7,6 @@ import { Typography } from "../design-system/Typography";
  * Implements route-based code splitting to dramatically reduce initial bundle size
  * Each page component is loaded only when the user navigates to it
  */
-import React, { lazy } from "react";
 import { Button } from "../ui";
 
 // Lazy load all major page components

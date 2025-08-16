@@ -9,6 +9,8 @@
  * @author BoxCall Development Team
  */
 
+import { DevProfileRepository } from "./DevProfileRepository";
+
 import type {
   DevMode,
   DevProfileConfig,
@@ -18,7 +20,6 @@ import type {
   IDevProfileEventListener,
   DevProfileSystemConfig,
 } from "../../types/dev-profiles";
-import { DevProfileRepository } from "./DevProfileRepository";
 
 /**
  * Professional service for development profile management

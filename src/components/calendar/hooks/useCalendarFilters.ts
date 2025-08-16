@@ -1,6 +1,8 @@
 import { useState } from "react";
-import type { CalendarFilters } from "../../../domain/calendar/types";
+
 import { useDebouncedValue } from "./useDebouncedValue";
+
+import type { CalendarFilters } from "../../../domain/calendar/types";
 
 // Handles calendar filters + search state with debounced search value
 export function useCalendarFilters(initialWindowDays = 30) {

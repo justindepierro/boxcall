@@ -9,12 +9,14 @@
  */
 
 import { supabase } from "../../lib/supabase";
+
+import { getProfileConfigurations, hasProfileConfig } from "./configs";
+
 import type {
   DevMode,
   DevProfileConfig,
   IDevProfileRepository,
 } from "../../types/dev-profiles";
-import { getProfileConfigurations, hasProfileConfig } from "./configs";
 
 /**
  * Professional repository for dev profile data

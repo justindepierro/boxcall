@@ -3,7 +3,9 @@
  * Extracted from massive useEnhancedCalendar to keep only what's used
  */
 import { useCallback, useState } from "react";
+
 import { rsvpService } from "../services/rsvpService";
+
 import type { AdvancedRSVP } from "../types/rsvp";
 
 export function useAdvancedRSVP(eventId: string, userId: string) {

@@ -3,6 +3,7 @@
 
 declare module "lucide-react/dist/esm/icons/*.js" {
   import * as React from "react";
+
   const Icon: React.ComponentType<{
     size?: number;
     color?: string;
@@ -16,6 +17,7 @@ declare module "lucide-react/dist/esm/icons/*.js" {
 // Provide a second wildcard to be safe under different TS module resolution behaviors.
 declare module "lucide-react/dist/esm/icons/*" {
   import * as React from "react";
+
   const Icon: React.ComponentType<{
     size?: number;
     color?: string;

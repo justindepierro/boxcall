@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
+
 import type { Profile } from "../../types/database";
 import type { UserRole } from "../../types/phase4-3";
+
 interface ProfileCardProps {
   profile: Profile;
   userRole: UserRole;

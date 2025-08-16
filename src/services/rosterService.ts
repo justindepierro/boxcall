@@ -1,4 +1,5 @@
 import { type PostgrestError } from "@supabase/supabase-js";
+
 import { supabase as sharedClient } from "../lib/supabase";
 
 export interface RosterPlayerView {

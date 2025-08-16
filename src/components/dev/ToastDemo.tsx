@@ -1,12 +1,13 @@
-import { Typography } from "../design-system";
-import { Icon } from "../ui/Icon/Icon";
 /**
  * Toast Demo Component
  * Quick demo to show the new toast system working
  */
 import React from "react";
+
 import { useToast } from "../../hooks/useToast";
+import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
+import { Icon } from "../ui/Icon/Icon";
 
 export const ToastDemo: React.FC = () => {
   const toast = useToast();

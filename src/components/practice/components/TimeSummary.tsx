@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Typography } from "../../design-system";
 import Icon from "../../ui/Icon/Icon";
 /**
@@ -18,9 +20,10 @@ import Icon from "../../ui/Icon/Icon";
  *   event={event}
  * />
  */
-import React from "react";
 import { getCategoryColor, formatDuration } from "../utils";
+
 import type { TimeSummaryProps, PracticeBlock } from "../types";
+
 export const TimeSummary: React.FC<TimeSummaryProps> = ({
   scheduledDuration,
   totalDuration,

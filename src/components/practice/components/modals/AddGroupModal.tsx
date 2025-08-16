@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+
 import { Typography } from "../../../design-system";
 /**
  * AddGroupModal Component
@@ -16,10 +18,11 @@ import { Typography } from "../../../design-system";
  *   onAddGroup={handleAddGroup}
  * />
  */
-import React, { useState, useEffect } from "react";
-import Icon from "../../../ui/Icon/Icon";
 import { Button } from "../../../ui/Button";
+import Icon from "../../../ui/Icon/Icon";
+
 import type { PracticeGroup } from "../../types";
+
 interface AddGroupModalProps {
   isOpen: boolean;
   blockId: string;

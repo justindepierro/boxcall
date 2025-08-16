@@ -1,12 +1,14 @@
+import React from "react";
+
 import { Typography } from "../../design-system/Typography";
 /**
  * Play Builder Preview - Live preview of play being created
  * Database-aligned with actual Play schema
  */
 
-import React from "react";
-import { Tag } from "../../ui/Tag";
 import { Icon } from "../../ui/Icon/Icon";
+import { Tag } from "../../ui/Tag";
+
 import type { Play } from "../../../types/play";
 
 interface PlayBuilderPreviewProps {

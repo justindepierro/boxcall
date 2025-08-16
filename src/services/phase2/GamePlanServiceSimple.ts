@@ -4,6 +4,7 @@
 // =============================================================================
 
 import { supabase } from "../../lib/supabase";
+
 import type {
   GamePlanEnhanced,
   GamePlanEnhancedInsert,

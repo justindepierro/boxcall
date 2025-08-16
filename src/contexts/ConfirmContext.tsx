@@ -6,8 +6,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Button } from "../components/ui/Button/Button";
+
 import { Typography } from "../components/design-system/Typography";
+import { Button } from "../components/ui/Button/Button";
 
 export interface ConfirmOptions {
   title?: string;

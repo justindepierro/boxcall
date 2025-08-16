@@ -4,6 +4,7 @@
  * Writes: src/styles/generated-themes.css
  */
 import { writeFileSync } from "fs";
+
 import { themeRegistry } from "./registry";
 
 function normalize(val: string): string {

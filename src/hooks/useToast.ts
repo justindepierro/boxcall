@@ -3,6 +3,7 @@
  * Separate from components for fast refresh compatibility
  */
 import { useContext } from "react";
+
 import { ToastContext, type ToastContextType } from "../contexts/ToastContext";
 
 export const useToast = (): ToastContextType => {

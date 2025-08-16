@@ -1,7 +1,9 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
+
 import { useAuthLoading, useIsAuthenticated } from "../app/auth-store";
 import { Layout } from "../components/layout/Layout";
+
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requireAuth?: boolean;

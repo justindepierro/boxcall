@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "../components/ui";
-import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
 import { useParams, useNavigate } from "react-router-dom";
+
 import { useAuth } from "../app/auth-store";
 import { useDevMode } from "../app/dev-mode-hooks";
-import { usePermissions } from "../hooks/usePermissions";
 import { Typography } from "../components/design-system";
-import { Icon } from "../components/ui/Icon/Icon";
-import { LogoIcon } from "../components/ui/Logo";
-import { supabase } from "../lib/supabase";
+import { TeamBulletinFeedPanel } from "../components/team-dashboard/layout/TeamBulletinFeedPanel";
 import { TeamBulletinHeader } from "../components/team-dashboard/layout/TeamBulletinHeader";
 import { TeamBulletinLeftPanel } from "../components/team-dashboard/layout/TeamBulletinLeftPanel";
-import { TeamBulletinFeedPanel } from "../components/team-dashboard/layout/TeamBulletinFeedPanel";
 import { TeamBulletinRightPanel } from "../components/team-dashboard/layout/TeamBulletinRightPanel";
+import { Button } from "../components/ui";
+import { Icon } from "../components/ui/Icon/Icon";
+import { LogoIcon } from "../components/ui/Logo";
+import { usePermissions } from "../hooks/usePermissions";
+import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
+import { supabase } from "../lib/supabase";
 
 // Team Bulletin Page (modular layout version)
 export const TeamBulletin: React.FC = () => {

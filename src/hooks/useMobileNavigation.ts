@@ -1,5 +1,6 @@
-import type { MobileNavItem } from "../components/mobile/MobileBottomNavigation";
 import { getRouteImporter } from "../routes/importers";
+
+import type { MobileNavItem } from "../components/mobile/MobileBottomNavigation";
 
 /**
  * Hook to get mobile navigation items based on user role and current route

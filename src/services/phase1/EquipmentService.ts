@@ -7,6 +7,7 @@
 
 import { supabase } from "../../lib/supabase";
 import { BaseService } from "../base/BaseService";
+
 import type {
   Equipment,
   EquipmentInsert,

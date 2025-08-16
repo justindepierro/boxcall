@@ -1,8 +1,11 @@
 import React, { useMemo } from "react";
-import { TelemetryEventTypes } from "../../../telemetry/events";
+
 import { telemetry } from "../../../telemetry/dispatcher";
-import type { PlaybookFiltersState } from "../../../contexts/PlaybookContext";
+import { TelemetryEventTypes } from "../../../telemetry/events";
 import { Button } from "../../ui/Button/Button";
+
+import type { PlaybookFiltersState } from "../../../contexts/PlaybookContext";
+
 
 export interface ActiveFilterChipsProps {
   searchQuery: string;

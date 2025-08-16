@@ -10,8 +10,8 @@
  * - Type safety with database types
  */
 
-import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Tables, Inserts, Updates } from "../../types/database";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 // Performance monitoring interface
 export interface ServiceMetrics {

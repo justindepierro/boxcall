@@ -1,4 +1,3 @@
-import { Typography } from "../../design-system";
 /**
  * PracticeBlocksList Component (Regular Mode)
  *
@@ -30,13 +29,17 @@ import { Typography } from "../../design-system";
  *   onAutoAssignCoaches={handleAutoAssignCoaches}
  * />
  */
-import React from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import type { DropResult } from "@hello-pangea/dnd";
+import React from "react";
+
+import { Typography } from "../../design-system";
 import { Button, Card } from "../../ui";
-import { getCategoryColor } from "../utils";
-import type { PracticeBlock, PracticeGroup, UserRole } from "../types";
 import Icon from "../../ui/Icon/Icon";
+import { getCategoryColor } from "../utils";
+
+import type { PracticeBlock, PracticeGroup, UserRole } from "../types";
+import type { DropResult } from "@hello-pangea/dnd";
+
 interface PracticeBlocksListProps {
   practiceBlocks: PracticeBlock[];
   userRole: UserRole;

@@ -21,10 +21,13 @@
  * />
  */
 import React from "react";
-import type { PracticeHeaderProps } from "../types";
+
 import { Typography } from "../../design-system/Typography";
-import Icon from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button";
+import Icon from "../../ui/Icon/Icon";
+
+import type { PracticeHeaderProps } from "../types";
+
 export const PracticeHeader: React.FC<PracticeHeaderProps> = ({
   event,
   userRole,

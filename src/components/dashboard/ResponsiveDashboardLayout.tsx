@@ -1,17 +1,18 @@
 import React from "react";
+
 import { useAuth } from "../../app/auth-store";
+import { useMobileNavigation } from "../../hooks/useMobileNavigation";
+import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
 import { PersonalCalendar } from "../dashboard/PersonalCalendar";
 import { PersonalTrophyShelf } from "../dashboard/PersonalTrophyShelf";
 import { ProfileCard } from "../dashboard/ProfileCard";
 import { TeamFeeds } from "../dashboard/TeamFeeds";
-import { ToastDemo } from "../dev/ToastDemo";
 import { Typography } from "../design-system";
+import { ToastDemo } from "../dev/ToastDemo";
 import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
-import { useMobileNavigation } from "../../hooks/useMobileNavigation";
-import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
-import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
-import { TeamOnboarding } from "../onboarding/TeamOnboarding";
 import { ActivationChecklist } from "../onboarding/ActivationChecklist";
+import { TeamOnboarding } from "../onboarding/TeamOnboarding";
+import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 
 /**
  * Responsive Dashboard Layout

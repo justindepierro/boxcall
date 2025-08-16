@@ -4,6 +4,7 @@
  * TypeScript definitions for the Button component system
  */
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+
 export type ButtonVariant =
   | "primary" // Primary brand button
   | "secondary" // Secondary action button

@@ -1,23 +1,25 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Typography } from "../design-system/Typography";
-import { Icon } from "../ui/Icon/Icon";
-import { OnboardingHint } from "../onboarding/OnboardingHint";
+
 import {
   useTeamPosts,
   useCreatePost,
   usePinPost,
 } from "../../hooks/teamDataHooks";
-import type { TeamPostListItem } from "../../services/postsService";
+import { useToast } from "../../hooks/useToast";
+import { telemetry } from "../../lib/telemetry";
 import {
   Capability,
   getCapabilitiesForRole,
   hasCapability,
 } from "../../services/capabilities/capabilityMap";
+import { Typography } from "../design-system/Typography";
+import { OnboardingHint } from "../onboarding/OnboardingHint";
 import { Button } from "../ui/Button/Button";
+import { Icon } from "../ui/Icon/Icon";
 import { Modal } from "../ui/Modal/Modal";
 import { TextArea } from "../ui/TextArea";
-import { useToast } from "../../hooks/useToast";
-import { telemetry } from "../../lib/telemetry";
+
+import type { TeamPostListItem } from "../../services/postsService";
 
 interface TeamFeedProps {
   teamId: string;

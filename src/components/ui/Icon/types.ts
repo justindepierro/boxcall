@@ -4,14 +4,14 @@
  * Centralized type definitions for the icon system
  */
 
-import type { LucideProps } from "lucide-react";
-import type { NavigationIconName } from "./categories/NavigationIcons";
 import type { ActionIconName } from "./categories/ActionIcons";
-import type { CalendarIconName } from "./categories/CalendarIcons";
-import type { SportsIconName } from "./categories/SportsIcons";
 import type { BusinessIconName } from "./categories/BusinessIcons";
+import type { CalendarIconName } from "./categories/CalendarIcons";
 import type { MediaIconName } from "./categories/MediaIcons";
+import type { NavigationIconName } from "./categories/NavigationIcons";
+import type { SportsIconName } from "./categories/SportsIcons";
 import type { SystemIconName } from "./categories/SystemIcons";
+import type { LucideProps } from "lucide-react";
 
 export interface IconProps {
   name: IconName;

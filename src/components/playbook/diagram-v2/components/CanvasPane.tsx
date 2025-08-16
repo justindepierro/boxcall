@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
+
 import { FieldCanvas } from "../FieldCanvas";
+
 import { ActionBar } from "./ActionBar";
-import { ToolPalette } from "./ToolPalette";
-import { TipsOverlay } from "./TipsOverlay";
 import { HelpHint } from "./HelpHint";
+import { TipsOverlay } from "./TipsOverlay";
+import { ToolPalette } from "./ToolPalette";
 
 /**
  * CanvasPane

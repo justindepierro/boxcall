@@ -1,5 +1,7 @@
 import { readFileSync } from "fs";
+
 import { describe, it, expect } from "vitest";
+
 import { generateTokensCSS } from "../../scripts/lib/generateTokens";
 
 describe("generated-tokens.css snapshot", () => {

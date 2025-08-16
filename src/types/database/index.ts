@@ -25,10 +25,10 @@ export type Json =
   | Json[];
 
 // Table type imports
-import type { UserTables } from "./tables/userTables";
-import type { TeamTables } from "./tables/teamTables";
 import type { PracticeGameTables } from "./tables/practiceGameTables";
 import type { SocialTables } from "./tables/socialTables";
+import type { TeamTables } from "./tables/teamTables";
+import type { UserTables } from "./tables/userTables";
 
 // Complete Database interface
 export interface Database {

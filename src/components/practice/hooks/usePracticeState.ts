@@ -1,4 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
+
+import {
+  recalculateBlockTimes,
+  calculateScheduledDuration,
+  getSamplePracticeBlocks,
+  loadPracticeFromStorage,
+  savePracticeToStorage,
+} from "../utils";
+
+import type { CalendarEvent } from "../../../domain/calendar/types";
 import type {
   PracticeBlock,
   PracticeGroup,
@@ -8,14 +18,6 @@ import type {
   SelectedGroupForScript,
   EditingGroup,
 } from "../types";
-import {
-  recalculateBlockTimes,
-  calculateScheduledDuration,
-  getSamplePracticeBlocks,
-  loadPracticeFromStorage,
-  savePracticeToStorage,
-} from "../utils";
-import type { CalendarEvent } from "../../../domain/calendar/types";
 
 export const usePracticeState = (event: CalendarEvent) => {
   // Core state

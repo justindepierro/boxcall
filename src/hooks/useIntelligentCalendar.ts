@@ -5,6 +5,7 @@
  * Provides smart scheduling, conflict detection, and attendance analytics.
  */
 import { useCallback, useEffect, useState } from "react";
+
 import {
   AttendanceAnalyticsService,
   type AttendanceAnalytics,

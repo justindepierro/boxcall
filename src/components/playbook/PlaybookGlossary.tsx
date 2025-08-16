@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+
 import { Button } from "../ui/Button/Button";
-import { Tag } from "../ui/Tag";
 import Icon from "../ui/Icon/Icon";
+import { Tag } from "../ui/Tag";
 
 const DEFAULT_CATEGORIES = [
   {

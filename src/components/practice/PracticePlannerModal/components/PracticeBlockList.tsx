@@ -1,12 +1,15 @@
-import React from "react";
-import { Tag } from "../../../ui/Tag";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import type { DropResult } from "@hello-pangea/dnd";
-import { Typography } from "../../../design-system";
+import React from "react";
+
+
 import { Button, Card } from "../../../../components/ui";
 import { ModularIcon as Icon } from "../../../../components/ui/Icon";
+import { Typography } from "../../../design-system";
+import { Tag } from "../../../ui/Tag";
+
 import type { ModularIconName } from "../../../../components/ui/Icon";
 import type { PracticeBlock } from "../types";
+import type { DropResult } from "@hello-pangea/dnd";
 
 interface PracticeBlockListProps {
   practiceBlocks: PracticeBlock[];

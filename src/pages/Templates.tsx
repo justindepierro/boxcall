@@ -1,8 +1,9 @@
 import React from "react";
+
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
-import { Icon } from "../components/ui/Icon/Icon";
 import { Button } from "../components/ui/Button/Button";
+import { Icon } from "../components/ui/Icon/Icon";
 /**
  * Templates - Coach resource hub with downloadable templates and import tools
  * Available to coaches only

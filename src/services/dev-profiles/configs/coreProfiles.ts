@@ -4,8 +4,9 @@
  * Contains production and blank slate profiles for real development work.
  */
 
-import type { DevProfileConfig } from "../../../types/dev-profiles";
 import { DevProfilePermissionService } from "../DevProfilePermissionService";
+
+import type { DevProfileConfig } from "../../../types/dev-profiles";
 
 const permissionService = DevProfilePermissionService.getInstance();
 

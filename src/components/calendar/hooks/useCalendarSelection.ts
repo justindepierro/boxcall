@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import type { CalendarEvent } from "../../../domain/calendar/types";
 
 export function useCalendarSelection() {

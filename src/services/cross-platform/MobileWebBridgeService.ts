@@ -4,13 +4,14 @@
  * Provides seamless data synchronization and feature adaptation between
  * web and mobile platforms, ensuring consistent user experience.
  */
-import type { CalendarEvent } from "../../types/calendar";
 import {
   UnifiedApiGateway,
   type DataConflict,
   type PlatformContext,
   type SyncResult,
 } from "./UnifiedApiGateway";
+
+import type { CalendarEvent } from "../../types/calendar";
 // ============================================================================
 // BRIDGE TYPES
 // ============================================================================

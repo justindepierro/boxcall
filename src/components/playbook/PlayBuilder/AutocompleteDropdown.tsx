@@ -3,11 +3,13 @@
  * Advanced dropdown with autocomplete, "add new" functionality, and toast notifications
  */
 
+import { Typography } from "@components/design-system/Typography";
 import React, { useState, useRef, useEffect } from "react";
+
 import { Button } from "../../ui/Button/Button";
 import { Icon } from "../../ui/Icon/Icon";
+
 import { useToast } from "./useToast";
-import { Typography } from "@components/design-system/Typography";
 
 interface AutocompleteDropdownProps {
   value: string;

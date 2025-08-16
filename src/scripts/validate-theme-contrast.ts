@@ -104,4 +104,5 @@ for (const r of results) {
 }
 
 import { writeFileSync } from "fs";
+
 writeFileSync("docs/style-inventory/theme-contrast-matrix.md", md);

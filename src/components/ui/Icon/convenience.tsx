@@ -6,6 +6,7 @@
  */
 
 import React from "react";
+
 import { Icon } from "./Icon";
 
 // Categories are no longer preloaded here to preserve proper code-splitting.

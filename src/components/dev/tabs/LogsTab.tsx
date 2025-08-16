@@ -1,10 +1,12 @@
+import React from "react";
+
 import { Typography } from "../../design-system";
 /**
  * DevTools Logs Tab
  * System logs display and management
  */
-import React from "react";
 import { Button } from "../../ui";
+
 import type { DevLog } from "../types";
 
 interface LogsTabProps {

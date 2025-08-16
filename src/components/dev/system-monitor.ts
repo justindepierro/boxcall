@@ -3,8 +3,10 @@
  */
 
 import { supabase } from "../../lib/supabase";
-import type { SystemStatus } from "../../types/dev";
+
 import { devLogger } from "./dev-logger";
+
+import type { SystemStatus } from "../../types/dev";
 
 class SystemMonitor {
   private lastUpdate = new Date();

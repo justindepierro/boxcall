@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+
 import type { Database } from "../types/database";
 
 // Type definitions with proper database types

@@ -1,9 +1,7 @@
 import React, { Suspense } from "react";
-import { Button } from "../components/ui";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import DiagramPaneRoute from "../components/playbook/DiagramPaneRoute";
+
 import { AuthProvider } from "../components/auth";
-import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system/Typography";
 import {
   LazyDashboardPage,
@@ -25,6 +23,10 @@ import {
   LazyCoachManagementPage,
   LazyPlayerDashboardPage,
 } from "../components/lazy/LazyRoutes";
+import DiagramPaneRoute from "../components/playbook/DiagramPaneRoute";
+import { Button } from "../components/ui";
+import { Icon } from "../components/ui/Icon/Icon";
+import DiagnosticsPage from "../pages/DiagnosticsPage";
 import {
   ProtectedRoute,
   PublicRoute,
@@ -32,7 +34,6 @@ import {
   SubscriptionRoute,
   TeamMemberRoute,
 } from "../routes";
-import DiagnosticsPage from "../pages/DiagnosticsPage";
 
 // Route loading fallback with better UX
 const RouteLoadingSpinner: React.FC = () => (

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+
+import { FORMATION_OPTIONS, PLAY_TYPE_OPTIONS } from "../../types/play";
 import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
-import { FORMATION_OPTIONS, PLAY_TYPE_OPTIONS } from "../../types/play";
 
 interface ActiveFilter {
   id: string;

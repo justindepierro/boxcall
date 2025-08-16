@@ -1,15 +1,17 @@
 import React, { useMemo } from "react";
-import { Icon } from "../ui/Icon/Icon";
-import type { IconName } from "../ui/Icon/Icon";
 import { useNavigate } from "react-router-dom";
-import { Typography } from "../design-system/Typography";
-import { Button } from "../ui";
+
+import { telemetry } from "../../lib/telemetry";
 import {
   Capability,
   getCapabilitiesForRole,
   hasCapability,
 } from "../../services/capabilities/capabilityMap";
-import { telemetry } from "../../lib/telemetry";
+import { Typography } from "../design-system/Typography";
+import { Button } from "../ui";
+import { Icon } from "../ui/Icon/Icon";
+
+import type { IconName } from "../ui/Icon/Icon";
 
 interface TeamQuickActionsProps {
   teamId: string;

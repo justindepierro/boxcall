@@ -1,6 +1,8 @@
 import React from "react";
-import { Typography } from "../../../../design-system";
+
 import { Icon } from "../../../../../components/ui/Icon/Icon";
+import { Typography } from "../../../../design-system";
+
 import type { TimelineAllocation, PracticeBlock } from "../../types";
 
 interface TimelineLegendProps {

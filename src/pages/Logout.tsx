@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
-import { useAuth } from "../app/auth-store";
 import { Typography } from "@components/design-system/Typography";
+import React, { useEffect } from "react";
+
+import { useAuth } from "../app/auth-store";
 
 /**
  * Logout Page

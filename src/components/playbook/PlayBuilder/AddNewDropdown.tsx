@@ -3,10 +3,11 @@
  * A dropdown with the ability to add new options dynamically
  */
 
+import { Typography } from "@components/design-system/Typography";
 import React, { useState } from "react";
+
 import { Button } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
-import { Typography } from "@components/design-system/Typography";
 
 interface AddNewDropdownProps {
   value: string;

@@ -5,11 +5,15 @@ import React, {
   useState,
   useMemo,
 } from "react";
-import { useDiagramEditor } from "./context";
-import { Button } from "../../ui/Button/Button";
-import type { DiagramAnnotation, DiagramAnnotationConnector } from "./types";
+
 import { telemetry } from "../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../telemetry/events";
+import { Button } from "../../ui/Button/Button";
+
+import { useDiagramEditor } from "./context";
+
+import type { DiagramAnnotation, DiagramAnnotationConnector } from "./types";
+
 
 // Simple SVG field canvas with zoom/pan transforms (placeholder)
 export const FieldCanvas: React.FC<{

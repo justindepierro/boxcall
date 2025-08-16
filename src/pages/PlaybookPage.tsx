@@ -1,15 +1,8 @@
 // Clean consolidated PlaybookPage implementation (legacy duplicated fragments removed)
+import { getPlayFlags } from "@utils/localPlayFlags";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Icon } from "../components/ui/Icon";
-import { PlayGrid } from "../components/playbook/PlayGrid";
-import { PlaybookGlossary } from "../components/playbook/PlaybookGlossary";
-import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
-import MobileDrawer from "../components/mobile/MobileDrawer";
-import { PlayFilters } from "../components/playbook/PlayFilters";
-import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
-import { PlayBuilderCore } from "../components/playbook/PlayBuilder";
-import { ConfettiBurst } from "../components/ui/ConfettiBurst";
+
 import { hasShownToday, markShownToday } from "../components/ui/confetti";
 import { UserPreferencesService } from "../services/userPreferencesService";
 import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal";
@@ -19,8 +12,35 @@ import { PlaysService } from "../services/playsService";
 import { PlaysDomainService } from "../domain/playsDomainService";
 import { ThumbnailUploadService } from "../services/thumbnailUploadService";
 import { Typography } from "../components/design-system/Typography";
+import MobileDrawer from "../components/mobile/MobileDrawer";
 import { markFirstPlayCreated } from "../components/onboarding/activationHelpers";
+import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
+import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
 // telemetry already imported above in original file; avoid duplicate import (cleanup)
+import { AchievementBadge } from "../components/ui/Badge";
+import { Button } from "../components/ui/Button/Button";
+import { PlaybookHeader } from "../components/playbook/page/PlaybookHeader";
+import { PlaybookActionsBar } from "../components/playbook/page/PlaybookActionsBar";
+import ActiveFilterChips from "../components/playbook/page/ActiveFilterChips";
+import BulkTaggingModal from "../components/playbook/BulkTaggingModal";
+import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
+import { PlaybookGlossary } from "../components/playbook/PlaybookGlossary";
+import { PlayBuilderCore } from "../components/playbook/PlayBuilder";
+import { PlayFilters } from "../components/playbook/PlayFilters";
+import { PlayGrid } from "../components/playbook/PlayGrid";
+import { ConfettiBurst } from "../components/ui/ConfettiBurst";
+import { Icon } from "../components/ui/Icon";
+import { useConfirm } from "../contexts/ConfirmContext";
+import { PlaybookProvider, usePlaybook } from "../contexts/PlaybookContext";
+import { useUndoQueue } from "../contexts/UndoQueueContext";
+import { mapError } from "../domain/errors/domainErrorMapper";
+import { useToast } from "../hooks/useToast";
+import { telemetry } from "../telemetry/dispatcher";
+import { TelemetryEventTypes } from "../telemetry/events";
+import {
+  getPlayCategory,
+  playMatchesSubcategory,
+} from "../utils/playbook-categories";
 import {
   listPresets,
   createPreset,
@@ -34,26 +54,8 @@ import {
   updateServerPreset,
   deleteServerPreset,
 } from "../utils/serverPlaybookViewPresets";
+
 import type { Play } from "../types/play";
-import { AchievementBadge } from "../components/ui/Badge";
-import { Button } from "../components/ui/Button/Button";
-import { PlaybookHeader } from "../components/playbook/page/PlaybookHeader";
-import { PlaybookActionsBar } from "../components/playbook/page/PlaybookActionsBar";
-import ActiveFilterChips from "../components/playbook/page/ActiveFilterChips";
-import BulkTaggingModal from "../components/playbook/BulkTaggingModal";
-import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
-import { PlaybookProvider, usePlaybook } from "../contexts/PlaybookContext";
-import { useConfirm } from "../contexts/ConfirmContext";
-import { useUndoQueue } from "../contexts/UndoQueueContext";
-import { useToast } from "../hooks/useToast";
-import { mapError } from "../domain/errors/domainErrorMapper";
-import { telemetry } from "../telemetry/dispatcher";
-import { TelemetryEventTypes } from "../telemetry/events";
-import {
-  getPlayCategory,
-  playMatchesSubcategory,
-} from "../utils/playbook-categories";
-import { getPlayFlags } from "@utils/localPlayFlags";
 
 const PlaybookPageInner: React.FC = () => {
   const { state, dispatch } = usePlaybook();

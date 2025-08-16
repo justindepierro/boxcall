@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+
+import { useDevMode } from "../app/dev-mode-hooks";
 import {
   DashboardService,
   type DashboardData,
   type UserTeamData,
 } from "../services/dashboardService";
-import { useDevMode } from "../app/dev-mode-hooks";
 
 /**
  * Hook for dashboard data management

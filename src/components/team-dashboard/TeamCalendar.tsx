@@ -1,19 +1,20 @@
 import React, { useState } from "react";
-import { Icon } from "../ui/Icon/Icon";
-import { Typography } from "../design-system/Typography";
-import { Card } from "../ui";
-import { OnboardingHint } from "../onboarding/OnboardingHint";
+
 import { useCreateEvent, useTeamEvents } from "../../hooks/teamDataHooks";
+import { telemetry } from "../../lib/telemetry";
 import {
   Capability,
   getCapabilitiesForRole,
   hasCapability,
 } from "../../services/capabilities/capabilityMap";
+import { Typography } from "../design-system/Typography";
+import { OnboardingHint } from "../onboarding/OnboardingHint";
+import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
+import { Icon } from "../ui/Icon/Icon";
 import { Input } from "../ui/Input";
-import { Select } from "../ui/Select";
 import { Modal } from "../ui/Modal/Modal";
-import { telemetry } from "../../lib/telemetry";
+import { Select } from "../ui/Select";
 
 interface TeamCalendarProps {
   teamId: string;

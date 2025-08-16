@@ -1,15 +1,17 @@
 import { format } from "date-fns";
-import { Icon as LegacyIcon } from "../ui/Icon/Icon";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEvents } from "../../state/calendar/hooks";
-import type { CalendarEvent } from "../../domain/calendar/types";
+
 import { useDevMode } from "../../app/dev-mode-hooks";
+import { useEvents } from "../../state/calendar/hooks";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
 import { ModularIcon as Icon } from "../ui/Icon";
+import { Icon as LegacyIcon } from "../ui/Icon/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../ui/Tag";
+
+import type { CalendarEvent } from "../../domain/calendar/types";
 
 interface PersonalCalendarProps {
   userId: string;

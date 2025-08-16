@@ -1,8 +1,11 @@
 /* @vitest-environment jsdom */
-import React from "react";
-import { describe, it, expect } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, act, waitFor } from "@testing-library/react";
+import React from "react";
+import { describe, it, expect } from "vitest";
+
+import { CalendarAPI } from "../../infra/calendar/api";
+
 import {
   useCreateEvent,
   useEvents,
@@ -13,7 +16,6 @@ import {
   useComments,
   useAddComment,
 } from "./hooks";
-import { CalendarAPI } from "../../infra/calendar/api";
 
 interface CalendarAPITestHarness {
   __setFailure(flags: {
@@ -26,6 +28,7 @@ interface CalendarAPITestHarness {
 }
 const TestAPI = CalendarAPI as typeof CalendarAPI & CalendarAPITestHarness;
 import { calendarKeys } from "./queryKeys";
+
 import type { CalendarEvent } from "../../domain/calendar/types";
 
 describe("calendar state hooks", () => {

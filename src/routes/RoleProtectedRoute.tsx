@@ -1,12 +1,14 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { Button } from "../components/ui";
-import { Typography } from "../components/design-system/Typography";
+
 import {
   useAuthLoading,
   useAuthProfile,
   useIsAuthenticated,
 } from "../app/auth-store";
+import { Typography } from "../components/design-system/Typography";
+import { Button } from "../components/ui";
+
 import type { Database } from "../types/database";
 // User role type from database
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];

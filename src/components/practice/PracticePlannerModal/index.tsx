@@ -1,13 +1,15 @@
 import React from "react";
-import type { CalendarEvent } from "../../../domain/calendar/types";
+
+import { ActionFooter } from "./components/ActionFooter";
+import { DevelopmentTools } from "./components/DevelopmentTools";
+import { AddBlockModal } from "./components/Forms/AddBlockModal";
+import { PracticeBlockList } from "./components/PracticeBlockList";
 import { PracticePlannerHeader } from "./components/PracticePlannerHeader";
 import { PracticeTimeline } from "./components/PracticeTimeline";
-import { PracticeBlockList } from "./components/PracticeBlockList";
-import { AddBlockModal } from "./components/Forms/AddBlockModal";
-import { DevelopmentTools } from "./components/DevelopmentTools";
-import { ActionFooter } from "./components/ActionFooter";
 import { ScriptSelectorModal } from "./components/ScriptSelector/ScriptSelectorModal";
 import { usePracticeState } from "./hooks/usePracticeState";
+
+import type { CalendarEvent } from "../../../domain/calendar/types";
 
 interface PracticePlannerModalProps {
   event: CalendarEvent;

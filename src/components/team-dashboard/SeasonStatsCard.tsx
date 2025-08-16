@@ -1,22 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Card } from "../ui";
-import { Typography } from "../design-system/Typography";
+
 import {
   useSeasonStats,
   useLogGameResult,
   useGameResults,
 } from "../../hooks/teamDataHooks";
+import { useToast } from "../../hooks/useToast";
+import { telemetry } from "../../lib/telemetry";
 import {
   Capability,
   getCapabilitiesForRole,
   hasCapability,
 } from "../../services/capabilities/capabilityMap";
+import { Typography } from "../design-system/Typography";
+import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
 import { Input } from "../ui/Input";
-import { Select } from "../ui/Select";
 import { Modal } from "../ui/Modal/Modal";
-import { useToast } from "../../hooks/useToast";
-import { telemetry } from "../../lib/telemetry";
+import { Select } from "../ui/Select";
 
 interface SeasonStatsCardProps {
   teamId: string;

@@ -1,6 +1,7 @@
-import { describe, it, expect } from "vitest";
 import fs from "fs";
 import path from "path";
+
+import { describe, it, expect } from "vitest";
 
 // Simple inventory test: ensure no 'variant="outline"' usages remain in calendar filters panel.
 // (Lightweight safeguard until ESLint rule is added.)

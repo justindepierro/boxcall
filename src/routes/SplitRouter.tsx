@@ -1,13 +1,14 @@
-import { Typography } from "../components/design-system/Typography";
 /**
  * Route-based Code Splitting
  * Part of Phase 3D: Final Mobile Polish & Performance Optimization
  */
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+
+import { Typography } from "../components/design-system/Typography";
 import { Button } from "../components/ui";
-import { RouteLoadingSkeleton } from "../components/ui/RouteLoadingSkeleton";
 import AdvancedErrorBoundary from "../components/ui/AdvancedErrorBoundary";
+import { RouteLoadingSkeleton } from "../components/ui/RouteLoadingSkeleton";
 import { dynamicImportWithRetry } from "../utils/bundleOptimization";
 
 // Lazy-loaded route components with error handling (using existing pages)

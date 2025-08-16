@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { DiagramEditorProvider, useDiagramEditor } from "./context";
-import { Toolbar } from "./components/Toolbar";
+
 // Sidebar hidden for on-canvas editing; keep imports commented for quick restore
 // import { PlayerSidebar } from "./components/PlayerSidebar";
 // import { RoutesPanel } from "./components/RoutesPanel";
 import { CanvasPane } from "./components/CanvasPane";
-import type { DiagramDocument } from "./types";
 import { HelpOverlay } from "./components/HelpOverlay";
+import { Toolbar } from "./components/Toolbar";
+import { DiagramEditorProvider, useDiagramEditor } from "./context";
 import { svgFullToPngDataUrl } from "./thumbnail";
+
+import type { DiagramDocument } from "./types";
 
 interface ShellProps {
   onDocumentChange?: (doc: DiagramDocument) => void;

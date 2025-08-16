@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 // (Removed unused Search import after log text simplification)
 import { useNavigate } from "react-router-dom";
+
 import { useAuth } from "../app/auth-store";
 import { Typography } from "../components/design-system";
+import { Button } from "../components/ui/Button/Button";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Tag } from "../components/ui/Tag";
-import { Button } from "../components/ui/Button/Button";
 
 /**
  * Join Team Page

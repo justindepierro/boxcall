@@ -4,13 +4,15 @@
  */
 
 import React from "react";
-import type { Play } from "../../../types/play";
-import { Typography } from "../../design-system/Typography";
+
 import {
   normalizeText,
   normalizePlayName,
   normalizeFormation,
 } from "../../../utils/textNormalization";
+import { Typography } from "../../design-system/Typography";
+
+import type { Play } from "../../../types/play";
 
 interface PlayBuilderFormProps {
   playData: Partial<Play>;

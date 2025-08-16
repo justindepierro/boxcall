@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "../components/ui";
 import { Navigate, useParams } from "react-router-dom";
-import { Typography } from "../components/design-system/Typography";
+
 import {
   useAuthLoading,
   useAuthProfile,
   useIsAuthenticated,
 } from "../app/auth-store";
+import { Typography } from "../components/design-system/Typography";
+import { Button } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
 import { supabase } from "../lib/supabase";
+import { canAccessTeamFeature, hasPermission } from "../types/permissions";
+
 import type {
   AppUserType,
   Permission,
   SubscriptionTier,
   TeamRole,
 } from "../types/permissions";
-import { canAccessTeamFeature, hasPermission } from "../types/permissions";
+
 interface PermissionRouteProps {
   children: React.ReactNode;
   // Required permissions (user must have ALL of these)

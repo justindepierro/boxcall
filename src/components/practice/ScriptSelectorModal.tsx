@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Typography } from "../design-system";
+
 import { Button, Card } from "../../components/ui";
 import Icon from "../../components/ui/Icon/Icon";
+import { Typography } from "../design-system";
+
 interface Script {
   id: string;
   title: string;

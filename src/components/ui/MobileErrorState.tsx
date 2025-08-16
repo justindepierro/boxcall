@@ -3,9 +3,11 @@
  * Part of Phase 3A: Critical Performance & Error Handling
  */
 import React from "react";
+
+import { Typography } from "../design-system/Typography";
+
 import { Button } from "./Button";
 import { ModularIcon as Icon } from "./Icon";
-import { Typography } from "../design-system/Typography";
 
 export interface MobileErrorStateProps {
   /** Error type determines the appropriate UI and messaging */

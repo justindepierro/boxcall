@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Typography } from "../../components/design-system/Typography";
 
 export const TermsOfServicePage: React.FC = () => {

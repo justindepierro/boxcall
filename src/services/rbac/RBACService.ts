@@ -1,6 +1,7 @@
 import { Permission, DataScopeMode } from "../../types/rbac";
-import type { DataScope } from "../../types/rbac";
+
 import type { DevMode } from "../../app/dev-mode-types";
+import type { DataScope } from "../../types/rbac";
 
 // Super Admin Email (YOU) - Gets unlimited access
 const SUPER_ADMIN_EMAIL = "justindepierro@gmail.com";

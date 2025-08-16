@@ -6,12 +6,15 @@
  */
 
 import React from "react";
-import { Badge } from "./Badge";
+
 import {
   analyzePlayComplexity,
   getComplexityBadgeInfo,
   type ComplexityMetrics,
 } from "../../../utils/playComplexity";
+
+import { Badge } from "./Badge";
+
 import type { Play } from "../../../types/play";
 
 interface ComplexityBadgeProps {

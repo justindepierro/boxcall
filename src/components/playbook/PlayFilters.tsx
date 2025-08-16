@@ -1,13 +1,15 @@
 import React from "react";
-import { Typography } from "../design-system/Typography";
-import { Button } from "../ui/Button/Button";
-import { Icon } from "../ui/Icon/Icon";
+
 import {
   FORMATION_OPTIONS,
   PLAY_TYPE_OPTIONS,
   DOWN_OPTIONS,
   DISTANCE_OPTIONS,
 } from "../../types/play";
+import { Typography } from "../design-system/Typography";
+import { Button } from "../ui/Button/Button";
+import { Icon } from "../ui/Icon/Icon";
+
 interface PlayFiltersProps {
   selectedFilters: {
     formation?: string;

@@ -1,15 +1,17 @@
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import { forwardRef, useImperativeHandle, useRef } from "react";
+
+import type { CalendarEvent } from "../../domain/calendar/types";
 import type {
   CalendarApi,
   DateSelectArg,
   EventClickArg,
   EventDropArg,
 } from "@fullcalendar/core";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import FullCalendar from "@fullcalendar/react";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import { forwardRef, useImperativeHandle, useRef } from "react";
-import type { CalendarEvent } from "../../domain/calendar/types";
+
 interface BoxCallCalendarProps {
   events: CalendarEvent[];
   onEventClick?: (event: CalendarEvent) => void;

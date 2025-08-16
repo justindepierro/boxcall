@@ -1,8 +1,9 @@
 import React from "react";
-import { Icon } from "../../components/ui/Icon/Icon";
+
 import { Typography } from "../../components/design-system/Typography";
-import { RoleProtectedRoute } from "../../routes/RoleProtectedRoute";
 import { Button } from "../../components/ui/Button";
+import { Icon } from "../../components/ui/Icon/Icon";
+import { RoleProtectedRoute } from "../../routes/RoleProtectedRoute";
 
 /**
  * Player Dashboard Page - Only accessible by players

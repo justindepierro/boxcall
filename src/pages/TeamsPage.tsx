@@ -1,14 +1,15 @@
+import React from "react";
+
 import { Typography } from "../components/design-system";
 /**
  * Teams Page - Shows all teams from database
  *
  * Displays the teams loaded from Supabase database
  */
-import React from "react";
-import { useTeamsData } from "../hooks/useTeamsData";
 import Card from "../components/ui/Card/Card";
+import { useTeamsData } from "../hooks/useTeamsData";
 
-export const TeamsPage: React.FC = () => {
+const TeamsPage: React.FC = () => {
   const { teams, loading, error } = useTeamsData();
 
   if (loading) {

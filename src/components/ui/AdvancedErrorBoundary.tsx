@@ -3,10 +3,13 @@
  * Part of Phase 3D: Final Mobile Polish & Performance Optimization
  */
 import React, { Component } from "react";
-import type { ReactNode, ErrorInfo } from "react";
-import { Icon } from "./Icon";
+
 import { Typography } from "../design-system/Typography";
+
+import { Icon } from "./Icon";
 import { TouchFeedback } from "./TouchFeedback";
+
+import type { ReactNode, ErrorInfo } from "react";
 
 declare global {
   function gtag(

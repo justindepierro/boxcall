@@ -1,11 +1,14 @@
 import React from "react";
-import { Typography } from "../../../../design-system/Typography";
+
 import { Button } from "../../../../../components/ui";
 import { Icon } from "../../../../../components/ui/Icon/Icon";
+import { Typography } from "../../../../design-system/Typography";
+
 import { CategorySelector } from "./CategorySelector";
 import { TimelineContainer } from "./TimelineContainer";
-import { TimelineSlider } from "./TimelineSlider";
 import { TimelineLegend } from "./TimelineLegend";
+import { TimelineSlider } from "./TimelineSlider";
+
 import type {
   PracticeBlock,
   TimelineAllocation,

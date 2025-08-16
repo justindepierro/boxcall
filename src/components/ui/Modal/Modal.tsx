@@ -1,8 +1,11 @@
-import type { ReactNode } from "react";
 import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { IconButton } from "../IconButton/IconButton";
+
 import { Typography } from "../../design-system/Typography";
+import { IconButton } from "../IconButton/IconButton";
+
+import type { ReactNode } from "react";
+
 export interface ModalProps {
   /** Whether the modal is open */
   isOpen: boolean;

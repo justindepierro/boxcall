@@ -5,6 +5,7 @@
  * Professional, confident design for football team management
  */
 import { forwardRef } from "react";
+
 import type { CardProps, CardStylesConfig } from "./Card.types";
 // Card styles configuration - Square, substantial styling with jade/navy theme
 const cardStyles: CardStylesConfig = {

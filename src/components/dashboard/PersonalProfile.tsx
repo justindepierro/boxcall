@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Icon } from "../ui/Icon/Icon";
+
 import { Typography } from "../design-system";
 import { Button, Card, Input } from "../ui";
+import { Icon } from "../ui/Icon/Icon";
+
 interface PersonalProfileProps {
   profile: {
     bio?: string | null;

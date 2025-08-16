@@ -5,10 +5,11 @@
  * Output: docs/style-inventory/a11y-smoke-report.md & a11y-smoke-report.json
  * Exit Code: 0 (baseline capture). Enable failure gate later when violations triaged.
  */
-import { chromium } from "playwright";
-import AxeBuilder from "@axe-core/playwright";
 import { mkdirSync, writeFileSync } from "fs";
 import { join } from "path";
+
+import AxeBuilder from "@axe-core/playwright";
+import { chromium } from "playwright";
 
 const BASE_URL = process.env.BOXCALL_BASE_URL || "http://localhost:5173";
 // TODO: derive from route config; static initial list

@@ -1,7 +1,9 @@
 import { describe, it, expect } from "vitest";
+
+import { FullCalendarAdapter } from "../../adapters/fullcalendar/FullCalendarAdapter";
+
 import { CalendarAPI } from "./api";
 import { eventToICS } from "./ics";
-import { FullCalendarAdapter } from "../../adapters/fullcalendar/FullCalendarAdapter";
 
 const iso = () => new Date().toISOString();
 

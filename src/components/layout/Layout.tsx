@@ -1,20 +1,10 @@
 import React from "react";
+
 import { Typography } from "../design-system/Typography";
 import { useAuthProfile } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
-import type { Database } from "../../types/database";
-import {
-  getNavigationItems,
-  getRoleDisplayInfo,
-  toSidebarItems,
-} from "../../utils/navigation";
-import { NavBar } from "../ui/NavBar";
-import { Sidebar } from "../ui/Sidebar";
-import { DevTools } from "../dev";
-import { SidebarLogo, NavbarLogo } from "../ui/Logo";
-import { UserMenu } from "../auth/UserMenu";
-import type { DevMode } from "../../types/dev";
+
 
 // Helper to get test role from dev mode
 const getTestRole = (devMode: DevMode): UserRole | null => {
@@ -31,8 +21,23 @@ const getTestRole = (devMode: DevMode): UserRole | null => {
       return null;
   }
 };
-import { Footer } from "./Footer";
 import { getRouteImporter } from "../../routes/importers";
+import {
+  getNavigationItems,
+  getRoleDisplayInfo,
+  toSidebarItems,
+} from "../../utils/navigation";
+import { UserMenu } from "../auth/UserMenu";
+import { DevTools } from "../dev";
+import { SidebarLogo, NavbarLogo } from "../ui/Logo";
+import { NavBar } from "../ui/NavBar";
+import { Sidebar } from "../ui/Sidebar";
+
+import { Footer } from "./Footer";
+
+import type { Database } from "../../types/database";
+import type { DevMode } from "../../types/dev";
+
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 interface LayoutProps {
   children: React.ReactNode;

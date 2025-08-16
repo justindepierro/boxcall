@@ -1,6 +1,7 @@
 import React from "react";
-import { Button } from "../../../ui/Button";
+
 import { Typography } from "../../../design-system/Typography";
+import { Button } from "../../../ui/Button";
 
 interface HelpOverlayProps {
   open: boolean;

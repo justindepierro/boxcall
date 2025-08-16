@@ -1,3 +1,5 @@
+import { forwardRef, useState } from "react";
+
 import { Typography } from "../../design-system";
 /**
  * BoxCall Input Component
@@ -5,8 +7,8 @@ import { Typography } from "../../design-system";
  * Masculine, technical input component with jade/navy theme
  * Square, confident design for football team management
  */
-import { forwardRef, useState } from "react";
 import { IconButton } from "../IconButton/IconButton";
+
 import type {
   InputProps,
   InputSizeConfig,

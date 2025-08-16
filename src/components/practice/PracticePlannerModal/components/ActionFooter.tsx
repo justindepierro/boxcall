@@ -1,7 +1,8 @@
 import React from "react";
-import { Typography } from "../../../design-system";
+
 import { Button } from "../../../../components/ui";
 import { Icon } from "../../../../components/ui/Icon/Icon";
+import { Typography } from "../../../design-system";
 
 interface ActionFooterProps {
   isOvertime: boolean;

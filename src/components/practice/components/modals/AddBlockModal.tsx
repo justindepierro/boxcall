@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+
 import { Typography } from "../../../design-system";
 /**
  * AddBlockModal Component
@@ -19,11 +21,13 @@ import { Typography } from "../../../design-system";
  *   selectedBlock={selectedBlock}
  * />
  */
-import React, { useState, useEffect } from "react";
-import { getCategoryColor } from "../../utils";
-import type { PracticeBlock, SelectedBlock, UserRole } from "../../types";
-import Icon from "../../../ui/Icon/Icon";
 import { Button } from "../../../ui/Button";
+import Icon from "../../../ui/Icon/Icon";
+import { getCategoryColor } from "../../utils";
+
+import type { PracticeBlock, SelectedBlock, UserRole } from "../../types";
+
+
 interface AddBlockModalProps {
   isOpen: boolean;
   onClose: () => void;

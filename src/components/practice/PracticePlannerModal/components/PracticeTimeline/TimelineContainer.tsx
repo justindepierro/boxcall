@@ -1,6 +1,8 @@
 import React from "react";
-import { Typography } from "../../../../design-system/Typography";
+
 import { Icon } from "../../../../../components/ui/Icon/Icon";
+import { Typography } from "../../../../design-system/Typography";
+
 import type {
   TimelineAllocation,
   SelectedBlock,

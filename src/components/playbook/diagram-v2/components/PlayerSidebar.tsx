@@ -1,9 +1,11 @@
 import React from "react";
-import { Button } from "../../../ui/Button";
-import { useDiagramEditor } from "../context";
-import type { DiagramPlayer, DiagramDocument } from "../types";
+
 import { telemetry } from "../../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../../telemetry/events";
+import { Button } from "../../../ui/Button";
+import { useDiagramEditor } from "../context";
+
+import type { DiagramPlayer, DiagramDocument } from "../types";
 
 // PlayerSidebar: handles player stats, bulk edit controls and grouped player list (no routes panel)
 export const PlayerSidebar: React.FC = () => {

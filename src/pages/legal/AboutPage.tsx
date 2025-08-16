@@ -1,9 +1,10 @@
 import React from "react";
+
+import { Typography } from "../../components/design-system/Typography";
 import { Icon } from "../../components/ui/Icon/Icon";
 import { LogoIcon } from "../../components/ui/Logo";
-import { Typography } from "../../components/design-system/Typography";
 
-export const AboutPage: React.FC = () => {
+const AboutPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       {/* Header */}
@@ -158,3 +159,5 @@ export const AboutPage: React.FC = () => {
     </div>
   );
 };
+
+export default AboutPage;

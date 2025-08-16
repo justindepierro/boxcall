@@ -5,11 +5,14 @@
  * Can be used in any practice component where PDF export is needed.
  */
 import React from "react";
-import { Tooltip } from "../ui/Tooltip/Tooltip";
+
+import { usePracticeScriptPDF } from "../../services/pdf/usePracticeScriptPDF";
 import { Button } from "../ui";
 import Icon from "../ui/Icon/Icon";
-import { usePracticeScriptPDF } from "../../services/pdf/usePracticeScriptPDF";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
+
 import type { PracticeBlock } from "./types";
+
 interface PDFExportButtonProps {
   practiceData: {
     title?: string;

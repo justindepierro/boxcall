@@ -4,6 +4,7 @@
  * Exits with non-zero code if drift is detected (for CI).
  */
 import { readFileSync } from "fs";
+
 import { generateTokensCSS } from "./lib/generateTokens";
 
 const current = readFileSync("src/styles/generated-tokens.css", "utf8");

@@ -3,8 +3,9 @@
  * Centralized actions for DevTools functionality
  */
 import { supabase } from "../../../lib/supabase";
-import { checkDatabaseData } from "../../../utils/demo-data-check";
 import { createSampleData } from "../../../utils/create-sample-data";
+import { checkDatabaseData } from "../../../utils/demo-data-check";
+
 import type { DevLog } from "../types";
 
 export class DevToolsActions {

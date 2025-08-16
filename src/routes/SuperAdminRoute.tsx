@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { Typography } from "../components/design-system/Typography";
+
 import {
   useAuthLoading,
   useAuthProfile,
   useIsAuthenticated,
 } from "../app/auth-store";
-import { Icon } from "../components/ui/Icon/Icon";
+import { Typography } from "../components/design-system/Typography";
 import { Button } from "../components/ui";
+import { Icon } from "../components/ui/Icon/Icon";
 import { supabase } from "../lib/supabase";
+
 interface SuperAdminRouteProps {
   children: React.ReactNode;
   fallbackTo?: string;

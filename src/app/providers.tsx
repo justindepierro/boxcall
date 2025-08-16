@@ -1,12 +1,16 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import type { ReactNode } from "react";
-import { ErrorBoundary } from "../components/ui/ErrorBoundary";
+
 import { AuthProvider } from "../components/auth/AuthProvider";
+import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 import { ToastProvider } from "../components/ui/Toast";
-import { queryClient } from "./queryClient";
 import { ConfirmProvider } from "../contexts/ConfirmContext";
 import { UndoQueueProvider } from "../contexts/UndoQueueContext";
 import { TelemetryProvider } from "../telemetry/context";
+
+import { queryClient } from "./queryClient";
+
+import type { ReactNode } from "react";
+
 interface AppProvidersProps {
   children: ReactNode;
 }

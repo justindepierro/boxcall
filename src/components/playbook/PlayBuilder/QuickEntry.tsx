@@ -1,17 +1,20 @@
+import React, { useState } from "react";
+
+import {
+  normalizePlayName,
+  normalizeFormation,
+  normalizeText,
+} from "../../../utils/textNormalization";
 import { Typography } from "../../design-system/Typography";
 /**
  * Quick Entry Mode for PlayBuilder
  * Allows rapid play creation with format: "Power O | I-Form | Run | 21 Personnel"
  */
 
-import React, { useState } from "react";
 import { Button } from "../../ui/Button/Button";
+
 import type { Play } from "../../../types/play";
-import {
-  normalizePlayName,
-  normalizeFormation,
-  normalizeText,
-} from "../../../utils/textNormalization";
+
 
 interface QuickEntryProps {
   onPlayParsed: (playData: Partial<Play>) => void;

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
+
 import { useAuthLoading, useAuthProfile } from "../app/auth-store";
-import { Button } from "../components/ui/Button";
-import { Input } from "../components/ui/Input";
-import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system/Typography";
+import { Button } from "../components/ui/Button";
+import { Icon } from "../components/ui/Icon/Icon";
+import { Input } from "../components/ui/Input";
 import { supabase } from "../lib/supabase";
 /**
  * ProfilePage Component

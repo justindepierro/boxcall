@@ -70,6 +70,7 @@ export class TelemetryDispatcher {
 
 // Singleton (can be replaced in tests) with persistence hook
 import { persistEventsBatch } from "./persistence";
+
 export const telemetry = new TelemetryDispatcher({
   onFlush: (events) => {
     void persistEventsBatch(events);

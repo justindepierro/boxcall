@@ -1,9 +1,10 @@
 import React from "react";
-import { useDiagramEditor } from "../context";
-import Icon from "../../../ui/Icon/Icon";
-import { Button } from "../../../ui/Button";
-import { Tooltip } from "../../../ui/Tooltip/Tooltip";
+
 import { UserPreferencesService } from "../../../../services/userPreferencesService";
+import { Button } from "../../../ui/Button";
+import Icon from "../../../ui/Icon/Icon";
+import { Tooltip } from "../../../ui/Tooltip/Tooltip";
+import { useDiagramEditor } from "../context";
 
 export const ToolPalette: React.FC = () => {
   const { state, dispatch } = useDiagramEditor();

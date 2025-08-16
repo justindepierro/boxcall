@@ -1,8 +1,9 @@
 import React from "react";
+
+import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
-import { useDevMode } from "../../app/dev-mode-hooks";
 
 interface TeamFeedsProps {
   userId: string;

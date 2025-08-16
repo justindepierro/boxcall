@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+
 import type { PostgrestError } from "@supabase/supabase-js";
 
 export interface TeamEventListItem {

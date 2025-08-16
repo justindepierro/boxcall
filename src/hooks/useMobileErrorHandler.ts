@@ -3,6 +3,7 @@
  * Part of Phase 3A: Critical Performance & Error Handling
  */
 import React from "react";
+
 import type { MobileErrorStateProps } from "../components/ui/MobileErrorState";
 
 // Hook for handling common error states in mobile components

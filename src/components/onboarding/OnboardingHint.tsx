@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import { Typography } from "../design-system";
-import { Icon } from "../ui/Icon/Icon";
-import { Button } from "../ui";
+
 import { telemetry } from "../../lib/telemetry";
+import { Typography } from "../design-system";
+import { Button } from "../ui";
+import { Icon } from "../ui/Icon/Icon";
 
 /**
  * Generic lightweight onboarding / empty-state hint component.
