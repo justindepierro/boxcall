@@ -35,8 +35,10 @@ Actions
 ## 2) Legacy calendar and practice modules
 
 - Calendar
+  - [R] src/pages/CalendarPage.tsx (legacy guard, removed)
+  - [R] src/pages/CalendarPageNew.tsx (legacy guard, removed)
+  - [R] src/pages/CalendarPageShell.tsx (legacy guard, removed)
   - [~] src/legacy/calendar/**
-  - [~] src/pages/CalendarPage*.tsx
   - [~] src/components/calendar/** (specific dup/unused exports listed by knip)
 
 - Practice
