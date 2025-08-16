@@ -71,6 +71,8 @@ Actions
 
 - [~] src/routes/**/*.tsx (Permission routes, SplitRouter)
 - [~] src/pages/**/*.tsx (BoxCall, DashboardPage, DiagnosticsPage, TeamsPage, etc.)
+- [R] src/components/ui/Popover/Popover.tsx (unreferenced, removed)
+- [R] src/pages/index.ts (unreferenced page aggregator, removed)
 
 Actions
 - [ ] Cross-check with actual router config and LazyRoutes
