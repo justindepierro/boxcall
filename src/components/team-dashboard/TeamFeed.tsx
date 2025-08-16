@@ -199,7 +199,10 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
           >
             <form onSubmit={handleSubmit} className="space-y-4" noValidate>
               <div>
-                <Typography variant="body-sm" as="label" className="block font-medium mb-1"
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-1"
                   htmlFor="post-content"
                 >
                   Announcement
@@ -259,7 +262,10 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
         <Modal isOpen={open} onClose={() => setOpen(false)} title="Create Post">
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
-              <Typography variant="body-sm" as="label" className="block font-medium mb-1"
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium mb-1"
                 htmlFor="post-content-inline"
               >
                 Announcement
@@ -305,7 +311,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
         </ul>
       )}
       {!!error && (
-        <div className="rounded border border-red-200 dark:border-red-700 bg-red-50 dark:bg-red-900/30 p-4 text-sm text-red-700 dark:text-red-300">
+        <div className="rounded border border-subtle dark:border-red-700 surface-subtle dark:bg-red-900/30 p-4 text-sm text-red-700 dark:text-red-300">
           Failed to load posts.
           <Button
             type="button"

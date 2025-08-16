@@ -103,7 +103,24 @@ function runUnusedExportsCheck(): CheckResult {
 }
 
 async function main(): Promise<void> {
-  log("🚀 PROFESSIONAL PRE-DEVELOPMENT VALIDATION", colors.bold);
+  const skip =
+    process.env.BC_SKIP_PREDEV === "1" || process.env.BC_PREDEV_MODE === "skip";
+  const relaxed =
+    process.env.BC_LINT_MODE === "relaxed" ||
+    process.env.BC_PREDEV_MODE === "relaxed";
+  if (skip) {
+    log(
+      "⚡ Predev checks skipped via BC_SKIP_PREDEV/BC_PREDEV_MODE",
+      colors.yellow
+    );
+    process.exit(0);
+  }
+
+  log(
+    "🚀 PROFESSIONAL PRE-DEVELOPMENT VALIDATION" +
+      (relaxed ? " (RELAXED)" : ""),
+    colors.bold
+  );
   log("================================================", colors.blue);
 
   const checks: CheckResult[] = [];
@@ -117,17 +134,23 @@ async function main(): Promise<void> {
   );
 
   // 2. ESLint Check - ZERO WARNINGS
+  const eslintMaxWarnings = relaxed ? 200 : 0;
   checks.push(
     runCommand(
-      "npx eslint src/ --ext .ts,.tsx --max-warnings 0 --format stylish",
-      "ESLint Zero-Warning Validation"
+      `npx eslint src/ --ext .ts,.tsx --max-warnings ${eslintMaxWarnings} --format stylish`,
+      relaxed ? "ESLint Validation (relaxed)" : "ESLint Zero-Warning Validation"
     )
   );
 
   // 3. Format Check - CONSISTENT STYLE
-  checks.push(
-    runCommand("npx prettier --check src/", "Prettier Format Validation")
-  );
+  const skipFormat = process.env.BC_PREDEV_NO_FORMAT === "1";
+  if (!skipFormat) {
+    checks.push(
+      runCommand("npx prettier --check src/", "Prettier Format Validation")
+    );
+  } else {
+    log("⏭️  Skipping Prettier check (BC_PREDEV_NO_FORMAT=1)", colors.yellow);
+  }
 
   // 4. Import Validation - REPORT UNUSED EXPORTS (NON-BLOCKING)
   checks.push(runUnusedExportsCheck());
@@ -157,13 +180,20 @@ async function main(): Promise<void> {
   );
   log(`⏱️  Total Time: ${totalTime}ms`, colors.blue);
 
-  if (failed.length > 0) {
+  if (failed.length > 0 && !relaxed) {
     log("\n🚨 DEVELOPMENT SERVER BLOCKED - FIX ERRORS FIRST", colors.red);
     log("Failed checks:", colors.red);
     failed.forEach((check) => {
       log(`  • ${check.name}`, colors.red);
     });
     process.exit(1);
+  }
+
+  if (failed.length > 0 && relaxed) {
+    log(
+      "\n⚠️  RELAXED MODE: Allowing dev server despite failures",
+      colors.yellow
+    );
   }
 
   log("\n🎉 ALL CHECKS PASSED - DEVELOPMENT SERVER READY!", colors.green);

@@ -1,5 +1,5 @@
 import { Typography } from "../../design-system";
-import { ClipboardList, Search, Sprout, Users } from "lucide-react";
+import { Icon } from "../../ui/Icon/Icon";
 /**
  * DevTools Data & Modes Tab
  * Database status and role switching
@@ -60,8 +60,8 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
           size="xs"
           fullWidth
         >
-          <Search
-            aria-label="search"
+          <Icon
+            name="search"
             className="inline h-4 w-4 align-middle text-current"
           />{" "}
           Check Demo Data
@@ -74,8 +74,8 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
           size="xs"
           fullWidth
         >
-          <Sprout
-            aria-label="growth"
+          <Icon
+            name="sprout"
             className="inline h-4 w-4 align-middle text-current"
           />{" "}
           Create Sample Data
@@ -88,8 +88,8 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
             variant="success"
             size="xs"
           >
-            <Users
-              aria-label="team"
+            <Icon
+              name="users"
               className="inline h-4 w-4 align-middle text-current"
             />{" "}
             Teams
@@ -99,8 +99,8 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
             variant="secondary"
             size="xs"
           >
-            <ClipboardList
-              aria-label="clipboard"
+            <Icon
+              name="clipboard-list"
               className="inline h-4 w-4 align-middle text-current"
             />{" "}
             Playbook

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "lucide-react";
 import Icon from "../Icon/Icon";
 import { Typography } from "../../design-system";
 import { Button } from "../Button";
@@ -142,7 +141,7 @@ export function LoginForm({
     >
       {/* Error Message */}
       {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div className="p-3 surface-subtle dark:bg-red-900/20 border border-subtle dark:border-red-800 rounded-lg">
           <Typography
             variant="body-sm"
             className="text-red-700 dark:text-red-400"
@@ -156,8 +155,8 @@ export function LoginForm({
         <div className="space-y-3">
           <Button variant="secondary" className="w-full" disabled={loading}>
             <span className="mr-2">
-              <Link
-                aria-label="link"
+              <Icon
+                name="link"
                 className="inline h-4 w-4 align-middle text-current"
               />
             </span>
@@ -312,7 +311,7 @@ export function SignupForm({
     >
       {/* Error Message */}
       {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div className="p-3 surface-subtle dark:bg-red-900/20 border border-subtle dark:border-red-800 rounded-lg">
           <Typography
             variant="body-sm"
             className="text-red-700 dark:text-red-400"
@@ -326,8 +325,8 @@ export function SignupForm({
         <div className="space-y-3">
           <Button variant="secondary" className="w-full" disabled={loading}>
             <span className="mr-2">
-              <Link
-                aria-label="link"
+              <Icon
+                name="link"
                 className="inline h-4 w-4 align-middle text-current"
               />
             </span>
@@ -380,7 +379,7 @@ export function SignupForm({
           onChange={(e) =>
             handleInputChange("role", e.target.value as SignupData["role"])
           }
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600 bg-white dark:bg-gray-700 text-text-primary"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600 surface-card dark:bg-gray-700 text-text-primary"
           disabled={loading}
         >
           <option value="player">Player</option>
@@ -555,7 +554,7 @@ export function ResetPasswordForm({
     >
       {/* Error Message */}
       {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div className="p-3 surface-subtle dark:bg-red-900/20 border border-subtle dark:border-red-800 rounded-lg">
           <Typography
             variant="body-sm"
             className="text-red-700 dark:text-red-400"

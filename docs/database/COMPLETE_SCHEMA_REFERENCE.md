@@ -1,3 +1,5 @@
+<!-- allow-empty -->
+
 # BoxCall Database Schema - Complete Table Reference
 
 ## All 21 Database Tables

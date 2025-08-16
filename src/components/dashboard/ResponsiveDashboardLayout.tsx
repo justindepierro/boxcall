@@ -11,6 +11,7 @@ import { useMobileNavigation } from "../../hooks/useMobileNavigation";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
 import { TeamOnboarding } from "../onboarding/TeamOnboarding";
+import { ActivationChecklist } from "../onboarding/ActivationChecklist";
 
 /**
  * Responsive Dashboard Layout
@@ -107,6 +108,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         {/* Team Onboarding - Shows for users without teams */}
         <div className="max-w-7xl mx-auto bc-container-padding">
           <TeamOnboarding context="dashboard" />
+          <ActivationChecklist />
         </div>
 
         {/* 

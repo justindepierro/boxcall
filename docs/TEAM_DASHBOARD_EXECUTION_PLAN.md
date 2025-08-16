@@ -1,4 +1,4 @@
-## Team Dashboard Cleanup & Enablement Plan (2025-08-09)
+# Team Dashboard Cleanup & Enablement Plan (2025-08-09)
 
 Author: Automated assistant draft — refine as needed.
 

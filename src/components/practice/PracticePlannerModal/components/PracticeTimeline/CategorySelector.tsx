@@ -58,7 +58,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
         })}
       </div>
       {selectedCategory && (
-        <div className="mt-3 p-2 bg-blue-50 rounded-lg">
+        <div className="mt-3 p-2 surface-subtle rounded-lg">
           <Typography
             variant="body-sm"
             className="text-blue-800 flex items-center"

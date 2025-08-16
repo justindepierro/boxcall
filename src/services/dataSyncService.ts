@@ -15,10 +15,9 @@ import type { PracticeScript } from "./practiceScriptService";
 import type { GamePlan } from "./gamePlanService";
 import { CSVService } from "./csv";
 import { normalizePlayName, normalizeText } from "../utils/textNormalization";
-import {
-  canonicalizePlayInput,
-  computeDuplicateKey,
-} from "../utils/playDataStandardization";
+import { PlaysDomainService } from "../domain/playsDomainService";
+import { PlaysService } from "./playsService";
+import type { InboundPlay } from "../utils/playDataStandardization";
 
 interface CachedData<T = unknown> {
   data: T;
@@ -174,15 +173,8 @@ export class DataSyncService {
     this.updateLocalCache("play", playId, updates);
 
     try {
-      // 2. Sync to Supabase in background
-      const { error } = await this.supabase!.from("plays")
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", playId);
-
-      if (error) throw error;
+      // 2. Delegate to domain layer (handles canonicalization + duplicate key)
+      await PlaysDomainService.updatePlay(playId, updates as InboundPlay);
 
       // 3. Trigger local backup
       this.triggerBackup();
@@ -207,18 +199,14 @@ export class DataSyncService {
 
     const tempId = `temp_${Date.now()}`;
 
-    // Normalize text fields before creating play
-    const normalizedPlay = {
-      ...play,
+    // Lightweight optimistic object (final canonicalization in domain layer)
+    const optimisticPlay: Play = {
+      ...(play as Play),
       play_name: normalizePlayName(play.play_name),
+      formation: normalizeText(play.formation),
       one_word_play: play.one_word_play
         ? normalizeText(play.one_word_play)
         : play.one_word_play,
-      formation: normalizeText(play.formation),
-    };
-
-    const optimisticPlay: Play = {
-      ...normalizedPlay,
       id: tempId,
       created_at: new Date(),
       updated_at: new Date(),
@@ -228,15 +216,10 @@ export class DataSyncService {
     this.addToLocalCache("play", optimisticPlay);
 
     try {
-      // 2. Create in Supabase
-      const { data, error } = await this.supabase!.from("plays")
-        .insert(normalizedPlay)
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      const createdPlay = data as Play;
+      // 2. Delegate creation to domain service
+      const { play: createdPlay } = await PlaysDomainService.createPlay(
+        play as InboundPlay
+      );
 
       // 3. Replace temp data with real data
       this.replaceInLocalCache("play", tempId, createdPlay);
@@ -271,88 +254,31 @@ export class DataSyncService {
     const created: Play[] = [];
     const errors: string[] = [];
 
-    console.log(`🚀 Starting bulk import of ${plays.length} plays...`);
+    console.log(
+      `🚀 Starting delegated bulk import of ${plays.length} plays...`
+    );
 
     try {
-      // Get current user for created_by field
-      const {
-        data: { user },
-      } = await this.supabase!.auth.getUser();
-
-      if (!user) {
-        throw new Error("No authenticated user found for bulk import");
-      }
-
-      // Prepare plays for insertion
-      const playsToInsert = plays.map((play) => {
-        const canonical = canonicalizePlayInput({
-          play_name: play.play_name,
-          formation: play.formation,
-          p_type: (play as unknown as { p_type?: string }).p_type || "Pass",
-          one_word_play: play.one_word_play,
-          personnel: (play as unknown as { personnel?: string }).personnel,
-        });
-        const dupKey = computeDuplicateKey(canonical);
-        return {
-          ...play,
-          play_name: canonical.play_name,
-          one_word_play: canonical.one_word_play,
-          formation: canonical.formation,
-          duplicate_key: dupKey,
-          playbook_id: playbookId,
-          created_by: user.id,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          confidence_base: play.confidence_base ?? 70,
-          times_called: play.times_called ?? 0,
-          times_successful: play.times_successful ?? 0,
-        };
-      });
-      // Bulk insert to Supabase (batch size 100 for reliability)
-      const batchSize = 100;
-      for (let i = 0; i < playsToInsert.length; i += batchSize) {
-        const batch = playsToInsert.slice(i, i + batchSize);
-
-        console.log(
-          `📦 Processing batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(playsToInsert.length / batchSize)}...`
-        );
-
-        console.log(
-          "🔍 Sample play data being inserted:",
-          JSON.stringify(batch[0], null, 2)
-        );
-
-        const { data, error } = await this.supabase!.from("plays")
-          .insert(batch)
-          .select();
-
-        if (error) {
-          if (error.code === "23505") {
-            errors.push(
-              "Duplicate play detected in batch (name + formation). Skipping batch."
-            );
-            continue;
-          }
-          console.error("❌ Supabase insert error:", error);
-          console.error("📊 Error details:", {
-            code: error.code,
-            message: error.message,
-            details: error.details,
-            hint: error.hint,
-          });
-          errors.push(
-            `Batch ${Math.floor(i / batchSize) + 1} failed: ${error.message} (Code: ${error.code})`
+      // Sequential delegation (can be optimized/batched later)
+      for (const p of plays) {
+        try {
+          // Domain service does not accept playbook_id in InboundPlay; attach after creation if needed
+          const { play: createdPlay } = await PlaysDomainService.createPlay(
+            p as InboundPlay
           );
-          continue;
+          if (playbookId && !createdPlay.playbook_id) {
+            // Fallback: if domain layer did not set it (should normally be set upstream), patch via PlaysService
+            await PlaysService.updatePlay(createdPlay.id, {
+              playbook_id: playbookId,
+            } as Partial<Play>);
+          }
+          created.push(createdPlay);
+          this.addToLocalCache("play", createdPlay);
+        } catch (e: unknown) {
+          errors.push(
+            e instanceof Error ? e.message : "Unknown error creating play"
+          );
         }
-
-        const batchCreated = data as Play[];
-        created.push(...batchCreated);
-
-        // Update cache with new plays
-        batchCreated.forEach((play) => {
-          this.addToLocalCache("play", play);
-        });
       }
 
       // Clear playbook cache to force refresh
@@ -361,7 +287,7 @@ export class DataSyncService {
 
       const duration = performance.now() - startTime;
       console.log(
-        `✅ Bulk import complete: ${created.length}/${plays.length} plays created in ${duration.toFixed(2)}ms`
+        `✅ Delegated bulk import complete: ${created.length}/${plays.length} plays created in ${duration.toFixed(2)}ms`
       );
 
       return {

@@ -86,7 +86,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
             {MOCK_SCRIPTS.map((script) => (
               <div
                 key={script.id}
-                className="p-4 border border-subtle rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors"
+                className="p-4 border border-subtle rounded-lg hover:border-blue-300 hover:surface-subtle cursor-pointer transition-colors"
                 onClick={() => handleScriptSelect(script)}
               >
                 <div className="flex items-start justify-between">
@@ -121,11 +121,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                       </span>
                     </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-blue-600 hover:text-blue-800"
-                  >
+                  <Button variant="infoLink" size="sm">
                     <Icon name="plus" size="sm" />
                   </Button>
                 </div>

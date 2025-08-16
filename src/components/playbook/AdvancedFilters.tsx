@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../ui/Button/Button";
-import { Filter, Plus, X } from "lucide-react";
+import { Icon } from "../ui/Icon/Icon";
 import { FORMATION_OPTIONS, PLAY_TYPE_OPTIONS } from "../../types/play";
 
 interface ActiveFilter {
@@ -160,12 +160,12 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
   );
 
   return (
-    <div className="surface-card rounded-lg shadow-sm border border-slate-200 dark:border-gray-700">
+    <div className="surface-card rounded-lg shadow-sm border border-subtle dark:border-gray-700">
       {/* Header */}
-      <div className="p-3 border-b border-slate-200 dark:border-gray-700">
+      <div className="p-3 border-b border-subtle dark:border-gray-700">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <Filter className="h-4 w-4 text-text-secondary mr-2" />
+            <Icon name="filter" className="h-4 w-4 text-text-secondary mr-2" />
             <span className="Typography typography-label-lg text-text-primary">
               Filters
             </span>
@@ -192,7 +192,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           {activeFilters.map((filter) => (
             <div
               key={filter.id}
-              className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded px-2 py-1"
+              className="flex items-center justify-between surface-subtle border border-subtle rounded px-2 py-1"
             >
               <span className="text-xs text-blue-900 truncate flex-1">
                 {filter.label}
@@ -203,7 +203,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                 onClick={() => removeFilter(filter.id)}
                 className="text-blue-600 hover:text-blue-800 h-auto px-1 py-0"
               >
-                <X className="h-3 w-3" />
+                <Icon name="close" className="h-3 w-3" />
               </Button>
             </div>
           ))}
@@ -219,7 +219,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             onClick={() => setShowAddFilter(true)}
             className="w-full flex items-center justify-center"
           >
-            <Plus className="h-3 w-3 mr-1" />
+            <Icon name="plus" className="h-3 w-3 mr-1" />
             Add Filter
           </Button>
         ) : (

@@ -98,7 +98,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                 variant="ghost"
                 size="xs"
                 onClick={closeAll}
-                className="text-gray-400 hover:text-text-secondary h-auto"
+                className="h-auto"
                 icon={<Icon name="close" size="sm" />}
                 iconPosition="only"
                 aria-label="Close event modal"

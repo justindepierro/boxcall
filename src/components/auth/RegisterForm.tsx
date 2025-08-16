@@ -182,7 +182,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             fullWidth
           />
           {error && (
-            <div className="p-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-md">
+            <div className="p-3 surface-subtle dark:bg-red-900/10 border border-subtle dark:border-red-800 rounded-md">
               <Typography
                 variant="body-sm"
                 className="text-red-700 dark:text-red-400"
@@ -198,7 +198,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             disabled={loading}
             fullWidth
             size="lg"
-            className="!bg-jade-600 !hover:bg-jade-700 !border-jade-600 !hover:border-jade-700 !text-text-inverse"
           >
             {loading ? "Creating Account..." : "Create Account"}
           </Button>

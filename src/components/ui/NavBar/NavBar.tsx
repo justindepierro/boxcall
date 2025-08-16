@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../Button";
 import { ThemeToggle } from "../ThemeToggle/ThemeToggle";
+import { prefetchOnHover } from "../../../routes/prefetch";
 export interface NavBarItem {
   /** Unique identifier for the nav item */
   id: string;
@@ -11,6 +12,10 @@ export interface NavBarItem {
   icon?: ReactNode;
   /** Click handler for the nav item */
   onClick?: () => void;
+  /** Optional href for navigation (used for hover prefetch and a11y) */
+  href?: string;
+  /** Optional importer to prefetch on hover */
+  importer?: () => Promise<unknown>;
   /** Whether the item is active/selected */
   active?: boolean;
   /** Whether the item is disabled */
@@ -60,6 +65,12 @@ const NavBarItem: React.FC<{
   onItemClick?: (item: NavBarItem) => void;
 }> = ({ item, isMobile = false, onItemClick }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const anchorRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const enabled = String(import.meta.env.VITE_PREFETCH_ROUTES) === "true";
+    if (!enabled || !item.importer || !anchorRef.current) return;
+    prefetchOnHover(anchorRef.current, item.importer);
+  }, [item.importer]);
   const handleClick = () => {
     if (item.disabled) return;
     if (item.children && item.children.length > 0) {
@@ -73,7 +84,17 @@ const NavBarItem: React.FC<{
 
   return (
     <div className={`relative ${isMobile ? "block" : "inline-block"}`}>
-      <div className={getNavItemStyles(item)} onClick={handleClick}>
+      <div
+        ref={anchorRef}
+        role="button"
+        tabIndex={0}
+        aria-disabled={item.disabled}
+        className={getNavItemStyles(item)}
+        onClick={handleClick}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") handleClick();
+        }}
+      >
         {item.icon && <span className="mr-2 flex-shrink-0">{item.icon}</span>}
         <span>{item.label}</span>
         {hasDropdown && (
@@ -82,6 +103,7 @@ const NavBarItem: React.FC<{
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"

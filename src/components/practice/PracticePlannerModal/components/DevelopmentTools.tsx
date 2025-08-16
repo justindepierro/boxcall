@@ -22,18 +22,13 @@ export const DevelopmentTools: React.FC<DevelopmentToolsProps> = ({
   }
 
   return (
-    <div className="mb-4 p-2 bg-yellow-50 border border-yellow-200 rounded">
+    <div className="mb-4 p-2 surface-subtle border border-subtle rounded">
       <div className="flex items-center justify-between">
         <Typography variant="body-sm" className="text-yellow-800">
           <Icon name="settings" size="sm" className="mr-1" />
           Development Tools
         </Typography>
-        <Button
-          onClick={resetToSampleData}
-          variant="warning"
-          size="xs"
-          className="bg-yellow-200 text-yellow-800 hover:bg-yellow-300"
-        >
+        <Button onClick={resetToSampleData} variant="warning" size="xs">
           Reset to Sample Data
         </Button>
       </div>

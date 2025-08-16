@@ -106,7 +106,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
           </Typography>
         </div>
         <div className="flex space-x-2">
-          <Button variant="ghost" size="sm" onClick={onCancel}>
+          <Button variant="neutralLink" size="sm" onClick={onCancel}>
             Cancel
           </Button>
           <Button variant="primary" size="sm" onClick={onSave}>
@@ -156,7 +156,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
           })}
         </div>
         {selectedCategory && (
-          <div className="mt-3 p-2 bg-blue-50 rounded-lg">
+          <div className="mt-3 p-2 surface-subtle rounded-lg">
             <div className="flex items-center gap-1">
               <Icon name="target" size="sm" color="info" />
               <Typography variant="body-sm" className="text-blue-800">
@@ -192,7 +192,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
             <div className="flex space-x-2">
               <Button
                 onClick={onRemoveEmpty}
-                variant="ghost"
+                variant="neutralLink"
                 size="xs"
                 icon={<Icon name="activity" size="sm" color="current" />}
               >
@@ -200,7 +200,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
               </Button>
               <Button
                 onClick={onClearAll}
-                variant="danger"
+                variant="dangerLink"
                 size="xs"
                 icon={<Icon name="delete" size="sm" color="current" />}
               >
@@ -363,7 +363,7 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
 
       {/* Expandable Slider for Selected Block */}
       {selectedBlock && (
-        <div className="mt-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+        <div className="mt-4 p-4 surface-subtle rounded-lg border-2 border-subtle">
           <div className="flex items-center justify-between mb-3">
             <div>
               <div className="flex items-center gap-2">
@@ -390,10 +390,10 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
               </div>
             </div>
             <Button
-              variant="ghost"
+              variant="infoLink"
               size="xs"
               onClick={onClearSelected}
-              className="h-auto p-1 text-blue-600 hover:text-blue-800"
+              className="h-auto p-1"
               aria-label="Clear selection"
             >
               ✕
@@ -402,7 +402,11 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
 
           <div className="space-y-3">
             <div>
-              <Typography variant="body-sm" as="label" className="block font-medium text-blue-700 mb-2">
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-blue-700 mb-2"
+              >
                 Duration: {sliderValue} minutes
               </Typography>
               <input
@@ -516,7 +520,11 @@ export const TimelineAllocation: React.FC<TimelineAllocationProps> = ({
                         className={`px-3 py-2 rounded-lg border-2 ${getCategoryColor(category as PracticeBlock["category"])} border-opacity-50`}
                       >
                         <div className="flex items-center space-x-2">
-                          <Typography variant="body-sm" as="span" className="font-medium capitalize">
+                          <Typography
+                            variant="body-sm"
+                            as="span"
+                            className="font-medium capitalize"
+                          >
                             {category.replace("-", " ")}
                             {data.blocks.length > 1 && ` #${blockIndex + 1}`}
                           </Typography>

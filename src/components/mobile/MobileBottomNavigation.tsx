@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui";
 import { NotificationBadge } from "../ui/Badge";
+import { prefetchOnHover } from "../../routes/prefetch";
 
 export interface MobileNavItem {
   id: string;
@@ -10,6 +11,7 @@ export interface MobileNavItem {
   href: string;
   badge?: number;
   isActive?: boolean;
+  importer?: () => Promise<unknown>;
 }
 
 export interface MobileBottomNavigationProps {
@@ -33,6 +35,19 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
   onNavigate,
   className = "",
 }) => {
+  const itemRefs = useRef(new Map<string, HTMLElement>());
+
+  useEffect(() => {
+    const enabled = String(import.meta.env.VITE_PREFETCH_ROUTES) === "true";
+    if (!enabled) return;
+    items.forEach((item) => {
+      const el = itemRefs.current.get(item.id) || null;
+      if (el && item.importer) {
+        prefetchOnHover(el, item.importer);
+      }
+    });
+  }, [items]);
+
   const handleItemClick = (item: MobileNavItem) => {
     // Provide haptic-style feedback
     const button = document.activeElement as HTMLElement;
@@ -55,7 +70,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
     <nav
       className={`
         fixed bottom-0 left-0 right-0 z-50
-        bg-white dark:bg-gray-900
+  surface-card
         border-t border-subtle dark:border-gray-700
         shadow-lg
         pb-safe-area-inset-bottom
@@ -68,48 +83,61 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
       <div className="px-2 py-1">
         <div className="flex justify-between items-center max-w-sm mx-auto">
           {items.map((item) => (
-            <Button
+            <div
               key={item.id}
-              onClick={() => handleItemClick(item)}
-              variant={item.isActive ? "primary" : "ghost"}
-              size="sm"
-              className={`relative flex flex-col items-center justify-center min-w-[60px] px-2 py-2 h-auto active:scale-95 focus-visible:ring-2 focus-visible:ring-jade-500 ${item.isActive ? "text-brand-jade dark:text-brand-jade-light" : "text-gray-500 hover:text-text-primary dark:hover:text-text-secondary"} text-text-secondary`}
-              style={{ minHeight: "60px" }}
-              aria-label={`Navigate to ${item.label}`}
+              ref={(el) => {
+                if (el) itemRefs.current.set(item.id, el);
+                else itemRefs.current.delete(item.id);
+              }}
+              className="inline-flex"
             >
-              {/* Icon Container */}
-              <div className="relative mb-1">
-                <Icon
-                  name={
-                    item.icon as "home" | "calendar" | "users" | "user" | "menu"
-                  }
-                  size="sm"
-                  className={`
+              <Button
+                onClick={() => handleItemClick(item)}
+                variant={item.isActive ? "primary" : "ghost"}
+                size="sm"
+                className={`relative flex flex-col items-center justify-center min-w-[60px] px-2 py-2 h-auto active:scale-95 focus-visible:ring-2 focus-visible:ring-jade-500 ${item.isActive ? "text-brand-jade dark:text-brand-jade-light" : "text-gray-500 hover:text-text-primary dark:hover:text-text-secondary"} text-text-secondary`}
+                style={{ minHeight: "60px" }}
+                aria-label={`Navigate to ${item.label}`}
+              >
+                {/* Icon Container */}
+                <div className="relative mb-1">
+                  <Icon
+                    name={
+                      item.icon as
+                        | "home"
+                        | "calendar"
+                        | "users"
+                        | "user"
+                        | "menu"
+                    }
+                    size="sm"
+                    className={`
                     transition-colors duration-200
                     ${item.isActive ? "text-brand-jade dark:text-brand-jade-light" : ""}
                   `}
-                />
+                  />
 
-                {/* Notification Badge */}
-                {item.badge && item.badge > 0 && (
-                  <div className="absolute -top-2 -right-2">
-                    <NotificationBadge count={item.badge} size="sm" />
-                  </div>
-                )}
+                  {/* Notification Badge */}
+                  {item.badge && item.badge > 0 && (
+                    <div className="absolute -top-2 -right-2">
+                      <NotificationBadge count={item.badge} size="sm" />
+                    </div>
+                  )}
 
-                {/* Active Indicator */}
-                {item.isActive && (
-                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
-                    <div className="w-1 h-1 bg-brand-jade dark:bg-brand-jade-light rounded-full" />
-                  </div>
-                )}
-              </div>
+                  {/* Active Indicator */}
+                  {item.isActive && (
+                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
+                      <div className="w-1 h-1 bg-brand-jade dark:bg-brand-jade-light rounded-full" />
+                    </div>
+                  )}
+                </div>
 
-              {/* Label */}
-              <span className="text-xs font-medium leading-tight">
-                {item.label}
-              </span>
-            </Button>
+                {/* Label */}
+                <span className="text-xs font-medium leading-tight">
+                  {item.label}
+                </span>
+              </Button>
+            </div>
           ))}
         </div>
       </div>

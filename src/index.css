@@ -1,6 +1,8 @@
 /* Import centralized design tokens first */
 @import "./styles/tokens.css";
 @import "./styles/mobile.css";
+/* Self-hosted fonts (optional until WOFF2 files are added) */
+@import "./styles/fonts.css";
 /* Generated CSS variables (design tokens) */
 @import "./styles/generated-tokens.css";
 @import "./styles/generated-themes.css";
@@ -26,6 +28,17 @@ body,
 }
 
 @layer base {
+  :root {
+    /* Component-level fallbacks */
+    --panel-bg: rgba(255, 255, 255, 0.85);
+    --panel-border: rgba(60, 60, 67, 0.18);
+    --panel-radius: 12px;
+    --panel-blur: 16px;
+    --panel-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 20px rgba(0, 0, 0, 0.06);
+    --button-border-radius: 4px;
+    --button-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  }
   html {
     font-family: "Inter", system-ui, sans-serif;
     margin: 0;
@@ -115,6 +128,15 @@ body,
 }
 
 @layer components {
+  /* Cupertino-style panel utility driven by theme component tokens */
+  .panel-cupertino {
+    background: var(--panel-bg);
+    -webkit-backdrop-filter: saturate(180%) blur(var(--panel-blur));
+    backdrop-filter: saturate(180%) blur(var(--panel-blur));
+    border: 1px solid var(--panel-border);
+    border-radius: var(--panel-radius);
+    box-shadow: var(--panel-shadow);
+  }
   /* Semantic Surface Utilities */
   .surface-app {
     background-color: #f9fafb;

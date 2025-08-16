@@ -22,6 +22,7 @@ import type {
   PracticeTemplate,
 } from "../types/practice";
 import { PRACTICE_BLOCK_TYPES, QUICK_TIME_INTERVALS } from "../types/practice";
+import { markFirstPracticeScheduled } from "../components/onboarding/activationHelpers";
 export function PracticePlanner() {
   const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
@@ -98,6 +99,12 @@ export function PracticePlanner() {
     setPracticeStarted(true);
     setLockedSchedule(true);
     startTimer();
+    // Activation: mark first practice (using schedule id)
+    if (selectedScheduleId) {
+      markFirstPracticeScheduled(selectedScheduleId);
+    } else {
+      markFirstPracticeScheduled();
+    }
   };
   const handleStopPractice = () => {
     setPracticeStarted(false);
@@ -299,7 +306,8 @@ export function PracticePlanner() {
                     {!practiceStarted ? (
                       <Button
                         onClick={handleStartPractice}
-                        className="bg-jade-600 hover:bg-jade-700 text-text-inverse flex items-center gap-2"
+                        variant="primary"
+                        className="flex items-center gap-2"
                         disabled={currentBlocks.length === 0}
                       >
                         <Icon
@@ -347,7 +355,7 @@ export function PracticePlanner() {
                         ref={provided.innerRef}
                         className={`space-y-3 min-h-[200px] p-4 rounded-lg placeholder-zone transition-colors ${
                           snapshot.isDraggingOver
-                            ? "border-jade-400 bg-jade-50"
+                            ? "border-jade-400 surface-subtle"
                             : "border-subtle surface-subtle"
                         }`}
                       >
@@ -435,9 +443,9 @@ export function PracticePlanner() {
                                         {block.practiceScriptId && (
                                           <div className="mt-2">
                                             <Button
-                                              variant="ghost"
+                                              variant="brandLink"
                                               size="sm"
-                                              className="text-jade-600 hover:text-jade-700 p-0 h-auto flex items-center"
+                                              className="p-0 h-auto flex items-center"
                                             >
                                               <Icon
                                                 name="file"
@@ -468,7 +476,7 @@ export function PracticePlanner() {
                                           handleDeleteBlock(block.id)
                                         }
                                         disabled={lockedSchedule}
-                                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                        className="text-red-600 hover:text-red-700 hover:surface-subtle"
                                       >
                                         <Icon name="delete" size="sm" />
                                       </Button>
@@ -547,7 +555,8 @@ export function PracticePlanner() {
                   </Typography>
                   <Button
                     onClick={() => setIsCreateBlockModalOpen(true)}
-                    className="w-full bg-jade-600 hover:bg-jade-700 text-text-inverse"
+                    variant="primary"
+                    className="w-full"
                     disabled={lockedSchedule}
                   >
                     + Create Custom Block
@@ -577,10 +586,10 @@ export function PracticePlanner() {
                       </Button>
                     ))}
                     <Button
-                      variant="ghost"
+                      variant="brandLink"
                       size="sm"
                       onClick={() => setIsTemplateModalOpen(true)}
-                      className="w-full text-jade-600 hover:text-jade-700"
+                      className="w-full"
                     >
                       View All Templates →
                     </Button>
@@ -712,7 +721,11 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
         </Typography>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
+            <Typography
+              variant="body-sm"
+              as="label"
+              className="block font-medium text-text-secondary mb-2"
+            >
               Block Title
             </Typography>
             <Input
@@ -724,7 +737,11 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
             />
           </div>
           <div>
-            <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
+            <Typography
+              variant="body-sm"
+              as="label"
+              className="block font-medium text-text-secondary mb-2"
+            >
               Description
             </Typography>
             <textarea
@@ -736,7 +753,11 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
             />
           </div>
           <div>
-            <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
+            <Typography
+              variant="body-sm"
+              as="label"
+              className="block font-medium text-text-secondary mb-2"
+            >
               Duration (minutes)
             </Typography>
             <Input
@@ -752,10 +773,7 @@ function CreateBlockModal({ isOpen, onClose, onSave }: CreateBlockModalProps) {
             <Button variant="ghost" onClick={onClose}>
               Cancel
             </Button>
-            <Button
-              type="submit"
-              className="bg-jade-600 hover:bg-jade-700 text-text-inverse"
-            >
+            <Button type="submit" variant="primary">
               Create Block
             </Button>
           </div>
@@ -801,7 +819,7 @@ function TemplatesModal({
                 <Button
                   size="sm"
                   onClick={() => onSelectTemplate(template.id)}
-                  className="bg-jade-600 hover:bg-jade-700 text-text-inverse"
+                  variant="primary"
                 >
                   Use Template
                 </Button>

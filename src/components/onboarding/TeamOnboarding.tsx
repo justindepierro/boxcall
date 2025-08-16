@@ -68,7 +68,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
   // Show loading state
   if (loading) {
     return (
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg bc-card-padding">
+      <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg bc-card-padding">
         <div className="animate-pulse flex items-center gap-3">
           <div className="w-6 h-6 bg-blue-200 rounded-full"></div>
           <div className="h-4 bg-blue-200 rounded w-32"></div>
@@ -87,7 +87,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
     if (hasCoachAccount) {
       // Coach Account users can use playbook without teams
       return (
-        <div className="bg-jade-50 dark:bg-jade-900/20 border border-jade-200 dark:border-jade-800 rounded-lg p-4 mb-6">
+        <div className="surface-subtle border-subtle rounded-lg p-4 mb-6">
           <div className="flex items-center gap-3">
             <Icon name="check-circle" size="md" color="success" />
             <div>
@@ -108,7 +108,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
     } else {
       // Free users need team or coach account for playbook
       return (
-        <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg bc-card-padding mb-8">
+        <div className="surface-subtle border-subtle rounded-lg bc-card-padding mb-8">
           <div className="text-center">
             <Icon
               name="lock"
@@ -126,14 +126,14 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
             <div className="flex gap-3 justify-center">
               <Button
                 size="sm"
-                variant="primary"
+                variant="brandLink"
                 onClick={() => navigate("/create-coach-account")}
               >
                 Get Coach Account ($19.99)
               </Button>
               <Button
                 size="sm"
-                variant="ghost"
+                variant="neutralLink"
                 onClick={() => navigate("/join-team")}
               >
                 Join a Team
@@ -147,7 +147,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
 
   // DASHBOARD CONTEXT: Encourage team creation for full experience
   return (
-    <div className="surface-card decorative-gradient bg-gradient-to-r from-blue-50 to-jade-50 dark:from-blue-900/20 dark:to-jade-900/20 border border-blue-200 dark:border-blue-800 rounded-md bc-card-padding mb-8">
+    <div className="surface-card decorative-gradient bg-gradient-to-r from-blue-50 to-jade-50 dark:from-blue-900/20 dark:to-jade-900/20 border border-subtle dark:border-blue-800 rounded-md bc-card-padding mb-8">
       <div className="text-center">
         <div className="flex items-center justify-center mb-6">
           <div className="bg-jade-100 dark:bg-jade-900/40 p-4 rounded-full">

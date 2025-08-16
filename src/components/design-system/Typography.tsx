@@ -2,7 +2,7 @@
  * BoxCall Design System - Typography
  *
  * Professional typography system with masculine, square aesthetic
- * Features Bebas Neue (display) + Inter (body) + IBM Plex Mono (code)
+ * Features Bebas Neue (display) + Inter (body) + JetBrains Mono (code)
  */
 import React from "react";
 // Typography variant types - Updated with new display variant
@@ -18,9 +18,9 @@ export type TypographyVariant =
   | "body-md" // Standard body text (Inter)
   | "body-sm" // Small body text (Inter)
   | "body-xs" // Extra small body text (Inter)
-  | "code-lg" // NEW: Large code/stats (IBM Plex Mono)
-  | "code-md" // NEW: Standard code/stats (IBM Plex Mono)
-  | "code-sm" // NEW: Small code/stats (IBM Plex Mono)
+  | "code-lg" // NEW: Large code/stats (JetBrains Mono)
+  | "code-md" // NEW: Standard code/stats (JetBrains Mono)
+  | "code-sm" // NEW: Small code/stats (JetBrains Mono)
   | "label-lg" // Large labels (Inter Medium)
   | "label-md" // Standard labels (Inter Medium)
   | "button" // Button text (Inter Semibold)
@@ -37,9 +37,17 @@ export type TypographyElement =
   | "div"
   | "label"
   | "code";
-export interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
-  /** Typography variant for consistent styling */
-  variant: TypographyVariant;
+// Optional alias variants for ergonomic usage (maps to -md defaults)
+export type TypographyVariantAlias =
+  | "display"
+  | "headline"
+  | "body"
+  | "code"
+  | "label";
+
+export interface TypographyProps {
+  /** Typography variant for consistent styling. If omitted, inferred from `as` or defaults to body-md */
+  variant?: TypographyVariant | TypographyVariantAlias;
   /** HTML element to render */
   as?: TypographyElement;
   /** Text content */
@@ -60,6 +68,28 @@ export interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   /** Truncate text with ellipsis */
   truncate?: boolean;
 }
+
+// Polymorphic typing helpers so native props/ref match the chosen `as` element
+type ElementFor<E extends TypographyElement> = E extends "p"
+  ? HTMLParagraphElement
+  : E extends "span"
+    ? HTMLSpanElement
+    : E extends "div"
+      ? HTMLDivElement
+      : E extends "label"
+        ? HTMLLabelElement
+        : E extends "code"
+          ? HTMLElement
+          : HTMLHeadingElement;
+
+type NativePropsFor<E extends TypographyElement> = Omit<
+  React.ComponentPropsWithoutRef<E>,
+  keyof TypographyProps | "color" | "children" | "className"
+>;
+
+type PolymorphicProps<E extends TypographyElement> = TypographyProps & {
+  as?: E;
+} & NativePropsFor<E>;
 // Typography variant class mappings - Updated with new font families and square aesthetic
 const typographyClasses: Record<TypographyVariant, string> = {
   // Display variants - Bebas Neue for maximum impact
@@ -77,7 +107,7 @@ const typographyClasses: Record<TypographyVariant, string> = {
   "body-md": "font-sans text-base leading-relaxed",
   "body-sm": "font-sans text-sm leading-relaxed",
   "body-xs": "font-sans text-xs leading-relaxed",
-  // Code/Stats - IBM Plex Mono for technical data
+  // Code/Stats - JetBrains Mono for technical data
   "code-lg": "font-mono text-lg leading-normal",
   "code-md": "font-mono text-base leading-normal",
   "code-sm": "font-mono text-sm leading-normal",
@@ -88,7 +118,7 @@ const typographyClasses: Record<TypographyVariant, string> = {
   caption: "font-sans text-xs text-text-secondary",
 };
 // Color class mappings - Updated with jade/navy system
-const colorClasses: Record<string, string> = {
+const colorClasses: Record<NonNullable<TypographyProps["color"]>, string> = {
   primary: "text-jade-600 dark:text-jade-400", // Jade green for primary
   secondary: "text-navy-600 dark:text-navy-400", // Navy blue for secondary
   success: "text-green-600 dark:text-green-400", // Success green
@@ -98,7 +128,7 @@ const colorClasses: Record<string, string> = {
   inverse: "text-white dark:text-gray-900", // Inverse colors
 };
 // Text alignment classes
-const alignClasses: Record<string, string> = {
+const alignClasses: Record<NonNullable<TypographyProps["align"]>, string> = {
   left: "text-left",
   center: "text-center",
   right: "text-right",
@@ -135,22 +165,80 @@ const defaultElements: Record<TypographyVariant, TypographyElement> = {
  * @param align - Text alignment
  * @param truncate - Whether to truncate text with ellipsis
  */
-export const Typography: React.FC<TypographyProps & { htmlFor?: string }> = ({
-  variant,
-  as,
-  children,
-  className = "",
-  color,
-  align,
-  truncate = false,
-  htmlFor,
-  ...restProps
-}) => {
+const TypographyBase = React.forwardRef(function TypographyBase<
+  E extends TypographyElement = "p",
+>(
+  {
+    variant,
+    as,
+    children,
+    className = "",
+    color,
+    align,
+    truncate = false,
+    htmlFor,
+    ...restProps
+  }: PolymorphicProps<E> & { htmlFor?: string },
+  ref: React.ForwardedRef<ElementFor<E>>
+) {
+  // Map alias variants to concrete sizes
+  const normalizeVariant = (
+    v: TypographyVariant | TypographyVariantAlias
+  ): TypographyVariant => {
+    switch (v) {
+      case "display":
+        return "display-lg";
+      case "headline":
+        return "headline-md";
+      case "body":
+        return "body-md";
+      case "code":
+        return "code-md";
+      case "label":
+        return "label-md";
+      default:
+        return v as TypographyVariant;
+    }
+  };
+
+  // Infer a sensible variant from the chosen element, if variant is not provided
+  const deriveVariantFromElement = (
+    el?: TypographyElement
+  ): TypographyVariant | undefined => {
+    switch (el) {
+      case "h1":
+        return "headline-xl";
+      case "h2":
+        return "headline-lg";
+      case "h3":
+        return "headline-md";
+      case "h4":
+      case "h5":
+      case "h6":
+        return "headline-sm";
+      case "label":
+        return "label-md";
+      case "code":
+        return "code-md";
+      case "span":
+        return "body-sm";
+      case "div":
+      case "p":
+      default:
+        return "body-md";
+    }
+  };
+
+  const actualVariant = normalizeVariant(
+    (variant as TypographyVariant | TypographyVariantAlias) ??
+      deriveVariantFromElement(as) ??
+      "body-md"
+  );
   // Determine the HTML element to render
-  const Element = as || defaultElements[variant];
+  const Element = as || defaultElements[actualVariant];
   // Build class string
   const classes = [
-    typographyClasses[variant],
+    typographyClasses[actualVariant],
     color ? colorClasses[color] : "text-gray-900 dark:text-gray-100", // Default text color when no color specified
     align && alignClasses[align],
     truncate && "truncate",
@@ -159,13 +247,58 @@ export const Typography: React.FC<TypographyProps & { htmlFor?: string }> = ({
     .filter(Boolean)
     .join(" ");
   const extraProps: Record<string, unknown> = {};
-  if (htmlFor && Element === 'label') extraProps.htmlFor = htmlFor;
+  if (htmlFor && Element === "label") extraProps.htmlFor = htmlFor;
   return (
-    <Element className={classes} {...extraProps} {...restProps}>
+    <Element
+      ref={ref as never}
+      className={classes}
+      {...extraProps}
+      {...(restProps as object)}
+    >
       {children}
     </Element>
   );
-};
+});
 // Set display name for debugging
+type TypographyComponent = <E extends TypographyElement = "p">(
+  props: PolymorphicProps<E> & { ref?: React.Ref<ElementFor<E>> }
+) => React.ReactElement | null;
+
+export const Typography = React.memo(
+  TypographyBase
+) as unknown as TypographyComponent & {
+  displayName?: string;
+};
 Typography.displayName = "Typography";
 export default Typography;
+
+// Ergonomic shorthands with sensible defaults; allow overriding variant when needed
+type PropsWithoutAs<E extends TypographyElement> = Omit<
+  PolymorphicProps<E>,
+  "as"
+>;
+
+export const H1 = ({ variant, ...rest }: PropsWithoutAs<"h1">) => (
+  <Typography as="h1" variant={variant ?? "headline-xl"} {...rest} />
+);
+export const H2 = ({ variant, ...rest }: PropsWithoutAs<"h2">) => (
+  <Typography as="h2" variant={variant ?? "headline-lg"} {...rest} />
+);
+export const H3 = ({ variant, ...rest }: PropsWithoutAs<"h3">) => (
+  <Typography as="h3" variant={variant ?? "headline-md"} {...rest} />
+);
+export const H4 = ({ variant, ...rest }: PropsWithoutAs<"h4">) => (
+  <Typography as="h4" variant={variant ?? "headline-sm"} {...rest} />
+);
+export const P = ({ variant, ...rest }: PropsWithoutAs<"p">) => (
+  <Typography as="p" variant={variant ?? "body-md"} {...rest} />
+);
+export const Label = ({
+  variant,
+  ...rest
+}: PropsWithoutAs<"label"> & { htmlFor?: string }) => (
+  <Typography as="label" variant={variant ?? "label-md"} {...rest} />
+);
+export const Code = ({ variant, ...rest }: PropsWithoutAs<"code">) => (
+  <Typography as="code" variant={variant ?? "code-md"} {...rest} />
+);

@@ -5,8 +5,8 @@
 
 import React from "react";
 import type { Play } from "../../../types/play";
+import { Typography } from "../../design-system/Typography";
 import {
-import { Typography } from "@/components/design-system/Typography";
   normalizeText,
   normalizePlayName,
   normalizeFormation,
@@ -22,15 +22,15 @@ interface PlayBuilderFormProps {
 // Shared form styles for consistency
 const formStyles = {
   section:
-    "bg-white rounded-none border border-slate-200 bc-card-padding space-y-4",
+    "surface-card rounded-none border border-subtle bc-card-padding space-y-4",
   sectionTitle:
-    "text-lg font-semibold text-slate-900 pb-2 border-b border-slate-200",
+    "text-lg font-semibold text-slate-900 pb-2 border-b border-subtle",
   label: "block text-sm font-medium text-slate-700 mb-1.5",
   required: "text-red-500 ml-1",
   input:
     "playbuilder-input w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 transition-colors",
   select:
-    "w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 bg-white transition-colors",
+    "w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 surface-card transition-colors",
   textarea:
     "playbuilder-input w-full px-3 py-2.5 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 resize-none transition-colors",
   helpText: "text-xs text-slate-500 mt-1",
@@ -294,7 +294,7 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
         </div>
 
         {/* Archive Toggle */}
-        <div className="pt-4 border-t border-slate-200">
+        <div className="pt-4 border-t border-subtle">
           <label className="flex items-center space-x-3 cursor-pointer">
             <input
               type="checkbox"
@@ -303,7 +303,11 @@ export const PlayBuilderForm: React.FC<PlayBuilderFormProps> = ({
               className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-slate-300 rounded"
             />
             <div>
-              <Typography variant="body-sm" as="span" className="font-medium text-slate-700">
+              <Typography
+                variant="body-sm"
+                as="span"
+                className="font-medium text-slate-700"
+              >
                 Archive this play
               </Typography>
               <p className="text-xs text-slate-500">

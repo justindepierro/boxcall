@@ -4,6 +4,8 @@ import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 import { AuthProvider } from "../components/auth/AuthProvider";
 import { ToastProvider } from "../components/ui/Toast";
 import { queryClient } from "./queryClient";
+import { ConfirmProvider } from "../contexts/ConfirmContext";
+import { UndoQueueProvider } from "../contexts/UndoQueueContext";
 import { TelemetryProvider } from "../telemetry/context";
 interface AppProvidersProps {
   children: ReactNode;
@@ -22,7 +24,11 @@ export function AppProviders({ children }: AppProvidersProps) {
       <TelemetryProvider>
         <QueryClientProvider client={queryClient}>
           <ToastProvider>
-            <AuthProvider>{children}</AuthProvider>
+            <ConfirmProvider>
+              <UndoQueueProvider>
+                <AuthProvider>{children}</AuthProvider>
+              </UndoQueueProvider>
+            </ConfirmProvider>
           </ToastProvider>
           {/* React Query Devtools will be added when we install the devtools package */}
         </QueryClientProvider>

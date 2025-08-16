@@ -58,3 +58,6 @@ export const sizeMap = {
 // Color mapping type
 export type IconColor = IconProps["color"];
 export type IconSize = IconProps["size"];
+
+// Deprecated legacy icon types. Do not import.
+export {};

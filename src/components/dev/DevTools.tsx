@@ -1,5 +1,5 @@
 import { Typography } from "../design-system";
-import { Wrench } from "lucide-react";
+import { Icon } from "../ui/Icon/Icon";
 /**
  * Development Tools Panel
  * Clean, modular development tools with better error handling
@@ -11,7 +11,6 @@ import { useAuth } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import { useToast } from "../../hooks/useToast";
-import { Icon } from "../ui/Icon/Icon";
 import { OverviewTab } from "./tabs/OverviewTab";
 import { DataTab } from "./tabs/DataTab";
 import { LogsTab } from "./tabs/LogsTab";
@@ -203,11 +202,7 @@ export const DevTools: React.FC = () => {
       >
         <div className="w-12 h-12 bg-jade-600 hover:bg-jade-600 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-all duration-200 animate-pulse">
           <span className="text-text-inverse text-lg">
-            <Wrench
-              aria-label="tools"
-              className="inline h-4 w-4 align-middle text-current"
-            />
-            ️
+            <Icon name="wrench" size="sm" />️
           </span>
         </div>
       </div>
@@ -238,10 +233,7 @@ export const DevTools: React.FC = () => {
               {state.isExpanded ? (
                 "BoxCall Dev Tools"
               ) : (
-                <Wrench
-                  aria-label="tools"
-                  className="inline h-4 w-4 align-middle text-current"
-                />
+                <Icon name="wrench" size="sm" />
               )}
             </Typography>
           </div>
@@ -274,7 +266,7 @@ export const DevTools: React.FC = () => {
                   isExpanded: !prev.isExpanded,
                 }))
               }
-              className="p-1 h-auto hover:bg-white/20 text-text-inverse"
+              className="p-1 h-auto hover:surface-subtle-hover text-text-inverse"
               aria-label={
                 state.isExpanded ? "Collapse dev tools" : "Expand dev tools"
               }

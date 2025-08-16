@@ -33,11 +33,11 @@ const inputStyles: InputStylesConfig = {
     default:
       "border-gray-300 dark:border-gray-600 focus:border-jade-500 dark:focus:border-jade-400 focus:ring-jade-500 dark:focus:ring-jade-400",
     error:
-      "border-red-400 dark:border-red-500 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 bg-red-50 dark:bg-red-900/20",
+      "border-red-400 dark:border-red-500 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 surface-subtle dark:bg-red-900/20",
     success:
-      "border-jade-400 dark:border-jade-500 focus:border-jade-500 dark:focus:border-jade-400 focus:ring-jade-500 dark:focus:ring-jade-400 bg-jade-50 dark:bg-jade-900/20",
+      "border-jade-400 dark:border-jade-500 focus:border-jade-500 dark:focus:border-jade-400 focus:ring-jade-500 dark:focus:ring-jade-400 surface-subtle dark:bg-jade-900/20",
     warning:
-      "border-yellow-400 dark:border-yellow-500 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-yellow-50 dark:bg-yellow-900/20",
+      "border-yellow-400 dark:border-yellow-500 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 surface-subtle dark:bg-yellow-900/20",
   },
   focus: "focus:ring-2 focus:ring-offset-1",
   disabled:

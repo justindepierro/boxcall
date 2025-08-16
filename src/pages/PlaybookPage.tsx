@@ -1,626 +1,793 @@
-import React, { useState } from "react";
-// Removed unused RefreshCw import
-import { FileText, Plus, Upload, Download, Clock, Users } from "lucide-react";
+// Clean consolidated PlaybookPage implementation (legacy duplicated fragments removed)
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Icon } from "../components/ui/Icon";
 import { PlayGrid } from "../components/playbook/PlayGrid";
 import { PlaybookGlossary } from "../components/playbook/PlaybookGlossary";
 import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
+import MobileDrawer from "../components/mobile/MobileDrawer";
+import { PlayFilters } from "../components/playbook/PlayFilters";
 import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
 import { PlayBuilderCore } from "../components/playbook/PlayBuilder";
+import { ConfettiBurst } from "../components/ui/ConfettiBurst";
+import { hasShownToday, markShownToday } from "../components/ui/confetti";
+import { UserPreferencesService } from "../services/userPreferencesService";
 import { CSVImportModal } from "../components/playbook/CSVImport/CSVImportModal";
-import { AdvancedSearchBar } from "../components/playbook/AdvancedSearchBar";
 import { PracticeScriptService } from "../services/practiceScriptService";
 import { CSVService } from "../services/csv";
-import { PlaysService } from "../services/playsService"; // legacy direct service (will be phased out)
+import { PlaysService } from "../services/playsService";
 import { PlaysDomainService } from "../domain/playsDomainService";
-import { Icon } from "../components/ui/Icon/Icon";
-import { TeamOnboarding } from "../components/onboarding/TeamOnboarding";
+import { ThumbnailUploadService } from "../services/thumbnailUploadService";
 import { Typography } from "../components/design-system/Typography";
-// TODO: Future enhancement - calculate real play counts with: import { calculatePlayCounts } from "../utils/playbook-categories";
-import type { Play } from "../types/play";
+import { markFirstPlayCreated } from "../components/onboarding/activationHelpers";
+// telemetry already imported above in original file; avoid duplicate import (cleanup)
 import {
-  Badge,
-  AchievementBadge,
-  ProgressBadge,
-  ComplexityBadge,
-} from "../components/ui/Badge";
+  listPresets,
+  createPreset,
+  deletePreset,
+  applyPreset,
+  updatePreset,
+} from "../utils/playbookFilterPresets";
+import {
+  listServerPresets,
+  createServerPreset,
+  updateServerPreset,
+  deleteServerPreset,
+} from "../utils/serverPlaybookViewPresets";
+import type { Play } from "../types/play";
+import { AchievementBadge } from "../components/ui/Badge";
 import { Button } from "../components/ui/Button/Button";
+import { PlaybookHeader } from "../components/playbook/page/PlaybookHeader";
+import { PlaybookActionsBar } from "../components/playbook/page/PlaybookActionsBar";
+import ActiveFilterChips from "../components/playbook/page/ActiveFilterChips";
+import BulkTaggingModal from "../components/playbook/BulkTaggingModal";
+import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
+import { PlaybookProvider, usePlaybook } from "../contexts/PlaybookContext";
+import { useConfirm } from "../contexts/ConfirmContext";
+import { useUndoQueue } from "../contexts/UndoQueueContext";
+import { useToast } from "../hooks/useToast";
+import { mapError } from "../domain/errors/domainErrorMapper";
+import { telemetry } from "../telemetry/dispatcher";
+import { TelemetryEventTypes } from "../telemetry/events";
+import {
+  getPlayCategory,
+  playMatchesSubcategory,
+} from "../utils/playbook-categories";
+import { getPlayFlags } from "@utils/localPlayFlags";
 
-interface ActiveFilter {
-  id: string;
-  field: string;
-  operator: "equals" | "contains" | "in";
-  value: string | string[];
-  label: string;
-}
-type CoachingView = "playbook" | "practice-script" | "game-plan";
+const PlaybookPageInner: React.FC = () => {
+  const { state, dispatch } = usePlaybook();
+  const navigate = useNavigate();
+  const {
+    success: toastSuccess,
+    error: toastError,
+    info: toastInfo,
+  } = useToast();
+  const confirmDialog = useConfirm();
+  const { pushUndo } = useUndoQueue();
 
-interface PlaybookPageState {
-  searchQuery: string;
-  activeFilters: string[]; // Quick filter IDs (red-zone, goal-line, etc.)
-  advancedFilters: ActiveFilter[]; // Advanced filters
-  showBuilder: boolean;
-  showImport: boolean;
-  currentView: CoachingView;
-  selectedFilters: {
-    formation?: string;
-    playType?: string;
-    down?: string;
-    distance?: string;
-    tags?: string[];
+  // Bulk Tagging Modal state
+  const [showBulkTagging, setShowBulkTagging] = React.useState(false);
+
+  // Achievement handling
+  const achievementTitles: Record<number, string> = {
+    1: "First Play Created!",
+    10: "Play Designer",
+    25: "Playbook Builder",
+    50: "Master Strategist",
+    100: "Coaching Legend",
   };
-  // Playbook Glossary State
-  selectedCategory?: string;
-  selectedSubcategory?: string;
-  // Bulk Operations State
-  enableBulkOperations: boolean;
-  selectedPlayIds: Set<string>;
-  // Reward Loop State
-  playsCreated: number;
-  recentAchievement: string | null;
-  showCelebration: boolean;
-  streakDays: number;
-  lastPlayCreated: Date | null;
-  // Data refresh trigger
-  refreshTrigger: number;
-}
-export const PlaybookPage: React.FC = () => {
-  const [state, setState] = useState<PlaybookPageState>({
-    searchQuery: "",
-    activeFilters: [],
-    advancedFilters: [],
-    showBuilder: false,
-    showImport: false,
-    currentView: "playbook",
-    selectedFilters: {},
-    // Playbook Glossary Initial State
-    selectedCategory: undefined,
-    selectedSubcategory: undefined,
-    // Bulk Operations Initial State
-    enableBulkOperations: false,
-    selectedPlayIds: new Set(),
-    // Reward Loop Initial State
-    playsCreated: 0,
-    recentAchievement: null,
-    showCelebration: false,
-    streakDays: 0,
-    lastPlayCreated: null,
-    // Data refresh trigger
-    refreshTrigger: 0,
-  });
-
-  // Achievement system - the heart of reward loop psychology
-  const checkAchievements = (newPlayCount: number) => {
-    const milestones = [
-      {
-        count: 1,
-        title: "First Play Created!",
-        description: "Welcome to coaching!",
-      },
-      {
-        count: 10,
-        title: "Play Designer",
-        description: "10 plays and counting",
-      },
-      {
-        count: 25,
-        title: "Playbook Builder",
-        description: "25 strategic plays",
-      },
-      {
-        count: 50,
-        title: "Master Strategist",
-        description: "50 plays - you're a pro!",
-      },
-      {
-        count: 100,
-        title: "Coaching Legend",
-        description: "100 plays! Incredible!",
-      },
-    ];
-
-    const achievement = milestones.find((m) => m.count === newPlayCount);
-    if (achievement) {
-      setState((prev) => ({
-        ...prev,
-        recentAchievement: achievement.title,
-        showCelebration: true,
-      }));
-
-      // Auto-hide celebration after 3 seconds
-      setTimeout(() => {
-        setState((prev) => ({ ...prev, showCelebration: false }));
-      }, 3000);
-    }
-  };
-
-  // Micro-celebration for play creation
   const handlePlayCreated = () => {
     const newCount = state.playsCreated + 1;
-    setState((prev) => ({
-      ...prev,
-      playsCreated: newCount,
-      streakDays: prev.streakDays, // Keep current streak
-    }));
-
-    // Check for achievements
-    checkAchievements(newCount);
-  };
-
-  // Trigger data refresh
-  const refreshPlays = () => {
-    setState((prev) => ({
-      ...prev,
-      refreshTrigger: prev.refreshTrigger + 1,
-    }));
-  };
-
-  // Handle glossary category selection
-  const handleCategorySelect = (categoryId: string, subcategory?: string) => {
-    console.log("📚 Category selected:", { categoryId, subcategory });
-    setState((prev) => ({
-      ...prev,
-      selectedCategory: categoryId,
-      selectedSubcategory: subcategory,
-    }));
-  };
-
-  // Handle saving a new play
-  const handleSavePlay = async (playData: Partial<Play>) => {
-    try {
-      console.log("💾 Saving play to database:", playData);
-
-      // Save to Supabase database
-      // Route through domain service (canonicalization + future duplicate_key)
-      const { play: newPlay } = await PlaysDomainService.createPlay(playData);
-      console.log("✅ Play saved successfully:", newPlay);
-
-      // Close the builder
-      handleCloseBuilder();
-
-      // Refresh the plays list
-      refreshPlays();
-
-      // Trigger celebration
-      handlePlayCreated();
-
-      // Show success message (optional)
-      // You could add a toast notification here if you have one
-      alert(`Play "${playData.play_name}" has been saved to your playbook!`);
-    } catch (error) {
-      console.error("❌ Error saving play:", error);
-      alert(
-        `Failed to save play: ${error instanceof Error ? error.message : "Unknown error"}`
-      );
+    dispatch({ type: "SET_PLAYS_CREATED", count: newCount });
+    if (achievementTitles[newCount]) {
+      dispatch({
+        type: "TRIGGER_CELEBRATION",
+        achievement: achievementTitles[newCount],
+      });
+      setTimeout(() => dispatch({ type: "HIDE_CELEBRATION" }), 3000);
     }
   };
 
-  // 3-Part Workflow Handlers - Week 3 Feature
+  const refreshPlays = () => dispatch({ type: "INCREMENT_REFRESH" });
+
+  // Play creation
+  const handleSavePlay = async (playData: Partial<Play>) => {
+    try {
+      const { play: newPlay } = await PlaysDomainService.createPlay(playData);
+      // If we have an inline data URL thumbnail, upload and patch play with public URL
+      if (playData.diagram_url && playData.diagram_url.startsWith("data:")) {
+        try {
+          const publicUrl = await ThumbnailUploadService.uploadPlayThumbnail(
+            newPlay.id,
+            playData.diagram_url
+          );
+          if (publicUrl && publicUrl !== playData.diagram_url) {
+            await PlaysService.updatePlay(newPlay.id, {
+              diagram_url: publicUrl,
+            });
+          }
+        } catch (_e) {
+          // Non-fatal; keep data URL
+        }
+      }
+      if (newPlay?.id) {
+        markFirstPlayCreated(newPlay.id);
+        telemetry.enqueue({
+          type: TelemetryEventTypes.PlayCreate,
+          data: { playId: newPlay.id, source: "builder", hasDiagram: false },
+        });
+      } else {
+        markFirstPlayCreated();
+      }
+      handleCloseBuilder();
+      refreshPlays();
+      // Placeholder diagram coverage update
+      dispatch({
+        type: "SET_DIAGRAM_COVERAGE",
+        coverage: Math.min(
+          100,
+          Math.round(((state.playsCreated + 1) / (state.playsCreated + 1)) * 50)
+        ),
+      });
+      handlePlayCreated();
+      toastSuccess(`Play "${playData.play_name}" saved!`);
+
+      // Confetti-on-first-save-per-day (if enabled)
+      try {
+        const prefs = UserPreferencesService.loadPreferences();
+        const enabled = !!prefs.ui.showConfetti;
+        if (enabled && !hasShownToday("play_save")) {
+          dispatch({ type: "SHOW_CONFETTI_OVERLAY" });
+          markShownToday("play_save");
+        }
+      } catch {
+        // ignore
+      }
+    } catch (e) {
+      const mapped = mapError(e);
+      console.error("Play save failed", e);
+      toastError(mapped.userMessage);
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ErrorBoundary,
+        data: {
+          code: mapped.code,
+          area: "play.save",
+          retryable: mapped.retryable,
+        },
+      });
+    }
+  };
+
+  // Workflow actions
   const handleAddToPracticeScript = async (play: Play) => {
     try {
-      // For demo purposes, use a mock team ID
-      const teamId = "demo-team-1";
-
-      // Get or create the "Quick Adds" script for easy workflow
       const script =
-        await PracticeScriptService.getOrCreateQuickAddsScript(teamId);
-
-      // Add the play to the script
+        await PracticeScriptService.getOrCreateQuickAddsScript("demo-team-1");
       await PracticeScriptService.addPlayToScript(
         {
           scriptId: script.id,
           playId: play.id,
-          notes: `Added from playbook workflow`,
+          notes: "Added from playbook workflow",
           repetitions: 5,
           estimatedTime: 3,
         },
         play
       );
-
-      // Show success message with workflow context
-      alert(
-        `"${play.play_name}" added to practice script "${script.name}"!\n\nNavigate to Calendar > Practice Planning to build your full practice session.`
-      );
-
-      // Note: Don't increment play count for workflow actions - only for actual play creation
-    } catch (error) {
-      console.error("Error adding play to practice script:", error);
-      alert("Failed to add play to practice script. Please try again.");
+      toastSuccess(`Added to practice script: ${script.name}`);
+    } catch (e) {
+      const mapped = mapError(e);
+      toastError(mapped.userMessage);
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ErrorBoundary,
+        data: { code: mapped.code, area: "practiceScript.add" },
+      });
     }
   };
+  const handleAddToGamePlan = (play: Play) =>
+    toastInfo(`"${play.play_name}" added to game plan (placeholder)`);
+  // Legacy single export kept for fallback (now replaced by scoped export submenu)
+  const handleExportCSV = () => handleExportScope("selected");
 
-  const handleAddToGamePlan = (play: Play) => {
-    // TODO: Implement game plan integration
-    console.log("Adding play to game plan:", play.play_name);
-    // For now, just show a success message
-    alert(`"${play.play_name}" added to game plan!`);
-  };
-
-  const handleExportCSV = () => {
+  const handleExportScope = async (scope: "selected" | "current" | "all") => {
     try {
-      // TODO: Get current plays from Supabase/real data
-      const plays: Play[] = []; // Empty for now until database integration
-
-      if (plays.length === 0) {
-        alert("No plays to export. Create some plays first!");
+      let plays: Play[] = [];
+      // Optional helper (not all environments may expose ensureUserHasPlaybook)
+      const ensureUserHasPlaybook: (() => Promise<string>) | undefined = (
+        PlaysService as unknown as {
+          ensureUserHasPlaybook?: () => Promise<string>;
+        }
+      ).ensureUserHasPlaybook;
+      if (scope === "selected") {
+        if (state.selectedPlayIds.size === 0) {
+          toastInfo("No selected plays to export.");
+          return;
+        }
+        for (const id of state.selectedPlayIds) {
+          const p = await PlaysService.getPlay(id);
+          if (p) plays.push(p);
+        }
+      } else if (scope === "current") {
+        // Fetch all then client-filter (future: push down to server)
+        const playbookId = ensureUserHasPlaybook
+          ? await ensureUserHasPlaybook()
+          : undefined;
+        if (playbookId) {
+          const all = await PlaysService.getPlaysByPlaybook(playbookId);
+          const {
+            selectedFilters,
+            searchQuery,
+            selectedCategory,
+            selectedSubcategory,
+          } = state;
+          plays = all.filter((play) => {
+            // Search query logic mirrors PlayGrid (name, formation, notes, flags fallback)
+            if (searchQuery) {
+              const q = searchQuery.toLowerCase();
+              const matchesName = play.play_name.toLowerCase().includes(q);
+              const matchesFormation = play.formation.toLowerCase().includes(q);
+              const matchesNotes = play.notes?.toLowerCase().includes(q);
+              if (!matchesName && !matchesFormation && !matchesNotes) {
+                const flags = getPlayFlags(play.id);
+                const haystack = [
+                  ...flags.positions,
+                  ...flags.players,
+                  ...flags.flags,
+                ]
+                  .join("\n")
+                  .toLowerCase();
+                if (!haystack.includes(q)) return false;
+              }
+            }
+            // Category filtering via helper utilities (same as PlayGrid)
+            if (selectedCategory) {
+              const categories = getPlayCategory(play);
+              if (!categories.includes(selectedCategory)) return false;
+              if (
+                selectedSubcategory &&
+                !playMatchesSubcategory(play, selectedSubcategory)
+              )
+                return false;
+            }
+            if (
+              selectedFilters.formation &&
+              play.formation !== selectedFilters.formation
+            )
+              return false;
+            if (
+              selectedFilters.playType &&
+              play.p_type !== selectedFilters.playType
+            )
+              return false;
+            return true;
+          });
+        }
+      } else {
+        const playbookId = ensureUserHasPlaybook
+          ? await ensureUserHasPlaybook()
+          : undefined;
+        if (playbookId)
+          plays = await PlaysService.getPlaysByPlaybook(playbookId);
+      }
+      if (!plays.length) {
+        toastInfo("No plays found for export.");
         return;
       }
-
-      // Export to CSV
       const csvContent = CSVService.exportPlaysToCSV(plays, {
         includePrivateNotes: true,
         formatForCoach: true,
       });
-
-      // Download the file
-      const timestamp = new Date().toISOString().split("T")[0];
-      CSVService.downloadCSV(csvContent, `playbook-export-${timestamp}.csv`);
-
-      // Note: Don't increment play count for exports - only for actual play creation
-    } catch (error) {
-      console.error("Error exporting CSV:", error);
-      alert("Failed to export playbook. Please try again.");
+      const stamp = new Date()
+        .toISOString()
+        .slice(0, 16)
+        // Avoid Tailwind arbitrary value detector by not using bracketed char classes
+        .replace(/-/g, "")
+        .replace(/:/g, "")
+        .replace(/T/g, "")
+        .slice(0, 12); // YYYYMMDDHHMM
+      CSVService.downloadCSV(csvContent, `plays-export-${scope}-${stamp}.csv`);
+      toastSuccess(`Exported ${plays.length} plays (${scope}).`);
+      // Telemetry for export scope
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ExportScope,
+        data: {
+          scope,
+          count: plays.length,
+          selectedCount: state.selectedPlayIds.size,
+          hadFilters:
+            !!state.searchQuery ||
+            !!state.selectedCategory ||
+            !!state.selectedSubcategory ||
+            Object.values(state.selectedFilters).some(Boolean),
+        },
+      });
+    } catch (e) {
+      const mapped = mapError(e);
+      toastError(mapped.userMessage || "Export failed");
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ErrorBoundary,
+        data: { code: mapped.code, area: "export.scoped" },
+      });
     }
   };
-  const handleSearch = (query: string) => {
-    setState((prev) => ({ ...prev, searchQuery: query }));
-  };
-
-  const handleOpenBuilder = () => {
-    setState((prev) => ({ ...prev, showBuilder: true }));
-  };
-  const handleCloseBuilder = () => {
-    setState((prev) => ({ ...prev, showBuilder: false }));
-  };
-  const handleOpenImport = () => {
-    setState((prev) => ({ ...prev, showImport: true }));
-  };
-  const handleCloseImport = () => {
-    setState((prev) => ({ ...prev, showImport: false }));
-  };
-
-  // Advanced filters handler
-  const handleAdvancedFiltersChange = (
-    filters: typeof state.advancedFilters
-  ) => {
-    setState((prev) => ({ ...prev, advancedFilters: filters }));
-  };
-
-  const handleViewChange = (view: CoachingView) => {
-    setState((prev) => ({ ...prev, currentView: view }));
-  };
-
-  // Bulk Operations Handlers
-  const toggleBulkOperations = () => {
-    setState((prev) => ({
-      ...prev,
-      enableBulkOperations: !prev.enableBulkOperations,
-      selectedPlayIds: new Set(), // Clear selection when toggling
-    }));
-  };
-
-  const handlePlaySelectionChange = (playIds: Set<string>) => {
-    setState((prev) => ({ ...prev, selectedPlayIds: playIds }));
-  };
-
-  const handleClearSelection = () => {
-    setState((prev) => ({ ...prev, selectedPlayIds: new Set() }));
-  };
-
-  const handleBulkAction = async (action: string) => {
-    const selectedPlays = Array.from(state.selectedPlayIds);
-    console.log(`Bulk action: ${action}`, selectedPlays);
-
+  const handleQuickNewPracticeScript = async () => {
     try {
-      switch (action) {
-        case "delete":
-          if (
-            confirm(
-              `Delete ${selectedPlays.length} selected plays? This cannot be undone.`
-            )
-          ) {
-            // TODO: Implement bulk delete
-            for (const playId of selectedPlays) {
-              await PlaysService.deletePlay(playId);
-            }
-            alert(`${selectedPlays.length} plays deleted successfully`);
-            refreshPlays();
-            handleClearSelection();
-          }
-          break;
-
-        case "export":
-          // TODO: Implement bulk export using CSVService
-          alert(`Exporting ${selectedPlays.length} plays...`);
-          break;
-
-        case "add-to-practice":
-          // TODO: Implement bulk add to practice
-          alert(`Adding ${selectedPlays.length} plays to practice script...`);
-          break;
-
-        case "add-tags": {
-          // TODO: Implement bulk tag editor
-          const tag = prompt("Enter tag to add to selected plays:");
-          if (tag) {
-            alert(`Adding tag "${tag}" to ${selectedPlays.length} plays...`);
-          }
-          break;
-        }
-
-        case "duplicate":
-          // TODO: Implement bulk duplicate
-          alert(`Duplicating ${selectedPlays.length} plays...`);
-          break;
-
-        case "batch-edit":
-          // TODO: Implement batch edit modal
-          alert(`Batch editing ${selectedPlays.length} plays...`);
-          break;
-
-        default:
-          console.warn(`Unknown bulk action: ${action}`);
-      }
-    } catch (error) {
-      console.error(`Error performing bulk action ${action}:`, error);
-      alert(
-        `Error: ${error instanceof Error ? error.message : "Unknown error"}`
-      );
+      const script = await PracticeScriptService.createPracticeScript({
+        name: `Practice Script ${new Date().toLocaleDateString()}`,
+        description: "Quick create",
+        teamId: "demo-team-1",
+        tags: ["quick-create"],
+      });
+      toastSuccess(`Created practice script: ${script.name}`);
+      dispatch({ type: "SET_VIEW", view: "practice-script" });
+    } catch (e) {
+      const mapped = mapError(e);
+      toastError(mapped.userMessage);
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ErrorBoundary,
+        data: { code: mapped.code, area: "practiceScript.create" },
+      });
     }
   };
+  const handleQuickNewInstall = () => {
+    telemetry.enqueue({
+      type: TelemetryEventTypes.UIAction,
+      data: { area: "playbook_header", action: "quick_new_install" },
+    });
+    toastInfo("Install creation coming soon");
+  };
+
+  // UI state handlers
+  const handleSearch = (q: string) =>
+    dispatch({ type: "SET_SEARCH", query: q });
+  const handleOpenBuilder = () =>
+    dispatch({ type: "SET_SHOW_BUILDER", value: true });
+  const handleCloseBuilder = () =>
+    dispatch({ type: "SET_SHOW_BUILDER", value: false });
+  const handleOpenImport = () =>
+    dispatch({ type: "SET_SHOW_IMPORT", value: true });
+  const handleCloseImport = () =>
+    dispatch({ type: "SET_SHOW_IMPORT", value: false });
+  const handleAdvancedFiltersChange = (filters: typeof state.advancedFilters) =>
+    dispatch({ type: "SET_ADVANCED_FILTERS", filters });
+  const handleCategorySelect = (categoryId: string, subcategory?: string) =>
+    dispatch({ type: "SET_CATEGORY", category: categoryId, subcategory });
+  type PlaybookView = "playbook" | "practice-script" | "game-plan";
+  const handleViewChange = (view: PlaybookView) =>
+    dispatch({ type: "SET_VIEW", view });
+  const toggleBulkOperations = () => dispatch({ type: "TOGGLE_BULK" });
+  const handlePlaySelectionChange = (playIds: Set<string>) =>
+    dispatch({ type: "SET_SELECTION", selection: playIds });
+  const handleClearSelection = () => dispatch({ type: "CLEAR_SELECTION" });
+
+  // Preset handlers
+  const handleSavePreset = async () => {
+    const name = prompt("Preset name?");
+    if (!name) return;
+    const filters = {
+      searchQuery: state.searchQuery,
+      formation: state.selectedFilters.formation,
+      playType: state.selectedFilters.playType,
+      category: state.selectedCategory,
+      subcategory: state.selectedSubcategory,
+    };
+    try {
+      const created = await createServerPreset({ name, filters });
+      dispatch({
+        type: "SET_SERVER_PRESETS",
+        presets: [created, ...state.serverPresets],
+      });
+      dispatch({ type: "SET_ACTIVE_SERVER_PRESET", id: created.id });
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ViewSavedServerCreate,
+        data: { id: created.id },
+      });
+    } catch {
+      const preset = createPreset({ name, filters });
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ViewSavedApply,
+        data: { viewId: preset.id, action: "create_local_fallback" },
+      });
+      dispatch({ type: "SET_PRESETS", presets: listPresets() });
+      dispatch({ type: "SET_ACTIVE_PRESET", id: preset.id });
+    }
+  };
+  const handleApplyPreset = async (id: string) => {
+    const server = state.serverPresets.find((p) => p.id === id);
+    if (server) {
+      const f = server.filters;
+      dispatch({ type: "SET_SEARCH", query: f.searchQuery || "" });
+      dispatch({
+        type: "SET_SELECTED_FILTERS",
+        filters: {
+          ...state.selectedFilters,
+          formation: f.formation,
+          playType: f.playType,
+        },
+      });
+      dispatch({
+        type: "SET_CATEGORY",
+        category: f.category,
+        subcategory: f.subcategory,
+      });
+      dispatch({ type: "SET_ACTIVE_SERVER_PRESET", id });
+      dispatch({ type: "ADD_RECENT_VIEW", id, scope: "server" });
+      telemetry.enqueue({
+        type: TelemetryEventTypes.ViewSavedServerApply,
+        data: { id, origin: "server" },
+      });
+      return;
+    }
+    const preset = listPresets().find((p) => p.id === id);
+    if (!preset) return;
+    const f = applyPreset(preset);
+    dispatch({ type: "SET_SEARCH", query: f.searchQuery || "" });
+    dispatch({
+      type: "SET_SELECTED_FILTERS",
+      filters: {
+        ...state.selectedFilters,
+        formation: f.formation,
+        playType: f.playType,
+      },
+    });
+    dispatch({
+      type: "SET_CATEGORY",
+      category: f.category,
+      subcategory: f.subcategory,
+    });
+    dispatch({ type: "SET_ACTIVE_PRESET", id });
+    dispatch({ type: "ADD_RECENT_VIEW", id, scope: "local" });
+    telemetry.enqueue({
+      type: TelemetryEventTypes.ViewSavedApply,
+      data: { viewId: id, action: "apply_local", origin: "local" },
+    });
+  };
+  const handleDeletePreset = async (id: string) => {
+    const confirmed = await confirmDialog({
+      title: "Delete Preset",
+      message:
+        "Are you sure you want to delete this preset? This cannot be undone.",
+      tone: "danger",
+      confirmLabel: "Delete",
+    });
+    if (!confirmed) return;
+    const server = state.serverPresets.find((p) => p.id === id);
+    if (server) {
+      try {
+        await deleteServerPreset(id);
+        dispatch({
+          type: "SET_SERVER_PRESETS",
+          presets: state.serverPresets.filter((sp) => sp.id !== id),
+        });
+        if (state.activeServerPresetId === id)
+          dispatch({ type: "SET_ACTIVE_SERVER_PRESET", id: undefined });
+        telemetry.enqueue({
+          type: TelemetryEventTypes.ViewSavedServerDelete,
+          data: { id },
+        });
+        return;
+      } catch {
+        // fallback to local
+      }
+    }
+    deletePreset(id);
+    dispatch({ type: "SET_PRESETS", presets: listPresets() });
+    if (state.activePresetId === id)
+      dispatch({ type: "SET_ACTIVE_PRESET", id: undefined });
+  };
+  const handleRenamePreset = async (id: string) => {
+    const newName = prompt("New name?");
+    if (!newName) return;
+    const server = state.serverPresets.find((p) => p.id === id);
+    if (server) {
+      try {
+        const updated = await updateServerPreset({ id, name: newName });
+        dispatch({
+          type: "SET_SERVER_PRESETS",
+          presets: state.serverPresets.map((sp) =>
+            sp.id === id ? updated : sp
+          ),
+        });
+        telemetry.enqueue({
+          type: TelemetryEventTypes.ViewSavedServerRename,
+          data: { id },
+        });
+        return;
+      } catch {
+        // fallback
+      }
+    }
+    updatePreset(id, { name: newName });
+    dispatch({ type: "SET_PRESETS", presets: listPresets() });
+  };
+
+  // Initial server presets load + local import migration
+  React.useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        dispatch({ type: "SET_SERVER_PRESETS_LOADING", loading: true });
+        const presets = await listServerPresets();
+        if (cancelled) return;
+        if (presets.length === 0) {
+          const local = listPresets();
+          if (local.length) {
+            for (const lp of local) {
+              try {
+                await createServerPreset({
+                  name: lp.name,
+                  filters: lp.filters,
+                });
+              } catch {
+                /* ignore */
+              }
+            }
+            const refreshed = await listServerPresets();
+            if (!cancelled) {
+              dispatch({ type: "SET_SERVER_PRESETS", presets: refreshed });
+              dispatch({ type: "SET_IMPORTED_LOCAL_PRESETS", value: true });
+            }
+            telemetry.enqueue({
+              type: TelemetryEventTypes.ViewSavedServerImport,
+              data: { count: local.length },
+            });
+            return;
+          }
+        }
+        dispatch({ type: "SET_SERVER_PRESETS", presets });
+      } catch {
+        if (!cancelled)
+          dispatch({
+            type: "SET_SERVER_PRESETS_ERROR",
+            error: "Failed to load presets",
+          });
+      } finally {
+        if (!cancelled)
+          dispatch({ type: "SET_SERVER_PRESETS_LOADING", loading: false });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [dispatch]);
 
   return (
     <div className="min-h-screen surface-app decorative-gradient bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Header */}
-      <header className="surface-subtle shadow-sm border-b border-subtle">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <FileText className="h-8 w-8 text-jade-600 mr-3" />
-              <div className="flex flex-col">
-                <Typography
-                  variant="headline-md"
-                  as="h1"
-                  className="text-slate-900"
-                >
-                  Playbook
-                </Typography>
-                {/* Progress indicator - key reward loop element */}
-                <div className="flex items-center space-x-2 mt-1">
-                  <ProgressBadge
-                    progress={Math.round((state.playsCreated / 100) * 100)}
-                  >
-                    {state.playsCreated}/100 plays
-                  </ProgressBadge>
-                  {state.streakDays > 0 && (
-                    <Badge variant="success" size="sm">
-                      {state.streakDays} day streak!
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            </div>
-            {/* Advanced Search Bar */}
-            <div className="flex-1 max-w-lg mx-8">
-              <AdvancedSearchBar
-                plays={[]} // TODO: Get actual plays from Supabase/PlayGrid
-                searchQuery={state.searchQuery}
-                onSearchChange={handleSearch}
-                placeholder="Search plays, formations, or tags..."
-              />
-            </div>
-            {/* Action Buttons with Reward Loop Psychology */}
-            <div className="flex items-center space-x-3">
-              {/* Bulk Operations Toggle */}
-              <Button
-                onClick={toggleBulkOperations}
-                variant={state.enableBulkOperations ? "primary" : "ghost"}
-                size="sm"
-                title={
-                  state.enableBulkOperations
-                    ? "Disable bulk operations"
-                    : "Enable bulk operations"
-                }
-                className="px-4 py-2 hover:scale-105 transition-transform"
-              >
-                <input
-                  type="checkbox"
-                  checked={state.enableBulkOperations}
-                  onChange={() => {}}
-                  className="h-4 w-4 mr-2 rounded border-slate-300 text-blue-600"
-                />
-                Bulk Edit
-              </Button>
-
-              {/* Export button */}
-              <Button
-                onClick={handleExportCSV}
-                variant="subtle"
-                size="sm"
-                className="px-4 py-2 hover:scale-105 transition-transform"
-              >
-                <Download className="h-4 w-4 mr-2" /> Export CSV
-              </Button>
-
-              {/* Import button with subtle enhancement */}
-              <Button
-                onClick={handleOpenImport}
-                variant="subtle"
-                size="sm"
-                className="px-4 py-2 hover:scale-105 transition-transform"
-              >
-                <Upload className="h-4 w-4 mr-2" /> Import CSV
-              </Button>
-
-              {/* New Play button - primary action with celebration potential */}
-              <div className="relative">
-                <Button
-                  onClick={() => {
-                    handleOpenBuilder();
-                  }}
-                  variant="primary"
-                  size="sm"
-                  className="px-4 py-2 hover:scale-105 transition-transform"
-                >
-                  <Plus className="h-4 w-4 mr-2" /> New Play
-                </Button>
-
-                {/* Next milestone indicator - creates desire for next achievement */}
-                {state.playsCreated < 100 && (
-                  <div className="absolute -top-2 -right-2">
-                    <Badge variant="warning" size="sm">
-                      {100 - state.playsCreated} to go!
-                    </Badge>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Team Onboarding - Shows for users without teams */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <TeamOnboarding context="playbook" />
-      </div>
-
-      {/* Week 3 Feature: Complexity Challenge System Demo */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-        <div className="surface-card decorative-gradient bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-purple-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <Typography
-                variant="label-lg"
-                as="h3"
-                className="text-purple-900 flex items-center gap-2"
-              >
-                Week 3 Feature: Complexity Challenge System
-                <Badge variant="premium" size="sm">
-                  NEW
-                </Badge>
-              </Typography>
-              <p className="text-sm text-purple-700 mt-1">
-                Your plays are now analyzed for complexity and rewarded with
-                achievement badges!
-              </p>
-            </div>
-            <div className="flex gap-2">
-              {/* Demo complexity badges for different play types */}
-              <ComplexityBadge
-                metrics={{
-                  routeCount: 12,
-                  formationComplexity: 10,
-                  personnelVariety: 15,
-                  conceptDifficulty: 8,
-                  totalScore: 45,
-                  badge: "intermediate",
-                }}
-                size="sm"
-              />
-              <ComplexityBadge
-                metrics={{
-                  routeCount: 25,
-                  formationComplexity: 20,
-                  personnelVariety: 20,
-                  conceptDifficulty: 15,
-                  totalScore: 80,
-                  badge: "expert",
-                }}
-                size="sm"
-              />
-              <ComplexityBadge
-                metrics={{
-                  routeCount: 30,
-                  formationComplexity: 20,
-                  personnelVariety: 25,
-                  conceptDifficulty: 20,
-                  totalScore: 95,
-                  badge: "innovative",
-                }}
-                size="sm"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex gap-6">
-          {/* Reduced from gap-8 to gap-6 */}
-          {/* Smart Playbook Glossary */}
-          <aside className="w-80 flex-shrink-0">
-            <PlaybookGlossary
-              onCategorySelect={handleCategorySelect}
+      <PlaybookHeader
+        playsCreated={state.playsCreated}
+        diagramCoverage={state.diagramCoverage}
+        streakDays={state.streakDays}
+      />
+      <PlaybookActionsBar
+        searchQuery={state.searchQuery}
+        onSearchChange={handleSearch}
+        onQuickNewPracticeScript={handleQuickNewPracticeScript}
+        onQuickNewInstall={handleQuickNewInstall}
+        serverPresets={state.serverPresets}
+        filterPresets={state.filterPresets}
+        serverPresetsLoading={state.serverPresetsLoading}
+        activeServerPresetId={state.activeServerPresetId}
+        activePresetId={state.activePresetId}
+        onApplyPreset={handleApplyPreset}
+        onRenamePreset={handleRenamePreset}
+        onDeletePreset={handleDeletePreset}
+        onSavePreset={handleSavePreset}
+        enableBulkOperations={state.enableBulkOperations}
+        onToggleBulk={toggleBulkOperations}
+        onExportCSV={handleExportCSV}
+        onExportScope={handleExportScope}
+        onOpenImport={handleOpenImport}
+        playsCreated={state.playsCreated}
+        onOpenBuilder={handleOpenBuilder}
+        selectedCount={state.selectedPlayIds.size}
+        onClearSelection={handleClearSelection}
+        recentViews={state.recentViews}
+        extraLeft={
+          <div className="hidden lg:block max-w-sm">
+            <ActiveFilterChips
+              searchQuery={state.searchQuery}
+              selectedFilters={state.selectedFilters}
               selectedCategory={state.selectedCategory}
               selectedSubcategory={state.selectedSubcategory}
+              advancedFilters={state.advancedFilters}
+              onChange={(partial) => {
+                if (partial.searchQuery !== undefined)
+                  dispatch({ type: "SET_SEARCH", query: partial.searchQuery });
+                if (partial.selectedFilters !== undefined)
+                  dispatch({
+                    type: "SET_SELECTED_FILTERS",
+                    filters: partial.selectedFilters,
+                  });
+                if (
+                  partial.selectedCategory !== undefined ||
+                  partial.selectedSubcategory !== undefined
+                )
+                  dispatch({
+                    type: "SET_CATEGORY",
+                    category: partial.selectedCategory,
+                    subcategory: partial.selectedSubcategory,
+                  });
+                if (partial.advancedFilters !== undefined)
+                  dispatch({
+                    type: "SET_ADVANCED_FILTERS",
+                    filters: partial.advancedFilters,
+                  });
+                dispatch({ type: "INCREMENT_REFRESH" });
+              }}
             />
-          </aside>
-          {/* Play Grid */}
-          <main className="flex-1">
-            {/* 3-View System Toggle */}
-            <div className="mb-6 surface-subtle rounded-lg shadow-sm border-subtle p-1">
-              <div className="flex space-x-1">
-                <Button
-                  onClick={() => handleViewChange("playbook")}
-                  variant={
-                    state.currentView === "playbook" ? "primary" : "ghost"
-                  }
-                  size="sm"
-                  className="flex-1 flex items-center justify-center"
-                >
-                  <FileText className="h-4 w-4 mr-2" /> Playbook View
-                </Button>
-                <Button
-                  onClick={() => handleViewChange("practice-script")}
-                  variant={
-                    state.currentView === "practice-script"
-                      ? "primary"
-                      : "ghost"
-                  }
-                  size="sm"
-                  className="flex-1 flex items-center justify-center"
-                >
-                  <Clock className="h-4 w-4 mr-2" /> Practice Script View
-                </Button>
-                <Button
-                  onClick={() => handleViewChange("game-plan")}
-                  variant={
-                    state.currentView === "game-plan" ? "primary" : "ghost"
-                  }
-                  size="sm"
-                  className="flex-1 flex items-center justify-center"
-                >
-                  <Users className="h-4 w-4 mr-2" /> Game Plan View
-                </Button>
-              </div>
-            </div>
-
-            {/* Conditional View Rendering */}
+          </div>
+        }
+        extraRight={
+          <div className="flex items-center gap-2">
+            {/* Future extension buttons */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                // Navigate to free-draw diagram builder (same experience as play card button)
+                // Opens route-based VisualPlayBuilder; when no playId provided it's a blank canvas.
+                navigate("/playbook/diagram");
+              }}
+              title="Open Diagram Builder"
+            >
+              Diagram
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => toastInfo("PDF export coming soon")}
+              title="Export PDF"
+            >
+              PDF
+            </Button>
+          </div>
+        }
+      />
+      <main>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <PlaybookViewTabs
+            currentView={state.currentView}
+            onViewChange={handleViewChange}
+          />
+          {/* Playbook Panel */}
+          <div
+            id="panel-playbook"
+            role="tabpanel"
+            aria-labelledby="tab-playbook"
+            hidden={state.currentView !== "playbook"}
+          >
             {state.currentView === "playbook" && (
               <>
-                {/* Advanced Filters */}
                 <div className="surface-card rounded-lg shadow-sm border-subtle p-3 mb-4">
-                  <AdvancedFilters
-                    activeFilters={state.advancedFilters}
-                    onFiltersChange={handleAdvancedFiltersChange}
-                  />
+                  <div className="hidden md:block">
+                    <AdvancedFilters
+                      activeFilters={state.advancedFilters}
+                      onFiltersChange={handleAdvancedFiltersChange}
+                    />
+                  </div>
+                  <div className="md:hidden text-xs text-slate-500">
+                    Use the Filters drawer to refine results
+                  </div>
                 </div>
-
-                {/* Bulk Actions Toolbar */}
                 {state.enableBulkOperations &&
                   state.selectedPlayIds.size > 0 && (
                     <BulkActionsToolbar
                       selectedCount={state.selectedPlayIds.size}
-                      onClearSelection={() =>
-                        setState((prev) => ({
-                          ...prev,
-                          selectedPlayIds: new Set(),
-                        }))
-                      }
-                      onBulkAction={handleBulkAction}
+                      onClearSelection={handleClearSelection}
+                      onBulkAction={async (action) => {
+                        const selectedPlays = Array.from(state.selectedPlayIds);
+                        try {
+                          switch (action) {
+                            case "delete": {
+                              const confirmed = await confirmDialog({
+                                title: "Delete Plays",
+                                message: `Delete ${selectedPlays.length} selected play${selectedPlays.length === 1 ? "" : "s"}? You can undo for a few seconds.`,
+                                tone: "danger",
+                                confirmLabel: "Delete",
+                              });
+                              if (confirmed) {
+                                const ids = [...selectedPlays];
+                                await PlaysService.deletePlays(ids);
+                                pushUndo({
+                                  label: `${ids.length} play${ids.length === 1 ? "" : "s"} deleted`,
+                                  payload: { ids },
+                                  apply: () => {},
+                                  restore: async ({
+                                    ids,
+                                  }: {
+                                    ids: string[];
+                                  }) => {
+                                    try {
+                                      await PlaysService.restorePlays(ids);
+                                      toastSuccess(
+                                        `Restored ${ids.length} play${ids.length === 1 ? "" : "s"}`
+                                      );
+                                    } catch (e) {
+                                      console.error("Undo restore failed", e);
+                                      toastError("Failed to restore plays");
+                                    } finally {
+                                      refreshPlays();
+                                    }
+                                  },
+                                });
+                                toastSuccess(
+                                  `${ids.length} play${ids.length === 1 ? "" : "s"} deleted`
+                                );
+                                refreshPlays();
+                                handleClearSelection();
+                              }
+                              break;
+                            }
+                            case "export": {
+                              if (!selectedPlays.length) {
+                                toastInfo("No plays selected to export.");
+                                return;
+                              }
+                              const fetched: Play[] = [];
+                              for (const id of selectedPlays) {
+                                const p = await PlaysService.getPlay(id);
+                                if (p) fetched.push(p);
+                              }
+                              if (!fetched.length) {
+                                toastError(
+                                  "Unable to load selected plays to export."
+                                );
+                                return;
+                              }
+                              const csvContent = CSVService.exportPlaysToCSV(
+                                fetched,
+                                {
+                                  includePrivateNotes: true,
+                                  formatForCoach: true,
+                                }
+                              );
+                              const ts = new Date()
+                                .toISOString()
+                                .replace(/[:T]/g, "-")
+                                .split(".")[0];
+                              CSVService.downloadCSV(
+                                csvContent,
+                                `plays-export-${fetched.length}-${ts}.csv`
+                              );
+                              toastSuccess(
+                                `Exported ${fetched.length} plays to CSV.`
+                              );
+                              break;
+                            }
+                            case "add-to-practice":
+                              toastInfo(
+                                `Adding ${selectedPlays.length} plays to practice script...`
+                              );
+                              break;
+                            case "add-tags": {
+                              setShowBulkTagging(true);
+                              break;
+                            }
+                            case "duplicate":
+                              toastInfo(
+                                `Duplicating ${selectedPlays.length} plays...`
+                              );
+                              break;
+                            case "batch-edit":
+                              toastInfo(
+                                `Batch editing ${selectedPlays.length} plays...`
+                              );
+                              break;
+                            default:
+                              console.warn(`Unknown bulk action: ${action}`);
+                          }
+                        } catch (error) {
+                          console.error(
+                            `Error performing bulk action ${action}:`,
+                            error
+                          );
+                          toastError(
+                            `Bulk action failed: ${error instanceof Error ? error.message : "Unknown error"}`
+                          );
+                        }
+                      }}
                     />
                   )}
-
                 <PlayGrid
                   searchQuery={state.searchQuery}
                   filters={state.selectedFilters}
@@ -632,20 +799,27 @@ export const PlaybookPage: React.FC = () => {
                   enableBulkOperations={state.enableBulkOperations}
                   selectedPlayIds={state.selectedPlayIds}
                   onPlaySelectionChange={handlePlaySelectionChange}
-                  onPlayCountChange={(count) => {
-                    setState((prev) => ({
-                      ...prev,
-                      playsCreated: count,
-                    }));
-                  }}
+                  onPlayCountChange={(count) =>
+                    dispatch({ type: "SET_PLAYS_CREATED", count })
+                  }
                 />
               </>
             )}
-
+          </div>
+          {/* Practice Script Panel */}
+          <div
+            id="panel-practice-script"
+            role="tabpanel"
+            aria-labelledby="tab-practice-script"
+            hidden={state.currentView !== "practice-script"}
+          >
             {state.currentView === "practice-script" && (
               <div className="surface-card rounded-lg shadow-sm border-subtle p-6">
                 <div className="text-center py-12">
-                  <Clock className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                  <Icon
+                    name="clock"
+                    className="h-12 w-12 text-slate-400 mx-auto mb-4"
+                  />
                   <Typography
                     variant="headline-sm"
                     as="h3"
@@ -664,11 +838,21 @@ export const PlaybookPage: React.FC = () => {
                 </div>
               </div>
             )}
-
+          </div>
+          {/* Game Plan Panel */}
+          <div
+            id="panel-game-plan"
+            role="tabpanel"
+            aria-labelledby="tab-game-plan"
+            hidden={state.currentView !== "game-plan"}
+          >
             {state.currentView === "game-plan" && (
               <div className="surface-card rounded-lg shadow-sm border-subtle p-6">
                 <div className="text-center py-12">
-                  <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                  <Icon
+                    name="users"
+                    className="h-12 w-12 text-slate-400 mx-auto mb-4"
+                  />
                   <Typography
                     variant="headline-sm"
                     as="h3"
@@ -686,10 +870,9 @@ export const PlaybookPage: React.FC = () => {
                 </div>
               </div>
             )}
-          </main>
+          </div>
         </div>
-      </div>
-      {/* Modals */}
+      </main>
       {state.showBuilder && (
         <PlayBuilderCore
           isOpen={state.showBuilder}
@@ -697,29 +880,120 @@ export const PlaybookPage: React.FC = () => {
           onSave={handleSavePlay}
         />
       )}
+      {/* Confetti overlay with small controls */}
+      {(() => {
+        const prefs = UserPreferencesService.loadPreferences();
+        const enabled = !!prefs.ui.showConfetti;
+        return (
+          <>
+            <ConfettiBurst
+              open={state.showConfettiOverlay === true && enabled}
+              onClose={() => dispatch({ type: "HIDE_CONFETTI_OVERLAY" })}
+              particleCount={64}
+              durationMs={1600}
+            />
+            {state.showConfettiOverlay && enabled && (
+              <div className="fixed inset-x-0 bottom-4 z-[71] flex justify-center pointer-events-none">
+                <div className="pointer-events-auto surface-card shadow-md rounded-full px-3 py-1 text-xs text-text-secondary flex items-center gap-2">
+                  <Icon name="sparkles" />
+                  <span>Nice save!</span>
+                  <Button
+                    variant="link"
+                    size="xs"
+                    onClick={() => {
+                      const p = UserPreferencesService.loadPreferences();
+                      p.ui.showConfetti = false;
+                      UserPreferencesService.savePreferences(p);
+                      dispatch({ type: "HIDE_CONFETTI_OVERLAY" });
+                    }}
+                  >
+                    Don't show confetti
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => dispatch({ type: "HIDE_CONFETTI_OVERLAY" })}
+                    aria-label="Dismiss"
+                    title="Dismiss"
+                  >
+                    Dismiss
+                  </Button>
+                </div>
+              </div>
+            )}
+          </>
+        );
+      })()}
       {state.showImport && (
         <CSVImportModal
           isOpen={state.showImport}
           onClose={handleCloseImport}
-          playbookId="" // Let CSVImportModal auto-detect/create the playbook
+          playbookId=""
           onImportComplete={(result) => {
-            console.log("Import completed:", result);
             if (result.success && result.importedPlays > 0) {
-              console.log(
-                `✅ Successfully imported ${result.importedPlays} plays, refreshing play grid...`
-              );
-              refreshPlays(); // Trigger PlayGrid refresh to show new plays
+              refreshPlays();
             }
             handleCloseImport();
           }}
         />
       )}
-
-      {/* Achievement Celebration Overlay - The reward loop climax */}
+      {showBulkTagging && (
+        <BulkTaggingModal
+          isOpen={showBulkTagging}
+          onClose={() => setShowBulkTagging(false)}
+          playIds={Array.from(state.selectedPlayIds)}
+          onApply={async (tags) => {
+            // Placeholder: In future, call service to append tags for each play.
+            toastInfo(
+              `Queued adding ${tags.length} tag${tags.length === 1 ? "" : "s"} to ${state.selectedPlayIds.size} plays (simulation).`
+            );
+            setShowBulkTagging(false);
+          }}
+        />
+      )}
+      <MobileDrawer
+        title="Glossary"
+        isOpen={state.showMobileGlossary}
+        onClose={() => dispatch({ type: "SET_MOBILE_GLOSSARY", value: false })}
+        side="left"
+      >
+        <PlaybookGlossary
+          onCategorySelect={(cat, sub) => {
+            handleCategorySelect(cat, sub);
+            dispatch({ type: "SET_MOBILE_GLOSSARY", value: false });
+          }}
+          selectedCategory={state.selectedCategory}
+          selectedSubcategory={state.selectedSubcategory}
+        />
+      </MobileDrawer>
+      <MobileDrawer
+        title="Filters"
+        isOpen={state.showMobileFilters}
+        onClose={() => dispatch({ type: "SET_MOBILE_FILTERS", value: false })}
+        side="right"
+      >
+        <PlayFilters
+          selectedFilters={state.selectedFilters}
+          onFilterChange={(f) =>
+            dispatch({ type: "SET_SELECTED_FILTERS", filters: f })
+          }
+        />
+        <div className="mt-4">
+          <Button
+            variant="primary"
+            size="sm"
+            className="w-full"
+            onClick={() =>
+              dispatch({ type: "SET_MOBILE_FILTERS", value: false })
+            }
+          >
+            Apply
+          </Button>
+        </div>
+      </MobileDrawer>
       {state.showCelebration && state.recentAchievement && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="surface-card elevation-modal rounded-md p-8 max-w-md mx-4 text-center transform animate-bounce-in">
-            {/* Replaced raw emoji with Icon component per lint governance */}
             <div className="mb-4">
               <Icon name="trophy" />
             </div>
@@ -730,9 +1004,7 @@ export const PlaybookPage: React.FC = () => {
               You're building an incredible playbook! Keep the momentum going!
             </p>
             <Button
-              onClick={() =>
-                setState((prev) => ({ ...prev, showCelebration: false }))
-              }
+              onClick={() => dispatch({ type: "HIDE_CELEBRATION" })}
               variant="primary"
               size="sm"
               className="mt-6"
@@ -745,3 +1017,9 @@ export const PlaybookPage: React.FC = () => {
     </div>
   );
 };
+
+export const PlaybookPage: React.FC = () => (
+  <PlaybookProvider>
+    <PlaybookPageInner />
+  </PlaybookProvider>
+);

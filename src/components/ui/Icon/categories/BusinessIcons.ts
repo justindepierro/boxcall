@@ -78,3 +78,6 @@ const businessIcons = {
 
 // Register business icons on module load
 registerIconCategory("business", businessIcons);
+
+// Deprecated legacy BusinessIcons. Do not import.
+export {};

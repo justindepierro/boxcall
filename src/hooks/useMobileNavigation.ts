@@ -1,4 +1,5 @@
 import type { MobileNavItem } from "../components/mobile/MobileBottomNavigation";
+import { getRouteImporter } from "../routes/importers";
 
 /**
  * Hook to get mobile navigation items based on user role and current route
@@ -20,6 +21,7 @@ export const useMobileNavigation = (currentPath: string = "/") => {
       href: "/dashboard",
       badge: notifications.dashboard,
       isActive: currentPath === "/dashboard" || currentPath === "/",
+      importer: getRouteImporter("/dashboard"),
     },
     {
       id: "calendar",
@@ -28,6 +30,7 @@ export const useMobileNavigation = (currentPath: string = "/") => {
       href: "/calendar",
       badge: notifications.calendar,
       isActive: currentPath.startsWith("/calendar"),
+      importer: getRouteImporter("/calendar"),
     },
     {
       id: "bulletin",
@@ -37,6 +40,7 @@ export const useMobileNavigation = (currentPath: string = "/") => {
       badge: notifications.bulletin,
       isActive:
         currentPath.includes("/team") || currentPath.includes("/bulletin"),
+      importer: getRouteImporter("/team/1/bulletin"),
     },
     {
       id: "profile",
@@ -45,6 +49,7 @@ export const useMobileNavigation = (currentPath: string = "/") => {
       href: "/profile",
       badge: notifications.profile,
       isActive: currentPath.startsWith("/profile"),
+      importer: getRouteImporter("/profile"),
     },
   ];
 

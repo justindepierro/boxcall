@@ -44,7 +44,7 @@ for (const theme of themeRegistry.themes) {
   );
   if (theme.component) {
     for (const [comp, tokens] of Object.entries(theme.component)) {
-      lines.push(...toCSSVars(`${comp}`, tokens));
+      lines.push(...toCSSVars(`${comp}`, tokens as Record<string, string>));
     }
   }
   lines.push("}");

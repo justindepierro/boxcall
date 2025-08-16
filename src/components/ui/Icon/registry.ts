@@ -186,3 +186,6 @@ export function getRegisteredIconNames(): string[] {
 export function isIconRegistered(name: string): boolean {
   return iconRegistry.has(name);
 }
+
+// Deprecated legacy icon registry. Do not import.
+export {};

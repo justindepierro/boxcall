@@ -4,7 +4,8 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
 import { Typography } from "../../../design-system";
 import { Button, Card } from "../../../../components/ui";
-import { Icon, type IconName } from "../../../../components/ui/Icon/Icon";
+import { ModularIcon as Icon } from "../../../../components/ui/Icon";
+import type { ModularIconName } from "../../../../components/ui/Icon";
 import type { PracticeBlock } from "../types";
 
 interface PracticeBlockListProps {
@@ -73,7 +74,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
               ref={provided.innerRef}
               className={`space-y-3 min-h-[200px] p-4 rounded-lg placeholder-zone transition-colors ${
                 snapshot.isDraggingOver
-                  ? "border-blue-400 bg-blue-50"
+                  ? "border-blue-400 surface-subtle"
                   : "border-gray-300 surface-subtle"
               }`}
             >
@@ -127,7 +128,9 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                               <div className="flex items-center space-x-2">
                                 <Icon
                                   name={
-                                    getCategoryIcon(block.category) as IconName
+                                    getCategoryIcon(
+                                      block.category
+                                    ) as ModularIconName
                                   }
                                   size="md"
                                 />
@@ -196,29 +199,26 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                           <div className="flex items-center space-x-2 ml-4">
                             {userRole === "head_coach" && (
                               <Button
-                                variant="ghost"
+                                variant="neutralLink"
                                 size="sm"
                                 onClick={() => onAddGroup(block.id)}
-                                className="text-text-muted hover:text-text-primary"
                               >
                                 <Icon name="plus" size="sm" />
                               </Button>
                             )}
 
                             <Button
-                              variant="ghost"
+                              variant="neutralLink"
                               size="sm"
                               onClick={() => onEditBlock(block)}
-                              className="text-text-muted hover:text-text-primary"
                             >
                               <Icon name="edit" size="sm" />
                             </Button>
 
                             <Button
-                              variant="ghost"
+                              variant="dangerLink"
                               size="sm"
                               onClick={() => onDeleteBlock(block.id)}
-                              className="text-red-500 hover:text-red-700"
                             >
                               <Icon name="close" size="sm" />
                             </Button>
@@ -238,7 +238,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                               {block.groups.map((group) => (
                                 <div
                                   key={group.id}
-                                  className="flex items-center justify-between p-2 bg-white/50 rounded"
+                                  className="flex items-center justify-between p-2 surface-card/50 rounded"
                                 >
                                   <div className="flex-1">
                                     <Typography
@@ -256,11 +256,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                                       </Typography>
                                     )}
                                   </div>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="text-gray-400 hover:text-text-secondary"
-                                  >
+                                  <Button variant="neutralLink" size="sm">
                                     <Icon name="edit" size="xs" />
                                   </Button>
                                 </div>

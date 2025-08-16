@@ -82,10 +82,10 @@ const CollapsedIndicator: React.FC<{
   return (
     <div className="relative">
       <Button
-        variant="ghost"
+        variant="neutralLink"
         size="xs"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="px-2 py-1 h-auto hover:text-text-primary dark:hover:text-text-primary text-text-secondary"
+        className="px-2 py-1 h-auto"
         aria-label="Show hidden breadcrumb items"
       >
         ...
@@ -95,9 +95,9 @@ const CollapsedIndicator: React.FC<{
           {hiddenItems.map((item) => (
             <Button
               key={item.id}
-              variant="ghost"
+              variant="neutralLink"
               size="xs"
-              className="w-full justify-start px-3 py-2 h-auto text-text-primary dark:text-gray-300 surface-subtle-hover dark:hover:bg-gray-700"
+              className="w-full justify-start px-3 py-2 h-auto surface-subtle-hover"
               onClick={() => {
                 onItemClick(item);
                 setIsExpanded(false);

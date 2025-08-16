@@ -198,3 +198,6 @@ const systemIcons = {
 
 // Register system icons on module load
 registerIconCategory("system", systemIcons);
+
+// Deprecated legacy SystemIcons. Do not import.
+export {};

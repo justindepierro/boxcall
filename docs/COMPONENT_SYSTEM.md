@@ -1,43 +1,28 @@
-# 🧱 BoxCall Component System Documentation
+# Component System (Archived Summary)
 
-> **Professional component architecture for enterprise-grade football management**
+This large document was archived during August 2025 cleanup to meet the 300‑line doc policy and eliminate duplication. Core guidance has been redistributed to:
 
-## 📋 **Table of Contents**
+- `docs/product/ROADMAP.md` (adoption & sequencing)
+- `docs/style-inventory/` (tokens, audit metrics)
+- `docs/STYLE_PROFESSIONALIZATION_PLAN.md` (governance & next steps)
 
-1. [Design System Foundation](#design-system-foundation)
-2. [Component Architecture](#component-architecture)
-3. [Naming Conventions](#naming-conventions)
-4. [Component Categories](#component-categories)
-5. [Development Guidelines](#development-guidelines)
-6. [Testing Strategy](#testing-strategy)
-7. [Documentation Standards](#documentation-standards)
+Recovery (older full content lives in git history):
 
-## 🎨 **Design System Foundation**
-
-### **Typography System**
-
-```typescript
-// Typography Scale (Tailwind-based)
-const typography = {
-  // Headlines
-  "headline-xl": "text-4xl font-bold leading-tight", // 36px
-  "headline-lg": "text-3xl font-bold leading-tight", // 30px
-  "headline-md": "text-2xl font-bold leading-tight", // 24px
-  "headline-sm": "text-xl font-bold leading-tight", // 20px
-
-  // Body Text
-  "body-lg": "text-lg leading-relaxed", // 18px
-  "body-md": "text-base leading-relaxed", // 16px
-  "body-sm": "text-sm leading-relaxed", // 14px
-  "body-xs": "text-xs leading-relaxed", // 12px
-
-  // Labels & UI
-  "label-lg": "text-sm font-semibold uppercase tracking-wide",
-  "label-md": "text-xs font-semibold uppercase tracking-wide",
-  button: "text-sm font-semibold",
-  caption: "text-xs text-gray-600",
-};
 ```
+git log --follow -- docs/COMPONENT_SYSTEM.md
+git show <commit>:docs/COMPONENT_SYSTEM.md > /tmp/COMPONENT_SYSTEM_legacy.md
+```
+
+Migration Status Snapshot:
+
+- Design tokens: centralized in tokens.ts ✅
+- Primitive audit scripts: style-audit & contrast-check ✅
+- Button unification: complete (variants normalized) ✅
+- Remaining primitives to standardize: Tag, Badge (extended states), Tooltip (semantic surface) 🔄
+
+Future additions should target concise, focused reference docs instead of a monolith.
+
+<!-- allow-empty -->
 
 ### **Color System**
 
@@ -345,7 +330,7 @@ Brief description of the component and its purpose.
 ## Usage
 
 ```tsx
-import { ComponentName } from "@/components/category/ComponentName";
+import { ComponentName } from "@components/category/ComponentName";
 
 function MyComponent() {
   return (

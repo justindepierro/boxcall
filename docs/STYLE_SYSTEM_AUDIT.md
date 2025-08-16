@@ -1,4 +1,4 @@
-    # Style System Comprehensive Audit Roadmap
+# Style System Comprehensive Audit Roadmap
 
 > Living document for consolidating and professionalizing BoxCall UI. Update as phases complete. (Created: 2025-08-09)
 

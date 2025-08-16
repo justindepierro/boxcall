@@ -11,80 +11,130 @@ import type {
   ButtonStylesConfig,
 } from "./Button.types";
 // Button variant styles configuration - Updated with jade/navy theme
+// NOTE: Using CSS variables mapped from design tokens (generated-tokens.css)
+// to reduce direct Tailwind color utility coupling. Utilities retained for spacing/structure only.
 const buttonVariants: ButtonStylesConfig = {
   primary: {
-    // Darken base background (jade 600) for AA contrast with white text
-    base: "bg-brand-jade-dark text-white border border-brand-jade-dark",
-    hover: "hover:bg-brand-jade-darker hover:border-brand-jade-darker",
-    active: "active:bg-brand-jade-darker active:border-brand-jade-darker",
+    base:
+      "text-white border" +
+      " bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)]",
+    hover:
+      "hover:bg-[var(--semantic-primary-active)] hover:border-[var(--semantic-primary-active)]",
+    active:
+      "active:bg-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)]",
     disabled:
-      "disabled:bg-brand-jade-light disabled:border-brand-jade-light disabled:cursor-not-allowed",
+      "disabled:bg-[color:var(--color-jade-300)] disabled:border-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   secondary: {
-    base: "bg-transparent text-brand-navy border-2 border-brand-navy",
-    hover: "hover:bg-brand-navy hover:text-white hover:border-brand-navy",
+    base: "bg-transparent text-[var(--color-navy-700)] border-2 border-[var(--color-navy-700)]",
+    hover:
+      "hover:bg-[var(--color-navy-700)] hover:text-white hover:border-[var(--color-navy-700)]",
     active:
-      "active:bg-brand-navy-dark active:text-white active:border-brand-navy-dark",
+      "active:bg-[var(--color-navy-800)] active:text-white active:border-[var(--color-navy-800)]",
     disabled:
-      "disabled:text-brand-navy-light disabled:border-brand-navy-light disabled:cursor-not-allowed",
+      "disabled:text-[color:var(--color-navy-400)] disabled:border-[color:var(--color-navy-300)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   outline: {
-    base: "bg-transparent text-interaction-jade border border-brand-jade",
+    base: "bg-transparent text-[var(--semantic-primary-hover)] border border-[var(--semantic-primary-hover)]",
     hover:
-      "hover:bg-surface-jade hover:text-interaction-jade hover:border-interaction-jade",
+      "hover:bg-[color:var(--color-jade-50)] hover:text-[var(--semantic-primary-active)] hover:border-[var(--semantic-primary-active)]",
     active:
-      "active:bg-surface-jade-dark active:text-brand-jade-dark active:border-brand-jade-dark",
+      "active:bg-[color:var(--color-jade-100)] active:text-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)]",
     disabled:
-      "disabled:text-brand-jade-light disabled:border-brand-jade-light disabled:cursor-not-allowed",
+      "disabled:text-[color:var(--color-jade-300)] disabled:border-[color:var(--color-jade-200)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   ghost: {
-    base: "bg-transparent text-text-secondary border border-transparent",
-    hover: "hover:bg-surface-neutral hover:text-text-primary",
-    active: "active:bg-surface-neutral-dark active:text-text-primary",
-    disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
+    base: "bg-transparent text-[var(--semantic-text-secondary)] border border-transparent",
+    hover:
+      "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
+    active:
+      "active:bg-[color:var(--color-gray-200)] active:text-[var(--semantic-text-primary)]",
+    disabled:
+      "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   subtle: {
-    base: "surface-subtle text-text-secondary border border-gray-300",
-    hover: "surface-subtle-hover hover:text-text-primary",
-    active: "active:surface-subtle active:text-text-primary",
+    base: "bg-[var(--semantic-bg-secondary)] text-[var(--semantic-text-secondary)] border border-[var(--semantic-border)]",
+    hover:
+      "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
+    active:
+      "active:bg-[color:var(--color-gray-200)] active:text-[var(--semantic-text-primary)]",
     disabled:
-      "disabled:surface-subtle disabled:text-text-muted disabled:border-subtle disabled:cursor-not-allowed",
-    focus: "focus:ring-2 focus:ring-brand-jade focus:ring-offset-2",
+      "disabled:bg-[var(--semantic-bg-secondary)] disabled:text-[var(--semantic-text-muted)] disabled:border-[var(--semantic-border)] disabled:cursor-not-allowed",
+    focus: "focus-ring focus-ring-offset",
   },
   link: {
-    base: "bg-transparent text-interaction-jade border border-transparent p-0 h-auto",
-    hover: "hover:text-brand-jade-dark hover:underline",
-    active: "active:text-brand-jade-dark",
-    disabled: "disabled:text-brand-jade-light disabled:cursor-not-allowed",
+    base: "bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto",
+    hover: "hover:text-[var(--semantic-primary-active)] hover:underline",
+    active: "active:text-[var(--semantic-primary-active)]",
+    disabled:
+      "disabled:text-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
+    focus: "focus-ring focus-ring-offset focus:rounded-sm",
+  },
+  // Brand link style with slightly stronger weight (used where prior inline text-jade-* overrides existed)
+  brandLink: {
+    base: "bg-transparent text-[var(--semantic-primary-active)] border border-transparent p-0 h-auto font-medium",
+    hover: "hover:text-[color:var(--color-jade-800)] hover:underline",
+    active: "active:text-[color:var(--color-jade-800)]",
+    disabled:
+      "disabled:text-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
+    focus: "focus-ring focus-ring-offset focus:rounded-sm",
+  },
+  neutralLink: {
+    base: "bg-transparent text-[var(--semantic-text-secondary)] border border-transparent p-0 h-auto",
+    hover: "hover:text-[var(--semantic-text-primary)] hover:underline",
+    active: "active:text-[var(--semantic-text-primary)]",
+    disabled:
+      "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
+    focus: "focus-ring focus-ring-offset focus:rounded-sm",
+  },
+  infoLink: {
+    base: "bg-transparent text-[color:var(--color-navy-600)] border border-transparent p-0 h-auto",
+    hover: "hover:text-[color:var(--color-navy-700)] hover:underline",
+    active: "active:text-[color:var(--color-navy-700)]",
+    disabled:
+      "disabled:text-[color:var(--color-navy-300)] disabled:cursor-not-allowed",
+    focus: "focus-ring focus-ring-offset focus:rounded-sm",
+  },
+  dangerLink: {
+    base: "bg-transparent text-[color:var(--color-error-600)] border border-transparent p-0 h-auto",
+    hover: "hover:text-[color:var(--color-error-700)] hover:underline",
+    active: "active:text-[color:var(--color-error-700)]",
+    disabled:
+      "disabled:text-[color:var(--color-error-300,#fca5a5)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   danger: {
-    base: "bg-red-600 text-white border border-red-600",
-    hover: "hover:bg-red-700 hover:border-red-700",
-    active: "active:bg-red-800 active:border-red-800",
+    base: "text-white border bg-[var(--semantic-error)] border-[var(--semantic-error)]",
+    hover:
+      "hover:bg-[color:var(--color-error-600)] hover:border-[color:var(--color-error-600)]",
+    active:
+      "active:bg-[color:var(--color-error-700)] active:border-[color:var(--color-error-700)]",
     disabled:
-      "disabled:bg-red-300 disabled:border-red-300 disabled:cursor-not-allowed",
+      "disabled:bg-[color:var(--color-error-500)]/50 disabled:border-[color:var(--color-error-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   success: {
-    base: "bg-interaction-jade text-white border border-interaction-jade",
-    hover: "hover:bg-brand-jade-dark hover:border-brand-jade-dark",
-    active: "active:bg-brand-jade-darker active:border-brand-jade-darker",
+    base: "text-white border bg-[color:var(--color-success-600)] border-[color:var(--color-success-600)]",
+    hover:
+      "hover:bg-[color:var(--color-success-700)] hover:border-[color:var(--color-success-700)]",
+    active:
+      "active:bg-[color:var(--color-success-700)] active:border-[color:var(--color-success-700)]",
     disabled:
-      "disabled:bg-brand-jade-light disabled:border-brand-jade-light disabled:cursor-not-allowed",
+      "disabled:bg-[color:var(--color-success-500)]/50 disabled:border-[color:var(--color-success-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   warning: {
-    // Use darker background and dark text for AA contrast
-    base: "bg-yellow-600 text-gray-900 border border-yellow-600",
-    hover: "hover:bg-yellow-700 hover:border-yellow-700",
-    active: "active:bg-yellow-700 active:border-yellow-700",
+    base: "text-gray-900 border bg-[color:var(--color-warning-600)] border-[color:var(--color-warning-600)]",
+    hover:
+      "hover:bg-[color:var(--color-warning-700)] hover:border-[color:var(--color-warning-700)]",
+    active:
+      "active:bg-[color:var(--color-warning-700)] active:border-[color:var(--color-warning-700)]",
     disabled:
-      "disabled:bg-yellow-300 disabled:border-yellow-300 disabled:cursor-not-allowed",
+      "disabled:bg-[color:var(--color-warning-500)]/50 disabled:border-[color:var(--color-warning-500)]/50 disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
 };
@@ -184,10 +234,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseClasses = [
       // Base button styles - square, confident
       "inline-flex items-center justify-center",
-      "font-sans rounded-sm", // Square corners for masculine feel
+      "font-sans", // radius via CSS var
       "transition-square hover-lift active-press focus-square",
       "focus:outline-none",
-      "shadow-sm hover:shadow-md", // Stronger shadows for depth
       // Variant styles
       variantStyles.base,
       !isDisabled && variantStyles.hover,
@@ -239,6 +288,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={isDisabled}
         className={baseClasses}
+        style={{
+          borderRadius: "var(--button-border-radius)",
+          boxShadow: "var(--button-shadow)",
+        }}
         {...restProps}
       >
         {renderLoadingSpinner()}

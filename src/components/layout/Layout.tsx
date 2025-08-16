@@ -32,6 +32,7 @@ const getTestRole = (devMode: DevMode): UserRole | null => {
   }
 };
 import { Footer } from "./Footer";
+import { getRouteImporter } from "../../routes/importers";
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 interface LayoutProps {
   children: React.ReactNode;
@@ -62,8 +63,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navBarItems = navigationItems.map((item, index) => ({
     id: item.id || item.href || `nav-item-${index}`,
     label: item.label,
+    href: item.href,
     onClick: () => (window.location.href = item.href),
     active: window.location.pathname === item.href,
+    importer: getRouteImporter(item.href),
   }));
 
   // Set data-density attribute on body (once per render cycle)

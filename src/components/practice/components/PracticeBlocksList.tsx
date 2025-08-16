@@ -1,5 +1,4 @@
 import { Typography } from "../../design-system";
-import { ClipboardList, Lightbulb, Users } from "lucide-react";
 /**
  * PracticeBlocksList Component (Regular Mode)
  *
@@ -80,8 +79,8 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
           <Typography variant="headline-md">Practice Schedule</Typography>
           {practiceBlocks.length > 0 && (
             <Typography variant="body-sm" color="muted" className="mt-1">
-              <Lightbulb
-                aria-label="idea"
+              <Icon
+                name="lightbulb"
                 className="inline h-4 w-4 align-middle text-current"
               />{" "}
               Drag the ⋮⋮ handle to reorder practice blocks
@@ -105,8 +104,8 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
               onClick={onAutoAssignCoaches}
               className="ml-2"
             >
-              <Users
-                aria-label="team"
+              <Icon
+                name="users"
                 className="inline h-4 w-4 align-middle text-current"
               />{" "}
               Auto-Assign Coaches
@@ -220,7 +219,7 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                 )}
                                 {/* Block Script */}
                                 {block.scriptId && (
-                                  <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+                                  <div className="mt-2 p-2 surface-subtle border border-subtle rounded-md">
                                     <div className="flex items-center gap-2">
                                       <Icon
                                         name="file"
@@ -279,8 +278,8 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                   variant="body-md"
                                   className="font-medium text-text-primary"
                                 >
-                                  <Users
-                                    aria-label="team"
+                                  <Icon
+                                    name="users"
                                     className="inline h-4 w-4 align-middle text-current"
                                   />{" "}
                                   Groups ({block.groups.length})
@@ -376,13 +375,13 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                     )}
                                     {/* Group Script */}
                                     {group.scriptId ? (
-                                      <div className="flex items-center justify-between p-2 bg-green-50 border border-green-200 rounded">
+                                      <div className="flex items-center justify-between p-2 surface-subtle border border-subtle rounded">
                                         <Typography
                                           variant="body-xs"
                                           className="text-green-800"
                                         >
-                                          <ClipboardList
-                                            aria-label="clipboard"
+                                          <Icon
+                                            name="clipboard-list"
                                             className="inline h-4 w-4 align-middle text-current"
                                           />{" "}
                                           {group.scriptTitle ||
@@ -432,8 +431,8 @@ export const PracticeBlocksList: React.FC<PracticeBlocksListProps> = ({
                                 fullWidth
                                 className="border-dashed text-text-secondary hover:text-text-primary"
                               >
-                                <Users
-                                  aria-label="team"
+                                <Icon
+                                  name="users"
                                   className="inline h-4 w-4 align-middle text-current"
                                 />{" "}
                                 Add Groups to This Block

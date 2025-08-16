@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Camera } from "lucide-react";
 import { Icon } from "../ui/Icon/Icon";
 import type { TeamSettings as TeamSettingsType } from "../../types/team-management";
 import { Button } from "../ui/Button";
@@ -101,8 +100,8 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           <div
             className={`p-4 rounded-lg border ${
               message.type === "success"
-                ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200"
-                : "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200"
+                ? "surface-subtle border-subtle text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200"
+                : "surface-subtle border-subtle text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200"
             }`}
           >
             {message.text}
@@ -141,8 +140,8 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
                 variant="secondary"
                 onClick={handleLogoUpload}
               >
-                <Camera
-                  aria-label="camera"
+                <Icon
+                  name="camera"
                   className="inline h-4 w-4 align-middle text-current"
                 />{" "}
                 Upload Logo
@@ -165,7 +164,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
             <div>
-              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-secondary mb-2"
+              >
                 Team Name *
               </Typography>
               <Input
@@ -177,7 +180,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-secondary mb-2"
+              >
                 School/Organization
               </Typography>
               <Input
@@ -188,7 +195,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-secondary mb-2"
+              >
                 Season
               </Typography>
               <Input
@@ -199,7 +210,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-secondary mb-2"
+              >
                 Logo URL
               </Typography>
               <Input
@@ -223,7 +238,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
             <div>
-              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-secondary mb-2"
+              >
                 Address
               </Typography>
               <Input
@@ -234,7 +253,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-secondary mb-2"
+              >
                 City
               </Typography>
               <Input
@@ -245,7 +268,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-secondary mb-2"
+              >
                 State
               </Typography>
               <Input
@@ -256,7 +283,11 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
               />
             </div>
             <div>
-              <Typography variant="body-sm" as="label" className="block font-medium text-text-secondary mb-2">
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium text-text-secondary mb-2"
+              >
                 ZIP Code
               </Typography>
               <Input
@@ -304,7 +335,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
           >
             Team Information
           </Typography>
-          <div className="bg-jade-50 dark:bg-navy-900/20 rounded-md p-4">
+          <div className="surface-subtle dark:bg-navy-900/20 rounded-md p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-text-primary">

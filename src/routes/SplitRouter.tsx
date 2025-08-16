@@ -51,6 +51,10 @@ const BoxCallPage = lazy(() =>
   dynamicImportWithRetry(() => import("../pages/BoxCall"))
 );
 
+const LogoutPage = lazy(() =>
+  dynamicImportWithRetry(() => import("../pages/Logout"))
+);
+
 // Route preloading utilities (moved to separate file to fix Fast Refresh)
 // Import from '../utils/routeUtils' when needed
 
@@ -131,6 +135,15 @@ export const SplitRouter: React.FC = () => {
         element={
           <RouteLoader routeName="login">
             <LoginPage />
+          </RouteLoader>
+        }
+      />
+
+      <Route
+        path="/logout"
+        element={
+          <RouteLoader routeName="logout">
+            <LogoutPage />
           </RouteLoader>
         }
       />

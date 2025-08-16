@@ -141,7 +141,7 @@ const getRowStyles = (
   return [
     "transition-colors duration-200",
     hoverable && "surface-subtle-hover",
-    isSelected && "bg-jade-50 dark:bg-navy-900/20",
+    isSelected && "surface-subtle dark:bg-navy-900/20",
     striped && isEven && "surface-subtle dark:bg-gray-800",
   ]
     .filter(Boolean)

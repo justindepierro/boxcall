@@ -24,7 +24,7 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
   const maxDuration = Math.min(50, scheduledDuration - selectedBlock.start);
 
   return (
-    <div className="mt-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+    <div className="mt-4 p-4 surface-subtle rounded-lg border-2 border-subtle">
       <div className="flex items-center justify-between mb-3">
         <div>
           <Typography
@@ -50,10 +50,10 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
           </Typography>
         </div>
         <Button
-          variant="link"
+          variant="neutralLink"
           size="xs"
           onClick={onCancelBlock}
-          className="p-1 text-blue-600 hover:text-blue-800 h-auto"
+          className="p-1 h-auto"
           aria-label="Cancel resize"
         >
           <Icon name="close" size="sm" />
@@ -62,7 +62,11 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
 
       <div className="space-y-3">
         <div>
-          <Typography variant="body-sm" as="label" className="block font-medium text-blue-700 mb-2">
+          <Typography
+            variant="body-sm"
+            as="label"
+            className="block font-medium text-blue-700 mb-2"
+          >
             Duration: {sliderValue} minutes
           </Typography>
           <input

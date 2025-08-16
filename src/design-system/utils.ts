@@ -53,7 +53,7 @@ export const tokenClasses = {
     "bg-surface-jade hover:bg-surface-jade-dark text-brand-jade-dark font-semibold py-2 px-4 rounded border border-surface-jade-dark transition-colors",
 
   // Card styles
-  card: "bg-white border border-surface-jade-dark rounded-lg shadow-sm",
+  card: "surface-card border border-surface-jade-dark rounded-lg shadow-sm",
   cardHover:
     "hover:shadow-md hover:border-brand-jade transition-all duration-200",
 
@@ -77,9 +77,9 @@ export const tokenClasses = {
     "hover:bg-interaction-jade hover:text-white transition-colors cursor-pointer",
 
   // Status styles
-  success: "bg-green-50 text-green-800 border border-green-200",
-  warning: "bg-yellow-50 text-yellow-800 border border-yellow-200",
-  error: "bg-red-50 text-red-800 border border-red-200",
+  success: "surface-subtle text-green-800 border border-subtle",
+  warning: "surface-subtle text-yellow-800 border border-subtle",
+  error: "surface-subtle text-red-800 border border-subtle",
 
   // Icon color standardization - Professional consistency
   iconBrand: `text-[${componentTokens.icon.jade}]`,

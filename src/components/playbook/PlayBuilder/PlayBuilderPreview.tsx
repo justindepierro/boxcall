@@ -6,7 +6,7 @@ import { Typography } from "../../design-system/Typography";
 
 import React from "react";
 import { Tag } from "../../ui/Tag";
-import { ArrowRight, CheckCircle, AlertTriangle } from "lucide-react";
+import { Icon } from "../../ui/Icon/Icon";
 import type { Play } from "../../../types/play";
 
 interface PlayBuilderPreviewProps {
@@ -31,12 +31,14 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
           <div className="flex items-center space-x-2">
             {isValid ? (
               <div className="flex items-center text-green-700">
-                <CheckCircle className="h-5 w-5 mr-1" />
-                <Typography variant="body-sm" as="span" className="font-medium">Ready to save</Typography>
+                <Icon name="check-circle" className="h-5 w-5 mr-1" />
+                <Typography variant="body-sm" as="span" className="font-medium">
+                  Ready to save
+                </Typography>
               </div>
             ) : (
               <div className="flex items-center text-amber-700">
-                <AlertTriangle className="h-5 w-5 mr-1" />
+                <Icon name="alert-triangle" className="h-5 w-5 mr-1" />
                 <Typography variant="body-sm" as="span" className="font-medium">
                   Missing required fields
                 </Typography>
@@ -61,7 +63,7 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
 
         {/* Core Information Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          <div className="bg-slate-50 rounded-lg p-4">
+          <div className="surface-subtle rounded-lg p-4">
             <Typography
               variant="label-lg"
               as="h4"
@@ -74,7 +76,7 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
             </p>
           </div>
 
-          <div className="bg-slate-50 rounded-lg p-4">
+          <div className="surface-subtle rounded-lg p-4">
             <Typography
               variant="label-lg"
               as="h4"
@@ -87,7 +89,7 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
             </p>
           </div>
 
-          <div className="bg-slate-50 rounded-lg p-4">
+          <div className="surface-subtle rounded-lg p-4">
             <Typography
               variant="label-lg"
               as="h4"
@@ -190,7 +192,7 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
             >
               Notes
             </Typography>
-            <div className="bg-slate-50 rounded-lg p-4">
+            <div className="surface-subtle rounded-lg p-4">
               <p className="text-slate-700 whitespace-pre-wrap">
                 {playData.notes}
               </p>
@@ -200,9 +202,12 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
 
         {/* Validation Errors */}
         {!isValid && validationErrors.length > 0 && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div className="surface-subtle border border-subtle rounded-lg p-4">
             <div className="flex items-start">
-              <AlertTriangle className="h-5 w-5 text-amber-400 mt-0.5 mr-3 flex-shrink-0" />
+              <Icon
+                name="alert-triangle"
+                className="h-5 w-5 text-amber-400 mt-0.5 mr-3 flex-shrink-0"
+              />
               <div>
                 <h5 className="font-medium text-amber-800 mb-2">
                   Required fields missing:
@@ -210,7 +215,10 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
                 <ul className="text-sm text-amber-700 space-y-1">
                   {validationErrors.map((error, index) => (
                     <li key={index} className="flex items-center">
-                      <ArrowRight className="h-4 w-4 mr-2 flex-shrink-0" />
+                      <Icon
+                        name="arrow-right"
+                        className="h-4 w-4 mr-2 flex-shrink-0"
+                      />
                       {error}
                     </li>
                   ))}
@@ -222,9 +230,12 @@ export const PlayBuilderPreview: React.FC<PlayBuilderPreviewProps> = ({
 
         {/* Success State */}
         {isValid && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div className="surface-subtle border border-subtle rounded-lg p-4">
             <div className="flex items-center">
-              <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+              <Icon
+                name="check-circle"
+                className="h-5 w-5 text-green-400 mr-3"
+              />
               <div>
                 <h5 className="font-medium text-green-800">Ready to save!</h5>
                 <p className="text-sm text-green-700 mt-1">

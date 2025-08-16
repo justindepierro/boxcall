@@ -5,8 +5,8 @@
 
 import React, { useState } from "react";
 import { Button } from "../../ui";
-import { X, Check } from "lucide-react";
-import { Typography } from "@/components/design-system/Typography";
+import { Icon } from "../../ui/Icon/Icon";
+import { Typography } from "@components/design-system/Typography";
 
 interface AddNewDropdownProps {
   value: string;
@@ -68,7 +68,11 @@ export const AddNewDropdown: React.FC<AddNewDropdownProps> = ({
 
   return (
     <div className={className}>
-      <Typography variant="body-sm" as="label" className="block font-medium text-slate-700 mb-2">
+      <Typography
+        variant="body-sm"
+        as="label"
+        className="block font-medium text-slate-700 mb-2"
+      >
         {label} {required && "*"}
       </Typography>
 
@@ -91,7 +95,7 @@ export const AddNewDropdown: React.FC<AddNewDropdownProps> = ({
             className="p-2 h-auto"
             title="Add"
           >
-            <Check className="h-4 w-4" />
+            <Icon name="check" className="h-4 w-4" />
           </Button>
           <Button
             type="button"
@@ -101,7 +105,7 @@ export const AddNewDropdown: React.FC<AddNewDropdownProps> = ({
             className="p-2 h-auto"
             title="Cancel"
           >
-            <X className="h-4 w-4" />
+            <Icon name="close" className="h-4 w-4" />
           </Button>
         </div>
       ) : (
@@ -119,7 +123,7 @@ export const AddNewDropdown: React.FC<AddNewDropdownProps> = ({
           {allowCustom && (
             <option
               value="__ADD_NEW__"
-              className="border-t border-slate-200 font-medium text-jade-600"
+              className="border-t border-subtle font-medium text-jade-600"
             >
               + Add New {label}...
             </option>

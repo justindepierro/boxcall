@@ -1,5 +1,5 @@
 import { Typography } from "../../design-system";
-import { Calendar } from "lucide-react";
+import Icon from "../../ui/Icon/Icon";
 /**
  * TimeSummary Component
  *
@@ -21,7 +21,6 @@ import { Calendar } from "lucide-react";
 import React from "react";
 import { getCategoryColor, formatDuration } from "../utils";
 import type { TimeSummaryProps, PracticeBlock } from "../types";
-import Icon from "../../ui/Icon/Icon";
 export const TimeSummary: React.FC<TimeSummaryProps> = ({
   scheduledDuration,
   totalDuration,
@@ -44,7 +43,7 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
   const isOverScheduled = totalDuration > scheduledDuration;
   const remainingTime = scheduledDuration - totalDuration;
   return (
-    <div className="bg-white rounded-lg border border-subtle p-4 mb-6">
+    <div className="surface-card rounded-lg border border-subtle p-4 mb-6">
       <div className="flex items-center gap-2 mb-3">
         <Icon name="clock" size="lg" className="text-navy-700" />
         <Typography variant="headline-sm" className="text-navy-900">
@@ -98,9 +97,9 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
           <div
             className={`h-2.5 rounded-full transition-all duration-300 ${
               isOverScheduled
-                ? "bg-red-500"
+                ? "surface-subtle0"
                 : progressPercentage === 100
-                  ? "bg-green-500"
+                  ? "surface-subtle0"
                   : "bg-jade-600"
             }`}
             style={{ width: `${Math.min(progressPercentage, 100)}%` }}
@@ -131,8 +130,8 @@ export const TimeSummary: React.FC<TimeSummaryProps> = ({
       {/* Event Details */}
       <div className="mt-4 pt-4 border-t border-subtle">
         <Typography variant="body-sm" color="muted">
-          <Calendar
-            aria-label="calendar"
+          <Icon
+            name="calendar"
             className="inline h-4 w-4 align-middle text-current"
           />{" "}
           {event.title} • {new Date(event.start).toLocaleDateString()} •

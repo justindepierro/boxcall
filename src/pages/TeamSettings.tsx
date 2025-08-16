@@ -1,5 +1,5 @@
 import React from "react";
-import { Wrench } from "lucide-react";
+import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
 /**
@@ -40,13 +40,13 @@ export const TeamSettings: React.FC = () => {
             Configure team settings, manage member roles, and customize your
             team's BoxCall experience.
           </Typography>
-          <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4 inline-block">
+          <div className="surface-subtle dark:bg-purple-900/20 border border-subtle dark:border-purple-800 rounded-lg p-4 inline-block">
             <Typography
               variant="body-sm"
               className="text-purple-700 dark:text-purple-300"
             >
-              <Wrench
-                aria-label="wrench"
+              <Icon
+                name="wrench"
                 className="inline h-4 w-4 align-middle text-current"
               />{" "}
               Coming Soon - Advanced team management and configuration tools

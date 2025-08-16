@@ -242,3 +242,9 @@ button:disabled {
     content: " (" attr(href) ")";
   }
 }
+
+/* Accessible focus outline for programmatically focusable scroll regions */
+.focus-scroll:focus-visible {
+  outline: 2px solid var(--color-border-accent, #047857);
+  outline-offset: 2px;
+}

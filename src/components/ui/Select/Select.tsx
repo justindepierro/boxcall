@@ -37,11 +37,11 @@ const selectStyles: SelectStylesConfig = {
     statuses: {
       default: "",
       error:
-        "border-red-300 dark:border-red-600 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 bg-red-50 dark:bg-red-900/20",
+        "border-red-300 dark:border-red-600 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-500 dark:focus:ring-red-400 surface-subtle dark:bg-red-900/20",
       success:
-        "border-green-300 dark:border-green-600 focus:border-green-500 dark:focus:border-green-400 focus:ring-green-500 dark:focus:ring-green-400 bg-green-50 dark:bg-green-900/20",
+        "border-green-300 dark:border-green-600 focus:border-green-500 dark:focus:border-green-400 focus:ring-green-500 dark:focus:ring-green-400 surface-subtle dark:bg-green-900/20",
       warning:
-        "border-yellow-300 dark:border-yellow-600 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 bg-yellow-50 dark:bg-yellow-900/20",
+        "border-yellow-300 dark:border-yellow-600 focus:border-yellow-500 dark:focus:border-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-400 surface-subtle dark:bg-yellow-900/20",
     },
     states: {
       disabled: "opacity-50 cursor-not-allowed",
@@ -62,7 +62,7 @@ const selectStyles: SelectStylesConfig = {
     states: {
       default: "",
       highlighted:
-        "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300",
+        "surface-subtle dark:bg-blue-900/30 text-blue-700 dark:text-blue-300",
       selected:
         "font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300",
       disabled: "opacity-50 cursor-not-allowed",

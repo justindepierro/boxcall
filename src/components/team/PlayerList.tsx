@@ -55,7 +55,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
     return (
       <div className="surface-card rounded-lg shadow-sm p-8">
         <div className="text-center">
-          <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full bg-jade-500/10 text-jade-600 dark:text-jade-400">
+          <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full surface-subtle0/10 text-jade-600 dark:text-jade-400">
             <Icon name="users" size="lg" />
           </div>
           <Typography
@@ -169,7 +169,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center space-x-3">
                     {/* Jersey Number */}
-                    <div className="w-12 h-12 bg-jade-500 rounded-md flex items-center justify-center text-text-inverse font-display font-bold">
+                    <div className="w-12 h-12 surface-subtle0 rounded-md flex items-center justify-center text-text-inverse font-display font-bold">
                       {player.jersey_number || "?"}
                     </div>
                     {/* Name and Level */}

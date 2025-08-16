@@ -4,7 +4,7 @@
  */
 import React, { Component } from "react";
 import type { ReactNode, ErrorInfo } from "react";
-import { AlertTriangle, RefreshCw, Home, Bug } from "lucide-react";
+import { Icon } from "./Icon";
 import { Typography } from "../design-system/Typography";
 import { TouchFeedback } from "./TouchFeedback";
 
@@ -358,7 +358,11 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
     <div className="min-h-screen surface-app flex items-center justify-center p-4">
       <div className="max-w-md w-full surface-card elevation-modal rounded-lg shadow-lg p-6 text-center">
         <div className="mb-4">
-          <AlertTriangle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+          <Icon
+            name="alert-triangle"
+            size="xl"
+            className="text-red-500 mx-auto mb-4"
+          />
           <Typography variant="headline-md" className="text-text-primary mb-2">
             Something went wrong
           </Typography>
@@ -404,9 +408,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
               disabled={isRecovering}
             >
               <div className="flex items-center justify-center space-x-2">
-                <RefreshCw
-                  className={`h-4 w-4 ${isRecovering ? "animate-spin" : ""}`}
-                />
+                <Icon name="refresh-cw" size="sm" />
                 <span>{isRecovering ? "Recovering..." : "Try Again"}</span>
               </div>
             </TouchFeedback>
@@ -418,7 +420,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
             onPress={onGoHome}
           >
             <div className="flex items-center justify-center space-x-2">
-              <Home className="h-4 w-4" />
+              <Icon name="home" size="sm" />
               <span>Go Home</span>
             </div>
           </TouchFeedback>
@@ -429,7 +431,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
             onPress={onReportError}
           >
             <div className="flex items-center justify-center space-x-2">
-              <Bug className="h-3 w-3" />
+              <Icon name="bug" size="xs" />
               <Typography variant="body-sm">Report this issue</Typography>
             </div>
           </TouchFeedback>

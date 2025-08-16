@@ -2,7 +2,13 @@ import { getTheme } from "./registry";
 
 const THEME_STORAGE_KEY = "app-theme";
 // Explicit theme id union (keep in sync with registry contents)
-export const THEME_IDS = ["light", "dark", "high-contrast"] as const;
+export const THEME_IDS = [
+  "light",
+  "dark",
+  "high-contrast",
+  "cupertino-light",
+  "cupertino-dark",
+] as const;
 export type ThemeName = (typeof THEME_IDS)[number];
 export const DEFAULT_THEME: ThemeName = "light";
 

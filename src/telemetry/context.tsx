@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo } from "react";
+/* eslint-disable react-refresh/only-export-components */
 import { telemetry, TelemetryDispatcher } from "./dispatcher";
 
 interface TelemetryContextValue {
@@ -37,3 +38,4 @@ export function useTelemetry() {
     throw new Error("useTelemetry must be used within TelemetryProvider");
   return ctx;
 }
+/* eslint-enable react-refresh/only-export-components */

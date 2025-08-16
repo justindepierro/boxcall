@@ -86,7 +86,7 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
         </div>
         {/* Script Assignment Display */}
         {editingGroup.group.scriptId && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+          <div className="mb-4 p-3 surface-subtle border border-subtle rounded-md">
             <div className="flex items-center gap-2">
               <Icon name="file" size="sm" className="text-blue-600" />
               <Typography variant="body-sm" className="text-blue-800">
@@ -100,7 +100,11 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Group Name */}
           <div>
-            <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
+            <Typography
+              variant="body-sm"
+              as="label"
+              className="block font-medium text-text-primary mb-1"
+            >
               Group Name *
             </Typography>
             <input
@@ -116,7 +120,11 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
           </div>
           {/* Location */}
           <div>
-            <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
+            <Typography
+              variant="body-sm"
+              as="label"
+              className="block font-medium text-text-primary mb-1"
+            >
               Location
             </Typography>
             <input
@@ -131,7 +139,11 @@ export const EditGroupModal: React.FC<EditGroupModalProps> = ({
           </div>
           {/* Notes */}
           <div>
-            <Typography variant="body-sm" as="label" className="block font-medium text-text-primary mb-1">
+            <Typography
+              variant="body-sm"
+              as="label"
+              className="block font-medium text-text-primary mb-1"
+            >
               Notes
             </Typography>
             <textarea

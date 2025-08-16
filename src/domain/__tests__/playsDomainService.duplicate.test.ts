@@ -1,5 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeAll, vi } from "vitest";
 import { PlaysDomainService } from "../../domain/playsDomainService";
+import * as PlaysServiceModule from "../../services/playsService";
+import type { InboundPlay } from "../../utils/playDataStandardization";
+import type { Play } from "../../types/play";
 
 interface MinimalInboundPlay {
   play_name: string;
@@ -7,8 +10,24 @@ interface MinimalInboundPlay {
   p_type: string;
 }
 
-// NOTE: This test assumes a test database or mocking layer.
-// If real Supabase is used, ensure env vars point to a disposable instance.
+beforeAll(() => {
+  const mockPlay: Partial<Play> = {
+    id: "00000000-0000-0000-0000-000000000001",
+    playbook_id: "00000000-0000-0000-0000-000000000002",
+    play_name: "Power O",
+    formation: "I Right",
+    p_type: "Run",
+    confidence_base: 70,
+    times_called: 0,
+    times_successful: 0,
+    created_by: "00000000-0000-0000-0000-000000000003",
+    created_at: new Date(),
+    updated_at: new Date(),
+  };
+  vi.spyOn(PlaysServiceModule.PlaysService, "createPlay").mockResolvedValue(
+    mockPlay as Play
+  );
+});
 
 describe("PlaysDomainService duplicate enforcement", () => {
   it("computes duplicateKey deterministically", async () => {
@@ -17,8 +36,9 @@ describe("PlaysDomainService duplicate enforcement", () => {
       formation: "I Right",
       p_type: "Run",
     };
-    const { duplicateKey } = await PlaysDomainService.createPlay(input);
+    const { duplicateKey } = await PlaysDomainService.createPlay(
+      input as unknown as InboundPlay
+    );
     expect(duplicateKey).toBeDefined();
   });
-  // Duplicate conflict test is illustrative; would normally mock PlaysService + DB error 23505.
 });

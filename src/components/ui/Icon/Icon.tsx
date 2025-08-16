@@ -1,12 +1,16 @@
 /**
- * Streamlined Icon System
- * Simplified from 999-line monster to clean, maintainable component
+ * Icon Adapter
+ * Preserves the existing Icon API but delegates rendering to the tree-shakeable ModularIcon.
  */
 import React from "react";
-import * as LucideIcons from "lucide-react";
 import { getComponentColor } from "../../../design-system/tokens";
+import {
+  ModularIcon,
+  type ModularIconName,
+  type ModularIconProps,
+} from "./ModularIcon";
 
-// Size mapping
+// Size mapping kept for backwards compatibility
 const SIZE_MAP = {
   xs: 12,
   sm: 16,
@@ -27,96 +31,107 @@ export type IconColor =
   | "navy"
   | "current";
 
-// Essential icons for BoxCall - only what we actually use
-const ICON_MAP = {
-  // Navigation
-  home: LucideIcons.Home,
-  menu: LucideIcons.Menu,
-  close: LucideIcons.X,
-  settings: LucideIcons.Settings,
-  back: LucideIcons.ArrowLeft,
-  forward: LucideIcons.ArrowRight,
-  "chevron-up": LucideIcons.ChevronUp,
-  "chevron-down": LucideIcons.ChevronDown,
-  "chevron-left": LucideIcons.ChevronLeft,
-  "chevron-right": LucideIcons.ChevronRight,
-
-  // Core football app
-  play: LucideIcons.Play,
-  pause: LucideIcons.Pause,
-  calendar: LucideIcons.Calendar,
-  clock: LucideIcons.Clock,
-  team: LucideIcons.Users,
-  user: LucideIcons.User,
-  users: LucideIcons.Users, // For team navigation
-  book: LucideIcons.Book, // For playbook
-  edit: LucideIcons.Edit3,
-  delete: LucideIcons.Trash2,
-  plus: LucideIcons.Plus,
-  "plus-circle": LucideIcons.PlusCircle,
-  minus: LucideIcons.Minus,
-
-  // Files & Actions
-  save: LucideIcons.Save,
-  download: LucideIcons.Download,
-  upload: LucideIcons.Upload,
-  search: LucideIcons.Search,
-  filter: LucideIcons.Filter,
-
-  // Status & Feedback
-  check: LucideIcons.Check,
-  warning: LucideIcons.AlertTriangle,
-  "alert-triangle": LucideIcons.AlertTriangle, // alias
-  error: LucideIcons.AlertCircle,
-  info: LucideIcons.Info,
-  alert: LucideIcons.AlertTriangle,
-
-  // Sports specific
-  target: LucideIcons.Target,
-  zap: LucideIcons.Zap,
-  award: LucideIcons.Award,
-  trophy: LucideIcons.Trophy,
-  flag: LucideIcons.Flag,
-  star: LucideIcons.Star,
-  "trending-up": LucideIcons.TrendingUp,
-  activity: LucideIcons.Activity,
-  chart: LucideIcons.BarChart3,
-  "bar-chart": LucideIcons.BarChart3,
-  shield: LucideIcons.Shield,
-
-  // Communication
-  phone: LucideIcons.Phone,
-  mail: LucideIcons.Mail,
-  message: LucideIcons.MessageCircle,
-
-  // Files
-  file: LucideIcons.File,
-  copy: LucideIcons.Copy,
-  folder: LucideIcons.Folder,
-  pdf: LucideIcons.FileText,
-  database: LucideIcons.Database,
-
-  // System
-  eye: LucideIcons.Eye,
-  "eye-off": LucideIcons.EyeOff,
-  lock: LucideIcons.Lock,
-  unlock: LucideIcons.Unlock,
-  key: LucideIcons.Key,
-  "user-plus": LucideIcons.UserPlus,
-  "check-circle": LucideIcons.CheckCircle,
-  grid: LucideIcons.Grid,
-  power: LucideIcons.Power,
-
-  // Arrows for UI
-  "arrow-up": LucideIcons.ArrowUp,
-  "arrow-down": LucideIcons.ArrowDown,
-  "arrow-left": LucideIcons.ArrowLeft,
-  "arrow-right": LucideIcons.ArrowRight,
-  map: LucideIcons.Map,
-  crown: LucideIcons.Crown,
-} as const;
-
-export type IconName = keyof typeof ICON_MAP;
+// Keep the IconName as a superset of what ModularIcon supports; unknown names will fall back to help-circle
+export type IconName =
+  | "home"
+  | "menu"
+  | "close"
+  | "tag"
+  | "settings"
+  | "back"
+  | "forward"
+  | "chevron-up"
+  | "chevron-down"
+  | "chevron-left"
+  | "chevron-right"
+  | "play"
+  | "pause"
+  | "calendar"
+  | "clock"
+  | "team"
+  | "user"
+  | "users"
+  | "book"
+  | "edit"
+  | "delete"
+  | "plus"
+  | "plus-circle"
+  | "minus"
+  | "save"
+  | "download"
+  | "upload"
+  | "search"
+  | "filter"
+  | "check"
+  | "warning"
+  | "alert-triangle"
+  | "refresh-cw"
+  | "error"
+  | "info"
+  | "alert"
+  | "wrench"
+  | "bug"
+  | "camera"
+  | "target"
+  | "zap"
+  | "award"
+  | "trophy"
+  | "flag"
+  | "star"
+  | "trending-up"
+  | "activity"
+  | "chart"
+  | "bar-chart"
+  | "shield"
+  | "phone"
+  | "mail"
+  | "message"
+  | "file"
+  | "copy"
+  | "folder"
+  | "pdf"
+  | "database"
+  | "image"
+  | "eye"
+  | "eye-off"
+  | "lock"
+  | "unlock"
+  | "key"
+  | "hash"
+  | "clipboard-list"
+  | "trending-up"
+  | "user-plus"
+  | "inbox"
+  | "flask-conical"
+  | "sprout"
+  | "lightbulb"
+  | "rocket"
+  | "party-popper"
+  | "type"
+  | "list"
+  | "circle"
+  | "graduation-cap"
+  | "shirt"
+  | "check-circle"
+  | "grid"
+  | "power"
+  | "arrow-up"
+  | "arrow-down"
+  | "arrow-left"
+  | "arrow-right"
+  | "map"
+  | "map-pin"
+  | "crown"
+  | "wifi-off"
+  | "toggle-right"
+  | "toggle-left"
+  | "gamepad-2"
+  | "pointer"
+  | "hand"
+  | "move"
+  | "pen-tool"
+  | "link"
+  | "sparkles";
 
 export interface IconProps {
   name: IconName;
@@ -131,25 +146,131 @@ export const Icon: React.FC<IconProps> = ({
   color = "current",
   className = "",
 }) => {
-  const IconComponent = ICON_MAP[name];
-
   const resolvedSize =
     typeof size === "number" ? size : (SIZE_MAP[size] ?? SIZE_MAP.md);
-
-  if (!IconComponent) {
-    console.warn(`Icon "${name}" not found`);
-    return <LucideIcons.HelpCircle size={resolvedSize} />;
-  }
 
   const colorClass =
     color === "current"
       ? ""
       : getComponentColor("icon", color === "navy" ? "secondary" : color);
 
+  // ModularIcon controls the vector color via 'color' prop; we pass className for layout only
+  const vectorColor =
+    color === "current"
+      ? "current"
+      : (color as unknown as ModularIconProps["color"]);
+
+  // Runtime guard to ensure the name is a supported ModularIconName; fallback to 'help-circle'
+  const toModularName = (n: IconName): ModularIconName => {
+    const supported = new Set<ModularIconName>([
+      "home",
+      "menu",
+      "close",
+      "settings",
+      "back",
+      "forward",
+      "chevron-up",
+      "chevron-down",
+      "chevron-left",
+      "chevron-right",
+      "play",
+      "pause",
+      "calendar",
+      "clock",
+      "team",
+      "user",
+      "users",
+      "book",
+      "edit",
+      "delete",
+      "plus",
+      "plus-circle",
+      "minus",
+      "tag",
+      "save",
+      "download",
+      "upload",
+      "search",
+      "filter",
+      "check",
+      "warning",
+      "alert-triangle",
+      "refresh-cw",
+      "error",
+      "info",
+      "alert",
+      "wrench",
+      "bug",
+      "target",
+      "zap",
+      "award",
+      "trophy",
+      "flag",
+      "star",
+      "trending-up",
+      "activity",
+      "shield",
+      "phone",
+      "mail",
+      "message",
+      "file",
+      "copy",
+      "folder",
+      "pdf",
+      "database",
+      "image",
+      "camera",
+      "eye",
+      "eye-off",
+      "lock",
+      "unlock",
+      "key",
+      "hash",
+      "clipboard-list",
+      "user-plus",
+      "check-circle",
+      "grid",
+      "power",
+      "arrow-up",
+      "arrow-down",
+      "arrow-left",
+      "arrow-right",
+      "map",
+      "map-pin",
+      "crown",
+      "wifi-off",
+      "toggle-right",
+      "toggle-left",
+      "gamepad-2",
+      "pointer",
+      "hand",
+      "move",
+      "pen-tool",
+      "link",
+      "sparkles",
+      "inbox",
+      "flask-conical",
+      "sprout",
+      "lightbulb",
+      "rocket",
+      "party-popper",
+      "type",
+      "list",
+      "circle",
+      "graduation-cap",
+      "shirt",
+    ]);
+    return supported.has(n as ModularIconName)
+      ? (n as ModularIconName)
+      : "help-circle";
+  };
+
   return (
-    <IconComponent
+    <ModularIcon
+      name={toModularName(name)}
       size={resolvedSize}
-      className={`${colorClass} ${className}`.trim()}
+      color={vectorColor}
+      className={className ? `${className} ${colorClass}`.trim() : colorClass}
     />
   );
 };

@@ -1,189 +1,96 @@
-# 🏗️ **DATA ARCHITECTURE PLAN - 3-VIEW COACHING SYSTEM**
+# Data Architecture Plan (Archived Summary)
 
-## 🎯 **OBJECTIVES**
+Condensed during Aug 2025 cleanup to meet doc size policy. Full schema definitions live in `database/schema.sql` and `docs/database/COMPLETE_SCHEMA_REFERENCE.md`.
 
-- **Performance**: Sub-100ms response times for all operations
-- **Security**: Multi-layer backup system with zero data loss tolerance
-- **Scalability**: Handle 10,000+ plays per team without performance degradation
-- **Offline Capability**: Core functionality works without internet connection
+Principles:
 
-## 🚀 **SUPABASE SCHEMA DESIGN**
+- RLS everywhere; capability-driven policies.
+- Indexed search vector + trigram fallback for plays.
+- Views for aggregates (season stats) to avoid heavy joins in UI.
+- Migrations verified via `database/verify_*.sql` scripts.
+- Delay partitioning & denormalization until observed bottlenecks.
 
-### **Core Tables**
+Monitoring KPIs:
 
-```sql
--- Teams table (existing, enhanced)
-CREATE TABLE teams (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name TEXT NOT NULL,
-  school_name TEXT,
-  mascot TEXT,
-  season_year INTEGER DEFAULT EXTRACT(YEAR FROM NOW()),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  -- Performance optimization
-  play_count INTEGER DEFAULT 0,
-  last_backup_at TIMESTAMPTZ,
-  backup_version INTEGER DEFAULT 1
-);
+- p95 query latency < 500ms (target <100ms for primary reads)
+- 0 policy bypass incidents
+- Successful nightly backups & weekly restore drill
 
--- Playbooks table (new - separates concerns)
-CREATE TABLE playbooks (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
-  name TEXT NOT NULL DEFAULT 'Main Playbook',
-  description TEXT,
-  is_active BOOLEAN DEFAULT true,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  -- Performance indexes
-  play_count INTEGER DEFAULT 0,
-  last_modified_at TIMESTAMPTZ DEFAULT NOW()
-);
+Recover full historical doc:
 
--- Plays table (enhanced for performance)
-CREATE TABLE plays (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  playbook_id UUID REFERENCES playbooks(id) ON DELETE CASCADE,
+```
+git log --follow -- docs/database/DATA_ARCHITECTURE_PLAN.md
+git show <commit>:docs/database/DATA_ARCHITECTURE_PLAN.md > /tmp/DATA_ARCH_PLAN_full.md
+```
 
-  -- Core play data
-  formation TEXT NOT NULL,
-  play_name TEXT NOT NULL,
-  one_word_play TEXT,
-  p_type TEXT NOT NULL CHECK (p_type IN ('Pass', 'Run', 'RPO', 'Play Action')),
+<!-- allow-empty -->
 
-  -- Formation details
-  personnel TEXT,
-  f_type TEXT,
-  f_dir TEXT,
-
-  -- Play details
-  protection TEXT,
-  p_dir TEXT,
-  r_str TEXT,
-  p_str TEXT,
-
-  -- Preferences
-  pref_down TEXT,
-  pref_dis TEXT,
-  pref_hash TEXT,
-  pref_cov TEXT,
-  pref_front TEXT,
-
-  -- Tags and categorization
-  ftag1 TEXT,
-  ftag2 TEXT,
-  p_tag1 TEXT,
-  p_tag2 TEXT,
-
-  -- Additional data
-  back_align TEXT,
-  shift TEXT,
-  motion TEXT,
-  key_player1 TEXT,
-  key_player2 TEXT,
-  check_into TEXT,
-  notes TEXT,
-
-  -- Performance metrics
-  confidence_base INTEGER DEFAULT 70,
-  times_called INTEGER DEFAULT 0,
-  times_successful INTEGER DEFAULT 0,
-
-  -- Metadata
-  created_by TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-
-  -- Performance optimization
-  is_archived BOOLEAN DEFAULT false,
-  last_used_at TIMESTAMPTZ,
-  complexity_score INTEGER,
-
-  -- Full-text search optimization
-  search_vector tsvector GENERATED ALWAYS AS (
-    to_tsvector('english',
-      COALESCE(play_name, '') || ' ' ||
-      COALESCE(formation, '') || ' ' ||
-      COALESCE(p_type, '') || ' ' ||
-      COALESCE(notes, '')
-    )
-  ) STORED
-);
-
--- Practice Scripts table (new)
-CREATE TABLE practice_scripts (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  description TEXT,
-  date_planned DATE,
-  total_duration INTEGER, -- in minutes
-  created_by TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  is_template BOOLEAN DEFAULT false,
-  tags TEXT[],
-  -- Performance optimization
-  play_count INTEGER DEFAULT 0
+created_by TEXT NOT NULL,
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW(),
+is_template BOOLEAN DEFAULT false,
+tags TEXT[],
+-- Performance optimization
+play_count INTEGER DEFAULT 0
 );
 
 -- Practice Script Plays (junction table with ordering)
 CREATE TABLE practice_script_plays (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  script_id UUID REFERENCES practice_scripts(id) ON DELETE CASCADE,
-  play_id UUID REFERENCES plays(id) ON DELETE CASCADE,
-  order_number INTEGER NOT NULL,
-  repetitions INTEGER DEFAULT 1,
-  estimated_time INTEGER DEFAULT 4, -- in minutes
-  notes TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+script_id UUID REFERENCES practice_scripts(id) ON DELETE CASCADE,
+play_id UUID REFERENCES plays(id) ON DELETE CASCADE,
+order_number INTEGER NOT NULL,
+repetitions INTEGER DEFAULT 1,
+estimated_time INTEGER DEFAULT 4, -- in minutes
+notes TEXT,
+created_at TIMESTAMPTZ DEFAULT NOW(),
 
-  UNIQUE(script_id, order_number)
+UNIQUE(script_id, order_number)
 );
 
 -- Game Plans table (new)
 CREATE TABLE game_plans (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  week_number INTEGER,
-  opponent TEXT,
-  game_date DATE,
-  created_by TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  is_template BOOLEAN DEFAULT false,
-  tags TEXT[],
-  notes TEXT,
-  -- Performance optimization
-  total_plays INTEGER DEFAULT 0
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
+name TEXT NOT NULL,
+week_number INTEGER,
+opponent TEXT,
+game_date DATE,
+created_by TEXT NOT NULL,
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW(),
+is_template BOOLEAN DEFAULT false,
+tags TEXT[],
+notes TEXT,
+-- Performance optimization
+total_plays INTEGER DEFAULT 0
 );
 
 -- Game Plan Situations (Brian Billick methodology)
 CREATE TABLE game_plan_situations (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  game_plan_id UUID REFERENCES game_plans(id) ON DELETE CASCADE,
-  name TEXT NOT NULL, -- "1st & 10", "Red Zone", etc.
-  description TEXT,
-  category TEXT NOT NULL, -- "down_distance", "red_zone", "special"
-  priority INTEGER DEFAULT 5,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+game_plan_id UUID REFERENCES game_plans(id) ON DELETE CASCADE,
+name TEXT NOT NULL, -- "1st & 10", "Red Zone", etc.
+description TEXT,
+category TEXT NOT NULL, -- "down_distance", "red_zone", "special"
+priority INTEGER DEFAULT 5,
+created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Game Plan Plays (junction with situational context)
 CREATE TABLE game_plan_plays (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  situation_id UUID REFERENCES game_plan_situations(id) ON DELETE CASCADE,
-  play_id UUID REFERENCES plays(id) ON DELETE CASCADE,
-  priority INTEGER NOT NULL CHECK (priority BETWEEN 1 AND 5), -- 1=primary, 5=check-down
-  notes TEXT,
-  times_used INTEGER DEFAULT 0,
-  added_at TIMESTAMPTZ DEFAULT NOW(),
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+situation_id UUID REFERENCES game_plan_situations(id) ON DELETE CASCADE,
+play_id UUID REFERENCES plays(id) ON DELETE CASCADE,
+priority INTEGER NOT NULL CHECK (priority BETWEEN 1 AND 5), -- 1=primary, 5=check-down
+notes TEXT,
+times_used INTEGER DEFAULT 0,
+added_at TIMESTAMPTZ DEFAULT NOW(),
 
-  UNIQUE(situation_id, play_id)
+UNIQUE(situation_id, play_id)
 );
-```
+
+````
 
 ### **PERFORMANCE INDEXES**
 
@@ -203,7 +110,7 @@ CREATE INDEX idx_script_plays_order ON practice_script_plays(script_id, order_nu
 -- Game plan optimization
 CREATE INDEX idx_game_plans_team_week ON game_plans(team_id, week_number DESC);
 CREATE INDEX idx_situation_plays_priority ON game_plan_plays(situation_id, priority);
-```
+````
 
 ## 🚀 **PERFORMANCE OPTIMIZATION STRATEGIES**
 

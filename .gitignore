@@ -83,7 +83,6 @@ PDF_IMPLEMENTATION_*.md
 IMPLEMENTATION_*.md
 
 # VS Code and development session artifacts
-.github/workflows/file-integrity-check.yml
 src/pages/PlaygroundPage.tsx
 src/pages/TeamDashboard.tsx
 src/pages/*-New.tsx
@@ -94,3 +93,10 @@ src/components/playbook/visual/FabricFieldCanvas.tsx
 
 # Local Netlify folder
 .netlify
+
+# Environment files
+.env
+.env.*.local
+
+# ESLint cache
+.eslintcache

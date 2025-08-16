@@ -25,6 +25,12 @@ export class TelemetryDispatcher {
     this.flushIntervalMs = opts.flushIntervalMs ?? 5000;
     this.maxBuffer = opts.maxBuffer ?? 40;
     this.onFlush = opts.onFlush;
+    if (typeof window !== "undefined") {
+      const handler = () => this.flush();
+      window.addEventListener("visibilitychange", handler);
+      window.addEventListener("pagehide", handler);
+      window.addEventListener("beforeunload", handler);
+    }
   }
 
   enqueue(event: Omit<TelemetryEvent, "ts">) {
@@ -62,5 +68,10 @@ export class TelemetryDispatcher {
   }
 }
 
-// Singleton (can be replaced in tests)
-export const telemetry = new TelemetryDispatcher();
+// Singleton (can be replaced in tests) with persistence hook
+import { persistEventsBatch } from "./persistence";
+export const telemetry = new TelemetryDispatcher({
+  onFlush: (events) => {
+    void persistEventsBatch(events);
+  },
+});

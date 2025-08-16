@@ -1,0 +1,57 @@
+/* Self-hosted font declarations for BoxCall
+   Drop WOFF2 files into public/assets/fonts and adjust URLs if needed.
+   Keep font-display: swap for good UX. */
+
+/* Inter – Regular (400) */
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/fonts/Inter-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Inter – Medium (500) */
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/fonts/Inter-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Inter – Semibold (600) */
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/fonts/Inter-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Inter – Bold (700) */
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/fonts/Inter-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Bebas Neue – Regular */
+@font-face {
+  font-family: "Bebas Neue";
+  src: url("/assets/fonts/BebasNeue-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* JetBrains Mono – Regular (400) */
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/assets/fonts/Jetbrains-Mono-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

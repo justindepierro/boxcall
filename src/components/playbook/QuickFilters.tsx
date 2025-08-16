@@ -5,7 +5,7 @@
 
 import React from "react";
 import { Button } from "../ui";
-import { X } from "lucide-react";
+import { Icon } from "../ui/Icon/Icon";
 import {
   PlaybookSearchService,
   type QuickFilter,
@@ -45,19 +45,19 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
     const colorMap = {
       red: isActive
         ? "bg-red-100 text-red-800 border-red-300 hover:bg-red-200"
-        : "bg-white text-red-600 border-red-200 hover:bg-red-50",
+        : "surface-card text-red-600 border-subtle hover:surface-subtle",
       blue: isActive
         ? "bg-blue-100 text-blue-800 border-blue-300 hover:bg-blue-200"
-        : "bg-white text-blue-600 border-blue-200 hover:bg-blue-50",
+        : "surface-card text-blue-600 border-subtle hover:surface-subtle",
       green: isActive
         ? "bg-green-100 text-green-800 border-green-300 hover:bg-green-200"
-        : "bg-white text-green-600 border-green-200 hover:bg-green-50",
+        : "surface-card text-green-600 border-subtle hover:surface-subtle",
       orange: isActive
         ? "bg-orange-100 text-orange-800 border-orange-300 hover:bg-orange-200"
-        : "bg-white text-orange-600 border-orange-200 hover:bg-orange-50",
+        : "surface-card text-orange-600 border-subtle hover:surface-subtle",
       purple: isActive
         ? "bg-purple-100 text-purple-800 border-purple-300 hover:bg-purple-200"
-        : "bg-white text-purple-600 border-purple-200 hover:bg-purple-50",
+        : "surface-card text-purple-600 border-subtle hover:surface-subtle",
     };
     return colorMap[filter.color];
   };
@@ -80,13 +80,24 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
               <span className="text-sm">{filter.icon}</span>
               <span>{filter.label}</span>
               {isActive && (
-                <X
-                  className="h-3 w-3 ml-1 hover:bg-black hover:bg-opacity-10 rounded-full p-0.5"
+                <span
+                  role="button"
+                  tabIndex={0}
+                  className="inline-flex items-center justify-center ml-1 rounded-full hover:bg-black hover:bg-opacity-10 p-0.5"
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleFilter(filter.id);
                   }}
-                />
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggleFilter(filter.id);
+                    }
+                  }}
+                >
+                  <Icon name="close" className="h-3 w-3" />
+                </span>
               )}
             </Button>
           );

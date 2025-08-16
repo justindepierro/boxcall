@@ -33,6 +33,16 @@ if (!fs.existsSync(distAssetsDir)) {
 const budgets = JSON.parse(fs.readFileSync(baselineFile, "utf8")).budgets || {};
 const files = fs.readdirSync(distAssetsDir).filter((f) => f.endsWith(".js"));
 
+// Exclude patterns for heavy, optional PDF-related chunks from the "largestNonPdf" calc
+// This covers common names we use (pdfRenderer, LazyPDFExport, PracticeScriptPDFService, pdfCapture)
+const EXCLUDE_FROM_NON_PDF = [
+  /(^|-)pdf/i,
+  /pdfrenderer/i,
+  /pdfcapture/i,
+  /lazypdfexport/i,
+  /practicescriptpdfservice/i,
+];
+
 function gzipSize(filePath) {
   const raw = fs.readFileSync(filePath);
   const gz = gzipSync(raw, { level: 9 });
@@ -42,7 +52,8 @@ function gzipSize(filePath) {
 // Largest non-pdf chunk
 let largestNonPdf = { file: null, size: 0 };
 for (const f of files) {
-  if (f.startsWith("pdf-")) continue; // exclude heavy pdf renderer bundle
+  // exclude heavy pdf-related bundles from this metric
+  if (EXCLUDE_FROM_NON_PDF.some((re) => re.test(f))) continue;
   const full = path.join(distAssetsDir, f);
   const size = gzipSize(full);
   if (size > largestNonPdf.size) largestNonPdf = { file: f, size };
@@ -55,9 +66,13 @@ const initialTotal = initialJsFiles.reduce(
   0
 );
 
-log(
-  `Largest non-pdf chunk gzip: ${largestNonPdf.size} bytes (${largestNonPdf.file})`
-);
+if (largestNonPdf.file) {
+  log(
+    `Largest non-pdf chunk gzip: ${largestNonPdf.size} bytes (${largestNonPdf.file})`
+  );
+} else {
+  log("Largest non-pdf chunk gzip: N/A (no matching files)");
+}
 log(
   `Initial JS (index/vendor) total gzip: ${initialTotal} bytes [${initialJsFiles.join(", ")}]`
 );

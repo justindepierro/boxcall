@@ -43,7 +43,7 @@
 ### **New Logo Component**
 
 ```tsx
-import { Logo, AuthLogo, NavbarLogo } from "@/components/ui/Logo";
+import { Logo, AuthLogo, NavbarLogo } from "@components/ui/Logo";
 
 // Professional usage:
 <Logo variant="icon" size="md" color="brand" />      // Standard icon
@@ -55,7 +55,7 @@ import { Logo, AuthLogo, NavbarLogo } from "@/components/ui/Logo";
 ### **Icon System Integration**
 
 ```tsx
-import { Icon } from "@/components/ui/Icon";
+import { Icon } from "@components/ui/Icon";
 
 // BoxCall brand icon (currently Target placeholder):
 <Icon name="boxcall" size="md" color="jade" />;

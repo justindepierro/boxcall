@@ -168,7 +168,7 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
   }
 
   return (
-    <div className="mb-6 bg-jade-50 border border-jade-200 rounded-lg p-4">
+    <div className="mb-6 surface-subtle border border-subtle rounded-lg p-4">
       <div className="flex items-center justify-between mb-3">
         <Typography
           variant="headline-sm"
@@ -192,9 +192,9 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
         </Typography>
         <Button
           onClick={onToggle}
-          variant="ghost"
+          variant="brandLink"
           size="xs"
-          className="text-jade-600 hover:text-jade-700 p-1 h-auto w-auto"
+          className="p-1 h-auto w-auto"
         >
           <svg
             className="w-5 h-5"
@@ -214,7 +214,11 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
 
       <div className="space-y-3">
         <div>
-          <Typography variant="body-sm" as="label" className="block font-medium text-jade-700 mb-2">
+          <Typography
+            variant="body-sm"
+            as="label"
+            className="block font-medium text-jade-700 mb-2"
+          >
             Enter play details separated by | or comma:
           </Typography>
           <input
@@ -223,7 +227,7 @@ export const QuickEntry: React.FC<QuickEntryProps> = ({
             onChange={(e) => setQuickInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Power O | I-Form | Run | 21 Personnel"
-            className="playbuilder-input w-full px-4 py-3 bg-white border-2 border-jade-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 text-base"
+            className="playbuilder-input w-full px-4 py-3 surface-card border-2 border-jade-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 text-base"
             autoFocus
           />
         </div>

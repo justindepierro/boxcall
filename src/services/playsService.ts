@@ -223,6 +223,9 @@ export class PlaysService {
             .duplicate_key === "string"
             ? (playData as unknown as { duplicate_key?: string }).duplicate_key
             : undefined,
+
+        // Media
+        diagram_url: playData.diagram_url || null,
       };
 
       console.log("🎯 Creating play in database:", newPlay);
@@ -392,6 +395,9 @@ export class PlaysService {
         // Metadata
         is_archived: updates.is_archived,
         updated_at: new Date(),
+
+        // Media
+        diagram_url: updates.diagram_url,
       };
 
       // Remove undefined values
@@ -441,6 +447,45 @@ export class PlaysService {
       }
     } catch (error) {
       console.error("❌ PlaysService.deletePlay failed:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Batch archive multiple plays in one request for efficiency
+   */
+  static async deletePlays(ids: string[]): Promise<void> {
+    if (!ids.length) return;
+    try {
+      const { error } = await supabase
+        .from("plays")
+        .update({ is_archived: true, updated_at: new Date() })
+        .in("id", ids);
+
+      if (error) {
+        console.error("❌ Error batch archiving plays:", error);
+        throw new Error(`Failed to archive plays: ${error.message}`);
+      }
+    } catch (error) {
+      console.error("❌ PlaysService.deletePlays failed:", error);
+      throw error;
+    }
+  }
+
+  /** Restore previously archived plays */
+  static async restorePlays(ids: string[]): Promise<void> {
+    if (!ids.length) return;
+    try {
+      const { error } = await supabase
+        .from("plays")
+        .update({ is_archived: false, updated_at: new Date() })
+        .in("id", ids);
+      if (error) {
+        console.error("❌ Error restoring plays:", error);
+        throw new Error(`Failed to restore plays: ${error.message}`);
+      }
+    } catch (error) {
+      console.error("❌ PlaysService.restorePlays failed:", error);
       throw error;
     }
   }

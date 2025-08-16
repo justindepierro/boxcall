@@ -9,6 +9,15 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      # Build/runtime env
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+      # Force Lightning CSS minifier to avoid PostCSS hashing regression in deploy
+      MINIFY_CSS: lightningcss
+      # Netlify secrets (set in repo Settings → Secrets and variables → Actions)
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
     steps:
       - name: Checkout code
@@ -17,7 +26,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          # Use repo's Node version for parity with local/CI builds
+          node-version-file: '.nvmrc'
           cache: "npm"
 
       - name: Install dependencies
@@ -25,12 +35,15 @@ jobs:
 
       - name: Build project
         run: npm run build
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Skip Netlify deploy (no secrets or external PR)
+        if: ${{ !(env.NETLIFY_AUTH_TOKEN != '' && env.NETLIFY_SITE_ID != '' && ((github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository))) }}
+        run: |
+          echo "Skipping Netlify deploy: secrets missing or not an internal main push/PR."
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
+        if: ${{ env.NETLIFY_AUTH_TOKEN != '' && env.NETLIFY_SITE_ID != '' && ((github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
         with:
           publish-dir: "./dist"
           production-branch: main
@@ -40,6 +53,5 @@ jobs:
           enable-commit-comment: true
           overwrites-pull-request-comment: true
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_PROJECT_ID }}
-        timeout-minutes: 1
+          NETLIFY_AUTH_TOKEN: ${{ env.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ env.NETLIFY_SITE_ID }}

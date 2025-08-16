@@ -48,10 +48,15 @@ if (current !== expected) {
       }
     }
   }
+  if (diffCount === 0) {
+    // Only formatting/newline differences that normalize away
+    console.log("generated-tokens.css is up-to-date.");
+    process.exit(0);
+  }
   console.error(
     `generated-tokens.css drift detected (first ${diffs.length} mismatches shown, total ${diffCount}).`
   );
-  console.error(diffs.join("\n"));
+  if (diffs.length) console.error(diffs.join("\n"));
   process.exit(1);
 }
 console.log("generated-tokens.css is up-to-date.");

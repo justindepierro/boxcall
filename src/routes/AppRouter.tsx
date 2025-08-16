@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { Button } from "../components/ui";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import DiagramPaneRoute from "../components/playbook/DiagramPaneRoute";
 import { AuthProvider } from "../components/auth";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system/Typography";
@@ -229,6 +230,15 @@ export const AppRouter: React.FC = () => {
                 <Suspense fallback={<RouteLoadingSpinner />}>
                   <LazyPlaybookPage />
                 </Suspense>
+              </ProtectedRoute>
+            }
+          />
+          {/* Diagram pane lightweight route */}
+          <Route
+            path="/playbook/diagram"
+            element={
+              <ProtectedRoute>
+                <DiagramPaneRoute />
               </ProtectedRoute>
             }
           />

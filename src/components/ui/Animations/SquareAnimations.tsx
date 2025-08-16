@@ -20,13 +20,13 @@ export const SquareProgressBar: React.FC<ProgressBarProps> = ({
   const getBarColors = () => {
     switch (variant) {
       case "jade":
-        return "bg-jade-500";
+        return "surface-subtle0";
       case "navy":
         return "bg-navy-500";
       case "gray":
         return "bg-gray-500";
       default:
-        return "bg-jade-500";
+        return "surface-subtle0";
     }
   };
   const getBackgroundColors = () => {
@@ -188,13 +188,13 @@ export const SquarePulseIndicator: React.FC<PulseIndicatorProps> = ({
   const getColors = () => {
     switch (variant) {
       case "jade":
-        return "bg-jade-500";
+        return "surface-subtle0";
       case "navy":
         return "bg-navy-500";
       case "red":
-        return "bg-red-500";
+        return "surface-subtle0";
       default:
-        return "bg-jade-500";
+        return "surface-subtle0";
     }
   };
   return (
@@ -216,14 +216,14 @@ export const FootballLoadingSpinner: React.FC<{ message?: string }> = ({
     <div className="flex flex-col items-center justify-center space-y-4 p-8">
       <div className="relative">
         {/* Spinning football field */}
-        <div className="w-16 h-16 border-4 border-jade-200 dark:border-jade-800 rounded-sm animate-spin">
+        <div className="w-16 h-16 border-4 border-subtle dark:border-jade-800 rounded-sm animate-spin">
           <div className="absolute inset-2 bg-green-100 dark:bg-green-900/20 rounded-sm flex items-center justify-center">
             <Icon name="award" className="w-5 h-5" />
           </div>
         </div>
         {/* Pulsing yard lines */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-12 h-0.5 bg-jade-500 animate-pulse" />
+          <div className="w-12 h-0.5 surface-subtle0 animate-pulse" />
         </div>
       </div>
       <div className="text-center">

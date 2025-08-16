@@ -299,10 +299,10 @@ export const JoinTeam: React.FC = () => {
               </Typography>
               <Button
                 type="button"
-                variant="link"
+                variant="brandLink"
                 size="sm"
                 onClick={() => setCurrentStep("search")}
-                className="text-jade-600 hover:text-brand-jade-dark"
+                className=""
               >
                 Search for your team instead
               </Button>
@@ -421,9 +421,9 @@ export const JoinTeam: React.FC = () => {
                 </Typography>
                 <Button
                   type="button"
-                  variant="link"
+                  variant="brandLink"
                   onClick={() => setCurrentStep("invite-code")}
-                  className="text-jade-600 hover:text-brand-jade-dark"
+                  className=""
                 >
                   Use an invite code instead
                 </Button>
@@ -450,7 +450,7 @@ export const JoinTeam: React.FC = () => {
               request is approved.
             </Typography>
 
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+            <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg p-4 mb-6">
               <Typography
                 variant="body-sm"
                 className="text-blue-700 dark:text-blue-300"
@@ -581,12 +581,7 @@ export const JoinTeam: React.FC = () => {
               Need help joining your team?
             </Typography>
             <div className="space-x-4">
-              <Button
-                type="button"
-                variant="link"
-                size="sm"
-                className="text-jade-600 hover:text-brand-jade-dark"
-              >
+              <Button type="button" variant="brandLink" size="sm" className="">
                 Contact Support
               </Button>
               <span className="text-gray-300">•</span>
@@ -595,7 +590,7 @@ export const JoinTeam: React.FC = () => {
                 variant="link"
                 size="sm"
                 onClick={() => navigate("/create-team")}
-                className="text-jade-600 hover:text-brand-jade-dark"
+                className=""
               >
                 Create a New Team Instead
               </Button>

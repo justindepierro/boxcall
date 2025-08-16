@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { MapPin } from "lucide-react";
+import { Icon as LegacyIcon } from "../ui/Icon/Icon";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEvents } from "../../state/calendar/hooks";
@@ -8,7 +8,7 @@ import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
-import Icon from "../ui/Icon/Icon";
+import { ModularIcon as Icon } from "../ui/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../ui/Tag";
 
 interface PersonalCalendarProps {
@@ -99,7 +99,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
               variant="secondary"
               size="xs"
               onClick={() => setShowQuickAdd(!showQuickAdd)}
-              className="border-jade-200 text-jade-600 hover:text-jade-700"
+              className="border-subtle text-jade-600 hover:text-jade-700"
             >
               + Add
             </Button>
@@ -108,7 +108,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
         {/* Quick Add Event Form */}
         {showQuickAdd && (
-          <div className="mb-4 p-3 bg-jade-50 rounded-lg border border-jade-200">
+          <div className="mb-4 p-3 surface-subtle rounded-lg border border-subtle">
             <div className="flex space-x-2">
               <input
                 type="text"
@@ -135,7 +135,12 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
         {/* Content */}
         <div className="flex-1 overflow-hidden">
-          <div className="overflow-y-auto">
+          <div
+            className="overflow-y-auto focus-scroll"
+            role="region"
+            aria-label="Upcoming events list"
+            tabIndex={0}
+          >
             <div className="space-y-tight">
               {upcomingEvents.length === 0 ? (
                 <div className="text-center py-8">
@@ -206,9 +211,10 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                           variant="body-xs"
                           className="text-text-muted truncate"
                         >
-                          <MapPin
-                            aria-label="location"
-                            className="inline h-4 w-4 align-middle text-current"
+                          <LegacyIcon
+                            name="map-pin"
+                            size="sm"
+                            className="inline align-middle"
                           />{" "}
                           {event.location}
                         </Typography>
@@ -254,9 +260,9 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                     {selectedEvent.type}
                   </Tag>
                   {selectedEvent.is_home && (
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                    <Tag variant="success" size="sm">
                       Home
-                    </span>
+                    </Tag>
                   )}
                 </div>
 

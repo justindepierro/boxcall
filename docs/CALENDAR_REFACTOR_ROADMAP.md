@@ -1,55 +1,52 @@
-# Calendar Refactor & Enhancement Roadmap
+# Calendar Refactor Roadmap (Archived Summary)
 
-Goal: Transform the Calendar feature into a modular, scalable, accessible scheduling platform supporting events (practice, game, meeting, film, training, team event), scripts/gameplans, tagging, comments, RSVP, recurrence, export (ICS / WebCal), and mobile/calendar integration—while aligning with the design system & theming.
+Original detailed multi-phase roadmap archived to reduce doc bulk. Key retained points:
 
----
+- Modular domain layer (`domain/calendar/*`) with schema validation (zod) and recurrence expansion.
+- Incremental migration strategy (no big bang) with always-green tests.
+- Accessibility & keyboard support prioritized early.
+- Semantic theming + design system primitives only.
+- Telemetry + performance instrumentation baked into iteration.
 
-## Guiding Principles
+Next Active Focus (if revived): finalize recurrence rules + RSVP model, then ICS export.
 
-1. Separation of concerns (domain / infra / state / UI / adapter).
-2. Incremental, always‑green migration (no big bang).
-3. Strong typing & schema validation boundaries (zod).
-4. Optimistic UX + offline resilience (React Query cache strategy).
-5. Accessibility & keyboard coverage from early phases.
-6. Semantic theming only (no raw gray/navy utilities).
-7. Observability: log + measure usage, performance, error rates.
-
----
-
-## High-Level Architecture End State
+Recovery for full phased plan:
 
 ```
-src/
-  domain/calendar/        # Pure types, rules, recurrence expansion
-    types.ts
-    schema.ts
-    rules.ts
+git log --follow -- docs/CALENDAR_REFACTOR_ROADMAP.md
+git show <commit>:docs/CALENDAR_REFACTOR_ROADMAP.md > /tmp/CALENDAR_ROADMAP_FULL.md
+```
+
+<!-- allow-empty -->
+
     recurrence.ts
-  infra/calendar/         # API adapters, ICS generation, RSVP, comments
-    api.ts
-    ics.ts
-    rsvp.ts
-    comments.ts
-  state/                  # React Query hooks
-    calendar/
-      queryKeys.ts        # Query key factory (implemented)
-      hooks.ts            # React Query hooks (events, event, create/update/delete, RSVP, comments)
-  adapters/fullcalendar/
-    FullCalendarAdapter.ts
-  components/calendar/
-    CalendarShell.tsx
-    CalendarToolbar.tsx
-    ViewSwitcher.tsx
-    CalendarFiltersPanel.tsx
-    CalendarStats.tsx
-    EventModal/
-      index.ts
-      EventForm.tsx
-      EventDetails.tsx
-    RSVPPanel.tsx
-    CommentThread.tsx
-    PracticeLaunchButton.tsx
-    GamePlanLaunchButton.tsx
+
+infra/calendar/ # API adapters, ICS generation, RSVP, comments
+api.ts
+ics.ts
+rsvp.ts
+comments.ts
+state/ # React Query hooks
+calendar/
+queryKeys.ts # Query key factory (implemented)
+hooks.ts # React Query hooks (events, event, create/update/delete, RSVP, comments)
+adapters/fullcalendar/
+FullCalendarAdapter.ts
+components/calendar/
+CalendarShell.tsx
+CalendarToolbar.tsx
+ViewSwitcher.tsx
+CalendarFiltersPanel.tsx
+CalendarStats.tsx
+EventModal/
+index.ts
+EventForm.tsx
+EventDetails.tsx
+RSVPPanel.tsx
+CommentThread.tsx
+PracticeLaunchButton.tsx
+GamePlanLaunchButton.tsx
+
 ```
 
 ---
@@ -341,6 +338,7 @@ Legend: [x] done, [~] in progress, [ ] pending
 ## Phase Kickoff Checklist Template
 
 ```
+
 1. Confirm scope vs out-of-scope list.
 2. Create tracking issue(s) & link to roadmap section.
 3. Add metrics instrumentation (if new dimension introduced).
@@ -348,6 +346,7 @@ Legend: [x] done, [~] in progress, [ ] pending
 5. Execute tasks (small PRs, feature flags if needed).
 6. Validate: tests + manual QA script.
 7. Update roadmap status & close issues.
+
 ```
 
 ---
@@ -424,3 +423,4 @@ Contributors: Design System, Backend (export feeds, recurrence persistence), QA 
 ## Definition of Done (Overall Initiative)
 
 All phases 0–9 exit criteria met, baseline metrics improved (perf, a11y), feature coverage (RSVP, comments, scripts integration, recurrence, export) stable in production for at least one iteration with <1% error rate and documented runbooks.
+```

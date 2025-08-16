@@ -1,5 +1,5 @@
 import { Typography } from "../../design-system";
-import { FlaskConical, Inbox, RefreshCw, Search, Trash2 } from "lucide-react";
+import { Icon } from "../../ui/Icon/Icon";
 /**
  * DevTools Overview Tab
  * System status and quick actions
@@ -130,8 +130,8 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         <div className="grid grid-cols-2 gap-2">
           <Button size="xs" variant="secondary" onClick={onTestDatabase}>
             <span className="mr-1">
-              <Search
-                aria-label="search"
+              <Icon
+                name="search"
                 className="inline h-4 w-4 align-middle text-current"
               />
             </span>{" "}
@@ -139,8 +139,8 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           </Button>
           <Button size="xs" variant="success" onClick={onExportState}>
             <span className="mr-1">
-              <Inbox
-                aria-label="inbox"
+              <Icon
+                name="inbox"
                 className="inline h-4 w-4 align-middle text-current"
               />
             </span>{" "}
@@ -148,8 +148,8 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           </Button>
           <Button size="xs" variant="primary" onClick={onReloadData}>
             <span className="mr-1">
-              <RefreshCw
-                aria-label="refresh"
+              <Icon
+                name="refresh-cw"
                 className="inline h-4 w-4 align-middle text-current"
               />
             </span>{" "}
@@ -157,8 +157,8 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           </Button>
           <Button size="xs" variant="danger" onClick={onClearData}>
             <span className="mr-1">
-              <Trash2
-                aria-label="trash"
+              <Icon
+                name="delete"
                 className="inline h-4 w-4 align-middle text-current"
               />
               ️
@@ -172,8 +172,8 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             className="col-span-2"
           >
             <span className="mr-1">
-              <FlaskConical
-                aria-label="experiment"
+              <Icon
+                name="flask-conical"
                 className="inline h-4 w-4 align-middle text-current"
               />
             </span>{" "}

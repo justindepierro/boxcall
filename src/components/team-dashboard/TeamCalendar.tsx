@@ -129,7 +129,10 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
         >
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
-              <Typography variant="body-sm" as="label" className="block font-medium mb-1"
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium mb-1"
                 htmlFor="ev-title"
               >
                 Title
@@ -146,7 +149,10 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 bc-grid-gap">
               <div>
-                <Typography variant="body-sm" as="label" className="block font-medium mb-1"
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-1"
                   htmlFor="ev-type"
                 >
                   Type
@@ -167,7 +173,10 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
                 />
               </div>
               <div>
-                <Typography variant="body-sm" as="label" className="block font-medium mb-1"
+                <Typography
+                  variant="body-sm"
+                  as="label"
+                  className="block font-medium mb-1"
                   htmlFor="ev-start"
                 >
                   Starts At
@@ -184,7 +193,10 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
               </div>
             </div>
             <div>
-              <Typography variant="body-sm" as="label" className="block font-medium mb-1"
+              <Typography
+                variant="body-sm"
+                as="label"
+                className="block font-medium mb-1"
                 htmlFor="ev-location"
               >
                 Location (optional)
