@@ -42,8 +42,10 @@ Actions
   - [~] src/components/calendar/** (specific dup/unused exports listed by knip)
 
 - Practice
-  - [~] src/components/practice/**
-  - [~] src/services/pdf/** and practice PDF helpers
+  - [R] src/components/practice/components/MemoizedPracticeTable.tsx (unreferenced, removed)
+  - [R] src/components/practice/components/PracticeBlocksList.tsx (unreferenced, removed)
+  - [R] src/components/practice/components/index.ts (unreferenced barrel, removed)
+  - [R] src/components/practice/components/modals/index.ts (unreferenced barrel, removed)
 
 Actions
 - [ ] Verify not reachable via routes or lazy imports
