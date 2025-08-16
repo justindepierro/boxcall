@@ -73,6 +73,8 @@ Actions
 - [~] src/pages/**/*.tsx (BoxCall, DashboardPage, DiagnosticsPage, TeamsPage, etc.)
 - [R] src/components/ui/Popover/Popover.tsx (unreferenced, removed)
 - [R] src/pages/index.ts (unreferenced page aggregator, removed)
+- [R] src/components/ui/SegmentedControl/SegmentedControl.tsx (unreferenced, removed)
+- [R] src/components/ui/Surface/Surface.tsx (unreferenced, removed)
 
 Actions
 - [ ] Cross-check with actual router config and LazyRoutes
