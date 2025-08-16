@@ -17,7 +17,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          # Use repo's Node version for parity with local/CI builds
+          node-version-file: '.nvmrc'
           cache: "npm"
 
       - name: Install dependencies
@@ -28,6 +29,8 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          # Force Lightning CSS minifier to avoid PostCSS hashing regression in deploy
+          MINIFY_CSS: lightningcss
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
