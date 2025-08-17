@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import { ROUTES } from "./paths";
 
 import { useAuthProfile } from "../app/auth-store";
-import { isRoleAllowed } from "./authorize";
+import { } from "./authorize";
 // UI handled via GuardUI
 import { LoadingScreen, AccessDenied } from "./GuardUI";
 import { useAuthGate } from "./useAuthGate";
@@ -39,13 +39,12 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
   if (!profile) {
     return <Navigate to={fallbackTo || ROUTES.DASHBOARD} replace />;
   }
-  // Check if user's role is in the allowed roles
-  if (!isRoleAllowed(profile.role, allowedRoles)) {
-    return (
-      <AccessDenied
-        message={"You don't have permission to access this page."}
-      />
-    );
+  // Check via centralized authorize()
+  // Note: This only checks app-level role; no team context here
+  const role = profile.role as NonNullable<typeof profile.role>;
+  const allowed = role ? allowedRoles.includes(role) : false;
+  if (!allowed) {
+    return <AccessDenied message={"You don't have permission to access this page."} />;
   }
   // Access granted, render the protected content
   return <>{children}</>;
