@@ -90,7 +90,7 @@ Files (planned)
 Tasks
 - [x] Active route highlighting via React Router
 - [x] Auto‑expand parents of active item
-- [ ] Favorites/pins (persisted)
+- [x] Favorites/pins (persisted)
 - [x] Tests for deep linking and expansion sync (selectors unit tests)
 
 ---
@@ -162,8 +162,8 @@ Tasks
 
 ## Next steps (short‑term)
 
-- [ ] Favorites (pin/unpin) UI and persistence; show pinned group at top
-- [ ] Wire Favorites (pin/unpin) UI and persistence; show pinned group at top
-- [ ] Convert NavBar items to React Router Links for SPA consistency
-- [ ] Add tests: deep‑linking auto‑expand (component level), keyboard a11y, aria‑current on Links
+- [x] Convert NavBar items to React Router Links for SPA consistency
+- [ ] Add tests: deep‑linking auto‑expand (component level), keyboard a11y, aria‑current on Links in both Sidebar and NavBar
+- [ ] Strict memoization of Sidebar items; measure renders (Phase 4)
+- [ ] Basic RTL/Tailwind tokens; CSS‑only transitions (Phase 2)
 - [ ] Run `npm run audit:legacy:nav` and plan removal of flagged wrappers/routes

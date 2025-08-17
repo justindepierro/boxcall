@@ -68,8 +68,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     id: item.id || item.href || `nav-item-${index}`,
     label: item.label,
     href: item.href,
-    onClick: () => (window.location.href = item.href),
-    active: window.location.pathname === item.href,
     importer: getRouteImporter(item.href),
   }));
 

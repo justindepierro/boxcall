@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 import { prefetchOnHover } from "../../../routes/prefetch";
 import { Button } from "../Button";
@@ -68,7 +69,7 @@ const NavBarItem: React.FC<{
   onItemClick?: (item: NavBarItem) => void;
 }> = ({ item, isMobile = false, onItemClick }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const anchorRef = useRef<HTMLDivElement | null>(null);
+  const anchorRef = useRef<HTMLAnchorElement | HTMLDivElement | null>(null);
   useEffect(() => {
     const enabled = String(import.meta.env.VITE_PREFETCH_ROUTES) === "true";
     if (!enabled || !item.importer || !anchorRef.current) return;
@@ -78,29 +79,26 @@ const NavBarItem: React.FC<{
     if (item.disabled) return;
     if (item.children && item.children.length > 0) {
       setIsDropdownOpen(!isDropdownOpen);
-    } else {
-      item.onClick?.();
-      onItemClick?.(item);
     }
   };
   const hasDropdown = item.children && item.children.length > 0;
 
   return (
     <div className={`relative ${isMobile ? "block" : "inline-block"}`}>
-      <div
-        ref={anchorRef}
-        role="button"
-        tabIndex={0}
-        aria-disabled={item.disabled}
-        className={getNavItemStyles(item)}
-        onClick={handleClick}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") handleClick();
-        }}
-      >
-        {item.icon && <span className="mr-2 flex-shrink-0">{item.icon}</span>}
-        <span>{item.label}</span>
-        {hasDropdown && (
+      {hasDropdown ? (
+        <div
+          ref={anchorRef as React.MutableRefObject<HTMLDivElement | null>}
+          role="button"
+          tabIndex={0}
+          aria-disabled={item.disabled}
+          className={getNavItemStyles(item)}
+          onClick={handleClick}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") handleClick();
+          }}
+        >
+          {item.icon && <span className="mr-2 flex-shrink-0">{item.icon}</span>}
+          <span>{item.label}</span>
           <svg
             className={`ml-0.5 h-4 w-4 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
             fill="none"
@@ -115,9 +113,27 @@ const NavBarItem: React.FC<{
               d="M19 9l-7 7-7-7"
             />
           </svg>
-        )}
-        {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
-      </div>
+          {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
+        </div>
+      ) : item.href ? (
+        <Link
+          ref={anchorRef as React.MutableRefObject<HTMLAnchorElement | null>}
+          to={item.href}
+          className={getNavItemStyles(item)}
+          aria-current={item.active ? "page" : undefined}
+          onClick={() => onItemClick?.(item)}
+        >
+          {item.icon && <span className="mr-2 flex-shrink-0">{item.icon}</span>}
+          <span>{item.label}</span>
+          {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
+        </Link>
+      ) : (
+        <div className={getNavItemStyles(item)} aria-disabled={item.disabled}>
+          {item.icon && <span className="mr-2 flex-shrink-0">{item.icon}</span>}
+          <span>{item.label}</span>
+          {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
+        </div>
+      )}
       {/* Dropdown Menu */}
       {hasDropdown && isDropdownOpen && (
         <div
@@ -127,36 +143,60 @@ const NavBarItem: React.FC<{
         `}
         >
           {item.children?.map((childItem, index) => (
-            <div
-              key={childItem.id || `child-${index}`}
-              className={`
-                block px-4 py-2 text-sm cursor-pointer
-                ${
-                  childItem.disabled
-                    ? "text-gray-400 dark:text-gray-500"
-                    : "text-gray-700 dark:text-gray-300 surface-subtle-hover dark:hover:bg-gray-700 dark:hover:text-text-inverse"
-                }
-              `}
-              onClick={() => {
-                if (!childItem.disabled) {
-                  childItem.onClick?.();
+            childItem.href && !childItem.disabled ? (
+              <Link
+                key={childItem.id || `child-${index}`}
+                to={childItem.href}
+                className={`block px-4 py-2 text-sm cursor-pointer text-gray-700 dark:text-gray-300 surface-subtle-hover dark:hover:bg-gray-700 dark:hover:text-text-inverse`}
+                onClick={() => {
                   onItemClick?.(childItem);
                   setIsDropdownOpen(false);
-                }
-              }}
-            >
-              <div className="flex items-center">
-                {childItem.icon && (
-                  <span className="mr-2 flex-shrink-0">{childItem.icon}</span>
-                )}
-                <span>{childItem.label}</span>
-                {childItem.badge && (
-                  <span className={`ml-auto ${getBadgeStyles()}`}>
-                    {childItem.badge}
-                  </span>
-                )}
+                }}
+              >
+                <div className="flex items-center">
+                  {childItem.icon && (
+                    <span className="mr-2 flex-shrink-0">{childItem.icon}</span>
+                  )}
+                  <span>{childItem.label}</span>
+                  {childItem.badge && (
+                    <span className={`ml-auto ${getBadgeStyles()}`}>
+                      {childItem.badge}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            ) : (
+              <div
+                key={childItem.id || `child-${index}`}
+                className={`
+                  block px-4 py-2 text-sm cursor-pointer
+                  ${
+                    childItem.disabled
+                      ? "text-gray-400 dark:text-gray-500"
+                      : "text-gray-700 dark:text-gray-300 surface-subtle-hover dark:hover:bg-gray-700 dark:hover:text-text-inverse"
+                  }
+                `}
+                onClick={() => {
+                  if (!childItem.disabled) {
+                    childItem.onClick?.();
+                    onItemClick?.(childItem);
+                    setIsDropdownOpen(false);
+                  }
+                }}
+              >
+                <div className="flex items-center">
+                  {childItem.icon && (
+                    <span className="mr-2 flex-shrink-0">{childItem.icon}</span>
+                  )}
+                  <span>{childItem.label}</span>
+                  {childItem.badge && (
+                    <span className={`ml-auto ${getBadgeStyles()}`}>
+                      {childItem.badge}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
+            )
           ))}
         </div>
       )}
@@ -173,6 +213,7 @@ export const NavBar: React.FC<NavBarProps> = ({
   showMobileMenu = true,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { pathname } = useLocation();
   const mergedActions = actions ? (
     <div className="flex items-center gap-2">
       {actions}
@@ -205,7 +246,7 @@ export const NavBar: React.FC<NavBarProps> = ({
               {items.map((item) => (
                 <NavBarItem
                   key={`desktop-${item.id}`}
-                  item={item}
+                  item={{ ...item, active: item.href ? pathname === item.href : item.active }}
                   onItemClick={handleItemClick}
                 />
               ))}
@@ -256,7 +297,7 @@ export const NavBar: React.FC<NavBarProps> = ({
               {items.map((item) => (
                 <NavBarItem
                   key={`mobile-${item.id}`}
-                  item={item}
+                  item={{ ...item, active: item.href ? pathname === item.href : item.active }}
                   isMobile={true}
                   onItemClick={handleItemClick}
                 />
