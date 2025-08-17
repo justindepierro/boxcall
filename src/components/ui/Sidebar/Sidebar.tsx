@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "../Button";
 import { useSidebarState } from "../../../hooks/useSidebarState";
 import { Link, useLocation } from "react-router-dom";
+import { Tooltip } from "../Tooltip/Tooltip";
+import { UserPreferencesService } from "../../../services/userPreferencesService";
 
 import type { ReactNode } from "react";
 
@@ -104,68 +106,7 @@ const getBadgeStyles = () => {
     bg-jade-600 dark:bg-jade-600 text-white
   `;
 };
-const SidebarItem: React.FC<{
-  item: SidebarItem;
-  level?: number;
-  onItemClick?: (item: SidebarItem) => void;
-}> = ({ item, level = 0, onItemClick }) => {
-  const [isExpanded, setIsExpanded] = React.useState(false);
-  if (item.divider) {
-    return <div className={getSidebarItemStyles(item, level)} />;
-  }
-  const handleClick = () => {
-    if (item.disabled) return;
-    if (item.children && item.children.length > 0) {
-      setIsExpanded(!isExpanded);
-    } else {
-      item.onClick?.();
-      onItemClick?.(item);
-    }
-  };
-  const hasChildren = item.children && item.children.length > 0;
-  return (
-    <div>
-      <div className={getSidebarItemStyles(item, level)} onClick={handleClick}>
-        {/* Icon area with fixed width for alignment */}
-        <div className="flex items-center justify-start w-9 flex-shrink-0">
-          {item.icon && item.icon}
-        </div>
-        <span className="flex-1 text-left">{item.label}</span>
-        {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
-        {hasChildren && (
-          <svg
-            className={`ml-2 h-4 w-4 transition-transform duration-200 ${
-              isExpanded ? "rotate-90" : ""
-            }`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        )}
-      </div>
-      {/* Children */}
-      {hasChildren && isExpanded && (
-        <div>
-          {item.children?.map((childItem) => (
-            <SidebarItem
-              key={childItem.id}
-              item={childItem}
-              level={level + 1}
-              onItemClick={onItemClick}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
+// (Legacy nested SidebarItem component removed; main Sidebar renders items directly)
 export const Sidebar: React.FC<SidebarProps> = ({
   items,
   isOpen,
@@ -182,6 +123,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [focusIndex, setFocusIndex] = useState<number>(0);
   const itemRefs = useRef<(HTMLAnchorElement | HTMLDivElement | null)[]>([]);
+  const showTooltips = UserPreferencesService.loadPreferences().ui.showTooltips;
 
   // Build a list of focusable indices aligned with rendered items (skip dividers/disabled)
   const focusableMap = useMemo(() => {
@@ -377,12 +319,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
               return (
               <div key={item.id} className="px-2">
                 {item.href ? (
-                  <Link
+                  <Tooltip
+                    content={item.label}
+                    disabled={state.mode !== "rail" || !showTooltips}
+                    placement="right"
+                  >
+                    <Link
                     to={item.href}
                     className={getSidebarItemStyles(styledItem)}
                     role="menuitem"
                     aria-current={isActive ? "page" : undefined}
-                    title={state.mode === "rail" ? item.label : undefined}
+                      title={undefined}
                     tabIndex={focusKey >= 0 ? (focusIndex === focusKey ? 0 : -1) : -1}
                     ref={(el) => {
                       if (focusKey >= 0) itemRefs.current[focusKey] = el;
@@ -400,30 +347,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         )}
                       </>
                     )}
-                  </Link>
+                    </Link>
+                  </Tooltip>
                 ) : (
-                  <div
-                    className={getSidebarItemStyles(styledItem)}
-                    role="menuitem"
-                    aria-current={isActive ? "page" : undefined}
-                    title={state.mode === "rail" ? item.label : undefined}
-                    tabIndex={focusKey >= 0 ? (focusIndex === focusKey ? 0 : -1) : -1}
-                    ref={(el) => {
-                      if (focusKey >= 0) itemRefs.current[focusKey] = el;
-                    }}
+                  <Tooltip
+                    content={item.label}
+                    disabled={state.mode !== "rail" || !showTooltips}
+                    placement="right"
                   >
-                    <div className="flex items-center justify-start w-9 flex-shrink-0">
-                      {item.icon}
+                    <div
+                      className={getSidebarItemStyles(styledItem)}
+                      role="menuitem"
+                      aria-current={isActive ? "page" : undefined}
+                      title={undefined}
+                      tabIndex={focusKey >= 0 ? (focusIndex === focusKey ? 0 : -1) : -1}
+                      ref={(el) => {
+                        if (focusKey >= 0) itemRefs.current[focusKey] = el;
+                      }}
+                    >
+                      <div className="flex items-center justify-start w-9 flex-shrink-0">
+                        {item.icon}
+                      </div>
+                      {state.mode !== "rail" && (
+                        <>
+                          <span className="flex-1 text-left">{item.label}</span>
+                          {item.badge && (
+                            <span className={getBadgeStyles()}>{item.badge}</span>
+                          )}
+                        </>
+                      )}
                     </div>
-                    {state.mode !== "rail" && (
-                      <>
-                        <span className="flex-1 text-left">{item.label}</span>
-                        {item.badge && (
-                          <span className={getBadgeStyles()}>{item.badge}</span>
-                        )}
-                      </>
-                    )}
-                  </div>
+                  </Tooltip>
                 )}
               </div>
               );
