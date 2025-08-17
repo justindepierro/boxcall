@@ -4,16 +4,11 @@ import { useParams } from "react-router-dom";
 import { useAuthProfile } from "../app/auth-store";
 import { AccessDenied, LoadingScreen } from "./GuardUI";
 import { supabase } from "../lib/supabase";
-import { canAccessTeamFeature, hasPermission } from "../types/permissions";
 import { useAuthGate } from "./useAuthGate";
 import { ROUTES } from "./paths";
+import { authorize } from "./authorize";
 
-import type {
-  AppUserType,
-  Permission,
-  SubscriptionTier,
-  TeamRole,
-} from "../types/permissions";
+import type { Permission } from "../types/permissions";
 
 interface PermissionRouteProps {
   children: React.ReactNode;
@@ -27,13 +22,6 @@ interface PermissionRouteProps {
   fallbackTo?: string;
   // Custom access denied message
   accessDeniedMessage?: string;
-}
-interface UserAccessData {
-  appUserType: AppUserType;
-  teamRole?: TeamRole;
-  subscriptionTier: SubscriptionTier;
-  isSuperAdmin: boolean;
-  teamMemberStatus?: "active" | "inactive" | "pending";
 }
 /**
  * PermissionRoute Component
@@ -52,22 +40,17 @@ export const PermissionRoute: React.FC<PermissionRouteProps> = ({
   const profile = useAuthProfile();
   const gate = useAuthGate({ requireAuth: true, redirectTo: ROUTES.LOGIN });
   const params = useParams();
-  const [accessData, setAccessData] = useState<UserAccessData | null>(null);
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
+  const [denyReason, setDenyReason] = useState<string | undefined>();
   // Get team ID from props or URL params
   const currentTeamId = teamId || params.teamId;
   useEffect(() => {
     const checkUserAccess = async () => {
-      if (!profile?.id) {
-        setAccessData(null);
-        setCheckingAccess(false);
-        return;
-      }
       try {
-        // Check super admin status
+        // Check super admin status first (bypass)
         let isSuperAdmin = false;
-        if (profile.role === "admin") {
+        if (profile?.id && profile.role === "admin") {
           const { data: superAdminData } = await supabase
             .from("super_admins")
             .select("admin_level")
@@ -77,81 +60,23 @@ export const PermissionRoute: React.FC<PermissionRouteProps> = ({
             superAdminData?.admin_level === "super_admin" ||
             superAdminData?.admin_level === "admin";
         }
-        // Get user's app-level subscription/type
-        let appUserType: AppUserType = "player"; // Default
-        const subscriptionTier: SubscriptionTier = "free"; // Default - TODO: Get from subscription table
-        if (isSuperAdmin) {
-          appUserType = "super_admin";
-        } else if (profile.role === "admin") {
-          appUserType = "admin";
-        } else {
-          // TODO: Get from user's subscription data
-          // For now, infer from profile role or subscription table
-          appUserType = (profile.role as AppUserType) || "player";
-        }
-        // Get team-level role if team ID is provided
-        let teamRole: TeamRole | undefined;
-        let teamMemberStatus: "active" | "inactive" | "pending" | undefined;
-        if (currentTeamId) {
-          const { data: teamMemberData } = await supabase
-            .from("team_members")
-            .select("role, status")
-            .eq("user_id", profile.id)
-            .eq("team_id", currentTeamId)
-            .single();
-          if (teamMemberData) {
-            teamRole = teamMemberData.role as TeamRole;
-            teamMemberStatus = teamMemberData.status;
-          }
-        }
-        const userData: UserAccessData = {
-          appUserType,
-          teamRole,
-          subscriptionTier,
+        const result = await authorize({
+          profile,
           isSuperAdmin,
-          teamMemberStatus,
-        };
-        setAccessData(userData);
-        // Check access permissions
-        let access = false;
-        // Super admins always have access
-        if (isSuperAdmin) {
-          access = true;
-        } else if (teamFeature) {
-          // Check team feature access
-          access = canAccessTeamFeature(
-            appUserType,
-            teamRole,
-            subscriptionTier,
-            teamFeature
-          );
-        } else if (requiredPermissions.length > 0) {
-          // Check specific permissions
-          access = requiredPermissions.every((permission) =>
-            hasPermission(appUserType, teamRole, subscriptionTier, permission)
-          );
-        } else {
-          // No specific requirements, just need to be authenticated
-          access = true;
-        }
-        // For team-based features, also check team membership status
-        if (access && currentTeamId && teamRole && !isSuperAdmin) {
-          access = teamMemberStatus === "active";
-        }
-        setHasAccess(access);
+          teamId: currentTeamId,
+          requiredPermissions,
+          teamFeature,
+        });
+        setHasAccess(result.allowed);
+        setDenyReason(result.reason);
       } catch (error) {
         console.error("Error checking user access:", error);
-        setAccessData(null);
         setHasAccess(false);
       } finally {
         setCheckingAccess(false);
       }
     };
-    if (profile) {
-      checkUserAccess();
-    } else {
-      setCheckingAccess(false);
-    }
+    checkUserAccess();
   }, [profile, currentTeamId, requiredPermissions, teamFeature]);
   // Show loading spinner while checking
   if (gate.status === "loading" || checkingAccess) {
@@ -161,49 +86,46 @@ export const PermissionRoute: React.FC<PermissionRouteProps> = ({
   if (gate.status === "redirect") return gate.element!;
   // Access denied
   if (!hasAccess) {
-    const defaultMessage = getAccessDeniedMessage(
-      accessData,
-      teamFeature,
-      requiredPermissions
-    );
-    return (
-      <AccessDenied
-        message={accessDeniedMessage || defaultMessage}
-        debugInfo={
-          accessData?.isSuperAdmin
-            ? JSON.stringify(accessData, null, 2)
-            : undefined
-        }
-      />
-    );
+    const defaultMessage = mapDenyMessage(denyReason, teamFeature);
+    return <AccessDenied message={accessDeniedMessage || defaultMessage} />;
   }
   // Access granted
   return <>{children}</>;
 };
-function getAccessDeniedMessage(
-  accessData: UserAccessData | null,
-  teamFeature?: string,
-  requiredPermissions?: Permission[]
-): string {
-  if (!accessData) {
-    return "Unable to verify your permissions. Please try again.";
+function mapDenyMessage(reason: string | undefined, teamFeature?: string): string {
+  switch (reason) {
+    case "unauthenticated":
+      return "Please sign in to continue.";
+    case "role_denied":
+      return "You don't have permission to access this page.";
+    case "no_team":
+      return "A team context is required to access this page.";
+    case "not_member":
+      return "You are not a member of this team.";
+    case "inactive_member":
+      return "Your team membership is not active.";
+    case "subscription_missing":
+      return "Unable to verify team subscription status.";
+    case "subscription_tier":
+      return "This feature requires a higher subscription tier.";
+    case "subscription_expired":
+      return "Team subscription has expired.";
+    case "permission_denied":
+    default:
+      if (teamFeature === "management") {
+        return "Team management requires Head Coach or staff access.";
+      }
+      if (teamFeature === "dashboard") {
+        return "You need to be a team member to access this team dashboard.";
+      }
+      if (teamFeature === "playbooks") {
+        return "Playbook tools require a Coach subscription or team staff access.";
+      }
+      if (teamFeature === "family_view") {
+        return "This area is for family members only.";
+      }
+      return "You don't have permission to access this feature.";
   }
-  if (teamFeature === "management") {
-    return `Team management requires a Head Coach subscription ($199) or coaching staff access. Your current access level: ${accessData.appUserType}`;
-  }
-  if (teamFeature === "dashboard") {
-    return "You need to be a team member to access this team dashboard.";
-  }
-  if (teamFeature === "playbooks") {
-    return "Playbook tools require a Coach subscription ($9.99) or team staff access.";
-  }
-  if (teamFeature === "family_view") {
-    return "This area is for family members only.";
-  }
-  if (requiredPermissions?.length) {
-    return `This feature requires specific permissions that your account doesn't have. Contact your team administrator.`;
-  }
-  return "You don't have permission to access this feature.";
 }
 // Convenience components for common use cases
 export const TeamManagementRoute: React.FC<{ children: React.ReactNode }> = ({
