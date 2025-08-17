@@ -27,10 +27,7 @@ export function getRouteImporter(path: string): RouteImporter | undefined {
     case ROUTES.BOXCALL:
       return () => import("../pages/BoxCall");
     case ROUTES.ABOUT:
-      return () =>
-        import("../pages/legal/AboutPage").then((m) => ({
-          default: m.AboutPage,
-        }));
+      return () => import("../pages/legal/AboutPage");
     case ROUTES.PRIVACY:
       return () =>
         import("../pages/legal/PrivacyPolicyPage").then((m) => ({

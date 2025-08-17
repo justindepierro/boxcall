@@ -8,7 +8,7 @@ import { Icon } from "../components/ui/Icon/Icon";
 import { usePermissions } from "../hooks/usePermissions";
 import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";
-import { ROUTES } from "../routes/paths";
+import { ROUTES, teamRoutes } from "../routes/paths";
 
 /**
  * Create Team Page

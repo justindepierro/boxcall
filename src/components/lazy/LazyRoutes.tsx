@@ -58,10 +58,8 @@ export const LazyPlaybookPage = lazy(() => import("../../pages/Playbook"));
 export const LazyTeamSettings = lazy(() => import("../../pages/TeamSettings"));
 export const LazyTemplatesPage = lazy(() => import("../../pages/Templates"));
 
-export const LazyAboutPage = lazy(() =>
-  import("../../pages/legal/AboutPage").then((module) => ({
-    default: module.AboutPage,
-  }))
+export const LazyAboutPage = lazy(
+  () => import("../../pages/legal/AboutPage")
 );
 
 export const LazyPrivacyPolicyPage = lazy(() =>
