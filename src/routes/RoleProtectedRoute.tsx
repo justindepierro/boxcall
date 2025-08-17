@@ -1,13 +1,11 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
+import { ROUTES } from "./paths";
 
-import {
-  useAuthLoading,
-  useAuthProfile,
-  useIsAuthenticated,
-} from "../app/auth-store";
-import { Typography } from "../components/design-system/Typography";
-import { Button } from "../components/ui";
+import { useAuthProfile } from "../app/auth-store";
+// UI handled via GuardUI
+import { LoadingScreen, AccessDenied } from "./GuardUI";
+import { useAuthGate } from "./useAuthGate";
 
 import type { Database } from "../types/database";
 // User role type from database
@@ -32,50 +30,20 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
   allowedRoles,
   fallbackTo = "/dashboard",
 }) => {
-  const isAuthenticated = useIsAuthenticated();
   const profile = useAuthProfile();
-  const loading = useAuthLoading();
-  // Show loading spinner while checking authentication and profile
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-jade"></div>
-      </div>
-    );
-  }
-  // Not authenticated - redirect to login
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+  const gate = useAuthGate({ requireAuth: true, redirectTo: ROUTES.LOGIN });
+  if (gate.status === "loading") return <LoadingScreen />;
+  if (gate.status === "redirect") return gate.element!;
   // No profile data yet - redirect to dashboard (shouldn't happen normally)
   if (!profile) {
-    return <Navigate to={fallbackTo} replace />;
+    return <Navigate to={fallbackTo || ROUTES.DASHBOARD} replace />;
   }
   // Check if user's role is in the allowed roles
   if (!profile.role || !allowedRoles.includes(profile.role)) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="max-w-md mx-auto text-center">
-          <Typography
-            variant="headline-md"
-            as="h1"
-            className="mb-4 text-text-primary"
-          >
-            Access Denied
-          </Typography>
-          <p className="mb-6 text-text-secondary">
-            You don't have permission to access this page.
-          </p>
-          <Button
-            onClick={() => window.history.back()}
-            variant="primary"
-            size="sm"
-            className="px-4 py-2"
-          >
-            Go Back
-          </Button>
-        </div>
-      </div>
+      <AccessDenied
+        message={"You don't have permission to access this page."}
+      />
     );
   }
   // Access granted, render the protected content

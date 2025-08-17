@@ -10,7 +10,6 @@ import { Typography } from "../design-system";
  */
 import { Icon } from "./Icon/Icon";
 
-
 import { Button } from "./index";
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({

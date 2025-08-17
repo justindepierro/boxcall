@@ -25,7 +25,6 @@ import Icon from "../../../ui/Icon/Icon";
 
 import type { EditingGroup, PracticeGroup } from "../../types";
 
-
 interface EditGroupModalProps {
   isOpen: boolean;
   editingGroup: EditingGroup | null;

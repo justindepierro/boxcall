@@ -1,5 +1,6 @@
 import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, type Location } from "react-router-dom";
+import { ROUTES } from "./paths";
 
 import { useAuthLoading, useIsAuthenticated } from "../app/auth-store";
 import { Layout } from "../components/layout/Layout";
@@ -22,7 +23,7 @@ interface ProtectedRouteProps {
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requireAuth = true,
-  redirectTo = "/login",
+  redirectTo = ROUTES.LOGIN,
 }) => {
   const isAuthenticated = useIsAuthenticated();
   const loading = useAuthLoading();
@@ -45,10 +46,14 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // If route requires NO auth (login page) and user IS authenticated
   if (!requireAuth && isAuthenticated) {
-    // Get the intended destination from state, or default to dashboard
-    const from = location.state?.from?.pathname || "/dashboard";
-    return <Navigate to={from} replace />;
+    // Get the intended destination from state, preserving search/hash
+    const state = location.state as (Location & { from?: Location }) | null;
+    const fromState = state?.from as Location | undefined;
+    const fromPath = fromState?.pathname
+      ? `${fromState.pathname}${fromState.search ?? ""}${fromState.hash ?? ""}`
+      : "/dashboard";
+    return <Navigate to={fromPath} replace />;
   }
   // Access granted, render the protected content with layout
-  return <Layout>{children}</Layout>;
+  return requireAuth ? <Layout>{children}</Layout> : <>{children}</>;
 };

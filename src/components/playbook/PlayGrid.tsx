@@ -27,10 +27,7 @@ import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
 import { PlayCard } from "./PlayCard";
 
-
-
 import type { Play } from "../../types/play";
-
 
 // Convert database play data to full Play type
 const mapDatabasePlayToFullPlay = (dbPlay: {

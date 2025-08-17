@@ -6,9 +6,7 @@ import {
   useAuthProfile,
   useIsAuthenticated,
 } from "../app/auth-store";
-import { Typography } from "../components/design-system/Typography";
-import { Button } from "../components/ui";
-import { Icon } from "../components/ui/Icon/Icon";
+import { AccessDenied, LoadingScreen } from "./GuardUI";
 import { supabase } from "../lib/supabase";
 import { canAccessTeamFeature, hasPermission } from "../types/permissions";
 
@@ -50,7 +48,7 @@ export const PermissionRoute: React.FC<PermissionRouteProps> = ({
   requiredPermissions = [],
   teamFeature,
   teamId,
-  fallbackTo = "/dashboard",
+  fallbackTo: _fallbackTo = "/dashboard",
   accessDeniedMessage,
 }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -160,11 +158,7 @@ export const PermissionRoute: React.FC<PermissionRouteProps> = ({
   }, [profile, currentTeamId, requiredPermissions, teamFeature]);
   // Show loading spinner while checking
   if (loading || checkingAccess) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-jade"></div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
   // Not authenticated - redirect to login
   if (!isAuthenticated) {
@@ -178,44 +172,14 @@ export const PermissionRoute: React.FC<PermissionRouteProps> = ({
       requiredPermissions
     );
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="max-w-md mx-auto text-center">
-          <Typography
-            variant="headline-md"
-            as="h1"
-            className="mb-4 flex items-center justify-center text-text-primary"
-          >
-            <Icon name="shield" size="lg" className="mr-2" />
-            Access Denied
-          </Typography>
-          <p className="mb-6 text-text-secondary">
-            {accessDeniedMessage || defaultMessage}
-          </p>
-          <div className="space-y-2">
-            <Button
-              onClick={() => window.history.back()}
-              variant="secondary"
-              size="sm"
-              className="mr-2"
-            >
-              Go Back
-            </Button>
-            <Button
-              onClick={() => (window.location.href = fallbackTo)}
-              variant="primary"
-              size="sm"
-            >
-              Dashboard
-            </Button>
-          </div>
-          {/* Debug info for super admins */}
-          {accessData?.isSuperAdmin && (
-            <div className="mt-4 p-3 surface-subtle dark:bg-yellow-900 rounded-md text-sm">
-              <strong>Debug Info:</strong> {JSON.stringify(accessData, null, 2)}
-            </div>
-          )}
-        </div>
-      </div>
+      <AccessDenied
+        message={accessDeniedMessage || defaultMessage}
+        debugInfo={
+          accessData?.isSuperAdmin
+            ? JSON.stringify(accessData, null, 2)
+            : undefined
+        }
+      />
     );
   }
   // Access granted

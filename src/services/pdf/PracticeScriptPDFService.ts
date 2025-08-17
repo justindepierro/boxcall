@@ -22,7 +22,6 @@ import type {
   PDFBranding,
 } from "./types";
 
-
 export class PracticeScriptPDFService extends BasePDFService {
   /**
    * Export practice script to PDF blob

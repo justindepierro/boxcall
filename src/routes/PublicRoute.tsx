@@ -1,6 +1,7 @@
 import React from "react";
 
 import { ProtectedRoute } from "./ProtectedRoute";
+import { ROUTES } from "./paths";
 
 interface PublicRouteProps {
   children: React.ReactNode;
@@ -18,7 +19,7 @@ interface PublicRouteProps {
  */
 export const PublicRoute: React.FC<PublicRouteProps> = ({
   children,
-  redirectTo = "/dashboard",
+  redirectTo = ROUTES.DASHBOARD,
 }) => {
   return (
     <ProtectedRoute requireAuth={false} redirectTo={redirectTo}>

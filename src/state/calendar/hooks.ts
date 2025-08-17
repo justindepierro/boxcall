@@ -18,8 +18,6 @@ import type {
 } from "../../domain/calendar/types";
 import type { QueryKey } from "@tanstack/react-query";
 
-
-
 // Types for ranges & params
 export interface EventsQueryParams {
   range?: { start: string; end: string };

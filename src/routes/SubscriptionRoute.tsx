@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useLocation, useParams } from "react-router-dom";
+import { ROUTES } from "./paths";
 
 import { useAuthLoading, useIsAuthenticated } from "../app/auth-store";
-import { Typography } from "../components/design-system/Typography";
-import { Button } from "../components/ui/Button/Button";
-import { Icon } from "../components/ui/Icon/Icon";
+import { LoadingScreen, AccessDenied } from "./GuardUI";
 import { supabase } from "../lib/supabase";
 
 import type { Database } from "../types/database";
@@ -42,6 +41,7 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
   const isAuthenticated = useIsAuthenticated();
   const loading = useAuthLoading();
   const params = useParams();
+  const location = useLocation();
   const [subscription, setSubscription] = useState<TeamSubscription | null>(
     null
   );
@@ -81,44 +81,24 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
   }, [currentTeamId]);
   // Show loading spinner while checking
   if (loading || checkingSubscription) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-jade"></div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
   // Not authenticated
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
   }
   // No team ID
   if (!currentTeamId) {
-    return <Navigate to={fallbackTo} replace />;
+    return <Navigate to={fallbackTo || ROUTES.DASHBOARD} replace />;
   }
   // No subscription data found
   if (!subscription) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="max-w-md mx-auto text-center">
-          <Typography
-            variant="headline-md"
-            as="h1"
-            className="text-red-600 mb-4 flex items-center justify-center"
-          >
-            <Icon name="users" size="lg" className="mr-2" />
-            Team Not Found
-          </Typography>
-          <p className="mb-6 text-text-secondary">
-            Unable to verify team subscription status.
-          </p>
-          <Button
-            variant="primary"
-            onClick={() => (window.location.href = fallbackTo)}
-          >
-            Return to Dashboard
-          </Button>
-        </div>
-      </div>
+      <AccessDenied
+        title="Team Not Found"
+        iconName="users"
+        message="Unable to verify team subscription status."
+      />
     );
   }
   // Check subscription tier
@@ -127,33 +107,16 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
     !requiredTiers.includes(subscription.subscription_tier)
   ) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="max-w-md mx-auto text-center">
-          <Typography
-            variant="headline-md"
-            as="h1"
-            className="text-yellow-600 mb-4"
-          >
-            ⭐ Premium Feature
-          </Typography>
-          <p className="mb-6 text-text-secondary">
+      <AccessDenied
+        title="Premium Feature"
+        iconName="star"
+        message={
+          <>
             This feature requires a {requiredTiers.join(" or ")} subscription.
             Current plan: {subscription.subscription_tier || "none"}
-          </p>
-          <div className="space-y-3">
-            <Button fullWidth variant="primary">
-              Upgrade Subscription
-            </Button>
-            <Button
-              fullWidth
-              variant="ghost"
-              onClick={() => window.history.back()}
-            >
-              Go Back
-            </Button>
-          </div>
-        </div>
-      </div>
+          </>
+        }
+      />
     );
   }
   // Check if subscription is expired
@@ -161,33 +124,16 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
     const expirationDate = new Date(subscription.subscription_expires_at);
     if (expirationDate < new Date()) {
       return (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="max-w-md mx-auto text-center">
-            <Typography
-              variant="headline-md"
-              as="h1"
-              className="text-red-600 mb-4"
-            >
-              ⏰ Subscription Expired
-            </Typography>
-            <p className="mb-6 text-text-secondary">
+        <AccessDenied
+          title="Subscription Expired"
+          iconName="clock"
+          message={
+            <>
               Team subscription expired on {expirationDate.toLocaleDateString()}
               . Please renew to continue using premium features.
-            </p>
-            <div className="space-y-3">
-              <Button fullWidth variant="primary">
-                Renew Subscription
-              </Button>
-              <Button
-                fullWidth
-                variant="ghost"
-                onClick={() => (window.location.href = fallbackTo)}
-              >
-                Return to Dashboard
-              </Button>
-            </div>
-          </div>
-        </div>
+            </>
+          }
+        />
       );
     }
   }

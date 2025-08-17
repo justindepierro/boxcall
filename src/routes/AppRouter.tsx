@@ -27,6 +27,8 @@ import DiagramPaneRoute from "../components/playbook/DiagramPaneRoute";
 import { Button } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
 import DiagnosticsPage from "../pages/DiagnosticsPage";
+import { ROUTES } from "./paths";
+import ScrollToTop from "./ScrollToTop";
 import {
   ProtectedRoute,
   PublicRoute,
@@ -60,12 +62,13 @@ const RouteLoadingSpinner: React.FC = () => (
 export const AppRouter: React.FC = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AuthProvider>
         <Routes>
           {/* ==================== PUBLIC ROUTES ==================== */}
           {/* Only accessible when NOT authenticated */}
           <Route
-            path="/login"
+            path={ROUTES.LOGIN}
             element={
               <PublicRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -78,7 +81,7 @@ export const AppRouter: React.FC = () => {
           {/* ==================== CORE PROTECTED ROUTES ==================== */}
           {/* Dashboard - Landing page for authenticated users */}
           <Route
-            path="/dashboard"
+            path={ROUTES.DASHBOARD}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -90,7 +93,7 @@ export const AppRouter: React.FC = () => {
 
           {/* User Profile Management */}
           <Route
-            path="/profile"
+            path={ROUTES.PROFILE}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -102,7 +105,7 @@ export const AppRouter: React.FC = () => {
 
           {/* Master Calendar (Shell) - Legacy fully removed */}
           <Route
-            path="/calendar"
+            path={ROUTES.CALENDAR}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -114,7 +117,7 @@ export const AppRouter: React.FC = () => {
 
           {/* Teams List - Available to all authenticated users */}
           <Route
-            path="/teams"
+            path={ROUTES.TEAMS}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -161,23 +164,25 @@ export const AppRouter: React.FC = () => {
           <Route
             path="/team/:teamId/analytics"
             element={
-              <TeamMemberRoute allowedTeamRoles={["coach", "admin"]}>
-                <SubscriptionRoute requiredTiers={["team_premium"]}>
-                  <div className="p-8 text-center">
-                    <Typography
-                      variant="headline-md"
-                      as="h1"
-                      className="mb-4 flex items-center justify-center"
-                    >
-                      <Icon name="bar-chart" size="lg" className="mr-2" />
-                      Premium Analytics
-                    </Typography>
-                    <p className="text-text-secondary">
-                      Advanced team analytics and reporting tools.
-                    </p>
-                  </div>
-                </SubscriptionRoute>
-              </TeamMemberRoute>
+              <ProtectedRoute>
+                <TeamMemberRoute allowedTeamRoles={["coach", "admin"]}>
+                  <SubscriptionRoute requiredTiers={["team_premium"]}>
+                    <div className="p-8 text-center">
+                      <Typography
+                        variant="headline-md"
+                        as="h1"
+                        className="mb-4 flex items-center justify-center"
+                      >
+                        <Icon name="bar-chart" size="lg" className="mr-2" />
+                        Premium Analytics
+                      </Typography>
+                      <p className="text-text-secondary">
+                        Advanced team analytics and reporting tools.
+                      </p>
+                    </div>
+                  </SubscriptionRoute>
+                </TeamMemberRoute>
+              </ProtectedRoute>
             }
           />
 
@@ -185,7 +190,7 @@ export const AppRouter: React.FC = () => {
           {/* ==================== COACH & ADMIN TOOLS ==================== */}
           {/* BoxCall - Coaches and admins only */}
           <Route
-            path="/boxcall"
+            path={ROUTES.BOXCALL}
             element={
               <ProtectedRoute>
                 <RoleProtectedRoute allowedRoles={["coach", "admin"]}>
@@ -200,7 +205,7 @@ export const AppRouter: React.FC = () => {
           {/* ==================== ROLE-SPECIFIC DASHBOARDS ==================== */}
           {/* Coach Management Hub - Coaches and admins only */}
           <Route
-            path="/coach"
+            path={ROUTES.COACH}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -212,7 +217,7 @@ export const AppRouter: React.FC = () => {
 
           {/* Player Dashboard - Players only */}
           <Route
-            path="/player"
+            path={ROUTES.PLAYER}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -225,7 +230,7 @@ export const AppRouter: React.FC = () => {
           {/* ==================== GENERAL ACCESS ROUTES ==================== */}
           {/* Playbook - All authenticated users */}
           <Route
-            path="/playbook"
+            path={ROUTES.PLAYBOOK}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -248,7 +253,7 @@ export const AppRouter: React.FC = () => {
           {/* ==================== TEAM MANAGEMENT ==================== */}
           {/* Create Team - Protected route with permission check */}
           <Route
-            path="/create-team"
+            path={ROUTES.CREATE_TEAM}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -260,7 +265,7 @@ export const AppRouter: React.FC = () => {
 
           {/* Join Team - All authenticated users */}
           <Route
-            path="/join-team"
+            path={ROUTES.JOIN_TEAM}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -272,7 +277,7 @@ export const AppRouter: React.FC = () => {
 
           {/* Create Coach Account - All authenticated users */}
           <Route
-            path="/create-coach-account"
+            path={ROUTES.CREATE_COACH_ACCOUNT}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -285,17 +290,7 @@ export const AppRouter: React.FC = () => {
           {/* ==================== DEVELOPMENT & TESTING ==================== */}
           {import.meta.env.DEV && (
             <Route
-              path="/dev/diagnostics"
-              element={
-                <ProtectedRoute>
-                  <DiagnosticsPage />
-                </ProtectedRoute>
-              }
-            />
-          )}
-          {import.meta.env.DEV && (
-            <Route
-              path="/dev/diagnostics"
+              path={ROUTES.DEV_DIAGNOSTICS}
               element={
                 <ProtectedRoute>
                   <DiagnosticsPage />
@@ -306,7 +301,7 @@ export const AppRouter: React.FC = () => {
           {/* ==================== LEGAL & INFO PAGES ==================== */}
           {/* ==================== LEGAL & INFO PAGES ==================== */}
           <Route
-            path="/about"
+            path={ROUTES.ABOUT}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -316,7 +311,7 @@ export const AppRouter: React.FC = () => {
             }
           />
           <Route
-            path="/privacy-policy"
+            path={ROUTES.PRIVACY}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -326,7 +321,7 @@ export const AppRouter: React.FC = () => {
             }
           />
           <Route
-            path="/terms-of-service"
+            path={ROUTES.TERMS}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -336,7 +331,7 @@ export const AppRouter: React.FC = () => {
             }
           />
           <Route
-            path="/contact"
+            path={ROUTES.CONTACT}
             element={
               <ProtectedRoute>
                 <Suspense fallback={<RouteLoadingSpinner />}>
@@ -348,7 +343,10 @@ export const AppRouter: React.FC = () => {
 
           {/* ==================== NAVIGATION & FALLBACKS ==================== */}
           {/* Root redirect to dashboard */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route
+            path={ROUTES.ROOT}
+            element={<Navigate to={ROUTES.DASHBOARD} replace />}
+          />
 
           {/* 404 Route */}
           {/* 404 Route */}

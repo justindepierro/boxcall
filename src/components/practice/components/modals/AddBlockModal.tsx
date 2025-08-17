@@ -27,7 +27,6 @@ import { getCategoryColor } from "../../utils";
 
 import type { PracticeBlock, SelectedBlock, UserRole } from "../../types";
 
-
 interface AddBlockModalProps {
   isOpen: boolean;
   onClose: () => void;

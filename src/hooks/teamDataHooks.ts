@@ -30,9 +30,6 @@ import type {
 } from "../services/gameResultsService";
 import type { TeamPostListItem } from "../services/postsService";
 
-
-
-
 // Query keys
 const qk = {
   posts: (teamId: string) => ["team", teamId, "posts"] as const,

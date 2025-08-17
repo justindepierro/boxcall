@@ -11,7 +11,6 @@ import {
 
 import type { Play } from "../types/play";
 
-
 export interface DomainCreateResult {
   play: Play;
   duplicateKey: string;

@@ -1,7 +1,6 @@
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import React from "react";
 
-
 import { Button, Card } from "../../../../components/ui";
 import { ModularIcon as Icon } from "../../../../components/ui/Icon";
 import { Typography } from "../../../design-system";

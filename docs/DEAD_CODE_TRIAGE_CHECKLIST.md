@@ -44,7 +44,9 @@ Actions
 - Practice
   - [R] src/components/practice/components/MemoizedPracticeTable.tsx (unreferenced, removed)
   - [R] src/components/practice/components/PracticeBlocksList.tsx (unreferenced, removed)
-  - [R] src/components/practice/components/index.ts (unreferenced barrel, removed)
+  - [R] src/components/practice/components/modals/AddBlockModal.tsx (unreferenced, removed)
+  - [R] src/components/practice/components/modals/AddGroupModal.tsx (unreferenced, removed)
+  - [R] src/components/practice/components/modals/EditGroupModal.tsx (unreferenced, removed)
   - [R] src/components/practice/components/modals/index.ts (unreferenced barrel, removed)
 
 Actions

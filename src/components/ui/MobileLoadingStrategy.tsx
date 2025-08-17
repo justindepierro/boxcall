@@ -18,7 +18,6 @@ import {
   PageLoadingSkeleton,
 } from "./Skeleton.tsx";
 
-
 interface LoadingStrategyProps {
   /** Loading state */
   isLoading?: boolean;

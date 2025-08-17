@@ -7,8 +7,5 @@
 export { PracticeHeader } from "./PracticeHeader";
 export { TimeSummary } from "./TimeSummary";
 export { TimelineAllocation } from "./TimelineAllocation";
-export { PracticeBlocksList } from "./PracticeBlocksList";
 // Modal components
-export { AddBlockModal } from "./modals/AddBlockModal";
-export { AddGroupModal } from "./modals/AddGroupModal";
-export { EditGroupModal } from "./modals/EditGroupModal";
+// Note: PracticePlannerModal provides its own scoped modals; generic modals in ./modals were removed.

@@ -36,13 +36,18 @@ function goodNetwork(): boolean {
   return !/(^|-)2g$/.test(type);
 }
 
-// Keep these aligned with dynamic imports in SplitRouter
+// Keep these aligned with lazy imports in AppRouter/LazyRoutes
 const prefetchers: Array<() => Promise<unknown>> = [
   () => import("../pages/DashboardPage"),
   () => import("../pages/CalendarShellPage"),
-  () => import("../pages/PlaybookPage"),
-  () => import("../pages/ProfilePage"),
+  () => import("../pages/Playbook"),
+  () =>
+    import("../pages/ProfilePage").then((m) => ({ default: m.ProfilePage })),
+  () => import("../pages/TeamsPage"),
+  () => import("../pages/TeamBulletin"),
   () => import("../pages/TeamSettings"),
+  () => import("../pages/roles/CoachManagementPage"),
+  () => import("../pages/roles/PlayerDashboardPage"),
 ];
 
 export function initRoutePrefetch(): void {

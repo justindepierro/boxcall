@@ -6,6 +6,7 @@ import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { useTheme } from "./hooks/useTheme";
 import { testDatabaseConnection } from "./lib/database-helpers";
+import { initRoutePrefetch } from "./routes/prefetch";
 import { AppRouter } from "./routes/AppRouter";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -35,6 +36,8 @@ function App() {
           "BoxCall: Database connection failed - check your .env.local configuration"
         );
       }
+      // Initialize idle prefetching for popular routes
+      initRoutePrefetch();
     };
     initBoxCall();
   }, []);

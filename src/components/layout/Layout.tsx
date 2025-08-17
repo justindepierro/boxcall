@@ -5,7 +5,6 @@ import { useAuthProfile } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
 
-
 // Helper to get test role from dev mode
 const getTestRole = (devMode: DevMode): UserRole | null => {
   switch (devMode) {

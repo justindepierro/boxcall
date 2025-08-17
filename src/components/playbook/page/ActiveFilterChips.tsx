@@ -6,7 +6,6 @@ import { Button } from "../../ui/Button/Button";
 
 import type { PlaybookFiltersState } from "../../../contexts/PlaybookContext";
 
-
 export interface ActiveFilterChipsProps {
   searchQuery: string;
   selectedFilters: PlaybookFiltersState["selectedFilters"];

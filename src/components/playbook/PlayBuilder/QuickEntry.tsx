@@ -15,7 +15,6 @@ import { Button } from "../../ui/Button/Button";
 
 import type { Play } from "../../../types/play";
 
-
 interface QuickEntryProps {
   onPlayParsed: (playData: Partial<Play>) => void;
   isVisible: boolean;

@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
+import { ROUTES } from "./paths";
 
-import {
-  useAuthLoading,
-  useAuthProfile,
-  useIsAuthenticated,
-} from "../app/auth-store";
-import { Typography } from "../components/design-system/Typography";
-import { Button } from "../components/ui";
-import { Icon } from "../components/ui/Icon/Icon";
+import { useAuthProfile } from "../app/auth-store";
+import { LoadingScreen, AccessDenied } from "./GuardUI";
+import { useAuthGate } from "./useAuthGate";
 import { supabase } from "../lib/supabase";
 
 import type { Database } from "../types/database";
@@ -42,10 +38,10 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
   teamId,
   fallbackTo = "/dashboard",
 }) => {
-  const isAuthenticated = useIsAuthenticated();
   const profile = useAuthProfile();
-  const loading = useAuthLoading();
+  // auth loading handled by gate
   const params = useParams();
+  const gate = useAuthGate({ requireAuth: true, redirectTo: ROUTES.LOGIN });
   const [teamMember, setTeamMember] = useState<TeamMemberData | null>(null);
   const [checkingMembership, setCheckingMembership] = useState(true);
   // Get team ID from props or URL params
@@ -88,77 +84,37 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
     checkTeamMembership();
   }, [profile?.id, profile?.role, currentTeamId, isAdmin]);
   // Show loading spinner while checking authentication and membership (but not for admins)
-  if (loading || (!isAdmin && checkingMembership)) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-jade"></div>
-      </div>
-    );
+  if (gate.status === "loading" || (!isAdmin && checkingMembership)) {
+    return <LoadingScreen />;
   }
   // Not authenticated - redirect to login
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+  if (gate.status === "redirect") return gate.element!;
   // No team ID provided
   if (!currentTeamId) {
-    return <Navigate to={fallbackTo} replace />;
+    return <Navigate to={fallbackTo || ROUTES.DASHBOARD} replace />;
   }
   // Not a team member or inactive (admins bypass this check completely)
   if (!isAdmin && (!teamMember || teamMember.status !== "active")) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="max-w-md mx-auto text-center">
-          <Typography
-            variant="headline-md"
-            as="h1"
-            className="mb-4 flex items-center justify-center text-text-primary"
-          >
-            <Icon name="users" size="lg" className="mr-2" />
-            Team Access Required
-          </Typography>
-          <p className="mb-6 text-text-secondary">
-            {!teamMember
-              ? "You are not a member of this team."
-              : "Your team membership is not active."}
-          </p>
-          {/* Replaced raw button with Button primitive */}
-          <Button
-            onClick={() => (window.location.href = fallbackTo)}
-            variant="primary"
-            size="sm"
-          >
-            Return to Dashboard
-          </Button>
-        </div>
-      </div>
+      <AccessDenied
+        title="Team Access Required"
+        iconName="users"
+        message={
+          !teamMember
+            ? "You are not a member of this team."
+            : "Your team membership is not active."
+        }
+      />
     );
   }
   // Check if user's team role is allowed (admins bypass this check completely)
   if (!isAdmin && teamMember && !allowedTeamRoles.includes(teamMember.role)) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="max-w-md mx-auto text-center">
-          <Typography
-            variant="headline-md"
-            as="h1"
-            className="mb-4 flex items-center justify-center text-text-primary"
-          >
-            <Icon name="shield" size="lg" className="mr-2" />
-            Insufficient Team Permissions
-          </Typography>
-          <p className="mb-6 text-text-secondary">
-            Your role ({teamMember.role}) doesn't have access to this feature.
-          </p>
-          {/* Replaced raw button with Button primitive */}
-          <Button
-            onClick={() => window.history.back()}
-            variant="primary"
-            size="sm"
-          >
-            Go Back
-          </Button>
-        </div>
-      </div>
+      <AccessDenied
+        title="Insufficient Team Permissions"
+        iconName="shield"
+        message={`Your role (${teamMember.role}) doesn't have access to this feature.`}
+      />
     );
   }
   // Access granted, render the protected content

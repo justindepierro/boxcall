@@ -15,7 +15,6 @@ import { DEV_MODES } from "../types";
 
 import type { DevMode } from "../../../app/dev-mode-types";
 
-
 interface DataTabProps {
   onModeChange: (mode: DevMode) => void;
   actions: DevToolsActions;
