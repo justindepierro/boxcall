@@ -380,6 +380,16 @@ const configArray = [
       // Allow cross-layer imports within isolated tests
       "import/no-restricted-paths": "off",
       "no-restricted-imports": "off",
+      // Tests can use `any` in mocks/utilities without blocking CI
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
+  // Targeted override: RouteErrorElement safely narrows unknown error shapes
+  // and must access `.data` from ErrorResponse which includes `any` in lib types.
+  {
+    files: ["src/routes/RouteErrorElement.tsx"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
   // Plugin injection for custom rule namespace

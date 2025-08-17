@@ -296,9 +296,14 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
+    // Avoid running in non-browser environments (e.g., after JSDOM teardown)
+    if (typeof window === "undefined") return;
+
+    let cancelled = false;
     // Check if already loaded
     if (iconRegistry.has(name)) {
-      setIconComponent(iconRegistry.get(name)!);
+      // Skip state updates if unmounted
+      if (!cancelled) setIconComponent(iconRegistry.get(name)!);
       return;
     }
 
@@ -308,6 +313,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
       setLoading(true);
       loader()
         .then((mod) => {
+          if (cancelled) return;
           const component = mod as
             | { default?: LucideComponent }
             | LucideComponent;
@@ -318,15 +324,20 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
           ) as LucideComponent;
           if (Comp) {
             iconRegistry.set(name, Comp);
-            setIconComponent(Comp);
+            if (!cancelled) setIconComponent(Comp);
           }
-          setLoading(false);
+          if (!cancelled) setLoading(false);
         })
         .catch((error) => {
-          console.error(`Failed to load icon: ${name}`, error);
-          setLoading(false);
+          if (!cancelled) {
+            console.error(`Failed to load icon: ${name}`, error);
+            setLoading(false);
+          }
         });
     }
+    return () => {
+      cancelled = true;
+    };
   }, [name, loading]);
 
   if (loading || !IconComponent) {

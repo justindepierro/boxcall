@@ -3,7 +3,7 @@ import React from "react";
 import { Typography } from "../../components/design-system/Typography";
 import { Button } from "../../components/ui/Button";
 import { Icon } from "../../components/ui/Icon/Icon";
-import { RoleProtectedRoute } from "../../routes/RoleProtectedRoute";
+// Legacy RoleProtectedRoute removed — route access is now enforced via Data Router loaders
 
 /**
  * Player Dashboard Page - Only accessible by players
@@ -369,9 +369,7 @@ const PlayerDashboardContent: React.FC = () => {
 
 export const PlayerDashboardPage: React.FC = () => {
   return (
-    <RoleProtectedRoute allowedRoles={["player"]}>
-      <PlayerDashboardContent />
-    </RoleProtectedRoute>
+  <PlayerDashboardContent />
   );
 };
 

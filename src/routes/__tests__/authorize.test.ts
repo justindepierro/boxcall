@@ -21,11 +21,14 @@ const hoisted = vi.hoisted(() => ({
   subscription: null as TeamRow | null,
 }));
 
+type MockQuery = { eq: (col?: string, val?: unknown) => MockQuery; single: () => Promise<unknown> };
+
 vi.mock("../../lib/supabase", () => ({
   supabase: {
     from: (table: string) => ({
-      select: () => ({
-        eq: () => ({
+      select: () => {
+        const chain: MockQuery = {
+          eq: () => chain,
           single: async () => {
             if (table === "team_members") {
               return { data: hoisted.teamMember, error: null } as { data: TeamMemberRow | null; error: unknown };
@@ -35,8 +38,9 @@ vi.mock("../../lib/supabase", () => ({
             }
             return { data: null, error: null } as { data: null; error: unknown };
           },
-        }),
-      }),
+        };
+        return chain;
+      },
     }),
   },
 }));
@@ -53,6 +57,24 @@ describe("authorize()", () => {
     const res = await authorize({ profile: null });
     expect(res.allowed).toBe(false);
     expect(res.reason).toBe("unauthenticated");
+  });
+
+  it("allows when requiredRoles includes user's role", async () => {
+    const res = await authorize({
+      profile,
+      requiredRoles: ["coach", "admin"],
+    });
+    expect(res.allowed).toBe(true);
+    expect(res.reason).toBeUndefined();
+  });
+
+  it("denies with role_denied when requiredRoles excludes user's role", async () => {
+    const res = await authorize({
+      profile: { id: "u1", role: "player" as AppRole },
+      requiredRoles: ["coach", "admin"],
+    });
+    expect(res.allowed).toBe(false);
+    expect(res.reason).toBe("role_denied");
   });
 
   it("allows super admin bypass", async () => {
@@ -98,7 +120,12 @@ describe("authorize()", () => {
   it("passes permission matrix when conditions satisfied", async () => {
   hoisted.teamMember = { role: "coach" as DbTeamMemberRole, status: "active" };
   hoisted.subscription = { subscription_tier: "staff_addon" as DbSubscriptionTier, subscription_expires_at: null };
-  const res = await authorize({ profile, teamId: "t1", requiredPermissions: ["playbook.create"] });
+  const res = await authorize({
+    profile,
+    teamId: "t1",
+    requiredTiers: ["staff_addon" as NonNullable<DbSubscriptionTier>],
+    requiredPermissions: ["playbook.create"],
+  });
     expect(res.allowed).toBe(true);
   });
 });

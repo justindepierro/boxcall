@@ -7,7 +7,7 @@ import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { useTheme } from "./hooks/useTheme";
 import { testDatabaseConnection } from "./lib/database-helpers";
 import { initRoutePrefetch } from "./routes/prefetch";
-import { AppRouter } from "./routes/AppRouter";
+import { DataRouterApp } from "./routes";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -47,7 +47,7 @@ function App() {
       <DevModeProvider>
         <div className="App">
           <DevHealthCheck />
-          <AppRouter />
+          <DataRouterApp />
           {showRQDevtools && (
             <ReactQueryDevtools initialIsOpen={false} position="bottom" />
           )}

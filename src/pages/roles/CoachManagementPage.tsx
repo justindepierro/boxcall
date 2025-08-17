@@ -3,7 +3,7 @@ import React from "react";
 import { Typography } from "../../components/design-system/Typography";
 import { Button } from "../../components/ui/Button/Button";
 import { Icon } from "../../components/ui/Icon/Icon";
-import { RoleProtectedRoute } from "../../routes/RoleProtectedRoute";
+// Legacy RoleProtectedRoute removed — route access is now enforced via Data Router loaders
 
 /**
  * Coach Management Page - Only accessible by coaches and admins
@@ -200,9 +200,7 @@ const CoachManagementContent: React.FC = () => {
 
 export const CoachManagementPage: React.FC = () => {
   return (
-    <RoleProtectedRoute allowedRoles={["coach", "admin"]}>
-      <CoachManagementContent />
-    </RoleProtectedRoute>
+  <CoachManagementContent />
   );
 };
 
