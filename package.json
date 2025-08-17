@@ -18,6 +18,8 @@
     "analytics"
   ],
   "scripts": {
+    "clean:caches": "rm -rf dist coverage tsconfig.tsbuildinfo .tmp_eslint.json && find . -name .DS_Store -delete",
+    "clean:phantoms": "node -e \"const fs=require('fs'); const files=['MASTER_ROADMAP.md','NEW_MASTER_ROADMAP.md']; for (const f of files){ if (fs.existsSync(f) && fs.statSync(f).size===0){ fs.rmSync(f); } }\"",
     "predev": "npm run tokens:build && npm run themes:build && tsx scripts/predev-check.ts",
     "dev": "vite",
     "dev:fast": "vite --open",
@@ -73,9 +75,9 @@
     "baseline:create": "node scripts/create-baseline.mjs",
     "perf:budgets": "node scripts/perf-budget-check.mjs",
     "code:dead": "knip",
-  "code:dead:ci": "knip --reporter compact",
-  "code:dead:json": "knip --reporter json > knip-report.json || true",
-  "code:dead:symbol": "knip --reporter symbol || true",
+    "code:dead:ci": "knip --reporter compact",
+    "code:dead:json": "knip --reporter json > knip-report.json || true",
+    "code:dead:symbol": "knip --reporter symbol || true",
     "dup:health": "tsx scripts/verify_duplicate_key_health.ts",
     "dup:fix": "tsx scripts/auto_archive_duplicate_key_conflicts.ts",
     "dup:fix:dry": "tsx scripts/auto_archive_duplicate_key_conflicts.ts --dry",
@@ -125,7 +127,6 @@
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
-    
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
