@@ -36,7 +36,7 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
   children,
   allowedTeamRoles,
   teamId,
-  fallbackTo = "/dashboard",
+  fallbackTo = ROUTES.DASHBOARD,
 }) => {
   const profile = useAuthProfile();
   // auth loading handled by gate

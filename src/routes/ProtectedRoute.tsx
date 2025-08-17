@@ -51,7 +51,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     const fromState = state?.from as Location | undefined;
     const fromPath = fromState?.pathname
       ? `${fromState.pathname}${fromState.search ?? ""}${fromState.hash ?? ""}`
-      : "/dashboard";
+      : ROUTES.DASHBOARD;
     return <Navigate to={fromPath} replace />;
   }
   // Access granted, render the protected content with layout

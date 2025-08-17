@@ -28,7 +28,7 @@ interface RoleProtectedRouteProps {
 export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
   children,
   allowedRoles,
-  fallbackTo = "/dashboard",
+  fallbackTo = ROUTES.DASHBOARD,
 }) => {
   const profile = useAuthProfile();
   const gate = useAuthGate({ requireAuth: true, redirectTo: ROUTES.LOGIN });

@@ -382,7 +382,7 @@ export const AppRouter: React.FC = () => {
                       Go Back
                     </Button>
                     <Button
-                      onClick={() => (window.location.href = "/dashboard")}
+                      onClick={() => (window.location.href = ROUTES.DASHBOARD)}
                       variant="ghost"
                       className="w-full px-6 py-3 font-sans font-semibold"
                     >

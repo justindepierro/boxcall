@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { ROUTES } from "./paths";
 
 import {
   useAuthLoading,
@@ -70,7 +71,7 @@ export const SuperAdminRoute: React.FC<SuperAdminRouteProps> = ({
   }
   // Not authenticated - redirect to login
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={ROUTES.LOGIN} replace />;
   }
   // Not a super admin - show access denied
   if (!isSuperAdmin) {

@@ -1,4 +1,12 @@
-import { describe, it, expect, beforeEach, afterEach, vi, type Mock } from "vitest";
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  type Mock,
+} from "vitest";
 import {
   MemoryRouter,
   Routes,
@@ -28,7 +36,9 @@ function GateProbe() {
 
 function LoginEcho() {
   const location = useLocation() as Location & {
-    state: { from?: { pathname: string; search?: string; hash?: string } } | null;
+    state: {
+      from?: { pathname: string; search?: string; hash?: string };
+    } | null;
   };
   const from = location.state?.from;
   const fromStr = from
@@ -46,10 +56,10 @@ describe("useAuthGate", () => {
   });
 
   it("returns loading status while auth is loading", () => {
-  (authStore.useAuthLoading as unknown as Mock).mockReturnValue(true);
-  (authStore.useIsAuthenticated as unknown as Mock).mockReturnValue(false);
+    (authStore.useAuthLoading as unknown as Mock).mockReturnValue(true);
+    (authStore.useIsAuthenticated as unknown as Mock).mockReturnValue(false);
 
-  const res = render(
+    const res = render(
       <MemoryRouter initialEntries={["/protected"]}>
         <Routes>
           <Route path="/protected" element={<GateProbe />} />
@@ -57,14 +67,14 @@ describe("useAuthGate", () => {
       </MemoryRouter>
     );
 
-  expect(res.getByTestId("state").textContent).toBe("loading");
+    expect(res.getByTestId("state").textContent).toBe("loading");
   });
 
   it("redirects unauthenticated users and preserves from-state (pathname+search+hash)", async () => {
-  (authStore.useAuthLoading as unknown as Mock).mockReturnValue(false);
-  (authStore.useIsAuthenticated as unknown as Mock).mockReturnValue(false);
+    (authStore.useAuthLoading as unknown as Mock).mockReturnValue(false);
+    (authStore.useIsAuthenticated as unknown as Mock).mockReturnValue(false);
 
-  const res = render(
+    const res = render(
       <MemoryRouter initialEntries={["/protected?x=1#h"]}>
         <Routes>
           <Route path="/protected" element={<GateProbe />} />
@@ -73,15 +83,15 @@ describe("useAuthGate", () => {
       </MemoryRouter>
     );
 
-  const login = await within(res.container).findByTestId("login");
+    const login = await within(res.container).findByTestId("login");
     expect(login.textContent).toContain("login from:/protected?x=1#h");
   });
 
   it("is ready when authenticated", () => {
-  (authStore.useAuthLoading as unknown as Mock).mockReturnValue(false);
-  (authStore.useIsAuthenticated as unknown as Mock).mockReturnValue(true);
+    (authStore.useAuthLoading as unknown as Mock).mockReturnValue(false);
+    (authStore.useIsAuthenticated as unknown as Mock).mockReturnValue(true);
 
-  const res = render(
+    const res = render(
       <MemoryRouter initialEntries={["/protected"]}>
         <Routes>
           <Route path="/protected" element={<GateProbe />} />
@@ -89,6 +99,6 @@ describe("useAuthGate", () => {
       </MemoryRouter>
     );
 
-  expect(res.getByTestId("state").textContent).toBe("ready");
+    expect(res.getByTestId("state").textContent).toBe("ready");
   });
 });
