@@ -30,6 +30,9 @@ import { Icon } from "../components/ui/Icon/Icon";
 import DiagnosticsPage from "../pages/DiagnosticsPage";
 import { ROUTES } from "./paths";
 import ScrollToTop from "./ScrollToTop";
+import { useParams, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useActiveTeamStore } from "../state/activeTeamStore";
 import {
   ProtectedRoute,
   PublicRoute,
@@ -61,9 +64,21 @@ const RouteLoadingSpinner: React.FC = () => (
  * - Clean 404 handling
  */
 export const AppRouter: React.FC = () => {
+  // Sync :teamId param to active team store whenever it appears in the URL
+  const TeamParamSync: React.FC = () => {
+    const params = useParams();
+    const location = useLocation();
+    const setActiveTeamId = useActiveTeamStore((s) => s.setActiveTeamId);
+    useEffect(() => {
+      const tid = params.teamId;
+      if (tid) setActiveTeamId(tid);
+    }, [location.pathname, params.teamId, setActiveTeamId]);
+    return null;
+  };
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <TeamParamSync />
       <AuthProvider>
         <Routes>
           {/* ==================== PUBLIC ROUTES ==================== */}

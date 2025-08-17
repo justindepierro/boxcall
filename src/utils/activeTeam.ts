@@ -1,22 +1,39 @@
+import { getActiveTeamIdFromStore, useActiveTeamStore } from "../state/activeTeamStore";
+
 /**
  * Active Team helpers
  * Provides a single source of truth for reading/writing the active team id.
  */
 export function getActiveTeamId(): string {
-  let activeTeamId = "1";
   try {
-    const stored = localStorage.getItem("activeTeamId");
-    if (stored) activeTeamId = stored;
+    const fromStore = getActiveTeamIdFromStore();
+    if (fromStore) return fromStore;
   } catch {
-    // ignore SSR or storage access issues
+    // store may not be initialized yet
   }
-  return activeTeamId;
+  if (typeof window !== "undefined") {
+    try {
+      return localStorage.getItem("activeTeamId") || "1";
+    } catch {
+      return "1";
+    }
+  }
+  return "1";
 }
 
 export function setActiveTeamId(teamId: string) {
   try {
-    localStorage.setItem("activeTeamId", teamId);
+    useActiveTeamStore.getState().setActiveTeamId(teamId);
+    return;
   } catch {
-    // ignore
+    // store access failed, fall through to localStorage
+  }
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem("activeTeamId", teamId);
+    } catch {
+      // ignore storage errors
+    }
   }
 }
+
