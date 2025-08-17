@@ -125,4 +125,33 @@ describe("SubscriptionRoute", () => {
     expect(await screen.findByTestId("dash")).toBeInTheDocument();
     expect(screen.queryByTestId("ok")).toBeNull();
   });
+
+  it("shows team-not-found when no subscription record exists", async () => {
+    // Simulate Supabase returning no data and no error
+    mockResult.data = null;
+    mockResult.error = null;
+
+    render(
+      <MemoryRouter initialEntries={["/team/abc123/analytics"]}>
+        <Routes>
+          <Route
+            path="/team/:teamId/analytics"
+            element={
+              <SubscriptionRoute requiredTiers={["team_premium"]}>
+                <div data-testid="ok">OK</div>
+              </SubscriptionRoute>
+            }
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(
+      await screen.findByRole("heading", { name: /Team Not Found/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Unable to verify team subscription status\./i)
+    ).toBeInTheDocument();
+    expect(screen.queryByTestId("ok")).toBeNull();
+  });
 });

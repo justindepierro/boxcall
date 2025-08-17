@@ -848,7 +848,9 @@ export const CreateTeam: React.FC = () => {
             <div className="flex gap-3 justify-center">
               <Button
                 onClick={() =>
-                  navigate(`/team/${createdTeamId || "unknown"}/bulletin`)
+                  navigate(
+                    teamRoutes.bulletin(String(createdTeamId || "unknown"))
+                  )
                 }
                 variant="primary"
                 size="sm"
