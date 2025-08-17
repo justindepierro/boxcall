@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../routes/paths";
 
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useEvents } from "../../state/calendar/hooks";
@@ -92,7 +93,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
             <Button
               variant="link"
               size="xs"
-              onClick={() => navigate("/calendar")}
+              onClick={() => navigate(ROUTES.CALENDAR)}
               className="text-jade-600 hover:text-jade-700"
             >
               View Full Calendar

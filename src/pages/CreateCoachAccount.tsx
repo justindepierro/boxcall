@@ -6,6 +6,7 @@ import { Typography } from "../components/design-system";
 import { Button } from "../components/ui/Button/Button";
 import { Icon } from "../components/ui/Icon/Icon";
 import { usePermissions } from "../hooks/usePermissions";
+import { ROUTES } from "../routes/paths";
 
 /**
  * Create Coach Account Page
@@ -735,14 +736,14 @@ export const CreateCoachAccount: React.FC = () => {
             </Typography>
             <div className="flex gap-3 justify-center">
               <Button
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate(ROUTES.DASHBOARD)}
                 variant="primary"
                 size="sm"
               >
                 Go to Coach Dashboard
               </Button>
               <Button
-                onClick={() => navigate("/playbook")}
+                onClick={() => navigate(ROUTES.PLAYBOOK)}
                 variant="ghost"
                 size="sm"
               >

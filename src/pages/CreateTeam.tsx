@@ -8,6 +8,7 @@ import { Icon } from "../components/ui/Icon/Icon";
 import { usePermissions } from "../hooks/usePermissions";
 import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";
+import { ROUTES } from "../routes/paths";
 
 /**
  * Create Team Page
@@ -810,7 +811,7 @@ export const CreateTeam: React.FC = () => {
                 <Button
                   onClick={() => {
                     console.log("🏃‍♂️ Redirecting to Coach Account signup");
-                    navigate("/create-coach-account");
+                    navigate(ROUTES.CREATE_COACH_ACCOUNT);
                   }}
                   fullWidth
                   variant="primary"
@@ -855,7 +856,7 @@ export const CreateTeam: React.FC = () => {
                 Go to Team Dashboard
               </Button>
               <Button
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate(ROUTES.DASHBOARD)}
                 variant="ghost"
                 size="sm"
               >

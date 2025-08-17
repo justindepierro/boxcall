@@ -7,13 +7,14 @@ import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
 
 import { VisualPlayBuilderV2 } from "./diagram-v2/VisualPlayBuilderV2";
+import { ROUTES } from "../../routes/paths";
 
 export const DiagramPaneRoute: React.FC = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const playId = params.get("playId");
 
-  const handleClose = useCallback(() => navigate("/playbook"), [navigate]);
+  const handleClose = useCallback(() => navigate(ROUTES.PLAYBOOK), [navigate]);
 
   // Close on ESC key
   useEffect(() => {

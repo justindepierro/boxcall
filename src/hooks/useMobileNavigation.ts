@@ -1,4 +1,5 @@
 import { getRouteImporter } from "../routes/importers";
+import { ROUTES, teamRoutes } from "../routes/paths";
 
 import type { MobileNavItem } from "../components/mobile/MobileBottomNavigation";
 
@@ -19,38 +20,38 @@ export const useMobileNavigation = (currentPath: string = "/") => {
       id: "dashboard",
       label: "Home",
       icon: "home",
-      href: "/dashboard",
+      href: ROUTES.DASHBOARD,
       badge: notifications.dashboard,
-      isActive: currentPath === "/dashboard" || currentPath === "/",
-      importer: getRouteImporter("/dashboard"),
+      isActive: currentPath === ROUTES.DASHBOARD || currentPath === "/",
+      importer: getRouteImporter(ROUTES.DASHBOARD),
     },
     {
       id: "calendar",
       label: "Calendar",
       icon: "calendar",
-      href: "/calendar",
+      href: ROUTES.CALENDAR,
       badge: notifications.calendar,
-      isActive: currentPath.startsWith("/calendar"),
-      importer: getRouteImporter("/calendar"),
+      isActive: currentPath.startsWith(ROUTES.CALENDAR),
+      importer: getRouteImporter(ROUTES.CALENDAR),
     },
     {
       id: "bulletin",
       label: "Team",
       icon: "users",
-      href: "/team/1/bulletin",
+      href: teamRoutes.bulletin("1"),
       badge: notifications.bulletin,
       isActive:
         currentPath.includes("/team") || currentPath.includes("/bulletin"),
-      importer: getRouteImporter("/team/1/bulletin"),
+      importer: getRouteImporter(teamRoutes.bulletin("1")),
     },
     {
       id: "profile",
       label: "Profile",
       icon: "user",
-      href: "/profile",
+      href: ROUTES.PROFILE,
       badge: notifications.profile,
-      isActive: currentPath.startsWith("/profile"),
-      importer: getRouteImporter("/profile"),
+      isActive: currentPath.startsWith(ROUTES.PROFILE),
+      importer: getRouteImporter(ROUTES.PROFILE),
     },
   ];
 

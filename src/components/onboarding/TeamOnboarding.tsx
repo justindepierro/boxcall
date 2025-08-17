@@ -6,6 +6,7 @@ import { supabase } from "../../lib/supabase";
 import { Typography } from "../design-system";
 import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
+import { ROUTES } from "../../routes/paths";
 
 interface TeamOnboardingProps {
   /** Show only on dashboard, not in playbook */
@@ -128,14 +129,14 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
               <Button
                 size="sm"
                 variant="brandLink"
-                onClick={() => navigate("/create-coach-account")}
+                onClick={() => navigate(ROUTES.CREATE_COACH_ACCOUNT)}
               >
                 Get Coach Account ($19.99)
               </Button>
               <Button
                 size="sm"
                 variant="neutralLink"
-                onClick={() => navigate("/join-team")}
+                onClick={() => navigate(ROUTES.JOIN_TEAM)}
               >
                 Join a Team
               </Button>
@@ -191,7 +192,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
               fullWidth
               size="sm"
               variant="primary"
-              onClick={() => navigate("/create-team")}
+              onClick={() => navigate(ROUTES.CREATE_TEAM)}
             >
               Create Team
             </Button>
@@ -215,7 +216,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
               fullWidth
               size="sm"
               variant="ghost"
-              onClick={() => navigate("/join-team")}
+              onClick={() => navigate(ROUTES.JOIN_TEAM)}
             >
               Join Team
             </Button>
@@ -231,7 +232,7 @@ export const TeamOnboarding: React.FC<TeamOnboardingProps> = ({
             <Button
               variant="link"
               size="sm"
-              onClick={() => navigate("/create-coach-account")}
+              onClick={() => navigate(ROUTES.CREATE_COACH_ACCOUNT)}
               className="font-medium"
             >
               Get Coach Account ($19.99 one-time) →

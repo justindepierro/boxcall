@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 // (Removed unused Search import after log text simplification)
 import { useNavigate } from "react-router-dom";
+import { ROUTES, teamRoutes } from "../routes/paths";
 
 import { useAuth } from "../app/auth-store";
 import { Typography } from "../components/design-system";
@@ -469,7 +470,7 @@ export const JoinTeam: React.FC = () => {
                 type="button"
                 variant="primary"
                 className="flex-1"
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate(ROUTES.DASHBOARD)}
               >
                 Go to Dashboard
               </Button>
@@ -522,7 +523,7 @@ export const JoinTeam: React.FC = () => {
                 type="button"
                 variant="primary"
                 className="flex-1"
-                onClick={() => navigate("/team/new-team-id/bulletin")}
+                onClick={() => navigate(teamRoutes.bulletin("new-team-id"))}
               >
                 Go to Team
               </Button>
@@ -530,7 +531,7 @@ export const JoinTeam: React.FC = () => {
                 type="button"
                 variant="ghost"
                 className="flex-1"
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate(ROUTES.DASHBOARD)}
               >
                 Dashboard
               </Button>
@@ -590,7 +591,7 @@ export const JoinTeam: React.FC = () => {
                 type="button"
                 variant="link"
                 size="sm"
-                onClick={() => navigate("/create-team")}
+                onClick={() => navigate(ROUTES.CREATE_TEAM)}
                 className=""
               >
                 Create a New Team Instead

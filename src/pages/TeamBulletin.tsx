@@ -14,6 +14,7 @@ import { LogoIcon } from "../components/ui/Logo";
 import { usePermissions } from "../hooks/usePermissions";
 import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
 import { supabase } from "../lib/supabase";
+import { ROUTES } from "../routes/paths";
 
 // Team Bulletin Page (modular layout version)
 export const TeamBulletin: React.FC = () => {
@@ -70,11 +71,11 @@ export const TeamBulletin: React.FC = () => {
       isSuperAdmin,
       canCreateTeamUnlimited,
     });
-    navigate("/create-team");
+  navigate(ROUTES.CREATE_TEAM);
   };
   const handleJoinTeam = () => {
     console.log("team.join.attempt");
-    navigate("/join-team");
+  navigate(ROUTES.JOIN_TEAM);
   };
 
   // Fetch real team if exists
