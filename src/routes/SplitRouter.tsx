@@ -4,6 +4,7 @@
  */
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import { ROUTES } from "./paths";
 
 import { Typography } from "../components/design-system/Typography";
 import { Button } from "../components/ui";
@@ -78,7 +79,7 @@ export const SplitRouter: React.FC = () => {
   return (
     <Routes>
       <Route
-        path="/"
+        path={ROUTES.ROOT}
         element={
           <RouteLoader routeName="home">
             <BoxCallPage />
@@ -87,7 +88,7 @@ export const SplitRouter: React.FC = () => {
       />
 
       <Route
-        path="/dashboard"
+        path={ROUTES.DASHBOARD}
         element={
           <RouteLoader routeName="dashboard">
             <DashboardPage />
@@ -96,7 +97,7 @@ export const SplitRouter: React.FC = () => {
       />
 
       <Route
-        path="/playbook"
+        path={ROUTES.PLAYBOOK}
         element={
           <RouteLoader routeName="playbook">
             <PlaybookPage />
@@ -105,7 +106,7 @@ export const SplitRouter: React.FC = () => {
       />
 
       <Route
-        path="/calendar"
+        path={ROUTES.CALENDAR}
         element={
           <RouteLoader routeName="calendar">
             <CalendarShellPage />
@@ -123,7 +124,7 @@ export const SplitRouter: React.FC = () => {
       />
 
       <Route
-        path="/profile"
+        path={ROUTES.PROFILE}
         element={
           <RouteLoader routeName="profile">
             <ProfilePage />
@@ -132,7 +133,7 @@ export const SplitRouter: React.FC = () => {
       />
 
       <Route
-        path="/login"
+        path={ROUTES.LOGIN}
         element={
           <RouteLoader routeName="login">
             <LoginPage />
@@ -141,7 +142,7 @@ export const SplitRouter: React.FC = () => {
       />
 
       <Route
-        path="/logout"
+        path={ROUTES.LOGOUT}
         element={
           <RouteLoader routeName="logout">
             <LogoutPage />

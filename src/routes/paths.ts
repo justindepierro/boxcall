@@ -9,6 +9,7 @@ export const ROUTES = {
   TEAMS: "/teams",
   PLAYBOOK: "/playbook",
   BOXCALL: "/boxcall",
+  LOGOUT: "/logout",
   CREATE_TEAM: "/create-team",
   JOIN_TEAM: "/join-team",
   CREATE_COACH_ACCOUNT: "/create-coach-account",
