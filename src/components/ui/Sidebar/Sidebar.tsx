@@ -124,19 +124,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [focusIndex, setFocusIndex] = useState<number>(0);
   const itemRefs = useRef<(HTMLAnchorElement | HTMLDivElement | null)[]>([]);
   const showTooltips = UserPreferencesService.loadPreferences().ui.showTooltips;
+  const pinnedIds = useMemo(() => new Set(state.favorites), [state.favorites]);
+  const pinnedItems = useMemo(
+    () => items.filter((it) => pinnedIds.has(it.id) && !it.divider && !it.disabled),
+    [items, pinnedIds]
+  );
+  const mainItems = useMemo(
+    () => items.filter((it) => !pinnedIds.has(it.id)),
+    [items, pinnedIds]
+  );
 
-  // Build a list of focusable indices aligned with rendered items (skip dividers/disabled)
+  // Build a list of focusable indices aligned with rendered MAIN items (skip dividers/disabled)
   const focusableMap = useMemo(() => {
     let idx = 0;
-    return items.map((it) => {
+    return mainItems.map((it) => {
       const isFocusable = !it.divider && !it.disabled;
       return isFocusable ? idx++ : -1;
     });
-  }, [items]);
+  }, [mainItems]);
 
   // Initialize focus index to active item when possible
   useEffect(() => {
-    const activeIdx = items.findIndex((it) => (it.href ? pathname === it.href : it.active));
+    const activeIdx = mainItems.findIndex((it) => (it.href ? pathname === it.href : it.active));
     if (activeIdx >= 0 && focusableMap[activeIdx] >= 0) {
       setFocusIndex(focusableMap[activeIdx]);
     } else {
@@ -145,7 +154,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       if (firstFocusable >= 0) setFocusIndex(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, items]);
+  }, [pathname, mainItems]);
   // Auto-expand parent groups when current route is within them (if using groups)
   useEffect(() => {
     // Expand any item whose href is a prefix of the current path
@@ -312,7 +321,110 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onKeyDown={onKeyDown}
         >
           <nav className="py-4" role="menubar" aria-orientation="vertical">
-            {items.map((item, i) => {
+            {pinnedItems.length > 0 && (
+              <div className="mb-2">
+                <div className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-text-tertiary">
+                  Pinned
+                </div>
+                {pinnedItems.map((item) => {
+                  const isActive = item.href ? pathname === item.href : !!item.active;
+                  const styledItem = { ...item, active: isActive } as SidebarItem;
+                  // compute focus map index based on main focus list start at 0; keep pinned non-roving for now
+                  const focusKey = -1;
+                  return (
+                    <div key={`pinned-${item.id}`} className="px-2">
+                      {item.href ? (
+                        <Tooltip
+                          content={item.label}
+                          disabled={state.mode !== "rail" || !showTooltips}
+                          placement="right"
+                        >
+                          <Link
+                            to={item.href}
+                            className={getSidebarItemStyles(styledItem)}
+                            role="menuitem"
+                            aria-current={isActive ? "page" : undefined}
+                            title={undefined}
+                            tabIndex={focusKey >= 0 ? (focusIndex === focusKey ? 0 : -1) : -1}
+                            onClick={() => handleItemClick()}
+                          >
+                            <div className="flex items-center justify-start w-9 flex-shrink-0">
+                              {item.icon}
+                            </div>
+                            {state.mode !== "rail" && (
+                              <>
+                                <span className="flex-1 text-left">{item.label}</span>
+                                {item.badge && (
+                                  <span className={getBadgeStyles()}>{item.badge}</span>
+                                )}
+                                {/* Unpin control */}
+                                <Tooltip content="Unpin" disabled={!showTooltips} placement="left">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    aria-label="Unpin"
+                                    aria-pressed={true}
+                                    className="ml-2 px-1 text-jade-600 hover:text-jade-700"
+                                    tabIndex={-1}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      state.toggleFavorite(item.id);
+                                    }}
+                                  >
+                                    ★
+                                  </Button>
+                                </Tooltip>
+                              </>
+                            )}
+                          </Link>
+                        </Tooltip>
+                      ) : (
+                        <Tooltip content={item.label} disabled={state.mode !== "rail" || !showTooltips} placement="right">
+                          <div
+                            className={getSidebarItemStyles(styledItem)}
+                            role="menuitem"
+                            aria-current={isActive ? "page" : undefined}
+                            title={undefined}
+                            tabIndex={-1}
+                          >
+                            <div className="flex items-center justify-start w-9 flex-shrink-0">
+                              {item.icon}
+                            </div>
+                            {state.mode !== "rail" && (
+                              <>
+                                <span className="flex-1 text-left">{item.label}</span>
+                                {item.badge && (
+                                  <span className={getBadgeStyles()}>{item.badge}</span>
+                                )}
+                                <Tooltip content="Unpin" disabled={!showTooltips} placement="left">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    aria-label="Unpin"
+                                    aria-pressed={true}
+                                    className="ml-2 px-1 text-jade-600 hover:text-jade-700"
+                                    tabIndex={-1}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      state.toggleFavorite(item.id);
+                                    }}
+                                  >
+                                    ★
+                                  </Button>
+                                </Tooltip>
+                              </>
+                            )}
+                          </div>
+                        </Tooltip>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {mainItems.map((item, i) => {
               const isActive = item.href ? pathname === item.href : !!item.active;
               const styledItem = { ...item, active: isActive } as SidebarItem;
               const focusKey = focusableMap[i];
@@ -345,16 +457,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         {item.badge && (
                           <span className={getBadgeStyles()}>{item.badge}</span>
                         )}
+                        {/* Pin/Unpin control */}
+                        <Tooltip content={pinnedIds.has(item.id) ? "Unpin" : "Pin"} disabled={!showTooltips} placement="left">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            aria-label={pinnedIds.has(item.id) ? "Unpin" : "Pin"}
+                            aria-pressed={pinnedIds.has(item.id)}
+                            className={`ml-2 px-1 ${pinnedIds.has(item.id) ? "text-jade-600" : "text-text-tertiary"} hover:text-jade-700`}
+                            tabIndex={-1}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              state.toggleFavorite(item.id);
+                            }}
+                          >
+                            ★
+                          </Button>
+                        </Tooltip>
                       </>
                     )}
                     </Link>
                   </Tooltip>
                 ) : (
-                  <Tooltip
-                    content={item.label}
-                    disabled={state.mode !== "rail" || !showTooltips}
-                    placement="right"
-                  >
+                  <Tooltip content={item.label} disabled={state.mode !== "rail" || !showTooltips} placement="right">
                     <div
                       className={getSidebarItemStyles(styledItem)}
                       role="menuitem"
@@ -374,6 +500,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           {item.badge && (
                             <span className={getBadgeStyles()}>{item.badge}</span>
                           )}
+                          <Tooltip content={pinnedIds.has(item.id) ? "Unpin" : "Pin"} disabled={!showTooltips} placement="left">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              aria-label={pinnedIds.has(item.id) ? "Unpin" : "Pin"}
+                              aria-pressed={pinnedIds.has(item.id)}
+                              className={`ml-2 px-1 ${pinnedIds.has(item.id) ? "text-jade-600" : "text-text-tertiary"} hover:text-jade-700`}
+                              tabIndex={-1}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                state.toggleFavorite(item.id);
+                              }}
+                            >
+                              ★
+                            </Button>
+                          </Tooltip>
                         </>
                       )}
                     </div>

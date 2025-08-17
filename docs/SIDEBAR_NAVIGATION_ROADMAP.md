@@ -77,8 +77,8 @@ Files (planned)
 Tasks
 - [x] Rail mode (≈64px) + expanded width (responsive)
 - [x] Local persistence (collapsed state) via localStorage
-- [ ] Keyboard nav (arrows, Home/End, typeahead); roving tab index
-- [ ] Tooltips in rail mode (aria-describedby) — using title as placeholder
+- [x] Keyboard nav (Arrow Up/Down, Home/End, Enter/Space) with roving tabindex
+- [x] Tooltips in rail mode using shared Tooltip (aria-describedby)
 - [ ] Basic RTL/Tailwind tokens; CSS‑only transitions
 
 ---
@@ -91,7 +91,7 @@ Tasks
 - [x] Active route highlighting via React Router
 - [x] Auto‑expand parents of active item
 - [ ] Favorites/pins (persisted)
-- [ ] Tests for deep linking and expansion sync
+- [x] Tests for deep linking and expansion sync (selectors unit tests)
 
 ---
 
@@ -149,6 +149,7 @@ Tasks
 - 2025‑08‑17: Sidebar uses React Router Links instead of window.location for SPA navigation.
 - 2025‑08‑17: Auto‑expand parent groups based on current pathname → child href prefix match.
 - 2025‑08‑17: `href` passed through nav mapping so Sidebar can compute active/aria‑current.
+- 2025‑08‑17: Introduced `src/navigation/nav.selectors.ts` for active/expanded derivation with tests.
 
 ---
 
@@ -161,10 +162,8 @@ Tasks
 
 ## Next steps (short‑term)
 
-- [ ] Keyboard navigation: roving tabindex, ArrowUp/Down/Left/Right, Home/End, Enter/Space, Esc
-- [ ] Replace rail mode title with Tooltip component (aria‑describedby), ensure focusable trigger
-- [ ] Extract active/expanded derivation to `src/navigation/nav.selectors.ts` and add tests
+- [ ] Favorites (pin/unpin) UI and persistence; show pinned group at top
 - [ ] Wire Favorites (pin/unpin) UI and persistence; show pinned group at top
 - [ ] Convert NavBar items to React Router Links for SPA consistency
-- [ ] Add tests: deep‑linking auto‑expand, keyboard a11y, aria‑current on Links
+- [ ] Add tests: deep‑linking auto‑expand (component level), keyboard a11y, aria‑current on Links
 - [ ] Run `npm run audit:legacy:nav` and plan removal of flagged wrappers/routes
