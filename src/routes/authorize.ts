@@ -47,6 +47,21 @@ export async function fetchTeamSubscription(
   return data;
 }
 
+// Super admin check helper (developer/admin panel access)
+export async function fetchSuperAdminStatus(
+  userId: string,
+  role: AppRole | null | undefined
+): Promise<boolean> {
+  if (!userId || role !== "admin") return false;
+  const { data, error } = await supabase
+    .from("super_admins")
+    .select("admin_level")
+    .eq("user_id", userId)
+    .single();
+  if (error || !data) return false;
+  return data.admin_level === "super_admin" || data.admin_level === "admin";
+}
+
 // Consolidated authorization decision helper
 export type AuthorizeInput = {
   profile: { id?: string | null; role?: AppRole | null } | null;

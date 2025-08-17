@@ -7,10 +7,8 @@ import {
   useAuthProfile,
   useIsAuthenticated,
 } from "../app/auth-store";
-import { Typography } from "../components/design-system/Typography";
-import { Button } from "../components/ui";
-import { Icon } from "../components/ui/Icon/Icon";
-import { supabase } from "../lib/supabase";
+import { LoadingScreen, AccessDenied } from "./GuardUI";
+import { fetchSuperAdminStatus } from "./authorize";
 
 interface SuperAdminRouteProps {
   children: React.ReactNode;
@@ -34,28 +32,8 @@ export const SuperAdminRoute: React.FC<SuperAdminRouteProps> = ({
   const [isSuperAdmin, setIsSuperAdmin] = useState<boolean | null>(null);
   useEffect(() => {
     const checkSuperAdminStatus = async () => {
-      if (!profile?.id || profile.role !== "admin") {
-        setIsSuperAdmin(false);
-        return;
-      }
-      try {
-        const { data, error } = await supabase
-          .from("super_admins")
-          .select("admin_level")
-          .eq("user_id", profile.id)
-          .single();
-        if (error || !data) {
-          setIsSuperAdmin(false);
-          return;
-        }
-        // Check if user has super_admin or admin level
-        setIsSuperAdmin(
-          data.admin_level === "super_admin" || data.admin_level === "admin"
-        );
-      } catch (error) {
-        console.error("Error checking super admin status:", error);
-        setIsSuperAdmin(false);
-      }
+      const ok = await fetchSuperAdminStatus(profile?.id as string, profile?.role ?? null);
+      setIsSuperAdmin(ok);
     };
     if (profile) {
       checkSuperAdminStatus();
@@ -63,11 +41,7 @@ export const SuperAdminRoute: React.FC<SuperAdminRouteProps> = ({
   }, [profile]);
   // Show loading spinner while checking authentication and super admin status
   if (loading || isSuperAdmin === null) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-jade"></div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
   // Not authenticated - redirect to login
   if (!isAuthenticated) {
@@ -76,28 +50,11 @@ export const SuperAdminRoute: React.FC<SuperAdminRouteProps> = ({
   // Not a super admin - show access denied
   if (!isSuperAdmin) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="max-w-md mx-auto text-center">
-          <Typography
-            variant="headline-md"
-            as="h1"
-            className="text-red-600 mb-4 flex items-center justify-center"
-          >
-            <Icon name="shield" size="lg" className="mr-2" />
-            Developer Access Only
-          </Typography>
-          <p className="mb-6 text-text-secondary">
-            This area is restricted to super administrators and developers.
-          </p>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => window.history.back()}
-          >
-            Go Back
-          </Button>
-        </div>
-      </div>
+      <AccessDenied
+        title="Developer Access Only"
+        iconName="shield"
+        message="This area is restricted to super administrators and developers."
+      />
     );
   }
   // Access granted, render the protected content
