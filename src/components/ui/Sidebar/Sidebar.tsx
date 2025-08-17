@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "../Button";
 import { useSidebarState } from "../../../hooks/useSidebarState";
 import { Link, useLocation } from "react-router-dom";
@@ -180,6 +180,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const state = useSidebarState();
   const { pathname } = useLocation();
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const [focusIndex, setFocusIndex] = useState<number>(0);
+  const itemRefs = useRef<(HTMLAnchorElement | HTMLDivElement | null)[]>([]);
+
+  // Build a list of focusable indices aligned with rendered items (skip dividers/disabled)
+  const focusableMap = useMemo(() => {
+    let idx = 0;
+    return items.map((it) => {
+      const isFocusable = !it.divider && !it.disabled;
+      return isFocusable ? idx++ : -1;
+    });
+  }, [items]);
+
+  // Initialize focus index to active item when possible
+  useEffect(() => {
+    const activeIdx = items.findIndex((it) => (it.href ? pathname === it.href : it.active));
+    if (activeIdx >= 0 && focusableMap[activeIdx] >= 0) {
+      setFocusIndex(focusableMap[activeIdx]);
+    } else {
+      // default to first focusable
+      const firstFocusable = focusableMap.findIndex((n) => n === 0);
+      if (firstFocusable >= 0) setFocusIndex(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, items]);
   // Auto-expand parent groups when current route is within them (if using groups)
   useEffect(() => {
     // Expand any item whose href is a prefix of the current path
@@ -234,6 +258,46 @@ export const Sidebar: React.FC<SidebarProps> = ({
     // Close sidebar when item is clicked (for mobile)
     if (window.innerWidth < 768) {
       onClose?.();
+    }
+  };
+
+  // Keyboard navigation for menu (roving tabindex)
+  const onKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+    const maxIndex = Math.max(0, focusableMap.filter((n) => n >= 0).length - 1);
+    const move = (to: number) => {
+      const clamped = Math.min(maxIndex, Math.max(0, to));
+      setFocusIndex(clamped);
+      requestAnimationFrame(() => itemRefs.current[clamped]?.focus());
+    };
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        move(focusIndex + 1);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        move(focusIndex - 1);
+        break;
+      case "Home":
+        e.preventDefault();
+        move(0);
+        break;
+      case "End":
+        e.preventDefault();
+        move(maxIndex);
+        break;
+      case "Enter":
+      case " ": // Space
+        {
+          const el = itemRefs.current[focusIndex];
+          if (el) {
+            e.preventDefault();
+            (el as HTMLElement).click();
+          }
+        }
+        break;
+      default:
+        break;
     }
   };
   if (!isOpen) return null;
@@ -302,12 +366,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
           className="flex-1 overflow-y-auto focus-scroll"
           role="navigation"
           aria-label="Primary navigation"
-          tabIndex={0}
+          tabIndex={-1}
+          onKeyDown={onKeyDown}
         >
           <nav className="py-4" role="menubar" aria-orientation="vertical">
-            {items.map((item) => {
+            {items.map((item, i) => {
               const isActive = item.href ? pathname === item.href : !!item.active;
               const styledItem = { ...item, active: isActive } as SidebarItem;
+              const focusKey = focusableMap[i];
               return (
               <div key={item.id} className="px-2">
                 {item.href ? (
@@ -317,6 +383,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     role="menuitem"
                     aria-current={isActive ? "page" : undefined}
                     title={state.mode === "rail" ? item.label : undefined}
+                    tabIndex={focusKey >= 0 ? (focusIndex === focusKey ? 0 : -1) : -1}
+                    ref={(el) => {
+                      if (focusKey >= 0) itemRefs.current[focusKey] = el;
+                    }}
                     onClick={() => handleItemClick()}
                   >
                     <div className="flex items-center justify-start w-9 flex-shrink-0">
@@ -337,6 +407,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     role="menuitem"
                     aria-current={isActive ? "page" : undefined}
                     title={state.mode === "rail" ? item.label : undefined}
+                    tabIndex={focusKey >= 0 ? (focusIndex === focusKey ? 0 : -1) : -1}
+                    ref={(el) => {
+                      if (focusKey >= 0) itemRefs.current[focusKey] = el;
+                    }}
                   >
                     <div className="flex items-center justify-start w-9 flex-shrink-0">
                       {item.icon}

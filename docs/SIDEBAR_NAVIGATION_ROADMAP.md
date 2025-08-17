@@ -2,7 +2,7 @@
 
 Last updated: 2025-08-17
 Owner: Justin (with support)
-Branch: chore/repo-cleanup (will move feature work to feat/sidebar-nav)
+Branch: feat/sidebar-nav
 
 Pin this doc in VS Code (right‑click the tab → Pin). Update checkboxes as we progress.
 
@@ -28,9 +28,9 @@ Pin this doc in VS Code (right‑click the tab → Pin). Update checkboxes as we
 
 ## Status dashboard
 - [ ] Phase 0: IA + wireframes
-- [ ] Phase 1: Nav schema + tests
-- [ ] Phase 2: Sidebar component shell (desktop)
-- [ ] Phase 3: Routing/state integration
+- [x] Phase 1: Nav schema + tests
+- [ ] Phase 2: Sidebar component shell (desktop) (in progress)
+- [ ] Phase 3: Routing/state integration (in progress)
 - [ ] Phase 4: Perf + polish
 - [ ] Phase 5: A11y + contrast validation
 - [ ] Phase 6: Mobile/Tablet behaviors
@@ -55,10 +55,10 @@ Files (planned)
 - `src/navigation/nav.selectors.ts` — filters, active/expanded derivation
 
 Tasks
-- [ ] Define schema types and example seed data
-- [ ] Role/feature‑flag filtering
-- [ ] Map to route IDs/paths; validate no orphans
-- [ ] Unit tests for filtering/derivation
+- [x] Define schema types and example seed data
+- [x] Role/feature‑flag filtering
+- [x] Map to route IDs/paths; validate no orphans
+- [x] Unit tests for filtering/derivation
 
 Contract
 - Input: user role + enabled features
@@ -75,10 +75,10 @@ Files (planned)
 - `src/components/ui/Sidebar/Sidebar.types.ts`
 
 Tasks
-- [ ] Rail mode (≈64px) + expanded width (responsive)
-- [ ] Local persistence (collapsed state) via localStorage
+- [x] Rail mode (≈64px) + expanded width (responsive)
+- [x] Local persistence (collapsed state) via localStorage
 - [ ] Keyboard nav (arrows, Home/End, typeahead); roving tab index
-- [ ] Tooltips in rail mode (aria-describedby)
+- [ ] Tooltips in rail mode (aria-describedby) — using title as placeholder
 - [ ] Basic RTL/Tailwind tokens; CSS‑only transitions
 
 ---
@@ -88,8 +88,8 @@ Files (planned)
 - `src/hooks/useSidebarState.ts` — collapse/expanded/favorites
 
 Tasks
-- [ ] Active route highlighting via React Router data APIs
-- [ ] Auto‑expand parents of active item
+- [x] Active route highlighting via React Router
+- [x] Auto‑expand parents of active item
 - [ ] Favorites/pins (persisted)
 - [ ] Tests for deep linking and expansion sync
 
@@ -146,10 +146,25 @@ Tasks
 
 ## Decisions log
 - 2025‑08‑17: Single typed schema drives UI; loader‑first auth remains; sidebar reflects routes.
+- 2025‑08‑17: Sidebar uses React Router Links instead of window.location for SPA navigation.
+- 2025‑08‑17: Auto‑expand parent groups based on current pathname → child href prefix match.
+- 2025‑08‑17: `href` passed through nav mapping so Sidebar can compute active/aria‑current.
 
 ---
 
 ## Working notes / TODO (scratchpad)
-- [ ] Create feature branch: `feat/sidebar-nav`
-- [ ] Scaffold files listed in Phase 1/2
-- [ ] Add initial nav seed for visual iteration
+- [x] Create feature branch: `feat/sidebar-nav`
+- [x] Scaffold files listed in Phase 1/2
+- [x] Add initial nav seed for visual iteration
+
+---
+
+## Next steps (short‑term)
+
+- [ ] Keyboard navigation: roving tabindex, ArrowUp/Down/Left/Right, Home/End, Enter/Space, Esc
+- [ ] Replace rail mode title with Tooltip component (aria‑describedby), ensure focusable trigger
+- [ ] Extract active/expanded derivation to `src/navigation/nav.selectors.ts` and add tests
+- [ ] Wire Favorites (pin/unpin) UI and persistence; show pinned group at top
+- [ ] Convert NavBar items to React Router Links for SPA consistency
+- [ ] Add tests: deep‑linking auto‑expand, keyboard a11y, aria‑current on Links
+- [ ] Run `npm run audit:legacy:nav` and plan removal of flagged wrappers/routes
