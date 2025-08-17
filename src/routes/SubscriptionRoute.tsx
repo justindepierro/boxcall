@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useLocation, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { ROUTES } from "./paths";
 
-import { useAuthLoading, useIsAuthenticated } from "../app/auth-store";
 import { LoadingScreen, AccessDenied } from "./GuardUI";
 import { supabase } from "../lib/supabase";
+import { useAuthGate } from "./useAuthGate";
 
 import type { Database } from "../types/database";
 
@@ -38,10 +38,8 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
   teamId,
   fallbackTo = "/dashboard",
 }) => {
-  const isAuthenticated = useIsAuthenticated();
-  const loading = useAuthLoading();
+  const gate = useAuthGate({ requireAuth: true, redirectTo: ROUTES.LOGIN });
   const params = useParams();
-  const location = useLocation();
   const [subscription, setSubscription] = useState<TeamSubscription | null>(
     null
   );
@@ -80,13 +78,11 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
     }
   }, [currentTeamId]);
   // Show loading spinner while checking
-  if (loading || checkingSubscription) {
+  if (gate.status === "loading" || checkingSubscription) {
     return <LoadingScreen />;
   }
   // Not authenticated
-  if (!isAuthenticated) {
-    return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
-  }
+  if (gate.status === "redirect") return gate.element!;
   // No team ID
   if (!currentTeamId) {
     return <Navigate to={fallbackTo || ROUTES.DASHBOARD} replace />;

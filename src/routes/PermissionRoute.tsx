@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import {
-  useAuthLoading,
-  useAuthProfile,
-  useIsAuthenticated,
-} from "../app/auth-store";
+import { useAuthProfile } from "../app/auth-store";
 import { AccessDenied, LoadingScreen } from "./GuardUI";
 import { supabase } from "../lib/supabase";
 import { canAccessTeamFeature, hasPermission } from "../types/permissions";
+import { useAuthGate } from "./useAuthGate";
+import { ROUTES } from "./paths";
 
 import type {
   AppUserType,
@@ -48,12 +46,11 @@ export const PermissionRoute: React.FC<PermissionRouteProps> = ({
   requiredPermissions = [],
   teamFeature,
   teamId,
-  fallbackTo: _fallbackTo = "/dashboard",
+  fallbackTo: _fallbackTo = ROUTES.DASHBOARD,
   accessDeniedMessage,
 }) => {
-  const isAuthenticated = useIsAuthenticated();
   const profile = useAuthProfile();
-  const loading = useAuthLoading();
+  const gate = useAuthGate({ requireAuth: true, redirectTo: ROUTES.LOGIN });
   const params = useParams();
   const [accessData, setAccessData] = useState<UserAccessData | null>(null);
   const [checkingAccess, setCheckingAccess] = useState(true);
@@ -157,13 +154,11 @@ export const PermissionRoute: React.FC<PermissionRouteProps> = ({
     }
   }, [profile, currentTeamId, requiredPermissions, teamFeature]);
   // Show loading spinner while checking
-  if (loading || checkingAccess) {
+  if (gate.status === "loading" || checkingAccess) {
     return <LoadingScreen />;
   }
-  // Not authenticated - redirect to login
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+  // Not authenticated - shared redirect element
+  if (gate.status === "redirect") return gate.element!;
   // Access denied
   if (!hasAccess) {
     const defaultMessage = getAccessDeniedMessage(
