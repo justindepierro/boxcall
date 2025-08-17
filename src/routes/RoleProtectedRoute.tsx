@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import { ROUTES } from "./paths";
 
 import { useAuthProfile } from "../app/auth-store";
+import { isRoleAllowed } from "./authorize";
 // UI handled via GuardUI
 import { LoadingScreen, AccessDenied } from "./GuardUI";
 import { useAuthGate } from "./useAuthGate";
@@ -39,7 +40,7 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
     return <Navigate to={fallbackTo || ROUTES.DASHBOARD} replace />;
   }
   // Check if user's role is in the allowed roles
-  if (!profile.role || !allowedRoles.includes(profile.role)) {
+  if (!isRoleAllowed(profile.role, allowedRoles)) {
     return (
       <AccessDenied
         message={"You don't have permission to access this page."}

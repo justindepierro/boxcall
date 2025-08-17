@@ -3,7 +3,7 @@ import { Navigate, useParams } from "react-router-dom";
 import { ROUTES } from "./paths";
 
 import { LoadingScreen, AccessDenied } from "./GuardUI";
-import { supabase } from "../lib/supabase";
+import { fetchTeamSubscription } from "./authorize";
 import { useAuthGate } from "./useAuthGate";
 
 import type { Database } from "../types/database";
@@ -47,23 +47,15 @@ export const SubscriptionRoute: React.FC<SubscriptionRouteProps> = ({
   // Get team ID from props or URL params
   const currentTeamId = teamId || params.teamId;
   useEffect(() => {
-    const checkTeamSubscription = async () => {
+  const checkTeamSubscription = async () => {
       if (!currentTeamId) {
         setSubscription(null);
         setCheckingSubscription(false);
         return;
       }
       try {
-        const { data, error } = await supabase
-          .from("teams")
-          .select("subscription_tier, subscription_expires_at")
-          .eq("id", currentTeamId)
-          .single();
-        if (error || !data) {
-          setSubscription(null);
-        } else {
-          setSubscription(data);
-        }
+    const data = await fetchTeamSubscription(currentTeamId);
+    setSubscription(data);
       } catch (error) {
         console.error("Error checking team subscription:", error);
         setSubscription(null);

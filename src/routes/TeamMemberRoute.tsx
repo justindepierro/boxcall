@@ -5,7 +5,7 @@ import { ROUTES } from "./paths";
 import { useAuthProfile } from "../app/auth-store";
 import { LoadingScreen, AccessDenied } from "./GuardUI";
 import { useAuthGate } from "./useAuthGate";
-import { supabase } from "../lib/supabase";
+import { fetchTeamMembership } from "./authorize";
 
 import type { Database } from "../types/database";
 // Team member role type
@@ -54,24 +54,15 @@ export const TeamMemberRoute: React.FC<TeamMemberRouteProps> = ({
       setCheckingMembership(false);
       return;
     }
-    const checkTeamMembership = async () => {
+  const checkTeamMembership = async () => {
       if (!profile?.id || !currentTeamId) {
         setTeamMember(null);
         setCheckingMembership(false);
         return;
       }
       try {
-        const { data, error } = await supabase
-          .from("team_members")
-          .select("role, status")
-          .eq("user_id", profile.id)
-          .eq("team_id", currentTeamId)
-          .single();
-        if (error || !data) {
-          setTeamMember(null);
-        } else {
-          setTeamMember(data);
-        }
+    const data = await fetchTeamMembership(profile.id, currentTeamId);
+    setTeamMember(data);
       } catch (error) {
         console.error("Error checking team membership:", error);
         setTeamMember(null);

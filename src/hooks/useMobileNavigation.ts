@@ -1,6 +1,6 @@
 import { getRouteImporter } from "../routes/importers";
 import { ROUTES, teamRoutes } from "../routes/paths";
-import { getActiveTeamId } from "../utils/activeTeam";
+import { useActiveTeamStore } from "../state/activeTeamStore";
 
 import type { MobileNavItem } from "../components/mobile/MobileBottomNavigation";
 
@@ -16,7 +16,7 @@ export const useMobileNavigation = (currentPath: string = "/") => {
     profile: 0,
   };
 
-  const teamId = getActiveTeamId();
+  const teamId = useActiveTeamStore((s) => s.activeTeamId) || "1";
   const items: MobileNavItem[] = [
     {
       id: "dashboard",
