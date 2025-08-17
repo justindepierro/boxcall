@@ -4,6 +4,7 @@ import { Icon } from "../components/ui/Icon/Icon";
 
 import type { IconName } from "../components/ui/Icon/Icon";
 import { ROUTES, teamRoutes } from "../routes/paths";
+import { getActiveTeamId } from "./activeTeam";
 import type { SidebarItem } from "../components/ui/Sidebar";
 import type { Database } from "../types/database";
 
@@ -33,13 +34,7 @@ export const getNavigationItems = (
     typeof userRole
   );
   // Dynamic team selection (persisted after creation)
-  let activeTeamId = "1";
-  try {
-    const stored = localStorage.getItem("activeTeamId");
-    if (stored) activeTeamId = stored;
-  } catch (_err) {
-    /* ignore */
-  }
+  const activeTeamId = getActiveTeamId();
   const items: NavigationItem[] = [
     // Dashboard - Available to everyone
     {

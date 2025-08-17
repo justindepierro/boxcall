@@ -1,5 +1,6 @@
 import { getRouteImporter } from "../routes/importers";
 import { ROUTES, teamRoutes } from "../routes/paths";
+import { getActiveTeamId } from "../utils/activeTeam";
 
 import type { MobileNavItem } from "../components/mobile/MobileBottomNavigation";
 
@@ -15,6 +16,7 @@ export const useMobileNavigation = (currentPath: string = "/") => {
     profile: 0,
   };
 
+  const teamId = getActiveTeamId();
   const items: MobileNavItem[] = [
     {
       id: "dashboard",
@@ -38,11 +40,11 @@ export const useMobileNavigation = (currentPath: string = "/") => {
       id: "bulletin",
       label: "Team",
       icon: "users",
-      href: teamRoutes.bulletin("1"),
+  href: teamRoutes.bulletin(teamId),
       badge: notifications.bulletin,
       isActive:
         currentPath.includes("/team") || currentPath.includes("/bulletin"),
-      importer: getRouteImporter(teamRoutes.bulletin("1")),
+  importer: getRouteImporter(teamRoutes.bulletin(teamId)),
     },
     {
       id: "profile",
