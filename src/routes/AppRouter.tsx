@@ -16,6 +16,7 @@ import {
   LazyBoxCall,
   LazyPlaybookPage,
   LazyTeamSettings,
+  LazyTemplatesPage,
   LazyAboutPage,
   LazyPrivacyPolicyPage,
   LazyTermsOfServicePage,
@@ -188,6 +189,20 @@ export const AppRouter: React.FC = () => {
 
           {/* ==================== COACH & ADMIN TOOLS ==================== */}
           {/* ==================== COACH & ADMIN TOOLS ==================== */}
+          {/* Templates - Coaches and admins only */}
+          <Route
+            path={ROUTES.TEMPLATES}
+            element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={["coach", "admin"]}>
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyTemplatesPage />
+                  </Suspense>
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            }
+          />
+
           {/* BoxCall - Coaches and admins only */}
           <Route
             path={ROUTES.BOXCALL}

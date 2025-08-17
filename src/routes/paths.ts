@@ -19,6 +19,7 @@ export const ROUTES = {
   PRIVACY: "/privacy-policy",
   TERMS: "/terms-of-service",
   CONTACT: "/contact",
+  TEMPLATES: "/templates",
   DEV_DIAGNOSTICS: "/dev/diagnostics",
 } as const;
 

@@ -144,7 +144,7 @@ export const getNavigationItems = (
       id: "templates",
       label: "Templates",
       icon: "file",
-  href: "/templates",
+  href: ROUTES.TEMPLATES,
       roles: ["admin", "coach"],
       description: "Pre-built templates and resources",
     });

@@ -46,6 +46,8 @@ export function getRouteImporter(path: string): RouteImporter | undefined {
         import("../pages/legal/ContactPage").then((m) => ({
           default: m.ContactPage,
         }));
+    case ROUTES.TEMPLATES:
+      return () => import("../pages/Templates");
     default:
       // Dynamic team routes
       if (p.startsWith("/team/") && p.endsWith("/bulletin")) {
