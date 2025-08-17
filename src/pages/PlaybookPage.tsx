@@ -2,6 +2,7 @@
 import { getPlayFlags } from "@utils/localPlayFlags";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../routes/paths";
 
 import { hasShownToday, markShownToday } from "../components/ui/confetti";
 import { UserPreferencesService } from "../services/userPreferencesService";
@@ -628,7 +629,7 @@ const PlaybookPageInner: React.FC = () => {
               onClick={() => {
                 // Navigate to free-draw diagram builder (same experience as play card button)
                 // Opens route-based VisualPlayBuilder; when no playId provided it's a blank canvas.
-                navigate("/playbook/diagram");
+                navigate(`${ROUTES.PLAYBOOK}/diagram`);
               }}
               title="Open Diagram Builder"
             >

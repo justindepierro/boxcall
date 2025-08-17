@@ -220,13 +220,13 @@ export const getPrimaryNavigationItems = (
       id: "dashboard",
       label: "Dashboard",
       icon: "home",
-      href: "/dashboard",
+  href: ROUTES.DASHBOARD,
     },
     {
       id: "boxcall",
       label: "BoxCall",
       icon: "phone",
-      href: "/boxcall",
+  href: ROUTES.BOXCALL,
     },
   ];
   return items.filter((item) => {
