@@ -89,7 +89,8 @@
     "migration:010:verify": "tsx scripts/migration_010_verify.ts",
     "events:report": "tsx scripts/events_report.ts",
     "a11y:smoke": "tsx scripts/a11y_smoke_pages.ts",
-    "a11y:gate": "node scripts/a11y-ci-gate.mjs"
+  "a11y:gate": "node scripts/a11y-ci-gate.mjs",
+  "audit:legacy:nav": "node scripts/audit-legacy-nav.mjs"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.18",

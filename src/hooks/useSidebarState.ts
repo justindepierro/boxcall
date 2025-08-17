@@ -52,6 +52,22 @@ export function useSidebarState() {
   }, []);
 
   const isExpanded = useCallback((id: string) => expanded.has(id), [expanded]);
+  const expand = useCallback((id: string) => {
+    setExpanded((prev) => {
+      if (prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+  }, []);
+  const collapse = useCallback((id: string) => {
+    setExpanded((prev) => {
+      if (!prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  }, []);
   const toggleExpanded = useCallback((id: string) => {
     setExpanded((prev) => {
       const next = new Set(prev);
@@ -78,11 +94,13 @@ export function useSidebarState() {
       toggleMode,
       expanded,
       isExpanded,
+      expand,
+      collapse,
       toggleExpanded,
       favorites,
       isFavorite,
       toggleFavorite,
     }),
-    [mode, toggleMode, expanded, isExpanded, toggleExpanded, favorites, isFavorite, toggleFavorite]
+    [mode, toggleMode, expanded, isExpanded, expand, collapse, toggleExpanded, favorites, isFavorite, toggleFavorite]
   );
 }

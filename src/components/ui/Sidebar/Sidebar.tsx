@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Button } from "../Button";
 import { useSidebarState } from "../../../hooks/useSidebarState";
+import { Link, useLocation } from "react-router-dom";
 
 import type { ReactNode } from "react";
 
@@ -9,6 +10,8 @@ export interface SidebarItem {
   id: string;
   /** Display label for the sidebar item */
   label: string;
+  /** Optional href for navigation */
+  href?: string;
   /** Optional icon (React component or string) */
   icon?: ReactNode;
   /** Click handler for the sidebar item */
@@ -175,7 +178,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
   position = "left",
 }) => {
   const state = useSidebarState();
+  const { pathname } = useLocation();
   const sidebarRef = useRef<HTMLDivElement>(null);
+  // Auto-expand parent groups when current route is within them (if using groups)
+  useEffect(() => {
+    // Expand any item whose href is a prefix of the current path
+    items.forEach((it) => {
+      if (it.children && it.children.length > 0) {
+        const anyChildActive = it.children.some((c) => c.href && pathname.startsWith(c.href));
+        if (anyChildActive) {
+          // Best effort: if ids represent groups, ensure expanded
+          state.expand?.(it.id);
+        }
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
   // Close sidebar when clicking outside
   useEffect(() => {
     if (!isOpen) return;
@@ -287,29 +305,55 @@ export const Sidebar: React.FC<SidebarProps> = ({
           tabIndex={0}
         >
           <nav className="py-4" role="menubar" aria-orientation="vertical">
-            {items.map((item) => (
+            {items.map((item) => {
+              const isActive = item.href ? pathname === item.href : !!item.active;
+              const styledItem = { ...item, active: isActive } as SidebarItem;
+              return (
               <div key={item.id} className="px-2">
-                <div
-                  className={getSidebarItemStyles(item)}
-                  role="menuitem"
-                  aria-current={item.active ? "page" : undefined}
-                  title={state.mode === "rail" ? item.label : undefined}
-                  onClick={() => handleItemClick()}
-                >
-                  <div className="flex items-center justify-start w-9 flex-shrink-0">
-                    {item.icon}
+                {item.href ? (
+                  <Link
+                    to={item.href}
+                    className={getSidebarItemStyles(styledItem)}
+                    role="menuitem"
+                    aria-current={isActive ? "page" : undefined}
+                    title={state.mode === "rail" ? item.label : undefined}
+                    onClick={() => handleItemClick()}
+                  >
+                    <div className="flex items-center justify-start w-9 flex-shrink-0">
+                      {item.icon}
+                    </div>
+                    {state.mode !== "rail" && (
+                      <>
+                        <span className="flex-1 text-left">{item.label}</span>
+                        {item.badge && (
+                          <span className={getBadgeStyles()}>{item.badge}</span>
+                        )}
+                      </>
+                    )}
+                  </Link>
+                ) : (
+                  <div
+                    className={getSidebarItemStyles(styledItem)}
+                    role="menuitem"
+                    aria-current={isActive ? "page" : undefined}
+                    title={state.mode === "rail" ? item.label : undefined}
+                  >
+                    <div className="flex items-center justify-start w-9 flex-shrink-0">
+                      {item.icon}
+                    </div>
+                    {state.mode !== "rail" && (
+                      <>
+                        <span className="flex-1 text-left">{item.label}</span>
+                        {item.badge && (
+                          <span className={getBadgeStyles()}>{item.badge}</span>
+                        )}
+                      </>
+                    )}
                   </div>
-                  {state.mode !== "rail" && (
-                    <>
-                      <span className="flex-1 text-left">{item.label}</span>
-                      {item.badge && (
-                        <span className={getBadgeStyles()}>{item.badge}</span>
-                      )}
-                    </>
-                  )}
-                </div>
+                )}
               </div>
-            ))}
+              );
+            })}
           </nav>
         </div>
         {/* Footer */}

@@ -186,6 +186,7 @@ export const toSidebarItems = (
     .map((item) => ({
       id: item.id,
       label: item.label,
+      href: item.href,
       icon: item.icon
         ? React.createElement(Icon, {
             name: item.icon,
@@ -193,9 +194,7 @@ export const toSidebarItems = (
             color: item.id === "boxcall" ? "primary" : "current",
           })
         : undefined,
-      onClick: item.divider
-        ? undefined
-        : () => (window.location.href = item.href),
+      onClick: item.divider ? undefined : undefined,
       divider: item.divider,
       badge: item.badge,
       children: item.children
