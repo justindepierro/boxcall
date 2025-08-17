@@ -115,9 +115,9 @@ export const SplitRouter: React.FC = () => {
       />
 
       <Route
-        path="/settings"
+        path="/team/:teamId/settings"
         element={
-          <RouteLoader routeName="settings">
+          <RouteLoader routeName="team-settings">
             <TeamSettingsPage />
           </RouteLoader>
         }
