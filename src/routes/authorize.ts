@@ -76,19 +76,22 @@ export type AuthorizeInput = {
 
 export type AuthorizeResult = {
   allowed: boolean;
-  reason?:
-    | "unauthenticated"
-    | "role_denied"
-    | "no_team"
-    | "not_member"
-    | "inactive_member"
-    | "subscription_missing"
-    | "subscription_tier"
-    | "subscription_expired"
-    | "permission_denied";
+  reason?: DenyReason;
   membership?: Awaited<ReturnType<typeof fetchTeamMembership>>;
   subscription?: Awaited<ReturnType<typeof fetchTeamSubscription>>;
 };
+
+// Public union of deny reasons for guard UIs to reuse in type-safe switches
+export type DenyReason =
+  | "unauthenticated"
+  | "role_denied"
+  | "no_team"
+  | "not_member"
+  | "inactive_member"
+  | "subscription_missing"
+  | "subscription_tier"
+  | "subscription_expired"
+  | "permission_denied";
 
 export async function authorize(input: AuthorizeInput): Promise<AuthorizeResult> {
   const {
