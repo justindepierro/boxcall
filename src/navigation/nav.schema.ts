@@ -30,7 +30,7 @@ export const baseNav: NavTree = [
   { id: 'calendar', label: 'Calendar', path: '/calendar', icon: 'Calendar' },
   { id: 'playbook', label: 'Playbook', path: '/playbook', icon: 'Book' },
   { id: 'practice', label: 'Practice', path: '/practice', icon: 'ClipboardList' },
-  { id: 'analytics', label: 'Analytics', path: '/analytics', icon: 'BarChart3' },
+  { id: 'analytics', label: 'Analytics', path: '/analytics', icon: 'BarChart3', featureFlag: 'analytics' },
   { id: 'settings', label: 'Settings', path: '/settings', icon: 'Settings' },
 ];
 
