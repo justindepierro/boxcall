@@ -3,6 +3,8 @@ import React, { useRef, useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { Typography } from "../../design-system";
 import { LogoIcon } from "../../ui/Logo";
+import { Button } from "../../ui/Button"; // Import the shared Button component
+
 // Removed old inline edit button import usage after redesign
 
 export interface TeamBulletinHeaderProps {
@@ -74,21 +76,23 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
         <div className="flex items-center space-x-4">
           {/* Team Logo / Uploader */}
           <div className="relative group">
-            <button
-              type="button"
+            {/* MIGRATION: Replace raw <button> with shared Button for a11y, style, and semantic tokens */}
+            <Button
+              variant={localLogo ? "secondary" : "outline"}
+              size="lg"
               disabled={!isCoach || uploading}
               onClick={() => fileInputRef.current?.click()}
-              className={`flex items-center justify-center w-20 h-20 rounded-none border ${
-                localLogo
-                  ? "border-subtle dark:border-gray-600 surface-subtle dark:bg-gray-700 overflow-hidden"
-                  : "border-gray-300 dark:border-gray-600 surface-subtle dark:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500"
-              } transition-colors cursor-pointer relative`}
               aria-label={
                 isCoach
                   ? localLogo
                     ? "Change team logo"
                     : "Upload team logo"
                   : "Team logo"
+              }
+              className={
+                localLogo
+                  ? "w-20 h-20 rounded-none border-subtle dark:border-gray-600 surface-subtle dark:bg-gray-700 overflow-hidden"
+                  : "w-20 h-20 rounded-none border-gray-300 dark:border-gray-600 surface-subtle dark:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500"
               }
             >
               {localLogo ? (
@@ -105,7 +109,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
                   </span>
                 </div>
               )}
-            </button>
+            </Button>
             <input
               ref={fileInputRef}
               type="file"

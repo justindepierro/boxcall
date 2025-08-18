@@ -1,621 +1,326 @@
 {
-  "totalFiles": 366,
+  "totalFiles": 515,
   "textWhite": 0,
   "textWhiteEntries": [],
   "bgClasses": [
-    ["white", 58],
-    ["gray-50", 31],
-    ["blue-50", 27],
-    ["gray-700", 22],
-    ["opacity-50", 17],
-    ["black", 16],
-    ["slate-50", 16],
-    ["gray-200", 15],
-    ["red-50", 14],
-    ["jade-600", 14],
-    ["slate-200", 12],
-    ["gray-100", 12],
-    ["jade-100", 11],
-    ["jade-50", 11],
-    ["blue-100", 10],
-    ["blue-900/20", 10],
-    ["gray-800", 10],
-    ["gray-300", 9],
-    ["green-100", 8],
-    ["slate-100", 8],
-    ["surface-jade", 8],
-    ["surface-jade-dark", 8],
-    ["jade-700", 7],
-    ["jade-500", 7],
-    ["gradient-to-r", 7],
-    ["green-50", 7],
-    ["white/50", 6],
-    ["yellow-50", 6],
-    ["gradient-to-br", 5],
-    ["green-900/20", 5],
-    ["purple-100", 4],
-    ["gray-700/30", 4],
-    ["blue-200", 4],
-    ["amber-50", 4],
-    ["red-900/20", 4],
-    ["jade-900/20", 3],
-    ["red-100", 3],
-    ["slate-900", 3],
-    ["blue-900", 3],
-    ["green-900", 3],
-    ["purple-900", 3],
-    ["red-900/10", 2],
-    ["orange-50", 2],
-    ["amber-100", 2],
-    ["red-500", 2],
-    ["transparent", 2],
-    ["red-900/30", 2],
-    ["gray-600", 2],
-    ["gray-800/50", 2],
-    ["yellow-900/20", 2],
-    ["purple-50", 2],
-    ["purple-900/20", 2],
-    ["white/60", 1],
-    ["gray-700/40", 1],
-    ["white/20", 1],
-    ["fixed", 1],
-    ["amber-900", 1],
-    ["brand-jade", 1],
-    ["brand-jade-light", 1],
-    ["orange-900/20", 1],
-    ["jade-900/40", 1],
-    ["jade-400", 1],
-    ["opacity-10", 1],
-    ["slate-300", 1],
-    ["gradient-to-b", 1],
-    ["yellow-200", 1],
-    ["yellow-300", 1],
-    ["black/5", 1],
-    ["jade-500/10", 1],
-    ["navy-900/20", 1],
-    ["surface-subtle/70", 1],
-    ["gray-900", 1],
-    ["gray-900/50", 1],
-    ["opacity-70", 1],
-    ["opacity-30", 1],
-    ["blue-900/10", 1],
-    ["jade-900/10", 1],
-    ["surface-jade0", 1],
-    ["navy-50", 1],
-    ["gray-900/20", 1],
-    ["interaction-jade", 1],
-    ["brand-jade-dark", 1],
-    ["orange-100", 1],
-    ["orange-900", 1],
-    ["green-600", 1],
-    ["purple-600", 1],
-    ["orange-600", 1],
-    ["yellow-900", 1]
+    [
+      "gray-700",
+      20
+    ],
+    [
+      "slate-200",
+      19
+    ],
+    [
+      "black",
+      13
+    ],
+    [
+      "opacity-50",
+      13
+    ],
+    [
+      "jade-100",
+      11
+    ],
+    [
+      "blue-100",
+      10
+    ],
+    [
+      "blue-900/20",
+      10
+    ],
+    [
+      "gray-800",
+      9
+    ],
+    [
+      "gray-300",
+      9
+    ],
+    [
+      "slate-100",
+      8
+    ],
+    [
+      "surface-jade",
+      8
+    ],
+    [
+      "surface-jade-dark",
+      8
+    ],
+    [
+      "gradient-to-r",
+      7
+    ],
+    [
+      "green-100",
+      7
+    ],
+    [
+      "jade-600",
+      6
+    ],
+    [
+      "gradient-to-br",
+      5
+    ],
+    [
+      "black/40",
+      5
+    ],
+    [
+      "green-900/20",
+      5
+    ],
+    [
+      "red-100",
+      4
+    ],
+    [
+      "purple-100",
+      4
+    ],
+    [
+      "amber-100",
+      4
+    ],
+    [
+      "blue-200",
+      4
+    ],
+    [
+      "red-50",
+      4
+    ],
+    [
+      "red-900/20",
+      4
+    ],
+    [
+      "blue-900",
+      3
+    ],
+    [
+      "green-900",
+      3
+    ],
+    [
+      "purple-900",
+      3
+    ],
+    [
+      "red-900/10",
+      2
+    ],
+    [
+      "slate-900",
+      2
+    ],
+    [
+      "transparent",
+      2
+    ],
+    [
+      "red-900/30",
+      2
+    ],
+    [
+      "gray-600",
+      2
+    ],
+    [
+      "gray-800/50",
+      2
+    ],
+    [
+      "yellow-900/20",
+      2
+    ],
+    [
+      "jade-900/20",
+      2
+    ],
+    [
+      "purple-900/20",
+      2
+    ],
+    [
+      "red-300",
+      1
+    ],
+    [
+      "black/50",
+      1
+    ],
+    [
+      "inverse",
+      1
+    ],
+    [
+      "fixed",
+      1
+    ],
+    [
+      "amber-900",
+      1
+    ],
+    [
+      "brand-jade",
+      1
+    ],
+    [
+      "brand-jade-light",
+      1
+    ],
+    [
+      "jade-900/40",
+      1
+    ],
+    [
+      "blue-50",
+      1
+    ],
+    [
+      "jade-400",
+      1
+    ],
+    [
+      "opacity-10",
+      1
+    ],
+    [
+      "emerald-800/60",
+      1
+    ],
+    [
+      "slate-900/70",
+      1
+    ],
+    [
+      "amber-50/70",
+      1
+    ],
+    [
+      "black/0",
+      1
+    ],
+    [
+      "black/5",
+      1
+    ],
+    [
+      "navy-900/20",
+      1
+    ],
+    [
+      "surface-subtle/70",
+      1
+    ],
+    [
+      "gray-900",
+      1
+    ],
+    [
+      "gray-900/50",
+      1
+    ],
+    [
+      "opacity-70",
+      1
+    ],
+    [
+      "primary",
+      1
+    ],
+    [
+      "blue-900/10",
+      1
+    ],
+    [
+      "jade-900/10",
+      1
+    ],
+    [
+      "surface-secondary",
+      1
+    ],
+    [
+      "surface-jade0",
+      1
+    ],
+    [
+      "gray-900/20",
+      1
+    ],
+    [
+      "interaction-jade",
+      1
+    ],
+    [
+      "brand-jade-dark",
+      1
+    ],
+    [
+      "orange-100",
+      1
+    ],
+    [
+      "orange-900",
+      1
+    ],
+    [
+      "green-600",
+      1
+    ],
+    [
+      "purple-600",
+      1
+    ],
+    [
+      "orange-600",
+      1
+    ]
   ],
   "brandClasses": [
-    ["brand-jade", 24],
-    ["surface-jade", 11],
-    ["brand-jade-dark", 10],
-    ["surface-jade-dark", 10],
-    ["interaction-jade", 5],
-    ["brand-jade-light", 3]
+    [
+      "brand-jade",
+      14
+    ],
+    [
+      "surface-jade",
+      11
+    ],
+    [
+      "surface-jade-dark",
+      10
+    ],
+    [
+      "brand-jade-dark",
+      6
+    ],
+    [
+      "interaction-jade",
+      5
+    ],
+    [
+      "brand-jade-light",
+      3
+    ]
   ],
   "rawButtonHeuristic": 1,
-  "surfaceCandidates": [
-    {
-      "file": "src/components/dashboard/DatabaseDataDisplay.tsx",
-      "line": 253,
-      "className": "p-3 bg-gray-50 rounded-lg"
-    },
-    {
-      "file": "src/components/dashboard/DatabaseDataDisplay.tsx",
-      "line": 296,
-      "className": "p-3 bg-gray-50 rounded-lg"
-    },
-    {
-      "file": "src/components/dashboard/PersonalTrophyShelf.tsx",
-      "line": 195,
-      "className": "text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg"
-    },
-    {
-      "file": "src/components/dashboard/PersonalTrophyShelf.tsx",
-      "line": 213,
-      "className": "text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg"
-    },
-    {
-      "file": "src/components/dashboard/PersonalTrophyShelf.tsx",
-      "line": 231,
-      "className": "text-center p-2 bg-white/50 dark:bg-gray-700/30 rounded-lg"
-    },
-    {
-      "file": "src/components/dashboard/PersonalTrophyShelf.tsx",
-      "line": 260,
-      "className": "flex items-center space-x-3 py-2 px-3 h-10 mb-1 bg-white/60 dark:bg-gray-700/40 rounded-lg border border-white/40 dark:border-gray-600/30"
-    },
-    {
-      "file": "src/components/dev/DevTools.tsx",
-      "line": 263,
-      "className": "p-1 h-auto hover:bg-white/20 text-text-inverse"
-    },
-    {
-      "file": "src/components/dev/tabs/LogsTab.tsx",
-      "line": 39,
-      "className": "text-xs p-2 rounded bg-gray-50 dark:bg-gray-700"
-    },
-    {
-      "file": "src/components/playbook/CSVImport/CSVImportModal.tsx",
-      "line": 717,
-      "className": "inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full"
-    },
-    {
-      "file": "src/components/playbook/CSVImport/CSVImportModal.tsx",
-      "line": 718,
-      "className": "bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between"
-    },
-    {
-      "file": "src/components/playbook/CSVImport/CSVImportModal.tsx",
-      "line": 736,
-      "className": "bg-white px-6 py-8"
-    },
-    {
-      "file": "src/components/playbook/PlayBuilder/AutocompleteDropdown.tsx",
-      "line": 172,
-      "className": "w-full px-3 py-2 pr-10 border border-slate-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 bg-white"
-    },
-    {
-      "file": "src/components/playbook/PlayBuilder/AutocompleteDropdown.tsx",
-      "line": 199,
-      "className": "h-4 w-4 bg-white rounded-full border border-jade-500"
-    },
-    {
-      "file": "src/components/playbook/PlayBuilder/AutocompleteDropdown.tsx",
-      "line": 206,
-      "className": "absolute z-50 w-full mt-1 bg-white border border-slate-300 rounded-md shadow-lg max-h-60 overflow-auto"
-    },
-    {
-      "file": "src/components/playbook/PlayBuilder/PlayBuilderCore.tsx",
-      "line": 174,
-      "className": "inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full max-h-[90vh]"
-    },
-    {
-      "file": "src/components/playbook/PlayBuilder/PlayBuilderCore.tsx",
-      "line": 176,
-      "className": "bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between"
-    },
-    {
-      "file": "src/components/playbook/PlayBuilder/PlayBuilderPreview.tsx",
-      "line": 24,
-      "className": "bg-white rounded-lg border border-slate-200"
-    },
-    {
-      "file": "src/components/playbook/PlayBuilder/PlayBuilderWizard.tsx",
-      "line": 23,
-      "className": "inline-block align-bottom bg-white rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full"
-    },
-    {
-      "file": "src/components/playbook/PlayBuilder/PlayBuilderWizard.tsx",
-      "line": 25,
-      "className": "bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between"
-    },
-    {
-      "file": "src/components/playbook/PlayBuilder/QuickEntry.tsx",
-      "line": 222,
-      "className": "playbuilder-input w-full px-4 py-3 bg-white border-2 border-jade-300 rounded-md focus:ring-2 focus:ring-jade-500 focus:border-jade-500 text-"
-    },
-    {
-      "file": "src/components/playbook/PlayFilters.tsx",
-      "line": 41,
-      "className": "bg-white rounded-lg shadow-sm border border-slate-200"
-    },
-    {
-      "file": "src/components/playbook/PlaybookGlossary.tsx",
-      "line": 128,
-      "className": "bg-white rounded-lg shadow-sm border border-slate-200"
-    },
-    {
-      "file": "src/components/playbook/visual/DrawingTools.tsx",
-      "line": 62,
-      "className": "bg-white rounded-lg shadow-sm border border-slate-200 p-3 space-y-3"
-    },
-    {
-      "file": "src/components/playbook/visual/EnhancedFieldCanvas.tsx",
-      "line": 270,
-      "className": "bg-white rounded-lg shadow-sm border border-slate-200 p-2"
-    },
-    {
-      "file": "src/components/playbook/visual/EnhancedFieldCanvas.tsx",
-      "line": 287,
-      "className": "bg-white rounded-lg shadow-sm border border-slate-200 p-2"
-    },
-    {
-      "file": "src/components/playbook/visual/EnhancedFieldCanvas.tsx",
-      "line": 322,
-      "className": "bg-white rounded-lg shadow-sm border border-slate-200 p-2 space-y-2"
-    },
-    {
-      "file": "src/components/playbook/visual/EnhancedFieldCanvas.tsx",
-      "line": 357,
-      "className": "absolute bottom-4 left-4 bg-white rounded-lg shadow-sm border border-slate-200 p-3 z-20"
-    },
-    {
-      "file": "src/components/playbook/visual/EnhancedFieldCanvas.tsx",
-      "line": 370,
-      "className": "absolute bottom-4 right-4 bg-white rounded-lg shadow-sm border border-slate-200 p-3 z-20"
-    },
-    {
-      "file": "src/components/playbook/visual/FieldCanvas.tsx",
-      "line": 159,
-      "className": "absolute top-4 right-4 z-10 flex items-center space-x-2 bg-white rounded-lg shadow-sm border border-slate-200 p-2"
-    },
-    {
-      "file": "src/components/playbook/visual/FieldCanvas.tsx",
-      "line": 297,
-      "className": "absolute bottom-4 left-4 bg-white rounded-lg shadow-sm border border-slate-200 p-3"
-    },
-    {
-      "file": "src/components/playbook/visual/InteractivePlayBuilder.tsx",
-      "line": 86,
-      "className": "bg-white rounded-lg shadow-xl w-[95vw] h-[90vh] flex flex-col"
-    },
-    {
-      "file": "src/components/playbook/visual/InteractivePlayBuilder.tsx",
-      "line": 104,
-      "className": "p-2 h-auto hover:bg-gray-100 rounded-lg"
-    },
-    {
-      "file": "src/components/playbook/visual/InteractivePlayBuilder.tsx",
-      "line": 109,
-      "className": "w-64 bg-gray-50 border-r border-gray-200 flex flex-col"
-    },
-    {
-      "file": "src/components/playbook/visual/InteractivePlayBuilder.tsx",
-      "line": 263,
-      "className": "p-4 border-t border-gray-200 bg-gray-50"
-    },
-    {
-      "file": "src/components/playbook/visual/VisualPlayBuilder.tsx",
-      "line": 39,
-      "className": "bg-white rounded-lg shadow-xl w-full max-w-7xl h-full max-h-[90vh] flex flex-col"
-    },
-    {
-      "file": "src/components/playbook/visual/VisualPlayBuilder.tsx",
-      "line": 159,
-      "className": "bg-white rounded-lg bc-card-padding border border-slate-200"
-    },
-    {
-      "file": "src/components/practice/PracticePDFExportDialog.tsx",
-      "line": 224,
-      "className": "bg-gray-50 rounded-lg p-4 mb-6"
-    },
-    {
-      "file": "src/components/practice/PracticePlannerModal/components/PracticeBlockList.tsx",
-      "line": 241,
-      "className": "flex items-center justify-between p-2 bg-white/50 rounded"
-    },
-    {
-      "file": "src/components/practice/PracticePlannerModal/components/PracticeTimeline/TimelineLegend.tsx",
-      "line": 65,
-      "className": "mt-4 p-4 bg-gray-50 rounded-lg text-center"
-    },
-    {
-      "file": "src/components/practice/PracticePlannerModal/components/ScriptSelector/ScriptSelectorModal.tsx",
-      "line": 62,
-      "className": "bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto mx-4"
-    },
-    {
-      "file": "src/components/practice/PracticePlannerModal/index.tsx",
-      "line": 66,
-      "className": "bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
-    },
-    {
-      "file": "src/components/practice/ScriptSelectorModal.tsx",
-      "line": 71,
-      "className": "bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto"
-    },
-    {
-      "file": "src/components/practice/ScriptSelectorModal.tsx",
-      "line": 187,
-      "className": "text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded"
-    },
-    {
-      "file": "src/components/practice/components/MemoizedPracticeTable.tsx",
-      "line": 119,
-      "className": "bg-white rounded-lg shadow overflow-hidden"
-    },
-    {
-      "file": "src/components/practice/components/MemoizedPracticeTable.tsx",
-      "line": 120,
-      "className": "px-4 py-3 bg-gray-50 border-b flex items-center justify-between"
-    },
-    {
-      "file": "src/components/practice/components/PracticeBlocksList.tsx",
-      "line": 287,
-      "className": "p-3 bg-gray-50 rounded-lg border border-gray-200"
-    },
-    {
-      "file": "src/components/practice/components/TimeSummary.tsx",
-      "line": 46,
-      "className": "bg-white rounded-lg border border-gray-200 p-4 mb-6"
-    },
-    {
-      "file": "src/components/practice/components/TimelineAllocation.tsx",
-      "line": 293,
-      "className": "flex-1 h-16 bg-gray-200 border-r border-gray-300 opacity-50"
-    },
-    {
-      "file": "src/components/practice/components/TimelineAllocation.tsx",
-      "line": 436,
-      "className": "mt-4 p-3 bg-gray-50 rounded-lg"
-    },
-    {
-      "file": "src/components/team/TeamSettings.tsx",
-      "line": 128,
-      "className": "w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center border border-gray-300 dark:border-gray-600"
-    },
-    {
-      "file": "src/components/team/TeamSettings.tsx",
-      "line": 260,
-      "className": "bg-gray-50 dark:bg-gray-700 rounded-lg p-4"
-    },
-    {
-      "file": "src/components/ui/AdvancedErrorBoundary.tsx",
-      "line": 358,
-      "className": "min-h-screen bg-gray-50 flex items-center justify-center p-4"
-    },
-    {
-      "file": "src/components/ui/AdvancedErrorBoundary.tsx",
-      "line": 359,
-      "className": "max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center"
-    },
-    {
-      "file": "src/components/ui/AdvancedErrorBoundary.tsx",
-      "line": 373,
-      "className": "mb-4 p-3 bg-gray-100 rounded text-left"
-    },
-    {
-      "file": "src/components/ui/Auth/Auth.tsx",
-      "line": 371,
-      "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600 bg-white dark"
-    },
-    {
-      "file": "src/components/ui/Breadcrumb/Breadcrumb.tsx",
-      "line": 100,
-      "className": "w-full justify-start px-3 py-2 h-auto text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-    },
-    {
-      "file": "src/components/ui/ErrorBoundary.tsx",
-      "line": 88,
-      "className": "min-h-screen bg-gray-50 flex items-center justify-center p-4"
-    },
-    {
-      "file": "src/components/ui/ErrorBoundary.tsx",
-      "line": 89,
-      "className": "max-w-md w-full bg-white rounded-xl shadow-lg p-6 mx-4"
-    },
-    {
-      "file": "src/components/ui/ErrorBoundary.tsx",
-      "line": 111,
-      "className": "mt-2 p-3 bg-white border rounded text-xs font-mono"
-    },
-    {
-      "file": "src/components/ui/Form/Form.tsx",
-      "line": 145,
-      "className": "absolute inset-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg z-10 flex items-center justify-center"
-    },
-    {
-      "file": "src/components/ui/Modal/Modal.tsx",
-      "line": 201,
-      "className": "bc-card-padding border-t-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50"
-    },
-    {
-      "file": "src/components/ui/RouteLoadingSkeleton.tsx",
-      "line": 10,
-      "className": "bg-white border-b border-gray-200"
-    },
-    {
-      "file": "src/components/ui/RouteLoadingSkeleton.tsx",
-      "line": 31,
-      "className": "bg-white rounded-lg border border-gray-200 p-6"
-    },
-    {
-      "file": "src/components/ui/Skeleton.tsx",
-      "line": 31,
-      "className": "bg-white rounded-lg border border-gray-200 p-6 shadow-sm"
-    },
-    {
-      "file": "src/components/ui/Skeleton.tsx",
-      "line": 59,
-      "className": "bg-white rounded-lg border border-slate-200 p-4 sm:p-6 shadow-sm"
-    },
-    {
-      "file": "src/components/ui/Skeleton.tsx",
-      "line": 107,
-      "className": "fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 pb-safe-area-inset-bottom"
-    },
-    {
-      "file": "src/components/ui/Skeleton.tsx",
-      "line": 140,
-      "className": "flex items-center space-x-3 p-4 bg-white rounded-lg border border-gray-200"
-    },
-    {
-      "file": "src/components/ui/Skeleton.tsx",
-      "line": 164,
-      "className": "bg-white rounded-lg border border-gray-200 p-6 shadow-sm"
-    },
-    {
-      "file": "src/pages/CalendarPage.tsx",
-      "line": 412,
-      "className": "flex rounded-lg bg-gray-100 p-1"
-    },
-    {
-      "file": "src/pages/CalendarPage.tsx",
-      "line": 482,
-      "className": "bg-white rounded-lg shadow-xl max-w-lg w-full max-h-96 overflow-y-auto"
-    },
-    {
-      "file": "src/pages/CreateCoachAccount.tsx",
-      "line": 488,
-      "className": "w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-jade-500"
-    },
-    {
-      "file": "src/pages/CreateCoachAccount.tsx",
-      "line": 522,
-      "className": "w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
-    },
-    {
-      "file": "src/pages/CreateCoachAccount.tsx",
-      "line": 537,
-      "className": "w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-jade-500"
-    },
-    {
-      "file": "src/pages/CreateCoachAccount.tsx",
-      "line": 548,
-      "className": "p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
-    },
-    {
-      "file": "src/pages/CreateTeam.tsx",
-      "line": 728,
-      "className": "border border-gray-200 rounded-lg p-6 bg-gray-50 dark:bg-gray-800"
-    },
-    {
-      "file": "src/pages/PlaybookPage.tsx",
-      "line": 370,
-      "className": "bg-white shadow-sm border-b border-slate-200"
-    },
-    {
-      "file": "src/pages/PlaybookPage.tsx",
-      "line": 557,
-      "className": "mb-6 bg-white rounded-lg shadow-sm border border-slate-200 p-1"
-    },
-    {
-      "file": "src/pages/PlaybookPage.tsx",
-      "line": 598,
-      "className": "bg-white rounded-lg shadow-sm border border-slate-200 p-3 mb-4"
-    },
-    {
-      "file": "src/pages/PlaybookPage.tsx",
-      "line": 642,
-      "className": "bg-white rounded-lg shadow-sm border border-slate-200 p-6"
-    },
-    {
-      "file": "src/pages/PlaybookPage.tsx",
-      "line": 665,
-      "className": "bg-white rounded-lg shadow-sm border border-slate-200 p-6"
-    },
-    {
-      "file": "src/pages/PlaybookPage.tsx",
-      "line": 717,
-      "className": "bg-white rounded-xl p-8 max-w-md mx-4 text-center transform animate-bounce-in"
-    },
-    {
-      "file": "src/pages/PracticePlanner.tsx",
-      "line": 239,
-      "className": "bg-white border-b border-gray-200"
-    },
-    {
-      "file": "src/pages/PracticePlanner.tsx",
-      "line": 289,
-      "className": "bg-white border-navy-200 text-navy-700 hover:bg-navy-50 flex items-center gap-2"
-    },
-    {
-      "file": "src/pages/PracticePlanner.tsx",
-      "line": 412,
-      "className": "px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-mono"
-    },
-    {
-      "file": "src/pages/ProfilePage.tsx",
-      "line": 304,
-      "className": "mt-8 bg-gray-50 dark:bg-gray-800/50 rounded-lg p-6"
-    },
-    {
-      "file": "src/pages/ProfilePage.tsx",
-      "line": 329,
-      "className": "text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded"
-    },
-    {
-      "file": "src/pages/TeamsPage.tsx",
-      "line": 70,
-      "className": "text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded"
-    },
-    {
-      "file": "src/pages/Templates.tsx",
-      "line": 339,
-      "className": "bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800 rounded-lg p-3"
-    },
-    {
-      "file": "src/pages/Templates.tsx",
-      "line": 384,
-      "className": "mt-8 bg-gray-50 dark:bg-gray-800 rounded-lg p-6"
-    },
-    {
-      "file": "src/pages/legal/AboutPage.tsx",
-      "line": 135,
-      "className": "text-center bg-gray-50 dark:bg-gray-800 rounded-lg p-8"
-    },
-    {
-      "file": "src/pages/legal/ContactPage.tsx",
-      "line": 93,
-      "className": "mt-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
-    },
-    {
-      "file": "src/pages/legal/ContactPage.tsx",
-      "line": 211,
-      "className": "bg-gray-50 dark:bg-gray-800 rounded-lg p-6"
-    },
-    {
-      "file": "src/pages/legal/PrivacyPolicyPage.tsx",
-      "line": 199,
-      "className": "bg-gray-50 dark:bg-gray-800 p-4 rounded-lg"
-    },
-    {
-      "file": "src/pages/legal/TermsOfServicePage.tsx",
-      "line": 230,
-      "className": "bg-gray-50 dark:bg-gray-800 p-4 rounded-lg"
-    },
-    {
-      "file": "src/routes/SplitRouter.tsx",
-      "line": 139,
-      "className": "min-h-screen bg-gray-50 flex items-center justify-center p-4"
-    }
-  ],
+  "surfaceCandidates": [],
   "whiteOnWhiteInteractions": [],
   "tooltipInverseTotal": 2,
   "tooltipInverseSurface": 0,
   "popoverInverseTotal": 0,
   "popoverInverseSurface": 0,
   "elevationUsage": {
-    "elevation-dropdown": 2,
-    "elevation-modal": 1,
-    "elevation-card": 21
+    "elevation-modal": 16,
+    "elevation-dropdown": 3,
+    "elevation-card": 23
   },
-  "radiusViolations": [
-    {
-      "file": "src/components/team/PlayerList.tsx",
-      "line": 109,
-      "token": "rounded-xs",
-      "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle t",
-      "reason": "unsupported-scale"
-    },
-    {
-      "file": "src/components/team/PlayerList.tsx",
-      "line": 124,
-      "token": "rounded-xs",
-      "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle t",
-      "reason": "unsupported-scale"
-    },
-    {
-      "file": "src/components/ui/Badge/Badge.tsx",
-      "line": 158,
-      "token": "rounded-inherit",
-      "className": "absolute inset-0 overflow-hidden rounded-inherit",
-      "reason": "unsupported-scale"
-    },
-    {
-      "file": "src/pages/ProfilePage.tsx",
-      "line": 249,
-      "token": "rounded-xs",
-      "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xs shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700",
-      "reason": "unsupported-scale"
-    }
-  ]
+  "radiusViolations": []
 }

@@ -4,7 +4,9 @@ import { useSidebarState } from "../../../hooks/useSidebarState";
 import { Link, useLocation } from "react-router-dom";
 import { Tooltip } from "../Tooltip/Tooltip";
 import { Icon } from "../Icon/Icon";
+import { getSidebarIcon } from "./getSidebarIcon";
 import { UserPreferencesService } from "../../../services/userPreferencesService";
+import { GestureDetector } from "../../../utils/touchUtils";
 
 import type { ReactNode } from "react";
 
@@ -322,6 +324,52 @@ export const Sidebar: React.FC<SidebarProps> = ({
         break;
     }
   };
+  useEffect(() => {
+    if (!isOpen || !showOverlay) return;
+    let startX = 0,
+      startY = 0,
+      startTime = 0;
+    const overlay = document.querySelector('[data-testid="sidebar-overlay"]');
+    if (!overlay) return;
+    // Use generic EventListener and cast to TouchEvent
+    const handleTouchStart = (e: Event) => {
+      const te = e as TouchEvent;
+      if (te.touches.length === 1) {
+        startX = te.touches[0].clientX;
+        startY = te.touches[0].clientY;
+        startTime = te.timeStamp;
+      }
+    };
+    const handleTouchEnd = (e: Event) => {
+      const te = e as TouchEvent;
+      if (te.changedTouches.length === 1) {
+        const endX = te.changedTouches[0].clientX;
+        const endY = te.changedTouches[0].clientY;
+        const endTime = te.timeStamp;
+        const result = GestureDetector.detectSwipe(
+          startX,
+          startY,
+          endX,
+          endY,
+          startTime,
+          endTime
+        );
+        // Only close sidebar on swipe left (LTR) or right (RTL)
+        if (result.direction === "left" && position === "left") {
+          onClose?.();
+        }
+        if (result.direction === "right" && position === "right") {
+          onClose?.();
+        }
+      }
+    };
+    overlay.addEventListener("touchstart", handleTouchStart as EventListener);
+    overlay.addEventListener("touchend", handleTouchEnd as EventListener);
+    return () => {
+      overlay.removeEventListener("touchstart", handleTouchStart as EventListener);
+      overlay.removeEventListener("touchend", handleTouchEnd as EventListener);
+    };
+  }, [isOpen, showOverlay, position, onClose]);
   if (!isOpen) return null;
   return (
     <>
@@ -443,7 +491,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                               className={`flex items-center justify-start w-9 flex-shrink-0 ${state.mode === "rail" ? "justify-center w-10" : ""}`}
                               aria-hidden
                             >
-                              {item.icon}
+                              {getSidebarIcon(item.icon as string)}
                             </div>
                             {state.mode !== "rail" && (
                               <>
@@ -591,7 +639,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           className={`flex items-center justify-start w-9 flex-shrink-0 ${state.mode === "rail" ? "justify-center w-10" : ""}`}
                           aria-hidden
                         >
-                          {item.icon}
+                          {getSidebarIcon(item.icon as string)}
                         </div>
                         {state.mode !== "rail" && (
                           <>
@@ -633,6 +681,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                 }}
                               >
                                 <Icon name="star" size="sm" aria-hidden />
+                                <span className="text-left">
+                                  {pinnedIds.has(item.id) ? "Unpin" : "Pin"}
+                                </span>
                               </Button>
                             </Tooltip>
                           </>
@@ -706,6 +757,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                 }}
                               >
                                 <Icon name="star" size="sm" aria-hidden />
+                                <span className="text-left">
+                                  {pinnedIds.has(item.id) ? "Unpin" : "Pin"}
+                                </span>
                               </Button>
                             </Tooltip>
                           </>

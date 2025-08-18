@@ -55,9 +55,7 @@ export const LogsTab: React.FC<LogsTabProps> = ({ logs, onClearLogs }) => {
                   {log.timestamp.toLocaleTimeString()}
                 </span>
               </div>
-              <div className="mt-1 text-text-primary">
-                {log.message}
-              </div>
+              <div className="mt-1 text-text-primary">{log.message}</div>
               <div className="text-xs mt-1 text-text-secondary">
                 {log.source}
               </div>

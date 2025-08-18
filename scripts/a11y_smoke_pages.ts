@@ -125,12 +125,16 @@ async function scan(): Promise<PageResult[]> {
             const root = document.documentElement;
             root.setAttribute("data-theme", t);
             root.classList.remove("dark", "high-contrast");
-            if (t === "dark" || t === "high-contrast") root.classList.add("dark");
+            if (t === "dark" || t === "high-contrast")
+              root.classList.add("dark");
             if (t === "high-contrast") root.classList.add("high-contrast");
             localStorage.setItem("app-theme", t);
           }, scene.theme);
         } catch (err) {
-          console.debug("a11y-smoke: theme apply skipped:", (err as Error)?.message || err);
+          console.debug(
+            "a11y-smoke: theme apply skipped:",
+            (err as Error)?.message || err
+          );
         }
       }
       status = resp?.status() ?? null;
@@ -163,9 +167,12 @@ async function scan(): Promise<PageResult[]> {
           );
         });
       } catch (err) {
-        console.debug("a11y-smoke: overlay cleanup skipped:", (err as Error)?.message || err);
+        console.debug(
+          "a11y-smoke: overlay cleanup skipped:",
+          (err as Error)?.message || err
+        );
       }
-  const axeResults = await new AxeBuilder({ page })
+      const axeResults = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa"])
         .analyze();
       violations = axeResults.violations.map((v) => ({
@@ -190,87 +197,87 @@ async function scan(): Promise<PageResult[]> {
       // Live contrast sampling for key interactive elements (esp. icons using currentColor and placeholders)
       try {
         contrastFindings = await page.evaluate(() => {
-        // Compute relative luminance
-        const lum = (rgb: string) => {
-          const m = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-          if (!m) return 0;
-          const [r, g, b] = [Number(m[1]), Number(m[2]), Number(m[3])].map(
-            (v) => v / 255
-          );
-          const f = (c: number) =>
-            c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-          const [sr, sg, sb] = [f(r), f(g), f(b)];
-          return 0.2126 * sr + 0.7152 * sg + 0.0722 * sb;
-        };
-        const contrast = (fg: string, bg: string) => {
-          const L1 = lum(fg);
-          const L2 = lum(bg);
-          const lighter = Math.max(L1, L2);
-          const darker = Math.min(L1, L2);
-          return (lighter + 0.05) / (darker + 0.05);
-        };
-        const effectiveBg = (el: Element): string => {
-          let node: Element | null = el as Element;
-          while (node && node instanceof Element) {
-            const cs = getComputedStyle(node as Element);
-            const bg = cs.backgroundColor;
-            if (bg && !bg.includes("0)")) return bg; // not fully transparent
-            node = node.parentElement;
+          // Compute relative luminance
+          const lum = (rgb: string) => {
+            const m = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+            if (!m) return 0;
+            const [r, g, b] = [Number(m[1]), Number(m[2]), Number(m[3])].map(
+              (v) => v / 255
+            );
+            const f = (c: number) =>
+              c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+            const [sr, sg, sb] = [f(r), f(g), f(b)];
+            return 0.2126 * sr + 0.7152 * sg + 0.0722 * sb;
+          };
+          const contrast = (fg: string, bg: string) => {
+            const L1 = lum(fg);
+            const L2 = lum(bg);
+            const lighter = Math.max(L1, L2);
+            const darker = Math.min(L1, L2);
+            return (lighter + 0.05) / (darker + 0.05);
+          };
+          const effectiveBg = (el: Element): string => {
+            let node: Element | null = el as Element;
+            while (node && node instanceof Element) {
+              const cs = getComputedStyle(node as Element);
+              const bg = cs.backgroundColor;
+              if (bg && !bg.includes("0)")) return bg; // not fully transparent
+              node = node.parentElement;
+            }
+            return "rgb(255, 255, 255)"; // fallback white
+          };
+          const results: Array<{
+            selector: string;
+            role?: string | null;
+            name?: string | null;
+            ratio: number;
+            threshold: number;
+            reason: string;
+          }> = [];
+          // Sample menuitems, nav buttons/links, lucide svg icons, and icon placeholders
+          const nodes: Element[] = [
+            ...document.querySelectorAll(
+              '[role="menuitem"], nav [role="button"], [role="link"]'
+            ),
+            ...document.querySelectorAll("svg"),
+            ...document.querySelectorAll('[data-icon-placeholder="true"]'),
+          ];
+          for (const el of nodes) {
+            const cs = getComputedStyle(el as Element);
+            const fg = cs.color;
+            const bg = effectiveBg(el as Element);
+            const ratio = contrast(fg, bg);
+            const text = (el.textContent || "").trim();
+            const isSVG = (el as HTMLElement).tagName.toLowerCase() === "svg";
+            const isPlaceholder =
+              (el as HTMLElement).getAttribute("data-icon-placeholder") ===
+              "true";
+            const isIconLike =
+              isSVG ||
+              isPlaceholder ||
+              text.length === 0 ||
+              (el as HTMLElement).innerText.trim().length === 0;
+            const threshold = isIconLike ? 3.0 : 4.5; // WCAG AA: icons/graphics 3:1, normal text 4.5:1
+            if (ratio < threshold) {
+              const role = (el as HTMLElement).getAttribute("role");
+              const accName = (el as HTMLElement).getAttribute("aria-label");
+              results.push({
+                selector: (el as HTMLElement).tagName.toLowerCase(),
+                role,
+                name: accName,
+                ratio: Number(ratio.toFixed(2)),
+                threshold,
+                reason: isPlaceholder
+                  ? "icon placeholder below 3:1"
+                  : isSVG
+                    ? "svg icon below 3:1"
+                    : isIconLike
+                      ? "icon-like element below 3:1"
+                      : "text below 4.5:1",
+              });
+            }
           }
-          return "rgb(255, 255, 255)"; // fallback white
-        };
-        const results: Array<{
-          selector: string;
-          role?: string | null;
-          name?: string | null;
-          ratio: number;
-          threshold: number;
-          reason: string;
-        }> = [];
-        // Sample menuitems, nav buttons/links, lucide svg icons, and icon placeholders
-        const nodes: Element[] = [
-          ...document.querySelectorAll(
-            '[role="menuitem"], nav [role="button"], [role="link"]'
-          ),
-          ...document.querySelectorAll("svg"),
-          ...document.querySelectorAll('[data-icon-placeholder="true"]'),
-        ];
-        for (const el of nodes) {
-          const cs = getComputedStyle(el as Element);
-          const fg = cs.color;
-          const bg = effectiveBg(el as Element);
-          const ratio = contrast(fg, bg);
-          const text = (el.textContent || "").trim();
-          const isSVG = (el as HTMLElement).tagName.toLowerCase() === "svg";
-          const isPlaceholder =
-            (el as HTMLElement).getAttribute("data-icon-placeholder") ===
-            "true";
-          const isIconLike =
-            isSVG ||
-            isPlaceholder ||
-            text.length === 0 ||
-            (el as HTMLElement).innerText.trim().length === 0;
-          const threshold = isIconLike ? 3.0 : 4.5; // WCAG AA: icons/graphics 3:1, normal text 4.5:1
-          if (ratio < threshold) {
-            const role = (el as HTMLElement).getAttribute("role");
-            const accName = (el as HTMLElement).getAttribute("aria-label");
-            results.push({
-              selector: (el as HTMLElement).tagName.toLowerCase(),
-              role,
-              name: accName,
-              ratio: Number(ratio.toFixed(2)),
-              threshold,
-              reason: isPlaceholder
-                ? "icon placeholder below 3:1"
-                : isSVG
-                  ? "svg icon below 3:1"
-                  : isIconLike
-                    ? "icon-like element below 3:1"
-                    : "text below 4.5:1",
-            });
-          }
-        }
-        return results;
+          return results;
         });
       } catch {
         contrastFindings = [];

@@ -9,6 +9,7 @@
  */
 
 import React from "react";
+import { iconRegistry, iconLoaders } from "./iconSingletons";
 
 // Note: prefer CSS variables over static token hex so icons adapt to theme
 
@@ -130,7 +131,9 @@ export type ModularIconName =
   | "list"
   | "circle"
   | "graduation-cap"
-  | "shirt";
+  | "shirt"
+  | "bar-chart"
+  | "chart";
 
 // Dynamic imports for perfect tree shaking (limited to our supported set)
 type LucideComponent = React.ComponentType<{
@@ -139,114 +142,9 @@ type LucideComponent = React.ComponentType<{
   strokeWidth?: number;
   className?: string;
 }>;
-type Loader = () => Promise<{ default: LucideComponent } | LucideComponent>;
-const iconLoaders: Record<ModularIconName, Loader> = {
-  // core navigation/actions
-  menu: () => import("lucide-react/dist/esm/icons/menu.js"),
-  close: () => import("lucide-react/dist/esm/icons/x.js"),
-  plus: () => import("lucide-react/dist/esm/icons/plus.js"),
-  "plus-circle": () => import("lucide-react/dist/esm/icons/plus-circle.js"),
-  minus: () => import("lucide-react/dist/esm/icons/minus.js"),
-  edit: () => import("lucide-react/dist/esm/icons/edit-3.js"),
-  delete: () => import("lucide-react/dist/esm/icons/trash-2.js"),
-  check: () => import("lucide-react/dist/esm/icons/check.js"),
-  "alert-triangle": () =>
-    import("lucide-react/dist/esm/icons/alert-triangle.js"),
-  warning: () => import("lucide-react/dist/esm/icons/alert-triangle.js"),
-  error: () => import("lucide-react/dist/esm/icons/alert-circle.js"),
-  info: () => import("lucide-react/dist/esm/icons/info.js"),
-  alert: () => import("lucide-react/dist/esm/icons/alert-triangle.js"),
-  tag: () => import("lucide-react/dist/esm/icons/tag.js"),
-  calendar: () => import("lucide-react/dist/esm/icons/calendar.js"),
-  clock: () => import("lucide-react/dist/esm/icons/clock.js"),
-  users: () => import("lucide-react/dist/esm/icons/users.js"),
-  user: () => import("lucide-react/dist/esm/icons/user.js"),
-  "user-plus": () => import("lucide-react/dist/esm/icons/user-plus.js"),
-  target: () => import("lucide-react/dist/esm/icons/target.js"),
-  trophy: () => import("lucide-react/dist/esm/icons/trophy.js"),
-  award: () => import("lucide-react/dist/esm/icons/award.js"),
-  star: () => import("lucide-react/dist/esm/icons/star.js"),
-  "trending-up": () => import("lucide-react/dist/esm/icons/trending-up.js"),
-  zap: () => import("lucide-react/dist/esm/icons/zap.js"),
-  flag: () => import("lucide-react/dist/esm/icons/flag.js"),
-  shield: () => import("lucide-react/dist/esm/icons/shield.js"),
-  activity: () => import("lucide-react/dist/esm/icons/activity.js"),
-  map: () => import("lucide-react/dist/esm/icons/map.js"),
-  "map-pin": () => import("lucide-react/dist/esm/icons/map-pin.js"),
-  message: () => import("lucide-react/dist/esm/icons/message-circle.js"),
-  home: () => import("lucide-react/dist/esm/icons/home.js"),
-  "refresh-cw": () => import("lucide-react/dist/esm/icons/refresh-cw.js"),
-  wrench: () => import("lucide-react/dist/esm/icons/wrench.js"),
-  "help-circle": () => import("lucide-react/dist/esm/icons/help-circle.js"),
-  bug: () => import("lucide-react/dist/esm/icons/bug.js"),
-  "wifi-off": () => import("lucide-react/dist/esm/icons/wifi-off.js"),
-  server: () => import("lucide-react/dist/esm/icons/server.js"),
-  save: () => import("lucide-react/dist/esm/icons/save.js"),
-  download: () => import("lucide-react/dist/esm/icons/download.js"),
-  upload: () => import("lucide-react/dist/esm/icons/upload.js"),
-  search: () => import("lucide-react/dist/esm/icons/search.js"),
-  filter: () => import("lucide-react/dist/esm/icons/filter.js"),
-  image: () => import("lucide-react/dist/esm/icons/image.js"),
-  camera: () => import("lucide-react/dist/esm/icons/camera.js"),
-  "arrow-left": () => import("lucide-react/dist/esm/icons/arrow-left.js"),
-  "arrow-right": () => import("lucide-react/dist/esm/icons/arrow-right.js"),
-  "arrow-up": () => import("lucide-react/dist/esm/icons/arrow-up.js"),
-  "arrow-down": () => import("lucide-react/dist/esm/icons/arrow-down.js"),
-  "chevron-down": () => import("lucide-react/dist/esm/icons/chevron-down.js"),
-  "chevron-up": () => import("lucide-react/dist/esm/icons/chevron-up.js"),
-  "chevron-left": () => import("lucide-react/dist/esm/icons/chevron-left.js"),
-  "chevron-right": () => import("lucide-react/dist/esm/icons/chevron-right.js"),
-  play: () => import("lucide-react/dist/esm/icons/play.js"),
-  pause: () => import("lucide-react/dist/esm/icons/pause.js"),
-  team: () => import("lucide-react/dist/esm/icons/users.js"),
-  book: () => import("lucide-react/dist/esm/icons/book.js"),
-  file: () => import("lucide-react/dist/esm/icons/file.js"),
-  pdf: () => import("lucide-react/dist/esm/icons/file-text.js"),
-  copy: () => import("lucide-react/dist/esm/icons/copy.js"),
-  folder: () => import("lucide-react/dist/esm/icons/folder.js"),
-  database: () => import("lucide-react/dist/esm/icons/database.js"),
-  phone: () => import("lucide-react/dist/esm/icons/phone.js"),
-  mail: () => import("lucide-react/dist/esm/icons/mail.js"),
-  eye: () => import("lucide-react/dist/esm/icons/eye.js"),
-  "eye-off": () => import("lucide-react/dist/esm/icons/eye-off.js"),
-  lock: () => import("lucide-react/dist/esm/icons/lock.js"),
-  unlock: () => import("lucide-react/dist/esm/icons/unlock.js"),
-  key: () => import("lucide-react/dist/esm/icons/key.js"),
-  hash: () => import("lucide-react/dist/esm/icons/hash.js"),
-  "clipboard-list": () =>
-    import("lucide-react/dist/esm/icons/clipboard-list.js"),
-  "check-circle": () => import("lucide-react/dist/esm/icons/check-circle.js"),
-  grid: () => import("lucide-react/dist/esm/icons/grid.js"),
-  power: () => import("lucide-react/dist/esm/icons/power.js"),
-  pointer: () => import("lucide-react/dist/esm/icons/mouse-pointer.js"),
-  hand: () => import("lucide-react/dist/esm/icons/hand.js"),
-  move: () => import("lucide-react/dist/esm/icons/move.js"),
-  "pen-tool": () => import("lucide-react/dist/esm/icons/pen-tool.js"),
-  link: () => import("lucide-react/dist/esm/icons/link.js"),
-  sparkles: () => import("lucide-react/dist/esm/icons/sparkles.js"),
-  crown: () => import("lucide-react/dist/esm/icons/crown.js"),
-  "toggle-right": () => import("lucide-react/dist/esm/icons/toggle-right.js"),
-  "toggle-left": () => import("lucide-react/dist/esm/icons/toggle-left.js"),
-  back: () => import("lucide-react/dist/esm/icons/arrow-left.js"),
-  forward: () => import("lucide-react/dist/esm/icons/arrow-right.js"),
-  settings: () => import("lucide-react/dist/esm/icons/settings.js"),
-  "gamepad-2": () => import("lucide-react/dist/esm/icons/gamepad-2.js"),
-  inbox: () => import("lucide-react/dist/esm/icons/inbox.js"),
-  "flask-conical": () => import("lucide-react/dist/esm/icons/flask-conical.js"),
-  sprout: () => import("lucide-react/dist/esm/icons/sprout.js"),
-  lightbulb: () => import("lucide-react/dist/esm/icons/lightbulb.js"),
-  rocket: () => import("lucide-react/dist/esm/icons/rocket.js"),
-  "party-popper": () => import("lucide-react/dist/esm/icons/party-popper.js"),
-  type: () => import("lucide-react/dist/esm/icons/type.js"),
-  list: () => import("lucide-react/dist/esm/icons/list.js"),
-  circle: () => import("lucide-react/dist/esm/icons/circle.js"),
-  "graduation-cap": () =>
-    import("lucide-react/dist/esm/icons/graduation-cap.js"),
-  shirt: () => import("lucide-react/dist/esm/icons/shirt.js"),
-};
 
 // Icon registry for loaded components
-const iconRegistry = new Map<string, LucideComponent>();
+// export const iconRegistry = new Map<ModularIconName, LucideComponent>();
 
 // Size mapping
 const sizeMap = {

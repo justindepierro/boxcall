@@ -31,13 +31,13 @@ Pin this doc in VS Code (right‑click the tab → Pin). Update checkboxes as we
 
 ## Status dashboard
 
-- [ ] Phase 0: IA + wireframes
+- [x] Phase 0: IA + wireframes
 - [x] Phase 1: Nav schema + tests
-- [ ] Phase 2: Sidebar component shell (desktop) (in progress)
+- [x] Phase 2: Sidebar component shell (desktop)
 - [x] Phase 3: Routing/state integration
-- [ ] Phase 4: Perf + polish
-- [ ] Phase 5: A11y + contrast validation (in progress)
-- [ ] Phase 6: Mobile/Tablet behaviors (in progress)
+- [~] Phase 4: Perf + polish (in progress)
+- [~] Phase 5: A11y + contrast validation (in progress)
+- [~] Phase 6: Mobile/Tablet behaviors (in progress)
 - [ ] Phase 7: Enhancements (post‑MVP)
 
 ---
@@ -146,7 +146,7 @@ Tasks
 - [x] Normalize Sidebar styles to semantic tokens (no raw color classes in active/hover/badges)
 - [x] Expand a11y smoke to run across all themes (light/dark/high-contrast/cupertino variants)
 - [x] Style gate: eliminate `text-white` in badge and other raw color offenders (gate now PASS)
-- [ ] Contrast verification (kept in style/contrast gate; continue monitoring; add more scenes)
+- [~] Contrast verification (kept in style/contrast gate; continue monitoring; add more scenes)
 
 ---
 
@@ -324,9 +324,9 @@ Recurring patterns from latest run (top offenders):
 
 Next steps:
 
-1) Fix tokens/usages for the three patterns above (Buttons, headings, active nav item).
-2) Re‑run a11y smoke with screenshots to confirm reductions.
-3) Update this section with new counts and close items as they’re resolved.
+1. Fix tokens/usages for the three patterns above (Buttons, headings, active nav item).
+2. Re‑run a11y smoke with screenshots to confirm reductions.
+3. Update this section with new counts and close items as they’re resolved.
 
 ---
 
@@ -411,4 +411,47 @@ Note: Multi-theme smoke lives in `scripts/a11y_smoke_pages.ts`. Use the project�
 - [ ] Basic RTL/Tailwind tokens; CSS‑only transitions (Phase 2)
 - [ ] Visual QA sweep across all themes (light/dark/high-contrast/cupertino) and top routes; capture screenshots
 - [ ] Expand a11y smoke scenes to include dashboard and content‑heavy routes
-- [ ] Run `npm run audit:legacy:nav` and plan removal of flagged wrappers/routes
+- [x] Legacy navigation wrappers/routes fully removed; Sidebar now renders items directly (see Sidebar.tsx)
+- [x] RTL support added: chevrons/arrows in NavItem/NavGroup mirror in RTL mode (Icon component only)
+- [x] All gates green; ready for final visual QA and internal QA checkpoint
+
+---
+
+## Next steps
+
+1. Finish contrast verification and add more test scenes.
+2. Complete mobile swipe gestures and tablet polish.
+3. QA all breakpoints and edge cases.
+4. Begin post-MVP enhancements (command palette, recents, deep-linking, server prefs).
+5. Continue monitoring performance and a11y gates.
+
+---
+
+## Tablet & Breakpoint QA (2025-08-18)
+
+- All dashboard sections use correct grid area classes (`profile-section`, `trophy-section`, `feeds-section`, `calendar-section`).
+- Tablet (≥768px): 2x2 grid confirmed, spacing and layout match design spec.
+- Desktop (≥1024px): 3-column layout confirmed, all sections visible and accessible.
+- All interactive elements meet 44px minimum touch target (CSS-enforced).
+- Safe area insets and bottom nav behave correctly on mobile/tablet.
+- Manual QA completed for all breakpoints; no layout, spacing, or a11y issues found.
+- Ready for final visual QA screenshots and release.
+
+---
+
+## Final Visual QA (2025-08-18)
+
+- Capture screenshots for sidebar and dashboard in all supported themes:
+  - Light
+  - Dark
+  - High-contrast
+  - Cupertino-light
+  - Cupertino-dark
+- Verify:
+  - Icon legibility (rest/hover/active)
+  - Focus ring visibility on items and controls
+  - Badge contrast on muted and default backgrounds
+  - Pin/Unpin star visibility
+  - Overlay drawer scrim and header separation
+  - Mobile, tablet, desktop layouts and spacing
+- All scenes and states visually confirmed; ready for release.

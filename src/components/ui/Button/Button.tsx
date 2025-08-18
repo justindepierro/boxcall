@@ -17,7 +17,7 @@ import type {
 const buttonVariants: ButtonStylesConfig = {
   primary: {
     base:
-  "text-[var(--semantic-text-inverse)] border" +
+      "text-[var(--semantic-text-inverse)] border" +
       " bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)]",
     hover:
       "hover:bg-[var(--semantic-primary-active)] hover:border-[var(--semantic-primary-active)]",
@@ -30,9 +30,9 @@ const buttonVariants: ButtonStylesConfig = {
   secondary: {
     base: "bg-transparent text-[var(--color-navy-700)] border-2 border-[var(--color-navy-700)]",
     hover:
-  "hover:bg-[var(--color-navy-700)] hover:text-[var(--semantic-text-inverse)] hover:border-[var(--color-navy-700)]",
+      "hover:bg-[var(--color-navy-700)] hover:text-[var(--semantic-text-inverse)] hover:border-[var(--color-navy-700)]",
     active:
-  "active:bg-[var(--color-navy-800)] active:text-[var(--semantic-text-inverse)] active:border-[var(--color-navy-800)]",
+      "active:bg-[var(--color-navy-800)] active:text-[var(--semantic-text-inverse)] active:border-[var(--color-navy-800)]",
     disabled:
       "disabled:text-[color:var(--color-navy-400)] disabled:border-[color:var(--color-navy-300)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
@@ -105,7 +105,7 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus-ring focus-ring-offset focus:rounded-sm",
   },
   danger: {
-  base: "text-[var(--semantic-text-inverse)] border bg-[var(--semantic-error)] border-[var(--semantic-error)]",
+    base: "text-[var(--semantic-text-inverse)] border bg-[var(--semantic-error)] border-[var(--semantic-error)]",
     hover:
       "hover:bg-[color:var(--color-error-600)] hover:border-[color:var(--color-error-600)]",
     active:
@@ -115,7 +115,7 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus-ring focus-ring-offset",
   },
   success: {
-  base: "text-[var(--semantic-text-inverse)] border bg-[color:var(--color-success-600)] border-[color:var(--color-success-600)]",
+    base: "text-[var(--semantic-text-inverse)] border bg-[color:var(--color-success-600)] border-[color:var(--color-success-600)]",
     hover:
       "hover:bg-[color:var(--color-success-700)] hover:border-[color:var(--color-success-700)]",
     active:

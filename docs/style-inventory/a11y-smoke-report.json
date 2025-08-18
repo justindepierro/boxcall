@@ -1,866 +1,2121 @@
 {
-  "generated": "2025-08-18T10:38:11.525Z",
+  "generated": "2025-08-18T22:21:05.682Z",
   "baseUrl": "http://localhost:5173",
   "summary": {
     "totalPages": 95,
-    "pagesErrored": 95,
-    "violations": 0,
-    "seriousOrCritical": 0
+    "pagesErrored": 0,
+    "violations": 45,
+    "seriousOrCritical": 45
   },
   "results": [
     {
       "path": "/ [theme:light]",
       "url": "http://localhost:5173/",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 9.120499999999993,
+      "durationMs": 1388.7045830000002,
       "contrastFindings": []
     },
     {
       "path": "/ [theme:dark]",
       "url": "http://localhost:5173/",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 28.248707999999965,
+      "durationMs": 1148.9089170000002,
       "contrastFindings": []
     },
     {
       "path": "/ [theme:high-contrast]",
       "url": "http://localhost:5173/",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 6.076958999999988,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 1034.7687080000005,
       "contrastFindings": []
     },
     {
       "path": "/ [theme:cupertino-light]",
       "url": "http://localhost:5173/",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 3.0688749999999345,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 927.3670419999999,
       "contrastFindings": []
     },
     {
       "path": "/ [theme:cupertino-dark]",
       "url": "http://localhost:5173/",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 4.532709000000068,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 876.7682919999997,
       "contrastFindings": []
     },
     {
       "path": "/ [theme:light] (actions:openSidebar)",
       "url": "http://localhost:5173/",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.85841599999992,
+      "durationMs": 3000.4323330000007,
       "contrastFindings": []
     },
     {
       "path": "/ [theme:dark] (actions:openSidebar)",
       "url": "http://localhost:5173/",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 3.071166999999946,
+      "durationMs": 2891.7160000000003,
       "contrastFindings": []
     },
     {
       "path": "/ [theme:high-contrast] (actions:openSidebar)",
       "url": "http://localhost:5173/",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.6369999999999436,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2938.137125000001,
       "contrastFindings": []
     },
     {
       "path": "/ [theme:cupertino-light] (actions:openSidebar)",
       "url": "http://localhost:5173/",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 3.591957999999977,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2945.304,
       "contrastFindings": []
     },
     {
       "path": "/ [theme:cupertino-dark] (actions:openSidebar)",
       "url": "http://localhost:5173/",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.2702090000000226,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2860.0847920000015,
       "contrastFindings": []
     },
     {
       "path": "/dashboard [theme:light]",
       "url": "http://localhost:5173/dashboard",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.8128750000000764,
+      "durationMs": 870.0357910000021,
       "contrastFindings": []
     },
     {
       "path": "/dashboard [theme:dark]",
       "url": "http://localhost:5173/dashboard",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 3.066874999999982,
+      "durationMs": 860.2177499999998,
       "contrastFindings": []
     },
     {
       "path": "/dashboard [theme:high-contrast]",
       "url": "http://localhost:5173/dashboard",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.312708999999927,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 878.7419169999994,
       "contrastFindings": []
     },
     {
       "path": "/dashboard [theme:cupertino-light]",
       "url": "http://localhost:5173/dashboard",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.2947090000000117,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 879.5504579999979,
       "contrastFindings": []
     },
     {
       "path": "/dashboard [theme:cupertino-dark]",
       "url": "http://localhost:5173/dashboard",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.4061249999999745,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 901.8376659999994,
       "contrastFindings": []
     },
     {
       "path": "/dashboard [theme:light] (actions:openSidebar)",
       "url": "http://localhost:5173/dashboard",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.366792000000032,
+      "durationMs": 2899.6642500000016,
       "contrastFindings": []
     },
     {
       "path": "/dashboard [theme:dark] (actions:openSidebar)",
       "url": "http://localhost:5173/dashboard",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.9680419999999685,
+      "durationMs": 2919.1321669999998,
       "contrastFindings": []
     },
     {
       "path": "/dashboard [theme:high-contrast] (actions:openSidebar)",
       "url": "http://localhost:5173/dashboard",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.986833000000047,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2851.3029590000006,
       "contrastFindings": []
     },
     {
       "path": "/dashboard [theme:cupertino-light] (actions:openSidebar)",
       "url": "http://localhost:5173/dashboard",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.2175829999999905,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2864.4712910000017,
       "contrastFindings": []
     },
     {
       "path": "/dashboard [theme:cupertino-dark] (actions:openSidebar)",
       "url": "http://localhost:5173/dashboard",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.5815830000000233,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2859.1987079999963,
       "contrastFindings": []
     },
     {
       "path": "/plays [theme:light]",
       "url": "http://localhost:5173/plays",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.3254160000000184,
+      "durationMs": 871.1085420000018,
       "contrastFindings": []
     },
     {
       "path": "/plays [theme:dark]",
       "url": "http://localhost:5173/plays",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.528124999999932,
+      "durationMs": 880.3600420000002,
       "contrastFindings": []
     },
     {
       "path": "/plays [theme:high-contrast]",
       "url": "http://localhost:5173/plays",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.7506250000000136,
+      "durationMs": 879.8191249999945,
       "contrastFindings": []
     },
     {
       "path": "/plays [theme:cupertino-light]",
       "url": "http://localhost:5173/plays",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.56841600000007,
+      "durationMs": 879.2892909999937,
       "contrastFindings": []
     },
     {
       "path": "/plays [theme:cupertino-dark]",
       "url": "http://localhost:5173/plays",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.592084,
+      "durationMs": 880.5345840000009,
       "contrastFindings": []
     },
     {
       "path": "/plays [theme:light] (actions:openSidebar)",
       "url": "http://localhost:5173/plays",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.330167000000074,
+      "durationMs": 1263.8318750000035,
       "contrastFindings": []
     },
     {
       "path": "/plays [theme:dark] (actions:openSidebar)",
       "url": "http://localhost:5173/plays",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.5149999999999864,
+      "durationMs": 1210.403124999997,
       "contrastFindings": []
     },
     {
       "path": "/plays [theme:high-contrast] (actions:openSidebar)",
       "url": "http://localhost:5173/plays",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.2048750000000155,
+      "durationMs": 1167.9791250000053,
       "contrastFindings": []
     },
     {
       "path": "/plays [theme:cupertino-light] (actions:openSidebar)",
       "url": "http://localhost:5173/plays",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.429457999999954,
+      "durationMs": 1183.4910420000015,
       "contrastFindings": []
     },
     {
       "path": "/plays [theme:cupertino-dark] (actions:openSidebar)",
       "url": "http://localhost:5173/plays",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.746334000000047,
+      "durationMs": 1174.2929999999978,
       "contrastFindings": []
     },
     {
       "path": "/calendar [theme:light]",
       "url": "http://localhost:5173/calendar",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.8050420000000713,
+      "durationMs": 891.7426669999986,
       "contrastFindings": []
     },
     {
       "path": "/calendar [theme:dark]",
       "url": "http://localhost:5173/calendar",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.41437499999995,
+      "durationMs": 921.3169170000037,
       "contrastFindings": []
     },
     {
       "path": "/calendar [theme:high-contrast]",
       "url": "http://localhost:5173/calendar",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.221916999999962,
+      "durationMs": 879.5422089999993,
       "contrastFindings": []
     },
     {
       "path": "/calendar [theme:cupertino-light]",
       "url": "http://localhost:5173/calendar",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.22787500000004,
+      "durationMs": 876.7923750000045,
       "contrastFindings": []
     },
     {
       "path": "/calendar [theme:cupertino-dark]",
       "url": "http://localhost:5173/calendar",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.668457999999987,
+      "durationMs": 892.2383750000008,
       "contrastFindings": []
     },
     {
       "path": "/calendar [theme:light] (actions:openSidebar)",
       "url": "http://localhost:5173/calendar",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.6523329999999987,
+      "durationMs": 1182.4895000000033,
       "contrastFindings": []
     },
     {
       "path": "/calendar [theme:dark] (actions:openSidebar)",
       "url": "http://localhost:5173/calendar",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.206166000000053,
+      "durationMs": 1177.8377910000054,
       "contrastFindings": []
     },
     {
       "path": "/calendar [theme:high-contrast] (actions:openSidebar)",
       "url": "http://localhost:5173/calendar",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.8492919999999913,
+      "durationMs": 1193.5017079999961,
       "contrastFindings": []
     },
     {
       "path": "/calendar [theme:cupertino-light] (actions:openSidebar)",
       "url": "http://localhost:5173/calendar",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.2944579999999632,
+      "durationMs": 1237.3662079999995,
       "contrastFindings": []
     },
     {
       "path": "/calendar [theme:cupertino-dark] (actions:openSidebar)",
       "url": "http://localhost:5173/calendar",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.39129099999991,
+      "durationMs": 1254.1936249999999,
       "contrastFindings": []
     },
     {
       "path": "/teams [theme:light]",
       "url": "http://localhost:5173/teams",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.262875000000008,
+      "durationMs": 907.8652920000022,
       "contrastFindings": []
     },
     {
       "path": "/teams [theme:dark]",
       "url": "http://localhost:5173/teams",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.676290999999992,
+      "durationMs": 860.3680830000012,
       "contrastFindings": []
     },
     {
       "path": "/teams [theme:high-contrast]",
       "url": "http://localhost:5173/teams",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 3.594249999999988,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 858.3161250000048,
       "contrastFindings": []
     },
     {
       "path": "/teams [theme:cupertino-light]",
       "url": "http://localhost:5173/teams",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.5217499999999973,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 869.6312079999989,
       "contrastFindings": []
     },
     {
       "path": "/teams [theme:cupertino-dark]",
       "url": "http://localhost:5173/teams",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.4470000000000027,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 890.7282909999994,
       "contrastFindings": []
     },
     {
       "path": "/teams [theme:light] (actions:openSidebar)",
       "url": "http://localhost:5173/teams",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.1518330000000105,
+      "durationMs": 2899.9867499999964,
       "contrastFindings": []
     },
     {
       "path": "/teams [theme:dark] (actions:openSidebar)",
       "url": "http://localhost:5173/teams",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.4399579999999332,
+      "durationMs": 2863.7799169999926,
       "contrastFindings": []
     },
     {
       "path": "/teams [theme:high-contrast] (actions:openSidebar)",
       "url": "http://localhost:5173/teams",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.2382499999999936,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2889.6980839999887,
       "contrastFindings": []
     },
     {
       "path": "/teams [theme:cupertino-light] (actions:openSidebar)",
       "url": "http://localhost:5173/teams",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.152500000000032,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2895.2886670000007,
       "contrastFindings": []
     },
     {
       "path": "/teams [theme:cupertino-dark] (actions:openSidebar)",
       "url": "http://localhost:5173/teams",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.5229170000000067,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2873.137499999997,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/bulletin [theme:light]",
       "url": "http://localhost:5173/team/t1/bulletin",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.350791000000072,
+      "durationMs": 873.4793339999887,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/bulletin [theme:dark]",
       "url": "http://localhost:5173/team/t1/bulletin",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.483875000000012,
+      "durationMs": 868.9137079999928,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/bulletin [theme:high-contrast]",
       "url": "http://localhost:5173/team/t1/bulletin",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 3.554124999999999,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 865.794624999995,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/bulletin [theme:cupertino-light]",
       "url": "http://localhost:5173/team/t1/bulletin",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 3.4385420000000977,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 866.729542000001,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/bulletin [theme:cupertino-dark]",
       "url": "http://localhost:5173/team/t1/bulletin",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.879707999999937,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 856.6551250000048,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/bulletin [theme:light] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/bulletin",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 5.672582999999918,
+      "durationMs": 2858.9524579999998,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/bulletin [theme:dark] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/bulletin",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.6296250000000327,
+      "durationMs": 2882.5874160000094,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/bulletin [theme:high-contrast] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/bulletin",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.147833000000105,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2873.7449580000102,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/bulletin [theme:cupertino-light] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/bulletin",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.100041000000033,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2865.514540999997,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/bulletin [theme:cupertino-dark] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/bulletin",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.257583000000068,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2850.8094160000037,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/settings [theme:light]",
       "url": "http://localhost:5173/team/t1/settings",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.886624999999981,
+      "durationMs": 886.3165840000001,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/settings [theme:dark]",
       "url": "http://localhost:5173/team/t1/settings",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.798958000000084,
+      "durationMs": 896.2187089999934,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/settings [theme:high-contrast]",
       "url": "http://localhost:5173/team/t1/settings",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.4190410000001066,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 864.1927090000099,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/settings [theme:cupertino-light]",
       "url": "http://localhost:5173/team/t1/settings",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.144333999999958,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 862.0617910000001,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/settings [theme:cupertino-dark]",
       "url": "http://localhost:5173/team/t1/settings",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 1.9974580000000515,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 858.0239580000052,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/settings [theme:light] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/settings",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.155958000000055,
+      "durationMs": 2872.5779170000023,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/settings [theme:dark] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/settings",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.357332999999926,
+      "durationMs": 2879.835290999996,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/settings [theme:high-contrast] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/settings",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.507000000000062,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2869.1110409999965,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/settings [theme:cupertino-light] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/settings",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.574916999999914,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2888.1413750000065,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/settings [theme:cupertino-dark] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/settings",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.991459000000077,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2881.195041999992,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/analytics [theme:light]",
       "url": "http://localhost:5173/team/t1/analytics",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.4373749999999745,
+      "durationMs": 871.2646249999962,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/analytics [theme:dark]",
       "url": "http://localhost:5173/team/t1/analytics",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.1166670000000067,
+      "durationMs": 841.4207499999902,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/analytics [theme:high-contrast]",
       "url": "http://localhost:5173/team/t1/analytics",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.1812090000000808,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 866.8557079999882,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/analytics [theme:cupertino-light]",
       "url": "http://localhost:5173/team/t1/analytics",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.7522089999999935,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 861.5195410000015,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/analytics [theme:cupertino-dark]",
       "url": "http://localhost:5173/team/t1/analytics",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.8061660000000757,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 874.8062919999938,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/analytics [theme:light] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/analytics",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 3.5712499999999636,
+      "durationMs": 2874.2361660000024,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/analytics [theme:dark] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/analytics",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 3.202207999999928,
+      "durationMs": 2893.5409579999978,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/analytics [theme:high-contrast] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/analytics",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.5029159999999138,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2893.3687079999945,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/analytics [theme:cupertino-light] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/analytics",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.756874999999809,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2876.6126659999863,
       "contrastFindings": []
     },
     {
       "path": "/team/t1/analytics [theme:cupertino-dark] (actions:openSidebar)",
       "url": "http://localhost:5173/team/t1/analytics",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.4209169999999176,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 2872.829375000001,
       "contrastFindings": []
     },
     {
       "path": "/login [theme:light]",
       "url": "http://localhost:5173/login",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/login\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.793957999999975,
+      "durationMs": 851.3999170000025,
       "contrastFindings": []
     },
     {
       "path": "/login [theme:dark]",
       "url": "http://localhost:5173/login",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/login\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.941833000000088,
+      "durationMs": 874.966207999998,
       "contrastFindings": []
     },
     {
       "path": "/login [theme:high-contrast]",
       "url": "http://localhost:5173/login",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/login\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.4547079999999823,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 866.0834589999868,
       "contrastFindings": []
     },
     {
       "path": "/login [theme:cupertino-light]",
       "url": "http://localhost:5173/login",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/login\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.1637499999999363,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 883.7828750000044,
       "contrastFindings": []
     },
     {
       "path": "/login [theme:cupertino-dark]",
       "url": "http://localhost:5173/login",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/login\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.1607919999999012,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 872.249833000009,
       "contrastFindings": []
     },
     {
       "path": "/coach [theme:light]",
       "url": "http://localhost:5173/coach",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/coach\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/coach\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.637707999999975,
+      "durationMs": 861.1144159999967,
       "contrastFindings": []
     },
     {
       "path": "/coach [theme:dark]",
       "url": "http://localhost:5173/coach",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/coach\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/coach\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.4397919999998976,
+      "durationMs": 847.2567920000001,
       "contrastFindings": []
     },
     {
       "path": "/coach [theme:high-contrast]",
       "url": "http://localhost:5173/coach",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/coach\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/coach\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.307125000000042,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 882.5549170000013,
       "contrastFindings": []
     },
     {
       "path": "/coach [theme:cupertino-light]",
       "url": "http://localhost:5173/coach",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/coach\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/coach\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.6729170000000977,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 854.7944579999894,
       "contrastFindings": []
     },
     {
       "path": "/coach [theme:cupertino-dark]",
       "url": "http://localhost:5173/coach",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/coach\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/coach\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.4170420000000377,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 859.0395410000056,
       "contrastFindings": []
     },
     {
       "path": "/player [theme:light]",
       "url": "http://localhost:5173/player",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/player\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/player\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.1280410000001666,
+      "durationMs": 860.5464999999967,
       "contrastFindings": []
     },
     {
       "path": "/player [theme:dark]",
       "url": "http://localhost:5173/player",
-      "status": null,
+      "status": 200,
       "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/player\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/player\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.306542000000036,
+      "durationMs": 867.0031250000175,
       "contrastFindings": []
     },
     {
       "path": "/player [theme:high-contrast]",
       "url": "http://localhost:5173/player",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/player\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/player\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.4889170000001286,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            }
+          ]
+        }
+      ],
+      "durationMs": 888.674874999997,
       "contrastFindings": []
     },
     {
       "path": "/player [theme:cupertino-light]",
       "url": "http://localhost:5173/player",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/player\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/player\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 2.5903749999999945,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
+              ],
+              "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 864.8897909999941,
       "contrastFindings": []
     },
     {
       "path": "/player [theme:cupertino-dark]",
       "url": "http://localhost:5173/player",
-      "status": null,
-      "violations": [],
-      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/player\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/player\", waiting until \"domcontentloaded\"\u001b[22m\n",
-      "durationMs": 4.226584000000003,
+      "status": 200,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "target": [
+                "h2"
+              ],
+              "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
+            },
+            {
+              "target": [
+                ".mb-6 > .text-base"
+              ],
+              "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
+            },
+            {
+              "target": [
+                ".mt-6 > p"
+              ],
+              "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
+            },
+            {
+              "target": [
+                ".bg-transparent"
+              ],
+              "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
+            }
+          ]
+        }
+      ],
+      "durationMs": 878.2289579999924,
       "contrastFindings": []
     }
   ]
