@@ -196,10 +196,10 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 ? "bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-200"
                 : outcome === "L"
                   ? "bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-200"
-                  : "surface-subtle text-gray-800 dark:bg-gray-600 dark:text-gray-100";
+                  : "surface-subtle text-text-primary";
             return (
               <li key={r.id} className="flex items-center justify-between py-1">
-                <span className="flex items-center gap-2 font-medium text-text-primary dark:text-gray-100">
+                <span className="flex items-center gap-2 font-medium text-text-primary">
                   <span
                     className={`inline-flex items-center justify-center rounded px-1.5 py-0.5 text-xs font-semibold ${color}`}
                   >
@@ -207,7 +207,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                   </span>
                   {pf}-{pa} vs {r.opponent}
                 </span>
-                <span className="text-text-muted dark:text-gray-300">
+                <span className="text-text-muted">
                   {new Date(r.game_date).toLocaleDateString(undefined, {
                     month: "short",
                     day: "numeric",

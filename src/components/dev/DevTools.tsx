@@ -4,6 +4,7 @@
  * Refactored from 946-line monolithic component into modular architecture
  */
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 import { useAuth } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
@@ -33,7 +34,7 @@ export const DevTools: React.FC = () => {
     activeTab: "overview",
     isVisible: false,
     isHovered: false,
-    opacity: 0.95,
+    opacity: 1,
     autoHideTimer: null,
   });
 
@@ -212,17 +213,17 @@ export const DevTools: React.FC = () => {
     );
   }
 
-  return (
+  const panel = (
     <div
-      className="fixed bottom-4 right-4 z-50 transition-all duration-300 ease-in-out"
+      className="fixed bottom-4 right-4 z-[2147483000] transition-all duration-300 ease-in-out pointer-events-auto"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ opacity: state.opacity }}
     >
-      <div className="surface-card border border-gray-300 dark:border-gray-600 rounded-lg shadow-2xl max-w-md">
+      <div className="surface-card border border-gray-300 dark:border-gray-600 rounded-lg shadow-2xl max-w-md text-text-primary">
         {/* Header */}
-        <div className="flex items-center justify-between p-3 surface-inverse relative overflow-hidden rounded-t-lg">
-          <div className="absolute inset-0 pointer-events-none opacity-20 decorative-gradient bg-gradient-to-r from-jade-500/40 via-purple-500/30 to-blue-500/40" />
+        <div className="flex items-center justify-between p-3 surface-inverse relative overflow-hidden rounded-t-lg bg-[var(--semantic-bg-inverse,#111827)]">
+          <div className="absolute inset-0 pointer-events-none opacity-20 decorative-gradient bg-gradient-to-r from-jade-500/30 via-purple-500/20 to-blue-500/30" />
           <div className="flex items-center">
             <Icon
               name="settings"
@@ -320,4 +321,8 @@ export const DevTools: React.FC = () => {
       </div>
     </div>
   );
+
+  return typeof document !== "undefined"
+    ? createPortal(panel, document.body)
+    : panel;
 };

@@ -96,8 +96,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
                 onClick={() => handleItemClick(item)}
                 variant={item.isActive ? "primary" : "ghost"}
                 size="sm"
-                className={`relative flex flex-col items-center justify-center min-w-[60px] px-2 py-2 h-auto active:scale-95 focus-visible:ring-2 focus-visible:ring-jade-500 ${item.isActive ? "text-brand-jade dark:text-brand-jade-light" : "text-gray-500 hover:text-text-primary dark:hover:text-text-secondary"} text-text-secondary`}
-                style={{ minHeight: "60px" }}
+                className={`relative flex flex-col items-center justify-center min-w-[60px] min-h-[60px] px-2 py-2 h-auto active:scale-95 focus-visible:ring-2 focus-visible:ring-jade-500 ${item.isActive ? "text-brand-jade dark:text-brand-jade-light" : "text-text-primary hover:text-text-primary dark:text-text-primary dark:hover:text-text-secondary"}`}
                 aria-label={`Navigate to ${item.label}`}
               >
                 {/* Icon Container */}
@@ -112,10 +111,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
                         | "menu"
                     }
                     size="sm"
-                    className={`
-                    transition-colors duration-200
-                    ${item.isActive ? "text-brand-jade dark:text-brand-jade-light" : ""}
-                  `}
+                    className={`transition-colors duration-200 ${item.isActive ? "text-brand-jade dark:text-brand-jade-light" : "text-current"}`}
                   />
 
                   {/* Notification Badge */}

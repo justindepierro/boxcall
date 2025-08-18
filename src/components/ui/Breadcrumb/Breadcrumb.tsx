@@ -41,7 +41,7 @@ const getBreadcrumbStyles = (size: BreadcrumbProps["size"]) => {
   return `
     flex items-center space-x-1
     ${sizeStyles[size || "md"]}
-    text-gray-600 dark:text-gray-300
+    text-[var(--semantic-text-secondary)]
   `;
 };
 const getBreadcrumbItemStyles = (item: BreadcrumbItem) => {
@@ -49,17 +49,17 @@ const getBreadcrumbItemStyles = (item: BreadcrumbItem) => {
     flex items-center transition-colors duration-200 ease-in-out
   `;
   if (item.current) {
-    return `${baseStyles} text-gray-900 dark:text-white font-medium cursor-default`;
+    return `${baseStyles} text-[var(--semantic-text-primary)] font-medium cursor-default`;
   }
   if (item.onClick || item.href) {
-    return `${baseStyles} text-gray-500 dark:text-gray-400 hover:text-text-primary dark:hover:text-white cursor-pointer hover:underline`;
+    return `${baseStyles} text-[var(--semantic-text-secondary)] hover:text-[var(--semantic-text-primary)] cursor-pointer hover:underline`;
   }
-  return `${baseStyles} text-gray-400 dark:text-gray-500`;
+  return `${baseStyles} text-[var(--semantic-text-muted, var(--semantic-text-secondary))]`;
 };
 const getSeparatorStyles = () => {
   return `
     mx-2 flex-shrink-0
-    text-gray-400 dark:text-gray-600
+    text-[var(--semantic-text-secondary)]
   `;
 };
 const DefaultSeparator: React.FC = () => (

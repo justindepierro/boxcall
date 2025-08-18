@@ -93,7 +93,7 @@ const getTableStyles = (size?: "sm" | "md" | "lg", bordered?: boolean) => {
   return [
     "w-full table-auto",
     "surface-card",
-    "text-text-primary dark:text-gray-100",
+  "text-text-primary",
     sizeStyles[size || "md"],
     bordered && "border border-subtle dark:border-gray-700",
   ]
@@ -107,10 +107,10 @@ const getHeaderStyles = (size?: "sm" | "md" | "lg") => {
     lg: "px-6 py-3",
   };
   return [
-    "border-b border-subtle dark:border-gray-700",
-    "surface-subtle dark:bg-gray-900",
-    "text-left font-semibold",
-    "text-text-primary dark:text-gray-100",
+  "border-b border-subtle",
+  "surface-subtle",
+  "text-left font-semibold",
+  "text-text-primary",
     sizeStyles[size || "md"],
   ].join(" ");
 };
@@ -129,8 +129,8 @@ const getCellStyles = (
     right: "text-right",
   };
   return [
-    "border-b border-subtle dark:border-gray-700",
-    "text-text-primary dark:text-gray-100",
+  "border-b border-subtle",
+  "text-text-primary",
     sizeStyles[size || "md"],
     alignStyles[align || "left"],
   ].join(" ");
@@ -145,7 +145,7 @@ const getRowStyles = (
     "transition-colors duration-200",
     hoverable && "surface-subtle-hover",
     isSelected && "surface-subtle dark:bg-navy-900/20",
-    striped && isEven && "surface-subtle dark:bg-gray-800",
+  striped && isEven && "surface-subtle",
   ]
     .filter(Boolean)
     .join(" ");

@@ -10,7 +10,7 @@
 
 import React from "react";
 
-import { getComponentColor } from "../../../design-system/tokens";
+// Note: prefer CSS variables over static token hex so icons adapt to theme
 
 // Core types
 export interface ModularIconProps {
@@ -260,18 +260,19 @@ const sizeMap = {
   touch: 44,
 };
 
-// Color mapping
-const colorMap = {
+// Color mapping — use semantic CSS variables so values switch with [data-theme]
+const colorMap: Record<NonNullable<ModularIconProps["color"]>, string> = {
   current: "currentColor",
-  primary: getComponentColor("icon", "primary"),
-  secondary: getComponentColor("icon", "secondary"),
-  jade: getComponentColor("icon", "jade"),
-  navy: getComponentColor("icon", "navy"),
-  slate: getComponentColor("icon", "slate"),
-  success: getComponentColor("icon", "success"),
-  warning: getComponentColor("icon", "warning"),
-  error: getComponentColor("icon", "error"),
-  info: getComponentColor("icon", "info"),
+  // Primary/brand uses interactive brand color; secondary/slate use text tokens
+  primary: "var(--semantic-primary)",
+  secondary: "var(--semantic-text-secondary)",
+  jade: "var(--semantic-text-brand)",
+  navy: "var(--color-navy-700)",
+  slate: "var(--color-gray-500)",
+  success: "var(--semantic-success)",
+  warning: "var(--semantic-warning)",
+  error: "var(--semantic-error)",
+  info: "var(--semantic-primary-hover)",
 };
 
 /**
@@ -344,10 +345,15 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
     // Return a minimal loading placeholder
     return (
       <div
-        className={`inline-block animate-pulse surface-subtle rounded ${className}`}
+        className={`inline-block animate-pulse bg-[var(--semantic-bg-muted)] border border-subtle rounded shadow-inner ${className}`}
+        data-icon-placeholder="true"
+        aria-hidden
         style={{
           width: typeof size === "number" ? size : sizeMap[size],
           height: typeof size === "number" ? size : sizeMap[size],
+          // Provide fallbacks to ensure visibility when CSS variables are not resolved yet
+          backgroundColor: "var(--semantic-bg-muted, #e5e7eb)",
+          borderColor: "var(--semantic-border, #9ca3af)",
         }}
       />
     );

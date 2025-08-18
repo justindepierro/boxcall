@@ -31,6 +31,7 @@ import {
 } from "../components/lazy/LazyRoutes";
 import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
+import { Layout } from "../components/layout/Layout";
 import { ROUTES } from "./paths";
 import {
   requireTeamCoachLoader,
@@ -64,6 +65,13 @@ const RootLayout: React.FC = () => (
   </>
 );
 
+// App shell that provides NavBar + Sidebar around routed pages
+const AppShell: React.FC = () => (
+  <Layout>
+    <Outlet />
+  </Layout>
+);
+
 export const DataRouterApp: React.FC = () => {
   // Role-gated non-team loaders created via factory
   const requirePlayerLoader = useMemo(() => requireRolesLoader(["player"]), []);
@@ -75,7 +83,7 @@ export const DataRouterApp: React.FC = () => {
         element: <RootLayout />,
         errorElement: <RouteErrorElement />,
         children: [
-          // Public
+          // Public (no app shell)
           {
             path: ROUTES.LOGIN,
             element: (
@@ -84,224 +92,223 @@ export const DataRouterApp: React.FC = () => {
               </Suspense>
             ),
           },
-          {
-            path: ROUTES.COACH,
-            loader: requireCoachOrAdminLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyCoachManagementPage />
-              </Suspense>
-            ),
-          },
-          {
-            path: ROUTES.PLAYER,
-            loader: requirePlayerLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyPlayerDashboardPage />
-              </Suspense>
-            ),
-          },
 
-          // Authenticated (no loader yet; will be gated in follow-ups)
+          // App shell with NavBar + Sidebar
           {
-            path: ROUTES.DASHBOARD,
-            loader: requireAuthenticatedLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyDashboardPage />
-              </Suspense>
-            ),
-          },
+            element: <AppShell />,
+            children: [
+              // Root redirect for convenience
+              {
+                index: true,
+                element: <Navigate to={ROUTES.DASHBOARD} replace />,
+              },
 
-          // Team Settings (coach/admin) — gated pre-render by loader
-          {
-            path: "/team/:teamId/settings",
-            loader: requireTeamCoachLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyTeamSettings />
-              </Suspense>
-            ),
+              {
+                path: ROUTES.COACH,
+                loader: requireCoachOrAdminLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyCoachManagementPage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.PLAYER,
+                loader: requirePlayerLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyPlayerDashboardPage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.DASHBOARD,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyDashboardPage />
+                  </Suspense>
+                ),
+              },
+              // Team Settings (coach/admin)
+              {
+                path: "/team/:teamId/settings",
+                loader: requireTeamCoachLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyTeamSettings />
+                  </Suspense>
+                ),
+              },
+              // Team Bulletin — all members
+              {
+                path: "/team/:teamId/bulletin",
+                loader: requireTeamMemberLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyTeamBulletin />
+                  </Suspense>
+                ),
+              },
+              // Team Analytics — premium
+              {
+                path: "/team/:teamId/analytics",
+                loader: requireTeamAnalyticsLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyAnalyticsPage />
+                  </Suspense>
+                ),
+              },
+              // Templates - coaches and admins only
+              {
+                path: ROUTES.TEMPLATES,
+                loader: requireCoachOrAdminLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyTemplatesPage />
+                  </Suspense>
+                ),
+              },
+              // Additional migrated routes (non-team)
+              {
+                path: ROUTES.PLAYBOOK,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyPlaybookPage />
+                  </Suspense>
+                ),
+              },
+              // Lightweight diagram pane route (kept non-lazy like legacy)
+              {
+                path: "/playbook/diagram",
+                loader: requireAuthenticatedLoader,
+                element: <DiagramPaneRoute />,
+              },
+              {
+                path: ROUTES.BOXCALL,
+                loader: requireCoachOrAdminLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyBoxCall />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.PROFILE,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyProfilePage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.TEAMS,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyTeamsPage />
+                  </Suspense>
+                ),
+              },
+              // Team management
+              {
+                path: ROUTES.CREATE_TEAM,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyCreateTeam />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.JOIN_TEAM,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyJoinTeam />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.CREATE_COACH_ACCOUNT,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyCreateCoachAccount />
+                  </Suspense>
+                ),
+              },
+              // Legal & info (kept authenticated like legacy)
+              {
+                path: ROUTES.ABOUT,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyAboutPage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.PRIVACY,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyPrivacyPolicyPage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.TERMS,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyTermsOfServicePage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.CONTACT,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyContactPage />
+                  </Suspense>
+                ),
+              },
+              // 404
+              {
+                path: "*",
+                element: (
+                  <div className="min-h-screen flex items-center justify-center surface-app">
+                    <div className="text-center max-w-md mx-auto p-6">
+                      <p className="font-medium text-text-secondary">
+                        404 - Page Not Found
+                      </p>
+                    </div>
+                  </div>
+                ),
+              },
+              // Dev only diagnostics route (parity with legacy)
+              ...(import.meta.env.DEV
+                ? [
+                    {
+                      path: ROUTES.DEV_DIAGNOSTICS,
+                      loader: requireAuthenticatedLoader,
+                      element: (
+                        <Suspense fallback={<RouteLoadingSpinner />}>
+                          {React.createElement(
+                            React.lazy(() => import("../pages/DiagnosticsPage"))
+                          )}
+                        </Suspense>
+                      ),
+                    } as RouteObject,
+                  ]
+                : []),
+            ],
           },
-
-          // Team Bulletin — all members, gated pre-render to avoid flashes
-          {
-            path: "/team/:teamId/bulletin",
-            loader: requireTeamMemberLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyTeamBulletin />
-              </Suspense>
-            ),
-          },
-
-          // Team Analytics — premium, gated by loader for subscription + role
-          {
-            path: "/team/:teamId/analytics",
-            loader: requireTeamAnalyticsLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyAnalyticsPage />
-              </Suspense>
-            ),
-          },
-
-          // Templates - coaches and admins only
-          {
-            path: ROUTES.TEMPLATES,
-            loader: requireCoachOrAdminLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyTemplatesPage />
-              </Suspense>
-            ),
-          },
-
-          // Root redirect for convenience
-          { index: true, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
-
-          // Additional migrated routes (non-team)
-          {
-            path: ROUTES.PLAYBOOK,
-            loader: requireAuthenticatedLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyPlaybookPage />
-              </Suspense>
-            ),
-          },
-          // Lightweight diagram pane route (kept non-lazy like legacy)
-          {
-            path: "/playbook/diagram",
-            loader: requireAuthenticatedLoader,
-            element: <DiagramPaneRoute />,
-          },
-          {
-            path: ROUTES.BOXCALL,
-            loader: requireCoachOrAdminLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyBoxCall />
-              </Suspense>
-            ),
-          },
-          {
-            path: ROUTES.PROFILE,
-            loader: requireAuthenticatedLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyProfilePage />
-              </Suspense>
-            ),
-          },
-          {
-            path: ROUTES.TEAMS,
-            loader: requireAuthenticatedLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyTeamsPage />
-              </Suspense>
-            ),
-          },
-
-          // Team management
-          {
-            path: ROUTES.CREATE_TEAM,
-            loader: requireAuthenticatedLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyCreateTeam />
-              </Suspense>
-            ),
-          },
-          {
-            path: ROUTES.JOIN_TEAM,
-            loader: requireAuthenticatedLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyJoinTeam />
-              </Suspense>
-            ),
-          },
-          {
-            path: ROUTES.CREATE_COACH_ACCOUNT,
-            loader: requireAuthenticatedLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyCreateCoachAccount />
-              </Suspense>
-            ),
-          },
-
-          // Legal & info (kept authenticated like legacy)
-          {
-            path: ROUTES.ABOUT,
-            loader: requireAuthenticatedLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyAboutPage />
-              </Suspense>
-            ),
-          },
-          {
-            path: ROUTES.PRIVACY,
-            loader: requireAuthenticatedLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyPrivacyPolicyPage />
-              </Suspense>
-            ),
-          },
-          {
-            path: ROUTES.TERMS,
-            loader: requireAuthenticatedLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyTermsOfServicePage />
-              </Suspense>
-            ),
-          },
-          {
-            path: ROUTES.CONTACT,
-            loader: requireAuthenticatedLoader,
-            element: (
-              <Suspense fallback={<RouteLoadingSpinner />}>
-                <LazyContactPage />
-              </Suspense>
-            ),
-          },
-
-          // 404
-          {
-            path: "*",
-            element: (
-              <div className="min-h-screen flex items-center justify-center surface-app">
-                <div className="text-center max-w-md mx-auto p-6">
-                  <p className="font-medium text-text-secondary">
-                    404 - Page Not Found
-                  </p>
-                </div>
-              </div>
-            ),
-          },
-
-          // Dev only diagnostics route (parity with legacy)
-          ...(import.meta.env.DEV
-            ? [
-                {
-                  path: ROUTES.DEV_DIAGNOSTICS,
-                  loader: requireAuthenticatedLoader,
-                  element: (
-                    <Suspense fallback={<RouteLoadingSpinner />}>
-                      {React.createElement(
-                        React.lazy(() => import("../pages/DiagnosticsPage"))
-                      )}
-                    </Suspense>
-                  ),
-                } as RouteObject,
-              ]
-            : []),
         ],
       },
     ],

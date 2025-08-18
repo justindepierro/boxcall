@@ -40,9 +40,7 @@ export async function fetchTeamMembership(
   return { role: data.role as TeamMemberRole, status: data.status };
 }
 
-export async function fetchTeamSubscription(
-  teamId: string
-): Promise<{
+export async function fetchTeamSubscription(teamId: string): Promise<{
   subscription_tier: SubscriptionTier;
   subscription_expires_at: string | null;
 } | null> {

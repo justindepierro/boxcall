@@ -199,13 +199,14 @@ export const TouchButton: React.FC<TouchButtonProps> = ({
 }) => {
   const variantStyles = {
     primary:
-      "bg-team-primary hover:bg-jade-700 text-white shadow-md hover:shadow-lg",
+      "bg-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-primary-active)] text-[var(--semantic-text-inverse)] shadow-md hover:shadow-lg",
     secondary:
-      "surface-subtle surface-subtle-hover text-gray-900 shadow-sm hover:shadow-md",
+      "surface-subtle surface-subtle-hover text-[var(--semantic-text-primary)] shadow-sm hover:shadow-md",
     ghost:
-      "bg-transparent surface-subtle-hover text-gray-700 border border-gray-300 hover:border-gray-400",
+      "bg-transparent surface-subtle-hover text-[var(--semantic-text-secondary)] border border-[var(--semantic-border)] hover:border-[var(--semantic-primary-hover)]",
     // Use slightly darker base for improved contrast
-    danger: "bg-red-600 hover:bg-red-700 text-white shadow-md hover:shadow-lg",
+    danger:
+      "bg-[color:var(--color-error-600)] hover:bg-[color:var(--color-error-700)] text-[var(--semantic-text-inverse)] shadow-md hover:shadow-lg",
   };
 
   const sizeStyles = {

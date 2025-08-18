@@ -51,7 +51,7 @@ const PostItem: React.FC<PostItemProps> = ({
     <li className="rounded border-subtle surface-card elevation-card p-3">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <p className="text-sm text-text-primary dark:text-gray-100 whitespace-pre-wrap">
+          <p className="text-sm text-text-primary whitespace-pre-wrap">
             {display}
           </p>
           {over && (

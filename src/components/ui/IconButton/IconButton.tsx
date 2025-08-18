@@ -23,12 +23,14 @@ const sizeStyles = {
 };
 
 const variantStyles = {
+  // Ghost actions visible at rest; use primary text and subtle hover surface
   ghost:
-    "text-text-secondary hover:text-text-primary hover:bg-surface-neutral active:bg-surface-neutral-dark",
+    "text-text-primary hover:text-text-primary hover:surface-subtle-hover active:bg-[var(--semantic-bg-muted)]",
+  // Subtle still de-emphasized, but avoid unreadable ultra-muted in some themes
   subtle:
-    "text-text-muted hover:text-text-primary hover:bg-surface-neutral/60 active:bg-surface-neutral-dark/60",
+    "text-text-secondary hover:text-text-primary hover:surface-subtle-hover active:bg-[var(--semantic-bg-muted)]/90",
   danger:
-    "text-red-600 hover:text-red-700 hover:surface-subtle active:bg-red-100",
+    "text-red-600 hover:text-red-700 hover:surface-subtle-hover active:bg-red-100",
 };
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(

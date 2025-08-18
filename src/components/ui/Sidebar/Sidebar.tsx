@@ -3,6 +3,7 @@ import { Button } from "../Button";
 import { useSidebarState } from "../../../hooks/useSidebarState";
 import { Link, useLocation } from "react-router-dom";
 import { Tooltip } from "../Tooltip/Tooltip";
+import { Icon } from "../Icon/Icon";
 import { UserPreferencesService } from "../../../services/userPreferencesService";
 
 import type { ReactNode } from "react";
@@ -70,40 +71,40 @@ const getSidebarPosition = (
   const openTransform = "translate-x-0";
   return `
     ${position === "right" ? "right-0" : "left-0"}
-    transform transition-transform duration-300 ease-in-out
+  transform transition-transform duration-300 ease-in-out motion-reduce:transition-none motion-reduce:duration-0
     ${isOpen ? openTransform : baseTransform}
   `;
 };
 const getSidebarStyles = () => {
   return `
-    fixed top-0 bottom-0 z-50 flex flex-col
-  surface-nav border-subtle
-    border-r shadow-lg
+  fixed top-0 bottom-0 z-50 flex flex-col
+  surface-nav border-subtle border-r shadow-lg
+  rounded-r-2xl overflow-hidden
   `;
 };
 const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
   const paddingLeft = level > 0 ? `pl-${4 + level * 4}` : "pl-4";
   const baseStyles = `
-    flex items-center px-4 py-3 text-sm font-medium cursor-pointer
-    transition-colors duration-200 ease-in-out
+    group flex items-center gap-3 px-3 py-2.5 text-sm font-medium cursor-pointer
+    transition-colors duration-150 ease-in-out rounded-md
+    focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--semantic-focus-ring)]/30 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--semantic-bg-primary)]
     ${paddingLeft}
   `;
   if (item.divider) {
-    return `border-t border-subtle dark:border-gray-700 my-2`;
+    return `border-t border-subtle my-2`;
   }
   if (item.disabled) {
-    return `${baseStyles} text-gray-400 dark:text-gray-500 cursor-not-allowed`;
+    return `${baseStyles} text-text-muted cursor-not-allowed`;
   }
   if (item.active) {
-    // Strengthened active contrast (previously blue-50 background with blue-700 text could blend into light surfaces)
-    return `${baseStyles} bg-brand-navy text-white dark:bg-gray-700 dark:text-white border-r-2 border-brand-jade-dark`;
+    // Active: semantic brand bg accent and strong readable text
+    return `${baseStyles} bg-[var(--semantic-bg-muted)] text-text-primary shadow-sm ring-1 ring-[color:var(--semantic-primary)]/20 border-l-2 border-[color:var(--semantic-primary)]`;
   }
-  return `${baseStyles} text-text-secondary dark:text-text-secondary surface-subtle-hover dark:hover:bg-gray-700 hover:text-text-primary dark:hover:text-text-inverse`;
+  return `${baseStyles} text-text-primary hover:bg-[var(--semantic-bg-muted)] hover:text-text-primary`;
 };
 const getBadgeStyles = () => {
   return `
     ml-auto px-2 py-0.5 text-xs font-medium rounded-full
-    bg-jade-600 dark:bg-jade-600 text-white
   `;
 };
 // (Legacy nested SidebarItem component removed; main Sidebar renders items directly)
@@ -121,9 +122,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const state = useSidebarState();
   const { pathname } = useLocation();
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedRef = useRef<Element | null>(null);
   const [focusIndex, setFocusIndex] = useState<number>(0);
   const itemRefs = useRef<(HTMLAnchorElement | HTMLDivElement | null)[]>([]);
-  const showTooltips = UserPreferencesService.loadPreferences().ui.showTooltips;
+  // Read once to avoid re-reading preferences on every render
+  const [showTooltips] = useState(
+    () => UserPreferencesService.loadPreferences().ui.showTooltips
+  );
   const pinnedIds = useMemo(() => new Set(state.favorites), [state.favorites]);
   const pinnedItems = useMemo(
     () =>
@@ -210,12 +215,73 @@ export const Sidebar: React.FC<SidebarProps> = ({
       document.body.style.overflow = "";
     };
   }, [isOpen]);
-  const handleItemClick = () => {
+
+  // Focus management: save previously focused element, auto-focus first menuitem, and trap focus while open
+  useEffect(() => {
+    if (!isOpen) {
+      // restore focus if possible when closing
+      const toRestore = previouslyFocusedRef.current as HTMLElement | null;
+      if (toRestore && typeof toRestore.focus === "function") {
+        // Delay to allow unmount
+        setTimeout(() => toRestore.focus(), 0);
+      }
+      return;
+    }
+    // record previously focused
+    previouslyFocusedRef.current = document.activeElement;
+
+    const container = sidebarRef.current;
+    if (!container) return;
+
+    // Helper to get tabbable elements within the sidebar
+    const getTabbables = (): HTMLElement[] => {
+      const nodes = container.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      return Array.from(nodes).filter(
+        (el) => el.offsetParent !== null || el === document.activeElement
+      );
+    };
+
+    // Try to focus the current roving item (tabIndex=0 menuitem); else first tabbable in the drawer
+    const rovingTarget = container.querySelector<HTMLElement>(
+      '[role="menuitem"][tabindex="0"]'
+    );
+    const initialFocus = rovingTarget || getTabbables()[0];
+    if (initialFocus && typeof initialFocus.focus === "function") {
+      // Defer to next frame so layout classes apply
+      requestAnimationFrame(() => initialFocus.focus());
+    }
+
+    // Focus trap: cycle Tab within the drawer
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const tabbables = getTabbables();
+      if (tabbables.length === 0) return;
+      const first = tabbables[0];
+      const last = tabbables[tabbables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey) {
+        if (active === first || !container.contains(active)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    container.addEventListener("keydown", handleKeyDown);
+    return () => container.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
+  const handleItemClick = React.useCallback(() => {
     // Close sidebar when item is clicked (for mobile)
     if (window.innerWidth < 768) {
       onClose?.();
     }
-  };
+  }, [onClose]);
 
   // Keyboard navigation for menu (roving tabindex)
   const onKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
@@ -263,7 +329,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {showOverlay && (
         <div
           data-testid="sidebar-overlay"
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70"
+          className="fixed inset-0 z-40 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 backdrop-blur-[1px] transition-opacity motion-reduce:transition-none"
           onClick={onClose}
         />
       )}
@@ -276,13 +342,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
           ${getSidebarPosition(position, isOpen)}
           ${className}
         `}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Sidebar navigation"
+        aria-labelledby={header ? "sidebar-title" : undefined}
+        data-testid="sidebar-panel"
         data-mode={state.mode}
       >
         {/* Header */}
         {header && (
-          <div className="px-4 py-4 border-b border-subtle dark:border-gray-700">
+          <div className="px-4 py-3 border-b border-subtle bg-[var(--semantic-bg-primary)]/80 backdrop-blur">
             <div className="flex items-center justify-between">
-              <div className="flex-1">{header}</div>
+              <div className="flex-1" id="sidebar-title">
+                {header}
+              </div>
               <div className="flex items-center gap-2">
                 <Button
                   variant="ghost"
@@ -294,29 +367,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       ? "Expand sidebar"
                       : "Collapse sidebar"
                   }
+                  className="p-2"
                 >
-                  {state.mode === "rail" ? "Expand" : "Collapse"}
+                  <Icon
+                    name={
+                      state.mode === "rail" ? "chevron-right" : "chevron-left"
+                    }
+                    size="sm"
+                  />
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={onClose}
-                  className="ml-4 p-1"
+                  className="p-2"
                   aria-label="Close sidebar"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
+                  <Icon name="close" size="sm" />
                 </Button>
               </div>
             </div>
@@ -330,10 +397,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           tabIndex={-1}
           onKeyDown={onKeyDown}
         >
-          <nav className="py-4" role="menubar" aria-orientation="vertical">
+          <nav className="py-3 px-2" role="menubar" aria-orientation="vertical">
             {pinnedItems.length > 0 && (
               <div className="mb-2">
-                <div className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-text-tertiary">
+                <div
+                  className="px-2 pb-1 text-[11px] font-semibold uppercase tracking-wide text-text-muted"
+                  aria-hidden="true"
+                >
                   Pinned
                 </div>
                 {pinnedItems.map((item) => {
@@ -347,7 +417,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   // compute focus map index based on main focus list start at 0; keep pinned non-roving for now
                   const focusKey = -1;
                   return (
-                    <div key={`pinned-${item.id}`} className="px-2">
+                    <div key={`pinned-${item.id}`} className="px-1">
                       {item.href ? (
                         <Tooltip
                           content={item.label}
@@ -356,7 +426,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         >
                           <Link
                             to={item.href}
-                            className={getSidebarItemStyles(styledItem)}
+                            className={`${getSidebarItemStyles(styledItem)} relative`}
                             role="menuitem"
                             aria-current={isActive ? "page" : undefined}
                             title={undefined}
@@ -369,7 +439,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                             }
                             onClick={() => handleItemClick()}
                           >
-                            <div className="flex items-center justify-start w-9 flex-shrink-0">
+                            <div
+                              className={`flex items-center justify-start w-9 flex-shrink-0 ${state.mode === "rail" ? "justify-center w-10" : ""}`}
+                              aria-hidden
+                            >
                               {item.icon}
                             </div>
                             {state.mode !== "rail" && (
@@ -378,7 +451,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                   {item.label}
                                 </span>
                                 {item.badge && (
-                                  <span className={getBadgeStyles()}>
+                                  <span
+                                    className={getBadgeStyles()}
+                                    style={{
+                                      backgroundColor:
+                                        "var(--semantic-primary)",
+                                      color: "var(--semantic-text-inverse)",
+                                    }}
+                                  >
                                     {item.badge}
                                   </span>
                                 )}
@@ -391,9 +471,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    aria-label="Unpin"
+                                    aria-label={`Unpin ${item.label}`}
                                     aria-pressed={true}
-                                    className="ml-2 px-1 text-jade-600 hover:text-jade-700"
+                                    className="ml-2 px-1 text-[color:var(--semantic-text-brand)] hover:text-[color:var(--semantic-primary-hover)] focus:text-[color:var(--semantic-primary-hover)] opacity-80 group-hover:opacity-100 focus:opacity-100 transition-opacity"
                                     tabIndex={-1}
                                     onClick={(e) => {
                                       e.preventDefault();
@@ -401,7 +481,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                       state.toggleFavorite(item.id);
                                     }}
                                   >
-                                    ★
+                                    <Icon name="star" size="sm" aria-hidden />
                                   </Button>
                                 </Tooltip>
                               </>
@@ -415,13 +495,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           placement="right"
                         >
                           <div
-                            className={getSidebarItemStyles(styledItem)}
+                            className={`${getSidebarItemStyles(styledItem)} relative`}
                             role="menuitem"
                             aria-current={isActive ? "page" : undefined}
                             title={undefined}
                             tabIndex={-1}
                           >
-                            <div className="flex items-center justify-start w-9 flex-shrink-0">
+                            <div
+                              className={`flex items-center justify-start w-9 flex-shrink-0 ${state.mode === "rail" ? "justify-center w-10" : ""}`}
+                              aria-hidden
+                            >
                               {item.icon}
                             </div>
                             {state.mode !== "rail" && (
@@ -430,7 +513,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                   {item.label}
                                 </span>
                                 {item.badge && (
-                                  <span className={getBadgeStyles()}>
+                                  <span
+                                    className={getBadgeStyles()}
+                                    style={{
+                                      backgroundColor:
+                                        "var(--semantic-primary)",
+                                      color: "var(--semantic-text-inverse)",
+                                    }}
+                                  >
                                     {item.badge}
                                   </span>
                                 )}
@@ -442,9 +532,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    aria-label="Unpin"
+                                    aria-label={`Unpin ${item.label}`}
                                     aria-pressed={true}
-                                    className="ml-2 px-1 text-jade-600 hover:text-jade-700"
+                                    className="ml-2 px-1 text-[color:var(--semantic-text-brand)] hover:text-[color:var(--semantic-primary-hover)] opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
                                     tabIndex={-1}
                                     onClick={(e) => {
                                       e.preventDefault();
@@ -452,7 +542,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                       state.toggleFavorite(item.id);
                                     }}
                                   >
-                                    ★
+                                    <Icon name="star" size="sm" aria-hidden />
                                   </Button>
                                 </Tooltip>
                               </>
@@ -472,7 +562,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               const styledItem = { ...item, active: isActive } as SidebarItem;
               const focusKey = focusableMap[i];
               return (
-                <div key={item.id} className="px-2">
+                <div key={item.id} className="px-1">
                   {item.href ? (
                     <Tooltip
                       content={item.label}
@@ -481,7 +571,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     >
                       <Link
                         to={item.href}
-                        className={getSidebarItemStyles(styledItem)}
+                        className={`${getSidebarItemStyles(styledItem)} relative`}
                         role="menuitem"
                         aria-current={isActive ? "page" : undefined}
                         title={undefined}
@@ -497,7 +587,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         }}
                         onClick={() => handleItemClick()}
                       >
-                        <div className="flex items-center justify-start w-9 flex-shrink-0">
+                        <div
+                          className={`flex items-center justify-start w-9 flex-shrink-0 ${state.mode === "rail" ? "justify-center w-10" : ""}`}
+                          aria-hidden
+                        >
                           {item.icon}
                         </div>
                         {state.mode !== "rail" && (
@@ -506,7 +599,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                               {item.label}
                             </span>
                             {item.badge && (
-                              <span className={getBadgeStyles()}>
+                              <span
+                                className={getBadgeStyles()}
+                                style={{
+                                  backgroundColor: "var(--semantic-primary)",
+                                  color: "var(--semantic-text-inverse)",
+                                }}
+                              >
                                 {item.badge}
                               </span>
                             )}
@@ -520,10 +619,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                 variant="ghost"
                                 size="sm"
                                 aria-label={
-                                  pinnedIds.has(item.id) ? "Unpin" : "Pin"
+                                  pinnedIds.has(item.id)
+                                    ? `Unpin ${item.label}`
+                                    : `Pin ${item.label}`
                                 }
                                 aria-pressed={pinnedIds.has(item.id)}
-                                className={`ml-2 px-1 ${pinnedIds.has(item.id) ? "text-jade-600" : "text-text-tertiary"} hover:text-jade-700`}
+                                className={`ml-2 px-1 ${pinnedIds.has(item.id) ? "text-[color:var(--semantic-text-brand)]" : "text-text-secondary"} hover:text-[color:var(--semantic-primary-hover)] opacity-60 group-hover:opacity-100 focus:opacity-100 transition-opacity`}
                                 tabIndex={-1}
                                 onClick={(e) => {
                                   e.preventDefault();
@@ -531,7 +632,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                   state.toggleFavorite(item.id);
                                 }}
                               >
-                                ★
+                                <Icon name="star" size="sm" aria-hidden />
                               </Button>
                             </Tooltip>
                           </>
@@ -545,7 +646,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       placement="right"
                     >
                       <div
-                        className={getSidebarItemStyles(styledItem)}
+                        className={`${getSidebarItemStyles(styledItem)} relative`}
                         role="menuitem"
                         aria-current={isActive ? "page" : undefined}
                         title={undefined}
@@ -560,7 +661,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           if (focusKey >= 0) itemRefs.current[focusKey] = el;
                         }}
                       >
-                        <div className="flex items-center justify-start w-9 flex-shrink-0">
+                        <div
+                          className={`flex items-center justify-start w-9 flex-shrink-0 ${state.mode === "rail" ? "justify-center w-10" : ""}`}
+                          aria-hidden
+                        >
                           {item.icon}
                         </div>
                         {state.mode !== "rail" && (
@@ -569,7 +673,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                               {item.label}
                             </span>
                             {item.badge && (
-                              <span className={getBadgeStyles()}>
+                              <span
+                                className={getBadgeStyles()}
+                                style={{
+                                  backgroundColor: "var(--semantic-primary)",
+                                  color: "var(--semantic-text-inverse)",
+                                }}
+                              >
                                 {item.badge}
                               </span>
                             )}
@@ -582,10 +692,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                 variant="ghost"
                                 size="sm"
                                 aria-label={
-                                  pinnedIds.has(item.id) ? "Unpin" : "Pin"
+                                  pinnedIds.has(item.id)
+                                    ? `Unpin ${item.label}`
+                                    : `Pin ${item.label}`
                                 }
                                 aria-pressed={pinnedIds.has(item.id)}
-                                className={`ml-2 px-1 ${pinnedIds.has(item.id) ? "text-jade-600" : "text-text-tertiary"} hover:text-jade-700`}
+                                className={`ml-2 px-1 ${pinnedIds.has(item.id) ? "text-[color:var(--semantic-text-brand)]" : "text-text-secondary"} hover:text-[color:var(--semantic-primary-hover)] opacity-60 group-hover:opacity-100 focus:opacity-100 transition-opacity`}
                                 tabIndex={-1}
                                 onClick={(e) => {
                                   e.preventDefault();
@@ -593,7 +705,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                   state.toggleFavorite(item.id);
                                 }}
                               >
-                                ★
+                                <Icon name="star" size="sm" aria-hidden />
                               </Button>
                             </Tooltip>
                           </>
@@ -608,9 +720,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
         {/* Footer */}
         {footer && (
-          <div className="px-4 py-4 border-t border-subtle dark:border-gray-700">
-            {footer}
-          </div>
+          <div className="px-4 py-4 border-t border-subtle">{footer}</div>
         )}
       </div>
     </>

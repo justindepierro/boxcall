@@ -1,40 +1,867 @@
 {
-  "generated": "2025-08-11T13:14:09.180Z",
+  "generated": "2025-08-18T10:38:11.525Z",
   "baseUrl": "http://localhost:5173",
   "summary": {
-    "totalPages": 4,
-    "pagesErrored": 0,
+    "totalPages": 95,
+    "pagesErrored": 95,
     "violations": 0,
     "seriousOrCritical": 0
   },
   "results": [
     {
-      "path": "/",
+      "path": "/ [theme:light]",
       "url": "http://localhost:5173/",
-      "status": 200,
+      "status": null,
       "violations": [],
-      "durationMs": 1185.839583
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 9.120499999999993,
+      "contrastFindings": []
     },
     {
-      "path": "/plays",
+      "path": "/ [theme:dark]",
+      "url": "http://localhost:5173/",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 28.248707999999965,
+      "contrastFindings": []
+    },
+    {
+      "path": "/ [theme:high-contrast]",
+      "url": "http://localhost:5173/",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 6.076958999999988,
+      "contrastFindings": []
+    },
+    {
+      "path": "/ [theme:cupertino-light]",
+      "url": "http://localhost:5173/",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 3.0688749999999345,
+      "contrastFindings": []
+    },
+    {
+      "path": "/ [theme:cupertino-dark]",
+      "url": "http://localhost:5173/",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 4.532709000000068,
+      "contrastFindings": []
+    },
+    {
+      "path": "/ [theme:light] (actions:openSidebar)",
+      "url": "http://localhost:5173/",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.85841599999992,
+      "contrastFindings": []
+    },
+    {
+      "path": "/ [theme:dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 3.071166999999946,
+      "contrastFindings": []
+    },
+    {
+      "path": "/ [theme:high-contrast] (actions:openSidebar)",
+      "url": "http://localhost:5173/",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.6369999999999436,
+      "contrastFindings": []
+    },
+    {
+      "path": "/ [theme:cupertino-light] (actions:openSidebar)",
+      "url": "http://localhost:5173/",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 3.591957999999977,
+      "contrastFindings": []
+    },
+    {
+      "path": "/ [theme:cupertino-dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.2702090000000226,
+      "contrastFindings": []
+    },
+    {
+      "path": "/dashboard [theme:light]",
+      "url": "http://localhost:5173/dashboard",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.8128750000000764,
+      "contrastFindings": []
+    },
+    {
+      "path": "/dashboard [theme:dark]",
+      "url": "http://localhost:5173/dashboard",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 3.066874999999982,
+      "contrastFindings": []
+    },
+    {
+      "path": "/dashboard [theme:high-contrast]",
+      "url": "http://localhost:5173/dashboard",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.312708999999927,
+      "contrastFindings": []
+    },
+    {
+      "path": "/dashboard [theme:cupertino-light]",
+      "url": "http://localhost:5173/dashboard",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.2947090000000117,
+      "contrastFindings": []
+    },
+    {
+      "path": "/dashboard [theme:cupertino-dark]",
+      "url": "http://localhost:5173/dashboard",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.4061249999999745,
+      "contrastFindings": []
+    },
+    {
+      "path": "/dashboard [theme:light] (actions:openSidebar)",
+      "url": "http://localhost:5173/dashboard",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.366792000000032,
+      "contrastFindings": []
+    },
+    {
+      "path": "/dashboard [theme:dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/dashboard",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.9680419999999685,
+      "contrastFindings": []
+    },
+    {
+      "path": "/dashboard [theme:high-contrast] (actions:openSidebar)",
+      "url": "http://localhost:5173/dashboard",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.986833000000047,
+      "contrastFindings": []
+    },
+    {
+      "path": "/dashboard [theme:cupertino-light] (actions:openSidebar)",
+      "url": "http://localhost:5173/dashboard",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.2175829999999905,
+      "contrastFindings": []
+    },
+    {
+      "path": "/dashboard [theme:cupertino-dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/dashboard",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/dashboard\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.5815830000000233,
+      "contrastFindings": []
+    },
+    {
+      "path": "/plays [theme:light]",
       "url": "http://localhost:5173/plays",
-      "status": 200,
+      "status": null,
       "violations": [],
-      "durationMs": 842.5774999999999
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.3254160000000184,
+      "contrastFindings": []
     },
     {
-      "path": "/calendar",
+      "path": "/plays [theme:dark]",
+      "url": "http://localhost:5173/plays",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.528124999999932,
+      "contrastFindings": []
+    },
+    {
+      "path": "/plays [theme:high-contrast]",
+      "url": "http://localhost:5173/plays",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.7506250000000136,
+      "contrastFindings": []
+    },
+    {
+      "path": "/plays [theme:cupertino-light]",
+      "url": "http://localhost:5173/plays",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.56841600000007,
+      "contrastFindings": []
+    },
+    {
+      "path": "/plays [theme:cupertino-dark]",
+      "url": "http://localhost:5173/plays",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.592084,
+      "contrastFindings": []
+    },
+    {
+      "path": "/plays [theme:light] (actions:openSidebar)",
+      "url": "http://localhost:5173/plays",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.330167000000074,
+      "contrastFindings": []
+    },
+    {
+      "path": "/plays [theme:dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/plays",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.5149999999999864,
+      "contrastFindings": []
+    },
+    {
+      "path": "/plays [theme:high-contrast] (actions:openSidebar)",
+      "url": "http://localhost:5173/plays",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.2048750000000155,
+      "contrastFindings": []
+    },
+    {
+      "path": "/plays [theme:cupertino-light] (actions:openSidebar)",
+      "url": "http://localhost:5173/plays",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.429457999999954,
+      "contrastFindings": []
+    },
+    {
+      "path": "/plays [theme:cupertino-dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/plays",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/plays\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/plays\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.746334000000047,
+      "contrastFindings": []
+    },
+    {
+      "path": "/calendar [theme:light]",
       "url": "http://localhost:5173/calendar",
-      "status": 200,
+      "status": null,
       "violations": [],
-      "durationMs": 796.6723339999999
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.8050420000000713,
+      "contrastFindings": []
     },
     {
-      "path": "/login",
-      "url": "http://localhost:5173/login",
-      "status": 200,
+      "path": "/calendar [theme:dark]",
+      "url": "http://localhost:5173/calendar",
+      "status": null,
       "violations": [],
-      "durationMs": 784.8377920000003
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.41437499999995,
+      "contrastFindings": []
+    },
+    {
+      "path": "/calendar [theme:high-contrast]",
+      "url": "http://localhost:5173/calendar",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.221916999999962,
+      "contrastFindings": []
+    },
+    {
+      "path": "/calendar [theme:cupertino-light]",
+      "url": "http://localhost:5173/calendar",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.22787500000004,
+      "contrastFindings": []
+    },
+    {
+      "path": "/calendar [theme:cupertino-dark]",
+      "url": "http://localhost:5173/calendar",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.668457999999987,
+      "contrastFindings": []
+    },
+    {
+      "path": "/calendar [theme:light] (actions:openSidebar)",
+      "url": "http://localhost:5173/calendar",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.6523329999999987,
+      "contrastFindings": []
+    },
+    {
+      "path": "/calendar [theme:dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/calendar",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.206166000000053,
+      "contrastFindings": []
+    },
+    {
+      "path": "/calendar [theme:high-contrast] (actions:openSidebar)",
+      "url": "http://localhost:5173/calendar",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.8492919999999913,
+      "contrastFindings": []
+    },
+    {
+      "path": "/calendar [theme:cupertino-light] (actions:openSidebar)",
+      "url": "http://localhost:5173/calendar",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.2944579999999632,
+      "contrastFindings": []
+    },
+    {
+      "path": "/calendar [theme:cupertino-dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/calendar",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/calendar\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/calendar\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.39129099999991,
+      "contrastFindings": []
+    },
+    {
+      "path": "/teams [theme:light]",
+      "url": "http://localhost:5173/teams",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.262875000000008,
+      "contrastFindings": []
+    },
+    {
+      "path": "/teams [theme:dark]",
+      "url": "http://localhost:5173/teams",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.676290999999992,
+      "contrastFindings": []
+    },
+    {
+      "path": "/teams [theme:high-contrast]",
+      "url": "http://localhost:5173/teams",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 3.594249999999988,
+      "contrastFindings": []
+    },
+    {
+      "path": "/teams [theme:cupertino-light]",
+      "url": "http://localhost:5173/teams",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.5217499999999973,
+      "contrastFindings": []
+    },
+    {
+      "path": "/teams [theme:cupertino-dark]",
+      "url": "http://localhost:5173/teams",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.4470000000000027,
+      "contrastFindings": []
+    },
+    {
+      "path": "/teams [theme:light] (actions:openSidebar)",
+      "url": "http://localhost:5173/teams",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.1518330000000105,
+      "contrastFindings": []
+    },
+    {
+      "path": "/teams [theme:dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/teams",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.4399579999999332,
+      "contrastFindings": []
+    },
+    {
+      "path": "/teams [theme:high-contrast] (actions:openSidebar)",
+      "url": "http://localhost:5173/teams",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.2382499999999936,
+      "contrastFindings": []
+    },
+    {
+      "path": "/teams [theme:cupertino-light] (actions:openSidebar)",
+      "url": "http://localhost:5173/teams",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.152500000000032,
+      "contrastFindings": []
+    },
+    {
+      "path": "/teams [theme:cupertino-dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/teams",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/teams\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/teams\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.5229170000000067,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/bulletin [theme:light]",
+      "url": "http://localhost:5173/team/t1/bulletin",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.350791000000072,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/bulletin [theme:dark]",
+      "url": "http://localhost:5173/team/t1/bulletin",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.483875000000012,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/bulletin [theme:high-contrast]",
+      "url": "http://localhost:5173/team/t1/bulletin",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 3.554124999999999,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/bulletin [theme:cupertino-light]",
+      "url": "http://localhost:5173/team/t1/bulletin",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 3.4385420000000977,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/bulletin [theme:cupertino-dark]",
+      "url": "http://localhost:5173/team/t1/bulletin",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.879707999999937,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/bulletin [theme:light] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/bulletin",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 5.672582999999918,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/bulletin [theme:dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/bulletin",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.6296250000000327,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/bulletin [theme:high-contrast] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/bulletin",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.147833000000105,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/bulletin [theme:cupertino-light] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/bulletin",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.100041000000033,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/bulletin [theme:cupertino-dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/bulletin",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/bulletin\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/bulletin\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.257583000000068,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/settings [theme:light]",
+      "url": "http://localhost:5173/team/t1/settings",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.886624999999981,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/settings [theme:dark]",
+      "url": "http://localhost:5173/team/t1/settings",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.798958000000084,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/settings [theme:high-contrast]",
+      "url": "http://localhost:5173/team/t1/settings",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.4190410000001066,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/settings [theme:cupertino-light]",
+      "url": "http://localhost:5173/team/t1/settings",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.144333999999958,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/settings [theme:cupertino-dark]",
+      "url": "http://localhost:5173/team/t1/settings",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 1.9974580000000515,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/settings [theme:light] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/settings",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.155958000000055,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/settings [theme:dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/settings",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.357332999999926,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/settings [theme:high-contrast] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/settings",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.507000000000062,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/settings [theme:cupertino-light] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/settings",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.574916999999914,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/settings [theme:cupertino-dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/settings",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/settings\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/settings\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.991459000000077,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/analytics [theme:light]",
+      "url": "http://localhost:5173/team/t1/analytics",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.4373749999999745,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/analytics [theme:dark]",
+      "url": "http://localhost:5173/team/t1/analytics",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.1166670000000067,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/analytics [theme:high-contrast]",
+      "url": "http://localhost:5173/team/t1/analytics",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.1812090000000808,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/analytics [theme:cupertino-light]",
+      "url": "http://localhost:5173/team/t1/analytics",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.7522089999999935,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/analytics [theme:cupertino-dark]",
+      "url": "http://localhost:5173/team/t1/analytics",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.8061660000000757,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/analytics [theme:light] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/analytics",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 3.5712499999999636,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/analytics [theme:dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/analytics",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 3.202207999999928,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/analytics [theme:high-contrast] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/analytics",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.5029159999999138,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/analytics [theme:cupertino-light] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/analytics",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.756874999999809,
+      "contrastFindings": []
+    },
+    {
+      "path": "/team/t1/analytics [theme:cupertino-dark] (actions:openSidebar)",
+      "url": "http://localhost:5173/team/t1/analytics",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/team/t1/analytics\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/team/t1/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.4209169999999176,
+      "contrastFindings": []
+    },
+    {
+      "path": "/login [theme:light]",
+      "url": "http://localhost:5173/login",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/login\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.793957999999975,
+      "contrastFindings": []
+    },
+    {
+      "path": "/login [theme:dark]",
+      "url": "http://localhost:5173/login",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/login\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.941833000000088,
+      "contrastFindings": []
+    },
+    {
+      "path": "/login [theme:high-contrast]",
+      "url": "http://localhost:5173/login",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/login\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.4547079999999823,
+      "contrastFindings": []
+    },
+    {
+      "path": "/login [theme:cupertino-light]",
+      "url": "http://localhost:5173/login",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/login\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.1637499999999363,
+      "contrastFindings": []
+    },
+    {
+      "path": "/login [theme:cupertino-dark]",
+      "url": "http://localhost:5173/login",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/login\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/login\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.1607919999999012,
+      "contrastFindings": []
+    },
+    {
+      "path": "/coach [theme:light]",
+      "url": "http://localhost:5173/coach",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/coach\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/coach\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.637707999999975,
+      "contrastFindings": []
+    },
+    {
+      "path": "/coach [theme:dark]",
+      "url": "http://localhost:5173/coach",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/coach\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/coach\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.4397919999998976,
+      "contrastFindings": []
+    },
+    {
+      "path": "/coach [theme:high-contrast]",
+      "url": "http://localhost:5173/coach",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/coach\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/coach\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.307125000000042,
+      "contrastFindings": []
+    },
+    {
+      "path": "/coach [theme:cupertino-light]",
+      "url": "http://localhost:5173/coach",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/coach\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/coach\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.6729170000000977,
+      "contrastFindings": []
+    },
+    {
+      "path": "/coach [theme:cupertino-dark]",
+      "url": "http://localhost:5173/coach",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/coach\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/coach\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.4170420000000377,
+      "contrastFindings": []
+    },
+    {
+      "path": "/player [theme:light]",
+      "url": "http://localhost:5173/player",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/player\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/player\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.1280410000001666,
+      "contrastFindings": []
+    },
+    {
+      "path": "/player [theme:dark]",
+      "url": "http://localhost:5173/player",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/player\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/player\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.306542000000036,
+      "contrastFindings": []
+    },
+    {
+      "path": "/player [theme:high-contrast]",
+      "url": "http://localhost:5173/player",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/player\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/player\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.4889170000001286,
+      "contrastFindings": []
+    },
+    {
+      "path": "/player [theme:cupertino-light]",
+      "url": "http://localhost:5173/player",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/player\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/player\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 2.5903749999999945,
+      "contrastFindings": []
+    },
+    {
+      "path": "/player [theme:cupertino-dark]",
+      "url": "http://localhost:5173/player",
+      "status": null,
+      "violations": [],
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/player\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5173/player\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "durationMs": 4.226584000000003,
+      "contrastFindings": []
     }
   ]
 }

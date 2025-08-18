@@ -90,6 +90,7 @@
     "events:report": "tsx scripts/events_report.ts",
     "a11y:smoke": "tsx scripts/a11y_smoke_pages.ts",
     "a11y:gate": "node scripts/a11y-ci-gate.mjs",
+    "a11y:contrast:gate": "node scripts/contrast-live-gate.mjs",
     "audit:legacy:nav": "node scripts/audit-legacy-nav.mjs"
   },
   "dependencies": {
@@ -128,6 +129,7 @@
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
+    "@types/jest-axe": "^3.5.9",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
@@ -136,6 +138,7 @@
     "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
     "autoprefixer": "^10.4.20",
+    "axe-core": "^4.10.3",
     "bundlesize": "^0.18.2",
     "concurrently": "^9.0.0",
     "dotenv": "^17.2.1",
@@ -146,6 +149,7 @@
     "globals": "^16.3.0",
     "globby": "^14.1.0",
     "husky": "^9.1.6",
+    "jest-axe": "^10.0.0",
     "jsdom": "^25.0.1",
     "knip": "^5.62.0",
     "lighthouse": "^12.8.1",

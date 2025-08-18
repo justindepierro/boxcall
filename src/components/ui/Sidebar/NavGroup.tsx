@@ -9,7 +9,7 @@ export interface NavGroupProps {
   children?: React.ReactNode;
 }
 
-export const NavGroup: React.FC<NavGroupProps> = ({
+const NavGroupImpl: React.FC<NavGroupProps> = ({
   id,
   label,
   icon,
@@ -49,4 +49,6 @@ export const NavGroup: React.FC<NavGroupProps> = ({
   );
 };
 
+NavGroupImpl.displayName = "NavGroup";
+export const NavGroup = React.memo(NavGroupImpl);
 export default NavGroup;

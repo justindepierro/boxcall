@@ -11,7 +11,7 @@ export interface NavItemProps {
   onClick?: () => void;
 }
 
-export const NavItem: React.FC<NavItemProps> = ({
+const NavItemImpl: React.FC<NavItemProps> = ({
   id,
   label,
   href,
@@ -23,7 +23,9 @@ export const NavItem: React.FC<NavItemProps> = ({
 }) => {
   const className = [
     "flex items-center gap-2 px-3 py-2 rounded-md",
-    active ? "bg-brand-navy text-white" : "text-text-secondary hover:bg-muted",
+    active
+      ? "bg-[var(--semantic-bg-muted)] text-text-primary shadow-sm ring-1 ring-[color:var(--semantic-primary)]/20 border-l-2 border-[color:var(--semantic-primary)]"
+      : "text-text-secondary hover:bg-[var(--semantic-bg-muted)] hover:text-text-primary",
     disabled ? "opacity-50 pointer-events-none" : "",
   ]
     .filter(Boolean)
@@ -43,7 +45,13 @@ export const NavItem: React.FC<NavItemProps> = ({
         </span>
         <span className="flex-1 text-left">{label}</span>
         {badge != null && (
-          <span className="ml-auto text-xs bg-jade-600 text-white rounded-full px-2 py-0.5">
+          <span
+            className="ml-auto text-xs rounded-full px-2 py-0.5"
+            style={{
+              backgroundColor: "var(--semantic-primary)",
+              color: "var(--semantic-text-inverse)",
+            }}
+          >
             {badge}
           </span>
         )}
@@ -51,5 +59,6 @@ export const NavItem: React.FC<NavItemProps> = ({
     </li>
   );
 };
-
+NavItemImpl.displayName = "NavItem";
+export const NavItem = React.memo(NavItemImpl);
 export default NavItem;

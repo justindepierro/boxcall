@@ -79,10 +79,10 @@ export const OnboardingHint: React.FC<OnboardingHintProps> = ({
           {actions.map((a, i) => {
             const base =
               a.variant === "primary"
-                ? "bg-jade-600 hover:bg-brand-jade-dark text-white"
+                ? "bg-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-primary-active)] text-[var(--semantic-text-inverse)] border border-[var(--semantic-primary-hover)] hover:border-[var(--semantic-primary-active)]"
                 : a.variant === "secondary"
-                  ? "border-subtle surface-subtle-hover"
-                  : "text-jade-600 dark:text-jade-400 hover:underline";
+                  ? "border-subtle surface-subtle-hover text-text-primary"
+                  : "text-[var(--semantic-primary-hover)] hover:text-[var(--semantic-primary-active)] hover:underline";
             if (a.href) {
               return (
                 <a
