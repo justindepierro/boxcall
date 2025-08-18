@@ -9,17 +9,20 @@ Pin this doc in VS Code (right‑click the tab → Pin). Update checkboxes as we
 ---
 
 ## Goals
+
 - World‑class sidebar: fast, collapsible/expandable, responsive (mobile → desktop), accessible, and extensible.
 - Route‑aware (React Router v7+), clear active state, and minimal re‑renders.
 - Persist user preferences (collapsed state, favorites). No layout shift or jank.
 
 ## Success metrics
+
 - Interaction latency (toggle/open/hover) < 16ms p90.
 - Toggle animation ≤ 150ms; 0 CLS during transitions.
 - Axe: 0 critical violations; WCAG AA contrast.
 - Fewer clicks to top 3 destinations vs. current nav (−20–30%).
 
 ## North‑star principles
+
 - Single source of truth for nav structure (typed, feature/role filtered).
 - Predictable keyboard behavior; focus-visible rings and tooltips in rail mode.
 - Minimal surface area: CSS transitions, memoized item rendering, tree-shaken icons.
@@ -27,6 +30,7 @@ Pin this doc in VS Code (right‑click the tab → Pin). Update checkboxes as we
 ---
 
 ## Status dashboard
+
 - [ ] Phase 0: IA + wireframes
 - [x] Phase 1: Nav schema + tests
 - [ ] Phase 2: Sidebar component shell (desktop) (in progress)
@@ -39,28 +43,35 @@ Pin this doc in VS Code (right‑click the tab → Pin). Update checkboxes as we
 ---
 
 ## Phase 0 — IA and UX spec
+
 Deliverables
+
 - [ ] Top‑level groups and frequent paths (Team, Playbook, Practice, Calendar, Analytics, Settings)
 - [ ] Wireframes for mobile, tablet, desktop
 - [ ] Decision on mobile behavior (drawer + bottom quick strip)
 
 Notes
+
 - Promote quick actions (e.g., “New Play”, “New Event”) and recently visited.
 
 ---
 
 ## Phase 1 — API and data model
+
 Files (planned)
+
 - `src/navigation/nav.schema.ts` — typed nav tree (id, label, icon, routeId/path, children, flags, badge)
 - `src/navigation/nav.selectors.ts` — filters, active/expanded derivation
 
 Tasks
+
 - [x] Define schema types and example seed data
 - [x] Role/feature‑flag filtering
 - [x] Map to route IDs/paths; validate no orphans
 - [x] Unit tests for filtering/derivation
 
 Contract
+
 - Input: user role + enabled features
 - Output: filtered, ordered nav tree with active/expanded hints
 - Error handling: invalid route IDs, circular children → fail tests
@@ -68,13 +79,16 @@ Contract
 ---
 
 ## Phase 2 — Sidebar component system (desktop first)
+
 Files (planned)
+
 - `src/components/ui/Sidebar/Sidebar.tsx` — container (rail/full), resize, persistence
 - `src/components/ui/Sidebar/NavItem.tsx` — item with icon, label, badge, tooltip
 - `src/components/ui/Sidebar/NavGroup.tsx` — collapsible group with keyboard support
 - `src/components/ui/Sidebar/Sidebar.types.ts`
 
 Tasks
+
 - [x] Rail mode (≈64px) + expanded width (responsive)
 - [x] Local persistence (collapsed state) via localStorage
 - [x] Keyboard nav (Arrow Up/Down, Home/End, Enter/Space) with roving tabindex
@@ -84,10 +98,13 @@ Tasks
 ---
 
 ## Phase 3 — Routing integration and state
+
 Files (planned)
+
 - `src/hooks/useSidebarState.ts` — collapse/expanded/favorites
 
 Tasks
+
 - [x] Active route highlighting via React Router
 - [x] Auto‑expand parents of active item
 - [x] Favorites/pins (persisted)
@@ -96,7 +113,9 @@ Tasks
 ---
 
 ## Phase 4 — Performance and polish
+
 Tasks
+
 - [ ] Strict memoization of items; measure renders
 - [ ] Defer icon imports; prefetch visible icons
 - [ ] No layout shift on toggle; verify with Web Vitals
@@ -105,23 +124,30 @@ Tasks
 ---
 
 ## Phase 5 — Accessibility and contrast
+
 Tasks
-- [ ] Roles: navigation + tree/list as appropriate
-- [ ] aria-current on active; aria-expanded on groups
-- [ ] Full keyboard coverage (Tab/Shift+Tab, arrows, Enter/Space, Esc)
+
+- [x] Roles: navigation + tree/list as appropriate
+- [x] aria-current on active; aria-expanded on groups (aria-current done; aria-expanded pending)
+- [x] Full keyboard coverage (Tab/Shift+Tab, arrows, Enter/Space, Esc) — unit tests added
 - [ ] Axe smoke tests; contrast verification
 
 ---
 
 ## Phase 6 — Mobile/Tablet adaptation
+
 Tasks
-- [ ] Mobile: overlay drawer + scrim; focus trap; swipe optional
+
+- [x] Mobile: overlay drawer + scrim + body scroll lock; overlay click + Esc close (unit test)
+- [ ] Mobile: focus trap in drawer
+- [ ] Mobile: swipe gestures (optional)
 - [ ] Tablet: rail by default; expandable on demand
 - [ ] QA across sm/md/lg/xl breakpoints
 
 ---
 
 ## Phase 7 — Enhancements (post‑MVP backlog)
+
 - [ ] Command palette integration
 - [ ] Recents and “pin to sidebar” quick actions
 - [ ] Deep‑linkable expanded state
@@ -130,14 +156,16 @@ Tasks
 ---
 
 ## Test plan
+
 - Unit: schema filtering, active derivation (Vitest)
-- Component: keyboard nav, aria‑current, tooltip a11y (RTL)
+- Component: keyboard nav, aria‑current, overlay behavior, tooltip a11y (RTL)
 - E2E: open/close, persist state, mobile drawer smoke (Playwright)
 - Performance: Interaction delay <16ms p90; no CLS on toggle
 
 ---
 
 ## Risks & mitigations
+
 - Over‑engineering nested trees → keep depth small; lazy‑render long lists.
 - Icon bundle bloat → tree‑shake icons; dynamic imports for less‑used sets.
 - State drift between routing and groups → single source of truth + selectors.
@@ -145,15 +173,18 @@ Tasks
 ---
 
 ## Decisions log
+
 - 2025‑08‑17: Single typed schema drives UI; loader‑first auth remains; sidebar reflects routes.
 - 2025‑08‑17: Sidebar uses React Router Links instead of window.location for SPA navigation.
 - 2025‑08‑17: Auto‑expand parent groups based on current pathname → child href prefix match.
 - 2025‑08‑17: `href` passed through nav mapping so Sidebar can compute active/aria‑current.
 - 2025‑08‑17: Introduced `src/navigation/nav.selectors.ts` for active/expanded derivation with tests.
+- 2025‑08‑17: Sidebar overlays main content with scrim and body scroll lock; overlay click and Escape close; unit test added.
 
 ---
 
 ## Working notes / TODO (scratchpad)
+
 - [x] Create feature branch: `feat/sidebar-nav`
 - [x] Scaffold files listed in Phase 1/2
 - [x] Add initial nav seed for visual iteration
@@ -163,7 +194,7 @@ Tasks
 ## Next steps (short‑term)
 
 - [x] Convert NavBar items to React Router Links for SPA consistency
-- [ ] Add tests: deep‑linking auto‑expand (component level), keyboard a11y, aria‑current on Links in both Sidebar and NavBar
+- [x] Add tests: deep‑linking auto‑expand (component level), keyboard a11y, aria‑current on Links in both Sidebar and NavBar
 - [ ] Strict memoization of Sidebar items; measure renders (Phase 4)
 - [ ] Basic RTL/Tailwind tokens; CSS‑only transitions (Phase 2)
 - [ ] Run `npm run audit:legacy:nav` and plan removal of flagged wrappers/routes
