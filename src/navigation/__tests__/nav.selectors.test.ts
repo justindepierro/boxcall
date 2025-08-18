@@ -1,6 +1,10 @@
 import { describe, it, expect } from "vitest";
 import type { SidebarItem } from "../../components/ui/Sidebar";
-import { computeActiveState, isActiveItem, shouldExpand } from "../nav.selectors";
+import {
+  computeActiveState,
+  isActiveItem,
+  shouldExpand,
+} from "../nav.selectors";
 
 const tree: SidebarItem[] = [
   { id: "dashboard", label: "Dashboard", href: "/dashboard" },

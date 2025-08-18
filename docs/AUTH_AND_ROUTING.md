@@ -6,10 +6,10 @@ What’s implemented now
 
 - Central policy: `authorize(input)` in `src/routes/authorize.ts` drives all guard decisions and returns `{ allowed, reason, membership, subscription }` with a typed `DenyReason` for UI mapping. `DenyReason` is exported for reuse in UIs and tests.
 - Loader-first gating: UI wrapper guards have been removed. All access control is enforced via React Router Data Router loaders in `src/routes/loaderAuth.ts` and exported via `src/routes/index.ts`:
-	- `requireTeamCoachLoader` (team settings)
-	- `requireTeamAnalyticsLoader` (team premium analytics: role + subscription tier)
-	- `requireAuthenticatedLoader` (non-team routes like dashboard)
-	- `requireTeamMemberLoader` (team routes for any member: coach/player/family/admin)
+  - `requireTeamCoachLoader` (team settings)
+  - `requireTeamAnalyticsLoader` (team premium analytics: role + subscription tier)
+  - `requireAuthenticatedLoader` (non-team routes like dashboard)
+  - `requireTeamMemberLoader` (team routes for any member: coach/player/family/admin)
 - Role-based non-team loader factory: `requireRolesLoader(["coach","admin",...])` with a ready-made `requireCoachOrAdminLoader`. Use these to gate non-team routes (e.g., Templates, BoxCall) without wrapper components.
 - Active team source of truth: Zustand store in `src/state/activeTeamStore.ts` and `TeamParamSync` syncs `:teamId` from the URL into the store (consumed by mobile nav and others).
 - Paths: centralized via `src/routes/paths.ts` (`ROUTES`, `teamRoutes`).
@@ -21,7 +21,7 @@ What’s implemented now
 Guard patterns (quick reference)
 
 - Loader (feature/permission/team/role):
-	Use `authorize()` inside route loaders to pre-gate before render. For premium features, pass `requiredTiers`. For team pages, pass `teamId` and `allowedTeamRoles`.
+  Use `authorize()` inside route loaders to pre-gate before render. For premium features, pass `requiredTiers`. For team pages, pass `teamId` and `allowedTeamRoles`.
 
 DenyReason → UI mapping (example)
 
@@ -29,21 +29,21 @@ DenyReason → UI mapping (example)
 import type { DenyReason } from "../../src/routes/authorize";
 
 const denyToMessage: Record<DenyReason, string> = {
-	unauthenticated: "You need to sign in to continue.",
-	role_denied: "Your account role is not allowed here.",
-	no_team: "Choose a team to access this page.",
-	not_member: "You’re not a member of this team.",
-	inactive_member: "Your team membership is inactive.",
-	subscription_missing: "This feature requires an active subscription.",
-	subscription_tier: "Your team’s plan does not include this feature.",
-	subscription_expired: "Your team’s subscription has expired.",
-	permission_denied: "You don’t have permission to access this feature.",
+  unauthenticated: "You need to sign in to continue.",
+  role_denied: "Your account role is not allowed here.",
+  no_team: "Choose a team to access this page.",
+  not_member: "You’re not a member of this team.",
+  inactive_member: "Your team membership is inactive.",
+  subscription_missing: "This feature requires an active subscription.",
+  subscription_tier: "Your team’s plan does not include this feature.",
+  subscription_expired: "Your team’s subscription has expired.",
+  permission_denied: "You don’t have permission to access this feature.",
 };
 ```
 
 Data Router loader: real implementation (coach/admin)
 
-```ts
+````ts
 // src/routes/loaderAuth.ts
 import { redirect } from "react-router-dom";
 import { supabase } from "../lib/supabase";
@@ -121,7 +121,7 @@ export function requireRolesLoader(allowedRoles: NonNullable<AppRole>[]) {
 }
 
 export const requireCoachOrAdminLoader = requireRolesLoader(["coach", "admin"]);
-```
+````
 
 Data Router routes (current)
 
@@ -134,7 +134,8 @@ Data Router routes (current)
 - Team premium gated: `/team/:teamId/analytics` (requires `team_premium`)
 - Root redirect: `/` → `/dashboard`
 - `errorElement`: `RouteErrorElement` provides friendly messages for loader/action errors
-```
+
+````
 
 Testing the loader (pre-render gating)
 
@@ -155,13 +156,13 @@ it("redirects unauthenticated to /login", async () => {
 	// Render and assert final screen shows Login
 	// ...
 });
-```
+````
 
 Adoption path
 
-1) Wire loaders on sensitive routes (settings, analytics) and general pages (dashboard). Use `requireRolesLoader`/`requireCoachOrAdminLoader` for non-team role gates.
-2) Co-locate route data fetching in loaders. Use `errorElement` for consistent 401/403 presentation.
-3) Continue consolidating checks in `authorize` and expand the test matrix as routes evolve.
+1. Wire loaders on sensitive routes (settings, analytics) and general pages (dashboard). Use `requireRolesLoader`/`requireCoachOrAdminLoader` for non-team role gates.
+2. Co-locate route data fetching in loaders. Use `errorElement` for consistent 401/403 presentation.
+3. Continue consolidating checks in `authorize` and expand the test matrix as routes evolve.
 
 Housekeeping (tests)
 

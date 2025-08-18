@@ -1,5 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor, cleanup, within } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  cleanup,
+  within,
+} from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { Sidebar } from "../Sidebar";
 import { UserPreferencesService } from "../../../../services/userPreferencesService";
@@ -8,7 +15,10 @@ describe("Sidebar a11y + keyboard navigation", () => {
   afterEach(() => cleanup());
   beforeEach(() => {
     vi.spyOn(UserPreferencesService, "loadPreferences").mockReturnValue({
-      csvImport: { skipMissingFieldsConfirmation: false, skipQualityWarnings: false },
+      csvImport: {
+        skipMissingFieldsConfirmation: false,
+        skipQualityWarnings: false,
+      },
       ui: { showTooltips: false, compactMode: false, showConfetti: false },
     });
   });
@@ -25,10 +35,12 @@ describe("Sidebar a11y + keyboard navigation", () => {
       </MemoryRouter>
     );
 
-  // Scope to the first primary navigation to avoid ambiguity
-  const [nav] = screen.getAllByRole("navigation", { name: /primary navigation/i });
-  const one = within(nav).getByRole("menuitem", { name: /one/i });
-  const two = within(nav).getByRole("menuitem", { name: /two/i });
+    // Scope to the first primary navigation to avoid ambiguity
+    const [nav] = screen.getAllByRole("navigation", {
+      name: /primary navigation/i,
+    });
+    const one = within(nav).getByRole("menuitem", { name: /one/i });
+    const two = within(nav).getByRole("menuitem", { name: /two/i });
 
     expect(two).toHaveAttribute("aria-current", "page");
     expect(one).not.toHaveAttribute("aria-current");
@@ -36,10 +48,12 @@ describe("Sidebar a11y + keyboard navigation", () => {
 
   it("moves focus with ArrowDown and activates item with Enter", async () => {
     // Immediate rAF to avoid async flake
-    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb: FrameRequestCallback) => {
-      cb(performance.now());
-      return 1 as unknown as number;
-    });
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation(
+      (cb: FrameRequestCallback) => {
+        cb(performance.now());
+        return 1 as unknown as number;
+      }
+    );
 
     const items = [
       { id: "one", label: "One", href: "/one" },
@@ -53,8 +67,10 @@ describe("Sidebar a11y + keyboard navigation", () => {
       </MemoryRouter>
     );
 
-  // The scroll container handles keydown; restrict queries to this container
-  const [container] = screen.getAllByRole("navigation", { name: /primary navigation/i });
+    // The scroll container handles keydown; restrict queries to this container
+    const [container] = screen.getAllByRole("navigation", {
+      name: /primary navigation/i,
+    });
 
     // ArrowDown should move focus from first to second item
     fireEvent.keyDown(container, { key: "ArrowDown" });

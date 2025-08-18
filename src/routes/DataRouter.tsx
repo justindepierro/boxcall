@@ -1,5 +1,10 @@
 import React, { Suspense, useMemo } from "react";
-import { createBrowserRouter, RouterProvider, Outlet, Navigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
 import type { RouteObject } from "react-router-dom";
 
 import { AuthProvider } from "../components/auth";
@@ -10,24 +15,31 @@ import {
   LazyTeamBulletin,
   LazyTemplatesPage,
   LazyAnalyticsPage,
-    LazyBoxCall,
-    LazyPlaybookPage,
-    LazyProfilePage,
-    LazyTeamsPage,
-    LazyCoachManagementPage,
-    LazyPlayerDashboardPage,
-    LazyCreateTeam,
-    LazyJoinTeam,
-    LazyCreateCoachAccount,
-    LazyAboutPage,
-    LazyPrivacyPolicyPage,
-    LazyTermsOfServicePage,
-    LazyContactPage,
+  LazyBoxCall,
+  LazyPlaybookPage,
+  LazyProfilePage,
+  LazyTeamsPage,
+  LazyCoachManagementPage,
+  LazyPlayerDashboardPage,
+  LazyCreateTeam,
+  LazyJoinTeam,
+  LazyCreateCoachAccount,
+  LazyAboutPage,
+  LazyPrivacyPolicyPage,
+  LazyTermsOfServicePage,
+  LazyContactPage,
 } from "../components/lazy/LazyRoutes";
 import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
 import { ROUTES } from "./paths";
-import { requireTeamCoachLoader, requireTeamAnalyticsLoader, requireAuthenticatedLoader, requireTeamMemberLoader, requireCoachOrAdminLoader, requireRolesLoader } from "./loaderAuth";
+import {
+  requireTeamCoachLoader,
+  requireTeamAnalyticsLoader,
+  requireAuthenticatedLoader,
+  requireTeamMemberLoader,
+  requireCoachOrAdminLoader,
+  requireRolesLoader,
+} from "./loaderAuth";
 import RouteErrorElement from "./RouteErrorElement";
 import DiagramPaneRoute from "../components/playbook/DiagramPaneRoute";
 
@@ -292,8 +304,8 @@ export const DataRouterApp: React.FC = () => {
             : []),
         ],
       },
-  ],
-  [requirePlayerLoader]
+    ],
+    [requirePlayerLoader]
   );
 
   const router = useMemo(() => createBrowserRouter(routes), [routes]);

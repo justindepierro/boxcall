@@ -40,11 +40,11 @@ export const useMobileNavigation = (currentPath: string = "/") => {
       id: "bulletin",
       label: "Team",
       icon: "users",
-  href: teamRoutes.bulletin(teamId),
+      href: teamRoutes.bulletin(teamId),
       badge: notifications.bulletin,
       isActive:
         currentPath.includes("/team") || currentPath.includes("/bulletin"),
-  importer: getRouteImporter(teamRoutes.bulletin(teamId)),
+      importer: getRouteImporter(teamRoutes.bulletin(teamId)),
     },
     {
       id: "profile",

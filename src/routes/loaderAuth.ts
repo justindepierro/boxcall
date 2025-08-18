@@ -11,7 +11,10 @@ import type { AppRole } from "./authorize";
  * Redirects before component render to avoid UI flashes.
  */
 // Shared helper to resolve current user id and app role
-async function getCurrentUserWithRole(): Promise<{ id: string; role: AppRole | null } | null> {
+async function getCurrentUserWithRole(): Promise<{
+  id: string;
+  role: AppRole | null;
+} | null> {
   const { data: authData } = await supabase.auth.getUser();
   const user = authData?.user ?? null;
   if (!user) return null;
@@ -49,7 +52,9 @@ export async function requireTeamCoachLoader({ params }: LoaderFunctionArgs) {
  * Pre-render gate for premium analytics route restricted to coach/admin roles
  * with an active "team_premium" subscription tier.
  */
-export async function requireTeamAnalyticsLoader({ params }: LoaderFunctionArgs) {
+export async function requireTeamAnalyticsLoader({
+  params,
+}: LoaderFunctionArgs) {
   const teamId = params.teamId as string | undefined;
 
   const current = await getCurrentUserWithRole();

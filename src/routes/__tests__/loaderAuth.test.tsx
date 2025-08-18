@@ -18,7 +18,9 @@ const hoisted = vi.hoisted(() => ({
 vi.mock("../../lib/supabase", () => ({
   supabase: {
     auth: {
-      getUser: async () => ({ data: { user: hoisted.userId ? { id: hoisted.userId } : null } }),
+      getUser: async () => ({
+        data: { user: hoisted.userId ? { id: hoisted.userId } : null },
+      }),
     },
     from: (_table: string) => ({
       select: () => ({
@@ -32,11 +34,14 @@ vi.mock("../../lib/supabase", () => ({
 
 vi.mock("../authorize", () => {
   return {
-    authorize: vi.fn(async ({ profile }: { profile: { id?: string | null } | null }) => {
-      if (!profile?.id) return { allowed: false, reason: "unauthenticated" as const };
-      const ok = hoisted.role === "coach" || hoisted.role === "admin";
-      return { allowed: ok };
-    }),
+    authorize: vi.fn(
+      async ({ profile }: { profile: { id?: string | null } | null }) => {
+        if (!profile?.id)
+          return { allowed: false, reason: "unauthenticated" as const };
+        const ok = hoisted.role === "coach" || hoisted.role === "admin";
+        return { allowed: ok };
+      }
+    ),
   };
 });
 

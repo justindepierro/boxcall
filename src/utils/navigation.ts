@@ -41,7 +41,7 @@ export const getNavigationItems = (
       id: "dashboard",
       label: "Dashboard",
       icon: "home",
-  href: ROUTES.DASHBOARD,
+      href: ROUTES.DASHBOARD,
       description: "Personal dashboard with live feed and notifications",
     },
     // Team Bulletin - Available to everyone (renamed from Team Dashboard)
@@ -49,7 +49,7 @@ export const getNavigationItems = (
       id: "team-bulletin",
       label: "Team Bulletin",
       icon: "users",
-  href: teamRoutes.bulletin(activeTeamId),
+      href: teamRoutes.bulletin(activeTeamId),
       description: "Team-specific feed, announcements, and quick actions",
     },
   ];
@@ -63,7 +63,7 @@ export const getNavigationItems = (
       id: "boxcall",
       label: "BoxCall",
       icon: "phone",
-  href: ROUTES.BOXCALL,
+      href: ROUTES.BOXCALL,
       roles: ["admin", "coach", "super_admin"],
       badge: "Pro",
       description: "Advanced coaching tools and analytics (Premium)",
@@ -89,7 +89,7 @@ export const getNavigationItems = (
       id: "playbook",
       label: "Playbook",
       icon: "book",
-  href: ROUTES.PLAYBOOK,
+      href: ROUTES.PLAYBOOK,
       roles: ["admin", "coach", "player", "super_admin"],
       description: "Team plays and strategies",
     });
@@ -99,7 +99,7 @@ export const getNavigationItems = (
     id: "calendar",
     label: "Calendar",
     icon: "calendar",
-  href: ROUTES.CALENDAR,
+    href: ROUTES.CALENDAR,
     description: "Personal and team calendars",
   });
   // Profile - Available to everyone
@@ -107,7 +107,7 @@ export const getNavigationItems = (
     id: "profile",
     label: "Profile",
     icon: "user",
-  href: ROUTES.PROFILE,
+    href: ROUTES.PROFILE,
     description: "Edit user settings and preferences",
   });
   // Team Settings - Coaches and super_admin only
@@ -116,7 +116,7 @@ export const getNavigationItems = (
     id: "team-settings",
     label: "Team Settings",
     icon: "settings",
-  href: teamRoutes.settings(activeTeamId),
+    href: teamRoutes.settings(activeTeamId),
     description: "Manage team configuration and roster",
   });
   // Divider before utility pages
@@ -131,7 +131,7 @@ export const getNavigationItems = (
     id: "about",
     label: "About",
     icon: "info",
-  href: ROUTES.ABOUT,
+    href: ROUTES.ABOUT,
     description: "Learn about BoxCall",
   });
   // Templates - Coaches and super_admin only
@@ -144,7 +144,7 @@ export const getNavigationItems = (
       id: "templates",
       label: "Templates",
       icon: "file",
-  href: ROUTES.TEMPLATES,
+      href: ROUTES.TEMPLATES,
       roles: ["admin", "coach"],
       description: "Pre-built templates and resources",
     });
@@ -162,7 +162,7 @@ export const getNavigationItems = (
     id: "logout",
     label: "Log Out",
     icon: "arrow-right",
-  href: ROUTES.LOGOUT,
+    href: ROUTES.LOGOUT,
     description: "Sign out of BoxCall",
   });
   return items;
@@ -214,13 +214,13 @@ export const getPrimaryNavigationItems = (
       id: "dashboard",
       label: "Dashboard",
       icon: "home",
-  href: ROUTES.DASHBOARD,
+      href: ROUTES.DASHBOARD,
     },
     {
       id: "boxcall",
       label: "BoxCall",
       icon: "phone",
-  href: ROUTES.BOXCALL,
+      href: ROUTES.BOXCALL,
     },
   ];
   return items.filter((item) => {

@@ -272,43 +272,142 @@ const configArray = [
             },
 
             // domain should stay pure (no UI, no infra/adapters/services/state/hooks)
-            { target: path.resolve(process.cwd(), "src/app"), from: path.resolve(process.cwd(), "src/domain") },
-            { target: path.resolve(process.cwd(), "src/pages"), from: path.resolve(process.cwd(), "src/domain") },
-            { target: path.resolve(process.cwd(), "src/routes"), from: path.resolve(process.cwd(), "src/domain") },
-            { target: path.resolve(process.cwd(), "src/components"), from: path.resolve(process.cwd(), "src/domain") },
-            { target: path.resolve(process.cwd(), "src/features"), from: path.resolve(process.cwd(), "src/domain") },
-            { target: path.resolve(process.cwd(), "src/design-system"), from: path.resolve(process.cwd(), "src/domain") },
-            { target: path.resolve(process.cwd(), "src/hooks"), from: path.resolve(process.cwd(), "src/domain") },
-            { target: path.resolve(process.cwd(), "src/services"), from: path.resolve(process.cwd(), "src/domain") },
-            { target: path.resolve(process.cwd(), "src/state"), from: path.resolve(process.cwd(), "src/domain") },
-            { target: path.resolve(process.cwd(), "src/infra"), from: path.resolve(process.cwd(), "src/domain") },
-            { target: path.resolve(process.cwd(), "src/adapters"), from: path.resolve(process.cwd(), "src/domain") },
-            { target: path.resolve(process.cwd(), "src/data"), from: path.resolve(process.cwd(), "src/domain") },
+            {
+              target: path.resolve(process.cwd(), "src/app"),
+              from: path.resolve(process.cwd(), "src/domain"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/pages"),
+              from: path.resolve(process.cwd(), "src/domain"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/routes"),
+              from: path.resolve(process.cwd(), "src/domain"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/components"),
+              from: path.resolve(process.cwd(), "src/domain"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/features"),
+              from: path.resolve(process.cwd(), "src/domain"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/design-system"),
+              from: path.resolve(process.cwd(), "src/domain"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/hooks"),
+              from: path.resolve(process.cwd(), "src/domain"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/services"),
+              from: path.resolve(process.cwd(), "src/domain"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/state"),
+              from: path.resolve(process.cwd(), "src/domain"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/infra"),
+              from: path.resolve(process.cwd(), "src/domain"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/adapters"),
+              from: path.resolve(process.cwd(), "src/domain"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/data"),
+              from: path.resolve(process.cwd(), "src/domain"),
+            },
 
             // infra/adapters/data should not import UI
-            { target: path.resolve(process.cwd(), "src/app"), from: path.resolve(process.cwd(), "src/infra") },
-            { target: path.resolve(process.cwd(), "src/pages"), from: path.resolve(process.cwd(), "src/infra") },
-            { target: path.resolve(process.cwd(), "src/routes"), from: path.resolve(process.cwd(), "src/infra") },
-            { target: path.resolve(process.cwd(), "src/components"), from: path.resolve(process.cwd(), "src/infra") },
-            { target: path.resolve(process.cwd(), "src/features"), from: path.resolve(process.cwd(), "src/infra") },
-            { target: path.resolve(process.cwd(), "src/design-system"), from: path.resolve(process.cwd(), "src/infra") },
-            { target: path.resolve(process.cwd(), "src/hooks"), from: path.resolve(process.cwd(), "src/infra") },
+            {
+              target: path.resolve(process.cwd(), "src/app"),
+              from: path.resolve(process.cwd(), "src/infra"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/pages"),
+              from: path.resolve(process.cwd(), "src/infra"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/routes"),
+              from: path.resolve(process.cwd(), "src/infra"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/components"),
+              from: path.resolve(process.cwd(), "src/infra"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/features"),
+              from: path.resolve(process.cwd(), "src/infra"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/design-system"),
+              from: path.resolve(process.cwd(), "src/infra"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/hooks"),
+              from: path.resolve(process.cwd(), "src/infra"),
+            },
 
-            { target: path.resolve(process.cwd(), "src/app"), from: path.resolve(process.cwd(), "src/adapters") },
-            { target: path.resolve(process.cwd(), "src/pages"), from: path.resolve(process.cwd(), "src/adapters") },
-            { target: path.resolve(process.cwd(), "src/routes"), from: path.resolve(process.cwd(), "src/adapters") },
-            { target: path.resolve(process.cwd(), "src/components"), from: path.resolve(process.cwd(), "src/adapters") },
-            { target: path.resolve(process.cwd(), "src/features"), from: path.resolve(process.cwd(), "src/adapters") },
-            { target: path.resolve(process.cwd(), "src/design-system"), from: path.resolve(process.cwd(), "src/adapters") },
-            { target: path.resolve(process.cwd(), "src/hooks"), from: path.resolve(process.cwd(), "src/adapters") },
+            {
+              target: path.resolve(process.cwd(), "src/app"),
+              from: path.resolve(process.cwd(), "src/adapters"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/pages"),
+              from: path.resolve(process.cwd(), "src/adapters"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/routes"),
+              from: path.resolve(process.cwd(), "src/adapters"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/components"),
+              from: path.resolve(process.cwd(), "src/adapters"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/features"),
+              from: path.resolve(process.cwd(), "src/adapters"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/design-system"),
+              from: path.resolve(process.cwd(), "src/adapters"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/hooks"),
+              from: path.resolve(process.cwd(), "src/adapters"),
+            },
 
-            { target: path.resolve(process.cwd(), "src/app"), from: path.resolve(process.cwd(), "src/data") },
-            { target: path.resolve(process.cwd(), "src/pages"), from: path.resolve(process.cwd(), "src/data") },
-            { target: path.resolve(process.cwd(), "src/routes"), from: path.resolve(process.cwd(), "src/data") },
-            { target: path.resolve(process.cwd(), "src/components"), from: path.resolve(process.cwd(), "src/data") },
-            { target: path.resolve(process.cwd(), "src/features"), from: path.resolve(process.cwd(), "src/data") },
-            { target: path.resolve(process.cwd(), "src/design-system"), from: path.resolve(process.cwd(), "src/data") },
-            { target: path.resolve(process.cwd(), "src/hooks"), from: path.resolve(process.cwd(), "src/data") },
+            {
+              target: path.resolve(process.cwd(), "src/app"),
+              from: path.resolve(process.cwd(), "src/data"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/pages"),
+              from: path.resolve(process.cwd(), "src/data"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/routes"),
+              from: path.resolve(process.cwd(), "src/data"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/components"),
+              from: path.resolve(process.cwd(), "src/data"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/features"),
+              from: path.resolve(process.cwd(), "src/data"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/design-system"),
+              from: path.resolve(process.cwd(), "src/data"),
+            },
+            {
+              target: path.resolve(process.cwd(), "src/hooks"),
+              from: path.resolve(process.cwd(), "src/data"),
+            },
           ],
         },
       ],
@@ -331,9 +430,21 @@ const configArray = [
               "newlines-between": "always",
               alphabetize: { order: "asc", caseInsensitive: true },
               pathGroups: [
-                { pattern: "@design-system/**", group: "internal", position: "before" },
-                { pattern: "@components/**", group: "internal", position: "before" },
-                { pattern: "@features/**", group: "internal", position: "before" },
+                {
+                  pattern: "@design-system/**",
+                  group: "internal",
+                  position: "before",
+                },
+                {
+                  pattern: "@components/**",
+                  group: "internal",
+                  position: "before",
+                },
+                {
+                  pattern: "@features/**",
+                  group: "internal",
+                  position: "before",
+                },
                 { pattern: "@app/**", group: "internal" },
                 { pattern: "@routes/**", group: "internal" },
                 { pattern: "@hooks/**", group: "internal" },
@@ -367,15 +478,25 @@ const configArray = [
         "warn",
         {
           paths: [
-            { name: "react", message: "Domain layer must not depend on React." },
-            { name: "react-dom", message: "Domain layer must not depend on React DOM." },
+            {
+              name: "react",
+              message: "Domain layer must not depend on React.",
+            },
+            {
+              name: "react-dom",
+              message: "Domain layer must not depend on React DOM.",
+            },
           ],
         },
       ],
     },
   },
   {
-    files: ["**/*.test.{ts,tsx}", "**/__tests__/**/*.{ts,tsx}", "**/*.spec.{ts,tsx}"],
+    files: [
+      "**/*.test.{ts,tsx}",
+      "**/__tests__/**/*.{ts,tsx}",
+      "**/*.spec.{ts,tsx}",
+    ],
     rules: {
       // Allow cross-layer imports within isolated tests
       "import/no-restricted-paths": "off",

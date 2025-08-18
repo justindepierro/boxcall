@@ -44,7 +44,8 @@ export function computeActiveState(
 
   visit(items, []);
 
-  if (!best) return { activeId: null, pathIds: [], expandedIds: new Set<string>() };
+  if (!best)
+    return { activeId: null, pathIds: [], expandedIds: new Set<string>() };
   const pathIds = (best as { pathIds: string[] }).pathIds;
   const activeId = pathIds[pathIds.length - 1] ?? null;
   const expandedIds = new Set<string>(pathIds.slice(0, -1));

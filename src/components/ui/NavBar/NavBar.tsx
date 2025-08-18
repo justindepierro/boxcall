@@ -142,7 +142,7 @@ const NavBarItem: React.FC<{
           surface-card border border-subtle dark:border-gray-700 rounded-md shadow-lg z-50
         `}
         >
-          {item.children?.map((childItem, index) => (
+          {item.children?.map((childItem, index) =>
             childItem.href && !childItem.disabled ? (
               <Link
                 key={childItem.id || `child-${index}`}
@@ -197,7 +197,7 @@ const NavBarItem: React.FC<{
                 </div>
               </div>
             )
-          ))}
+          )}
         </div>
       )}
     </div>
@@ -246,7 +246,10 @@ export const NavBar: React.FC<NavBarProps> = ({
               {items.map((item) => (
                 <NavBarItem
                   key={`desktop-${item.id}`}
-                  item={{ ...item, active: item.href ? pathname === item.href : item.active }}
+                  item={{
+                    ...item,
+                    active: item.href ? pathname === item.href : item.active,
+                  }}
                   onItemClick={handleItemClick}
                 />
               ))}
@@ -297,7 +300,10 @@ export const NavBar: React.FC<NavBarProps> = ({
               {items.map((item) => (
                 <NavBarItem
                   key={`mobile-${item.id}`}
-                  item={{ ...item, active: item.href ? pathname === item.href : item.active }}
+                  item={{
+                    ...item,
+                    active: item.href ? pathname === item.href : item.active,
+                  }}
                   isMobile={true}
                   onItemClick={handleItemClick}
                 />

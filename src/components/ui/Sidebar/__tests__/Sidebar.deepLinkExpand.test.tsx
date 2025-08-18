@@ -39,9 +39,7 @@ describe("Sidebar deep-link auto-expand", () => {
       {
         id: "grp",
         label: "Group",
-        children: [
-          { id: "child", label: "Child", href: "/group/child" },
-        ],
+        children: [{ id: "child", label: "Child", href: "/group/child" }],
       },
     ];
 

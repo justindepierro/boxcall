@@ -8,7 +8,11 @@ vi.mock("../../state/activeTeamStore", async (orig) => {
   const actual = (await orig()) as typeof import("../../state/activeTeamStore");
   return {
     ...actual,
-    useActiveTeamStore: ((selector?: (s: { setActiveTeamId: (id: string | null) => void }) => unknown) => {
+    useActiveTeamStore: ((
+      selector?: (s: {
+        setActiveTeamId: (id: string | null) => void;
+      }) => unknown
+    ) => {
       // return a stub with a tracked setter
       const setActiveTeamId = vi.fn();
       const slice = { setActiveTeamId };

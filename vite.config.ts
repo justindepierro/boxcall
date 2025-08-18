@@ -22,21 +22,21 @@ export default defineConfig({
   resolve: {
     alias: {
       "@app": path.resolve(__dirname, "src/app"),
-  "@adapters": path.resolve(__dirname, "src/adapters"),
+      "@adapters": path.resolve(__dirname, "src/adapters"),
       "@components": path.resolve(__dirname, "src/components"),
-  "@data": path.resolve(__dirname, "src/data"),
-  "@domain": path.resolve(__dirname, "src/domain"),
-  "@features": path.resolve(__dirname, "src/features"),
+      "@data": path.resolve(__dirname, "src/data"),
+      "@domain": path.resolve(__dirname, "src/domain"),
+      "@features": path.resolve(__dirname, "src/features"),
       "@hooks": path.resolve(__dirname, "src/hooks"),
-  "@infra": path.resolve(__dirname, "src/infra"),
+      "@infra": path.resolve(__dirname, "src/infra"),
       "@lib": path.resolve(__dirname, "src/lib"),
       "@state": path.resolve(__dirname, "src/state"),
       "@styles": path.resolve(__dirname, "src/styles"),
       "@routes": path.resolve(__dirname, "src/routes"),
       "@utils": path.resolve(__dirname, "src/utils"),
       "@design-system": path.resolve(__dirname, "src/design-system"),
-  "@types": path.resolve(__dirname, "src/types"),
-  "@telemetry": path.resolve(__dirname, "src/telemetry"),
+      "@types": path.resolve(__dirname, "src/types"),
+      "@telemetry": path.resolve(__dirname, "src/telemetry"),
     },
   },
   plugins: [
@@ -129,10 +129,7 @@ export default defineConfig({
           // pdfCapture: ["jspdf", "html2canvas"],
 
           // Database and API
-          data: [
-            "@supabase/supabase-js",
-            "@tanstack/react-query",
-          ],
+          data: ["@supabase/supabase-js", "@tanstack/react-query"],
 
           // UI: avoid forcing all lucide icons into a single chunk; let tree-shaking work
           // forms deps removed (react-hook-form, @hookform/resolvers)
@@ -145,12 +142,7 @@ export default defineConfig({
           // editor: ["slate", "slate-react", "react-mentions"],
 
           // Utilities
-          utils: [
-            "date-fns",
-            "fuse.js",
-            "zod",
-            "zustand",
-          ],
+          utils: ["date-fns", "fuse.js", "zod", "zustand"],
         },
       },
     },

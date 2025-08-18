@@ -19,17 +19,20 @@ Pinned reference for elevating code quality, speed, and security without blockin
 Goals: Enforce structure, kill dead code, and make envs deterministic.
 
 Work
+
 - Module boundaries/import hygiene rules (eslint-plugin-boundaries/import)
 - Dead code & dep pruning in CI (knip, ts-prune)
 - Typed, validated envs (vite-plugin-validate-env or @t3-oss/env-core + Zod) and ENVIRONMENT.md
 - Commit discipline (commitlint) and Changesets scaffold
 
 Outputs
+
 - ESLint rules active; CI fails on boundary/import/unused violations
 - Env schema validation gate; docs added
 - Conventional commit PR titles; changesets ready (for future DS package)
 
 Acceptance
+
 - CI blocks on boundary/import/unused; dev setup unaffected
 
 ---
@@ -39,6 +42,7 @@ Acceptance
 Goals: Harden supply chain, secrets, and headers; keep updates small and safe.
 
 Work
+
 - Renovate with pinned ranges and small PRs
 - Secrets scanning (Gitleaks) and SAST (Semgrep with JS/React/Supabase rules)
 - License scanning in CI
@@ -46,11 +50,13 @@ Work
 - Subresource Integrity (SRI) for any externals
 
 Outputs
+
 - Renovate PRs flowing; baseline Semgrep rules green
 - Deploys send strict headers; SRI enabled where applicable
 - CI fails on leaked secrets or insecure deps/licenses
 
 Acceptance
+
 - New builds pass with headers enforced; zero critical SAST/secrets findings
 
 ---
@@ -60,6 +66,7 @@ Acceptance
 Goals: Reduce JS/CSS payloads; keep main thread responsive.
 
 Work
+
 - Bundle size budgets with size-limit; PR comments on diffs
 - Code splitting + suspense audit; finish prefetch heuristics (hover + idle, network-gated)
 - Offload heavy tasks to Web Workers (PDF/CSV via Comlink)
@@ -67,11 +74,13 @@ Work
 - Font subsetting for WOFF2
 
 Outputs
+
 - Size budgets and analysis artifacts in CI
 - Workers for PDF/CSV; improved INP under load
 - Smaller images/fonts with measurable bundle savings
 
 Acceptance
+
 - No regressions in LCP/INP; chunk counts increase only where justified
 
 ---
@@ -81,17 +90,20 @@ Acceptance
 Goals: Catch issues earlier; ensure accessible UI.
 
 Work
+
 - Lighthouse CI with budgets and trend reports
 - Playwright + axe-core a11y checks on key flows (CI gate on critical violations)
 - Error boundaries coverage; sourcemaps + Sentry/Supabase logs
 - Web Vitals sampling rollout with privacy policy for telemetry payloads
 
 Outputs
+
 - PR comments for Lighthouse deltas
 - Critical a11y violations block CI
 - Error telemetry tied to releases; sourcemaps uploaded
 
 Acceptance
+
 - A11y checks pass; vitals events sampled with PII-scrubbed payloads
 
 ---
@@ -101,16 +113,19 @@ Acceptance
 Goals: Validate data at boundaries and lock down policies.
 
 Work
+
 - Zod schemas for API/row/URL/CSV boundaries with shared parsing utils
 - Supabase RLS tests in CI (ephemeral DB) for policies
 - Threat modeling + sanitization (DOMPurify) for any user-provided HTML
 
 Outputs
+
 - Runtime guards at boundaries; unified validation utilities
 - RLS test suite green; CI blocks on regressions
 - Sanitization in rendering/export paths
 
 Acceptance
+
 - Invalid inputs rejected early; no RLS regressions; no XSS vectors
 
 ---
@@ -120,15 +135,18 @@ Acceptance
 Goals: Package the design system; formalize perf/security policies.
 
 Work
+
 - Extract design system to an internal workspace package; Storybook/Ladle; typed props docs; semver
 - Dependency allowlist + “no heavy libs” policy gate
 - HTTP caching and precompression (br/gzip) verification in production
 
 Outputs
+
 - Versioned DS package with docs
 - Policy gates flag large deps; caching headers verified
 
 Acceptance
+
 - DS changes versioned; cache hits confirmed; bundle size stable or smaller
 
 ---

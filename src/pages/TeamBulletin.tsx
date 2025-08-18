@@ -71,11 +71,11 @@ export const TeamBulletin: React.FC = () => {
       isSuperAdmin,
       canCreateTeamUnlimited,
     });
-  navigate(ROUTES.CREATE_TEAM);
+    navigate(ROUTES.CREATE_TEAM);
   };
   const handleJoinTeam = () => {
     console.log("team.join.attempt");
-  navigate(ROUTES.JOIN_TEAM);
+    navigate(ROUTES.JOIN_TEAM);
   };
 
   // Fetch real team if exists

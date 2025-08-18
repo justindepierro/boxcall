@@ -16,13 +16,16 @@ const hoisted = vi.hoisted(() => ({
 vi.mock("../../lib/supabase", () => ({
   supabase: {
     auth: {
-      getUser: async () => ({ data: { user: hoisted.userId ? { id: hoisted.userId } : null } }),
+      getUser: async () => ({
+        data: { user: hoisted.userId ? { id: hoisted.userId } : null },
+      }),
     },
     from: (table: string) => ({
       select: () => ({
         eq: () => ({
           single: async () => {
-            if (table === "profiles") return { data: { role: hoisted.role }, error: null };
+            if (table === "profiles")
+              return { data: { role: hoisted.role }, error: null };
             return { data: null, error: null };
           },
         }),
@@ -40,7 +43,11 @@ vi.mock("../authorize", () => {
 function renderWithRouter(path: string) {
   const router = createMemoryRouter(
     [
-      { path: "/templates", loader: requireCoachOrAdminLoader, element: <OK /> },
+      {
+        path: "/templates",
+        loader: requireCoachOrAdminLoader,
+        element: <OK />,
+      },
       { path: "/login", element: <div>LOGIN</div> },
       { path: "/dashboard", element: <div>DASHBOARD</div> },
     ],

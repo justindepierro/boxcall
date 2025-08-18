@@ -51,10 +51,18 @@ export const RouteErrorElement: React.FC = () => {
         )}
         <p className="text-text-secondary mb-4">{message}</p>
         <div className="flex gap-3 justify-center">
-          <Button variant="primary" size="sm" onClick={() => (window.location.href = "/dashboard")}>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => (window.location.href = "/dashboard")}
+          >
             Go to Dashboard
           </Button>
-          <Button variant="secondary" size="sm" onClick={() => window.location.reload()}>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => window.location.reload()}
+          >
             Retry
           </Button>
         </div>

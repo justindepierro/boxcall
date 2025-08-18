@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export interface NavItemProps {
   id: string;
@@ -22,19 +22,19 @@ export const NavItem: React.FC<NavItemProps> = ({
   onClick,
 }) => {
   const className = [
-    'flex items-center gap-2 px-3 py-2 rounded-md',
-    active ? 'bg-brand-navy text-white' : 'text-text-secondary hover:bg-muted',
-    disabled ? 'opacity-50 pointer-events-none' : '',
+    "flex items-center gap-2 px-3 py-2 rounded-md",
+    active ? "bg-brand-navy text-white" : "text-text-secondary hover:bg-muted",
+    disabled ? "opacity-50 pointer-events-none" : "",
   ]
     .filter(Boolean)
-    .join(' ');
+    .join(" ");
 
   return (
     <li id={id} role="none">
       <a
         role="menuitem"
         href={href}
-        aria-current={active ? 'page' : undefined}
+        aria-current={active ? "page" : undefined}
         className={className}
         onClick={onClick}
       >

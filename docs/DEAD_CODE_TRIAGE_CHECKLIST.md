@@ -3,6 +3,7 @@
 Purpose: Systematically decide what to remove vs. what to keep as scaffold for future features. Keep this list short, actionable, and updated as we knock items down.
 
 Status key
+
 - [ ] todo
 - [~] confirm reachability (lazy routes, dynamic import)
 - [S] scaffold, keep and add to roadmap
@@ -28,6 +29,7 @@ Status key
   - [~] husky, lint-staged (note: used locally—confirm keep)
 
 Actions
+
 - [ ] For each above, grep for imports/usages (including dynamic)
 - [ ] If truly unused, remove and run typecheck/tests/build
 - [ ] If to be used soon, mark [S] and link to roadmap item
@@ -38,8 +40,8 @@ Actions
   - [R] src/pages/CalendarPage.tsx (legacy guard, removed)
   - [R] src/pages/CalendarPageNew.tsx (legacy guard, removed)
   - [R] src/pages/CalendarPageShell.tsx (legacy guard, removed)
-  - [~] src/legacy/calendar/**
-  - [~] src/components/calendar/** (specific dup/unused exports listed by knip)
+  - [~] src/legacy/calendar/\*\*
+  - [~] src/components/calendar/\*\* (specific dup/unused exports listed by knip)
 
 - Practice
   - [R] src/components/practice/components/MemoizedPracticeTable.tsx (unreferenced, removed)
@@ -50,48 +52,53 @@ Actions
   - [R] src/components/practice/components/modals/index.ts (unreferenced barrel, removed)
 
 Actions
+
 - [ ] Verify not reachable via routes or lazy imports
 - [ ] If deprecated, mark [R] and remove
 - [ ] If future, mark [S] and capture scope in roadmap
 
 ## 3) Services and cross-platform
 
-- [~] src/services/cross-platform/** (bridge/unified gateways)
+- [~] src/services/cross-platform/\*\* (bridge/unified gateways)
 - [~] src/services/phase1/**, src/services/phase2/**
 - [~] src/services/offlineDataManager.ts
 
 Actions
+
 - [ ] Confirm not used by current flows
 - [ ] Keep minimal interfaces if referenced by types; otherwise [R]
 
 ## 4) UI and icons
 
-- [~] src/components/ui/Icon/** (many exports unused/duplicated)
-- [~] src/components/ui/* indices re-exporting unused symbols
+- [~] src/components/ui/Icon/\*\* (many exports unused/duplicated)
+- [~] src/components/ui/\* indices re-exporting unused symbols
 
 Actions
+
 - [ ] Prune unused icons/exports; keep stable public re-exports used by app
 - [ ] Ensure tree-shaking-safe named exports
 
 ## 5) Routes and pages
 
-- [~] src/routes/**/*.tsx (Permission routes, SplitRouter)
-- [~] src/pages/**/*.tsx (BoxCall, DashboardPage, DiagnosticsPage, TeamsPage, etc.)
+- [~] src/routes/\*_/_.tsx (Permission routes, SplitRouter)
+- [~] src/pages/\*_/_.tsx (BoxCall, DashboardPage, DiagnosticsPage, TeamsPage, etc.)
 - [R] src/components/ui/Popover/Popover.tsx (unreferenced, removed)
 - [R] src/pages/index.ts (unreferenced page aggregator, removed)
 - [R] src/components/ui/SegmentedControl/SegmentedControl.tsx (unreferenced, removed)
 - [R] src/components/ui/Surface/Surface.tsx (unreferenced, removed)
 
 Actions
+
 - [ ] Cross-check with actual router config and LazyRoutes
 - [ ] Remove dead routes; keep scaffolds with TODO links
 
 ## 6) Types and utils
 
-- [~] src/types/** (calendar, play, rsvp, permissions)
-- [~] src/utils/** (play* utils, navigation, performanceMonitoring, etc.)
+- [~] src/types/\*\* (calendar, play, rsvp, permissions)
+- [~] src/utils/\*_ (play_ utils, navigation, performanceMonitoring, etc.)
 
 Actions
+
 - [ ] Remove unused exports only after dependent modules are decided
 - [ ] Avoid churn on types until module deletions settle
 
@@ -102,5 +109,6 @@ Actions
 - [ ] Add `code:dead:ci` to CI in non-blocking mode for visibility
 
 ## Notes
+
 - Respect future roadmap scaffolds—do not delete, mark [S] and reference the roadmap file
 - For ambiguous modules, mark [~] and verify reachability before acting

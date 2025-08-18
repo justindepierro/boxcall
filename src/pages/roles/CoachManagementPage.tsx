@@ -199,9 +199,7 @@ const CoachManagementContent: React.FC = () => {
 };
 
 export const CoachManagementPage: React.FC = () => {
-  return (
-  <CoachManagementContent />
-  );
+  return <CoachManagementContent />;
 };
 
 export default CoachManagementPage;

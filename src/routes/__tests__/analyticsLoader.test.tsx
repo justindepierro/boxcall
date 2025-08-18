@@ -12,22 +12,36 @@ const hoisted = vi.hoisted(() => ({
   userId: "u1" as string | null,
   role: "coach" as unknown,
   tier: "team_premium" as string | null,
-  member: { role: "coach", status: "active" as const } as { role: string; status: "active" | "inactive" | "pending" | null } | null,
+  member: { role: "coach", status: "active" as const } as {
+    role: string;
+    status: "active" | "inactive" | "pending" | null;
+  } | null,
 }));
 
 vi.mock("../../lib/supabase", () => ({
   supabase: {
     auth: {
-      getUser: async () => ({ data: { user: hoisted.userId ? { id: hoisted.userId } : null } }),
+      getUser: async () => ({
+        data: { user: hoisted.userId ? { id: hoisted.userId } : null },
+      }),
     },
     from: (table: string) => ({
       select: () => {
         const chain = {
           eq: () => chain,
           single: async () => {
-            if (table === "profiles") return { data: { role: hoisted.role }, error: null };
-            if (table === "teams") return { data: { subscription_tier: hoisted.tier, subscription_expires_at: null }, error: null };
-            if (table === "team_members") return { data: hoisted.member, error: null };
+            if (table === "profiles")
+              return { data: { role: hoisted.role }, error: null };
+            if (table === "teams")
+              return {
+                data: {
+                  subscription_tier: hoisted.tier,
+                  subscription_expires_at: null,
+                },
+                error: null,
+              };
+            if (table === "team_members")
+              return { data: hoisted.member, error: null };
             return { data: null, error: null };
           },
         } as const;
@@ -46,7 +60,11 @@ vi.mock("../authorize", () => {
 function renderWithRouter(path: string) {
   const router = createMemoryRouter(
     [
-      { path: "/team/:teamId/analytics", loader: requireTeamAnalyticsLoader, element: <OK /> },
+      {
+        path: "/team/:teamId/analytics",
+        loader: requireTeamAnalyticsLoader,
+        element: <OK />,
+      },
       { path: "/login", element: <div>LOGIN</div> },
       { path: "/dashboard", element: <div>DASHBOARD</div> },
     ],
@@ -60,7 +78,7 @@ describe("requireTeamAnalyticsLoader", () => {
     hoisted.userId = "u1";
     hoisted.role = "coach";
     hoisted.tier = "team_premium";
-  hoisted.member = { role: "coach", status: "active" };
+    hoisted.member = { role: "coach", status: "active" };
   });
 
   it("renders when authorized and tier satisfied", async () => {

@@ -13,7 +13,10 @@ describe("Sidebar overlay behavior", () => {
 
   it("renders scrim overlay, closes via overlay click and Escape, and locks body scroll", () => {
     vi.spyOn(UserPreferencesService, "loadPreferences").mockReturnValue({
-      csvImport: { skipMissingFieldsConfirmation: false, skipQualityWarnings: false },
+      csvImport: {
+        skipMissingFieldsConfirmation: false,
+        skipQualityWarnings: false,
+      },
       ui: { showTooltips: false, compactMode: false, showConfetti: false },
     });
 
@@ -26,7 +29,12 @@ describe("Sidebar overlay behavior", () => {
 
     const { rerender } = render(
       <MemoryRouter initialEntries={["/one"]}>
-        <Sidebar items={items as any} isOpen={true} onClose={onClose} showOverlay={true} />
+        <Sidebar
+          items={items as any}
+          isOpen={true}
+          onClose={onClose}
+          showOverlay={true}
+        />
       </MemoryRouter>
     );
 
@@ -44,7 +52,12 @@ describe("Sidebar overlay behavior", () => {
     // Re-open to test Escape
     rerender(
       <MemoryRouter initialEntries={["/one"]}>
-        <Sidebar items={items as any} isOpen={true} onClose={onClose} showOverlay={true} />
+        <Sidebar
+          items={items as any}
+          isOpen={true}
+          onClose={onClose}
+          showOverlay={true}
+        />
       </MemoryRouter>
     );
 

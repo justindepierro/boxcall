@@ -14,6 +14,6 @@ export default defineConfig({
     coverage: {
       reporter: ["text", "lcov"],
     },
-  setupFiles: ["./src/test/setup.ts"],
+    setupFiles: ["./src/test/setup.ts"],
   },
 });

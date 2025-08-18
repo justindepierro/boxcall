@@ -1,5 +1,5 @@
-import React, { useCallback, useId, useState } from 'react';
-import { Button } from '../Button';
+import React, { useCallback, useId, useState } from "react";
+import { Button } from "../Button";
 
 export interface NavGroupProps {
   id: string;
@@ -31,7 +31,10 @@ export const NavGroup: React.FC<NavGroupProps> = ({
           onClick={toggle}
           className="w-full justify-start gap-2"
         >
-          <span className="w-5 h-5 flex items-center justify-center" aria-hidden>
+          <span
+            className="w-5 h-5 flex items-center justify-center"
+            aria-hidden
+          >
             {icon ?? <span>▸</span>}
           </span>
           <span className="flex-1 text-left">{label}</span>

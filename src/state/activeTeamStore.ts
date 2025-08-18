@@ -9,7 +9,8 @@ const STORAGE_KEY = "activeTeamId";
 
 function loadInitial(): string | null {
   try {
-    const v = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
+    const v =
+      typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
     return v || null;
   } catch {
     return null;

@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-export type SidebarMode = 'rail' | 'expanded';
+export type SidebarMode = "rail" | "expanded";
 
-const STORAGE_KEY = 'sidebar:prefs';
+const STORAGE_KEY = "sidebar:prefs";
 
 type Persisted = {
   mode: SidebarMode;
@@ -13,15 +13,15 @@ type Persisted = {
 const read = (): Persisted => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { mode: 'expanded', expanded: [], favorites: [] };
+    if (!raw) return { mode: "expanded", expanded: [], favorites: [] };
     const parsed = JSON.parse(raw) as Partial<Persisted>;
     return {
-      mode: parsed.mode ?? 'expanded',
+      mode: parsed.mode ?? "expanded",
       expanded: parsed.expanded ?? [],
       favorites: parsed.favorites ?? [],
     };
   } catch {
-    return { mode: 'expanded', expanded: [], favorites: [] };
+    return { mode: "expanded", expanded: [], favorites: [] };
   }
 };
 
@@ -48,7 +48,7 @@ export function useSidebarState() {
   }, [mode, expanded, favorites]);
 
   const toggleMode = useCallback(() => {
-    setMode((m) => (m === 'rail' ? 'expanded' : 'rail'));
+    setMode((m) => (m === "rail" ? "expanded" : "rail"));
   }, []);
 
   const isExpanded = useCallback((id: string) => expanded.has(id), [expanded]);
@@ -77,7 +77,10 @@ export function useSidebarState() {
     });
   }, []);
 
-  const isFavorite = useCallback((id: string) => favorites.has(id), [favorites]);
+  const isFavorite = useCallback(
+    (id: string) => favorites.has(id),
+    [favorites]
+  );
   const toggleFavorite = useCallback((id: string) => {
     setFavorites((prev) => {
       const next = new Set(prev);
@@ -101,6 +104,17 @@ export function useSidebarState() {
       isFavorite,
       toggleFavorite,
     }),
-    [mode, toggleMode, expanded, isExpanded, expand, collapse, toggleExpanded, favorites, isFavorite, toggleFavorite]
+    [
+      mode,
+      toggleMode,
+      expanded,
+      isExpanded,
+      expand,
+      collapse,
+      toggleExpanded,
+      favorites,
+      isFavorite,
+      toggleFavorite,
+    ]
   );
 }

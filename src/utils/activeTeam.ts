@@ -1,4 +1,7 @@
-import { getActiveTeamIdFromStore, useActiveTeamStore } from "../state/activeTeamStore";
+import {
+  getActiveTeamIdFromStore,
+  useActiveTeamStore,
+} from "../state/activeTeamStore";
 
 /**
  * Active Team helpers
@@ -36,4 +39,3 @@ export function setActiveTeamId(teamId: string) {
     }
   }
 }
-

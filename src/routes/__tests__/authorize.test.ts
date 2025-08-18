@@ -21,7 +21,10 @@ const hoisted = vi.hoisted(() => ({
   subscription: null as TeamRow | null,
 }));
 
-type MockQuery = { eq: (col?: string, val?: unknown) => MockQuery; single: () => Promise<unknown> };
+type MockQuery = {
+  eq: (col?: string, val?: unknown) => MockQuery;
+  single: () => Promise<unknown>;
+};
 
 vi.mock("../../lib/supabase", () => ({
   supabase: {
@@ -31,12 +34,21 @@ vi.mock("../../lib/supabase", () => ({
           eq: () => chain,
           single: async () => {
             if (table === "team_members") {
-              return { data: hoisted.teamMember, error: null } as { data: TeamMemberRow | null; error: unknown };
+              return { data: hoisted.teamMember, error: null } as {
+                data: TeamMemberRow | null;
+                error: unknown;
+              };
             }
             if (table === "teams") {
-              return { data: hoisted.subscription, error: null } as { data: TeamRow | null; error: unknown };
+              return { data: hoisted.subscription, error: null } as {
+                data: TeamRow | null;
+                error: unknown;
+              };
             }
-            return { data: null, error: null } as { data: null; error: unknown };
+            return { data: null, error: null } as {
+              data: null;
+              error: unknown;
+            };
           },
         };
         return chain;
@@ -51,7 +63,10 @@ describe("authorize()", () => {
     hoisted.subscription = null;
   });
 
-  const profile: { id: string; role: AppRole } = { id: "u1", role: "coach" as AppRole };
+  const profile: { id: string; role: AppRole } = {
+    id: "u1",
+    role: "coach" as AppRole,
+  };
 
   it("blocks when unauthenticated", async () => {
     const res = await authorize({ profile: null });
@@ -78,54 +93,96 @@ describe("authorize()", () => {
   });
 
   it("allows super admin bypass", async () => {
-    const res = await authorize({ profile, isSuperAdmin: true, teamFeature: "dashboard", teamId: "t1" });
+    const res = await authorize({
+      profile,
+      isSuperAdmin: true,
+      teamFeature: "dashboard",
+      teamId: "t1",
+    });
     expect(res.allowed).toBe(true);
   });
 
   it("requires team context when constraints need it", async () => {
-  const res = await authorize({ profile, requiredPermissions: ["dashboard.view_team"] });
+    const res = await authorize({
+      profile,
+      requiredPermissions: ["dashboard.view_team"],
+    });
     expect(res.allowed).toBe(false);
     expect(res.reason).toBe("no_team");
   });
 
   it("denies when not a team member", async () => {
-  const res = await authorize({ profile, teamId: "t1", requiredPermissions: ["dashboard.view_team"] });
+    const res = await authorize({
+      profile,
+      teamId: "t1",
+      requiredPermissions: ["dashboard.view_team"],
+    });
     expect(res.allowed).toBe(false);
     expect(res.reason).toBe("not_member");
   });
 
   it("denies when inactive member", async () => {
-  hoisted.teamMember = { role: "coach" as DbTeamMemberRole, status: "inactive" };
-  const res = await authorize({ profile, teamId: "t1", requiredPermissions: ["dashboard.view_team"] });
+    hoisted.teamMember = {
+      role: "coach" as DbTeamMemberRole,
+      status: "inactive",
+    };
+    const res = await authorize({
+      profile,
+      teamId: "t1",
+      requiredPermissions: ["dashboard.view_team"],
+    });
     expect(res.allowed).toBe(false);
     expect(res.reason).toBe("inactive_member");
   });
 
   it("checks subscription tier and expiry", async () => {
-  hoisted.teamMember = { role: "coach" as DbTeamMemberRole, status: "active" };
+    hoisted.teamMember = {
+      role: "coach" as DbTeamMemberRole,
+      status: "active",
+    };
     // wrong tier
-  hoisted.subscription = { subscription_tier: "free" as DbSubscriptionTier, subscription_expires_at: null };
-  let res = await authorize({ profile, teamId: "t1", requiredTiers: ["team_premium" as NonNullable<DbSubscriptionTier>] });
+    hoisted.subscription = {
+      subscription_tier: "free" as DbSubscriptionTier,
+      subscription_expires_at: null,
+    };
+    let res = await authorize({
+      profile,
+      teamId: "t1",
+      requiredTiers: ["team_premium" as NonNullable<DbSubscriptionTier>],
+    });
     expect(res.allowed).toBe(false);
     expect(res.reason).toBe("subscription_tier");
 
     // expired
     const past = new Date(Date.now() - 86400000).toISOString();
-  hoisted.subscription = { subscription_tier: "team_premium" as DbSubscriptionTier, subscription_expires_at: past };
-  res = await authorize({ profile, teamId: "t1", requiredTiers: ["team_premium" as NonNullable<DbSubscriptionTier>] });
+    hoisted.subscription = {
+      subscription_tier: "team_premium" as DbSubscriptionTier,
+      subscription_expires_at: past,
+    };
+    res = await authorize({
+      profile,
+      teamId: "t1",
+      requiredTiers: ["team_premium" as NonNullable<DbSubscriptionTier>],
+    });
     expect(res.allowed).toBe(false);
     expect(res.reason).toBe("subscription_expired");
   });
 
   it("passes permission matrix when conditions satisfied", async () => {
-  hoisted.teamMember = { role: "coach" as DbTeamMemberRole, status: "active" };
-  hoisted.subscription = { subscription_tier: "staff_addon" as DbSubscriptionTier, subscription_expires_at: null };
-  const res = await authorize({
-    profile,
-    teamId: "t1",
-    requiredTiers: ["staff_addon" as NonNullable<DbSubscriptionTier>],
-    requiredPermissions: ["playbook.create"],
-  });
+    hoisted.teamMember = {
+      role: "coach" as DbTeamMemberRole,
+      status: "active",
+    };
+    hoisted.subscription = {
+      subscription_tier: "staff_addon" as DbSubscriptionTier,
+      subscription_expires_at: null,
+    };
+    const res = await authorize({
+      profile,
+      teamId: "t1",
+      requiredTiers: ["staff_addon" as NonNullable<DbSubscriptionTier>],
+      requiredPermissions: ["playbook.create"],
+    });
     expect(res.allowed).toBe(true);
   });
 });

@@ -368,9 +368,7 @@ const PlayerDashboardContent: React.FC = () => {
 };
 
 export const PlayerDashboardPage: React.FC = () => {
-  return (
-  <PlayerDashboardContent />
-  );
+  return <PlayerDashboardContent />;
 };
 
 export default PlayerDashboardPage;
