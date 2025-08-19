@@ -37,7 +37,7 @@ const NavItemImpl: React.FC<NavItemProps> = ({
   const isRTL = typeof document !== "undefined" && document.dir === "rtl";
   // Only mirror if icon is our Icon component
   const renderIcon = () => {
-    if (!icon) return <span>■</span>;
+    if (!icon) return null;
     if (
       React.isValidElement(icon) &&
       icon.type === Icon &&

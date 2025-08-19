@@ -23,4 +23,7 @@ const icons = new Set<string>();
 walk(SRC_DIR, icons);
 console.log("Icon names found:", Array.from(icons));
 // Optionally: write to file for CI/test use
-fs.writeFileSync(path.resolve(__dirname, "icon-usage.json"), JSON.stringify(Array.from(icons), null, 2));
+fs.writeFileSync(
+  path.resolve(__dirname, "icon-usage.json"),
+  JSON.stringify(Array.from(icons), null, 2)
+);

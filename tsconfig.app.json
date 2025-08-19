@@ -44,5 +44,9 @@
       "@telemetry/*": ["src/telemetry/*"]
     }
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "src/components/ui/Icon/*.ts",
+    "src/components/ui/Icon/*.d.ts"
+  ]
 }

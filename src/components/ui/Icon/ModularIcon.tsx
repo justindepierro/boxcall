@@ -199,7 +199,16 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
     if (typeof window === "undefined") return;
 
     let cancelled = false;
-    // Check if already loaded
+    // Debug: log requested icon name and registry status
+    if (!iconLoaders[name]) {
+      console.warn(
+        `[ModularIcon] Requested icon name '${name}' does NOT exist in iconLoaders registry.`
+      );
+    } else {
+      console.info(
+        `[ModularIcon] Requested icon name '${name}' found in iconLoaders registry.`
+      );
+    }
     if (iconRegistry.has(name)) {
       // Skip state updates if unmounted
       if (!cancelled) setIconComponent(iconRegistry.get(name)!);
@@ -213,14 +222,33 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
       loader()
         .then((mod) => {
           if (cancelled) return;
-          const component = mod as
-            | { default?: LucideComponent }
-            | LucideComponent;
-          const Comp = (
-            typeof component === "function"
-              ? component
-              : (component as { default?: LucideComponent }).default
-          ) as LucideComponent;
+          // Lucide React icons are named exports, e.g., { Wrench }
+          // Convert icon name to PascalCase
+          const pascalName = name
+            .split(/[-_]/)
+            .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+            .join("");
+          let Comp: LucideComponent | undefined = undefined;
+          if (mod && typeof mod === "object") {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Lucide modules are dynamic, safe here
+            const modAny = mod as any;
+            if (
+              modAny[pascalName] &&
+              typeof modAny[pascalName] === "function"
+            ) {
+              Comp = modAny[pascalName] as LucideComponent;
+            } else if (modAny.default && typeof modAny.default === "function") {
+              Comp = modAny.default as LucideComponent;
+            }
+          } else if (typeof mod === "function") {
+            Comp = mod as LucideComponent;
+          }
+          if (!Comp) {
+            console.error(
+              `[ModularIcon] Could not extract icon component for '${name}' (PascalCase: '${pascalName}') from module:`,
+              mod
+            );
+          }
           if (Comp) {
             iconRegistry.set(name, Comp);
             if (!cancelled) setIconComponent(Comp);
@@ -229,7 +257,10 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
         })
         .catch((error) => {
           if (!cancelled) {
-            console.error(`Failed to load icon: ${name}`, error);
+            console.error(
+              `[ModularIcon] Failed to load icon: '${name}'`,
+              error
+            );
             setLoading(false);
           }
         });
@@ -240,9 +271,9 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
   }, [name, loading]);
 
   if (loading || !IconComponent) {
-    // Return a minimal loading placeholder
+    // Return a minimal loading placeholder (span for safe nesting)
     return (
-      <div
+      <span
         className={`inline-block animate-pulse bg-[var(--semantic-bg-muted)] border border-subtle rounded shadow-inner ${className}`}
         data-icon-placeholder="true"
         aria-hidden

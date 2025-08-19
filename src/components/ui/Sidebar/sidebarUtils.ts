@@ -18,7 +18,8 @@ export const getSidebarPosition = (
   position: "left" | "right" = "left",
   isOpen: boolean
 ) => {
-  const baseTransform = position === "right" ? "translate-x-full" : "-translate-x-full";
+  const baseTransform =
+    position === "right" ? "translate-x-full" : "-translate-x-full";
   const openTransform = "translate-x-0";
   return `
     ${position === "right" ? "right-0" : "left-0"}
@@ -42,7 +43,8 @@ export const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
   `;
   if (item.divider) return `border-t border-subtle my-2`;
   if (item.disabled) return `${baseStyles} text-text-muted cursor-not-allowed`;
-  if (item.active) return `${baseStyles} bg-[var(--semantic-bg-muted)] text-text-primary shadow-sm ring-1 ring-[color:var(--semantic-primary)]/20 border-l-2 border-[color:var(--semantic-primary)]`;
+  if (item.active)
+    return `${baseStyles} bg-[var(--semantic-bg-muted)] text-text-primary shadow-sm ring-1 ring-[color:var(--semantic-primary)]/20 border-l-2 border-[color:var(--semantic-primary)]`;
   return `${baseStyles} text-text-primary hover:bg-[var(--semantic-bg-muted)] hover:text-text-primary`;
 };
 

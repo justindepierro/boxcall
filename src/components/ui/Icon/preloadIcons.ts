@@ -26,7 +26,8 @@ export async function preloadIcons(names: ModularIconName[]): Promise<void> {
             ? (mod as ComponentType)
             : (mod as { default?: ComponentType }).default;
         if (Comp) iconRegistry.set(name, Comp);
-        else logIconError(name, new Error("No component found in loader result"));
+        else
+          logIconError(name, new Error("No component found in loader result"));
       } catch (error) {
         logIconError(name, error);
       }
