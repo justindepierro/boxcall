@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button/Button";
-import { ModularIcon as Icon } from "../ui/Icon";
+import Icon from "../ui/Icon/Icon";
 
 interface MobileDrawerProps {
   title: string;

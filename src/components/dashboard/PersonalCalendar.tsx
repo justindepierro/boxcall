@@ -8,8 +8,8 @@ import { useEvents } from "../../state/calendar/hooks";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
-import { ModularIcon as Icon } from "../ui/Icon";
-import { Icon as LegacyIcon } from "../ui/Icon/Icon";
+import Icon from "../ui/Icon/Icon";
+// Removed unused LegacyIcon import
 import { Tag, mapEventTypeToTagVariant } from "../ui/Tag";
 
 import type { CalendarEvent } from "../../domain/calendar/types";
@@ -214,7 +214,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                           variant="body-xs"
                           className="text-text-muted truncate"
                         >
-                          <LegacyIcon
+                          <Icon
                             name="map-pin"
                             size="sm"
                             className="inline align-middle"

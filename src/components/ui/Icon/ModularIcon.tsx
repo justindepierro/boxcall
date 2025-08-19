@@ -33,107 +33,8 @@ export interface ModularIconProps {
 }
 
 // Start with just the most common icons to prove the concept
-export type ModularIconName =
-  | "menu"
-  | "close"
-  | "plus"
-  | "plus-circle"
-  | "minus"
-  | "edit"
-  | "delete"
-  | "check"
-  | "alert-triangle"
-  | "warning"
-  | "error"
-  | "info"
-  | "alert"
-  | "tag"
-  | "calendar"
-  | "clock"
-  | "users"
-  | "user"
-  | "user-plus"
-  | "target"
-  | "trophy"
-  | "award"
-  | "star"
-  | "trending-up"
-  | "zap"
-  | "flag"
-  | "shield"
-  | "activity"
-  | "map"
-  | "map-pin"
-  | "message"
-  | "home"
-  | "refresh-cw"
-  | "wrench"
-  | "help-circle"
-  | "bug"
-  | "wifi-off"
-  | "server"
-  | "save"
-  | "download"
-  | "upload"
-  | "search"
-  | "filter"
-  | "image"
-  | "camera"
-  | "arrow-left"
-  | "arrow-right"
-  | "arrow-up"
-  | "arrow-down"
-  | "chevron-down"
-  | "chevron-up"
-  | "chevron-left"
-  | "chevron-right"
-  | "play"
-  | "pause"
-  | "team"
-  | "book"
-  | "file"
-  | "pdf"
-  | "copy"
-  | "folder"
-  | "database"
-  | "phone"
-  | "mail"
-  | "eye"
-  | "eye-off"
-  | "lock"
-  | "unlock"
-  | "key"
-  | "hash"
-  | "clipboard-list"
-  | "check-circle"
-  | "grid"
-  | "power"
-  | "pointer"
-  | "hand"
-  | "move"
-  | "pen-tool"
-  | "link"
-  | "sparkles"
-  | "crown"
-  | "toggle-right"
-  | "toggle-left"
-  | "back"
-  | "forward"
-  | "settings"
-  | "gamepad-2"
-  | "inbox"
-  | "flask-conical"
-  | "sprout"
-  | "lightbulb"
-  | "rocket"
-  | "party-popper"
-  | "type"
-  | "list"
-  | "circle"
-  | "graduation-cap"
-  | "shirt"
-  | "bar-chart"
-  | "chart";
+import type { IconName } from "./types";
+export type ModularIconName = IconName;
 
 // Dynamic imports for perfect tree shaking (limited to our supported set)
 type LucideComponent = React.ComponentType<{
@@ -222,26 +123,43 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
       loader()
         .then((mod) => {
           if (cancelled) return;
-          // Lucide React icons are named exports, e.g., { Wrench }
-          // Convert icon name to PascalCase
           const pascalName = name
             .split(/[-_]/)
             .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
             .join("");
           let Comp: LucideComponent | undefined = undefined;
+          console.log(
+            `[ModularIcon] Dynamic import for '${name}' returned:`,
+            mod
+          );
           if (mod && typeof mod === "object") {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Lucide modules are dynamic, safe here
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const modAny = mod as any;
+            console.log(
+              `[ModularIcon] Checking for named export '${pascalName}' in module:`,
+              Object.keys(modAny)
+            );
             if (
               modAny[pascalName] &&
               typeof modAny[pascalName] === "function"
             ) {
               Comp = modAny[pascalName] as LucideComponent;
+              console.log(
+                `[ModularIcon] Found named export '${pascalName}' for '${name}'.`
+              );
             } else if (modAny.default && typeof modAny.default === "function") {
               Comp = modAny.default as LucideComponent;
+              console.log(`[ModularIcon] Using default export for '${name}'.`);
+            } else {
+              console.warn(
+                `[ModularIcon] Neither named nor default export found for '${name}'.`
+              );
             }
           } else if (typeof mod === "function") {
             Comp = mod as LucideComponent;
+            console.log(
+              `[ModularIcon] Module itself is a function for '${name}'.`
+            );
           }
           if (!Comp) {
             console.error(

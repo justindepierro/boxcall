@@ -1,6 +1,7 @@
-export function logIconError(name: string, error: unknown) {
-  if (process.env.NODE_ENV !== "production") {
-    // ...existing code...
-    console.error(`[IconSystem] Failed to load icon: ${name}`, error);
-  }
+/**
+ * Logs icon loading errors for diagnostics and debugging.
+ * Can be enhanced to send errors to external monitoring in production.
+ */
+export function logIconError(name: string, error: unknown): void {
+  console.error(`[IconError] Failed to load icon: ${name}`, error);
 }

@@ -6,7 +6,7 @@ import { TelemetryEventTypes } from "../../telemetry/events";
 import { Typography } from "../design-system";
 
 import { Button } from "./Button";
-import { ModularIcon as Icon } from "./Icon";
+import Icon from "./Icon/Icon";
 
 import type { ErrorInfo, ReactNode } from "react";
 
@@ -124,7 +124,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 <details className="text-sm">
                   <summary className="cursor-pointer font-medium text-red-800 mb-2">
                     <Icon
-                      name="wrench"
+                      name="settings"
                       aria-label="wrench"
                       className="inline h-4 w-4 align-middle text-current"
                     />{" "}
@@ -150,7 +150,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 variant="primary"
                 size="sm"
                 className="w-full flex items-center justify-center"
-                icon={<Icon name="refresh-cw" className="h-4 w-4" />}
+                icon={<Icon name="refresh" className="h-4 w-4" />}
                 iconPosition="left"
               >
                 Try Again

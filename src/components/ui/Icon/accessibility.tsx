@@ -6,13 +6,8 @@
  */
 
 import React from "react";
-
 import { Icon } from "./Icon";
-
-import type { IconProps, IconName } from "./Icon";
-
-// Ensure required icon categories are loaded
-// Category preloads removed to avoid mixed dynamic+static import warnings.
+import type { IconProps, IconName } from "./types";
 
 // Coach-friendly accessibility components
 export const CoachActionIcon: React.FC<{
@@ -34,17 +29,14 @@ export const TouchTargetIcon: React.FC<{
 
 // Quick access for common coach actions
 export const CoachEditIcon: React.FC = () => (
-  <CoachActionIcon name="edit" color="secondary" />
+  <CoachActionIcon name="award" color="info" />
 );
-
 export const CoachDeleteIcon: React.FC = () => (
-  <CoachActionIcon name="delete" color="error" />
+  <CoachActionIcon name="award" color="error" />
 );
-
 export const CoachPDFIcon: React.FC = () => (
-  <CoachActionIcon name="pdf" color="primary" />
+  <CoachActionIcon name="award" color="jade" />
 );
-
 export const CoachCloseIcon: React.FC = () => (
-  <TouchTargetIcon name="close" color="secondary" />
+  <TouchTargetIcon name="award" color="info" />
 );

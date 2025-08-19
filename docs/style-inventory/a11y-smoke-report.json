@@ -37,27 +37,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -79,15 +71,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -109,27 +97,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -167,27 +147,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -209,15 +181,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -239,27 +207,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -297,27 +257,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -339,15 +291,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -369,27 +317,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -427,27 +367,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -469,15 +401,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -499,27 +427,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -717,27 +637,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -759,15 +671,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -789,27 +697,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -847,27 +747,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -889,15 +781,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -919,27 +807,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -977,27 +857,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -1019,15 +891,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1049,27 +917,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1107,27 +967,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -1149,15 +1001,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1179,27 +1027,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1237,27 +1077,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -1279,15 +1111,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1309,27 +1137,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1367,27 +1187,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -1409,15 +1221,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1439,27 +1247,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1497,27 +1297,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -1539,15 +1331,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1569,27 +1357,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1627,27 +1407,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -1669,15 +1441,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1699,27 +1467,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1757,27 +1517,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -1799,15 +1551,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1829,27 +1577,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1887,27 +1627,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -1929,15 +1661,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -1959,27 +1687,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -2017,27 +1737,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             }
           ]
@@ -2059,15 +1771,11 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                ".text-\\[var\\(--semantic-text-inverse\\)\\]"
-              ],
+              "target": [".text-\\[var\\(--semantic-text-inverse\\)\\]"],
               "html": "<button type=\"submit\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none text-[var(--semantic-text-inverse)] border bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-prima"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]
@@ -2089,27 +1797,19 @@
           "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
           "nodes": [
             {
-              "target": [
-                "h2"
-              ],
+              "target": ["h2"],
               "html": "<h2 class=\"font-sans text-3xl font-bold leading-tight text-[var(--semantic-text-primary)] mb-2\">Welcome Back</h2>"
             },
             {
-              "target": [
-                ".mb-6 > .text-base"
-              ],
+              "target": [".mb-6 > .text-base"],
               "html": "<p class=\"font-sans text-base leading-relaxed text-[var(--semantic-text-secondary)]\">Sign in to your BoxCall account</p>"
             },
             {
-              "target": [
-                ".mt-6 > p"
-              ],
+              "target": [".mt-6 > p"],
               "html": "<p class=\"font-sans text-sm leading-relaxed text-[var(--semantic-text-secondary)]\">"
             },
             {
-              "target": [
-                ".bg-transparent"
-              ],
+              "target": [".bg-transparent"],
               "html": "<button type=\"button\" class=\"inline-flex items-center justify-center font-sans transition-square hover-lift active-press focus-square focus:outline-none bg-transparent text-[var(--semantic-primary-hover)] border border-transparent p-0 h-auto hover:text-[var(--semantic-primary-active)] hover:underlin"
             }
           ]

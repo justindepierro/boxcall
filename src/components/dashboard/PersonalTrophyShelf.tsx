@@ -3,7 +3,7 @@ import React from "react";
 import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
-import { ModularIcon as Icon, SmartIconSystem } from "../ui/Icon";
+import Icon from "../ui/Icon/Icon";
 
 interface PersonalTrophyShelfProps {
   userId: string;
@@ -22,7 +22,7 @@ interface PersonalTrophyShelfProps {
 export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   userId,
 }) => {
-  const { achievements, loading, error } = useAchievements(userId);
+  const { achievements } = useAchievements(userId);
 
   // Extract properties from achievements with defaults
   const helmetStickers = achievements?.helmetStickers || [];
@@ -54,9 +54,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   ];
   // Helper function to render consistent icons using available Icon component names
   const renderAchievementIcon = (
-    iconData: React.ReactElement | string | undefined,
-    name?: string,
-    description?: string
+    iconData: React.ReactElement | string | undefined
   ) => {
     // If it's already a React element (icon), return it
     if (React.isValidElement(iconData)) {
@@ -97,54 +95,10 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         shield: "shield",
       };
       iconName = iconMap[iconData] || "star"; // fallback to star if not found
-    } else {
-      // Use SmartIconSystem to analyze content and pick best icon
-      const content = `${name || ""} ${description || ""}`;
-      const smartIcon = SmartIconSystem.getContextualIcon(
-        content,
-        "achievement",
-        "trophy"
-      );
-      // Map SmartIconSystem results to our available icons
-      const smartIconMap: { [key: string]: ValidIconName } = {
-        trophy: "trophy",
-        award: "award",
-        star: "star",
-        target: "target",
-        zap: "zap",
-        check: "check",
-        flag: "flag",
-        activity: "activity",
-        chart: "activity", // chart -> activity
-        shield: "shield",
-      };
-      iconName = smartIconMap[smartIcon] || "star";
     }
+    // If not a string, fallback to 'award' for achievements
     return <Icon name={iconName} size="sm" className="text-text-secondary" />;
   };
-  // Show loading state
-  if (loading) {
-    return (
-      <Card className="compact-card surface-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-subtle dark:border-jade-800">
-        <div className="flex items-center justify-center h-24">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-jade-600"></div>
-        </div>
-      </Card>
-    );
-  }
-  // Show error state
-  if (error) {
-    return (
-      <Card className="compact-card surface-card bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-subtle dark:border-red-800">
-        <Typography
-          variant="headline-md"
-          className="text-red-600 dark:text-red-400 text-center"
-        >
-          Failed to load achievements
-        </Typography>
-      </Card>
-    );
-  }
   return (
     <Card className="compact-card surface-card bg-gradient-to-br from-jade-50 to-jade-100 dark:from-jade-900/20 dark:to-jade-800/20 border-subtle dark:border-jade-800">
       {/* Header */}
@@ -204,13 +158,6 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
             >
               {helmetStickers.length}
             </Typography>
-            <Typography
-              variant="caption"
-              color="muted"
-              className="text-xs text-center"
-            >
-              Stickers
-            </Typography>
           </div>
           <div className="text-center p-2 surface-card/50 dark:surface-card/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
@@ -264,11 +211,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
                     <div
                       className={`flex-shrink-0 w-4 h-4 flex items-center justify-center ${achievement.earned ? "" : "grayscale opacity-50"}`}
                     >
-                      {renderAchievementIcon(
-                        achievement.icon,
-                        achievement.name,
-                        achievement.description
-                      )}
+                      {renderAchievementIcon(achievement.icon)}
                     </div>
                     <div className="flex-1 min-w-0">
                       <Typography
