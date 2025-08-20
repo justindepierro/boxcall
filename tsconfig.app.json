@@ -9,7 +9,12 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["vitest", "node"],
+    "types": [
+      "vitest",
+      "node",
+      "@testing-library/react",
+      "@testing-library/jest-dom"
+    ],
 
     /* Node module resolution for dynamic imports and .d.ts module declarations */
     "moduleResolution": "node",

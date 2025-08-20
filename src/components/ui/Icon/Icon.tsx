@@ -18,6 +18,7 @@ export const Icon: React.FC<IconProps> = ({
   color = "current",
   className = "",
   strokeWidth = 2,
+  tabIndex,
   ...rest
 }) => {
   const IconComponent = getIconComponent(name);
@@ -35,6 +36,7 @@ export const Icon: React.FC<IconProps> = ({
         alignItems: "center",
         justifyContent: "center",
       }}
+      tabIndex={tabIndex}
       {...rest}
     >
       {IconComponent ? (

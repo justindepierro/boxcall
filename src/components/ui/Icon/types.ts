@@ -21,6 +21,7 @@ export interface IconProps {
     | "error"
     | "info";
   strokeWidth?: number;
+  tabIndex?: number;
 }
 
 // Base icon props from Lucide
