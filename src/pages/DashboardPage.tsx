@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Layout } from "../components/layout/Layout";
 import { ResponsiveDashboardLayout } from "../components/dashboard/ResponsiveDashboardLayout";
 
 /**
@@ -15,7 +15,11 @@ import { ResponsiveDashboardLayout } from "../components/dashboard/ResponsiveDas
  * - Progressive loading with skeletons
  */
 export const DashboardPage: React.FC = () => {
-  return <ResponsiveDashboardLayout />;
+  return (
+    <Layout>
+      <ResponsiveDashboardLayout />
+    </Layout>
+  );
 };
 
 export default DashboardPage;

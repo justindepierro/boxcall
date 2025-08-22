@@ -7,7 +7,8 @@
 
 // Core icon component and types (always needed)
 export { Icon } from "./Icon";
-export type { IconName, IconProps } from "./Icon";
+export type { IconProps } from "./types";
+export type { IconName } from "./types";
 export { ModularIcon } from "./ModularIcon";
 export type { ModularIconProps, ModularIconName } from "./ModularIcon";
 
@@ -15,17 +16,5 @@ export type { ModularIconProps, ModularIconName } from "./ModularIcon";
 export { SmartIconSystem } from "./SmartIconSystem";
 
 // Convenience components (load their dependencies lazily)
-export {
-  PlayIcon,
-  PauseIcon,
-  EditIcon,
-  DeleteIcon,
-  AddIcon,
-} from "./convenience";
-export {
-  PDFIcon,
-  CalendarIcon,
-  ClockIcon,
-  TeamIcon,
-  SettingsIcon,
-} from "./common";
+// ...existing code...
+// ...existing code...

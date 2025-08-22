@@ -20,18 +20,14 @@ const getTestRole = (devMode: DevMode): UserRole | null => {
       return null;
   }
 };
-import { getRouteImporter } from "../../routes/importers";
 import {
   getNavigationItems,
   getRoleDisplayInfo,
   toSidebarItems,
 } from "../../utils/navigation";
-import { UserMenu } from "../auth/UserMenu";
 import { DevTools } from "../dev";
-import { SidebarLogo, NavbarLogo } from "../ui/Logo";
-import { NavBar } from "../ui/NavBar";
+import { SidebarLogo } from "../ui/Logo";
 import { Sidebar } from "../ui/Sidebar";
-import { Button } from "../ui/Button";
 
 import { Footer } from "./Footer";
 
@@ -65,12 +61,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const roleInfo = getRoleDisplayInfo(currentRole);
 
   // Convert navigationItems to NavBarItems format
-  const navBarItems = navigationItems.map((item, index) => ({
-    id: item.id || item.href || `nav-item-${index}`,
-    label: item.label,
-    href: item.href,
-    importer: getRouteImporter(item.href),
-  }));
 
   // Set data-density attribute on body (once per render cycle)
   if (typeof document !== "undefined") {
@@ -79,36 +69,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen surface-app decorative-gradient bg-[radial-gradient(circle_at_20%_15%,#f5f9f6,#eef3f1)] dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 bg-fixed relative">
       <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' fill=\'none\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>')]" />
-      <NavBar
-        items={navBarItems}
-        brand={
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              aria-label="Open sidebar"
-              className="text-text-primary"
-              onClick={() => toggleSidebar()}
-            >
-              <svg
-                className="h-6 w-6"
-                stroke="currentColor"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </Button>
-            <NavbarLogo />
-          </div>
-        }
-        actions={<UserMenu />}
-      />
       {/* Main content area with overlay sidebar and top padding for fixed nav */}
       <div className="relative pt-0">
         {/* Sidebar - Now overlays instead of pushing content */}
