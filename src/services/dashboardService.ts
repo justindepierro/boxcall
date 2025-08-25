@@ -51,7 +51,7 @@ export class DashboardService {
         .eq("status", "active");
 
       if (error) {
-        console.error("Error fetching user teams:", error);
+        // TODO: Handle error fetching user teams (was: console.error)
         return [];
       }
 
@@ -73,7 +73,7 @@ export class DashboardService {
         .in("id", teamIds);
 
       if (teamsError) {
-        console.error("Error fetching teams:", teamsError);
+        // TODO: Handle error fetching teams (was: console.error)
         return [];
       }
 
@@ -107,7 +107,7 @@ export class DashboardService {
 
       return userTeams;
     } catch (error) {
-      console.error("Error in getUserTeams:", error);
+      // TODO: Handle error in getUserTeams (was: console.error)
       return [];
     }
   }
@@ -137,8 +137,8 @@ export class DashboardService {
         activeTeams,
         recentActivity,
       };
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
+    } catch (_error) {
+      // TODO: Handle error fetching dashboard data (was: console.error)
       return {
         userTeams: [],
         totalTeams: 0,
@@ -158,9 +158,7 @@ export class DashboardService {
   ): Promise<ActivityItem[]> {
     // For blank slate mode, return empty activity
     if (devMode === "blank_slate") {
-      console.log(
-        "🆕 Dashboard Service: Blank slate mode - returning empty activity"
-      );
+      // TODO: Remove dashboard debug log (was: console.log)
       return [];
     }
 
@@ -175,10 +173,10 @@ export class DashboardService {
         // For now, return empty until real implementation
         // In the future, this will fetch from activity/notifications tables
         return [];
-      } catch (error) {
+      } catch (_error) {
         console.warn(
           "Dashboard Service: Could not fetch real activity:",
-          error
+          _error
         );
         return [];
       }

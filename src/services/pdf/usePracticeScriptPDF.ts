@@ -58,7 +58,7 @@ export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
             ? `${err.message}${err.details ? ` (${err.details})` : ""}`
             : "Failed to export PDF";
         setError(errorMessage);
-        console.error("PDF Export Error:", err);
+        // TODO: Handle PDF Export Error (was: console.error)
         return null;
       } finally {
         setIsExporting(false);
@@ -82,7 +82,7 @@ export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
             ? `${err.message}${err.details ? ` (${err.details})` : ""}`
             : "Failed to download PDF";
         setError(errorMessage);
-        console.error("PDF Download Error:", err);
+        // TODO: Handle PDF Download Error (was: console.error)
       } finally {
         setIsExporting(false);
       }
@@ -105,7 +105,7 @@ export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
             ? `${err.message}${err.details ? ` (${err.details})` : ""}`
             : "Failed to generate PDF preview";
         setError(errorMessage);
-        console.error("PDF Preview Error:", err);
+        // TODO: Handle PDF Preview Error (was: console.error)
         return null;
       } finally {
         setIsExporting(false);
