@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Typography } from "../components/design-system/Typography";
+import { Layout } from "../components/layout/Layout";
 import { markFirstPracticeScheduled } from "../components/onboarding/activationHelpers";
 import { PDFExportTrigger } from "../components/practice/LazyPDFExport";
 import { Button } from "../components/ui/Button/Button";
@@ -244,7 +245,7 @@ export function PracticePlanner() {
     );
   }
   return (
-    <div className="min-h-screen surface-app">
+    <Layout>
       {/* Header */}
       <div className="surface-header border-b border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -302,7 +303,7 @@ export function PracticePlanner() {
                       className="surface-card border-subtle text-text-secondary hover:text-text-primary surface-subtle-hover flex items-center gap-2"
                       disabled={currentBlocks.length === 0}
                     >
-                      <Icon name="pdf" size="sm" />
+                      <Icon name="file" size="sm" />
                       Print Practice to PDF
                     </Button>
                     {/* Practice Controls */}
@@ -691,7 +692,7 @@ export function PracticePlanner() {
           triggerElement={null} // Programmatically controlled
         />
       )}
-    </div>
+    </Layout>
   );
 }
 // Create Block Modal Component

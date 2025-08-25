@@ -595,25 +595,48 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         >
                           {getSidebarIcon(item.icon)}
                         </div>
-                        {state.mode !== "rail" && (
-                          <>
-                            <span className="flex-1 text-left">
-                              {item.label}
+                        <>
+                          <span className="flex-1 text-left">{item.label}</span>
+                          {item.badge && (
+                            <span
+                              className={getBadgeStyles()}
+                              style={{
+                                backgroundColor: "var(--semantic-primary)",
+                                color: "var(--semantic-text-inverse)",
+                              }}
+                            >
+                              {item.badge}
                             </span>
-                            {item.badge && (
-                              <span
-                                className={getBadgeStyles()}
-                                style={{
-                                  backgroundColor: "var(--semantic-primary)",
-                                  color: "var(--semantic-text-inverse)",
-                                }}
-                              >
-                                {item.badge}
+                          )}
+                          <Tooltip
+                            content={pinnedIds.has(item.id) ? "Unpin" : "Pin"}
+                            disabled={!showTooltips}
+                            placement="left"
+                          >
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              aria-label={
+                                pinnedIds.has(item.id)
+                                  ? `Unpin ${item.label}`
+                                  : `Pin ${item.label}`
+                              }
+                              aria-pressed={pinnedIds.has(item.id)}
+                              className={`ml-2 px-1 ${pinnedIds.has(item.id) ? "text-[color:var(--semantic-text-brand)]" : "text-text-secondary"} hover:text-[color:var(--semantic-primary-hover)] opacity-60 group-hover:opacity-100 focus:opacity-100 transition-opacity`}
+                              tabIndex={-1}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                state.toggleFavorite(item.id);
+                              }}
+                            >
+                              <Icon name="star" size="sm" aria-hidden />
+                              <span className="text-left">
+                                {pinnedIds.has(item.id) ? "Unpin" : "Pin"}
                               </span>
-                            )}
-                            {/* Pin/Unpin control removed for now */}
-                          </>
-                        )}
+                            </Button>
+                          </Tooltip>
+                        </>
                       </Link>
                     </Tooltip>
                   ) : (

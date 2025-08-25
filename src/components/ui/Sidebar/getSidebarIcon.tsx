@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "../Icon/Icon";
+import type { IconName } from "../Icon/types";
 
 // Map nav schema icon strings to Icon component names
 const iconMap: Record<string, string> = {
@@ -44,9 +45,12 @@ const iconMap: Record<string, string> = {
 export function getSidebarIcon(
   icon?: string | React.ReactNode
 ): React.ReactNode {
+  // Always render an icon; fallback to 'help-circle' if missing or invalid
   if (!icon) {
-    console.warn(`[Sidebar] No icon provided for sidebar item.`);
-    return null;
+    console.warn(
+      `[Sidebar] No icon provided for sidebar item. Using fallback.`
+    );
+    return <Icon name="help-circle" size="md" />;
   }
   // If already a ReactNode (e.g., <Icon ... />), return as-is
   if (React.isValidElement(icon)) {
@@ -55,7 +59,7 @@ export function getSidebarIcon(
   }
   if (typeof icon !== "string") {
     console.warn(`[Sidebar] Icon is not a string or ReactNode:`, icon);
-    return null;
+    return <Icon name="help-circle" size="md" />;
   }
   const mapped = iconMap[icon] || icon.toLowerCase();
   console.info(`[Sidebar] Requested icon: '${icon}', mapped to: '${mapped}'`);
@@ -162,8 +166,8 @@ export function getSidebarIcon(
     "help-circle",
   ]);
   const iconProp = validNames.has(mapped)
-    ? (mapped as import("../Icon/Icon").IconName)
-    : ("help-circle" as import("../Icon/Icon").IconName);
+    ? (mapped as IconName)
+    : ("help-circle" as IconName);
   if (!validNames.has(mapped)) {
     // ...existing code...
     console.warn(

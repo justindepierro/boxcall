@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Layout } from "../components/layout/Layout";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../app/auth-store";
@@ -23,8 +24,17 @@ export const TeamBulletin: React.FC = () => {
   const { devMode } = useDevMode();
   const { isSuperAdmin, canCreateTeamUnlimited } = usePermissions();
   const navigate = useNavigate();
-  // Resolve authoritative team membership role ASAP (must be before early returns to satisfy Rules of Hooks)
   const { data: membershipRole } = useTeamMembershipRole(teamId, profile?.id);
+
+  function computeAcademicYearDisplay(baseYear?: number) {
+    if (typeof baseYear === "number" && !isNaN(baseYear)) {
+      return `${baseYear}-${baseYear + 1}`;
+    }
+    const now = new Date();
+    const startYear =
+      now.getMonth() >= 6 ? now.getFullYear() : now.getFullYear() - 1;
+    return `${startYear}-${startYear + 1}`;
+  }
 
   interface TeamData {
     id: string;
@@ -38,16 +48,6 @@ export const TeamBulletin: React.FC = () => {
     mascot?: string | null;
     school_name?: string | null;
     logo_url?: string | null;
-  }
-
-  function computeAcademicYearDisplay(baseYear?: number) {
-    if (typeof baseYear === "number" && !isNaN(baseYear)) {
-      return `${baseYear}-${baseYear + 1}`;
-    }
-    const now = new Date();
-    const startYear =
-      now.getMonth() >= 6 ? now.getFullYear() : now.getFullYear() - 1;
-    return `${startYear}-${startYear + 1}`;
   }
 
   const buildMockTeam = (): TeamData => ({
@@ -78,7 +78,6 @@ export const TeamBulletin: React.FC = () => {
     navigate(ROUTES.JOIN_TEAM);
   };
 
-  // Fetch real team if exists
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -143,57 +142,65 @@ export const TeamBulletin: React.FC = () => {
 
   if (loadingInitial) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Typography variant="headline-lg" color="muted">
-            Loading team dashboard...
-          </Typography>
+      <Layout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <Typography variant="headline-lg" color="muted">
+              Loading team dashboard...
+            </Typography>
+          </div>
         </div>
-      </div>
+      </Layout>
     );
   }
 
   if (!teamData) {
     return (
-      <div className="py-6">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="surface-card elevation-card border-subtle rounded-lg p-8">
-            <LogoIcon size="xl" color="brand" className="mx-auto mb-4" />
-            <Typography variant="headline-lg" className="mb-2">
-              No Team Found
-            </Typography>
-            <Typography variant="body-lg" color="muted" className="mb-6">
-              {devMode === "blank_slate"
-                ? "Create your first team or join an existing one to get started."
-                : "This team doesn't exist or you don't have access to it."}
-            </Typography>
-            <div className="flex gap-3 justify-center">
-              <Button
-                onClick={handleCreateTeam}
-                variant="primary"
-                className="px-6 py-2 rounded-lg font-medium flex items-center gap-2"
-              >
-                Create Team
-                {isSuperAdmin && (
-                  <Icon name="unlock" size="sm" className="text-text-primary" />
-                )}
-              </Button>
-              <Button
-                onClick={handleJoinTeam}
-                variant="ghost"
-                className="px-6 py-2 rounded-lg font-medium"
-              >
-                Join Team
-              </Button>
-            </div>
-            {isSuperAdmin && (
-              <div className="mt-2 text-xs text-jade-600 dark:text-jade-400">
-                Super Admin: Unlimited team creation access
+      <Layout>
+        <div className="py-6">
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="surface-card elevation-card border-subtle rounded-lg p-8">
+              <LogoIcon size="xl" color="brand" className="mx-auto mb-4" />
+              <Typography variant="headline-lg" className="mb-2">
+                No Team Found
+              </Typography>
+              <Typography variant="body-lg" color="muted" className="mb-6">
+                {devMode === "blank_slate"
+                  ? "Create your first team or join an existing one to get started."
+                  : "This team doesn't exist or you don't have access to it."}
+              </Typography>
+              <div className="flex gap-3 justify-center">
+                <Button
+                  onClick={handleCreateTeam}
+                  variant="primary"
+                  className="px-6 py-2 rounded-lg font-medium flex items-center gap-2"
+                >
+                  Create Team
+                  {isSuperAdmin && (
+                    <Icon
+                      name="unlock"
+                      size="sm"
+                      className="text-text-primary"
+                    />
+                  )}
+                </Button>
+                <Button
+                  onClick={handleJoinTeam}
+                  variant="ghost"
+                  className="px-6 py-2 rounded-lg font-medium"
+                >
+                  Join Team
+                </Button>
               </div>
-            )}
+              {isSuperAdmin && (
+                <div className="mt-2 text-xs text-jade-600 dark:text-jade-400">
+                  Super Admin: Unlimited team creation access
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </Layout>
     );
   }
 
@@ -201,7 +208,7 @@ export const TeamBulletin: React.FC = () => {
   const isCoach = userRole === "coach" || userRole === "head_coach";
 
   return (
-    <>
+    <Layout>
       {/* Skip link for keyboard users */}
       <a
         href="#main-content"
@@ -236,7 +243,7 @@ export const TeamBulletin: React.FC = () => {
           </div>
         </div>
       </main>
-    </>
+    </Layout>
   );
 };
 export default TeamBulletin;

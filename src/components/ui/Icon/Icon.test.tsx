@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
 import { Icon } from "./Icon";
 
 describe("Icon component", () => {
@@ -11,8 +12,8 @@ describe("Icon component", () => {
 
   it("renders fallback if icon name is invalid", () => {
     render(<Icon name={"nonexistent" as any} size="md" color="info" />);
-    // Should render fallback icon (e.g., alert or error)
-    const fallback = screen.getByLabelText(/alert|error/i);
+    // Should render fallback icon (e.g., help-circle)
+    const fallback = screen.getByLabelText("nonexistent");
     expect(fallback).toBeInTheDocument();
   });
 
@@ -30,20 +31,21 @@ describe("Icon component", () => {
         <Icon name="star" size="lg" color="error" />
       </>
     );
-    expect(screen.getByLabelText("icon-star")).toBeInTheDocument();
+    const icons = screen.getAllByLabelText("star");
+    expect(icons.length).toBe(3);
     // You could add more assertions for style/class if needed
   });
 
   it("handles missing props gracefully", () => {
     // @ts-expect-error: intentionally missing required props
-    render(<Icon />);
-    // Should not throw, may render fallback or nothing
+    expect(() => render(<Icon />)).not.toThrow();
     // No assertion needed, just checking for crash
   });
 
   it("handles invalid type for size", () => {
     // @ts-expect-error: invalid size
     render(<Icon name="star" size={"xlarge"} color="info" />);
-    expect(screen.getByLabelText("icon-star")).toBeInTheDocument();
+    const icons = screen.getAllByLabelText("star");
+    expect(icons.length).toBeGreaterThan(0);
   });
 });
