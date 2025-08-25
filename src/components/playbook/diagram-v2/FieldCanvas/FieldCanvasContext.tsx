@@ -1,5 +1,6 @@
+import { FieldCanvasContext } from "./FieldCanvasContextInstance";
 import React, { useReducer, useRef, useState } from "react";
-import { FieldCanvasContext } from "./FieldCanvasContextExport";
+// Only types and provider are exported from this file. Context instance is imported from FieldCanvasContextInstance.ts
 
 // Define initial state shape
 export type ShapeType = {
@@ -109,6 +110,8 @@ type FieldCanvasAction =
   | { type: "SET_LINES"; lines: LineType[] }
   | { type: string; [key: string]: unknown };
 
+export type { FieldCanvasAction };
+
 function reducer(
   state: FieldCanvasState,
   action: FieldCanvasAction
@@ -170,33 +173,10 @@ type CenterFlashType = { x?: boolean; y?: boolean; t0: number } | null;
 export type FieldCanvasContextType = {
   state: FieldCanvasState;
   dispatch: React.Dispatch<FieldCanvasAction>;
-  dragRef: React.RefObject<{
-    startX: number;
-    startY: number;
-    startClientX: number;
-    startClientY: number;
-    hasStarted: boolean;
-    moved: boolean;
-    originals: { id: string; xAbs: number; yAbs: number }[];
-  } | null>;
-  panRef: React.RefObject<{
-    startX: number;
-    startY: number;
-    panX: number;
-    panY: number;
-  } | null>;
-  annotDragRef: React.RefObject<{
-    id: string;
-    startX: number;
-    startY: number;
-  } | null>;
-  selectionDragRef: React.RefObject<{
-    startX: number;
-    startY: number;
-    startClientX: number;
-    startClientY: number;
-    hasMoved: boolean;
-  } | null>;
+  dragRef: React.RefObject<unknown>;
+  panRef: React.RefObject<unknown>;
+  annotDragRef: React.RefObject<unknown>;
+  selectionDragRef: React.RefObject<unknown>;
   nudgeBatchRef: React.RefObject<{
     events: number;
     playersMoved: number;
@@ -225,34 +205,7 @@ export type FieldCanvasContextType = {
   setCenterFlash: React.Dispatch<React.SetStateAction<CenterFlashType>>;
 };
 
-export const defaultContext: FieldCanvasContextType = {
-  state: initialState,
-  dispatch: () => {},
-  dragRef: { current: null },
-  panRef: { current: null },
-  annotDragRef: { current: null },
-  selectionDragRef: { current: null },
-  nudgeBatchRef: { current: { events: 0, playersMoved: 0, timer: null } },
-  selectionBox: null,
-  setSelectionBox: ((
-    _value: SelectionBoxType | ((prev: SelectionBoxType) => SelectionBoxType)
-  ) => {}) as React.Dispatch<React.SetStateAction<SelectionBoxType>>,
-  hoverAnnId: undefined,
-  setHoverAnnId: () => {},
-  snapViz: { x: 0, y: 0, show: false },
-  setSnapViz: () => {},
-  snapPulses: [],
-  setSnapPulses: () => {},
-  alignGuides: null,
-  setAlignGuides: () => {},
-  guideLiveOpacity: 0,
-  setGuideLiveOpacity: () => {},
-  lastGuidesRef: { current: null },
-  guideFade: null,
-  setGuideFade: () => {},
-  centerFlash: null,
-  setCenterFlash: () => {},
-};
+// Context and default values are now provided by FieldCanvasContextValues.ts and FieldCanvasContextInstance.ts
 
 export function FieldCanvasProvider({
   children,

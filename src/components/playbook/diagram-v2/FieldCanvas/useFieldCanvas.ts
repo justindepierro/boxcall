@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { FieldCanvasContext } from "./FieldCanvasContext";
+import { FieldCanvasContext } from "./FieldCanvasContextInstance";
 import type { FieldCanvasContextType } from "./FieldCanvasContext";
 
 export function useFieldCanvas(): FieldCanvasContextType {

@@ -1,6 +1,6 @@
 // Selection box, multi-select, drag, snap logic
 import React from "react";
-import { useFieldCanvas } from "./FieldCanvasContext";
+import { useFieldCanvas } from "./useFieldCanvas";
 
 export const Selection: React.FC = () => {
   const { selectionBox, state } = useFieldCanvas();

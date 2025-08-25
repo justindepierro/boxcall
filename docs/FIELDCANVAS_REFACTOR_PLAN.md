@@ -36,12 +36,27 @@
 9. **Annotation/Connector System**
    - Separate logic for connectors/annotations
 
+## Progress & Completion
+
+- [x] Scaffold new subcomponent files and context structure
+- [x] Extract Toolbar, Shape, Layer, Selection, ZoomPan, Annotation, and Layer logic from FieldCanvas.tsx
+- [x] Refactor event handling and state management into modular context/provider
+- [x] Strictly type all context, state, and utility functions
+- [x] Split context for react-refresh compliance
+- [x] Audit and clean up all legacy/v1/v2/unused code
+- [x] Add README documenting modular architecture and usage
+- [x] Fix all TypeScript and lint errors in modular system
+- [x] Push all changes to git
+
 ## Next Steps
 
-1. Scaffold new subcomponent files and context structure
-2. Extract Toolbar, Shape, and Layer logic from FieldCanvas.tsx
-3. Refactor event handling and state management
-4. Redesign UI for snappier, more intuitive interactions
+- [ ] UI/UX polish: redesign Toolbar, add icons, improve visual feedback
+- [ ] Add advanced shape types (Arrow, Text, etc.)
+- [ ] Modularize event handlers for mouse/touch/keyboard
+- [ ] Add undo/redo and layer controls to Toolbar
+- [ ] Expand annotation/connector system
+- [ ] Write unit tests for all modular components
+- [ ] Document new features and update README
 
 ---
 
