@@ -12,15 +12,15 @@ import type {
   DiagramDocument,
   DiagramFieldConfig,
   DiagramPlayer,
-} from "./types";
-import { createEmptyDocument, computeComplexityScore } from "./types";
-import { telemetry } from "../../../telemetry/dispatcher";
-import { TelemetryEventTypes } from "../../../telemetry/events";
+} from "../types/types";
+import { createEmptyDocument, computeComplexityScore } from "../types/types";
+import { telemetry } from "../../../../telemetry/dispatcher";
+import { TelemetryEventTypes } from "../../../../telemetry/events";
 import {
   getFormationSpec,
   applyFormationIdempotent,
   type FormationId,
-} from "./formations";
+} from "../domain/formations";
 
 const HISTORY_CAP = 100;
 const initialState: DiagramEditorState = {

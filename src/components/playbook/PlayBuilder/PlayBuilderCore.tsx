@@ -12,15 +12,15 @@ import {
 import { Typography } from "../../design-system/Typography";
 import { Button } from "../../ui/Button";
 import { Icon } from "../../ui/Icon";
-import { computeComplexityScore } from "../diagram-v2/types";
-import { VisualPlayBuilderV2 } from "../diagram-v2/VisualPlayBuilderV2";
+import { computeComplexityScore } from "../diagram/types/types";
+import { VisualPlayBuilder } from "../diagram/VisualPlayBuilder";
 
 import { PlayBuilderForm } from "./PlayBuilderForm";
 import { PlayBuilderPreview } from "./PlayBuilderPreview";
 import { QuickEntry } from "./QuickEntry";
 
 import type { Play } from "../../../types/play";
-import type { DiagramDocument } from "../diagram-v2/types";
+import type { DiagramDocument } from "../diagram/types/types";
 
 interface PlayBuilderCoreProps {
   isOpen: boolean;
@@ -421,7 +421,7 @@ export const PlayBuilderCore: React.FC<PlayBuilderCoreProps> = ({
                         Diagram Builder
                       </Typography>
                       <div className="mb-4 border border-dashed border-slate-300 rounded">
-                        <VisualPlayBuilderV2
+                        <VisualPlayBuilder
                           onClose={attemptClose}
                           onDocumentChange={(doc) => {
                             setDiagramV2Doc(doc);

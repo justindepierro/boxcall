@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, it } from "vitest";
 import { render } from "@testing-library/react";
-import { ZoomPan } from "../ZoomPan";
-import { FieldCanvasProvider } from "../FieldCanvasContext";
+import { ZoomPan } from "../../ZoomPan";
+import { FieldCanvasProvider } from "../../FieldCanvasContext";
 
 describe("ZoomPan", () => {
   it("renders ZoomPan", () => {

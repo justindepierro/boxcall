@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, it } from "vitest";
 import { render } from "@testing-library/react";
-import { Layer } from "../Layer";
+import { Layer } from "../../Layer";
 
 describe("Layer", () => {
   it("renders layer", () => {

@@ -1,4 +1,4 @@
-import { useFieldCanvas } from "./useFieldCanvas";
+import { useFieldCanvas } from "../FieldCanvas/useFieldCanvas";
 import type { AnnotationType } from "./FieldCanvasContext";
 import { Arrow } from "./Arrow";
 import { Text as CanvasText } from "./Text";

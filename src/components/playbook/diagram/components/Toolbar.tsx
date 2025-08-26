@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button } from "../../../ui/Button";
-import { useDiagramEditor, useAddPlayer } from "../context";
+import { useDiagramEditor, useAddPlayer } from "../context/context";
 // Thumbnail helpers are loaded on-demand to keep bundle size down
 
 interface ToolbarProps {

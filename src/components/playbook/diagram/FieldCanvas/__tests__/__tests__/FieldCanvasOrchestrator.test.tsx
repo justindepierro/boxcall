@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, it } from "vitest";
 import { render } from "@testing-library/react";
-import { FieldCanvasOrchestrator } from "../FieldCanvasOrchestrator";
-import { FieldCanvasProvider } from "../FieldCanvasContext";
+import { FieldCanvasOrchestrator } from "../../FieldCanvasOrchestrator";
+import { FieldCanvasProvider } from "../../FieldCanvasContext";
 
 describe("FieldCanvasOrchestrator", () => {
   it("renders orchestrator", () => {

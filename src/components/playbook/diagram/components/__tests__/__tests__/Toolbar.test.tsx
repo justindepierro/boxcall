@@ -2,8 +2,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import React from "react";
 import { describe, it, expect } from "vitest";
 
-import { DiagramEditorProvider } from "../../context";
-import { Toolbar } from "../Toolbar";
+import { DiagramEditorProvider } from "../../../context/context";
+import { Toolbar } from "../../Toolbar";
 
 // Minimal smoke test: renders and toggles a tool button
 

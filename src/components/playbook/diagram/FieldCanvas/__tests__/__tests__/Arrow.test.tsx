@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, it } from "vitest";
 import { render } from "@testing-library/react";
-import { Arrow } from "../Arrow";
+import { Arrow } from "../../Arrow";
 
 describe("Arrow", () => {
   it("renders without crashing", () => {

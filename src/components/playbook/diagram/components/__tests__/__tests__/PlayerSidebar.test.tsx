@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 
-import { DiagramEditorProvider } from "../../context";
-import { PlayerSidebar } from "../PlayerSidebar";
+import { DiagramEditorProvider } from "../../../context/context";
+import { PlayerSidebar } from "../../PlayerSidebar";
 
 // Smoke test: renders grouped headers (OFFENSE / DEFENSE) when players exist
 

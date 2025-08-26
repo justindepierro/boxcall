@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, it } from "vitest";
 import { render } from "@testing-library/react";
-import { Toolbar } from "../Toolbar";
+import { Toolbar } from "../../Toolbar";
 
 describe("Toolbar", () => {
   it("renders toolbar", () => {

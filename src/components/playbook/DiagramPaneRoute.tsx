@@ -6,7 +6,7 @@ import { TelemetryEventTypes } from "../../telemetry/events";
 import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
 
-import { VisualPlayBuilderV2 } from "./diagram-v2/VisualPlayBuilderV2";
+import { VisualPlayBuilder } from "./diagram/VisualPlayBuilder";
 import { ROUTES } from "../../routes/paths";
 
 export const DiagramPaneRoute: React.FC = () => {
@@ -39,7 +39,7 @@ export const DiagramPaneRoute: React.FC = () => {
         role="dialog"
         aria-modal="true"
       >
-        <VisualPlayBuilderV2
+        <VisualPlayBuilder
           onDocumentChange={(doc) => {
             telemetry.enqueue({
               type: TelemetryEventTypes.PlayDiagramUpdated,

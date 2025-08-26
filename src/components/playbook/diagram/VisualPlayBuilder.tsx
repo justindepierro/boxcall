@@ -6,10 +6,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { CanvasPane } from "./components/CanvasPane";
 import { HelpOverlay } from "./components/HelpOverlay";
 import { Toolbar } from "./components/Toolbar";
-import { DiagramEditorProvider, useDiagramEditor } from "./context";
-import { svgFullToPngDataUrl } from "./thumbnail";
+import { DiagramEditorProvider, useDiagramEditor } from "./context/context";
+import { svgFullToPngDataUrl } from "./utils/thumbnail";
 
-import type { DiagramDocument } from "./types";
+import type { DiagramDocument } from "./types/types";
 
 interface ShellProps {
   onDocumentChange?: (doc: DiagramDocument) => void;
@@ -139,7 +139,7 @@ const Shell: React.FC<ShellProps> = ({
   );
 };
 
-export const VisualPlayBuilderV2: React.FC<{
+export const VisualPlayBuilder: React.FC<{
   onDocumentChange?: (doc: DiagramDocument) => void;
   onClose?: () => void;
   onRequestExport?: (exporter: () => Promise<string | null>) => void;
