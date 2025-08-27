@@ -1,3 +1,2 @@
-// Legacy useCalendar hook removed.
-// throw new Error("legacy/useCalendar imported. Replace with new hooks (useSearchEvents, useCalendarShellController, etc.)");
+// File removed in batch cleanup. Use new calendar hooks.
 export {};

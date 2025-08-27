@@ -1,17 +1,9 @@
-/**
- * Practice Block Editor
- *
- * Reusable component for editing individual practice blocks
- * Extracted from the massive PracticePlannerModal for better maintainability
- */
 import React, { useState } from "react";
-
-import { Typography } from "../../design-system/Typography";
-import { Button } from "../../ui/Button/Button";
-import Card from "../../ui/Card/Card";
-import { Icon } from "../../ui/Icon/Icon";
-
-import type { PracticeBlock } from "../../../types/practice";
+import Typography from "src/components/design-system/Typography";
+import Button from "src/components/ui/Button/Button";
+import Card from "src/components/ui/Card/Card";
+import Icon from "src/components/ui/Icon/Icon";
+import type { PracticeBlock } from "src/types/practice";
 
 interface PracticeBlockEditorProps {
   block: PracticeBlock;
@@ -19,13 +11,14 @@ interface PracticeBlockEditorProps {
   onCancel: () => void;
   onDelete?: (blockId: string) => void;
 }
+// ...existing code...
 
 const CATEGORY_OPTIONS = [
   {
     value: "offense",
     label: "Offense",
     color: "surface-subtle0",
-    icon: "football",
+    icon: "target", // fallback to help-circle if not in registry
   },
   {
     value: "defense",
@@ -39,7 +32,7 @@ const CATEGORY_OPTIONS = [
     color: "surface-subtle0",
     icon: "star",
   },
-  { value: "meeting", label: "Meeting", color: "bg-jade-600", icon: "chat" },
+  { value: "meeting", label: "Meeting", color: "bg-jade-600", icon: "message" },
   {
     value: "conditioning",
     label: "Conditioning",
@@ -58,7 +51,7 @@ const CATEGORY_OPTIONS = [
     color: "surface-subtle0",
     icon: "users",
   },
-  { value: "break", label: "Break", color: "bg-gray-400", icon: "coffee" },
+  { value: "break", label: "Break", color: "bg-gray-400", icon: "pause" },
 ] as const;
 
 const INTENSITY_OPTIONS = [
@@ -115,6 +108,8 @@ export const PracticeBlockEditor: React.FC<PracticeBlockEditorProps> = ({
       )
     );
   };
+
+  // ...existing code...
 
   const selectedCategory = CATEGORY_OPTIONS.find(
     (cat) => cat.value === editingBlock.category

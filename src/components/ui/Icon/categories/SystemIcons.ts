@@ -38,6 +38,7 @@ import {
   Lightbulb,
   Wifi,
   WifiOff,
+  HelpCircle,
   Bluetooth,
   Battery,
   BatteryLow,
@@ -69,7 +70,6 @@ import {
 
 import { registerIconCategory } from "../registry";
 
-// System icon names type
 export type SystemIconName =
   | "file"
   | "files"
@@ -130,7 +130,8 @@ export type SystemIconName =
   | "handshake"
   | "hash"
   | "binary"
-  | "percent";
+  | "percent"
+  | "help-circle";
 
 // System icons mapping
 const systemIcons = {
@@ -194,10 +195,11 @@ const systemIcons = {
   hash: Hash,
   binary: Binary,
   percent: Percent,
+  "help-circle": HelpCircle,
 };
 
 // Register system icons on module load
 registerIconCategory("system", systemIcons);
 
-// Deprecated legacy SystemIcons. Do not import.
+// SystemIcons: Do not import. Use new icon registry.
 export {};

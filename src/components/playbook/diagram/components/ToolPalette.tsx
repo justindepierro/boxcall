@@ -4,7 +4,7 @@ import { UserPreferencesService } from "../../../../services/userPreferencesServ
 import { Button } from "../../../ui/Button";
 import Icon from "../../../ui/Icon/Icon";
 import { Tooltip } from "../../../ui/Tooltip/Tooltip";
-import { useDiagramEditor } from "../context";
+import { useDiagramEditor } from "../context/context";
 
 export const ToolPalette: React.FC = () => {
   const { state, dispatch } = useDiagramEditor();
@@ -44,7 +44,7 @@ export const ToolPalette: React.FC = () => {
             label="Select"
             active={state.ui.tool === "select"}
             onClick={() => dispatch({ type: "SET_TOOL", tool: "select" })}
-            icon={<Icon name="pointer" size="lg" />}
+            icon={<Icon name="move" size="lg" />}
             tooltip={
               <span>
                 Select
@@ -80,7 +80,7 @@ export const ToolPalette: React.FC = () => {
             label="Route"
             active={state.ui.tool === "route"}
             onClick={() => dispatch({ type: "SET_TOOL", tool: "route" })}
-            icon={<Icon name="map" size="lg" />}
+            icon={<Icon name="map-pin" size="lg" />}
             tooltip={
               <span>
                 Route

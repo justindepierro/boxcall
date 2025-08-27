@@ -1,85 +1,52 @@
-/**
- * Icon Component - Unified, Professional, Future-Proof
- *
- * This file should remain under 1000 lines. Refactor as needed to maintain clarity and maintainability.
- */
 import React from "react";
 import { getIconComponent } from "./registry";
-import { sizeMap } from "./types";
-import type { IconProps } from "./types";
 
-/**
- * Icon - Main entry point for all icons in the system
- * Handles accessibility, fallback, and traceability
- */
-export const Icon: React.FC<IconProps> = (props) => {
-  const {
-    name,
-    size = "md",
-    color = "current",
-    className = "",
-    strokeWidth = 2,
-    tabIndex,
-    ...rest
-  } = props;
-  // Prop validation and fallback
-  const safeName = typeof name === "string" && name ? name : "help-circle";
-  const safeSize =
-    typeof size === "number" ? size : sizeMap[size] || sizeMap.md;
-  const IconComponent = getIconComponent(safeName);
-  const FallbackIconComponent = getIconComponent("help-circle");
-  // Use restProps for all property access
-  const restProps = rest as Record<string, unknown>;
-  // Use custom aria-label if provided, otherwise default
-  const customAriaLabel =
-    typeof restProps["aria-label"] === "string"
-      ? (restProps["aria-label"] as string)
-      : undefined;
-  const isDecorative =
-    restProps["aria-hidden"] === "true" || restProps["aria-hidden"] === true;
-  // Only spread role and aria-label if not decorative
-  const spanProps: React.HTMLAttributes<HTMLSpanElement> = {
-    className: `icon-root ${className}`.trim(),
-    style: {
-      display: "inline-flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    tabIndex,
-    ...rest,
-  };
-  if (!isDecorative) {
-    spanProps.role = "img";
-    spanProps["aria-label"] = customAriaLabel || safeName;
-  } else {
-    // Remove aria-label if decorative
-    delete spanProps["aria-label"];
-  }
+type IconSize = number | "xs" | "sm" | "md" | "lg" | "xl";
+
+type IconProps = {
+  name: string;
+  size?: IconSize;
+  color?: string;
+  className?: string;
+};
+
+const sizeMap: Record<Exclude<IconSize, number>, number> = {
+  xs: 12,
+  sm: 16,
+  md: 20,
+  lg: 24,
+  xl: 32,
+};
+
+const Icon: React.FC<IconProps> = ({
+  name,
+  size = "md",
+  color = "currentColor",
+  className = "",
+}) => {
+  const IconComponent = getIconComponent(name);
+  if (!IconComponent) return null;
+  const pixelSize =
+    typeof size === "number" ? size : sizeMap[size] || sizeMap["md"];
   return (
-    <span {...spanProps}>
-      {IconComponent ? (
-        <IconComponent
-          width={safeSize}
-          height={safeSize}
-          color={color}
-          strokeWidth={strokeWidth}
-          aria-hidden="true"
-        />
-      ) : FallbackIconComponent ? (
-        <FallbackIconComponent
-          width={safeSize}
-          height={safeSize}
-          color={color}
-          strokeWidth={strokeWidth}
-          aria-hidden="true"
-        />
-      ) : (
-        <span style={{ fontSize: safeSize }} aria-hidden="true">
-          ?
-        </span>
-      )}
+    <span
+      className={className}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: pixelSize,
+        height: pixelSize,
+        minWidth: pixelSize,
+        minHeight: pixelSize,
+        maxWidth: pixelSize,
+        maxHeight: pixelSize,
+      }}
+    >
+      <IconComponent width={pixelSize} height={pixelSize} color={color} />
     </span>
   );
 };
 
 export default Icon;
+export { Icon };

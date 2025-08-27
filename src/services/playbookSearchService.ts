@@ -50,7 +50,7 @@ export class PlaybookSearchService {
         play.notes?.toLowerCase().includes("red zone") ||
         play.play_name.toLowerCase().includes("goal"),
       color: "red",
-      icon: "🎯",
+      icon: "target",
     },
     {
       id: "goal-line",
@@ -64,7 +64,7 @@ export class PlaybookSearchService {
         play.notes?.toLowerCase().includes("goal line") ||
         play.pref_dis === "1-2",
       color: "green",
-      icon: "🏈",
+      icon: "football", // If not in registry, fallback to "help-circle"
     },
     {
       id: "two-minute",
@@ -78,7 +78,7 @@ export class PlaybookSearchService {
         (play.notes?.toLowerCase().includes("hurry") ?? false) ||
         (play.notes?.toLowerCase().includes("2-minute") ?? false),
       color: "orange",
-      icon: "⏱️",
+      icon: "clock",
     },
     {
       id: "third-down",
@@ -92,7 +92,7 @@ export class PlaybookSearchService {
         play.p_tag2?.toLowerCase().includes("third-down") ||
         (play.notes?.toLowerCase().includes("3rd") ?? false),
       color: "blue",
-      icon: "🔄",
+      icon: "refresh",
     },
     {
       id: "high-success",
@@ -108,7 +108,7 @@ export class PlaybookSearchService {
         return play.confidence_base > 85;
       },
       color: "green",
-      icon: "⭐",
+      icon: "star",
     },
     {
       id: "play-action",
@@ -116,7 +116,7 @@ export class PlaybookSearchService {
       description: "Play action passing plays",
       filter: (play) => play.p_type === "Play Action",
       color: "purple",
-      icon: "🎭",
+      icon: "users", // If not in registry, fallback to "help-circle"
     },
   ];
 

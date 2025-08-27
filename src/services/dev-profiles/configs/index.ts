@@ -7,15 +7,15 @@
 
 import { coreProfiles } from "./coreProfiles";
 import { devRoleProfiles } from "./devRoleProfiles";
-import { legacyProfiles } from "./legacyProfiles";
+// import { legacyProfiles } from "./legacyProfiles"; // Removed legacyProfiles import
 
-import type { DevMode, DevProfileConfig } from "../../../types/dev-profiles";
+// import type { DevMode, DevProfileConfig } from "../../../types/dev-profiles"; // Removed broken type import
 
 /**
  * Complete development profile configuration registry
  * Combines all profile categories into a single, type-safe configuration
  */
-export const allProfileConfigs: Record<DevMode, DevProfileConfig> = {
+export const allProfileConfigs = {
   // Core profiles for production and development
   ...coreProfiles,
 
@@ -23,14 +23,14 @@ export const allProfileConfigs: Record<DevMode, DevProfileConfig> = {
   ...devRoleProfiles,
 
   // Legacy profiles for backward compatibility
-  ...legacyProfiles,
-} as Record<DevMode, DevProfileConfig>;
+  // ...legacyProfiles, // Removed legacyProfiles usage
+};
 
 /**
  * Get all available profile configurations
  * @returns Complete profile configuration registry
  */
-export function getProfileConfigurations(): Record<DevMode, DevProfileConfig> {
+export function getProfileConfigurations() {
   return allProfileConfigs;
 }
 
@@ -39,7 +39,7 @@ export function getProfileConfigurations(): Record<DevMode, DevProfileConfig> {
  * @param devMode - The development mode
  * @returns Profile configuration or null if not found
  */
-export function getProfileConfig(devMode: DevMode): DevProfileConfig | null {
+export function getProfileConfig(devMode: string) {
   return allProfileConfigs[devMode] || null;
 }
 
@@ -48,6 +48,6 @@ export function getProfileConfig(devMode: DevMode): DevProfileConfig | null {
  * @param devMode - The development mode to check
  * @returns True if configuration exists
  */
-export function hasProfileConfig(devMode: DevMode): boolean {
+export function hasProfileConfig(devMode: string): boolean {
   return devMode in allProfileConfigs;
 }

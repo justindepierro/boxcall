@@ -233,15 +233,15 @@ export class AchievementService {
   private static getStickerIcon(stickerType: string | null): string {
     switch (stickerType) {
       case "star":
-        return "⭐";
+        return "star";
       case "flame":
-        return "[Fire/Hot streak]";
+        return "zap";
       case "lightning":
-        return "[Lightning/Power]";
+        return "zap";
       case "crown":
-        return "[Crown/Leadership]";
+        return "crown";
       case "diamond":
-        return "[Diamond/Premium]";
+        return "award";
       default:
         return "award";
     }
@@ -334,7 +334,7 @@ export class AchievementService {
             {
               id: "dev-leadership-1",
               name: "Leadership Excellence",
-              icon: "⭐",
+              icon: "star",
               awardedBy: "dev-system",
               awardedByName: "Development System",
               date: new Date(
@@ -346,7 +346,7 @@ export class AchievementService {
             {
               id: "dev-coaching-1",
               name: "Outstanding Coaching",
-              icon: "[Trophy/Achievement]",
+              icon: "trophy",
               awardedBy: "dev-system",
               awardedByName: "Development System",
               date: new Date(
@@ -361,7 +361,7 @@ export class AchievementService {
               id: "dev-season-excellence",
               name: "Season Excellence",
               description: "Led team to outstanding season performance",
-              icon: "[Gold Medal]",
+              icon: "medal",
               earned: true,
               earnedDate: new Date(
                 Date.now() - 30 * 24 * 60 * 60 * 1000
@@ -378,7 +378,7 @@ export class AchievementService {
             {
               id: "dev-defensive-1",
               name: "Defensive Coordinator",
-              icon: "[Shield/Defense]",
+              icon: "shield",
               awardedBy: "dev-system",
               awardedByName: "Development System",
               date: new Date(
@@ -393,7 +393,7 @@ export class AchievementService {
               id: "dev-player-development",
               name: "Player Development",
               description: "Exceptional player mentoring and development",
-              icon: "[Medal]",
+              icon: "medal",
               earned: true,
               earnedDate: new Date(
                 Date.now() - 21 * 24 * 60 * 60 * 1000
@@ -411,7 +411,7 @@ export class AchievementService {
             {
               id: "dev-touchdown-1",
               name: "Touchdown Pass",
-              icon: "[Football]",
+              icon: "football", // fallback to help-circle if not in registry
               awardedBy: "dev-coach",
               awardedByName: "Coach Martinez",
               date: new Date(
@@ -423,7 +423,7 @@ export class AchievementService {
             {
               id: "dev-leadership-player",
               name: "Team Captain",
-              icon: "⭐",
+              icon: "star",
               awardedBy: "dev-coach",
               awardedByName: "Coach Martinez",
               date: new Date(
@@ -438,7 +438,7 @@ export class AchievementService {
               id: "dev-player-of-week",
               name: "Player of the Week",
               description: "Outstanding performance in last game",
-              icon: "[Trophy/Achievement]",
+              icon: "trophy",
               earned: true,
               earnedDate: new Date(
                 Date.now() - 7 * 24 * 60 * 60 * 1000
@@ -456,7 +456,7 @@ export class AchievementService {
             {
               id: "dev-admin-excellence",
               name: "Platform Excellence",
-              icon: "[Crown/Leadership]",
+              icon: "crown",
               awardedBy: "dev-system",
               awardedByName: "BoxCall System",
               date: new Date(
@@ -471,7 +471,7 @@ export class AchievementService {
               id: "dev-system-admin",
               name: "System Administrator",
               description: "Excellence in platform management",
-              icon: "[Target]",
+              icon: "target",
               earned: true,
               earnedDate: new Date(
                 Date.now() - 14 * 24 * 60 * 60 * 1000

@@ -13,10 +13,9 @@ let supabaseClient: ReturnType<typeof createClient> | null = null;
 
 function getClient() {
   if (supabaseClient) return supabaseClient;
-  const meta: unknown = import.meta as unknown;
-  const env = (meta as { env?: Record<string, string | undefined> }).env || {};
-  const url = env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
-  const key = env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+  const env = import.meta.env || {};
+  const url = env.VITE_SUPABASE_URL;
+  const key = env.VITE_SUPABASE_ANON_KEY;
   if (!url || !key) return null; // fail open (no persistence)
   supabaseClient = createClient(url, key, { auth: { persistSession: true } });
   return supabaseClient;

@@ -28,6 +28,7 @@ import {
 import { DevTools } from "../dev";
 import { SidebarLogo } from "../ui/Logo";
 import { Sidebar } from "../ui/Sidebar";
+import { Button } from "../ui/Button";
 
 import { Footer } from "./Footer";
 
@@ -108,23 +109,18 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               </div>
             </div>
           }
-          footer={
-            <div className="text-xs text-center text-text-secondary">
-              <p>BoxCall v0.1.5</p>
-              <p>Football Management</p>
-              {isDevMode && (
-                <p className="text-amber-600 dark:text-amber-400 font-medium mt-1">
-                  Dev Mode:{" "}
-                  {devMode
-                    .replace(/_/g, " ")
-                    .replace(/\b\w/g, (l) => l.toUpperCase())}
-                </p>
-              )}
-            </div>
-          }
           width="md"
           position="left"
         />
+        {/* Sidebar Toggle Button - Always visible for guaranteed access */}
+        <Button
+          variant="primary"
+          className="fixed top-4 left-4 z-50 rounded-full shadow-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-jade-400"
+          onClick={() => toggleSidebar()}
+          aria-label="Open sidebar"
+        >
+          ☰
+        </Button>
         {/* Main content - mobile-first layout */}
         <main className="flex-1 min-h-screen">
           <div className="flex flex-col min-h-screen">

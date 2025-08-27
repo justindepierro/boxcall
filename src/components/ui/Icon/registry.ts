@@ -6,22 +6,47 @@
  */
 
 import type { LucideIcon } from "lucide-react";
+import {
+  Square,
+  Type,
+  ArrowRight,
+  Pointer,
+  Undo,
+  RefreshCw,
+  Grid,
+  HelpCircle,
+  PenLine,
+} from "lucide-react";
 
-// Icon registry - populated by category imports
-const iconRegistry = new Map<string, LucideIcon>();
+// Statically register all core UI icons (Toolbar, etc.)
+const iconRegistry = new Map<string, LucideIcon>([
+  ["square", Square],
+  ["type", Type],
+  ["arrow-right", ArrowRight],
+  ["pointer", Pointer],
+  ["undo", Undo],
+  ["refresh-cw", RefreshCw],
+  ["grid", Grid],
+  ["help-circle", HelpCircle],
+  ["pen-line", PenLine],
+]);
 
 // Category loading status
 const categoryStatus = new Map<string, boolean>();
 
 /**
  * Register an icon from a category
+ * (For dynamic/feature icons only)
  */
 export function registerIcon(name: string, component: LucideIcon): void {
-  iconRegistry.set(name, component);
+  if (!iconRegistry.has(name)) {
+    iconRegistry.set(name, component);
+  }
 }
 
 /**
  * Register multiple icons from a category
+ * (For dynamic/feature icons only)
  */
 export function registerIconCategory(
   categoryName: string,

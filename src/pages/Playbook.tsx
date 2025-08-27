@@ -1,7 +1,6 @@
 import React from "react";
 
 import { PlaybookPage } from "./PlaybookPage";
-import { Layout } from "../components/layout/Layout";
 /**
  * Playbook - Team plays and strategy management
  * Available to all team members with role-based permissions
@@ -15,9 +14,5 @@ import { Layout } from "../components/layout/Layout";
  * - Integration scaffold for future Play Diagram Editor
  */
 
-export const Playbook: React.FC = () => (
-  <Layout>
-    <PlaybookPage />
-  </Layout>
-);
+export const Playbook: React.FC = () => <PlaybookPage />;
 export default Playbook;

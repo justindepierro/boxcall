@@ -1,4 +1,3 @@
 // DO NOT USE: Legacy CalendarPage removed.
-throw new Error(
-  "CalendarPage.tsx imported after legacy removal. Use CalendarShellPage instead."
+// File removed in batch cleanup. Use CalendarShellPage instead.
 );

@@ -38,6 +38,7 @@ export type LucideIconProps = LucideProps;
  */
 export type IconName =
   | "activity"
+  | "hash"
   | "alert"
   | "alert-circle"
   | "alert-octagon"
@@ -117,6 +118,7 @@ export type IconName =
   | "trophy"
   | "type"
   | "undo"
+  | "pen-line"
   | "unlock"
   | "upload"
   | "user"

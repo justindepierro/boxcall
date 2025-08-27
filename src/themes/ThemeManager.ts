@@ -1,4 +1,20 @@
-import { getTheme } from "./registry";
+// Dynamic theme loader for lazy-loading theme definitions
+async function loadTheme(name: ThemeName): Promise<import('./types').ThemeDefinition | undefined> {
+  switch (name) {
+    case "light":
+      return (await import("./light")).default;
+    case "dark":
+      return (await import("./dark")).default;
+    case "high-contrast":
+      return (await import("./highContrast")).default;
+    // For cupertino themes, fallback to static registry for now
+    default: {
+      // Static fallback for cupertino themes
+      const { getTheme } = await import("./registry");
+      return getTheme(name);
+    }
+  }
+}
 
 const THEME_STORAGE_KEY = "app-theme";
 // Explicit theme id union (keep in sync with registry contents)
@@ -18,20 +34,16 @@ export function getStoredTheme(): ThemeName | null {
   return (THEME_IDS as readonly string[]).includes(v) ? (v as ThemeName) : null;
 }
 
-export function applyTheme(name: ThemeName) {
-  const theme = getTheme(name);
+export async function applyTheme(name: ThemeName) {
+  const theme = await loadTheme(name);
   if (!theme) return;
   const root = document.documentElement;
-  // Data attribute for CSS variable scoping
   root.setAttribute("data-theme", name);
-  // Legacy Tailwind dark variant support (many classes still rely on .dark)
-  // We treat both dark + high-contrast as dark base until full variable migration.
   if (name === "dark" || name === "high-contrast") {
     root.classList.add("dark");
   } else {
     root.classList.remove("dark");
   }
-  // Optional high-contrast class for future specific overrides
   root.classList.remove("high-contrast");
   if (name === "high-contrast") root.classList.add("high-contrast");
   try {
@@ -41,18 +53,17 @@ export function applyTheme(name: ThemeName) {
   }
 }
 
-export function initTheme(fallback: ThemeName = DEFAULT_THEME) {
+export async function initTheme(fallback: ThemeName = DEFAULT_THEME) {
   const stored = getStoredTheme();
-  applyTheme(stored ?? fallback);
+  await applyTheme(stored ?? fallback);
 }
 
 // Optional immediate hydration (call at app entry before React mounts)
 if (typeof document !== "undefined") {
-  // Defer to next microtask to allow other early scripts to run
-  queueMicrotask(() => {
+  queueMicrotask(async () => {
     if (!document.documentElement.getAttribute("data-theme")) {
       const stored = getStoredTheme();
-      applyTheme((stored as ThemeName) ?? DEFAULT_THEME);
+      await applyTheme((stored as ThemeName) ?? DEFAULT_THEME);
     }
   });
 }

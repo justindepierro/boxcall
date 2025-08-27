@@ -110,7 +110,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
     label: string;
     icon: string;
   }> = [
-    { value: "offense", label: "Offense", icon: "trending-up" },
+    { value: "offense", label: "Offense", icon: "target" },
     { value: "defense", label: "Defense", icon: "shield" },
     { value: "special-teams", label: "Special Teams", icon: "zap" },
     { value: "meeting", label: "Meeting", icon: "file" },

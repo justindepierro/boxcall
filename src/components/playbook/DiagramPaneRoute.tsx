@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, Suspense, lazy } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 import { telemetry } from "../../telemetry/dispatcher";
@@ -6,7 +6,11 @@ import { TelemetryEventTypes } from "../../telemetry/events";
 import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
 
-import { VisualPlayBuilder } from "./diagram/VisualPlayBuilder";
+const LazyVisualPlayBuilder = lazy(() =>
+  import("./diagram/VisualPlayBuilder").then((m) => ({
+    default: m.VisualPlayBuilder,
+  }))
+);
 import { ROUTES } from "../../routes/paths";
 
 export const DiagramPaneRoute: React.FC = () => {
@@ -39,14 +43,22 @@ export const DiagramPaneRoute: React.FC = () => {
         role="dialog"
         aria-modal="true"
       >
-        <VisualPlayBuilder
-          onDocumentChange={(doc) => {
-            telemetry.enqueue({
-              type: TelemetryEventTypes.PlayDiagramUpdated,
-              data: { playId: playId || "free", routes: doc.routes.length },
-            });
-          }}
-        />
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center h-full">
+              <span>Loading diagram...</span>
+            </div>
+          }
+        >
+          <LazyVisualPlayBuilder
+            onDocumentChange={(doc) => {
+              telemetry.enqueue({
+                type: TelemetryEventTypes.PlayDiagramUpdated,
+                data: { playId: playId || "free", routes: doc.routes.length },
+              });
+            }}
+          />
+        </Suspense>
         <Button
           variant="ghost"
           size="xs"

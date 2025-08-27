@@ -1,4 +1,5 @@
 import React from "react";
+import LucideTest from "../ui/Icon/LucideTest";
 
 import { useAuth } from "../../app/auth-store";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
@@ -8,10 +9,7 @@ import { PersonalTrophyShelf } from "../dashboard/PersonalTrophyShelf";
 import { ProfileCard } from "../dashboard/ProfileCard";
 import { TeamFeeds } from "../dashboard/TeamFeeds";
 import { Typography } from "../design-system";
-import { ToastDemo } from "../dev/ToastDemo";
 import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
-import { ActivationChecklist } from "../onboarding/ActivationChecklist";
-import { TeamOnboarding } from "../onboarding/TeamOnboarding";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 
 /**
@@ -74,11 +72,9 @@ export const ResponsiveDashboardLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen surface-app">
-      {/* 
-        ============================================================================
-        WELCOME HEADER - Responsive across all breakpoints
-        ============================================================================ 
-      */}
+      {/* Lucide direct icon test - REMOVE after audit */}
+      <LucideTest />
+      {/* WELCOME HEADER - Responsive across all breakpoints */}
       <div className="responsive-welcome-header bg-gradient-to-r from-surface-jade to-surface-jade dark:from-surface-jade-dark dark:to-surface-jade-dark border-b border-surface-jade-dark dark:border-brand-jade-dark">
         <div className="max-w-7xl mx-auto bc-container-padding py-3 text-left">
           <Typography
@@ -97,35 +93,9 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         </div>
       </div>
 
-      {/* 
-        ============================================================================
-        RESPONSIVE LAYOUT CONTAINER
-        Mobile: Clean stack layout (no view switching!)
-        Tablet: 2-column grid  
-        Desktop: 3-column grid
-        ============================================================================ 
-      */}
+      {/* RESPONSIVE LAYOUT CONTAINER */}
       <div className="responsive-dashboard-container">
-        {/* Team Onboarding - Shows for users without teams */}
-        <div className="max-w-7xl mx-auto bc-container-padding">
-          <TeamOnboarding context="dashboard" />
-          <ActivationChecklist />
-        </div>
-
-        {/* 
-          ============================================================================
-          MAIN CONTENT GRID - Clean Responsive Design
-          Mobile: Single column stack - ALL sections visible
-          Tablet: 2x2 grid layout
-          Desktop: 3-column layout
-          ============================================================================ 
-        */}
         <div className="responsive-content-grid">
-          {/* Toast Demo - Temporary to show new system working */}
-          <div className="col-span-full">
-            <ToastDemo />
-          </div>
-
           {/* Profile Card */}
           <div className="profile-section">
             {isStepVisible(0) ? (
@@ -170,11 +140,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         </div>
       </div>
 
-      {/* 
-        ============================================================================
-        MOBILE BOTTOM NAVIGATION - Clean, single navigation system
-        ============================================================================ 
-      */}
+      {/* MOBILE BOTTOM NAVIGATION */}
       <div className="mobile-bottom-nav lg:hidden">
         <MobileBottomNavigation items={items} />
       </div>

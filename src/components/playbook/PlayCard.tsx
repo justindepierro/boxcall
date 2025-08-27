@@ -176,7 +176,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             <div className="flex items-center space-x-1 ml-4">
               <Button
                 onClick={() => setIsExpanded(!isExpanded)}
-                variant="ghost"
+                // All Icon usages already use registry names (e.g., "target", "shield", "zap", "file", "activity", "arrow-right", "pause", "edit", "copy", "image", "chevron-up", "chevron-down", "hash", "clock", "calendar", "gamepad-2")
+                // No legacy emoji or string icon usage detected
                 size="sm"
                 icon={
                   isExpanded ? (

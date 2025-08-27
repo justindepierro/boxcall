@@ -133,22 +133,25 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
             mod
           );
           if (mod && typeof mod === "object") {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const modAny = mod as any;
+            // Use unknown and type guard instead of 'any'
+            const modObj = mod as Record<string, unknown>;
             console.log(
               `[ModularIcon] Checking for named export '${pascalName}' in module:`,
-              Object.keys(modAny)
+              Object.keys(modObj)
             );
             if (
-              modAny[pascalName] &&
-              typeof modAny[pascalName] === "function"
+              pascalName in modObj &&
+              typeof modObj[pascalName] === "function"
             ) {
-              Comp = modAny[pascalName] as LucideComponent;
+              Comp = modObj[pascalName] as LucideComponent;
               console.log(
                 `[ModularIcon] Found named export '${pascalName}' for '${name}'.`
               );
-            } else if (modAny.default && typeof modAny.default === "function") {
-              Comp = modAny.default as LucideComponent;
+            } else if (
+              "default" in modObj &&
+              typeof modObj["default"] === "function"
+            ) {
+              Comp = modObj["default"] as LucideComponent;
               console.log(`[ModularIcon] Using default export for '${name}'.`);
             } else {
               console.warn(

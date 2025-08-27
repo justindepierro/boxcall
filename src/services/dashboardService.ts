@@ -106,7 +106,7 @@ export class DashboardService {
       }
 
       return userTeams;
-    } catch (error) {
+    } catch (_error) {
       // TODO: Handle error in getUserTeams (was: console.error)
       return [];
     }

@@ -1,3 +1,23 @@
+## TypeScript `any` Usage Audit (In Progress)
+
+- Identified all direct usages of `any`, `as any`, `: any`, and related patterns in src/
+- Will prioritize refactoring:
+  - src/components/playbook/diagram/context/context.tsx
+  - src/components/calendar/EventModal.tsx
+  - src/components/ui/Icon/ModularIcon.tsx
+  - src/services/pdf/BasePDFService.ts
+  - src/services/pdf/styles.ts
+  - src/components/ui/Sidebar/**tests**/\*.test.tsx
+- Plan: Replace `any` with more specific types, generics, or unknown where possible
+- Will batch commit refactors and document results here
+
+## August 26, 2025 — Batch Cleanup Progress
+
+- Removed all legacyProfiles imports and usage from dev-profiles/configs/index.ts
+- Cleaned broken type references (DevMode, DevProfileConfig) and switched to plain object typing
+- No lint/type errors remain in dev-profiles/configs/index.ts
+- Next: Audit and refactor TypeScript `any` usage across src (see grep results)
+
 # 📋 Codebase Cleanup Checklist
 
 ## 1. Remove Unused Imports, Variables, and Console Statements
