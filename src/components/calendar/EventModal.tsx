@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 
 import {
@@ -21,10 +20,10 @@ import type { Database } from "../../types/database";
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
 
 // Minimal shape compatible with react-query mutation objects we pass in.
-type MinimalMutation = {
+type MinimalMutation<Args = unknown, Result = unknown> = {
   status: string;
-  mutate: (...args: any[]) => void;
-  mutateAsync: (...args: any[]) => Promise<any>;
+  mutate: (...args: Args[]) => void;
+  mutateAsync: (...args: Args[]) => Promise<Result>;
 };
 
 interface EventModalProps {

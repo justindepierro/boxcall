@@ -5,10 +5,14 @@ import { Toolbar } from "../../components/playbook/diagram-v2/FieldCanvas/Toolba
 
 // Main Playbook feature page
 import { useState } from "react";
+import { eventBus } from "../../lib/eventBus";
 
 const PlaybookPage: React.FC = () => {
   const [activeTool, setActiveTool] = useState("select");
-  const handleToolSelect = (tool: string) => setActiveTool(tool);
+  const handleToolSelect = (tool: string) => {
+    setActiveTool(tool);
+    eventBus.publish({ type: "playbook:toolSelected", payload: { tool } });
+  };
   return (
     <FieldCanvasProvider>
       <div

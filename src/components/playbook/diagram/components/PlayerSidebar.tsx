@@ -3,7 +3,7 @@ import React from "react";
 import { telemetry } from "../../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../../telemetry/events";
 import { Button } from "../../../ui/Button";
-import { useDiagramEditor } from "../context/context";
+import { useDiagramEditor } from "../context/useDiagramEditor";
 
 import type { DiagramPlayer, DiagramDocument } from "../types/types";
 
@@ -12,19 +12,23 @@ export const PlayerSidebar: React.FC = () => {
   const { state, dispatch } = useDiagramEditor();
   const complexity = React.useMemo(() => {
     const doc = state.doc as DiagramDocument & { complexity_score?: number };
-    return doc.complexity_score ?? doc.routes.length + doc.players.length;
+    const routesLength = Array.isArray(doc.routes) ? doc.routes.length : 0;
+    const playersLength = Array.isArray(doc.players) ? doc.players.length : 0;
+    return doc.complexity_score ?? routesLength + playersLength;
   }, [state.doc]);
   if (!state.doc) return null;
+  const playersLength = Array.isArray(state.doc.players)
+    ? state.doc.players.length
+    : 0;
+  const routesLength = Array.isArray(state.doc.routes)
+    ? state.doc.routes.length
+    : 0;
   return (
     <div data-testid="player-sidebar-root">
       <div className="text-xs text-slate-500">Complexity: {complexity}</div>
-      <div className="text-xs text-slate-500">
-        Players: {state.doc.players.length}
-      </div>
-      <div className="text-xs text-slate-500">
-        Routes: {state.doc.routes.length}
-      </div>
-      {state.doc.players.length > 0 && (
+      <div className="text-xs text-slate-500">Players: {playersLength}</div>
+      <div className="text-xs text-slate-500">Routes: {routesLength}</div>
+      {playersLength > 0 && (
         <div>
           <div className="text-[11px] font-semibold text-slate-600 mt-3 mb-1 flex items-center justify-between">
             <span>PLAYERS</span>

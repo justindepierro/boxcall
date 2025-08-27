@@ -7,8 +7,7 @@
 // Lightweight StyleSheet shim to avoid importing `@react-pdf/renderer` until PDF generation is used.
 // React-PDF accepts plain style objects; `StyleSheet.create` is not required at runtime for correctness.
 type StyleSheetLike = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  create: <T extends Record<string, any>>(obj: T) => T;
+  create: <T extends Record<string, unknown>>(obj: T) => T;
 };
 const StyleSheet: StyleSheetLike = {
   create: (obj) => obj,

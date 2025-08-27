@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "../../../ui/Button";
-import { useDiagramEditor } from "../context/context";
+import { useDiagramEditor } from "../context/useDiagramEditor";
 
 export const ActionBar: React.FC<{
   svgRef: React.MutableRefObject<SVGSVGElement | null>;

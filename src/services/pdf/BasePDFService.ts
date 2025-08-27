@@ -8,6 +8,8 @@ import { PDFColors, PDFFonts } from "./styles";
 import { PDFError } from "./types";
 
 import type { PDFExportOptions, PDFTemplate, PDFBranding } from "./types";
+import type { DocumentProps } from "@react-pdf/renderer";
+import type { PDFDocumentElement } from "./types/pdf-types";
 
 export abstract class BasePDFService {
   protected template: PDFTemplate;
@@ -19,11 +21,11 @@ export abstract class BasePDFService {
   /**
    * Generate PDF blob from document
    */
-  protected async generateBlob(document: React.ReactElement): Promise<Blob> {
+  protected async generateBlob(document: PDFDocumentElement): Promise<Blob> {
     try {
       const { pdf } = await import("@react-pdf/renderer");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const instance = pdf(document as any);
+      // Cast to React.ReactElement<DocumentProps> for @react-pdf/renderer API
+      const instance = pdf(document as React.ReactElement<DocumentProps>);
       return await instance.toBlob();
     } catch (error) {
       throw new PDFError(
@@ -206,16 +208,17 @@ export abstract class BasePDFService {
  * Creates appropriate PDF service based on document type
  */
 export class PDFServiceFactory {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private static services: Map<string, new (...args: any[]) => BasePDFService> =
-    new Map();
+  // Use unknown[] for constructor args to avoid 'any'
+  private static services: Map<
+    string,
+    new (...args: unknown[]) => BasePDFService
+  > = new Map();
   /**
    * Register a PDF service for a specific document type
    */
   static registerService(
     documentType: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    serviceClass: new (...args: any[]) => BasePDFService
+    serviceClass: new (...args: unknown[]) => BasePDFService
   ): void {
     this.services.set(documentType, serviceClass);
   }

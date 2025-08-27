@@ -6,7 +6,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { CanvasPane } from "./components/CanvasPane";
 import { HelpOverlay } from "./components/HelpOverlay";
 import { Toolbar } from "./components/Toolbar";
-import { DiagramEditorProvider, useDiagramEditor } from "./context/context";
+import { DiagramEditorProvider } from "./context/DiagramEditorProvider";
+import { useDiagramEditor } from "./context/useDiagramEditor";
 import { svgFullToPngDataUrl } from "./utils/thumbnail";
 
 import type { DiagramDocument } from "./types/types";
@@ -109,7 +110,10 @@ const Shell: React.FC<ShellProps> = ({
   }, [onRequestExport]);
 
   return (
-    <div className="flex flex-col h-full min-h-[620px]">
+    <div
+      data-testid="diagram-root"
+      className="flex flex-col h-full min-h-[620px]"
+    >
       <Toolbar onClose={onClose} svgRef={svgRef} />
       <div className="flex flex-1 min-h-0 mt-2" style={{ width: "100%" }}>
         {/* Sidebar hidden */}

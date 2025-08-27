@@ -105,6 +105,8 @@ export default defineConfig({
   build: {
     // Emit manifest for bundle analysis tools
     manifest: true,
+    // Emit assets for SSR
+    ssrEmitAssets: true,
     // CSS minifier: default esbuild for Tailwind arbitrary selectors; allow opt-in lightningcss trials
     cssMinify: useLightningCss ? "lightningcss" : "esbuild",
     // Target modern browsers for smaller bundles; adjust if legacy browser support is required

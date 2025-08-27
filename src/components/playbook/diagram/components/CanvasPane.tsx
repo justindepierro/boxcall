@@ -20,7 +20,7 @@ export const CanvasPane: React.FC<{
   className?: string;
 }> = ({ svgRef, className }) => {
   return (
-    <div className={className}>
+    <div data-testid="canvas-pane-root" className={className}>
       {" "}
       {/* .flex-1 min-w-0 flex flex-col p-3 passes through */}
       <div className="relative flex-1 min-h-0 rounded-md bg-emerald-800/60">

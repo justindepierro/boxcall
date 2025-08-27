@@ -1,35 +1,129 @@
 import React from "react";
 import { getIconComponent } from "./registry";
+import type { IconProps } from "./types";
+import { sizeMap } from "./types";
 
-type IconSize = number | "xs" | "sm" | "md" | "lg" | "xl";
-
-type IconProps = {
-  name: string;
-  size?: IconSize;
-  color?: string;
-  className?: string;
-};
-
-const sizeMap: Record<Exclude<IconSize, number>, number> = {
-  xs: 12,
-  sm: 16,
-  md: 20,
-  lg: 24,
-  xl: 32,
-};
+const FALLBACK_ICON = getIconComponent("help-circle");
 
 const Icon: React.FC<IconProps> = ({
   name,
   size = "md",
   color = "currentColor",
   className = "",
+  strokeWidth,
+  tabIndex,
+  "aria-label": ariaLabel,
+  "aria-hidden": ariaHidden,
 }) => {
+  // Defensive: handle missing name
+  if (!name) {
+    return (
+      <span role="img" aria-label="icon" className={className}>
+        {FALLBACK_ICON ? (
+          <FALLBACK_ICON width={sizeMap.md} height={sizeMap.md} color={color} />
+        ) : (
+          "?"
+        )}
+      </span>
+    );
+  }
+
   const IconComponent = getIconComponent(name);
-  if (!IconComponent) return null;
   const pixelSize =
-    typeof size === "number" ? size : sizeMap[size] || sizeMap["md"];
+    typeof size === "number"
+      ? size
+      : sizeMap[size as keyof typeof sizeMap] || sizeMap.md;
+  const label = ariaLabel || name;
+  const isHidden = !!ariaHidden;
+
+  // Fallback if icon missing
+  if (!IconComponent) {
+    if (isHidden) {
+      return (
+        <span
+          aria-hidden="true"
+          className={className}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: pixelSize,
+            height: pixelSize,
+          }}
+          tabIndex={tabIndex}
+        >
+          {FALLBACK_ICON ? (
+            <FALLBACK_ICON
+              width={pixelSize}
+              height={pixelSize}
+              color={color}
+              aria-hidden="true"
+              strokeWidth={strokeWidth}
+            />
+          ) : (
+            "?"
+          )}
+        </span>
+      );
+    }
+    return (
+      <span
+        role="img"
+        aria-label={label}
+        className={className}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: pixelSize,
+          height: pixelSize,
+        }}
+        tabIndex={tabIndex}
+      >
+        {FALLBACK_ICON ? (
+          <FALLBACK_ICON
+            width={pixelSize}
+            height={pixelSize}
+            color={color}
+            aria-hidden="true"
+            strokeWidth={strokeWidth}
+          />
+        ) : (
+          "?"
+        )}
+      </span>
+    );
+  }
+
+  // Main icon
+  if (isHidden) {
+    return (
+      <span
+        aria-hidden="true"
+        className={className}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: pixelSize,
+          height: pixelSize,
+        }}
+        tabIndex={tabIndex}
+      >
+        <IconComponent
+          width={pixelSize}
+          height={pixelSize}
+          color={color}
+          aria-hidden="true"
+          strokeWidth={strokeWidth}
+        />
+      </span>
+    );
+  }
   return (
     <span
+      role="img"
+      aria-label={label}
       className={className}
       style={{
         display: "inline-flex",
@@ -37,13 +131,16 @@ const Icon: React.FC<IconProps> = ({
         justifyContent: "center",
         width: pixelSize,
         height: pixelSize,
-        minWidth: pixelSize,
-        minHeight: pixelSize,
-        maxWidth: pixelSize,
-        maxHeight: pixelSize,
       }}
+      tabIndex={tabIndex}
     >
-      <IconComponent width={pixelSize} height={pixelSize} color={color} />
+      <IconComponent
+        width={pixelSize}
+        height={pixelSize}
+        color={color}
+        aria-hidden="true"
+        strokeWidth={strokeWidth}
+      />
     </span>
   );
 };

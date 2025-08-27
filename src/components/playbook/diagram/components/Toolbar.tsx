@@ -1,7 +1,8 @@
 import React from "react";
 
 import { Button } from "../../../ui/Button";
-import { useDiagramEditor, useAddPlayer } from "../context/context";
+import { useDiagramEditor } from "../context/useDiagramEditor";
+import { useAddPlayer } from "../context/useAddPlayer";
 // Thumbnail helpers are loaded on-demand to keep bundle size down
 
 interface ToolbarProps {
@@ -15,7 +16,10 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   const { state, dispatch } = useDiagramEditor();
   const addPlayer = useAddPlayer();
   return (
-    <div className="panel-cupertino px-3 py-2 z-10 flex flex-wrap items-center gap-2">
+    <div
+      data-testid="toolbar-root"
+      className="panel-cupertino px-3 py-2 z-10 flex flex-wrap items-center gap-2"
+    >
       <div className="flex items-center gap-2 mr-4 whitespace-nowrap">
         <span className="font-medium text-slate-700">Diagram Builder v2</span>
         {onClose && (

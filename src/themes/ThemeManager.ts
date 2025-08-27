@@ -1,5 +1,7 @@
 // Dynamic theme loader for lazy-loading theme definitions
-async function loadTheme(name: ThemeName): Promise<import('./types').ThemeDefinition | undefined> {
+async function loadTheme(
+  name: ThemeName
+): Promise<import("./types").ThemeDefinition | undefined> {
   switch (name) {
     case "light":
       return (await import("./light")).default;

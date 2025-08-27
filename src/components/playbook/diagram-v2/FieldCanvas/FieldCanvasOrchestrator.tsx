@@ -8,21 +8,37 @@ import { ZoomPan } from "./ZoomPan";
 import { Annotation } from "./Annotation";
 import { FieldCanvasProvider } from "./FieldCanvasContext";
 import { useFieldCanvas } from "./useFieldCanvas";
+import { useEffect } from "react";
+import { eventBus } from "../../../lib/eventBus";
 
 // Top-level orchestrator for FieldCanvas
 export const FieldCanvasOrchestrator: React.FC = () => {
   return (
     <FieldCanvasProvider>
-      <div data-testid="field-canvas-root">
-        <FieldCanvasOrchestratorInner />
-      </div>
+      <FieldCanvasOrchestratorInner />
     </FieldCanvasProvider>
   );
 };
 
 const FieldCanvasOrchestratorInner: React.FC = () => {
   const { state, dispatch } = useFieldCanvas();
-  // Replace example props with context-driven state
+  // Subscribe to playbook:toolSelected events
+  useEffect(() => {
+    const unsubscribe = eventBus.subscribe("playbook:toolSelected", (event) => {
+      if (
+        event.payload &&
+        typeof event.payload === "object" &&
+        "tool" in event.payload
+      ) {
+        dispatch({
+          type: "SET_TOOL",
+          tool: (event.payload as { tool: string }).tool,
+        });
+      }
+    });
+    return unsubscribe;
+  }, [dispatch]);
+
   const handleToolSelect = (tool: string) => {
     dispatch({ type: "SET_TOOL", tool });
   };

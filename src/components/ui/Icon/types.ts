@@ -22,6 +22,8 @@ export interface IconProps {
     | "info";
   strokeWidth?: number;
   tabIndex?: number;
+  "aria-label"?: string;
+  "aria-hidden"?: boolean;
 }
 
 // Base icon props from Lucide

@@ -20,9 +20,7 @@ export const HelpOverlay: React.FC<HelpOverlayProps> = ({
   return (
     <div
       className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="diagram-help-title"
+      data-testid="help-overlay-root"
     >
       <div className="panel-cupertino max-w-3xl w-[min(90vw,900px)] max-h-[85vh] overflow-auto p-5 relative">
         <div className="absolute top-2 right-2">

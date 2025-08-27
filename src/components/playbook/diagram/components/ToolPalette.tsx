@@ -4,7 +4,7 @@ import { UserPreferencesService } from "../../../../services/userPreferencesServ
 import { Button } from "../../../ui/Button";
 import Icon from "../../../ui/Icon/Icon";
 import { Tooltip } from "../../../ui/Tooltip/Tooltip";
-import { useDiagramEditor } from "../context/context";
+import { useDiagramEditor } from "../context/useDiagramEditor";
 
 export const ToolPalette: React.FC = () => {
   const { state, dispatch } = useDiagramEditor();
