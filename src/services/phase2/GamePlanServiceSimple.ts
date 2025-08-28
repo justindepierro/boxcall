@@ -12,8 +12,7 @@ import type {
   GamePlanSituationInsert,
   GamePlanPlay,
   GamePlanPlayInsert,
-  CoachCard,
-  CoachCardInsert,
+  // ...existing code...
   BillickSituation,
   PlayAssignment,
   PriorityOptimization,
@@ -276,107 +275,7 @@ export class GamePlanService {
     return createdPlays;
   }
 
-  // =============================================================================
-  // COACH CARDS GENERATION (BILLICK SIDELINE SYSTEM)
-  // =============================================================================
-
-  /**
-   * Generate coach cards organized by Billick methodology
-   */
-  async generateCoachCards(gamePlanId: string): Promise<CoachCard[]> {
-    // Get all situations and their plays
-    const { data: situations, error: situationError } = await supabase
-      .from("game_plan_situations")
-      .select(
-        `
-        *,
-        game_plan_plays (
-          *,
-          plays (name, formation, p_type)
-        )
-      `
-      )
-      .eq("game_plan_id", gamePlanId)
-      .eq("is_active", true)
-      .order("priority_level", { ascending: true })
-      .order("sequence_order", { ascending: true });
-
-    if (situationError) throw situationError;
-
-    const coachCards: CoachCard[] = [];
-
-    // Group situations by type for card organization
-    type SituationWithPlays = (typeof situations)[0];
-    const situationsByType =
-      situations?.reduce(
-        (
-          acc: Record<string, SituationWithPlays[]>,
-          situation: SituationWithPlays
-        ) => {
-          if (!acc[situation.category_type]) {
-            acc[situation.category_type] = [];
-          }
-          acc[situation.category_type].push(situation);
-          return acc;
-        },
-        {} as Record<string, SituationWithPlays[]>
-      ) || {};
-
-    // Generate cards for each category type
-    let cardOrder = 1;
-
-    // Down & Distance Card
-    if (situationsByType.down_distance) {
-      const cardData: CoachCardInsert = {
-        game_plan_id: gamePlanId,
-        card_type: "situation",
-        title: "Down & Distance",
-        subtitle: "Core Billick System",
-        content: {
-          layout: "list",
-          plays: situationsByType.down_distance.flatMap(
-            (situation: SituationWithPlays) => {
-              type GamePlanPlayData = {
-                play_id: string;
-                plays?: { name?: string; formation?: string };
-                priority_level: number;
-              };
-
-              return (
-                (situation.game_plan_plays as GamePlanPlayData[])?.map(
-                  (gpp: GamePlanPlayData) => ({
-                    id: gpp.play_id,
-                    name: gpp.plays?.name || "Unknown Play",
-                    formation: gpp.plays?.formation || "",
-                    priority: gpp.priority_level,
-                    situation: situation.category_name,
-                  })
-                ) || []
-              );
-            }
-          ),
-          notes: [
-            "Priority 1 = Must have plays",
-            "Priority 2 = High confidence plays",
-            "Priority 3 = Situational plays",
-          ],
-        },
-        print_order: cardOrder++,
-        created_by: "system",
-      };
-
-      const { data: card, error } = await supabase
-        .from("coach_cards")
-        .insert(cardData)
-        .select("*")
-        .single();
-
-      if (error) throw error;
-      coachCards.push(card as CoachCard);
-    }
-
-    return coachCards;
-  }
+  // ...existing code...
 
   // =============================================================================
   // PRIORITY OPTIMIZATION (SIMPLIFIED)

@@ -1,15 +1,11 @@
 import React, { useState } from "react";
+import { useDashboardContext } from "../../context/useDashboardContext";
 
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 
-import type { Profile } from "../../types/database";
-import type { UserRole } from "../../types/phase4-3";
-
 interface ProfileCardProps {
-  profile: Profile;
-  userRole: UserRole;
   isViewMode?: boolean; // When viewed in modal by other users
   onEditClick?: () => void;
 }
@@ -23,12 +19,12 @@ interface ProfileCardProps {
  * - Modal-viewable for other users
  */
 export const ProfileCard: React.FC<ProfileCardProps> = ({
-  profile,
-  userRole,
   isViewMode = false,
   onEditClick,
 }) => {
+  const { profile } = useDashboardContext();
   const [showFullBio, setShowFullBio] = useState(false);
+  const userRole = profile?.role || "player";
   const isPlayer = userRole === "player";
   const isCoach = userRole === "coach";
   const isFamily = userRole === "family";
@@ -40,7 +36,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
       .toUpperCase()
       .slice(0, 2);
   };
-  const displayName = profile.full_name || profile.display_name || "Player";
+  const displayName = profile?.full_name || profile?.display_name || "Player";
   return (
     <Card className="compact-card h-full">
       {/* Header */}
@@ -100,14 +96,14 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
         )}
         {isFamily && (
           <div className="flex items-center space-x-2">
-            <Icon name="users" size={14} color="primary" />
+            <Icon name="users" size={14} color="jade" />
             <Typography variant="body-sm" className="text-text-primary">
               Family Member
             </Typography>
           </div>
         )}
         {/* Bio */}
-        {profile.bio && (
+        {profile?.bio && (
           <div className="pt-1 border-t border-subtle">
             <Typography
               variant="body-sm"
@@ -115,9 +111,9 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             >
               {showFullBio
                 ? profile.bio
-                : `${profile.bio.slice(0, 80)}${profile.bio.length > 80 ? "..." : ""}`}
+                : `${profile.bio?.slice(0, 80)}${profile.bio && profile.bio.length > 80 ? "..." : ""}`}
             </Typography>
-            {profile.bio.length > 80 && (
+            {profile?.bio && profile.bio.length > 80 && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -130,9 +126,9 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
           </div>
         )}
         {/* Contact Info */}
-        {profile.phone && !isViewMode && (
+        {profile?.phone && !isViewMode && (
           <div className="flex items-center space-x-2 pt-1 border-t border-subtle">
-            <Icon name="phone" size={14} color="secondary" />
+            <Icon name="phone" size={14} color="navy" />
             <Typography variant="body-sm" className="text-text-secondary">
               {profile.phone}
             </Typography>

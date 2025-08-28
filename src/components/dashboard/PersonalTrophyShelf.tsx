@@ -1,14 +1,11 @@
 import React from "react";
+import { useDashboardContext } from "../../context/useDashboardContext";
 
 import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import Icon from "../ui/Icon/Icon";
 
-interface PersonalTrophyShelfProps {
-  userId: string;
-  userRole?: string; // Optional for future role-based features
-}
 /**
  * Personal Trophy Shelf - Compact Scrollable Design
  *
@@ -19,10 +16,9 @@ interface PersonalTrophyShelfProps {
  * - Integrated helmet stickers and BoxCall medals
  * - Responsive design with jade/navy color palette
  */
-export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
-  userId,
-}) => {
-  const { achievements } = useAchievements(userId);
+export const PersonalTrophyShelf: React.FC = () => {
+  const { profile } = useDashboardContext();
+  const { achievements } = useAchievements(profile?.id);
 
   // Extract properties from achievements with defaults
   const helmetStickers = achievements?.helmetStickers || [];

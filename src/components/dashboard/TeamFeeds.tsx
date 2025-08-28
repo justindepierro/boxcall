@@ -1,13 +1,11 @@
 import React from "react";
+// import { useDashboardContext } from "../../context/useDashboardContext"; // not used
 
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 
-interface TeamFeedsProps {
-  userId: string;
-}
 /**
  * Team Feeds - Cross-team activity and updates
  *
@@ -16,7 +14,7 @@ interface TeamFeedsProps {
  * - Activity from all teams
  * - Quick team communications
  */
-export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
+export const TeamFeeds: React.FC = () => {
   const { devMode } = useDevMode();
 
   // Get feeds based on dev mode
@@ -102,7 +100,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
         <Typography variant="headline-md" className="text-text-primary">
           Team Feeds
         </Typography>
-        <Icon name="users" size="sm" color="secondary" />
+        <Icon name="users" size="sm" color="jade" />
       </div>
 
       {/* Feed Content */}
@@ -111,7 +109,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
           <Icon
             name="users"
             size="xl"
-            color="secondary"
+            color="navy"
             className="mb-4 opacity-50"
           />
           <Typography variant="body-lg" className="text-text-secondary mb-2">
@@ -130,7 +128,7 @@ export const TeamFeeds: React.FC<TeamFeedsProps> = ({ userId: _userId }) => {
             >
               {/* Feed Icon */}
               <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-jade-100 flex items-center justify-center mt-0.5">
-                <Icon name={feed.icon} size="sm" color="primary" />
+                <Icon name={feed.icon} size="sm" color="navy" />
               </div>
               {/* Feed Content */}
               <div className="flex-1 min-w-0">

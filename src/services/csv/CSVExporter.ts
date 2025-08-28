@@ -4,7 +4,7 @@
  * Handles exporting plays and practice scripts to CSV format
  */
 
-import type { CSVPlayData, CSVExportOptions } from "./types";
+import type { CSVExportOptions } from "./types";
 import type { Play } from "../../types/play";
 
 // Import the PracticeScript type locally to avoid circular dependencies
@@ -108,59 +108,7 @@ export class CSVExporter {
     return csvLines.join("\n");
   }
 
-  /**
-   * Generate sample CSV template
-   */
-  static generateSampleCSV(): string {
-    const samplePlays: CSVPlayData[] = [
-      {
-        formation: "I-Formation",
-        play_name: "Power O",
-        one_word_play: "Thunder",
-        p_type: "run",
-        personnel: "21",
-        f_type: "11P",
-        pref_down: "1st",
-        pref_dis: "10",
-        protection: "BOB",
-        r_str: "strong",
-        p_str: "",
-        notes: "Good short yardage play",
-      },
-      {
-        formation: "Shotgun",
-        play_name: "Four Verticals",
-        one_word_play: "Smash",
-        p_type: "pass",
-        personnel: "11",
-        f_type: "11P",
-        pref_down: "3rd",
-        pref_dis: "7+",
-        protection: "6-man",
-        r_str: "",
-        p_str: "vertical",
-        notes: "Great vs Cover 3",
-      },
-    ];
-
-    return this.exportSamplePlaysToCSV(samplePlays);
-  }
-
-  /**
-   * Export sample plays data to CSV
-   */
-  private static exportSamplePlaysToCSV(plays: CSVPlayData[]): string {
-    const headers = Object.keys(plays[0]) as (keyof CSVPlayData)[];
-    const csvLines = [headers.join(",")];
-
-    plays.forEach((play) => {
-      const row = headers.map((header) => play[header] || "");
-      const escapedRow = row.map((value) => this.escapeCSVValue(value));
-      csvLines.push(escapedRow.join(","));
-    });
-
-    return csvLines.join("\n");
-  }
+  // ...existing code...
 
   /**
    * Escape CSV values that contain commas or quotes

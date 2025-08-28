@@ -73,12 +73,7 @@ export class CSVService {
     return CSVExporter.downloadCSV(content, filename);
   }
 
-  /**
-   * Generate sample CSV template
-   */
-  static generateSampleCSV(): string {
-    return CSVExporter.generateSampleCSV();
-  }
+  // ...existing code...
 }
 
 // Export types for external use

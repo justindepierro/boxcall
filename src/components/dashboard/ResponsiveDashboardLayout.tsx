@@ -1,5 +1,5 @@
 import React from "react";
-import LucideTest from "../ui/Icon/LucideTest";
+import { DashboardProvider } from "../../context/DashboardContext";
 
 import { useAuth } from "../../app/auth-store";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
@@ -68,83 +68,75 @@ export const ResponsiveDashboardLayout: React.FC = () => {
     );
   }
 
-  const userRole = profile.role || "player";
-
   return (
-    <div className="min-h-screen surface-app">
-      {/* Lucide direct icon test - REMOVE after audit */}
-      <LucideTest />
-      {/* WELCOME HEADER - Responsive across all breakpoints */}
-      <div className="responsive-welcome-header bg-gradient-to-r from-surface-jade to-surface-jade dark:from-surface-jade-dark dark:to-surface-jade-dark border-b border-surface-jade-dark dark:border-brand-jade-dark">
-        <div className="max-w-7xl mx-auto bc-container-padding py-3 text-left">
-          <Typography
-            variant="headline-md"
-            className="text-brand-jade-dark dark:text-brand-jade-light"
-          >
-            Welcome back,{" "}
-            {profile.full_name?.split(" ")[0] ||
-              profile.display_name ||
-              user.email}
-            !
-          </Typography>
-          <Typography variant="body-sm" color="muted" className="mt-1">
-            Your command center awaits • Quote of the day coming soon
-          </Typography>
-        </div>
-      </div>
-
-      {/* RESPONSIVE LAYOUT CONTAINER */}
-      <div className="responsive-dashboard-container">
-        <div className="responsive-content-grid">
-          {/* Profile Card */}
-          <div className="profile-section">
-            {isStepVisible(0) ? (
-              <ProfileCard
-                profile={profile}
-                userRole={userRole}
-                onEditClick={() => {
-                  // TODO: Implement edit functionality
-                }}
-              />
-            ) : (
-              <DashboardCardSkeleton />
-            )}
-          </div>
-
-          {/* Trophy Shelf */}
-          <div className="trophy-section">
-            {isStepVisible(1) ? (
-              <PersonalTrophyShelf userId={user.id} userRole={userRole} />
-            ) : (
-              <DashboardCardSkeleton />
-            )}
-          </div>
-
-          {/* Team Feeds */}
-          <div className="feeds-section">
-            {isStepVisible(2) ? (
-              <TeamFeeds userId={user.id} />
-            ) : (
-              <DashboardCardSkeleton />
-            )}
-          </div>
-
-          {/* Calendar */}
-          <div className="calendar-section">
-            {isStepVisible(3) ? (
-              <PersonalCalendar userId={user.id} />
-            ) : (
-              <DashboardCardSkeleton />
-            )}
+    <DashboardProvider>
+      <div className="min-h-screen surface-app">
+        {/* WELCOME HEADER - Responsive across all breakpoints */}
+        <div className="responsive-welcome-header bg-gradient-to-r from-surface-jade to-surface-jade dark:from-surface-jade-dark dark:to-surface-jade-dark border-b border-surface-jade-dark dark:border-brand-jade-dark">
+          <div className="max-w-7xl mx-auto bc-container-padding py-3 text-left">
+            <Typography
+              variant="headline-md"
+              className="text-brand-jade-dark dark:text-brand-jade-light"
+            >
+              Welcome back,{" "}
+              {profile.full_name?.split(" ")[0] ||
+                profile.display_name ||
+                user.email}
+              !
+            </Typography>
+            <Typography variant="body-sm" color="muted" className="mt-1">
+              Your command center awaits • Quote of the day coming soon
+            </Typography>
           </div>
         </div>
-      </div>
 
-      {/* MOBILE BOTTOM NAVIGATION */}
-      <div className="mobile-bottom-nav lg:hidden">
-        <MobileBottomNavigation items={items} />
+        {/* RESPONSIVE LAYOUT CONTAINER */}
+        <div className="responsive-dashboard-container">
+          <div className="responsive-content-grid">
+            {/* Profile Card */}
+            <div className="profile-section">
+              {isStepVisible(0) ? (
+                <ProfileCard
+                  onEditClick={() => {
+                    // TODO: Implement edit functionality
+                  }}
+                />
+              ) : (
+                <DashboardCardSkeleton />
+              )}
+            </div>
+
+            {/* Trophy Shelf */}
+            <div className="trophy-section">
+              {isStepVisible(1) ? (
+                <PersonalTrophyShelf />
+              ) : (
+                <DashboardCardSkeleton />
+              )}
+            </div>
+
+            {/* Team Feeds */}
+            <div className="feeds-section">
+              {isStepVisible(2) ? <TeamFeeds /> : <DashboardCardSkeleton />}
+            </div>
+
+            {/* Calendar */}
+            <div className="calendar-section">
+              {isStepVisible(3) ? (
+                <PersonalCalendar />
+              ) : (
+                <DashboardCardSkeleton />
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* MOBILE BOTTOM NAVIGATION */}
+        <div className="mobile-bottom-nav lg:hidden">
+          <MobileBottomNavigation items={items} />
+        </div>
       </div>
-    </div>
+    </DashboardProvider>
   );
 };
 

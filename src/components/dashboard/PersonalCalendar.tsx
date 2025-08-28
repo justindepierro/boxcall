@@ -1,22 +1,17 @@
 import { format } from "date-fns";
 import React, { useState } from "react";
+import { useDashboardContext } from "../../context/useDashboardContext";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes/paths";
-
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useEvents } from "../../state/calendar/hooks";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
 import Icon from "../ui/Icon/Icon";
-// Removed unused LegacyIcon import
 import { Tag, mapEventTypeToTagVariant } from "../ui/Tag";
 
 import type { CalendarEvent } from "../../domain/calendar/types";
-
-interface PersonalCalendarProps {
-  userId: string;
-}
 
 /**
  * Personal Calendar - Cross-team events and schedule
@@ -27,9 +22,10 @@ interface PersonalCalendarProps {
  * - Personal reminders and deadlines
  * - Quick event creation
  */
-export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
-  userId,
-}) => {
+export const PersonalCalendar: React.FC = () => {
+  const { profile } = useDashboardContext();
+  const userId = profile?.id ?? "";
+
   const navigate = useNavigate();
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
     null
@@ -41,11 +37,25 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
   // Fetch a short horizon of events (next 14 days)
   const rangeStart = new Date();
   const rangeEnd = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
-  const { data: upcomingEvents = [], isLoading: upcomingLoading } = useEvents({
-    userId,
-    devMode,
-    range: { start: rangeStart.toISOString(), end: rangeEnd.toISOString() },
-  });
+  const { data: upcomingEvents = [], isLoading: upcomingLoading } = useEvents(
+    userId
+      ? {
+          userId,
+          devMode,
+          range: {
+            start: rangeStart.toISOString(),
+            end: rangeEnd.toISOString(),
+          },
+        }
+      : {
+          userId: "",
+          devMode,
+          range: {
+            start: rangeStart.toISOString(),
+            end: rangeEnd.toISOString(),
+          },
+        }
+  );
 
   // Handle event click
   const handleEventClick = (event: CalendarEvent) => {
