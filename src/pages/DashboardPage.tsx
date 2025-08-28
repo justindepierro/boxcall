@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react"; // Not needed for React 17+
 import { ResponsiveDashboardLayout } from "../components/dashboard/ResponsiveDashboardLayout";
 
 /**
@@ -13,8 +13,6 @@ import { ResponsiveDashboardLayout } from "../components/dashboard/ResponsiveDas
  * - Mobile-first responsive design
  * - Progressive loading with skeletons
  */
-export const DashboardPage: React.FC = () => {
+export default function DashboardPage() {
   return <ResponsiveDashboardLayout />;
-};
-
-export default DashboardPage;
+}

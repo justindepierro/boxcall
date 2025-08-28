@@ -91,10 +91,18 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         </div>
 
         {/* RESPONSIVE LAYOUT CONTAINER */}
-        <div className="responsive-dashboard-container">
+        <main
+          className="responsive-dashboard-container"
+          role="main"
+          aria-label="Dashboard main content"
+        >
           <div className="responsive-content-grid">
             {/* Profile Card */}
-            <div className="profile-section">
+            <div
+              className="profile-section min-h-[320px]"
+              role="region"
+              aria-label="Profile"
+            >
               {isStepVisible(0) ? (
                 <ProfileCard
                   onEditClick={() => {
@@ -107,7 +115,11 @@ export const ResponsiveDashboardLayout: React.FC = () => {
             </div>
 
             {/* Trophy Shelf */}
-            <div className="trophy-section">
+            <div
+              className="trophy-section min-h-[320px]"
+              role="region"
+              aria-label="Trophy Shelf"
+            >
               {isStepVisible(1) ? (
                 <PersonalTrophyShelf />
               ) : (
@@ -116,12 +128,20 @@ export const ResponsiveDashboardLayout: React.FC = () => {
             </div>
 
             {/* Team Feeds */}
-            <div className="feeds-section">
+            <div
+              className="feeds-section min-h-[320px]"
+              role="region"
+              aria-label="Team Feeds"
+            >
               {isStepVisible(2) ? <TeamFeeds /> : <DashboardCardSkeleton />}
             </div>
 
             {/* Calendar */}
-            <div className="calendar-section">
+            <div
+              className="calendar-section min-h-[320px]"
+              role="region"
+              aria-label="Calendar"
+            >
               {isStepVisible(3) ? (
                 <PersonalCalendar />
               ) : (
@@ -129,7 +149,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
               )}
             </div>
           </div>
-        </div>
+        </main>
 
         {/* MOBILE BOTTOM NAVIGATION */}
         <div className="mobile-bottom-nav lg:hidden">
