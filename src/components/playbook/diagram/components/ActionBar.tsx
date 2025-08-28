@@ -8,13 +8,17 @@ export const ActionBar: React.FC<{
 }> = ({ svgRef: _svgRef }) => {
   const { state, dispatch } = useDiagramEditor();
   const sel = useMemo(() => state.ui.selectedIds || [], [state.ui.selectedIds]);
+  const players = useMemo(
+    () => (Array.isArray(state.doc.players) ? state.doc.players : []),
+    [state.doc.players]
+  );
   const player = useMemo(
-    () => state.doc.players.find((p) => p.id === sel[0]),
-    [state.doc.players, sel]
+    () => players.find((p) => p.id === sel[0]),
+    [players, sel]
   );
   const selectedPlayers = useMemo(
-    () => state.doc.players.filter((p) => sel.includes(p.id)),
-    [state.doc.players, sel]
+    () => players.filter((p) => sel.includes(p.id)),
+    [players, sel]
   );
   const [label, setLabel] = useState<string>(player?.label || "");
   const [assignment, setAssignment] = useState<string>(

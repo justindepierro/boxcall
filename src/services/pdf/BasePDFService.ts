@@ -23,13 +23,23 @@ export abstract class BasePDFService {
    */
   protected async generateBlob(document: PDFDocumentElement): Promise<Blob> {
     try {
-      const { pdf } = await import("@react-pdf/renderer");
-      // Cast to React.ReactElement<DocumentProps> for @react-pdf/renderer API
-      const instance = pdf(document as React.ReactElement<DocumentProps>);
-      return await instance.toBlob();
+      // Use PDF Web Worker via comlink
+      const { wrap } = await import("comlink");
+      const worker = new Worker(
+        new URL("../../workers/pdfWorker.ts", import.meta.url),
+        { type: "module" }
+      );
+      const pdfWorker =
+        wrap<import("../../workers/types/pdfWorkerTypes").PDFWorkerAPI>(worker);
+      // Cast to React.ReactElement<DocumentProps> for worker API
+      const blob = await pdfWorker.generatePdfBlob(
+        document as React.ReactElement<DocumentProps>
+      );
+      worker.terminate();
+      return blob;
     } catch (error) {
       throw new PDFError(
-        "Failed to generate PDF blob",
+        "Failed to generate PDF blob (worker)",
         "GENERATION_ERROR",
         error instanceof Error ? error.message : "Unknown error"
       );
@@ -317,19 +327,19 @@ export class PDFUtils {
     author?: string
   ): {
     title: string;
-    author: string;
     subject: string;
     creator: string;
     producer: string;
     creationDate: Date;
+    author?: string;
   } {
     return {
       title,
-      author: author || "Practice Planner",
       subject: "Generated Practice Document",
       creator: "Practice Planner App",
       producer: "React-PDF",
       creationDate: new Date(),
+      ...(author ? { author } : {}),
     };
   }
 }
