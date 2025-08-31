@@ -92,17 +92,17 @@ export const DatabaseDataDisplay: React.FC = () => {
           <Icon
             name="database"
             size="xl"
-            color="secondary"
+            color="slate"
             className="mx-auto mb-4 opacity-50"
           />
           <Typography
             variant="headline-sm"
             className="text-text-secondary mb-2"
           >
-            No Data Found
+            Ready to Start
           </Typography>
           <Typography variant="body-sm" className="text-text-muted">
-            Run the demo data loader to populate your database
+            Create your first team to begin using BoxCall
           </Typography>
         </div>
       </Card>
@@ -117,13 +117,13 @@ export const DatabaseDataDisplay: React.FC = () => {
           <div>
             <Typography variant="headline-md" className="text-jade-800 mb-1">
               <Icon
-                name="party-popper"
+                name="check"
                 className="inline h-4 w-4 align-middle text-current"
               />{" "}
-              Demo Data Loaded Successfully!
+              Database Connected
             </Typography>
             <Typography variant="body-md" className="text-jade-700">
-              Your BoxCall database is now populated with sample data
+              Your BoxCall database is active and ready
             </Typography>
           </div>
           <div className="text-right">
@@ -146,7 +146,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         <Card className="bc-card-padding surface-card">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-jade-100 rounded-lg flex items-center justify-center mr-3">
-              <Icon name="users" size="md" color="primary" />
+              <Icon name="users" size="md" color="jade" />
             </div>
             <div>
               <Typography variant="headline-sm" className="text-text-primary">
@@ -187,7 +187,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                     <Icon
                       name={isActive ? "chevron-up" : "chevron-down"}
                       size="sm"
-                      color={isActive ? "primary" : "secondary"}
+                      color={isActive ? "jade" : "slate"}
                     />
                   </div>
                 </Button>

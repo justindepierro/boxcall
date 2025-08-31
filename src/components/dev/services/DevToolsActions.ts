@@ -3,7 +3,6 @@
  * Centralized actions for DevTools functionality
  */
 import { supabase } from "../../../lib/supabase";
-import { createSampleData } from "../../../utils/create-sample-data";
 import { checkDatabaseData } from "../../../utils/demo-data-check";
 
 import type { DevLog } from "../types";
@@ -107,48 +106,29 @@ export class DevToolsActions {
 
   async createSampleData() {
     try {
-      this.addLog("info", "Creating sample data for demo...", "demo");
+      this.addLog("info", "Sample data creation is disabled in production mode", "demo");
       this.showToast(
-        "info",
-        "Creating sample team, playbook, and plays...",
-        "Creating Demo Data"
+        "warning",
+        "Sample data creation is disabled. Use the database directly or enable dev mode.",
+        "Feature Disabled"
       );
 
-      const result = await createSampleData();
+      // Since sample data creation is disabled, return early
+      this.addLog(
+        "warning",
+        "Sample data creation has been disabled for production deployment",
+        "demo"
+      );
 
-      if (result.success) {
-        this.addLog(
-          "success",
-          `Created sample team "${result.data?.team.name}" with ${result.data?.plays.length} plays`,
-          "demo"
-        );
-
-        this.showToast(
-          "success",
-          `Demo data created! Team "${result.data?.team.name}" with playbook and plays`,
-          "Sample Data Ready"
-        );
-      } else {
-        this.addLog(
-          "error",
-          `Sample data creation failed: ${result.error}`,
-          "demo"
-        );
-        this.showToast(
-          "error",
-          `Failed to create sample data: ${result.error}`,
-          "Creation Failed"
-        );
-      }
-
-      return result;
+      return { success: false, error: "Sample data creation disabled" };
     } catch (err) {
-      this.addLog("error", `Sample data creation failed: ${err}`, "demo");
+      this.addLog("error", `Sample data operation failed: ${err}`, "demo");
       this.showToast(
         "error",
-        `Sample data creation failed: ${err}`,
-        "Creation Failed"
+        `Sample data operation failed: ${err}`,
+        "Operation Failed"
       );
+      return { success: false, error: String(err) };
     }
   }
 

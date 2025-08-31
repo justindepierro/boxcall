@@ -16,11 +16,11 @@
 - [x] Refactor dashboard layout for responsive design (mobile/tablet/desktop)
 - [x] Remove redundant wrappers and unify layout system (AppGrid, custom CSS grid)
 - [x] Clean up unused imports and layout code across all major pages
-- [ ] Implement lazy loading for heavy dashboard widgets
+- [x] Implement lazy loading for heavy dashboard widgets
 
 ### 3. UI/UX Modernization
 
-- [ ] Redesign dashboard header for clear navigation and branding
+- [x] Redesign dashboard header for clear navigation and branding
 - [ ] Add interactive sidebar with collapsible groups (team, personal, achievements)
 - [ ] Use cards/panels for each dashboard section (profile, team, calendar, achievements)
 - [ ] Add drag-and-drop support for rearranging dashboard panels

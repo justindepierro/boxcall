@@ -70,8 +70,8 @@
     grid-template-columns: 1fr 2fr 1fr;
     grid-template-rows: auto auto;
     grid-template-areas:
-      "profile trophy feeds"
-      "profile calendar feeds";
+      "profile feeds trophy"
+      "profile calendar trophy";
   }
 }
 

@@ -28,16 +28,21 @@ export async function fetchTeamMembership(
   teamId: string
 ): Promise<{
   role: TeamMemberRole;
+  team_role: string; // New unified team role
   status: "active" | "inactive" | "pending" | null;
 } | null> {
   const { data, error } = await supabase
     .from("team_members")
-    .select("role, status")
+    .select("role, team_role, status")
     .eq("user_id", userId)
     .eq("team_id", teamId)
     .single();
   if (error || !data) return null;
-  return { role: data.role as TeamMemberRole, status: data.status };
+  return {
+    role: data.role as TeamMemberRole,
+    team_role: data.team_role || data.role, // Fallback to legacy role if team_role is null
+    status: data.status,
+  };
 }
 
 export async function fetchTeamSubscription(teamId: string): Promise<{

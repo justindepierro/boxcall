@@ -1,6 +1,6 @@
 import React from "react";
 
-import { PlaybookPage } from "./PlaybookPage";
+import PlaybookPage from "./PlaybookPage";
 /**
  * Playbook - Team plays and strategy management
  * Available to all team members with role-based permissions

@@ -16,7 +16,7 @@ import Icon from "../ui/Icon/Icon";
  * - Integrated helmet stickers and BoxCall medals
  * - Responsive design with jade/navy color palette
  */
-export const PersonalTrophyShelf: React.FC = () => {
+const PersonalTrophyShelf: React.FC = () => {
   const { profile } = useDashboardContext();
   const { achievements } = useAchievements(profile?.id);
 
@@ -264,3 +264,4 @@ export const PersonalTrophyShelf: React.FC = () => {
     </Card>
   );
 };
+export default PersonalTrophyShelf;

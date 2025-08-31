@@ -22,7 +22,7 @@ import type { CalendarEvent } from "../../domain/calendar/types";
  * - Personal reminders and deadlines
  * - Quick event creation
  */
-export const PersonalCalendar: React.FC = () => {
+const PersonalCalendar: React.FC = () => {
   const { profile } = useDashboardContext();
   const userId = profile?.id ?? "";
 
@@ -71,8 +71,6 @@ export const PersonalCalendar: React.FC = () => {
     setQuickEventTitle("");
     setShowQuickAdd(false);
   };
-
-  // Deprecated legacy event badge color map replaced by Tag variants
 
   // Format event time
   const formatEventTime = (start?: string, end?: string) => {
@@ -339,3 +337,5 @@ export const PersonalCalendar: React.FC = () => {
     </>
   );
 };
+
+export default PersonalCalendar;

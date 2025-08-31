@@ -48,17 +48,13 @@ export default function About() {
       </Card>
       {/* Support */}
       <Card className="p-6">
-        <Icon
-          name="users"
-          size="xl"
-          className="text-text-secondary mb-4"
-        />
+        <Icon name="users" size="xl" className="text-text-secondary mb-4" />
         <Typography variant="headline-md" className="mb-3">
           Support & Help
         </Typography>
         <Typography variant="body-md" color="muted" className="mb-4">
-          Need help getting started or have questions? We're here to
-          support your team's success.
+          Need help getting started or have questions? We're here to support
+          your team's success.
         </Typography>
         <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg p-3 mb-2">
           <Typography

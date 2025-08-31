@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 
 import { prefetchOnHover } from "../../../routes/prefetch";
 import { Button } from "../Button";
-import { ThemeToggle } from "../ThemeToggle/ThemeToggle";
 
 import type { ReactNode } from "react";
 
@@ -215,13 +214,8 @@ export const NavBar: React.FC<NavBarProps> = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { pathname } = useLocation();
   const mergedActions = actions ? (
-    <div className="flex items-center gap-2">
-      {actions}
-      <ThemeToggle />
-    </div>
-  ) : (
-    <ThemeToggle />
-  );
+    <div className="flex items-center gap-2">{actions}</div>
+  ) : null;
   const handleMobileMenuToggle = () => {
     const newState = !isMobileMenuOpen;
     setIsMobileMenuOpen(newState);

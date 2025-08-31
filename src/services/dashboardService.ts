@@ -39,6 +39,25 @@ export interface ActivityItem {
  */
 export class DashboardService {
   /**
+   * Update the current user's profile (bio, avatar_url, etc.)
+   */
+  static async updateUserProfile(
+    userId: string,
+    updates: Partial<{ bio: string; avatar_url: string }>
+  ): Promise<UserProfile | null> {
+    const { data, error } = await supabase
+      .from("profiles")
+      .update(updates)
+      .eq("id", userId)
+      .select()
+      .single();
+    if (error) {
+      // TODO: Handle error (was: console.error)
+      return null;
+    }
+    return data as UserProfile;
+  }
+  /**
    * Get all teams for a user with their membership data
    */
   static async getUserTeams(userId: string): Promise<UserTeamData[]> {

@@ -8,6 +8,7 @@ import { useTheme } from "./hooks/useTheme";
 import { testDatabaseConnection } from "./lib/database-helpers";
 import { initRoutePrefetch } from "./routes/prefetch";
 import { DataRouterApp } from "./routes";
+import { AppGrid } from "./components/AppGrid";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -47,7 +48,9 @@ function App() {
       <DevModeProvider>
         <div className="App">
           <DevHealthCheck />
-          <DataRouterApp />
+          <AppGrid>
+            <DataRouterApp />
+          </AppGrid>
           {showRQDevtools && (
             <ReactQueryDevtools initialIsOpen={false} position="bottom" />
           )}

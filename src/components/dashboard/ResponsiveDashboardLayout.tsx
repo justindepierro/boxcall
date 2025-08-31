@@ -4,11 +4,32 @@ import { DashboardProvider } from "../../context/DashboardContext";
 import { useAuth } from "../../app/auth-store";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
-import { PersonalCalendar } from "../dashboard/PersonalCalendar";
-import { PersonalTrophyShelf } from "../dashboard/PersonalTrophyShelf";
-import { ProfileCard } from "../dashboard/ProfileCard";
-import { TeamFeeds } from "../dashboard/TeamFeeds";
+const ProfileCard = React.lazy(
+  () =>
+    import("../dashboard/ProfileCard") as Promise<{
+      default: React.ComponentType<{ onEditClick?: () => void }>;
+    }>
+);
+const PersonalTrophyShelf = React.lazy(
+  () =>
+    import("../dashboard/PersonalTrophyShelf") as Promise<{
+      default: React.ComponentType<unknown>;
+    }>
+);
+const TeamFeeds = React.lazy(
+  () =>
+    import("../dashboard/TeamFeeds") as Promise<{
+      default: React.ComponentType<unknown>;
+    }>
+);
+const PersonalCalendar = React.lazy(
+  () =>
+    import("../dashboard/PersonalCalendar") as Promise<{
+      default: React.ComponentType<unknown>;
+    }>
+);
 import { Typography } from "../design-system";
+import DashboardHeader from "./DashboardHeader";
 import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 
@@ -71,24 +92,8 @@ export const ResponsiveDashboardLayout: React.FC = () => {
   return (
     <DashboardProvider>
       <div className="min-h-screen surface-app">
-        {/* WELCOME HEADER - Responsive across all breakpoints */}
-        <div className="responsive-welcome-header bg-gradient-to-r from-surface-jade to-surface-jade dark:from-surface-jade-dark dark:to-surface-jade-dark border-b border-surface-jade-dark dark:border-brand-jade-dark">
-          <div className="max-w-7xl mx-auto bc-container-padding py-3 text-left">
-            <Typography
-              variant="headline-md"
-              className="text-brand-jade-dark dark:text-brand-jade-light"
-            >
-              Welcome back,{" "}
-              {profile.full_name?.split(" ")[0] ||
-                profile.display_name ||
-                user.email}
-              !
-            </Typography>
-            <Typography variant="body-sm" color="muted" className="mt-1">
-              Your command center awaits • Quote of the day coming soon
-            </Typography>
-          </div>
-        </div>
+        {/* MODERN DASHBOARD HEADER */}
+        <DashboardHeader />
 
         {/* RESPONSIVE LAYOUT CONTAINER */}
         <main
@@ -104,36 +109,42 @@ export const ResponsiveDashboardLayout: React.FC = () => {
               aria-label="Profile"
             >
               {isStepVisible(0) ? (
-                <ProfileCard
-                  onEditClick={() => {
-                    // TODO: Implement edit functionality
-                  }}
-                />
+                <React.Suspense fallback={<DashboardCardSkeleton />}>
+                  <ProfileCard />
+                </React.Suspense>
               ) : (
                 <DashboardCardSkeleton />
               )}
             </div>
 
-            {/* Trophy Shelf */}
+            {/* Team Feeds (now middle column) */}
+            <div
+              className="feeds-section min-h-[320px]"
+              role="region"
+              aria-label="Team Feeds"
+            >
+              {isStepVisible(2) ? (
+                <React.Suspense fallback={<DashboardCardSkeleton />}>
+                  <TeamFeeds />
+                </React.Suspense>
+              ) : (
+                <DashboardCardSkeleton />
+              )}
+            </div>
+
+            {/* Trophy Shelf (now right column) */}
             <div
               className="trophy-section min-h-[320px]"
               role="region"
               aria-label="Trophy Shelf"
             >
               {isStepVisible(1) ? (
-                <PersonalTrophyShelf />
+                <React.Suspense fallback={<DashboardCardSkeleton />}>
+                  <PersonalTrophyShelf />
+                </React.Suspense>
               ) : (
                 <DashboardCardSkeleton />
               )}
-            </div>
-
-            {/* Team Feeds */}
-            <div
-              className="feeds-section min-h-[320px]"
-              role="region"
-              aria-label="Team Feeds"
-            >
-              {isStepVisible(2) ? <TeamFeeds /> : <DashboardCardSkeleton />}
             </div>
 
             {/* Calendar */}
@@ -143,7 +154,9 @@ export const ResponsiveDashboardLayout: React.FC = () => {
               aria-label="Calendar"
             >
               {isStepVisible(3) ? (
-                <PersonalCalendar />
+                <React.Suspense fallback={<DashboardCardSkeleton />}>
+                  <PersonalCalendar />
+                </React.Suspense>
               ) : (
                 <DashboardCardSkeleton />
               )}

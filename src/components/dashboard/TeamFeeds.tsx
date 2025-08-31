@@ -1,6 +1,9 @@
-import React from "react";
 // import { useDashboardContext } from "../../context/useDashboardContext"; // not used
 
+// import { useDashboardContext } from "../../context/useDashboardContext"; // not used
+
+import React, { useState } from "react";
+import { Modal } from "../ui/Modal";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
@@ -14,7 +17,7 @@ import { Icon } from "../ui/Icon/Icon";
  * - Activity from all teams
  * - Quick team communications
  */
-export const TeamFeeds: React.FC = () => {
+const TeamFeeds: React.FC = () => {
   const { devMode } = useDevMode();
 
   // Get feeds based on dev mode
@@ -93,14 +96,28 @@ export const TeamFeeds: React.FC = () => {
 
   const feeds = getFeeds();
 
+  const [quickAddOpen, setQuickAddOpen] = useState(false);
+  const [quickMessage, setQuickMessage] = useState("");
+  // TODO: Only show quick add for user's own dashboard (add context check if needed)
   return (
-    <Card className="compact-card h-full surface-card">
+    <Card className="compact-card h-full surface-card relative">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-subtle dark:border-gray-700 pb-2">
         <Typography variant="headline-md" className="text-text-primary">
           Team Feeds
         </Typography>
-        <Icon name="users" size="sm" color="jade" />
+        <div className="flex items-center space-x-2">
+          <Icon name="users" size="sm" color="jade" />
+          <Button
+            variant="ghost"
+            size="xs"
+            className="bg-white rounded-full shadow p-1 border border-subtle hover:bg-jade-50"
+            aria-label="Quick add message"
+            onClick={() => setQuickAddOpen(true)}
+          >
+            <Icon name="plus" size={12} />
+          </Button>
+        </div>
       </div>
 
       {/* Feed Content */}
@@ -164,6 +181,46 @@ export const TeamFeeds: React.FC = () => {
           </div>
         </div>
       )}
+      {/* Quick Add Modal */}
+      {quickAddOpen && (
+        <Modal
+          isOpen={quickAddOpen}
+          onClose={() => setQuickAddOpen(false)}
+          title="Quick Add Message"
+          size="sm"
+        >
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              // TODO: Implement message post logic
+              setQuickAddOpen(false);
+              setQuickMessage("");
+            }}
+          >
+            <textarea
+              value={quickMessage}
+              onChange={(e) => setQuickMessage(e.target.value)}
+              className="w-full p-2 border rounded"
+              rows={3}
+              placeholder="Type your message..."
+            />
+            <div className="flex justify-end mt-2">
+              <Button type="submit" variant="primary" size="sm">
+                Post
+              </Button>
+              <Button
+                type="button"
+                variant="link"
+                size="sm"
+                onClick={() => setQuickAddOpen(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
     </Card>
   );
 };
+export default TeamFeeds;

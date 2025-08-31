@@ -43,7 +43,7 @@ export const ProfilePage: React.FC = () => {
         if (error) {
           setMessage({
             type: "error",
-            text: "Failed to update profile: " + error.message,
+            text: error.message || "Failed to update profile.",
           });
         } else {
           setMessage({

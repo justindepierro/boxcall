@@ -1,7 +1,11 @@
 /**
  * User Related Tables
  * All tables related to users, profiles, and authentication
+ *
+ * Updated for Role System Overhaul (Migration 999)
  */
+
+import type { AppRole } from "../../roles";
 
 // Define Json type locally for this module
 type Json =
@@ -14,12 +18,13 @@ type Json =
 
 export interface UserTables {
   // 🔥 CRITICAL: Enhanced Profiles table (required by dashboardService.ts)
+  // Updated for unified role system
   profiles: {
     Row: {
       id: string; // References auth.users.id
       full_name: string | null;
       avatar_url: string | null;
-      role: "player" | "coach" | "assistant_coach" | "family" | "admin";
+      role: AppRole; // Updated to use standardized AppRole enum
       bio: string | null;
       phone: string | null;
       email: string | null;
@@ -39,7 +44,7 @@ export interface UserTables {
       id: string; // References auth.users.id
       full_name?: string | null;
       avatar_url?: string | null;
-      role?: "player" | "coach" | "assistant_coach" | "family" | "admin";
+      role?: AppRole; // Updated to use standardized AppRole enum
       bio?: string | null;
       phone?: string | null;
       email?: string | null;
@@ -58,7 +63,7 @@ export interface UserTables {
       id?: string;
       full_name?: string | null;
       avatar_url?: string | null;
-      role?: "player" | "coach" | "family" | "admin" | null;
+      role?: AppRole | null; // Updated to use standardized AppRole enum
       bio?: string | null;
       phone?: string | null;
       created_at?: string | null;
