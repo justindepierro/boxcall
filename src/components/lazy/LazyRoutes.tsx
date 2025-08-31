@@ -56,7 +56,6 @@ export const LazyBoxCall = lazy(() => import("../../pages/BoxCall"));
 export const LazyPlaybookPage = lazy(() => import("../../pages/Playbook"));
 
 export const LazyTeamSettings = lazy(() => import("../../pages/TeamSettings"));
-export const LazyTemplatesPage = lazy(() => import("../../pages/Templates"));
 export const LazyAnalyticsPage = lazy(
   () => import("../../pages/AnalyticsPage")
 );

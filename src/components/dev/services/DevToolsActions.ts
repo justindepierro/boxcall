@@ -3,7 +3,6 @@
  * Centralized actions for DevTools functionality
  */
 import { supabase } from "../../../lib/supabase";
-import { checkDatabaseData } from "../../../utils/demo-data-check";
 
 import type { DevLog } from "../types";
 
@@ -57,50 +56,6 @@ export class DevToolsActions {
         `Connection test failed: ${err}`,
         "Unexpected Error"
       );
-    }
-  }
-
-  async checkDemoData() {
-    try {
-      this.addLog("info", "Checking database data for demo...", "demo");
-      this.showToast(
-        "info",
-        "Checking what data exists in database...",
-        "Demo Data Check"
-      );
-
-      const result = await checkDatabaseData();
-
-      this.addLog(
-        "success",
-        `Found: ${result.teams.length} teams, ${result.playbooks.length} playbooks, ${result.plays.length} plays`,
-        "demo"
-      );
-
-      this.showToast(
-        "success",
-        `Database contains ${result.teams.length + result.playbooks.length + result.plays.length} total records - UI should now show data!`,
-        "Demo Data Found"
-      );
-
-      // Force a small delay to let hooks refresh
-      setTimeout(() => {
-        this.addLog(
-          "info",
-          "Data hooks refreshed - navigate to Teams/Playbooks to see data",
-          "demo"
-        );
-        this.showToast(
-          "info",
-          "✅ Try navigating to /teams or /playbook to see your data!",
-          "Navigation Tip"
-        );
-      }, 1000);
-
-      return result;
-    } catch (err) {
-      this.addLog("error", `Demo data check failed: ${err}`, "demo");
-      this.showToast("error", `Demo data check failed: ${err}`, "Check Failed");
     }
   }
 

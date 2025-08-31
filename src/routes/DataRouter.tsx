@@ -12,7 +12,8 @@ import {
   LazyDashboardPage,
   LazyLoginPage,
   LazyTeamSettings,
-  LazyTeamBulletinLazyAnalyticsPage,
+  LazyTeamBulletin,
+  LazyAnalyticsPage,
   LazyBoxCall,
   LazyPlaybookPage,
   LazyProfilePage,
@@ -155,16 +156,6 @@ export const DataRouterApp: React.FC = () => {
                 element: (
                   <Suspense fallback={<RouteLoadingSpinner />}>
                     <LazyAnalyticsPage />
-                  </Suspense>
-                ),
-              },
-              // Templates - coaches and admins only
-              {
-                path: ROUTES.TEMPLATES,
-                loader: requireCoachOrAdminLoader,
-                element: (
-                  <Suspense fallback={<RouteLoadingSpinner />}>
-                    </>
                   </Suspense>
                 ),
               },

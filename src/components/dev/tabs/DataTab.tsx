@@ -54,19 +54,10 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
           </div>
         </div>
 
-        {/* Demo Data Check Button */}
-        <Button
-          onClick={() => actions.checkDemoData()}
-          variant="success"
-          size="xs"
-          fullWidth
-        >
-          <Icon
-            name="search"
-            className="inline h-4 w-4 align-middle text-current"
-          />{" "}
-          Check Demo Data
-        </Button>
+        {/* Demo Data Section Disabled */}
+        <div className="text-sm text-text-muted text-center py-4">
+          Demo data utilities have been removed from production build
+        </div>
 
         {/* Create Sample Data Button */}
         <Button
@@ -101,7 +92,7 @@ export const DataTab: React.FC<DataTabProps> = ({ onModeChange, actions }) => {
             size="xs"
           >
             <Icon
-              name="clipboard-list"
+              name="list"
               className="inline h-4 w-4 align-middle text-current"
             />{" "}
             Playbook
