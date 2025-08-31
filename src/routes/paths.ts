@@ -18,9 +18,7 @@ export const ROUTES = {
   ABOUT: "/about",
   PRIVACY: "/privacy-policy",
   TERMS: "/terms-of-service",
-  CONTACT: "/contact",
-  TEMPLATES: "/templates",
-  DEV_DIAGNOSTICS: "/dev/diagnostics",
+  CONTACT: "/contact",DEV_DIAGNOSTICS: "/dev/diagnostics",
 } as const;
 
 export const teamRoutes = {

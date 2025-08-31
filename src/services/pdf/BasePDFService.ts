@@ -339,7 +339,7 @@ export class PDFUtils {
       creator: "Practice Planner App",
       producer: "React-PDF",
       creationDate: new Date(),
-      ...(author ? { author } : {}),
+      author,
     };
   }
 }

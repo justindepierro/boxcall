@@ -118,7 +118,7 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
             </div>
             {/* Debug info for development */}
             {import.meta.env.DEV && (
-              <div className="mt-4 p-3 bg-gray-100 rounded-md text-sm text-left">
+              <div className="mt-4 p-3 bg-surface-subtle rounded-md text-sm text-left">
                 <strong>Debug Info:</strong>
                 <pre>{JSON.stringify({ roleContext }, null, 2)}</pre>
               </div>

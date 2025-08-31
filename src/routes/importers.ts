@@ -42,10 +42,7 @@ export function getRouteImporter(path: string): RouteImporter | undefined {
       return () =>
         import("../pages/legal/ContactPage").then((m) => ({
           default: m.ContactPage,
-        }));
-    case ROUTES.TEMPLATES:
-      return () => import("../pages/Templates");
-    default:
+        }));default:
       // Dynamic team routes
       if (p.startsWith("/team/") && p.endsWith("/bulletin")) {
         return () => import("../pages/TeamBulletin");
