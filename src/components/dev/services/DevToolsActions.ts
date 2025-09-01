@@ -61,7 +61,11 @@ export class DevToolsActions {
 
   async createSampleData() {
     try {
-      this.addLog("info", "Sample data creation is disabled in production mode", "demo");
+      this.addLog(
+        "info",
+        "Sample data creation is disabled in production mode",
+        "demo"
+      );
       this.showToast(
         "warning",
         "Sample data creation is disabled. Use the database directly or enable dev mode.",

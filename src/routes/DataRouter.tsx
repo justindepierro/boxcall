@@ -31,6 +31,7 @@ import {
 import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
 import { Layout } from "../components/layout/Layout";
+import { PlaybookProvider } from "../contexts/PlaybookContext";
 import { ROUTES } from "./paths";
 import {
   requireTeamCoachLoader,
@@ -165,7 +166,9 @@ export const DataRouterApp: React.FC = () => {
                 loader: requireAuthenticatedLoader,
                 element: (
                   <Suspense fallback={<RouteLoadingSpinner />}>
-                    <LazyPlaybookPage />
+                    <PlaybookProvider>
+                      <LazyPlaybookPage />
+                    </PlaybookProvider>
                   </Suspense>
                 ),
               },

@@ -15,10 +15,8 @@ export const LazyDashboardPage = lazy(
 );
 
 // Calendar Shell (final) – load direct page wrapper (legacy shims removed)
-export const LazyCalendarShellPage = lazy(() =>
-  import("../../pages/CalendarShellPage").then((m) => ({
-    default: m.CalendarShellPage,
-  }))
+export const LazyCalendarShellPage = lazy(
+  () => import("../../pages/CalendarShellPage")
 );
 
 export const LazyLoginPage = lazy(() => import("../../pages/LoginPage"));

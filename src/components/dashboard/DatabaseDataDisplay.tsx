@@ -229,7 +229,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                 <div className="mt-3 pt-2 border-t border-subtle">
                   <Typography variant="body-xs" className="text-jade-700">
                     <Icon
-                      name="lightbulb"
+                      name="info"
                       className="inline h-4 w-4 align-middle text-current"
                     />{" "}
                     In a full app, selecting a team would switch your workspace
@@ -289,7 +289,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         <Card className="bc-card-padding surface-card">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-              <Icon name="zap" size="md" color="secondary" />
+              <Icon name="zap" size="md" color="info" />
             </div>
             <div>
               <Typography variant="headline-sm" className="text-text-primary">

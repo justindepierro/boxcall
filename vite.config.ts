@@ -102,6 +102,9 @@ export default defineConfig({
         ]
       : []),
   ],
+  worker: {
+    format: "es",
+  },
   build: {
     // Emit manifest for bundle analysis tools
     manifest: true,
