@@ -4,6 +4,7 @@ import { DashboardProvider } from "../../context/DashboardContext";
 import { useAuth } from "../../app/auth-store";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
+import { useDashboardStore } from "../../stores/dashboardStore";
 const ProfileCard = React.lazy(
   () =>
     import("../dashboard/ProfileCard") as Promise<{
@@ -32,6 +33,9 @@ import { Typography } from "../design-system";
 import DashboardHeader from "./DashboardHeader";
 import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
+import { DashboardErrorBoundary } from "./DashboardErrorBoundary";
+import { DashboardCustomizationPanel } from "./DashboardCustomizationPanel";
+import { DashboardCustomizationTrigger } from "./DashboardCustomizationTrigger";
 
 /**
  * Responsive Dashboard Layout
@@ -53,6 +57,21 @@ export const ResponsiveDashboardLayout: React.FC = () => {
     typeof window !== "undefined" ? window.location.pathname : "/"
   );
   const { isStepVisible } = useProgressiveLoading(4, 200);
+
+  // Phase 2A: Dashboard customization state
+  const {
+    currentLayout: _currentLayout,
+    loadLayouts,
+    personalizationSettings: _personalizationSettings,
+  } = useDashboardStore();
+  const [showCustomization, setShowCustomization] = React.useState(false);
+
+  // Load user's dashboard layouts on mount
+  React.useEffect(() => {
+    if (user?.id) {
+      loadLayouts(user.id);
+    }
+  }, [user?.id, loadLayouts]);
 
   // Early returns for loading and error states
   if (loading) {
@@ -108,13 +127,15 @@ export const ResponsiveDashboardLayout: React.FC = () => {
               role="region"
               aria-label="Profile"
             >
-              {isStepVisible(0) ? (
-                <React.Suspense fallback={<DashboardCardSkeleton />}>
-                  <ProfileCard />
-                </React.Suspense>
-              ) : (
-                <DashboardCardSkeleton />
-              )}
+              <DashboardErrorBoundary>
+                {isStepVisible(0) ? (
+                  <React.Suspense fallback={<DashboardCardSkeleton />}>
+                    <ProfileCard />
+                  </React.Suspense>
+                ) : (
+                  <DashboardCardSkeleton />
+                )}
+              </DashboardErrorBoundary>
             </div>
 
             {/* Team Feeds (now middle column) */}
@@ -123,13 +144,15 @@ export const ResponsiveDashboardLayout: React.FC = () => {
               role="region"
               aria-label="Team Feeds"
             >
-              {isStepVisible(2) ? (
-                <React.Suspense fallback={<DashboardCardSkeleton />}>
-                  <TeamFeeds />
-                </React.Suspense>
-              ) : (
-                <DashboardCardSkeleton />
-              )}
+              <DashboardErrorBoundary>
+                {isStepVisible(2) ? (
+                  <React.Suspense fallback={<DashboardCardSkeleton />}>
+                    <TeamFeeds />
+                  </React.Suspense>
+                ) : (
+                  <DashboardCardSkeleton />
+                )}
+              </DashboardErrorBoundary>
             </div>
 
             {/* Trophy Shelf (now right column) */}
@@ -138,13 +161,15 @@ export const ResponsiveDashboardLayout: React.FC = () => {
               role="region"
               aria-label="Trophy Shelf"
             >
-              {isStepVisible(1) ? (
-                <React.Suspense fallback={<DashboardCardSkeleton />}>
-                  <PersonalTrophyShelf />
-                </React.Suspense>
-              ) : (
-                <DashboardCardSkeleton />
-              )}
+              <DashboardErrorBoundary>
+                {isStepVisible(1) ? (
+                  <React.Suspense fallback={<DashboardCardSkeleton />}>
+                    <PersonalTrophyShelf />
+                  </React.Suspense>
+                ) : (
+                  <DashboardCardSkeleton />
+                )}
+              </DashboardErrorBoundary>
             </div>
 
             {/* Calendar */}
@@ -153,13 +178,15 @@ export const ResponsiveDashboardLayout: React.FC = () => {
               role="region"
               aria-label="Calendar"
             >
-              {isStepVisible(3) ? (
-                <React.Suspense fallback={<DashboardCardSkeleton />}>
-                  <PersonalCalendar />
-                </React.Suspense>
-              ) : (
-                <DashboardCardSkeleton />
-              )}
+              <DashboardErrorBoundary>
+                {isStepVisible(3) ? (
+                  <React.Suspense fallback={<DashboardCardSkeleton />}>
+                    <PersonalCalendar />
+                  </React.Suspense>
+                ) : (
+                  <DashboardCardSkeleton />
+                )}
+              </DashboardErrorBoundary>
             </div>
           </div>
         </main>
@@ -168,6 +195,16 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         <div className="mobile-bottom-nav lg:hidden">
           <MobileBottomNavigation items={items} />
         </div>
+
+        {/* PHASE 2A: Dashboard Customization */}
+        <DashboardCustomizationTrigger
+          onClick={() => setShowCustomization(true)}
+        />
+
+        <DashboardCustomizationPanel
+          isOpen={showCustomization}
+          onClose={() => setShowCustomization(false)}
+        />
       </div>
     </DashboardProvider>
   );

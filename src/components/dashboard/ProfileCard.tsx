@@ -30,20 +30,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const isOwnProfile = !isViewMode; // Only show quick actions for own profile
   const [showFullBio, setShowFullBio] = useState(false);
 
-  // Debug logging
-  console.log(
-    "ProfileCard render - editModalOpen:",
-    editModalOpen,
-    "isOwnProfile:",
-    isOwnProfile,
-    "isViewMode:",
-    isViewMode,
-    "profile:",
-    profile,
-    "roleContext:",
-    roleContext
-  );
-
   // Use unified role system
   const userRole = roleContext?.appRole || profile?.role || "player";
   const isPlayer = userRole === "player";
@@ -76,9 +62,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             variant="ghost"
             size="sm"
             onClick={handleHeaderEdit}
-            className="p-1"
+            className="p-2 hover:bg-jade-50 rounded-lg"
+            aria-label="Edit profile"
           >
-            <Icon name="edit" size={14} />
+            <Icon name="edit" size={16} />
           </Button>
         )}
       </div>
@@ -93,15 +80,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             {isOwnProfile && (
               <Button
                 variant="ghost"
-                size="xs"
-                className="absolute bottom-0 right-0 bg-white rounded-full shadow p-1 border border-subtle hover:bg-jade-50"
+                size="sm"
+                className="absolute -bottom-1 -right-1 bg-white rounded-full shadow-md p-2 border border-subtle hover:bg-jade-50 hover:border-jade-200 transition-colors"
                 aria-label="Edit profile picture"
-                onClick={() => {
-                  console.log("Edit profile picture clicked - opening modal");
-                  setEditModalOpen(true);
-                }}
+                onClick={() => setEditModalOpen(true)}
               >
-                <Icon name="plus" size={12} />
+                <Icon name="plus" size={14} />
               </Button>
             )}
           </div>
@@ -176,15 +160,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           {isOwnProfile && (
             <Button
               variant="ghost"
-              size="xs"
-              className="absolute top-0 right-0 bg-white rounded-full shadow p-1 border border-subtle hover:bg-jade-50"
+              size="sm"
+              className="absolute -top-1 -right-1 bg-white rounded-full shadow-md p-2 border border-subtle hover:bg-jade-50 hover:border-jade-200 transition-colors"
               aria-label="Edit bio"
-              onClick={() => {
-                console.log("Edit bio clicked - opening modal");
-                setEditModalOpen(true);
-              }}
+              onClick={() => setEditModalOpen(true)}
             >
-              <Icon name="plus" size={12} />
+              <Icon name="plus" size={14} />
             </Button>
           )}
           {/* Profile Edit Modal */}
@@ -217,4 +198,4 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   );
 };
 
-export default ProfileCard;
+export default React.memo(ProfileCard);

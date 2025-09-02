@@ -32,6 +32,7 @@ const PersonalCalendar: React.FC = () => {
   );
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [quickEventTitle, setQuickEventTitle] = useState("");
+  const [isCreatingEvent, setIsCreatingEvent] = useState(false);
 
   const { devMode } = useDevMode();
   // Fetch a short horizon of events (next 14 days)
@@ -66,10 +67,19 @@ const PersonalCalendar: React.FC = () => {
   const handleQuickAdd = async () => {
     if (!quickEventTitle.trim()) return;
 
-    // TODO: Implement event creation service call
-    console.log("Creating event:", quickEventTitle);
-    setQuickEventTitle("");
-    setShowQuickAdd(false);
+    setIsCreatingEvent(true);
+    try {
+      // TODO: Implement event creation service call
+      // await eventService.createEvent({ title: quickEventTitle, ... })
+
+      setQuickEventTitle("");
+      setShowQuickAdd(false);
+    } catch (error) {
+      console.error("Failed to create event:", error);
+      // TODO: Show error toast to user
+    } finally {
+      setIsCreatingEvent(false);
+    }
   };
 
   // Format event time
@@ -100,17 +110,17 @@ const PersonalCalendar: React.FC = () => {
           <div className="flex items-center space-x-2">
             <Button
               variant="link"
-              size="xs"
+              size="sm"
               onClick={() => navigate(ROUTES.CALENDAR)}
-              className="text-jade-600 hover:text-jade-700"
+              className="text-jade-600 hover:text-jade-700 px-3 py-2"
             >
               View Full Calendar
             </Button>
             <Button
               variant="secondary"
-              size="xs"
+              size="sm"
               onClick={() => setShowQuickAdd(!showQuickAdd)}
-              className="border-subtle text-jade-600 hover:text-jade-700"
+              className="border-subtle text-jade-600 hover:text-jade-700 px-3 py-2"
             >
               + Add
             </Button>
@@ -129,11 +139,16 @@ const PersonalCalendar: React.FC = () => {
                 className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-jade-500 focus:border-jade-500"
                 onKeyPress={(e) => e.key === "Enter" && handleQuickAdd()}
               />
-              <Button variant="primary" size="sm" onClick={handleQuickAdd}>
-                Add
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleQuickAdd}
+                disabled={isCreatingEvent || !quickEventTitle.trim()}
+              >
+                {isCreatingEvent ? "Adding..." : "Add"}
               </Button>
               <Button
-                variant="link"
+                variant="ghost"
                 size="sm"
                 onClick={() => setShowQuickAdd(false)}
                 className="text-text-secondary hover:text-text-primary"
@@ -175,7 +190,16 @@ const PersonalCalendar: React.FC = () => {
                   <div
                     key={event.id}
                     onClick={() => handleEventClick(event)}
-                    className="flex items-start space-x-3 p-3 rounded-lg surface-subtle-hover transition-colors cursor-pointer border border-subtle dark:border-gray-700"
+                    className="flex items-start space-x-3 p-4 rounded-lg surface-subtle-hover transition-colors cursor-pointer border border-subtle dark:border-gray-700 hover:border-jade-200 dark:hover:border-jade-600"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${event.title} on ${format(new Date(event.start || ""), "MMMM d")}`}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleEventClick(event);
+                      }
+                    }}
                   >
                     {/* Event Icon */}
                     <div className="flex-shrink-0 mt-1">
