@@ -66,7 +66,7 @@ export function useAdaptiveDashboard() {
    * Detect and update current context
    */
   const updateContext = useCallback(() => {
-    if (!personalizationSettings.adaptiveFeatures.enableSmartPrioritization) {
+    if (!personalizationSettings?.adaptiveFeatures?.enableSmartPrioritization) {
       return;
     }
 
@@ -83,7 +83,7 @@ export function useAdaptiveDashboard() {
 
       // Trigger layout adaptation if enabled
       if (
-        personalizationSettings.adaptiveFeatures.enableAutoLayoutOptimization
+        personalizationSettings?.adaptiveFeatures?.enableAutoLayoutOptimization
       ) {
         adaptLayoutForContext(detection.context);
       }
@@ -113,7 +113,7 @@ export function useAdaptiveDashboard() {
       action: "view" | "interact" | "edit" | "share",
       duration: number = 1000
     ) => {
-      if (!personalizationSettings.adaptiveFeatures.enableUsageAnalytics) {
+      if (!personalizationSettings?.adaptiveFeatures?.enableUsageAnalytics) {
         return;
       }
 
@@ -136,12 +136,12 @@ export function useAdaptiveDashboard() {
    * Get contextual actions for current situation
    */
   const getAdaptiveActions = useCallback(() => {
-    if (!personalizationSettings.adaptiveFeatures.enableContextualActions) {
+    if (!personalizationSettings?.adaptiveFeatures?.enableContextualActions) {
       return [];
     }
 
     return getContextualActions();
-  }, [personalizationSettings.adaptiveFeatures, getContextualActions]);
+  }, [personalizationSettings?.adaptiveFeatures, getContextualActions]);
 
   /**
    * Force context refresh
@@ -154,7 +154,7 @@ export function useAdaptiveDashboard() {
    * Setup automatic context updates
    */
   useEffect(() => {
-    if (!personalizationSettings.adaptiveFeatures.enableSmartPrioritization) {
+    if (!personalizationSettings?.adaptiveFeatures?.enableSmartPrioritization) {
       return;
     }
 
@@ -174,7 +174,7 @@ export function useAdaptiveDashboard() {
     };
   }, [
     updateContext,
-    personalizationSettings.adaptiveFeatures.enableSmartPrioritization,
+    personalizationSettings?.adaptiveFeatures?.enableSmartPrioritization,
   ]);
 
   /**
@@ -210,7 +210,7 @@ export function useAdaptiveDashboard() {
 
     // Adaptive features
     isAdaptiveMode:
-      personalizationSettings.adaptiveFeatures.enableSmartPrioritization,
+      personalizationSettings?.adaptiveFeatures?.enableSmartPrioritization ?? false,
     contextConfidence: 0.8, // TODO: Get from actual detection
     lastContextUpdate: Date.now(),
 
