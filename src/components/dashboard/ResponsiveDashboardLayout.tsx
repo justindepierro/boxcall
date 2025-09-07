@@ -36,6 +36,7 @@ import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { DashboardErrorBoundary } from "./DashboardErrorBoundary";
 import { DashboardCustomizationPanel } from "./DashboardCustomizationPanel";
 import { DashboardCustomizationTrigger } from "./DashboardCustomizationTrigger";
+import { ContextualActionsPanel } from "./ContextualActionsPanel";
 
 /**
  * Responsive Dashboard Layout
@@ -121,6 +122,17 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           aria-label="Dashboard main content"
         >
           <div className="responsive-content-grid">
+            {/* Phase 2A Sprint 2: Smart Actions */}
+            <div
+              className="smart-actions-section min-h-[120px]"
+              role="region"
+              aria-label="Smart Actions"
+            >
+              <DashboardErrorBoundary>
+                <ContextualActionsPanel />
+              </DashboardErrorBoundary>
+            </div>
+
             {/* Profile Card */}
             <div
               className="profile-section min-h-[320px]"

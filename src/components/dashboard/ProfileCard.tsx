@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ProfileEditModal } from "../profile/ProfileEditModal";
 import { useDashboardContext } from "../../context/useDashboardContext";
 import { useRoles } from "../../hooks/useRoles";
+import { useAdaptiveWidget } from "../../hooks/useAdaptiveDashboard";
 
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
@@ -30,6 +31,31 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const isOwnProfile = !isViewMode; // Only show quick actions for own profile
   const [showFullBio, setShowFullBio] = useState(false);
 
+  // Phase 2A Sprint 2: Adaptive behavior
+  const { trackView, trackEdit, isHighPriority } = useAdaptiveWidget(
+    "profile-card",
+    "profile"
+  );
+
+  // Track profile views and interactions
+  useEffect(() => {
+    trackView();
+  }, [trackView]);
+
+  const handleProfileEdit = () => {
+    trackEdit();
+    if (onEditClick) {
+      onEditClick();
+    } else {
+      setEditModalOpen(true);
+    }
+  };
+
+  // Adaptive styling for high priority widgets
+  const cardClassName = isHighPriority
+    ? "ring-2 ring-blue-200 ring-opacity-50"
+    : "";
+
   // Use unified role system
   const userRole = roleContext?.appRole || profile?.role || "player";
   const isPlayer = userRole === "player";
@@ -44,14 +70,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       .slice(0, 2);
   };
   const displayName = profile?.full_name || profile?.display_name || "Player";
-  // If onEditClick is provided, use it; otherwise, open profile modal
-  const handleHeaderEdit =
-    onEditClick ||
-    (() => {
-      setEditModalOpen(true);
-    });
+
   return (
-    <Card className="compact-card h-full relative">
+    <Card className={`compact-card h-full relative ${cardClassName}`}>
       {/* Header */}
       <div className="flex items-center justify-between border-b border-subtle pb-2">
         <Typography variant="headline-md" className="text-navy-800">
@@ -61,7 +82,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           <Button
             variant="ghost"
             size="sm"
-            onClick={handleHeaderEdit}
+            onClick={handleProfileEdit}
             className="p-2 hover:bg-jade-50 rounded-lg"
             aria-label="Edit profile"
           >
@@ -83,7 +104,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 size="sm"
                 className="absolute -bottom-1 -right-1 bg-white rounded-full shadow-md p-2 border border-subtle hover:bg-jade-50 hover:border-jade-200 transition-colors"
                 aria-label="Edit profile picture"
-                onClick={() => setEditModalOpen(true)}
+                onClick={handleProfileEdit}
               >
                 <Icon name="plus" size={14} />
               </Button>
@@ -163,7 +184,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               size="sm"
               className="absolute -top-1 -right-1 bg-white rounded-full shadow-md p-2 border border-subtle hover:bg-jade-50 hover:border-jade-200 transition-colors"
               aria-label="Edit bio"
-              onClick={() => setEditModalOpen(true)}
+              onClick={handleProfileEdit}
             >
               <Icon name="plus" size={14} />
             </Button>

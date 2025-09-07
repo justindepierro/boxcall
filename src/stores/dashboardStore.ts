@@ -3,10 +3,12 @@ import { persist } from "zustand/middleware";
 
 /**
  * Dashboard Personalization Store
- * Phase 2A: Smart Dashboard Personalization
+ * Phase 2A: Smart Dashboard Personalization + Adaptive Content System
  *
- * Manages user dashboard layout preferences, widget configurations,
- * and intelligent personalization features.
+ * Sprint 1: Widget configuration, layout management, user preferences
+ * Sprint 2: Adaptive content, smart prioritization, contextual actions
+ *
+ * Manages intelligent dashboard behavior with context-aware adaptations.
  */
 
 export type WidgetType =
@@ -23,6 +25,51 @@ export type WidgetType =
 export type LayoutSize = "small" | "medium" | "large";
 export type UserRole = "coach" | "player" | "family" | "admin";
 
+// Sprint 2: Adaptive Content System Types
+export type ContextType =
+  | "game-day"
+  | "practice-day"
+  | "off-season"
+  | "recruiting"
+  | "tournament"
+  | "team-meeting";
+
+export type TimeContext =
+  | "morning"
+  | "pre-practice"
+  | "practice-time"
+  | "post-practice"
+  | "game-time"
+  | "evening";
+
+export interface UserActivity {
+  widgetId: string;
+  action: "view" | "interact" | "edit" | "share";
+  timestamp: number;
+  duration: number; // in milliseconds
+  context: ContextType;
+}
+
+export interface WidgetPriority {
+  widgetId: string;
+  priority: number; // 0-100, higher = more important
+  reason: string;
+  contextFactors: string[];
+  lastCalculated: number;
+}
+
+export interface ContextualAction {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  action: () => void;
+  contexts: ContextType[];
+  roles: UserRole[];
+  priority: number;
+  conditions?: () => boolean;
+}
+
 export interface WidgetConfig {
   id: string;
   type: WidgetType;
@@ -35,6 +82,16 @@ export interface WidgetConfig {
   };
   size: LayoutSize;
   preferences: Record<string, unknown>;
+
+  // Sprint 2: Adaptive Features
+  adaptiveSettings?: {
+    autoHide: boolean;
+    contextualResize: boolean;
+    smartPrioritization: boolean;
+    lastInteraction?: number;
+    avgDailyUse?: number;
+    preferredContexts?: ContextType[];
+  };
 }
 
 export interface DashboardLayout {
@@ -61,6 +118,16 @@ export interface PersonalizationSettings {
   autoRefresh: boolean;
   refreshInterval: number; // in seconds
   preferredLanguage: string;
+
+  // Sprint 2: Adaptive Content Settings
+  adaptiveFeatures: {
+    enableSmartPrioritization: boolean;
+    enableContextualActions: boolean;
+    enableAutoLayoutOptimization: boolean;
+    enableUsageAnalytics: boolean;
+    adaptiveNotifications: boolean;
+    learningMode: "aggressive" | "moderate" | "conservative";
+  };
 }
 
 interface DashboardState {
@@ -78,6 +145,14 @@ interface DashboardState {
   isDragging: boolean;
   draggedWidget: WidgetConfig | null;
   previewLayout: DashboardLayout | null;
+
+  // Sprint 2: Adaptive Content State
+  currentContext: ContextType;
+  timeContext: TimeContext;
+  userActivity: UserActivity[];
+  widgetPriorities: WidgetPriority[];
+  contextualActions: ContextualAction[];
+  adaptiveRecommendations: string[];
 
   // Actions
   setCurrentLayout: (layout: DashboardLayout) => void;
@@ -118,6 +193,16 @@ interface DashboardState {
   getRecommendedLayouts: (userRole: UserRole) => DashboardLayout[];
   optimizeLayout: () => void;
 
+  // Sprint 2: Adaptive Content Methods
+  setCurrentContext: (context: ContextType) => void;
+  setTimeContext: (context: TimeContext) => void;
+  trackUserActivity: (activity: UserActivity) => void;
+  calculateWidgetPriorities: () => void;
+  getContextualActions: () => ContextualAction[];
+  updateAdaptiveRecommendations: () => void;
+  adaptLayoutForContext: (context: ContextType) => void;
+  getSmartWidgetOrder: () => string[];
+
   // Persistence
   saveLayout: () => Promise<void>;
   loadLayouts: (userId: string) => Promise<void>;
@@ -138,6 +223,16 @@ const defaultPersonalizationSettings: PersonalizationSettings = {
   autoRefresh: true,
   refreshInterval: 300, // 5 minutes
   preferredLanguage: "en",
+
+  // Sprint 2: Adaptive Content Settings
+  adaptiveFeatures: {
+    enableSmartPrioritization: true,
+    enableContextualActions: true,
+    enableAutoLayoutOptimization: true,
+    enableUsageAnalytics: true,
+    adaptiveNotifications: true,
+    learningMode: "moderate",
+  },
 };
 
 // Default widget configurations for different roles
@@ -281,6 +376,14 @@ export const useDashboardStore = create<DashboardState>()(
       isDragging: false,
       draggedWidget: null,
       previewLayout: null,
+
+      // Sprint 2: Adaptive Content State
+      currentContext: "practice-day",
+      timeContext: "morning",
+      userActivity: [],
+      widgetPriorities: [],
+      contextualActions: [],
+      adaptiveRecommendations: [],
 
       // Basic setters
       setCurrentLayout: (layout) => set({ currentLayout: layout }),
@@ -562,6 +665,236 @@ export const useDashboardStore = create<DashboardState>()(
         }
       },
 
+      // Sprint 2: Adaptive Content Methods
+      setCurrentContext: (context) => {
+        set({ currentContext: context });
+        get().calculateWidgetPriorities();
+        get().updateAdaptiveRecommendations();
+      },
+
+      setTimeContext: (context) => {
+        set({ timeContext: context });
+        get().calculateWidgetPriorities();
+      },
+
+      trackUserActivity: (activity) => {
+        const state = get();
+        const updatedActivity = [...state.userActivity, activity];
+
+        // Keep only last 100 activities to prevent memory bloat
+        if (updatedActivity.length > 100) {
+          updatedActivity.splice(0, updatedActivity.length - 100);
+        }
+
+        set({ userActivity: updatedActivity });
+        get().calculateWidgetPriorities();
+      },
+
+      calculateWidgetPriorities: () => {
+        const state = get();
+        if (
+          !state.personalizationSettings.adaptiveFeatures
+            .enableSmartPrioritization
+        ) {
+          return;
+        }
+
+        const now = Date.now();
+        const priorities: WidgetPriority[] = [];
+
+        state.currentLayout?.widgets.forEach((widget) => {
+          let priority = 50; // Base priority
+          const reasons: string[] = [];
+          const contextFactors: string[] = [];
+
+          // Factor 1: Recent usage
+          const recentActivity = state.userActivity.filter(
+            (a) =>
+              a.widgetId === widget.id &&
+              now - a.timestamp < 24 * 60 * 60 * 1000
+          ).length;
+
+          if (recentActivity > 0) {
+            priority += Math.min(recentActivity * 5, 25);
+            reasons.push(`Used ${recentActivity} times today`);
+            contextFactors.push("recent-usage");
+          }
+
+          // Factor 2: Context relevance
+          if (
+            state.currentContext === "game-day" &&
+            widget.type === "performance-stats"
+          ) {
+            priority += 20;
+            reasons.push("Relevant for game day");
+            contextFactors.push("context-match");
+          }
+
+          if (
+            state.currentContext === "practice-day" &&
+            widget.type === "practice-plans"
+          ) {
+            priority += 20;
+            reasons.push("Relevant for practice");
+            contextFactors.push("context-match");
+          }
+
+          // Factor 3: Time of day
+          if (state.timeContext === "morning" && widget.type === "calendar") {
+            priority += 15;
+            reasons.push("Schedule relevant in morning");
+            contextFactors.push("time-relevance");
+          }
+
+          priorities.push({
+            widgetId: widget.id,
+            priority: Math.min(priority, 100),
+            reason: reasons.join(", ") || "Base priority",
+            contextFactors,
+            lastCalculated: now,
+          });
+        });
+
+        set({ widgetPriorities: priorities });
+      },
+
+      getContextualActions: () => {
+        const state = get();
+        if (
+          !state.personalizationSettings.adaptiveFeatures
+            .enableContextualActions
+        ) {
+          return [];
+        }
+
+        const actions: ContextualAction[] = [];
+
+        // Game day actions
+        if (state.currentContext === "game-day") {
+          actions.push({
+            id: "quick-game-plan",
+            title: "Quick Game Plan",
+            description: "Access today's game strategy",
+            icon: "gamepad-2",
+            action: () => console.log("Opening game plan"),
+            contexts: ["game-day"],
+            roles: ["coach", "player"],
+            priority: 90,
+          });
+        }
+
+        // Practice day actions
+        if (state.currentContext === "practice-day") {
+          actions.push({
+            id: "practice-checklist",
+            title: "Practice Checklist",
+            description: "Review today's practice plan",
+            icon: "check-square",
+            action: () => console.log("Opening practice checklist"),
+            contexts: ["practice-day"],
+            roles: ["coach"],
+            priority: 85,
+          });
+        }
+
+        return actions.sort((a, b) => b.priority - a.priority);
+      },
+
+      updateAdaptiveRecommendations: () => {
+        const state = get();
+        const recommendations: string[] = [];
+
+        // Analyze usage patterns
+        const widgetUsage = state.userActivity.reduce(
+          (acc, activity) => {
+            acc[activity.widgetId] = (acc[activity.widgetId] || 0) + 1;
+            return acc;
+          },
+          {} as Record<string, number>
+        );
+
+        // Find underused widgets
+        const allWidgets = state.currentLayout?.widgets || [];
+        const underusedWidgets = allWidgets.filter(
+          (w) => (widgetUsage[w.id] || 0) < 5
+        );
+
+        if (underusedWidgets.length > 0) {
+          recommendations.push(
+            `Consider hiding or resizing ${underusedWidgets.length} rarely used widgets`
+          );
+        }
+
+        // Context-based recommendations
+        if (state.currentContext === "game-day") {
+          recommendations.push(
+            "Enable game-day focused layout for better performance tracking"
+          );
+        }
+
+        set({ adaptiveRecommendations: recommendations });
+      },
+
+      adaptLayoutForContext: (context) => {
+        const state = get();
+        if (
+          !state.currentLayout ||
+          !state.personalizationSettings.adaptiveFeatures
+            .enableAutoLayoutOptimization
+        ) {
+          return;
+        }
+
+        const adaptedWidgets = state.currentLayout.widgets.map((widget) => {
+          const adapted = { ...widget };
+
+          // Game day adaptations
+          if (context === "game-day") {
+            if (widget.type === "performance-stats") {
+              adapted.size = "large";
+              adapted.position = { ...adapted.position, order: 0 };
+            }
+            if (widget.type === "trophy-shelf") {
+              adapted.size = "small";
+            }
+          }
+
+          // Practice day adaptations
+          if (context === "practice-day") {
+            if (widget.type === "practice-plans") {
+              adapted.size = "large";
+              adapted.position = { ...adapted.position, order: 0 };
+            }
+          }
+
+          return adapted;
+        });
+
+        const adaptedLayout: DashboardLayout = {
+          ...state.currentLayout,
+          widgets: adaptedWidgets,
+          updatedAt: new Date().toISOString(),
+        };
+
+        set({ currentLayout: adaptedLayout });
+      },
+
+      getSmartWidgetOrder: () => {
+        const state = get();
+        if (
+          !state.personalizationSettings.adaptiveFeatures
+            .enableSmartPrioritization
+        ) {
+          return state.currentLayout?.widgets.map((w) => w.id) || [];
+        }
+
+        // Sort widgets by calculated priority
+        const sortedPriorities = [...state.widgetPriorities].sort(
+          (a, b) => b.priority - a.priority
+        );
+        return sortedPriorities.map((p) => p.widgetId);
+      },
+
       // Utilities
       reset: () => {
         set({
@@ -574,6 +907,13 @@ export const useDashboardStore = create<DashboardState>()(
           isDragging: false,
           draggedWidget: null,
           previewLayout: null,
+          // Sprint 2: Reset adaptive state
+          currentContext: "practice-day",
+          timeContext: "morning",
+          userActivity: [],
+          widgetPriorities: [],
+          contextualActions: [],
+          adaptiveRecommendations: [],
         });
       },
 
@@ -585,6 +925,11 @@ export const useDashboardStore = create<DashboardState>()(
         availableLayouts: state.availableLayouts,
         personalizationSettings: state.personalizationSettings,
         currentLayout: state.currentLayout,
+        // Sprint 2: Persist adaptive state
+        currentContext: state.currentContext,
+        timeContext: state.timeContext,
+        userActivity: state.userActivity.slice(-50), // Keep only recent 50 activities
+        widgetPriorities: state.widgetPriorities,
       }),
     }
   )
