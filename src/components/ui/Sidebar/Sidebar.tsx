@@ -82,16 +82,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [showTooltips] = useState(
     () => UserPreferencesService.loadPreferences().ui.showTooltips
   );
-  const pinnedIds = useMemo(() => new Set(state.favorites), [state.favorites]);
-  const pinnedItems = useMemo(
-    () =>
-      items.filter((it) => pinnedIds.has(it.id) && !it.divider && !it.disabled),
-    [items, pinnedIds]
-  );
-  const mainItems = useMemo(
-    () => items.filter((it) => !pinnedIds.has(it.id)),
-    [items, pinnedIds]
-  );
+  // Simplified: just use all items without pinning
+  const mainItems = items;
+
+  // For backwards compatibility, add empty pinned items and IDs
+  const pinnedItems: SidebarItem[] = [];
+  const pinnedIds = new Set<string>();
 
   // Build a list of focusable indices aligned with rendered MAIN items (skip dividers/disabled)
   const focusableMap = useMemo(() => {

@@ -38,7 +38,7 @@ export const useMobileNavigation = (currentPath: string = "/") => {
     },
     {
       id: "bulletin",
-      label: "Team",
+      label: "Team Hub",
       icon: "users",
       href: teamRoutes.bulletin(teamId),
       badge: notifications.bulletin,

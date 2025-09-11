@@ -17,6 +17,15 @@ import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
 import { supabase } from "../lib/supabase";
 import { ROUTES } from "../routes/paths";
 
+// Collaboration components and provider
+import { SharedGoalTracker } from "../components/collaboration/SharedGoalTracker";
+import { TeamVoteWidget } from "../components/collaboration/TeamVoteWidget";
+import { ProgressSharing } from "../components/collaboration/ProgressSharing";
+import { CollaborationProvider } from "../components/collaboration/CollaborationProvider";
+
+// Loading skeleton for collaboration widgets
+import { DashboardCardSkeleton } from "../components/ui/Skeleton";
+
 // Team Bulletin Page (modular layout version)
 export const TeamBulletin: React.FC = () => {
   const { teamId } = useParams<{ teamId: string }>();
@@ -216,33 +225,141 @@ export const TeamBulletin: React.FC = () => {
       >
         Skip to main content
       </a>
-      <main
-        id="main-content"
-        role="main"
-        aria-labelledby="team-dashboard-heading"
-        className="py-4"
+      <CollaborationProvider
+        teamId={teamId || "demo-team"}
+        dashboardId="team-bulletin"
+        user={{
+          id: user?.id || "anonymous",
+          name: profile?.display_name || profile?.full_name || "Team Member",
+          role:
+            profile?.role === "admin" || isCoach
+              ? "coach"
+              : userRole === "family"
+                ? "parent"
+                : "player",
+        }}
       >
-        <div className="px-4 sm:px-6 lg:px-8">
-          <TeamBulletinHeader
-            headingId="team-dashboard-heading"
-            teamId={teamId}
-            teamName={teamData.name}
-            seasonDisplay={teamData.season}
-            record={teamData.record}
-            memberCount={teamData.memberCount}
-            nextGame={teamData.nextGame}
-            schoolName={teamData.school_name}
-            mascot={teamData.mascot}
-            isCoach={isCoach}
-            logoUrl={teamData.logo_url || undefined}
-          />
-          <div className="grid grid-cols-1 lg:grid-cols-4 bc-grid-gap">
-            <TeamBulletinLeftPanel teamId={teamId} userRole={userRole} />
-            <TeamBulletinFeedPanel teamId={teamId} userRole={userRole} />
-            <TeamBulletinRightPanel teamId={teamId} />
+        <main
+          id="main-content"
+          role="main"
+          aria-labelledby="team-dashboard-heading"
+          className="py-4"
+        >
+          <div className="px-4 sm:px-6 lg:px-8">
+            <TeamBulletinHeader
+              headingId="team-dashboard-heading"
+              teamId={teamId}
+              teamName={teamData.name}
+              seasonDisplay={teamData.season}
+              record={teamData.record}
+              memberCount={teamData.memberCount}
+              nextGame={teamData.nextGame}
+              schoolName={teamData.school_name}
+              mascot={teamData.mascot}
+              isCoach={isCoach}
+              logoUrl={teamData.logo_url || undefined}
+            />
+
+            {/* Team Collaboration Hub Section */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <Typography
+                    variant="headline-sm"
+                    className="text-text-primary mb-2"
+                  >
+                    Team Collaboration Hub
+                  </Typography>
+                  <Typography variant="body-sm" color="muted">
+                    Real-time planning, voting, and progress tracking tools
+                  </Typography>
+                </div>
+              </div>
+
+              {/* Collaboration Widgets Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Shared Goals */}
+                <div
+                  className="collaboration-goals min-h-[320px]"
+                  role="region"
+                  aria-label="Team Goals"
+                >
+                  <React.Suspense fallback={<DashboardCardSkeleton />}>
+                    <SharedGoalTracker
+                      widgetId="team-bulletin-shared-goals"
+                      userRole={
+                        profile?.role === "admin"
+                          ? "coach"
+                          : (userRole as "coach" | "player" | "family") ||
+                            "player"
+                      }
+                      userId={user?.id || "anonymous"}
+                      teamId={teamId || "demo-team"}
+                    />
+                  </React.Suspense>
+                </div>
+
+                {/* Team Voting */}
+                <div
+                  className="collaboration-vote min-h-[320px]"
+                  role="region"
+                  aria-label="Team Decisions"
+                >
+                  <React.Suspense fallback={<DashboardCardSkeleton />}>
+                    <TeamVoteWidget
+                      widgetId="team-bulletin-team-vote"
+                      userRole={
+                        profile?.role === "admin"
+                          ? "coach"
+                          : (userRole as "coach" | "player" | "family") ||
+                            "player"
+                      }
+                      userId={user?.id || "anonymous"}
+                      userName={
+                        profile?.display_name ||
+                        profile?.full_name ||
+                        "Team Member"
+                      }
+                    />
+                  </React.Suspense>
+                </div>
+
+                {/* Progress Sharing */}
+                <div
+                  className="collaboration-progress min-h-[320px] md:col-span-2 lg:col-span-1"
+                  role="region"
+                  aria-label="Team Progress"
+                >
+                  <React.Suspense fallback={<DashboardCardSkeleton />}>
+                    <ProgressSharing
+                      widgetId="team-bulletin-progress-sharing"
+                      userRole={
+                        profile?.role === "admin"
+                          ? "coach"
+                          : (userRole as "coach" | "player" | "family") ||
+                            "player"
+                      }
+                      userId={user?.id || "anonymous"}
+                      userName={
+                        profile?.display_name ||
+                        profile?.full_name ||
+                        "Team Member"
+                      }
+                    />
+                  </React.Suspense>
+                </div>
+              </div>
+            </div>
+
+            {/* Original Team Bulletin Content */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 bc-grid-gap">
+              <TeamBulletinLeftPanel teamId={teamId} userRole={userRole} />
+              <TeamBulletinFeedPanel teamId={teamId} userRole={userRole} />
+              <TeamBulletinRightPanel teamId={teamId} />
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </CollaborationProvider>
     </Layout>
   );
 };

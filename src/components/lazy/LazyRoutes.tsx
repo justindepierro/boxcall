@@ -27,6 +27,10 @@ export const LazyProfilePage = lazy(() =>
   }))
 );
 
+export const LazyCollaborativeDemoPage = lazy(
+  () => import("../../pages/CollaborativeDemoPage")
+);
+
 export const LazyTeamBulletin = lazy(() => import("../../pages/TeamBulletin"));
 
 export const LazyTeamsPage = lazy(() => import("../../pages/TeamsPage"));

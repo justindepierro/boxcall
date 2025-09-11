@@ -20,14 +20,10 @@ const getTestRole = (devMode: DevMode): UserRole | null => {
       return null;
   }
 };
-import {
-  getNavigationItems,
-  getRoleDisplayInfo,
-  toSidebarItems,
-} from "../../utils/navigation";
+import { getNavigationItems, getRoleDisplayInfo } from "../../utils/navigation";
 import { DevTools } from "../dev";
 import { SidebarLogo } from "../ui/Logo";
-import { Sidebar } from "../ui/Sidebar";
+import { SimpleSidebar } from "../ui/Sidebar/SimpleSidebar";
 import { Button } from "../ui/Button";
 
 import { Footer } from "./Footer";
@@ -58,8 +54,17 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const isDevMode = devMode !== "production";
 
   const navigationItems = getNavigationItems(currentRole);
-  const sidebarItems = toSidebarItems(navigationItems, currentRole);
   const roleInfo = getRoleDisplayInfo(currentRole);
+
+  // Convert navigation items to simple sidebar format
+  const sidebarItems = navigationItems.map((item) => ({
+    id: item.id,
+    label: item.label,
+    href: item.href,
+    icon: item.icon,
+    divider: item.divider,
+    badge: item.badge,
+  }));
 
   // Convert navigationItems to NavBarItems format
 
@@ -72,55 +77,64 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' fill=\'none\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>')]" />
       {/* Main content area with overlay sidebar and top padding for fixed nav */}
       <div className="relative pt-0">
-        {/* Sidebar - Now overlays instead of pushing content */}
-        <Sidebar
+        {/* Simplified Sidebar */}
+        <SimpleSidebar
           items={sidebarItems}
           isOpen={sidebarOpen}
           onClose={() => toggleSidebar()}
-          showOverlay={true}
           header={
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 flex items-center justify-center">
-                <SidebarLogo />
-              </div>
-              <div>
-                <Typography
-                  variant="headline-sm"
-                  as="h3"
-                  className="text-jade-600"
-                >
-                  BoxCall
-                </Typography>
-                <div className="flex items-center space-x-2">
-                  <p className="text-xs text-text-secondary">
-                    {roleInfo.display}
-                  </p>
-                  {isDevMode && (
-                    <span className="text-xs bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 px-1.5 py-0.5 rounded font-medium">
-                      DEV
-                    </span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 flex items-center justify-center">
+                  <SidebarLogo />
+                </div>
+                <div>
+                  <Typography
+                    variant="headline-sm"
+                    as="h3"
+                    className="text-jade-600"
+                  >
+                    BoxCall
+                  </Typography>
+                  <div className="flex items-center space-x-2">
+                    <p className="text-xs text-text-secondary">
+                      {roleInfo.display}
+                    </p>
+                    {isDevMode && (
+                      <span className="text-xs bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 px-1.5 py-0.5 rounded font-medium">
+                        DEV
+                      </span>
+                    )}
+                  </div>
+                  {isDevMode && currentRole !== profile?.role && (
+                    <p className="text-xs text-amber-600 dark:text-amber-400 italic">
+                      Simulating: {currentRole}
+                    </p>
                   )}
                 </div>
-                {isDevMode && currentRole !== profile?.role && (
-                  <p className="text-xs text-amber-600 dark:text-amber-400 italic">
-                    Simulating: {currentRole}
-                  </p>
-                )}
               </div>
+              <Button
+                variant="ghost"
+                onClick={() => toggleSidebar()}
+                className="p-2"
+                aria-label="Close sidebar"
+              >
+                ✕
+              </Button>
             </div>
           }
-          width="md"
-          position="left"
         />
-        {/* Sidebar Toggle Button - Always visible for guaranteed access */}
-        <Button
-          variant="primary"
-          className="fixed top-4 left-4 z-50 rounded-full shadow-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-jade-400"
-          onClick={() => toggleSidebar()}
-          aria-label="Open sidebar"
-        >
-          ☰
-        </Button>
+        {/* Sidebar Toggle Button - Only show when sidebar is closed */}
+        {!sidebarOpen && (
+          <Button
+            variant="primary"
+            className="fixed top-4 left-4 z-30 rounded-full shadow-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-jade-400"
+            onClick={() => toggleSidebar()}
+            aria-label="Open sidebar"
+          >
+            ☰
+          </Button>
+        )}
         {/* Main content - mobile-first layout */}
         <main className="flex-1 min-h-screen">
           <div className="flex flex-col min-h-screen">

@@ -9,7 +9,7 @@ import React, { useContext } from "react";
 import {
   CollaborationContext,
   type CollaborationContextValue,
-} from "./CollaborationProvider";
+} from "./CollaborationContext";
 
 /**
  * Hook to access collaboration context

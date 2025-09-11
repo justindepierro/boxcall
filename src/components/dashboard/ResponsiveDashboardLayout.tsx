@@ -30,6 +30,8 @@ const PersonalCalendar = React.lazy(
     }>
 );
 import { Typography } from "../design-system";
+import { Button } from "../ui";
+import { Icon } from "../ui/Icon/Icon";
 import DashboardHeader from "./DashboardHeader";
 import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
@@ -37,6 +39,7 @@ import { DashboardErrorBoundary } from "./DashboardErrorBoundary";
 import { DashboardCustomizationPanel } from "./DashboardCustomizationPanel";
 import { DashboardCustomizationTrigger } from "./DashboardCustomizationTrigger";
 import { ContextualActionsPanel } from "./ContextualActionsPanel";
+import { CollaborativeFeaturesBanner } from "./CollaborativeFeaturesBanner";
 
 /**
  * Responsive Dashboard Layout
@@ -122,6 +125,13 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           aria-label="Dashboard main content"
         >
           <div className="responsive-content-grid">
+            {/* Collaborative Features Announcement */}
+            <div className="col-span-full mb-4">
+              <DashboardErrorBoundary>
+                <CollaborativeFeaturesBanner />
+              </DashboardErrorBoundary>
+            </div>
+
             {/* Phase 2A Sprint 2: Smart Actions */}
             <div
               className="smart-actions-section min-h-[120px]"
@@ -217,6 +227,17 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           isOpen={showCustomization}
           onClose={() => setShowCustomization(false)}
         />
+
+        {/* Quick Access to Collaborative Features */}
+        <div className="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-40">
+          <Button
+            onClick={() => (window.location.href = "/collaborative-demo")}
+            className="w-14 h-14 rounded-full bg-primary text-text-on-primary shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center"
+            title="Team Collaboration & Planning"
+          >
+            <Icon name="message" size="lg" />
+          </Button>
+        </div>
       </div>
     </DashboardProvider>
   );

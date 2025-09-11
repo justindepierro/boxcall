@@ -20,7 +20,11 @@ export type WidgetType =
   | "performance-stats"
   | "announcements"
   | "practice-plans"
-  | "game-schedule";
+  | "game-schedule"
+  | "shared-goals"
+  | "team-vote"
+  | "progress-sharing"
+  | "collaborative-notes";
 
 export type LayoutSize = "small" | "medium" | "large";
 export type UserRole = "coach" | "player" | "family" | "admin";
@@ -796,6 +800,29 @@ export const useDashboardStore = create<DashboardState>()(
             priority: 85,
           });
         }
+
+        // Collaborative features - available in all contexts
+        actions.push({
+          id: "team-messaging",
+          title: "Team Messages",
+          description: "Chat with your team in real-time",
+          icon: "message",
+          action: () => (window.location.href = "/collaborative-demo"),
+          contexts: ["practice-day", "game-day", "team-meeting"],
+          roles: ["coach", "player", "family"],
+          priority: 75,
+        });
+
+        actions.push({
+          id: "team-planning",
+          title: "Collaborative Planning",
+          description: "Set goals and make decisions together",
+          icon: "users",
+          action: () => (window.location.href = "/collaborative-demo"),
+          contexts: ["practice-day", "team-meeting"],
+          roles: ["coach", "player"],
+          priority: 70,
+        });
 
         return actions.sort((a, b) => b.priority - a.priority);
       },

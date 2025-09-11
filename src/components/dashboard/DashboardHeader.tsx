@@ -14,6 +14,12 @@ const navItems: NavBarItem[] = [
     icon: <i className="fa fa-home" />,
   },
   {
+    id: "collaboration",
+    label: "Team Collaboration",
+    href: "/collaborative-demo",
+    icon: <i className="fa fa-comments" />,
+  },
+  {
     id: "profile",
     label: "Profile",
     href: "/profile",

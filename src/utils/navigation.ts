@@ -2,7 +2,7 @@ import React from "react";
 
 import { Icon } from "../components/ui/Icon/Icon";
 
-import type { IconName } from "../components/ui/Icon/Icon";
+import type { IconName } from "../components/ui/Icon";
 import { ROUTES, teamRoutes } from "../routes/paths";
 import { getActiveTeamId } from "./activeTeam";
 import type { SidebarItem } from "../components/ui/Sidebar";
@@ -47,10 +47,11 @@ export const getNavigationItems = (
     // Team Bulletin - Available to everyone (renamed from Team Dashboard)
     {
       id: "team-bulletin",
-      label: "Team Bulletin",
+      label: "Team Hub",
       icon: "users",
       href: teamRoutes.bulletin(activeTeamId),
-      description: "Team-specific feed, announcements, and quick actions",
+      description:
+        "Team collaboration hub with goals, voting, and progress tracking",
     },
   ];
   // BoxCall - Coaches and super_admin only (premium feature)
@@ -134,21 +135,6 @@ export const getNavigationItems = (
     href: ROUTES.ABOUT,
     description: "Learn about BoxCall",
   });
-  // Templates - Coaches and super_admin only
-  if (
-    userRole === "admin" ||
-    userRole === "coach" ||
-    (userRole as string) === "super_admin"
-  ) {
-    items.push({
-      id: "templates",
-      label: "Templates",
-      icon: "file",
-      href: ROUTES.TEMPLATES,
-      roles: ["admin", "coach"],
-      description: "Pre-built templates and resources",
-    });
-  }
 
   // Divider before logout
   items.push({
@@ -191,7 +177,7 @@ export const toSidebarItems = (
         ? React.createElement(Icon, {
             name: item.icon,
             size: "md",
-            color: item.id === "boxcall" ? "primary" : "current",
+            color: item.id === "boxcall" ? "jade" : "current",
           })
         : undefined,
       onClick: item.divider ? undefined : undefined,
@@ -240,9 +226,9 @@ export const getRoleDisplayInfo = (role?: UserRole | null) => {
     NonNullable<UserRole>,
     { display: string; color: string }
   > = {
+    super_admin: { display: "Super Admin", color: "red" },
     admin: { display: "Administrator", color: "red" },
     coach: { display: "Coach", color: "blue" },
-    assistant_coach: { display: "Assistant Coach", color: "blue" },
     player: { display: "Player", color: "green" },
     family: { display: "Family", color: "purple" },
   };

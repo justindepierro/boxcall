@@ -27,6 +27,7 @@ import {
   LazyPrivacyPolicyPage,
   LazyTermsOfServicePage,
   LazyContactPage,
+  LazyCollaborativeDemoPage,
 } from "../components/lazy/LazyRoutes";
 import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
@@ -193,6 +194,15 @@ export const DataRouterApp: React.FC = () => {
                 element: (
                   <Suspense fallback={<RouteLoadingSpinner />}>
                     <LazyProfilePage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.COLLABORATIVE_DEMO,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyCollaborativeDemoPage />
                   </Suspense>
                 ),
               },
