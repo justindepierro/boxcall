@@ -26,7 +26,7 @@ export const Toolbar: React.FC<{
   ];
   return (
     <nav
-      className="field-canvas-toolbar flex gap-2 p-3 bg-white rounded-lg shadow-lg border border-slate-200"
+      className="field-canvas-toolbar flex gap-2 p-3 bg-surface-primary rounded-lg shadow-lg border border-slate-200"
       aria-label="Field Canvas Toolbar"
       style={{ minHeight: 56 }}
     >

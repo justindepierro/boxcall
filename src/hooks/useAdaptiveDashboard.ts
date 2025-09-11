@@ -210,7 +210,8 @@ export function useAdaptiveDashboard() {
 
     // Adaptive features
     isAdaptiveMode:
-      personalizationSettings?.adaptiveFeatures?.enableSmartPrioritization ?? false,
+      personalizationSettings?.adaptiveFeatures?.enableSmartPrioritization ??
+      false,
     contextConfidence: 0.8, // TODO: Get from actual detection
     lastContextUpdate: Date.now(),
 

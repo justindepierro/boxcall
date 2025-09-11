@@ -111,7 +111,7 @@ const TeamFeeds: React.FC = () => {
           <Button
             variant="ghost"
             size="xs"
-            className="bg-white rounded-full shadow p-1 border border-subtle hover:bg-jade-50"
+            className="bg-surface-primary rounded-full shadow p-1 border border-subtle hover:bg-jade-50"
             aria-label="Quick add message"
             onClick={() => setQuickAddOpen(true)}
           >
