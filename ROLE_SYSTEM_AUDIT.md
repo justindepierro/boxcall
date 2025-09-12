@@ -439,3 +439,6 @@ describe("Role System", () => {
 ---
 
 This comprehensive overhaul will solve all the current role inconsistencies and provide a solid foundation for future development.
+# [ARCHIVED] Historical Reference
+
+This document is kept for history. For current status and roadmap, see `docs/CURRENT_STATUS.md` and `docs/product/ROADMAP.md`.

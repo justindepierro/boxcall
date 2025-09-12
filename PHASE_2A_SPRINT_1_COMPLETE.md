@@ -234,3 +234,6 @@ All foundation components are in place, tested, and integrated. The dashboard no
 ---
 
 **Built for professional football program excellence** 🏈 **Ready for Sprint 2** 🚀
+# [ARCHIVED] Historical Reference
+
+This document is kept for history. For current status and roadmap, see `docs/CURRENT_STATUS.md` and `docs/product/ROADMAP.md`.

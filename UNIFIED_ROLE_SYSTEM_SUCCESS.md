@@ -199,3 +199,6 @@ Your BoxCall application now has enterprise-grade role and permission management
 ---
 
 **Questions or Issues?** Check the implementation documentation in `ROLE_SYSTEM_IMPLEMENTATION_COMPLETE.md` or review the type definitions in `src/types/roles.ts`.
+# [ARCHIVED] Historical Reference
+
+This document is kept for history. For current status and roadmap, see `docs/CURRENT_STATUS.md` and `docs/product/ROADMAP.md`.

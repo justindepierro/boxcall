@@ -197,3 +197,6 @@ function ProfileCard({ teamId }: { teamId?: string }) {
 4. **Test modal functionality** with new role system
 
 The foundation is now solid and ready for your app to use the new unified role system! 🚀
+# [ARCHIVED] Historical Reference
+
+This document is kept for history. For current status and roadmap, see `docs/CURRENT_STATUS.md` and `docs/product/ROADMAP.md`.
