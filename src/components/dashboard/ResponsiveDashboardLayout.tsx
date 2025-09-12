@@ -30,14 +30,9 @@ const PersonalCalendar = React.lazy(
     }>
 );
 import { Typography } from "../design-system";
-import { Button } from "../ui";
-import { Icon } from "../ui/Icon/Icon";
-import DashboardHeader from "./DashboardHeader";
 import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { DashboardErrorBoundary } from "./DashboardErrorBoundary";
-import { DashboardCustomizationPanel } from "./DashboardCustomizationPanel";
-import { DashboardCustomizationTrigger } from "./DashboardCustomizationTrigger";
 import { ContextualActionsPanel } from "./ContextualActionsPanel";
 import { CollaborativeFeaturesBanner } from "./CollaborativeFeaturesBanner";
 
@@ -68,7 +63,6 @@ export const ResponsiveDashboardLayout: React.FC = () => {
     loadLayouts,
     personalizationSettings: _personalizationSettings,
   } = useDashboardStore();
-  const [showCustomization, setShowCustomization] = React.useState(false);
 
   // Load user's dashboard layouts on mount
   React.useEffect(() => {
@@ -115,12 +109,9 @@ export const ResponsiveDashboardLayout: React.FC = () => {
   return (
     <DashboardProvider>
       <div className="min-h-screen surface-app">
-        {/* MODERN DASHBOARD HEADER */}
-        <DashboardHeader />
-
         {/* RESPONSIVE LAYOUT CONTAINER */}
         <main
-          className="responsive-dashboard-container"
+          className="responsive-dashboard-container pt-4 pb-8"
           role="main"
           aria-label="Dashboard main content"
         >
@@ -216,27 +207,6 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         {/* MOBILE BOTTOM NAVIGATION */}
         <div className="mobile-bottom-nav lg:hidden">
           <MobileBottomNavigation items={items} />
-        </div>
-
-        {/* PHASE 2A: Dashboard Customization */}
-        <DashboardCustomizationTrigger
-          onClick={() => setShowCustomization(true)}
-        />
-
-        <DashboardCustomizationPanel
-          isOpen={showCustomization}
-          onClose={() => setShowCustomization(false)}
-        />
-
-        {/* Quick Access to Collaborative Features */}
-        <div className="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-40">
-          <Button
-            onClick={() => (window.location.href = "/collaborative-demo")}
-            className="w-14 h-14 rounded-full bg-primary text-text-on-primary shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center"
-            title="Team Collaboration & Planning"
-          >
-            <Icon name="message" size="lg" />
-          </Button>
         </div>
       </div>
     </DashboardProvider>

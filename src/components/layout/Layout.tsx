@@ -4,6 +4,7 @@ import { Typography } from "../design-system/Typography";
 import { useAuthProfile } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
+import { AppHeader } from "./AppHeader";
 
 // Helper to get test role from dev mode
 const getTestRole = (devMode: DevMode): UserRole | null => {
@@ -21,9 +22,9 @@ const getTestRole = (devMode: DevMode): UserRole | null => {
   }
 };
 import { getNavigationItems, getRoleDisplayInfo } from "../../utils/navigation";
-import { DevTools } from "../dev";
+// import { DevTools } from "../dev";
 import { SidebarLogo } from "../ui/Logo";
-import { SimpleSidebar } from "../ui/Sidebar/SimpleSidebar";
+import { Sidebar } from "../ui/Sidebar/Sidebar";
 import { Button } from "../ui/Button";
 
 import { Footer } from "./Footer";
@@ -75,10 +76,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen surface-app decorative-gradient bg-[radial-gradient(circle_at_20%_15%,#f5f9f6,#eef3f1)] dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 bg-fixed relative">
       <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' fill=\'none\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>')]" />
-      {/* Main content area with overlay sidebar and top padding for fixed nav */}
-      <div className="relative pt-0">
+
+      {/* App Header with auto-hide behavior */}
+      <AppHeader onMenuToggle={toggleSidebar} sidebarOpen={sidebarOpen} />
+
+      {/* Main content area with sidebar overlay and top padding for header */}
+      <div className="relative pt-16">
         {/* Simplified Sidebar */}
-        <SimpleSidebar
+        <Sidebar
           items={sidebarItems}
           isOpen={sidebarOpen}
           onClose={() => toggleSidebar()}
@@ -124,17 +129,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           }
         />
-        {/* Sidebar Toggle Button - Only show when sidebar is closed */}
-        {!sidebarOpen && (
-          <Button
-            variant="primary"
-            className="fixed top-4 left-4 z-30 rounded-full shadow-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-jade-400"
-            onClick={() => toggleSidebar()}
-            aria-label="Open sidebar"
-          >
-            ☰
-          </Button>
-        )}
+
         {/* Main content - mobile-first layout */}
         <main className="flex-1 min-h-screen">
           <div className="flex flex-col min-h-screen">
@@ -143,8 +138,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </main>
 
-        {/* Professional Development Tools Panel */}
-        <DevTools />
+        {/* Professional Development Tools Panel - Temporarily hidden */}
+        {/* <DevTools /> */}
       </div>
     </div>
   );

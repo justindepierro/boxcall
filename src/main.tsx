@@ -13,7 +13,9 @@ import "./index.css";
 import "./styles/responsive-dashboard.css";
 import "./styles/density.css";
 // Development-only contrast debugging overlay (activated via localStorage 'debugContrast')
-import "./dev/contrastDebug";
+if (process.env.NODE_ENV === "development") {
+  import("./dev/contrastDebug");
+}
 import { initWebVitals } from "./telemetry/initWebVitals";
 
 if (process.env.NODE_ENV === "production") initWebVitals();
