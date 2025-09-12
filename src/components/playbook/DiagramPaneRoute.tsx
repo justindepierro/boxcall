@@ -1,24 +1,18 @@
-import React, { useEffect, useCallback, Suspense, lazy } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-
 import { telemetry } from "../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../telemetry/events";
 import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
 
-const LazyVisualPlayBuilder = lazy(() =>
-  import("./diagram/VisualPlayBuilder").then((m) => ({
-    default: m.VisualPlayBuilder,
-  }))
-);
-import { ROUTES } from "../../routes/paths";
+import { VisualPlayBuilderV2 } from "./diagram-v2/VisualPlayBuilderV2";
 
 export const DiagramPaneRoute: React.FC = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const playId = params.get("playId");
 
-  const handleClose = useCallback(() => navigate(ROUTES.PLAYBOOK), [navigate]);
+  const handleClose = useCallback(() => navigate("/playbook"), [navigate]);
 
   // Close on ESC key
   useEffect(() => {
@@ -43,22 +37,14 @@ export const DiagramPaneRoute: React.FC = () => {
         role="dialog"
         aria-modal="true"
       >
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center h-full">
-              <span>Loading diagram...</span>
-            </div>
-          }
-        >
-          <LazyVisualPlayBuilder
-            onDocumentChange={(doc) => {
-              telemetry.enqueue({
-                type: TelemetryEventTypes.PlayDiagramUpdated,
-                data: { playId: playId || "free", routes: doc.routes.length },
-              });
-            }}
-          />
-        </Suspense>
+        <VisualPlayBuilderV2
+          onDocumentChange={(doc) => {
+            telemetry.enqueue({
+              type: TelemetryEventTypes.PlayDiagramUpdated,
+              data: { playId: playId || "free", routes: doc.routes.length },
+            });
+          }}
+        />
         <Button
           variant="ghost"
           size="xs"

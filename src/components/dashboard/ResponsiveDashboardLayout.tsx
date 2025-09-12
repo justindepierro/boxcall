@@ -1,40 +1,17 @@
 import React from "react";
-import { DashboardProvider } from "../../context/DashboardContext";
-
 import { useAuth } from "../../app/auth-store";
-import { useMobileNavigation } from "../../hooks/useMobileNavigation";
-import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
-import { useDashboardStore } from "../../stores/dashboardStore";
-const ProfileCard = React.lazy(
-  () =>
-    import("../dashboard/ProfileCard") as Promise<{
-      default: React.ComponentType<{ onEditClick?: () => void }>;
-    }>
-);
-const PersonalTrophyShelf = React.lazy(
-  () =>
-    import("../dashboard/PersonalTrophyShelf") as Promise<{
-      default: React.ComponentType<unknown>;
-    }>
-);
-const TeamFeeds = React.lazy(
-  () =>
-    import("../dashboard/TeamFeeds") as Promise<{
-      default: React.ComponentType<unknown>;
-    }>
-);
-const PersonalCalendar = React.lazy(
-  () =>
-    import("../dashboard/PersonalCalendar") as Promise<{
-      default: React.ComponentType<unknown>;
-    }>
-);
+import { PersonalCalendar } from "../dashboard/PersonalCalendar";
+import { PersonalTrophyShelf } from "../dashboard/PersonalTrophyShelf";
+import { ProfileCard } from "../dashboard/ProfileCard";
+import { TeamFeeds } from "../dashboard/TeamFeeds";
+import { ToastDemo } from "../dev/ToastDemo";
 import { Typography } from "../design-system";
 import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
+import { useMobileNavigation } from "../../hooks/useMobileNavigation";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
-import { DashboardErrorBoundary } from "./DashboardErrorBoundary";
-import { ContextualActionsPanel } from "./ContextualActionsPanel";
-import { CollaborativeFeaturesBanner } from "./CollaborativeFeaturesBanner";
+import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
+import { TeamOnboarding } from "../onboarding/TeamOnboarding";
+import { ActivationChecklist } from "../onboarding/ActivationChecklist";
 
 /**
  * Responsive Dashboard Layout
@@ -56,20 +33,6 @@ export const ResponsiveDashboardLayout: React.FC = () => {
     typeof window !== "undefined" ? window.location.pathname : "/"
   );
   const { isStepVisible } = useProgressiveLoading(4, 200);
-
-  // Phase 2A: Dashboard customization state
-  const {
-    currentLayout: _currentLayout,
-    loadLayouts,
-    personalizationSettings: _personalizationSettings,
-  } = useDashboardStore();
-
-  // Load user's dashboard layouts on mount
-  React.useEffect(() => {
-    if (user?.id) {
-      loadLayouts(user.id);
-    }
-  }, [user?.id, loadLayouts]);
 
   // Early returns for loading and error states
   if (loading) {
@@ -106,110 +69,115 @@ export const ResponsiveDashboardLayout: React.FC = () => {
     );
   }
 
+  const userRole = profile.role || "player";
+
   return (
-    <DashboardProvider>
-      <div className="min-h-screen surface-app">
-        {/* RESPONSIVE LAYOUT CONTAINER */}
-        <main
-          className="responsive-dashboard-container pt-4 pb-8"
-          role="main"
-          aria-label="Dashboard main content"
-        >
-          <div className="responsive-content-grid">
-            {/* Collaborative Features Announcement */}
-            <div className="col-span-full mb-4">
-              <DashboardErrorBoundary>
-                <CollaborativeFeaturesBanner />
-              </DashboardErrorBoundary>
-            </div>
-
-            {/* Phase 2A Sprint 2: Smart Actions */}
-            <div
-              className="smart-actions-section min-h-[120px]"
-              role="region"
-              aria-label="Smart Actions"
-            >
-              <DashboardErrorBoundary>
-                <ContextualActionsPanel />
-              </DashboardErrorBoundary>
-            </div>
-
-            {/* Profile Card */}
-            <div
-              className="profile-section min-h-[320px]"
-              role="region"
-              aria-label="Profile"
-            >
-              <DashboardErrorBoundary>
-                {isStepVisible(0) ? (
-                  <React.Suspense fallback={<DashboardCardSkeleton />}>
-                    <ProfileCard />
-                  </React.Suspense>
-                ) : (
-                  <DashboardCardSkeleton />
-                )}
-              </DashboardErrorBoundary>
-            </div>
-
-            {/* Team Feeds (now middle column) */}
-            <div
-              className="feeds-section min-h-[320px]"
-              role="region"
-              aria-label="Team Feeds"
-            >
-              <DashboardErrorBoundary>
-                {isStepVisible(2) ? (
-                  <React.Suspense fallback={<DashboardCardSkeleton />}>
-                    <TeamFeeds />
-                  </React.Suspense>
-                ) : (
-                  <DashboardCardSkeleton />
-                )}
-              </DashboardErrorBoundary>
-            </div>
-
-            {/* Trophy Shelf (now right column) */}
-            <div
-              className="trophy-section min-h-[320px]"
-              role="region"
-              aria-label="Trophy Shelf"
-            >
-              <DashboardErrorBoundary>
-                {isStepVisible(1) ? (
-                  <React.Suspense fallback={<DashboardCardSkeleton />}>
-                    <PersonalTrophyShelf />
-                  </React.Suspense>
-                ) : (
-                  <DashboardCardSkeleton />
-                )}
-              </DashboardErrorBoundary>
-            </div>
-
-            {/* Calendar */}
-            <div
-              className="calendar-section min-h-[320px]"
-              role="region"
-              aria-label="Calendar"
-            >
-              <DashboardErrorBoundary>
-                {isStepVisible(3) ? (
-                  <React.Suspense fallback={<DashboardCardSkeleton />}>
-                    <PersonalCalendar />
-                  </React.Suspense>
-                ) : (
-                  <DashboardCardSkeleton />
-                )}
-              </DashboardErrorBoundary>
-            </div>
-          </div>
-        </main>
-
-        {/* MOBILE BOTTOM NAVIGATION */}
-        <div className="mobile-bottom-nav lg:hidden">
-          <MobileBottomNavigation items={items} />
+    <div className="min-h-screen surface-app">
+      {/* 
+        ============================================================================
+        WELCOME HEADER - Responsive across all breakpoints
+        ============================================================================ 
+      */}
+      <div className="responsive-welcome-header bg-gradient-to-r from-surface-jade to-surface-jade dark:from-surface-jade-dark dark:to-surface-jade-dark border-b border-surface-jade-dark dark:border-brand-jade-dark">
+        <div className="max-w-7xl mx-auto bc-container-padding py-3 text-left">
+          <Typography
+            variant="headline-md"
+            className="text-brand-jade-dark dark:text-brand-jade-light"
+          >
+            Welcome back,{" "}
+            {profile.full_name?.split(" ")[0] ||
+              profile.display_name ||
+              user.email}
+            !
+          </Typography>
+          <Typography variant="body-sm" color="muted" className="mt-1">
+            Your command center awaits • Quote of the day coming soon
+          </Typography>
         </div>
       </div>
-    </DashboardProvider>
+
+      {/* 
+        ============================================================================
+        RESPONSIVE LAYOUT CONTAINER
+        Mobile: Clean stack layout (no view switching!)
+        Tablet: 2-column grid  
+        Desktop: 3-column grid
+        ============================================================================ 
+      */}
+      <div className="responsive-dashboard-container">
+        {/* Team Onboarding - Shows for users without teams */}
+        <div className="max-w-7xl mx-auto bc-container-padding">
+          <TeamOnboarding context="dashboard" />
+          <ActivationChecklist />
+        </div>
+
+        {/* 
+          ============================================================================
+          MAIN CONTENT GRID - Clean Responsive Design
+          Mobile: Single column stack - ALL sections visible
+          Tablet: 2x2 grid layout
+          Desktop: 3-column layout
+          ============================================================================ 
+        */}
+        <div className="responsive-content-grid">
+          {/* Toast Demo - Temporary to show new system working */}
+          <div className="col-span-full">
+            <ToastDemo />
+          </div>
+
+          {/* Profile Card */}
+          <div className="profile-section">
+            {isStepVisible(0) ? (
+              <ProfileCard
+                profile={profile}
+                userRole={userRole}
+                onEditClick={() => {
+                  // TODO: Implement edit functionality
+                }}
+              />
+            ) : (
+              <DashboardCardSkeleton />
+            )}
+          </div>
+
+          {/* Trophy Shelf */}
+          <div className="trophy-section">
+            {isStepVisible(1) ? (
+              <PersonalTrophyShelf userId={user.id} userRole={userRole} />
+            ) : (
+              <DashboardCardSkeleton />
+            )}
+          </div>
+
+          {/* Team Feeds */}
+          <div className="feeds-section">
+            {isStepVisible(2) ? (
+              <TeamFeeds userId={user.id} />
+            ) : (
+              <DashboardCardSkeleton />
+            )}
+          </div>
+
+          {/* Calendar */}
+          <div className="calendar-section">
+            {isStepVisible(3) ? (
+              <PersonalCalendar userId={user.id} />
+            ) : (
+              <DashboardCardSkeleton />
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* 
+        ============================================================================
+        MOBILE BOTTOM NAVIGATION - Clean, single navigation system
+        ============================================================================ 
+      */}
+      <div className="mobile-bottom-nav lg:hidden">
+        <MobileBottomNavigation items={items} />
+      </div>
+    </div>
   );
 };
 

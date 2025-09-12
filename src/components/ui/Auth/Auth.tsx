@@ -1,11 +1,9 @@
 import { useState } from "react";
-
+import Icon from "../Icon/Icon";
 import { Typography } from "../../design-system";
 import { Button } from "../Button";
 import { Form, FormActions, FormField } from "../Form";
-import Icon from "../Icon/Icon";
 import { Input } from "../Input";
-
 export interface User {
   id: string;
   email: string;

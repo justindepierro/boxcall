@@ -6,7 +6,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-
 import { useToast } from "../hooks/useToast";
 
 interface UndoItem<T> {

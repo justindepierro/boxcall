@@ -29,7 +29,6 @@ export {
  * Quick access functions for common PDF operations
  */
 import { PDFServiceFactory } from "./BasePDFService";
-
 import type {
   PracticeScriptPDFData,
   PDFExportOptions,

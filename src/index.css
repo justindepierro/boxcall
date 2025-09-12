@@ -128,15 +128,6 @@ body,
 }
 
 @layer components {
-  /* Missing utility used widely in app: dark subtle surface intended for inverse text chips/badges */
-  .surface-subtle0 {
-    background-color: rgb(31 41 55); /* gray-800 */
-    color: rgb(243 244 246); /* gray-100 */
-  }
-  .dark .surface-subtle0 {
-    background-color: rgb(55 65 81); /* gray-700 */
-    color: rgb(243 244 246); /* gray-100 */
-  }
   /* Cupertino-style panel utility driven by theme component tokens */
   .panel-cupertino {
     background: var(--panel-bg);
@@ -148,35 +139,61 @@ body,
   }
   /* Semantic Surface Utilities */
   .surface-app {
-    background-color: var(--semantic-bg-secondary);
-    color: var(--semantic-text-primary);
+    background-color: #f9fafb;
+    color: #111827;
+  }
+  .dark .surface-app {
+    background-color: #111827;
+    color: #f3f4f6;
   }
   .surface-header {
-    background-color: var(--semantic-bg-primary);
-    color: var(--semantic-text-primary);
+    background-color: #ffffff;
+    color: #111827;
+  }
+  .dark .surface-header {
+    background-color: #1f2937;
+    color: #f3f4f6;
   }
   .surface-card {
-    background-color: var(--semantic-bg-primary);
+    background-color: #ffffff;
+  }
+  .dark .surface-card {
+    background-color: #1f2937;
   }
   .surface-subtle {
-    background-color: var(--semantic-bg-secondary);
+    background-color: #f9fafb;
+  }
+  .dark .surface-subtle {
+    background-color: rgba(31, 41, 55, 0.6);
   }
   /* New: Navigation surface (tokens-driven) */
   .surface-nav {
-    background: var(--semantic-bg-primary);
-    border-bottom: 1px solid var(--semantic-border);
-    color: var(--semantic-text-primary);
+    background: var(--navigation-background);
+    border-bottom: 1px solid var(--navigation-border);
+    color: var(--color-textPrimary);
+  }
+  .dark .surface-nav {
+    background: var(--color-bgSecondary);
+    border-color: var(--color-border);
+    color: var(--color-textPrimary);
   }
 
   /* Optional inverse surface (for future tooltips / overlays) */
   .surface-inverse {
-    background-color: var(--semantic-surface-inverse);
-    color: var(--semantic-text-inverse);
+    background-color: rgb(17 24 39); /* gray-900 */
+    color: #fff;
+  }
+  .dark .surface-inverse {
+    background-color: rgb(55 65 81); /* gray-700 */
+    color: rgb(243 244 246); /* gray-100 */
   }
 
   /* Subtle hover layer utility (token-friendly) */
   .hoverable-subtle:hover {
-    background: var(--semantic-bg-muted);
+    background: var(--color-bgMuted);
+  }
+  .dark .hoverable-subtle:hover {
+    background-color: rgb(55 65 81); /* gray-700 */
   }
 
   /* Nav item base + states (tokens-based) */
@@ -189,22 +206,26 @@ body,
     font-weight: 500;
     border-radius: 0.5rem;
     line-height: 1.25rem;
-    color: var(--semantic-text-secondary);
+    color: var(--color-textSecondary);
     position: relative;
     transition:
       background-color 120ms ease,
       color 120ms ease;
   }
   .dark .nav-item-base {
-    color: var(--semantic-text-secondary);
+    color: var(--color-textSecondary);
   }
   .nav-item-base:hover {
-    background: var(--semantic-surface-subtle-hover);
-    color: var(--semantic-text-primary);
+    background: var(--navigation-linkHover);
+    color: var(--color-textPrimary);
   }
   .nav-item-active {
-    background: var(--semantic-bg-muted);
-    color: var(--semantic-text-primary);
+    background: var(--color-bgBrand);
+    color: var(--color-primaryHover);
+  }
+  .dark .nav-item-active {
+    background: rgba(4, 120, 87, 0.15); /* jade 700 w/ alpha */
+    color: var(--color-primary);
   }
   .nav-item-active::before {
     content: "";
@@ -216,15 +237,15 @@ body,
     border-radius: 2px;
     background: linear-gradient(
       180deg,
-      var(--semantic-primary),
-      var(--semantic-primary-active)
+      var(--color-primary),
+      var(--color-primaryActive)
     );
   }
   .dark .nav-item-active::before {
     background: linear-gradient(
       180deg,
-      var(--semantic-primary),
-      var(--semantic-primary-hover)
+      var(--color-primary),
+      var(--color-primaryHover)
     );
   }
   .nav-item-disabled {
@@ -234,7 +255,10 @@ body,
 
   /* Surface Hover State (semantic) */
   .surface-subtle-hover {
-    background-color: var(--semantic-surface-subtle-hover);
+    background-color: var(--surface-subtle-hover);
+  }
+  .dark .surface-subtle-hover {
+    background-color: var(--surface-subtle-hover);
   }
   /* Deprecated: row-hover alias removed after migration to surface-subtle-hover */
 
@@ -286,13 +310,16 @@ body,
 
   /* Semantic border utility (replaces ad-hoc dashed placeholders) */
   .border-subtle {
-    border: 1px solid var(--semantic-border);
+    border: 1px solid var(--color-border);
+  }
+  .dark .border-subtle {
+    border-color: #374151;
   }
 
   /* Drop zone / placeholder (refined from dashed boxes) */
   .placeholder-zone {
-    background: var(--semantic-bg-secondary);
-    border: 1px solid var(--semantic-border);
+    background: var(--color-bgSecondary);
+    border: 1px solid var(--color-border);
     border-radius: 0.75rem;
   }
   .placeholder-zone.emphasis {
@@ -302,16 +329,25 @@ body,
 
   /* Semantic Text Tokens */
   .text-text-primary {
-    color: var(--semantic-text-primary);
+    color: #111827;
+  }
+  .dark .text-text-primary {
+    color: #f3f4f6;
   }
   .text-text-secondary {
-    color: var(--semantic-text-secondary);
+    color: #4b5563;
+  }
+  .dark .text-text-secondary {
+    color: #9ca3af;
   }
   .text-text-muted {
-    color: var(--semantic-text-muted);
+    color: #6b7280;
+  }
+  .dark .text-text-muted {
+    color: #6b7280;
   }
   .text-text-inverse {
-    color: var(--semantic-text-inverse);
+    color: #ffffff;
   }
   /* Button variants */
   .btn-primary {

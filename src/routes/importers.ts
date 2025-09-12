@@ -3,42 +3,43 @@
 
 export type RouteImporter = () => Promise<unknown>;
 
-import { ROUTES } from "./paths";
-
 export function getRouteImporter(path: string): RouteImporter | undefined {
   // Normalize: strip trailing slash
   const p = path.endsWith("/") && path !== "/" ? path.slice(0, -1) : path;
   switch (p) {
-    case ROUTES.ROOT:
-    case ROUTES.DASHBOARD:
+    case "/":
+    case "/dashboard":
       return () => import("../pages/DashboardPage");
-    case ROUTES.PROFILE:
+    case "/profile":
       return () =>
         import("../pages/ProfilePage").then((m) => ({
           default: m.ProfilePage,
         }));
-    case ROUTES.CALENDAR:
+    case "/calendar":
       return () =>
         import("../pages/CalendarShellPage").then((m) => ({
           default: m.CalendarShellPage,
         }));
-    case ROUTES.PLAYBOOK:
+    case "/playbook":
       return () => import("../pages/Playbook");
-    case ROUTES.BOXCALL:
+    case "/boxcall":
       return () => import("../pages/BoxCall");
-    case ROUTES.ABOUT:
-      return () => import("../pages/legal/AboutPage");
-    case ROUTES.PRIVACY:
+    case "/about":
+      return () =>
+        import("../pages/legal/AboutPage").then((m) => ({
+          default: m.AboutPage,
+        }));
+    case "/privacy-policy":
       return () =>
         import("../pages/legal/PrivacyPolicyPage").then((m) => ({
           default: m.PrivacyPolicyPage,
         }));
-    case ROUTES.TERMS:
+    case "/terms-of-service":
       return () =>
         import("../pages/legal/TermsOfServicePage").then((m) => ({
           default: m.TermsOfServicePage,
         }));
-    case ROUTES.CONTACT:
+    case "/contact":
       return () =>
         import("../pages/legal/ContactPage").then((m) => ({
           default: m.ContactPage,

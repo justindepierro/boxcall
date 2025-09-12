@@ -1,10 +1,7 @@
+import type { ReactNode } from "react";
 import React, { useMemo, useState } from "react";
-
 import { Button } from "../Button";
 import { Input } from "../Input";
-
-import type { ReactNode } from "react";
-
 export interface TableColumn<T = Record<string, unknown>> {
   /** Unique identifier for the column */
   id: string;
@@ -93,7 +90,7 @@ const getTableStyles = (size?: "sm" | "md" | "lg", bordered?: boolean) => {
   return [
     "w-full table-auto",
     "surface-card",
-    "text-text-primary",
+    "text-text-primary dark:text-gray-100",
     sizeStyles[size || "md"],
     bordered && "border border-subtle dark:border-gray-700",
   ]
@@ -107,10 +104,10 @@ const getHeaderStyles = (size?: "sm" | "md" | "lg") => {
     lg: "px-6 py-3",
   };
   return [
-    "border-b border-subtle",
-    "surface-subtle",
+    "border-b border-subtle dark:border-gray-700",
+    "surface-subtle dark:bg-gray-900",
     "text-left font-semibold",
-    "text-text-primary",
+    "text-text-primary dark:text-gray-100",
     sizeStyles[size || "md"],
   ].join(" ");
 };
@@ -129,8 +126,8 @@ const getCellStyles = (
     right: "text-right",
   };
   return [
-    "border-b border-subtle",
-    "text-text-primary",
+    "border-b border-subtle dark:border-gray-700",
+    "text-text-primary dark:text-gray-100",
     sizeStyles[size || "md"],
     alignStyles[align || "left"],
   ].join(" ");
@@ -145,7 +142,7 @@ const getRowStyles = (
     "transition-colors duration-200",
     hoverable && "surface-subtle-hover",
     isSelected && "surface-subtle dark:bg-navy-900/20",
-    striped && isEven && "surface-subtle",
+    striped && isEven && "surface-subtle dark:bg-gray-800",
   ]
     .filter(Boolean)
     .join(" ");

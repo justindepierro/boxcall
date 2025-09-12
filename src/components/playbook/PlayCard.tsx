@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { INSTALL_PHASES, type InstallPhase } from "../../types/play";
+import { Typography } from "../design-system/Typography";
+import Icon from "../ui/Icon/Icon";
+import type { Play as PlayType } from "../../types/play";
+import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
 import {
   getPlayFlags,
   addFlag,
@@ -9,14 +11,9 @@ import {
   POSITION_OPTIONS,
   type PlayFlags,
 } from "../../utils/localPlayFlags";
-import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
-import { Typography } from "../design-system/Typography";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button/Button";
-import Icon from "../ui/Icon/Icon";
-
-import type { Play as PlayType } from "../../types/play";
-
+import { INSTALL_PHASES, type InstallPhase } from "../../types/play";
 interface PlayCardProps {
   play: PlayType;
   showOneWordCalls?: boolean;
@@ -176,8 +173,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             <div className="flex items-center space-x-1 ml-4">
               <Button
                 onClick={() => setIsExpanded(!isExpanded)}
-                // All Icon usages already use registry names (e.g., "target", "shield", "zap", "file", "activity", "arrow-right", "pause", "edit", "copy", "image", "chevron-up", "chevron-down", "hash", "clock", "calendar", "gamepad-2")
-                // No legacy emoji or string icon usage detected
+                variant="ghost"
                 size="sm"
                 icon={
                   isExpanded ? (

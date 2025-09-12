@@ -1,6 +1,3 @@
-import React, { useState, useEffect } from "react";
-
-import { customFieldsService } from "../../services/customFieldsService";
 import { Typography } from "../design-system/Typography";
 // (Removed unused lucide-react icon imports after emoji cleanup)
 /**
@@ -8,8 +5,9 @@ import { Typography } from "../design-system/Typography";
  * Renders team-specific custom fields in the Play Builder
  */
 
+import React, { useState, useEffect } from "react";
 import { Icon } from "../ui/Icon/Icon";
-
+import { customFieldsService } from "../../services/customFieldsService";
 import type {
   CustomFieldDefinition,
   CustomFieldValues,

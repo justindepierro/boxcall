@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
-
-import { telemetry } from "../../lib/telemetry";
 import { Typography } from "../design-system";
-import { Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
+import { Button } from "../ui";
+import { telemetry } from "../../lib/telemetry";
 
 /**
  * Generic lightweight onboarding / empty-state hint component.
@@ -79,10 +78,10 @@ export const OnboardingHint: React.FC<OnboardingHintProps> = ({
           {actions.map((a, i) => {
             const base =
               a.variant === "primary"
-                ? "bg-[var(--semantic-primary-hover)] hover:bg-[var(--semantic-primary-active)] text-[var(--semantic-text-inverse)] border border-[var(--semantic-primary-hover)] hover:border-[var(--semantic-primary-active)]"
+                ? "bg-jade-600 hover:bg-brand-jade-dark text-white"
                 : a.variant === "secondary"
-                  ? "border-subtle surface-subtle-hover text-text-primary"
-                  : "text-[var(--semantic-primary-hover)] hover:text-[var(--semantic-primary-active)] hover:underline";
+                  ? "border-subtle surface-subtle-hover"
+                  : "text-jade-600 dark:text-jade-400 hover:underline";
             if (a.href) {
               return (
                 <a

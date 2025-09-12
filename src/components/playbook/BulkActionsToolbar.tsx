@@ -1,8 +1,7 @@
-import { Typography } from "@components/design-system/Typography";
 import React from "react";
-
-import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
+import { Button } from "../ui/Button/Button";
+import { Typography } from "@components/design-system/Typography";
 
 interface BulkActionsToolbarProps {
   selectedCount: number;

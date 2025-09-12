@@ -1,7 +1,6 @@
-import path from "path";
-
-import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
+import path from "path";
+import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
 // https://vite.dev/config/
@@ -22,21 +21,14 @@ export default defineConfig({
   resolve: {
     alias: {
       "@app": path.resolve(__dirname, "src/app"),
-      "@adapters": path.resolve(__dirname, "src/adapters"),
       "@components": path.resolve(__dirname, "src/components"),
-      "@data": path.resolve(__dirname, "src/data"),
-      "@domain": path.resolve(__dirname, "src/domain"),
-      "@features": path.resolve(__dirname, "src/features"),
       "@hooks": path.resolve(__dirname, "src/hooks"),
-      "@infra": path.resolve(__dirname, "src/infra"),
       "@lib": path.resolve(__dirname, "src/lib"),
       "@state": path.resolve(__dirname, "src/state"),
       "@styles": path.resolve(__dirname, "src/styles"),
       "@routes": path.resolve(__dirname, "src/routes"),
       "@utils": path.resolve(__dirname, "src/utils"),
       "@design-system": path.resolve(__dirname, "src/design-system"),
-      "@types": path.resolve(__dirname, "src/types"),
-      "@telemetry": path.resolve(__dirname, "src/telemetry"),
     },
   },
   plugins: [
@@ -102,14 +94,9 @@ export default defineConfig({
         ]
       : []),
   ],
-  worker: {
-    format: "es",
-  },
   build: {
     // Emit manifest for bundle analysis tools
     manifest: true,
-    // Emit assets for SSR
-    ssrEmitAssets: true,
     // CSS minifier: default esbuild for Tailwind arbitrary selectors; allow opt-in lightningcss trials
     cssMinify: useLightningCss ? "lightningcss" : "esbuild",
     // Target modern browsers for smaller bundles; adjust if legacy browser support is required
@@ -130,24 +117,32 @@ export default defineConfig({
           ],
           // PDF stack split for better parallelization
           pdfRenderer: ["@react-pdf/renderer"],
-          // pdfCapture deps removed (jspdf, html2canvas)
-          // pdfCapture: ["jspdf", "html2canvas"],
+          pdfCapture: ["jspdf", "html2canvas"],
 
           // Database and API
-          data: ["@supabase/supabase-js", "@tanstack/react-query"],
+          data: [
+            "@supabase/supabase-js",
+            "@tanstack/react-query",
+            "socket.io-client",
+          ],
 
           // UI: avoid forcing all lucide icons into a single chunk; let tree-shaking work
-          // forms deps removed (react-hook-form, @hookform/resolvers)
-          // forms: ["react-hook-form", "@hookform/resolvers"],
+          forms: ["react-hook-form", "@hookform/resolvers"],
           dnd: ["@hello-pangea/dnd"],
           clsx: ["clsx"],
 
           // Text editing and mentions
-          // editor deps removed (slate, slate-react, react-mentions)
-          // editor: ["slate", "slate-react", "react-mentions"],
+          editor: ["slate", "slate-react", "react-mentions"],
 
           // Utilities
-          utils: ["date-fns", "fuse.js", "zod", "zustand"],
+          utils: [
+            "date-fns",
+            "fuse.js",
+            "papaparse",
+            "dompurify",
+            "zod",
+            "zustand",
+          ],
         },
       },
     },

@@ -1,4 +1,3 @@
-import { getPlayFlags } from "@utils/localPlayFlags";
 import React, {
   useState,
   useMemo,
@@ -6,28 +5,26 @@ import React, {
   useCallback,
   useRef,
 } from "react";
-
 // (Removed unused RefreshCw, Search imports after log text simplification)
+import { Icon } from "../ui/Icon/Icon";
+import { IconButton } from "../ui";
+import { PlayCard } from "./PlayCard";
 import { Virtuoso } from "react-virtuoso";
-
-import { useTeamsData } from "../../hooks/useTeamsData";
+import { Button } from "../ui/Button/Button";
 import { telemetry } from "../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../telemetry/events";
-import {
-  getPlayCategory,
-  playMatchesSubcategory,
-} from "../../utils/playbook-categories";
+import { useTeamsData } from "../../hooks/useTeamsData";
+import type { Play } from "../../types/play";
+import { getPlayFlags } from "@utils/localPlayFlags";
+import { Typography } from "../design-system/Typography";
 import {
   validatePlaybookData,
   logValidationResults,
 } from "../../utils/playbook-test-validation";
-import { Typography } from "../design-system/Typography";
-import { IconButton } from "../ui";
-import { Button } from "../ui/Button/Button";
-import { Icon } from "../ui/Icon/Icon";
-import { PlayCard } from "./PlayCard";
-
-import type { Play } from "../../types/play";
+import {
+  getPlayCategory,
+  playMatchesSubcategory,
+} from "../../utils/playbook-categories";
 
 // Convert database play data to full Play type
 const mapDatabasePlayToFullPlay = (dbPlay: {

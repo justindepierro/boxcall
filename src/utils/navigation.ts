@@ -1,13 +1,8 @@
-import React from "react";
-
-import { Icon } from "../components/ui/Icon/Icon";
-
-import type { IconName } from "../components/ui/Icon";
-import { ROUTES, teamRoutes } from "../routes/paths";
-import { getActiveTeamId } from "./activeTeam";
 import type { SidebarItem } from "../components/ui/Sidebar";
 import type { Database } from "../types/database";
-
+import React from "react";
+import { Icon } from "../components/ui/Icon/Icon";
+import type { IconName } from "../components/ui/Icon/Icon";
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 type ExtendedUserRole = UserRole | "super_admin";
 export interface NavigationItem {
@@ -34,24 +29,29 @@ export const getNavigationItems = (
     typeof userRole
   );
   // Dynamic team selection (persisted after creation)
-  const activeTeamId = getActiveTeamId();
+  let activeTeamId = "1";
+  try {
+    const stored = localStorage.getItem("activeTeamId");
+    if (stored) activeTeamId = stored;
+  } catch (_err) {
+    /* ignore */
+  }
   const items: NavigationItem[] = [
     // Dashboard - Available to everyone
     {
       id: "dashboard",
       label: "Dashboard",
       icon: "home",
-      href: ROUTES.DASHBOARD,
+      href: "/dashboard",
       description: "Personal dashboard with live feed and notifications",
     },
     // Team Bulletin - Available to everyone (renamed from Team Dashboard)
     {
       id: "team-bulletin",
-      label: "Team Hub",
+      label: "Team Bulletin",
       icon: "users",
-      href: teamRoutes.bulletin(activeTeamId),
-      description:
-        "Team collaboration hub with goals, voting, and progress tracking",
+      href: `/team/${activeTeamId}/bulletin`,
+      description: "Team-specific feed, announcements, and quick actions",
     },
   ];
   // BoxCall - Coaches and super_admin only (premium feature)
@@ -64,7 +64,7 @@ export const getNavigationItems = (
       id: "boxcall",
       label: "BoxCall",
       icon: "phone",
-      href: ROUTES.BOXCALL,
+      href: "/boxcall",
       roles: ["admin", "coach", "super_admin"],
       badge: "Pro",
       description: "Advanced coaching tools and analytics (Premium)",
@@ -90,7 +90,7 @@ export const getNavigationItems = (
       id: "playbook",
       label: "Playbook",
       icon: "book",
-      href: ROUTES.PLAYBOOK,
+      href: "/playbook",
       roles: ["admin", "coach", "player", "super_admin"],
       description: "Team plays and strategies",
     });
@@ -100,7 +100,7 @@ export const getNavigationItems = (
     id: "calendar",
     label: "Calendar",
     icon: "calendar",
-    href: ROUTES.CALENDAR,
+    href: "/calendar",
     description: "Personal and team calendars",
   });
   // Profile - Available to everyone
@@ -108,7 +108,7 @@ export const getNavigationItems = (
     id: "profile",
     label: "Profile",
     icon: "user",
-    href: ROUTES.PROFILE,
+    href: "/profile",
     description: "Edit user settings and preferences",
   });
   // Team Settings - Coaches and super_admin only
@@ -117,7 +117,7 @@ export const getNavigationItems = (
     id: "team-settings",
     label: "Team Settings",
     icon: "settings",
-    href: teamRoutes.settings(activeTeamId),
+    href: `/team/${activeTeamId}/settings`,
     description: "Manage team configuration and roster",
   });
   // Divider before utility pages
@@ -132,9 +132,24 @@ export const getNavigationItems = (
     id: "about",
     label: "About",
     icon: "info",
-    href: ROUTES.ABOUT,
+    href: "/about",
     description: "Learn about BoxCall",
   });
+  // Templates - Coaches and super_admin only
+  if (
+    userRole === "admin" ||
+    userRole === "coach" ||
+    (userRole as string) === "super_admin"
+  ) {
+    items.push({
+      id: "templates",
+      label: "Templates",
+      icon: "file",
+      href: "/templates",
+      roles: ["admin", "coach"],
+      description: "Pre-built templates and resources",
+    });
+  }
 
   // Divider before logout
   items.push({
@@ -148,7 +163,7 @@ export const getNavigationItems = (
     id: "logout",
     label: "Log Out",
     icon: "arrow-right",
-    href: ROUTES.LOGOUT,
+    href: "/logout",
     description: "Sign out of BoxCall",
   });
   return items;
@@ -172,15 +187,16 @@ export const toSidebarItems = (
     .map((item) => ({
       id: item.id,
       label: item.label,
-      href: item.href,
       icon: item.icon
         ? React.createElement(Icon, {
             name: item.icon,
             size: "md",
-            color: item.id === "boxcall" ? "jade" : "current",
+            color: item.id === "boxcall" ? "primary" : "current",
           })
         : undefined,
-      onClick: item.divider ? undefined : undefined,
+      onClick: item.divider
+        ? undefined
+        : () => (window.location.href = item.href),
       divider: item.divider,
       badge: item.badge,
       children: item.children
@@ -200,13 +216,13 @@ export const getPrimaryNavigationItems = (
       id: "dashboard",
       label: "Dashboard",
       icon: "home",
-      href: ROUTES.DASHBOARD,
+      href: "/dashboard",
     },
     {
       id: "boxcall",
       label: "BoxCall",
       icon: "phone",
-      href: ROUTES.BOXCALL,
+      href: "/boxcall",
     },
   ];
   return items.filter((item) => {
@@ -226,9 +242,9 @@ export const getRoleDisplayInfo = (role?: UserRole | null) => {
     NonNullable<UserRole>,
     { display: string; color: string }
   > = {
-    super_admin: { display: "Super Admin", color: "red" },
     admin: { display: "Administrator", color: "red" },
     coach: { display: "Coach", color: "blue" },
+    assistant_coach: { display: "Assistant Coach", color: "blue" },
     player: { display: "Player", color: "green" },
     family: { display: "Family", color: "purple" },
   };

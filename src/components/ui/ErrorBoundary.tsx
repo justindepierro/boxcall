@@ -1,14 +1,11 @@
-import React, { Component } from "react";
-
+import type { ErrorInfo, ReactNode } from "react";
+import { ModularIcon as Icon } from "./Icon";
 import { telemetry } from "../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../telemetry/events";
+import React, { Component } from "react";
 // Use ModularIcon for lightweight, per-icon dynamic imports
-import { Typography } from "../design-system";
-
 import { Button } from "./Button";
-import Icon from "./Icon/Icon";
-
-import type { ErrorInfo, ReactNode } from "react";
+import { Typography } from "../design-system";
 
 interface Props {
   children: ReactNode;
@@ -124,7 +121,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 <details className="text-sm">
                   <summary className="cursor-pointer font-medium text-red-800 mb-2">
                     <Icon
-                      name="settings"
+                      name="wrench"
                       aria-label="wrench"
                       className="inline h-4 w-4 align-middle text-current"
                     />{" "}
@@ -150,7 +147,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 variant="primary"
                 size="sm"
                 className="w-full flex items-center justify-center"
-                icon={<Icon name="refresh" className="h-4 w-4" />}
+                icon={<Icon name="refresh-cw" className="h-4 w-4" />}
                 iconPosition="left"
               >
                 Try Again

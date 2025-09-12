@@ -2,11 +2,9 @@
  * IconButton - lightweight chromeless icon action control
  * Purpose: internal UI chrome (close modal, clear input, toggle visibility)
  */
-import clsx from "clsx";
 import React, { forwardRef } from "react";
-
+import clsx from "clsx";
 import { Button } from "../Button";
-
 import type { ButtonProps } from "../Button/Button.types";
 
 export interface IconButtonProps
@@ -23,14 +21,12 @@ const sizeStyles = {
 };
 
 const variantStyles = {
-  // Ghost actions visible at rest; use primary text and subtle hover surface
   ghost:
-    "text-text-primary hover:text-text-primary hover:surface-subtle-hover active:bg-[var(--semantic-bg-muted)]",
-  // Subtle still de-emphasized, but avoid unreadable ultra-muted in some themes
+    "text-text-secondary hover:text-text-primary hover:bg-surface-neutral active:bg-surface-neutral-dark",
   subtle:
-    "text-text-secondary hover:text-text-primary hover:surface-subtle-hover active:bg-[var(--semantic-bg-muted)]/90",
+    "text-text-muted hover:text-text-primary hover:bg-surface-neutral/60 active:bg-surface-neutral-dark/60",
   danger:
-    "text-red-600 hover:text-red-700 hover:surface-subtle-hover active:bg-red-100",
+    "text-red-600 hover:text-red-700 hover:surface-subtle active:bg-red-100",
 };
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(

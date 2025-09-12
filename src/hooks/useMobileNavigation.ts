@@ -1,8 +1,5 @@
-import { getRouteImporter } from "../routes/importers";
-import { ROUTES, teamRoutes } from "../routes/paths";
-import { useActiveTeamStore } from "../state/activeTeamStore";
-
 import type { MobileNavItem } from "../components/mobile/MobileBottomNavigation";
+import { getRouteImporter } from "../routes/importers";
 
 /**
  * Hook to get mobile navigation items based on user role and current route
@@ -16,44 +13,43 @@ export const useMobileNavigation = (currentPath: string = "/") => {
     profile: 0,
   };
 
-  const teamId = useActiveTeamStore((s) => s.activeTeamId) || "1";
   const items: MobileNavItem[] = [
     {
       id: "dashboard",
       label: "Home",
       icon: "home",
-      href: ROUTES.DASHBOARD,
+      href: "/dashboard",
       badge: notifications.dashboard,
-      isActive: currentPath === ROUTES.DASHBOARD || currentPath === "/",
-      importer: getRouteImporter(ROUTES.DASHBOARD),
+      isActive: currentPath === "/dashboard" || currentPath === "/",
+      importer: getRouteImporter("/dashboard"),
     },
     {
       id: "calendar",
       label: "Calendar",
       icon: "calendar",
-      href: ROUTES.CALENDAR,
+      href: "/calendar",
       badge: notifications.calendar,
-      isActive: currentPath.startsWith(ROUTES.CALENDAR),
-      importer: getRouteImporter(ROUTES.CALENDAR),
+      isActive: currentPath.startsWith("/calendar"),
+      importer: getRouteImporter("/calendar"),
     },
     {
       id: "bulletin",
-      label: "Team Hub",
+      label: "Team",
       icon: "users",
-      href: teamRoutes.bulletin(teamId),
+      href: "/team/1/bulletin",
       badge: notifications.bulletin,
       isActive:
         currentPath.includes("/team") || currentPath.includes("/bulletin"),
-      importer: getRouteImporter(teamRoutes.bulletin(teamId)),
+      importer: getRouteImporter("/team/1/bulletin"),
     },
     {
       id: "profile",
       label: "Profile",
       icon: "user",
-      href: ROUTES.PROFILE,
+      href: "/profile",
       badge: notifications.profile,
-      isActive: currentPath.startsWith(ROUTES.PROFILE),
-      importer: getRouteImporter(ROUTES.PROFILE),
+      isActive: currentPath.startsWith("/profile"),
+      importer: getRouteImporter("/profile"),
     },
   ];
 

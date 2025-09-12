@@ -1,13 +1,12 @@
+import { Typography } from "../design-system";
 /**
  * Database Data Display
  * Shows the loaded demo data from the database with interactive team selector
  * Respects dev mode settings for data source
  */
 import React, { useState } from "react";
-
-import { useDevMode } from "../../app/dev-mode-hooks";
 import { useTeamsData } from "../../hooks/useTeamsData";
-import { Typography } from "../design-system";
+import { useDevMode } from "../../app/dev-mode-hooks";
 import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 
@@ -92,17 +91,17 @@ export const DatabaseDataDisplay: React.FC = () => {
           <Icon
             name="database"
             size="xl"
-            color="slate"
+            color="secondary"
             className="mx-auto mb-4 opacity-50"
           />
           <Typography
             variant="headline-sm"
             className="text-text-secondary mb-2"
           >
-            Ready to Start
+            No Data Found
           </Typography>
           <Typography variant="body-sm" className="text-text-muted">
-            Create your first team to begin using BoxCall
+            Run the demo data loader to populate your database
           </Typography>
         </div>
       </Card>
@@ -117,13 +116,13 @@ export const DatabaseDataDisplay: React.FC = () => {
           <div>
             <Typography variant="headline-md" className="text-jade-800 mb-1">
               <Icon
-                name="check"
+                name="party-popper"
                 className="inline h-4 w-4 align-middle text-current"
               />{" "}
-              Database Connected
+              Demo Data Loaded Successfully!
             </Typography>
             <Typography variant="body-md" className="text-jade-700">
-              Your BoxCall database is active and ready
+              Your BoxCall database is now populated with sample data
             </Typography>
           </div>
           <div className="text-right">
@@ -146,7 +145,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         <Card className="bc-card-padding surface-card">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-jade-100 rounded-lg flex items-center justify-center mr-3">
-              <Icon name="users" size="md" color="jade" />
+              <Icon name="users" size="md" color="primary" />
             </div>
             <div>
               <Typography variant="headline-sm" className="text-text-primary">
@@ -187,7 +186,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                     <Icon
                       name={isActive ? "chevron-up" : "chevron-down"}
                       size="sm"
-                      color={isActive ? "jade" : "slate"}
+                      color={isActive ? "primary" : "secondary"}
                     />
                   </div>
                 </Button>
@@ -229,7 +228,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                 <div className="mt-3 pt-2 border-t border-subtle">
                   <Typography variant="body-xs" className="text-jade-700">
                     <Icon
-                      name="info"
+                      name="lightbulb"
                       className="inline h-4 w-4 align-middle text-current"
                     />{" "}
                     In a full app, selecting a team would switch your workspace
@@ -289,7 +288,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         <Card className="bc-card-padding surface-card">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-              <Icon name="zap" size="md" color="info" />
+              <Icon name="zap" size="md" color="secondary" />
             </div>
             <div>
               <Typography variant="headline-sm" className="text-text-primary">

@@ -100,14 +100,3 @@ src/components/playbook/visual/FabricFieldCanvas.tsx
 
 # ESLint cache
 .eslintcache
-
-# Temporary ESLint dump created during crashes
-.tmp_eslint.json
-
-# Lighthouse CI output
-.lighthouseci/
-
-# Vite/Vitest caches under node_modules
-node_modules/.vite/
-node_modules/.cache/
-node_modules/.vitest/

@@ -1,6 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useMemo, useReducer } from "react";
-
 import type { ServerPlaybookViewPreset } from "../types/playbookViewPreset";
 
 export type CoachingView = "playbook" | "practice-script" | "game-plan";

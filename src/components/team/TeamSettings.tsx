@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-
-import { Typography } from "../design-system/Typography";
-import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon/Icon";
-import { Input } from "../ui/Input";
-
 import type { TeamSettings as TeamSettingsType } from "../../types/team-management";
+import { Button } from "../ui/Button";
+import { Input } from "../ui/Input";
+import { Typography } from "../design-system/Typography";
 
 interface TeamSettingsProps {
   teamSettings: TeamSettingsType;

@@ -1,6 +1,5 @@
-import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-
+import { render, screen } from "@testing-library/react";
 import Typography, { H1, H2, P, Label, Code } from "../Typography";
 
 describe("Typography polymorphic behavior", () => {

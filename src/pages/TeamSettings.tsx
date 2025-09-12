@@ -1,8 +1,7 @@
 import React from "react";
-
+import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
-import { Icon } from "../components/ui/Icon/Icon";
 /**
  * TeamSettings - Team configuration and management
  * Available to coaches and managers only
@@ -13,7 +12,7 @@ import { Icon } from "../components/ui/Icon/Icon";
  * - Team preferences and settings
  * - Integration configurations
  */
-const TeamSettings: React.FC = () => {
+export const TeamSettings: React.FC = () => {
   return (
     <div className="py-6">
       <div className="max-w-7xl mx-auto">

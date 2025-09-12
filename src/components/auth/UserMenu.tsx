@@ -3,11 +3,10 @@
  * Simple dropdown menu with user info and logout option
  */
 
-import { Typography } from "@components/design-system/Typography";
 import React, { useState, useRef, useEffect } from "react";
-
-import { useAuth } from "../../app/auth-store";
 import { Button } from "../ui/Button/Button";
+import { useAuth } from "../../app/auth-store";
+import { Typography } from "@components/design-system/Typography";
 
 export const UserMenu: React.FC = () => {
   const { user, profile, signOut, loading } = useAuth();

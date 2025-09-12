@@ -5,6 +5,8 @@ import { getRouteImporter } from "../../routes/importers";
 import { prefetchOnHover } from "../../routes/prefetch";
 import { Typography } from "../design-system";
 import { LogoIcon } from "../ui/Logo";
+import { prefetchOnHover } from "../../routes/prefetch";
+import { getRouteImporter } from "../../routes/importers";
 
 /**
  * Footer Component

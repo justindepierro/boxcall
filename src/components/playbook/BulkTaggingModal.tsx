@@ -1,8 +1,7 @@
 import React, { useState, useMemo } from "react";
-
-import { Typography } from "../design-system/Typography";
-import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
+import { Button } from "../ui/Button/Button";
+import { Typography } from "../design-system/Typography";
 
 export interface BulkTaggingModalProps {
   isOpen: boolean;

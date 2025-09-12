@@ -1,17 +1,19 @@
 import { format } from "date-fns";
+import { Icon as LegacyIcon } from "../ui/Icon/Icon";
 import React, { useState } from "react";
-import { useDashboardContext } from "../../context/useDashboardContext";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../routes/paths";
-import { useDevMode } from "../../app/dev-mode-hooks";
 import { useEvents } from "../../state/calendar/hooks";
+import type { CalendarEvent } from "../../domain/calendar/types";
+import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
-import Icon from "../ui/Icon/Icon";
+import { ModularIcon as Icon } from "../ui/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../ui/Tag";
 
-import type { CalendarEvent } from "../../domain/calendar/types";
+interface PersonalCalendarProps {
+  userId: string;
+}
 
 /**
  * Personal Calendar - Cross-team events and schedule
@@ -22,41 +24,25 @@ import type { CalendarEvent } from "../../domain/calendar/types";
  * - Personal reminders and deadlines
  * - Quick event creation
  */
-const PersonalCalendar: React.FC = () => {
-  const { profile } = useDashboardContext();
-  const userId = profile?.id ?? "";
-
+export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
+  userId,
+}) => {
   const navigate = useNavigate();
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
     null
   );
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [quickEventTitle, setQuickEventTitle] = useState("");
-  const [isCreatingEvent, setIsCreatingEvent] = useState(false);
 
   const { devMode } = useDevMode();
   // Fetch a short horizon of events (next 14 days)
   const rangeStart = new Date();
   const rangeEnd = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
-  const { data: upcomingEvents = [], isLoading: upcomingLoading } = useEvents(
-    userId
-      ? {
-          userId,
-          devMode,
-          range: {
-            start: rangeStart.toISOString(),
-            end: rangeEnd.toISOString(),
-          },
-        }
-      : {
-          userId: "",
-          devMode,
-          range: {
-            start: rangeStart.toISOString(),
-            end: rangeEnd.toISOString(),
-          },
-        }
-  );
+  const { data: upcomingEvents = [], isLoading: upcomingLoading } = useEvents({
+    userId,
+    devMode,
+    range: { start: rangeStart.toISOString(), end: rangeEnd.toISOString() },
+  });
 
   // Handle event click
   const handleEventClick = (event: CalendarEvent) => {
@@ -67,20 +53,13 @@ const PersonalCalendar: React.FC = () => {
   const handleQuickAdd = async () => {
     if (!quickEventTitle.trim()) return;
 
-    setIsCreatingEvent(true);
-    try {
-      // TODO: Implement event creation service call
-      // await eventService.createEvent({ title: quickEventTitle, ... })
-
-      setQuickEventTitle("");
-      setShowQuickAdd(false);
-    } catch (error) {
-      console.error("Failed to create event:", error);
-      // TODO: Show error toast to user
-    } finally {
-      setIsCreatingEvent(false);
-    }
+    // TODO: Implement event creation service call
+    console.log("Creating event:", quickEventTitle);
+    setQuickEventTitle("");
+    setShowQuickAdd(false);
   };
+
+  // Deprecated legacy event badge color map replaced by Tag variants
 
   // Format event time
   const formatEventTime = (start?: string, end?: string) => {
@@ -110,17 +89,17 @@ const PersonalCalendar: React.FC = () => {
           <div className="flex items-center space-x-2">
             <Button
               variant="link"
-              size="sm"
-              onClick={() => navigate(ROUTES.CALENDAR)}
-              className="text-jade-600 hover:text-jade-700 px-3 py-2"
+              size="xs"
+              onClick={() => navigate("/calendar")}
+              className="text-jade-600 hover:text-jade-700"
             >
               View Full Calendar
             </Button>
             <Button
               variant="secondary"
-              size="sm"
+              size="xs"
               onClick={() => setShowQuickAdd(!showQuickAdd)}
-              className="border-subtle text-jade-600 hover:text-jade-700 px-3 py-2"
+              className="border-subtle text-jade-600 hover:text-jade-700"
             >
               + Add
             </Button>
@@ -139,16 +118,11 @@ const PersonalCalendar: React.FC = () => {
                 className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-jade-500 focus:border-jade-500"
                 onKeyPress={(e) => e.key === "Enter" && handleQuickAdd()}
               />
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handleQuickAdd}
-                disabled={isCreatingEvent || !quickEventTitle.trim()}
-              >
-                {isCreatingEvent ? "Adding..." : "Add"}
+              <Button variant="primary" size="sm" onClick={handleQuickAdd}>
+                Add
               </Button>
               <Button
-                variant="ghost"
+                variant="link"
                 size="sm"
                 onClick={() => setShowQuickAdd(false)}
                 className="text-text-secondary hover:text-text-primary"
@@ -190,16 +164,7 @@ const PersonalCalendar: React.FC = () => {
                   <div
                     key={event.id}
                     onClick={() => handleEventClick(event)}
-                    className="flex items-start space-x-3 p-4 rounded-lg surface-subtle-hover transition-colors cursor-pointer border border-subtle dark:border-gray-700 hover:border-jade-200 dark:hover:border-jade-600"
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`${event.title} on ${format(new Date(event.start || ""), "MMMM d")}`}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        handleEventClick(event);
-                      }
-                    }}
+                    className="flex items-start space-x-3 p-3 rounded-lg surface-subtle-hover transition-colors cursor-pointer border border-subtle dark:border-gray-700"
                   >
                     {/* Event Icon */}
                     <div className="flex-shrink-0 mt-1">
@@ -246,7 +211,7 @@ const PersonalCalendar: React.FC = () => {
                           variant="body-xs"
                           className="text-text-muted truncate"
                         >
-                          <Icon
+                          <LegacyIcon
                             name="map-pin"
                             size="sm"
                             className="inline align-middle"
@@ -361,5 +326,3 @@ const PersonalCalendar: React.FC = () => {
     </>
   );
 };
-
-export default PersonalCalendar;

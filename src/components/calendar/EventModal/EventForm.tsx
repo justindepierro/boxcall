@@ -1,9 +1,7 @@
-import { Typography } from "@components/design-system/Typography";
 import React from "react";
-
 import { Button, Input } from "../../ui";
-
 import type { CalendarEvent } from "../../../domain/calendar/types";
+import { Typography } from "@components/design-system/Typography";
 
 export interface EventFormProps {
   mode: "create" | "edit";

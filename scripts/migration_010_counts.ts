@@ -10,10 +10,9 @@
  * Intended to be committed prior to drafting Migration 010 SQL.
  */
 import "dotenv/config";
+import { createClient } from "@supabase/supabase-js";
 import fs from "fs";
 import path from "path";
-
-import { createClient } from "@supabase/supabase-js";
 
 const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const key =

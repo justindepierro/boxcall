@@ -2,30 +2,27 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
 import { Typography } from "../components/design-system/Typography";
-import { markFirstPracticeScheduled } from "../components/onboarding/activationHelpers";
-import { PDFExportTrigger } from "../components/practice/LazyPDFExport";
 import { Button } from "../components/ui/Button/Button";
 import Card from "../components/ui/Card/Card";
-import Icon from "../components/ui/Icon/Icon";
 import Input from "../components/ui/Input/Input";
 import { Modal } from "../components/ui/Modal/Modal";
+import Icon from "../components/ui/Icon/Icon";
+import { PDFExportTrigger } from "../components/practice/LazyPDFExport";
 import {
   usePracticeBlocks,
   usePracticeSchedule,
   usePracticeTemplates,
   usePracticeTimer,
 } from "../hooks/usePractice";
-import { PRACTICE_BLOCK_TYPES, QUICK_TIME_INTERVALS } from "../types/practice";
-
 import type {
   CreatePracticeBlockData,
   DragDropResult,
   PracticeBlock,
   PracticeTemplate,
 } from "../types/practice";
-
+import { PRACTICE_BLOCK_TYPES, QUICK_TIME_INTERVALS } from "../types/practice";
+import { markFirstPracticeScheduled } from "../components/onboarding/activationHelpers";
 export function PracticePlanner() {
   const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
@@ -244,7 +241,7 @@ export function PracticePlanner() {
     );
   }
   return (
-    <>
+    <div className="min-h-screen surface-app">
       {/* Header */}
       <div className="surface-header border-b border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -302,7 +299,7 @@ export function PracticePlanner() {
                       className="surface-card border-subtle text-text-secondary hover:text-text-primary surface-subtle-hover flex items-center gap-2"
                       disabled={currentBlocks.length === 0}
                     >
-                      <Icon name="file" size="sm" />
+                      <Icon name="pdf" size="sm" />
                       Print Practice to PDF
                     </Button>
                     {/* Practice Controls */}
@@ -691,7 +688,7 @@ export function PracticePlanner() {
           triggerElement={null} // Programmatically controlled
         />
       )}
-    </>
+    </div>
   );
 }
 // Create Block Modal Component

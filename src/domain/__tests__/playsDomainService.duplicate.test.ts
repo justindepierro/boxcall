@@ -1,10 +1,8 @@
 import { describe, it, expect, beforeAll, vi } from "vitest";
-
 import { PlaysDomainService } from "../../domain/playsDomainService";
 import * as PlaysServiceModule from "../../services/playsService";
-
-import type { Play } from "../../types/play";
 import type { InboundPlay } from "../../utils/playDataStandardization";
+import type { Play } from "../../types/play";
 
 interface MinimalInboundPlay {
   play_name: string;

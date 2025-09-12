@@ -1,7 +1,6 @@
 import React from "react";
-
-import { Button } from "../../ui/Button/Button";
 import { Icon } from "../../ui/Icon/Icon";
+import { Button } from "../../ui/Button/Button";
 
 export type CoachingView = "playbook" | "practice-script" | "game-plan";
 

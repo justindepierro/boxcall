@@ -9,9 +9,7 @@
  */
 
 import React from "react";
-import { iconRegistry, iconLoaders } from "./iconSingletons";
-
-// Note: prefer CSS variables over static token hex so icons adapt to theme
+import { getComponentColor } from "../../../design-system/tokens";
 
 // Core types
 export interface ModularIconProps {
@@ -33,8 +31,105 @@ export interface ModularIconProps {
 }
 
 // Start with just the most common icons to prove the concept
-import type { IconName } from "./types";
-export type ModularIconName = IconName;
+export type ModularIconName =
+  | "menu"
+  | "close"
+  | "plus"
+  | "plus-circle"
+  | "minus"
+  | "edit"
+  | "delete"
+  | "check"
+  | "alert-triangle"
+  | "warning"
+  | "error"
+  | "info"
+  | "alert"
+  | "tag"
+  | "calendar"
+  | "clock"
+  | "users"
+  | "user"
+  | "user-plus"
+  | "target"
+  | "trophy"
+  | "award"
+  | "star"
+  | "trending-up"
+  | "zap"
+  | "flag"
+  | "shield"
+  | "activity"
+  | "map"
+  | "map-pin"
+  | "message"
+  | "home"
+  | "refresh-cw"
+  | "wrench"
+  | "help-circle"
+  | "bug"
+  | "wifi-off"
+  | "server"
+  | "save"
+  | "download"
+  | "upload"
+  | "search"
+  | "filter"
+  | "image"
+  | "camera"
+  | "arrow-left"
+  | "arrow-right"
+  | "arrow-up"
+  | "arrow-down"
+  | "chevron-down"
+  | "chevron-up"
+  | "chevron-left"
+  | "chevron-right"
+  | "play"
+  | "pause"
+  | "team"
+  | "book"
+  | "file"
+  | "pdf"
+  | "copy"
+  | "folder"
+  | "database"
+  | "phone"
+  | "mail"
+  | "eye"
+  | "eye-off"
+  | "lock"
+  | "unlock"
+  | "key"
+  | "hash"
+  | "clipboard-list"
+  | "check-circle"
+  | "grid"
+  | "power"
+  | "pointer"
+  | "hand"
+  | "move"
+  | "pen-tool"
+  | "link"
+  | "sparkles"
+  | "crown"
+  | "toggle-right"
+  | "toggle-left"
+  | "back"
+  | "forward"
+  | "settings"
+  | "gamepad-2"
+  | "inbox"
+  | "flask-conical"
+  | "sprout"
+  | "lightbulb"
+  | "rocket"
+  | "party-popper"
+  | "type"
+  | "list"
+  | "circle"
+  | "graduation-cap"
+  | "shirt";
 
 // Dynamic imports for perfect tree shaking (limited to our supported set)
 type LucideComponent = React.ComponentType<{
@@ -43,9 +138,114 @@ type LucideComponent = React.ComponentType<{
   strokeWidth?: number;
   className?: string;
 }>;
+type Loader = () => Promise<{ default: LucideComponent } | LucideComponent>;
+const iconLoaders: Record<ModularIconName, Loader> = {
+  // core navigation/actions
+  menu: () => import("lucide-react/dist/esm/icons/menu.js"),
+  close: () => import("lucide-react/dist/esm/icons/x.js"),
+  plus: () => import("lucide-react/dist/esm/icons/plus.js"),
+  "plus-circle": () => import("lucide-react/dist/esm/icons/plus-circle.js"),
+  minus: () => import("lucide-react/dist/esm/icons/minus.js"),
+  edit: () => import("lucide-react/dist/esm/icons/edit-3.js"),
+  delete: () => import("lucide-react/dist/esm/icons/trash-2.js"),
+  check: () => import("lucide-react/dist/esm/icons/check.js"),
+  "alert-triangle": () =>
+    import("lucide-react/dist/esm/icons/alert-triangle.js"),
+  warning: () => import("lucide-react/dist/esm/icons/alert-triangle.js"),
+  error: () => import("lucide-react/dist/esm/icons/alert-circle.js"),
+  info: () => import("lucide-react/dist/esm/icons/info.js"),
+  alert: () => import("lucide-react/dist/esm/icons/alert-triangle.js"),
+  tag: () => import("lucide-react/dist/esm/icons/tag.js"),
+  calendar: () => import("lucide-react/dist/esm/icons/calendar.js"),
+  clock: () => import("lucide-react/dist/esm/icons/clock.js"),
+  users: () => import("lucide-react/dist/esm/icons/users.js"),
+  user: () => import("lucide-react/dist/esm/icons/user.js"),
+  "user-plus": () => import("lucide-react/dist/esm/icons/user-plus.js"),
+  target: () => import("lucide-react/dist/esm/icons/target.js"),
+  trophy: () => import("lucide-react/dist/esm/icons/trophy.js"),
+  award: () => import("lucide-react/dist/esm/icons/award.js"),
+  star: () => import("lucide-react/dist/esm/icons/star.js"),
+  "trending-up": () => import("lucide-react/dist/esm/icons/trending-up.js"),
+  zap: () => import("lucide-react/dist/esm/icons/zap.js"),
+  flag: () => import("lucide-react/dist/esm/icons/flag.js"),
+  shield: () => import("lucide-react/dist/esm/icons/shield.js"),
+  activity: () => import("lucide-react/dist/esm/icons/activity.js"),
+  map: () => import("lucide-react/dist/esm/icons/map.js"),
+  "map-pin": () => import("lucide-react/dist/esm/icons/map-pin.js"),
+  message: () => import("lucide-react/dist/esm/icons/message-circle.js"),
+  home: () => import("lucide-react/dist/esm/icons/home.js"),
+  "refresh-cw": () => import("lucide-react/dist/esm/icons/refresh-cw.js"),
+  wrench: () => import("lucide-react/dist/esm/icons/wrench.js"),
+  "help-circle": () => import("lucide-react/dist/esm/icons/help-circle.js"),
+  bug: () => import("lucide-react/dist/esm/icons/bug.js"),
+  "wifi-off": () => import("lucide-react/dist/esm/icons/wifi-off.js"),
+  server: () => import("lucide-react/dist/esm/icons/server.js"),
+  save: () => import("lucide-react/dist/esm/icons/save.js"),
+  download: () => import("lucide-react/dist/esm/icons/download.js"),
+  upload: () => import("lucide-react/dist/esm/icons/upload.js"),
+  search: () => import("lucide-react/dist/esm/icons/search.js"),
+  filter: () => import("lucide-react/dist/esm/icons/filter.js"),
+  image: () => import("lucide-react/dist/esm/icons/image.js"),
+  camera: () => import("lucide-react/dist/esm/icons/camera.js"),
+  "arrow-left": () => import("lucide-react/dist/esm/icons/arrow-left.js"),
+  "arrow-right": () => import("lucide-react/dist/esm/icons/arrow-right.js"),
+  "arrow-up": () => import("lucide-react/dist/esm/icons/arrow-up.js"),
+  "arrow-down": () => import("lucide-react/dist/esm/icons/arrow-down.js"),
+  "chevron-down": () => import("lucide-react/dist/esm/icons/chevron-down.js"),
+  "chevron-up": () => import("lucide-react/dist/esm/icons/chevron-up.js"),
+  "chevron-left": () => import("lucide-react/dist/esm/icons/chevron-left.js"),
+  "chevron-right": () => import("lucide-react/dist/esm/icons/chevron-right.js"),
+  play: () => import("lucide-react/dist/esm/icons/play.js"),
+  pause: () => import("lucide-react/dist/esm/icons/pause.js"),
+  team: () => import("lucide-react/dist/esm/icons/users.js"),
+  book: () => import("lucide-react/dist/esm/icons/book.js"),
+  file: () => import("lucide-react/dist/esm/icons/file.js"),
+  pdf: () => import("lucide-react/dist/esm/icons/file-text.js"),
+  copy: () => import("lucide-react/dist/esm/icons/copy.js"),
+  folder: () => import("lucide-react/dist/esm/icons/folder.js"),
+  database: () => import("lucide-react/dist/esm/icons/database.js"),
+  phone: () => import("lucide-react/dist/esm/icons/phone.js"),
+  mail: () => import("lucide-react/dist/esm/icons/mail.js"),
+  eye: () => import("lucide-react/dist/esm/icons/eye.js"),
+  "eye-off": () => import("lucide-react/dist/esm/icons/eye-off.js"),
+  lock: () => import("lucide-react/dist/esm/icons/lock.js"),
+  unlock: () => import("lucide-react/dist/esm/icons/unlock.js"),
+  key: () => import("lucide-react/dist/esm/icons/key.js"),
+  hash: () => import("lucide-react/dist/esm/icons/hash.js"),
+  "clipboard-list": () =>
+    import("lucide-react/dist/esm/icons/clipboard-list.js"),
+  "check-circle": () => import("lucide-react/dist/esm/icons/check-circle.js"),
+  grid: () => import("lucide-react/dist/esm/icons/grid.js"),
+  power: () => import("lucide-react/dist/esm/icons/power.js"),
+  pointer: () => import("lucide-react/dist/esm/icons/mouse-pointer.js"),
+  hand: () => import("lucide-react/dist/esm/icons/hand.js"),
+  move: () => import("lucide-react/dist/esm/icons/move.js"),
+  "pen-tool": () => import("lucide-react/dist/esm/icons/pen-tool.js"),
+  link: () => import("lucide-react/dist/esm/icons/link.js"),
+  sparkles: () => import("lucide-react/dist/esm/icons/sparkles.js"),
+  crown: () => import("lucide-react/dist/esm/icons/crown.js"),
+  "toggle-right": () => import("lucide-react/dist/esm/icons/toggle-right.js"),
+  "toggle-left": () => import("lucide-react/dist/esm/icons/toggle-left.js"),
+  back: () => import("lucide-react/dist/esm/icons/arrow-left.js"),
+  forward: () => import("lucide-react/dist/esm/icons/arrow-right.js"),
+  settings: () => import("lucide-react/dist/esm/icons/settings.js"),
+  "gamepad-2": () => import("lucide-react/dist/esm/icons/gamepad-2.js"),
+  inbox: () => import("lucide-react/dist/esm/icons/inbox.js"),
+  "flask-conical": () => import("lucide-react/dist/esm/icons/flask-conical.js"),
+  sprout: () => import("lucide-react/dist/esm/icons/sprout.js"),
+  lightbulb: () => import("lucide-react/dist/esm/icons/lightbulb.js"),
+  rocket: () => import("lucide-react/dist/esm/icons/rocket.js"),
+  "party-popper": () => import("lucide-react/dist/esm/icons/party-popper.js"),
+  type: () => import("lucide-react/dist/esm/icons/type.js"),
+  list: () => import("lucide-react/dist/esm/icons/list.js"),
+  circle: () => import("lucide-react/dist/esm/icons/circle.js"),
+  "graduation-cap": () =>
+    import("lucide-react/dist/esm/icons/graduation-cap.js"),
+  shirt: () => import("lucide-react/dist/esm/icons/shirt.js"),
+};
 
 // Icon registry for loaded components
-// export const iconRegistry = new Map<ModularIconName, LucideComponent>();
+const iconRegistry = new Map<string, LucideComponent>();
 
 // Size mapping
 const sizeMap = {
@@ -59,19 +259,18 @@ const sizeMap = {
   touch: 44,
 };
 
-// Color mapping — use semantic CSS variables so values switch with [data-theme]
-const colorMap: Record<NonNullable<ModularIconProps["color"]>, string> = {
+// Color mapping
+const colorMap = {
   current: "currentColor",
-  // Primary/brand uses interactive brand color; secondary/slate use text tokens
-  primary: "var(--semantic-primary)",
-  secondary: "var(--semantic-text-secondary)",
-  jade: "var(--semantic-text-brand)",
-  navy: "var(--color-navy-700)",
-  slate: "var(--color-gray-500)",
-  success: "var(--semantic-success)",
-  warning: "var(--semantic-warning)",
-  error: "var(--semantic-error)",
-  info: "var(--semantic-primary-hover)",
+  primary: getComponentColor("icon", "primary"),
+  secondary: getComponentColor("icon", "secondary"),
+  jade: getComponentColor("icon", "jade"),
+  navy: getComponentColor("icon", "navy"),
+  slate: getComponentColor("icon", "slate"),
+  success: getComponentColor("icon", "success"),
+  warning: getComponentColor("icon", "warning"),
+  error: getComponentColor("icon", "error"),
+  info: getComponentColor("icon", "info"),
 };
 
 /**
@@ -96,23 +295,9 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    // Avoid running in non-browser environments (e.g., after JSDOM teardown)
-    if (typeof window === "undefined") return;
-
-    let cancelled = false;
-    // Debug: log requested icon name and registry status
-    if (!iconLoaders[name]) {
-      console.warn(
-        `[ModularIcon] Requested icon name '${name}' does NOT exist in iconLoaders registry.`
-      );
-    } else {
-      console.info(
-        `[ModularIcon] Requested icon name '${name}' found in iconLoaders registry.`
-      );
-    }
+    // Check if already loaded
     if (iconRegistry.has(name)) {
-      // Skip state updates if unmounted
-      if (!cancelled) setIconComponent(iconRegistry.get(name)!);
+      setIconComponent(iconRegistry.get(name)!);
       return;
     }
 
@@ -122,88 +307,35 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
       setLoading(true);
       loader()
         .then((mod) => {
-          if (cancelled) return;
-          const pascalName = name
-            .split(/[-_]/)
-            .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-            .join("");
-          let Comp: LucideComponent | undefined = undefined;
-          console.log(
-            `[ModularIcon] Dynamic import for '${name}' returned:`,
-            mod
-          );
-          if (mod && typeof mod === "object") {
-            // Use unknown and type guard instead of 'any'
-            const modObj = mod as Record<string, unknown>;
-            console.log(
-              `[ModularIcon] Checking for named export '${pascalName}' in module:`,
-              Object.keys(modObj)
-            );
-            if (
-              pascalName in modObj &&
-              typeof modObj[pascalName] === "function"
-            ) {
-              Comp = modObj[pascalName] as LucideComponent;
-              console.log(
-                `[ModularIcon] Found named export '${pascalName}' for '${name}'.`
-              );
-            } else if (
-              "default" in modObj &&
-              typeof modObj["default"] === "function"
-            ) {
-              Comp = modObj["default"] as LucideComponent;
-              console.log(`[ModularIcon] Using default export for '${name}'.`);
-            } else {
-              console.warn(
-                `[ModularIcon] Neither named nor default export found for '${name}'.`
-              );
-            }
-          } else if (typeof mod === "function") {
-            Comp = mod as LucideComponent;
-            console.log(
-              `[ModularIcon] Module itself is a function for '${name}'.`
-            );
-          }
-          if (!Comp) {
-            console.error(
-              `[ModularIcon] Could not extract icon component for '${name}' (PascalCase: '${pascalName}') from module:`,
-              mod
-            );
-          }
+          const component = mod as
+            | { default?: LucideComponent }
+            | LucideComponent;
+          const Comp = (
+            typeof component === "function"
+              ? component
+              : (component as { default?: LucideComponent }).default
+          ) as LucideComponent;
           if (Comp) {
             iconRegistry.set(name, Comp);
-            if (!cancelled) setIconComponent(Comp);
+            setIconComponent(Comp);
           }
-          if (!cancelled) setLoading(false);
+          setLoading(false);
         })
         .catch((error) => {
-          if (!cancelled) {
-            console.error(
-              `[ModularIcon] Failed to load icon: '${name}'`,
-              error
-            );
-            setLoading(false);
-          }
+          console.error(`Failed to load icon: ${name}`, error);
+          setLoading(false);
         });
     }
-    return () => {
-      cancelled = true;
-    };
   }, [name, loading]);
 
   if (loading || !IconComponent) {
-    // Return a minimal loading placeholder (span for safe nesting)
+    // Return a minimal loading placeholder
     return (
-      <span
-        className={`inline-block animate-pulse bg-[var(--semantic-bg-muted)] border border-subtle rounded shadow-inner ${className}`}
-        data-icon-placeholder="true"
-        aria-hidden
+      <div
+        className={`inline-block animate-pulse surface-subtle rounded ${className}`}
         style={{
           width: typeof size === "number" ? size : sizeMap[size],
           height: typeof size === "number" ? size : sizeMap[size],
-          // Provide fallbacks to ensure visibility when CSS variables are not resolved yet
-          backgroundColor: "var(--semantic-bg-muted, #e5e7eb)",
-          borderColor: "var(--semantic-border, #9ca3af)",
         }}
       />
     );

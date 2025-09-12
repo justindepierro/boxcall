@@ -124,8 +124,8 @@ const colorClasses: Record<NonNullable<TypographyProps["color"]>, string> = {
   success: "text-green-600 dark:text-green-400", // Success green
   warning: "text-yellow-600 dark:text-yellow-400", // Warning yellow
   error: "text-red-600 dark:text-red-400", // Error red
-  muted: "text-[var(--semantic-text-secondary)]", // Muted via semantic token
-  inverse: "text-[var(--semantic-text-inverse)]", // Inverse colors
+  muted: "text-gray-500 dark:text-gray-400", // Muted gray
+  inverse: "text-white dark:text-gray-900", // Inverse colors
 };
 // Text alignment classes
 const alignClasses: Record<NonNullable<TypographyProps["align"]>, string> = {
@@ -239,7 +239,7 @@ const TypographyBase = React.forwardRef(function TypographyBase<
   // Build class string
   const classes = [
     typographyClasses[actualVariant],
-    color ? colorClasses[color] : "text-[var(--semantic-text-primary)]", // Default text color when no color specified
+    color ? colorClasses[color] : "text-gray-900 dark:text-gray-100", // Default text color when no color specified
     align && alignClasses[align],
     truncate && "truncate",
     className,

@@ -1,6 +1,5 @@
-import { render } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-
+import { render } from "@testing-library/react";
 import { Typography } from "../../design-system/Typography";
 
 // Tiny helper to extract the className from rendered element

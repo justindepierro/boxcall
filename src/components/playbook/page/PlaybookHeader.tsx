@@ -1,8 +1,7 @@
 import React from "react";
-
-import { Typography } from "../../design-system/Typography";
-import { Badge, ProgressBadge, ComplexityBadge } from "../../ui/Badge";
 import { Icon } from "../../ui/Icon/Icon";
+import { Badge, ProgressBadge, ComplexityBadge } from "../../ui/Badge";
+import { Typography } from "../../design-system/Typography";
 
 export type PlaybookHeaderProps = {
   title?: string;

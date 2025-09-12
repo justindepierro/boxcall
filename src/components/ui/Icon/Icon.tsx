@@ -1,149 +1,283 @@
+/**
+ * Icon Adapter
+ * Preserves the existing Icon API but delegates rendering to the tree-shakeable ModularIcon.
+ */
 import React from "react";
-import { getIconComponent } from "./registry";
-import type { IconProps } from "./types";
-import { sizeMap } from "./types";
+import { getComponentColor } from "../../../design-system/tokens";
+import {
+  ModularIcon,
+  type ModularIconName,
+  type ModularIconProps,
+} from "./ModularIcon";
 
-const FALLBACK_ICON = getIconComponent("help-circle");
+// Size mapping kept for backwards compatibility
+const SIZE_MAP = {
+  xs: 12,
+  sm: 16,
+  md: 20,
+  lg: 24,
+  xl: 32,
+  touch: 44,
+} as const;
 
-const Icon: React.FC<IconProps> = ({
+export type IconSize = keyof typeof SIZE_MAP | number;
+export type IconColor =
+  | "primary"
+  | "secondary"
+  | "success"
+  | "error"
+  | "warning"
+  | "info"
+  | "navy"
+  | "current";
+
+// Keep the IconName as a superset of what ModularIcon supports; unknown names will fall back to help-circle
+export type IconName =
+  | "home"
+  | "menu"
+  | "close"
+  | "tag"
+  | "settings"
+  | "back"
+  | "forward"
+  | "chevron-up"
+  | "chevron-down"
+  | "chevron-left"
+  | "chevron-right"
+  | "play"
+  | "pause"
+  | "calendar"
+  | "clock"
+  | "team"
+  | "user"
+  | "users"
+  | "book"
+  | "edit"
+  | "delete"
+  | "plus"
+  | "plus-circle"
+  | "minus"
+  | "save"
+  | "download"
+  | "upload"
+  | "search"
+  | "filter"
+  | "check"
+  | "warning"
+  | "alert-triangle"
+  | "refresh-cw"
+  | "error"
+  | "info"
+  | "alert"
+  | "wrench"
+  | "bug"
+  | "camera"
+  | "target"
+  | "zap"
+  | "award"
+  | "trophy"
+  | "flag"
+  | "star"
+  | "trending-up"
+  | "activity"
+  | "chart"
+  | "bar-chart"
+  | "shield"
+  | "phone"
+  | "mail"
+  | "message"
+  | "file"
+  | "copy"
+  | "folder"
+  | "pdf"
+  | "database"
+  | "image"
+  | "eye"
+  | "eye-off"
+  | "lock"
+  | "unlock"
+  | "key"
+  | "hash"
+  | "clipboard-list"
+  | "trending-up"
+  | "user-plus"
+  | "inbox"
+  | "flask-conical"
+  | "sprout"
+  | "lightbulb"
+  | "rocket"
+  | "party-popper"
+  | "type"
+  | "list"
+  | "circle"
+  | "graduation-cap"
+  | "shirt"
+  | "check-circle"
+  | "grid"
+  | "power"
+  | "arrow-up"
+  | "arrow-down"
+  | "arrow-left"
+  | "arrow-right"
+  | "map"
+  | "map-pin"
+  | "crown"
+  | "wifi-off"
+  | "toggle-right"
+  | "toggle-left"
+  | "gamepad-2"
+  | "pointer"
+  | "hand"
+  | "move"
+  | "pen-tool"
+  | "link"
+  | "sparkles";
+
+export interface IconProps {
+  name: IconName;
+  size?: IconSize;
+  color?: IconColor;
+  className?: string;
+}
+
+export const Icon: React.FC<IconProps> = ({
   name,
   size = "md",
-  color = "currentColor",
+  color = "current",
   className = "",
-  strokeWidth,
-  tabIndex,
-  "aria-label": ariaLabel,
-  "aria-hidden": ariaHidden,
 }) => {
-  // Defensive: handle missing name
-  if (!name) {
-    return (
-      <span role="img" aria-label="icon" className={className}>
-        {FALLBACK_ICON ? (
-          <FALLBACK_ICON width={sizeMap.md} height={sizeMap.md} color={color} />
-        ) : (
-          "?"
-        )}
-      </span>
-    );
-  }
+  const resolvedSize =
+    typeof size === "number" ? size : (SIZE_MAP[size] ?? SIZE_MAP.md);
 
-  const IconComponent = getIconComponent(name);
-  const pixelSize =
-    typeof size === "number"
-      ? size
-      : sizeMap[size as keyof typeof sizeMap] || sizeMap.md;
-  const label = ariaLabel || name;
-  const isHidden = !!ariaHidden;
+  const colorClass =
+    color === "current"
+      ? ""
+      : getComponentColor("icon", color === "navy" ? "secondary" : color);
 
-  // Fallback if icon missing
-  if (!IconComponent) {
-    if (isHidden) {
-      return (
-        <span
-          aria-hidden="true"
-          className={className}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: pixelSize,
-            height: pixelSize,
-          }}
-          tabIndex={tabIndex}
-        >
-          {FALLBACK_ICON ? (
-            <FALLBACK_ICON
-              width={pixelSize}
-              height={pixelSize}
-              color={color}
-              aria-hidden="true"
-              strokeWidth={strokeWidth}
-            />
-          ) : (
-            "?"
-          )}
-        </span>
-      );
-    }
-    return (
-      <span
-        role="img"
-        aria-label={label}
-        className={className}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: pixelSize,
-          height: pixelSize,
-        }}
-        tabIndex={tabIndex}
-      >
-        {FALLBACK_ICON ? (
-          <FALLBACK_ICON
-            width={pixelSize}
-            height={pixelSize}
-            color={color}
-            aria-hidden="true"
-            strokeWidth={strokeWidth}
-          />
-        ) : (
-          "?"
-        )}
-      </span>
-    );
-  }
+  // ModularIcon controls the vector color via 'color' prop; we pass className for layout only
+  const vectorColor =
+    color === "current"
+      ? "current"
+      : (color as unknown as ModularIconProps["color"]);
 
-  // Main icon
-  if (isHidden) {
-    return (
-      <span
-        aria-hidden="true"
-        className={className}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: pixelSize,
-          height: pixelSize,
-        }}
-        tabIndex={tabIndex}
-      >
-        <IconComponent
-          width={pixelSize}
-          height={pixelSize}
-          color={color}
-          aria-hidden="true"
-          strokeWidth={strokeWidth}
-        />
-      </span>
-    );
-  }
+  // Runtime guard to ensure the name is a supported ModularIconName; fallback to 'help-circle'
+  const toModularName = (n: IconName): ModularIconName => {
+    const supported = new Set<ModularIconName>([
+      "home",
+      "menu",
+      "close",
+      "settings",
+      "back",
+      "forward",
+      "chevron-up",
+      "chevron-down",
+      "chevron-left",
+      "chevron-right",
+      "play",
+      "pause",
+      "calendar",
+      "clock",
+      "team",
+      "user",
+      "users",
+      "book",
+      "edit",
+      "delete",
+      "plus",
+      "plus-circle",
+      "minus",
+      "tag",
+      "save",
+      "download",
+      "upload",
+      "search",
+      "filter",
+      "check",
+      "warning",
+      "alert-triangle",
+      "refresh-cw",
+      "error",
+      "info",
+      "alert",
+      "wrench",
+      "bug",
+      "target",
+      "zap",
+      "award",
+      "trophy",
+      "flag",
+      "star",
+      "trending-up",
+      "activity",
+      "shield",
+      "phone",
+      "mail",
+      "message",
+      "file",
+      "copy",
+      "folder",
+      "pdf",
+      "database",
+      "image",
+      "camera",
+      "eye",
+      "eye-off",
+      "lock",
+      "unlock",
+      "key",
+      "hash",
+      "clipboard-list",
+      "user-plus",
+      "check-circle",
+      "grid",
+      "power",
+      "arrow-up",
+      "arrow-down",
+      "arrow-left",
+      "arrow-right",
+      "map",
+      "map-pin",
+      "crown",
+      "wifi-off",
+      "toggle-right",
+      "toggle-left",
+      "gamepad-2",
+      "pointer",
+      "hand",
+      "move",
+      "pen-tool",
+      "link",
+      "sparkles",
+      "inbox",
+      "flask-conical",
+      "sprout",
+      "lightbulb",
+      "rocket",
+      "party-popper",
+      "type",
+      "list",
+      "circle",
+      "graduation-cap",
+      "shirt",
+    ]);
+    return supported.has(n as ModularIconName)
+      ? (n as ModularIconName)
+      : "help-circle";
+  };
+
   return (
-    <span
-      role="img"
-      aria-label={label}
-      className={className}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: pixelSize,
-        height: pixelSize,
-      }}
-      tabIndex={tabIndex}
-    >
-      <IconComponent
-        width={pixelSize}
-        height={pixelSize}
-        color={color}
-        aria-hidden="true"
-        strokeWidth={strokeWidth}
-      />
-    </span>
+    <ModularIcon
+      name={toModularName(name)}
+      size={resolvedSize}
+      color={vectorColor}
+      className={className ? `${className} ${colorClass}`.trim() : colorClass}
+    />
   );
 };
 
+// Convenience components for common use cases
+export const PlayIcon = () => <Icon name="play" color="primary" />;
+export const EditIcon = () => <Icon name="edit" color="secondary" />;
+export const DeleteIcon = () => <Icon name="delete" color="error" />;
+
 export default Icon;
-export { Icon };
