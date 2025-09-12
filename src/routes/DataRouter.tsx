@@ -32,6 +32,8 @@ import {
 import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
 import { Layout } from "../components/layout/Layout";
+import { DashboardProvider } from "../context/DashboardContext";
+import { RoleProvider } from "../hooks/useRoles";
 import { PlaybookProvider } from "../contexts/PlaybookContext";
 import { ROUTES } from "./paths";
 import {
@@ -68,9 +70,13 @@ const RootLayout: React.FC = () => (
 
 // App shell that provides NavBar + Sidebar around routed pages
 const AppShell: React.FC = () => (
-  <Layout>
-    <Outlet />
-  </Layout>
+  <DashboardProvider>
+    <RoleProvider>
+      <Layout>
+        <Outlet />
+      </Layout>
+    </RoleProvider>
+  </DashboardProvider>
 );
 
 export const DataRouterApp: React.FC = () => {

@@ -18,6 +18,7 @@
 
     /* Node module resolution for dynamic imports and .d.ts module declarations */
     "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
@@ -43,6 +44,7 @@
       "@lib/*": ["src/lib/*"],
       "@state/*": ["src/state/*"],
       "@styles/*": ["src/styles/*"],
+      "@services/*": ["src/services/*"],
       "@routes/*": ["src/routes/*"],
       "@utils/*": ["src/utils/*"],
       "@design-system/*": ["src/design-system/*"],

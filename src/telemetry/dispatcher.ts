@@ -1,12 +1,8 @@
+import { logger } from "./logger";
 // Lightweight telemetry dispatcher skeleton
 // Provides enqueue + flush (console output for now); future: send to Supabase edge function or REST endpoint.
 
-export type TelemetryEvent = {
-  type: string;
-  ts: number; // epoch ms
-  data?: Record<string, unknown>;
-  context?: Record<string, unknown>;
-};
+import type { TelemetryEvent } from "./types";
 
 interface DispatcherOptions {
   flushIntervalMs?: number;
@@ -55,11 +51,12 @@ export class TelemetryDispatcher {
       try {
         this.onFlush(toSend);
       } catch (err) {
-        // Fallback logging
-        console.warn("Telemetry onFlush failed", err);
+        logger.warn("Telemetry onFlush failed", {
+          err: (err as Error)?.message,
+        });
       }
     } else {
-      console.debug("[telemetry:flush]", toSend);
+      logger.debug("[telemetry:flush]", { count: toSend.length });
     }
   }
 
@@ -68,10 +65,17 @@ export class TelemetryDispatcher {
   }
 }
 
-// Singleton (can be replaced in tests) with persistence hook
-import { persistEventsBatch } from "./persistence";
+// Persistence injection to avoid import cycle
+export type TelemetryPersist = (
+  events: TelemetryEvent[]
+) => Promise<void> | void;
+let _persist: TelemetryPersist | null = null;
+export function setTelemetryPersist(fn: TelemetryPersist) {
+  _persist = fn;
+}
+
 export const telemetry = new TelemetryDispatcher({
   onFlush: (events) => {
-    void persistEventsBatch(events);
+    if (_persist) void _persist(events);
   },
 });

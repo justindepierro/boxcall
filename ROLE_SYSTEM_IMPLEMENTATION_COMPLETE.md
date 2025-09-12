@@ -244,6 +244,7 @@ The unified role system is now fully implemented and ready for use! This represe
 - **Future Proof:** Ready for growth and new requirements
 
 The system is battle-tested, type-safe, and ready to handle the complexities of team-based permissions in a scalable way.
+
 # [ARCHIVED] Historical Reference
 
 This document is kept for history. For current status and roadmap, see `docs/CURRENT_STATUS.md` and `docs/product/ROADMAP.md`.

@@ -1,4 +1,4 @@
-## Playbook Diagram Platform Unified Roadmap (V2 Implementation + Competitive Positioning)
+# Playbook Diagram Platform Unified Roadmap (V2 Implementation + Competitive Positioning)
 
 Updated: 2025-08-14 (post‑legacy removal & modular extraction pass complete – Toolbar, PlayerSidebar, RoutesPanel, CanvasPane, a11y, telemetry sampling; curved routes + thumbnail persistence delivered)
 Status Legend: DONE (merged to main), PARTIAL (scaffold or partial UI), TODO (planned / prioritized), FUTURE (later phase / out-of-scope now)

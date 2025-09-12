@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { getSupabaseClient } from "../lib/supabaseClient";
+import { supabase } from "../lib/supabase";
 import { telemetry } from "../telemetry/dispatcher";
 
 export interface PlaySearchResult {
@@ -55,7 +55,6 @@ export function usePlaySearch(
       let fuzzyDuration = 0;
       let usedFuzzy = false;
       try {
-        const supabase = getSupabaseClient();
         type FT = { play_id: string; rank?: number };
         type FZ = { play_id: string; similarity?: number };
         const ftStart =

@@ -112,6 +112,18 @@ const configArray = [
       "boxcall-style/no-raw-emoji": "error",
     },
   },
+  // Relax type strictness in tests
+  {
+    files: [
+      "**/*.test.ts",
+      "**/*.test.tsx",
+      "**/__tests__/**/*.ts",
+      "**/__tests__/**/*.tsx",
+    ],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
   // Plugin injection for custom rule namespace
   {
     plugins: {

@@ -2,7 +2,6 @@ import React from "react";
 import { NavBar } from "../ui/NavBar";
 import type { NavBarItem } from "../ui/NavBar";
 import { LogoFull } from "../ui/Logo/Logo";
-import { ThemeToggle } from "../ui/ThemeToggle/ThemeToggle";
 import { useAuth } from "../../app/auth-store";
 
 // Example navigation items (customize as needed)
@@ -58,21 +57,18 @@ export const DashboardHeader: React.FC = () => {
       items={navItems}
       brand={<LogoFull size="md" />}
       actions={
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          {profile && (
-            <span className="w-8 h-8 rounded-full bg-jade-100 flex items-center justify-center font-bold text-jade-800 text-sm">
-              {profile.full_name
-                ? profile.full_name
-                    .split(" ")
-                    .map((n: string) => n[0])
-                    .join("")
-                    .toUpperCase()
-                    .slice(0, 2)
-                : "U"}
-            </span>
-          )}
-        </div>
+        profile ? (
+          <span className="w-8 h-8 rounded-full bg-jade-100 flex items-center justify-center font-bold text-jade-800 text-sm">
+            {profile.full_name
+              ? profile.full_name
+                  .split(" ")
+                  .map((n: string) => n[0])
+                  .join("")
+                  .toUpperCase()
+                  .slice(0, 2)
+              : "U"}
+          </span>
+        ) : null
       }
       sticky={true}
       className="glass-header shadow-md"

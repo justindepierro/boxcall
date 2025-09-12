@@ -2,16 +2,14 @@ import React from "react";
 import { useAuth } from "../../app/auth-store";
 import { PersonalCalendar } from "../dashboard/PersonalCalendar";
 import { PersonalTrophyShelf } from "../dashboard/PersonalTrophyShelf";
-import { ProfileCard } from "../dashboard/ProfileCard";
-import { TeamFeeds } from "../dashboard/TeamFeeds";
-import { ToastDemo } from "../dev/ToastDemo";
+import ProfileCard from "../dashboard/ProfileCard";
+import TeamFeeds from "../dashboard/TeamFeeds";
 import { Typography } from "../design-system";
 import { MobileBottomNavigation } from "../mobile/MobileBottomNavigation";
 import { useMobileNavigation } from "../../hooks/useMobileNavigation";
 import { PageLoadingSkeleton, DashboardCardSkeleton } from "../ui/Skeleton.tsx";
 import { useProgressiveLoading } from "../../hooks/useProgressiveLoading";
-import { TeamOnboarding } from "../onboarding/TeamOnboarding";
-import { ActivationChecklist } from "../onboarding/ActivationChecklist";
+// Onboarding components removed during cleanup
 
 /**
  * Responsive Dashboard Layout
@@ -105,11 +103,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         ============================================================================ 
       */}
       <div className="responsive-dashboard-container">
-        {/* Team Onboarding - Shows for users without teams */}
-        <div className="max-w-7xl mx-auto bc-container-padding">
-          <TeamOnboarding context="dashboard" />
-          <ActivationChecklist />
-        </div>
+        {/* Onboarding section removed */}
 
         {/* 
           ============================================================================
@@ -120,10 +114,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           ============================================================================ 
         */}
         <div className="responsive-content-grid">
-          {/* Toast Demo - Temporary to show new system working */}
-          <div className="col-span-full">
-            <ToastDemo />
-          </div>
+          {/* Toast demo removed */}
 
           {/* Profile Card */}
           <div className="profile-section">

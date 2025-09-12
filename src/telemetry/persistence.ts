@@ -1,12 +1,7 @@
+import { logger } from "./logger";
 import { createClient } from "@supabase/supabase-js";
-import type { TelemetryEvent } from "./dispatcher";
-
-interface TelemetryContext {
-  session_id?: string;
-  trace_id?: string;
-  user_id?: string;
-  [k: string]: unknown;
-}
+import type { TelemetryEvent, TelemetryContext } from "./types";
+import { setTelemetryPersist } from "./dispatcher";
 
 let supabaseClient: ReturnType<typeof createClient> | null = null;
 
@@ -38,11 +33,13 @@ export async function persistEventsBatch(events: TelemetryEvent[]) {
   });
   try {
     const { error } = await client.from("events").insert(rows);
-    if (error) {
-      // Soft fail; could push to retry queue (future)
-      console.warn("Telemetry insert failed", error.message);
-    }
+    if (error) logger.warn("Telemetry insert failed", { error: error.message });
   } catch (err) {
-    console.warn("Telemetry persistence exception", err);
+    logger.warn("Telemetry persistence exception", { err });
   }
 }
+
+// Register with dispatcher at module load (optional in SSR)
+setTelemetryPersist((events) => {
+  void persistEventsBatch(events);
+});

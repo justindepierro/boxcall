@@ -28,4 +28,4 @@ export {
   ClockIcon,
   TeamIcon,
   SettingsIcon,
-} from "./common";
+} from "./convenience";

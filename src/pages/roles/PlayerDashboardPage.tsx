@@ -1,7 +1,6 @@
 import React from "react";
 import { Icon } from "../../components/ui/Icon/Icon";
 import { Typography } from "../../components/design-system/Typography";
-import { RoleProtectedRoute } from "../../routes/RoleProtectedRoute";
 import { Button } from "../../components/ui/Button";
 
 /**
@@ -367,11 +366,9 @@ const PlayerDashboardContent: React.FC = () => {
 };
 
 export const PlayerDashboardPage: React.FC = () => {
-  return (
-    <RoleProtectedRoute allowedRoles={["player"]}>
-      <PlayerDashboardContent />
-    </RoleProtectedRoute>
-  );
+  // Route access is enforced via loader guards in DataRouter.
+  // No runtime wrapper needed here.
+  return <PlayerDashboardContent />;
 };
 
 export default PlayerDashboardPage;

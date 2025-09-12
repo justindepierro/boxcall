@@ -11,6 +11,10 @@ export default defineConfig({
   server: {
     open: true,
   },
+  worker: {
+    // Ensure web workers emitted as ESM. IIFE/UMD are not supported with code-splitting workers in Vite 5+.
+    format: "es",
+  },
   define: {
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
   },
@@ -29,6 +33,14 @@ export default defineConfig({
       "@routes": path.resolve(__dirname, "src/routes"),
       "@utils": path.resolve(__dirname, "src/utils"),
       "@design-system": path.resolve(__dirname, "src/design-system"),
+      // Keep Vite in sync with tsconfig paths for future-proof imports
+      "@adapters": path.resolve(__dirname, "src/adapters"),
+      "@data": path.resolve(__dirname, "src/data"),
+      "@domain": path.resolve(__dirname, "src/domain"),
+      "@features": path.resolve(__dirname, "src/features"),
+      "@infra": path.resolve(__dirname, "src/infra"),
+      "@telemetry": path.resolve(__dirname, "src/telemetry"),
+      "@types": path.resolve(__dirname, "src/types"),
     },
   },
   plugins: [
@@ -106,8 +118,7 @@ export default defineConfig({
         manualChunks: {
           // Core React dependencies
           vendor: ["react", "react-dom", "react-router-dom"],
-
-          // Heavy visual dependencies (none explicitly grouped here)
+          // Calendar stack
           calendar: [
             "@fullcalendar/core",
             "@fullcalendar/daygrid",
@@ -115,34 +126,12 @@ export default defineConfig({
             "@fullcalendar/react",
             "@fullcalendar/timegrid",
           ],
-          // PDF stack split for better parallelization
+          // PDF renderer
           pdfRenderer: ["@react-pdf/renderer"],
-          pdfCapture: ["jspdf", "html2canvas"],
-
-          // Database and API
-          data: [
-            "@supabase/supabase-js",
-            "@tanstack/react-query",
-            "socket.io-client",
-          ],
-
-          // UI: avoid forcing all lucide icons into a single chunk; let tree-shaking work
-          forms: ["react-hook-form", "@hookform/resolvers"],
+          // Data layer
+          data: ["@supabase/supabase-js", "@tanstack/react-query"],
+          // Drag and drop
           dnd: ["@hello-pangea/dnd"],
-          clsx: ["clsx"],
-
-          // Text editing and mentions
-          editor: ["slate", "slate-react", "react-mentions"],
-
-          // Utilities
-          utils: [
-            "date-fns",
-            "fuse.js",
-            "papaparse",
-            "dompurify",
-            "zod",
-            "zustand",
-          ],
         },
       },
     },

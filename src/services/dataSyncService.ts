@@ -770,14 +770,14 @@ export class DataSyncService {
     if (!this.supabase) await this.initialize();
     try {
       // Fetch playbook IDs for team
-      const { data: playbooks, error: pbErr } = await this.supabase!
-        .from("playbooks")
+      const { data: playbooks, error: pbErr } = await this.supabase!.from(
+        "playbooks"
+      )
         .select("id")
         .eq("team_id", teamId);
       if (pbErr || !playbooks || playbooks.length === 0) return [];
       const ids = (playbooks as Array<{ id: string }>).map((p) => p.id);
-      const { data, error } = await this.supabase!
-        .from("plays")
+      const { data, error } = await this.supabase!.from("plays")
         .select("*")
         .in("playbook_id", ids)
         .eq("is_archived", false);
@@ -808,8 +808,7 @@ export class DataSyncService {
   ): Promise<PracticeScript[]> {
     if (!this.supabase) await this.initialize();
     try {
-      const { data, error } = await this.supabase!
-        .from("practice_scripts")
+      const { data, error } = await this.supabase!.from("practice_scripts")
         .select(
           "id, team_id, name, description, total_duration, created_by, created_at, updated_at, is_template, tags"
         )
@@ -845,8 +844,7 @@ export class DataSyncService {
   private static async getAllGamePlans(teamId: string): Promise<GamePlan[]> {
     if (!this.supabase) await this.initialize();
     try {
-      const { data, error } = await this.supabase!
-        .from("game_plans")
+      const { data, error } = await this.supabase!.from("game_plans")
         .select(
           "id, team_id, name, week_number, opponent, game_date, created_by, created_at, updated_at, is_template, tags, total_plays"
         )
@@ -899,12 +897,17 @@ export class DataSyncService {
       String(s.duration ?? 0),
       s.isTemplate ? "true" : "false",
       (s.tags || []).join("|"),
-      (s.createdAt instanceof Date ? s.createdAt.toISOString() : String(s.createdAt)),
-      (s.updatedAt instanceof Date ? s.updatedAt.toISOString() : String(s.updatedAt)),
+      s.createdAt instanceof Date
+        ? s.createdAt.toISOString()
+        : String(s.createdAt),
+      s.updatedAt instanceof Date
+        ? s.updatedAt.toISOString()
+        : String(s.updatedAt),
     ]);
-    return [headers.join(","), ...rows.map((r) => r.map(csvEscape).join(","))].join(
-      "\n"
-    );
+    return [
+      headers.join(","),
+      ...rows.map((r) => r.map(csvEscape).join(",")),
+    ].join("\n");
   }
 
   private static exportGamePlansCSV(gamePlans: GamePlan[]): string {
@@ -926,15 +929,20 @@ export class DataSyncService {
       g.teamId,
       g.opponent ?? "",
       String(g.weekNumber ?? 0),
-      (g.date instanceof Date ? g.date.toISOString() : String(g.date)),
+      g.date instanceof Date ? g.date.toISOString() : String(g.date),
       String(g.totalPlays ?? 0),
       (g.tags || []).join("|"),
-      (g.createdAt instanceof Date ? g.createdAt.toISOString() : String(g.createdAt)),
-      (g.updatedAt instanceof Date ? g.updatedAt.toISOString() : String(g.updatedAt)),
+      g.createdAt instanceof Date
+        ? g.createdAt.toISOString()
+        : String(g.createdAt),
+      g.updatedAt instanceof Date
+        ? g.updatedAt.toISOString()
+        : String(g.updatedAt),
     ]);
-    return [headers.join(","), ...rows.map((r) => r.map(csvEscape).join(","))].join(
-      "\n"
-    );
+    return [
+      headers.join(","),
+      ...rows.map((r) => r.map(csvEscape).join(",")),
+    ].join("\n");
   }
 
   private static async cleanupOldBackups(keepCount: number): Promise<void> {

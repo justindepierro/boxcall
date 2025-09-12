@@ -1,4 +1,4 @@
-## Diagram Builder v2 (Superseded)
+# Diagram Builder v2 (Superseded)
 
 NOTE: This document is archived. See `PLAYBOOK_DIAGRAM_ROADMAP.md` for the active unified roadmap (implementation + competitive context). Content below retained for historical reference.
 

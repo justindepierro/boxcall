@@ -1,0 +1,4700 @@
+{
+  "files": [
+    "scripts/backfill_duplicate_key.ts",
+    "scripts/backfill_duplicate_key_node.ts",
+    "scripts/button-variant-histogram.mjs",
+    "scripts/codemod-light-panels.mjs",
+    "scripts/create-test-roles.ts",
+    "scripts/generate-contrast-remediation.mjs",
+    "scripts/inventory-white-buttons.mjs",
+    "archive/2025-08-14-diagram-legacy/DiagramEditorMVP.tsx",
+    "archive/2025-08-14-diagram-legacy/DiagramV2Route.tsx",
+    "archive/2025-08-14-diagram-legacy/FieldCanvas.legacy-shim.tsx",
+    "archive/2025-08-14-diagram-legacy/PlayBuilderWizard.tsx",
+    "archive/2025-08-14-diagram-legacy/VisualPlayBuilder.tsx",
+    "src/hooks/usePlaySearch.ts",
+    "src/hooks/useSidebarState.ts",
+    "src/lib/supabaseClient.ts",
+    "src/pages/Logout.tsx",
+    "src/services/customFieldsService.ts",
+    "src/services/offlineDataManager.ts",
+    "src/services/rsvpService.ts",
+    "src/services/thumbnailUploadService.ts",
+    "src/telemetry/hooks.ts",
+    "src/telemetry/vitals.ts",
+    "src/types/calendar.ts",
+    "src/types/csvMapping.ts",
+    "src/types/global.d.ts",
+    "src/types/lucide-react-subpaths.d.ts",
+    "src/types/phase4-3.ts",
+    "src/types/playBuilder.ts",
+    "src/types/rsvp.ts",
+    "src/utils/activeTeam.ts",
+    "src/utils/authDebug.ts",
+    "src/utils/bundleOptimization.ts",
+    "src/utils/create-sample-data.ts",
+    "src/utils/errorBoundaryUtils.ts",
+    "src/utils/errorHandler.ts",
+    "src/utils/errorHandler.tsx",
+    "src/utils/performanceMonitoring.ts",
+    "src/utils/playbook-search-tests.ts",
+    "src/utils/playbookFilterPresets.ts",
+    "src/utils/routeUtils.ts",
+    "src/utils/serverPlaybookViewPresets.ts",
+    "src/utils/touchUtils.ts",
+    "src/workers/pdfWorker.ts",
+    "src/components/collaboration/CollaborativeCursor.tsx",
+    "src/components/collaboration/collaborationUtils.ts",
+    "src/components/collaboration/index.ts",
+    "src/components/dashboard/CleanSidebar.tsx",
+    "src/components/dashboard/CollaborativeFeaturesBanner.tsx",
+    "src/components/dashboard/ContextualActionsPanel.tsx",
+    "src/components/dashboard/DashboardCustomizationPanel.tsx",
+    "src/components/dashboard/DashboardCustomizationTrigger.tsx",
+    "src/components/dashboard/DashboardErrorBoundary.tsx",
+    "src/components/dashboard/DashboardHeader.tsx",
+    "src/components/dashboard/DatabaseDataDisplay.tsx",
+    "src/components/dashboard/FloatingActionsPanel.tsx",
+    "src/components/dashboard/MinimalGridTest.tsx",
+    "src/components/dashboard/RoleBasedDashboard.tsx",
+    "src/components/dashboard/UnifiedSettingsPanel.tsx",
+    "src/components/debug/TestModal.tsx",
+    "src/components/layout/AppHeader.tsx",
+    "src/components/mobile/MobileDrawer.tsx",
+    "src/components/onboarding/ActivationChecklist.tsx",
+    "src/components/playbook/BulkTaggingModal.tsx",
+    "src/components/playbook/CustomFields.tsx",
+    "src/components/playbook/PlayRemoteSearchBar.tsx",
+    "src/components/practice/utils.ts",
+    "src/components/team/PlayerForm.tsx",
+    "src/components/team/TeamSettings.tsx",
+    "src/components/ui/ConfettiBurst.tsx",
+    "src/components/ui/MobileErrorState.tsx",
+    "src/components/ui/MobileLoadingStrategy.tsx",
+    "src/components/ui/confetti.ts",
+    "src/domain/errors/domainErrorMapper.ts",
+    "src/features/profile/ProfileActivity.tsx",
+    "src/features/profile/ProfileForm.tsx",
+    "src/features/profile/useProfileData.ts",
+    "src/services/base/BaseService.ts",
+    "src/services/cross-platform/ExternalIntegrationService.ts",
+    "src/services/cross-platform/MobileWebBridgeService.ts",
+    "src/services/cross-platform/RealTimeSyncService.ts",
+    "src/services/cross-platform/UnifiedApiGateway.ts",
+    "src/services/cross-platform/index.ts",
+    "src/services/dev-profiles/DevProfilePermissionService.ts",
+    "src/services/dev-profiles/DevProfileRepository.ts",
+    "src/services/dev-profiles/DevProfileService.ts",
+    "src/services/messaging/MessagingService.ts",
+    "src/services/performance/DatabasePerformanceMonitor.ts",
+    "src/services/phase1/EquipmentService.ts",
+    "src/services/phase1/PracticeScheduleService.ts",
+    "src/services/phase2/GamePlanService.ts",
+    "src/services/phase2/GamePlanServiceSimple.ts",
+    "src/services/react-native/ReactNativePlatformService.ts",
+    "src/services/react-native/index.ts",
+    "src/components/dashboard/QuickActions/CoachQuickActions.tsx",
+    "src/components/dashboard/QuickActions/FamilyQuickActions.tsx",
+    "src/components/dashboard/QuickActions/PlayerQuickActions.tsx",
+    "src/components/playbook/CSVImport/CSVImportModal.tsx",
+    "src/components/playbook/PlayBuilder/DiagramEditorMVP.tsx",
+    "src/components/playbook/diagram-v2/DiagramV2Route.tsx",
+    "src/components/playbook/page/ActiveFilterChips.tsx",
+    "src/components/playbook/visual/FieldCanvas.tsx",
+    "src/components/playbook/visual/VisualPlayBuilder.tsx",
+    "src/components/practice/types/index.ts",
+    "src/components/practice/hooks/usePracticeState.ts",
+    "src/components/ui/Animations/SquareAnimations.tsx",
+    "src/components/ui/Icon/LucideTest.tsx",
+    "src/components/ui/Icon/ProfessionalIcon.tsx",
+    "src/components/ui/Icon/StreamlinedIcon.tsx",
+    "src/components/ui/Icon/accessibility.tsx",
+    "src/components/ui/Icon/iconErrorLogger.ts",
+    "src/components/ui/Icon/iconSingletons.ts",
+    "src/components/ui/Icon/preloadIcons.ts",
+    "src/components/ui/Icon/preloadShim.d.ts",
+    "src/components/ui/Icon/preloadShim.ts",
+    "src/components/ui/Icon/registry.ts",
+    "src/components/ui/Logo/brand-assets.ts",
+    "src/components/ui/SegmentedControl/SegmentedControl.tsx",
+    "src/components/ui/Sidebar/Sidebar.legacy.backup.tsx",
+    "src/services/dev-profiles/configs/coreProfiles.ts",
+    "src/services/dev-profiles/configs/devRoleProfiles.ts",
+    "src/services/dev-profiles/configs/index.ts",
+    "src/types/database/core/base.ts",
+    "src/types/database/enums/index.ts",
+    "src/components/playbook/diagram-v2/components/RoutesPanel.tsx",
+    "src/components/ui/Icon/categories/ActionIcons.ts",
+    "src/components/ui/Icon/categories/BusinessIcons.ts",
+    "src/components/ui/Icon/categories/CalendarIcons.ts",
+    "src/components/ui/Icon/categories/MediaIcons.ts",
+    "src/components/ui/Icon/categories/NavigationIcons.ts",
+    "src/components/ui/Icon/categories/SportsIcons.ts",
+    "src/components/ui/Icon/categories/SystemIcons.ts",
+    "src/components/ui/Icon/icons/index.ts"
+  ],
+  "issues": [
+    {
+      "file": "package.json",
+      "owners": [],
+      "dependencies": [],
+      "devDependencies": [
+        {
+          "name": "@testing-library/user-event",
+          "line": 122,
+          "col": 6,
+          "pos": 6109
+        },
+        {
+          "name": "@types/testing-library__jest-dom",
+          "line": 126,
+          "col": 6,
+          "pos": 6254
+        },
+        {
+          "name": "@typescript-eslint/eslint-plugin",
+          "line": 127,
+          "col": 6,
+          "pos": 6305
+        },
+        {
+          "name": "@typescript-eslint/parser",
+          "line": 128,
+          "col": 6,
+          "pos": 6356
+        },
+        { "name": "axe-core", "line": 133, "col": 6, "pos": 6535 },
+        { "name": "eslint-plugin-import", "line": 138, "col": 6, "pos": 6671 },
+        { "name": "husky", "line": 143, "col": 6, "pos": 6850 },
+        { "name": "lighthouse", "line": 147, "col": 6, "pos": 6947 },
+        { "name": "lint-staged", "line": 149, "col": 6, "pos": 7007 },
+        { "name": "vite-bundle-analyzer", "line": 158, "col": 6, "pos": 7260 }
+      ],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "scripts/eslint-rules/no-raw-button.js",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 42, "col": 8, "pos": 1215 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "noRawButtonRule", "line": 6, "col": 13, "pos": 179 },
+          { "name": "default", "line": 42, "col": 15, "pos": 1222 }
+        ]
+      ]
+    },
+    {
+      "file": "scripts/eslint-rules/no-unsafe-white.js",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 82, "col": 8, "pos": 2368 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "noUnsafeWhiteRule", "line": 6, "col": 13, "pos": 324 },
+          { "name": "default", "line": 82, "col": 15, "pos": 2375 }
+        ]
+      ]
+    },
+    {
+      "file": "scripts/eslint-rules/no-radius-violations.js",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 97, "col": 8, "pos": 3136 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          {
+            "name": "noRadiusViolationsRule",
+            "line": 6,
+            "col": 13,
+            "pos": 316
+          },
+          { "name": "default", "line": 97, "col": 15, "pos": 3143 }
+        ]
+      ]
+    },
+    {
+      "file": "src/themes/registry.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "lightTheme", "line": 4, "col": 14, "pos": 156 },
+        { "name": "darkTheme", "line": 38, "col": 14, "pos": 977 },
+        { "name": "highContrastTheme", "line": 72, "col": 14, "pos": 1850 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/domain/calendar/schema.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "calendarEventTypeEnum", "line": 5, "col": 14, "pos": 133 },
+        { "name": "calendarEventBase", "line": 13, "col": 14, "pos": 242 },
+        { "name": "calendarEventCreate", "line": 33, "col": 14, "pos": 981 },
+        { "name": "calendarEventUpdate", "line": 48, "col": 14, "pos": 1611 },
+        { "name": "eventRSVP", "line": 50, "col": 14, "pos": 1678 },
+        { "name": "calendarFilters", "line": 60, "col": 14, "pos": 1926 },
+        { "name": "calendarComment", "line": 67, "col": 14, "pos": 2176 },
+        { "name": "calendarCommentCreate", "line": 78, "col": 14, "pos": 2436 },
+        { "name": "parseCalendarFilters", "line": 92, "col": 14, "pos": 2970 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/domain/calendar/types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "CalendarEventTypeSchema",
+          "line": 89,
+          "col": 14,
+          "pos": 1920
+        },
+        {
+          "name": "CalendarEventCreateSchema",
+          "line": 117,
+          "col": 14,
+          "pos": 2785
+        },
+        {
+          "name": "CalendarFiltersSchema",
+          "line": 135,
+          "col": 14,
+          "pos": 3269
+        },
+        {
+          "name": "CalendarCommentCreateSchema",
+          "line": 156,
+          "col": 14,
+          "pos": 3903
+        }
+      ],
+      "types": [
+        { "name": "CalendarEventType", "line": 5, "col": 13, "pos": 208 },
+        { "name": "CalendarCommentCreate", "line": 74, "col": 18, "pos": 1543 },
+        { "name": "CalendarEventParsed", "line": 162, "col": 13, "pos": 4030 },
+        {
+          "name": "CalendarEventCreateParsed",
+          "line": 163,
+          "col": 13,
+          "pos": 4101
+        },
+        { "name": "EventRSVPParsed", "line": 166, "col": 13, "pos": 4188 },
+        {
+          "name": "CalendarFiltersParsed",
+          "line": 167,
+          "col": 13,
+          "pos": 4251
+        },
+        {
+          "name": "CalendarCommentParsed",
+          "line": 168,
+          "col": 13,
+          "pos": 4326
+        },
+        {
+          "name": "CalendarCommentCreateParsed",
+          "line": 169,
+          "col": 13,
+          "pos": 4401
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/utils/playDataStandardization.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "buildPlaySearchDocument",
+          "line": 146,
+          "col": 17,
+          "pos": 3910
+        },
+        { "name": "diffCanonical", "line": 169, "col": 17, "pos": 4340 },
+        { "name": "prepareForCreate", "line": 189, "col": 17, "pos": 4930 },
+        { "name": "applyCanonicalToPlay", "line": 197, "col": 17, "pos": 5178 },
+        { "name": "buildDuplicateIndex", "line": 205, "col": 17, "pos": 5465 },
+        { "name": "isDuplicate", "line": 213, "col": 17, "pos": 5669 },
+        { "name": "createSearchFilter", "line": 220, "col": 17, "pos": 5882 },
+        { "name": "default", "line": 228, "col": 8, "pos": 6123 }
+      ],
+      "types": [
+        { "name": "CanonicalizedPlay", "line": 48, "col": 18, "pos": 962 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/types/play.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "DIRECTION_OPTIONS", "line": 257, "col": 14, "pos": 6303 },
+        { "name": "FORMATION_TAGS", "line": 259, "col": 14, "pos": 6392 },
+        { "name": "BACK_ALIGN_OPTIONS", "line": 272, "col": 14, "pos": 6565 },
+        { "name": "PROTECTION_OPTIONS", "line": 281, "col": 14, "pos": 6704 },
+        { "name": "DOWN_OPTIONS", "line": 292, "col": 14, "pos": 6852 },
+        { "name": "DISTANCE_OPTIONS", "line": 294, "col": 14, "pos": 6942 },
+        { "name": "HASH_OPTIONS", "line": 305, "col": 14, "pos": 7087 }
+      ],
+      "types": [
+        { "name": "CustomFieldType", "line": 2, "col": 13, "pos": 34 },
+        { "name": "CustomFieldValue", "line": 12, "col": 13, "pos": 186 },
+        { "name": "CustomFieldDefinition", "line": 21, "col": 18, "pos": 332 },
+        { "name": "CustomFieldValues", "line": 38, "col": 18, "pos": 834 },
+        { "name": "PlayLegacy", "line": 114, "col": 18, "pos": 3202 },
+        { "name": "PlayType", "line": 123, "col": 13, "pos": 3622 },
+        { "name": "FormationOption", "line": 131, "col": 18, "pos": 3772 },
+        { "name": "PlayBuilderData", "line": 138, "col": 18, "pos": 3913 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/state/activeTeamStore.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "getActiveTeamIdFromStore",
+          "line": 35,
+          "col": 17,
+          "pos": 786
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/routes/authorize.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "isRoleAllowed", "line": 18, "col": 17, "pos": 627 },
+        { "name": "fetchSuperAdminStatus", "line": 62, "col": 23, "pos": 1887 }
+      ],
+      "types": [
+        { "name": "AuthorizeInput", "line": 77, "col": 13, "pos": 2344 },
+        { "name": "AuthorizeResult", "line": 88, "col": 13, "pos": 2733 },
+        { "name": "DenyReason", "line": 96, "col": 13, "pos": 3021 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/state/calendar/hooks.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "useEvent", "line": 68, "col": 17, "pos": 2267 }],
+      "types": [
+        { "name": "EventsQueryParams", "line": 22, "col": 18, "pos": 613 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/design-system/Typography.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "H3", "line": 287, "col": 14, "pos": 9302 },
+        { "name": "H4", "line": 290, "col": 14, "pos": 9443 }
+      ],
+      "types": [
+        { "name": "TypographyVariant", "line": 9, "col": 13, "pos": 290 },
+        { "name": "TypographyElement", "line": 28, "col": 13, "pos": 1220 },
+        {
+          "name": "TypographyVariantAlias",
+          "line": 41,
+          "col": 13,
+          "pos": 1429
+        },
+        { "name": "TypographyProps", "line": 48, "col": 18, "pos": 1536 }
+      ],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "Typography", "line": 267, "col": 13, "pos": 8654 },
+          { "name": "default", "line": 273, "col": 15, "pos": 8817 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/ui/Icon/Icon.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "PlayIcon", "line": 294, "col": 14, "pos": 5361 },
+        { "name": "EditIcon", "line": 295, "col": 14, "pos": 5429 },
+        { "name": "DeleteIcon", "line": 296, "col": 14, "pos": 5499 }
+      ],
+      "types": [
+        { "name": "IconSize", "line": 23, "col": 13, "pos": 466 },
+        { "name": "IconColor", "line": 24, "col": 13, "pos": 521 },
+        { "name": "IconProps", "line": 141, "col": 18, "pos": 2275 }
+      ],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "Icon", "line": 148, "col": 13, "pos": 2409 },
+          { "name": "default", "line": 298, "col": 15, "pos": 5571 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/ui/Icon/types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "sizeMap", "line": 135, "col": 14, "pos": 2327 }],
+      "types": [
+        { "name": "IconProps", "line": 10, "col": 18, "pos": 278 },
+        { "name": "LucideIconProps", "line": 30, "col": 13, "pos": 677 },
+        { "name": "IconColor", "line": 147, "col": 13, "pos": 2677 },
+        { "name": "IconSize", "line": 148, "col": 13, "pos": 2721 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Button/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 6, "col": 27, "pos": 121 }],
+      "types": [
+        { "name": "ButtonIconPosition", "line": 7, "col": 14, "pos": 162 },
+        { "name": "ButtonProps", "line": 8, "col": 22, "pos": 184 },
+        { "name": "ButtonSize", "line": 9, "col": 15, "pos": 199 },
+        { "name": "ButtonVariant", "line": 10, "col": 14, "pos": 213 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "Modal", "line": 12, "col": 9, "pos": 435 },
+        { "name": "Sidebar", "line": 16, "col": 9, "pos": 603 },
+        { "name": "Breadcrumb", "line": 18, "col": 9, "pos": 700 },
+        { "name": "Table", "line": 20, "col": 9, "pos": 812 },
+        { "name": "Form", "line": 22, "col": 9, "pos": 911 },
+        { "name": "FormActions", "line": 22, "col": 15, "pos": 917 },
+        { "name": "FormField", "line": 22, "col": 28, "pos": 930 },
+        { "name": "Auth", "line": 24, "col": 9, "pos": 1023 },
+        { "name": "LoginForm", "line": 24, "col": 15, "pos": 1029 },
+        { "name": "ResetPasswordForm", "line": 24, "col": 26, "pos": 1040 },
+        { "name": "SignupForm", "line": 24, "col": 45, "pos": 1059 },
+        { "name": "DevHealthCheck", "line": 32, "col": 9, "pos": 1203 },
+        { "name": "ErrorBoundary", "line": 33, "col": 9, "pos": 1254 }
+      ],
+      "types": [
+        { "name": "ButtonProps", "line": 3, "col": 14, "pos": 65 },
+        { "name": "InputProps", "line": 5, "col": 14, "pos": 143 },
+        { "name": "TextAreaProps", "line": 7, "col": 14, "pos": 225 },
+        { "name": "CardProps", "line": 9, "col": 14, "pos": 305 },
+        { "name": "SelectOption", "line": 11, "col": 14, "pos": 381 },
+        { "name": "SelectProps", "line": 11, "col": 28, "pos": 395 },
+        { "name": "ModalProps", "line": 13, "col": 14, "pos": 473 },
+        { "name": "NavBarItem", "line": 15, "col": 14, "pos": 551 },
+        { "name": "NavBarProps", "line": 15, "col": 26, "pos": 563 },
+        { "name": "SidebarItem", "line": 17, "col": 14, "pos": 645 },
+        { "name": "SidebarProps", "line": 17, "col": 27, "pos": 658 },
+        { "name": "BreadcrumbItem", "line": 19, "col": 14, "pos": 748 },
+        { "name": "BreadcrumbProps", "line": 19, "col": 30, "pos": 764 },
+        { "name": "TableColumn", "line": 21, "col": 14, "pos": 850 },
+        { "name": "TableProps", "line": 21, "col": 27, "pos": 863 },
+        { "name": "TableRow", "line": 21, "col": 39, "pos": 875 },
+        { "name": "FormFieldProps", "line": 23, "col": 14, "pos": 971 },
+        { "name": "FormProps", "line": 23, "col": 30, "pos": 987 },
+        { "name": "AuthState", "line": 25, "col": 14, "pos": 1101 },
+        { "name": "LoginCredentials", "line": 26, "col": 13, "pos": 1114 },
+        { "name": "ResetPasswordData", "line": 27, "col": 20, "pos": 1134 },
+        { "name": "SignupData", "line": 28, "col": 21, "pos": 1155 },
+        { "name": "User", "line": 29, "col": 14, "pos": 1169 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/playbook/diagram/types/types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "computeComplexityScore",
+          "line": 341,
+          "col": 14,
+          "pos": 11274
+        }
+      ],
+      "types": [
+        { "name": "DiagramDocumentV1", "line": 44, "col": 18, "pos": 1591 },
+        { "name": "EditorToolState", "line": 55, "col": 18, "pos": 1949 },
+        { "name": "AnnotationType", "line": 352, "col": 13, "pos": 11661 },
+        {
+          "name": "DiagramAnnotationBase",
+          "line": 360,
+          "col": 18,
+          "pos": 11788
+        },
+        {
+          "name": "DiagramAnnotationLine",
+          "line": 367,
+          "col": 18,
+          "pos": 11970
+        },
+        {
+          "name": "DiagramAnnotationArrow",
+          "line": 371,
+          "col": 18,
+          "pos": 12117
+        },
+        {
+          "name": "DiagramAnnotationCurve",
+          "line": 375,
+          "col": 18,
+          "pos": 12267
+        },
+        {
+          "name": "DiagramAnnotationFreehand",
+          "line": 379,
+          "col": 18,
+          "pos": 12417
+        },
+        {
+          "name": "DiagramAnnotationConnector",
+          "line": 383,
+          "col": 18,
+          "pos": 12577
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/playbook/diagram/context/reducers/routeReducer.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "HISTORY_CAP", "line": 13, "col": 14, "pos": 344 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/app/dev-mode-store.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "useDevModeContext", "line": 59, "col": 14, "pos": 1445 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/ErrorBoundary.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "useErrorBoundary", "line": 196, "col": 14, "pos": 6315 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/lib/database-helpers.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "getCurrentUser", "line": 77, "col": 23, "pos": 2008 },
+        { "name": "getUserProfile", "line": 83, "col": 23, "pos": 2133 },
+        { "name": "getTeams", "line": 95, "col": 23, "pos": 2441 },
+        { "name": "getTeamGames", "line": 106, "col": 23, "pos": 2726 },
+        { "name": "getPlaybookPlays", "line": 118, "col": 23, "pos": 3055 },
+        { "name": "getGamePlayCalls", "line": 131, "col": 23, "pos": 3424 },
+        { "name": "getTeamGoals", "line": 143, "col": 23, "pos": 3750 },
+        { "name": "getTeamFiles", "line": 155, "col": 23, "pos": 4091 },
+        {
+          "name": "getUserProfileByUserId",
+          "line": 167,
+          "col": 23,
+          "pos": 4435
+        },
+        { "name": "getPostReactions", "line": 181, "col": 23, "pos": 4769 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/routes/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "requireTeamCoachLoader", "line": 2, "col": 9, "pos": 54 },
+        {
+          "name": "requireTeamAnalyticsLoader",
+          "line": 3,
+          "col": 26,
+          "pos": 80
+        },
+        {
+          "name": "requireAuthenticatedLoader",
+          "line": 4,
+          "col": 30,
+          "pos": 110
+        },
+        { "name": "requireTeamMemberLoader", "line": 5, "col": 30, "pos": 140 },
+        { "name": "requireRolesLoader", "line": 6, "col": 27, "pos": 167 },
+        {
+          "name": "requireCoachOrAdminLoader",
+          "line": 7,
+          "col": 22,
+          "pos": 189
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/app/auth-store.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "useAuthUser", "line": 221, "col": 14, "pos": 7424 },
+        { "name": "useAuthError", "line": 224, "col": 14, "pos": 7631 },
+        { "name": "useIsAuthenticated", "line": 226, "col": 14, "pos": 7733 },
+        { "name": "useIsCoach", "line": 227, "col": 14, "pos": 7807 },
+        { "name": "useIsPlayer", "line": 229, "col": 14, "pos": 7894 },
+        { "name": "useIsFamily", "line": 231, "col": 14, "pos": 7983 },
+        { "name": "useIsAdmin", "line": 233, "col": 14, "pos": 8072 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/app/dev-mode-types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "DEV_MODE_CONFIGS", "line": 10, "col": 14, "pos": 401 }
+      ],
+      "types": [
+        { "name": "CleanDevMode", "line": 44, "col": 13, "pos": 1200 },
+        { "name": "DataSource", "line": 45, "col": 13, "pos": 1236 },
+        { "name": "DataResolutionContext", "line": 51, "col": 18, "pos": 1334 },
+        { "name": "PermissionContext", "line": 58, "col": 18, "pos": 1468 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/app/dev-mode-hooks.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "useIsHeadCoach", "line": 44, "col": 14, "pos": 1150 },
+        { "name": "useIsCoach", "line": 52, "col": 14, "pos": 1407 },
+        { "name": "useIsPlayer", "line": 66, "col": 14, "pos": 1758 },
+        { "name": "useIsFamily", "line": 73, "col": 14, "pos": 1939 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Toast.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "ToastContainer", "line": 207, "col": 9, "pos": 5209 },
+        { "name": "ToastItem", "line": 207, "col": 25, "pos": 5225 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/contexts/ConfirmContext.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "useConfirm", "line": 125, "col": 17, "pos": 3565 }
+      ],
+      "types": [
+        { "name": "ConfirmOptions", "line": 12, "col": 18, "pos": 302 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/contexts/UndoQueueContext.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "useUndoQueue", "line": 93, "col": 14, "pos": 2724 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/telemetry/context.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "useTelemetry", "line": 35, "col": 17, "pos": 1050 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/app/store.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "useAppStore", "line": 106, "col": 14, "pos": 2874 },
+        { "name": "useAuth", "line": 247, "col": 14, "pos": 6886 },
+        { "name": "useTeams", "line": 265, "col": 14, "pos": 7480 },
+        { "name": "usePlayers", "line": 266, "col": 14, "pos": 7547 },
+        { "name": "useError", "line": 289, "col": 14, "pos": 8419 }
+      ],
+      "types": [
+        { "name": "User", "line": 4, "col": 18, "pos": 142 },
+        { "name": "Team", "line": 12, "col": 18, "pos": 331 },
+        { "name": "TeamSettings", "line": 23, "col": 18, "pos": 609 },
+        { "name": "Player", "line": 31, "col": 18, "pos": 798 },
+        { "name": "PlayerStats", "line": 42, "col": 18, "pos": 998 },
+        { "name": "Notification", "line": 48, "col": 18, "pos": 1112 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/context/DashboardContext.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "DashboardProvider", "line": 20, "col": 14, "pos": 730 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Button/Button.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 311, "col": 8, "pos": 11603 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "Button", "line": 211, "col": 13, "pos": 8822 },
+          { "name": "default", "line": 311, "col": 15, "pos": 11610 }
+        ]
+      ]
+    },
+    {
+      "file": "src/design-system/tokens.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "densityTokens", "line": 184, "col": 14, "pos": 4623 },
+        { "name": "getColor", "line": 362, "col": 17, "pos": 10492 },
+        {
+          "name": "generateCSSCustomProperties",
+          "line": 385,
+          "col": 17,
+          "pos": 11064
+        },
+        { "name": "tailwindColors", "line": 408, "col": 14, "pos": 11810 },
+        { "name": "colors", "line": 419, "col": 17, "pos": 12057 },
+        { "name": "typography", "line": 422, "col": 22, "pos": 12149 },
+        { "name": "spacing", "line": 423, "col": 19, "pos": 12180 },
+        { "name": "default", "line": 427, "col": 8, "pos": 12235 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/design-system/utils.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "getTokenColor", "line": 17, "col": 17, "pos": 291 },
+        { "name": "tokenClasses", "line": 46, "col": 14, "pos": 1004 },
+        { "name": "isValidToken", "line": 112, "col": 17, "pos": 3675 },
+        { "name": "getAllTokenPaths", "line": 125, "col": 17, "pos": 3897 },
+        { "name": "printTokens", "line": 149, "col": 17, "pos": 4574 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/lib/telemetry.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "telemetryLifecycle", "line": 70, "col": 14, "pos": 2441 }
+      ],
+      "types": [
+        { "name": "TelemetryEvent", "line": 2, "col": 13, "pos": 65 },
+        { "name": "TelemetryProps", "line": 38, "col": 13, "pos": 1157 },
+        { "name": "Telemetry", "line": 99, "col": 13, "pos": 3106 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/stores/dashboardStore.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "getDefaultWidgetsForRole",
+          "line": 243,
+          "col": 14,
+          "pos": 6383
+        },
+        { "name": "createDefaultLayout", "line": 347, "col": 14, "pos": 8975 }
+      ],
+      "types": [
+        { "name": "WidgetType", "line": 14, "col": 13, "pos": 431 },
+        { "name": "LayoutSize", "line": 29, "col": 13, "pos": 712 },
+        { "name": "UserActivity", "line": 49, "col": 18, "pos": 1143 },
+        { "name": "WidgetPriority", "line": 57, "col": 18, "pos": 1332 },
+        { "name": "ContextualAction", "line": 65, "col": 18, "pos": 1515 },
+        { "name": "WidgetConfig", "line": 77, "col": 18, "pos": 1744 },
+        { "name": "DashboardLayout", "line": 101, "col": 18, "pos": 2230 },
+        {
+          "name": "PersonalizationSettings",
+          "line": 117,
+          "col": 18,
+          "pos": 2509
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/adaptiveContentService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 401, "col": 8, "pos": 10285 }],
+      "types": [
+        { "name": "ContextDetectionResult", "line": 15, "col": 18, "pos": 350 }
+      ],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          {
+            "name": "AdaptiveContentService",
+            "line": 20,
+            "col": 2,
+            "pos": 471
+          },
+          { "name": "default", "line": 401, "col": 15, "pos": 10292 }
+        ]
+      ]
+    },
+    {
+      "file": "src/hooks/useAdaptiveDashboard.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "useAdaptiveDashboard", "line": 31, "col": 17, "pos": 882 },
+        { "name": "default", "line": 300, "col": 8, "pos": 7693 }
+      ],
+      "types": [
+        { "name": "AdaptiveContextState", "line": 14, "col": 18, "pos": 526 }
+      ],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "useAdaptiveDashboard", "line": 26, "col": 2, "pos": 807 },
+          { "name": "default", "line": 300, "col": 15, "pos": 7700 }
+        ]
+      ]
+    },
+    {
+      "file": "src/services/realTimeCollaboration.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 426, "col": 8, "pos": 10772 }],
+      "types": [
+        { "name": "WebSocketMessage", "line": 65, "col": 18, "pos": 1367 }
+      ],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          {
+            "name": "collaborationService",
+            "line": 425,
+            "col": 13,
+            "pos": 10705
+          },
+          { "name": "default", "line": 426, "col": 15, "pos": 10779 }
+        ]
+      ]
+    },
+    {
+      "file": "src/hooks/useCollaboration.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "useCollaborativeCursor",
+          "line": 440,
+          "col": 17,
+          "pos": 11179
+        },
+        { "name": "default", "line": 503, "col": 8, "pos": 13206 }
+      ],
+      "types": [
+        { "name": "UpdateSubscription", "line": 36, "col": 18, "pos": 779 }
+      ],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "useCollaboration", "line": 84, "col": 2, "pos": 2066 },
+          { "name": "default", "line": 503, "col": 15, "pos": 13213 }
+        ]
+      ]
+    },
+    {
+      "file": "src/types/rbac.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "UserRole", "line": 2, "col": 14, "pos": 46 }],
+      "types": [{ "name": "UserProfile", "line": 55, "col": 18, "pos": 1405 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/hooks/usePractice.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "usePracticeAttendance",
+          "line": 248,
+          "col": 17,
+          "pos": 6433
+        },
+        { "name": "useEquipment", "line": 309, "col": 17, "pos": 8053 },
+        { "name": "usePracticeSearch", "line": 339, "col": 17, "pos": 8857 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/types/roles.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "APP_ROLE_TO_TEAM_ROLE",
+          "line": 218,
+          "col": 14,
+          "pos": 5237
+        },
+        { "name": "ROLE_DISPLAY_NAMES", "line": 233, "col": 14, "pos": 5652 },
+        { "name": "ROLE_DESCRIPTIONS", "line": 252, "col": 14, "pos": 6048 },
+        { "name": "isCoachingRole", "line": 275, "col": 17, "pos": 6952 },
+        { "name": "isManagementRole", "line": 282, "col": 17, "pos": 7139 },
+        { "name": "isAdminAppRole", "line": 289, "col": 17, "pos": 7322 },
+        { "name": "canManageMembers", "line": 296, "col": 17, "pos": 7487 },
+        { "name": "canEditPlaybook", "line": 303, "col": 17, "pos": 7630 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/hooks/useRoles.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "RoleProvider", "line": 58, "col": 17, "pos": 1636 },
+        { "name": "useAppRole", "line": 150, "col": 17, "pos": 4107 },
+        { "name": "useTeamRole", "line": 158, "col": 17, "pos": 4293 },
+        { "name": "usePermissions", "line": 172, "col": 17, "pos": 4647 },
+        { "name": "useCapability", "line": 206, "col": 17, "pos": 5573 },
+        { "name": "useRoleGuard", "line": 236, "col": 17, "pos": 6346 },
+        { "name": "useRoleDisplayNames", "line": 287, "col": 17, "pos": 7644 },
+        { "name": "useTeamMembership", "line": 299, "col": 17, "pos": 7931 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/themes/ThemeManager.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "initTheme", "line": 58, "col": 23, "pos": 1748 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/design-system/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "colorTokens", "line": 17, "col": 9, "pos": 353 },
+        { "name": "semantic", "line": 18, "col": 15, "pos": 368 },
+        { "name": "component", "line": 19, "col": 12, "pos": 380 },
+        { "name": "getComponentColor", "line": 20, "col": 13, "pos": 393 },
+        { "name": "getTokenColor", "line": 37, "col": 9, "pos": 720 },
+        { "name": "tokenClasses", "line": 38, "col": 17, "pos": 737 },
+        { "name": "isValidToken", "line": 39, "col": 16, "pos": 753 },
+        { "name": "getAllTokenPaths", "line": 40, "col": 16, "pos": 769 },
+        { "name": "printTokens", "line": 41, "col": 20, "pos": 789 },
+        { "name": "semanticSpacing", "line": 46, "col": 9, "pos": 868 },
+        { "name": "spacing", "line": 47, "col": 19, "pos": 887 },
+        { "name": "spacingClasses", "line": 48, "col": 11, "pos": 898 },
+        { "name": "spacingUtils", "line": 49, "col": 18, "pos": 916 },
+        { "name": "designTokens", "line": 59, "col": 14, "pos": 1176 },
+        {
+          "name": "generateCSSCustomProperties",
+          "line": 68,
+          "col": 14,
+          "pos": 1344
+        }
+      ],
+      "types": [
+        { "name": "TypographyElement", "line": 11, "col": 7, "pos": 223 },
+        { "name": "TypographyProps", "line": 12, "col": 7, "pos": 249 },
+        { "name": "TypographyVariant", "line": 13, "col": 7, "pos": 273 },
+        { "name": "ColorScale", "line": 25, "col": 14, "pos": 489 },
+        { "name": "BrandColorTokens", "line": 26, "col": 14, "pos": 503 },
+        { "name": "SemanticColorTokens", "line": 27, "col": 20, "pos": 523 },
+        { "name": "ComponentColorTokens", "line": 28, "col": 23, "pos": 546 },
+        { "name": "TokenUsagePattern", "line": 29, "col": 24, "pos": 570 },
+        { "name": "TailwindColorClass", "line": 30, "col": 21, "pos": 591 },
+        { "name": "DesignTokens", "line": 31, "col": 22, "pos": 613 },
+        { "name": "ValidTokenPath", "line": 32, "col": 16, "pos": 629 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/calendar/CalendarShell.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 144, "col": 8, "pos": 4724 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "CalendarShell", "line": 23, "col": 13, "pos": 879 },
+          { "name": "default", "line": 144, "col": 15, "pos": 4731 }
+        ]
+      ]
+    },
+    {
+      "file": "src/pages/CollaborativeDemoPage.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "CollaborativeDemoPage", "line": 14, "col": 17, "pos": 450 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          {
+            "name": "CollaborativeDemoPage",
+            "line": 12,
+            "col": 97,
+            "pos": 432
+          },
+          { "name": "default", "line": 18, "col": 15, "pos": 534 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/dashboard/ResponsiveDashboardLayout.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 175, "col": 8, "pos": 6187 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          {
+            "name": "ResponsiveDashboardLayout",
+            "line": 28,
+            "col": 13,
+            "pos": 1204
+          },
+          { "name": "default", "line": 175, "col": 15, "pos": 6194 }
+        ]
+      ]
+    },
+    {
+      "file": "src/pages/DiagnosticsPage.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "DiagnosticsPage", "line": 18, "col": 14, "pos": 356 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "DiagnosticsPage", "line": 18, "col": 13, "pos": 355 },
+          { "name": "default", "line": 93, "col": 15, "pos": 3095 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/ui/Tag/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "mapCategoryToTagVariant", "line": 3, "col": 9, "pos": 88 }
+      ],
+      "types": [
+        { "name": "TagProps", "line": 2, "col": 14, "pos": 42 },
+        { "name": "TagVariant", "line": 2, "col": 24, "pos": 52 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/auth/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "LoginForm", "line": 3, "col": 9, "pos": 86 },
+        { "name": "RegisterForm", "line": 4, "col": 9, "pos": 127 },
+        { "name": "UserMenu", "line": 5, "col": 9, "pos": 174 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/pages/Playbook.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "Playbook", "line": 17, "col": 14, "pos": 523 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "Playbook", "line": 17, "col": 13, "pos": 522 },
+          { "name": "default", "line": 18, "col": 15, "pos": 582 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/ui/Icon/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "PlayIcon", "line": 18, "col": 9, "pos": 608 },
+        { "name": "PauseIcon", "line": 19, "col": 12, "pos": 620 },
+        { "name": "EditIcon", "line": 20, "col": 13, "pos": 633 },
+        { "name": "DeleteIcon", "line": 21, "col": 12, "pos": 645 },
+        { "name": "AddIcon", "line": 22, "col": 14, "pos": 659 },
+        { "name": "PDFIcon", "line": 25, "col": 9, "pos": 703 },
+        { "name": "CalendarIcon", "line": 26, "col": 11, "pos": 714 },
+        { "name": "ClockIcon", "line": 27, "col": 16, "pos": 730 },
+        { "name": "TeamIcon", "line": 28, "col": 13, "pos": 743 },
+        { "name": "SettingsIcon", "line": 29, "col": 12, "pos": 755 }
+      ],
+      "types": [
+        { "name": "IconName", "line": 10, "col": 14, "pos": 284 },
+        { "name": "IconProps", "line": 10, "col": 24, "pos": 294 },
+        { "name": "ModularIconProps", "line": 12, "col": 14, "pos": 380 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/practice/LazyPDFExport.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "LazyPDFExport", "line": 57, "col": 14, "pos": 1480 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/onboarding/activationHelpers.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "markFirstPlayCreated", "line": 55, "col": 17, "pos": 1324 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/pages/PracticePlanner.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "PracticePlanner", "line": 26, "col": 17, "pos": 1055 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "PracticePlanner", "line": 25, "col": 89, "pos": 1038 },
+          { "name": "default", "line": 839, "col": 15, "pos": 33421 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/ui/Input/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 16, "col": 9, "pos": 324 }],
+      "types": [
+        { "name": "InputProps", "line": 7, "col": 14, "pos": 159 },
+        { "name": "InputSize", "line": 8, "col": 14, "pos": 173 },
+        { "name": "InputSizeConfig", "line": 9, "col": 13, "pos": 186 },
+        { "name": "InputStatus", "line": 10, "col": 19, "pos": 205 },
+        { "name": "InputStylesConfig", "line": 11, "col": 15, "pos": 220 },
+        { "name": "InputVariant", "line": 12, "col": 21, "pos": 241 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Logo/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "Logo", "line": 5, "col": 9, "pos": 46 },
+        { "name": "LogoFull", "line": 7, "col": 12, "pos": 66 },
+        { "name": "HeroLogo", "line": 11, "col": 15, "pos": 119 }
+      ],
+      "types": [
+        { "name": "LogoProps", "line": 15, "col": 14, "pos": 163 },
+        { "name": "LogoVariant", "line": 15, "col": 25, "pos": 174 },
+        { "name": "LogoSize", "line": 15, "col": 38, "pos": 187 },
+        { "name": "LogoColor", "line": 15, "col": 48, "pos": 197 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/collaboration/CollaborationProvider.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 146, "col": 8, "pos": 3617 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          {
+            "name": "CollaborationProvider",
+            "line": 35,
+            "col": 13,
+            "pos": 808
+          },
+          { "name": "default", "line": 146, "col": 15, "pos": 3624 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/ui/Skeleton.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "PlayCardSkeleton", "line": 58, "col": 14, "pos": 1628 },
+        { "name": "NavigationSkeleton", "line": 106, "col": 14, "pos": 2911 },
+        { "name": "ListSkeleton", "line": 132, "col": 14, "pos": 3699 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/pages/TeamBulletin.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "TeamBulletin", "line": 30, "col": 14, "pos": 1620 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "TeamBulletin", "line": 30, "col": 13, "pos": 1619 },
+          { "name": "default", "line": 366, "col": 15, "pos": 13038 }
+        ]
+      ]
+    },
+    {
+      "file": "src/pages/TeamSettings.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "TeamSettings", "line": 15, "col": 14, "pos": 442 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "TeamSettings", "line": 15, "col": 13, "pos": 441 },
+          { "name": "default", "line": 60, "col": 15, "pos": 2108 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/lazy/LazyRoutes.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "LazyCalendarShellPage", "line": 18, "col": 14, "pos": 532 },
+        { "name": "LazyPracticePlanner", "line": 96, "col": 14, "pos": 2689 },
+        {
+          "name": "LazyPracticePlannerModal",
+          "line": 101,
+          "col": 14,
+          "pos": 2812
+        },
+        { "name": "RouteLoadingSpinner", "line": 108, "col": 14, "pos": 3023 },
+        { "name": "LazyLoadErrorBoundary", "line": 118, "col": 14, "pos": 3401 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/routes/ScrollToTop.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "ScrollToTop", "line": 5, "col": 14, "pos": 149 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "ScrollToTop", "line": 5, "col": 13, "pos": 148 },
+          { "name": "default", "line": 14, "col": 15, "pos": 400 }
+        ]
+      ]
+    },
+    {
+      "file": "src/routes/RouteErrorElement.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "RouteErrorElement", "line": 6, "col": 14, "pos": 225 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "RouteErrorElement", "line": 6, "col": 13, "pos": 224 },
+          { "name": "default", "line": 74, "col": 15, "pos": 2498 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/playbook/DiagramPaneRoute.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "DiagramPaneRoute", "line": 10, "col": 14, "pos": 411 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "DiagramPaneRoute", "line": 10, "col": 13, "pos": 410 },
+          { "name": "default", "line": 62, "col": 15, "pos": 2016 }
+        ]
+      ]
+    },
+    {
+      "file": "src/routes/DataRouter.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 328, "col": 8, "pos": 10567 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "DataRouterApp", "line": 76, "col": 13, "pos": 2088 },
+          { "name": "default", "line": 328, "col": 15, "pos": 10574 }
+        ]
+      ]
+    },
+    {
+      "file": "src/types/permissions.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "PERMISSION_MATRIX", "line": 81, "col": 14, "pos": 2515 },
+        { "name": "getUserPermissions", "line": 264, "col": 17, "pos": 7711 }
+      ],
+      "types": [
+        { "name": "PermissionCategory", "line": 29, "col": 13, "pos": 1073 },
+        { "name": "PermissionMatrix", "line": 71, "col": 18, "pos": 2276 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/conflictResolution.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 311, "col": 8, "pos": 8323 }],
+      "types": [{ "name": "MergeStrategy", "line": 20, "col": 18, "pos": 497 }],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          {
+            "name": "conflictResolutionService",
+            "line": 309,
+            "col": 13,
+            "pos": 8253
+          },
+          { "name": "default", "line": 311, "col": 15, "pos": 8330 }
+        ]
+      ]
+    },
+    {
+      "file": "src/utils/textNormalization.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "normalizePersonnel", "line": 74, "col": 14, "pos": 1871 },
+        {
+          "name": "createNormalizedInputHandler",
+          "line": 100,
+          "col": 14,
+          "pos": 2674
+        },
+        { "name": "fuzzyMatch", "line": 119, "col": 14, "pos": 3207 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/csv/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "CSVParser", "line": 11, "col": 9, "pos": 241 },
+        { "name": "CSVColumnMapper", "line": 12, "col": 9, "pos": 282 },
+        { "name": "CSVDataValidator", "line": 13, "col": 9, "pos": 335 },
+        { "name": "CSVExporter", "line": 14, "col": 9, "pos": 390 },
+        { "name": "CSVPlayConverter", "line": 15, "col": 9, "pos": 435 },
+        { "name": "CSVImportProcessor", "line": 16, "col": 9, "pos": 490 }
+      ],
+      "types": [
+        { "name": "CSVPlayData", "line": 19, "col": 14, "pos": 575 },
+        { "name": "CSVImportResult", "line": 20, "col": 15, "pos": 590 },
+        { "name": "CSVPlayPreview", "line": 21, "col": 19, "pos": 609 },
+        { "name": "CSVParseResult", "line": 22, "col": 18, "pos": 627 },
+        { "name": "CSVExportOptions", "line": 23, "col": 18, "pos": 645 },
+        { "name": "ColumnMappings", "line": 24, "col": 20, "pos": 665 },
+        { "name": "ValidationResult", "line": 25, "col": 18, "pos": 683 },
+        { "name": "PlayTypeMapping", "line": 26, "col": 20, "pos": 703 },
+        { "name": "FormationCorrection", "line": 27, "col": 19, "pos": 722 },
+        { "name": "CommonPlayCorrection", "line": 28, "col": 23, "pos": 745 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/gamePlanService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "GamePlanService", "line": 76, "col": 14, "pos": 1590 }
+      ],
+      "types": [
+        { "name": "GamePlanSituation", "line": 10, "col": 18, "pos": 288 },
+        { "name": "GamePlanPlay", "line": 28, "col": 18, "pos": 649 },
+        { "name": "CreateGamePlanData", "line": 57, "col": 18, "pos": 1243 },
+        { "name": "AddPlayToGamePlanData", "line": 68, "col": 18, "pos": 1448 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/practiceScriptService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "PracticeScriptService", "line": 51, "col": 14, "pos": 1039 }
+      ],
+      "types": [
+        { "name": "PracticeScriptPlay", "line": 24, "col": 18, "pos": 538 },
+        {
+          "name": "CreatePracticeScriptData",
+          "line": 35,
+          "col": 18,
+          "pos": 739
+        },
+        {
+          "name": "AddPlayToPracticeScriptData",
+          "line": 43,
+          "col": 18,
+          "pos": 887
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/types/profileFields.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "COACH_PROFILE_CONFIG", "line": 33, "col": 14, "pos": 646 },
+        {
+          "name": "PLAYER_PROFILE_CONFIG",
+          "line": 148,
+          "col": 14,
+          "pos": 3805
+        },
+        {
+          "name": "FAMILY_PROFILE_CONFIG",
+          "line": 353,
+          "col": 14,
+          "pos": 10080
+        }
+      ],
+      "types": [
+        { "name": "RoleProfileConfig", "line": 24, "col": 18, "pos": 412 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/types/team-management.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "FOOTBALL_POSITIONS", "line": 151, "col": 14, "pos": 3838 }
+      ],
+      "types": [
+        { "name": "TeamPlayerInsert", "line": 27, "col": 18, "pos": 800 },
+        { "name": "TeamPlayerUpdate", "line": 45, "col": 18, "pos": 1220 },
+        { "name": "TeamSettings", "line": 65, "col": 18, "pos": 1722 },
+        { "name": "CoachInvitation", "line": 94, "col": 18, "pos": 2418 },
+        {
+          "name": "CoachInvitationInsert",
+          "line": 108,
+          "col": 18,
+          "pos": 2781
+        },
+        { "name": "CSVImportRow", "line": 121, "col": 18, "pos": 3135 },
+        { "name": "ParsedPlayerData", "line": 125, "col": 18, "pos": 3224 },
+        { "name": "CSVImportResult", "line": 143, "col": 18, "pos": 3662 },
+        { "name": "FootballPosition", "line": 204, "col": 13, "pos": 4355 },
+        { "name": "TeamLevel", "line": 212, "col": 13, "pos": 4722 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/utils/localPlayFlags.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "setPlayFlags", "line": 28, "col": 17, "pos": 742 }
+      ],
+      "types": [
+        { "name": "PlayFlagCategory", "line": 1, "col": 13, "pos": 12 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/utils/navigation.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "getPrimaryNavigationItems",
+          "line": 211,
+          "col": 14,
+          "pos": 5790
+        }
+      ],
+      "types": [{ "name": "NavigationItem", "line": 8, "col": 18, "pos": 390 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/utils/playComplexity.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "checkComplexityMilestones",
+          "line": 244,
+          "col": 17,
+          "pos": 6286
+        }
+      ],
+      "types": [
+        { "name": "ComplexityBadgeType", "line": 19, "col": 13, "pos": 440 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/utils/playNameUtils.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "generatePlayName", "line": 32, "col": 17, "pos": 1064 },
+        {
+          "name": "generateConcatenatedName",
+          "line": 43,
+          "col": 17,
+          "pos": 1387
+        },
+        { "name": "generatePlayNamePlain", "line": 87, "col": 17, "pos": 2812 },
+        { "name": "hasOneWordPlay", "line": 114, "col": 17, "pos": 3603 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/utils/playbook-categories.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "calculatePlayCounts", "line": 145, "col": 14, "pos": 4161 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/calendar/CalendarFiltersPanel.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 163, "col": 8, "pos": 5390 }],
+      "types": [
+        {
+          "name": "CalendarFiltersPanelProps",
+          "line": 9,
+          "col": 18,
+          "pos": 313
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "CalendarFiltersPanel", "line": 25, "col": 13, "pos": 773 },
+          { "name": "default", "line": 163, "col": 15, "pos": 5397 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/calendar/CalendarHeader.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 47, "col": 8, "pos": 1402 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "CalendarHeader", "line": 12, "col": 13, "pos": 218 },
+          { "name": "default", "line": 47, "col": 15, "pos": 1409 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/calendar/CalendarSkeletons.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "CalendarSidebarSkeleton", "line": 8, "col": 14, "pos": 207 },
+        { "name": "CalendarGridSkeleton", "line": 32, "col": 14, "pos": 1228 },
+        { "name": "default", "line": 102, "col": 8, "pos": 3755 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          {
+            "name": "CalendarPageSkeleton",
+            "line": 55,
+            "col": 13,
+            "pos": 2094
+          },
+          { "name": "default", "line": 102, "col": 15, "pos": 3762 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/calendar/CalendarStats.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 54, "col": 8, "pos": 1599 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "CalendarStats", "line": 10, "col": 13, "pos": 215 },
+          { "name": "default", "line": 54, "col": 15, "pos": 1606 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/calendar/CalendarToolbar.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 51, "col": 8, "pos": 1205 }],
+      "types": [
+        { "name": "CalendarToolbarProps", "line": 7, "col": 18, "pos": 140 }
+      ],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "CalendarToolbar", "line": 16, "col": 13, "pos": 400 },
+          { "name": "default", "line": 51, "col": 15, "pos": 1212 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/calendar/EventModal.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 213, "col": 8, "pos": 7229 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "EventModal", "line": 46, "col": 13, "pos": 1454 },
+          { "name": "default", "line": 213, "col": 15, "pos": 7236 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/calendar/ViewSwitcher.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 125, "col": 8, "pos": 3870 }],
+      "types": [{ "name": "CalendarView", "line": 5, "col": 13, "pos": 115 }],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "ViewSwitcher", "line": 15, "col": 13, "pos": 423 },
+          { "name": "default", "line": 125, "col": 15, "pos": 3877 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/calendar/EventModal/EventDetails.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 250, "col": 8, "pos": 8271 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "EventDetails", "line": 32, "col": 13, "pos": 946 },
+          { "name": "default", "line": 250, "col": 15, "pos": 8278 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/calendar/EventModal/EventForm.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 116, "col": 8, "pos": 3442 }],
+      "types": [{ "name": "EventFormProps", "line": 6, "col": 18, "pos": 223 }],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "EventForm", "line": 15, "col": 13, "pos": 449 },
+          { "name": "default", "line": 116, "col": 15, "pos": 3449 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/dashboard/AdaptiveChart.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 268, "col": 8, "pos": 7780 }],
+      "types": [{ "name": "ChartConfig", "line": 62, "col": 18, "pos": 1751 }],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "AdaptiveChart", "line": 72, "col": 13, "pos": 1965 },
+          { "name": "default", "line": 268, "col": 15, "pos": 7787 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/dashboard/ProfileCard.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 222, "col": 8, "pos": 7618 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/dashboard/TeamFeeds.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 226, "col": 8, "pos": 7080 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/design-system/Spacing.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "spacingClasses", "line": 82, "col": 14, "pos": 2370 },
+        { "name": "default", "line": 209, "col": 8, "pos": 5679 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "spacing", "line": 8, "col": 13, "pos": 234 },
+          { "name": "default", "line": 209, "col": 15, "pos": 5686 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/dev/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 7, "col": 8, "pos": 261 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "DevTools", "line": 5, "col": 13, "pos": 195 },
+          { "name": "default", "line": 7, "col": 15, "pos": 268 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/forms/ProfileFormFields.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "FormField", "line": 14, "col": 14, "pos": 375 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/pages/roles/PlayerDashboardPage.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "PlayerDashboardPage", "line": 368, "col": 14, "pos": 13710 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          {
+            "name": "PlayerDashboardPage",
+            "line": 368,
+            "col": 13,
+            "pos": 13709
+          },
+          { "name": "default", "line": 374, "col": 15, "pos": 13905 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/ui/Badge/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "AchievementBadge", "line": 8, "col": 9, "pos": 146 }
+      ],
+      "types": [{ "name": "BadgeProps", "line": 14, "col": 14, "pos": 289 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/pdf/usePracticeScriptPDF.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "convertPracticeStateToPDFData",
+          "line": 128,
+          "col": 14,
+          "pos": 3462
+        },
+        {
+          "name": "getDefaultPracticeScriptPDFOptions",
+          "line": 202,
+          "col": 14,
+          "pos": 5652
+        },
+        {
+          "name": "generatePracticeScriptFilename",
+          "line": 212,
+          "col": 14,
+          "pos": 5905
+        }
+      ],
+      "types": [
+        {
+          "name": "UsePracticeScriptPDFReturn",
+          "line": 18,
+          "col": 18,
+          "pos": 411
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Select/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 6, "col": 28, "pos": 102 }],
+      "types": [
+        { "name": "SelectOption", "line": 7, "col": 14, "pos": 143 },
+        { "name": "SelectProps", "line": 8, "col": 16, "pos": 159 },
+        { "name": "SelectStylesConfig", "line": 9, "col": 15, "pos": 174 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/TextArea/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 10, "col": 9, "pos": 198 }],
+      "types": [
+        { "name": "TextAreaProps", "line": 5, "col": 14, "pos": 111 },
+        { "name": "TextAreaSize", "line": 6, "col": 17, "pos": 128 },
+        { "name": "TextAreaStatus", "line": 7, "col": 16, "pos": 144 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Card/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 11, "col": 9, "pos": 191 }],
+      "types": [
+        { "name": "CardProps", "line": 5, "col": 14, "pos": 99 },
+        { "name": "CardSize", "line": 6, "col": 13, "pos": 112 },
+        { "name": "CardStylesConfig", "line": 7, "col": 12, "pos": 124 },
+        { "name": "CardVariant", "line": 8, "col": 20, "pos": 144 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Breadcrumb/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "Breadcrumb", "line": 1, "col": 9, "pos": 8 }],
+      "types": [
+        { "name": "BreadcrumbItem", "line": 2, "col": 14, "pos": 56 },
+        { "name": "BreadcrumbProps", "line": 2, "col": 30, "pos": 72 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Table/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "Table", "line": 1, "col": 9, "pos": 8 }],
+      "types": [
+        { "name": "TableColumn", "line": 2, "col": 14, "pos": 46 },
+        { "name": "TableProps", "line": 2, "col": 27, "pos": 59 },
+        { "name": "TableRow", "line": 2, "col": 39, "pos": 71 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Form/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "FormGroup", "line": 1, "col": 39, "pos": 38 }],
+      "types": [
+        { "name": "FormActionsProps", "line": 2, "col": 14, "pos": 79 },
+        { "name": "FormFieldProps", "line": 3, "col": 20, "pos": 99 },
+        { "name": "FormGroupProps", "line": 4, "col": 18, "pos": 117 },
+        { "name": "FormProps", "line": 5, "col": 18, "pos": 135 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Auth/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "Auth", "line": 1, "col": 9, "pos": 8 },
+        { "name": "LoginForm", "line": 1, "col": 15, "pos": 14 },
+        { "name": "ResetPasswordForm", "line": 1, "col": 26, "pos": 25 },
+        { "name": "SignupForm", "line": 1, "col": 45, "pos": 44 }
+      ],
+      "types": [
+        { "name": "AuthFormProps", "line": 2, "col": 14, "pos": 86 },
+        { "name": "AuthProps", "line": 3, "col": 17, "pos": 103 },
+        { "name": "AuthState", "line": 4, "col": 13, "pos": 116 },
+        { "name": "LoginCredentials", "line": 5, "col": 13, "pos": 129 },
+        { "name": "LoginFormProps", "line": 6, "col": 20, "pos": 149 },
+        { "name": "ResetPasswordData", "line": 7, "col": 18, "pos": 167 },
+        { "name": "ResetPasswordFormProps", "line": 8, "col": 21, "pos": 188 },
+        { "name": "SignupData", "line": 9, "col": 26, "pos": 214 },
+        { "name": "SignupFormProps", "line": 10, "col": 14, "pos": 228 },
+        { "name": "User", "line": 11, "col": 19, "pos": 247 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/IconButton/IconButton.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 80, "col": 8, "pos": 2152 }],
+      "types": [
+        { "name": "IconButtonProps", "line": 10, "col": 18, "pos": 325 }
+      ],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "IconButton", "line": 32, "col": 13, "pos": 1037 },
+          { "name": "default", "line": 80, "col": 15, "pos": 2159 }
+        ]
+      ]
+    },
+    {
+      "file": "src/services/pdf/styles.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "createPageBreak", "line": 326, "col": 14, "pos": 8216 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/pdf/PracticeScriptPDFService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "PracticeScriptPDFService",
+          "line": 25,
+          "col": 14,
+          "pos": 582
+        }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/pdf/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "BasePDFService", "line": 8, "col": 9, "pos": 179 },
+        { "name": "PDFServiceFactory", "line": 8, "col": 25, "pos": 195 },
+        { "name": "PDFUtils", "line": 8, "col": 44, "pos": 214 },
+        { "name": "PDFBaseStyles", "line": 21, "col": 9, "pos": 488 },
+        { "name": "PDFColors", "line": 22, "col": 17, "pos": 505 },
+        { "name": "PDFFonts", "line": 23, "col": 13, "pos": 518 },
+        { "name": "getCategoryColor", "line": 24, "col": 12, "pos": 530 },
+        { "name": "formatTimeForPDF", "line": 25, "col": 20, "pos": 550 },
+        {
+          "name": "getAvailablePDFServices",
+          "line": 87,
+          "col": 14,
+          "pos": 2439
+        },
+        { "name": "createPDFService", "line": 93, "col": 14, "pos": 2609 }
+      ],
+      "types": [
+        { "name": "PDFDocument", "line": 10, "col": 14, "pos": 273 },
+        { "name": "PDFBranding", "line": 11, "col": 15, "pos": 288 },
+        { "name": "PDFTemplate", "line": 12, "col": 15, "pos": 303 },
+        { "name": "PDFExportOptions", "line": 13, "col": 15, "pos": 318 },
+        { "name": "PracticeScriptPDFData", "line": 14, "col": 20, "pos": 338 },
+        { "name": "PlaybookPDFData", "line": 15, "col": 25, "pos": 363 },
+        { "name": "GamePlanPDFData", "line": 16, "col": 19, "pos": 382 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/calendar/hooks/useDebouncedValue.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 16, "col": 8, "pos": 438 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "useDebouncedValue", "line": 1, "col": 45, "pos": 44 },
+          { "name": "default", "line": 16, "col": 15, "pos": 445 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/playbook/diagram/utils/thumbnail.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "svgElementToDataUrl", "line": 13, "col": 23, "pos": 496 },
+        { "name": "svgFullToString", "line": 145, "col": 17, "pos": 5089 }
+      ],
+      "types": [
+        { "name": "ThumbnailOptions", "line": 4, "col": 18, "pos": 206 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/thumbnail.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "svgElementToDataUrl", "line": 13, "col": 23, "pos": 496 },
+        { "name": "svgFullToString", "line": 145, "col": 17, "pos": 5089 }
+      ],
+      "types": [
+        { "name": "ThumbnailOptions", "line": 4, "col": 18, "pos": 206 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/formations.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "FORMATION_OPTIONS", "line": 13, "col": 14, "pos": 297 }
+      ],
+      "types": [{ "name": "FormationSpec", "line": 21, "col": 13, "pos": 598 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Auth/Auth.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "LoginForm", "line": 62, "col": 17, "pos": 1603 },
+        { "name": "SignupForm", "line": 225, "col": 17, "pos": 6859 },
+        { "name": "ResetPasswordForm", "line": 465, "col": 17, "pos": 14830 },
+        { "name": "Auth", "line": 609, "col": 17, "pos": 19425 },
+        { "name": "default", "line": 666, "col": 8, "pos": 20891 }
+      ],
+      "types": [
+        { "name": "User", "line": 7, "col": 18, "pos": 260 },
+        { "name": "AuthState", "line": 17, "col": 18, "pos": 466 },
+        { "name": "LoginCredentials", "line": 23, "col": 18, "pos": 592 },
+        { "name": "SignupData", "line": 28, "col": 18, "pos": 691 },
+        { "name": "ResetPasswordData", "line": 36, "col": 18, "pos": 876 },
+        { "name": "AuthFormProps", "line": 39, "col": 18, "pos": 932 },
+        { "name": "LoginFormProps", "line": 46, "col": 18, "pos": 1136 },
+        { "name": "SignupFormProps", "line": 51, "col": 18, "pos": 1299 },
+        {
+          "name": "ResetPasswordFormProps",
+          "line": 55,
+          "col": 18,
+          "pos": 1424
+        },
+        { "name": "AuthProps", "line": 587, "col": 18, "pos": 18665 }
+      ],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "Auth", "line": 608, "col": 2, "pos": 19408 },
+          { "name": "default", "line": 666, "col": 15, "pos": 20898 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/ui/Badge/Badge.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "AchievementBadge", "line": 192, "col": 14, "pos": 6069 },
+        { "name": "default", "line": 233, "col": 8, "pos": 7165 }
+      ],
+      "types": [
+        { "name": "CanonicalBadgeVariant", "line": 18, "col": 13, "pos": 577 },
+        { "name": "LegacyBadgeVariant", "line": 28, "col": 13, "pos": 774 },
+        { "name": "BadgeVariant", "line": 35, "col": 13, "pos": 889 },
+        { "name": "BadgeProps", "line": 37, "col": 18, "pos": 966 }
+      ],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "Badge", "line": 88, "col": 13, "pos": 2240 },
+          { "name": "default", "line": 233, "col": 15, "pos": 7172 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/ui/Breadcrumb/Breadcrumb.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "Breadcrumb", "line": 169, "col": 14, "pos": 4641 }
+      ],
+      "types": [
+        { "name": "BreadcrumbItem", "line": 7, "col": 18, "pos": 123 },
+        { "name": "BreadcrumbProps", "line": 21, "col": 18, "pos": 588 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Form/Form.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "FormGroup", "line": 247, "col": 17, "pos": 6780 }],
+      "types": [
+        { "name": "FormProps", "line": 5, "col": 18, "pos": 120 },
+        { "name": "FormFieldProps", "line": 31, "col": 18, "pos": 948 },
+        { "name": "FormGroupProps", "line": 51, "col": 18, "pos": 1505 },
+        { "name": "FormActionsProps", "line": 65, "col": 18, "pos": 1894 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Icon/ModularIcon.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "ModularPlayIcon", "line": 392, "col": 14, "pos": 13112 },
+        { "name": "ModularEditIcon", "line": 395, "col": 14, "pos": 13210 },
+        { "name": "ModularDeleteIcon", "line": 398, "col": 14, "pos": 13320 },
+        { "name": "ModularAddIcon", "line": 401, "col": 14, "pos": 13430 },
+        { "name": "ModularCalendarIcon", "line": 404, "col": 14, "pos": 13527 },
+        { "name": "ModularClockIcon", "line": 407, "col": 14, "pos": 13630 },
+        { "name": "ModularTeamIcon", "line": 410, "col": 14, "pos": 13732 },
+        { "name": "ModularSettingsIcon", "line": 413, "col": 14, "pos": 13828 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Icon/convenience.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "PlayIcon", "line": 16, "col": 14, "pos": 469 },
+        { "name": "PauseIcon", "line": 17, "col": 14, "pos": 547 },
+        { "name": "EditIcon", "line": 20, "col": 14, "pos": 635 },
+        { "name": "DeleteIcon", "line": 23, "col": 14, "pos": 731 },
+        { "name": "AddIcon", "line": 26, "col": 14, "pos": 827 },
+        { "name": "PDFIcon", "line": 27, "col": 14, "pos": 904 },
+        { "name": "CalendarIcon", "line": 28, "col": 14, "pos": 980 },
+        { "name": "ClockIcon", "line": 31, "col": 14, "pos": 1069 },
+        { "name": "TeamIcon", "line": 34, "col": 14, "pos": 1157 },
+        { "name": "SettingsIcon", "line": 35, "col": 14, "pos": 1232 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Logo/Logo.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "Logo", "line": 67, "col": 14, "pos": 2029 },
+        { "name": "LogoFull", "line": 92, "col": 14, "pos": 2588 },
+        { "name": "HeroLogo", "line": 105, "col": 14, "pos": 2981 },
+        { "name": "default", "line": 107, "col": 8, "pos": 3055 }
+      ],
+      "types": [
+        { "name": "LogoVariant", "line": 12, "col": 13, "pos": 247 },
+        { "name": "LogoSize", "line": 13, "col": 13, "pos": 316 },
+        { "name": "LogoColor", "line": 14, "col": 13, "pos": 381 },
+        { "name": "LogoProps", "line": 16, "col": 18, "pos": 452 }
+      ],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "Logo", "line": 67, "col": 13, "pos": 2028 },
+          { "name": "default", "line": 107, "col": 15, "pos": 3062 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/ui/Select/Select.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 524, "col": 8, "pos": 17445 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Table/Table.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "Table", "line": 204, "col": 14, "pos": 6252 }],
+      "types": [
+        { "name": "TableColumn", "line": 5, "col": 18, "pos": 177 },
+        { "name": "TableRow", "line": 25, "col": 18, "pos": 797 },
+        { "name": "SortDirection", "line": 30, "col": 13, "pos": 901 },
+        { "name": "SortState", "line": 31, "col": 18, "pos": 957 },
+        { "name": "TableProps", "line": 35, "col": 18, "pos": 1036 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Tag/Tag.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 75, "col": 8, "pos": 2329 }],
+      "types": [{ "name": "TagProps", "line": 13, "col": 18, "pos": 194 }],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "Tag", "line": 45, "col": 13, "pos": 1656 },
+          { "name": "default", "line": 75, "col": 15, "pos": 2336 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/ui/Tag/mapping.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "mapCategoryToTagVariant", "line": 3, "col": 17, "pos": 58 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/TextArea/TextArea.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 195, "col": 8, "pos": 6530 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Tooltip/Tooltip.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 126, "col": 8, "pos": 4212 }],
+      "types": [{ "name": "TooltipProps", "line": 4, "col": 18, "pos": 70 }],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "Tooltip", "line": 21, "col": 13, "pos": 624 },
+          { "name": "default", "line": 126, "col": 15, "pos": 4219 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/playbook/diagram/components/HelpHint.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 99, "col": 8, "pos": 2797 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "HelpHint", "line": 8, "col": 13, "pos": 254 },
+          { "name": "default", "line": 99, "col": 15, "pos": 2804 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/playbook/diagram/components/TipsOverlay.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 125, "col": 8, "pos": 3484 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "TipsOverlay", "line": 10, "col": 13, "pos": 286 },
+          { "name": "default", "line": 125, "col": 15, "pos": 3491 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/playbook/diagram/components/ToolPalette.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 424, "col": 8, "pos": 14020 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "ToolPalette", "line": 9, "col": 13, "pos": 333 },
+          { "name": "default", "line": 424, "col": 15, "pos": 14027 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/components/ToolPalette.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 423, "col": 8, "pos": 14001 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "ToolPalette", "line": 8, "col": 13, "pos": 315 },
+          { "name": "default", "line": 423, "col": 15, "pos": 14008 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/components/TipsOverlay.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 124, "col": 8, "pos": 3466 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "TipsOverlay", "line": 9, "col": 13, "pos": 268 },
+          { "name": "default", "line": 124, "col": 15, "pos": 3473 }
+        ]
+      ]
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/components/HelpHint.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "default", "line": 99, "col": 8, "pos": 2797 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [
+        [
+          { "name": "HelpHint", "line": 8, "col": 13, "pos": 254 },
+          { "name": "default", "line": 99, "col": 15, "pos": 2804 }
+        ]
+      ]
+    },
+    {
+      "file": "src/adapters/fullcalendar/FullCalendarAdapter.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "FullCalendarEventLike", "line": 5, "col": 18, "pos": 189 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/domain/playsDomainService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "DomainCreateResult", "line": 14, "col": 18, "pos": 395 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/calendarService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "CalendarEventCreate", "line": 14, "col": 14, "pos": 432 },
+        { "name": "EventRSVP", "line": 14, "col": 35, "pos": 453 },
+        { "name": "CalendarFilters", "line": 14, "col": 46, "pos": 464 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/domain/calendar/rules.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "UserLike", "line": 5, "col": 13, "pos": 152 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/navigation/nav.schema.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "NavItemId", "line": 4, "col": 13, "pos": 126 },
+        { "name": "NavBadge", "line": 12, "col": 13, "pos": 244 },
+        { "name": "NavItem", "line": 14, "col": 13, "pos": 318 },
+        { "name": "NavTree", "line": 25, "col": 13, "pos": 641 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Sidebar/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "SidebarProps", "line": 2, "col": 27, "pos": 63 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/navigation/nav.selectors.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "ActiveState", "line": 11, "col": 13, "pos": 401 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/pdf/types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "PDFDocument", "line": 18, "col": 18, "pos": 450 },
+        { "name": "PlaybookPDFData", "line": 146, "col": 18, "pos": 3064 },
+        { "name": "GamePlanPDFData", "line": 158, "col": 18, "pos": 3311 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/mobile/MobileBottomNavigation.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "MobileBottomNavigationProps",
+          "line": 17,
+          "col": 18,
+          "pos": 422
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Sidebar/Sidebar.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "SidebarProps", "line": 24, "col": 18, "pos": 739 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/userPreferencesService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "UserPreferences", "line": 7, "col": 18, "pos": 170 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/playbook/diagram/FieldCanvas/FieldCanvasContext.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "ShapeType", "line": 6, "col": 13, "pos": 291 },
+        { "name": "PlayerType", "line": 21, "col": 13, "pos": 528 },
+        { "name": "RouteSegmentType", "line": 27, "col": 13, "pos": 615 },
+        { "name": "RouteType", "line": 32, "col": 13, "pos": 729 },
+        { "name": "FieldType", "line": 45, "col": 13, "pos": 1025 },
+        { "name": "FieldCanvasState", "line": 48, "col": 13, "pos": 1071 },
+        { "name": "FieldCanvasAction", "line": 113, "col": 14, "pos": 2360 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/playbook/diagram/FieldCanvas/Text.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "TextProps", "line": 3, "col": 18, "pos": 45 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/hooks/useTheme.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "Theme", "line": 11, "col": 13, "pos": 194 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/lib/supabase.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "Session", "line": 64, "col": 14, "pos": 2066 },
+        { "name": "User", "line": 64, "col": 23, "pos": 2075 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/types/playbookViewPreset.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "CreateServerPlaybookViewPresetInput",
+          "line": 19,
+          "col": 13,
+          "pos": 398
+        },
+        {
+          "name": "UpdateServerPlaybookViewPresetInput",
+          "line": 25,
+          "col": 13,
+          "pos": 545
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/contexts/PlaybookContext.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "PlaybookFiltersState", "line": 7, "col": 18, "pos": 306 },
+        { "name": "PlaybookSelectionState", "line": 27, "col": 18, "pos": 730 },
+        { "name": "PlaybookPresetState", "line": 32, "col": 18, "pos": 840 },
+        { "name": "PlaybookMetricsState", "line": 42, "col": 18, "pos": 1226 },
+        { "name": "PlaybookUIState", "line": 48, "col": 18, "pos": 1342 },
+        { "name": "PlaybookAction", "line": 99, "col": 13, "pos": 2585 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/design-system/types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "ColorScale", "line": 7, "col": 13, "pos": 154 },
+        { "name": "BrandColorTokens", "line": 21, "col": 13, "pos": 356 },
+        { "name": "SemanticColorTokens", "line": 43, "col": 13, "pos": 679 },
+        { "name": "ComponentColorTokens", "line": 62, "col": 13, "pos": 1064 },
+        { "name": "TokenUsagePattern", "line": 90, "col": 13, "pos": 1554 },
+        { "name": "TailwindColorClass", "line": 101, "col": 13, "pos": 1801 },
+        { "name": "DesignTokens", "line": 113, "col": 18, "pos": 2076 },
+        { "name": "ValidTokenPath", "line": 120, "col": 13, "pos": 2229 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/telemetry/events.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "TelemetryEventType", "line": 47, "col": 13, "pos": 2071 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/postsService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "CreatePostInput", "line": 30, "col": 18, "pos": 737 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/statsService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "SeasonStats", "line": 5, "col": 18, "pos": 124 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/achievementService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "HelmetSticker", "line": 4, "col": 18, "pos": 83 },
+        { "name": "BoxCallMedal", "line": 15, "col": 18, "pos": 267 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/routes/importers.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "RouteImporter", "line": 4, "col": 13, "pos": 159 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/rbac/RBACService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "UserProfile", "line": 9, "col": 18, "pos": 295 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/types/practice.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "PracticeDrill", "line": 91, "col": 18, "pos": 2316 },
+        { "name": "QuickTimeInterval", "line": 130, "col": 13, "pos": 3404 },
+        { "name": "PracticeBlockType", "line": 152, "col": 13, "pos": 4332 },
+        {
+          "name": "PracticeScheduleResponse",
+          "line": 191,
+          "col": 18,
+          "pos": 5282
+        },
+        { "name": "WeatherInfo", "line": 196, "col": 18, "pos": 5419 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/dashboard/CollaborativeDashboardDemo.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "CollaborativeDashboardDemoProps",
+          "line": 92,
+          "col": 18,
+          "pos": 2639
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/routes/paths.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "RoutePath", "line": 32, "col": 13, "pos": 844 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/playbook/page/PlaybookHeader.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "PlaybookHeaderProps", "line": 6, "col": 13, "pos": 216 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/playbook/page/PlaybookActionsBar.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "PlaybookActionsBarProps", "line": 8, "col": 13, "pos": 325 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/playbook/page/PlaybookViewTabs.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "CoachingView", "line": 5, "col": 13, "pos": 132 },
+        { "name": "PlaybookViewTabsProps", "line": 7, "col": 13, "pos": 206 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/csvService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "CSVPlayData", "line": 80, "col": 14, "pos": 1830 },
+        { "name": "CSVImportResult", "line": 81, "col": 15, "pos": 1845 },
+        { "name": "CSVPlayPreview", "line": 82, "col": 19, "pos": 1864 },
+        { "name": "CSVParseResult", "line": 83, "col": 18, "pos": 1882 },
+        { "name": "CSVExportOptions", "line": 84, "col": 18, "pos": 1900 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Modal/Modal.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "ModalProps", "line": 9, "col": 18, "pos": 268 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/team-dashboard/layout/TeamBulletinHeader.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "TeamBulletinHeaderProps", "line": 10, "col": 18, "pos": 353 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/collaboration/SharedGoalTracker.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "SharedGoalTrackerProps", "line": 40, "col": 18, "pos": 1022 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/collaboration/TeamVoteWidget.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "TeamVoteWidgetProps", "line": 39, "col": 18, "pos": 943 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/collaboration/ProgressSharing.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "ProgressSharingProps", "line": 55, "col": 18, "pos": 1372 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/csv/types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "CSVPlayData", "line": 9, "col": 18, "pos": 176 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/dashboardService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "TeamMember", "line": 11, "col": 13, "pos": 414 },
+        { "name": "Team", "line": 12, "col": 13, "pos": 459 },
+        { "name": "UserProfile", "line": 13, "col": 13, "pos": 492 },
+        { "name": "UserTeamData", "line": 14, "col": 18, "pos": 540 },
+        { "name": "DashboardData", "line": 19, "col": 18, "pos": 638 },
+        { "name": "ActivityItem", "line": 25, "col": 18, "pos": 790 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/playbookSearchService.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "SearchResult", "line": 11, "col": 18, "pos": 271 },
+        { "name": "QuickFilter", "line": 17, "col": 18, "pos": 378 },
+        { "name": "SearchPreset", "line": 26, "col": 18, "pos": 574 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/services/smartDataAnalyzer.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "DataPoint", "line": 9, "col": 18, "pos": 266 },
+        { "name": "TrendAnalysis", "line": 24, "col": 18, "pos": 597 },
+        { "name": "SmartAggregation", "line": 44, "col": 18, "pos": 1267 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/themes/types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "SemanticTheme", "line": 1, "col": 18, "pos": 17 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/types/database/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "Json", "line": 19, "col": 13, "pos": 564 },
+        { "name": "Tables", "line": 55, "col": 13, "pos": 1384 },
+        { "name": "Inserts", "line": 58, "col": 13, "pos": 1494 },
+        { "name": "Updates", "line": 61, "col": 13, "pos": 1608 },
+        { "name": "Achievement", "line": 65, "col": 13, "pos": 1791 },
+        { "name": "HelmetSticker", "line": 67, "col": 13, "pos": 1877 },
+        { "name": "Playbook", "line": 68, "col": 13, "pos": 1932 },
+        { "name": "PostComment", "line": 71, "col": 13, "pos": 2057 },
+        { "name": "PracticeScript", "line": 73, "col": 13, "pos": 2161 },
+        { "name": "ScriptPlay", "line": 75, "col": 13, "pos": 2260 },
+        { "name": "SuperAdmin", "line": 76, "col": 13, "pos": 2309 },
+        { "name": "TeamAnnouncement", "line": 77, "col": 13, "pos": 2358 },
+        { "name": "TeamInvite", "line": 80, "col": 13, "pos": 2509 },
+        { "name": "TeamMember", "line": 81, "col": 13, "pos": 2558 },
+        { "name": "TeamMembership", "line": 82, "col": 13, "pos": 2607 },
+        { "name": "TeamPost", "line": 83, "col": 13, "pos": 2664 },
+        { "name": "CalendarEvent", "line": 88, "col": 13, "pos": 2841 },
+        { "name": "PracticeSchedule", "line": 89, "col": 13, "pos": 2896 },
+        { "name": "PracticeAttendance", "line": 90, "col": 13, "pos": 2957 },
+        { "name": "Equipment", "line": 91, "col": 13, "pos": 3021 },
+        { "name": "AchievementInsert", "line": 94, "col": 13, "pos": 3083 },
+        { "name": "GameInsert", "line": 95, "col": 13, "pos": 3140 },
+        { "name": "HelmetStickerInsert", "line": 96, "col": 13, "pos": 3183 },
+        { "name": "PlaybookInsert", "line": 97, "col": 13, "pos": 3245 },
+        { "name": "PlayInsert", "line": 98, "col": 13, "pos": 3296 },
+        { "name": "PlayCallInsert", "line": 99, "col": 13, "pos": 3339 },
+        { "name": "PostCommentInsert", "line": 100, "col": 13, "pos": 3391 },
+        { "name": "PostReactionInsert", "line": 101, "col": 13, "pos": 3449 },
+        { "name": "PracticeScriptInsert", "line": 102, "col": 13, "pos": 3509 },
+        { "name": "ProfileInsert", "line": 103, "col": 13, "pos": 3573 },
+        { "name": "ScriptPlayInsert", "line": 104, "col": 13, "pos": 3622 },
+        { "name": "SuperAdminInsert", "line": 105, "col": 13, "pos": 3678 },
+        {
+          "name": "TeamAnnouncementInsert",
+          "line": 106,
+          "col": 13,
+          "pos": 3734
+        },
+        { "name": "TeamFileInsert", "line": 107, "col": 13, "pos": 3802 },
+        { "name": "TeamGoalInsert", "line": 108, "col": 13, "pos": 3854 },
+        { "name": "TeamInviteInsert", "line": 109, "col": 13, "pos": 3906 },
+        { "name": "TeamMemberInsert", "line": 110, "col": 13, "pos": 3962 },
+        { "name": "TeamMembershipInsert", "line": 111, "col": 13, "pos": 4018 },
+        { "name": "TeamPostInsert", "line": 112, "col": 13, "pos": 4082 },
+        { "name": "CalendarEventInsert", "line": 115, "col": 13, "pos": 4185 },
+        {
+          "name": "PracticeScheduleInsert",
+          "line": 116,
+          "col": 13,
+          "pos": 4247
+        },
+        {
+          "name": "PracticeAttendanceInsert",
+          "line": 117,
+          "col": 13,
+          "pos": 4315
+        },
+        { "name": "EquipmentInsert", "line": 118, "col": 13, "pos": 4386 },
+        { "name": "CalendarEventUpdate", "line": 121, "col": 13, "pos": 4480 },
+        {
+          "name": "PracticeScheduleUpdate",
+          "line": 122,
+          "col": 13,
+          "pos": 4542
+        },
+        {
+          "name": "PracticeAttendanceUpdate",
+          "line": 123,
+          "col": 13,
+          "pos": 4610
+        },
+        { "name": "EquipmentUpdate", "line": 124, "col": 13, "pos": 4681 },
+        { "name": "TeamInsert", "line": 125, "col": 13, "pos": 4733 },
+        { "name": "UserProfileInsert", "line": 126, "col": 13, "pos": 4776 },
+        { "name": "AchievementUpdate", "line": 129, "col": 13, "pos": 4851 },
+        { "name": "GameUpdate", "line": 130, "col": 13, "pos": 4908 },
+        { "name": "HelmetStickerUpdate", "line": 131, "col": 13, "pos": 4951 },
+        { "name": "PlaybookUpdate", "line": 132, "col": 13, "pos": 5013 },
+        { "name": "PlayUpdate", "line": 133, "col": 13, "pos": 5064 },
+        { "name": "PlayCallUpdate", "line": 134, "col": 13, "pos": 5107 },
+        { "name": "PostCommentUpdate", "line": 135, "col": 13, "pos": 5159 },
+        { "name": "PostReactionUpdate", "line": 136, "col": 13, "pos": 5217 },
+        { "name": "PracticeScriptUpdate", "line": 137, "col": 13, "pos": 5277 },
+        { "name": "ProfileUpdate", "line": 138, "col": 13, "pos": 5341 },
+        { "name": "ScriptPlayUpdate", "line": 139, "col": 13, "pos": 5390 },
+        { "name": "SuperAdminUpdate", "line": 140, "col": 13, "pos": 5446 },
+        {
+          "name": "TeamAnnouncementUpdate",
+          "line": 141,
+          "col": 13,
+          "pos": 5502
+        },
+        { "name": "TeamFileUpdate", "line": 142, "col": 13, "pos": 5570 },
+        { "name": "TeamGoalUpdate", "line": 143, "col": 13, "pos": 5622 },
+        { "name": "TeamInviteUpdate", "line": 144, "col": 13, "pos": 5674 },
+        { "name": "TeamMemberUpdate", "line": 145, "col": 13, "pos": 5730 },
+        { "name": "TeamMembershipUpdate", "line": 146, "col": 13, "pos": 5786 },
+        { "name": "TeamPostUpdate", "line": 147, "col": 13, "pos": 5850 },
+        { "name": "TeamUpdate", "line": 148, "col": 13, "pos": 5902 },
+        { "name": "UserProfileUpdate", "line": 149, "col": 13, "pos": 5945 },
+        { "name": "UserTables", "line": 152, "col": 14, "pos": 6048 },
+        { "name": "TeamTables", "line": 153, "col": 14, "pos": 6103 },
+        { "name": "PracticeGameTables", "line": 154, "col": 14, "pos": 6158 },
+        { "name": "SocialTables", "line": 155, "col": 14, "pos": 6229 },
+        {
+          "name": "Phase2DatabaseServices",
+          "line": 172,
+          "col": 18,
+          "pos": 6915
+        },
+        { "name": "Phase2BaseEntity", "line": 185, "col": 18, "pos": 7334 },
+        {
+          "name": "Phase2TeamScopedEntity",
+          "line": 194,
+          "col": 18,
+          "pos": 7471
+        },
+        {
+          "name": "Phase2UserScopedEntity",
+          "line": 201,
+          "col": 18,
+          "pos": 7600
+        },
+        {
+          "name": "Phase2PaginationParams",
+          "line": 208,
+          "col": 18,
+          "pos": 7743
+        },
+        {
+          "name": "Phase2PaginatedResponse",
+          "line": 218,
+          "col": 18,
+          "pos": 7924
+        },
+        { "name": "Phase2ApiResponse", "line": 233, "col": 18, "pos": 8180 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/types/dev.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "SubscriptionTier", "line": 6, "col": 13, "pos": 107 },
+        { "name": "TeamRole", "line": 12, "col": 13, "pos": 346 },
+        { "name": "DevToolsState", "line": 29, "col": 18, "pos": 1035 },
+        { "name": "DevToolTab", "line": 36, "col": 13, "pos": 1153 },
+        { "name": "SystemStatus", "line": 39, "col": 18, "pos": 1266 },
+        { "name": "ActionResult", "line": 54, "col": 18, "pos": 1590 },
+        { "name": "LogEntry", "line": 61, "col": 18, "pos": 1709 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/collaboration/CollaborativeCalendar.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "CollaborativeCalendarProps",
+          "line": 43,
+          "col": 18,
+          "pos": 1154
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/dashboard/CollaborativeAdaptiveChart.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "CollaborativeAdaptiveChartProps",
+          "line": 19,
+          "col": 18,
+          "pos": 707
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/dashboard/CollaborativePersonalProfile.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        {
+          "name": "CollaborativePersonalProfileProps",
+          "line": 28,
+          "col": 18,
+          "pos": 758
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Modal/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [{ "name": "ModalProps", "line": 2, "col": 14, "pos": 46 }],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/NavBar/index.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "NavBarItem", "line": 2, "col": 14, "pos": 48 },
+        { "name": "NavBarProps", "line": 2, "col": 26, "pos": 60 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/onboarding/OnboardingHint.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "OnboardingHintAction", "line": 11, "col": 18, "pos": 373 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/practice/types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "PracticeGroup", "line": 2, "col": 18, "pos": 58 },
+        { "name": "TimelineAllocation", "line": 32, "col": 18, "pos": 755 },
+        { "name": "UserRole", "line": 39, "col": 13, "pos": 903 },
+        { "name": "SelectedBlock", "line": 40, "col": 18, "pos": 964 },
+        {
+          "name": "SelectedGroupForScript",
+          "line": 45,
+          "col": 18,
+          "pos": 1075
+        },
+        { "name": "EditingGroup", "line": 49, "col": 18, "pos": 1157 },
+        { "name": "Script", "line": 53, "col": 18, "pos": 1234 },
+        {
+          "name": "PracticePlannerModalProps",
+          "line": 58,
+          "col": 18,
+          "pos": 1313
+        },
+        { "name": "PracticeHeaderProps", "line": 62, "col": 18, "pos": 1445 },
+        { "name": "TimeSummaryProps", "line": 73, "col": 18, "pos": 1800 },
+        {
+          "name": "PracticeBlocksListProps",
+          "line": 79,
+          "col": 18,
+          "pos": 1989
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/workers/types/pdfWorkerTypes.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "PDFDocumentInput", "line": 4, "col": 13, "pos": 95 },
+        { "name": "PDFWorkerAPI", "line": 6, "col": 18, "pos": 167 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/types/database/gamePlanningTypes.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "ScoutingReport", "line": 7, "col": 18, "pos": 309 },
+        { "name": "WeatherConsiderations", "line": 23, "col": 18, "pos": 600 },
+        { "name": "PersonnelRotations", "line": 31, "col": 18, "pos": 765 },
+        { "name": "SuccessMetrics", "line": 40, "col": 18, "pos": 979 },
+        { "name": "CoachCardContent", "line": 46, "col": 18, "pos": 1228 },
+        {
+          "name": "TemplateSituationCategory",
+          "line": 61,
+          "col": 18,
+          "pos": 1486
+        },
+        { "name": "TemplateDefaultPlays", "line": 68, "col": 18, "pos": 1675 },
+        { "name": "GamePlanEnhanced", "line": 75, "col": 18, "pos": 1852 },
+        {
+          "name": "GamePlanEnhancedInsert",
+          "line": 101,
+          "col": 18,
+          "pos": 2574
+        },
+        {
+          "name": "GamePlanEnhancedUpdate",
+          "line": 119,
+          "col": 18,
+          "pos": 3149
+        },
+        { "name": "GamePlanSituation", "line": 139, "col": 18, "pos": 3898 },
+        {
+          "name": "GamePlanSituationInsert",
+          "line": 175,
+          "col": 18,
+          "pos": 4776
+        },
+        {
+          "name": "GamePlanSituationUpdate",
+          "line": 207,
+          "col": 18,
+          "pos": 5457
+        },
+        { "name": "GamePlanPlay", "line": 236, "col": 18, "pos": 6204 },
+        { "name": "GamePlanPlayInsert", "line": 263, "col": 18, "pos": 6916 },
+        { "name": "GamePlanPlayUpdate", "line": 285, "col": 18, "pos": 7411 },
+        { "name": "CoachCard", "line": 307, "col": 18, "pos": 8024 },
+        { "name": "CoachCardInsert", "line": 328, "col": 18, "pos": 8490 },
+        { "name": "CoachCardUpdate", "line": 346, "col": 18, "pos": 8863 },
+        { "name": "GamePlanTemplate", "line": 359, "col": 18, "pos": 9270 },
+        {
+          "name": "GamePlanTemplateInsert",
+          "line": 379,
+          "col": 18,
+          "pos": 9799
+        },
+        {
+          "name": "GamePlanTemplateUpdate",
+          "line": 395,
+          "col": 18,
+          "pos": 10195
+        },
+        { "name": "GameContext", "line": 408, "col": 18, "pos": 10650 },
+        { "name": "GamePlanAnalytics", "line": 425, "col": 18, "pos": 10932 },
+        {
+          "name": "GamePlanAnalyticsInsert",
+          "line": 440,
+          "col": 18,
+          "pos": 11388
+        },
+        { "name": "PlayAssignment", "line": 457, "col": 18, "pos": 11945 },
+        { "name": "BillickSituation", "line": 470, "col": 18, "pos": 12238 },
+        {
+          "name": "PriorityOptimization",
+          "line": 494,
+          "col": 18,
+          "pos": 12768
+        },
+        { "name": "SuccessProbability", "line": 507, "col": 18, "pos": 13039 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/types/database/practicePlanningTypes.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "BlockType", "line": 11, "col": 13, "pos": 566 },
+        { "name": "FocusArea", "line": 22, "col": 13, "pos": 731 },
+        { "name": "FieldArea", "line": 30, "col": 13, "pos": 857 },
+        { "name": "PersonnelGrouping", "line": 38, "col": 13, "pos": 980 },
+        { "name": "PracticeBlock", "line": 50, "col": 18, "pos": 1253 },
+        { "name": "PracticeBlockInsert", "line": 86, "col": 18, "pos": 1996 },
+        { "name": "PracticeBlockUpdate", "line": 107, "col": 18, "pos": 2538 },
+        { "name": "ActivityType", "line": 131, "col": 13, "pos": 3249 },
+        { "name": "MeasurementMethod", "line": 142, "col": 13, "pos": 3436 },
+        { "name": "ScoringMethod", "line": 150, "col": 13, "pos": 3562 },
+        { "name": "WeatherSuitability", "line": 157, "col": 13, "pos": 3676 },
+        { "name": "PracticeActivity", "line": 166, "col": 18, "pos": 3801 },
+        {
+          "name": "PracticeActivityInsert",
+          "line": 216,
+          "col": 18,
+          "pos": 4923
+        },
+        { "name": "TemplateCategory", "line": 252, "col": 13, "pos": 5996 },
+        { "name": "CoachingLevel", "line": 262, "col": 13, "pos": 6170 },
+        { "name": "SeasonTiming", "line": 264, "col": 13, "pos": 6244 },
+        { "name": "PracticeTemplate", "line": 272, "col": 18, "pos": 6380 },
+        {
+          "name": "PracticeTemplateInsert",
+          "line": 306,
+          "col": 18,
+          "pos": 7121
+        },
+        { "name": "PracticeExecution", "line": 327, "col": 18, "pos": 7776 },
+        {
+          "name": "PracticeExecutionInsert",
+          "line": 366,
+          "col": 18,
+          "pos": 8695
+        },
+        { "name": "LayoutStyle", "line": 396, "col": 13, "pos": 9590 },
+        { "name": "PracticeLayoutBox", "line": 398, "col": 18, "pos": 9676 },
+        {
+          "name": "PracticeLayoutBoxInsert",
+          "line": 439,
+          "col": 18,
+          "pos": 10534
+        },
+        { "name": "AnalysisPeriod", "line": 468, "col": 13, "pos": 11324 },
+        { "name": "PracticeAnalytics", "line": 470, "col": 18, "pos": 11392 },
+        {
+          "name": "PracticeScheduleWithBlocks",
+          "line": 511,
+          "col": 18,
+          "pos": 12488
+        },
+        {
+          "name": "PracticeBlockWithActivities",
+          "line": 522,
+          "col": 18,
+          "pos": 12718
+        },
+        { "name": "EightBoxLayout", "line": 531, "col": 18, "pos": 12920 },
+        {
+          "name": "PracticePerformanceMetrics",
+          "line": 539,
+          "col": 18,
+          "pos": 13096
+        },
+        {
+          "name": "CreatePracticeFromTemplate",
+          "line": 556,
+          "col": 18,
+          "pos": 13605
+        },
+        {
+          "name": "PracticeOptimization",
+          "line": 569,
+          "col": 18,
+          "pos": 13939
+        },
+        {
+          "name": "PracticeSearchFilters",
+          "line": 579,
+          "col": 18,
+          "pos": 14199
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/types/database/playerPerformanceTypes.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "PlayerPerformance", "line": 10, "col": 18, "pos": 388 },
+        { "name": "PassingStats", "line": 67, "col": 18, "pos": 2041 },
+        { "name": "RushingStats", "line": 80, "col": 18, "pos": 2322 },
+        { "name": "ReceivingStats", "line": 91, "col": 18, "pos": 2545 },
+        { "name": "DefensiveStats", "line": 103, "col": 18, "pos": 2800 },
+        { "name": "SpecialTeamsStats", "line": 115, "col": 18, "pos": 3066 },
+        { "name": "PlayerProgress", "line": 128, "col": 18, "pos": 3337 },
+        { "name": "AchievementCategory", "line": 158, "col": 18, "pos": 4223 },
+        { "name": "PlayerAchievement", "line": 185, "col": 18, "pos": 4816 },
+        {
+          "name": "PlayerPerformanceSummary",
+          "line": 214,
+          "col": 18,
+          "pos": 5637
+        },
+        {
+          "name": "ProgressTrackingSummary",
+          "line": 229,
+          "col": 18,
+          "pos": 5995
+        },
+        {
+          "name": "TeamPerformanceAnalytics",
+          "line": 242,
+          "col": 18,
+          "pos": 6289
+        },
+        {
+          "name": "CreatePlayerPerformancePayload",
+          "line": 256,
+          "col": 18,
+          "pos": 6622
+        },
+        {
+          "name": "CreatePlayerProgressPayload",
+          "line": 284,
+          "col": 18,
+          "pos": 7460
+        },
+        {
+          "name": "CreateAchievementCategoryPayload",
+          "line": 297,
+          "col": 18,
+          "pos": 7785
+        },
+        { "name": "PerformanceFilters", "line": 314, "col": 18, "pos": 8329 },
+        { "name": "PerformanceReport", "line": 322, "col": 18, "pos": 8532 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/types/database/teamManagementTypes.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "League", "line": 72, "col": 18, "pos": 1839 },
+        { "name": "Division", "line": 91, "col": 18, "pos": 2284 },
+        { "name": "StaffRole", "line": 108, "col": 18, "pos": 2711 },
+        { "name": "TeamCommunication", "line": 159, "col": 18, "pos": 3920 },
+        {
+          "name": "CommunicationRecipient",
+          "line": 209,
+          "col": 18,
+          "pos": 5159
+        },
+        { "name": "TeamEquipment", "line": 235, "col": 18, "pos": 5776 },
+        { "name": "EquipmentCheckout", "line": 284, "col": 18, "pos": 6801 },
+        { "name": "TeamDashboardSummary", "line": 320, "col": 18, "pos": 7711 },
+        { "name": "EquipmentAlert", "line": 336, "col": 18, "pos": 8106 },
+        {
+          "name": "CommunicationTemplate",
+          "line": 351,
+          "col": 18,
+          "pos": 8412
+        },
+        { "name": "CreateTeamPayload", "line": 369, "col": 18, "pos": 8791 },
+        {
+          "name": "CreateStaffRolePayload",
+          "line": 385,
+          "col": 18,
+          "pos": 9197
+        },
+        {
+          "name": "CreateCommunicationPayload",
+          "line": 399,
+          "col": 18,
+          "pos": 9553
+        },
+        {
+          "name": "CreateEquipmentPayload",
+          "line": 412,
+          "col": 18,
+          "pos": 9937
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/calendar/hooks/useCalendarUrlState.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "CalendarUrlState", "line": 4, "col": 18, "pos": 135 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "RoutePoint", "line": 15, "col": 18, "pos": 449 },
+        { "name": "RouteSegment", "line": 19, "col": 18, "pos": 507 },
+        { "name": "PlayerRoute", "line": 24, "col": 18, "pos": 709 },
+        { "name": "DiagramDocumentV1", "line": 44, "col": 18, "pos": 1591 },
+        { "name": "EditorToolState", "line": 55, "col": 18, "pos": 1949 },
+        { "name": "AnnotationType", "line": 352, "col": 13, "pos": 11661 },
+        {
+          "name": "DiagramAnnotationBase",
+          "line": 360,
+          "col": 18,
+          "pos": 11788
+        },
+        {
+          "name": "DiagramAnnotationLine",
+          "line": 367,
+          "col": 18,
+          "pos": 11970
+        },
+        {
+          "name": "DiagramAnnotationArrow",
+          "line": 371,
+          "col": 18,
+          "pos": 12117
+        },
+        {
+          "name": "DiagramAnnotationCurve",
+          "line": 375,
+          "col": 18,
+          "pos": 12267
+        },
+        {
+          "name": "DiagramAnnotationFreehand",
+          "line": 379,
+          "col": 18,
+          "pos": 12417
+        }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Button/Button.types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "ButtonVariant", "line": 8, "col": 13, "pos": 178 },
+        { "name": "ButtonSize", "line": 22, "col": 13, "pos": 779 },
+        { "name": "ButtonIconPosition", "line": 28, "col": 13, "pos": 953 },
+        { "name": "ButtonVariantStyles", "line": 52, "col": 18, "pos": 1629 },
+        { "name": "ButtonSizeStyles", "line": 59, "col": 18, "pos": 1758 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Card/Card.types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "CardVariant", "line": 6, "col": 13, "pos": 109 },
+        { "name": "CardSize", "line": 12, "col": 13, "pos": 328 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/Input/Input.types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "InputVariant", "line": 8, "col": 13, "pos": 175 },
+        { "name": "InputSize", "line": 16, "col": 13, "pos": 454 },
+        { "name": "InputStatus", "line": 20, "col": 13, "pos": 562 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/NavBar/NavBar.tsx",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "NavBarItem", "line": 6, "col": 18, "pos": 261 },
+        { "name": "NavBarProps", "line": 28, "col": 18, "pos": 971 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    },
+    {
+      "file": "src/components/ui/TextArea/TextArea.types.ts",
+      "owners": [{ "name": "@justindepierro" }],
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [
+        { "name": "TextAreaSize", "line": 6, "col": 13, "pos": 110 },
+        { "name": "TextAreaStatus", "line": 10, "col": 13, "pos": 230 }
+      ],
+      "enumMembers": {},
+      "duplicates": []
+    }
+  ]
+}

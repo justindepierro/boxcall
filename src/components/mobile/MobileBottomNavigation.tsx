@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui";
 import { NotificationBadge } from "../ui/Badge";
-import { prefetchOnHover } from "../../routes/prefetch";
+import { prefetchOnHover } from "../../navigation/prefetch-utils";
 
 export interface MobileNavItem {
   id: string;

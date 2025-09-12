@@ -1,4 +1,4 @@
-Auth and routing modernization
+# Auth and routing modernization
 
 Our goal remains: remove guard wrapper duplication, shift checks into route loaders, and standardize UX/errors while keeping gates green.
 

@@ -1,0 +1,23 @@
+digraph Routes {
+  rankdir=LR;
+  "/";
+  "/team/:teamId/settings";
+  "/team/:teamId/bulletin";
+  "/team/:teamId/analytics";
+  "/playbook/diagram";
+  "*";
+  "/calendar";
+  "/playbook";
+  "/practice";
+  "/analytics";
+  "/settings";
+  "/" -> "/playbook/diagram";
+  "/" -> "/team/:teamId/settings";
+  "/" -> "/team/:teamId/bulletin";
+  "/" -> "/team/:teamId/analytics";
+  "/" -> "/calendar";
+  "/" -> "/playbook";
+  "/" -> "/practice";
+  "/" -> "/settings";
+  "/" -> "/analytics";
+}

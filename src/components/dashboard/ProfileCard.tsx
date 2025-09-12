@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { ProfileEditModal } from "../profile/ProfileEditModal";
-import { useDashboardContext } from "../../context/useDashboardContext";
+import { DashboardContext } from "../../context/DashboardContextInstance";
 import { useRoles } from "../../hooks/useRoles";
 import { useAdaptiveWidget } from "../../hooks/useAdaptiveDashboard";
 
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
+import type { Profile } from "../../types/database";
 
 interface ProfileCardProps {
+  profile?: Profile | null;
+  userRole?: string;
   isViewMode?: boolean; // When viewed in modal by other users
   onEditClick?: () => void;
 }
@@ -22,10 +25,15 @@ interface ProfileCardProps {
  * - Modal-viewable for other users
  */
 const ProfileCard: React.FC<ProfileCardProps> = ({
+  profile: profileProp = null,
+  userRole: userRoleProp,
   isViewMode = false,
   onEditClick,
 }) => {
-  const { profile, setProfile } = useDashboardContext();
+  // Prefer context when available; gracefully fall back to props when not provided
+  const ctx = useContext(DashboardContext);
+  const profile = ctx?.profile ?? profileProp;
+  const setProfile = ctx?.setProfile ?? (() => {});
   const { roleContext } = useRoles(); // Use new unified role system
   const [editModalOpen, setEditModalOpen] = useState(false);
   const isOwnProfile = !isViewMode; // Only show quick actions for own profile
@@ -57,7 +65,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     : "";
 
   // Use unified role system
-  const userRole = roleContext?.appRole || profile?.role || "player";
+  const userRole =
+    userRoleProp || roleContext?.appRole || profile?.role || "player";
   const isPlayer = userRole === "player";
   const isCoach = userRole === "coach" || userRole === "admin";
   const isFamily = userRole === "family";

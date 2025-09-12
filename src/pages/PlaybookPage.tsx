@@ -170,7 +170,7 @@ export default function PlaybookPage() {
         style={{ display: "none" }}
       />
       {busy && (
-        <div className="fixed bottom-4 right-4 text-xs py-1 px-2 rounded bg-black/70 text-white">
+        <div className="fixed bottom-4 right-4 text-xs py-1 px-2 rounded bg-black/70 text-text-inverse">
           Working…
         </div>
       )}
