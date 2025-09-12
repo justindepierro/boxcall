@@ -1,5 +1,22 @@
 # Dashboard Modernization Roadmap
 
+## Repository Cleanup Tracker (Sep 2025)
+
+- [x] Phase 1: Legacy/archive purge (archive/, legacy/, public/sw.js)
+- [x] Phase 1B: Remove unused PlayBuilder/Practice/Diagram legacy
+- [x] Phase 2: Scripts + README alignment (remove Storybook refs, codemods trimmed)
+- [x] Phase 2B: Additional script/page cleanup (CreateTeam multi-step, unused pages)
+- [x] Phase 2C: Safe component sweep (dev tools, mobile/onboarding extras, misc UI)
+- [x] Phase 3: Remove failing legacy/drift tests (suite green)
+- [x] Phase 4: Playbook CSV export/import wired via DataSyncService + CSVService
+
+Next (post‑PR)
+
+- [ ] PR to main with summary and metrics
+- [ ] Optional: refine Export "current" scope to honor active filters/search
+- [ ] Optional: replace import/export alerts with toasts
+- [ ] Optional: add import preview flow using CSV parse previews
+
 ## Progress Checklist
 
 ### 1. Audit & Remove Demos/Obsolete Tests
