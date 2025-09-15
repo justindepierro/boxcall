@@ -2,6 +2,7 @@ import React from "react";
 import { Icon } from "../../components/ui/Icon/Icon";
 import { Typography } from "../../components/design-system/Typography";
 import { Button } from "../../components/ui/Button";
+import ProfileCard from "../../components/dashboard/ProfileCard";
 
 /**
  * Player Dashboard Page - Only accessible by players
@@ -22,6 +23,11 @@ const PlayerDashboardContent: React.FC = () => {
           <Typography variant="body-md" color="muted" className="mt-2">
             Track your progress and stay updated with team activities
           </Typography>
+        </div>
+
+        {/* Profile Card */}
+        <div className="mb-8 max-w-md">
+          <ProfileCard />
         </div>
 
         {/* Quick Stats */}
