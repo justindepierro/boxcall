@@ -45,10 +45,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const [showFullBio, setShowFullBio] = useState(false);
   const navigate = useNavigate();
 
-  const [achievements, setAchievements] = useState<
-    | { stickers: number; medals: number; streak: number; points: number }
-    | null
-  >(null);
+  const [achievements, setAchievements] = useState<{
+    stickers: number;
+    medals: number;
+    streak: number;
+    points: number;
+  } | null>(null);
   const [achLoading, setAchLoading] = useState(false);
 
   // Phase 2A Sprint 2: Adaptive behavior
@@ -116,7 +118,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   return (
     <Card className={`compact-card h-full relative ${cardClassName}`}>
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-subtle pb-2">
+      <div className="flex items-center justify-between border-b border-subtle pb-3">
         <Typography variant="headline-md" className="text-navy-800">
           Profile
         </Typography>
@@ -133,9 +135,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         )}
       </div>
       {/* Profile Content */}
-      <div className="space-y-tight">
+      <div className="space-y-3">
         {/* Avatar & Name */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-4">
           <div className="relative">
             <Button
               variant="ghost"
@@ -144,10 +146,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               className="w-16 h-16 p-0 rounded-lg bg-jade-100 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-jade-300"
               aria-label="View profile"
             >
-              <Typography
-                variant="body-lg"
-                className="font-bold text-jade-800"
-              >
+              <Typography variant="body-lg" className="font-bold text-jade-800">
                 {getInitials(displayName)}
               </Typography>
             </Button>
@@ -186,7 +185,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 
         {/* Achievements Summary */}
         {achievements && (
-          <div className="grid grid-cols-4 gap-2 pt-1">
+          <div className="grid grid-cols-4 gap-3 pt-2">
             <div className="surface-subtle rounded-md p-2 text-center">
               <Typography variant="body-xs" className="text-text-muted">
                 Stickers
@@ -253,7 +252,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           </div>
         )}
         {/* Bio */}
-        <div className="pt-1 border-t border-subtle relative">
+        <div className="pt-2 border-t border-subtle relative">
           {profile?.bio ? (
             <>
               <Typography
@@ -312,7 +311,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         </div>
         {/* Contact Info */}
         {profile?.phone && !isViewMode && (
-          <div className="flex items-center space-x-2 pt-1 border-t border-subtle">
+          <div className="flex items-center space-x-2 pt-2 border-t border-subtle">
             <Icon name="phone" size={14} color="navy" />
             <Typography variant="body-sm" className="text-text-secondary">
               {profile.phone}
@@ -321,7 +320,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         )}
 
         {/* Actions */}
-        <div className="pt-2 flex items-center justify-between">
+        <div className="pt-3 flex items-center justify-between">
           <Button
             variant="ghost"
             size="sm"
