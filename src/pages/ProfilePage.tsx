@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAuthLoading, useAuthProfile } from "../app/auth-store";
+import { useAuth, useAuthLoading, useAuthProfile } from "../app/auth-store";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Icon } from "../components/ui/Icon/Icon";
@@ -14,6 +14,7 @@ import { supabase } from "../lib/supabase";
 export const ProfilePage: React.FC = () => {
   const profile = useAuthProfile();
   const loading = useAuthLoading();
+  const fetchUserProfile = useAuth((s) => s.fetchUserProfile);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
@@ -70,6 +71,8 @@ export const ProfilePage: React.FC = () => {
           text: "Failed to update profile: " + error.message,
         });
       } else {
+        // Refresh global auth profile to keep the app in sync
+        await fetchUserProfile(profile.id);
         setMessage({ type: "success", text: "Profile updated successfully!" });
       }
     } catch {

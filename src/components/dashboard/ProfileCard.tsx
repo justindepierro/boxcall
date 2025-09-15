@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { ProfileEditModal } from "../profile/ProfileEditModal";
 import { DashboardContext } from "../../context/DashboardContextInstance";
 import { useRoles } from "../../hooks/useRoles";
@@ -8,6 +9,8 @@ import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 import type { Profile } from "../../types/database";
+import { AchievementService } from "@services/achievementService";
+import { useAuth, useAuthProfile } from "../../app/auth-store";
 
 interface ProfileCardProps {
   profile?: Profile | null;
@@ -32,12 +35,21 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 }) => {
   // Prefer context when available; gracefully fall back to props when not provided
   const ctx = useContext(DashboardContext);
-  const profile = ctx?.profile ?? profileProp;
+  const authProfile = useAuthProfile();
+  const profile = ctx?.profile ?? profileProp ?? authProfile;
   const setProfile = ctx?.setProfile ?? (() => {});
+  const setAuthProfile = useAuth((s) => s.setProfile);
   const { roleContext } = useRoles(); // Use new unified role system
   const [editModalOpen, setEditModalOpen] = useState(false);
   const isOwnProfile = !isViewMode; // Only show quick actions for own profile
   const [showFullBio, setShowFullBio] = useState(false);
+  const navigate = useNavigate();
+
+  const [achievements, setAchievements] = useState<
+    | { stickers: number; medals: number; streak: number; points: number }
+    | null
+  >(null);
+  const [achLoading, setAchLoading] = useState(false);
 
   // Phase 2A Sprint 2: Adaptive behavior
   const { trackView, trackEdit, isHighPriority } = useAdaptiveWidget(
@@ -49,6 +61,27 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   useEffect(() => {
     trackView();
   }, [trackView]);
+
+  useEffect(() => {
+    const loadAchievements = async () => {
+      if (!profile?.id) return;
+      setAchLoading(true);
+      try {
+        const data = await AchievementService.getUserAchievements(profile.id);
+        setAchievements({
+          stickers: data.helmetStickers.length,
+          medals: data.boxcallMedals.length,
+          streak: data.weeklyStreak || 0,
+          points: data.totalPoints || 0,
+        });
+      } catch {
+        setAchievements(null);
+      } finally {
+        setAchLoading(false);
+      }
+    };
+    loadAchievements();
+  }, [profile?.id]);
 
   const handleProfileEdit = () => {
     trackEdit();
@@ -103,10 +136,21 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       <div className="space-y-tight">
         {/* Avatar & Name */}
         <div className="flex items-center space-x-3">
-          <div className="w-16 h-16 rounded-lg bg-jade-100 flex items-center justify-center relative">
-            <Typography variant="body-lg" className="font-bold text-jade-800">
-              {getInitials(displayName)}
-            </Typography>
+          <div className="relative">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/profile")}
+              className="w-16 h-16 p-0 rounded-lg bg-jade-100 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-jade-300"
+              aria-label="View profile"
+            >
+              <Typography
+                variant="body-lg"
+                className="font-bold text-jade-800"
+              >
+                {getInitials(displayName)}
+              </Typography>
+            </Button>
             {isOwnProfile && (
               <Button
                 variant="ghost"
@@ -120,17 +164,68 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <Typography
-              variant="body-lg"
-              className="font-semibold text-text-primary truncate"
+            <Button
+              variant="link"
+              size="sm"
+              onClick={() => navigate("/profile")}
+              className="text-left w-full"
+              aria-label="Open profile page"
             >
-              {displayName}
-            </Typography>
+              <Typography
+                variant="body-lg"
+                className="font-semibold text-text-primary truncate hover:underline"
+              >
+                {displayName}
+              </Typography>
+            </Button>
             <Typography variant="body-sm" color="muted">
               {userRole.replace("_", " ").toUpperCase()}
             </Typography>
           </div>
         </div>
+
+        {/* Achievements Summary */}
+        {achievements && (
+          <div className="grid grid-cols-4 gap-2 pt-1">
+            <div className="surface-subtle rounded-md p-2 text-center">
+              <Typography variant="body-xs" className="text-text-muted">
+                Stickers
+              </Typography>
+              <Typography variant="body-sm" className="font-semibold">
+                {achievements.stickers}
+              </Typography>
+            </div>
+            <div className="surface-subtle rounded-md p-2 text-center">
+              <Typography variant="body-xs" className="text-text-muted">
+                Medals
+              </Typography>
+              <Typography variant="body-sm" className="font-semibold">
+                {achievements.medals}
+              </Typography>
+            </div>
+            <div className="surface-subtle rounded-md p-2 text-center">
+              <Typography variant="body-xs" className="text-text-muted">
+                Streak
+              </Typography>
+              <Typography variant="body-sm" className="font-semibold">
+                {achievements.streak}
+              </Typography>
+            </div>
+            <div className="surface-subtle rounded-md p-2 text-center">
+              <Typography variant="body-xs" className="text-text-muted">
+                Points
+              </Typography>
+              <Typography variant="body-sm" className="font-semibold">
+                {achievements.points}
+              </Typography>
+            </div>
+          </div>
+        )}
+        {achLoading && (
+          <Typography variant="body-xs" color="muted">
+            Loading achievements…
+          </Typography>
+        )}
         {/* Role-Specific Info */}
         {isPlayer && (
           <div className="text-xs text-text-secondary">
@@ -151,7 +246,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         )}
         {isFamily && (
           <div className="flex items-center space-x-2">
-            <Icon name="users" size={14} color="jade" />
+            <Icon name="users" size={14} color="primary" />
             <Typography variant="body-sm" className="text-text-primary">
               Family Member
             </Typography>
@@ -209,6 +304,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               }
               onProfileUpdate={(updatedProfile) => {
                 setProfile(updatedProfile as unknown as typeof profile);
+                setAuthProfile(updatedProfile as unknown as typeof profile);
                 setEditModalOpen(false);
               }}
             />
@@ -223,6 +319,23 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             </Typography>
           </div>
         )}
+
+        {/* Actions */}
+        <div className="pt-2 flex items-center justify-between">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/profile")}
+            aria-label="View full profile"
+          >
+            <Icon name="user" size={14} className="mr-2" /> View Profile
+          </Button>
+          {!isViewMode && (
+            <Button variant="primary" size="sm" onClick={handleProfileEdit}>
+              <Icon name="edit" size={14} className="mr-2" /> Edit
+            </Button>
+          )}
+        </div>
       </div>
     </Card>
   );
