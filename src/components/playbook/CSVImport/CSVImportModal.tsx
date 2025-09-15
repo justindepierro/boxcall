@@ -2,9 +2,8 @@ import React, { useState } from "react";
 // (Removed unused Rocket, Wrench imports after log text simplification)
 import { Typography } from "../../design-system/Typography";
 import { Icon } from "../../ui/Icon/Icon";
-import { DataSyncService } from "../../../services/dataSyncService";
-import { CSVService, type CSVParseResult } from "../../../services/csv";
-import { PlaysService } from "../../../services/playsService";
+import { DataSyncService, CSVService, PlaysService } from "@services";
+import type { CSVParseResult } from "@services/csv";
 import { Button } from "../../ui/Button/Button";
 
 interface CSVImportModalProps {
