@@ -301,6 +301,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               currentProfile={
                 { ...profile } as { id: string; [key: string]: unknown }
               }
+              mode="quick"
               onProfileUpdate={(updatedProfile) => {
                 setProfile(updatedProfile as unknown as typeof profile);
                 setAuthProfile(updatedProfile as unknown as typeof profile);

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { Modal } from "../ui/Modal";
 import { Button } from "../ui";
 import { Typography } from "../design-system/Typography";
@@ -18,6 +19,7 @@ interface ProfileEditModalProps {
   userRole: string;
   currentProfile: ProfileData;
   onProfileUpdate: (updatedProfile: ProfileData) => void;
+  mode?: "quick" | "full";
 }
 
 export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
@@ -26,29 +28,40 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   userRole,
   currentProfile,
   onProfileUpdate,
+  mode = "full",
 }) => {
   const config = getProfileConfigForRole(userRole);
+  const navigate = useNavigate();
   const [formValues, setFormValues] = useState<Record<string, FormValue>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarUploading, setAvatarUploading] = useState(false);
 
-  // Initialize form values from current profile
+  // Determine visible fields based on mode
+  const quickFieldKeys = useMemo(() => ["display_name", "bio"], []);
+  const basicQuickFields = useMemo(
+    () =>
+      config.basicFields.filter((f) => quickFieldKeys.includes(f.key)),
+    [config.basicFields, quickFieldKeys]
+  );
+  const allFieldsCombined = useMemo(
+    () => [
+      ...config.basicFields,
+      ...(config.athleticFields || []),
+      ...(config.academicFields || []),
+      ...(config.contactFields || []),
+      ...(config.professionalFields || []),
+    ],
+    [config]
+  );
+  const fieldsForRender = mode === "quick" ? basicQuickFields : allFieldsCombined;
+
+  // Initialize form values from current profile (only for visible fields)
   useEffect(() => {
     if (currentProfile && isOpen) {
       const initialValues: Record<string, FormValue> = {};
-
-      // Collect all fields from all sections
-      const allFields = [
-        ...config.basicFields,
-        ...(config.athleticFields || []),
-        ...(config.academicFields || []),
-        ...(config.contactFields || []),
-        ...(config.professionalFields || []),
-      ];
-
-      allFields.forEach((field) => {
+      fieldsForRender.forEach((field) => {
         const value = currentProfile[field.key];
         if (value !== undefined && value !== null) {
           initialValues[field.key] = value as FormValue;
@@ -57,7 +70,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 
       setFormValues(initialValues);
     }
-  }, [currentProfile, isOpen, config]);
+  }, [currentProfile, isOpen, fieldsForRender]);
 
   const handleFieldChange = (key: string, value: FormValue) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
@@ -73,16 +86,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
-    const allFields = [
-      ...config.basicFields,
-      ...(config.athleticFields || []),
-      ...(config.academicFields || []),
-      ...(config.contactFields || []),
-      ...(config.professionalFields || []),
-    ];
-
-    allFields.forEach((field) => {
+    fieldsForRender.forEach((field) => {
       if (
         field.required &&
         (!formValues[field.key] || formValues[field.key] === "")
@@ -206,7 +210,11 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title={`Edit ${userRole.charAt(0).toUpperCase() + userRole.slice(1)} Profile`}
+      title={
+        mode === "quick"
+          ? "Quick Edit Profile"
+          : `Edit ${userRole.charAt(0).toUpperCase() + userRole.slice(1)} Profile`
+      }
       size="lg"
       className="max-h-[90vh] overflow-y-auto"
     >
@@ -250,17 +258,27 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
           </div>
         </div>
 
-        {/* Basic Information */}
-        <ProfileFormSection
-          title="Basic Information"
-          fields={config.basicFields}
-          values={formValues}
-          onChange={handleFieldChange}
-          errors={errors}
-        />
+        {/* Fields */}
+        {mode === "quick" ? (
+          <ProfileFormSection
+            title="Quick Details"
+            fields={basicQuickFields}
+            values={formValues}
+            onChange={handleFieldChange}
+            errors={errors}
+          />
+        ) : (
+          <ProfileFormSection
+            title="Basic Information"
+            fields={config.basicFields}
+            values={formValues}
+            onChange={handleFieldChange}
+            errors={errors}
+          />
+        )}
 
         {/* Athletic Information (for players) */}
-        {config.athleticFields && (
+        {mode === "full" && config.athleticFields && (
           <ProfileFormSection
             title="Athletic Information"
             fields={config.athleticFields}
@@ -271,7 +289,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         )}
 
         {/* Academic Information (for players) */}
-        {config.academicFields && (
+        {mode === "full" && config.academicFields && (
           <ProfileFormSection
             title="Academic Information"
             fields={config.academicFields}
@@ -282,7 +300,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         )}
 
         {/* Professional Information (for coaches) */}
-        {config.professionalFields && (
+        {mode === "full" && config.professionalFields && (
           <ProfileFormSection
             title="Professional Information"
             fields={config.professionalFields}
@@ -293,7 +311,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         )}
 
         {/* Contact Information */}
-        {config.contactFields && (
+        {mode === "full" && config.contactFields && (
           <ProfileFormSection
             title="Contact Information"
             fields={config.contactFields}
@@ -304,7 +322,17 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         )}
 
         {/* Submit Buttons */}
-        <div className="flex justify-end space-x-3 pt-6 border-t border-subtle">
+        <div className="flex items-center justify-between pt-6 border-t border-subtle gap-3">
+          {mode === "quick" && (
+            <Button
+              type="button"
+              variant="infoLink"
+              onClick={() => navigate("/profile")}
+            >
+              Manage account settings
+            </Button>
+          )}
+          <div className="flex items-center gap-3 ml-auto">
           <Button
             type="button"
             variant="ghost"
@@ -320,6 +348,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
           >
             {isSubmitting || avatarUploading ? "Saving..." : "Save Changes"}
           </Button>
+          </div>
         </div>
       </form>
     </Modal>
