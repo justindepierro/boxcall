@@ -3,7 +3,7 @@ import { render, cleanup } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { Sidebar } from "../Sidebar";
-import { UserPreferencesService } from "../../../../services/userPreferencesService";
+import { UserPreferencesService } from "@services/userPreferencesService";
 
 // Extend Vitest expect with jest-axe matcher
 expect.extend(toHaveNoViolations);

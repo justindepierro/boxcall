@@ -1,6 +1,6 @@
 import React from "react";
 
-import { UserPreferencesService } from "../../../../services/userPreferencesService";
+import { UserPreferencesService } from "@services/userPreferencesService";
 import { Button } from "../../../ui/Button";
 import Icon from "../../../ui/Icon/Icon";
 import { Tooltip } from "../../../ui/Tooltip/Tooltip";
