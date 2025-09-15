@@ -2,6 +2,7 @@ export * from "./achievementService";
 export * from "./adaptiveContentService";
 export * from "./calendarService";
 export * from "./customFieldsService";
+export * from "./csvService";
 export * from "./dashboardService";
 export * from "./dataSyncService";
 export * from "./eventsService";

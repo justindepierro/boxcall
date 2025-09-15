@@ -74,7 +74,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
       const y = event.clientY - rect.top;
 
       // TODO: updateCursor when real collaboration is integrated
-      console.log("Cursor move:", { widgetId, x, y });
+  console.info("Cursor move:", { widgetId, x, y });
     };
 
     const handleClick = (event: MouseEvent) => {
@@ -83,7 +83,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
       const y = event.clientY - rect.top;
 
       // TODO: broadcastUpdate when real collaboration is integrated
-      console.log("Widget interaction:", { widgetId, x, y });
+  console.info("Widget interaction:", { widgetId, x, y });
     };
 
     container.addEventListener("mousemove", handleMouseMove);
@@ -107,7 +107,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
     if (!conflictData) return;
 
     // TODO: resolveConflict when real collaboration is integrated
-    console.log("Conflict resolution:", { widgetId, resolution, conflictData });
+  console.info("Conflict resolution:", { widgetId, resolution, conflictData });
     setConflictData(null);
   };
 

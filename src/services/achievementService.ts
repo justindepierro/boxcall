@@ -44,20 +44,20 @@ export class AchievementService {
     devMode?: string
   ): Promise<AchievementData> {
     try {
-      console.log(
+  console.info(
         `[Trophy/Achievement] Getting achievements for user ${userId} in dev mode: ${devMode}`
       );
 
       // Check if we're in blank slate mode
       if (devMode === "blank_slate") {
-        console.log("🆕 Returning empty achievements for blank slate mode");
+  console.info("🆕 Returning empty achievements for blank slate mode");
         return this.getEmptyAchievements();
       }
 
       // For production/real modes, get real data
       if (devMode === "production" || devMode === "super_admin_real") {
         try {
-          console.log(
+          console.info(
             "[Search/Investigate] Attempting to fetch real achievements..."
           );
           const realAchievements = await Promise.race([
@@ -69,7 +69,7 @@ export class AchievementService {
               )
             ),
           ]);
-          console.log(
+          console.info(
             "[Success/Complete] Real achievements fetched successfully"
           );
           return realAchievements;
@@ -89,7 +89,7 @@ export class AchievementService {
 
       // For blank slate mode, return empty achievements
       if (devMode === "blank_slate") {
-        console.log(
+  console.info(
           "🆕 Achievement Service: Blank slate mode - returning empty achievements"
         );
         return this.getEmptyAchievements();
@@ -292,7 +292,7 @@ export class AchievementService {
     try {
       // TODO: Calculate based on user login/activity data
       // For now, return mock data
-      console.log("Calculating activity streak for user:", userId);
+  console.info("Calculating activity streak for user:", userId);
       return Math.floor(Math.random() * 14) + 1; // 1-14 days
     } catch (error) {
       console.error("Error calculating activity streak:", error);

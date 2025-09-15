@@ -11,24 +11,24 @@ import {
   gameResultLogSucceeded,
   gameResultLogFailed,
 } from "../lib/telemetry";
-import { listTeamEvents, createEvent } from "../services/eventsService";
-import { listGameResults, logGameResult } from "../services/gameResultsService";
+import { listTeamEvents, createEvent } from "@services/eventsService";
+import { listGameResults, logGameResult } from "@services/gameResultsService";
 import {
   listTeamPosts,
   createPost,
   updatePostPin,
-} from "../services/postsService";
-import { getSeasonStats } from "../services/statsService";
+} from "@services/postsService";
+import { getSeasonStats } from "@services/statsService";
 
 import type {
   TeamEventListItem,
   CreateEventInput,
-} from "../services/eventsService";
+} from "@services/eventsService";
 import type {
   GameResultListItem,
   LogGameResultInput,
-} from "../services/gameResultsService";
-import type { TeamPostListItem } from "../services/postsService";
+} from "@services/gameResultsService";
+import type { TeamPostListItem } from "@services/postsService";
 
 // Query keys
 const qk = {

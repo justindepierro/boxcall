@@ -206,7 +206,7 @@ export const DashboardCustomizationPanel: React.FC<
                   size="sm"
                   onClick={() => {
                     // TODO: Implement layout switching
-                    console.log("Switch to layout:", layout.id);
+                    console.info("Switch to layout:", layout.id);
                   }}
                 >
                   Use
@@ -220,7 +220,7 @@ export const DashboardCustomizationPanel: React.FC<
                   className="text-red-600 hover:text-red-700"
                   onClick={() => {
                     // TODO: Implement layout deletion
-                    console.log("Delete layout:", layout.id);
+                    console.info("Delete layout:", layout.id);
                   }}
                 >
                   <Icon name="delete" size="sm" />

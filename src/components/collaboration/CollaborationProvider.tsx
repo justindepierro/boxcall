@@ -13,7 +13,7 @@ import {
 import {
   conflictResolutionService,
   type ConflictResolution,
-} from "../../services/conflictResolution";
+} from "@services/conflictResolution";
 import {
   CollaborationContext,
   type CollaborationContextValue,

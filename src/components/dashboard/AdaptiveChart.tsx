@@ -7,8 +7,8 @@
  */
 
 import React, { useMemo } from "react";
-import type { DataSeries, DataInsight } from "../../services/smartDataAnalyzer";
-import { SmartDataAnalyzer } from "../../services/smartDataAnalyzer";
+import type { DataSeries, DataInsight } from "@services/smartDataAnalyzer";
+import { SmartDataAnalyzer } from "@services/smartDataAnalyzer";
 
 // Chart library components (placeholder - replace with actual chart library)
 interface ChartProps {

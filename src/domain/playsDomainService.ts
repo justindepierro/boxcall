@@ -1,7 +1,7 @@
 // PlaysDomainService
 // Wrapper enforcing canonicalization & future duplicate_key integration.
 
-import { PlaysService } from "../services/playsService";
+import { PlaysService } from "@services/playsService";
 import { TelemetryEventTypes } from "../telemetry/events";
 import {
   canonicalizePlayInput,

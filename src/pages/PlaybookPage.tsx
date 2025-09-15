@@ -10,9 +10,7 @@ import { Button } from "../components/ui/Button/Button";
 import { Icon } from "../components/ui/Icon";
 import { usePlaybook } from "../contexts/PlaybookContext";
 import type { CoachingView, PlaybookState } from "../contexts/PlaybookContext";
-import { CSVService } from "../services/csvService";
-import { DataSyncService } from "../services/dataSyncService";
-import { PlaysService } from "../services/playsService";
+import { CSVService, DataSyncService, PlaysService } from "@services";
 
 // TODO: Add hooks and context imports as needed
 

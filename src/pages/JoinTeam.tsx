@@ -135,7 +135,7 @@ export const JoinTeam: React.FC = () => {
     setIsLoading(true);
 
     // TODO: Implement actual invite code verification
-    console.log("🔑 Verifying invite code:", inviteCode);
+  console.info("🔑 Verifying invite code:", inviteCode);
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -151,7 +151,7 @@ export const JoinTeam: React.FC = () => {
     setIsLoading(true);
 
     // TODO: Implement actual team search API
-    console.log("Searching for teams:", searchQuery);
+  console.info("Searching for teams:", searchQuery);
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -173,12 +173,12 @@ export const JoinTeam: React.FC = () => {
 
     if (team.requiresApproval) {
       // Send join request
-      console.log("📨 Sending join request for team:", team.name);
+  console.info("📨 Sending join request for team:", team.name);
       // TODO: Implement join request logic
       setCurrentStep("request");
     } else {
       // Join immediately
-      console.log("✅ Joining team immediately:", team.name);
+  console.info("✅ Joining team immediately:", team.name);
       // TODO: Implement immediate join logic
       setCurrentStep("complete");
     }

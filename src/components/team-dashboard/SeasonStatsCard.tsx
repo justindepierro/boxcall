@@ -11,7 +11,7 @@ import {
   Capability,
   getCapabilitiesForRole,
   hasCapability,
-} from "../../services/capabilities/capabilityMap";
+} from "@services/capabilities/capabilityMap";
 import { Typography } from "../design-system/Typography";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";

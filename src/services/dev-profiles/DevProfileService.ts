@@ -306,7 +306,7 @@ export class DevProfileService implements IDevProfileService {
 
   private emitEvent(event: DevProfileEvent): void {
     if (this.config.enableLogging) {
-      console.log("DevProfile Event:", event);
+      console.info("DevProfile Event:", event);
     }
 
     this.eventListeners.forEach((listener) => {

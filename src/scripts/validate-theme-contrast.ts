@@ -90,11 +90,11 @@ for (const theme of themeRegistry.themes) {
 
 const failing = results.filter((r) => !r.pass);
 if (failing.length) {
-  console.log("Theme Contrast Validation: FAIL");
-  console.table(failing);
+  console.info("Theme Contrast Validation: FAIL");
+  console.info(failing);
   process.exitCode = 1;
 } else {
-  console.log("Theme Contrast Validation: PASS");
+  console.info("Theme Contrast Validation: PASS");
 }
 
 // Output markdown table summary

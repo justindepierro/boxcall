@@ -4,7 +4,7 @@ import { useDevMode } from "../app/dev-mode-hooks";
 import {
   AchievementService,
   type AchievementData,
-} from "../services/achievementService";
+} from "@services/achievementService";
 /**
  * Hook for managing user achievements
  */

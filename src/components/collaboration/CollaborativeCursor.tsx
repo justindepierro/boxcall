@@ -9,7 +9,7 @@ import React from "react";
 import {
   type CursorUpdate,
   type CollaborationUser,
-} from "../../services/realTimeCollaboration";
+} from "@services/realTimeCollaboration";
 
 interface CollaborativeCursorProps {
   cursor: CursorUpdate;

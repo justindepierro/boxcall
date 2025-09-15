@@ -179,7 +179,7 @@ class ErrorHandler {
   private async sendErrors(errors: ErrorReport[]) {
     // TODO: Integrate with actual error reporting service
     if (process.env.NODE_ENV === "development") {
-      console.log("Would send error reports:", errors);
+  console.info("Would send error reports:", errors);
       return;
     }
 

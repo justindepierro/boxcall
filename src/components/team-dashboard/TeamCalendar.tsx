@@ -6,7 +6,7 @@ import {
   Capability,
   getCapabilitiesForRole,
   hasCapability,
-} from "../../services/capabilities/capabilityMap";
+} from "@services/capabilities/capabilityMap";
 import { Typography } from "../design-system/Typography";
 import { OnboardingHint } from "../onboarding/OnboardingHint";
 import { Card } from "../ui";
@@ -99,7 +99,7 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
               label: "View Roadmap",
               variant: "ghost",
               onClick: () =>
-                console.log("telemetry:onboarding.calendar.view_roadmap"),
+                console.info("telemetry:onboarding.calendar.view_roadmap"),
             },
           ]}
         />

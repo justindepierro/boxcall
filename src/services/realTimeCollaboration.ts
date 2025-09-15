@@ -272,7 +272,7 @@ class RealTimeCollaborationService {
 
     setTimeout(() => {
       if (!this.isConnected && this.sessionId) {
-        console.log(`Reconnection attempt ${this.reconnectAttempts}`);
+  console.info(`Reconnection attempt ${this.reconnectAttempts}`);
         this.connect().catch(console.error);
       }
     }, this.reconnectDelay * this.reconnectAttempts);

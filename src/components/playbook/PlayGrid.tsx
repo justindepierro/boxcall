@@ -119,7 +119,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Refresh data when refreshTrigger changes
   useEffect(() => {
     if (refreshTrigger > 0) {
-      console.log("Refreshing plays data due to trigger:", refreshTrigger);
+  console.info("Refreshing plays data due to trigger:", refreshTrigger);
       refreshData();
     }
   }, [refreshTrigger, refreshData]);
@@ -140,16 +140,16 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Validate database integration (development mode only)
   useEffect(() => {
     if (plays.length > 0 && process.env.NODE_ENV === "development") {
-      console.group("🏈 Playbook Database Integration Test");
-      console.log("📊 Total Plays Loaded:", plays.length);
-      console.log("🏟️ Sample Play:", plays[0]);
-      console.log("Available Formations:", [
+  console.info("🏈 Playbook Database Integration Test");
+  console.info("📊 Total Plays Loaded:", plays.length);
+  console.info("🏟️ Sample Play:", plays[0]);
+  console.info("Available Formations:", [
         ...new Set(plays.map((p) => p.formation)),
       ]);
-      console.log("⚡ Available Play Types:", [
+  console.info("⚡ Available Play Types:", [
         ...new Set(plays.map((p) => p.p_type)),
       ]);
-      console.groupEnd();
+  // end group
 
       const validationResults = validatePlaybookData(plays);
       logValidationResults(validationResults);

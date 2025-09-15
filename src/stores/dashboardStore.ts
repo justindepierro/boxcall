@@ -592,7 +592,7 @@ export const useDashboardStore = create<DashboardState>()(
 
       optimizeLayout: () => {
         // TODO: Implement layout optimization based on usage patterns
-        console.log("Layout optimization not yet implemented");
+  console.info("Layout optimization not yet implemented");
       },
 
       // Persistence
@@ -780,7 +780,7 @@ export const useDashboardStore = create<DashboardState>()(
             title: "Quick Game Plan",
             description: "Access today's game strategy",
             icon: "gamepad-2",
-            action: () => console.log("Opening game plan"),
+            action: () => console.info("Opening game plan"),
             contexts: ["game-day"],
             roles: ["coach", "player"],
             priority: 90,
@@ -794,7 +794,7 @@ export const useDashboardStore = create<DashboardState>()(
             title: "Practice Checklist",
             description: "Review today's practice plan",
             icon: "check-square",
-            action: () => console.log("Opening practice checklist"),
+            action: () => console.info("Opening practice checklist"),
             contexts: ["practice-day"],
             roles: ["coach"],
             priority: 85,

@@ -21,7 +21,7 @@ import { ProgressSharing } from "../collaboration/ProgressSharing";
 import { Button, Card } from "../ui";
 import { Typography } from "../design-system";
 import { Icon } from "../ui/Icon/Icon";
-import type { DataSeries } from "../../services/smartDataAnalyzer";
+import type { DataSeries } from "@services/smartDataAnalyzer";
 
 // Mock data for demo
 const mockChartData: DataSeries = {

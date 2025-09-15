@@ -124,12 +124,12 @@ export const runSearchTests = (
   tests: SearchTestCase[],
   searchFunction: (query: string) => number
 ) => {
-  console.group("🔍 Search Function Tests");
+  console.info("🔍 Search Function Tests");
   const results = tests.map((test) => {
     const actualResults = searchFunction(test.searchQuery);
     const passed = actualResults === test.expectedMatches;
 
-    console.log(
+  console.info(
       `${passed ? "✅" : "❌"} ${test.name}: ${test.description}`,
       `Expected: ${test.expectedMatches}, Got: ${actualResults}`
     );
@@ -138,8 +138,8 @@ export const runSearchTests = (
   });
 
   const passedCount = results.filter((r) => r.passed).length;
-  console.log(`📊 Search Tests: ${passedCount}/${tests.length} passed`);
-  console.groupEnd();
+  console.info(`📊 Search Tests: ${passedCount}/${tests.length} passed`);
+  // end group
 
   return results;
 };
@@ -148,12 +148,12 @@ export const runFilterTests = (
   tests: FilterTestCase[],
   filterFunction: (filters: { formation?: string; playType?: string }) => number
 ) => {
-  console.group("🏷️ Filter Function Tests");
+  console.info("🏷️ Filter Function Tests");
   const results = tests.map((test) => {
     const actualResults = filterFunction(test.filters);
     const passed = actualResults === test.expectedResults;
 
-    console.log(
+  console.info(
       `${passed ? "✅" : "❌"} ${test.name}: ${test.description}`,
       `Expected: ${test.expectedResults}, Got: ${actualResults}`
     );
@@ -162,8 +162,8 @@ export const runFilterTests = (
   });
 
   const passedCount = results.filter((r) => r.passed).length;
-  console.log(`📊 Filter Tests: ${passedCount}/${tests.length} passed`);
-  console.groupEnd();
+  console.info(`📊 Filter Tests: ${passedCount}/${tests.length} passed`);
+  // end group
 
   return results;
 };

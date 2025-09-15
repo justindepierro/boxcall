@@ -7,7 +7,7 @@
 
 import { createContext } from "react";
 import { type UseCollaborationReturn } from "../../hooks/useCollaboration";
-import { type ConflictResolution } from "../../services/conflictResolution";
+import { type ConflictResolution } from "@services/conflictResolution";
 
 interface CollaborationContextValue extends UseCollaborationReturn {
   // Enhanced conflict resolution

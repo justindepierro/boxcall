@@ -39,6 +39,7 @@ export default defineConfig({
       "@domain": path.resolve(__dirname, "src/domain"),
       "@features": path.resolve(__dirname, "src/features"),
       "@infra": path.resolve(__dirname, "src/infra"),
+  "@services": path.resolve(__dirname, "src/services"),
       "@telemetry": path.resolve(__dirname, "src/telemetry"),
       "@types": path.resolve(__dirname, "src/types"),
     },

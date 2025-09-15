@@ -12,7 +12,7 @@ import {
   type CollaborationSession,
   type DashboardUpdate,
   type CursorUpdate,
-} from "../services/realTimeCollaboration";
+} from "@services/realTimeCollaboration";
 
 export interface UseCollaborationOptions {
   teamId: string;

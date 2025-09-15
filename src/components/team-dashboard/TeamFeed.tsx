@@ -11,7 +11,7 @@ import {
   Capability,
   getCapabilitiesForRole,
   hasCapability,
-} from "../../services/capabilities/capabilityMap";
+} from "@services/capabilities/capabilityMap";
 import { Typography } from "../design-system/Typography";
 import { OnboardingHint } from "../onboarding/OnboardingHint";
 import { Button } from "../ui/Button/Button";
@@ -19,7 +19,7 @@ import { Icon } from "../ui/Icon/Icon";
 import { Modal } from "../ui/Modal/Modal";
 import { TextArea } from "../ui/TextArea";
 
-import type { TeamPostListItem } from "../../services/postsService";
+import type { TeamPostListItem } from "@services/postsService";
 
 interface TeamFeedProps {
   teamId: string;
@@ -188,7 +188,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
                     label: "View Roadmap",
                     variant: "ghost",
                     onClick: () =>
-                      console.log("telemetry:onboarding.feed.view_roadmap"),
+                      console.info("telemetry:onboarding.feed.view_roadmap"),
                   },
                 ]
           }

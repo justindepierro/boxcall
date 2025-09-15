@@ -18,7 +18,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="primary"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("Create Play")}
+  onClick={() => console.info("Create Play")}
       >
         <Icon name="target" size={14} className="mr-2" />
         Create New Play
@@ -27,7 +27,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="primary"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("Practice Script")}
+  onClick={() => console.info("Practice Script")}
       >
         <Icon name="file" size={14} className="mr-2" />
         Build Practice Script
@@ -36,7 +36,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("Playbook Editor")}
+  onClick={() => console.info("Playbook Editor")}
       >
         <Icon name="book" size={14} className="mr-2" />
         Playbook Editor
@@ -45,7 +45,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("Team Analytics")}
+  onClick={() => console.info("Team Analytics")}
       >
         <Icon name="bar-chart" size={14} className="mr-2" />
         Team Analytics
@@ -54,7 +54,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("Send Announcement")}
+  onClick={() => console.info("Send Announcement")}
       >
         <Icon name="info" size={14} className="mr-2" />
         Send Announcement
@@ -63,7 +63,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("Award Stickers")}
+  onClick={() => console.info("Award Stickers")}
       >
         <Icon name="star" size={14} className="mr-2" />
         Award Helmet Stickers
@@ -72,7 +72,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("Game Film")}
+  onClick={() => console.info("Game Film")}
       >
         <Icon name="play" size={14} className="mr-2" />
         Upload Game Film
@@ -81,7 +81,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("Player Progress")}
+  onClick={() => console.info("Player Progress")}
       >
         <Icon name="trending-up" size={14} className="mr-2" />
         Player Progress

@@ -4,7 +4,7 @@ import { Button } from "../ui";
 import { Typography } from "../design-system/Typography";
 import { ProfileFormSection, type FormValue } from "../forms/ProfileFormFields";
 import { getProfileConfigForRole } from "../../types/profileFields";
-import { DashboardService } from "../../services/dashboardService";
+import { DashboardService } from "@services/dashboardService";
 import { supabase } from "../../lib/supabase";
 
 interface ProfileData {

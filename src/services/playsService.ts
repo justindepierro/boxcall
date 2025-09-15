@@ -229,7 +229,7 @@ export class PlaysService {
         diagram_url: playData.diagram_url || null,
       };
 
-      console.log("🎯 Creating play in database:", newPlay);
+  console.info("🎯 Creating play in database:", newPlay);
 
       // Insert into Supabase
       let { data, error } = await supabase
@@ -244,14 +244,14 @@ export class PlaysService {
         error.code === "23503" &&
         error.message.includes("playbook_id")
       ) {
-        console.log("📚 Playbook doesn't exist, creating demo playbook...");
+  console.info("📚 Playbook doesn't exist, creating demo playbook...");
         await DatabaseDebug.checkPlaybooks();
 
         const createdPlaybookId = await DatabaseDebug.createDemoPlaybook();
         if (createdPlaybookId) {
           // Update the play with the new playbook ID and try again
           newPlay.playbook_id = createdPlaybookId;
-          console.log("🔄 Retrying play creation with new playbook...");
+          console.info("🔄 Retrying play creation with new playbook...");
 
           const retryResult = await supabase
             .from("plays")
@@ -278,7 +278,7 @@ export class PlaysService {
         throw new Error("No data returned from play creation");
       }
 
-      console.log("✅ Play created successfully:", data);
+  console.info("✅ Play created successfully:", data);
       return data as Play;
     } catch (error) {
       console.error("❌ PlaysService.createPlay failed:", error);

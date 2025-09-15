@@ -46,7 +46,7 @@ export const TeamBulletinRightPanel: React.FC<RightPanelProps> = ({
             {
               label: "Open Calendar",
               variant: "primary",
-              onClick: () => console.log("onboarding.upcoming.open_calendar"),
+              onClick: () => console.info("onboarding.upcoming.open_calendar"),
             },
           ]}
         />

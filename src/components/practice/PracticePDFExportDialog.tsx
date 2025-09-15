@@ -9,7 +9,7 @@ import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import { Modal } from "../ui/Modal/Modal";
 import { Typography } from "../design-system/Typography";
-import { usePracticeScriptPDF } from "../../services/pdf/usePracticeScriptPDF";
+import { usePracticeScriptPDF } from "@services/pdf/usePracticeScriptPDF";
 import { markFirstScriptExport } from "../onboarding/activationHelpers";
 import type { PracticeBlock } from "./types";
 interface PDFExportOptions {

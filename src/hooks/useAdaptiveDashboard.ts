@@ -8,7 +8,7 @@
 
 import { useEffect, useCallback, useRef } from "react";
 import { useDashboardStore } from "../stores/dashboardStore";
-import { AdaptiveContentService } from "../services/adaptiveContentService";
+import { AdaptiveContentService } from "@services/adaptiveContentService";
 import { useAuth } from "../app/auth-store";
 
 export interface AdaptiveContextState {

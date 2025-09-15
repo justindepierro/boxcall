@@ -14,7 +14,7 @@ import { AdaptiveChart, type AdaptiveChartProps } from "./AdaptiveChart";
 import { CollaborativeWidget } from "../collaboration/CollaborativeWidget";
 import { Button } from "../ui";
 import { Typography } from "../design-system/Typography";
-import type { DataSeries } from "../../services/smartDataAnalyzer";
+import type { DataSeries } from "@services/smartDataAnalyzer";
 
 export interface CollaborativeAdaptiveChartProps
   extends Omit<AdaptiveChartProps, "data"> {

@@ -60,10 +60,10 @@ export const UnifiedSettingsPanel: React.FC = () => {
         {
           id: "reset",
           label: "Reset Layout",
-          icon: "refresh",
+          icon: "refresh-cw",
           action: () => {
             // Add reset logic
-            console.log("Reset dashboard layout");
+            console.info("Reset dashboard layout");
           },
           description: "Reset dashboard to default layout",
         },
@@ -87,7 +87,7 @@ export const UnifiedSettingsPanel: React.FC = () => {
           icon: "link",
           action: () => {
             // Add sharing logic
-            console.log("Share dashboard");
+            console.info("Share dashboard");
           },
           description: "Share your dashboard with team members",
         },
@@ -113,7 +113,7 @@ export const UnifiedSettingsPanel: React.FC = () => {
           icon: "list",
           action: () => {
             // Add logs logic
-            console.log("View system logs");
+            console.info("View system logs");
           },
           description: "View application logs and debug info",
           devOnly: true,

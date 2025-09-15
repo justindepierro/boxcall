@@ -58,4 +58,4 @@ writeFileSync(
   lines.join("\n") + "\n",
   "utf8"
 );
-console.log("Generated src/styles/generated-themes.css");
+console.info("Generated src/styles/generated-themes.css");

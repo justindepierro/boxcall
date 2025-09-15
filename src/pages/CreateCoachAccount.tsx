@@ -138,10 +138,10 @@ export const CreateCoachAccount: React.FC = () => {
 
   const handleSubmit = async () => {
     // TODO: Implement actual coach account creation logic
-    console.log("🏃‍♂️ Creating coach account with data:", formData);
+  console.info("🏃‍♂️ Creating coach account with data:", formData);
 
     if (isSuperAdmin) {
-      console.log("🔓 Super admin coach account creation - bypassing payment");
+  console.info("🔓 Super admin coach account creation - bypassing payment");
     }
 
     // Simulate API call
