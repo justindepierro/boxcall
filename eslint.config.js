@@ -26,8 +26,8 @@ const configArray = [
       "*.log",
       ".dependency-cruiser.cjs",
       ".dependency-cruiser.js",
-  "scripts/**/*.mjs",
-  "scripts/**/*.cjs",
+      "scripts/**/*.mjs",
+      "scripts/**/*.cjs",
       "!shared/",
       "!shared/**/*.ts",
       "!shared/**/*.tsx",
@@ -67,7 +67,12 @@ const configArray = [
     },
   },
   {
-    files: ["src/**/*.{ts,tsx}", "shared/**/*.{ts,tsx}", "vite.config.ts", "vitest.config.ts"],
+    files: [
+      "src/**/*.{ts,tsx}",
+      "shared/**/*.{ts,tsx}",
+      "vite.config.ts",
+      "vitest.config.ts",
+    ],
     plugins: {
       import: importPlugin,
     },
@@ -83,10 +88,7 @@ const configArray = [
     },
     rules: {
       // Disallow noisy console.log; allow warn/error only
-      "no-console": [
-        "error",
-        { allow: ["warn", "error", "info", "debug"] },
-      ],
+      "no-console": ["error", { allow: ["warn", "error", "info", "debug"] }],
       // Enforce barrel imports for services and block deep paths
       "no-restricted-imports": [
         "error",

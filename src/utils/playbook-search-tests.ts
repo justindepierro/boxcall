@@ -129,7 +129,7 @@ export const runSearchTests = (
     const actualResults = searchFunction(test.searchQuery);
     const passed = actualResults === test.expectedMatches;
 
-  console.info(
+    console.info(
       `${passed ? "✅" : "❌"} ${test.name}: ${test.description}`,
       `Expected: ${test.expectedMatches}, Got: ${actualResults}`
     );
@@ -153,7 +153,7 @@ export const runFilterTests = (
     const actualResults = filterFunction(test.filters);
     const passed = actualResults === test.expectedResults;
 
-  console.info(
+    console.info(
       `${passed ? "✅" : "❌"} ${test.name}: ${test.description}`,
       `Expected: ${test.expectedResults}, Got: ${actualResults}`
     );

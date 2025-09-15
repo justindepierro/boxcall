@@ -5,7 +5,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@services": path.resolve(__dirname, "src/services"),
-      "@services/": path.resolve(__dirname, "src/services/")
+      "@services/": path.resolve(__dirname, "src/services/"),
     },
   },
   test: {

@@ -56,7 +56,7 @@ export class RealTimeService {
   private syncConfig: CrossPlatformSyncConfig;
 
   constructor(config: CrossPlatformSyncConfig) {
-  this.syncConfig = config;
+    this.syncConfig = config;
   }
 
   /**
@@ -185,7 +185,7 @@ export class RealTimeService {
   ): Promise<void> {
     // Implement WebSocket or Server-Sent Events connection
     // This would typically connect to a real-time service like Socket.IO, Pusher, or Firebase
-  console.info(`Initializing real-time connection for ${type}:${entityId}`);
+    console.info(`Initializing real-time connection for ${type}:${entityId}`);
     if (this.syncConfig.deltaSyncEnabled) {
       console.info("Delta sync enabled; using optimized payloads");
     }
@@ -198,7 +198,7 @@ export class RealTimeService {
 
   private async updateLocalState(userState: UserState): Promise<void> {
     // Implement local state persistence using AsyncStorage or similar
-  console.info("Updating local state:", userState);
+    console.info("Updating local state:", userState);
   }
 
   private notifySubscribers(
@@ -227,7 +227,7 @@ export class RealTimeService {
     );
 
     if (!hasActiveSubscriptions) {
-  console.info(`Cleaning up connection for ${type}:${entityId}`);
+      console.info(`Cleaning up connection for ${type}:${entityId}`);
       // Implement connection cleanup
       // connection cleanup would occur here
     }
@@ -432,7 +432,7 @@ export class ReactNativePlatformService {
     try {
       // Leverage existing Phase 4.2 mobile optimization
       // Note: MobileOrchestrator needs initialize method
-  console.info("Initializing mobile orchestrator...");
+      console.info("Initializing mobile orchestrator...");
       // Touch orchestrator/service to satisfy strict unused checks
       console.info("Orchestrator ready:", !!this.mobileOrchestrator);
       console.info("Real-time service ready:", !!this.realTimeService);
@@ -461,7 +461,7 @@ export class ReactNativePlatformService {
    */
   private async setupNativeNavigation(): Promise<void> {
     // Configure React Navigation with BoxCall jade/navy theming
-  console.info("Setting up native navigation with jade/navy theming");
+    console.info("Setting up native navigation with jade/navy theming");
   }
 
   /**
@@ -469,7 +469,7 @@ export class ReactNativePlatformService {
    */
   private async configureRealTimeSync(): Promise<void> {
     // Set up real-time data synchronization between web and mobile
-  console.info("Configuring real-time synchronization");
+    console.info("Configuring real-time synchronization");
   }
 
   /**
@@ -477,7 +477,7 @@ export class ReactNativePlatformService {
    */
   private async initializeAnalytics(): Promise<void> {
     // Set up analytics tracking for coaching insights
-  console.info("Initializing coaching analytics");
+    console.info("Initializing coaching analytics");
   }
 
   /**

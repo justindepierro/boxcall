@@ -96,15 +96,15 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     setIsProcessing(true);
 
     try {
-  console.info("Starting CSV import...");
+      console.info("Starting CSV import...");
 
       // Get or create a real playbook for the current user
       let actualPlaybookId = playbookId;
 
       if (!playbookId || playbookId === "demo-playbook-id") {
-  console.info("Getting real playbook for user...");
+        console.info("Getting real playbook for user...");
         actualPlaybookId = await PlaysService.ensureUserHasPlaybook();
-  console.info("✅ Using playbook ID:", actualPlaybookId);
+        console.info("✅ Using playbook ID:", actualPlaybookId);
       }
 
       // Convert previews to plays and import

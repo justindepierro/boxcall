@@ -91,7 +91,9 @@ export class DataSyncService {
     // Setup real-time subscriptions
     this.setupRealtimeSync();
 
-  console.info("✅ DataSyncService initialized with bulletproof architecture");
+    console.info(
+      "✅ DataSyncService initialized with bulletproof architecture"
+    );
   }
 
   /**
@@ -104,7 +106,7 @@ export class DataSyncService {
   static async getPlays(playbookId: string, useCache = true): Promise<Play[]> {
     // Ensure service is initialized before proceeding
     if (!this.supabase) {
-  console.info("🔧 DataSyncService not initialized, initializing now...");
+      console.info("🔧 DataSyncService not initialized, initializing now...");
       await this.initialize();
     }
 
@@ -179,7 +181,7 @@ export class DataSyncService {
   ): Promise<void> {
     // Ensure service is initialized before proceeding
     if (!this.supabase) {
-  console.info("🔧 DataSyncService not initialized, initializing now...");
+      console.info("🔧 DataSyncService not initialized, initializing now...");
       await this.initialize();
     }
 
@@ -207,7 +209,7 @@ export class DataSyncService {
   ): Promise<Play> {
     // Ensure service is initialized before proceeding
     if (!this.supabase) {
-  console.info("🔧 DataSyncService not initialized, initializing now...");
+      console.info("🔧 DataSyncService not initialized, initializing now...");
       await this.initialize();
     }
 
@@ -260,7 +262,7 @@ export class DataSyncService {
   }> {
     // Ensure service is initialized before proceeding
     if (!this.supabase) {
-  console.info("🔧 DataSyncService not initialized, initializing now...");
+      console.info("🔧 DataSyncService not initialized, initializing now...");
       await this.initialize();
     }
 
@@ -268,7 +270,7 @@ export class DataSyncService {
     const created: Play[] = [];
     const errors: string[] = [];
 
-  console.info(
+    console.info(
       `🚀 Starting delegated bulk import of ${plays.length} plays...`
     );
 
@@ -300,7 +302,7 @@ export class DataSyncService {
       this.cache.delete(cacheKey);
 
       const duration = performance.now() - startTime;
-  console.info(
+      console.info(
         `✅ Delegated bulk import complete: ${created.length}/${plays.length} plays created in ${duration.toFixed(2)}ms`
       );
 
@@ -334,7 +336,7 @@ export class DataSyncService {
     errors: string[];
     created: Play[];
   }> {
-  console.info("📊 Parsing CSV content...");
+    console.info("📊 Parsing CSV content...");
 
     // Parse CSV using existing CSV service
     const parseResult = CSVService.parseCSVForPreview(csvContent);
@@ -357,7 +359,7 @@ export class DataSyncService {
     );
     const plays = convertResult.plays;
 
-  console.info(`📋 Parsed ${plays.length} valid plays from CSV`);
+    console.info(`📋 Parsed ${plays.length} valid plays from CSV`);
 
     // Bulk create the parsed plays
     const bulkResult = await this.bulkCreatePlays(playbookId, plays);
@@ -499,7 +501,7 @@ export class DataSyncService {
       link.click();
       document.body.removeChild(link);
 
-  console.info("✅ Comprehensive backup exported successfully");
+      console.info("✅ Comprehensive backup exported successfully");
     } catch (error) {
       console.error("Export backup failed:", error);
       throw error;
@@ -540,7 +542,7 @@ export class DataSyncService {
       )
       .subscribe();
 
-  console.info("✅ Real-time sync enabled");
+    console.info("✅ Real-time sync enabled");
   }
 
   /**
@@ -716,17 +718,17 @@ export class DataSyncService {
     _updates: unknown
   ): void {
     // Implementation for updating local cache
-  console.info(`Updated local cache: ${type}:${id}`);
+    console.info(`Updated local cache: ${type}:${id}`);
   }
 
   private static rollbackLocalCache(type: string, id: string): void {
     // Implementation for rolling back local changes
-  console.info(`Rolled back local cache: ${type}:${id}`);
+    console.info(`Rolled back local cache: ${type}:${id}`);
   }
 
   private static addToLocalCache(type: string, _item: unknown): void {
     // Implementation for adding to local cache
-  console.info(`Added to local cache: ${type}`);
+    console.info(`Added to local cache: ${type}`);
   }
 
   private static replaceInLocalCache(
@@ -735,17 +737,17 @@ export class DataSyncService {
     _realItem: unknown
   ): void {
     // Implementation for replacing temp data with real data
-  console.info(`Replaced in local cache: ${type}:${tempId}`);
+    console.info(`Replaced in local cache: ${type}:${tempId}`);
   }
 
   private static removeFromLocalCache(type: string, id: string): void {
     // Implementation for removing from local cache
-  console.info(`Removed from local cache: ${type}:${id}`);
+    console.info(`Removed from local cache: ${type}:${id}`);
   }
 
   private static showSyncNotification(message: string): void {
     // Implementation for showing sync notifications
-  console.info(`Sync notification: ${message}`);
+    console.info(`Sync notification: ${message}`);
   }
 
   private static triggerBackup(): void {
@@ -951,7 +953,7 @@ export class DataSyncService {
       if (keys.length <= keepCount) return;
       const toDelete = keys.slice(0, Math.max(0, keys.length - keepCount));
       await Promise.all(toDelete.map((k) => this.deleteBackupKey(k)));
-  console.info(`Cleaned up old backups, kept ${keepCount}`);
+      console.info(`Cleaned up old backups, kept ${keepCount}`);
     } catch (e) {
       console.warn("Failed to cleanup backups", e);
     }
@@ -979,6 +981,6 @@ export class DataSyncService {
     }
 
     this.cache.clear();
-  console.info("✅ DataSyncService cleaned up");
+    console.info("✅ DataSyncService cleaned up");
   }
 }

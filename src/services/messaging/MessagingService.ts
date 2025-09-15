@@ -158,7 +158,7 @@ export class MessagingService extends EventEmitter {
     this.isConnected = true;
 
     // In real implementation: WebSocket connection setup
-  console.info(
+    console.info(
       `[MessagingService] Connected user ${userId} to team ${teamId}`
     );
 
@@ -453,7 +453,9 @@ export class MessagingService extends EventEmitter {
   private loadUnreadContent(userId: string): void {
     // Load unread messages and notifications for user
     // In real implementation: database query
-  console.info(`[MessagingService] Loading unread content for user ${userId}`);
+    console.info(
+      `[MessagingService] Loading unread content for user ${userId}`
+    );
   }
 
   private setupMockData(): void {

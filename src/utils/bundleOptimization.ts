@@ -69,22 +69,22 @@ export const analyzeBundleSize = () => {
     if (performanceEntries.length > 0) {
       const navigationEntry =
         performanceEntries[0] as PerformanceNavigationTiming;
-  console.info("📦 Bundle Analysis");
-  console.info(
+      console.info("📦 Bundle Analysis");
+      console.info(
         "Total Load Time:",
         navigationEntry.loadEventEnd - navigationEntry.fetchStart,
         "ms"
       );
-  console.info(
+      console.info(
         "DOMContentLoaded:",
         navigationEntry.domContentLoadedEventEnd - navigationEntry.fetchStart,
         "ms"
       );
-  console.info(
+      console.info(
         "First Contentful Paint:",
         "Check Lighthouse for FCP metrics"
       );
-  // end group
+      // end group
     }
   }
 };
@@ -121,7 +121,7 @@ export const registerServiceWorker = async () => {
   if ("serviceWorker" in navigator) {
     try {
       const registration = await navigator.serviceWorker.register("/sw.js");
-  console.info("Service Worker registered successfully:", registration);
+      console.info("Service Worker registered successfully:", registration);
       return registration;
     } catch (error) {
       console.error("Service Worker registration failed:", error);
@@ -177,7 +177,7 @@ export const monitorMemoryUsage = () => {
     };
 
     if (process.env.NODE_ENV === "development") {
-  console.info("🧠 Memory Usage:", memoryInfo);
+      console.info("🧠 Memory Usage:", memoryInfo);
     }
 
     // Warn if memory usage is high
@@ -206,11 +206,11 @@ export const optimizeChunkLoading = () => {
 // Tree shaking verification (development only)
 export const verifyTreeShaking = (moduleNames: string[]) => {
   if (process.env.NODE_ENV === "development") {
-  console.info("🌳 Tree Shaking Verification");
+    console.info("🌳 Tree Shaking Verification");
     moduleNames.forEach((name) => {
-  console.info(`${name}: Module should be tree-shakeable`);
+      console.info(`${name}: Module should be tree-shakeable`);
     });
-  // end group
+    // end group
   }
 };
 

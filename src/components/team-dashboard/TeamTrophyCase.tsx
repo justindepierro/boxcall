@@ -33,7 +33,7 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = ({ teamId }) => {
         variant="primary"
         size="sm"
         fullWidth
-  onClick={() => console.info("achievements.help.click", { teamId })}
+        onClick={() => console.info("achievements.help.click", { teamId })}
       >
         Learn how achievements work
       </Button>

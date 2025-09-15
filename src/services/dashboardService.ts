@@ -185,7 +185,7 @@ export class DashboardService {
     if (devMode === "production" || devMode === "super_admin_real") {
       try {
         // TODO: Implement real activity feed from Supabase
-  console.info(
+        console.info(
           "[Search/Investigate] Dashboard Service: Attempting to fetch real activity..."
         );
 

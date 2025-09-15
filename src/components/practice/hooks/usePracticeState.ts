@@ -96,11 +96,11 @@ export const usePracticeState = (event: CalendarEvent) => {
     const savedBlocks = loadPracticeFromStorage(event.id || "");
 
     if (savedBlocks) {
-  console.info("Loading saved practice plan:", savedBlocks);
+      console.info("Loading saved practice plan:", savedBlocks);
       const blocksWithTimes = memoizedRecalculateBlockTimes(savedBlocks);
       setPracticeBlocks(blocksWithTimes);
     } else {
-  console.info("No saved practice data found, loading sample data");
+      console.info("No saved practice data found, loading sample data");
       const sampleBlocks = getSamplePracticeBlocks();
       const blocksWithTimes = memoizedRecalculateBlockTimes(sampleBlocks);
       setPracticeBlocks(blocksWithTimes);
@@ -124,10 +124,10 @@ export const usePracticeState = (event: CalendarEvent) => {
     (newScaffoldMode: boolean) => {
       if (newScaffoldMode && !scaffoldMode) {
         // Entering scaffold mode - convert existing blocks to timeline allocation
-  console.info(
+        console.info(
           "🎯 ENTERING SCAFFOLD MODE - Converting blocks to timeline!"
         );
-  console.info("📦 Current practice blocks:", practiceBlocks);
+        console.info("📦 Current practice blocks:", practiceBlocks);
 
         // Store current blocks as backup for cancel functionality
         setOriginalBlocksBeforeScaffold([...practiceBlocks]);
@@ -150,18 +150,18 @@ export const usePracticeState = (event: CalendarEvent) => {
           currentMinute += block.duration;
         });
 
-  console.info(
+        console.info(
           "✨ Created timeline allocation from existing blocks:",
           allocation
         );
-  console.info(
+        console.info(
           "📊 Total minutes allocated:",
           Object.keys(allocation).length
         );
         setTimelineAllocation(allocation);
       } else if (!newScaffoldMode && scaffoldMode) {
         // Exiting scaffold mode - clear timeline allocation
-  console.info("🚪 EXITING SCAFFOLD MODE - Clearing timeline");
+        console.info("🚪 EXITING SCAFFOLD MODE - Clearing timeline");
         setTimelineAllocation({});
         setSelectedCategory(null);
         setSelectedBlock(null);
@@ -401,7 +401,7 @@ export const usePracticeState = (event: CalendarEvent) => {
         endTime: "",
       }));
       localStorage.setItem(savedPracticeKey, JSON.stringify(blocksToSave));
-  console.info("Time allocation saved to localStorage");
+      console.info("Time allocation saved to localStorage");
     } catch (error) {
       console.error("Error saving time allocation:", error);
     }
@@ -420,17 +420,17 @@ export const usePracticeState = (event: CalendarEvent) => {
 
   // TODO: Implement remaining handlers for full integration
   const handleDragEnd = useCallback(() => {
-  console.info("handleDragEnd - TODO: implement");
+    console.info("handleDragEnd - TODO: implement");
   }, []);
 
   const handleAddBlock = useCallback(() => {
-  console.info("handleAddBlock - TODO: implement");
+    console.info("handleAddBlock - TODO: implement");
   }, []);
 
   const handleEditBlock = useCallback((block: PracticeBlock) => {
     // This opens a modal or form to edit the block
     // For now, we'll just log it - the actual editing happens in modals
-  console.info("Edit block:", block);
+    console.info("Edit block:", block);
     // TODO: Implement block editing modal or inline editing
   }, []);
 
@@ -463,11 +463,11 @@ export const usePracticeState = (event: CalendarEvent) => {
   }, []);
 
   const handleEditGroup = useCallback(() => {
-  console.info("handleEditGroup - TODO: implement");
+    console.info("handleEditGroup - TODO: implement");
   }, []);
 
   const handleUpdateGroup = useCallback(() => {
-  console.info("handleUpdateGroup - TODO: implement");
+    console.info("handleUpdateGroup - TODO: implement");
   }, []);
 
   const handleRemoveGroup = useCallback(

@@ -67,7 +67,7 @@ export class ErrorBoundary extends Component<Props, State> {
       url: window.location.href,
     };
 
-  console.info("Error report:", errorReport);
+    console.info("Error report:", errorReport);
     try {
       telemetry.enqueue({
         type: TelemetryEventTypes.ErrorBoundary,

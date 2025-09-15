@@ -35,7 +35,7 @@
     "analyze": "node scripts/bundle-visualize.mjs",
     "build:analyze": "npm run build && npm run analyze",
     "build:pwa": "npm run type-check && VITE_ENABLE_PWA=true vite build",
-  "lint": "eslint src vite.config.ts vitest.config.ts --ext ts,tsx --report-unused-disable-directives --max-warnings 50",
+    "lint": "eslint src vite.config.ts vitest.config.ts --ext ts,tsx --report-unused-disable-directives --max-warnings 50",
     "lint:imports": "BC_LINT_IMPORTS=true eslint . --ext ts,tsx",
     "lint:imports:fix": "BC_LINT_IMPORTS=true eslint . --ext ts,tsx --fix",
     "lint:boundaries": "BC_LINT_BOUNDARIES_STRICT=true eslint src --ext ts,tsx",

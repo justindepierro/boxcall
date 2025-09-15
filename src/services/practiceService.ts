@@ -543,7 +543,7 @@ export class PracticeService {
   ): Promise<PracticeScript[]> {
     // Mock implementation - will be replaced when Practice Scripts are implemented
     // For now, return empty array but accept the parameters for consistency
-  console.info(
+    console.info(
       `Searching practice scripts for query: ${query}, teamId: ${teamId}`
     );
     return [];

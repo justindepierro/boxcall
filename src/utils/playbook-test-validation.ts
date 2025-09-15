@@ -85,9 +85,9 @@ export const logValidationResults = (
   );
 
   if (results.issues.length > 0) {
-  console.info("⚠️ Issues Found");
+    console.info("⚠️ Issues Found");
     results.issues.forEach((issue) => console.warn(issue));
-  // end group
+    // end group
   }
 
   // end group

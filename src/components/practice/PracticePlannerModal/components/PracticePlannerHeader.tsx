@@ -82,7 +82,7 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
     if (!scaffoldMode) {
       // Entering scaffold mode - store original blocks and convert to timeline allocation
       let blocksToConvert = practiceBlocks;
-  console.info(
+      console.info(
         "Entering scaffold mode with current blocks:",
         practiceBlocks
       );
@@ -92,7 +92,7 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
 
       // If we don't have current blocks, try to load from localStorage first
       if (practiceBlocks.length === 0) {
-  console.info("No current blocks, trying to load from localStorage...");
+        console.info("No current blocks, trying to load from localStorage...");
         const savedPracticeKey = `practice_plan_${event.id || "default"}`;
         const savedPractice = localStorage.getItem(savedPracticeKey);
 
@@ -131,7 +131,7 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
         }
         currentMinute += block.duration;
       });
-  console.info("Created timeline allocation:", allocation);
+      console.info("Created timeline allocation:", allocation);
       onTimelineAllocationChange(allocation);
     } else {
       // Exiting scaffold mode - clear timeline allocation
