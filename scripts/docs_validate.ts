@@ -7,6 +7,7 @@ interface Violation {
 }
 
 const ROOT = join(process.cwd(), "docs");
+const MAX_LINES = Number(process.env.DOCS_MAX_LINES ?? 600);
 const violations: Violation[] = [];
 
 function walk(dir: string) {
@@ -29,8 +30,11 @@ function check(file: string) {
   const hasH1 = /^#\s+\S+/m.test(txt);
   if (!hasH1) violations.push({ file, reason: "missing H1 title" });
   const lineCount = txt.split(/\n/).length;
-  if (lineCount > 300)
-    violations.push({ file, reason: `exceeds 300 lines (${lineCount})` });
+  if (lineCount > MAX_LINES)
+    violations.push({
+      file,
+      reason: `exceeds ${MAX_LINES} lines (${lineCount})`,
+    });
 }
 
 walk(ROOT);

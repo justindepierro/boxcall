@@ -41,13 +41,17 @@ function main() {
       }
     }
     if (violations.length) {
-      console.error("Font self-hosting guard FAILED: external references found\n");
+      console.error(
+        "Font self-hosting guard FAILED: external references found\n"
+      );
       for (const v of violations) {
         console.error(`- ${v.file} matched ${v.pattern}`);
       }
       process.exit(1);
     } else {
-      console.log("Font self-hosting guard PASSED: no external font references found.");
+      console.log(
+        "Font self-hosting guard PASSED: no external font references found."
+      );
     }
   } catch (err) {
     console.warn(

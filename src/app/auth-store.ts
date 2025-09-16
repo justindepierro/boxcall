@@ -1,8 +1,10 @@
-import type { Session, User } from "@supabase/supabase-js";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
 import { supabase } from "../lib/supabase";
+
 import type { Database } from "../types/database";
+import type { Session, User } from "@supabase/supabase-js";
 // User profile type from our database (main profiles table with role)
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
 interface AuthState {

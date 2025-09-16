@@ -133,7 +133,12 @@ export type IconName =
   | "link"
   | "sparkles";
 
-export interface IconProps {
+type AccessibleSvgProps = Pick<
+  React.SVGProps<SVGSVGElement>,
+  "role" | "aria-label" | "aria-hidden" | "focusable" | "tabIndex"
+>;
+
+export interface IconProps extends AccessibleSvgProps {
   name: IconName;
   size?: IconSize;
   color?: IconColor;
@@ -145,6 +150,11 @@ export const Icon: React.FC<IconProps> = ({
   size = "md",
   color = "current",
   className = "",
+  "aria-label": ariaLabel,
+  role,
+  tabIndex,
+  focusable,
+  "aria-hidden": ariaHidden,
 }) => {
   const resolvedSize =
     typeof size === "number" ? size : (SIZE_MAP[size] ?? SIZE_MAP.md);
@@ -271,6 +281,11 @@ export const Icon: React.FC<IconProps> = ({
       size={resolvedSize}
       color={vectorColor}
       className={className ? `${className} ${colorClass}`.trim() : colorClass}
+      role={role}
+      aria-label={ariaLabel ?? name}
+      aria-hidden={ariaHidden}
+      focusable={focusable}
+      tabIndex={tabIndex}
     />
   );
 };

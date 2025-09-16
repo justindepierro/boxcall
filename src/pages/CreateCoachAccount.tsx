@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { useAuth } from "../app/auth-store";
-import { usePermissions } from "../hooks/usePermissions";
 import { Typography } from "../components/design-system";
-import { Icon } from "../components/ui/Icon/Icon";
 import { Button } from "../components/ui/Button/Button";
+import { Icon } from "../components/ui/Icon/Icon";
+import { usePermissions } from "../hooks/usePermissions";
+import { ROUTES } from "../routes/paths";
 
 /**
  * Create Coach Account Page
@@ -136,10 +138,10 @@ export const CreateCoachAccount: React.FC = () => {
 
   const handleSubmit = async () => {
     // TODO: Implement actual coach account creation logic
-    console.log("🏃‍♂️ Creating coach account with data:", formData);
+    console.info("🏃‍♂️ Creating coach account with data:", formData);
 
     if (isSuperAdmin) {
-      console.log("🔓 Super admin coach account creation - bypassing payment");
+      console.info("🔓 Super admin coach account creation - bypassing payment");
     }
 
     // Simulate API call
@@ -734,14 +736,14 @@ export const CreateCoachAccount: React.FC = () => {
             </Typography>
             <div className="flex gap-3 justify-center">
               <Button
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate(ROUTES.DASHBOARD)}
                 variant="primary"
                 size="sm"
               >
                 Go to Coach Dashboard
               </Button>
               <Button
-                onClick={() => navigate("/playbook")}
+                onClick={() => navigate(ROUTES.PLAYBOOK)}
                 variant="ghost"
                 size="sm"
               >

@@ -4,6 +4,7 @@
  * TypeScript definitions for the Select component
  */
 import type { ReactNode } from "react";
+
 export interface SelectOption {
   value: string | number;
   label: string;

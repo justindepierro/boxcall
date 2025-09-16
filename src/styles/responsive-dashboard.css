@@ -16,7 +16,7 @@
   max-width: 80rem; /* max-w-7xl */
   margin: 0 auto;
   padding: 1rem; /* px-4 py-4 */
-  min-height: calc(100vh - 8rem); /* Account for header and bottom nav */
+  min-height: calc(100vh - 4rem); /* Account for header space */
 }
 
 @media (min-width: 640px) {
@@ -70,8 +70,8 @@
     grid-template-columns: 1fr 2fr 1fr;
     grid-template-rows: auto auto;
     grid-template-areas:
-      "profile trophy feeds"
-      "profile calendar feeds";
+      "profile feeds trophy"
+      "profile calendar trophy";
   }
 }
 

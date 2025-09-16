@@ -156,12 +156,18 @@ async function main(): Promise<void> {
   checks.push(runUnusedExportsCheck());
 
   // 5. Bundle Analysis - SIZE CHECK
-  if (existsSync("dist")) {
+  const skipAnalyze = process.env.BC_PREDEV_SKIP_ANALYZE === "1";
+  if (existsSync("dist") && !skipAnalyze) {
     checks.push(
       runCommand(
         "npx vite-bundle-analyzer dist --mode production",
         "Bundle Size Analysis"
       )
+    );
+  } else if (existsSync("dist") && skipAnalyze) {
+    log(
+      "⏭️  Skipping bundle analysis (BC_PREDEV_SKIP_ANALYZE=1)",
+      colors.yellow
     );
   }
 

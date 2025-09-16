@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-  rosterService,
-  type RosterPlayerView,
-} from "../services/rosterService";
+
 import { emitTelemetry } from "../lib/telemetry";
+import { rosterService, type RosterPlayerView } from "@services/rosterService";
 
 interface UseRosterResult {
   players: RosterPlayerView[];

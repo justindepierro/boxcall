@@ -1,7 +1,9 @@
 import { describe, it, expect } from "vitest";
+
+import { FullCalendarAdapter } from "../../adapters/fullcalendar/FullCalendarAdapter";
+
 import { CalendarAPI } from "./api";
 import { eventToICS } from "./ics";
-import { FullCalendarAdapter } from "../../adapters/fullcalendar/FullCalendarAdapter";
 
 const iso = () => new Date().toISOString();
 
@@ -104,6 +106,13 @@ describe("Calendar Infra Phase 2 scaffolding", () => {
   });
 
   it("upcoming returns future events", async () => {
+    // Ensure at least one guaranteed future event exists
+    const futureStart = new Date(Date.now() + 60_000).toISOString();
+    await CalendarAPI.createEvent({
+      title: "Future Test",
+      start: futureStart,
+      type: "practice",
+    });
     const events = await CalendarAPI.upcoming("u-upcoming", 2);
     expect(events.length).toBeGreaterThan(0);
     const now = Date.now();

@@ -1,14 +1,15 @@
 // PlaysDomainService
 // Wrapper enforcing canonicalization & future duplicate_key integration.
 
-import { PlaysService } from "../services/playsService";
-import type { Play } from "../types/play";
+import { PlaysService } from "@services/playsService";
+import { TelemetryEventTypes } from "../telemetry/events";
 import {
   canonicalizePlayInput,
   computeDuplicateKey,
   type InboundPlay,
 } from "../utils/playDataStandardization";
-import { TelemetryEventTypes } from "../telemetry/events";
+
+import type { Play } from "../types/play";
 
 export interface DomainCreateResult {
   play: Play;

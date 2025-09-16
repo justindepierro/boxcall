@@ -2,9 +2,8 @@ import React, { useState } from "react";
 // (Removed unused Rocket, Wrench imports after log text simplification)
 import { Typography } from "../../design-system/Typography";
 import { Icon } from "../../ui/Icon/Icon";
-import { DataSyncService } from "../../../services/dataSyncService";
-import { CSVService, type CSVParseResult } from "../../../services/csv";
-import { PlaysService } from "../../../services/playsService";
+import { DataSyncService, CSVService, PlaysService } from "@services";
+import type { CSVParseResult } from "@services/csv";
 import { Button } from "../../ui/Button/Button";
 
 interface CSVImportModalProps {
@@ -97,15 +96,15 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     setIsProcessing(true);
 
     try {
-      console.log("Starting CSV import...");
+      console.info("Starting CSV import...");
 
       // Get or create a real playbook for the current user
       let actualPlaybookId = playbookId;
 
       if (!playbookId || playbookId === "demo-playbook-id") {
-        console.log("Getting real playbook for user...");
+        console.info("Getting real playbook for user...");
         actualPlaybookId = await PlaysService.ensureUserHasPlaybook();
-        console.log("✅ Using playbook ID:", actualPlaybookId);
+        console.info("✅ Using playbook ID:", actualPlaybookId);
       }
 
       // Convert previews to plays and import

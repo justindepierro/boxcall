@@ -1,6 +1,7 @@
 // RSVP infra module (Phase 2)
 // Handles retrieval and mutation of event RSVPs (mock implementation)
 import { parseEventRSVPs } from "../../domain/calendar/schema";
+
 import type { EventRSVP } from "../../domain/calendar/types";
 
 // Internal mock generator (mirrors old CalendarService.getMockRSVPs)

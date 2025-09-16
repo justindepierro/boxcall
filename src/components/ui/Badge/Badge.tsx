@@ -7,8 +7,8 @@
  * hundreds of times, so it should feel perfect every single time.
  */
 
-import React from "react";
 import { clsx } from "clsx";
+import React from "react";
 
 // Utility function for combining class names
 const cn = (...classes: (string | undefined | null | false)[]): string => {

@@ -1,9 +1,10 @@
 import React from "react";
-import { Card } from "../../ui";
+
 import { Typography } from "../../design-system";
-import { TeamCalendar } from "../TeamCalendar";
 import { OnboardingHint } from "../../onboarding/OnboardingHint";
 import { PlayerRosterContainer } from "../../team/PlayerRosterContainer";
+import { Card } from "../../ui";
+import { TeamCalendar } from "../TeamCalendar";
 
 interface RightPanelProps {
   teamId: string | undefined;
@@ -45,7 +46,7 @@ export const TeamBulletinRightPanel: React.FC<RightPanelProps> = ({
             {
               label: "Open Calendar",
               variant: "primary",
-              onClick: () => console.log("onboarding.upcoming.open_calendar"),
+              onClick: () => console.info("onboarding.upcoming.open_calendar"),
             },
           ]}
         />

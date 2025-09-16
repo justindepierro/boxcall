@@ -2,6 +2,7 @@
  * BoxCall TextArea Component Types
  */
 import type { TextareaHTMLAttributes } from "react";
+
 export type TextAreaSize =
   | "sm" // Small textarea
   | "md" // Medium textarea (default)

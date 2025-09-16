@@ -7,7 +7,7 @@ import { Typography } from "../design-system/Typography";
 
 import React, { useState, useEffect } from "react";
 import { Icon } from "../ui/Icon/Icon";
-import { customFieldsService } from "../../services/customFieldsService";
+import { customFieldsService } from "@services/customFieldsService";
 import type {
   CustomFieldDefinition,
   CustomFieldValues,

@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node
 /** Verify generated-themes.css matches current theme registry output. */
-import { readFileSync } from "fs";
 import { execSync } from "child_process";
+import { readFileSync } from "fs";
 
 try {
   execSync("npm run themes:build", { stdio: "ignore" });

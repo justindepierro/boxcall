@@ -1,7 +1,11 @@
 /**
  * Team Related Tables
  * All tables related to teams, memberships, and team management
+ *
+ * Updated for Role System Overhaul (Migration 999)
  */
+
+import type { TeamRole, Capability } from "../../roles";
 
 export interface TeamTables {
   teams: {
@@ -57,30 +61,49 @@ export interface TeamTables {
       updated_at?: string | null;
     };
   };
+  // Updated team_members table with new role system
   team_members: {
     Row: {
       id: string;
       team_id: string;
       user_id: string;
-      role: "player" | "coach" | "family" | "admin" | null;
+      role: "player" | "coach" | "family" | "admin" | null; // Legacy field - kept for migration safety
+      team_role: TeamRole; // New standardized team role
+      capabilities: Capability[]; // Granular permissions array
+      role_notes: string | null; // Optional role description
+      assigned_at: string; // When role was assigned
+      status: "active" | "inactive" | "pending" | null; // Updated to use status instead of is_active
+      permissions: Record<string, unknown> | null; // Legacy permissions field
       joined_at: string | null;
-      is_active: boolean | null;
+      invited_by: string | null;
     };
     Insert: {
       id?: string;
       team_id: string;
       user_id: string;
-      role?: "player" | "coach" | "family" | "admin" | null;
+      role?: "player" | "coach" | "family" | "admin" | null; // Legacy field
+      team_role?: TeamRole; // New standardized team role
+      capabilities?: Capability[]; // Granular permissions array
+      role_notes?: string | null;
+      assigned_at?: string;
+      status?: "active" | "inactive" | "pending" | null;
+      permissions?: Record<string, unknown> | null;
       joined_at?: string | null;
-      is_active?: boolean | null;
+      invited_by?: string | null;
     };
     Update: {
       id?: string;
       team_id?: string;
       user_id?: string;
-      role?: "player" | "coach" | "family" | "admin" | null;
+      role?: "player" | "coach" | "family" | "admin" | null; // Legacy field
+      team_role?: TeamRole; // New standardized team role
+      capabilities?: Capability[]; // Granular permissions array
+      role_notes?: string | null;
+      assigned_at?: string;
+      status?: "active" | "inactive" | "pending" | null;
+      permissions?: Record<string, unknown> | null;
       joined_at?: string | null;
-      is_active?: boolean | null;
+      invited_by?: string | null;
     };
   };
   team_memberships: {

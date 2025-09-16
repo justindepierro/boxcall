@@ -1,6 +1,8 @@
 import { useState } from "react";
-import type { DevMode } from "./dev-mode-types";
+
 import { useAuthProfile } from "./auth-store";
+
+import type { DevMode } from "./dev-mode-types";
 
 // Simple dev mode hook without complex context
 export const useDevMode = () => {

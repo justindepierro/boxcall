@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+
 import type { CalendarEvent } from "../../../../domain/calendar/types";
 import type {
   PracticeBlock,

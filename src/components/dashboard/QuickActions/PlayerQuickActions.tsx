@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Button } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
 /**
@@ -17,7 +18,7 @@ export const PlayerQuickActions: React.FC = () => {
         variant="primary"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("View Stats")}
+        onClick={() => console.info("View Stats")}
       >
         <Icon name="bar-chart" size={14} className="mr-2" />
         View My Stats
@@ -26,7 +27,7 @@ export const PlayerQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("Study Playbook")}
+        onClick={() => console.info("Study Playbook")}
       >
         <Icon name="book" size={14} className="mr-2" />
         Study Playbook
@@ -35,7 +36,7 @@ export const PlayerQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("Check Assignments")}
+        onClick={() => console.info("Check Assignments")}
       >
         <Icon name="file" size={14} className="mr-2" />
         Check Assignments
@@ -44,7 +45,7 @@ export const PlayerQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("Team Chat")}
+        onClick={() => console.info("Team Chat")}
       >
         <Icon name="message" size={14} className="mr-2" />
         Team Chat
@@ -53,7 +54,7 @@ export const PlayerQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("Update Gear")}
+        onClick={() => console.info("Update Gear")}
       >
         <Icon name="shield" size={14} className="mr-2" />
         Update My Gear
@@ -62,7 +63,7 @@ export const PlayerQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.log("Training Log")}
+        onClick={() => console.info("Training Log")}
       >
         <Icon name="activity" size={14} className="mr-2" />
         Training Log

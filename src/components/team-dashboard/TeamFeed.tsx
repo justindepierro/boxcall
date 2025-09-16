@@ -1,23 +1,25 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Typography } from "../design-system/Typography";
-import { Icon } from "../ui/Icon/Icon";
-import { OnboardingHint } from "../onboarding/OnboardingHint";
+
 import {
   useTeamPosts,
   useCreatePost,
   usePinPost,
 } from "../../hooks/teamDataHooks";
-import type { TeamPostListItem } from "../../services/postsService";
+import { useToast } from "../../hooks/useToast";
+import { telemetry } from "../../lib/telemetry";
 import {
   Capability,
   getCapabilitiesForRole,
   hasCapability,
-} from "../../services/capabilities/capabilityMap";
+} from "@services/capabilities/capabilityMap";
+import { Typography } from "../design-system/Typography";
+import { OnboardingHint } from "../onboarding/OnboardingHint";
 import { Button } from "../ui/Button/Button";
+import { Icon } from "../ui/Icon/Icon";
 import { Modal } from "../ui/Modal/Modal";
 import { TextArea } from "../ui/TextArea";
-import { useToast } from "../../hooks/useToast";
-import { telemetry } from "../../lib/telemetry";
+
+import type { TeamPostListItem } from "@services/postsService";
 
 interface TeamFeedProps {
   teamId: string;
@@ -49,7 +51,7 @@ const PostItem: React.FC<PostItemProps> = ({
     <li className="rounded border-subtle surface-card elevation-card p-3">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <p className="text-sm text-text-primary dark:text-gray-100 whitespace-pre-wrap">
+          <p className="text-sm text-text-primary whitespace-pre-wrap">
             {display}
           </p>
           {over && (
@@ -186,7 +188,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
                     label: "View Roadmap",
                     variant: "ghost",
                     onClick: () =>
-                      console.log("telemetry:onboarding.feed.view_roadmap"),
+                      console.info("telemetry:onboarding.feed.view_roadmap"),
                   },
                 ]
           }

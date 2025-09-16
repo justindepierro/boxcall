@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
+
 type AuthMode = "login" | "register";
 interface AuthProps {
   initialMode?: AuthMode;

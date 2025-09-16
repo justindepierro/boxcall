@@ -4,9 +4,13 @@
  * Abstract base class for all PDF generation services.
  * Provides common functionality and consistent interface.
  */
-import type { PDFExportOptions, PDFTemplate, PDFBranding } from "./types";
-import { PDFError } from "./types";
 import { PDFColors, PDFFonts } from "./styles";
+import { PDFError } from "./types";
+
+import type { PDFExportOptions, PDFTemplate, PDFBranding } from "./types";
+import type { DocumentProps } from "@react-pdf/renderer";
+import type { PDFDocumentElement } from "./types/pdf-types";
+
 export abstract class BasePDFService {
   protected template: PDFTemplate;
   protected branding?: PDFBranding;
@@ -17,15 +21,25 @@ export abstract class BasePDFService {
   /**
    * Generate PDF blob from document
    */
-  protected async generateBlob(document: React.ReactElement): Promise<Blob> {
+  protected async generateBlob(document: PDFDocumentElement): Promise<Blob> {
     try {
-      const { pdf } = await import("@react-pdf/renderer");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const instance = pdf(document as any);
-      return await instance.toBlob();
+      // Use PDF Web Worker via comlink
+      const { wrap } = await import("comlink");
+      const worker = new Worker(
+        new URL("../../workers/pdfWorker.ts", import.meta.url),
+        { type: "module" }
+      );
+      const pdfWorker =
+        wrap<import("../../workers/types/pdfWorkerTypes").PDFWorkerAPI>(worker);
+      // Cast to React.ReactElement<DocumentProps> for worker API
+      const blob = await pdfWorker.generatePdfBlob(
+        document as React.ReactElement<DocumentProps>
+      );
+      worker.terminate();
+      return blob;
     } catch (error) {
       throw new PDFError(
-        "Failed to generate PDF blob",
+        "Failed to generate PDF blob (worker)",
         "GENERATION_ERROR",
         error instanceof Error ? error.message : "Unknown error"
       );
@@ -204,16 +218,17 @@ export abstract class BasePDFService {
  * Creates appropriate PDF service based on document type
  */
 export class PDFServiceFactory {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private static services: Map<string, new (...args: any[]) => BasePDFService> =
-    new Map();
+  // Use unknown[] for constructor args to avoid 'any'
+  private static services: Map<
+    string,
+    new (...args: unknown[]) => BasePDFService
+  > = new Map();
   /**
    * Register a PDF service for a specific document type
    */
   static registerService(
     documentType: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    serviceClass: new (...args: any[]) => BasePDFService
+    serviceClass: new (...args: unknown[]) => BasePDFService
   ): void {
     this.services.set(documentType, serviceClass);
   }
@@ -312,19 +327,19 @@ export class PDFUtils {
     author?: string
   ): {
     title: string;
-    author: string;
     subject: string;
     creator: string;
     producer: string;
     creationDate: Date;
+    author?: string;
   } {
     return {
       title,
-      author: author || "Practice Planner",
       subject: "Generated Practice Document",
       creator: "Practice Planner App",
       producer: "React-PDF",
       creationDate: new Date(),
+      author,
     };
   }
 }

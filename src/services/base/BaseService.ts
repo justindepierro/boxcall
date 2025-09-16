@@ -10,8 +10,8 @@
  * - Type safety with database types
  */
 
-import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Tables, Inserts, Updates } from "../../types/database";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 // Performance monitoring interface
 export interface ServiceMetrics {
@@ -293,20 +293,18 @@ export abstract class BaseService<
 
       // Log slow operations (> 1000ms)
       if (duration > 1000) {
-        console.warn(
-          `Slow operation detected: ${metric.operationName} took ${duration}ms`
-        );
+        // TODO: Remove warning log (was: console.warn)
+        // ...existing code...
       }
     }
   }
 
   // Event sourcing
-  protected async emitEvent(event: DomainEvent): Promise<void> {
+  protected async emitEvent(_event: DomainEvent): Promise<void> {
     // TODO: Implement proper event sourcing
     // For now, just log the event
-    console.log(
-      `Domain Event: ${event.eventType} for ${event.aggregateType}:${event.aggregateId}`
-    );
+    // TODO: Remove debug log (was: console.log)
+    // ...existing code...
   }
 
   // Cache management

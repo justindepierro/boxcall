@@ -1,21 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  listTeamPosts,
-  createPost,
-  updatePostPin,
-} from "../services/postsService";
-import type { TeamPostListItem } from "../services/postsService";
-import { listTeamEvents, createEvent } from "../services/eventsService";
-import type {
-  TeamEventListItem,
-  CreateEventInput,
-} from "../services/eventsService";
-import { listGameResults, logGameResult } from "../services/gameResultsService";
-import type {
-  GameResultListItem,
-  LogGameResultInput,
-} from "../services/gameResultsService";
-import { getSeasonStats } from "../services/statsService";
+
 import {
   postCreateStarted,
   postCreateSucceeded,
@@ -27,6 +11,24 @@ import {
   gameResultLogSucceeded,
   gameResultLogFailed,
 } from "../lib/telemetry";
+import { listTeamEvents, createEvent } from "@services/eventsService";
+import { listGameResults, logGameResult } from "@services/gameResultsService";
+import {
+  listTeamPosts,
+  createPost,
+  updatePostPin,
+} from "@services/postsService";
+import { getSeasonStats } from "@services/statsService";
+
+import type {
+  TeamEventListItem,
+  CreateEventInput,
+} from "@services/eventsService";
+import type {
+  GameResultListItem,
+  LogGameResultInput,
+} from "@services/gameResultsService";
+import type { TeamPostListItem } from "@services/postsService";
 
 // Query keys
 const qk = {

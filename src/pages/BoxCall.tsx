@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
@@ -12,7 +13,7 @@ import { Icon } from "../components/ui/Icon/Icon";
  * - Real-time team coordination
  * - Game strategy tools
  */
-export const BoxCall: React.FC = () => {
+const BoxCall: React.FC = () => {
   return (
     <div className="py-6">
       <div className="max-w-7xl mx-auto">

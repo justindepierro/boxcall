@@ -137,9 +137,9 @@ export const useAppStore = create<AppStore>()(
         ),
       // Team management
       setCurrentTeam: (teamId) => {
-        const teams = get().teams;
+        const teams = Array.isArray(get().teams) ? get().teams : [];
         const currentTeam = teamId
-          ? teams.find((t) => t.id === teamId) || null
+          ? teams.find((t) => t && t.id === teamId) || null
           : null;
         set({ currentTeamId: teamId, currentTeam }, false, "setCurrentTeam");
       },

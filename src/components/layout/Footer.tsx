@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+
+import { getRouteImporter } from "../../routes/importers";
+import { prefetchOnHover } from "../../navigation/prefetch-utils";
 import { Typography } from "../design-system";
 import { LogoIcon } from "../ui/Logo";
-import { prefetchOnHover } from "../../routes/prefetch";
-import { getRouteImporter } from "../../routes/importers";
 
 /**
  * Footer Component

@@ -46,7 +46,7 @@ export function getTokenColor(path: string): string {
 export const tokenClasses = {
   // Primary button styles
   buttonPrimary:
-    "bg-brand-jade hover:bg-interaction-jade focus:bg-interaction-jade text-white font-semibold py-2 px-4 rounded transition-colors",
+    "bg-brand-jade hover:bg-interaction-jade focus:bg-interaction-jade text-[var(--semantic-text-inverse)] font-semibold py-2 px-4 rounded transition-colors",
 
   // Secondary button styles
   buttonSecondary:
@@ -74,7 +74,7 @@ export const tokenClasses = {
 
   // Interactive states
   interactive:
-    "hover:bg-interaction-jade hover:text-white transition-colors cursor-pointer",
+    "hover:bg-interaction-jade hover:text-[var(--semantic-text-inverse)] transition-colors cursor-pointer",
 
   // Status styles
   success: "surface-subtle text-green-800 border border-subtle",
@@ -148,10 +148,10 @@ export function getAllTokenPaths(): string[] {
  */
 export function printTokens(): void {
   if (process.env.NODE_ENV === "development") {
-    console.group("🎨 Available Design Tokens:");
+    console.info("🎨 Available Design Tokens:");
     getAllTokenPaths().forEach((path) => {
-      console.log(`${path}: ${getTokenColor(path)}`);
+      console.info(`${path}: ${getTokenColor(path)}`);
     });
-    console.groupEnd();
+    console.info("— end tokens —");
   }
 }

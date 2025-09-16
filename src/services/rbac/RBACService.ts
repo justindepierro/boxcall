@@ -1,6 +1,7 @@
 import { Permission, DataScopeMode } from "../../types/rbac";
-import type { DataScope } from "../../types/rbac";
+
 import type { DevMode } from "../../app/dev-mode-types";
+import type { DataScope } from "../../types/rbac";
 
 // Super Admin Email (YOU) - Gets unlimited access
 const SUPER_ADMIN_EMAIL = "justindepierro@gmail.com";
@@ -31,7 +32,7 @@ export class RBACService {
 
     // [Target] SUPER ADMIN OVERRIDE - You get unlimited access
     if (user.email === SUPER_ADMIN_EMAIL) {
-      console.log(
+      console.info(
         `[Unlocked/Access] Super admin override: ${user.email} granted ${permission}`
       );
       return true;
@@ -74,18 +75,18 @@ export class RBACService {
    */
   private static getDevModePermissions(devMode: DevMode): Permission[] {
     switch (devMode) {
-      case "view_as_head_coach":
+      case "test_as_head_coach":
         return [
           Permission.CREATE_TEAM,
           Permission.MANAGE_TEAM_SETTINGS,
           Permission.INVITE_USERS,
           Permission.EDIT_SCHEDULE,
         ];
-      case "view_as_player":
+      case "test_as_player":
         return []; // Players have minimal permissions
-      case "view_as_manager":
+      case "test_as_coach":
         return [Permission.EDIT_SCHEDULE];
-      case "view_as_family":
+      case "test_as_family":
         return []; // View only
       default:
         return [Permission.CREATE_TEAM];

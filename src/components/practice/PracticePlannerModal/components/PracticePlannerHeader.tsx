@@ -1,9 +1,11 @@
 import React from "react";
-import { Typography } from "../../../design-system/Typography";
+
 import { Button } from "../../../../components/ui";
 import { Icon } from "../../../../components/ui/Icon/Icon";
-import type { CalendarEvent } from "../../../../domain/calendar/types";
+import { Typography } from "../../../design-system/Typography";
 import { PDFExportTrigger } from "../../LazyPDFExport";
+
+import type { CalendarEvent } from "../../../../domain/calendar/types";
 import type {
   PracticeBlock,
   TimelineAllocation,
@@ -80,7 +82,7 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
     if (!scaffoldMode) {
       // Entering scaffold mode - store original blocks and convert to timeline allocation
       let blocksToConvert = practiceBlocks;
-      console.log(
+      console.info(
         "Entering scaffold mode with current blocks:",
         practiceBlocks
       );
@@ -90,7 +92,7 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
 
       // If we don't have current blocks, try to load from localStorage first
       if (practiceBlocks.length === 0) {
-        console.log("No current blocks, trying to load from localStorage...");
+        console.info("No current blocks, trying to load from localStorage...");
         const savedPracticeKey = `practice_plan_${event.id || "default"}`;
         const savedPractice = localStorage.getItem(savedPracticeKey);
 
@@ -98,7 +100,7 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
           try {
             const savedBlocks = JSON.parse(savedPractice);
             const blocksWithTimes = recalculateBlockTimes(savedBlocks);
-            console.log(
+            console.info(
               "Loaded saved blocks for scaffold mode:",
               blocksWithTimes
             );
@@ -112,7 +114,7 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
             );
           }
         } else {
-          console.log("No saved practice data found in localStorage");
+          console.info("No saved practice data found in localStorage");
         }
       }
 
@@ -129,7 +131,7 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
         }
         currentMinute += block.duration;
       });
-      console.log("Created timeline allocation:", allocation);
+      console.info("Created timeline allocation:", allocation);
       onTimelineAllocationChange(allocation);
     } else {
       // Exiting scaffold mode - clear timeline allocation

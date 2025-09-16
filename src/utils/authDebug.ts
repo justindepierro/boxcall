@@ -11,7 +11,7 @@ export class AuthDebug {
    */
   static async checkProfiles(): Promise<void> {
     try {
-      console.log("🔍 Checking profiles in database...");
+      console.info("🔍 Checking profiles in database...");
 
       const { data: profiles, error } = await supabase
         .from("profiles")
@@ -22,18 +22,18 @@ export class AuthDebug {
         return;
       }
 
-      console.log("👤 Found profiles:", profiles);
+      console.info("👤 Found profiles:", profiles);
 
       if (profiles && profiles.length > 0) {
-        console.log(`✅ Found ${profiles.length} profile(s):`);
+        console.info(`✅ Found ${profiles.length} profile(s):`);
         profiles.forEach((profile) => {
-          console.log(
+          console.info(
             `  - ${profile.full_name || "No Name"} (${profile.email || "No Email"}) - Role: ${profile.role}`
           );
         });
       } else {
-        console.log("⚠️ No profiles found in database!");
-        console.log("💡 You need to register a user account first");
+        console.info("⚠️ No profiles found in database!");
+        console.info("💡 You need to register a user account first");
       }
     } catch (error) {
       console.error("❌ AuthDebug.checkProfiles failed:", error);
@@ -45,7 +45,7 @@ export class AuthDebug {
    */
   static async checkAuthSession(): Promise<void> {
     try {
-      console.log("🔍 Checking current auth session...");
+      console.info("🔍 Checking current auth session...");
 
       const {
         data: { session },
@@ -58,12 +58,12 @@ export class AuthDebug {
       }
 
       if (session) {
-        console.log("✅ Active session found:");
-        console.log("  - User ID:", session.user.id);
-        console.log("  - Email:", session.user.email);
-        console.log("  - Role:", session.user.role);
+        console.info("✅ Active session found:");
+        console.info("  - User ID:", session.user.id);
+        console.info("  - Email:", session.user.email);
+        console.info("  - Role:", session.user.role);
       } else {
-        console.log("⚠️ No active session - user not logged in");
+        console.info("⚠️ No active session - user not logged in");
       }
     } catch (error) {
       console.error("❌ AuthDebug.checkAuthSession failed:", error);
@@ -75,7 +75,7 @@ export class AuthDebug {
    */
   static async createTestUser(): Promise<void> {
     try {
-      console.log("🧪 Creating test user...");
+      console.info("🧪 Creating test user...");
 
       const testEmail = "coachd@boxcallapp.com";
       const testPassword = "testpassword123";
@@ -97,10 +97,10 @@ export class AuthDebug {
       }
 
       if (data.user) {
-        console.log("✅ Test user created successfully!");
-        console.log("  - Email:", data.user.email);
-        console.log("  - ID:", data.user.id);
-        console.log("💡 You can now login with:", testEmail);
+        console.info("✅ Test user created successfully!");
+        console.info("  - Email:", data.user.email);
+        console.info("  - ID:", data.user.id);
+        console.info("💡 You can now login with:", testEmail);
       }
     } catch (error) {
       console.error("❌ AuthDebug.createTestUser failed:", error);
@@ -111,14 +111,14 @@ export class AuthDebug {
    * Run all debug checks
    */
   static async runAllChecks(): Promise<void> {
-    console.log("🚀 Running auth debug checks...");
-    console.log("=====================================");
+    console.info("🚀 Running auth debug checks...");
+    console.info("=====================================");
 
     await this.checkAuthSession();
-    console.log("-------------------------------------");
+    console.info("-------------------------------------");
 
     await this.checkProfiles();
-    console.log("=====================================");
+    console.info("=====================================");
   }
 }
 

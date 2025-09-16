@@ -4,6 +4,7 @@
  * Writes: src/styles/generated-themes.css
  */
 import { writeFileSync } from "fs";
+
 import { themeRegistry } from "./registry";
 
 function normalize(val: string): string {
@@ -57,4 +58,4 @@ writeFileSync(
   lines.join("\n") + "\n",
   "utf8"
 );
-console.log("Generated src/styles/generated-themes.css");
+console.info("Generated src/styles/generated-themes.css");

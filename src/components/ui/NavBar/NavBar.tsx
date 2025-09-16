@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import React, { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Button } from "../Button";
-import { ThemeToggle } from "../ThemeToggle/ThemeToggle";
-import { prefetchOnHover } from "../../../routes/prefetch";
+import { prefetchOnHover } from "../../../navigation/prefetch-utils";
 export interface NavBarItem {
   /** Unique identifier for the nav item */
   id: string;
@@ -65,7 +65,8 @@ const NavBarItem: React.FC<{
   onItemClick?: (item: NavBarItem) => void;
 }> = ({ item, isMobile = false, onItemClick }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const anchorRef = useRef<HTMLDivElement | null>(null);
+  const anchorRef = useRef<HTMLAnchorElement | HTMLDivElement | null>(null);
+  const location = useLocation?.();
   useEffect(() => {
     const enabled = String(import.meta.env.VITE_PREFETCH_ROUTES) === "true";
     if (!enabled || !item.importer || !anchorRef.current) return;
@@ -81,40 +82,64 @@ const NavBarItem: React.FC<{
     }
   };
   const hasDropdown = item.children && item.children.length > 0;
+  const isActive =
+    item.active ?? (item.href ? location?.pathname === item.href : false);
 
   return (
     <div className={`relative ${isMobile ? "block" : "inline-block"}`}>
-      <div
-        ref={anchorRef}
-        role="button"
-        tabIndex={0}
-        aria-disabled={item.disabled}
-        className={getNavItemStyles(item)}
-        onClick={handleClick}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") handleClick();
-        }}
-      >
-        {item.icon && <span className="mr-2 flex-shrink-0">{item.icon}</span>}
-        <span>{item.label}</span>
-        {hasDropdown && (
-          <svg
-            className={`ml-0.5 h-4 w-4 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        )}
-        {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
-      </div>
+      {item.href && !hasDropdown ? (
+        <a
+          ref={anchorRef as React.RefObject<HTMLAnchorElement>}
+          href={item.href}
+          className={getNavItemStyles({ ...item, active: isActive })}
+          aria-current={isActive ? "page" : undefined}
+          aria-disabled={item.disabled}
+          onClick={(e) => {
+            if (item.disabled) {
+              e.preventDefault();
+              return;
+            }
+            item.onClick?.();
+            onItemClick?.(item);
+          }}
+        >
+          {item.icon && <span className="mr-2 flex-shrink-0">{item.icon}</span>}
+          <span>{item.label}</span>
+          {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
+        </a>
+      ) : (
+        <div
+          ref={anchorRef as React.RefObject<HTMLDivElement>}
+          role="button"
+          tabIndex={0}
+          aria-disabled={item.disabled}
+          className={getNavItemStyles({ ...item, active: isActive })}
+          onClick={handleClick}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") handleClick();
+          }}
+        >
+          {item.icon && <span className="mr-2 flex-shrink-0">{item.icon}</span>}
+          <span>{item.label}</span>
+          {hasDropdown && (
+            <svg
+              className={`ml-0.5 h-4 w-4 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          )}
+          {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
+        </div>
+      )}
       {/* Dropdown Menu */}
       {hasDropdown && isDropdownOpen && (
         <div
@@ -171,13 +196,8 @@ export const NavBar: React.FC<NavBarProps> = ({
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mergedActions = actions ? (
-    <div className="flex items-center gap-2">
-      {actions}
-      <ThemeToggle />
-    </div>
-  ) : (
-    <ThemeToggle />
-  );
+    <div className="flex items-center gap-2">{actions}</div>
+  ) : null;
   const handleMobileMenuToggle = () => {
     const newState = !isMobileMenuOpen;
     setIsMobileMenuOpen(newState);

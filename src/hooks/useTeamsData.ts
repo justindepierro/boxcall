@@ -4,8 +4,9 @@
  * Fetches teams data from Supabase database
  */
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "../lib/supabase";
+
 import { useAuth } from "../app/auth-store";
+import { supabase } from "../lib/supabase";
 
 interface Team {
   id: string;

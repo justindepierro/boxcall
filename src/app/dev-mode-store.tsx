@@ -8,6 +8,7 @@ import React, {
   useState,
   type ReactNode,
 } from "react";
+
 import type { DevMode } from "./dev-mode-types";
 
 // Dev mode context
@@ -28,14 +29,14 @@ export const DevModeProvider: React.FC<DevModeProviderProps> = ({
   children,
 }) => {
   const [devMode, setDevModeState] = useState<DevMode>(() => {
-    // Get from localStorage or default to production
+    // Get from localStorage or default to blank_slate for clean dashboard
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("boxcall-dev-mode");
       if (stored && isValidDevMode(stored)) {
         return stored as DevMode;
       }
     }
-    return "production";
+    return "blank_slate"; // Default to clean, empty state
   });
 
   const setDevMode = (mode: DevMode) => {

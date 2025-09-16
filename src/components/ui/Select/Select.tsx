@@ -1,11 +1,13 @@
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
+
 import { Typography } from "../../design-system";
 /**
  * BoxCall Select Component
  *
  * Professional select/dropdown component with search, multi-select, and validation
  */
-import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { IconButton } from "../IconButton/IconButton";
+
 import type {
   SelectOption,
   SelectProps,

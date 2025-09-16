@@ -1,27 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import { Button } from "../ui";
-import Icon from "../ui/Icon/Icon";
-import { Typography } from "../design-system/Typography";
-import type { CalendarEvent, EventRSVP } from "../../domain/calendar/types";
-import { PracticePlannerModal } from "../practice/PracticePlannerModal";
+
 import {
   useRSVPs,
   useUpdateRSVP,
   useComments,
   useAddComment,
 } from "../../state/calendar/hooks";
-import { EventForm } from "./EventModal/EventForm";
+import { Typography } from "../design-system/Typography";
+import { PracticePlannerModal } from "../practice/PracticePlannerModal";
+import { Button } from "../ui";
+import Icon from "../ui/Icon/Icon";
+
 import { EventDetails } from "./EventModal/EventDetails";
+import { EventForm } from "./EventModal/EventForm";
+
+import type { CalendarEvent, EventRSVP } from "../../domain/calendar/types";
 import type { Database } from "../../types/database";
 
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
 
 // Minimal shape compatible with react-query mutation objects we pass in.
-type MinimalMutation = {
+type MinimalMutation<Args = unknown, Result = unknown> = {
   status: string;
-  mutate: (...args: any[]) => void;
-  mutateAsync: (...args: any[]) => Promise<any>;
+  mutate: (...args: Args[]) => void;
+  mutateAsync: (...args: Args[]) => Promise<Result>;
 };
 
 interface EventModalProps {

@@ -10,14 +10,28 @@
  */
 
 import { SupabaseClient } from "@supabase/supabase-js";
-import type { Play } from "../types/play";
-import type { PracticeScript } from "./practiceScriptService";
-import type { GamePlan } from "./gamePlanService";
-import { CSVService } from "./csv";
-import { normalizePlayName, normalizeText } from "../utils/textNormalization";
+
 import { PlaysDomainService } from "../domain/playsDomainService";
+import { normalizePlayName, normalizeText } from "../utils/textNormalization";
+
+import { CSVService } from "./csv";
 import { PlaysService } from "./playsService";
+
+import type { GamePlan } from "./gamePlanService";
+import type { PracticeScript } from "./practiceScriptService";
+import type { Play } from "../types/play";
 import type { InboundPlay } from "../utils/playDataStandardization";
+
+// Minimal CSV escape helper for inline CSV generation
+function csvEscape(v: unknown): string {
+  if (v === null || v === undefined) return "";
+  const s = String(v);
+  // Quote if contains comma, quote, or newline
+  if (/[",\n]/.test(s)) {
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  return s;
+}
 
 interface CachedData<T = unknown> {
   data: T;
@@ -77,7 +91,9 @@ export class DataSyncService {
     // Setup real-time subscriptions
     this.setupRealtimeSync();
 
-    console.log("✅ DataSyncService initialized with bulletproof architecture");
+    console.info(
+      "✅ DataSyncService initialized with bulletproof architecture"
+    );
   }
 
   /**
@@ -90,7 +106,7 @@ export class DataSyncService {
   static async getPlays(playbookId: string, useCache = true): Promise<Play[]> {
     // Ensure service is initialized before proceeding
     if (!this.supabase) {
-      console.log("🔧 DataSyncService not initialized, initializing now...");
+      console.info("🔧 DataSyncService not initialized, initializing now...");
       await this.initialize();
     }
 
@@ -165,7 +181,7 @@ export class DataSyncService {
   ): Promise<void> {
     // Ensure service is initialized before proceeding
     if (!this.supabase) {
-      console.log("🔧 DataSyncService not initialized, initializing now...");
+      console.info("🔧 DataSyncService not initialized, initializing now...");
       await this.initialize();
     }
 
@@ -193,7 +209,7 @@ export class DataSyncService {
   ): Promise<Play> {
     // Ensure service is initialized before proceeding
     if (!this.supabase) {
-      console.log("🔧 DataSyncService not initialized, initializing now...");
+      console.info("🔧 DataSyncService not initialized, initializing now...");
       await this.initialize();
     }
 
@@ -246,7 +262,7 @@ export class DataSyncService {
   }> {
     // Ensure service is initialized before proceeding
     if (!this.supabase) {
-      console.log("🔧 DataSyncService not initialized, initializing now...");
+      console.info("🔧 DataSyncService not initialized, initializing now...");
       await this.initialize();
     }
 
@@ -254,7 +270,7 @@ export class DataSyncService {
     const created: Play[] = [];
     const errors: string[] = [];
 
-    console.log(
+    console.info(
       `🚀 Starting delegated bulk import of ${plays.length} plays...`
     );
 
@@ -286,7 +302,7 @@ export class DataSyncService {
       this.cache.delete(cacheKey);
 
       const duration = performance.now() - startTime;
-      console.log(
+      console.info(
         `✅ Delegated bulk import complete: ${created.length}/${plays.length} plays created in ${duration.toFixed(2)}ms`
       );
 
@@ -320,7 +336,7 @@ export class DataSyncService {
     errors: string[];
     created: Play[];
   }> {
-    console.log("📊 Parsing CSV content...");
+    console.info("📊 Parsing CSV content...");
 
     // Parse CSV using existing CSV service
     const parseResult = CSVService.parseCSVForPreview(csvContent);
@@ -343,7 +359,7 @@ export class DataSyncService {
     );
     const plays = convertResult.plays;
 
-    console.log(`📋 Parsed ${plays.length} valid plays from CSV`);
+    console.info(`📋 Parsed ${plays.length} valid plays from CSV`);
 
     // Bulk create the parsed plays
     const bulkResult = await this.bulkCreatePlays(playbookId, plays);
@@ -373,7 +389,7 @@ export class DataSyncService {
       async () => {
         try {
           await this.createAutomaticBackup();
-          console.log("✅ Automatic backup completed");
+          console.info("✅ Automatic backup completed");
         } catch (error) {
           console.error("❌ Automatic backup failed:", error);
         }
@@ -410,8 +426,8 @@ export class DataSyncService {
         },
       };
 
-      // Save to IndexedDB
-      await this.saveToIndexedDB(`backup_${Date.now()}`, {
+      // Save to IndexedDB (backups store)
+      await this.saveBackupToIndexedDB(`backup_${Date.now()}`, {
         data: backupData,
         timestamp: Date.now(),
         version: 1,
@@ -485,7 +501,7 @@ export class DataSyncService {
       link.click();
       document.body.removeChild(link);
 
-      console.log("✅ Comprehensive backup exported successfully");
+      console.info("✅ Comprehensive backup exported successfully");
     } catch (error) {
       console.error("Export backup failed:", error);
       throw error;
@@ -526,7 +542,7 @@ export class DataSyncService {
       )
       .subscribe();
 
-    console.log("✅ Real-time sync enabled");
+    console.info("✅ Real-time sync enabled");
   }
 
   /**
@@ -641,6 +657,50 @@ export class DataSyncService {
   }
 
   /**
+   * Save backup payload to IndexedDB 'backups' store
+   */
+  private static async saveBackupToIndexedDB(
+    key: string,
+    data: CachedData
+  ): Promise<void> {
+    if (!this.indexedDB) return;
+    const tx = this.indexedDB.transaction(["backups"], "readwrite");
+    const store = tx.objectStore("backups");
+    await store.put({ key, ...data });
+  }
+
+  /**
+   * List all backup keys in ascending order
+   */
+  private static async listBackupKeys(): Promise<string[]> {
+    if (!this.indexedDB) return [];
+    const tx = this.indexedDB.transaction(["backups"], "readonly");
+    const store = tx.objectStore("backups");
+    return new Promise((resolve) => {
+      const keys: string[] = [];
+      const req = store.openCursor();
+      req.onsuccess = () => {
+        const cursor = req.result as IDBCursorWithValue | null;
+        if (cursor) {
+          const value = cursor.value as { key: string };
+          if (value && value.key) keys.push(value.key);
+          cursor.continue();
+        } else {
+          resolve(keys.sort());
+        }
+      };
+      req.onerror = () => resolve([]);
+    });
+  }
+
+  private static async deleteBackupKey(key: string): Promise<void> {
+    if (!this.indexedDB) return;
+    const tx = this.indexedDB.transaction(["backups"], "readwrite");
+    const store = tx.objectStore("backups");
+    await store.delete(key);
+  }
+
+  /**
    * UTILITY METHODS
    */
 
@@ -658,17 +718,17 @@ export class DataSyncService {
     _updates: unknown
   ): void {
     // Implementation for updating local cache
-    console.log(`Updated local cache: ${type}:${id}`);
+    console.info(`Updated local cache: ${type}:${id}`);
   }
 
   private static rollbackLocalCache(type: string, id: string): void {
     // Implementation for rolling back local changes
-    console.log(`Rolled back local cache: ${type}:${id}`);
+    console.info(`Rolled back local cache: ${type}:${id}`);
   }
 
   private static addToLocalCache(type: string, _item: unknown): void {
     // Implementation for adding to local cache
-    console.log(`Added to local cache: ${type}`);
+    console.info(`Added to local cache: ${type}`);
   }
 
   private static replaceInLocalCache(
@@ -677,54 +737,226 @@ export class DataSyncService {
     _realItem: unknown
   ): void {
     // Implementation for replacing temp data with real data
-    console.log(`Replaced in local cache: ${type}:${tempId}`);
+    console.info(`Replaced in local cache: ${type}:${tempId}`);
   }
 
   private static removeFromLocalCache(type: string, id: string): void {
     // Implementation for removing from local cache
-    console.log(`Removed from local cache: ${type}:${id}`);
+    console.info(`Removed from local cache: ${type}:${id}`);
   }
 
   private static showSyncNotification(message: string): void {
     // Implementation for showing sync notifications
-    console.log(`Sync notification: ${message}`);
+    console.info(`Sync notification: ${message}`);
   }
 
   private static triggerBackup(): void {
-    // Implementation for triggering backup
-    console.log("Backup triggered");
+    // Debounce opportunistic backups to at most once per 2 minutes
+    const now = Date.now();
+    const minGap = 2 * 60 * 1000;
+    // Store last backup timestamp in metrics.backupFrequency (count) is separate; use cache key
+    const last = (this.cache.get("__last_backup_ts__")?.data as number) || 0;
+    if (now - last < minGap) return;
+    this.cache.set("__last_backup_ts__", {
+      data: now,
+      timestamp: now,
+      version: 1,
+    });
+    // Fire and forget
+    this.createAutomaticBackup().catch((e) =>
+      console.warn("Opportunistic backup failed", e)
+    );
   }
 
-  private static async getAllPlays(_teamId: string): Promise<Play[]> {
-    // Implementation for getting all plays
-    return [];
+  private static async getAllPlays(teamId: string): Promise<Play[]> {
+    if (!this.supabase) await this.initialize();
+    try {
+      // Fetch playbook IDs for team
+      const { data: playbooks, error: pbErr } = await this.supabase!.from(
+        "playbooks"
+      )
+        .select("id")
+        .eq("team_id", teamId);
+      if (pbErr || !playbooks || playbooks.length === 0) return [];
+      const ids = (playbooks as Array<{ id: string }>).map((p) => p.id);
+      const { data, error } = await this.supabase!.from("plays")
+        .select("*")
+        .in("playbook_id", ids)
+        .eq("is_archived", false);
+      if (error || !data) return [];
+      // Coerce timestamp fields to Date for Play typing
+      return (data as unknown[]).map((row) => {
+        const r = row as Record<string, unknown>;
+        return {
+          ...(r as object),
+          created_at: r["created_at"]
+            ? new Date(String(r["created_at"]))
+            : new Date(),
+          updated_at: r["updated_at"]
+            ? new Date(String(r["updated_at"]))
+            : new Date(),
+          last_used_at: r["last_used_at"]
+            ? new Date(String(r["last_used_at"]))
+            : undefined,
+        } as Play;
+      });
+    } catch {
+      return [];
+    }
   }
 
   private static async getAllPracticeScripts(
-    _teamId: string
+    teamId: string
   ): Promise<PracticeScript[]> {
-    // Implementation for getting all practice scripts
-    return [];
+    if (!this.supabase) await this.initialize();
+    try {
+      const { data, error } = await this.supabase!.from("practice_scripts")
+        .select(
+          "id, team_id, name, description, total_duration, created_by, created_at, updated_at, is_template, tags"
+        )
+        .eq("team_id", teamId)
+        .order("updated_at", { ascending: false });
+      if (error || !data) return [] as unknown as PracticeScript[];
+      const mapped = (data as unknown[]).map((row) => {
+        const r = row as Record<string, unknown>;
+        return {
+          id: String(r["id"]),
+          name: String(r["name"]),
+          description: (r["description"] as string | undefined) ?? undefined,
+          teamId: String(r["team_id"]),
+          createdBy: (r["created_by"] as string | undefined) ?? "",
+          createdAt: r["created_at"]
+            ? new Date(String(r["created_at"]))
+            : new Date(),
+          updatedAt: r["updated_at"]
+            ? new Date(String(r["updated_at"]))
+            : new Date(),
+          isTemplate: Boolean(r["is_template"]),
+          plays: [],
+          duration: (r["total_duration"] as number | undefined) ?? 0,
+          tags: Array.isArray(r["tags"]) ? (r["tags"] as string[]) : [],
+        } as PracticeScript;
+      });
+      return mapped;
+    } catch {
+      return [] as unknown as PracticeScript[];
+    }
   }
 
-  private static async getAllGamePlans(_teamId: string): Promise<GamePlan[]> {
-    // Implementation for getting all game plans
-    return [];
+  private static async getAllGamePlans(teamId: string): Promise<GamePlan[]> {
+    if (!this.supabase) await this.initialize();
+    try {
+      const { data, error } = await this.supabase!.from("game_plans")
+        .select(
+          "id, team_id, name, week_number, opponent, game_date, created_by, created_at, updated_at, is_template, tags, total_plays"
+        )
+        .eq("team_id", teamId)
+        .order("updated_at", { ascending: false });
+      if (error || !data) return [] as unknown as GamePlan[];
+      const mapped = (data as unknown[]).map((row) => {
+        const r = row as Record<string, unknown>;
+        return {
+          id: String(r["id"]),
+          name: String(r["name"]),
+          weekNumber: (r["week_number"] as number | undefined) ?? 0,
+          opponent: (r["opponent"] as string | undefined) ?? "",
+          date: r["game_date"] ? new Date(String(r["game_date"])) : new Date(),
+          teamId: String(r["team_id"]),
+          createdBy: (r["created_by"] as string | undefined) ?? "",
+          createdAt: r["created_at"]
+            ? new Date(String(r["created_at"]))
+            : new Date(),
+          updatedAt: r["updated_at"]
+            ? new Date(String(r["updated_at"]))
+            : new Date(),
+          isTemplate: Boolean(r["is_template"]),
+          situations: [],
+          totalPlays: (r["total_plays"] as number | undefined) ?? 0,
+          tags: Array.isArray(r["tags"]) ? (r["tags"] as string[]) : [],
+        } as GamePlan;
+      });
+      return mapped;
+    } catch {
+      return [] as unknown as GamePlan[];
+    }
   }
 
-  private static exportPracticeScriptsCSV(_scripts: PracticeScript[]): string {
-    // Implementation for exporting practice scripts to CSV
-    return "";
+  private static exportPracticeScriptsCSV(scripts: PracticeScript[]): string {
+    const headers = [
+      "id",
+      "name",
+      "teamId",
+      "duration_minutes",
+      "isTemplate",
+      "tags",
+      "createdAt",
+      "updatedAt",
+    ];
+    const rows = scripts.map((s) => [
+      s.id,
+      s.name,
+      s.teamId,
+      String(s.duration ?? 0),
+      s.isTemplate ? "true" : "false",
+      (s.tags || []).join("|"),
+      s.createdAt instanceof Date
+        ? s.createdAt.toISOString()
+        : String(s.createdAt),
+      s.updatedAt instanceof Date
+        ? s.updatedAt.toISOString()
+        : String(s.updatedAt),
+    ]);
+    return [
+      headers.join(","),
+      ...rows.map((r) => r.map(csvEscape).join(",")),
+    ].join("\n");
   }
 
-  private static exportGamePlansCSV(_gamePlans: GamePlan[]): string {
-    // Implementation for exporting game plans to CSV
-    return "";
+  private static exportGamePlansCSV(gamePlans: GamePlan[]): string {
+    const headers = [
+      "id",
+      "name",
+      "teamId",
+      "opponent",
+      "weekNumber",
+      "date",
+      "totalPlays",
+      "tags",
+      "createdAt",
+      "updatedAt",
+    ];
+    const rows = gamePlans.map((g) => [
+      g.id,
+      g.name,
+      g.teamId,
+      g.opponent ?? "",
+      String(g.weekNumber ?? 0),
+      g.date instanceof Date ? g.date.toISOString() : String(g.date),
+      String(g.totalPlays ?? 0),
+      (g.tags || []).join("|"),
+      g.createdAt instanceof Date
+        ? g.createdAt.toISOString()
+        : String(g.createdAt),
+      g.updatedAt instanceof Date
+        ? g.updatedAt.toISOString()
+        : String(g.updatedAt),
+    ]);
+    return [
+      headers.join(","),
+      ...rows.map((r) => r.map(csvEscape).join(",")),
+    ].join("\n");
   }
 
   private static async cleanupOldBackups(keepCount: number): Promise<void> {
-    // Implementation for cleaning up old backups
-    console.log(`Cleaned up old backups, kept ${keepCount}`);
+    try {
+      const keys = await this.listBackupKeys();
+      if (keys.length <= keepCount) return;
+      const toDelete = keys.slice(0, Math.max(0, keys.length - keepCount));
+      await Promise.all(toDelete.map((k) => this.deleteBackupKey(k)));
+      console.info(`Cleaned up old backups, kept ${keepCount}`);
+    } catch (e) {
+      console.warn("Failed to cleanup backups", e);
+    }
   }
 
   /**
@@ -749,6 +981,6 @@ export class DataSyncService {
     }
 
     this.cache.clear();
-    console.log("✅ DataSyncService cleaned up");
+    console.info("✅ DataSyncService cleaned up");
   }
 }

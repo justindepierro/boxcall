@@ -6,8 +6,10 @@ import {
   parseCalendarEventUpdate,
   parseCalendarEvent,
 } from "../../domain/calendar/schema";
-import { CalendarRSVP } from "./rsvp";
+
 import { CalendarComments } from "./comments";
+import { CalendarRSVP } from "./rsvp";
+
 import type {
   CalendarEventCreate,
   CalendarComment,

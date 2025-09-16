@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+
 import type { CalendarEvent } from "../../domain/calendar/types";
 
 interface CalendarStatsProps {

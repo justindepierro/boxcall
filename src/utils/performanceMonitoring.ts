@@ -331,7 +331,7 @@ class WebVitalsMonitor {
   private reportMetric(name: string, value: number) {
     // Development logging
     if (process.env.NODE_ENV === "development") {
-      console.log(
+      console.info(
         `📊 ${name}:`,
         Math.round(value * 100) / 100,
         this.getMetricUnit(name)

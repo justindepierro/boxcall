@@ -1,4 +1,5 @@
 import { onCLS, onLCP, onINP, onFCP, onTTFB } from "web-vitals";
+
 import { telemetry } from "./dispatcher";
 import { getSessionId } from "./session";
 

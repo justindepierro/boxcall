@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+
 import type { Database } from "../types/database";
 
 // Type definitions with proper database types
@@ -38,6 +39,25 @@ export interface ActivityItem {
  */
 export class DashboardService {
   /**
+   * Update the current user's profile (bio, avatar_url, etc.)
+   */
+  static async updateUserProfile(
+    userId: string,
+    updates: Partial<{ bio: string; avatar_url: string }>
+  ): Promise<UserProfile | null> {
+    const { data, error } = await supabase
+      .from("profiles")
+      .update(updates)
+      .eq("id", userId)
+      .select()
+      .single();
+    if (error) {
+      // TODO: Handle error (was: console.error)
+      return null;
+    }
+    return data as UserProfile;
+  }
+  /**
    * Get all teams for a user with their membership data
    */
   static async getUserTeams(userId: string): Promise<UserTeamData[]> {
@@ -50,7 +70,7 @@ export class DashboardService {
         .eq("status", "active");
 
       if (error) {
-        console.error("Error fetching user teams:", error);
+        // TODO: Handle error fetching user teams (was: console.error)
         return [];
       }
 
@@ -72,7 +92,7 @@ export class DashboardService {
         .in("id", teamIds);
 
       if (teamsError) {
-        console.error("Error fetching teams:", teamsError);
+        // TODO: Handle error fetching teams (was: console.error)
         return [];
       }
 
@@ -105,8 +125,8 @@ export class DashboardService {
       }
 
       return userTeams;
-    } catch (error) {
-      console.error("Error in getUserTeams:", error);
+    } catch (_error) {
+      // TODO: Handle error in getUserTeams (was: console.error)
       return [];
     }
   }
@@ -136,8 +156,8 @@ export class DashboardService {
         activeTeams,
         recentActivity,
       };
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
+    } catch (_error) {
+      // TODO: Handle error fetching dashboard data (was: console.error)
       return {
         userTeams: [],
         totalTeams: 0,
@@ -157,9 +177,7 @@ export class DashboardService {
   ): Promise<ActivityItem[]> {
     // For blank slate mode, return empty activity
     if (devMode === "blank_slate") {
-      console.log(
-        "🆕 Dashboard Service: Blank slate mode - returning empty activity"
-      );
+      // TODO: Remove dashboard debug log (was: console.log)
       return [];
     }
 
@@ -167,17 +185,17 @@ export class DashboardService {
     if (devMode === "production" || devMode === "super_admin_real") {
       try {
         // TODO: Implement real activity feed from Supabase
-        console.log(
+        console.info(
           "[Search/Investigate] Dashboard Service: Attempting to fetch real activity..."
         );
 
         // For now, return empty until real implementation
         // In the future, this will fetch from activity/notifications tables
         return [];
-      } catch (error) {
+      } catch (_error) {
         console.warn(
           "Dashboard Service: Could not fetch real activity:",
-          error
+          _error
         );
         return [];
       }

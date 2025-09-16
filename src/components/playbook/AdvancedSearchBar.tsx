@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
-import { PlaybookSearchService } from "../../services/playbookSearchService";
+import { PlaybookSearchService } from "@services/playbookSearchService";
 import type { Play } from "../../types/play";
 
 interface AdvancedSearchBarProps {

@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           # Use repo's Node version for parity with local/CI builds
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
           cache: "npm"
 
       - name: Install dependencies

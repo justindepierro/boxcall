@@ -1,17 +1,20 @@
 import { useRef } from "react";
+
 import { useAuth } from "../../../app/auth-store";
 import { useDevMode } from "../../../app/dev-mode-hooks";
+
 // Data + mutations now handled via useCalendarData
+import { useCalendarActions } from "./useCalendarActions";
+import { useCalendarData } from "./useCalendarData";
 import { useCalendarFilters } from "./useCalendarFilters";
-import { useCalendarSelection } from "./useCalendarSelection";
 import { useCalendarNavigation } from "./useCalendarNavigation";
 import { useCalendarPrefetch } from "./useCalendarPrefetch";
-import { useCalendarData } from "./useCalendarData";
-import { useCalendarActions } from "./useCalendarActions";
+import { useCalendarSelection } from "./useCalendarSelection";
 import {
   useCalendarUrlState,
   mapQueryViewToInternal,
 } from "./useCalendarUrlState";
+
 // Event creation moved to actions hook
 import type { BoxCallCalendarRef } from "../BoxCallCalendar";
 

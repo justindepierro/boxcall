@@ -1,7 +1,9 @@
 import React from "react";
-import { Typography } from "../../../../design-system";
+
 import { Card, Button } from "../../../../../components/ui";
 import { Icon, type IconName } from "../../../../../components/ui/Icon/Icon";
+import { Typography } from "../../../../design-system";
+
 import type { PracticeBlock } from "../../types";
 
 interface CategorySelectorProps {

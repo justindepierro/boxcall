@@ -3,12 +3,13 @@
  * Centralized, idempotent canonicalization + duplicate key + search doc helpers
  * for Play domain objects. Designed for reuse (UI, services, background tasks).
  */
-import type { Play } from "../types/play";
 import {
   normalizePlayName,
   normalizeText,
   normalizeFormation,
 } from "./textNormalization";
+
+import type { Play } from "../types/play";
 
 /** Shape accepted for inbound (partial) play creation/update */
 export type InboundPlay = Partial<

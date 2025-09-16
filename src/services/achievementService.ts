@@ -44,20 +44,20 @@ export class AchievementService {
     devMode?: string
   ): Promise<AchievementData> {
     try {
-      console.log(
+      console.info(
         `[Trophy/Achievement] Getting achievements for user ${userId} in dev mode: ${devMode}`
       );
 
       // Check if we're in blank slate mode
       if (devMode === "blank_slate") {
-        console.log("🆕 Returning empty achievements for blank slate mode");
+        console.info("🆕 Returning empty achievements for blank slate mode");
         return this.getEmptyAchievements();
       }
 
       // For production/real modes, get real data
       if (devMode === "production" || devMode === "super_admin_real") {
         try {
-          console.log(
+          console.info(
             "[Search/Investigate] Attempting to fetch real achievements..."
           );
           const realAchievements = await Promise.race([
@@ -69,7 +69,7 @@ export class AchievementService {
               )
             ),
           ]);
-          console.log(
+          console.info(
             "[Success/Complete] Real achievements fetched successfully"
           );
           return realAchievements;
@@ -89,7 +89,7 @@ export class AchievementService {
 
       // For blank slate mode, return empty achievements
       if (devMode === "blank_slate") {
-        console.log(
+        console.info(
           "🆕 Achievement Service: Blank slate mode - returning empty achievements"
         );
         return this.getEmptyAchievements();
@@ -233,15 +233,15 @@ export class AchievementService {
   private static getStickerIcon(stickerType: string | null): string {
     switch (stickerType) {
       case "star":
-        return "⭐";
+        return "star";
       case "flame":
-        return "[Fire/Hot streak]";
+        return "zap";
       case "lightning":
-        return "[Lightning/Power]";
+        return "zap";
       case "crown":
-        return "[Crown/Leadership]";
+        return "crown";
       case "diamond":
-        return "[Diamond/Premium]";
+        return "award";
       default:
         return "award";
     }
@@ -292,7 +292,7 @@ export class AchievementService {
     try {
       // TODO: Calculate based on user login/activity data
       // For now, return mock data
-      console.log("Calculating activity streak for user:", userId);
+      console.info("Calculating activity streak for user:", userId);
       return Math.floor(Math.random() * 14) + 1; // 1-14 days
     } catch (error) {
       console.error("Error calculating activity streak:", error);
@@ -334,7 +334,7 @@ export class AchievementService {
             {
               id: "dev-leadership-1",
               name: "Leadership Excellence",
-              icon: "⭐",
+              icon: "star",
               awardedBy: "dev-system",
               awardedByName: "Development System",
               date: new Date(
@@ -346,7 +346,7 @@ export class AchievementService {
             {
               id: "dev-coaching-1",
               name: "Outstanding Coaching",
-              icon: "[Trophy/Achievement]",
+              icon: "trophy",
               awardedBy: "dev-system",
               awardedByName: "Development System",
               date: new Date(
@@ -361,7 +361,7 @@ export class AchievementService {
               id: "dev-season-excellence",
               name: "Season Excellence",
               description: "Led team to outstanding season performance",
-              icon: "[Gold Medal]",
+              icon: "medal",
               earned: true,
               earnedDate: new Date(
                 Date.now() - 30 * 24 * 60 * 60 * 1000
@@ -378,7 +378,7 @@ export class AchievementService {
             {
               id: "dev-defensive-1",
               name: "Defensive Coordinator",
-              icon: "[Shield/Defense]",
+              icon: "shield",
               awardedBy: "dev-system",
               awardedByName: "Development System",
               date: new Date(
@@ -393,7 +393,7 @@ export class AchievementService {
               id: "dev-player-development",
               name: "Player Development",
               description: "Exceptional player mentoring and development",
-              icon: "[Medal]",
+              icon: "medal",
               earned: true,
               earnedDate: new Date(
                 Date.now() - 21 * 24 * 60 * 60 * 1000
@@ -411,7 +411,7 @@ export class AchievementService {
             {
               id: "dev-touchdown-1",
               name: "Touchdown Pass",
-              icon: "[Football]",
+              icon: "football", // fallback to help-circle if not in registry
               awardedBy: "dev-coach",
               awardedByName: "Coach Martinez",
               date: new Date(
@@ -423,7 +423,7 @@ export class AchievementService {
             {
               id: "dev-leadership-player",
               name: "Team Captain",
-              icon: "⭐",
+              icon: "star",
               awardedBy: "dev-coach",
               awardedByName: "Coach Martinez",
               date: new Date(
@@ -438,7 +438,7 @@ export class AchievementService {
               id: "dev-player-of-week",
               name: "Player of the Week",
               description: "Outstanding performance in last game",
-              icon: "[Trophy/Achievement]",
+              icon: "trophy",
               earned: true,
               earnedDate: new Date(
                 Date.now() - 7 * 24 * 60 * 60 * 1000
@@ -456,7 +456,7 @@ export class AchievementService {
             {
               id: "dev-admin-excellence",
               name: "Platform Excellence",
-              icon: "[Crown/Leadership]",
+              icon: "crown",
               awardedBy: "dev-system",
               awardedByName: "BoxCall System",
               date: new Date(
@@ -471,7 +471,7 @@ export class AchievementService {
               id: "dev-system-admin",
               name: "System Administrator",
               description: "Excellence in platform management",
-              icon: "[Target]",
+              icon: "target",
               earned: true,
               earnedDate: new Date(
                 Date.now() - 14 * 24 * 60 * 60 * 1000

@@ -4,12 +4,14 @@
  * Orchestrates the CSV import process with intelligent parsing and validation
  */
 
-import { CSVParser } from "./CSVParser";
+import { UserPreferencesService } from "../userPreferencesService";
+
 import { CSVColumnMapper } from "./CSVColumnMapper";
 import { CSVDataValidator } from "./CSVDataValidator";
+import { CSVParser } from "./CSVParser";
 import { CSVPlayConverter } from "./CSVPlayConverter";
+
 import type { CSVParseResult, CSVPlayPreview, CSVImportResult } from "./types";
-import { UserPreferencesService } from "../userPreferencesService";
 
 export class CSVImportProcessor {
   /**

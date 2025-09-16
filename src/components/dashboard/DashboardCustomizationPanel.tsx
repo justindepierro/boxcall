@@ -1,0 +1,466 @@
+import React from "react";
+import { Button } from "../ui";
+import { Typography } from "../design-system/Typography";
+import { Icon } from "../ui/Icon";
+import { useDashboardStore } from "../../stores/dashboardStore";
+import type { LayoutSize } from "../../stores/dashboardStore";
+
+/**
+ * Dashboard Customization Panel
+ * Phase 2A: Smart Dashboard Personalization
+ *
+ * Provides interface for users to customize their dashboard layout,
+ * toggle widgets, adjust sizes, and manage layout presets.
+ */
+
+interface DashboardCustomizationPanelProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const DashboardCustomizationPanel: React.FC<
+  DashboardCustomizationPanelProps
+> = ({ isOpen, onClose }) => {
+  const {
+    currentLayout,
+    availableLayouts,
+    personalizationSettings,
+    loading,
+    error,
+    createLayout,
+    toggleWidgetVisibility,
+    resizeWidget,
+    setPersonalizationSettings,
+    clearError,
+  } = useDashboardStore();
+
+  const [activeTab, setActiveTab] = React.useState<
+    "widgets" | "layouts" | "settings"
+  >("widgets");
+  const [newLayoutName, setNewLayoutName] = React.useState("");
+  const [showCreateLayout, setShowCreateLayout] = React.useState(false);
+
+  if (!isOpen) return null;
+
+  const handleCreateLayout = async () => {
+    if (!newLayoutName.trim()) return;
+
+    try {
+      await createLayout(newLayoutName, currentLayout || undefined);
+      setNewLayoutName("");
+      setShowCreateLayout(false);
+    } catch (error) {
+      console.error("Failed to create layout:", error);
+    }
+  };
+
+  const handleWidgetSizeChange = (widgetId: string, size: LayoutSize) => {
+    resizeWidget(widgetId, size);
+  };
+
+  const renderWidgetsTab = () => (
+    <div className="space-y-4">
+      <Typography variant="headline-sm" className="text-text-primary">
+        Widget Configuration
+      </Typography>
+
+      {currentLayout?.widgets.map((widget) => (
+        <div
+          key={widget.id}
+          className="flex items-center justify-between p-4 bg-surface-card rounded-lg border border-subtle"
+        >
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => toggleWidgetVisibility(widget.id)}
+              className="p-2"
+              aria-label={`${widget.visible ? "Hide" : "Show"} ${widget.title}`}
+            >
+              <Icon
+                name={widget.visible ? "eye" : "eye-off"}
+                size="sm"
+                className={
+                  widget.visible ? "text-text-primary" : "text-text-muted"
+                }
+              />
+            </Button>
+
+            <div>
+              <Typography variant="body-md" className="font-medium">
+                {widget.title}
+              </Typography>
+              <Typography variant="body-sm" color="muted">
+                {widget.visible ? "Visible" : "Hidden"}
+              </Typography>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            {/* Size selector */}
+            <div className="flex bg-surface-subtle rounded-lg p-1">
+              {(["small", "medium", "large"] as LayoutSize[]).map((size) => (
+                <Button
+                  key={size}
+                  variant={widget.size === size ? "primary" : "ghost"}
+                  size="sm"
+                  className="px-2 py-1 text-xs"
+                  onClick={() => handleWidgetSizeChange(widget.id, size)}
+                >
+                  {size.charAt(0).toUpperCase()}
+                </Button>
+              ))}
+            </div>
+
+            {/* Widget settings button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="p-2"
+              aria-label={`Configure ${widget.title}`}
+            >
+              <Icon name="settings" size="sm" />
+            </Button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderLayoutsTab = () => (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <Typography variant="headline-sm" className="text-text-primary">
+          Layout Presets
+        </Typography>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowCreateLayout(true)}
+          className="flex items-center space-x-2"
+        >
+          <Icon name="plus" size="sm" />
+          <span>New Layout</span>
+        </Button>
+      </div>
+
+      {showCreateLayout && (
+        <div className="p-4 bg-surface-card rounded-lg border border-subtle">
+          <Typography variant="body-md" className="mb-3 font-medium">
+            Create New Layout
+          </Typography>
+          <div className="flex space-x-2">
+            <input
+              type="text"
+              value={newLayoutName}
+              onChange={(e) => setNewLayoutName(e.target.value)}
+              placeholder="Layout name..."
+              className="flex-1 px-3 py-2 bg-surface-app border border-subtle rounded-lg 
+                         text-text-primary placeholder-text-muted focus:outline-none 
+                         focus:ring-2 focus:ring-jade-500 focus:border-transparent"
+              onKeyDown={(e) => e.key === "Enter" && handleCreateLayout()}
+            />
+            <Button
+              variant="primary"
+              onClick={handleCreateLayout}
+              disabled={!newLayoutName.trim()}
+            >
+              Create
+            </Button>
+            <Button variant="ghost" onClick={() => setShowCreateLayout(false)}>
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {availableLayouts.map((layout) => (
+        <div
+          key={layout.id}
+          className={`p-4 bg-surface-card rounded-lg border transition-colors ${
+            currentLayout?.id === layout.id
+              ? "border-jade-500 bg-jade-50"
+              : "border-subtle hover:border-jade-200"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <Typography variant="body-md" className="font-medium">
+                {layout.name}
+                {layout.isDefault && (
+                  <span className="ml-2 px-2 py-1 text-xs bg-jade-100 text-jade-800 rounded">
+                    Default
+                  </span>
+                )}
+              </Typography>
+              <Typography variant="body-sm" color="muted">
+                {layout.widgets.filter((w) => w.visible).length} widgets •
+                Updated {new Date(layout.updatedAt).toLocaleDateString()}
+              </Typography>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              {currentLayout?.id !== layout.id && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    // TODO: Implement layout switching
+                    console.info("Switch to layout:", layout.id);
+                  }}
+                >
+                  Use
+                </Button>
+              )}
+
+              {!layout.isDefault && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-600 hover:text-red-700"
+                  onClick={() => {
+                    // TODO: Implement layout deletion
+                    console.info("Delete layout:", layout.id);
+                  }}
+                >
+                  <Icon name="delete" size="sm" />
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderSettingsTab = () => (
+    <div className="space-y-6">
+      <Typography variant="headline-sm" className="text-text-primary">
+        Dashboard Settings
+      </Typography>
+
+      {/* Theme Settings */}
+      <div className="space-y-3">
+        <Typography variant="body-md" className="font-medium">
+          Appearance
+        </Typography>
+
+        <div className="space-y-2">
+          <label className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              checked={personalizationSettings.compactMode}
+              onChange={(e) =>
+                setPersonalizationSettings({
+                  ...personalizationSettings,
+                  compactMode: e.target.checked,
+                })
+              }
+              className="w-4 h-4 text-jade-600 bg-surface-app border-gray-300 rounded 
+                         focus:ring-jade-500 focus:ring-2"
+            />
+            <Typography variant="body-sm">Compact mode</Typography>
+          </label>
+
+          <label className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              checked={personalizationSettings.showWelcomeMessages}
+              onChange={(e) =>
+                setPersonalizationSettings({
+                  ...personalizationSettings,
+                  showWelcomeMessages: e.target.checked,
+                })
+              }
+              className="w-4 h-4 text-jade-600 bg-surface-app border-gray-300 rounded 
+                         focus:ring-jade-500 focus:ring-2"
+            />
+            <Typography variant="body-sm">Show welcome messages</Typography>
+          </label>
+        </div>
+      </div>
+
+      {/* Notification Settings */}
+      <div className="space-y-3">
+        <Typography variant="body-md" className="font-medium">
+          Notifications
+        </Typography>
+
+        <div className="space-y-2">
+          <label className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              checked={personalizationSettings.enableNotifications}
+              onChange={(e) =>
+                setPersonalizationSettings({
+                  ...personalizationSettings,
+                  enableNotifications: e.target.checked,
+                })
+              }
+              className="w-4 h-4 text-jade-600 bg-surface-app border-gray-300 rounded 
+                         focus:ring-jade-500 focus:ring-2"
+            />
+            <Typography variant="body-sm">Enable notifications</Typography>
+          </label>
+
+          <label className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              checked={personalizationSettings.autoRefresh}
+              onChange={(e) =>
+                setPersonalizationSettings({
+                  ...personalizationSettings,
+                  autoRefresh: e.target.checked,
+                })
+              }
+              className="w-4 h-4 text-jade-600 bg-surface-app border-gray-300 rounded 
+                         focus:ring-jade-500 focus:ring-2"
+            />
+            <Typography variant="body-sm">Auto-refresh dashboard</Typography>
+          </label>
+        </div>
+      </div>
+
+      {/* Refresh Interval */}
+      <div className="space-y-3">
+        <Typography variant="body-md" className="font-medium">
+          Refresh Rate
+        </Typography>
+
+        <select
+          value={personalizationSettings.refreshInterval}
+          onChange={(e) =>
+            setPersonalizationSettings({
+              ...personalizationSettings,
+              refreshInterval: parseInt(e.target.value),
+            })
+          }
+          className="w-full px-3 py-2 bg-surface-app border border-subtle rounded-lg 
+                     text-text-primary focus:outline-none focus:ring-2 focus:ring-jade-500 
+                     focus:border-transparent"
+          disabled={!personalizationSettings.autoRefresh}
+        >
+          <option value={60}>1 minute</option>
+          <option value={300}>5 minutes</option>
+          <option value={600}>10 minutes</option>
+          <option value={1800}>30 minutes</option>
+        </select>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black bg-opacity-50"
+        onClick={onClose}
+      />
+
+      {/* Panel */}
+      <div
+        className="relative w-full max-w-2xl max-h-[90vh] mx-4 bg-surface-app rounded-lg shadow-xl 
+                      border border-subtle overflow-hidden"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-subtle">
+          <div>
+            <Typography variant="headline-lg" className="text-text-primary">
+              Customize Dashboard
+            </Typography>
+            <Typography variant="body-sm" color="muted">
+              Personalize your workspace for maximum efficiency
+            </Typography>
+          </div>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="p-2"
+            aria-label="Close customization panel"
+          >
+            <Icon name="close" size="md" />
+          </Button>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="p-4 bg-red-50 border-b border-red-200">
+            <div className="flex items-center justify-between">
+              <Typography variant="body-sm" className="text-red-700">
+                {error}
+              </Typography>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearError}
+                className="text-red-700 hover:text-red-800"
+              >
+                <Icon name="close" size="sm" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Tabs */}
+        <div className="border-b border-subtle">
+          <nav className="flex space-x-8 px-6" aria-label="Tabs">
+            {[
+              { id: "widgets", label: "Widgets", icon: "grid" as const },
+              { id: "layouts", label: "Layouts", icon: "grid" as const }, // Using grid as layout icon
+              { id: "settings", label: "Settings", icon: "settings" as const },
+            ].map((tab) => (
+              <Button
+                key={tab.id}
+                variant="ghost"
+                onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                className={`flex items-center space-x-2 py-4 border-b-2 transition-colors ${
+                  activeTab === tab.id
+                    ? "border-jade-500 text-jade-600"
+                    : "border-transparent text-text-muted hover:text-text-primary"
+                }`}
+              >
+                <Icon name={tab.icon} size="sm" />
+                <Typography variant="body-sm" className="font-medium">
+                  {tab.label}
+                </Typography>
+              </Button>
+            ))}
+          </nav>
+        </div>
+
+        {/* Content */}
+        <div
+          className="p-6 overflow-y-auto"
+          style={{ maxHeight: "calc(90vh - 200px)" }}
+        >
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-500" />
+            </div>
+          ) : (
+            <>
+              {activeTab === "widgets" && renderWidgetsTab()}
+              {activeTab === "layouts" && renderLayoutsTab()}
+              {activeTab === "settings" && renderSettingsTab()}
+            </>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between p-6 border-t border-subtle bg-surface-subtle">
+          <Typography variant="body-sm" color="muted">
+            Changes are saved automatically
+          </Typography>
+
+          <div className="flex space-x-3">
+            <Button variant="outline" onClick={onClose}>
+              Done
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

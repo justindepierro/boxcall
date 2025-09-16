@@ -12,7 +12,12 @@ import React from "react";
 import { getComponentColor } from "../../../design-system/tokens";
 
 // Core types
-export interface ModularIconProps {
+type AccessibleSvgProps = Pick<
+  React.SVGProps<SVGSVGElement>,
+  "role" | "aria-label" | "aria-hidden" | "focusable" | "tabIndex"
+>;
+
+export interface ModularIconProps extends AccessibleSvgProps {
   name: ModularIconName;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "touch" | number;
   className?: string;
@@ -132,12 +137,14 @@ export type ModularIconName =
   | "shirt";
 
 // Dynamic imports for perfect tree shaking (limited to our supported set)
-type LucideComponent = React.ComponentType<{
-  size?: number;
-  color?: string;
-  strokeWidth?: number;
-  className?: string;
-}>;
+type LucideComponent = React.ComponentType<
+  AccessibleSvgProps & {
+    size?: number;
+    color?: string;
+    strokeWidth?: number;
+    className?: string;
+  }
+>;
 type Loader = () => Promise<{ default: LucideComponent } | LucideComponent>;
 const iconLoaders: Record<ModularIconName, Loader> = {
   // core navigation/actions
@@ -285,6 +292,11 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
   className = "",
   color = "current",
   strokeWidth = 2,
+  "aria-label": ariaLabel,
+  role,
+  tabIndex,
+  focusable,
+  "aria-hidden": ariaHidden,
 }) => {
   const [IconComponent, setIconComponent] = React.useState<React.ComponentType<{
     size?: number;
@@ -304,9 +316,11 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
     // Load the icon dynamically (per-icon subpath to avoid bundling the whole library)
     const loader = iconLoaders[name];
     if (loader && !loading) {
+      let isMounted = true;
       setLoading(true);
       loader()
         .then((mod) => {
+          if (!isMounted) return;
           const component = mod as
             | { default?: LucideComponent }
             | LucideComponent;
@@ -322,22 +336,36 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
           setLoading(false);
         })
         .catch((error) => {
+          // Swallow errors during tests/SSR; keep placeholder visible
           console.error(`Failed to load icon: ${name}`, error);
+          if (!isMounted) return;
           setLoading(false);
         });
+      return () => {
+        isMounted = false;
+      };
     }
   }, [name, loading]);
 
   if (loading || !IconComponent) {
     // Return a minimal loading placeholder
     return (
-      <div
-        className={`inline-block animate-pulse surface-subtle rounded ${className}`}
-        style={{
-          width: typeof size === "number" ? size : sizeMap[size],
-          height: typeof size === "number" ? size : sizeMap[size],
-        }}
-      />
+      <svg
+        role={role ?? "img"}
+        aria-label={ariaLabel ?? name}
+        aria-hidden={ariaHidden}
+        focusable={focusable}
+        tabIndex={tabIndex}
+        className={`inline-block surface-subtle rounded ${className}`}
+        width={typeof size === "number" ? size : sizeMap[size]}
+        height={typeof size === "number" ? size : sizeMap[size]}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Simple neutral placeholder mark */}
+        <circle cx="12" cy="12" r="10" stroke="#00A86B" strokeWidth="2" />
+      </svg>
     );
   }
 
@@ -350,6 +378,11 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
       color={iconColor}
       strokeWidth={strokeWidth}
       className={className}
+      role={role ?? "img"}
+      aria-label={ariaLabel ?? name}
+      aria-hidden={ariaHidden}
+      focusable={focusable}
+      tabIndex={tabIndex}
     />
   );
 };

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
-import type { TeamPlayer, TeamPlayerInsert } from "../../types/team-management";
+
 import { FOOTBALL_POSITIONS, TEAM_LEVELS } from "../../types/team-management";
-import { Button } from "../ui/Button";
 import { Typography } from "../design-system/Typography";
+import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
+
+import type { TeamPlayer, TeamPlayerInsert } from "../../types/team-management";
+
 interface PlayerFormProps {
   player?: TeamPlayer | null;
   teamId: string;

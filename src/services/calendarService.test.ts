@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
+
 import { parseEventRSVPs } from "../domain/calendar/schema";
 import { CalendarAPI } from "../infra/calendar/api";
+
 import type { CalendarEventCreate } from "../domain/calendar/types";
 
 // Helpers

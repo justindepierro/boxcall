@@ -23,7 +23,7 @@ export interface NavigationItem {
 export const getNavigationItems = (
   userRole?: UserRole | null | string
 ): NavigationItem[] => {
-  console.log(
+  console.info(
     "getNavigationItems called with userRole:",
     userRole,
     typeof userRole
@@ -76,7 +76,7 @@ export const getNavigationItems = (
     userRole === "coach" ||
     userRole === "player" ||
     (userRole as string) === "super_admin";
-  console.log("Playbook check:", {
+  console.info("Playbook check:", {
     userRole,
     userRoleType: typeof userRole,
     isAdmin: userRole === "admin",
@@ -242,11 +242,24 @@ export const getRoleDisplayInfo = (role?: UserRole | null) => {
     NonNullable<UserRole>,
     { display: string; color: string }
   > = {
+    super_admin: { display: "Super Admin", color: "red" },
     admin: { display: "Administrator", color: "red" },
     coach: { display: "Coach", color: "blue" },
-    assistant_coach: { display: "Assistant Coach", color: "blue" },
     player: { display: "Player", color: "green" },
     family: { display: "Family", color: "purple" },
   };
-  return roleInfo[role] || { display: role, color: "gray" };
+  if (role in roleInfo) return roleInfo[role as NonNullable<UserRole>];
+  // Fallback for team-role strings that may appear in some contexts
+  switch (role as string) {
+    case "head_coach":
+      return { display: "Head Coach", color: "blue" };
+    case "assistant_coach":
+      return { display: "Assistant Coach", color: "blue" };
+    case "manager":
+      return { display: "Manager", color: "purple" };
+    case "alumni":
+      return { display: "Alumni", color: "gray" };
+    default:
+      return { display: String(role), color: "gray" };
+  }
 };

@@ -1,8 +1,7 @@
-/**
- * Dev Tools - Export main component
- */
+import React from "react";
 
-export { DevTools } from "./DevTools";
-export { devLogger } from "./dev-logger";
-export { systemMonitor } from "./system-monitor";
-export { devActions } from "./dev-actions";
+// No-op DevTools stub to satisfy imports in Layout/FloatingActionsPanel.
+// Actual dev tools were removed during cleanup; keep this harmless placeholder.
+export const DevTools: React.FC<{ className?: string }> = () => null;
+
+export default DevTools;

@@ -1,8 +1,11 @@
-import type { ReactNode } from "react";
 import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { IconButton } from "../IconButton/IconButton";
+
 import { Typography } from "../../design-system/Typography";
+import { IconButton } from "../IconButton/IconButton";
+
+import type { ReactNode } from "react";
+
 export interface ModalProps {
   /** Whether the modal is open */
   isOpen: boolean;
@@ -66,7 +69,7 @@ export const Modal: React.FC<ModalProps> = ({
   closeOnEscape = true,
   footer,
   className = "",
-  zIndex = 50,
+  zIndex = 9999,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
@@ -140,8 +143,8 @@ export const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
   const modalContent = (
     <div
-      className={`fixed inset-0 z-${zIndex} flex items-center justify-center p-4`}
-      style={{ zIndex }}
+      className={`fixed inset-0 z-[9999] flex items-center justify-center p-4`}
+      style={{ zIndex, border: "4px solid red" }}
     >
       {/* Backdrop */}
       <div

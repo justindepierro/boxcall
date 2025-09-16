@@ -1,5 +1,6 @@
-import type { Play } from "../types/play";
 import { normalizePlayName } from "./textNormalization";
+
+import type { Play } from "../types/play";
 /**
  * Utility functions for play name generation
  */

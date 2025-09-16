@@ -60,16 +60,4 @@ export function initRoutePrefetch(): void {
 }
 
 // Hover-based prefetch helper for nav links
-export function prefetchOnHover(
-  el: HTMLElement | null,
-  importer: () => Promise<unknown>
-) {
-  if (!el) return;
-  let done = false;
-  const handler = () => {
-    if (done) return;
-    done = true;
-    importer().catch(() => void 0);
-  };
-  el.addEventListener("mouseenter", handler, { once: true });
-}
+// Note: Hover-based prefetch utility moved to navigation/prefetch-utils

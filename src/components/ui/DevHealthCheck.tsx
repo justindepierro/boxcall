@@ -1,11 +1,14 @@
+import React, { useState } from "react";
+
 import { Typography } from "../design-system";
+
 /**
  * DevHealthCheck Component
  *
  * Monitors development environment health and displays status
  */
-import React, { useState } from "react";
 import { Icon } from "./Icon/Icon";
+
 interface HealthStatus {
   react: boolean;
   typescript: boolean;

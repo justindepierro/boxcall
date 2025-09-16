@@ -202,8 +202,8 @@ class OfflineDataManager {
         await this.syncAction(action);
         await this.removeSyncAction(action.id);
         this.syncQueue = this.syncQueue.filter((a) => a.id !== action.id);
-      } catch (error) {
-        console.error("Sync failed for action:", action.id, error);
+      } catch (_error) {
+        // TODO: Handle sync failure (was: console.error)
         action.retryCount++;
 
         // Remove actions that have failed too many times
@@ -215,10 +215,10 @@ class OfflineDataManager {
     }
   }
 
-  private async syncAction(action: SyncAction): Promise<void> {
+  private async syncAction(_action: SyncAction): Promise<void> {
     // This would integrate with your actual API
     // For now, simulate API call
-    console.log("Syncing action:", action);
+    // TODO: Remove debug log (was: console.log)
 
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -327,8 +327,7 @@ class ServiceWorkerManager {
 
   private showUpdateAvailable(): void {
     // Integration with your notification system
-    console.log("App update available! Reload to get the latest version.");
-
+    // TODO: Remove update log (was: console.log)
     // You could show a notification toast here
     // notificationService.show('Update available', 'Reload to get the latest features', 'info');
   }

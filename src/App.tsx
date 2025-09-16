@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
+
 import "./App.css";
 import { DevModeProvider } from "./app/dev-mode-store.tsx";
 import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { useTheme } from "./hooks/useTheme";
 import { testDatabaseConnection } from "./lib/database-helpers";
-import { AppRouter } from "./routes/AppRouter";
+import { initRoutePrefetch } from "./routes/prefetch";
+import { DataRouterApp } from "./routes";
+import { AppGrid } from "./components/AppGrid";
+
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 import { initWebVitals } from "./utils/performance/webVitals";
 /**
  * App Component
@@ -32,6 +37,8 @@ function App() {
           "BoxCall: Database connection failed - check your .env.local configuration"
         );
       }
+      // Initialize idle prefetching for popular routes
+      initRoutePrefetch();
     };
     initBoxCall();
   }, []);
@@ -41,7 +48,9 @@ function App() {
       <DevModeProvider>
         <div className="App">
           <DevHealthCheck />
-          <AppRouter />
+          <AppGrid>
+            <DataRouterApp />
+          </AppGrid>
           {showRQDevtools && (
             <ReactQueryDevtools initialIsOpen={false} position="bottom" />
           )}

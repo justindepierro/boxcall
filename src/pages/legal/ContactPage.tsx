@@ -1,7 +1,8 @@
 import React from "react";
-import { Icon } from "../../components/ui/Icon/Icon";
-import { Button } from "../../components/ui";
+
 import { Typography } from "../../components/design-system/Typography";
+import { Button } from "../../components/ui";
+import { Icon } from "../../components/ui/Icon/Icon";
 
 export const ContactPage: React.FC = () => {
   return (

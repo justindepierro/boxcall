@@ -4,9 +4,10 @@
  * Handles import/export of plays and practice scripts with modular architecture
  */
 
-import { CSVImportProcessor } from "./csv/CSVImportProcessor";
 import { CSVExporter } from "./csv/CSVExporter";
+import { CSVImportProcessor } from "./csv/CSVImportProcessor";
 import { CSVPlayConverter } from "./csv/CSVPlayConverter";
+
 import type {
   CSVParseResult,
   CSVImportResult,
@@ -73,11 +74,64 @@ export class CSVService {
   }
 
   /**
-   * Generate sample CSV template
+   * Generate a sample CSV template users can download
+   * Matches the headers expected by the importer/exporter
    */
   static generateSampleCSV(): string {
-    return CSVExporter.generateSampleCSV();
+    const headers = [
+      "formation",
+      "play_name",
+      "one_word_play",
+      "p_type",
+      "personnel",
+      "f_type",
+      "protection",
+      "pref_down",
+      "pref_dis",
+      "r_str",
+      "p_str",
+    ];
+
+    const sampleRows = [
+      [
+        "Shotgun",
+        "Mesh",
+        "Mesh",
+        "Pass",
+        "11",
+        "Spread",
+        "Slide Left",
+        "2nd",
+        "Medium",
+        "Right",
+        "Right",
+      ],
+      [
+        "I-Formation",
+        "Power O",
+        "Power",
+        "Run",
+        "21",
+        "Power",
+        "N/A",
+        "1st",
+        "Short",
+        "Left",
+        "Left",
+      ],
+    ];
+
+    const escape = (v: string) =>
+      v.includes(",") || v.includes('"') ? `"${v.replace(/"/g, '""')}"` : v;
+
+    const lines = [headers.join(",")];
+    for (const row of sampleRows) {
+      lines.push(row.map(escape).join(","));
+    }
+    return lines.join("\n");
   }
+
+  // ...existing code...
 }
 
 // Export types for external use

@@ -4,8 +4,9 @@
  * Contains realistic test profiles for different user roles with full data.
  */
 
-import type { DevProfileConfig } from "../../../types/dev-profiles";
 import { DevProfilePermissionService } from "../DevProfilePermissionService";
+
+import type { DevProfileConfig } from "../../../types/dev-profiles";
 
 const permissionService = DevProfilePermissionService.getInstance();
 

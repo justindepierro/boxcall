@@ -1,3 +1,5 @@
+import React, { lazy } from "react";
+
 import { Typography } from "../design-system/Typography";
 /**
  * Lazy Route Components
@@ -5,7 +7,6 @@ import { Typography } from "../design-system/Typography";
  * Implements route-based code splitting to dramatically reduce initial bundle size
  * Each page component is loaded only when the user navigates to it
  */
-import React, { lazy } from "react";
 import { Button } from "../ui";
 
 // Lazy load all major page components
@@ -14,10 +15,8 @@ export const LazyDashboardPage = lazy(
 );
 
 // Calendar Shell (final) – load direct page wrapper (legacy shims removed)
-export const LazyCalendarShellPage = lazy(() =>
-  import("../../pages/CalendarShellPage").then((m) => ({
-    default: m.CalendarShellPage,
-  }))
+export const LazyCalendarShellPage = lazy(
+  () => import("../../pages/CalendarShellPage")
 );
 
 export const LazyLoginPage = lazy(() => import("../../pages/LoginPage"));
@@ -26,6 +25,10 @@ export const LazyProfilePage = lazy(() =>
   import("../../pages/ProfilePage").then((module) => ({
     default: module.ProfilePage,
   }))
+);
+
+export const LazyCollaborativeDemoPage = lazy(
+  () => import("../../pages/CollaborativeDemoPage")
 );
 
 export const LazyTeamBulletin = lazy(() => import("../../pages/TeamBulletin"));
@@ -55,12 +58,11 @@ export const LazyBoxCall = lazy(() => import("../../pages/BoxCall"));
 export const LazyPlaybookPage = lazy(() => import("../../pages/Playbook"));
 
 export const LazyTeamSettings = lazy(() => import("../../pages/TeamSettings"));
-
-export const LazyAboutPage = lazy(() =>
-  import("../../pages/legal/AboutPage").then((module) => ({
-    default: module.AboutPage,
-  }))
+export const LazyAnalyticsPage = lazy(
+  () => import("../../pages/AnalyticsPage")
 );
+
+export const LazyAboutPage = lazy(() => import("../../pages/legal/AboutPage"));
 
 export const LazyPrivacyPolicyPage = lazy(() =>
   import("../../pages/legal/PrivacyPolicyPage").then((module) => ({

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { useAuth } from "../app/auth-store";
-import { usePermissions } from "../hooks/usePermissions";
 import { Typography } from "../components/design-system";
-import { Icon } from "../components/ui/Icon/Icon";
 import { Button } from "../components/ui/Button/Button";
+import { Icon } from "../components/ui/Icon/Icon";
+import { usePermissions } from "../hooks/usePermissions";
 import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";
+import { ROUTES, teamRoutes } from "../routes/paths";
 
 /**
  * Create Team Page
@@ -808,8 +810,8 @@ export const CreateTeam: React.FC = () => {
 
                 <Button
                   onClick={() => {
-                    console.log("🏃‍♂️ Redirecting to Coach Account signup");
-                    navigate("/create-coach-account");
+                    console.info("🏃‍♂️ Redirecting to Coach Account signup");
+                    navigate(ROUTES.CREATE_COACH_ACCOUNT);
                   }}
                   fullWidth
                   variant="primary"
@@ -846,7 +848,9 @@ export const CreateTeam: React.FC = () => {
             <div className="flex gap-3 justify-center">
               <Button
                 onClick={() =>
-                  navigate(`/team/${createdTeamId || "unknown"}/bulletin`)
+                  navigate(
+                    teamRoutes.bulletin(String(createdTeamId || "unknown"))
+                  )
                 }
                 variant="primary"
                 size="sm"
@@ -854,7 +858,7 @@ export const CreateTeam: React.FC = () => {
                 Go to Team Dashboard
               </Button>
               <Button
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate(ROUTES.DASHBOARD)}
                 variant="ghost"
                 size="sm"
               >

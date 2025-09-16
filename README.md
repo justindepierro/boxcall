@@ -262,8 +262,7 @@ npm run predev
 # Start optimized development environment
 npm run dev
 
-# Launch Storybook design system
-npm run storybook
+# (Storybook planned) Design system stories will be reintroduced after cleanup
 
 # Run comprehensive quality checks
 npm run quality:check
@@ -271,6 +270,14 @@ npm run quality:check
 # Analyze bundle size and performance
 npm run analyze
 ```
+
+### Development without Supabase (dev fallback)
+
+- If `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are not set in development, the app starts with a safe stub client:
+  - Route loaders treat you as unauthenticated and redirect to the login page.
+  - Auth/data operations return a "Supabase not configured" error.
+  - This lets you work on UI, routing, and styling without backend secrets.
+- In production builds, missing Supabase env variables cause a hard failure (by design).
 
 ## ⚡ **Performance & Quality Monitoring**
 
@@ -330,7 +337,7 @@ Planned extensions: per-route LCP/INP thresholds, image weight budgets, PDF bund
 - **Enterprise workspace optimization** with industry-leading practices
 - **Professional jade & navy color palette** for coaching interfaces
 - **Typography hierarchy**: Bebas Neue (display), Inter (interface), IBM Plex Mono (data)
-- **Storybook documentation** with component-driven development
+- Component documentation maintained in code and docs (Storybook planned)
 - **Tailwind CSS integration** with custom BoxCall design tokens
 - **Performance monitoring** with real-time Web Vitals tracking
 
@@ -467,7 +474,7 @@ WARNING: You are currently running a version of TypeScript which is not official
   - **30% opacity** when collapsed and idle (stays out of your way)
   - **95% opacity** when actively using, hovering, or expanded
   - **Smooth transitions** between states for polished UX
-- **Quick access** to Storybook, Bundle Analyzer, Web Vitals test
+- **Quick access** to Bundle Analyzer and Web Vitals test
 - **Debug console** button for instant troubleshooting
 - **Collapsible interface** with expand/collapse controls
 - **Hide when not needed**, restore with floating button
@@ -476,7 +483,6 @@ WARNING: You are currently running a version of TypeScript which is not official
 
 - Click **🛠️** button (top-right) to access all dev tools
 - **Performance Monitor** independently controllable
-- **One-click access** to Storybook (`npm run storybook`)
 - **Bundle analysis** with visual reports (`npm run analyze`)
 - **Web Vitals testing** page for performance validation
 
@@ -539,7 +545,7 @@ Proprietary – All rights reserved.
 1. **Complete Trophy Shelf height alignment** for perfect stat box matching
 2. **Integrate achievement system** with real user data and backend
 3. **Expand dashboard components** with consistent design patterns
-4. **Complete Storybook component stories** with comprehensive documentation
+4. **Rebuild component stories** post-cleanup (replace deprecated ones)
 
 ### 📈 **Performance Targets** (Automated Monitoring)
 

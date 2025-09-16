@@ -5,6 +5,7 @@ import { globalIgnores } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import path from "node:path";
+import importPlugin from "eslint-plugin-import";
 import { noRawButtonRule } from "./scripts/eslint-rules/no-raw-button.js";
 import { noUnsafeWhiteRule } from "./scripts/eslint-rules/no-unsafe-white.js";
 import { noRadiusViolationsRule } from "./scripts/eslint-rules/no-radius-violations.js";
@@ -23,13 +24,58 @@ const configArray = [
       "archive/**",
       ".codemod-backups/",
       "*.log",
+      ".dependency-cruiser.cjs",
+      ".dependency-cruiser.js",
+      "scripts/**/*.mjs",
+      "scripts/**/*.cjs",
       "!shared/",
       "!shared/**/*.ts",
       "!shared/**/*.tsx",
     ],
   },
+  // Node scripts in JS/ESM: allow console and Node globals
   {
-    files: ["**/*.{ts,tsx}"],
+    files: ["scripts/**/*.{js,mjs,cjs}"],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "module",
+      globals: globals.node,
+    },
+    rules: {
+      "no-console": "off",
+    },
+  },
+  // Node scripts written in TypeScript: parse with TS and allow console
+  {
+    files: ["scripts/**/*.ts"],
+    extends: [js.configs.recommended, tseslint.configs.recommended],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "module",
+      globals: globals.node,
+    },
+    rules: {
+      "no-console": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+    },
+  },
+  {
+    files: [
+      "src/**/*.{ts,tsx}",
+      "shared/**/*.{ts,tsx}",
+      "vite.config.ts",
+      "vitest.config.ts",
+    ],
+    plugins: {
+      import: importPlugin,
+    },
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
@@ -41,6 +87,36 @@ const configArray = [
       globals: globals.browser,
     },
     rules: {
+      // Disallow noisy console.log; allow warn/error only
+      "no-console": ["error", { allow: ["warn", "error", "info", "debug"] }],
+      // Enforce barrel imports for services and block deep paths
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["src/services/*", "../services/*", "../../services/*"],
+              message:
+                "Import services via the barrel alias @services/* to keep a single source of truth.",
+            },
+          ],
+        },
+      ],
+      // Block components importing from routes/* (except whitelisted utils)
+      "import/no-restricted-paths": [
+        "error",
+        {
+          zones: [
+            {
+              target: "src/components",
+              from: "src/routes",
+              except: ["src/navigation/prefetch-utils.ts"],
+              message:
+                "UI components should not import from routes/*. Extract shared utilities under src/navigation/ or features.",
+            },
+          ],
+        },
+      ],
       // Custom rule registrations
       "no-raw-button/no-raw-button": [
         "error",
@@ -110,6 +186,18 @@ const configArray = [
       "boxcall-style/no-raw-gray-text": "error",
       "boxcall-style/no-raw-heading-utilities": "error",
       "boxcall-style/no-raw-emoji": "error",
+    },
+  },
+  // Relax type strictness in tests
+  {
+    files: [
+      "**/*.test.ts",
+      "**/*.test.tsx",
+      "**/__tests__/**/*.ts",
+      "**/__tests__/**/*.tsx",
+    ],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
   // Plugin injection for custom rule namespace
@@ -427,5 +515,7 @@ if (RELAXED) {
     },
   });
 }
+
+// (No final override block; scripts/**/*.ts are handled above)
 
 export default tseslint.config(configArray);

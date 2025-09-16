@@ -3,7 +3,7 @@ import { useDiagramEditor } from "../context";
 import Icon from "../../../ui/Icon/Icon";
 import { Button } from "../../../ui/Button";
 import { Tooltip } from "../../../ui/Tooltip/Tooltip";
-import { UserPreferencesService } from "../../../../services/userPreferencesService";
+import { UserPreferencesService } from "@services/userPreferencesService";
 
 export const ToolPalette: React.FC = () => {
   const { state, dispatch } = useDiagramEditor();

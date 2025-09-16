@@ -4,10 +4,4 @@
  * Commonly used icon components loaded from convenience.tsx
  */
 
-export {
-  PDFIcon,
-  CalendarIcon,
-  ClockIcon,
-  TeamIcon,
-  SettingsIcon,
-} from "./convenience";
+// No common icons exported; convenience.tsx is empty.

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
@@ -32,7 +33,7 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = ({ teamId }) => {
         variant="primary"
         size="sm"
         fullWidth
-        onClick={() => console.log("achievements.help.click", { teamId })}
+        onClick={() => console.info("achievements.help.click", { teamId })}
       >
         Learn how achievements work
       </Button>

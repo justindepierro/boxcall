@@ -2,16 +2,23 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",
+    "resolveJsonModule": true,
     "useDefineForClassFields": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"],
     "module": "ESNext",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["vitest", "node"],
+    "types": [
+      "vitest",
+      "node",
+      "@testing-library/react",
+      "@testing-library/jest-dom"
+    ],
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
+    /* Node module resolution for dynamic imports and .d.ts module declarations */
+    "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
@@ -27,15 +34,28 @@
     "baseUrl": "./",
     "paths": {
       "@app/*": ["src/app/*"],
+      "@adapters/*": ["src/adapters/*"],
       "@components/*": ["src/components/*"],
+      "@data/*": ["src/data/*"],
+      "@domain/*": ["src/domain/*"],
+      "@features/*": ["src/features/*"],
       "@hooks/*": ["src/hooks/*"],
+      "@infra/*": ["src/infra/*"],
       "@lib/*": ["src/lib/*"],
       "@state/*": ["src/state/*"],
       "@styles/*": ["src/styles/*"],
+      "@services": ["src/services/index.ts"],
+      "@services/*": ["src/services/*"],
       "@routes/*": ["src/routes/*"],
       "@utils/*": ["src/utils/*"],
-      "@design-system/*": ["src/design-system/*"]
+      "@design-system/*": ["src/design-system/*"],
+      "@types/*": ["src/types/*"],
+      "@telemetry/*": ["src/telemetry/*"]
     }
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "src/components/ui/Icon/*.ts",
+    "src/components/ui/Icon/*.d.ts"
+  ]
 }

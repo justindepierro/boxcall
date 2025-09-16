@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+
 import { useUI } from "../app/store";
 /**
  * Error handler hook for consistent error handling across the application

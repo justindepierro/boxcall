@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+
 import {
   canEditEvent,
   canCreateEvent,
@@ -6,6 +7,7 @@ import {
   requiresRSVP,
   canEditRecurringInstance,
 } from "./rules";
+
 import type { CalendarEvent } from "./types";
 
 const baseEvent: CalendarEvent = {

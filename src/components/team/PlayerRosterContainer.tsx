@@ -1,9 +1,12 @@
 import React from "react";
+
 import { useRoster } from "../../hooks/useRoster";
-import { PlayerList } from "./PlayerList";
 import { Button } from "../ui";
+
+import { PlayerList } from "./PlayerList";
+
+import type { RosterPlayerView } from "@services/rosterService";
 import type { TeamPlayer } from "../../types/team-management";
-import type { RosterPlayerView } from "../../services/rosterService";
 
 type ExtendedRosterPlayer = RosterPlayerView & {
   first_name?: string;
@@ -67,9 +70,9 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
   return (
     <PlayerList
       players={mapped}
-      onEditPlayer={(p) => console.log("edit player", p.id)}
-      onDeletePlayer={(id) => console.log("delete player", id)}
-      onAddPlayer={() => console.log("add player")}
+      onEditPlayer={(p) => console.info("edit player", p.id)}
+      onDeletePlayer={(id) => console.info("delete player", id)}
+      onAddPlayer={() => console.info("add player")}
     />
   );
 };

@@ -1,0 +1,2603 @@
+{
+  "eslint-disable": [
+    {
+      "file": "src/contexts/ConfirmContext.tsx",
+      "line": 1,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "src/contexts/PlaybookContext.tsx",
+      "line": 1,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "src/contexts/UndoQueueContext.tsx",
+      "line": 1,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "src/hooks/useRoles.tsx",
+      "line": 11,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "src/telemetry/context.tsx",
+      "line": 2,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "src/services/pdf/styles.ts",
+      "line": 10,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "src/components/calendar/hooks/useCalendarNavigation.ts",
+      "line": 40,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "src/components/calendar/hooks/useCalendarUrlState.ts",
+      "line": 64,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 1,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "src/components/ui/Button/Button.tsx",
+      "line": 285,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "src/components/ui/Sidebar/Sidebar.legacy.backup.tsx",
+      "line": 100,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "scripts/arch-summary.ts",
+      "line": 54,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "scripts/code-hygiene-scan.ts",
+      "line": 12,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "scripts/code-hygiene-scan.ts",
+      "line": 12,
+      "match": "eslint-disable"
+    },
+    {
+      "file": "scripts/code-hygiene-scan.ts",
+      "line": 65,
+      "match": "eslint-disable"
+    }
+  ],
+  "console.log": [
+    {
+      "file": "src/design-system/utils.ts",
+      "line": 153,
+      "match": "console.log("
+    },
+    {
+      "file": "src/dev/contrastDebug.ts",
+      "line": 287,
+      "match": "console.log("
+    },
+    {
+      "file": "src/dev/contrastDebug.ts",
+      "line": 289,
+      "match": "console.log("
+    },
+    {
+      "file": "src/dev/contrastDebug.ts",
+      "line": 291,
+      "match": "console.log("
+    },
+    {
+      "file": "src/pages/CreateCoachAccount.tsx",
+      "line": 141,
+      "match": "console.log("
+    },
+    {
+      "file": "src/pages/CreateCoachAccount.tsx",
+      "line": 144,
+      "match": "console.log("
+    },
+    {
+      "file": "src/pages/CreateTeam.tsx",
+      "line": 813,
+      "match": "console.log("
+    },
+    {
+      "file": "src/pages/JoinTeam.tsx",
+      "line": 138,
+      "match": "console.log("
+    },
+    {
+      "file": "src/pages/JoinTeam.tsx",
+      "line": 154,
+      "match": "console.log("
+    },
+    {
+      "file": "src/pages/JoinTeam.tsx",
+      "line": 176,
+      "match": "console.log("
+    },
+    {
+      "file": "src/pages/JoinTeam.tsx",
+      "line": 181,
+      "match": "console.log("
+    },
+    {
+      "file": "src/pages/TeamBulletin.tsx",
+      "line": 79,
+      "match": "console.log("
+    },
+    {
+      "file": "src/pages/TeamBulletin.tsx",
+      "line": 86,
+      "match": "console.log("
+    },
+    {
+      "file": "src/scripts/validate-theme-contrast.ts",
+      "line": 93,
+      "match": "console.log("
+    },
+    {
+      "file": "src/scripts/validate-theme-contrast.ts",
+      "line": 97,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/achievementService.ts",
+      "line": 47,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/achievementService.ts",
+      "line": 53,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/achievementService.ts",
+      "line": 60,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/achievementService.ts",
+      "line": 72,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/achievementService.ts",
+      "line": 92,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/achievementService.ts",
+      "line": 295,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dashboardService.ts",
+      "line": 188,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 94,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 107,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 182,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 210,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 263,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 271,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 303,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 337,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 360,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 390,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 502,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 543,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 719,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 724,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 729,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 738,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 743,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 748,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 954,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 982,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/playsService.ts",
+      "line": 232,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/playsService.ts",
+      "line": 247,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/playsService.ts",
+      "line": 254,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/playsService.ts",
+      "line": 281,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/practiceService.ts",
+      "line": 546,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/realTimeCollaboration.ts",
+      "line": 275,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/rsvpService.ts",
+      "line": 44,
+      "match": "console.log("
+    },
+    {
+      "file": "src/stores/dashboardStore.ts",
+      "line": 595,
+      "match": "console.log("
+    },
+    {
+      "file": "src/stores/dashboardStore.ts",
+      "line": 783,
+      "match": "console.log("
+    },
+    {
+      "file": "src/stores/dashboardStore.ts",
+      "line": 797,
+      "match": "console.log("
+    },
+    {
+      "file": "src/themes/build-themes.ts",
+      "line": 61,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 14,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 25,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 28,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 30,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 35,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 36,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 48,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 61,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 62,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 63,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 64,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 66,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 78,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 100,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 101,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 102,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 103,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 114,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 115,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 118,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/authDebug.ts",
+      "line": 121,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/bundleOptimization.ts",
+      "line": 73,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/bundleOptimization.ts",
+      "line": 78,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/bundleOptimization.ts",
+      "line": 83,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/bundleOptimization.ts",
+      "line": 124,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/bundleOptimization.ts",
+      "line": 180,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/bundleOptimization.ts",
+      "line": 211,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 11,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 22,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 25,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 27,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 30,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 31,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 40,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 49,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 57,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 71,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 83,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 85,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 100,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/databaseDebug.ts",
+      "line": 158,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/errorHandler.ts",
+      "line": 182,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/navigation.ts",
+      "line": 26,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/navigation.ts",
+      "line": 79,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/performanceMonitoring.ts",
+      "line": 334,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/playbook-search-tests.ts",
+      "line": 132,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/playbook-search-tests.ts",
+      "line": 141,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/playbook-search-tests.ts",
+      "line": 156,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/playbook-search-tests.ts",
+      "line": 165,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/playbook-test-validation.ts",
+      "line": 77,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/playbook-test-validation.ts",
+      "line": 78,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/playbook-test-validation.ts",
+      "line": 79,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/playbook-test-validation.ts",
+      "line": 80,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/playbook-test-validation.ts",
+      "line": 81,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/playbook-test-validation.ts",
+      "line": 82,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/routeUtils.ts",
+      "line": 68,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/auth/UserMenu.tsx",
+      "line": 95,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/auth/UserMenu.tsx",
+      "line": 107,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/collaboration/CollaborativeWidget.tsx",
+      "line": 77,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/collaboration/CollaborativeWidget.tsx",
+      "line": 86,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/collaboration/CollaborativeWidget.tsx",
+      "line": 110,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/AdaptiveChart.tsx",
+      "line": 119,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/DashboardCustomizationPanel.tsx",
+      "line": 209,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/DashboardCustomizationPanel.tsx",
+      "line": 223,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/PersonalCalendar.tsx",
+      "line": 57,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/UnifiedSettingsPanel.tsx",
+      "line": 66,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/UnifiedSettingsPanel.tsx",
+      "line": 90,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/UnifiedSettingsPanel.tsx",
+      "line": 116,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/debug/TestModal.tsx",
+      "line": 8,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/debug/TestModal.tsx",
+      "line": 14,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/debug/TestModal.tsx",
+      "line": 26,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/playbook/PlayGrid.tsx",
+      "line": 122,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/playbook/PlayGrid.tsx",
+      "line": 144,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/playbook/PlayGrid.tsx",
+      "line": 145,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/playbook/PlayGrid.tsx",
+      "line": 146,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/playbook/PlayGrid.tsx",
+      "line": 149,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team/PlayerRosterContainer.tsx",
+      "line": 73,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team/PlayerRosterContainer.tsx",
+      "line": 74,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team/PlayerRosterContainer.tsx",
+      "line": 75,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/TeamCalendar.tsx",
+      "line": 102,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/TeamFeed.tsx",
+      "line": 191,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/TeamQuickActions.tsx",
+      "line": 38,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/TeamQuickActions.tsx",
+      "line": 46,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/TeamQuickActions.tsx",
+      "line": 62,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/TeamQuickActions.tsx",
+      "line": 70,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/TeamQuickActions.tsx",
+      "line": 87,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/TeamQuickActions.tsx",
+      "line": 95,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/TeamQuickActions.tsx",
+      "line": 103,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/TeamQuickActions.tsx",
+      "line": 111,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/TeamQuickActions.tsx",
+      "line": 120,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/TeamQuickActions.tsx",
+      "line": 128,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/TeamTrophyCase.tsx",
+      "line": 36,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/ui/ErrorBoundary.tsx",
+      "line": 70,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/messaging/MessagingService.ts",
+      "line": 161,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/messaging/MessagingService.ts",
+      "line": 456,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/dev-profiles/DevProfileService.ts",
+      "line": 309,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/rbac/RBACService.ts",
+      "line": 35,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/react-native/ReactNativePlatformService.ts",
+      "line": 190,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/react-native/ReactNativePlatformService.ts",
+      "line": 201,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/react-native/ReactNativePlatformService.ts",
+      "line": 230,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/react-native/ReactNativePlatformService.ts",
+      "line": 434,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/react-native/ReactNativePlatformService.ts",
+      "line": 444,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/react-native/ReactNativePlatformService.ts",
+      "line": 460,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/react-native/ReactNativePlatformService.ts",
+      "line": 468,
+      "match": "console.log("
+    },
+    {
+      "file": "src/services/react-native/ReactNativePlatformService.ts",
+      "line": 476,
+      "match": "console.log("
+    },
+    {
+      "file": "src/utils/performance/webVitals.ts",
+      "line": 36,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/playbook/CSVImport/CSVImportModal.tsx",
+      "line": 100,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/playbook/CSVImport/CSVImportModal.tsx",
+      "line": 106,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/playbook/CSVImport/CSVImportModal.tsx",
+      "line": 108,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/CoachQuickActions.tsx",
+      "line": 21,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/CoachQuickActions.tsx",
+      "line": 30,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/CoachQuickActions.tsx",
+      "line": 39,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/CoachQuickActions.tsx",
+      "line": 48,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/CoachQuickActions.tsx",
+      "line": 57,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/CoachQuickActions.tsx",
+      "line": 66,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/CoachQuickActions.tsx",
+      "line": 75,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/CoachQuickActions.tsx",
+      "line": 84,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/FamilyQuickActions.tsx",
+      "line": 21,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/FamilyQuickActions.tsx",
+      "line": 30,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/FamilyQuickActions.tsx",
+      "line": 39,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/FamilyQuickActions.tsx",
+      "line": 48,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/FamilyQuickActions.tsx",
+      "line": 57,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/FamilyQuickActions.tsx",
+      "line": 66,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/FamilyQuickActions.tsx",
+      "line": 75,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/PlayerQuickActions.tsx",
+      "line": 21,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/PlayerQuickActions.tsx",
+      "line": 30,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/PlayerQuickActions.tsx",
+      "line": 39,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/PlayerQuickActions.tsx",
+      "line": 48,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/PlayerQuickActions.tsx",
+      "line": 57,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/dashboard/QuickActions/PlayerQuickActions.tsx",
+      "line": 66,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 99,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 103,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 127,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 130,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 140,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 153,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 157,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 164,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 404,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 423,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 427,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 433,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 466,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 470,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/team-dashboard/layout/TeamBulletinRightPanel.tsx",
+      "line": 49,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/components/PracticePlannerHeader.tsx",
+      "line": 85,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/components/PracticePlannerHeader.tsx",
+      "line": 95,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/components/PracticePlannerHeader.tsx",
+      "line": 103,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/components/PracticePlannerHeader.tsx",
+      "line": 117,
+      "match": "console.log("
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/components/PracticePlannerHeader.tsx",
+      "line": 134,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/a11y_smoke_pages.ts",
+      "line": 169,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/a11y_smoke_pages.ts",
+      "line": 172,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/a11y_smoke_pages.ts",
+      "line": 173,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/backfill_duplicate_key.ts",
+      "line": 44,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/backfill_duplicate_key.ts",
+      "line": 48,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/backfill_duplicate_key.ts",
+      "line": 50,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/backfill_duplicate_key.ts",
+      "line": 70,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/backfill_duplicate_key_node.ts",
+      "line": 53,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/backfill_duplicate_key_node.ts",
+      "line": 62,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/backfill_duplicate_key_node.ts",
+      "line": 63,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/backfill_duplicate_key_node.ts",
+      "line": 65,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/backfill_duplicate_key_node.ts",
+      "line": 89,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/backfill_duplicate_key_node.ts",
+      "line": 95,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 60,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 64,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 79,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 93,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 95,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 96,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 97,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 98,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 108,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 109,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 110,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 111,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 112,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 115,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 116,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 117,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 118,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 119,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 122,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 123,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 124,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 125,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 126,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 127,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 128,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 129,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 130,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 133,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 136,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 137,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 138,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 145,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/create-test-roles.ts",
+      "line": 146,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/debug_play_search.ts",
+      "line": 37,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/debug_play_search.ts",
+      "line": 44,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/debug_play_search.ts",
+      "line": 52,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/debug_play_search.ts",
+      "line": 56,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/debug_play_search.ts",
+      "line": 64,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/docs_validate.ts",
+      "line": 47,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/duplicate_key_readiness.ts",
+      "line": 55,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/duplicate_key_readiness.ts",
+      "line": 56,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/duplicate_key_readiness.ts",
+      "line": 57,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/duplicate_key_readiness.ts",
+      "line": 58,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/duplicate_key_readiness.ts",
+      "line": 59,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/duplicate_key_readiness.ts",
+      "line": 62,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/duplicate_key_readiness.ts",
+      "line": 65,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/error-detection.ts",
+      "line": 24,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/error-detection.ts",
+      "line": 163,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/error-detection.ts",
+      "line": 181,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/error-detection.ts",
+      "line": 198,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 123,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 124,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 128,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 131,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 139,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 145,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 149,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 160,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 161,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 162,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 163,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 164,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 174,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 175,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 186,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 197,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 198,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 206,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 210,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 211,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 212,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 218,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 223,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 227,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/events_report.ts",
+      "line": 228,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/generate-tokens-css.ts",
+      "line": 9,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/migration_010_counts.ts",
+      "line": 143,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/migration_010_counts.ts",
+      "line": 144,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/migration_010_counts.ts",
+      "line": 145,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/migration_010_counts.ts",
+      "line": 146,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/migration_010_counts.ts",
+      "line": 147,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/migration_010_counts.ts",
+      "line": 148,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/migration_010_counts.ts",
+      "line": 151,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/migration_010_counts.ts",
+      "line": 152,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/migration_010_counts.ts",
+      "line": 153,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/migration_010_verify.ts",
+      "line": 77,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/migration_010_verify.ts",
+      "line": 82,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/predev-check.ts",
+      "line": 36,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/release-version.ts",
+      "line": 47,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/search_plays.ts",
+      "line": 52,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/search_plays.ts",
+      "line": 61,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify-generated-themes.ts",
+      "line": 27,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify-generated-tokens.ts",
+      "line": 54,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify-generated-tokens.ts",
+      "line": 63,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify_canonical_play_writes.ts",
+      "line": 64,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify_canonical_play_writes.ts",
+      "line": 65,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify_canonical_play_writes.ts",
+      "line": 66,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify_duplicate_key_health.ts",
+      "line": 63,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify_duplicate_key_health.ts",
+      "line": 64,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify_duplicate_key_health.ts",
+      "line": 65,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify_duplicate_key_health.ts",
+      "line": 66,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify_duplicate_key_health.ts",
+      "line": 68,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify_duplicate_key_health.ts",
+      "line": 72,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify_duplicate_key_health.ts",
+      "line": 74,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/verify_duplicate_key_health.ts",
+      "line": 81,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 29,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 60,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 89,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 137,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 153,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 156,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 160,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 163,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 164,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 168,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 172,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 175,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 178,
+      "match": "console.log("
+    },
+    {
+      "file": "scripts/vscode-parity-check.ts",
+      "line": 183,
+      "match": "console.log("
+    }
+  ],
+  "TODO": [
+    {
+      "file": "src/hooks/useAdaptiveDashboard.ts",
+      "line": 215,
+      "match": "TODO"
+    },
+    {
+      "file": "src/hooks/usePermissions.ts",
+      "line": 24,
+      "match": "TODO"
+    },
+    {
+      "file": "src/hooks/usePermissions.ts",
+      "line": 25,
+      "match": "TODO"
+    },
+    {
+      "file": "src/pages/CreateCoachAccount.tsx",
+      "line": 140,
+      "match": "TODO"
+    },
+    {
+      "file": "src/pages/CreateTeam.tsx",
+      "line": 494,
+      "match": "TODO"
+    },
+    {
+      "file": "src/pages/CreateTeam.tsx",
+      "line": 624,
+      "match": "TODO"
+    },
+    {
+      "file": "src/pages/JoinTeam.tsx",
+      "line": 137,
+      "match": "TODO"
+    },
+    {
+      "file": "src/pages/JoinTeam.tsx",
+      "line": 153,
+      "match": "TODO"
+    },
+    {
+      "file": "src/pages/JoinTeam.tsx",
+      "line": 177,
+      "match": "TODO"
+    },
+    {
+      "file": "src/pages/JoinTeam.tsx",
+      "line": 182,
+      "match": "TODO"
+    },
+    {
+      "file": "src/pages/PlaybookPage.tsx",
+      "line": 17,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/achievementService.ts",
+      "line": 252,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/achievementService.ts",
+      "line": 256,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/achievementService.ts",
+      "line": 267,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/achievementService.ts",
+      "line": 280,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/achievementService.ts",
+      "line": 293,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/dashboardService.ts",
+      "line": 55,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/dashboardService.ts",
+      "line": 73,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/dashboardService.ts",
+      "line": 95,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/dashboardService.ts",
+      "line": 129,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/dashboardService.ts",
+      "line": 144,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/dashboardService.ts",
+      "line": 160,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/dashboardService.ts",
+      "line": 171,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/dashboardService.ts",
+      "line": 180,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/dashboardService.ts",
+      "line": 187,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/dashboardService.ts",
+      "line": 209,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/dashboardService.ts",
+      "line": 217,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/dataSyncService.ts",
+      "line": 405,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/offlineDataManager.ts",
+      "line": 206,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/offlineDataManager.ts",
+      "line": 221,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/offlineDataManager.ts",
+      "line": 330,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/realTimeCollaboration.ts",
+      "line": 131,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/realTimeCollaboration.ts",
+      "line": 162,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/rsvpService.ts",
+      "line": 13,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/rsvpService.ts",
+      "line": 43,
+      "match": "TODO"
+    },
+    {
+      "file": "src/stores/dashboardStore.ts",
+      "line": 407,
+      "match": "TODO"
+    },
+    {
+      "file": "src/stores/dashboardStore.ts",
+      "line": 408,
+      "match": "TODO"
+    },
+    {
+      "file": "src/stores/dashboardStore.ts",
+      "line": 588,
+      "match": "TODO"
+    },
+    {
+      "file": "src/stores/dashboardStore.ts",
+      "line": 594,
+      "match": "TODO"
+    },
+    {
+      "file": "src/stores/dashboardStore.ts",
+      "line": 610,
+      "match": "TODO"
+    },
+    {
+      "file": "src/stores/dashboardStore.ts",
+      "line": 614,
+      "match": "TODO"
+    },
+    {
+      "file": "src/types/play.ts",
+      "line": 113,
+      "match": "TODO"
+    },
+    {
+      "file": "src/utils/errorHandler.ts",
+      "line": 180,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/auth/AuthProvider.tsx",
+      "line": 24,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/auth/AuthProvider.tsx",
+      "line": 36,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/collaboration/CollaborationProvider.tsx",
+      "line": 112,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/collaboration/CollaborativeWidget.tsx",
+      "line": 49,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/collaboration/CollaborativeWidget.tsx",
+      "line": 54,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/collaboration/CollaborativeWidget.tsx",
+      "line": 76,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/collaboration/CollaborativeWidget.tsx",
+      "line": 85,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/collaboration/CollaborativeWidget.tsx",
+      "line": 109,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/dashboard/DashboardCustomizationPanel.tsx",
+      "line": 208,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/dashboard/DashboardCustomizationPanel.tsx",
+      "line": 222,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/dashboard/PersonalCalendar.tsx",
+      "line": 56,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/dashboard/PersonalProfile.tsx",
+      "line": 50,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/dashboard/ResponsiveDashboardLayout.tsx",
+      "line": 126,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/dashboard/TeamFeeds.tsx",
+      "line": 101,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/dashboard/TeamFeeds.tsx",
+      "line": 195,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/ui/ErrorBoundary.tsx",
+      "line": 60,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/profile/ProfileEditModal.tsx",
+      "line": 192,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/base/BaseService.ts",
+      "line": 116,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/base/BaseService.ts",
+      "line": 296,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/base/BaseService.ts",
+      "line": 304,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/base/BaseService.ts",
+      "line": 306,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/ExternalIntegrationService.ts",
+      "line": 451,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/ExternalIntegrationService.ts",
+      "line": 452,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/ExternalIntegrationService.ts",
+      "line": 520,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/ExternalIntegrationService.ts",
+      "line": 542,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/MobileWebBridgeService.ts",
+      "line": 108,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/MobileWebBridgeService.ts",
+      "line": 200,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/MobileWebBridgeService.ts",
+      "line": 228,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/MobileWebBridgeService.ts",
+      "line": 229,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/MobileWebBridgeService.ts",
+      "line": 247,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/MobileWebBridgeService.ts",
+      "line": 283,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/MobileWebBridgeService.ts",
+      "line": 287,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 464,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 467,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 470,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 473,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 476,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 489,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 492,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 495,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 498,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 501,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 512,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 531,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 548,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 570,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 590,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 596,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 600,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/RealTimeSyncService.ts",
+      "line": 649,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/UnifiedApiGateway.ts",
+      "line": 330,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/UnifiedApiGateway.ts",
+      "line": 362,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/UnifiedApiGateway.ts",
+      "line": 376,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/UnifiedApiGateway.ts",
+      "line": 380,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/index.ts",
+      "line": 63,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/index.ts",
+      "line": 88,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/cross-platform/index.ts",
+      "line": 117,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/pdf/usePracticeScriptPDF.ts",
+      "line": 61,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/pdf/usePracticeScriptPDF.ts",
+      "line": 85,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/pdf/usePracticeScriptPDF.ts",
+      "line": 108,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/performance/DatabasePerformanceMonitor.ts",
+      "line": 147,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/performance/DatabasePerformanceMonitor.ts",
+      "line": 148,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/rbac/RBACService.ts",
+      "line": 41,
+      "match": "TODO"
+    },
+    {
+      "file": "src/services/rbac/RBACService.ts",
+      "line": 69,
+      "match": "TODO"
+    },
+    {
+      "file": "src/utils/performance/webVitals.ts",
+      "line": 45,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 32,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 36,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 40,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 44,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 48,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 53,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 108,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 111,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 114,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 117,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 121,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 125,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 158,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 185,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/PracticePlannerModal/index.tsx",
+      "line": 201,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 421,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 423,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 427,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 434,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 466,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/practice/hooks/usePracticeState.ts",
+      "line": 470,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/ui/Logo/brand-assets.ts",
+      "line": 13,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/ui/Logo/brand-assets.ts",
+      "line": 19,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/ui/Table/Table.tsx",
+      "line": 221,
+      "match": "TODO"
+    },
+    {
+      "file": "src/components/playbook/diagram/context/DiagramEditorContext.ts",
+      "line": 5,
+      "match": "TODO"
+    },
+    {
+      "file": "scripts/a11y_smoke_pages.ts",
+      "line": 14,
+      "match": "TODO"
+    },
+    {
+      "file": "scripts/code-hygiene-scan.ts",
+      "line": 17,
+      "match": "TODO"
+    }
+  ],
+  "any type": [
+    {
+      "file": "src/domain/calendar/schema.ts",
+      "line": 47,
+      "match": ": any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 561,
+      "match": ": any"
+    },
+    {
+      "file": "scripts/migration_010_counts.ts",
+      "line": 93,
+      "match": ": any"
+    }
+  ],
+  "as any": [
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 460,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 468,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 508,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 509,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 512,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 516,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 526,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 527,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 531,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 538,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 539,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 548,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 552,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 1104,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 1123,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 1140,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 1146,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 1201,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 1202,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 1213,
+      "match": "as any"
+    },
+    {
+      "file": "src/components/playbook/diagram-v2/context.tsx",
+      "line": 1259,
+      "match": "as any"
+    },
+    {
+      "file": "scripts/code-hygiene-scan.ts",
+      "line": 13,
+      "match": "as any"
+    }
+  ],
+  "@ts-ignore": [
+    {
+      "file": "scripts/arch-summary.ts",
+      "line": 54,
+      "match": "@ts-ignore"
+    },
+    {
+      "file": "scripts/code-hygiene-scan.ts",
+      "line": 11,
+      "match": "@ts-ignore"
+    },
+    {
+      "file": "scripts/code-hygiene-scan.ts",
+      "line": 11,
+      "match": "@ts-ignore"
+    },
+    {
+      "file": "scripts/code-hygiene-scan.ts",
+      "line": 65,
+      "match": "@ts-ignore"
+    }
+  ],
+  "debugger": [
+    {
+      "file": "scripts/code-hygiene-scan.ts",
+      "line": 16,
+      "match": "debugger"
+    },
+    {
+      "file": "scripts/code-hygiene-scan.ts",
+      "line": 65,
+      "match": "debugger"
+    }
+  ],
+  "FIXME": [
+    {
+      "file": "scripts/code-hygiene-scan.ts",
+      "line": 18,
+      "match": "FIXME"
+    }
+  ]
+}

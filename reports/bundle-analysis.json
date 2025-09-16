@@ -1,0 +1,1473 @@
+{
+  "generatedAt": "2025-08-26T15:45:21.146Z",
+  "totals": {
+    "files": 53,
+    "rawBytes": 3382982,
+    "gzipBytes": 1034913
+  },
+  "topByGzip": [
+    {
+      "file": "pdfRenderer-97IrOfGv.js",
+      "ext": "js",
+      "chunk": "pdfRenderer",
+      "rawBytes": 1497612,
+      "gzipBytes": 499481,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": ["_vendor-BnSLzT9n.js"]
+    },
+    {
+      "file": "index-Cvj3iMS3.js",
+      "ext": "js",
+      "chunk": "index",
+      "rawBytes": 353559,
+      "gzipBytes": 106369,
+      "isEntry": true,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-97IrOfGv.js",
+        "_vendor-BnSLzT9n.js",
+        "_data-B5MJpUF0.js",
+        "_utils-B_qf3Ekr.js",
+        "_clsx-B-dksMZM.js"
+      ]
+    },
+    {
+      "file": "calendar-zZDkU4Pl.js",
+      "ext": "js",
+      "chunk": "calendar",
+      "rawBytes": 259398,
+      "gzipBytes": 76732,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": ["_vendor-BnSLzT9n.js"]
+    },
+    {
+      "file": "Playbook-DOqZ9-Jg.js",
+      "ext": "js",
+      "chunk": "Playbook",
+      "rawBytes": 218569,
+      "gzipBytes": 62129,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-97IrOfGv.js",
+        "_vendor-BnSLzT9n.js",
+        "index.html",
+        "_data-B5MJpUF0.js",
+        "_activationHelpers-C3UpqN6K.js",
+        "_Badge-M6YukZxd.js",
+        "_utils-B_qf3Ekr.js",
+        "_Tag-BMZqbimq.js",
+        "_clsx-B-dksMZM.js"
+      ]
+    },
+    {
+      "file": "data-B5MJpUF0.js",
+      "ext": "js",
+      "chunk": "data",
+      "rawBytes": 154673,
+      "gzipBytes": 42946,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": ["_vendor-BnSLzT9n.js", "_pdfRenderer-97IrOfGv.js"]
+    },
+    {
+      "file": "vendor-BnSLzT9n.js",
+      "ext": "js",
+      "chunk": "vendor",
+      "rawBytes": 90084,
+      "gzipBytes": 30582,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": []
+    },
+    {
+      "file": "dnd-Dnqr-4NY.js",
+      "ext": "js",
+      "chunk": "dnd",
+      "rawBytes": 97351,
+      "gzipBytes": 30421,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": ["_vendor-BnSLzT9n.js"]
+    },
+    {
+      "file": "jszip.min-C54T31TA.js",
+      "ext": "js",
+      "chunk": "jszip.min",
+      "rawBytes": 97072,
+      "gzipBytes": 30089,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": ["_vendor-BnSLzT9n.js", "_pdfRenderer-97IrOfGv.js"]
+    },
+    {
+      "file": "utils-B_qf3Ekr.js",
+      "ext": "js",
+      "chunk": "utils",
+      "rawBytes": 81712,
+      "gzipBytes": 23856,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": ["_vendor-BnSLzT9n.js"]
+    },
+    {
+      "file": "index-C0ZoWFuA.css",
+      "ext": "css",
+      "chunk": "index",
+      "rawBytes": 126128,
+      "gzipBytes": 21063,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": []
+    },
+    {
+      "file": "TeamBulletin-HnXH-uRq.js",
+      "ext": "js",
+      "chunk": "TeamBulletin",
+      "rawBytes": 44725,
+      "gzipBytes": 12010,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-97IrOfGv.js",
+        "_vendor-BnSLzT9n.js",
+        "index.html",
+        "_data-B5MJpUF0.js",
+        "_telemetry-Bkg_1a5t.js",
+        "_Modal-JNLIA8sI.js",
+        "_usePermissions-B_qq9LIq.js",
+        "_utils-B_qf3Ekr.js",
+        "_clsx-B-dksMZM.js"
+      ]
+    },
+    {
+      "file": "DashboardPage-CcQZUveD.js",
+      "ext": "js",
+      "chunk": "DashboardPage",
+      "rawBytes": 38191,
+      "gzipBytes": 9921,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-97IrOfGv.js",
+        "_vendor-BnSLzT9n.js",
+        "index.html",
+        "_mapping-BXj5E1qv.js",
+        "_Tag-BMZqbimq.js",
+        "_utils-B_qf3Ekr.js",
+        "_Badge-M6YukZxd.js",
+        "_data-B5MJpUF0.js",
+        "_clsx-B-dksMZM.js"
+      ]
+    },
+    {
+      "file": "CalendarShellPage-Vcia44BK.js",
+      "ext": "js",
+      "chunk": "CalendarShellPage",
+      "rawBytes": 29106,
+      "gzipBytes": 8563,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-97IrOfGv.js",
+        "_vendor-BnSLzT9n.js",
+        "index.html",
+        "_calendar-zZDkU4Pl.js",
+        "_mapping-BXj5E1qv.js",
+        "src/components/practice/PracticePlannerModal/index.tsx",
+        "_Tag-BMZqbimq.js",
+        "_data-B5MJpUF0.js",
+        "_utils-B_qf3Ekr.js",
+        "_clsx-B-dksMZM.js",
+        "_dnd-Dnqr-4NY.js",
+        "_LazyPDFExport-DNV-YDC9.js"
+      ]
+    },
+    {
+      "file": "index-DaCZW65r.js",
+      "ext": "js",
+      "chunk": "index",
+      "rawBytes": 29816,
+      "gzipBytes": 7858,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-97IrOfGv.js",
+        "_vendor-BnSLzT9n.js",
+        "index.html",
+        "_dnd-Dnqr-4NY.js",
+        "_Tag-BMZqbimq.js",
+        "_LazyPDFExport-DNV-YDC9.js",
+        "_data-B5MJpUF0.js",
+        "_utils-B_qf3Ekr.js",
+        "_clsx-B-dksMZM.js"
+      ]
+    },
+    {
+      "file": "PracticePlanner-CNM1X9QW.js",
+      "ext": "js",
+      "chunk": "PracticePlanner",
+      "rawBytes": 24814,
+      "gzipBytes": 6744,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-97IrOfGv.js",
+        "_dnd-Dnqr-4NY.js",
+        "_vendor-BnSLzT9n.js",
+        "index.html",
+        "_activationHelpers-C3UpqN6K.js",
+        "_LazyPDFExport-DNV-YDC9.js",
+        "_Modal-JNLIA8sI.js",
+        "_utils-B_qf3Ekr.js",
+        "_data-B5MJpUF0.js",
+        "_clsx-B-dksMZM.js"
+      ]
+    },
+    {
+      "file": "SystemIcons-BLMt1sT1.js",
+      "ext": "js",
+      "chunk": "SystemIcons",
+      "rawBytes": 27066,
+      "gzipBytes": 5880,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "index.html",
+        "_createLucideIcon-B03bYBwR.js",
+        "_pdfRenderer-97IrOfGv.js",
+        "_vendor-BnSLzT9n.js",
+        "_data-B5MJpUF0.js",
+        "_utils-B_qf3Ekr.js",
+        "_clsx-B-dksMZM.js"
+      ]
+    },
+    {
+      "file": "PracticePDFExportDialog-CnwVr2wy.js",
+      "ext": "js",
+      "chunk": "PracticePDFExportDialog",
+      "rawBytes": 17615,
+      "gzipBytes": 5465,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-97IrOfGv.js",
+        "_vendor-BnSLzT9n.js",
+        "_data-B5MJpUF0.js",
+        "index.html",
+        "_activationHelpers-C3UpqN6K.js",
+        "_Modal-JNLIA8sI.js"
+      ]
+    },
+    {
+      "file": "CreateTeam-ByLgKKdr.js",
+      "ext": "js",
+      "chunk": "CreateTeam",
+      "rawBytes": 20470,
+      "gzipBytes": 4782,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-97IrOfGv.js",
+        "_vendor-BnSLzT9n.js",
+        "index.html",
+        "_usePermissions-B_qq9LIq.js",
+        "_telemetry-Bkg_1a5t.js",
+        "_data-B5MJpUF0.js",
+        "_utils-B_qf3Ekr.js",
+        "_clsx-B-dksMZM.js"
+      ]
+    },
+    {
+      "file": "CreateCoachAccount-DhIKWECu.js",
+      "ext": "js",
+      "chunk": "CreateCoachAccount",
+      "rawBytes": 17706,
+      "gzipBytes": 3786,
+      "isEntry": false,
+      "isDynamicEntry": true,
+      "imports": [
+        "_pdfRenderer-97IrOfGv.js",
+        "_vendor-BnSLzT9n.js",
+        "index.html",
+        "_usePermissions-B_qq9LIq.js",
+        "_data-B5MJpUF0.js",
+        "_utils-B_qf3Ekr.js",
+        "_clsx-B-dksMZM.js"
+      ]
+    },
+    {
+      "file": "mapping-BXj5E1qv.js",
+      "ext": "js",
+      "chunk": "mapping",
+      "rawBytes": 11254,
+      "gzipBytes": 3456,
+      "isEntry": false,
+      "isDynamicEntry": false,
+      "imports": [
+        "_data-B5MJpUF0.js",
+        "_vendor-BnSLzT9n.js",
+        "_utils-B_qf3Ekr.js"
+      ]
+    }
+  ],
+  "byChunk": [
+    {
+      "chunk": "pdfRenderer",
+      "files": [
+        {
+          "file": "pdfRenderer-97IrOfGv.js",
+          "ext": "js",
+          "chunk": "pdfRenderer",
+          "rawBytes": 1497612,
+          "gzipBytes": 499481,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": ["_vendor-BnSLzT9n.js"]
+        }
+      ],
+      "rawBytes": 1497612,
+      "gzipBytes": 499481
+    },
+    {
+      "chunk": "index",
+      "files": [
+        {
+          "file": "index-Cvj3iMS3.js",
+          "ext": "js",
+          "chunk": "index",
+          "rawBytes": 353559,
+          "gzipBytes": 106369,
+          "isEntry": true,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        },
+        {
+          "file": "index-C0ZoWFuA.css",
+          "ext": "css",
+          "chunk": "index",
+          "rawBytes": 126128,
+          "gzipBytes": 21063,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": []
+        },
+        {
+          "file": "index-DaCZW65r.js",
+          "ext": "js",
+          "chunk": "index",
+          "rawBytes": 29816,
+          "gzipBytes": 7858,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_dnd-Dnqr-4NY.js",
+            "_Tag-BMZqbimq.js",
+            "_LazyPDFExport-DNV-YDC9.js",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 509503,
+      "gzipBytes": 135290
+    },
+    {
+      "chunk": "calendar",
+      "files": [
+        {
+          "file": "calendar-zZDkU4Pl.js",
+          "ext": "js",
+          "chunk": "calendar",
+          "rawBytes": 259398,
+          "gzipBytes": 76732,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": ["_vendor-BnSLzT9n.js"]
+        }
+      ],
+      "rawBytes": 259398,
+      "gzipBytes": 76732
+    },
+    {
+      "chunk": "Playbook",
+      "files": [
+        {
+          "file": "Playbook-DOqZ9-Jg.js",
+          "ext": "js",
+          "chunk": "Playbook",
+          "rawBytes": 218569,
+          "gzipBytes": 62129,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_activationHelpers-C3UpqN6K.js",
+            "_Badge-M6YukZxd.js",
+            "_utils-B_qf3Ekr.js",
+            "_Tag-BMZqbimq.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 218569,
+      "gzipBytes": 62129
+    },
+    {
+      "chunk": "data",
+      "files": [
+        {
+          "file": "data-B5MJpUF0.js",
+          "ext": "js",
+          "chunk": "data",
+          "rawBytes": 154673,
+          "gzipBytes": 42946,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": ["_vendor-BnSLzT9n.js", "_pdfRenderer-97IrOfGv.js"]
+        }
+      ],
+      "rawBytes": 154673,
+      "gzipBytes": 42946
+    },
+    {
+      "chunk": "vendor",
+      "files": [
+        {
+          "file": "vendor-BnSLzT9n.js",
+          "ext": "js",
+          "chunk": "vendor",
+          "rawBytes": 90084,
+          "gzipBytes": 30582,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": []
+        }
+      ],
+      "rawBytes": 90084,
+      "gzipBytes": 30582
+    },
+    {
+      "chunk": "dnd",
+      "files": [
+        {
+          "file": "dnd-Dnqr-4NY.js",
+          "ext": "js",
+          "chunk": "dnd",
+          "rawBytes": 97351,
+          "gzipBytes": 30421,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": ["_vendor-BnSLzT9n.js"]
+        }
+      ],
+      "rawBytes": 97351,
+      "gzipBytes": 30421
+    },
+    {
+      "chunk": "jszip.min",
+      "files": [
+        {
+          "file": "jszip.min-C54T31TA.js",
+          "ext": "js",
+          "chunk": "jszip.min",
+          "rawBytes": 97072,
+          "gzipBytes": 30089,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": ["_vendor-BnSLzT9n.js", "_pdfRenderer-97IrOfGv.js"]
+        }
+      ],
+      "rawBytes": 97072,
+      "gzipBytes": 30089
+    },
+    {
+      "chunk": "utils",
+      "files": [
+        {
+          "file": "utils-B_qf3Ekr.js",
+          "ext": "js",
+          "chunk": "utils",
+          "rawBytes": 81712,
+          "gzipBytes": 23856,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": ["_vendor-BnSLzT9n.js"]
+        }
+      ],
+      "rawBytes": 81712,
+      "gzipBytes": 23856
+    },
+    {
+      "chunk": "TeamBulletin",
+      "files": [
+        {
+          "file": "TeamBulletin-HnXH-uRq.js",
+          "ext": "js",
+          "chunk": "TeamBulletin",
+          "rawBytes": 44725,
+          "gzipBytes": 12010,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_telemetry-Bkg_1a5t.js",
+            "_Modal-JNLIA8sI.js",
+            "_usePermissions-B_qq9LIq.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 44725,
+      "gzipBytes": 12010
+    },
+    {
+      "chunk": "DashboardPage",
+      "files": [
+        {
+          "file": "DashboardPage-CcQZUveD.js",
+          "ext": "js",
+          "chunk": "DashboardPage",
+          "rawBytes": 38191,
+          "gzipBytes": 9921,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_mapping-BXj5E1qv.js",
+            "_Tag-BMZqbimq.js",
+            "_utils-B_qf3Ekr.js",
+            "_Badge-M6YukZxd.js",
+            "_data-B5MJpUF0.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 38191,
+      "gzipBytes": 9921
+    },
+    {
+      "chunk": "CalendarShellPage",
+      "files": [
+        {
+          "file": "CalendarShellPage-Vcia44BK.js",
+          "ext": "js",
+          "chunk": "CalendarShellPage",
+          "rawBytes": 29106,
+          "gzipBytes": 8563,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_calendar-zZDkU4Pl.js",
+            "_mapping-BXj5E1qv.js",
+            "src/components/practice/PracticePlannerModal/index.tsx",
+            "_Tag-BMZqbimq.js",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js",
+            "_dnd-Dnqr-4NY.js",
+            "_LazyPDFExport-DNV-YDC9.js"
+          ]
+        },
+        {
+          "file": "CalendarShellPage-C0_tWXi1.css",
+          "ext": "css",
+          "chunk": "CalendarShellPage",
+          "rawBytes": 95,
+          "gzipBytes": 109,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": []
+        }
+      ],
+      "rawBytes": 29201,
+      "gzipBytes": 8672
+    },
+    {
+      "chunk": "PracticePlanner",
+      "files": [
+        {
+          "file": "PracticePlanner-CNM1X9QW.js",
+          "ext": "js",
+          "chunk": "PracticePlanner",
+          "rawBytes": 24814,
+          "gzipBytes": 6744,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_dnd-Dnqr-4NY.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_activationHelpers-C3UpqN6K.js",
+            "_LazyPDFExport-DNV-YDC9.js",
+            "_Modal-JNLIA8sI.js",
+            "_utils-B_qf3Ekr.js",
+            "_data-B5MJpUF0.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 24814,
+      "gzipBytes": 6744
+    },
+    {
+      "chunk": "SystemIcons",
+      "files": [
+        {
+          "file": "SystemIcons-BLMt1sT1.js",
+          "ext": "js",
+          "chunk": "SystemIcons",
+          "rawBytes": 27066,
+          "gzipBytes": 5880,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "index.html",
+            "_createLucideIcon-B03bYBwR.js",
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 27066,
+      "gzipBytes": 5880
+    },
+    {
+      "chunk": "PracticePDFExportDialog",
+      "files": [
+        {
+          "file": "PracticePDFExportDialog-CnwVr2wy.js",
+          "ext": "js",
+          "chunk": "PracticePDFExportDialog",
+          "rawBytes": 17615,
+          "gzipBytes": 5465,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "_data-B5MJpUF0.js",
+            "index.html",
+            "_activationHelpers-C3UpqN6K.js",
+            "_Modal-JNLIA8sI.js"
+          ]
+        }
+      ],
+      "rawBytes": 17615,
+      "gzipBytes": 5465
+    },
+    {
+      "chunk": "CreateTeam",
+      "files": [
+        {
+          "file": "CreateTeam-ByLgKKdr.js",
+          "ext": "js",
+          "chunk": "CreateTeam",
+          "rawBytes": 20470,
+          "gzipBytes": 4782,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_usePermissions-B_qq9LIq.js",
+            "_telemetry-Bkg_1a5t.js",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 20470,
+      "gzipBytes": 4782
+    },
+    {
+      "chunk": "CreateCoachAccount",
+      "files": [
+        {
+          "file": "CreateCoachAccount-DhIKWECu.js",
+          "ext": "js",
+          "chunk": "CreateCoachAccount",
+          "rawBytes": 17706,
+          "gzipBytes": 3786,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_usePermissions-B_qq9LIq.js",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 17706,
+      "gzipBytes": 3786
+    },
+    {
+      "chunk": "mapping",
+      "files": [
+        {
+          "file": "mapping-BXj5E1qv.js",
+          "ext": "js",
+          "chunk": "mapping",
+          "rawBytes": 11254,
+          "gzipBytes": 3456,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_data-B5MJpUF0.js",
+            "_vendor-BnSLzT9n.js",
+            "_utils-B_qf3Ekr.js"
+          ]
+        }
+      ],
+      "rawBytes": 11254,
+      "gzipBytes": 3456
+    },
+    {
+      "chunk": "JoinTeam",
+      "files": [
+        {
+          "file": "JoinTeam-B1zLfJiY.js",
+          "ext": "js",
+          "chunk": "JoinTeam",
+          "rawBytes": 10263,
+          "gzipBytes": 3120,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_Tag-BMZqbimq.js",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 10263,
+      "gzipBytes": 3120
+    },
+    {
+      "chunk": "MediaIcons",
+      "files": [
+        {
+          "file": "MediaIcons-BZNIbSkI.js",
+          "ext": "js",
+          "chunk": "MediaIcons",
+          "rawBytes": 13150,
+          "gzipBytes": 3082,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "index.html",
+            "_createLucideIcon-B03bYBwR.js",
+            "_share-CKbWlJQd.js",
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 13150,
+      "gzipBytes": 3082
+    },
+    {
+      "chunk": "TermsOfServicePage",
+      "files": [
+        {
+          "file": "TermsOfServicePage-8GGTRr0S.js",
+          "ext": "js",
+          "chunk": "TermsOfServicePage",
+          "rawBytes": 9835,
+          "gzipBytes": 2761,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 9835,
+      "gzipBytes": 2761
+    },
+    {
+      "chunk": "ActionIcons",
+      "files": [
+        {
+          "file": "ActionIcons-BgSgzqBQ.js",
+          "ext": "js",
+          "chunk": "ActionIcons",
+          "rawBytes": 11060,
+          "gzipBytes": 2438,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "index.html",
+            "_createLucideIcon-B03bYBwR.js",
+            "_share-CKbWlJQd.js",
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 11060,
+      "gzipBytes": 2438
+    },
+    {
+      "chunk": "Badge",
+      "files": [
+        {
+          "file": "Badge-M6YukZxd.js",
+          "ext": "js",
+          "chunk": "Badge",
+          "rawBytes": 3301,
+          "gzipBytes": 1314,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_clsx-B-dksMZM.js",
+            "_vendor-BnSLzT9n.js"
+          ]
+        },
+        {
+          "file": "Badge-BHrTeo1A.css",
+          "ext": "css",
+          "chunk": "Badge",
+          "rawBytes": 3168,
+          "gzipBytes": 1077,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": []
+        }
+      ],
+      "rawBytes": 6469,
+      "gzipBytes": 2391
+    },
+    {
+      "chunk": "SportsIcons",
+      "files": [
+        {
+          "file": "SportsIcons-7-3M-aBS.js",
+          "ext": "js",
+          "chunk": "SportsIcons",
+          "rawBytes": 8376,
+          "gzipBytes": 2333,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "index.html",
+            "_createLucideIcon-B03bYBwR.js",
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 8376,
+      "gzipBytes": 2333
+    },
+    {
+      "chunk": "PrivacyPolicyPage",
+      "files": [
+        {
+          "file": "PrivacyPolicyPage-CRCC270P.js",
+          "ext": "js",
+          "chunk": "PrivacyPolicyPage",
+          "rawBytes": 8011,
+          "gzipBytes": 2113,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 8011,
+      "gzipBytes": 2113
+    },
+    {
+      "chunk": "BusinessIcons",
+      "files": [
+        {
+          "file": "BusinessIcons-Cw0j1xEp.js",
+          "ext": "js",
+          "chunk": "BusinessIcons",
+          "rawBytes": 8981,
+          "gzipBytes": 1952,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "index.html",
+            "_createLucideIcon-B03bYBwR.js",
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 8981,
+      "gzipBytes": 1952
+    },
+    {
+      "chunk": "LoginPage",
+      "files": [
+        {
+          "file": "LoginPage-DZ1n-FJj.js",
+          "ext": "js",
+          "chunk": "LoginPage",
+          "rawBytes": 6939,
+          "gzipBytes": 1945,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 6939,
+      "gzipBytes": 1945
+    },
+    {
+      "chunk": "NavigationIcons",
+      "files": [
+        {
+          "file": "NavigationIcons-D9jQ-UM6.js",
+          "ext": "js",
+          "chunk": "NavigationIcons",
+          "rawBytes": 9639,
+          "gzipBytes": 1910,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "index.html",
+            "_createLucideIcon-B03bYBwR.js",
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 9639,
+      "gzipBytes": 1910
+    },
+    {
+      "chunk": "ProfilePage",
+      "files": [
+        {
+          "file": "ProfilePage-D72KB8Sd.js",
+          "ext": "js",
+          "chunk": "ProfilePage",
+          "rawBytes": 4986,
+          "gzipBytes": 1798,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 4986,
+      "gzipBytes": 1798
+    },
+    {
+      "chunk": "PracticeScriptPDFService",
+      "files": [
+        {
+          "file": "PracticeScriptPDFService-DuLLAzeM.js",
+          "ext": "js",
+          "chunk": "PracticeScriptPDFService",
+          "rawBytes": 6076,
+          "gzipBytes": 1771,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "_PracticePDFExportDialog-CnwVr2wy.js",
+            "_data-B5MJpUF0.js",
+            "index.html",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js",
+            "_activationHelpers-C3UpqN6K.js",
+            "_Modal-JNLIA8sI.js"
+          ]
+        }
+      ],
+      "rawBytes": 6076,
+      "gzipBytes": 1771
+    },
+    {
+      "chunk": "CalendarIcons",
+      "files": [
+        {
+          "file": "CalendarIcons-kcfCFnxR.js",
+          "ext": "js",
+          "chunk": "CalendarIcons",
+          "rawBytes": 8068,
+          "gzipBytes": 1742,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "index.html",
+            "_createLucideIcon-B03bYBwR.js",
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 8068,
+      "gzipBytes": 1742
+    },
+    {
+      "chunk": "AboutPage",
+      "files": [
+        {
+          "file": "AboutPage-BENyvx80.js",
+          "ext": "js",
+          "chunk": "AboutPage",
+          "rawBytes": 5362,
+          "gzipBytes": 1603,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 5362,
+      "gzipBytes": 1603
+    },
+    {
+      "chunk": "ContactPage",
+      "files": [
+        {
+          "file": "ContactPage-CkSswGRL.js",
+          "ext": "js",
+          "chunk": "ContactPage",
+          "rawBytes": 6600,
+          "gzipBytes": 1575,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 6600,
+      "gzipBytes": 1575
+    },
+    {
+      "chunk": "Modal",
+      "files": [
+        {
+          "file": "Modal-JNLIA8sI.js",
+          "ext": "js",
+          "chunk": "Modal",
+          "rawBytes": 3132,
+          "gzipBytes": 1380,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html"
+          ]
+        }
+      ],
+      "rawBytes": 3132,
+      "gzipBytes": 1380
+    },
+    {
+      "chunk": "usePermissions",
+      "files": [
+        {
+          "file": "usePermissions-B_qq9LIq.js",
+          "ext": "js",
+          "chunk": "usePermissions",
+          "rawBytes": 2121,
+          "gzipBytes": 1018,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": ["_vendor-BnSLzT9n.js", "index.html"]
+        }
+      ],
+      "rawBytes": 2121,
+      "gzipBytes": 1018
+    },
+    {
+      "chunk": "TeamsPage",
+      "files": [
+        {
+          "file": "TeamsPage-CEKCX7K0.js",
+          "ext": "js",
+          "chunk": "TeamsPage",
+          "rawBytes": 2379,
+          "gzipBytes": 868,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 2379,
+      "gzipBytes": 868
+    },
+    {
+      "chunk": "LazyPDFExport",
+      "files": [
+        {
+          "file": "LazyPDFExport-DNV-YDC9.js",
+          "ext": "js",
+          "chunk": "LazyPDFExport",
+          "rawBytes": 1632,
+          "gzipBytes": 857,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_data-B5MJpUF0.js",
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html"
+          ]
+        }
+      ],
+      "rawBytes": 1632,
+      "gzipBytes": 857
+    },
+    {
+      "chunk": "Templates",
+      "files": [
+        {
+          "file": "Templates-DtlVHwEr.js",
+          "ext": "js",
+          "chunk": "Templates",
+          "rawBytes": 2556,
+          "gzipBytes": 805,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 2556,
+      "gzipBytes": 805
+    },
+    {
+      "chunk": "createLucideIcon",
+      "files": [
+        {
+          "file": "createLucideIcon-B03bYBwR.js",
+          "ext": "js",
+          "chunk": "createLucideIcon",
+          "rawBytes": 1858,
+          "gzipBytes": 799,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": ["_vendor-BnSLzT9n.js"]
+        }
+      ],
+      "rawBytes": 1858,
+      "gzipBytes": 799
+    },
+    {
+      "chunk": "TeamSettings",
+      "files": [
+        {
+          "file": "TeamSettings-CGujox8D.js",
+          "ext": "js",
+          "chunk": "TeamSettings",
+          "rawBytes": 1425,
+          "gzipBytes": 678,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 1425,
+      "gzipBytes": 678
+    },
+    {
+      "chunk": "BoxCall",
+      "files": [
+        {
+          "file": "BoxCall-BVc5PXTP.js",
+          "ext": "js",
+          "chunk": "BoxCall",
+          "rawBytes": 1386,
+          "gzipBytes": 654,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 1386,
+      "gzipBytes": 654
+    },
+    {
+      "chunk": "Tag",
+      "files": [
+        {
+          "file": "Tag-BMZqbimq.js",
+          "ext": "js",
+          "chunk": "Tag",
+          "rawBytes": 1485,
+          "gzipBytes": 643,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_clsx-B-dksMZM.js",
+            "_vendor-BnSLzT9n.js"
+          ]
+        }
+      ],
+      "rawBytes": 1485,
+      "gzipBytes": 643
+    },
+    {
+      "chunk": "PlayerDashboardPage",
+      "files": [
+        {
+          "file": "PlayerDashboardPage-DzvK7WoM.js",
+          "ext": "js",
+          "chunk": "PlayerDashboardPage",
+          "rawBytes": 907,
+          "gzipBytes": 478,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 907,
+      "gzipBytes": 478
+    },
+    {
+      "chunk": "activationHelpers",
+      "files": [
+        {
+          "file": "activationHelpers-C3UpqN6K.js",
+          "ext": "js",
+          "chunk": "activationHelpers",
+          "rawBytes": 771,
+          "gzipBytes": 425,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": ["index.html"]
+        }
+      ],
+      "rawBytes": 771,
+      "gzipBytes": 425
+    },
+    {
+      "chunk": "AnalyticsPage",
+      "files": [
+        {
+          "file": "AnalyticsPage-CftVzL7a.js",
+          "ext": "js",
+          "chunk": "AnalyticsPage",
+          "rawBytes": 572,
+          "gzipBytes": 374,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 572,
+      "gzipBytes": 374
+    },
+    {
+      "chunk": "telemetry",
+      "files": [
+        {
+          "file": "telemetry-Bkg_1a5t.js",
+          "ext": "js",
+          "chunk": "telemetry",
+          "rawBytes": 757,
+          "gzipBytes": 351,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": []
+        }
+      ],
+      "rawBytes": 757,
+      "gzipBytes": 351
+    },
+    {
+      "chunk": "share",
+      "files": [
+        {
+          "file": "share-CKbWlJQd.js",
+          "ext": "js",
+          "chunk": "share",
+          "rawBytes": 413,
+          "gzipBytes": 296,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": ["_createLucideIcon-B03bYBwR.js"]
+        }
+      ],
+      "rawBytes": 413,
+      "gzipBytes": 296
+    },
+    {
+      "chunk": "CoachManagementPage",
+      "files": [
+        {
+          "file": "CoachManagementPage-Cg4gVOKA.js",
+          "ext": "js",
+          "chunk": "CoachManagementPage",
+          "rawBytes": 383,
+          "gzipBytes": 273,
+          "isEntry": false,
+          "isDynamicEntry": true,
+          "imports": [
+            "_pdfRenderer-97IrOfGv.js",
+            "_vendor-BnSLzT9n.js",
+            "index.html",
+            "_data-B5MJpUF0.js",
+            "_utils-B_qf3Ekr.js",
+            "_clsx-B-dksMZM.js"
+          ]
+        }
+      ],
+      "rawBytes": 383,
+      "gzipBytes": 273
+    },
+    {
+      "chunk": "clsx",
+      "files": [
+        {
+          "file": "clsx-B-dksMZM.js",
+          "ext": "js",
+          "chunk": "clsx",
+          "rawBytes": 374,
+          "gzipBytes": 238,
+          "isEntry": false,
+          "isDynamicEntry": false,
+          "imports": []
+        }
+      ],
+      "rawBytes": 374,
+      "gzipBytes": 238
+    }
+  ]
+}

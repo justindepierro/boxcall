@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   useAuthProfile,
   useIsCoach,
@@ -6,9 +7,9 @@ import {
   useIsFamily,
   useIsAdmin,
 } from "../../app/auth-store";
-import { Icon } from "../ui/Icon/Icon";
-import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
+import { Button } from "../ui/Button/Button";
+import { Icon } from "../ui/Icon/Icon";
 import { Tag } from "../ui/Tag";
 
 // Import the existing dashboard components

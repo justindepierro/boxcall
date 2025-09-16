@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+
 import { supabase } from "../lib/supabase";
+
 import type { PostgrestError } from "@supabase/supabase-js";
 
 interface TeamMembershipRow {

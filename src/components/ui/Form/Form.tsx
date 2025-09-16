@@ -1,5 +1,7 @@
-import type { FormEvent, ReactNode } from "react";
 import { Typography } from "../../design-system";
+
+import type { FormEvent, ReactNode } from "react";
+
 export interface FormProps {
   /** Form children - FormField components */
   children: ReactNode;

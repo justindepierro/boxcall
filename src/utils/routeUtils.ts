@@ -65,7 +65,7 @@ export const useRouteAnalytics = () => {
 
     // Log performance in development
     if (process.env.NODE_ENV === "development") {
-      console.log(`📊 Route ${routeName} loaded in ${loadTime}ms`);
+      console.info(`📊 Route ${routeName} loaded in ${loadTime}ms`);
     }
   };
 
