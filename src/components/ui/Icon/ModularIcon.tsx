@@ -25,6 +25,7 @@ import {
   Calendar as FbkCalendar,
   Flag as FbkFlag,
   Check as FbkCheck,
+  Camera as FbkCamera,
 } from "lucide-react";
 
 // Core types
@@ -186,32 +187,35 @@ const importIcon = (id: string): Loader => {
       string,
       () => Promise<unknown>
     >;
-    // lucide-react dynamicIconImports typically uses kebab-case keys.
-    // Be resilient: try kebab-case id first, then PascalCase.
-    const candidates = [id, toPascalKey(id)];
-    for (const key of candidates) {
-      const loader = map[key];
-      if (loader) {
-        return loader() as Promise<
-          { default: LucideComponent } | LucideComponent
-        >;
-      }
+    const pascal = toPascalKey(id);
+    // lucide-react dynamicIconImports typically uses kebab-case OR PascalCase keys.
+    const candidates = [id, pascal];
+    const foundLoader = candidates
+      .map((key) => map[key])
+      .find((loader): loader is () => Promise<unknown> => Boolean(loader));
+
+    const tryModuleFallback = () =>
+      import("lucide-react").then((mod) => {
+        const Comp = (mod as Record<string, unknown>)[pascal] as unknown as
+          | LucideComponent
+          | undefined;
+        if (!Comp) {
+          const tried = candidates.join(", ");
+          throw new Error(
+            `Lucide icon not found in dynamic map or module: id='${id}' tried keys=[${tried}]`
+          );
+        }
+        return Comp as unknown as { default: LucideComponent } | LucideComponent;
+      });
+
+    if (foundLoader) {
+      return (foundLoader() as Promise<
+        { default: LucideComponent } | LucideComponent
+      >).catch(() => tryModuleFallback());
     }
-    // Fallback: dynamically import the full lucide-react module and pick the named export.
-    // This guarantees correctness across the app at the cost of a one-time larger chunk.
-    return import("lucide-react").then((mod) => {
-      const pascal = toPascalKey(id);
-      const Comp = (mod as Record<string, unknown>)[pascal] as unknown as
-        | LucideComponent
-        | undefined;
-      if (!Comp) {
-        const tried = candidates.join(", ");
-        throw new Error(
-          `Lucide icon not found in dynamic map or module: id='${id}' tried keys=[${tried}]`
-        );
-      }
-      return Comp as unknown as { default: LucideComponent } | LucideComponent;
-    });
+
+    // No loader in the map, go straight to module fallback.
+    return tryModuleFallback();
   };
 };
 
@@ -230,6 +234,7 @@ const fallbackIcons: Partial<Record<ModularIconName, LucideComponent>> = {
   football: FbkTrophy as unknown as LucideComponent,
   flag: FbkFlag as unknown as LucideComponent,
   check: FbkCheck as unknown as LucideComponent,
+  camera: FbkCamera as unknown as LucideComponent,
 };
 
 const iconLoaders: Record<ModularIconName, Loader> = {
