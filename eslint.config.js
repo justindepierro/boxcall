@@ -127,6 +127,13 @@ const configArray = [
                 "Do not import from lucide-react directly. Use the Icon component (src/components/ui/Icon).",
               except: ["src/components/ui/Icon/**"],
             },
+            {
+              target: "src",
+              from: "lucide-react/dist",
+              message:
+                "Do not import deep paths from lucide-react/dist/**. Use the Icon component, which handles dynamic loading.",
+              except: ["src/components/ui/Icon/**"],
+            },
           ],
         },
       ],
