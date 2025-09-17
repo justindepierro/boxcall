@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/Button";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Typography } from "../design-system/Typography";
 import { SidebarLogo } from "../ui/Logo";
 

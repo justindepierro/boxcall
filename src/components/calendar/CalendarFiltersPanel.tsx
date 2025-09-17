@@ -2,7 +2,7 @@ import React from "react";
 
 import { Typography } from "../../components/design-system/Typography";
 import { Card, Button, Input } from "../../components/ui";
-import Icon from "../../components/ui/Icon/Icon";
+import { Icon } from "../../components/ui/Icon";
 
 import type { CalendarFilters } from "../../domain/calendar/types"; // modern source
 

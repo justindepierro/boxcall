@@ -13,7 +13,7 @@ import React, { useState, useCallback } from "react";
 import { CollaborativeWidget } from "./CollaborativeWidget";
 import { Button, Card } from "../ui";
 import { Typography } from "../design-system/Typography";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 
 interface CalendarEvent {
   id: string;

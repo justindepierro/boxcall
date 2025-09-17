@@ -20,7 +20,7 @@ import { CollaborativeCalendar } from "../collaboration/CollaborativeCalendar";
 import { ProgressSharing } from "../collaboration/ProgressSharing";
 import { Button, Card } from "../ui";
 import { Typography } from "../design-system";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import type { DataSeries } from "@services/smartDataAnalyzer";
 
 // Mock data for demo

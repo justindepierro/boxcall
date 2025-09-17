@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button } from "../../ui";
-import { Icon } from "../../ui/Icon/Icon";
+import { Icon } from "../../ui/Icon";
 /**
  * Coach Quick Actions - Coach-specific dashboard shortcuts
  *

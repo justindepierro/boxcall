@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
 import type { IconName } from "../ui/Icon";

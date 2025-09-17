@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "../design-system/Typography";
-import Icon from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import type { Play as PlayType } from "../../types/play";
 import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
 import {

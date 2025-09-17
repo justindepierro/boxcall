@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button } from "../../ui";
-import { Icon } from "../../ui/Icon/Icon";
+import { Icon } from "../../ui/Icon";
 /**
  * Family Quick Actions - Family member-specific dashboard shortcuts
  *

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../ui/Button/Button";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { FORMATION_OPTIONS, PLAY_TYPE_OPTIONS } from "../../types/play";
 
 interface ActiveFilter {

@@ -45,18 +45,18 @@ const getModalSizeStyles = (size: ModalProps["size"]) => {
   }
 };
 const getModalTypeStyles = (type: ModalProps["type"]) => {
-  const baseStyles = "rounded-lg shadow-xl border-2"; // Square corners, stronger shadows
+  const baseStyles = "rounded-lg shadow-xl"; // Softer, no hard border
   switch (type) {
     case "alert":
-      return `${baseStyles} surface-subtle dark:bg-red-900/20 border-red-400 dark:border-red-500`;
+      return `${baseStyles} surface-subtle dark:bg-red-900/20`;
     case "confirm":
-      return `${baseStyles} surface-subtle dark:bg-yellow-900/20 border-yellow-400 dark:border-yellow-500`;
+      return `${baseStyles} surface-subtle dark:bg-yellow-900/20`;
     default:
-      return `${baseStyles} surface-card elevation-modal border-subtle`;
+      return `${baseStyles} surface-card elevation-modal`;
   }
 };
 const getBackdropStyles = () => {
-  return "bg-brand-navy/60 dark:bg-brand-navy-dark/80"; // Navy-tinted backdrop instead of gray
+  return "bg-black/40 dark:bg-black/60"; // Neutral backdrop
 };
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
@@ -144,7 +144,7 @@ export const Modal: React.FC<ModalProps> = ({
   const modalContent = (
     <div
       className={`fixed inset-0 z-[9999] flex items-center justify-center p-4`}
-      style={{ zIndex, border: "4px solid red" }}
+      style={{ zIndex }}
     >
       {/* Backdrop */}
       <div
@@ -167,7 +167,7 @@ export const Modal: React.FC<ModalProps> = ({
       >
         {/* Header - Enhanced with display font and substantial styling */}
         {title && (
-          <div className="bc-card-padding border-b-2 border-subtle dark:border-gray-700">
+          <div className="bc-card-padding">
             <div className="flex items-center justify-between">
               <Typography
                 id="modal-title"
@@ -204,7 +204,7 @@ export const Modal: React.FC<ModalProps> = ({
         <div className="bc-card-padding">{children}</div>
         {/* Footer - Enhanced styling */}
         {footer && (
-          <div className="bc-card-padding border-t-2 border-subtle dark:border-gray-700 surface-subtle dark:bg-gray-900/50">
+          <div className="bc-card-padding surface-subtle dark:bg-gray-900/50">
             {footer}
           </div>
         )}

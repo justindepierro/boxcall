@@ -7,9 +7,11 @@ import { useAdaptiveWidget } from "../../hooks/useAdaptiveDashboard";
 
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import type { Profile } from "../../types/database";
 import { AchievementService } from "@services/achievementService";
+import { DashboardService } from "@services/dashboardService";
+import { supabase } from "../../lib/supabase";
 import { useAuth, useAuthProfile } from "../../app/auth-store";
 
 interface ProfileCardProps {
@@ -41,8 +43,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const setAuthProfile = useAuth((s) => s.setProfile);
   const { roleContext } = useRoles(); // Use new unified role system
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editMode, setEditMode] = useState<"quick" | "full">("quick");
   const isOwnProfile = !isViewMode; // Only show quick actions for own profile
   const [showFullBio, setShowFullBio] = useState(false);
+  const [editingBio, setEditingBio] = useState(false);
+  const [bioDraft, setBioDraft] = useState<string>(profile?.bio || "");
+  const [savingBio, setSavingBio] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
 
   const [achievements, setAchievements] = useState<{
@@ -85,12 +92,72 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     loadAchievements();
   }, [profile?.id]);
 
-  const handleProfileEdit = () => {
+  const handleProfileEdit = (mode: "quick" | "full" = "quick") => {
     trackEdit();
+    // Lightweight debug signal so users can confirm wiring
+    if (import.meta.env.DEV)
+      console.info("[ProfileCard] Open quick-edit modal");
     if (onEditClick) {
       onEditClick();
     } else {
+      setEditMode(mode);
       setEditModalOpen(true);
+    }
+  };
+  const handleEditBio = () => setEditingBio(true);
+
+  useEffect(() => {
+    setBioDraft(profile?.bio || "");
+  }, [profile?.bio]);
+
+  const saveBioInline = async () => {
+    if (!profile?.id) return;
+    setSavingBio(true);
+    try {
+      const updated = await DashboardService.updateUserProfile(profile.id, {
+        bio: bioDraft,
+      });
+      if (updated) {
+        setProfile(updated as unknown as Profile);
+        setAuthProfile(updated as unknown as Profile);
+        setEditingBio(false);
+      }
+    } finally {
+      setSavingBio(false);
+    }
+  };
+
+  const onAvatarButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const onAvatarFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !profile?.id) return;
+    try {
+      // Upload to storage (ProfileEditModal uses 'avatars' bucket)
+      const { error } = await supabase.storage
+        .from("avatars")
+        .upload(`${profile.id}/${file.name}`, file, { upsert: true });
+      if (error) throw error;
+      const { data: urlData } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(`${profile.id}/${file.name}`);
+      const avatarUrl = urlData?.publicUrl;
+      if (avatarUrl) {
+        const updated = await DashboardService.updateUserProfile(profile.id, {
+          avatar_url: avatarUrl,
+        });
+        if (updated) {
+          setProfile(updated as unknown as Profile);
+          setAuthProfile(updated as unknown as Profile);
+        }
+      }
+    } catch (err) {
+      console.error("Avatar upload failed", err);
+    } finally {
+      // reset input to allow re-upload same file
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -116,29 +183,20 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const displayName = profile?.full_name || profile?.display_name || "Player";
 
   return (
-    <Card className={`compact-card h-full relative ${cardClassName}`}>
+    <Card
+      className={`compact-card h-full relative border-0 shadow-[0_1px_2px_rgba(0,0,0,0.06)] ${cardClassName}`}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-subtle pb-3">
+      <div className="flex items-center justify-between pb-3">
         <Typography variant="headline-md" className="text-navy-800">
           Profile
         </Typography>
-        {!isViewMode && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleProfileEdit}
-            className="p-2 hover:bg-jade-50 rounded-lg"
-            aria-label="Edit profile"
-          >
-            <Icon name="edit" size={16} />
-          </Button>
-        )}
       </div>
       {/* Profile Content */}
       <div className="space-y-3">
         {/* Avatar & Name */}
         <div className="flex items-center space-x-4">
-          <div className="relative">
+          <div className="relative w-16 h-16">
             <Button
               variant="ghost"
               size="sm"
@@ -150,17 +208,24 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 {getInitials(displayName)}
               </Typography>
             </Button>
-            {isOwnProfile && (
+            {!isViewMode && (
               <Button
-                variant="ghost"
-                size="sm"
-                className="absolute -bottom-1 -right-1 bg-surface-primary rounded-full shadow-md p-2 border border-subtle hover:bg-jade-50 hover:border-jade-200 transition-colors"
-                aria-label="Edit profile picture"
-                onClick={handleProfileEdit}
+                variant="secondary"
+                size="xs"
+                onClick={onAvatarButtonClick}
+                aria-label="Change profile picture"
+                className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full p-0 shadow-sm flex items-center justify-center"
               >
-                <Icon name="plus" size={14} />
+                <Icon name="camera" size={12} />
               </Button>
             )}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={onAvatarFileChange}
+              className="hidden"
+            />
           </div>
           <div className="flex-1 min-w-0">
             <Button
@@ -186,7 +251,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         {/* Achievements Summary */}
         {achievements && (
           <div className="grid grid-cols-4 gap-3 pt-2">
-            <div className="surface-subtle rounded-md p-2 text-center">
+            <div className="rounded-md p-2 text-center bg-[var(--semantic-bg-secondary)]">
               <Typography variant="body-xs" className="text-text-muted">
                 Stickers
               </Typography>
@@ -194,7 +259,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 {achievements.stickers}
               </Typography>
             </div>
-            <div className="surface-subtle rounded-md p-2 text-center">
+            <div className="rounded-md p-2 text-center bg-[var(--semantic-bg-secondary)]">
               <Typography variant="body-xs" className="text-text-muted">
                 Medals
               </Typography>
@@ -202,7 +267,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 {achievements.medals}
               </Typography>
             </div>
-            <div className="surface-subtle rounded-md p-2 text-center">
+            <div className="rounded-md p-2 text-center bg-[var(--semantic-bg-secondary)]">
               <Typography variant="body-xs" className="text-text-muted">
                 Streak
               </Typography>
@@ -210,7 +275,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 {achievements.streak}
               </Typography>
             </div>
-            <div className="surface-subtle rounded-md p-2 text-center">
+            <div className="rounded-md p-2 text-center bg-[var(--semantic-bg-secondary)]">
               <Typography variant="body-xs" className="text-text-muted">
                 Points
               </Typography>
@@ -252,17 +317,53 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           </div>
         )}
         {/* Bio */}
-        <div className="pt-2 border-t border-subtle relative">
-          {profile?.bio ? (
+        <div className="pt-2">
+          {editingBio ? (
+            <div className="space-y-2">
+              <textarea
+                value={bioDraft}
+                onChange={(e) => setBioDraft(e.target.value)}
+                className="w-full min-h-[80px] rounded bg-[var(--semantic-bg-secondary)] p-2 text-sm"
+              />
+              <div className="flex gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setBioDraft(profile?.bio || "");
+                    setEditingBio(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={saveBioInline}
+                  disabled={savingBio}
+                >
+                  {savingBio ? "Saving..." : "Done"}
+                </Button>
+              </div>
+            </div>
+          ) : profile?.bio ? (
             <>
-              <Typography
-                variant="body-sm"
-                className="text-text-secondary leading-relaxed"
+              <Button
+                variant="link"
+                size="sm"
+                onClick={handleEditBio}
+                aria-label="Edit Bio"
+                className="text-left w-full"
               >
-                {showFullBio
-                  ? profile.bio
-                  : `${profile.bio.slice(0, 80)}${profile.bio.length > 80 ? "..." : ""}`}
-              </Typography>
+                <Typography
+                  variant="body-sm"
+                  className="text-text-secondary leading-relaxed"
+                >
+                  {showFullBio
+                    ? profile.bio
+                    : `${profile.bio.slice(0, 80)}${profile.bio.length > 80 ? "..." : ""}`}
+                </Typography>
+              </Button>
               {profile.bio.length > 80 && (
                 <Button
                   variant="ghost"
@@ -276,43 +377,26 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             </>
           ) : (
             isOwnProfile && (
-              <Typography variant="body-sm" className="text-text-muted italic">
-                Add a bio to tell others about yourself...
-              </Typography>
+              <Button
+                variant="link"
+                size="sm"
+                onClick={handleEditBio}
+                aria-label="Add Bio"
+                className="text-left w-full"
+              >
+                <Typography
+                  variant="body-sm"
+                  className="italic text-text-muted"
+                >
+                  Add a bio to tell others about yourself...
+                </Typography>
+              </Button>
             )
-          )}
-          {isOwnProfile && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="absolute -top-1 -right-1 bg-surface-primary rounded-full shadow-md p-2 border border-subtle hover:bg-jade-50 hover:border-jade-200 transition-colors"
-              aria-label="Edit bio"
-              onClick={handleProfileEdit}
-            >
-              <Icon name="plus" size={14} />
-            </Button>
-          )}
-          {/* Profile Edit Modal */}
-          {editModalOpen && profile && (
-            <ProfileEditModal
-              isOpen={editModalOpen}
-              onClose={() => setEditModalOpen(false)}
-              userRole={profile.role || "player"}
-              currentProfile={
-                { ...profile } as { id: string; [key: string]: unknown }
-              }
-              mode="quick"
-              onProfileUpdate={(updatedProfile) => {
-                setProfile(updatedProfile as unknown as typeof profile);
-                setAuthProfile(updatedProfile as unknown as typeof profile);
-                setEditModalOpen(false);
-              }}
-            />
           )}
         </div>
         {/* Contact Info */}
         {profile?.phone && !isViewMode && (
-          <div className="flex items-center space-x-2 pt-2 border-t border-subtle">
+          <div className="flex items-center space-x-2 pt-2">
             <Icon name="phone" size={14} color="navy" />
             <Typography variant="body-sm" className="text-text-secondary">
               {profile.phone}
@@ -320,8 +404,20 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           </div>
         )}
 
-        {/* Actions */}
+        {/* Actions - Bottom Left: Quick Edit, Bottom Right: View Profile */}
         <div className="pt-3 flex items-center justify-between">
+          {!isViewMode ? (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => handleProfileEdit("quick")}
+              aria-label="Quick Edit Profile"
+            >
+              <Icon name="edit" size={14} className="mr-2" /> Quick Edit
+            </Button>
+          ) : (
+            <span />
+          )}
           <Button
             variant="ghost"
             size="sm"
@@ -330,13 +426,25 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           >
             <Icon name="user" size={14} className="mr-2" /> View Profile
           </Button>
-          {!isViewMode && (
-            <Button variant="primary" size="sm" onClick={handleProfileEdit}>
-              <Icon name="edit" size={14} className="mr-2" /> Edit
-            </Button>
-          )}
         </div>
       </div>
+      {/* Profile Edit Modal (portal renders at document.body) */}
+      {editModalOpen && profile && (
+        <ProfileEditModal
+          isOpen={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          userRole={profile.role || "player"}
+          currentProfile={
+            { ...profile } as { id: string; [key: string]: unknown }
+          }
+          mode={editMode}
+          onProfileUpdate={(updatedProfile) => {
+            setProfile(updatedProfile as unknown as typeof profile);
+            setAuthProfile(updatedProfile as unknown as typeof profile);
+            setEditModalOpen(false);
+          }}
+        />
+      )}
     </Card>
   );
 };

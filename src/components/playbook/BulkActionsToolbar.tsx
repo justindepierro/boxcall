@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "@components/design-system/Typography";
 

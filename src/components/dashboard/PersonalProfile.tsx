@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Typography } from "../design-system";
 import { Button, Card, Input } from "../ui";
 interface PersonalProfileProps {

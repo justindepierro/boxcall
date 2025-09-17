@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../app/auth-store";
 import { Typography } from "../components/design-system";
 import { Button } from "../components/ui/Button/Button";
-import { Icon } from "../components/ui/Icon/Icon";
+import { Icon } from "../components/ui/Icon";
 import { usePermissions } from "../hooks/usePermissions";
 import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";

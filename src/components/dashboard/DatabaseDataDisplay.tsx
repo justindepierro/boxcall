@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { Card, Button } from "../ui";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 
 // Using the same Team interface as useTeamsData hook
 interface Team {

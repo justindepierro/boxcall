@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button } from "../../../../../components/ui";
-import { Icon } from "../../../../../components/ui/Icon/Icon";
+import { Icon } from "../../../../../components/ui/Icon";
 import { Typography } from "../../../../design-system/Typography";
 
 import { CategorySelector } from "./CategorySelector";

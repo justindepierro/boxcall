@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { Typography } from "../../design-system/Typography";
 import { Button } from "../../ui";
-import Icon from "../../ui/Icon/Icon";
+import { Icon } from "../../ui/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../../ui/Tag";
 
 import type {

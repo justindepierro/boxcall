@@ -1,6 +1,6 @@
 import React, { useId } from "react";
 import { usePlaySearch } from "../../hooks/usePlaySearch";
-import Icon from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Button } from "../ui";
 
 /**

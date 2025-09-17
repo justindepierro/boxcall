@@ -1,5 +1,5 @@
 import type { ErrorInfo, ReactNode } from "react";
-import { ModularIcon as Icon } from "./Icon";
+import { Icon } from "./Icon";
 import { telemetry } from "../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../telemetry/events";
 import React, { Component } from "react";

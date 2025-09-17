@@ -99,6 +99,34 @@ const configArray = [
               message:
                 "Import services via the barrel alias @services/* to keep a single source of truth.",
             },
+            {
+              group: [
+                "src/components/**/ui/Icon/Icon",
+                "../ui/Icon/Icon",
+                "../../ui/Icon/Icon",
+                "src/components/**/ui/Icon/categories/*",
+                "src/components/**/ui/Icon/registry",
+                "src/components/**/ui/Icon/iconSingletons",
+                "src/components/**/ui/Icon/preload*",
+              ],
+              message:
+                "Use the single public entry 'src/components/ui/Icon' for icons. Do not import from legacy icon paths.",
+            },
+          ],
+        },
+      ],
+      // Disallow direct lucide-react imports outside the icon system directory
+      "import/no-restricted-paths": [
+        "error",
+        {
+          zones: [
+            {
+              target: "src",
+              from: "lucide-react",
+              message:
+                "Do not import from lucide-react directly. Use the Icon component (src/components/ui/Icon).",
+              except: ["src/components/ui/Icon/**"],
+            },
           ],
         },
       ],

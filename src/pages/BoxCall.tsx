@@ -2,7 +2,7 @@ import React from "react";
 
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
-import { Icon } from "../components/ui/Icon/Icon";
+import { Icon } from "../components/ui/Icon";
 /**
  * BoxCall - Game management and communication platform
  * Available to coaches only

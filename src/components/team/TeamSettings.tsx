@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import type { TeamSettings as TeamSettingsType } from "../../types/team-management";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";

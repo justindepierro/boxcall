@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "../../../ui/Button";
-import { Icon } from "../../../ui/Icon/Icon";
+import { Icon, type IconName } from "../../../ui/Icon";
 
 // Toolbar for shape/line tools, selection, undo/redo, layer controls, etc.
 export const Toolbar: React.FC<{
@@ -43,9 +43,9 @@ export const Toolbar: React.FC<{
           tabIndex={0}
         >
           <Icon
-            name={tool.icon as import("../../../ui/Icon/types").IconName}
+            name={tool.icon as IconName}
             size="sm"
-            color={tool.key === activeTool ? "navy" : "slate"}
+            color={tool.key === activeTool ? "navy" : "secondary"}
           />
           <span className="sr-only md:not-sr-only">{tool.label}</span>
         </Button>
@@ -58,7 +58,7 @@ export const Toolbar: React.FC<{
         aria-label="Undo"
         title="Undo (Cmd+Z)"
       >
-        <Icon name="undo" size="sm" />
+        <Icon name="arrow-left" size="sm" />
         <span className="sr-only md:not-sr-only">Undo</span>
       </Button>
       <Button

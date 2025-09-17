@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { telemetry } from "../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../telemetry/events";
 import { Button } from "../ui/Button/Button";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 
 import { VisualPlayBuilderV2 } from "./diagram-v2/VisualPlayBuilderV2";
 

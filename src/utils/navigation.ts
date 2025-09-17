@@ -1,8 +1,8 @@
 import type { SidebarItem } from "../components/ui/Sidebar";
 import type { Database } from "../types/database";
 import React from "react";
-import { Icon } from "../components/ui/Icon/Icon";
-import type { IconName } from "../components/ui/Icon/Icon";
+import { Icon } from "../components/ui/Icon";
+import type { IconName } from "../components/ui/Icon";
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 type ExtendedUserRole = UserRole | "super_admin";
 export interface NavigationItem {

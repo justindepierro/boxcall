@@ -9,9 +9,9 @@ import {
 } from "@services/capabilities/capabilityMap";
 import { Typography } from "../design-system/Typography";
 import { Button } from "../ui";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 
-import type { IconName } from "../ui/Icon/Icon";
+import type { IconName } from "../ui/Icon";
 
 interface TeamQuickActionsProps {
   teamId: string;

@@ -9,7 +9,7 @@ import {
 import { Typography } from "../design-system/Typography";
 import { PracticePlannerModal } from "../practice/PracticePlannerModal";
 import { Button } from "../ui";
-import Icon from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 
 import { EventDetails } from "./EventModal/EventDetails";
 import { EventForm } from "./EventModal/EventForm";

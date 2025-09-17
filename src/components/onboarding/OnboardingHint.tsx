@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Typography } from "../design-system";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Button } from "../ui";
 import { telemetry } from "../../lib/telemetry";
 

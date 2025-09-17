@@ -8,6 +8,9 @@ The format is based on https://keepachangelog.com/en/1.1.0/ and this project adh
 
 ### Added
 
+- Dashboard `ProfileCard` with quick‑edit (avatar, display name, bio) and direct navigation to `/profile`.
+- `ProfileEditModal` quick mode with state sync to auth/profile store.
+- Unit test covering ProfileCard navigation and quick‑edit behavior.
 - Deterministic token & theme generation with verification scripts.
 - React Query Devtools toggle (Ctrl/⌘ + `).
 - Zod validation layer for calendar domain (events, RSVPs, comments).
@@ -18,10 +21,15 @@ The format is based on https://keepachangelog.com/en/1.1.0/ and this project adh
 
 ### Changed
 
+- Service imports aligned behind `@services` barrel (SSOT); Vite/Vitest/tsconfig aliases updated.
+- Telemetry dispatcher decoupled from persistence; console logging gated via a lightweight logger.
+- Player dashboard integrates the new `ProfileCard` for consistent profile access.
 - Calendar page decomposed into modular components with barrel exports.
 
 ### Fixed
 
+- Design-system compliance in ProfileCard (replaced raw buttons; corrected icon color usage).
+- Test flakiness in ProfileCard navigation test by unmounting between renders.
 - Formatting drift in generated token CSS (elevation multiline & font stack spacing).
 - Comment API test expectation alignment.
 

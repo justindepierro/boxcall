@@ -69,12 +69,15 @@ export type IconName =
   | "error"
   | "info"
   | "alert"
+  | "check-square"
+  | "clipboard"
   | "wrench"
   | "bug"
   | "camera"
   | "target"
   | "zap"
   | "award"
+  | "medal"
   | "trophy"
   | "flag"
   | "star"
@@ -123,6 +126,8 @@ export type IconName =
   | "map-pin"
   | "crown"
   | "wifi-off"
+  | "football"
+  | "server"
   | "toggle-right"
   | "toggle-left"
   | "gamepad-2"
@@ -172,6 +177,12 @@ export const Icon: React.FC<IconProps> = ({
 
   // Runtime guard to ensure the name is a supported ModularIconName; fallback to 'help-circle'
   const toModularName = (n: IconName): ModularIconName => {
+    const debugEnabled =
+      (typeof window !== "undefined" &&
+        // @ts-expect-error custom flag on window
+        (window.__ICON_DEBUG__ === true ||
+          localStorage.getItem("debugIcons") === "1")) ||
+      false;
     const supported = new Set<ModularIconName>([
       "home",
       "menu",
@@ -209,16 +220,21 @@ export const Icon: React.FC<IconProps> = ({
       "error",
       "info",
       "alert",
+      "check-square",
+      "clipboard",
       "wrench",
       "bug",
       "target",
       "zap",
       "award",
+      "medal",
       "trophy",
       "flag",
       "star",
       "trending-up",
       "activity",
+      "chart",
+      "bar-chart",
       "shield",
       "phone",
       "mail",
@@ -248,7 +264,9 @@ export const Icon: React.FC<IconProps> = ({
       "map",
       "map-pin",
       "crown",
+      "football",
       "wifi-off",
+      "server",
       "toggle-right",
       "toggle-left",
       "gamepad-2",
@@ -270,9 +288,13 @@ export const Icon: React.FC<IconProps> = ({
       "graduation-cap",
       "shirt",
     ]);
-    return supported.has(n as ModularIconName)
-      ? (n as ModularIconName)
-      : "help-circle";
+    const ok = supported.has(n as ModularIconName);
+    if (!ok && debugEnabled) {
+      console.warn(`[IconDebug] unsupported icon name; falling back`, {
+        name: n,
+      });
+    }
+    return ok ? (n as ModularIconName) : "help-circle";
   };
 
   return (

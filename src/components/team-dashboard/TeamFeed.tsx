@@ -15,7 +15,7 @@ import {
 import { Typography } from "../design-system/Typography";
 import { OnboardingHint } from "../onboarding/OnboardingHint";
 import { Button } from "../ui/Button/Button";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Modal } from "../ui/Modal/Modal";
 import { TextArea } from "../ui/TextArea";
 

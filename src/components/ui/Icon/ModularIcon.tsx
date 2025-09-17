@@ -10,6 +10,22 @@
 
 import React from "react";
 import { getComponentColor } from "../../../design-system/tokens";
+import dynamicIconImports from "lucide-react/dynamicIconImports";
+// Minimal static fallbacks for critical icons (Trophy Shelf + common)
+import {
+  Trophy as FbkTrophy,
+  Award as FbkAward,
+  Medal as FbkMedal,
+  Star as FbkStar,
+  Target as FbkTarget,
+  Zap as FbkZap,
+  Activity as FbkActivity,
+  Shield as FbkShield,
+  MessageCircle as FbkMessageCircle,
+  Calendar as FbkCalendar,
+  Flag as FbkFlag,
+  Check as FbkCheck,
+} from "lucide-react";
 
 // Core types
 type AccessibleSvgProps = Pick<
@@ -50,6 +66,8 @@ export type ModularIconName =
   | "error"
   | "info"
   | "alert"
+  | "check-square"
+  | "clipboard"
   | "tag"
   | "calendar"
   | "clock"
@@ -59,17 +77,21 @@ export type ModularIconName =
   | "target"
   | "trophy"
   | "award"
+  | "medal"
   | "star"
   | "trending-up"
   | "zap"
   | "flag"
   | "shield"
   | "activity"
+  | "chart"
+  | "bar-chart"
   | "map"
   | "map-pin"
   | "message"
   | "home"
   | "refresh-cw"
+  | "refresh"
   | "wrench"
   | "help-circle"
   | "bug"
@@ -118,6 +140,7 @@ export type ModularIconName =
   | "link"
   | "sparkles"
   | "crown"
+  | "football"
   | "toggle-right"
   | "toggle-left"
   | "back"
@@ -146,109 +169,176 @@ type LucideComponent = React.ComponentType<
   }
 >;
 type Loader = () => Promise<{ default: LucideComponent } | LucideComponent>;
+
+// Use lucide's official dynamic loader map so Vite resolves chunks correctly
+// Convert kebab/lowercase ids (e.g. "arrow-left", "bar-chart", "gamepad-2")
+// to Lucide's PascalCase component keys ("ArrowLeft", "BarChart", "Gamepad2")
+const toPascalKey = (id: string): string =>
+  id
+    .split(/[^a-zA-Z0-9]+/)
+    .filter(Boolean)
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+    .join("");
+
+const importIcon = (id: string): Loader => {
+  return () => {
+    const map = dynamicIconImports as unknown as Record<
+      string,
+      () => Promise<unknown>
+    >;
+    // lucide-react dynamicIconImports typically uses kebab-case keys.
+    // Be resilient: try kebab-case id first, then PascalCase.
+    const candidates = [id, toPascalKey(id)];
+    for (const key of candidates) {
+      const loader = map[key];
+      if (loader) {
+        return loader() as Promise<
+          { default: LucideComponent } | LucideComponent
+        >;
+      }
+    }
+    // Fallback: dynamically import the full lucide-react module and pick the named export.
+    // This guarantees correctness across the app at the cost of a one-time larger chunk.
+    return import("lucide-react").then((mod) => {
+      const pascal = toPascalKey(id);
+      const Comp = (mod as Record<string, unknown>)[pascal] as unknown as
+        | LucideComponent
+        | undefined;
+      if (!Comp) {
+        const tried = candidates.join(", ");
+        throw new Error(
+          `Lucide icon not found in dynamic map or module: id='${id}' tried keys=[${tried}]`
+        );
+      }
+      return Comp as unknown as { default: LucideComponent } | LucideComponent;
+    });
+  };
+};
+
+// Static fallback components keyed by our public icon names
+const fallbackIcons: Partial<Record<ModularIconName, LucideComponent>> = {
+  trophy: FbkTrophy as unknown as LucideComponent,
+  award: FbkAward as unknown as LucideComponent,
+  medal: FbkMedal as unknown as LucideComponent,
+  star: FbkStar as unknown as LucideComponent,
+  target: FbkTarget as unknown as LucideComponent,
+  zap: FbkZap as unknown as LucideComponent,
+  activity: FbkActivity as unknown as LucideComponent,
+  shield: FbkShield as unknown as LucideComponent,
+  message: FbkMessageCircle as unknown as LucideComponent,
+  calendar: FbkCalendar as unknown as LucideComponent,
+  football: FbkTrophy as unknown as LucideComponent,
+  flag: FbkFlag as unknown as LucideComponent,
+  check: FbkCheck as unknown as LucideComponent,
+};
+
 const iconLoaders: Record<ModularIconName, Loader> = {
   // core navigation/actions
-  menu: () => import("lucide-react/dist/esm/icons/menu.js"),
-  close: () => import("lucide-react/dist/esm/icons/x.js"),
-  plus: () => import("lucide-react/dist/esm/icons/plus.js"),
-  "plus-circle": () => import("lucide-react/dist/esm/icons/plus-circle.js"),
-  minus: () => import("lucide-react/dist/esm/icons/minus.js"),
-  edit: () => import("lucide-react/dist/esm/icons/edit-3.js"),
-  delete: () => import("lucide-react/dist/esm/icons/trash-2.js"),
-  check: () => import("lucide-react/dist/esm/icons/check.js"),
-  "alert-triangle": () =>
-    import("lucide-react/dist/esm/icons/alert-triangle.js"),
-  warning: () => import("lucide-react/dist/esm/icons/alert-triangle.js"),
-  error: () => import("lucide-react/dist/esm/icons/alert-circle.js"),
-  info: () => import("lucide-react/dist/esm/icons/info.js"),
-  alert: () => import("lucide-react/dist/esm/icons/alert-triangle.js"),
-  tag: () => import("lucide-react/dist/esm/icons/tag.js"),
-  calendar: () => import("lucide-react/dist/esm/icons/calendar.js"),
-  clock: () => import("lucide-react/dist/esm/icons/clock.js"),
-  users: () => import("lucide-react/dist/esm/icons/users.js"),
-  user: () => import("lucide-react/dist/esm/icons/user.js"),
-  "user-plus": () => import("lucide-react/dist/esm/icons/user-plus.js"),
-  target: () => import("lucide-react/dist/esm/icons/target.js"),
-  trophy: () => import("lucide-react/dist/esm/icons/trophy.js"),
-  award: () => import("lucide-react/dist/esm/icons/award.js"),
-  star: () => import("lucide-react/dist/esm/icons/star.js"),
-  "trending-up": () => import("lucide-react/dist/esm/icons/trending-up.js"),
-  zap: () => import("lucide-react/dist/esm/icons/zap.js"),
-  flag: () => import("lucide-react/dist/esm/icons/flag.js"),
-  shield: () => import("lucide-react/dist/esm/icons/shield.js"),
-  activity: () => import("lucide-react/dist/esm/icons/activity.js"),
-  map: () => import("lucide-react/dist/esm/icons/map.js"),
-  "map-pin": () => import("lucide-react/dist/esm/icons/map-pin.js"),
-  message: () => import("lucide-react/dist/esm/icons/message-circle.js"),
-  home: () => import("lucide-react/dist/esm/icons/home.js"),
-  "refresh-cw": () => import("lucide-react/dist/esm/icons/refresh-cw.js"),
-  wrench: () => import("lucide-react/dist/esm/icons/wrench.js"),
-  "help-circle": () => import("lucide-react/dist/esm/icons/help-circle.js"),
-  bug: () => import("lucide-react/dist/esm/icons/bug.js"),
-  "wifi-off": () => import("lucide-react/dist/esm/icons/wifi-off.js"),
-  server: () => import("lucide-react/dist/esm/icons/server.js"),
-  save: () => import("lucide-react/dist/esm/icons/save.js"),
-  download: () => import("lucide-react/dist/esm/icons/download.js"),
-  upload: () => import("lucide-react/dist/esm/icons/upload.js"),
-  search: () => import("lucide-react/dist/esm/icons/search.js"),
-  filter: () => import("lucide-react/dist/esm/icons/filter.js"),
-  image: () => import("lucide-react/dist/esm/icons/image.js"),
-  camera: () => import("lucide-react/dist/esm/icons/camera.js"),
-  "arrow-left": () => import("lucide-react/dist/esm/icons/arrow-left.js"),
-  "arrow-right": () => import("lucide-react/dist/esm/icons/arrow-right.js"),
-  "arrow-up": () => import("lucide-react/dist/esm/icons/arrow-up.js"),
-  "arrow-down": () => import("lucide-react/dist/esm/icons/arrow-down.js"),
-  "chevron-down": () => import("lucide-react/dist/esm/icons/chevron-down.js"),
-  "chevron-up": () => import("lucide-react/dist/esm/icons/chevron-up.js"),
-  "chevron-left": () => import("lucide-react/dist/esm/icons/chevron-left.js"),
-  "chevron-right": () => import("lucide-react/dist/esm/icons/chevron-right.js"),
-  play: () => import("lucide-react/dist/esm/icons/play.js"),
-  pause: () => import("lucide-react/dist/esm/icons/pause.js"),
-  team: () => import("lucide-react/dist/esm/icons/users.js"),
-  book: () => import("lucide-react/dist/esm/icons/book.js"),
-  file: () => import("lucide-react/dist/esm/icons/file.js"),
-  pdf: () => import("lucide-react/dist/esm/icons/file-text.js"),
-  copy: () => import("lucide-react/dist/esm/icons/copy.js"),
-  folder: () => import("lucide-react/dist/esm/icons/folder.js"),
-  database: () => import("lucide-react/dist/esm/icons/database.js"),
-  phone: () => import("lucide-react/dist/esm/icons/phone.js"),
-  mail: () => import("lucide-react/dist/esm/icons/mail.js"),
-  eye: () => import("lucide-react/dist/esm/icons/eye.js"),
-  "eye-off": () => import("lucide-react/dist/esm/icons/eye-off.js"),
-  lock: () => import("lucide-react/dist/esm/icons/lock.js"),
-  unlock: () => import("lucide-react/dist/esm/icons/unlock.js"),
-  key: () => import("lucide-react/dist/esm/icons/key.js"),
-  hash: () => import("lucide-react/dist/esm/icons/hash.js"),
-  "clipboard-list": () =>
-    import("lucide-react/dist/esm/icons/clipboard-list.js"),
-  "check-circle": () => import("lucide-react/dist/esm/icons/check-circle.js"),
-  grid: () => import("lucide-react/dist/esm/icons/grid.js"),
-  power: () => import("lucide-react/dist/esm/icons/power.js"),
-  pointer: () => import("lucide-react/dist/esm/icons/mouse-pointer.js"),
-  hand: () => import("lucide-react/dist/esm/icons/hand.js"),
-  move: () => import("lucide-react/dist/esm/icons/move.js"),
-  "pen-tool": () => import("lucide-react/dist/esm/icons/pen-tool.js"),
-  link: () => import("lucide-react/dist/esm/icons/link.js"),
-  sparkles: () => import("lucide-react/dist/esm/icons/sparkles.js"),
-  crown: () => import("lucide-react/dist/esm/icons/crown.js"),
-  "toggle-right": () => import("lucide-react/dist/esm/icons/toggle-right.js"),
-  "toggle-left": () => import("lucide-react/dist/esm/icons/toggle-left.js"),
-  back: () => import("lucide-react/dist/esm/icons/arrow-left.js"),
-  forward: () => import("lucide-react/dist/esm/icons/arrow-right.js"),
-  settings: () => import("lucide-react/dist/esm/icons/settings.js"),
-  "gamepad-2": () => import("lucide-react/dist/esm/icons/gamepad-2.js"),
-  inbox: () => import("lucide-react/dist/esm/icons/inbox.js"),
-  "flask-conical": () => import("lucide-react/dist/esm/icons/flask-conical.js"),
-  sprout: () => import("lucide-react/dist/esm/icons/sprout.js"),
-  lightbulb: () => import("lucide-react/dist/esm/icons/lightbulb.js"),
-  rocket: () => import("lucide-react/dist/esm/icons/rocket.js"),
-  "party-popper": () => import("lucide-react/dist/esm/icons/party-popper.js"),
-  type: () => import("lucide-react/dist/esm/icons/type.js"),
-  list: () => import("lucide-react/dist/esm/icons/list.js"),
-  circle: () => import("lucide-react/dist/esm/icons/circle.js"),
-  "graduation-cap": () =>
-    import("lucide-react/dist/esm/icons/graduation-cap.js"),
-  shirt: () => import("lucide-react/dist/esm/icons/shirt.js"),
+  menu: importIcon("menu"),
+  close: importIcon("x"),
+  plus: importIcon("plus"),
+  "plus-circle": importIcon("plus-circle"),
+  minus: importIcon("minus"),
+  edit: importIcon("edit-3"),
+  delete: importIcon("trash-2"),
+  check: importIcon("check"),
+  "alert-triangle": importIcon("alert-triangle"),
+  warning: importIcon("alert-triangle"),
+  error: importIcon("alert-circle"),
+  info: importIcon("info"),
+  alert: importIcon("alert-triangle"),
+  "check-square": importIcon("check-square"),
+  clipboard: importIcon("clipboard"),
+  tag: importIcon("tag"),
+  calendar: importIcon("calendar"),
+  clock: importIcon("clock"),
+  users: importIcon("users"),
+  user: importIcon("user"),
+  "user-plus": importIcon("user-plus"),
+  target: importIcon("target"),
+  trophy: importIcon("trophy"),
+  award: importIcon("award"),
+  medal: importIcon("medal"),
+  star: importIcon("star"),
+  "trending-up": importIcon("trending-up"),
+  zap: importIcon("zap"),
+  flag: importIcon("flag"),
+  shield: importIcon("shield"),
+  activity: importIcon("activity"),
+  chart: importIcon("bar-chart"),
+  "bar-chart": importIcon("bar-chart"),
+  map: importIcon("map"),
+  "map-pin": importIcon("map-pin"),
+  message: importIcon("message-circle"),
+  home: importIcon("home"),
+  "refresh-cw": importIcon("refresh-cw"),
+  refresh: importIcon("refresh-cw"),
+  wrench: importIcon("wrench"),
+  "help-circle": importIcon("help-circle"),
+  bug: importIcon("bug"),
+  "wifi-off": importIcon("wifi-off"),
+  server: importIcon("server"),
+  save: importIcon("save"),
+  download: importIcon("download"),
+  upload: importIcon("upload"),
+  search: importIcon("search"),
+  filter: importIcon("filter"),
+  image: importIcon("image"),
+  camera: importIcon("camera"),
+  "arrow-left": importIcon("arrow-left"),
+  "arrow-right": importIcon("arrow-right"),
+  "arrow-up": importIcon("arrow-up"),
+  "arrow-down": importIcon("arrow-down"),
+  "chevron-down": importIcon("chevron-down"),
+  "chevron-up": importIcon("chevron-up"),
+  "chevron-left": importIcon("chevron-left"),
+  "chevron-right": importIcon("chevron-right"),
+  play: importIcon("play"),
+  pause: importIcon("pause"),
+  team: importIcon("users"),
+  book: importIcon("book"),
+  file: importIcon("file"),
+  pdf: importIcon("file-text"),
+  copy: importIcon("copy"),
+  folder: importIcon("folder"),
+  database: importIcon("database"),
+  phone: importIcon("phone"),
+  mail: importIcon("mail"),
+  eye: importIcon("eye"),
+  "eye-off": importIcon("eye-off"),
+  lock: importIcon("lock"),
+  unlock: importIcon("unlock"),
+  key: importIcon("key"),
+  hash: importIcon("hash"),
+  "clipboard-list": importIcon("clipboard-list"),
+  "check-circle": importIcon("check-circle"),
+  grid: importIcon("grid"),
+  power: importIcon("power"),
+  pointer: importIcon("mouse-pointer"),
+  hand: importIcon("hand"),
+  move: importIcon("move"),
+  "pen-tool": importIcon("pen-tool"),
+  link: importIcon("link"),
+  sparkles: importIcon("sparkles"),
+  crown: importIcon("crown"),
+  football: importIcon("football"),
+  "toggle-right": importIcon("toggle-right"),
+  "toggle-left": importIcon("toggle-left"),
+  back: importIcon("arrow-left"),
+  forward: importIcon("arrow-right"),
+  settings: importIcon("settings"),
+  "gamepad-2": importIcon("gamepad-2"),
+  inbox: importIcon("inbox"),
+  "flask-conical": importIcon("flask-conical"),
+  sprout: importIcon("sprout"),
+  lightbulb: importIcon("lightbulb"),
+  rocket: importIcon("rocket"),
+  "party-popper": importIcon("party-popper"),
+  type: importIcon("type"),
+  list: importIcon("list"),
+  circle: importIcon("circle"),
+  "graduation-cap": importIcon("graduation-cap"),
+  shirt: importIcon("shirt"),
 };
 
 // Icon registry for loaded components
@@ -298,6 +388,12 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
   focusable,
   "aria-hidden": ariaHidden,
 }) => {
+  const debugEnabled =
+    (typeof window !== "undefined" &&
+      // @ts-expect-error: custom debug flag
+      (window.__ICON_DEBUG__ === true ||
+        localStorage.getItem("debugIcons") === "1")) ||
+    false;
   const [IconComponent, setIconComponent] = React.useState<React.ComponentType<{
     size?: number;
     color?: string;
@@ -318,6 +414,9 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
     if (loader && !loading) {
       let isMounted = true;
       setLoading(true);
+      if (debugEnabled) {
+        console.debug(`[IconDebug] start load`, { name });
+      }
       loader()
         .then((mod) => {
           if (!isMounted) return;
@@ -332,12 +431,28 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
           if (Comp) {
             iconRegistry.set(name, Comp);
             setIconComponent(Comp);
+            if (debugEnabled) {
+              console.debug(`[IconDebug] load success`, { name });
+            }
           }
           setLoading(false);
         })
         .catch((error) => {
           // Swallow errors during tests/SSR; keep placeholder visible
-          console.error(`Failed to load icon: ${name}`, error);
+          if (debugEnabled) {
+            console.error(`[IconDebug] load error`, { name, error });
+          } else {
+            console.error(`Failed to load icon: ${name}`, error);
+          }
+          // Last-chance static fallback for critical icons
+          const Fallback = fallbackIcons[name as ModularIconName];
+          if (Fallback) {
+            iconRegistry.set(name, Fallback);
+            setIconComponent(Fallback);
+            if (debugEnabled) {
+              console.debug(`[IconDebug] used static fallback`, { name });
+            }
+          }
           if (!isMounted) return;
           setLoading(false);
         });
@@ -345,7 +460,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
         isMounted = false;
       };
     }
-  }, [name, loading]);
+  }, [name, loading, debugEnabled]);
 
   if (loading || !IconComponent) {
     // Return a minimal loading placeholder
@@ -373,17 +488,24 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
   const iconColor = colorMap[color];
 
   return (
-    <IconComponent
-      size={iconSize}
-      color={iconColor}
-      strokeWidth={strokeWidth}
-      className={className}
+    <span
       role={role ?? "img"}
       aria-label={ariaLabel ?? name}
       aria-hidden={ariaHidden}
-      focusable={focusable}
       tabIndex={tabIndex}
-    />
+      // Ensure wrapper doesn't break layout
+      style={{ display: "inline-flex", lineHeight: 0 }}
+    >
+      <IconComponent
+        size={iconSize}
+        color={iconColor}
+        strokeWidth={strokeWidth}
+        className={className}
+        // Pass-through focusability to SVG when provided
+        // @ts-expect-error: lucide types may not declare focusable
+        focusable={focusable}
+      />
+    </span>
   );
 };
 

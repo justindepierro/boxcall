@@ -2,7 +2,7 @@ import React from "react";
 
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 
 interface TeamTrophyCaseProps {
   teamId: string;

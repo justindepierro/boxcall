@@ -3,7 +3,7 @@
  * Phase 2A Sprint 2: Smart context-aware quick actions
  */
 
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
 import Card from "../ui/Card/Card";

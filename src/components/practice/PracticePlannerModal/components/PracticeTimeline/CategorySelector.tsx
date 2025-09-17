@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Card, Button } from "../../../../../components/ui";
-import { Icon, type IconName } from "../../../../../components/ui/Icon/Icon";
+import { Icon, type IconName } from "../../../../../components/ui/Icon";
 import { Typography } from "../../../../design-system";
 
 import type { PracticeBlock } from "../../types";

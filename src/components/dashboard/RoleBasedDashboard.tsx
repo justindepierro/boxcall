@@ -9,7 +9,7 @@ import {
 } from "../../app/auth-store";
 import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button/Button";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Tag } from "../ui/Tag";
 
 // Import the existing dashboard components

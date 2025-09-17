@@ -41,8 +41,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   // Determine visible fields based on mode
   const quickFieldKeys = useMemo(() => ["display_name", "bio"], []);
   const basicQuickFields = useMemo(
-    () =>
-      config.basicFields.filter((f) => quickFieldKeys.includes(f.key)),
+    () => config.basicFields.filter((f) => quickFieldKeys.includes(f.key)),
     [config.basicFields, quickFieldKeys]
   );
   const allFieldsCombined = useMemo(
@@ -55,7 +54,8 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
     ],
     [config]
   );
-  const fieldsForRender = mode === "quick" ? basicQuickFields : allFieldsCombined;
+  const fieldsForRender =
+    mode === "quick" ? basicQuickFields : allFieldsCombined;
 
   // Initialize form values from current profile (only for visible fields)
   useEffect(() => {
@@ -333,21 +333,21 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             </Button>
           )}
           <div className="flex items-center gap-3 ml-auto">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={handleClose}
-            disabled={isSubmitting}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={isSubmitting || avatarUploading}
-          >
-            {isSubmitting || avatarUploading ? "Saving..." : "Save Changes"}
-          </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={handleClose}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={isSubmitting || avatarUploading}
+            >
+              {isSubmitting || avatarUploading ? "Saving..." : "Save Changes"}
+            </Button>
           </div>
         </div>
       </form>

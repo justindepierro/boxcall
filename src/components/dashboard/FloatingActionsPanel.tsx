@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../ui";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { DevTools } from "../dev";
 import { DashboardCustomizationPanel } from "./DashboardCustomizationPanel";
 

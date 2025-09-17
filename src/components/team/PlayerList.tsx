@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { TEAM_LEVELS } from "../../types/team-management";
 import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Input } from "../ui/Input";
 
 import type { TeamPlayer } from "../../types/team-management";

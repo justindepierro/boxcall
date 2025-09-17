@@ -1,5 +1,4 @@
 import { format } from "date-fns";
-import { Icon as LegacyIcon } from "../ui/Icon/Icon";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEvents } from "../../state/calendar/hooks";
@@ -8,7 +7,7 @@ import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
-import { ModularIcon as Icon } from "../ui/Icon";
+import { Icon } from "../ui/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../ui/Tag";
 
 interface PersonalCalendarProps {
@@ -211,7 +210,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                           variant="body-xs"
                           className="text-text-muted truncate"
                         >
-                          <LegacyIcon
+                          <Icon
                             name="map-pin"
                             size="sm"
                             className="inline align-middle"

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Button } from "../ui";
 import { NotificationBadge } from "../ui/Badge";
 import { prefetchOnHover } from "../../navigation/prefetch-utils";

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Typography } from "../../components/design-system/Typography";
-import { Icon } from "../../components/ui/Icon/Icon";
+import { Icon } from "../../components/ui/Icon";
 import { LogoIcon } from "../../components/ui/Logo";
 
 const AboutPage: React.FC = () => {

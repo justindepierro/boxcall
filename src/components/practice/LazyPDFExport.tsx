@@ -7,10 +7,10 @@
 import React, { Suspense, lazy } from "react";
 
 import { Button } from "../ui/Button/Button";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 
 import type { PracticeBlock } from "./types";
-import type { IconName } from "../ui/Icon/Icon";
+import type { IconName } from "../ui/Icon";
 
 // Lazy load the heavy PDF components
 const PracticePDFExportDialog = lazy(() =>

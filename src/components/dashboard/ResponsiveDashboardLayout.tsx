@@ -119,13 +119,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           {/* Profile Card */}
           <div className="profile-section">
             {isStepVisible(0) ? (
-              <ProfileCard
-                profile={profile}
-                userRole={userRole}
-                onEditClick={() => {
-                  // TODO: Implement edit functionality
-                }}
-              />
+              <ProfileCard profile={profile} userRole={userRole} />
             ) : (
               <DashboardCardSkeleton />
             )}

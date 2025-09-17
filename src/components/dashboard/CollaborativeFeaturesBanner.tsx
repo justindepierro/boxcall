@@ -6,7 +6,7 @@
 import { useState } from "react";
 import { Card } from "../ui";
 import { Button } from "../ui";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Typography } from "../design-system";
 
 interface CollaborativeFeaturesBannerProps {

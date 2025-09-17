@@ -7,7 +7,7 @@ import { Modal } from "../ui/Modal";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 
 /**
  * Team Feeds - Cross-team activity and updates
@@ -107,7 +107,7 @@ const TeamFeeds: React.FC = () => {
           Team Feeds
         </Typography>
         <div className="flex items-center space-x-2">
-          <Icon name="users" size="sm" color="jade" />
+          <Icon name="users" size="sm" color="primary" />
           <Button
             variant="ghost"
             size="xs"

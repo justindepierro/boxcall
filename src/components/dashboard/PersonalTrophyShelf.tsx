@@ -2,7 +2,7 @@ import React from "react";
 import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
-import { ModularIcon as Icon, SmartIconSystem } from "../ui/Icon";
+import { Icon, SmartIconSystem } from "../ui/Icon";
 interface PersonalTrophyShelfProps {
   userId: string;
   userRole?: string; // Optional for future role-based features
@@ -66,6 +66,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       | "star"
       | "trophy"
       | "award"
+      | "medal"
       | "target"
       | "zap"
       | "check"
@@ -73,7 +74,8 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       | "activity"
       | "shield"
       | "message"
-      | "calendar";
+      | "calendar"
+      | "football";
 
     let iconName: ValidIconName = "star"; // fallback
 
@@ -88,11 +90,12 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         calendar: "calendar",
         trophy: "trophy",
         award: "award",
-        medal: "award", // medal -> award
+        medal: "medal",
         star: "star",
         flag: "flag",
         activity: "activity",
         shield: "shield",
+        football: "football",
       };
       iconName = iconMap[iconData] || "star"; // fallback to star if not found
     } else {

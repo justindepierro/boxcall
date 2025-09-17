@@ -1,6 +1,6 @@
 import React from "react";
 import { useDiagramEditor } from "../context";
-import Icon from "../../../ui/Icon/Icon";
+import { Icon } from "../../../ui/Icon";
 import { Button } from "../../../ui/Button";
 import { Tooltip } from "../../../ui/Tooltip/Tooltip";
 import { UserPreferencesService } from "@services/userPreferencesService";

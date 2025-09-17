@@ -10,7 +10,7 @@ import { TeamBulletinHeader } from "../components/team-dashboard/layout/TeamBull
 import { TeamBulletinLeftPanel } from "../components/team-dashboard/layout/TeamBulletinLeftPanel";
 import { TeamBulletinRightPanel } from "../components/team-dashboard/layout/TeamBulletinRightPanel";
 import { Button } from "../components/ui";
-import { Icon } from "../components/ui/Icon/Icon";
+import { Icon } from "../components/ui/Icon";
 import { LogoIcon } from "../components/ui/Logo";
 import { usePermissions } from "../hooks/usePermissions";
 import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";

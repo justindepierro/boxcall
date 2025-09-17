@@ -15,39 +15,35 @@ import type {
 // to reduce direct Tailwind color utility coupling. Utilities retained for spacing/structure only.
 const buttonVariants: ButtonStylesConfig = {
   primary: {
-    base:
-      "text-white border" +
-      " bg-[var(--semantic-primary-hover)] border-[var(--semantic-primary-hover)]",
-    hover:
-      "hover:bg-[var(--semantic-primary-active)] hover:border-[var(--semantic-primary-active)]",
-    active:
-      "active:bg-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)]",
+    base: "text-white" + " bg-[var(--semantic-primary-hover)]",
+    hover: "hover:bg-[var(--semantic-primary-active)]",
+    active: "active:bg-[var(--semantic-primary-active)]",
     disabled:
-      "disabled:bg-[color:var(--color-jade-300)] disabled:border-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
+      "disabled:bg-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   secondary: {
-    base: "bg-transparent text-[var(--color-navy-700)] border-2 border-[var(--color-navy-700)]",
+    base: "bg-[var(--semantic-bg-secondary)] text-[var(--color-navy-700)]",
     hover:
-      "hover:bg-[var(--color-navy-700)] hover:text-white hover:border-[var(--color-navy-700)]",
+      "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--color-navy-800)]",
     active:
-      "active:bg-[var(--color-navy-800)] active:text-white active:border-[var(--color-navy-800)]",
+      "active:bg-[color:var(--color-gray-200)] active:text-[var(--color-navy-900)]",
     disabled:
-      "disabled:text-[color:var(--color-navy-400)] disabled:border-[color:var(--color-navy-300)] disabled:cursor-not-allowed",
+      "disabled:text-[color:var(--color-navy-400)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   outline: {
-    base: "bg-transparent text-[var(--semantic-primary-hover)] border border-[var(--semantic-primary-hover)]",
+    base: "bg-transparent text-[var(--semantic-primary-hover)]",
     hover:
-      "hover:bg-[color:var(--color-jade-50)] hover:text-[var(--semantic-primary-active)] hover:border-[var(--semantic-primary-active)]",
+      "hover:bg-[color:var(--color-jade-50)] hover:text-[var(--semantic-primary-active)]",
     active:
-      "active:bg-[color:var(--color-jade-100)] active:text-[var(--semantic-primary-active)] active:border-[var(--semantic-primary-active)]",
+      "active:bg-[color:var(--color-jade-100)] active:text-[var(--semantic-primary-active)]",
     disabled:
-      "disabled:text-[color:var(--color-jade-300)] disabled:border-[color:var(--color-jade-200)] disabled:cursor-not-allowed",
+      "disabled:text-[color:var(--color-jade-300)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   ghost: {
-    base: "bg-transparent text-[var(--semantic-text-secondary)] border border-transparent",
+    base: "bg-transparent text-[var(--semantic-text-secondary)]",
     hover:
       "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
     active:
@@ -57,13 +53,13 @@ const buttonVariants: ButtonStylesConfig = {
     focus: "focus-ring focus-ring-offset",
   },
   subtle: {
-    base: "bg-[var(--semantic-bg-secondary)] text-[var(--semantic-text-secondary)] border border-[var(--semantic-border)]",
+    base: "bg-[var(--semantic-bg-secondary)] text-[var(--semantic-text-secondary)]",
     hover:
       "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
     active:
       "active:bg-[color:var(--color-gray-200)] active:text-[var(--semantic-text-primary)]",
     disabled:
-      "disabled:bg-[var(--semantic-bg-secondary)] disabled:text-[var(--semantic-text-muted)] disabled:border-[var(--semantic-border)] disabled:cursor-not-allowed",
+      "disabled:bg-[var(--semantic-bg-secondary)] disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   link: {

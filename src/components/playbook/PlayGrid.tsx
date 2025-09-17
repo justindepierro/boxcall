@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from "react";
 // (Removed unused RefreshCw, Search imports after log text simplification)
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { IconButton } from "../ui";
 import { PlayCard } from "./PlayCard";
 import { Virtuoso } from "react-virtuoso";

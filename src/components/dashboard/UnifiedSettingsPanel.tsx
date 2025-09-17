@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../ui";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Typography } from "../design-system/Typography";
 import { DashboardCustomizationPanel } from "./DashboardCustomizationPanel";
 

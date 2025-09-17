@@ -7,7 +7,7 @@ import { Button } from "../components/ui/Button/Button";
 import Card from "../components/ui/Card/Card";
 import Input from "../components/ui/Input/Input";
 import { Modal } from "../components/ui/Modal/Modal";
-import Icon from "../components/ui/Icon/Icon";
+import { Icon } from "../components/ui/Icon";
 import { PDFExportTrigger } from "../components/practice/LazyPDFExport";
 import {
   usePracticeBlocks,

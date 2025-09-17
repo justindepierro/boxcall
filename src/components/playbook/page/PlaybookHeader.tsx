@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon } from "../../ui/Icon/Icon";
+import { Icon } from "../../ui/Icon";
 import { Badge, ProgressBadge, ComplexityBadge } from "../../ui/Badge";
 import { Typography } from "../../design-system/Typography";
 

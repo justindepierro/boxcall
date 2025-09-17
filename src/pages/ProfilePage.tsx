@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth, useAuthLoading, useAuthProfile } from "../app/auth-store";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
-import { Icon } from "../components/ui/Icon/Icon";
+import { Icon } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
 import { supabase } from "../lib/supabase";
 /**

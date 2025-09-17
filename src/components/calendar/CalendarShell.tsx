@@ -3,7 +3,7 @@ import React from "react";
 import "./CalendarShell.css";
 // (migrated logic now inside controller hook)
 import { Card } from "../ui"; // adjust relative path if needed
-import Icon from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 
 import { BoxCallCalendar } from "./BoxCallCalendar";
 import { CalendarFiltersPanel } from "./CalendarFiltersPanel";

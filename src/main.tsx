@@ -22,6 +22,17 @@ if (import.meta.env.VITE_PREFETCH_ROUTES === "true") {
   setTimeout(() => initRoutePrefetch(), 0);
 }
 
+// Optional: enable icon debug logs if requested
+try {
+  if (localStorage.getItem("debugIcons") === "1") {
+    // @ts-expect-error custom flag on window
+    window.__ICON_DEBUG__ = true;
+    console.info("[IconDebug] Icon debug mode enabled via localStorage");
+  }
+} catch {
+  // ignore storage access issues
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AppProviders>

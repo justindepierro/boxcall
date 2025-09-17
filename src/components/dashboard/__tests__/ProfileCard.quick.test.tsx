@@ -26,7 +26,9 @@ describe("ProfileCard quick-edit and navigation", () => {
             path="/dashboard"
             element={
               <RoleProvider>
-                <DashboardContext.Provider value={{ profile, setProfile } as any}>
+                <DashboardContext.Provider
+                  value={{ profile, setProfile } as any}
+                >
                   <ProfileCard />
                 </DashboardContext.Provider>
               </RoleProvider>
@@ -43,9 +45,7 @@ describe("ProfileCard quick-edit and navigation", () => {
     const r1 = renderCard();
 
     // Avatar button
-    await user.click(
-      screen.getByRole("button", { name: /view profile/i })
-    );
+    await user.click(screen.getByRole("button", { name: /view profile/i }));
     expect(screen.getByText("Profile Page")).toBeInTheDocument();
     r1.unmount();
 
@@ -70,17 +70,23 @@ describe("ProfileCard quick-edit and navigation", () => {
     r3.unmount();
   });
 
-  it("opens quick edit modal from header edit button", async () => {
+  it("opens quick edit modal from Quick Edit button", async () => {
     const user = userEvent.setup();
     renderCard();
 
-    // Use exact match to avoid 'Edit profile picture'
-    await user.click(
-      screen.getByRole("button", { name: /^Edit profile$/ })
-    );
+    await user.click(screen.getByRole("button", { name: /quick edit/i }));
     // Modal title for quick mode
     expect(screen.getByText(/quick edit profile/i)).toBeInTheDocument();
     // Has display name and bio fields visible
+    expect(screen.getByText(/quick details/i)).toBeInTheDocument();
+  });
+
+  it("opens quick edit modal from 'Edit Bio' button", async () => {
+    const user = userEvent.setup();
+    renderCard();
+    const editBioButtons = screen.getAllByRole("button", { name: /edit bio/i });
+    await user.click(editBioButtons[0]);
+    expect(screen.getByText(/quick edit profile/i)).toBeInTheDocument();
     expect(screen.getByText(/quick details/i)).toBeInTheDocument();
   });
 });

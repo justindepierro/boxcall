@@ -4,7 +4,8 @@
  */
 import React from "react";
 import { Button } from "./Button";
-import { ModularIcon as Icon } from "./Icon";
+import { Icon } from "./Icon";
+import type { IconName } from "./Icon";
 import { Typography } from "../design-system/Typography";
 
 export interface MobileErrorStateProps {
@@ -30,7 +31,16 @@ export interface MobileErrorStateProps {
   className?: string;
 }
 
-const ERROR_CONFIGURATIONS = {
+const ERROR_CONFIGURATIONS: Record<
+  NonNullable<MobileErrorStateProps["type"]>,
+  {
+    icon: IconName;
+    defaultTitle: string;
+    defaultMessage: string;
+    color: string;
+    bgColor: string;
+  }
+> = {
   network: {
     icon: "wifi-off" as const,
     defaultTitle: "Network Error",
@@ -83,7 +93,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
   className = "",
 }) => {
   const config = ERROR_CONFIGURATIONS[type];
-  const IconName = config.icon;
+  const IconName = config.icon as IconName;
 
   const handleRetry = () => {
     if (onRetry) {

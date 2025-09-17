@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon } from "../../ui/Icon/Icon";
+import { Icon } from "../../ui/Icon";
 import { Button } from "../../ui/Button/Button";
 import { Badge } from "../../ui/Badge";
 import { AdvancedSearchBar } from "../../playbook/AdvancedSearchBar";

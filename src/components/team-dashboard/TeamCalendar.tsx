@@ -11,7 +11,7 @@ import { Typography } from "../design-system/Typography";
 import { OnboardingHint } from "../onboarding/OnboardingHint";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../ui/Icon";
 import { Input } from "../ui/Input";
 import { Modal } from "../ui/Modal/Modal";
 import { Select } from "../ui/Select";

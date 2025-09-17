@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../app/auth-store";
 import { Typography } from "../components/design-system";
-import { Icon } from "../components/ui/Icon/Icon";
+import { Icon } from "../components/ui/Icon";
 import { Tag } from "../components/ui/Tag";
 import { Button } from "../components/ui/Button/Button";
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // (Removed unused Rocket, Wrench imports after log text simplification)
 import { Typography } from "../../design-system/Typography";
-import { Icon } from "../../ui/Icon/Icon";
+import { Icon } from "../../ui/Icon";
 import { DataSyncService, CSVService, PlaysService } from "@services";
 import type { CSVParseResult } from "@services/csv";
 import { Button } from "../../ui/Button/Button";
