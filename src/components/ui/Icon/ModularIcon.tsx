@@ -26,6 +26,12 @@ import {
   Flag as FbkFlag,
   Check as FbkCheck,
   Camera as FbkCamera,
+  Crown as FbkCrown,
+  Edit3 as FbkEdit3,
+  User as FbkUser,
+  Users as FbkUsers,
+  Home as FbkHome,
+  Plus as FbkPlus,
 } from "lucide-react";
 
 // Core types
@@ -208,6 +214,19 @@ const importIcon = (id: string): Loader => {
         return Comp as unknown as { default: LucideComponent } | LucideComponent;
       });
 
+    // In development, prefer module fallback first to avoid dynamic chunk fetch flakiness.
+    if (import.meta.env.DEV) {
+      return tryModuleFallback().catch(() => {
+        if (foundLoader) {
+          return foundLoader() as Promise<
+            { default: LucideComponent } | LucideComponent
+          >;
+        }
+        throw new Error(`Lucide icon not found (dev): id='${id}'`);
+      });
+    }
+
+    // In production, try dynamic chunk first for optimal tree-shaking, then fallback.
     if (foundLoader) {
       return (foundLoader() as Promise<
         { default: LucideComponent } | LucideComponent
@@ -235,6 +254,12 @@ const fallbackIcons: Partial<Record<ModularIconName, LucideComponent>> = {
   flag: FbkFlag as unknown as LucideComponent,
   check: FbkCheck as unknown as LucideComponent,
   camera: FbkCamera as unknown as LucideComponent,
+  crown: FbkCrown as unknown as LucideComponent,
+  edit: FbkEdit3 as unknown as LucideComponent,
+  user: FbkUser as unknown as LucideComponent,
+  users: FbkUsers as unknown as LucideComponent,
+  home: FbkHome as unknown as LucideComponent,
+  plus: FbkPlus as unknown as LucideComponent,
 };
 
 const iconLoaders: Record<ModularIconName, Loader> = {
@@ -406,6 +431,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
     className?: string;
   }> | null>(null);
   const [loading, setLoading] = React.useState(false);
+  const computedAriaLabel = ariaHidden ? undefined : ariaLabel ?? name;
 
   React.useEffect(() => {
     // Check if already loaded
@@ -414,13 +440,25 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
       return;
     }
 
+    // In dev, if we have a static fallback for this icon, show it immediately for better UX
+    if (import.meta.env.DEV) {
+      const devFallback = fallbackIcons[name as ModularIconName];
+      if (devFallback) {
+        iconRegistry.set(name, devFallback);
+        setIconComponent(devFallback);
+        if (debugEnabled) {
+          console.info(`[IconDebug] dev immediate fallback`, { name });
+        }
+      }
+    }
+
     // Load the icon dynamically (per-icon subpath to avoid bundling the whole library)
     const loader = iconLoaders[name];
     if (loader && !loading) {
       let isMounted = true;
       setLoading(true);
       if (debugEnabled) {
-        console.debug(`[IconDebug] start load`, { name });
+        console.info(`[IconDebug] start load`, { name });
       }
       loader()
         .then((mod) => {
@@ -437,7 +475,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
             iconRegistry.set(name, Comp);
             setIconComponent(Comp);
             if (debugEnabled) {
-              console.debug(`[IconDebug] load success`, { name });
+              console.info(`[IconDebug] load success`, { name });
             }
           }
           setLoading(false);
@@ -455,7 +493,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
             iconRegistry.set(name, Fallback);
             setIconComponent(Fallback);
             if (debugEnabled) {
-              console.debug(`[IconDebug] used static fallback`, { name });
+              console.info(`[IconDebug] used static fallback`, { name });
             }
           }
           if (!isMounted) return;
@@ -467,12 +505,14 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
     }
   }, [name, loading, debugEnabled]);
 
-  if (loading || !IconComponent) {
+  if (!IconComponent) {
     // Return a minimal loading placeholder
     return (
       <svg
+        data-icon-placeholder="true"
+        data-icon={name}
         role={role ?? "img"}
-        aria-label={ariaLabel ?? name}
+        aria-label={computedAriaLabel}
         aria-hidden={ariaHidden}
         focusable={focusable}
         tabIndex={tabIndex}
@@ -494,8 +534,9 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
 
   return (
     <span
+      data-icon={name}
       role={role ?? "img"}
-      aria-label={ariaLabel ?? name}
+      aria-label={computedAriaLabel}
       aria-hidden={ariaHidden}
       tabIndex={tabIndex}
       // Ensure wrapper doesn't break layout

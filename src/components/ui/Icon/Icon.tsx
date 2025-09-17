@@ -297,6 +297,9 @@ export const Icon: React.FC<IconProps> = ({
     return ok ? (n as ModularIconName) : "help-circle";
   };
 
+  // If the icon is decorative (aria-hidden), do not provide an aria-label
+  const computedAriaLabel = ariaHidden ? undefined : ariaLabel ?? name;
+
   return (
     <ModularIcon
       name={toModularName(name)}
@@ -304,7 +307,7 @@ export const Icon: React.FC<IconProps> = ({
       color={vectorColor}
       className={className ? `${className} ${colorClass}`.trim() : colorClass}
       role={role}
-      aria-label={ariaLabel ?? name}
+      aria-label={computedAriaLabel}
       aria-hidden={ariaHidden}
       focusable={focusable}
       tabIndex={tabIndex}

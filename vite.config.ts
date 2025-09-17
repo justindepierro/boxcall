@@ -7,7 +7,7 @@ import { VitePWA } from "vite-plugin-pwa";
 const enablePWA = process.env.VITE_ENABLE_PWA === "true";
 const useLightningCss = process.env.MINIFY_CSS === "lightningcss";
 
-export default defineConfig({
+export default defineConfig(({ command, mode: _mode }) => ({
   server: {
     open: true,
   },
@@ -20,7 +20,7 @@ export default defineConfig({
   },
   // Strip console/debugger in production transforms
   esbuild: {
-    drop: process.env.NODE_ENV === "production" ? ["console", "debugger"] : [],
+    drop: command === "build" ? ["console", "debugger"] : [],
   },
   resolve: {
     alias: {
@@ -140,4 +140,4 @@ export default defineConfig({
     // Set chunk size warnings
     chunkSizeWarningLimit: 500,
   },
-});
+}));
