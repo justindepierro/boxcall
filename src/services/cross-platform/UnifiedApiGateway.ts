@@ -361,7 +361,7 @@ export class UnifiedApiGateway {
       // Store analysis results for future reference
       // TODO: Implement intelligent analysis storage
     } catch (error) {
-      console.error("Failed to trigger intelligent analysis:", error);
+// console.error("Failed to trigger intelligent analysis:", error);
     }
   }
   private static async triggerConflictReanalysis(

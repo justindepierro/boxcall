@@ -1,0 +1,646 @@
+/* Import centralized design tokens first */
+@import "./styles/tokens.css";
+@import "./styles/mobile.css";
+/* Self-hosted fonts (optional until WOFF2 files are added) */
+@import "./styles/fonts.css";
+/* Generated CSS variables (design tokens) */
+@import "./styles/generated-tokens.css";
+@import "./styles/generated-themes.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Universal reset for borders */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+}
+
+@layer base {
+  :root {
+    /* Component-level fallbacks */
+    --panel-bg: rgba(255, 255, 255, 0.85);
+    --panel-border: rgba(60, 60, 67, 0.18);
+    --panel-radius: 12px;
+    --panel-blur: 16px;
+    --panel-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 20px rgba(0, 0, 0, 0.06);
+    --button-border-radius: 4px;
+    --button-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  }
+  html {
+    font-family: "Inter", system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+  }
+
+  /* MonoSpace font family for PlayBuilder inputs */
+  .playbuilder-input,
+  .mono-input {
+    font-family:
+      "JetBrains Mono", "SF Mono", "Monaco", "Cascadia Code", "Roboto Mono",
+      "Courier New", Courier, monospace !important;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.025em;
+  }
+
+  /* Ensure consistent sizing for monospace fonts */
+  .playbuilder-input {
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.5;
+  }
+
+  /* Removed empty html:not(.dark) * rule that triggered a CSS warning */
+
+  html:not(.dark) .card,
+  html:not(.dark) [class*="bg-gray-8"],
+  html:not(.dark) [class*="bg-gray-9"] {
+    background-color: #ffffff !important;
+    color: #111827 !important; /* gray-900 */
+  }
+
+  /* Override specific problematic background classes in light mode */
+  html:not(.dark) [style*="background-color: rgb(31, 41, 55)"],
+  html:not(.dark) [style*="background-color: rgb(17, 24, 39)"] {
+    background-color: white !important;
+    color: rgb(17, 24, 39) !important;
+  }
+
+  /* Force proper dark mode styling when in dark mode */
+  html.dark .card {
+    background-color: #1f2937 !important; /* gray-800 */
+    color: #f3f4f6 !important; /* gray-100 */
+  }
+
+  body {
+    background-color: #f9fafb; /* gray-50 */
+    color: #111827; /* gray-900 */
+    margin: 0;
+    min-height: 100vh;
+    padding: 0;
+    border: none;
+    outline: none;
+  }
+  .dark body {
+    background-color: #111827; /* gray-900 */
+    color: #f3f4f6; /* gray-100 */
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 0.5rem;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: #f3f4f6;
+  }
+  .dark ::-webkit-scrollbar-track {
+    background-color: #1f2937;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #d1d5db;
+    border-radius: 9999px;
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #9ca3af;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background-color: #6b7280;
+  }
+}
+
+@layer components {
+  /* Cupertino-style panel utility driven by theme component tokens */
+  .panel-cupertino {
+    background: var(--panel-bg);
+    -webkit-backdrop-filter: saturate(180%) blur(var(--panel-blur));
+    backdrop-filter: saturate(180%) blur(var(--panel-blur));
+    border: 1px solid var(--panel-border);
+    border-radius: var(--panel-radius);
+    box-shadow: var(--panel-shadow);
+  }
+  /* Semantic Surface Utilities */
+  .surface-app {
+    background-color: #f9fafb;
+    color: #111827;
+  }
+  .dark .surface-app {
+    background-color: #111827;
+    color: #f3f4f6;
+  }
+  .surface-header {
+    background-color: #ffffff;
+    color: #111827;
+  }
+  .dark .surface-header {
+    background-color: #1f2937;
+    color: #f3f4f6;
+  }
+  .surface-card {
+    background-color: #ffffff;
+  }
+  .dark .surface-card {
+    background-color: #1f2937;
+  }
+  .surface-subtle {
+    background-color: #f9fafb;
+  }
+  .dark .surface-subtle {
+    background-color: rgba(31, 41, 55, 0.6);
+  }
+  /* New: Navigation surface (tokens-driven) */
+  .surface-nav {
+    background: var(--navigation-background);
+    border-bottom: 1px solid var(--navigation-border);
+    color: var(--color-textPrimary);
+  }
+  .dark .surface-nav {
+    background: var(--color-bgSecondary);
+    border-color: var(--color-border);
+    color: var(--color-textPrimary);
+  }
+
+  /* Optional inverse surface (for future tooltips / overlays) */
+  .surface-inverse {
+    background-color: rgb(17 24 39); /* gray-900 */
+    color: #fff;
+  }
+  .dark .surface-inverse {
+    background-color: rgb(55 65 81); /* gray-700 */
+    color: rgb(243 244 246); /* gray-100 */
+  }
+
+  /* Subtle hover layer utility (token-friendly) */
+  .hoverable-subtle:hover {
+    background: var(--color-bgMuted);
+  }
+  .dark .hoverable-subtle:hover {
+    background-color: rgb(55 65 81); /* gray-700 */
+  }
+
+  /* Nav item base + states (tokens-based) */
+  .nav-item-base {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    line-height: 1.25rem;
+    color: var(--color-textSecondary);
+    position: relative;
+    transition:
+      background-color 120ms ease,
+      color 120ms ease;
+  }
+  .dark .nav-item-base {
+    color: var(--color-textSecondary);
+  }
+  .nav-item-base:hover {
+    background: var(--navigation-linkHover);
+    color: var(--color-textPrimary);
+  }
+  .nav-item-active {
+    background: var(--color-bgBrand);
+    color: var(--color-primaryHover);
+  }
+  .dark .nav-item-active {
+    background: rgba(4, 120, 87, 0.15); /* jade 700 w/ alpha */
+    color: var(--color-primary);
+  }
+  .nav-item-active::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: -0.75rem;
+    top: 0.4rem;
+    bottom: 0.4rem;
+    width: 4px;
+    border-radius: 2px;
+    background: linear-gradient(
+      180deg,
+      var(--color-primary),
+      var(--color-primaryActive)
+    );
+  }
+  .dark .nav-item-active::before {
+    background: linear-gradient(
+      180deg,
+      var(--color-primary),
+      var(--color-primaryHover)
+    );
+  }
+  .nav-item-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* Surface Hover State (semantic) */
+  .surface-subtle-hover {
+    background-color: var(--surface-subtle-hover);
+  }
+  .dark .surface-subtle-hover {
+    background-color: var(--surface-subtle-hover);
+  }
+  /* Deprecated: row-hover alias removed after migration to surface-subtle-hover */
+
+  /* Elevation utilities (token friendly) */
+  .elevation-card {
+    box-shadow: var(--shadow-card-rest);
+    transition:
+      box-shadow 0.18s ease,
+      transform 0.18s ease;
+  }
+  .elevation-card.hoverable:hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+  .elevation-card:active {
+    box-shadow: var(--shadow-card-active);
+  }
+  .elevation-button {
+    box-shadow: var(--shadow-button-rest);
+    transition: box-shadow 0.18s ease;
+  }
+  .elevation-button:hover {
+    box-shadow: var(--shadow-button-hover);
+  }
+  .elevation-button:active {
+    box-shadow: var(--shadow-button-active);
+  }
+  .elevation-dropdown {
+    box-shadow: var(--shadow-dropdown);
+  }
+  .elevation-modal {
+    box-shadow: var(--shadow-modal);
+  }
+
+  /* Dividers */
+  .divider-light {
+    height: 1px;
+    background: #e5e7eb;
+  }
+  .dark .divider-light {
+    background: #374151;
+  }
+  .divider-strong {
+    height: 1px;
+    background: #cbd5e1;
+  }
+  .dark .divider-strong {
+    background: #475569;
+  }
+
+  /* Semantic border utility (replaces ad-hoc dashed placeholders) */
+  .border-subtle {
+    border: 1px solid var(--color-border);
+  }
+  .dark .border-subtle {
+    border-color: #374151;
+  }
+
+  /* Drop zone / placeholder (refined from dashed boxes) */
+  .placeholder-zone {
+    background: var(--color-bgSecondary);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+  }
+  .placeholder-zone.emphasis {
+    background: var(--color-bgBrand);
+    border-color: var(--color-primaryHover);
+  }
+
+  /* Semantic Text Tokens */
+  .text-text-primary {
+    color: #111827;
+  }
+  .dark .text-text-primary {
+    color: #f3f4f6;
+  }
+  .text-text-secondary {
+    color: #4b5563;
+  }
+  .dark .text-text-secondary {
+    color: #9ca3af;
+  }
+  .text-text-muted {
+    color: #6b7280;
+  }
+  .dark .text-text-muted {
+    color: #6b7280;
+  }
+  .text-text-inverse {
+    color: #ffffff;
+  }
+  /* Button variants */
+  .btn-primary {
+    background-color: #00a86b;
+    color: #ffffff;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.15s;
+  }
+  .btn-primary:hover {
+    background-color: #047857;
+  }
+
+  .btn-secondary {
+    background-color: #e5e7eb;
+    color: #111827;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+  }
+  .btn-secondary:hover {
+    background-color: #d1d5db;
+  }
+  .dark .btn-secondary {
+    background-color: #374151;
+    color: #f3f4f6;
+  }
+  .dark .btn-secondary:hover {
+    background-color: #4b5563;
+  }
+
+  /* Unified Focus Ring Utilities */
+  .focus-ring {
+    outline: none !important;
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 0),
+      var(--focus-ring, 0 0 0 2px rgba(34, 197, 94, 0.6));
+    transition: box-shadow 120ms ease;
+  }
+  .focus-ring:focus-visible {
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 0),
+      var(--focus-ring, 0 0 0 2px rgba(34, 197, 94, 0.6));
+  }
+  .focus-ring-offset:focus-visible {
+    box-shadow:
+      0 0 0 2px var(--color-bgBase, #fff),
+      var(--focus-ring, 0 0 0 2px rgba(34, 197, 94, 0.6));
+  }
+  .dark .focus-ring-offset:focus-visible {
+    box-shadow:
+      0 0 0 2px var(--color-bgBase, #111827),
+      var(--focus-ring, 0 0 0 2px rgba(16, 185, 129, 0.7));
+  }
+
+  .btn-danger {
+    background-color: #dc2626;
+    color: #ffffff;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.15s;
+  }
+  .btn-danger:hover {
+    background-color: #b91c1c;
+  }
+
+  /* Card components */
+  .card {
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    padding: 1.5rem;
+  }
+  .dark .card {
+    background-color: #1f2937;
+  }
+
+  .play-card {
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+  }
+  .play-card:hover {
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.1),
+      0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  /* Confidence indicators */
+  .confidence-high {
+    background-color: #047857;
+    color: #ffffff;
+  }
+
+  .confidence-medium {
+    background-color: #d97706;
+    color: #ffffff;
+  }
+
+  .confidence-low {
+    background-color: #dc2626;
+    color: #ffffff;
+  }
+
+  .confidence-unknown {
+    background-color: #64748b;
+    color: #ffffff;
+  }
+
+  /* Form styling */
+  .form-input {
+    display: block;
+    width: 100%;
+    border-radius: 0.375rem;
+    border: 1px solid #d1d5db;
+    padding: 0.5rem 0.75rem;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  }
+  .form-input:focus {
+    outline: 2px solid #00a86b;
+    outline-offset: 1px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Navigation */
+  .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+  }
+
+  .nav-link-active {
+    background-color: #334155;
+    color: #f8fafc;
+  }
+
+  .nav-link-inactive {
+    color: #94a3b8;
+  }
+  .nav-link-inactive:hover {
+    background-color: #1e293b;
+    color: #f8fafc;
+  }
+
+  /* Field/canvas styling */
+  .field-canvas {
+    border: 2px solid #2d5016;
+    background-color: #4a7c59;
+    border-radius: 0.5rem;
+  }
+
+  /* Play type indicators */
+  .play-run {
+    background-color: #7c3aed;
+    color: #ffffff;
+  }
+
+  .play-pass {
+    background-color: #0369a1;
+    color: #ffffff;
+  }
+
+  .play-special {
+    background-color: #d97706;
+    color: #ffffff;
+  }
+
+  .play-defense {
+    background-color: #dc2626;
+    color: #ffffff;
+  }
+}
+
+@layer utilities {
+  /* Custom utilities */
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .backdrop-blur-xs {
+    backdrop-filter: blur(2px);
+  }
+
+  /* Confidence animations */
+  .confidence-pulse {
+    animation: confidencePulse 2s infinite;
+  }
+
+  /* BoxCall Compact Layout System */
+  .compact-layout > * + * {
+    margin-top: 0.75rem;
+  }
+
+  .compact-grid {
+    gap: 0.75rem;
+  }
+
+  .compact-card {
+    padding: 0.75rem;
+  }
+  .compact-card > * + * {
+    margin-top: 0.5rem;
+  }
+
+  .compact-section {
+    margin-bottom: 0.75rem;
+  }
+  .compact-section > * + * {
+    margin-top: 0.5rem;
+  }
+
+  .compact-header {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Tight spacing utilities */
+  .space-y-tight > * + * {
+    margin-top: 0.5rem;
+  }
+
+  .space-x-tight > * + * {
+    margin-left: 0.5rem;
+  }
+
+  /* Ultra-compact for dense information */
+  .ultra-compact {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  .ultra-compact > * + * {
+    margin-top: 0.25rem;
+  }
+
+  /* Grid layouts for different screen sizes */
+  .grid-plays {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  @media (min-width: 768px) {
+    .grid-plays {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1024px) {
+    .grid-plays {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1280px) {
+    .grid-plays {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .grid-dashboard {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    .grid-dashboard {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  /* Compact dashboard layout */
+  .grid-dashboard-compact {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  @media (min-width: 1024px) {
+    .grid-dashboard-compact {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+}

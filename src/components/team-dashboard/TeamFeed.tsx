@@ -188,7 +188,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
                     label: "View Roadmap",
                     variant: "ghost",
                     onClick: () =>
-                      console.info("telemetry:onboarding.feed.view_roadmap"),
+// console.info("telemetry:onboarding.feed.view_roadmap"),
                   },
                 ]
           }

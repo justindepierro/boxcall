@@ -119,7 +119,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Refresh data when refreshTrigger changes
   useEffect(() => {
     if (refreshTrigger > 0) {
-      console.info("Refreshing plays data due to trigger:", refreshTrigger);
+// console.info("Refreshing plays data due to trigger:", refreshTrigger);
       refreshData();
     }
   }, [refreshTrigger, refreshData]);
@@ -140,13 +140,13 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Validate database integration (development mode only)
   useEffect(() => {
     if (plays.length > 0 && process.env.NODE_ENV === "development") {
-      console.info("🏈 Playbook Database Integration Test");
-      console.info("📊 Total Plays Loaded:", plays.length);
-      console.info("🏟️ Sample Play:", plays[0]);
-      console.info("Available Formations:", [
+// console.info("🏈 Playbook Database Integration Test");
+// console.info("📊 Total Plays Loaded:", plays.length);
+// console.info("🏟️ Sample Play:", plays[0]);
+// console.info("Available Formations:", [
         ...new Set(plays.map((p) => p.formation)),
       ]);
-      console.info("⚡ Available Play Types:", [
+// console.info("⚡ Available Play Types:", [
         ...new Set(plays.map((p) => p.p_type)),
       ]);
       // end group
@@ -325,7 +325,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     if (count % 100 === 0) {
       const elapsed = performance.now() - start;
       if (elapsed < 8000) {
-        console.warn(
+// console.warn(
           `[PlayGrid] High render frequency: ${count} renders in ${elapsed.toFixed(
             0
           )}ms (filteredPlays=${filteredPlays.length})`

@@ -1,0 +1,48 @@
+// Centralized telemetry event type constants.
+export const TelemetryEventTypes = {
+  PlayCreate: "play.create",
+  PlayUpdate: "play.update",
+  PlayDiagramUpdated: "play.diagram_updated",
+  PlayDiagramRouteAdd: "play.diagram_route_add",
+  PlayDiagramPlayerAdd: "play.diagram_player_add",
+  PlayDiagramPlayerUpdate: "play.diagram_player_update",
+  PlayDiagramPlayerRemove: "play.diagram_player_remove",
+  PlayDiagramHistory: "play.diagram_history",
+  PlayDiagramFlagToggle: "play.diagram_flag_toggle",
+  PlayDiagramMirror: "play.diagram_mirror",
+  PlayDiagramFormationApply: "play.diagram_formation_apply",
+  PlayDiagramBallHash: "play.diagram_ball_hash",
+  PlayDiagramExportThumbnail: "play.diagram_export_thumbnail",
+  PlayDiagramFieldTheme: "play.diagram_field_theme",
+  PlayDiagramSelection: "play.diagram_selection",
+  PlayDiagramMoveGroup: "play.diagram_move_group",
+  PlayDiagramRedZoneToggle: "play.diagram_red_zone_toggle",
+  PlayDiagramPlayerReorder: "play.diagram_player_reorder",
+  PlayDiagramPlayerBulkEdit: "play.diagram_player_bulk_edit",
+  PlayDiagramPlayerReorderStats: "play.diagram_player_reorder_stats",
+  PlayDiagramNudge: "play.diagram_nudge", // individual arrow key move (sampled)
+  PlayDiagramNudgeBatch: "play.diagram_nudge_batch", // aggregated after throttle window
+  PlayDuplicate: "play.duplicate",
+  FilterApply: "filter.apply",
+  UIAction: "ui.action",
+  ViewSavedApply: "view.saved_apply",
+  ViewSavedServerCreate: "view.saved_server_create",
+  ViewSavedServerApply: "view.saved_server_apply",
+  ViewSavedServerRename: "view.saved_server_rename",
+  ViewSavedServerDelete: "view.saved_server_delete",
+  ViewSavedServerImport: "view.saved_server_import",
+  PlayDraftAutosave: "play.draft_autosave",
+  PlayDraftRestore: "play.draft_restore",
+  PlayDraftClear: "play.draft_clear",
+  PlayDraftFinalize: "play.draft_finalize",
+  ErrorBoundary: "error.boundary",
+  VitalCLS: "vital:CLS",
+  VitalINP: "vital:INP",
+  VitalFCP: "vital:FCP",
+  VitalLCP: "vital:LCP",
+  VitalTTFB: "vital:TTFB",
+  ExportScope: "export.scope",
+} as const;
+
+export type TelemetryEventType =
+  (typeof TelemetryEventTypes)[keyof typeof TelemetryEventTypes];

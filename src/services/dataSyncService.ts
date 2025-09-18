@@ -106,7 +106,6 @@ export class DataSyncService {
   static async getPlays(playbookId: string, useCache = true): Promise<Play[]> {
     // Ensure service is initialized before proceeding
     if (!this.supabase) {
-      console.info("🔧 DataSyncService not initialized, initializing now...");
       await this.initialize();
     }
 
@@ -155,9 +154,7 @@ export class DataSyncService {
 
       this.updateMetrics("database_hit", performance.now() - startTime);
       return plays;
-    } catch (error) {
-      console.error("Database query failed, using cached data:", error);
-
+    } catch (_error) {
       // Fallback to any cached data available
       const fallbackData = await this.getFromIndexedDB(cacheKey);
       if (fallbackData) {
@@ -181,7 +178,6 @@ export class DataSyncService {
   ): Promise<void> {
     // Ensure service is initialized before proceeding
     if (!this.supabase) {
-      console.info("🔧 DataSyncService not initialized, initializing now...");
       await this.initialize();
     }
 
@@ -193,7 +189,7 @@ export class DataSyncService {
       await PlaysDomainService.updatePlay(playId, updates as InboundPlay);
 
       // 3. Trigger local backup
-      this.triggerBackup();
+      this.triggerBackup("unknown"); // TODO: Pass teamId
     } catch (error) {
       // 4. Rollback local changes if sync fails
       this.rollbackLocalCache("play", playId);
@@ -209,7 +205,6 @@ export class DataSyncService {
   ): Promise<Play> {
     // Ensure service is initialized before proceeding
     if (!this.supabase) {
-      console.info("🔧 DataSyncService not initialized, initializing now...");
       await this.initialize();
     }
 
@@ -262,17 +257,12 @@ export class DataSyncService {
   }> {
     // Ensure service is initialized before proceeding
     if (!this.supabase) {
-      console.info("🔧 DataSyncService not initialized, initializing now...");
       await this.initialize();
     }
 
     const startTime = performance.now();
     const created: Play[] = [];
     const errors: string[] = [];
-
-    console.info(
-      `🚀 Starting delegated bulk import of ${plays.length} plays...`
-    );
 
     try {
       // Sequential delegation (can be optimized/batched later)
@@ -303,7 +293,9 @@ export class DataSyncService {
 
       const duration = performance.now() - startTime;
       console.info(
-        `✅ Delegated bulk import complete: ${created.length}/${plays.length} plays created in ${duration.toFixed(2)}ms`
+        `✅ Delegated bulk import complete: ${created.length}/${
+          plays.length
+        } plays created in ${duration.toFixed(2)}ms`
       );
 
       return {
@@ -313,7 +305,6 @@ export class DataSyncService {
         totalProcessed: plays.length,
       };
     } catch (error) {
-      console.error("❌ Bulk import failed:", error);
       return {
         success: false,
         created,
@@ -336,8 +327,6 @@ export class DataSyncService {
     errors: string[];
     created: Play[];
   }> {
-    console.info("📊 Parsing CSV content...");
-
     // Parse CSV using existing CSV service
     const parseResult = CSVService.parseCSVForPreview(csvContent);
 
@@ -358,8 +347,6 @@ export class DataSyncService {
       playbookId
     );
     const plays = convertResult.plays;
-
-    console.info(`📋 Parsed ${plays.length} valid plays from CSV`);
 
     // Bulk create the parsed plays
     const bulkResult = await this.bulkCreatePlays(playbookId, plays);
@@ -388,10 +375,10 @@ export class DataSyncService {
     this.backupInterval = setInterval(
       async () => {
         try {
-          await this.createAutomaticBackup();
-          console.info("✅ Automatic backup completed");
-        } catch (error) {
-          console.error("❌ Automatic backup failed:", error);
+          // TODO: Need a way to get teamId here
+          // await this.createAutomaticBackup("some-team-id");
+        } catch (_error) {
+          // console.error("❌ Automatic backup failed:", error);
         }
       },
       5 * 60 * 1000
@@ -401,111 +388,96 @@ export class DataSyncService {
   /**
    * Create comprehensive local backup
    */
-  private static async createAutomaticBackup(): Promise<void> {
-    try {
-      // Get current team data (replace with actual team ID)
-      const teamId = "current-team-id"; // TODO: Get from auth context
-
-      // Gather all data
-      const [plays, practiceScripts, gamePlans] = await Promise.all([
-        this.getAllPlays(teamId),
-        this.getAllPracticeScripts(teamId),
-        this.getAllGamePlans(teamId),
-      ]);
-
-      const backupData: BackupData = {
-        timestamp: new Date().toISOString(),
-        version: Date.now(),
-        plays,
-        practiceScripts,
-        gamePlans,
-        metadata: {
-          teamId,
-          playCount: plays.length,
-          lastModified: new Date().toISOString(),
-        },
-      };
-
-      // Save to IndexedDB (backups store)
-      await this.saveBackupToIndexedDB(`backup_${Date.now()}`, {
-        data: backupData,
-        timestamp: Date.now(),
-        version: 1,
-      });
-
-      // Clean up old backups (keep last 50)
-      await this.cleanupOldBackups(50);
-
-      this.metrics.backupFrequency++;
-    } catch (error) {
-      console.error("Backup creation failed:", error);
-      throw error;
+  private static async createAutomaticBackup(teamId: string): Promise<void> {
+    if (!teamId) {
+      return;
     }
+    // Gather all data
+    const [plays, practiceScripts, gamePlans] = await Promise.all([
+      this.getAllPlays(teamId),
+      this.getAllPracticeScripts(teamId),
+      this.getAllGamePlans(teamId),
+    ]);
+
+    const backupData: BackupData = {
+      timestamp: new Date().toISOString(),
+      version: Date.now(),
+      plays,
+      practiceScripts,
+      gamePlans,
+      metadata: {
+        teamId,
+        playCount: plays.length,
+        lastModified: new Date().toISOString(),
+      },
+    };
+
+    // Save to IndexedDB (backups store)
+    await this.saveBackupToIndexedDB(`backup_${Date.now()}`, {
+      data: backupData,
+      timestamp: Date.now(),
+      version: 1,
+    });
+
+    // Clean up old backups (keep last 50)
+    await this.cleanupOldBackups(50);
+
+    this.metrics.backupFrequency++;
   }
 
   /**
    * Export comprehensive backup as downloadable files
    */
   static async exportComprehensiveBackup(teamId: string): Promise<void> {
-    try {
-      const timestamp = new Date().toISOString().split("T")[0];
+    const timestamp = new Date().toISOString().split("T")[0];
 
-      // Get all data
-      const [plays, practiceScripts, gamePlans] = await Promise.all([
-        this.getAllPlays(teamId),
-        this.getAllPracticeScripts(teamId),
-        this.getAllGamePlans(teamId),
-      ]);
+    // Get all data
+    const [plays, practiceScripts, gamePlans] = await Promise.all([
+      this.getAllPlays(teamId),
+      this.getAllPracticeScripts(teamId),
+      this.getAllGamePlans(teamId),
+    ]);
 
-      // Create CSV exports
-      const playsCSV = CSVService.exportPlaysToCSV(plays, {
-        includePrivateNotes: true,
-        formatForCoach: true,
-      });
+    // Create CSV exports
+    const playsCSV = CSVService.exportPlaysToCSV(plays, {
+      includePrivateNotes: true,
+      formatForCoach: true,
+    });
 
-      // Download as zip file
-      const JSZip = (await import("jszip")).default;
-      const zip = new JSZip();
+    // Download as zip file
+    const JSZip = (await import("jszip")).default;
+    const zip = new JSZip();
 
-      zip.file(`plays-${timestamp}.csv`, playsCSV);
-      zip.file(
-        `practice-scripts-${timestamp}.csv`,
-        this.exportPracticeScriptsCSV(practiceScripts)
-      );
-      zip.file(
-        `game-plans-${timestamp}.csv`,
-        this.exportGamePlansCSV(gamePlans)
-      );
-      zip.file(
-        "backup-info.json",
-        JSON.stringify(
-          {
-            timestamp,
-            version: Date.now(),
-            playCount: plays.length,
-            scriptCount: practiceScripts.length,
-            gamePlanCount: gamePlans.length,
-          },
-          null,
-          2
-        )
-      );
+    zip.file(`plays-${timestamp}.csv`, playsCSV);
+    zip.file(
+      `practice-scripts-${timestamp}.csv`,
+      this.exportPracticeScriptsCSV(practiceScripts)
+    );
+    zip.file(`game-plans-${timestamp}.csv`, this.exportGamePlansCSV(gamePlans));
+    zip.file(
+      "backup-info.json",
+      JSON.stringify(
+        {
+          timestamp,
+          version: Date.now(),
+          playCount: plays.length,
+          scriptCount: practiceScripts.length,
+          gamePlanCount: gamePlans.length,
+        },
+        null,
+        2
+      )
+    );
 
-      const zipBlob = await zip.generateAsync({ type: "blob" });
+    const zipBlob = await zip.generateAsync({ type: "blob" });
 
-      // Download the backup
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(zipBlob);
-      link.download = `playbook-backup-${timestamp}.zip`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      console.info("✅ Comprehensive backup exported successfully");
-    } catch (error) {
-      console.error("Export backup failed:", error);
-      throw error;
-    }
+    // Download the backup
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(zipBlob);
+    link.download = `playbook-backup-${timestamp}.zip`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   /**
@@ -541,8 +513,6 @@ export class DataSyncService {
         }
       )
       .subscribe();
-
-    console.info("✅ Real-time sync enabled");
   }
 
   /**
@@ -581,7 +551,7 @@ export class DataSyncService {
     }
 
     // Trigger automatic backup after external changes
-    this.triggerBackup();
+    this.triggerBackup("unknown"); // TODO: Pass teamId
   }
 
   /**
@@ -750,7 +720,7 @@ export class DataSyncService {
     console.info(`Sync notification: ${message}`);
   }
 
-  private static triggerBackup(): void {
+  private static triggerBackup(teamId: string): void {
     // Debounce opportunistic backups to at most once per 2 minutes
     const now = Date.now();
     const minGap = 2 * 60 * 1000;
@@ -763,7 +733,7 @@ export class DataSyncService {
       version: 1,
     });
     // Fire and forget
-    this.createAutomaticBackup().catch((e) =>
+    this.createAutomaticBackup(teamId).catch((e) =>
       console.warn("Opportunistic backup failed", e)
     );
   }
@@ -953,7 +923,6 @@ export class DataSyncService {
       if (keys.length <= keepCount) return;
       const toDelete = keys.slice(0, Math.max(0, keys.length - keepCount));
       await Promise.all(toDelete.map((k) => this.deleteBackupKey(k)));
-      console.info(`Cleaned up old backups, kept ${keepCount}`);
     } catch (e) {
       console.warn("Failed to cleanup backups", e);
     }

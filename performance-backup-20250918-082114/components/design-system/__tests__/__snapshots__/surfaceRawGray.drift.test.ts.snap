@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`surface-tokens: raw gray utility drift > does not use disallowed raw gray bg/border utilities > raw-gray-offenders 1`] = `[]`;

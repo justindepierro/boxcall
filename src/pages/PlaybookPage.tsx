@@ -53,7 +53,7 @@ export default function PlaybookPage() {
       });
       CSVService.downloadCSV(csv, `boxcall-plays-${scope}-${date}.csv`);
     } catch (e) {
-      console.error("CSV export failed", e);
+// console.error("CSV export failed", e);
       alert("CSV export failed. See console for details.");
     } finally {
       setBusy(false);
@@ -85,7 +85,7 @@ export default function PlaybookPage() {
       );
       dispatch({ type: "INCREMENT_REFRESH" });
     } catch (err) {
-      console.error("CSV import failed", err);
+// console.error("CSV import failed", err);
       alert("CSV import failed. See console for details.");
     } finally {
       setBusy(false);

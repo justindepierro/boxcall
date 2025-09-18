@@ -66,7 +66,7 @@ export function PracticePlanner() {
     } catch (err) {
       // Revert on error
       setCurrentBlocks(currentBlocks);
-      console.error("Failed to reorder blocks:", err);
+// console.error("Failed to reorder blocks:", err);
     }
   };
   const handleQuickAddBlock = async (
@@ -83,7 +83,7 @@ export function PracticePlanner() {
       const newBlock = await addBlock(blockData);
       setCurrentBlocks((prev) => [...prev, newBlock]);
     } catch (err) {
-      console.error("Failed to add block:", err);
+// console.error("Failed to add block:", err);
     }
   };
   const handleDeleteBlock = async (blockId: string) => {
@@ -92,7 +92,7 @@ export function PracticePlanner() {
       await deleteBlock(blockId);
       setCurrentBlocks((prev) => prev.filter((block) => block.id !== blockId));
     } catch (error) {
-      console.error("Failed to delete block:", error);
+// console.error("Failed to delete block:", error);
     }
   };
   const handleStartPractice = () => {

@@ -129,7 +129,7 @@ export function useCollaboration(
       const errorMessage =
         err instanceof Error ? err.message : "Failed to start collaboration";
       setError(errorMessage);
-      console.error("Collaboration session error:", err);
+// console.error("Collaboration session error:", err);
     } finally {
       setIsConnecting(false);
     }
@@ -153,7 +153,7 @@ export function useCollaboration(
   const sendDashboardUpdate = useCallback(
     (update: Omit<DashboardUpdate, "userId" | "timestamp">) => {
       if (!isConnected) {
-        console.warn("Cannot send dashboard update: not connected");
+// console.warn("Cannot send dashboard update: not connected");
         return;
       }
 
@@ -331,7 +331,7 @@ export function useCollaboration(
         try {
           callback(update);
         } catch (error) {
-          console.error("Error in update subscriber:", error);
+// console.error("Error in update subscriber:", error);
         }
       });
 

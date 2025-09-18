@@ -157,7 +157,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 
       return urlData?.publicUrl || null;
     } catch (error) {
-      console.error("Avatar upload failed:", error);
+// console.error("Avatar upload failed:", error);
       return null;
     } finally {
       setAvatarUploading(false);
@@ -192,7 +192,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         onClose();
       }
     } catch (error) {
-      console.error("Profile update failed:", error);
+// console.error("Profile update failed:", error);
       // TODO: Show error message to user
     } finally {
       setIsSubmitting(false);

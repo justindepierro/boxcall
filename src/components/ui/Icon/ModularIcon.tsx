@@ -211,7 +211,9 @@ const importIcon = (id: string): Loader => {
             `Lucide icon not found in dynamic map or module: id='${id}' tried keys=[${tried}]`
           );
         }
-        return Comp as unknown as { default: LucideComponent } | LucideComponent;
+        return Comp as unknown as
+          | { default: LucideComponent }
+          | LucideComponent;
       });
 
     // In development, prefer module fallback first to avoid dynamic chunk fetch flakiness.
@@ -228,9 +230,9 @@ const importIcon = (id: string): Loader => {
 
     // In production, try dynamic chunk first for optimal tree-shaking, then fallback.
     if (foundLoader) {
-      return (foundLoader() as Promise<
-        { default: LucideComponent } | LucideComponent
-      >).catch(() => tryModuleFallback());
+      return (
+        foundLoader() as Promise<{ default: LucideComponent } | LucideComponent>
+      ).catch(() => tryModuleFallback());
     }
 
     // No loader in the map, go straight to module fallback.
@@ -406,18 +408,23 @@ const colorMap = {
  * Only imports the specific icons that are used
  * Perfect for new components that want bundle optimization
  */
-export const ModularIcon: React.FC<ModularIconProps> = ({
-  name,
-  size = "md",
-  className = "",
-  color = "current",
-  strokeWidth = 2,
-  "aria-label": ariaLabel,
-  role,
-  tabIndex,
-  focusable,
-  "aria-hidden": ariaHidden,
-}) => {
+export const ModularIcon: React.FC<ModularIconProps> = (props) => {
+  const {
+    name,
+    size = "md",
+    className = "",
+    color = "current",
+    strokeWidth = 2,
+    "aria-label": ariaLabel,
+    role,
+    tabIndex,
+    focusable,
+  } = props;
+  type AriaHiddenProps = { "aria-hidden"?: boolean; ariaHidden?: boolean };
+  const ariaHidden =
+    (props as unknown as AriaHiddenProps)["aria-hidden"] ??
+    (props as unknown as AriaHiddenProps).ariaHidden ??
+    false;
   const debugEnabled =
     (typeof window !== "undefined" &&
       // @ts-expect-error: custom debug flag
@@ -431,7 +438,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
     className?: string;
   }> | null>(null);
   const [loading, setLoading] = React.useState(false);
-  const computedAriaLabel = ariaHidden ? undefined : ariaLabel ?? name;
+  const computedAriaLabel = ariaHidden ? undefined : (ariaLabel ?? name);
 
   React.useEffect(() => {
     // Check if already loaded
@@ -447,7 +454,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
         iconRegistry.set(name, devFallback);
         setIconComponent(devFallback);
         if (debugEnabled) {
-          console.info(`[IconDebug] dev immediate fallback`, { name });
+// console.info(`[IconDebug] dev immediate fallback`, { name });
         }
       }
     }
@@ -458,7 +465,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
       let isMounted = true;
       setLoading(true);
       if (debugEnabled) {
-        console.info(`[IconDebug] start load`, { name });
+// console.info(`[IconDebug] start load`, { name });
       }
       loader()
         .then((mod) => {
@@ -475,7 +482,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
             iconRegistry.set(name, Comp);
             setIconComponent(Comp);
             if (debugEnabled) {
-              console.info(`[IconDebug] load success`, { name });
+// console.info(`[IconDebug] load success`, { name });
             }
           }
           setLoading(false);
@@ -483,9 +490,9 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
         .catch((error) => {
           // Swallow errors during tests/SSR; keep placeholder visible
           if (debugEnabled) {
-            console.error(`[IconDebug] load error`, { name, error });
+// console.error(`[IconDebug] load error`, { name, error });
           } else {
-            console.error(`Failed to load icon: ${name}`, error);
+// console.error(`Failed to load icon: ${name}`, error);
           }
           // Last-chance static fallback for critical icons
           const Fallback = fallbackIcons[name as ModularIconName];
@@ -493,7 +500,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
             iconRegistry.set(name, Fallback);
             setIconComponent(Fallback);
             if (debugEnabled) {
-              console.info(`[IconDebug] used static fallback`, { name });
+// console.info(`[IconDebug] used static fallback`, { name });
             }
           }
           if (!isMounted) return;

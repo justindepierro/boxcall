@@ -16,9 +16,9 @@ export const logger = {
     if (isDev) console.info(format(msg, fields));
   },
   warn(msg: string, fields?: Fields) {
-    console.warn(format(msg, fields));
+// console.warn(format(msg, fields));
   },
   error(msg: string, err?: unknown, fields?: Fields) {
-    console.error(format(msg, fields), err);
+// console.error(format(msg, fields), err);
   },
 };

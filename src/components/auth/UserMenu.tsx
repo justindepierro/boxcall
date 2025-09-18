@@ -92,7 +92,7 @@ export const UserMenu: React.FC = () => {
             <Button
               onClick={() => {
                 setIsOpen(false);
-                console.info("Navigate to profile");
+// console.info("Navigate to profile");
               }}
               variant="ghost"
               size="xs"
@@ -104,7 +104,7 @@ export const UserMenu: React.FC = () => {
             <Button
               onClick={() => {
                 setIsOpen(false);
-                console.info("Navigate to team");
+// console.info("Navigate to team");
               }}
               variant="ghost"
               size="xs"

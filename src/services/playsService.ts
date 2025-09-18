@@ -68,7 +68,7 @@ export class PlaysService {
         });
 
       if (membershipError) {
-        console.error(
+// console.error(
           "Warning: Failed to create team membership:",
           membershipError
         );
@@ -77,7 +77,7 @@ export class PlaysService {
 
       return newTeam.id;
     } catch (error) {
-      console.error("Failed to ensure user has team:", error);
+// console.error("Failed to ensure user has team:", error);
       throw error;
     }
   }
@@ -135,7 +135,7 @@ export class PlaysService {
       if (playbookError) throw playbookError;
       return newPlaybook.id;
     } catch (error) {
-      console.error("Failed to ensure user has playbook:", error);
+// console.error("Failed to ensure user has playbook:", error);
       throw error;
     }
   }
@@ -229,7 +229,7 @@ export class PlaysService {
         diagram_url: playData.diagram_url || null,
       };
 
-      console.info("🎯 Creating play in database:", newPlay);
+// console.info("🎯 Creating play in database:", newPlay);
 
       // Insert into Supabase
       let { data, error } = await supabase
@@ -244,14 +244,14 @@ export class PlaysService {
         error.code === "23503" &&
         error.message.includes("playbook_id")
       ) {
-        console.info("📚 Playbook doesn't exist, creating demo playbook...");
+// console.info("📚 Playbook doesn't exist, creating demo playbook...");
         await DatabaseDebug.checkPlaybooks();
 
         const createdPlaybookId = await DatabaseDebug.createDemoPlaybook();
         if (createdPlaybookId) {
           // Update the play with the new playbook ID and try again
           newPlay.playbook_id = createdPlaybookId;
-          console.info("🔄 Retrying play creation with new playbook...");
+// console.info("🔄 Retrying play creation with new playbook...");
 
           const retryResult = await supabase
             .from("plays")
@@ -270,7 +270,7 @@ export class PlaysService {
           (dupErr as { code?: string }).code = "23505";
           throw dupErr;
         }
-        console.error("❌ Error creating play:", error);
+// console.error("❌ Error creating play:", error);
         throw new Error(`Failed to create play: ${error.message}`);
       }
 
@@ -278,10 +278,10 @@ export class PlaysService {
         throw new Error("No data returned from play creation");
       }
 
-      console.info("✅ Play created successfully:", data);
+// console.info("✅ Play created successfully:", data);
       return data as Play;
     } catch (error) {
-      console.error("❌ PlaysService.createPlay failed:", error);
+// console.error("❌ PlaysService.createPlay failed:", error);
       throw error;
     }
   }
@@ -299,13 +299,13 @@ export class PlaysService {
         .order("created_at", { ascending: false });
 
       if (error) {
-        console.error("❌ Error fetching plays:", error);
+// console.error("❌ Error fetching plays:", error);
         throw new Error(`Failed to fetch plays: ${error.message}`);
       }
 
       return (data as Play[]) || [];
     } catch (error) {
-      console.error("❌ PlaysService.getPlaysByPlaybook failed:", error);
+// console.error("❌ PlaysService.getPlaysByPlaybook failed:", error);
       throw error;
     }
   }
@@ -326,13 +326,13 @@ export class PlaysService {
           // No rows found
           return null;
         }
-        console.error("❌ Error fetching play:", error);
+// console.error("❌ Error fetching play:", error);
         throw new Error(`Failed to fetch play: ${error.message}`);
       }
 
       return data as Play;
     } catch (error) {
-      console.error("❌ PlaysService.getPlay failed:", error);
+// console.error("❌ PlaysService.getPlay failed:", error);
       throw error;
     }
   }
@@ -414,7 +414,7 @@ export class PlaysService {
         .single();
 
       if (error) {
-        console.error("❌ Error updating play:", error);
+// console.error("❌ Error updating play:", error);
         throw new Error(`Failed to update play: ${error.message}`);
       }
 
@@ -424,7 +424,7 @@ export class PlaysService {
 
       return data as Play;
     } catch (error) {
-      console.error("❌ PlaysService.updatePlay failed:", error);
+// console.error("❌ PlaysService.updatePlay failed:", error);
       throw error;
     }
   }
@@ -443,11 +443,11 @@ export class PlaysService {
         .eq("id", id);
 
       if (error) {
-        console.error("❌ Error archiving play:", error);
+// console.error("❌ Error archiving play:", error);
         throw new Error(`Failed to archive play: ${error.message}`);
       }
     } catch (error) {
-      console.error("❌ PlaysService.deletePlay failed:", error);
+// console.error("❌ PlaysService.deletePlay failed:", error);
       throw error;
     }
   }
@@ -464,11 +464,11 @@ export class PlaysService {
         .in("id", ids);
 
       if (error) {
-        console.error("❌ Error batch archiving plays:", error);
+// console.error("❌ Error batch archiving plays:", error);
         throw new Error(`Failed to archive plays: ${error.message}`);
       }
     } catch (error) {
-      console.error("❌ PlaysService.deletePlays failed:", error);
+// console.error("❌ PlaysService.deletePlays failed:", error);
       throw error;
     }
   }
@@ -482,11 +482,11 @@ export class PlaysService {
         .update({ is_archived: false, updated_at: new Date() })
         .in("id", ids);
       if (error) {
-        console.error("❌ Error restoring plays:", error);
+// console.error("❌ Error restoring plays:", error);
         throw new Error(`Failed to restore plays: ${error.message}`);
       }
     } catch (error) {
-      console.error("❌ PlaysService.restorePlays failed:", error);
+// console.error("❌ PlaysService.restorePlays failed:", error);
       throw error;
     }
   }

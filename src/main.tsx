@@ -27,10 +27,10 @@ try {
   if (localStorage.getItem("debugIcons") === "1") {
     // @ts-expect-error custom flag on window
     window.__ICON_DEBUG__ = true;
-    console.info("[IconDebug] Icon debug mode enabled via localStorage");
+// console.info("[IconDebug] Icon debug mode enabled via localStorage");
   } else {
     // Provide a clear hint once at startup
-    console.info(
+// console.info(
       "[IconDebug] To enable icon debug logs, run: localStorage.setItem('debugIcons','1'); location.reload()"
     );
   }

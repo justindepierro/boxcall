@@ -82,7 +82,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       setParseResult(result);
       setStep("preview");
     } catch (error) {
-      console.error("Error reading file:", error);
+// console.error("Error reading file:", error);
       alert("Error reading file. Please try again.");
     } finally {
       setIsProcessing(false);
@@ -96,15 +96,15 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     setIsProcessing(true);
 
     try {
-      console.info("Starting CSV import...");
+// console.info("Starting CSV import...");
 
       // Get or create a real playbook for the current user
       let actualPlaybookId = playbookId;
 
       if (!playbookId || playbookId === "demo-playbook-id") {
-        console.info("Getting real playbook for user...");
+// console.info("Getting real playbook for user...");
         actualPlaybookId = await PlaysService.ensureUserHasPlaybook();
-        console.info("✅ Using playbook ID:", actualPlaybookId);
+// console.info("✅ Using playbook ID:", actualPlaybookId);
       }
 
       // Convert previews to plays and import
@@ -149,7 +149,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         onImportComplete(importResult);
       }
     } catch (error) {
-      console.error("❌ Import failed:", error);
+// console.error("❌ Import failed:", error);
       setImportResult({
         success: false,
         totalRows: 0,

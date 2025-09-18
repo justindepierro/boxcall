@@ -61,7 +61,7 @@ export class UserPreferencesService {
         },
       };
     } catch (error) {
-      console.warn("Failed to load user preferences, using defaults:", error);
+// console.warn("Failed to load user preferences, using defaults:", error);
       return this.getDefaultPreferences();
     }
   }
@@ -73,7 +73,7 @@ export class UserPreferencesService {
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(preferences));
     } catch (error) {
-      console.error("Failed to save user preferences:", error);
+// console.error("Failed to save user preferences:", error);
     }
   }
 

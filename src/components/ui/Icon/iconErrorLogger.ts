@@ -3,5 +3,5 @@
  * Can be enhanced to send errors to external monitoring in production.
  */
 export function logIconError(name: string, error: unknown): void {
-  console.error(`[IconError] Failed to load icon: ${name}`, error);
+// console.error(`[IconError] Failed to load icon: ${name}`, error);
 }

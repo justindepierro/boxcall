@@ -607,3 +607,190 @@ git commit -m "feat: description"  # Conventional commit format
 ---
 
 _Building the future of football coaching operations._ 🏈
+
+## Documentation
+
+
+## 1. Product & Roadmap
+
+- Unified Roadmap: `product/ROADMAP.md`
+- Current Status: `CURRENT_STATUS.md`
+
+## 2. Architecture & Design
+
+- High-Level Architecture: `ARCHITECTURE.md`
+- Component System: `COMPONENT_SYSTEM.md`
+- Style System Audit: `STYLE_SYSTEM_AUDIT.md`
+- Professionalization Plan (legacy): `STYLE_PROFESSIONALIZATION_PLAN.md`
+
+## 3. Database & Migrations
+
+- Integration Overview: `DATABASE_INTEGRATION.md`
+- Table Inventory: `DATABASE_TABLE_INVENTORY.md`
+- Migration 010 Plan & Counts: `MIGRATION_010_PLAN.md`, `MIGRATION_010_COUNTS.md`
+- NOT NULL Readiness: `database/NOT_NULL_duplicate_key_PLAN.md`
+
+## 4. Search & Telemetry
+
+- Play Write Path Inventory: `PLAY_WRITE_PATH_INVENTORY.md`
+- Telemetry Schema: `quality/TELEMETRY_SCHEMA.md`
+
+## 5. Performance & Quality
+
+- Performance Status: `PERFORMANCE_OPTIMIZATION_STATUS.md`
+- Contrast & Style Policies: `BUTTON_VARIANT_POLICY.md`, `BADGE_TAG_GUIDELINES.md`
+- Icon Optimization (archived): `archive/ICON_OPTIMIZATION_COMPLETE.md`
+
+## 6. Development & Setup
+
+- Setup: `SETUP.md`, `SUPABASE_SETUP.md`
+- Development Guide: `DEVELOPMENT.md`
+- Git Safety: `GIT_SAFETY_GUIDE.md`
+
+## 7. Archived Initiatives
+
+- See `archive/` for historical refactor, optimization, and phase completion docs.
+
+## 8. Pending Cleanup Targets
+
+- (None currently) – keep index lean.
+
+## 9. Standards
+
+New docs must:
+
+1. Start with H1 title.
+2. Include Status line (Active / Archived / Draft).
+3. Stay ≤300 lines (split otherwise).
+
+## 10. Maintenance
+
+Run `npm run docs:validate` before PR to ensure no empty docs. Allow intentional empties by adding comment: `<!-- allow-empty -->`.
+
+---
+
+Last Updated: 2025-08-11
+Owner: Documentation Steward (rotate quarterly)
+
+## Project Structure
+
+```
+git log --follow -- docs/README-ARCHIVE.md
+git show <commit>:docs/README-ARCHIVE.md > /tmp/README_LEGACY.md
+```
+```
+boxcall/
+├── 📋 README.md                 # This file
+├── 📦 package.json              # Dependencies & scripts
+├── ⚙️ vite.config.ts             # Build configuration
+├── 🧪 vitest.config.ts          # Test configuration
+├── 📘 tsconfig.json             # TypeScript configuration
+├── 🎨 tailwind.config.js        # Styling configuration
+├── 🔧 .github/
+│   └── workflows/               # CI/CD pipelines
+├── 📚 docs/
+│   ├── ARCHITECTURE.md          # Technical architecture
+│   ├── DEVELOPMENT.md           # Development guidelines
+│   └── API.md                   # API documentation
+├── 🌍 public/
+│   ├── index.html               # Entry point
+│   └── assets/                  # Static files
+├── 🎯 src/
+│   ├── 🏪 app/                  # App configuration
+│   │   ├── store.ts             # Global state
+│   │   ├── router.ts            # Route configuration
+│   │   └── providers.tsx        # Context providers
+│   ├── 🧱 components/           # Reusable UI components
+│   │   ├── ui/                  # Basic primitives (Button, Input)
+│   │   ├── forms/               # Form components
+│   │   ├── layout/              # Layout components
+│   │   └── feedback/            # Loading, Error states
+│   ├── 📱 features/             # Business domains
+│   │   ├── auth/                # Authentication
+│   │   ├── calls/               # Call management
+│   │   ├── playbooks/           # Playbook system
+│   │   ├── teams/               # Team management
+│   │   ├── analytics/           # Metrics & reporting
+│   │   └── settings/            # Configuration
+│   ├── 🔌 services/             # External integrations
+│   │   ├── api/                 # HTTP client
+│   │   ├── auth/                # Authentication service
+│   │   ├── websocket/           # Real-time communication
+│   │   └── storage/             # Local/session storage
+│   ├── 🎨 styles/               # Global styles
+│   │   ├── globals.css          # Global CSS
+│   │   ├── components.css       # Component styles
+│   │   └── themes/              # Theme definitions
+│   ├── 📊 utils/                # Pure utility functions
+│   │   ├── validation/          # Input validation
+│   │   ├── formatting/          # Data formatting
+│   │   ├── constants/           # App constants
+│   │   └── helpers/             # General helpers
+│   ├── 🔧 hooks/                # Custom React hooks
+│   └── 📄 types/                # TypeScript definitions
+└── 🧪 tests/
+    ├── __mocks__/               # Test mocks
+    ├── fixtures/                # Test data
+    ├── integration/             # Integration tests
+    ├── e2e/                     # End-to-end tests
+    └── utils/                   # Test utilities
+```
+```json
+{
+  "react": "^18.2.0",
+  "react-dom": "^18.2.0",
+  "react-router-dom": "^6.8.0",
+  "zustand": "^4.3.0",
+  "@tanstack/react-query": "^4.24.0",
+  "react-hook-form": "^7.43.0",
+  "@hookform/resolvers": "^2.9.0",
+  "zod": "^3.20.0",
+  "tailwindcss": "^3.2.0",
+  "clsx": "^1.2.0",
+  "lucide-react": "^0.312.0"
+}
+```
+```json
+{
+  "@types/react": "^18.0.0",
+  "@types/react-dom": "^18.0.0",
+  "@vitejs/plugin-react": "^3.1.0",
+  "typescript": "^4.9.0",
+  "vite": "^4.1.0",
+  "vitest": "^0.28.0",
+  "@testing-library/react": "^13.4.0",
+  "@testing-library/jest-dom": "^5.16.0",
+  "eslint": "^8.35.0",
+  "@typescript-eslint/eslint-plugin": "^5.54.0",
+  "prettier": "^2.8.0",
+  "husky": "^8.0.0",
+  "lint-staged": "^13.1.0"
+}
+```
+```bash
+# Clone or create the project
+git clone <repository-url> boxcall
+cd boxcall
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Run tests
+npm test
+
+# Build for production
+npm run build
+```
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm test             # Run tests
+npm run test:ui      # Run tests with UI
+npm run lint         # Lint code
+npm run format       # Format code
+npm run type-check   # Check TypeScript types
+```

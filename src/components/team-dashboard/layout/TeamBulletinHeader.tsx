@@ -62,7 +62,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
       if (updateError) throw updateError;
       setLocalLogo(publicUrl);
     } catch (err) {
-      console.warn("team.logo.upload.error", err);
+// console.warn("team.logo.upload.error", err);
       // Simple fallback: revert input value
       e.target.value = "";
     } finally {

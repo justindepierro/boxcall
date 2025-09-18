@@ -96,7 +96,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     trackEdit();
     // Lightweight debug signal so users can confirm wiring
     if (import.meta.env.DEV)
-      console.info("[ProfileCard] Open quick-edit modal");
+// console.info("[ProfileCard] Open quick-edit modal");
     if (onEditClick) {
       onEditClick();
     } else {
@@ -154,7 +154,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         }
       }
     } catch (err) {
-      console.error("Avatar upload failed", err);
+// console.error("Avatar upload failed", err);
     } finally {
       // reset input to allow re-upload same file
       if (fileInputRef.current) fileInputRef.current.value = "";

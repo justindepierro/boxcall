@@ -232,7 +232,7 @@ export class DevProfileService implements IDevProfileService {
 
     const permissionKey = permissionMap[action];
     if (!permissionKey) {
-      console.warn(`Unknown permission action: ${action}`);
+// console.warn(`Unknown permission action: ${action}`);
       return false;
     }
 
@@ -306,14 +306,14 @@ export class DevProfileService implements IDevProfileService {
 
   private emitEvent(event: DevProfileEvent): void {
     if (this.config.enableLogging) {
-      console.info("DevProfile Event:", event);
+// console.info("DevProfile Event:", event);
     }
 
     this.eventListeners.forEach((listener) => {
       try {
         listener.onProfileEvent(event);
       } catch (error) {
-        console.error("Error in event listener:", error);
+// console.error("Error in event listener:", error);
       }
     });
   }

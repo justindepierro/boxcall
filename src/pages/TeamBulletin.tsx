@@ -76,14 +76,14 @@ export const TeamBulletin: React.FC = () => {
   const loadingInitial = !user || !profile || !teamId;
 
   const handleCreateTeam = () => {
-    console.info("team.create.attempt", {
+// console.info("team.create.attempt", {
       isSuperAdmin,
       canCreateTeamUnlimited,
     });
     navigate(ROUTES.CREATE_TEAM);
   };
   const handleJoinTeam = () => {
-    console.info("team.join.attempt");
+// console.info("team.join.attempt");
     navigate(ROUTES.JOIN_TEAM);
   };
 
@@ -105,7 +105,7 @@ export const TeamBulletin: React.FC = () => {
           .eq("id", teamId)
           .single<TeamRow>();
         if (error) {
-          console.warn("team.fetch.error", error);
+// console.warn("team.fetch.error", error);
           return;
         }
         let memberCount = 0;

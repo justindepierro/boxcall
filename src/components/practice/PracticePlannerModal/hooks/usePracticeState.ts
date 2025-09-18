@@ -122,7 +122,7 @@ export const usePracticeState = (event: CalendarEvent) => {
         const blocksWithTimes = recalculateBlockTimes(savedBlocks);
         setPracticeBlocks(blocksWithTimes);
       } catch (error) {
-        console.error("Error loading saved practice plan:", error);
+// console.error("Error loading saved practice plan:", error);
       }
     }
   }, [event.id, event.start, recalculateBlockTimes]);

@@ -70,8 +70,8 @@ export const useAuth = create<AuthState>()(
             password,
           });
           if (error) {
-            console.error("🚨 Supabase signIn error:", error);
-            console.error("🚨 Error details:", {
+// console.error("🚨 Supabase signIn error:", error);
+// console.error("🚨 Error details:", {
               message: error.message,
               status: error.status,
               details: error,
@@ -195,12 +195,12 @@ export const useAuth = create<AuthState>()(
             .eq("id", userId)
             .single();
           if (error) {
-            console.error("Error fetching user profile:", error);
+// console.error("Error fetching user profile:", error);
             return;
           }
           set({ profile: data });
         } catch (error) {
-          console.error("Error fetching user profile:", error);
+// console.error("Error fetching user profile:", error);
         }
       },
       // Utility methods

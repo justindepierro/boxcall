@@ -64,7 +64,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
         text: "Team settings updated successfully!",
       });
     } catch (error) {
-      console.error("Error updating team settings:", error);
+// console.error("Error updating team settings:", error);
       setMessage({
         type: "error",
         text: "Failed to update team settings. Please try again.",

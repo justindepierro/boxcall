@@ -72,7 +72,7 @@ class WebVitalsMonitor {
       observer.observe({ type: "largest-contentful-paint", buffered: true });
       this.observers.push(observer);
     } catch (_error) {
-      console.warn("LCP measurement not supported");
+// console.warn("LCP measurement not supported");
     }
   }
 
@@ -98,7 +98,7 @@ class WebVitalsMonitor {
       observer.observe({ type: "first-input", buffered: true });
       this.observers.push(observer);
     } catch (_error) {
-      console.warn("FID measurement not supported");
+// console.warn("FID measurement not supported");
     }
   }
 
@@ -129,7 +129,7 @@ class WebVitalsMonitor {
       observer.observe({ type: "layout-shift", buffered: true });
       this.observers.push(observer);
     } catch (_error) {
-      console.warn("CLS measurement not supported");
+// console.warn("CLS measurement not supported");
     }
   }
 
@@ -153,7 +153,7 @@ class WebVitalsMonitor {
       observer.observe({ type: "paint", buffered: true });
       this.observers.push(observer);
     } catch (_error) {
-      console.warn("FCP measurement not supported");
+// console.warn("FCP measurement not supported");
     }
   }
 
@@ -274,7 +274,7 @@ class WebVitalsMonitor {
           // Alert if memory usage is high
           if (usedMemory > 150 * 1024 * 1024) {
             // 150MB
-            console.warn(
+// console.warn(
               "High memory usage detected:",
               usedMemory / 1024 / 1024,
               "MB"
@@ -317,7 +317,7 @@ class WebVitalsMonitor {
 
           if (responseTime > 100) {
             // Alert on slow responses
-            console.warn("Slow touch response:", responseTime, "ms");
+// console.warn("Slow touch response:", responseTime, "ms");
           }
 
           touchStartTime = 0;
@@ -331,7 +331,7 @@ class WebVitalsMonitor {
   private reportMetric(name: string, value: number) {
     // Development logging
     if (process.env.NODE_ENV === "development") {
-      console.info(
+// console.info(
         `📊 ${name}:`,
         Math.round(value * 100) / 100,
         this.getMetricUnit(name)
@@ -390,7 +390,7 @@ class WebVitalsMonitor {
 
     const target = targets[name];
     if (target && value > target) {
-      console.warn(
+// console.warn(
         `⚠️ Performance target missed for ${name}:`,
         value,
         ">",
@@ -407,7 +407,7 @@ class WebVitalsMonitor {
   /** Alert monitoring system of performance issues */
   private alertPerformanceIssue(name: string, value: number, target: number) {
     // Send alert to monitoring service (Sentry, DataDog, etc.)
-    console.error("Performance threshold exceeded:", {
+// console.error("Performance threshold exceeded:", {
       metric: name,
       value,
       target,
@@ -569,7 +569,7 @@ class MemoryLeakDetector {
       this.timeoutIds.size > 100;
 
     if (hasLeaks) {
-      console.warn("🚨 Potential memory leaks detected:", {
+// console.warn("🚨 Potential memory leaks detected:", {
         components: componentLeaks,
         eventListeners: eventListenerLeaks,
         intervals: this.intervalIds.size,

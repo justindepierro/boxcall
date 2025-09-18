@@ -480,7 +480,7 @@ export class RealTimeSyncService {
       await new Promise((resolve) => setTimeout(resolve, 100));
       return true;
     } catch (error) {
-      console.error(`Failed to start channel sync: ${error}`);
+// console.error(`Failed to start channel sync: ${error}`);
       return false;
     }
   }
@@ -504,7 +504,7 @@ export class RealTimeSyncService {
       // Simulate successful disconnection
       await new Promise((resolve) => setTimeout(resolve, 50));
     } catch (error) {
-      console.error(`Failed to stop channel sync: ${error}`);
+// console.error(`Failed to stop channel sync: ${error}`);
     }
   }
   private static async processEvent(channelId: string): Promise<boolean> {
@@ -520,7 +520,7 @@ export class RealTimeSyncService {
       }
       return true;
     } catch (error) {
-      console.error(`Failed to process event: ${error}`);
+// console.error(`Failed to process event: ${error}`);
       return false;
     }
   }
@@ -539,7 +539,7 @@ export class RealTimeSyncService {
       }
       return true;
     } catch (error) {
-      console.error(`Failed to process incoming event: ${error}`);
+// console.error(`Failed to process incoming event: ${error}`);
       return false;
     }
   }
@@ -558,7 +558,7 @@ export class RealTimeSyncService {
       }
       return null;
     } catch (error) {
-      console.error(`Failed to parse incoming event: ${error}`);
+// console.error(`Failed to parse incoming event: ${error}`);
       return null;
     }
   }
@@ -579,7 +579,7 @@ export class RealTimeSyncService {
       }
       return null;
     } catch (error) {
-      console.error(`Failed to detect conflict: ${error}`);
+// console.error(`Failed to detect conflict: ${error}`);
       return null;
     }
   }
@@ -607,7 +607,7 @@ export class RealTimeSyncService {
       conflict.resolvedAt = new Date();
       return true;
     } catch (error) {
-      console.error(`Failed to resolve conflict: ${error}`);
+// console.error(`Failed to resolve conflict: ${error}`);
       return false;
     }
   }

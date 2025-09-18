@@ -53,7 +53,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
     if (!quickEventTitle.trim()) return;
 
     // TODO: Implement event creation service call
-    console.info("Creating event:", quickEventTitle);
+// console.info("Creating event:", quickEventTitle);
     setQuickEventTitle("");
     setShowQuickAdd(false);
   };

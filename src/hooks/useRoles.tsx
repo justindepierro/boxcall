@@ -74,7 +74,7 @@ export function RoleProvider({ children }: RoleProviderProps) {
       const context = await RoleService.getUserRoleContext(user.id);
       setRoleContext(context);
     } catch (err) {
-      console.error("Error refreshing roles:", err);
+// console.error("Error refreshing roles:", err);
       setError(err instanceof Error ? err.message : "Failed to load roles");
       setRoleContext(null);
     } finally {
@@ -184,7 +184,7 @@ export function usePermissions(teamId?: string) {
         const perms = await getUIPermissions(teamId);
         setPermissions(perms);
       } catch (err) {
-        console.error("Error loading permissions:", err);
+// console.error("Error loading permissions:", err);
         setError(
           err instanceof Error ? err.message : "Failed to load permissions"
         );
@@ -215,7 +215,7 @@ export function useCapability(teamId: string, capability: string) {
         const access = await hasCapability(teamId, capability);
         setHasAccess(access);
       } catch (error) {
-        console.error("Error checking capability:", error);
+// console.error("Error checking capability:", error);
         setHasAccess(false);
       } finally {
         setLoading(false);

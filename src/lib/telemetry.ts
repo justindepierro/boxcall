@@ -11,7 +11,7 @@ function emit(name: string, props?: Record<string, unknown>) {
   const evt: TelemetryEvent = { name, ts: Date.now(), props };
   queue.push(evt);
   if (import.meta.env.DEV) {
-    console.debug("[telemetry]", evt);
+// console.debug("[telemetry]", evt);
   }
 }
 

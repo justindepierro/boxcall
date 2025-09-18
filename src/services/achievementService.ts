@@ -44,20 +44,20 @@ export class AchievementService {
     devMode?: string
   ): Promise<AchievementData> {
     try {
-      console.info(
+// console.info(
         `[Trophy/Achievement] Getting achievements for user ${userId} in dev mode: ${devMode}`
       );
 
       // Check if we're in blank slate mode
       if (devMode === "blank_slate") {
-        console.info("🆕 Returning empty achievements for blank slate mode");
+// console.info("🆕 Returning empty achievements for blank slate mode");
         return this.getEmptyAchievements();
       }
 
       // For production/real modes, get real data
       if (devMode === "production" || devMode === "super_admin_real") {
         try {
-          console.info(
+// console.info(
             "[Search/Investigate] Attempting to fetch real achievements..."
           );
           const realAchievements = await Promise.race([
@@ -69,12 +69,12 @@ export class AchievementService {
               )
             ),
           ]);
-          console.info(
+// console.info(
             "[Success/Complete] Real achievements fetched successfully"
           );
           return realAchievements;
         } catch (error) {
-          console.warn(
+// console.warn(
             "[Warning] Could not fetch real achievements, returning empty:",
             error
           );
@@ -89,7 +89,7 @@ export class AchievementService {
 
       // For blank slate mode, return empty achievements
       if (devMode === "blank_slate") {
-        console.info(
+// console.info(
           "🆕 Achievement Service: Blank slate mode - returning empty achievements"
         );
         return this.getEmptyAchievements();
@@ -100,14 +100,14 @@ export class AchievementService {
         const realAchievements = await this.getRealAchievements(userId);
         return realAchievements;
       } catch (error) {
-        console.warn(
+// console.warn(
           "Could not fetch real achievements, returning empty:",
           error
         );
         return this.getEmptyAchievements();
       }
     } catch (error) {
-      console.error("Error fetching user achievements:", error);
+// console.error("Error fetching user achievements:", error);
       return this.getEmptyAchievements();
     }
   }
@@ -127,7 +127,7 @@ export class AchievementService {
         .order("awarded_at", { ascending: false });
 
       if (stickersResult.error) {
-        console.warn("Error fetching helmet stickers:", stickersResult.error);
+// console.warn("Error fetching helmet stickers:", stickersResult.error);
       }
 
       // Try to get real achievements with error handling
@@ -138,7 +138,7 @@ export class AchievementService {
         .order("earned_at", { ascending: false });
 
       if (achievementsResult.error) {
-        console.warn("Error fetching achievements:", achievementsResult.error);
+// console.warn("Error fetching achievements:", achievementsResult.error);
       }
 
       const stickers: unknown[] = stickersResult.data || [];
@@ -212,7 +212,7 @@ export class AchievementService {
         ],
       };
     } catch (error) {
-      console.error("Error in getRealAchievements:", error);
+// console.error("Error in getRealAchievements:", error);
       throw error; // Re-throw to be caught by calling function
     }
   }
@@ -267,7 +267,7 @@ export class AchievementService {
       // TODO: Implement real helmet stickers from database
       return [];
     } catch (error) {
-      console.error("Error fetching helmet stickers:", error);
+// console.error("Error fetching helmet stickers:", error);
       return [];
     }
   }
@@ -280,7 +280,7 @@ export class AchievementService {
       // TODO: Implement medal calculation based on user activity
       return [];
     } catch (error) {
-      console.error("Error calculating BoxCall medals:", error);
+// console.error("Error calculating BoxCall medals:", error);
       return [];
     }
   }
@@ -292,10 +292,10 @@ export class AchievementService {
     try {
       // TODO: Calculate based on user login/activity data
       // For now, return mock data
-      console.info("Calculating activity streak for user:", userId);
+// console.info("Calculating activity streak for user:", userId);
       return Math.floor(Math.random() * 14) + 1; // 1-14 days
     } catch (error) {
-      console.error("Error calculating activity streak:", error);
+// console.error("Error calculating activity streak:", error);
       return 0;
     }
   }

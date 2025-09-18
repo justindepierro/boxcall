@@ -1,4 +1,7 @@
-# Archived: Phase 2 Complete Summary
+<!-- allow-empty -->
 
-Status: Archived (2025-08-11)
-Original file empty; stub retained.
+# Phase 2 Completion Summary (Placeholder)
+
+Will summarize: dashboard data model enablement, event/post/game result features, first-\* telemetry outcomes.
+
+To draft after migrations & RLS steps finalized.

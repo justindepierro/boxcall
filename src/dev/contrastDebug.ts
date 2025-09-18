@@ -19,7 +19,7 @@ const isEnabled = () =>
   typeof window !== "undefined" && localStorage.getItem(ACTIVE_FLAG) === "on";
 // Lightweight diagnostic (safe if console blocked)
 try {
-  console.info("[contrastDebug] loaded", { flag: isEnabled() });
+// console.info("[contrastDebug] loaded", { flag: isEnabled() });
 } catch (_err) {
   /* noop */
 }
@@ -275,7 +275,7 @@ function runContrastScan() {
   // Log summary table
   if (indicatorEl) updateIndicator(issues.length, near, scanned);
   if (issues.length) {
-    console.info(
+// console.info(
       issues.slice(0, 50).map((i) => ({
         text: i.node.textContent?.trim()?.slice(0, 40) || "(element)",
         ratio: i.ratio.toFixed(2),
@@ -284,11 +284,11 @@ function runContrastScan() {
         bg: i.bg,
       }))
     );
-    console.info(`Contrast issues flagged: ${issues.length}`);
+// console.info(`Contrast issues flagged: ${issues.length}`);
   } else {
-    console.info("No contrast issues detected by heuristic scanner.");
+// console.info("No contrast issues detected by heuristic scanner.");
   }
-  console.info(
+// console.info(
     `[contrastDebug] scanned=${scanned} fail=${issues.length} near=${near} mode='${mode || "default"}'`
   );
   return issues;

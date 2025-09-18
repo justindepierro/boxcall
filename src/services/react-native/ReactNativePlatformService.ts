@@ -135,7 +135,7 @@ export class RealTimeService {
 
       return userState;
     } catch (error) {
-      console.error("User state sync failed:", error);
+// console.error("User state sync failed:", error);
       throw error;
     }
   }
@@ -185,9 +185,9 @@ export class RealTimeService {
   ): Promise<void> {
     // Implement WebSocket or Server-Sent Events connection
     // This would typically connect to a real-time service like Socket.IO, Pusher, or Firebase
-    console.info(`Initializing real-time connection for ${type}:${entityId}`);
+// console.info(`Initializing real-time connection for ${type}:${entityId}`);
     if (this.syncConfig.deltaSyncEnabled) {
-      console.info("Delta sync enabled; using optimized payloads");
+// console.info("Delta sync enabled; using optimized payloads");
     }
   }
 
@@ -198,7 +198,7 @@ export class RealTimeService {
 
   private async updateLocalState(userState: UserState): Promise<void> {
     // Implement local state persistence using AsyncStorage or similar
-    console.info("Updating local state:", userState);
+// console.info("Updating local state:", userState);
   }
 
   private notifySubscribers(
@@ -227,7 +227,7 @@ export class RealTimeService {
     );
 
     if (!hasActiveSubscriptions) {
-      console.info(`Cleaning up connection for ${type}:${entityId}`);
+// console.info(`Cleaning up connection for ${type}:${entityId}`);
       // Implement connection cleanup
       // connection cleanup would occur here
     }
@@ -261,7 +261,7 @@ export class TeamManagementService {
       );
       return await response.json();
     } catch (error) {
-      console.error("Failed to get user permissions:", error);
+// console.error("Failed to get user permissions:", error);
       throw error;
     }
   }
@@ -274,7 +274,7 @@ export class TeamManagementService {
       const response = await fetch(`/api/coaches/${coachId}/dashboard`);
       return await response.json();
     } catch (error) {
-      console.error("Failed to get coach dashboard:", error);
+// console.error("Failed to get coach dashboard:", error);
       throw error;
     }
   }
@@ -287,7 +287,7 @@ export class TeamManagementService {
       const response = await fetch(`/api/players/${playerId}/dashboard`);
       return await response.json();
     } catch (error) {
-      console.error("Failed to get player dashboard:", error);
+// console.error("Failed to get player dashboard:", error);
       throw error;
     }
   }
@@ -300,7 +300,7 @@ export class TeamManagementService {
       const response = await fetch(`/api/families/${familyId}/dashboard`);
       return await response.json();
     } catch (error) {
-      console.error("Failed to get family dashboard:", error);
+// console.error("Failed to get family dashboard:", error);
       throw error;
     }
   }
@@ -322,7 +322,7 @@ export class TeamManagementService {
         throw new Error(`Notification failed: ${response.statusText}`);
       }
     } catch (error) {
-      console.error("Failed to send role-based notification:", error);
+// console.error("Failed to send role-based notification:", error);
       throw error;
     }
   }
@@ -345,7 +345,7 @@ export class CoachingAnalyticsService {
       );
       return await response.json();
     } catch (error) {
-      console.error("Failed to get player performance metrics:", error);
+// console.error("Failed to get player performance metrics:", error);
       throw error;
     }
   }
@@ -358,7 +358,7 @@ export class CoachingAnalyticsService {
       const response = await fetch(`/api/analytics/teams/${teamId}/engagement`);
       return await response.json();
     } catch (error) {
-      console.error("Failed to get team engagement metrics:", error);
+// console.error("Failed to get team engagement metrics:", error);
       throw error;
     }
   }
@@ -373,7 +373,7 @@ export class CoachingAnalyticsService {
       );
       return await response.json();
     } catch (error) {
-      console.error("Failed to get coaching insights:", error);
+// console.error("Failed to get coaching insights:", error);
       throw error;
     }
   }
@@ -388,7 +388,7 @@ export class CoachingAnalyticsService {
       const response = await fetch(`/api/analytics/teams/${teamId}/predictive`);
       return await response.json();
     } catch (error) {
-      console.error("Failed to get predictive analytics:", error);
+// console.error("Failed to get predictive analytics:", error);
       throw error;
     }
   }
@@ -432,10 +432,10 @@ export class ReactNativePlatformService {
     try {
       // Leverage existing Phase 4.2 mobile optimization
       // Note: MobileOrchestrator needs initialize method
-      console.info("Initializing mobile orchestrator...");
+// console.info("Initializing mobile orchestrator...");
       // Touch orchestrator/service to satisfy strict unused checks
-      console.info("Orchestrator ready:", !!this.mobileOrchestrator);
-      console.info("Real-time service ready:", !!this.realTimeService);
+// console.info("Orchestrator ready:", !!this.mobileOrchestrator);
+// console.info("Real-time service ready:", !!this.realTimeService);
 
       // Add Phase 4.3 enhancements
       await this.setupNativeNavigation();
@@ -445,13 +445,13 @@ export class ReactNativePlatformService {
       // Set up native app state
       this.nativeAppState = await this.getNativeAppState();
 
-      console.info(
+// console.info(
         "React Native app initialized successfully",
         this.nativeAppState
       );
       return this.nativeAppState;
     } catch (error) {
-      console.error("Failed to initialize React Native app:", error);
+// console.error("Failed to initialize React Native app:", error);
       throw error;
     }
   }
@@ -461,7 +461,7 @@ export class ReactNativePlatformService {
    */
   private async setupNativeNavigation(): Promise<void> {
     // Configure React Navigation with BoxCall jade/navy theming
-    console.info("Setting up native navigation with jade/navy theming");
+// console.info("Setting up native navigation with jade/navy theming");
   }
 
   /**
@@ -469,7 +469,7 @@ export class ReactNativePlatformService {
    */
   private async configureRealTimeSync(): Promise<void> {
     // Set up real-time data synchronization between web and mobile
-    console.info("Configuring real-time synchronization");
+// console.info("Configuring real-time synchronization");
   }
 
   /**
@@ -477,7 +477,7 @@ export class ReactNativePlatformService {
    */
   private async initializeAnalytics(): Promise<void> {
     // Set up analytics tracking for coaching insights
-    console.info("Initializing coaching analytics");
+// console.info("Initializing coaching analytics");
   }
 
   /**

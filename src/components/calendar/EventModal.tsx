@@ -10,21 +10,21 @@ import { Typography } from "../design-system/Typography";
 import { PracticePlannerModal } from "../practice/PracticePlannerModal";
 import { Button } from "../ui";
 import { Icon } from "../ui/Icon";
+import { useToast } from "../../hooks/useToast";
+import { logger } from "../../telemetry/logger";
 
 import { EventDetails } from "./EventModal/EventDetails";
 import { EventForm } from "./EventModal/EventForm";
 
-import type { CalendarEvent, EventRSVP } from "../../domain/calendar/types";
+import type {
+  CalendarEvent,
+  CalendarEventCreate,
+  EventRSVP,
+} from "../../domain/calendar/types";
+import type { MinimalMutation } from "../../types/mutations";
 import type { Database } from "../../types/database";
 
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
-
-// Minimal shape compatible with react-query mutation objects we pass in.
-type MinimalMutation<Args = unknown, Result = unknown> = {
-  status: string;
-  mutate: (...args: Args[]) => void;
-  mutateAsync: (...args: Args[]) => Promise<Result>;
-};
 
 interface EventModalProps {
   isOpen: boolean;
@@ -37,9 +37,17 @@ interface EventModalProps {
   setIsEditing: (v: boolean) => void;
   profile: UserProfile | null;
   userId: string | undefined;
-  createEventMutation: MinimalMutation;
-  updateEventMutation: MinimalMutation;
-  deleteEventMutation: MinimalMutation;
+  createEventMutation: MinimalMutation<
+    CalendarEventCreate,
+    Error,
+    CalendarEvent
+  >;
+  updateEventMutation: MinimalMutation<
+    { id: string; updates: Partial<CalendarEventCreate> },
+    Error,
+    null
+  >;
+  deleteEventMutation: MinimalMutation<string, Error, boolean>;
   onOpenPracticePlanner: (event: CalendarEvent) => void;
 }
 
@@ -60,6 +68,7 @@ export const EventModal: React.FC<EventModalProps> = ({
   onOpenPracticePlanner,
 }) => {
   const [showPracticePlanner, setShowPracticePlanner] = useState(false);
+  const toast = useToast();
   // local UI state delegated to child components now
 
   const eventId = isOpen && event && !isCreating && event.id ? event.id : "";
@@ -128,8 +137,13 @@ export const EventModal: React.FC<EventModalProps> = ({
                     });
                     setIsCreating(false);
                     onClose();
+                    toast.success("Event created", "Calendar");
                   } catch (err) {
-                    console.error("Failed to create event:", err);
+                    logger.error("Failed to create event", err);
+                    toast.error(
+                      "Could not create event. Please try again.",
+                      "Calendar"
+                    );
                   }
                 }}
               />
@@ -154,8 +168,13 @@ export const EventModal: React.FC<EventModalProps> = ({
                       },
                     });
                     setIsEditing(false);
+                    toast.success("Event updated", "Calendar");
                   } catch (err) {
-                    console.error("Failed to update event:", err);
+                    logger.error("Failed to update event", err);
+                    toast.error(
+                      "Could not update event. Please try again.",
+                      "Calendar"
+                    );
                   }
                 }}
               />
@@ -171,9 +190,14 @@ export const EventModal: React.FC<EventModalProps> = ({
                       await deleteEventMutation.mutateAsync(event.id);
                       onClose();
                       setEvent(null);
+                      toast.success("Event deleted", "Calendar");
                     }
                   } catch (err) {
-                    console.error("Failed to delete event:", err);
+                    logger.error("Failed to delete event", err);
+                    toast.error(
+                      "Could not delete event. Please try again.",
+                      "Calendar"
+                    );
                   }
                 }}
                 deletePending={deleteEventMutation.status === "pending"}

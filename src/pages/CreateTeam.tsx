@@ -810,7 +810,7 @@ export const CreateTeam: React.FC = () => {
 
                 <Button
                   onClick={() => {
-                    console.info("🏃‍♂️ Redirecting to Coach Account signup");
+// console.info("🏃‍♂️ Redirecting to Coach Account signup");
                     navigate(ROUTES.CREATE_COACH_ACCOUNT);
                   }}
                   fullWidth

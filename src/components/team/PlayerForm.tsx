@@ -143,7 +143,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
       };
       onSave(playerData);
     } catch (error) {
-      console.error("Error saving player:", error);
+// console.error("Error saving player:", error);
     } finally {
       setSaving(false);
     }

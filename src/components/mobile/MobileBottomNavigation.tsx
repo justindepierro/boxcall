@@ -1,18 +1,7 @@
-import React, { useEffect, useRef } from "react";
-import { Icon } from "../ui/Icon";
+import React, { useRef } from "react";
+import { Icon, type IconName } from "../ui/Icon";
 import { Button } from "../ui";
-import { NotificationBadge } from "../ui/Badge";
-import { prefetchOnHover } from "../../navigation/prefetch-utils";
-
-export interface MobileNavItem {
-  id: string;
-  label: string;
-  icon: string;
-  href: string;
-  badge?: number;
-  isActive?: boolean;
-  importer?: () => Promise<unknown>;
-}
+import type { MobileNavItem } from "../../hooks/useMobileNavigation";
 
 export interface MobileBottomNavigationProps {
   items: MobileNavItem[];
@@ -36,17 +25,6 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
   className = "",
 }) => {
   const itemRefs = useRef(new Map<string, HTMLElement>());
-
-  useEffect(() => {
-    const enabled = String(import.meta.env.VITE_PREFETCH_ROUTES) === "true";
-    if (!enabled) return;
-    items.forEach((item) => {
-      const el = itemRefs.current.get(item.id) || null;
-      if (el && item.importer) {
-        prefetchOnHover(el, item.importer);
-      }
-    });
-  }, [items]);
 
   const handleItemClick = (item: MobileNavItem) => {
     // Provide haptic-style feedback
@@ -102,34 +80,10 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
                 {/* Icon Container */}
                 <div className="relative mb-1">
                   <Icon
-                    name={
-                      item.icon as
-                        | "home"
-                        | "calendar"
-                        | "users"
-                        | "user"
-                        | "menu"
-                    }
-                    size="sm"
-                    className={`
-                    transition-colors duration-200
-                    ${item.isActive ? "text-brand-jade dark:text-brand-jade-light" : ""}
-                  `}
+                    name={item.icon as IconName}
+                    size="lg"
+                    color="current"
                   />
-
-                  {/* Notification Badge */}
-                  {item.badge && item.badge > 0 && (
-                    <div className="absolute -top-2 -right-2">
-                      <NotificationBadge count={item.badge} size="sm" />
-                    </div>
-                  )}
-
-                  {/* Active Indicator */}
-                  {item.isActive && (
-                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
-                      <div className="w-1 h-1 bg-brand-jade dark:bg-brand-jade-light rounded-full" />
-                    </div>
-                  )}
                 </div>
 
                 {/* Label */}

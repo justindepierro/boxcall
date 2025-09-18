@@ -33,7 +33,7 @@ function App() {
       if (connectionOk) {
         // Connection successful
       } else {
-        console.error(
+// console.error(
           "BoxCall: Database connection failed - check your .env.local configuration"
         );
       }

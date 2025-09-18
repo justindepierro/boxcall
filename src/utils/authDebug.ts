@@ -11,32 +11,32 @@ export class AuthDebug {
    */
   static async checkProfiles(): Promise<void> {
     try {
-      console.info("🔍 Checking profiles in database...");
+// console.info("🔍 Checking profiles in database...");
 
       const { data: profiles, error } = await supabase
         .from("profiles")
         .select("id, full_name, email, role, created_at");
 
       if (error) {
-        console.error("❌ Error fetching profiles:", error);
+// console.error("❌ Error fetching profiles:", error);
         return;
       }
 
-      console.info("👤 Found profiles:", profiles);
+// console.info("👤 Found profiles:", profiles);
 
       if (profiles && profiles.length > 0) {
-        console.info(`✅ Found ${profiles.length} profile(s):`);
+// console.info(`✅ Found ${profiles.length} profile(s):`);
         profiles.forEach((profile) => {
-          console.info(
+// console.info(
             `  - ${profile.full_name || "No Name"} (${profile.email || "No Email"}) - Role: ${profile.role}`
           );
         });
       } else {
-        console.info("⚠️ No profiles found in database!");
-        console.info("💡 You need to register a user account first");
+// console.info("⚠️ No profiles found in database!");
+// console.info("💡 You need to register a user account first");
       }
     } catch (error) {
-      console.error("❌ AuthDebug.checkProfiles failed:", error);
+// console.error("❌ AuthDebug.checkProfiles failed:", error);
     }
   }
 
@@ -45,7 +45,7 @@ export class AuthDebug {
    */
   static async checkAuthSession(): Promise<void> {
     try {
-      console.info("🔍 Checking current auth session...");
+// console.info("🔍 Checking current auth session...");
 
       const {
         data: { session },
@@ -53,20 +53,20 @@ export class AuthDebug {
       } = await supabase.auth.getSession();
 
       if (error) {
-        console.error("❌ Error getting session:", error);
+// console.error("❌ Error getting session:", error);
         return;
       }
 
       if (session) {
-        console.info("✅ Active session found:");
-        console.info("  - User ID:", session.user.id);
-        console.info("  - Email:", session.user.email);
-        console.info("  - Role:", session.user.role);
+// console.info("✅ Active session found:");
+// console.info("  - User ID:", session.user.id);
+// console.info("  - Email:", session.user.email);
+// console.info("  - Role:", session.user.role);
       } else {
-        console.info("⚠️ No active session - user not logged in");
+// console.info("⚠️ No active session - user not logged in");
       }
     } catch (error) {
-      console.error("❌ AuthDebug.checkAuthSession failed:", error);
+// console.error("❌ AuthDebug.checkAuthSession failed:", error);
     }
   }
 
@@ -75,7 +75,7 @@ export class AuthDebug {
    */
   static async createTestUser(): Promise<void> {
     try {
-      console.info("🧪 Creating test user...");
+// console.info("🧪 Creating test user...");
 
       const testEmail = "coachd@boxcallapp.com";
       const testPassword = "testpassword123";
@@ -92,18 +92,18 @@ export class AuthDebug {
       });
 
       if (error) {
-        console.error("❌ Error creating test user:", error.message);
+// console.error("❌ Error creating test user:", error.message);
         return;
       }
 
       if (data.user) {
-        console.info("✅ Test user created successfully!");
-        console.info("  - Email:", data.user.email);
-        console.info("  - ID:", data.user.id);
-        console.info("💡 You can now login with:", testEmail);
+// console.info("✅ Test user created successfully!");
+// console.info("  - Email:", data.user.email);
+// console.info("  - ID:", data.user.id);
+// console.info("💡 You can now login with:", testEmail);
       }
     } catch (error) {
-      console.error("❌ AuthDebug.createTestUser failed:", error);
+// console.error("❌ AuthDebug.createTestUser failed:", error);
     }
   }
 
@@ -111,14 +111,14 @@ export class AuthDebug {
    * Run all debug checks
    */
   static async runAllChecks(): Promise<void> {
-    console.info("🚀 Running auth debug checks...");
-    console.info("=====================================");
+// console.info("🚀 Running auth debug checks...");
+// console.info("=====================================");
 
     await this.checkAuthSession();
-    console.info("-------------------------------------");
+// console.info("-------------------------------------");
 
     await this.checkProfiles();
-    console.info("=====================================");
+// console.info("=====================================");
   }
 }
 

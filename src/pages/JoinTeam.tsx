@@ -32,17 +32,8 @@ interface JoinMethod {
   primary?: boolean;
 }
 
-interface TeamSearchResult {
-  id: string;
-  name: string;
-  school: string;
-  sport: string;
-  level: string;
-  memberCount: number;
-  coachName: string;
-  isPublic: boolean;
-  requiresApproval: boolean;
-}
+import { teamService } from "@services";
+import type { TeamSearchResult } from "@services/TeamService";
 
 type JoinStep =
   | "method"
@@ -95,32 +86,6 @@ export const JoinTeam: React.FC = () => {
     },
   ];
 
-  // Mock search results - replace with actual API call
-  const mockSearchResults: TeamSearchResult[] = [
-    {
-      id: "team-1",
-      name: "Central High Eagles",
-      school: "Central High School",
-      sport: "Football",
-      level: "Varsity",
-      memberCount: 45,
-      coachName: "Coach Johnson",
-      isPublic: true,
-      requiresApproval: false,
-    },
-    {
-      id: "team-2",
-      name: "North Lions JV",
-      school: "North High School",
-      sport: "Football",
-      level: "Junior Varsity",
-      memberCount: 32,
-      coachName: "Coach Williams",
-      isPublic: false,
-      requiresApproval: true,
-    },
-  ];
-
   const handleMethodSelect = (methodId: string) => {
     setSelectedMethod(methodId);
     setCurrentStep(methodId as JoinStep);
@@ -135,7 +100,7 @@ export const JoinTeam: React.FC = () => {
     setIsLoading(true);
 
     // TODO: Implement actual invite code verification
-    console.info("🔑 Verifying invite code:", inviteCode);
+    // console.info("🔑 Verifying invite code:", inviteCode);
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -149,23 +114,15 @@ export const JoinTeam: React.FC = () => {
     if (!searchQuery.trim()) return;
 
     setIsLoading(true);
-
-    // TODO: Implement actual team search API
-    console.info("Searching for teams:", searchQuery);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Mock results - replace with actual search
-    setSearchResults(
-      mockSearchResults.filter(
-        (team) =>
-          team.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          team.school.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
-
-    setIsLoading(false);
+    try {
+      const results = await teamService.searchTeams(searchQuery);
+      setSearchResults(results);
+    } catch (error) {
+      // TODO: Add user-facing error handling
+      console.error("Failed to search for teams:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleJoinTeam = async (team: TeamSearchResult) => {
@@ -173,12 +130,12 @@ export const JoinTeam: React.FC = () => {
 
     if (team.requiresApproval) {
       // Send join request
-      console.info("📨 Sending join request for team:", team.name);
+      // console.info("📨 Sending join request for team:", team.name);
       // TODO: Implement join request logic
       setCurrentStep("request");
     } else {
       // Join immediately
-      console.info("✅ Joining team immediately:", team.name);
+      // console.info("✅ Joining team immediately:", team.name);
       // TODO: Implement immediate join logic
       setCurrentStep("complete");
     }

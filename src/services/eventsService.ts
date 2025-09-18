@@ -29,7 +29,7 @@ export async function listTeamEvents(
     const pgErr = error as PostgrestError;
     if (status === 404 || pgErr?.code === "42P01") {
       if (process.env.NODE_ENV !== "production") {
-        console.warn(
+// console.warn(
           "team_events relation not found (likely migrations pending) – returning empty list"
         );
       }

@@ -18,7 +18,7 @@ export const createLazyComponent = <
 ) => {
   return React.lazy(() =>
     importFn().catch((error) => {
-      console.error("Failed to load component:", error);
+// console.error("Failed to load component:", error);
       // Return fallback component wrapped in default export
       const FallbackComponent =
         fallback ||
@@ -69,18 +69,18 @@ export const analyzeBundleSize = () => {
     if (performanceEntries.length > 0) {
       const navigationEntry =
         performanceEntries[0] as PerformanceNavigationTiming;
-      console.info("📦 Bundle Analysis");
-      console.info(
+// console.info("📦 Bundle Analysis");
+// console.info(
         "Total Load Time:",
         navigationEntry.loadEventEnd - navigationEntry.fetchStart,
         "ms"
       );
-      console.info(
+// console.info(
         "DOMContentLoaded:",
         navigationEntry.domContentLoadedEventEnd - navigationEntry.fetchStart,
         "ms"
       );
-      console.info(
+// console.info(
         "First Contentful Paint:",
         "Check Lighthouse for FCP metrics"
       );
@@ -102,7 +102,7 @@ export const dynamicImportWithRetry = async <T>(
       return await importFn();
     } catch (error) {
       lastError = error as Error;
-      console.warn(
+// console.warn(
         `Dynamic import failed (attempt ${i + 1}/${maxRetries}):`,
         error
       );
@@ -121,10 +121,10 @@ export const registerServiceWorker = async () => {
   if ("serviceWorker" in navigator) {
     try {
       const registration = await navigator.serviceWorker.register("/sw.js");
-      console.info("Service Worker registered successfully:", registration);
+// console.info("Service Worker registered successfully:", registration);
       return registration;
     } catch (error) {
-      console.error("Service Worker registration failed:", error);
+// console.error("Service Worker registration failed:", error);
       throw error;
     }
   } else {
@@ -177,12 +177,12 @@ export const monitorMemoryUsage = () => {
     };
 
     if (process.env.NODE_ENV === "development") {
-      console.info("🧠 Memory Usage:", memoryInfo);
+// console.info("🧠 Memory Usage:", memoryInfo);
     }
 
     // Warn if memory usage is high
     if (memoryInfo.usage > 70) {
-      console.warn("High memory usage detected:", memoryInfo.usage + "%");
+// console.warn("High memory usage detected:", memoryInfo.usage + "%");
     }
 
     return memoryInfo;
@@ -206,9 +206,9 @@ export const optimizeChunkLoading = () => {
 // Tree shaking verification (development only)
 export const verifyTreeShaking = (moduleNames: string[]) => {
   if (process.env.NODE_ENV === "development") {
-    console.info("🌳 Tree Shaking Verification");
+// console.info("🌳 Tree Shaking Verification");
     moduleNames.forEach((name) => {
-      console.info(`${name}: Module should be tree-shakeable`);
+// console.info(`${name}: Module should be tree-shakeable`);
     });
     // end group
   }

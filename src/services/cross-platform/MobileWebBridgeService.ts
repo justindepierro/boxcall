@@ -134,7 +134,7 @@ export class MobileWebBridgeService {
         const resolution = await this.resolveDataConflict(conflict, connection);
         resolved.push({ ...conflict, resolution });
       } catch (error) {
-        console.error(`Failed to resolve conflict ${conflict.id}:`, error);
+// console.error(`Failed to resolve conflict ${conflict.id}:`, error);
         pending.push(conflict);
       }
     }
@@ -275,7 +275,7 @@ export class MobileWebBridgeService {
       }
       return syncedCount;
     } catch (error) {
-      console.error("Failed to sync calendar events:", error);
+// console.error("Failed to sync calendar events:", error);
       return 0;
     }
   }
@@ -411,7 +411,7 @@ export class MobileWebBridgeService {
         try {
           await this.syncPlatforms(bridgeId);
         } catch (error) {
-          console.error(`Auto-sync failed for bridge ${bridgeId}:`, error);
+// console.error(`Auto-sync failed for bridge ${bridgeId}:`, error);
         }
       },
       connection.syncConfig.syncInterval * 60 * 1000

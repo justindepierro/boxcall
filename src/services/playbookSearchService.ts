@@ -326,7 +326,7 @@ export class PlaybookSearchService {
         this.searchHistory = JSON.parse(saved);
       }
     } catch (error) {
-      console.warn("Failed to load search history:", error);
+// console.warn("Failed to load search history:", error);
       this.searchHistory = [];
     }
   }
@@ -341,7 +341,7 @@ export class PlaybookSearchService {
         JSON.stringify(this.searchHistory)
       );
     } catch (error) {
-      console.warn("Failed to save search history:", error);
+// console.warn("Failed to save search history:", error);
     }
   }
 

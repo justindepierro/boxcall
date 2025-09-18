@@ -82,7 +82,7 @@ export class DevProfileRepository implements IDevProfileRepository {
         .order("earned_at", { ascending: false });
 
       if (error) {
-        console.error("Error fetching achievements:", error);
+// console.error("Error fetching achievements:", error);
         return [];
       }
 
@@ -90,7 +90,7 @@ export class DevProfileRepository implements IDevProfileRepository {
       this.setCachedData(cacheKey, achievements);
       return achievements;
     } catch (error) {
-      console.error("Repository error fetching achievements:", error);
+// console.error("Repository error fetching achievements:", error);
       return [];
     }
   }
@@ -121,7 +121,7 @@ export class DevProfileRepository implements IDevProfileRepository {
         .eq("status", "active");
 
       if (error) {
-        console.error("Error fetching team data:", error);
+// console.error("Error fetching team data:", error);
         return [];
       }
 
@@ -129,7 +129,7 @@ export class DevProfileRepository implements IDevProfileRepository {
       this.setCachedData(cacheKey, teamData);
       return teamData;
     } catch (error) {
-      console.error("Repository error fetching team data:", error);
+// console.error("Repository error fetching team data:", error);
       return [];
     }
   }

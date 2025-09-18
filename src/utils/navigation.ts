@@ -23,7 +23,7 @@ export interface NavigationItem {
 export const getNavigationItems = (
   userRole?: UserRole | null | string
 ): NavigationItem[] => {
-  console.info(
+// console.info(
     "getNavigationItems called with userRole:",
     userRole,
     typeof userRole
@@ -76,7 +76,7 @@ export const getNavigationItems = (
     userRole === "coach" ||
     userRole === "player" ||
     (userRole as string) === "super_admin";
-  console.info("Playbook check:", {
+// console.info("Playbook check:", {
     userRole,
     userRoleType: typeof userRole,
     isAdmin: userRole === "admin",

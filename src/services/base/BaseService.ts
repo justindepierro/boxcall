@@ -94,7 +94,7 @@ export abstract class BaseService<
   /**
    * Create a new record
    */
-  async create(data: Inserts<T>): Promise<Tables<T>> {
+  async create(data: Inserts<T>, actorId?: string): Promise<Tables<T>> {
     return this.executeWithMetrics("create", async () => {
       const { data: result, error } = await this.supabase
         .from(this.tableName as string)
@@ -113,7 +113,7 @@ export abstract class BaseService<
         aggregateType: String(this.tableName),
         eventType: "created",
         eventData: result,
-        causedBy: "system", // TODO: Get from auth context
+        causedBy: actorId || "system", // TODO: Get from auth context
         timestamp: new Date(),
       });
 
@@ -178,7 +178,11 @@ export abstract class BaseService<
   /**
    * Update a record
    */
-  async update(id: string, data: Updates<T>): Promise<Tables<T>> {
+  async update(
+    id: string,
+    data: Updates<T>,
+    actorId?: string
+  ): Promise<Tables<T>> {
     return this.executeWithMetrics("update", async () => {
       const { data: result, error } = await this.supabase
         .from(this.tableName as string)
@@ -198,7 +202,7 @@ export abstract class BaseService<
         aggregateType: String(this.tableName),
         eventType: "updated",
         eventData: { id, changes: data },
-        causedBy: "system",
+        causedBy: actorId || "system",
         timestamp: new Date(),
       });
 
@@ -209,7 +213,7 @@ export abstract class BaseService<
   /**
    * Delete a record
    */
-  async delete(id: string): Promise<void> {
+  async delete(id: string, actorId?: string): Promise<void> {
     await this.executeWithMetrics("delete", async () => {
       const { error } = await this.supabase
         .from(this.tableName as string)
@@ -227,7 +231,7 @@ export abstract class BaseService<
         aggregateType: String(this.tableName),
         eventType: "deleted",
         eventData: { id },
-        causedBy: "system",
+        causedBy: actorId || "system",
         timestamp: new Date(),
       });
     });

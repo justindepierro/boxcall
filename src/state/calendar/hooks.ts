@@ -15,8 +15,18 @@ import type {
   CalendarEventCreate,
   EventRSVP,
   CalendarEvent,
+  CalendarComment,
 } from "../../domain/calendar/types";
 import type { QueryKey } from "@tanstack/react-query";
+
+function calendarDebugEnabled(): boolean {
+  if (typeof window === "undefined") return false;
+  const w = window as Window & { __CALENDAR_DEBUG__?: boolean };
+  return (
+    w.localStorage.getItem("debugCalendar") === "1" ||
+    w.__CALENDAR_DEBUG__ === true
+  );
+}
 
 // Types for ranges & params
 export interface EventsQueryParams {
@@ -28,15 +38,21 @@ export interface EventsQueryParams {
 
 export function useEvents(params: EventsQueryParams) {
   const { range, filters, devMode, userId } = params;
-  return useQuery({
+  return useQuery<CalendarEvent[]>({
     queryKey: calendarKeys.events(filters, range, devMode),
     queryFn: async () => {
       const data = await CalendarAPI.listUserEvents(userId, devMode, filters);
       if (import.meta.env.DEV && Array.isArray(data)) {
-        for (const ev of data.slice(0, 25)) {
-          const parse = CalendarEventSchema.safeParse(ev);
-          if (!parse.success) {
-            console.warn("Invalid CalendarEvent shape", parse.error.issues, ev);
+        if (calendarDebugEnabled()) {
+          for (const ev of data.slice(0, 25)) {
+            const parse = CalendarEventSchema.safeParse(ev);
+            if (!parse.success) {
+              console.warn(
+                "[CalendarDebug] Invalid CalendarEvent shape",
+                parse.error.issues,
+                ev
+              );
+            }
           }
         }
       }
@@ -59,7 +75,7 @@ export function useSearchEvents(query: string, params: EventsQueryParams) {
         e.title?.toLowerCase().includes(lc) ||
         (e.location && e.location.toLowerCase().includes(lc)) ||
         (Array.isArray(e.tags) &&
-          e.tags.some((t) => t.toLowerCase().includes(lc)))
+          e.tags.some((t: string) => t.toLowerCase().includes(lc)))
     );
   }, [lc, eventsQuery.data]);
   return { ...eventsQuery, data: filtered };
@@ -67,7 +83,7 @@ export function useSearchEvents(query: string, params: EventsQueryParams) {
 
 export function useEvent(id: string) {
   const qc = useQueryClient();
-  return useQuery({
+  return useQuery<CalendarEvent | null>({
     queryKey: calendarKeys.event(id),
     queryFn: async (): Promise<CalendarEvent | null> => {
       // Attempt to hydrate from any cached events query
@@ -84,11 +100,11 @@ export function useEvent(id: string) {
       }
       const results = await CalendarAPI.search(id);
       const match = results.find((e) => e.id === id) ?? null;
-      if (import.meta.env.DEV && match) {
+      if (import.meta.env.DEV && match && calendarDebugEnabled()) {
         const parse = CalendarEventSchema.safeParse(match);
         if (!parse.success) {
           console.warn(
-            "Invalid CalendarEvent shape",
+            "[CalendarDebug] Invalid CalendarEvent shape",
             parse.error.issues,
             match
           );
@@ -106,7 +122,12 @@ export function useCreateEvent(
   filters?: EventFilters
 ) {
   const qc = useQueryClient();
-  return useMutation({
+  return useMutation<
+    CalendarEvent,
+    Error,
+    CalendarEventCreate,
+    { key: QueryKey; previous: CalendarEvent[]; tempId: string }
+  >({
     mutationFn: (data: CalendarEventCreate) => CalendarAPI.createEvent(data),
     onMutate: async (data) => {
       const key = calendarKeys.events(
@@ -153,7 +174,16 @@ export function useCreateEvent(
 
 export function useUpdateEvent() {
   const qc = useQueryClient();
-  return useMutation({
+  return useMutation<
+    null,
+    Error,
+    { id: string; updates: Partial<CalendarEventCreate> },
+    {
+      snapshots: Array<{ key: QueryKey; data: CalendarEvent[] | undefined }>;
+      id: string;
+      updates: Partial<CalendarEventCreate>;
+    }
+  >({
     mutationFn: ({
       id,
       updates,
@@ -200,7 +230,12 @@ export function useUpdateEvent() {
 
 export function useDeleteEvent() {
   const qc = useQueryClient();
-  return useMutation({
+  return useMutation<
+    boolean,
+    Error,
+    string,
+    { snapshots: Array<{ key: QueryKey; data: CalendarEvent[] | undefined }> }
+  >({
     mutationFn: (id: string) => CalendarAPI.deleteEvent(id),
     onMutate: async (id) => {
       const eventsQueries = qc
@@ -237,7 +272,7 @@ export function useDeleteEvent() {
 }
 
 export function useRSVPs(eventId: string) {
-  return useQuery({
+  return useQuery<EventRSVP[]>({
     queryKey: calendarKeys.rsvps(eventId),
     queryFn: () => CalendarAPI.getRSVPs(eventId),
     enabled: !!eventId,
@@ -246,7 +281,12 @@ export function useRSVPs(eventId: string) {
 
 export function useUpdateRSVP(eventId: string) {
   const qc = useQueryClient();
-  return useMutation({
+  return useMutation<
+    EventRSVP,
+    Error,
+    { userId: string; status: EventRSVP["status"]; note?: string },
+    { prev: EventRSVP[] | undefined }
+  >({
     mutationFn: (vars: {
       userId: string;
       status: EventRSVP["status"];
@@ -275,7 +315,7 @@ export function useUpdateRSVP(eventId: string) {
               note: vars.note,
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString(),
-            },
+            } as EventRSVP,
           ];
         }
         qc.setQueryData(key, next);
@@ -286,10 +326,14 @@ export function useUpdateRSVP(eventId: string) {
       ctx?.prev && qc.setQueryData(calendarKeys.rsvps(eventId), ctx.prev),
     onSuccess: (saved, vars) => {
       if (!saved) return;
-      if (import.meta.env.DEV) {
+      if (import.meta.env.DEV && calendarDebugEnabled()) {
         const parse = EventRSVPSchema.safeParse(saved);
         if (!parse.success) {
-          console.warn("Invalid EventRSVP shape", parse.error.issues, saved);
+          console.warn(
+            "[CalendarDebug] Invalid EventRSVP shape",
+            parse.error.issues,
+            saved
+          );
         }
       }
       const key = calendarKeys.rsvps(eventId);
@@ -311,16 +355,20 @@ export function useUpdateRSVP(eventId: string) {
 }
 
 export function useComments(eventId: string) {
-  return useQuery({
+  return useQuery<CalendarComment[]>({
     queryKey: calendarKeys.comments(eventId),
     queryFn: async () => {
       const data = await CalendarAPI.listComments(eventId);
-      if (import.meta.env.DEV && Array.isArray(data)) {
+      if (
+        import.meta.env.DEV &&
+        Array.isArray(data) &&
+        calendarDebugEnabled()
+      ) {
         for (const c of data.slice(0, 50)) {
           const parse = CalendarCommentSchema.safeParse(c);
           if (!parse.success) {
             console.warn(
-              "Invalid CalendarComment shape",
+              "[CalendarDebug] Invalid CalendarComment shape",
               parse.error.issues,
               c
             );
@@ -335,24 +383,21 @@ export function useComments(eventId: string) {
 
 export function useAddComment(eventId: string) {
   const qc = useQueryClient();
-  return useMutation({
+  return useMutation<
+    CalendarComment,
+    Error,
+    string,
+    { prev: CalendarComment[] }
+  >({
     mutationFn: (body: string) =>
       CalendarAPI.addComment({ event_id: eventId, body: body }),
     onMutate: async (body) => {
       const key = calendarKeys.comments(eventId);
-      interface CommentLike {
-        id: string;
-        event_id: string;
-        user_id: string;
-        body: string;
-        created_at: string;
-        updated_at: string;
-      }
-      const prev = (qc.getQueryData<CommentLike[]>(key) || []) as CommentLike[];
-      const optimistic = {
+      const prev = qc.getQueryData<CalendarComment[]>(key) || [];
+      const optimistic: CalendarComment = {
         id: `temp-comment-${Date.now()}`,
         event_id: eventId,
-        user_id: "me",
+        user_id: "me", // This will be replaced by the server
         body,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),

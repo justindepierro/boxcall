@@ -59,17 +59,17 @@ export async function testDatabaseConnection() {
 
     // Only log in development mode to reduce console noise
     if (import.meta.env.DEV) {
-      console.info(
+// console.info(
         `🔗 Database: ${accessibleTables.length} accessible tables, ${protectedCount.length} protected`
       );
       if (protectedCount.length > 0) {
-        console.info(`🔒 Protected tables:`, protectedCount);
+// console.info(`🔒 Protected tables:`, protectedCount);
       }
     }
 
     return true;
   } catch (error) {
-    console.error("❌ Database connection failed:", error);
+// console.error("❌ Database connection failed:", error);
     return false;
   }
 }
@@ -87,7 +87,7 @@ export async function getUserProfile(userId: string): Promise<Profile | null> {
     .eq("id", userId)
     .single();
   if (error) {
-    console.error("Error fetching user profile:", error);
+// console.error("Error fetching user profile:", error);
     return null;
   }
   return data;
@@ -98,7 +98,7 @@ export async function getTeams(): Promise<Team[]> {
     .select("*")
     .order("created_at", { ascending: false });
   if (error) {
-    console.error("Error fetching teams:", error);
+// console.error("Error fetching teams:", error);
     return [];
   }
   return data || [];
@@ -110,7 +110,7 @@ export async function getTeamGames(teamId: string): Promise<Game[]> {
     .eq("team_id", teamId)
     .order("game_date", { ascending: false });
   if (error) {
-    console.error("Error fetching games:", error);
+// console.error("Error fetching games:", error);
     return [];
   }
   return data || [];
@@ -122,7 +122,7 @@ export async function getPlaybookPlays(playbookId: string): Promise<Play[]> {
     .eq("playbook_id", playbookId)
     .order("play_name");
   if (error) {
-    console.error("Error fetching plays:", error);
+// console.error("Error fetching plays:", error);
     return [];
   }
   return data || [];
@@ -135,7 +135,7 @@ export async function getGamePlayCalls(gameId: string): Promise<PlayCall[]> {
     .eq("game_id", gameId)
     .order("created_at");
   if (error) {
-    console.error("Error fetching play calls:", error);
+// console.error("Error fetching play calls:", error);
     return [];
   }
   return data || [];
@@ -147,7 +147,7 @@ export async function getTeamGoals(teamId: string): Promise<TeamGoal[]> {
     .eq("team_id", teamId)
     .order("deadline", { ascending: true });
   if (error) {
-    console.error("Error fetching team goals:", error);
+// console.error("Error fetching team goals:", error);
     return [];
   }
   return data || [];
@@ -159,7 +159,7 @@ export async function getTeamFiles(teamId: string): Promise<TeamFile[]> {
     .eq("team_id", teamId)
     .order("created_at", { ascending: false });
   if (error) {
-    console.error("Error fetching team files:", error);
+// console.error("Error fetching team files:", error);
     return [];
   }
   return data || [];
@@ -173,7 +173,7 @@ export async function getUserProfileByUserId(
     .eq("user_id", userId)
     .single();
   if (error) {
-    console.error("Error fetching user profile:", error);
+// console.error("Error fetching user profile:", error);
     return null;
   }
   return data;
@@ -187,7 +187,7 @@ export async function getPostReactions(
     .eq("post_id", postId)
     .order("created_at", { ascending: false });
   if (error) {
-    console.error("Error fetching post reactions:", error);
+// console.error("Error fetching post reactions:", error);
     return [];
   }
   return data || [];

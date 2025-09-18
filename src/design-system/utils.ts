@@ -31,7 +31,7 @@ export function getTokenColor(path: string): string {
     ) {
       current = (current as Record<string, unknown>)[part];
     } else {
-      console.warn(`Design token path "${path}" not found`);
+// console.warn(`Design token path "${path}" not found`);
       return semanticTokens.primary; // Fallback to primary color
     }
   }
@@ -148,10 +148,10 @@ export function getAllTokenPaths(): string[] {
  */
 export function printTokens(): void {
   if (process.env.NODE_ENV === "development") {
-    console.info("🎨 Available Design Tokens:");
+// console.info("🎨 Available Design Tokens:");
     getAllTokenPaths().forEach((path) => {
-      console.info(`${path}: ${getTokenColor(path)}`);
+// console.info(`${path}: ${getTokenColor(path)}`);
     });
-    console.info("— end tokens —");
+// console.info("— end tokens —");
   }
 }

@@ -21,3 +21,4 @@ export * from "./smartDataAnalyzer";
 export * from "./statsService";
 export * from "./thumbnailUploadService";
 export * from "./userPreferencesService";
+export * from "./TeamService";

@@ -30,7 +30,7 @@ export class DashboardErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("Dashboard component error:", error, errorInfo);
+// console.error("Dashboard component error:", error, errorInfo);
   }
 
   render() {

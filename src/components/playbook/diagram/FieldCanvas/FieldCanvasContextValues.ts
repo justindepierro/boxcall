@@ -1,18 +1,21 @@
 // FieldCanvasContextValues.ts
-import type { FieldCanvasContextType } from "./FieldCanvasContext";
+import type {
+  FieldCanvasContextType,
+  FieldCanvasState,
+  FieldCanvasAction,
+} from "./FieldCanvasContext.types";
 
 export type { FieldCanvasContextType };
 
 export const defaultContext: FieldCanvasContextType = {
-  state:
-    undefined as unknown as import("./FieldCanvasContext").FieldCanvasState,
-  dispatch: (() => {}) as React.Dispatch<
-    import("./FieldCanvasContext").FieldCanvasAction
-  >,
-  dragRef: { current: null } as React.RefObject<unknown>,
-  panRef: { current: null } as React.RefObject<unknown>,
-  annotDragRef: { current: null } as React.RefObject<unknown>,
-  selectionDragRef: { current: null } as React.RefObject<unknown>,
+  state: undefined as unknown as FieldCanvasState,
+  dispatch: (() => {}) as React.Dispatch<FieldCanvasAction>,
+  dragRef: { current: null } as unknown as React.RefObject<HTMLDivElement>,
+  panRef: { current: null } as unknown as React.RefObject<HTMLDivElement>,
+  annotDragRef: { current: null } as unknown as React.RefObject<HTMLDivElement>,
+  selectionDragRef: {
+    current: null,
+  } as unknown as React.RefObject<HTMLDivElement>,
   nudgeBatchRef: {
     current: { events: 0, playersMoved: 0, timer: null },
   } as React.RefObject<{

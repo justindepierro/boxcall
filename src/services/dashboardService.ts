@@ -24,12 +24,11 @@ export interface DashboardData {
 }
 export interface ActivityItem {
   id: string;
-  type: "achievement" | "message" | "event" | "practice" | "game";
+  team_id: string;
+  type: "announcement" | "achievement" | "event";
   title: string;
-  description: string;
+  description: string | null;
   timestamp: string;
-  teamId?: string;
-  teamName?: string;
   icon: string;
   color: string;
 }
@@ -133,10 +132,7 @@ export class DashboardService {
   /**
    * Get comprehensive dashboard data for a user
    */
-  static async getDashboardData(
-    userId: string,
-    devMode?: string
-  ): Promise<DashboardData> {
+  static async getDashboardData(userId: string): Promise<DashboardData> {
     try {
       const userTeams = await this.getUserTeams(userId);
       // Filter active teams (in season)
@@ -145,11 +141,7 @@ export class DashboardService {
         return true;
       });
       // Get recent activity with dev mode awareness
-      const recentActivity = await this.getRecentActivity(
-        userId,
-        userTeams,
-        devMode
-      );
+      const recentActivity = await this.getRecentActivity(userId, userTeams);
       return {
         userTeams,
         totalTeams: userTeams.length,
@@ -172,43 +164,32 @@ export class DashboardService {
    */
   static async getRecentActivity(
     _userId: string,
-    userTeams: UserTeamData[],
-    devMode?: string
+    userTeams: UserTeamData[]
   ): Promise<ActivityItem[]> {
-    // For blank slate mode, return empty activity
-    if (devMode === "blank_slate") {
-      // TODO: Remove dashboard debug log (was: console.log)
-      return [];
-    }
-
-    // For production/real modes, try to get real data
-    if (devMode === "production" || devMode === "super_admin_real") {
-      try {
-        // TODO: Implement real activity feed from Supabase
-        console.info(
-          "[Search/Investigate] Dashboard Service: Attempting to fetch real activity..."
-        );
-
-        // For now, return empty until real implementation
-        // In the future, this will fetch from activity/notifications tables
-        return [];
-      } catch (_error) {
-        console.warn(
-          "Dashboard Service: Could not fetch real activity:",
-          _error
-        );
-        return [];
-      }
-    }
-
-    // For users with no teams, return empty activity
     if (!userTeams || userTeams.length === 0) {
       return [];
     }
 
-    // TODO: Implement real activity fetching from Supabase
-    // For now, return empty until we have real data
-    return [];
+    const teamIds = userTeams.map((ut) => ut.team.id);
+
+    try {
+      const { data, error } = await supabase
+        .from("v_team_activity")
+        .select("*")
+        .in("team_id", teamIds)
+        .order("timestamp", { ascending: false })
+        .limit(20);
+
+      if (error) {
+        // TODO: Handle error fetching activity (was: console.error)
+        return [];
+      }
+
+      return (data as ActivityItem[]) || [];
+    } catch (_error) {
+      // TODO: Handle error fetching activity (was: console.error)
+      return [];
+    }
   }
   /**
    * Get team status for display

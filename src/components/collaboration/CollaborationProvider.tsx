@@ -71,7 +71,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
   ) => {
     const conflict = activeConflicts.find((c) => c.conflictId === conflictId);
     if (!conflict) {
-      console.warn("Conflict not found:", conflictId);
+// console.warn("Conflict not found:", conflictId);
       return;
     }
 
@@ -93,7 +93,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
         prev.filter((c) => c.conflictId !== conflictId)
       );
     } else {
-      console.error("Failed to resolve conflict with strategy:", strategy);
+// console.error("Failed to resolve conflict with strategy:", strategy);
     }
   };
 

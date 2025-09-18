@@ -303,7 +303,7 @@ export class PracticeScheduleService extends BaseService<"practice_schedules"> {
         const created = await this.createWithCalendar(practice);
         results.push(created);
       } catch (error) {
-        console.error(
+// console.error(
           `Failed to create practice for ${practice.date_scheduled}:`,
           error
         );
