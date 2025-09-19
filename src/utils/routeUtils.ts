@@ -21,7 +21,7 @@ export const preloadRoute = (routeName: string) => {
     case "login":
       return import("../pages/LoginPage");
     default:
-// console.warn("Unknown route for preloading:", routeName);
+      // console.warn("Unknown route for preloading:", routeName);
       return Promise.resolve();
   }
 };
@@ -43,7 +43,7 @@ export const useSmartPreloading = () => {
       // Preload after a small delay to not interfere with current page loading
       setTimeout(() => {
         preloadRoute(route).catch((error) => {
-// console.warn("Route preloading failed:", route, error);
+          // console.warn("Route preloading failed:", route, error);
         });
       }, 100);
     });
@@ -65,7 +65,7 @@ export const useRouteAnalytics = () => {
 
     // Log performance in development
     if (process.env.NODE_ENV === "development") {
-// console.info(`📊 Route ${routeName} loaded in ${loadTime}ms`);
+      // console.info(`📊 Route ${routeName} loaded in ${loadTime}ms`);
     }
   };
 
@@ -78,7 +78,7 @@ export const useRouteAnalytics = () => {
       });
     }
 
-// console.error(`❌ Route ${routeName} failed to load:`, error);
+    // console.error(`❌ Route ${routeName} failed to load:`, error);
   };
 
   return { trackRouteChange, trackRouteError };

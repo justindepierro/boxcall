@@ -68,31 +68,31 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
     const container = containerRef.current;
     if (!container || !isActive) return;
 
-    const handleMouseMove = (event: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+    // const handleMouseMove = (event: MouseEvent) => {
+    //   const rect = container.getBoundingClientRect();
+    //   // const _x = event.clientX - rect.left;
+    //   // const _y = event.clientY - rect.top;
 
-      // TODO: updateCursor when real collaboration is integrated
-// console.info("Cursor move:", { widgetId, x, y });
-    };
+    //   // TODO: updateCursor when real collaboration is integrated
+    //   // console.info("Cursor move:", { widgetId, x: event.clientX - rect.left, y: event.clientY - rect.top });
+    // };
 
-    const handleClick = (event: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+    // const handleClick = (event: MouseEvent) => {
+    //   const rect = container.getBoundingClientRect();
+    //   // const _x = event.clientX - rect.left;
+    //   // const _y = event.clientY - rect.top;
 
-      // TODO: broadcastUpdate when real collaboration is integrated
-// console.info("Widget interaction:", { widgetId, x, y });
-    };
+    //   // TODO: broadcastUpdate when real collaboration is integrated
+    //   // console.info("Widget interaction:", { widgetId, x: event.clientX - rect.left, y: event.clientY - rect.top });
+    // };
 
-    container.addEventListener("mousemove", handleMouseMove);
-    container.addEventListener("click", handleClick);
+    // container.addEventListener("mousemove", handleMouseMove);
+    // container.addEventListener("click", handleClick);
 
-    return () => {
-      container.removeEventListener("mousemove", handleMouseMove);
-      container.removeEventListener("click", handleClick);
-    };
+    // return () => {
+    //   container.removeEventListener("mousemove", handleMouseMove);
+    //   container.removeEventListener("click", handleClick);
+    // };
   }, [widgetId, isActive]);
 
   // Get cursors for this widget
@@ -103,15 +103,17 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
   // Get active participants for this widget (mock)
   const activeParticipants = participants.slice(0, 2); // Mock: first 2 participants
 
-  const handleConflictResolve = (resolution: "accept" | "reject" | "merge") => {
+  const handleConflictResolve = (
+    _resolution: "accept" | "reject" | "merge"
+  ) => {
     if (!conflictData) return;
 
     // TODO: resolveConflict when real collaboration is integrated
-// console.info("Conflict resolution:", {
-      widgetId,
-      resolution,
-      conflictData,
-    });
+    // console.info("Conflict resolution:", {
+    //   widgetId,
+    //   resolution,
+    //   conflictData,
+    // });
     setConflictData(null);
   };
 

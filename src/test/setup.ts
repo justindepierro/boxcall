@@ -53,12 +53,12 @@ function isNoise(args: unknown[]): boolean {
   return NOISE_PATTERNS.some((rx) => rx.test(msg));
 }
 
-// console.error = (...args: unknown[]) => {
+console.error = (...args: unknown[]) => {
   if (isNoise(args)) return;
   originalError(...(args as []));
 };
 
-// console.warn = (...args: unknown[]) => {
+console.warn = (...args: unknown[]) => {
   if (isNoise(args)) return;
   originalWarn(...(args as []));
 };

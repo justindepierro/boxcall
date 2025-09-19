@@ -33,9 +33,7 @@ function App() {
       if (connectionOk) {
         // Connection successful
       } else {
-// console.error(
-          "BoxCall: Database connection failed - check your .env.local configuration"
-        );
+        // console.error("BoxCall: Database connection failed - check your .env.local configuration");
       }
       // Initialize idle prefetching for popular routes
       initRoutePrefetch();

@@ -113,31 +113,26 @@ export class RealTimeService {
    * Synchronize user state across all platforms
    */
   async syncUserState(userId: string): Promise<UserState> {
-    try {
-      // Implement cross-platform state synchronization
-      const response = await fetch(`/api/users/${userId}/sync`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${await this.getAuthToken()}`,
-        },
-      });
+    // Implement cross-platform state synchronization
+    const response = await fetch(`/api/users/${userId}/sync`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${await this.getAuthToken()}`,
+      },
+    });
 
-      if (!response.ok) {
-        throw new Error(`Sync failed: ${response.statusText}`);
-      }
-
-      const userState: UserState = await response.json();
-
-      // Update local state and notify subscribers
-      await this.updateLocalState(userState);
-      this.notifySubscribers("user", userId, userState);
-
-      return userState;
-    } catch (error) {
-// console.error("User state sync failed:", error);
-      throw error;
+    if (!response.ok) {
+      throw new Error(`Sync failed: ${response.statusText}`);
     }
+
+    const userState: UserState = await response.json();
+
+    // Update local state and notify subscribers
+    await this.updateLocalState(userState);
+    this.notifySubscribers("user", userId, userState);
+
+    return userState;
   }
 
   /**
@@ -180,14 +175,14 @@ export class RealTimeService {
   }
 
   private async initializeRealTimeConnection(
-    type: string,
-    entityId: string
+    _type: string,
+    _entityId: string
   ): Promise<void> {
     // Implement WebSocket or Server-Sent Events connection
     // This would typically connect to a real-time service like Socket.IO, Pusher, or Firebase
-// console.info(`Initializing real-time connection for ${type}:${entityId}`);
+    // console.info(`Initializing real-time connection for ${type}:${entityId}`);
     if (this.syncConfig.deltaSyncEnabled) {
-// console.info("Delta sync enabled; using optimized payloads");
+      // console.info("Delta sync enabled; using optimized payloads");
     }
   }
 
@@ -196,9 +191,9 @@ export class RealTimeService {
     return "dummy-token";
   }
 
-  private async updateLocalState(userState: UserState): Promise<void> {
+  private async updateLocalState(_userState: UserState): Promise<void> {
     // Implement local state persistence using AsyncStorage or similar
-// console.info("Updating local state:", userState);
+    // console.info("Updating local state:", userState);
   }
 
   private notifySubscribers(
@@ -218,16 +213,16 @@ export class RealTimeService {
   }
 
   private async cleanupConnection(
-    type: string,
-    entityId: string
+    _type: string,
+    _entityId: string
   ): Promise<void> {
     // Check if any other subscriptions need this connection
     const hasActiveSubscriptions = Array.from(this.subscriptions.values()).some(
-      (sub) => sub.type === type && sub.entityId === entityId && sub.isActive
+      (sub) => sub.type === _type && sub.entityId === _entityId && sub.isActive
     );
 
     if (!hasActiveSubscriptions) {
-// console.info(`Cleaning up connection for ${type}:${entityId}`);
+      // console.info(`Cleaning up connection for ${_type}:${_entityId}`);
       // Implement connection cleanup
       // connection cleanup would occur here
     }
@@ -255,54 +250,34 @@ export class TeamManagementService {
     userId: string,
     teamId: string
   ): Promise<Record<string, boolean>> {
-    try {
-      const response = await fetch(
-        `/api/teams/${teamId}/users/${userId}/permissions`
-      );
-      return await response.json();
-    } catch (error) {
-// console.error("Failed to get user permissions:", error);
-      throw error;
-    }
+    const response = await fetch(
+      `/api/teams/${teamId}/users/${userId}/permissions`
+    );
+    return await response.json();
   }
 
   /**
    * Get coach-specific dashboard data
    */
   async getCoachDashboard(coachId: string): Promise<CoachDashboard> {
-    try {
-      const response = await fetch(`/api/coaches/${coachId}/dashboard`);
-      return await response.json();
-    } catch (error) {
-// console.error("Failed to get coach dashboard:", error);
-      throw error;
-    }
+    const response = await fetch(`/api/coaches/${coachId}/dashboard`);
+    return await response.json();
   }
 
   /**
    * Get player-specific dashboard data
    */
   async getPlayerDashboard(playerId: string): Promise<PlayerDashboard> {
-    try {
-      const response = await fetch(`/api/players/${playerId}/dashboard`);
-      return await response.json();
-    } catch (error) {
-// console.error("Failed to get player dashboard:", error);
-      throw error;
-    }
+    const response = await fetch(`/api/players/${playerId}/dashboard`);
+    return await response.json();
   }
 
   /**
    * Get family-specific dashboard data
    */
   async getFamilyDashboard(familyId: string): Promise<FamilyDashboard> {
-    try {
-      const response = await fetch(`/api/families/${familyId}/dashboard`);
-      return await response.json();
-    } catch (error) {
-// console.error("Failed to get family dashboard:", error);
-      throw error;
-    }
+    const response = await fetch(`/api/families/${familyId}/dashboard`);
+    return await response.json();
   }
 
   /**
@@ -311,19 +286,14 @@ export class TeamManagementService {
   async sendRoleBasedNotification(
     notification: Record<string, unknown>
   ): Promise<void> {
-    try {
-      const response = await fetch("/api/notifications/role-based", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(notification),
-      });
+    const response = await fetch("/api/notifications/role-based", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(notification),
+    });
 
-      if (!response.ok) {
-        throw new Error(`Notification failed: ${response.statusText}`);
-      }
-    } catch (error) {
-// console.error("Failed to send role-based notification:", error);
-      throw error;
+    if (!response.ok) {
+      throw new Error(`Notification failed: ${response.statusText}`);
     }
   }
 }
@@ -339,43 +309,26 @@ export class CoachingAnalyticsService {
   async getPlayerPerformanceMetrics(
     playerId: string
   ): Promise<PerformanceMetrics> {
-    try {
-      const response = await fetch(
-        `/api/analytics/players/${playerId}/performance`
-      );
-      return await response.json();
-    } catch (error) {
-// console.error("Failed to get player performance metrics:", error);
-      throw error;
-    }
+    const response = await fetch(
+      `/api/analytics/players/${playerId}/performance`
+    );
+    return await response.json();
   }
 
   /**
    * Get team engagement metrics
    */
   async getTeamEngagementMetrics(teamId: string): Promise<EngagementMetrics> {
-    try {
-      const response = await fetch(`/api/analytics/teams/${teamId}/engagement`);
-      return await response.json();
-    } catch (error) {
-// console.error("Failed to get team engagement metrics:", error);
-      throw error;
-    }
+    const response = await fetch(`/api/analytics/teams/${teamId}/engagement`);
+    return await response.json();
   }
 
   /**
    * Get coaching insights
    */
   async getCoachingInsights(coachId: string): Promise<CoachingInsights> {
-    try {
-      const response = await fetch(
-        `/api/analytics/coaches/${coachId}/insights`
-      );
-      return await response.json();
-    } catch (error) {
-// console.error("Failed to get coaching insights:", error);
-      throw error;
-    }
+    const response = await fetch(`/api/analytics/coaches/${coachId}/insights`);
+    return await response.json();
   }
 
   /**
@@ -384,13 +337,8 @@ export class CoachingAnalyticsService {
   async getPredictiveAnalytics(
     teamId: string
   ): Promise<Record<string, unknown>> {
-    try {
-      const response = await fetch(`/api/analytics/teams/${teamId}/predictive`);
-      return await response.json();
-    } catch (error) {
-// console.error("Failed to get predictive analytics:", error);
-      throw error;
-    }
+    const response = await fetch(`/api/analytics/teams/${teamId}/predictive`);
+    return await response.json();
   }
 }
 
@@ -399,7 +347,7 @@ export class CoachingAnalyticsService {
  * Central orchestrator for Phase 4.3 cross-platform features
  */
 export class ReactNativePlatformService {
-  private mobileOrchestrator: MobileOrchestrator;
+  private _mobileOrchestrator: MobileOrchestrator;
   private realTimeService: RealTimeService;
   private teamManagementService: TeamManagementService;
   private analyticsService: CoachingAnalyticsService;
@@ -407,7 +355,7 @@ export class ReactNativePlatformService {
 
   constructor() {
     // Initialize Phase 4.2 mobile foundation
-    this.mobileOrchestrator = new MobileOrchestrator();
+    this._mobileOrchestrator = new MobileOrchestrator();
 
     // Initialize Phase 4.3 services
     const syncConfig: CrossPlatformSyncConfig = {
@@ -429,31 +377,23 @@ export class ReactNativePlatformService {
    * Initialize React Native app with cross-platform capabilities
    */
   async initializeNativeApp(): Promise<NativeAppState> {
-    try {
-      // Leverage existing Phase 4.2 mobile optimization
-      // Note: MobileOrchestrator needs initialize method
-// console.info("Initializing mobile orchestrator...");
-      // Touch orchestrator/service to satisfy strict unused checks
-// console.info("Orchestrator ready:", !!this.mobileOrchestrator);
-// console.info("Real-time service ready:", !!this.realTimeService);
+    // Leverage existing Phase 4.2 mobile optimization
+    // Note: MobileOrchestrator needs initialize method
+    // console.info("Initializing mobile orchestrator...");
+    // Touch orchestrator/service to satisfy strict unused checks
+    // console.info("Orchestrator ready:", !!this._mobileOrchestrator);
+    // console.info("Real-time service ready:", !!this.realTimeService);
 
-      // Add Phase 4.3 enhancements
-      await this.setupNativeNavigation();
-      await this.configureRealTimeSync();
-      await this.initializeAnalytics();
+    // Add Phase 4.3 enhancements
+    await this.setupNativeNavigation();
+    await this.configureRealTimeSync();
+    await this.initializeAnalytics();
 
-      // Set up native app state
-      this.nativeAppState = await this.getNativeAppState();
+    // Set up native app state
+    this.nativeAppState = await this.getNativeAppState();
 
-// console.info(
-        "React Native app initialized successfully",
-        this.nativeAppState
-      );
-      return this.nativeAppState;
-    } catch (error) {
-// console.error("Failed to initialize React Native app:", error);
-      throw error;
-    }
+    // console.info("React Native app initialized successfully", this.nativeAppState);
+    return this.nativeAppState;
   }
 
   /**
@@ -461,7 +401,7 @@ export class ReactNativePlatformService {
    */
   private async setupNativeNavigation(): Promise<void> {
     // Configure React Navigation with BoxCall jade/navy theming
-// console.info("Setting up native navigation with jade/navy theming");
+    // console.info("Setting up native navigation with jade/navy theming");
   }
 
   /**
@@ -469,7 +409,7 @@ export class ReactNativePlatformService {
    */
   private async configureRealTimeSync(): Promise<void> {
     // Set up real-time data synchronization between web and mobile
-// console.info("Configuring real-time synchronization");
+    // console.info("Configuring real-time synchronization");
   }
 
   /**
@@ -477,7 +417,7 @@ export class ReactNativePlatformService {
    */
   private async initializeAnalytics(): Promise<void> {
     // Set up analytics tracking for coaching insights
-// console.info("Initializing coaching analytics");
+    // console.info("Initializing coaching analytics");
   }
 
   /**

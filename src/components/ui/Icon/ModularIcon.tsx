@@ -454,7 +454,7 @@ export const ModularIcon: React.FC<ModularIconProps> = (props) => {
         iconRegistry.set(name, devFallback);
         setIconComponent(devFallback);
         if (debugEnabled) {
-// console.info(`[IconDebug] dev immediate fallback`, { name });
+          // console.info(`[IconDebug] dev immediate fallback`, { name });
         }
       }
     }
@@ -465,7 +465,7 @@ export const ModularIcon: React.FC<ModularIconProps> = (props) => {
       let isMounted = true;
       setLoading(true);
       if (debugEnabled) {
-// console.info(`[IconDebug] start load`, { name });
+        // console.info(`[IconDebug] start load`, { name });
       }
       loader()
         .then((mod) => {
@@ -482,7 +482,7 @@ export const ModularIcon: React.FC<ModularIconProps> = (props) => {
             iconRegistry.set(name, Comp);
             setIconComponent(Comp);
             if (debugEnabled) {
-// console.info(`[IconDebug] load success`, { name });
+              // console.info(`[IconDebug] load success`, { name });
             }
           }
           setLoading(false);
@@ -490,9 +490,9 @@ export const ModularIcon: React.FC<ModularIconProps> = (props) => {
         .catch((error) => {
           // Swallow errors during tests/SSR; keep placeholder visible
           if (debugEnabled) {
-// console.error(`[IconDebug] load error`, { name, error });
+            // console.error(`[IconDebug] load error`, { name, error });
           } else {
-// console.error(`Failed to load icon: ${name}`, error);
+            // console.error(`Failed to load icon: ${name}`, error);
           }
           // Last-chance static fallback for critical icons
           const Fallback = fallbackIcons[name as ModularIconName];
@@ -500,7 +500,7 @@ export const ModularIcon: React.FC<ModularIconProps> = (props) => {
             iconRegistry.set(name, Fallback);
             setIconComponent(Fallback);
             if (debugEnabled) {
-// console.info(`[IconDebug] used static fallback`, { name });
+              // console.info(`[IconDebug] used static fallback`, { name });
             }
           }
           if (!isMounted) return;

@@ -136,10 +136,10 @@ export class RealTimeSyncService {
           endpoint,
         },
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        error: `Failed to initialize channel: ${error}`,
+        error: `Failed to initialize channel: ${_error}`,
         data: null,
       };
     }
@@ -190,10 +190,10 @@ export class RealTimeSyncService {
           data: null,
         };
       }
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        error: `Failed to start sync: ${error}`,
+        error: `Failed to start sync: ${_error}`,
         data: null,
       };
     }
@@ -231,10 +231,10 @@ export class RealTimeSyncService {
           stoppedAt: new Date(),
         },
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        error: `Failed to stop sync: ${error}`,
+        error: `Failed to stop sync: ${_error}`,
         data: null,
       };
     }
@@ -295,10 +295,10 @@ export class RealTimeSyncService {
           processed,
         },
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        error: `Failed to send event: ${error}`,
+        error: `Failed to send event: ${_error}`,
         data: null,
       };
     }
@@ -362,10 +362,10 @@ export class RealTimeSyncService {
           processed,
         },
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        error: `Failed to receive event: ${error}`,
+        error: `Failed to receive event: ${_error}`,
         data: null,
       };
     }
@@ -390,10 +390,10 @@ export class RealTimeSyncService {
           ).length,
         },
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        error: `Failed to get metrics: ${error}`,
+        error: `Failed to get metrics: ${_error}`,
         data: null,
       };
     }
@@ -421,10 +421,10 @@ export class RealTimeSyncService {
           retrievedAt: new Date(),
         },
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        error: `Failed to get sync state: ${error}`,
+        error: `Failed to get sync state: ${_error}`,
         data: null,
       };
     }
@@ -446,10 +446,10 @@ export class RealTimeSyncService {
           retrievedAt: new Date(),
         },
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        error: `Failed to get active channels: ${error}`,
+        error: `Failed to get active channels: ${_error}`,
         data: null,
       };
     }
@@ -479,8 +479,8 @@ export class RealTimeSyncService {
       // Simulate successful connection
       await new Promise((resolve) => setTimeout(resolve, 100));
       return true;
-    } catch (error) {
-// console.error(`Failed to start channel sync: ${error}`);
+    } catch (_error) {
+      // console.error(`Failed to start channel sync: ${error}`);
       return false;
     }
   }
@@ -503,8 +503,8 @@ export class RealTimeSyncService {
       }
       // Simulate successful disconnection
       await new Promise((resolve) => setTimeout(resolve, 50));
-    } catch (error) {
-// console.error(`Failed to stop channel sync: ${error}`);
+    } catch (_error) {
+      // console.error(`Failed to stop channel sync: ${error}`);
     }
   }
   private static async processEvent(channelId: string): Promise<boolean> {
@@ -519,8 +519,8 @@ export class RealTimeSyncService {
         channel.lastActivity = new Date();
       }
       return true;
-    } catch (error) {
-// console.error(`Failed to process event: ${error}`);
+    } catch (_error) {
+      // console.error(`Failed to process event: ${error}`);
       return false;
     }
   }
@@ -538,8 +538,8 @@ export class RealTimeSyncService {
         channel.lastActivity = new Date();
       }
       return true;
-    } catch (error) {
-// console.error(`Failed to process incoming event: ${error}`);
+    } catch (_error) {
+      // console.error(`Failed to process incoming event: ${error}`);
       return false;
     }
   }
@@ -557,8 +557,8 @@ export class RealTimeSyncService {
         };
       }
       return null;
-    } catch (error) {
-// console.error(`Failed to parse incoming event: ${error}`);
+    } catch (_error) {
+      // console.error(`Failed to parse incoming event: ${error}`);
       return null;
     }
   }
@@ -578,8 +578,8 @@ export class RealTimeSyncService {
         };
       }
       return null;
-    } catch (error) {
-// console.error(`Failed to detect conflict: ${error}`);
+    } catch (_error) {
+      // console.error(`Failed to detect conflict: ${error}`);
       return null;
     }
   }
@@ -606,8 +606,8 @@ export class RealTimeSyncService {
       }
       conflict.resolvedAt = new Date();
       return true;
-    } catch (error) {
-// console.error(`Failed to resolve conflict: ${error}`);
+    } catch (_error) {
+      // console.error(`Failed to resolve conflict: ${error}`);
       return false;
     }
   }

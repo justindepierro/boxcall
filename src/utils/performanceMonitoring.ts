@@ -72,7 +72,7 @@ class WebVitalsMonitor {
       observer.observe({ type: "largest-contentful-paint", buffered: true });
       this.observers.push(observer);
     } catch (_error) {
-// console.warn("LCP measurement not supported");
+      // console.warn("LCP measurement not supported");
     }
   }
 
@@ -98,7 +98,7 @@ class WebVitalsMonitor {
       observer.observe({ type: "first-input", buffered: true });
       this.observers.push(observer);
     } catch (_error) {
-// console.warn("FID measurement not supported");
+      // console.warn("FID measurement not supported");
     }
   }
 
@@ -129,7 +129,7 @@ class WebVitalsMonitor {
       observer.observe({ type: "layout-shift", buffered: true });
       this.observers.push(observer);
     } catch (_error) {
-// console.warn("CLS measurement not supported");
+      // console.warn("CLS measurement not supported");
     }
   }
 
@@ -153,7 +153,7 @@ class WebVitalsMonitor {
       observer.observe({ type: "paint", buffered: true });
       this.observers.push(observer);
     } catch (_error) {
-// console.warn("FCP measurement not supported");
+      // console.warn("FCP measurement not supported");
     }
   }
 
@@ -274,11 +274,7 @@ class WebVitalsMonitor {
           // Alert if memory usage is high
           if (usedMemory > 150 * 1024 * 1024) {
             // 150MB
-// console.warn(
-              "High memory usage detected:",
-              usedMemory / 1024 / 1024,
-              "MB"
-            );
+            // console.info("High memory usage detected:", usedMemory / 1024 / 1024, "MB");
           }
         }
 
@@ -317,7 +313,7 @@ class WebVitalsMonitor {
 
           if (responseTime > 100) {
             // Alert on slow responses
-// console.warn("Slow touch response:", responseTime, "ms");
+            // console.warn("Slow touch response:", responseTime, "ms");
           }
 
           touchStartTime = 0;
@@ -331,11 +327,11 @@ class WebVitalsMonitor {
   private reportMetric(name: string, value: number) {
     // Development logging
     if (process.env.NODE_ENV === "development") {
-// console.info(
+      /* console.info(
         `📊 ${name}:`,
         Math.round(value * 100) / 100,
         this.getMetricUnit(name)
-      );
+      ); */
     }
 
     // In production, send to analytics service
@@ -390,12 +386,12 @@ class WebVitalsMonitor {
 
     const target = targets[name];
     if (target && value > target) {
-// console.warn(
+      /* console.warn(
         `⚠️ Performance target missed for ${name}:`,
         value,
         ">",
         target
-      );
+      ); */
 
       // In production, alert monitoring system
       if (process.env.NODE_ENV === "production") {
@@ -405,18 +401,22 @@ class WebVitalsMonitor {
   }
 
   /** Alert monitoring system of performance issues */
-  private alertPerformanceIssue(name: string, value: number, target: number) {
+  private alertPerformanceIssue(
+    _name: string,
+    _value: number,
+    _target: number
+  ) {
     // Send alert to monitoring service (Sentry, DataDog, etc.)
-// console.error("Performance threshold exceeded:", {
-      metric: name,
-      value,
-      target,
-      timestamp: new Date().toISOString(),
-    });
+    // console.error("Performance threshold exceeded:", {
+    //   metric: _name,
+    //   value: _value,
+    //   target: _target,
+    //   timestamp: new Date().toISOString(),
+    // });
   }
 
   /** Get the appropriate unit for a metric */
-  private getMetricUnit(name: string): string {
+  private _getMetricUnit(name: string): string {
     const units: Record<string, string> = {
       LCP: "ms",
       FID: "ms",
@@ -569,12 +569,12 @@ class MemoryLeakDetector {
       this.timeoutIds.size > 100;
 
     if (hasLeaks) {
-// console.warn("🚨 Potential memory leaks detected:", {
+      /* console.warn("🚨 Potential memory leaks detected:", {
         components: componentLeaks,
         eventListeners: eventListenerLeaks,
         intervals: this.intervalIds.size,
         timeouts: this.timeoutIds.size,
-      });
+      }); */
     }
 
     return {

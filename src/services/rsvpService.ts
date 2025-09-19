@@ -39,12 +39,13 @@ export class RSVPService {
     return rsvp;
   }
 
-  async sendRSVPReminders(eventId: string, userIds?: string[]): Promise<void> {
+  async sendRSVPReminders(
+    _eventId: string,
+    _userIds?: string[]
+  ): Promise<void> {
     // TODO: Implement reminder logic when email service is integrated
-// console.info(
-      `Sending RSVP reminders for event ${eventId} to users:`,
-      userIds
-    );
+    // console.info(
+    // console.info(`Sending RSVP reminders for event ${eventId} to users:`, userIds);
   }
 }
 

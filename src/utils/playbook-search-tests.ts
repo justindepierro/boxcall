@@ -124,21 +124,18 @@ export const runSearchTests = (
   tests: SearchTestCase[],
   searchFunction: (query: string) => number
 ) => {
-// console.info("🔍 Search Function Tests");
+  // console.info("🔍 Search Function Tests");
   const results = tests.map((test) => {
     const actualResults = searchFunction(test.searchQuery);
     const passed = actualResults === test.expectedMatches;
 
-// console.info(
-      `${passed ? "✅" : "❌"} ${test.name}: ${test.description}`,
-      `Expected: ${test.expectedMatches}, Got: ${actualResults}`
-    );
+    // console.info(`${passed ? "✅" : "❌"} ${test.name}: ${test.description}`, `Expected: ${test.expectedMatches}, Got: ${actualResults}`);
 
     return { ...test, passed, actualResults };
   });
 
-  const passedCount = results.filter((r) => r.passed).length;
-// console.info(`📊 Search Tests: ${passedCount}/${tests.length} passed`);
+  const _passedCount = results.filter((r) => r.passed).length;
+  // console.info(`📊 Search Tests: ${_passedCount}/${tests.length} passed`);
   // end group
 
   return results;
@@ -148,21 +145,21 @@ export const runFilterTests = (
   tests: FilterTestCase[],
   filterFunction: (filters: { formation?: string; playType?: string }) => number
 ) => {
-// console.info("🏷️ Filter Function Tests");
+  // console.info("🏷️ Filter Function Tests");
   const results = tests.map((test) => {
     const actualResults = filterFunction(test.filters);
     const passed = actualResults === test.expectedResults;
 
-// console.info(
+    /* console.info(
       `${passed ? "✅" : "❌"} ${test.name}: ${test.description}`,
       `Expected: ${test.expectedResults}, Got: ${actualResults}`
-    );
+    ); */
 
     return { ...test, passed, actualResults };
   });
 
-  const passedCount = results.filter((r) => r.passed).length;
-// console.info(`📊 Filter Tests: ${passedCount}/${tests.length} passed`);
+  const _passedCount_ = results.filter((r) => r.passed).length;
+  // console.info(`📊 Filter Tests: ${_passedCount_}/${tests.length} passed`);
   // end group
 
   return results;

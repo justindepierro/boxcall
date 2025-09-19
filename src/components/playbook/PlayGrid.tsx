@@ -95,7 +95,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   enableBulkOperations = false,
   selectedPlayIds = new Set(),
   onPlaySelectionChange,
-  onOpenBuilder: _onOpenBuilder,
+  onOpenBuilder,
 }) => {
   // Toggle for play name display mode (true = one-word calls, false = full names)
   const [showOneWordCalls, setShowOneWordCalls] = useState<boolean>(() => {
@@ -119,7 +119,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Refresh data when refreshTrigger changes
   useEffect(() => {
     if (refreshTrigger > 0) {
-// console.info("Refreshing plays data due to trigger:", refreshTrigger);
+      // console.info("Refreshing plays data due to trigger:", refreshTrigger);
       refreshData();
     }
   }, [refreshTrigger, refreshData]);
@@ -140,15 +140,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Validate database integration (development mode only)
   useEffect(() => {
     if (plays.length > 0 && process.env.NODE_ENV === "development") {
-// console.info("🏈 Playbook Database Integration Test");
-// console.info("📊 Total Plays Loaded:", plays.length);
-// console.info("🏟️ Sample Play:", plays[0]);
-// console.info("Available Formations:", [
-        ...new Set(plays.map((p) => p.formation)),
-      ]);
-// console.info("⚡ Available Play Types:", [
-        ...new Set(plays.map((p) => p.p_type)),
-      ]);
+      // console.info("🏈 Playbook Database Integration Test");
+      // console.info("📊 Total Plays Loaded:", plays.length);
+      // console.info("🏟️ Sample Play:", plays[0]);
+      // console.info("Available Formations:", [...new Set(plays.map((p) => p.formation))]);
+      // console.info("⚡ Available Play Types:", [...new Set(plays.map((p) => p.p_type))]);
       // end group
 
       const validationResults = validatePlaybookData(plays);
@@ -168,24 +164,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     [onPlaySelectionChange, selectedPlayIds]
   );
 
-  const handleSelectAll = () => {
-    if (!onPlaySelectionChange) return;
-    const currentIds = new Set(filteredPlays.map((p) => p.id));
-    const allVisibleSelected = filteredPlays.every((p) =>
-      selectedPlayIds.has(p.id)
-    );
-
-    const next = new Set(selectedPlayIds);
-    if (allVisibleSelected) {
-      // Deselect only visible plays, keep hidden ones selected
-      for (const id of currentIds) next.delete(id);
-    } else {
-      // Select all visible plays, keep any previously selected hidden plays
-      for (const id of currentIds) next.add(id);
-    }
-    onPlaySelectionChange(next);
-  };
-
   // Apply filters to plays
   const filteredPlays = useMemo(() => {
     return plays.filter((play) => {
@@ -195,8 +173,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         const matchesName = play.play_name.toLowerCase().includes(query);
         const matchesFormation = play.formation.toLowerCase().includes(query);
         const matchesNotes = play.notes?.toLowerCase().includes(query);
-        let matchesFlags = false;
-        if (!matchesName && !matchesFormation && !matchesNotes) {
+        const matchesFlags = (() => {
           const flags = getPlayFlags(play.id);
           const haystack = [
             ...flags.positions,
@@ -205,9 +182,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           ]
             .join("\n")
             .toLowerCase();
-          matchesFlags = haystack.includes(query);
-          if (!matchesFlags) return false;
-        }
+          return haystack.includes(query);
+        })();
+
+        if (!matchesName && !matchesFormation && !matchesNotes && !matchesFlags)
+          return false;
       }
 
       // Category-based filtering from Smart Playbook Glossary
@@ -237,6 +216,24 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       return true;
     });
   }, [plays, searchQuery, filters, selectedCategory, selectedSubcategory]);
+
+  const handleSelectAll = () => {
+    if (!onPlaySelectionChange) return;
+    const currentIds = new Set(filteredPlays.map((p) => p.id));
+    const allVisibleSelected = filteredPlays.every((p) =>
+      selectedPlayIds.has(p.id)
+    );
+
+    const next = new Set(selectedPlayIds);
+    if (allVisibleSelected) {
+      // Deselect only visible plays, keep hidden ones selected
+      for (const id of currentIds) next.delete(id);
+    } else {
+      // Select all visible plays, keep any previously selected hidden plays
+      for (const id of currentIds) next.add(id);
+    }
+    onPlaySelectionChange(next);
+  };
 
   // Telemetry: emit filter.apply when filter state meaningfully changes.
   // Guard against infinite loops if telemetry enqueue triggers a context update that re-renders PlayGrid.
@@ -325,11 +322,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     if (count % 100 === 0) {
       const elapsed = performance.now() - start;
       if (elapsed < 8000) {
-// console.warn(
-          `[PlayGrid] High render frequency: ${count} renders in ${elapsed.toFixed(
-            0
-          )}ms (filteredPlays=${filteredPlays.length})`
-        );
+        // console.warn(
+        //   `[PlayGrid] High render frequency: ${count} renders in ${elapsed.toFixed(
+        //     0
+        //   )}ms (filteredPlays=${filteredPlays.length})`
+        // );
       }
     }
   }
@@ -386,7 +383,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   const EmptyActions = () => {
     if (!hasFilters) {
       return (
-        <Button variant="primary" size="sm" onClick={() => _onOpenBuilder?.()}>
+        <Button variant="primary" size="sm" onClick={onOpenBuilder}>
           Create your first play
         </Button>
       );
@@ -476,84 +473,86 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         </div>
       )}
       {/* Results Header with Toggle */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div>
-            <Typography
-              variant="headline-sm"
-              as="h2"
-              className="text-slate-900"
-            >
-              {filteredPlays.length}{" "}
-              {filteredPlays.length === 1 ? "Play" : "Plays"}
-              {selectedCategory && (
-                <span className="text-slate-500 font-normal ml-2">
-                  in{" "}
-                  {selectedCategory.charAt(0).toUpperCase() +
-                    selectedCategory.slice(1).replace("-", " ")}
-                  {selectedSubcategory && ` › ${selectedSubcategory}`}
-                </span>
-              )}
-            </Typography>
-          </div>
-
-          {/* Bulk Selection Controls */}
-          {enableBulkOperations && (
-            <div className="flex items-center space-x-2">
-              <label className="flex items-center space-x-2 text-sm text-slate-600">
-                <input
-                  type="checkbox"
-                  checked={
-                    filteredPlays.length > 0 &&
-                    filteredPlays.every((p) => selectedPlayIds.has(p.id))
-                  }
-                  onChange={handleSelectAll}
-                  className="rounded border-slate-300 text-blue-600 focus:ring-jade-500"
-                />
-                <span>
-                  {selectedPlayIds.size > 0
-                    ? `${selectedPlayIds.size} selected`
-                    : "Select all"}
-                </span>
-              </label>
+      {!showEmpty && (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div>
+              <Typography
+                variant="headline-sm"
+                as="h2"
+                className="text-slate-900"
+              >
+                {filteredPlays.length}{" "}
+                {filteredPlays.length === 1 ? "Play" : "Plays"}
+                {selectedCategory && (
+                  <span className="text-slate-500 font-normal ml-2">
+                    in{" "}
+                    {selectedCategory.charAt(0).toUpperCase() +
+                      selectedCategory.slice(1).replace("-", " ")}
+                    {selectedSubcategory && ` › ${selectedSubcategory}`}
+                  </span>
+                )}
+              </Typography>
             </div>
-          )}
-        </div>
 
-        {/* Play Name Display Toggle */}
-        <div className="flex items-center space-x-3">
-          <span className="text-sm text-slate-600">One-word calls</span>
-          <IconButton
-            aria-label={
-              showOneWordCalls
-                ? "Switch to full play names"
-                : "Switch to one-word calls"
-            }
-            onClick={() => setShowOneWordCalls(!showOneWordCalls)}
-            variant="subtle"
-            size="sm"
-          >
-            {showOneWordCalls ? (
-              <Icon name="toggle-right" className="h-5 w-5 text-blue-600" />
-            ) : (
-              <Icon name="toggle-left" className="h-5 w-5 text-slate-400" />
+            {/* Bulk Selection Controls */}
+            {enableBulkOperations && (
+              <div className="flex items-center space-x-2">
+                <label className="flex items-center space-x-2 text-sm text-slate-600">
+                  <input
+                    type="checkbox"
+                    checked={
+                      filteredPlays.length > 0 &&
+                      filteredPlays.every((p) => selectedPlayIds.has(p.id))
+                    }
+                    onChange={handleSelectAll}
+                    className="rounded border-slate-300 text-blue-600 focus:ring-jade-500"
+                  />
+                  <span>
+                    {selectedPlayIds.size > 0
+                      ? `${selectedPlayIds.size} selected`
+                      : "Select all"}
+                  </span>
+                </label>
+              </div>
             )}
-          </IconButton>
-          <span className="text-sm text-slate-600">Full names</span>
-          <div className="pl-4 ml-4 border-l border-subtle flex items-center space-x-2">
-            <Button
-              variant={density === "compact" ? "secondary" : "ghost"}
-              size="xs"
-              onClick={toggleDensity}
-              aria-pressed={density === "compact"}
-              aria-label="Toggle density mode"
-              className="!h-auto px-2 py-1 text-xs"
+          </div>
+
+          {/* Play Name Display Toggle */}
+          <div className="flex items-center space-x-3">
+            <span className="text-sm text-slate-600">One-word calls</span>
+            <IconButton
+              aria-label={
+                showOneWordCalls
+                  ? "Switch to full play names"
+                  : "Switch to one-word calls"
+              }
+              onClick={() => setShowOneWordCalls(!showOneWordCalls)}
+              variant="subtle"
+              size="sm"
             >
-              {density === "compact" ? "Compact" : "Comfort"}
-            </Button>
+              {showOneWordCalls ? (
+                <Icon name="toggle-right" className="h-5 w-5 text-blue-600" />
+              ) : (
+                <Icon name="toggle-left" className="h-5 w-5 text-slate-400" />
+              )}
+            </IconButton>
+            <span className="text-sm text-slate-600">Full names</span>
+            <div className="pl-4 ml-4 border-l border-subtle flex items-center space-x-2">
+              <Button
+                variant={density === "compact" ? "secondary" : "ghost"}
+                size="xs"
+                onClick={toggleDensity}
+                aria-pressed={density === "compact"}
+                aria-label="Toggle density mode"
+                className="!h-auto px-2 py-1 text-xs"
+              >
+                {density === "compact" ? "Compact" : "Comfort"}
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Play Grid (virtualized when large) */}
       {!showEmpty &&
@@ -594,7 +593,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 };
 
 // Custom props compare to avoid unnecessary rerenders cascading into Virtuoso
-function arePlayGridPropsEqual(prev: PlayGridProps, next: PlayGridProps) {
+function arePlayGridPropsEqual(
+  prev: Readonly<PlayGridProps>,
+  next: Readonly<PlayGridProps>
+) {
   // Primitive / simple checks
   if (prev.searchQuery !== next.searchQuery) return false;
   if (prev.selectedCategory !== next.selectedCategory) return false;
@@ -609,8 +611,7 @@ function arePlayGridPropsEqual(prev: PlayGridProps, next: PlayGridProps) {
     ...Object.keys(nf ?? {}),
   ]);
   for (const k of filterKeys) {
-    // @ts-expect-error index
-    if (pf[k] !== nf[k]) return false;
+    if (pf[k as keyof typeof pf] !== nf[k as keyof typeof nf]) return false;
   }
   // Selection set size + membership hash (cheap)
   const ps = prev.selectedPlayIds;
@@ -650,4 +651,5 @@ if (process.env.NODE_ENV === "development") {
     whyDidYouRender?: boolean;
   }
   (PlayGrid as unknown as WdyrMark).whyDidYouRender = false;
+  (PlayGridInner as unknown as WdyrMark).whyDidYouRender = false;
 }

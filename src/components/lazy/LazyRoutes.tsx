@@ -132,7 +132,7 @@ export class LazyLoadErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-// console.error("Lazy loading error:", error, errorInfo);
+    // console.error("Lazy loading error:", error, errorInfo);
   }
 
   render(): React.ReactNode {

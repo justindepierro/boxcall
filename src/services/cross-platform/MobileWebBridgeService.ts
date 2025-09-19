@@ -111,9 +111,9 @@ export class MobileWebBridgeService {
       connection.status = "connected";
       connection.lastSync = new Date().toISOString();
       return result;
-    } catch (error) {
+    } catch (_error) {
       connection.status = "error";
-      throw error;
+      throw _error;
     }
   }
   /**
@@ -133,8 +133,8 @@ export class MobileWebBridgeService {
       try {
         const resolution = await this.resolveDataConflict(conflict, connection);
         resolved.push({ ...conflict, resolution });
-      } catch (error) {
-// console.error(`Failed to resolve conflict ${conflict.id}:`, error);
+      } catch (_error) {
+        // console.error(`Failed to resolve conflict ${conflict.id}:`, _error);
         pending.push(conflict);
       }
     }
@@ -274,8 +274,8 @@ export class MobileWebBridgeService {
         }
       }
       return syncedCount;
-    } catch (error) {
-// console.error("Failed to sync calendar events:", error);
+    } catch (_error) {
+      // console.error("Failed to sync calendar events:", _error);
       return 0;
     }
   }
@@ -411,7 +411,7 @@ export class MobileWebBridgeService {
         try {
           await this.syncPlatforms(bridgeId);
         } catch (error) {
-// console.error(`Auto-sync failed for bridge ${bridgeId}:`, error);
+          // console.error(`Auto-sync failed for bridge ${bridgeId}:`, error);
         }
       },
       connection.syncConfig.syncInterval * 60 * 1000

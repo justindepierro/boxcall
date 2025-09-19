@@ -92,9 +92,9 @@ export class DevProfileService implements IDevProfileService {
       });
 
       return profileConfig;
-    } catch (error) {
+    } catch (_error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
+        _error instanceof Error ? _error.message : "Unknown error";
       this.updateState({ loading: false, error: errorMessage });
 
       this.emitEvent({
@@ -105,7 +105,7 @@ export class DevProfileService implements IDevProfileService {
         },
       });
 
-      throw error;
+      throw _error;
     }
   }
 
@@ -158,9 +158,9 @@ export class DevProfileService implements IDevProfileService {
       });
 
       return data as T;
-    } catch (error) {
+    } catch (_error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
+        _error instanceof Error ? _error.message : "Unknown error";
 
       this.emitEvent({
         type: "ERROR_OCCURRED",
@@ -170,7 +170,7 @@ export class DevProfileService implements IDevProfileService {
         },
       });
 
-      throw error;
+      throw _error;
     }
   }
 
@@ -232,7 +232,7 @@ export class DevProfileService implements IDevProfileService {
 
     const permissionKey = permissionMap[action];
     if (!permissionKey) {
-// console.warn(`Unknown permission action: ${action}`);
+      // console.warn(`Unknown permission action: ${action}`);
       return false;
     }
 
@@ -306,14 +306,14 @@ export class DevProfileService implements IDevProfileService {
 
   private emitEvent(event: DevProfileEvent): void {
     if (this.config.enableLogging) {
-// console.info("DevProfile Event:", event);
+      // console.info("DevProfile Event:", event);
     }
 
     this.eventListeners.forEach((listener) => {
       try {
         listener.onProfileEvent(event);
-      } catch (error) {
-// console.error("Error in event listener:", error);
+      } catch (_error) {
+        // console.error("Error in event listener:", error);
       }
     });
   }

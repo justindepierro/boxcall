@@ -98,8 +98,8 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
             {
               label: "View Roadmap",
               variant: "ghost",
-              onClick: () =>
-// console.info("telemetry:onboarding.calendar.view_roadmap"),
+              /* onClick: () =>
+console.info("telemetry:onboarding.calendar.view_roadmap"), */
             },
           ]}
         />

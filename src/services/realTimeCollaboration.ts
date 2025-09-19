@@ -114,8 +114,8 @@ class RealTimeCollaborationService {
       await this.connect();
 
       return session;
-    } catch (error) {
-// console.error("Failed to start collaboration session:", error);
+    } catch (_error) {
+      // console.error("Failed to start collaboration session:", error);
       throw new Error("Could not start collaboration session");
     }
   }
@@ -193,11 +193,11 @@ class RealTimeCollaborationService {
         };
 
         this.ws.onerror = (error) => {
-// console.error("WebSocket error:", error);
+          // console.error("WebSocket error:", error);
           reject(error);
         };
-      } catch (error) {
-        reject(error);
+      } catch (_error) {
+        reject(_error);
       }
     });
   }
@@ -244,7 +244,7 @@ class RealTimeCollaborationService {
         break;
 
       default:
-// console.warn("Unknown message type:", message.type);
+      // console.warn("Unknown message type:", message.type);
     }
   }
 
@@ -255,7 +255,7 @@ class RealTimeCollaborationService {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(message));
     } else {
-// console.warn("Cannot send message: WebSocket not connected");
+      // console.warn("Cannot send message: WebSocket not connected");
     }
   }
 
@@ -264,7 +264,7 @@ class RealTimeCollaborationService {
    */
   private handleReconnect(): void {
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-// console.error("Max reconnection attempts reached");
+      // console.error("Max reconnection attempts reached");
       return;
     }
 
@@ -272,7 +272,7 @@ class RealTimeCollaborationService {
 
     setTimeout(() => {
       if (!this.isConnected && this.sessionId) {
-// console.info(`Reconnection attempt ${this.reconnectAttempts}`);
+        // console.info(`Reconnection attempt ${this.reconnectAttempts}`);
         this.connect().catch(console.error);
       }
     }, this.reconnectDelay * this.reconnectAttempts);

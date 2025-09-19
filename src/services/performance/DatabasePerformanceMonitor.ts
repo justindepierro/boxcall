@@ -81,15 +81,14 @@ export class DatabasePerformanceMonitor {
 
     // Log slow queries immediately
     if (duration > this.slowQueryThreshold) {
-// console.warn(`🐌 Slow Query Detected: ${query} took ${duration}ms`);
-
+      // console.warn(`🐌 Slow Query Detected: ${query} took ${duration}ms`);
       // In production, you might want to send to monitoring service
       // await this.sendSlowQueryAlert(metric);
     }
 
     // Log errors immediately
     if (!success && error) {
-// console.error(`❌ Query Error: ${query} failed with: ${error}`);
+      // console.error(`❌ Query Error: ${query} failed with: ${error}`);
     }
   }
 

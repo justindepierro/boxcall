@@ -38,7 +38,7 @@ export class RoleService {
         .single();
 
       if (profileError) {
-// console.error("Error fetching user profile:", profileError);
+        // console.error("Error fetching user profile:", profileError);
         throw new Error("Failed to fetch user role context");
       }
 
@@ -59,7 +59,7 @@ export class RoleService {
         .eq("status", "active");
 
       if (memberError) {
-// console.error("Error fetching team memberships:", memberError);
+        // console.error("Error fetching team memberships:", memberError);
         throw new Error("Failed to fetch team memberships");
       }
 
@@ -91,7 +91,7 @@ export class RoleService {
         lastUpdated: new Date(),
       };
     } catch (error) {
-// console.error("RoleService.getUserRoleContext error:", error);
+      // console.error("RoleService.getUserRoleContext error:", error);
       // Return safe fallback
       return {
         appRole: "player",
@@ -124,7 +124,7 @@ export class RoleService {
 
       return data.team_role;
     } catch (error) {
-// console.error("RoleService.getUserTeamRole error:", error);
+      // console.error("RoleService.getUserTeamRole error:", error);
       return null;
     }
   }
@@ -164,7 +164,7 @@ export class RoleService {
       const defaultCapabilities = DEFAULT_TEAM_ROLE_CAPABILITIES[teamRole];
       return defaultCapabilities.includes(capability);
     } catch (error) {
-// console.error("RoleService.hasCapability error:", error);
+      // console.error("RoleService.hasCapability error:", error);
       return false;
     }
   }
@@ -318,7 +318,7 @@ export class RoleService {
         canViewProfiles: true, // Everyone can view profiles
       };
     } catch (error) {
-// console.error("RoleService.getUIPermissions error:", error);
+      // console.error("RoleService.getUIPermissions error:", error);
       // Return safe fallback permissions
       return {
         canManageGlobalSettings: false,
@@ -366,13 +366,13 @@ export class RoleService {
         .eq("id", userId);
 
       if (error) {
-// console.error("Error updating app role:", error);
+        // console.error("Error updating app role:", error);
         return false;
       }
 
       return true;
     } catch (error) {
-// console.error("RoleService.updateUserAppRole error:", error);
+      // console.error("RoleService.updateUserAppRole error:", error);
       return false;
     }
   }
@@ -411,13 +411,13 @@ export class RoleService {
         .eq("team_id", teamId);
 
       if (error) {
-// console.error("Error updating team role:", error);
+        // console.error("Error updating team role:", error);
         return false;
       }
 
       return true;
     } catch (error) {
-// console.error("RoleService.updateUserTeamRole error:", error);
+      // console.error("RoleService.updateUserTeamRole error:", error);
       return false;
     }
   }

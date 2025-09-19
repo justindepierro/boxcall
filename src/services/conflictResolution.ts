@@ -162,8 +162,8 @@ class ConflictResolutionService {
     this.listeners.forEach((listener) => {
       try {
         listener(conflict);
-      } catch (error) {
-// console.error("Error in conflict listener:", error);
+      } catch (_error) {
+        // console.error("Error in conflict listener:", _error);
       }
     });
 
@@ -179,7 +179,7 @@ class ConflictResolutionService {
   ): unknown | null {
     const strategy = this.mergeStrategies.get(strategyName);
     if (!strategy) {
-// console.warn(`Unknown merge strategy: ${strategyName}`);
+      // console.warn(`Unknown merge strategy: ${strategyName}`);
       return null;
     }
 
@@ -191,16 +191,16 @@ class ConflictResolutionService {
     const [local, remote, base] = versions;
 
     if (!strategy.canApply(local, remote)) {
-// console.warn(
+      /* console.warn(
         `Strategy ${strategyName} cannot be applied to these data types`
-      );
+      ); */
       return null;
     }
 
     try {
       return strategy.apply(local, remote, base);
-    } catch (error) {
-// console.error(`Error applying merge strategy ${strategyName}:`, error);
+    } catch (_error) {
+      // console.error(`Error applying merge strategy ${strategyName}:`, _error);
       return null;
     }
   }

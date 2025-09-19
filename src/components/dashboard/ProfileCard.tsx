@@ -96,13 +96,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     trackEdit();
     // Lightweight debug signal so users can confirm wiring
     if (import.meta.env.DEV)
-// console.info("[ProfileCard] Open quick-edit modal");
-    if (onEditClick) {
-      onEditClick();
-    } else {
-      setEditMode(mode);
-      setEditModalOpen(true);
-    }
+      if (onEditClick) {
+        // console.info("[ProfileCard] Open quick-edit modal");
+        onEditClick();
+      } else {
+        setEditMode(mode);
+        setEditModalOpen(true);
+      }
   };
   const handleEditBio = () => setEditingBio(true);
 
@@ -153,8 +153,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           setAuthProfile(updated as unknown as Profile);
         }
       }
-    } catch (err) {
-// console.error("Avatar upload failed", err);
+    } catch (_err) {
+      // console.error("Avatar upload failed", err);
     } finally {
       // reset input to allow re-upload same file
       if (fileInputRef.current) fileInputRef.current.value = "";

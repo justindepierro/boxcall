@@ -42,9 +42,9 @@ function createDevStub(): SupabaseClient<Database> {
 
   const stub = { auth, from } as unknown as SupabaseClient<Database>;
   // Surface a helpful console warning on first use
-// console.warn(
+  /* console.warn(
     "[BoxCall] Using dev Supabase stub – set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable real backend."
-  );
+  ); */
   return stub;
 }
 

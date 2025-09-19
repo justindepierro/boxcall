@@ -69,7 +69,7 @@ export function useTeamsData() {
           .order("created_at", { ascending: false });
 
         if (teamsError) {
-// console.error("Error fetching teams:", teamsError);
+          // console.error("Error fetching teams:", teamsError);
           setError(`Failed to fetch teams: ${teamsError.message}`);
           return;
         }
@@ -83,7 +83,7 @@ export function useTeamsData() {
           .order("created_at", { ascending: false });
 
         if (playbooksError) {
-// console.error("Error fetching playbooks:", playbooksError);
+          // console.error("Error fetching playbooks:", playbooksError);
           setError(`Failed to fetch playbooks: ${playbooksError.message}`);
           return;
         }
@@ -97,14 +97,14 @@ export function useTeamsData() {
           .order("created_at", { ascending: false });
 
         if (playsError) {
-// console.error("Error fetching plays:", playsError);
+          // console.error("Error fetching plays:", playsError);
           setError(`Failed to fetch plays: ${playsError.message}`);
           return;
         }
 
         setPlays(playsData || []);
       } catch (err) {
-// console.error("Unexpected error fetching data:", err);
+        // console.error("Unexpected error fetching data:", err);
         setError(
           `Unexpected error: ${err instanceof Error ? err.message : String(err)}`
         );

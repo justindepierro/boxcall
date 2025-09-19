@@ -37,6 +37,6 @@ export function initWebVitals() {
     onINP(send);
     onFCP(send);
   } catch (e) {
-// console.warn("Web Vitals init failed", e);
+    // console.warn("Web Vitals init failed", e);
   }
 }

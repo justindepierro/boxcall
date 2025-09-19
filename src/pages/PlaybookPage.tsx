@@ -52,8 +52,8 @@ export default function PlaybookPage() {
         formatForCoach: true,
       });
       CSVService.downloadCSV(csv, `boxcall-plays-${scope}-${date}.csv`);
-    } catch (e) {
-// console.error("CSV export failed", e);
+    } catch (_e) {
+      // console.error("CSV export failed", _e);
       alert("CSV export failed. See console for details.");
     } finally {
       setBusy(false);
@@ -84,8 +84,8 @@ export default function PlaybookPage() {
           : `Import completed with errors. Imported ${result.importedPlays} / ${result.totalRows}.`
       );
       dispatch({ type: "INCREMENT_REFRESH" });
-    } catch (err) {
-// console.error("CSV import failed", err);
+    } catch (_err) {
+      // console.error("CSV import failed", _err);
       alert("CSV import failed. See console for details.");
     } finally {
       setBusy(false);

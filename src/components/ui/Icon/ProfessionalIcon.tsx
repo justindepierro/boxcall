@@ -23,7 +23,7 @@ export const Icon: React.FC<IconProps> = ({
   const IconComponent = iconMap[name];
 
   if (!IconComponent) {
-// console.warn(`Icon "${name}" not found`);
+    // console.warn(`Icon "${name}" not found`);
     return null;
   }
 

@@ -23,11 +23,7 @@ export interface NavigationItem {
 export const getNavigationItems = (
   userRole?: UserRole | null | string
 ): NavigationItem[] => {
-// console.info(
-    "getNavigationItems called with userRole:",
-    userRole,
-    typeof userRole
-  );
+  // console.info("User role for navigation:", userRole, typeof userRole);
   // Dynamic team selection (persisted after creation)
   let activeTeamId = "1";
   try {
@@ -76,7 +72,8 @@ export const getNavigationItems = (
     userRole === "coach" ||
     userRole === "player" ||
     (userRole as string) === "super_admin";
-// console.info("Playbook check:", {
+  /*
+console.info("Playbook check:", {
     userRole,
     userRoleType: typeof userRole,
     isAdmin: userRole === "admin",
@@ -85,6 +82,7 @@ export const getNavigationItems = (
     isSuperAdmin: (userRole as string) === "super_admin",
     shouldShowPlaybook,
   });
+  */
   if (shouldShowPlaybook) {
     items.push({
       id: "playbook",

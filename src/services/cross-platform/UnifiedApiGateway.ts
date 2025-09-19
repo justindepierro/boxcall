@@ -5,7 +5,7 @@
  * ensuring consistent behavior across web, mobile, and external integrations.
  */
 import { supabase } from "../../lib/supabase";
-import {
+/* import {
   AttendanceAnalyticsService,
   type AttendanceAnalytics,
 } from "../phase3/AttendanceAnalyticsService";
@@ -23,7 +23,7 @@ import {
   SmartSchedulingOptimizer,
   type SchedulingConstraints,
   type TimeSuggestion,
-} from "../phase3/SmartSchedulingOptimizer";
+} from "../phase3/SmartSchedulingOptimizer"; */
 
 import type {
   CalendarEvent,
@@ -81,7 +81,7 @@ export class UnifiedApiGateway {
   /**
    * Unified intelligent scheduling endpoint
    */
-  static async getIntelligentScheduling(
+  /* static async getIntelligentScheduling(
     request: IntelligentCalendarRequest,
     context: PlatformContext
   ): Promise<UnifiedApiResponse<ScheduleAnalysisResult>> {
@@ -93,17 +93,17 @@ export class UnifiedApiGateway {
         context,
         "Intelligent scheduling analysis completed"
       );
-    } catch (error) {
+    } catch (_error) {
       return this.createErrorResponse(
-        error as Error,
+        _error as Error,
         context
       ) as UnifiedApiResponse<ScheduleAnalysisResult>;
     }
-  }
+  } */
   /**
    * Unified conflict detection endpoint
    */
-  static async detectConflicts(
+  /* static async detectConflicts(
     request: ConflictDetectionRequest,
     context: PlatformContext
   ): Promise<UnifiedApiResponse<ConflictDetectionResult>> {
@@ -114,17 +114,17 @@ export class UnifiedApiGateway {
         context,
         "Conflict detection completed"
       );
-    } catch (error) {
+    } catch (_error) {
       return this.createErrorResponse(
-        error as Error,
+        _error as Error,
         context
       ) as UnifiedApiResponse<ConflictDetectionResult>;
     }
-  }
+  } */
   /**
    * Unified smart scheduling optimization endpoint
    */
-  static async getSchedulingOptimization(
+  /* static async getSchedulingOptimization(
     teamId: string,
     constraints: SchedulingConstraints,
     context: PlatformContext
@@ -140,17 +140,17 @@ export class UnifiedApiGateway {
         context,
         "Scheduling optimization completed"
       );
-    } catch (error) {
+    } catch (_error) {
       return this.createErrorResponse(
-        error as Error,
+        _error as Error,
         context
       ) as UnifiedApiResponse<TimeSuggestion[]>;
     }
-  }
+  } */
   /**
    * Unified attendance analytics endpoint
    */
-  static async getAttendanceAnalytics(
+  /* static async getAttendanceAnalytics(
     teamId: string,
     period: "week" | "month" | "season" | "all_time",
     context: PlatformContext
@@ -165,13 +165,13 @@ export class UnifiedApiGateway {
         context,
         "Attendance analytics generated"
       );
-    } catch (error) {
+    } catch (_error) {
       return this.createErrorResponse(
-        error as Error,
+        _error as Error,
         context
       ) as UnifiedApiResponse<AttendanceAnalytics>;
     }
-  }
+  } */
   // ==========================================
   // Calendar Management APIs
   // ==========================================
@@ -196,16 +196,16 @@ export class UnifiedApiGateway {
       if (error) throw error;
       // Trigger intelligent analysis for the new event
       if (data.team_id) {
-        await this.triggerIntelligentAnalysis(data);
+        // await this.triggerIntelligentAnalysis(data);
       }
       return this.createSuccessResponse(
         data,
         context,
         "Event created successfully"
       );
-    } catch (error) {
+    } catch (_error) {
       return this.createErrorResponse(
-        error as Error,
+        _error as Error,
         context
       ) as UnifiedApiResponse<CalendarEvent>;
     }
@@ -230,16 +230,16 @@ export class UnifiedApiGateway {
       if (error) throw error;
       // Trigger conflict re-analysis if time/location changed
       if (updateData.start || updateData.location) {
-        await this.triggerConflictReanalysis(data);
+        // await this.triggerConflictReanalysis(data);
       }
       return this.createSuccessResponse(
         data,
         context,
         "Event updated successfully"
       );
-    } catch (error) {
+    } catch (_error) {
       return this.createErrorResponse(
-        error as Error,
+        _error as Error,
         context
       ) as UnifiedApiResponse<CalendarEvent>;
     }
@@ -284,9 +284,9 @@ export class UnifiedApiGateway {
         context,
         "Events retrieved successfully"
       );
-    } catch (error) {
+    } catch (_error) {
       return this.createErrorResponse(
-        error as Error,
+        _error as Error,
         context
       ) as UnifiedApiResponse<CalendarEvent[]>;
     }
@@ -308,9 +308,9 @@ export class UnifiedApiGateway {
         context,
         "Cross-platform sync completed"
       );
-    } catch (error) {
+    } catch (_error) {
       return this.createErrorResponse(
-        error as Error,
+        _error as Error,
         context
       ) as UnifiedApiResponse<SyncResult>;
     }
@@ -334,9 +334,9 @@ export class UnifiedApiGateway {
         context,
         "Real-time sync connection established"
       );
-    } catch (error) {
+    } catch (_error) {
       return this.createErrorResponse(
-        error as Error,
+        _error as Error,
         context
       ) as UnifiedApiResponse<{ connectionId: string; channels: string[] }>;
     }
@@ -344,7 +344,7 @@ export class UnifiedApiGateway {
   // ==========================================
   // Helper Methods
   // ==========================================
-  private static async triggerIntelligentAnalysis(
+  /* private static async triggerIntelligentAnalysis(
     event: CalendarEvent
   ): Promise<void> {
     if (!event.team_id) return;
@@ -360,16 +360,16 @@ export class UnifiedApiGateway {
       await ConflictDetectionService.detectConflicts(conflictRequest);
       // Store analysis results for future reference
       // TODO: Implement intelligent analysis storage
-    } catch (error) {
-// console.error("Failed to trigger intelligent analysis:", error);
+    } catch (_error) {
+      // console.error("Failed to trigger intelligent analysis:", _error);
     }
-  }
-  private static async triggerConflictReanalysis(
+  } */
+  /* private static async triggerConflictReanalysis(
     event: CalendarEvent
   ): Promise<void> {
     // Similar to triggerIntelligentAnalysis but for updates
     await this.triggerIntelligentAnalysis(event);
-  }
+  } */
   private static async enhanceEventsWithIntelligentData(
     events: CalendarEvent[]
   ): Promise<CalendarEvent[]> {

@@ -49,8 +49,8 @@ export const DashboardCustomizationPanel: React.FC<
       await createLayout(newLayoutName, currentLayout || undefined);
       setNewLayoutName("");
       setShowCreateLayout(false);
-    } catch (error) {
-// console.error("Failed to create layout:", error);
+    } catch (_error) {
+      // console.error("Failed to create layout:", error);
     }
   };
 
@@ -206,7 +206,7 @@ export const DashboardCustomizationPanel: React.FC<
                   size="sm"
                   onClick={() => {
                     // TODO: Implement layout switching
-// console.info("Switch to layout:", layout.id);
+                    // console.info("Switch to layout:", layout.id);
                   }}
                 >
                   Use
@@ -220,7 +220,7 @@ export const DashboardCustomizationPanel: React.FC<
                   className="text-red-600 hover:text-red-700"
                   onClick={() => {
                     // TODO: Implement layout deletion
-// console.info("Delete layout:", layout.id);
+                    // console.info("Delete layout:", layout.id);
                   }}
                 >
                   <Icon name="delete" size="sm" />

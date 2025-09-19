@@ -82,17 +82,17 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
     if (!scaffoldMode) {
       // Entering scaffold mode - store original blocks and convert to timeline allocation
       let blocksToConvert = practiceBlocks;
-// console.info(
+      /* console.info(
         "Entering scaffold mode with current blocks:",
         practiceBlocks
-      );
+      ); */
 
       // Store current blocks as backup for cancel functionality
       onOriginalBlocksChange([...practiceBlocks]);
 
       // If we don't have current blocks, try to load from localStorage first
       if (practiceBlocks.length === 0) {
-// console.info("No current blocks, trying to load from localStorage...");
+        /* console.info("No current blocks, trying to load from localStorage..."); */
         const savedPracticeKey = `practice_plan_${event.id || "default"}`;
         const savedPractice = localStorage.getItem(savedPracticeKey);
 
@@ -100,21 +100,21 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
           try {
             const savedBlocks = JSON.parse(savedPractice);
             const blocksWithTimes = recalculateBlockTimes(savedBlocks);
-// console.info(
+            /* console.info(
               "Loaded saved blocks for scaffold mode:",
               blocksWithTimes
-            );
+            ); */
             onPracticeBlocksChange(blocksWithTimes);
             onOriginalBlocksChange([...blocksWithTimes]);
             blocksToConvert = blocksWithTimes;
-          } catch (error) {
-// console.error(
+          } catch (_error) {
+            /* console.error(
               "Error loading saved practice plan for scaffold mode:",
               error
-            );
+            ); */
           }
         } else {
-// console.info("No saved practice data found in localStorage");
+          /* console.info("No saved practice data found in localStorage"); */
         }
       }
 
@@ -131,7 +131,7 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
         }
         currentMinute += block.duration;
       });
-// console.info("Created timeline allocation:", allocation);
+      /* console.info("Created timeline allocation:", allocation); */
       onTimelineAllocationChange(allocation);
     } else {
       // Exiting scaffold mode - clear timeline allocation

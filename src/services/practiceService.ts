@@ -538,14 +538,12 @@ export class PracticeService {
   }
 
   private static async searchPracticeScripts(
-    query: string,
-    teamId: string
+    _query: string,
+    _teamId: string
   ): Promise<PracticeScript[]> {
     // Mock implementation - will be replaced when Practice Scripts are implemented
     // For now, return empty array but accept the parameters for consistency
-// console.info(
-      `Searching practice scripts for query: ${query}, teamId: ${teamId}`
-    );
+    // console.info(`Searching practice scripts for query: ${query}, teamId: ${teamId}`);
     return [];
   }
 }

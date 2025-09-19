@@ -44,22 +44,22 @@ export class AchievementService {
     devMode?: string
   ): Promise<AchievementData> {
     try {
-// console.info(
+      /* console.info(
         `[Trophy/Achievement] Getting achievements for user ${userId} in dev mode: ${devMode}`
-      );
+      ); */
 
       // Check if we're in blank slate mode
       if (devMode === "blank_slate") {
-// console.info("🆕 Returning empty achievements for blank slate mode");
+        /* console.info("🆕 Returning empty achievements for blank slate mode"); */
         return this.getEmptyAchievements();
       }
 
       // For production/real modes, get real data
       if (devMode === "production" || devMode === "super_admin_real") {
         try {
-// console.info(
+          /* console.info(
             "[Search/Investigate] Attempting to fetch real achievements..."
-          );
+          ); */
           const realAchievements = await Promise.race([
             this.getRealAchievements(userId),
             new Promise<never>((_, reject) =>
@@ -69,15 +69,15 @@ export class AchievementService {
               )
             ),
           ]);
-// console.info(
+          /* console.info(
             "[Success/Complete] Real achievements fetched successfully"
-          );
+          ); */
           return realAchievements;
-        } catch (error) {
-// console.warn(
+        } catch (_error) {
+          /* console.warn(
             "[Warning] Could not fetch real achievements, returning empty:",
-            error
-          );
+            _error
+          ); */
           return this.getEmptyAchievements();
         }
       }
@@ -89,9 +89,9 @@ export class AchievementService {
 
       // For blank slate mode, return empty achievements
       if (devMode === "blank_slate") {
-// console.info(
+        /* console.info(
           "🆕 Achievement Service: Blank slate mode - returning empty achievements"
-        );
+        ); */
         return this.getEmptyAchievements();
       }
 
@@ -99,15 +99,15 @@ export class AchievementService {
       try {
         const realAchievements = await this.getRealAchievements(userId);
         return realAchievements;
-      } catch (error) {
-// console.warn(
+      } catch (_error) {
+        /* console.warn(
           "Could not fetch real achievements, returning empty:",
-          error
-        );
+          _error
+        ); */
         return this.getEmptyAchievements();
       }
-    } catch (error) {
-// console.error("Error fetching user achievements:", error);
+    } catch (_error) {
+      /* console.error("Error fetching user achievements:", _error); */
       return this.getEmptyAchievements();
     }
   }
@@ -118,103 +118,98 @@ export class AchievementService {
   private static async getRealAchievements(
     userId: string
   ): Promise<AchievementData> {
-    try {
-      // Get helmet stickers without joins first
-      const stickersResult = await supabase
-        .from("helmet_stickers")
-        .select("*")
-        .eq("user_id", userId)
-        .order("awarded_at", { ascending: false });
+    // Get helmet stickers without joins first
+    const stickersResult = await supabase
+      .from("helmet_stickers")
+      .select("*")
+      .eq("user_id", userId)
+      .order("awarded_at", { ascending: false });
 
-      if (stickersResult.error) {
-// console.warn("Error fetching helmet stickers:", stickersResult.error);
-      }
+    if (stickersResult.error) {
+      /* console.warn("Error fetching helmet stickers:", stickersResult.error); */
+    }
 
-      // Try to get real achievements with error handling
-      const achievementsResult = await supabase
-        .from("achievements")
-        .select("*")
-        .eq("user_id", userId)
-        .order("earned_at", { ascending: false });
+    // Try to get real achievements with error handling
+    const achievementsResult = await supabase
+      .from("achievements")
+      .select("*")
+      .eq("user_id", userId)
+      .order("earned_at", { ascending: false });
 
-      if (achievementsResult.error) {
-// console.warn("Error fetching achievements:", achievementsResult.error);
-      }
+    if (achievementsResult.error) {
+      /* console.warn("Error fetching achievements:", achievementsResult.error); */
+    }
 
-      const stickers: unknown[] = stickersResult.data || [];
-      const achievements: unknown[] = achievementsResult.data || [];
+    const stickers: unknown[] = stickersResult.data || [];
+    const achievements: unknown[] = achievementsResult.data || [];
 
-      // Type guard function to ensure we have valid data
-      const isValidSticker = (
-        sticker: unknown
-      ): sticker is Record<string, unknown> => {
-        return !!(sticker && typeof sticker === "object" && "id" in sticker);
-      };
+    // Type guard function to ensure we have valid data
+    const isValidSticker = (
+      sticker: unknown
+    ): sticker is Record<string, unknown> => {
+      return !!(sticker && typeof sticker === "object" && "id" in sticker);
+    };
 
-      const isValidAchievement = (
-        achievement: unknown
-      ): achievement is Record<string, unknown> => {
-        return !!(
-          achievement &&
-          typeof achievement === "object" &&
-          "id" in achievement
-        );
-      };
-
-      // Safely extract stickers data
-      const validStickers: Record<string, unknown>[] = [];
-      if (Array.isArray(stickers)) {
-        validStickers.push(...stickers.filter(isValidSticker));
-      }
-
-      // Safely extract achievements data
-      const validAchievements: Record<string, unknown>[] = [];
-      if (Array.isArray(achievements)) {
-        validAchievements.push(...achievements.filter(isValidAchievement));
-      }
-
-      const helmetStickers: HelmetSticker[] = validStickers.map((sticker) => ({
-        id: String(sticker.id || ""),
-        name: String(sticker.reason || "Sticker"),
-        icon: this.getStickerIcon(String(sticker.sticker_type || "star")),
-        awardedBy: String(sticker.awarded_by || ""),
-        awardedByName: "Coach", // Simplified for now
-        date: String(sticker.awarded_at || new Date().toISOString()),
-        teamId: String(sticker.team_id || ""),
-        teamName: "Team", // Simplified for now
-      }));
-
-      const boxcallMedals: BoxCallMedal[] = validAchievements.map(
-        (achievement) => ({
-          id: String(achievement.id || ""),
-          name: String(achievement.title || "Achievement"),
-          icon: String(achievement.icon_name || "award"),
-          description: String(achievement.description || ""),
-          earned: true,
-          earnedDate: String(achievement.earned_at || new Date().toISOString()),
-        })
+    const isValidAchievement = (
+      achievement: unknown
+    ): achievement is Record<string, unknown> => {
+      return !!(
+        achievement &&
+        typeof achievement === "object" &&
+        "id" in achievement
       );
+    };
 
-      return {
+    // Safely extract stickers data
+    const validStickers: Record<string, unknown>[] = [];
+    if (Array.isArray(stickers)) {
+      validStickers.push(...stickers.filter(isValidSticker));
+    }
+
+    // Safely extract achievements data
+    const validAchievements: Record<string, unknown>[] = [];
+    if (Array.isArray(achievements)) {
+      validAchievements.push(...achievements.filter(isValidAchievement));
+    }
+
+    const helmetStickers: HelmetSticker[] = validStickers.map((sticker) => ({
+      id: String(sticker.id || ""),
+      name: String(sticker.reason || "Sticker"),
+      icon: this.getStickerIcon(String(sticker.sticker_type || "star")),
+      awardedBy: String(sticker.awarded_by || ""),
+      awardedByName: "Coach", // Simplified for now
+      date: String(sticker.awarded_at || new Date().toISOString()),
+      teamId: String(sticker.team_id || ""),
+      teamName: "Team", // Simplified for now
+    }));
+
+    const boxcallMedals: BoxCallMedal[] = validAchievements.map(
+      (achievement) => ({
+        id: String(achievement.id || ""),
+        name: String(achievement.title || "Achievement"),
+        icon: String(achievement.icon_name || "award"),
+        description: String(achievement.description || ""),
+        earned: true,
+        earnedDate: String(achievement.earned_at || new Date().toISOString()),
+      })
+    );
+
+    return {
+      helmetStickers,
+      boxcallMedals,
+      weeklyStreak: 0, // Calculate real streak later
+      totalPoints: this.calculateTotalPoints({
         helmetStickers,
         boxcallMedals,
-        weeklyStreak: 0, // Calculate real streak later
-        totalPoints: this.calculateTotalPoints({
-          helmetStickers,
-          boxcallMedals,
-          weeklyStreak: 0,
-          totalPoints: 0,
-          recentAchievements: [],
-        }),
-        recentAchievements: [
-          ...helmetStickers.slice(0, 2),
-          ...boxcallMedals.slice(0, 1),
-        ],
-      };
-    } catch (error) {
-// console.error("Error in getRealAchievements:", error);
-      throw error; // Re-throw to be caught by calling function
-    }
+        weeklyStreak: 0,
+        totalPoints: 0,
+        recentAchievements: [],
+      }),
+      recentAchievements: [
+        ...helmetStickers.slice(0, 2),
+        ...boxcallMedals.slice(0, 1),
+      ],
+    };
   }
 
   /**
@@ -266,8 +261,8 @@ export class AchievementService {
 
       // TODO: Implement real helmet stickers from database
       return [];
-    } catch (error) {
-// console.error("Error fetching helmet stickers:", error);
+    } catch (_error) {
+      /* console.error("Error fetching helmet stickers:", _error); */
       return [];
     }
   }
@@ -279,8 +274,8 @@ export class AchievementService {
     try {
       // TODO: Implement medal calculation based on user activity
       return [];
-    } catch (error) {
-// console.error("Error calculating BoxCall medals:", error);
+    } catch (_error) {
+      /* console.error("Error calculating BoxCall medals:", _error); */
       return [];
     }
   }
@@ -288,14 +283,14 @@ export class AchievementService {
   /**
    * Calculate user's activity streak
    */
-  static async getActivityStreak(userId: string): Promise<number> {
+  static async getActivityStreak(_userId: string): Promise<number> {
     try {
       // TODO: Calculate based on user login/activity data
       // For now, return mock data
-// console.info("Calculating activity streak for user:", userId);
+      /* console.info("Calculating activity streak for user:", userId); */
       return Math.floor(Math.random() * 14) + 1; // 1-14 days
-    } catch (error) {
-// console.error("Error calculating activity streak:", error);
+    } catch (_error) {
+      /* console.error("Error calculating activity streak:", _error); */
       return 0;
     }
   }

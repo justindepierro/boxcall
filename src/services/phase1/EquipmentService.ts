@@ -266,8 +266,8 @@ export class EquipmentService extends BaseService<"equipment"> {
       try {
         const created = await this.create(item);
         results.push(created);
-      } catch (error) {
-// console.error(`Failed to create equipment ${item.name}:`, error);
+      } catch (_error) {
+        // console.error(`Failed to create equipment ${item.name}:`, error);
         // Continue with remaining items
       }
     }

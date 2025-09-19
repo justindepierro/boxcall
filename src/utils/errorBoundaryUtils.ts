@@ -37,7 +37,7 @@ export const reportError = (
 
   // Log to console in development
   if (process.env.NODE_ENV === "development") {
-// console.error("Manual Error Report:", errorData);
+    // console.error("Manual Error Report:", errorData);
   }
 
   // Send to error tracking services

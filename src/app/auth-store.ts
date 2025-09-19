@@ -70,12 +70,7 @@ export const useAuth = create<AuthState>()(
             password,
           });
           if (error) {
-// console.error("🚨 Supabase signIn error:", error);
-// console.error("🚨 Error details:", {
-              message: error.message,
-              status: error.status,
-              details: error,
-            });
+            // console.error("🚨 Supabase signIn error:", error);
             set({ error: error.message, loading: false });
             return { success: false, error: error.message };
           }
@@ -139,9 +134,9 @@ export const useAuth = create<AuthState>()(
             await get().fetchUserProfile(authData.user.id);
           }
           return { success: true };
-        } catch (error) {
+        } catch (_error) {
           const errorMessage =
-            error instanceof Error ? error.message : "Sign up failed";
+            _error instanceof Error ? _error.message : "Sign up failed";
           set({ error: errorMessage, loading: false });
           return { success: false, error: errorMessage };
         }
@@ -161,9 +156,9 @@ export const useAuth = create<AuthState>()(
             profile: null,
             loading: false,
           });
-        } catch (error) {
+        } catch (_error) {
           const errorMessage =
-            error instanceof Error ? error.message : "Sign out failed";
+            _error instanceof Error ? _error.message : "Sign out failed";
           set({ error: errorMessage, loading: false });
         }
       },
@@ -179,9 +174,9 @@ export const useAuth = create<AuthState>()(
           }
           set({ loading: false });
           return { success: true };
-        } catch (error) {
+        } catch (_error) {
           const errorMessage =
-            error instanceof Error ? error.message : "Password reset failed";
+            _error instanceof Error ? _error.message : "Password reset failed";
           set({ error: errorMessage, loading: false });
           return { success: false, error: errorMessage };
         }
@@ -195,12 +190,12 @@ export const useAuth = create<AuthState>()(
             .eq("id", userId)
             .single();
           if (error) {
-// console.error("Error fetching user profile:", error);
+            // console.error("Error fetching user profile:", error);
             return;
           }
           set({ profile: data });
-        } catch (error) {
-// console.error("Error fetching user profile:", error);
+        } catch (_error) {
+          // console.error("Error fetching user profile:", _error);
         }
       },
       // Utility methods

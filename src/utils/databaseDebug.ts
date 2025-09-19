@@ -8,53 +8,50 @@ import { supabase } from "../lib/supabase";
 export class DatabaseDebug {
   static async checkPlaybooks(): Promise<void> {
     try {
-// console.info("🔍 Checking playbooks in database...");
+      // console.info("🔍 Checking playbooks in database...");
 
       const { data: playbooks, error } = await supabase
         .from("playbooks")
         .select("*");
 
       if (error) {
-// console.error("❌ Error fetching playbooks:", error);
+        // console.error("❌ Error fetching playbooks:", error);
         return;
       }
 
-// console.info("📚 Found playbooks:", playbooks);
-
       if (playbooks && playbooks.length > 0) {
-// console.info(`✅ Found ${playbooks.length} playbook(s):`);
-        playbooks.forEach((pb) => {
-// console.info(`  - ${pb.name} (${pb.id})`);
+        // console.info("📚 Playbooks in database:");
+        playbooks.forEach((_pb) => {
+          // console.info(`  - ${_pb.name}`);
         });
       } else {
-// console.info("⚠️ No playbooks found in database!");
-// console.info("💡 You may need to run database seeds");
+        // console.info("⚠️ No playbooks found in database!");
+        // console.info("💡 You may need to run database seeds");
       }
-    } catch (error) {
-// console.error("❌ DatabaseDebug.checkPlaybooks failed:", error);
+    } catch (_error) {
+      // console.error("❌ Error during playbook check:", _error);
     }
   }
 
   static async checkTeams(): Promise<void> {
     try {
-// console.info("🔍 Checking teams in database...");
-
-      const { data: teams, error } = await supabase.from("teams").select("*");
+      // console.info("🔍 Checking teams...");
+      const { data: _teams, error } = await supabase.from("teams").select("*");
 
       if (error) {
-// console.error("❌ Error fetching teams:", error);
+        // console.error("❌ Error fetching teams:", error);
         return;
       }
 
-// console.info("🏈 Found teams:", teams);
-    } catch (error) {
-// console.error("❌ DatabaseDebug.checkTeams failed:", error);
+      // console.info("✅ Team check complete.");
+    } catch (_error) {
+      // console.error("❌ Error during team check:", _error);
     }
   }
 
   static async createDemoPlaybook(): Promise<string | null> {
     try {
-// console.info("🔧 Creating demo playbook...");
+      // console.info("🔧 Creating demo playbook...");
 
       // First, create or get demo user
       const demoUserId = "00000000-0000-0000-0000-000000000001";
@@ -68,7 +65,7 @@ export class DatabaseDebug {
 
       if (!existingUser || existingUser.length === 0) {
         // Create demo user - minimal required fields
-// console.info("👤 Creating demo user...");
+        // console.info("👤 Creating demo user...");
         const { error: userError } = await supabase.from("users").insert([
           {
             id: demoUserId,
@@ -78,11 +75,11 @@ export class DatabaseDebug {
         ]);
 
         if (userError) {
-// console.error("❌ Error creating demo user:", userError);
+          // console.error("❌ Error creating demo user:", userError);
           // If we can't create user, let's try without created_by constraint
-// console.info("⚠️ Continuing without demo user...");
+          // console.info("⚠️ Continuing without demo user...");
         } else {
-// console.info("✅ Demo user created successfully");
+          // console.info("✅ Demo user created successfully");
         }
       }
 
@@ -97,7 +94,7 @@ export class DatabaseDebug {
 
       if (!teams || teams.length === 0) {
         // Create demo team first
-// console.info("🏗️ Creating demo team...");
+        // console.info("🏗️ Creating demo team...");
         const { error: teamError } = await supabase.from("teams").insert([
           {
             id: teamId,
@@ -110,7 +107,7 @@ export class DatabaseDebug {
         ]);
 
         if (teamError) {
-// console.error("❌ Error creating demo team:", teamError);
+          // console.error("❌ Error creating demo team:", teamError);
 
           // Try without created_by if user constraint is the issue
           const { error: teamErrorFallback } = await supabase
@@ -127,16 +124,13 @@ export class DatabaseDebug {
             ]);
 
           if (teamErrorFallback) {
-// console.error(
-              "❌ Error creating demo team (fallback):",
-              teamErrorFallback
-            );
+            // console.error("❌ Error creating demo team (fallback):", teamErrorFallback);
             return null;
           }
         }
       } // Now create the playbook
       const playbookId = "550e8400-e29b-41d4-a716-446655440001";
-      const { data, error } = await supabase
+      const { data: _data, error } = await supabase
         .from("playbooks")
         .insert([
           {
@@ -151,14 +145,14 @@ export class DatabaseDebug {
         .single();
 
       if (error) {
-// console.error("❌ Error creating demo playbook:", error);
+        // console.error("❌ Error creating demo playbook:", error);
         return null;
       }
 
-// console.info("✅ Demo playbook created:", data);
+      // console.info("✅ Demo playbook created:", _data);
       return playbookId;
-    } catch (error) {
-// console.error("❌ DatabaseDebug.createDemoPlaybook failed:", error);
+    } catch (_error) {
+      // console.error("❌ DatabaseDebug.createDemoPlaybook failed:", _error);
       return null;
     }
   }

@@ -610,7 +610,6 @@ _Building the future of football coaching operations._ 🏈
 
 ## Documentation
 
-
 ## 1. Product & Roadmap
 
 - Unified Roadmap: `product/ROADMAP.md`
@@ -678,6 +677,7 @@ Owner: Documentation Steward (rotate quarterly)
 git log --follow -- docs/README-ARCHIVE.md
 git show <commit>:docs/README-ARCHIVE.md > /tmp/README_LEGACY.md
 ```
+
 ```
 boxcall/
 ├── 📋 README.md                 # This file
@@ -735,6 +735,7 @@ boxcall/
     ├── e2e/                     # End-to-end tests
     └── utils/                   # Test utilities
 ```
+
 ```json
 {
   "react": "^18.2.0",
@@ -750,6 +751,7 @@ boxcall/
   "lucide-react": "^0.312.0"
 }
 ```
+
 ```json
 {
   "@types/react": "^18.0.0",
@@ -767,6 +769,7 @@ boxcall/
   "lint-staged": "^13.1.0"
 }
 ```
+
 ```bash
 # Clone or create the project
 git clone <repository-url> boxcall
@@ -784,6 +787,7 @@ npm test
 # Build for production
 npm run build
 ```
+
 ```bash
 npm run dev          # Start development server
 npm run build        # Build for production

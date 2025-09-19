@@ -592,7 +592,7 @@ export const useDashboardStore = create<DashboardState>()(
 
       optimizeLayout: () => {
         // TODO: Implement layout optimization based on usage patterns
-// console.info("Layout optimization not yet implemented");
+        // console.info("Layout optimization not yet implemented");
       },
 
       // Persistence

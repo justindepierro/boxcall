@@ -11,7 +11,7 @@ export function useErrorHandler() {
       const errorMessage = typeof error === "string" ? error : error.message;
       const title = context ? `Error in ${context}` : "Application Error";
       // Log error to console for debugging
-// console.error("Error handled:", { error, context });
+      // console.error("Error handled:", { error, context });
       // Add error notification to the UI
       addNotification({
         type: "error",
@@ -24,7 +24,7 @@ export function useErrorHandler() {
   const handleWarning = useCallback(
     (warning: string, context?: string) => {
       const title = context ? `Warning in ${context}` : "Warning";
-// console.warn("Warning handled:", { warning, context });
+      // console.warn("Warning handled:", { warning, context });
       addNotification({
         type: "warning",
         title,

@@ -3,6 +3,7 @@
 Total occurrences: 319
 
 ## eslint-disable (18)
+
 - src/contexts/ConfirmContext.tsx:1 — eslint-disable
 - src/contexts/PlaybookContext.tsx:1 — eslint-disable
 - src/contexts/UndoQueueContext.tsx:1 — eslint-disable
@@ -21,7 +22,9 @@ Total occurrences: 319
 - scripts/code-hygiene-scan.ts:12 — eslint-disable
 - scripts/code-hygiene-scan.ts:12 — eslint-disable
 - scripts/code-hygiene-scan.ts:71 — eslint-disable
+
 ## TODO (135)
+
 - src/hooks/useAdaptiveDashboard.ts:215 — TODO
 - src/hooks/usePermissions.ts:24 — TODO
 - src/hooks/usePermissions.ts:25 — TODO
@@ -157,13 +160,17 @@ Total occurrences: 319
 - src/components/playbook/diagram/context/DiagramEditorContext.ts:5 — TODO
 - scripts/a11y_smoke_pages.ts:14 — TODO
 - scripts/code-hygiene-scan.ts:17 — TODO
+
 ## @ts-ignore (5)
+
 - src/test/setup.ts:12 — @ts-ignore
 - scripts/arch-summary.ts:56 — @ts-ignore
 - scripts/code-hygiene-scan.ts:11 — @ts-ignore
 - scripts/code-hygiene-scan.ts:11 — @ts-ignore
 - scripts/code-hygiene-scan.ts:70 — @ts-ignore
+
 ## console.log (133)
+
 - src/components/dashboard/AdaptiveChart.tsx:119 — console.log(
 - scripts/a11y_smoke_pages.ts:169 — console.log(
 - scripts/a11y_smoke_pages.ts:172 — console.log(
@@ -297,11 +304,15 @@ Total occurrences: 319
 - scripts/vscode-parity-check.ts:175 — console.log(
 - scripts/vscode-parity-check.ts:178 — console.log(
 - scripts/vscode-parity-check.ts:183 — console.log(
+
 ## any type (3)
+
 - src/domain/calendar/schema.ts:47 — : any
 - src/components/playbook/diagram-v2/context.tsx:561 — : any
 - scripts/migration_010_counts.ts:93 — : any
+
 ## as any (22)
+
 - src/components/playbook/diagram-v2/context.tsx:460 — as any
 - src/components/playbook/diagram-v2/context.tsx:468 — as any
 - src/components/playbook/diagram-v2/context.tsx:508 — as any
@@ -324,8 +335,12 @@ Total occurrences: 319
 - src/components/playbook/diagram-v2/context.tsx:1213 — as any
 - src/components/playbook/diagram-v2/context.tsx:1259 — as any
 - scripts/code-hygiene-scan.ts:13 — as any
+
 ## debugger (2)
+
 - scripts/code-hygiene-scan.ts:16 — debugger
 - scripts/code-hygiene-scan.ts:72 — debugger
+
 ## FIXME (1)
+
 - scripts/code-hygiene-scan.ts:18 — FIXME

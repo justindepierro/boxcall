@@ -276,7 +276,7 @@ export class ExternalIntegrationService {
       this.activeSyncs.set(syncId, syncOperation);
       // Start the sync process asynchronously
       this.performSync(syncOperation).catch((error) => {
-// console.error(`Sync ${syncId} failed:`, error);
+        // console.error(`Sync ${syncId} failed:`, error);
         syncOperation.status = "failed";
         syncOperation.endTime = new Date();
         syncOperation.errors.push({

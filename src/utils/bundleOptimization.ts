@@ -17,8 +17,8 @@ export const createLazyComponent = <
   fallback?: React.ComponentType
 ) => {
   return React.lazy(() =>
-    importFn().catch((error) => {
-// console.error("Failed to load component:", error);
+    importFn().catch((_error) => {
+      // console.error("Failed to load component:", _error);
       // Return fallback component wrapped in default export
       const FallbackComponent =
         fallback ||
@@ -67,23 +67,12 @@ export const analyzeBundleSize = () => {
     // Log bundle information for development analysis
     const performanceEntries = performance.getEntriesByType("navigation");
     if (performanceEntries.length > 0) {
-      const navigationEntry =
+      const _navigationEntry =
         performanceEntries[0] as PerformanceNavigationTiming;
-// console.info("📦 Bundle Analysis");
-// console.info(
-        "Total Load Time:",
-        navigationEntry.loadEventEnd - navigationEntry.fetchStart,
-        "ms"
-      );
-// console.info(
-        "DOMContentLoaded:",
-        navigationEntry.domContentLoadedEventEnd - navigationEntry.fetchStart,
-        "ms"
-      );
-// console.info(
-        "First Contentful Paint:",
-        "Check Lighthouse for FCP metrics"
-      );
+      // console.info("📦 Bundle Analysis");
+      // console.info("Total Load Time:", _navigationEntry.loadEventEnd - _navigationEntry.fetchStart, "ms");
+      // console.info("DOMContentLoaded:", _navigationEntry.domContentLoadedEventEnd - _navigationEntry.fetchStart, "ms");
+      // console.info("First Contentful Paint:", "Check Lighthouse for FCP metrics");
       // end group
     }
   }
@@ -93,40 +82,32 @@ export const analyzeBundleSize = () => {
 export const dynamicImportWithRetry = async <T>(
   importFn: () => Promise<T>,
   maxRetries = 3,
-  delay = 1000
+  _delay = 1000
 ): Promise<T> => {
-  let lastError: Error;
+  let _lastError: Error;
 
   for (let i = 0; i < maxRetries; i++) {
     try {
       return await importFn();
     } catch (error) {
-      lastError = error as Error;
-// console.warn(
-        `Dynamic import failed (attempt ${i + 1}/${maxRetries}):`,
-        error
-      );
+      _lastError = error as Error;
+      // console.warn(`Dynamic import failed (attempt ${i + 1}/${maxRetries}):`, error);
 
       if (i < maxRetries - 1) {
-        await new Promise((resolve) => setTimeout(resolve, delay * (i + 1)));
+        await new Promise((resolve) => setTimeout(resolve, _delay * (i + 1)));
       }
     }
   }
 
-  throw lastError!;
+  throw _lastError!;
 };
 
 // Service worker registration for caching
 export const registerServiceWorker = async () => {
   if ("serviceWorker" in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.register("/sw.js");
-// console.info("Service Worker registered successfully:", registration);
-      return registration;
-    } catch (error) {
-// console.error("Service Worker registration failed:", error);
-      throw error;
-    }
+    const registration = await navigator.serviceWorker.register("/sw.js");
+    // console.info("Service Worker registered successfully:", registration);
+    return registration;
   } else {
     throw new Error("Service Worker not supported");
   }
@@ -177,12 +158,12 @@ export const monitorMemoryUsage = () => {
     };
 
     if (process.env.NODE_ENV === "development") {
-// console.info("🧠 Memory Usage:", memoryInfo);
+      // console.info("🧠 Memory Usage:", memoryInfo);
     }
 
     // Warn if memory usage is high
     if (memoryInfo.usage > 70) {
-// console.warn("High memory usage detected:", memoryInfo.usage + "%");
+      // console.warn("High memory usage detected:", memoryInfo.usage + "%");
     }
 
     return memoryInfo;
@@ -206,9 +187,9 @@ export const optimizeChunkLoading = () => {
 // Tree shaking verification (development only)
 export const verifyTreeShaking = (moduleNames: string[]) => {
   if (process.env.NODE_ENV === "development") {
-// console.info("🌳 Tree Shaking Verification");
-    moduleNames.forEach((name) => {
-// console.info(`${name}: Module should be tree-shakeable`);
+    // console.info("🌳 Tree Shaking Verification");
+    moduleNames.forEach((_name) => {
+      // console.info(`${_name}: Module should be tree-shakeable`);
     });
     // end group
   }

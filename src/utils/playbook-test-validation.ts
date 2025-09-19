@@ -73,19 +73,16 @@ export const validatePlaybookData = (plays: unknown[]) => {
 export const logValidationResults = (
   results: ReturnType<typeof validatePlaybookData>
 ) => {
-// console.info("🏈 Playbook Interface Validation");
-// console.info("📊 Data Loading:", results.dataLoaded ? "✅" : "❌");
-// console.info("📈 Play Count:", results.playCount);
-// console.info("🏗️ Structure Valid:", results.hasValidStructure ? "✅" : "❌");
-// console.info("🏟️ Formation Variety:", results.hasFormations ? "✅" : "❌");
-// console.info("⚡ Play Type Variety:", results.hasPlayTypes ? "✅" : "❌");
-// console.info(
-    "🎯 Overall Status:",
-    results.validationPassed ? "✅ PASSED" : "❌ FAILED"
-  );
+  // console.info("🏈 Playbook Interface Validation");
+  // console.info("📊 Data Loading:", results.dataLoaded ? "✅" : "❌");
+  // console.info("📈 Play Count:", results.playCount);
+  // console.info("🏗️ Structure Valid:", results.hasValidStructure ? "✅" : "❌");
+  // console.info("🏟️ Formation Variety:", results.hasFormations ? "✅" : "❌");
+  // console.info("⚡ Play Type Variety:", results.hasPlayTypes ? "✅" : "❌");
+  // console.info("🎯 Overall Status:", results.validationPassed ? "✅ PASSED" : "❌ FAILED");
 
   if (results.issues.length > 0) {
-// console.info("⚠️ Issues Found");
+    // console.info("⚠️ Issues Found");
     results.issues.forEach((issue) => console.warn(issue));
     // end group
   }
