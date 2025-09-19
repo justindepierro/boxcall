@@ -1,6 +1,64 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useMemo, useReducer } from "react";
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  useReducer,
+  useEffect,
+} from "react";
 import type { ServerPlaybookViewPreset } from "../types/playbookViewPreset";
+import type { PersonnelSettings } from "../types/personnel";
+import { PersonnelSettingsService } from "@services";
+
+// Default personnel settings
+const createDefaultPersonnelSettings = (): PersonnelSettings => {
+  const now = new Date();
+  return {
+    groupings: [
+      {
+        id: "default",
+        name: "Default",
+        positions: [
+          { id: "qb", label: "QB", position: "Quarterback", isLocked: true },
+          {
+            id: "lot",
+            label: "LOT",
+            position: "Left Offensive Tackle",
+            isLocked: true,
+          },
+          {
+            id: "log",
+            label: "LOG",
+            position: "Left Offensive Guard",
+            isLocked: true,
+          },
+          { id: "c", label: "C", position: "Center", isLocked: true },
+          {
+            id: "rog",
+            label: "ROG",
+            position: "Right Offensive Guard",
+            isLocked: true,
+          },
+          {
+            id: "rot",
+            label: "ROT",
+            position: "Right Offensive Tackle",
+            isLocked: true,
+          },
+          { id: "rb", label: "RB", position: "Running Back" },
+          { id: "te1", label: "TE 1", position: "Tight End" },
+          { id: "wr1", label: "WR 1", position: "Wide Receiver" },
+          { id: "wr2", label: "WR 2", position: "Wide Receiver" },
+          { id: "wr3", label: "WR 3", position: "Wide Receiver" },
+        ],
+        isDefault: true,
+        createdAt: now,
+        updatedAt: now,
+      },
+    ],
+    activeGroupingId: "default",
+  };
+};
 
 export type CoachingView = "playbook" | "practice-script" | "game-plan";
 
@@ -56,6 +114,8 @@ export interface PlaybookUIState {
   showCelebration: boolean;
   recentAchievement: string | null;
   showConfettiOverlay: boolean;
+  showPersonnelSettings: boolean;
+  personnelSettings: PersonnelSettings;
 }
 
 export interface PlaybookState
@@ -93,6 +153,8 @@ const initialState: PlaybookState = {
   showCelebration: false,
   recentAchievement: null,
   showConfettiOverlay: false,
+  showPersonnelSettings: false,
+  personnelSettings: createDefaultPersonnelSettings(),
 };
 
 // ACTION TYPES
@@ -131,7 +193,11 @@ export type PlaybookAction =
   | { type: "HIDE_CELEBRATION" }
   | { type: "SHOW_CONFETTI_OVERLAY" }
   | { type: "HIDE_CONFETTI_OVERLAY" }
-  | { type: "SET_IMPORTED_LOCAL_PRESETS"; value: boolean };
+  | { type: "SET_IMPORTED_LOCAL_PRESETS"; value: boolean }
+  | { type: "SET_PERSONNEL_SETTINGS"; settings: PersonnelSettings }
+  | { type: "SHOW_PERSONNEL_SETTINGS" }
+  | { type: "HIDE_PERSONNEL_SETTINGS" }
+  | { type: "LOAD_PERSONNEL_SETTINGS_FROM_SERVER" };
 
 function reducer(state: PlaybookState, action: PlaybookAction): PlaybookState {
   switch (action.type) {
@@ -223,6 +289,15 @@ function reducer(state: PlaybookState, action: PlaybookAction): PlaybookState {
       return { ...state, showConfettiOverlay: false };
     case "SET_IMPORTED_LOCAL_PRESETS":
       return { ...state, importedLocalPresets: action.value };
+    case "SET_PERSONNEL_SETTINGS":
+      return { ...state, personnelSettings: action.settings };
+    case "SHOW_PERSONNEL_SETTINGS":
+      return { ...state, showPersonnelSettings: true };
+    case "HIDE_PERSONNEL_SETTINGS":
+      return { ...state, showPersonnelSettings: false };
+    case "LOAD_PERSONNEL_SETTINGS_FROM_SERVER":
+      // This will be handled asynchronously by the component
+      return state;
     default:
       return state;
   }
@@ -241,6 +316,27 @@ export const PlaybookProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  // Load personnel settings from server on mount
+  useEffect(() => {
+    const loadPersonnelSettings = async () => {
+      try {
+        const serverSettings = await PersonnelSettingsService.loadSettings();
+        if (serverSettings) {
+          dispatch({
+            type: "SET_PERSONNEL_SETTINGS",
+            settings: serverSettings,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load personnel settings from server:", error);
+        // Fall back to default settings (already set in initialState)
+      }
+    };
+
+    loadPersonnelSettings();
+  }, []);
+
   const value = useMemo(() => ({ state, dispatch }), [state]);
   return (
     <PlaybookContext.Provider value={value}>

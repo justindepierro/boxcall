@@ -75,7 +75,7 @@ interface PlayGridProps {
   enableBulkOperations?: boolean;
   selectedPlayIds?: Set<string>;
   onPlaySelectionChange?: (playIds: Set<string>) => void;
-  onOpenBuilder?: () => void;
+  onOpenQuickPlayForm?: () => void;
 }
 
 const PlayGridInner: React.FC<PlayGridProps> = ({
@@ -95,7 +95,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   enableBulkOperations = false,
   selectedPlayIds = new Set(),
   onPlaySelectionChange,
-  onOpenBuilder,
+  onOpenQuickPlayForm,
 }) => {
   // Toggle for play name display mode (true = one-word calls, false = full names)
   const [showOneWordCalls, setShowOneWordCalls] = useState<boolean>(() => {
@@ -383,9 +383,21 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   const EmptyActions = () => {
     if (!hasFilters) {
       return (
-        <Button variant="primary" size="sm" onClick={onOpenBuilder}>
-          Create your first play
-        </Button>
+        <div className="flex flex-col items-center gap-4">
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={onOpenQuickPlayForm}
+            className="px-8 py-3 text-lg font-semibold"
+          >
+            <Icon name="plus" className="h-5 w-5 mr-3" />
+            Create Your First Play
+          </Button>
+          <p className="text-sm text-slate-500 text-center max-w-md">
+            Start building your playbook by adding your first play. You can
+            always create detailed diagrams later.
+          </p>
+        </div>
       );
     }
     return (

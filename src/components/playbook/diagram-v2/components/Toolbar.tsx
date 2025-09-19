@@ -62,6 +62,13 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         >
           Motion
         </Button>
+        <Button
+          size="xs"
+          variant={state.ui.tool === "shape" ? "secondary" : "ghost"}
+          onClick={() => dispatch({ type: "SET_TOOL", tool: "shape" })}
+        >
+          Shapes
+        </Button>
         <div className="mx-2 w-px h-5 bg-slate-200" />
         <Button
           size="xs"

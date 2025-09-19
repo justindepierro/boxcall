@@ -21,6 +21,8 @@ export const LazyCalendarShellPage = lazy(
 
 export const LazyLoginPage = lazy(() => import("../../pages/LoginPage"));
 
+export const LazyLogoutPage = lazy(() => import("../../pages/Logout"));
+
 export const LazyProfilePage = lazy(() =>
   import("../../pages/ProfilePage").then((module) => ({
     default: module.ProfilePage,
@@ -76,6 +78,12 @@ export const LazyTermsOfServicePage = lazy(() =>
   }))
 );
 
+export const LazyTemplatesPage = lazy(() =>
+  import("../../pages/TemplatesPage").then((module) => ({
+    default: module.TemplatesPage,
+  }))
+);
+
 export const LazyContactPage = lazy(() =>
   import("../../pages/legal/ContactPage").then((module) => ({
     default: module.ContactPage,
@@ -96,6 +104,9 @@ export const LazyPlayerDashboardPage = lazy(
 export const LazyPracticePlanner = lazy(
   () => import("../../pages/PracticePlanner")
 );
+
+// Game Plan page lazy loading
+export const LazyGamePlanPage = lazy(() => import("../../pages/GamePlanPage"));
 
 // Heavy component lazy loading
 export const LazyPracticePlannerModal = lazy(() =>
@@ -131,7 +142,7 @@ export class LazyLoadErrorBoundary extends React.Component<
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+  componentDidCatch(_error: Error, _errorInfo: React.ErrorInfo): void {
     // console.error("Lazy loading error:", error, errorInfo);
   }
 

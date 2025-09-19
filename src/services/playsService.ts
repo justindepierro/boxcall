@@ -67,10 +67,7 @@ export class PlaysService {
       });
 
     if (membershipError) {
-      /* console.error(
-          "Warning: Failed to create team membership:",
-          membershipError
-        ); */
+      // console.error("Warning: Failed to create team membership:", membershipError);
       // Don't throw here - team was created successfully
     }
 
@@ -135,18 +132,22 @@ export class PlaysService {
    * Only saves fields that exist in the database schema
    */
   static async createPlay(playData: Partial<Play>): Promise<Play> {
+    console.info("🎯 PlaysService.createPlay called with:", playData);
     // Get current user for created_by field
     const {
       data: { user },
     } = await supabase.auth.getUser();
+    console.info("👤 Current user:", user);
     if (!user) throw new Error("User not authenticated");
 
     // Generate a unique ID for the play
     const playId = crypto.randomUUID();
+    console.info("🆔 Generated play ID:", playId);
 
     // Ensure user has a playbook (auto-create if needed)
     const playbookId =
       playData.playbook_id || (await this.ensureUserHasPlaybook());
+    console.info("📚 Using playbook ID:", playbookId);
 
     // Prepare ONLY database-valid fields for insertion
     const newPlay = {
@@ -219,11 +220,13 @@ export class PlaysService {
     };
 
     // Insert into Supabase
+    console.info("💾 Inserting play into database:", newPlay);
     let { data, error } = await supabase
       .from("plays")
       .insert([newPlay])
       .select()
       .single();
+    console.info("📊 Database response - data:", data, "error:", error);
 
     // If we get a foreign key error, try to create the demo playbook
     if (
@@ -442,5 +445,60 @@ export class PlaysService {
       /* console.error("❌ Error restoring plays:", error); */
       throw new Error(`Failed to restore plays: ${error.message}`);
     }
+  }
+
+  /**
+   * Get distinct values for a field to provide autocomplete suggestions
+   */
+  static async getDistinctValues(field: keyof Play): Promise<string[]> {
+    const { data, error } = await supabase
+      .from("plays")
+      .select(field as string)
+      .not(field as string, "is", null)
+      .not(field as string, "eq", "")
+      .order(field as string);
+
+    if (error) {
+      /* console.error(`❌ Error fetching distinct ${field} values:`, error); */
+      return [];
+    }
+
+    // Extract unique values and normalize
+    const values = [
+      ...new Set(data.map((item) => item[field as keyof typeof item])),
+    ]
+      .filter(Boolean)
+      .map((value) => String(value).trim())
+      .filter((value) => value.length > 0);
+
+    return values;
+  }
+
+  /**
+   * Get distinct formations for autocomplete
+   */
+  static async getDistinctFormations(): Promise<string[]> {
+    return this.getDistinctValues("formation");
+  }
+
+  /**
+   * Get distinct play names for autocomplete
+   */
+  static async getDistinctPlayNames(): Promise<string[]> {
+    return this.getDistinctValues("play_name");
+  }
+
+  /**
+   * Get distinct one word plays for autocomplete
+   */
+  static async getDistinctOneWordPlays(): Promise<string[]> {
+    return this.getDistinctValues("one_word_play");
+  }
+
+  /**
+   * Get distinct personnel values for autocomplete
+   */
+  static async getDistinctPersonnel(): Promise<string[]> {
+    return this.getDistinctValues("personnel");
   }
 }

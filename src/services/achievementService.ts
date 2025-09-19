@@ -44,9 +44,7 @@ export class AchievementService {
     devMode?: string
   ): Promise<AchievementData> {
     try {
-      /* console.info(
-        `[Trophy/Achievement] Getting achievements for user ${userId} in dev mode: ${devMode}`
-      ); */
+      // console.info(`[Trophy/Achievement] Getting achievements for user ${userId} in dev mode: ${devMode}`);
 
       // Check if we're in blank slate mode
       if (devMode === "blank_slate") {

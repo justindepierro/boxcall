@@ -246,6 +246,88 @@ export const ToolPalette: React.FC = () => {
             </span>
           </div>
         )}
+        {state.ui.tool === "shape" && (
+          <div className="flex items-center gap-2" aria-label="Shape modes">
+            <Btn
+              label="Rectangle"
+              active={state.ui.shapeMode === "rectangle"}
+              onClick={() =>
+                dispatch({ type: "SET_SHAPE_MODE", mode: "rectangle" })
+              }
+              icon={<Icon name="check-square" size="lg" />}
+              tooltip={
+                <span>
+                  Rectangle
+                  <span className="opacity-70 ml-1">
+                    • Click and drag to create • Shift for square
+                  </span>
+                </span>
+              }
+            />
+            <Btn
+              label="Circle"
+              active={state.ui.shapeMode === "circle"}
+              onClick={() =>
+                dispatch({ type: "SET_SHAPE_MODE", mode: "circle" })
+              }
+              icon={<Icon name="circle" size="lg" />}
+              tooltip={
+                <span>
+                  Circle
+                  <span className="opacity-70 ml-1">
+                    • Click and drag to create • Shift for perfect circle
+                  </span>
+                </span>
+              }
+            />
+            <Btn
+              label="Triangle"
+              active={state.ui.shapeMode === "triangle"}
+              onClick={() =>
+                dispatch({ type: "SET_SHAPE_MODE", mode: "triangle" })
+              }
+              icon={<Icon name="target" size="lg" />}
+              tooltip={
+                <span>
+                  Triangle
+                  <span className="opacity-70 ml-1">
+                    • Click and drag to create • Shift for equilateral
+                  </span>
+                </span>
+              }
+            />
+            <div className="mx-1 w-px h-6 bg-slate-200" />
+            <input
+              type="color"
+              aria-label="Shape color"
+              value={state.ui.drawColor || "#111827"}
+              onChange={(e) =>
+                dispatch({ type: "SET_DRAW_COLOR", color: e.target.value })
+              }
+              className="w-10 h-10 p-0 border border-slate-300 rounded"
+              title="Stroke color"
+            />
+            <input
+              type="range"
+              aria-label="Shape width"
+              min={1}
+              max={10}
+              step={1}
+              value={state.ui.drawWidth || 3}
+              onChange={(e) =>
+                dispatch({
+                  type: "SET_DRAW_WIDTH",
+                  width: Number(e.target.value),
+                })
+              }
+              className="w-32"
+              title="Stroke width"
+            />
+            <span className="text-[12px] text-slate-700 w-9 text-right">
+              {state.ui.drawWidth || 3}px
+            </span>
+          </div>
+        )}
         <div
           className="ml-auto flex items-center gap-2 pr-3 border-r border-slate-200"
           aria-label="Align & distribute"

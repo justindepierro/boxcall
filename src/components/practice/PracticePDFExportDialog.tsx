@@ -171,7 +171,7 @@ export const PracticePDFExportDialog: React.FC<
       // Activation: mark first script export
       markFirstScriptExport(filename);
       onClose();
-    } catch (error) {
+    } catch (_error) {
       // console.error("PDF export failed:", error);
       // You could add error handling/notification here
     } finally {

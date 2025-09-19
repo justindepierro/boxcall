@@ -31,7 +31,7 @@ export async function getSeasonStats(
     const pgErr = error as PostgrestError;
     if (status === 404 || pgErr?.code === "42P01") {
       if (process.env.NODE_ENV !== "production") {
-        // console.warn("season_stats view not found (likely migrations pending) – returning null");
+        // console.warn("season_stats view not found (likely migrations pending) – returning null")
       }
       return null;
     }

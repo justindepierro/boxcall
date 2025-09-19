@@ -11,11 +11,14 @@ import { AuthProvider } from "../components/auth";
 import {
   LazyDashboardPage,
   LazyLoginPage,
+  LazyLogoutPage,
   LazyTeamSettings,
   LazyTeamBulletin,
   LazyAnalyticsPage,
   LazyBoxCall,
   LazyPlaybookPage,
+  LazyPracticePlanner,
+  LazyGamePlanPage,
   LazyProfilePage,
   LazyTeamsPage,
   LazyCoachManagementPage,
@@ -28,6 +31,8 @@ import {
   LazyTermsOfServicePage,
   LazyContactPage,
   LazyCollaborativeDemoPage,
+  LazyCalendarShellPage,
+  LazyTemplatesPage,
 } from "../components/lazy/LazyRoutes";
 import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
@@ -99,6 +104,14 @@ export const DataRouterApp: React.FC = () => {
               </Suspense>
             ),
           },
+          {
+            path: ROUTES.LOGOUT,
+            element: (
+              <Suspense fallback={<RouteLoadingSpinner />}>
+                <LazyLogoutPage />
+              </Suspense>
+            ),
+          },
 
           // App shell with NavBar + Sidebar
           {
@@ -134,6 +147,15 @@ export const DataRouterApp: React.FC = () => {
                 element: (
                   <Suspense fallback={<RouteLoadingSpinner />}>
                     <LazyDashboardPage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.CALENDAR,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyCalendarShellPage />
                   </Suspense>
                 ),
               },
@@ -179,6 +201,24 @@ export const DataRouterApp: React.FC = () => {
                   </Suspense>
                 ),
               },
+              {
+                path: ROUTES.PRACTICE_PLANNER,
+                loader: requireCoachOrAdminLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyPracticePlanner />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.GAME_PLAN,
+                loader: requireCoachOrAdminLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyGamePlanPage />
+                  </Suspense>
+                ),
+              },
               // Lightweight diagram pane route (kept non-lazy like legacy)
               {
                 path: "/playbook/diagram",
@@ -218,6 +258,15 @@ export const DataRouterApp: React.FC = () => {
                 element: (
                   <Suspense fallback={<RouteLoadingSpinner />}>
                     <LazyTeamsPage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.TEMPLATES,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyTemplatesPage />
                   </Suspense>
                 ),
               },

@@ -142,7 +142,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
         updated_at: new Date().toISOString(),
       };
       onSave(playerData);
-    } catch (error) {
+    } catch (_error) {
       // console.error("Error saving player:", error);
     } finally {
       setSaving(false);

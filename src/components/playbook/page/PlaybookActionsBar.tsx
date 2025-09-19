@@ -6,8 +6,8 @@ import { AdvancedSearchBar } from "../../playbook/AdvancedSearchBar";
 import type { ServerPlaybookViewPreset } from "../../../types/playbookViewPreset";
 
 export type PlaybookActionsBarProps = {
-  searchQuery: string;
-  onSearchChange: (q: string) => void;
+  searchQuery?: string;
+  onSearchChange?: (q: string) => void;
   onQuickNewPracticeScript: () => void;
   onQuickNewInstall: () => void;
   serverPresets: ServerPlaybookViewPreset[];
@@ -26,6 +26,7 @@ export type PlaybookActionsBarProps = {
   onOpenImport: () => void;
   playsCreated: number;
   onOpenBuilder: () => void;
+  onOpenQuickPlayForm: () => void;
   selectedCount: number;
   onClearSelection: () => void;
   /** Optional slot rendered on the left side (after default left controls). */
@@ -56,6 +57,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
   onOpenImport,
   playsCreated,
   onOpenBuilder,
+  onOpenQuickPlayForm,
   selectedCount,
   onClearSelection,
   extraLeft,
@@ -71,50 +73,157 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
     .filter((v) => v.scope === "local")
     .map((v) => filterPresets.find((p) => p.id === v.id))
     .filter(Boolean) as { id: string; name: string }[];
+
   return (
-    <div className="surface-subtle border-b border-subtle sticky top-0 z-30">
+    <div className="bg-white border-b border-slate-200 sticky top-0 z-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="py-2">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0 flex-1">
-              <div className="w-full max-w-lg">
-                <AdvancedSearchBar
-                  plays={[]}
-                  searchQuery={searchQuery}
-                  onSearchChange={onSearchChange}
-                  placeholder="Search plays, formations, or tags..."
-                />
+        <div className="py-4">
+          {/* Main Actions Row */}
+          <div className="flex items-center justify-between gap-4 mb-4">
+            {/* Left side - Search and Quick Actions */}
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              {searchQuery !== undefined && onSearchChange && (
+                <div className="w-full max-w-md">
+                  <AdvancedSearchBar
+                    plays={[]}
+                    searchQuery={searchQuery}
+                    onSearchChange={onSearchChange}
+                    placeholder="Search plays, formations, or tags..."
+                  />
+                </div>
+              )}
+
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={onQuickNewPracticeScript}
+                  variant="secondary"
+                  size="sm"
+                  className="whitespace-nowrap"
+                >
+                  <Icon name="plus" className="h-4 w-4 mr-2" />
+                  Practice Script
+                </Button>
+                <Button
+                  onClick={onQuickNewInstall}
+                  variant="ghost"
+                  size="sm"
+                  className="whitespace-nowrap"
+                >
+                  <Icon name="plus" className="h-4 w-4 mr-2" />
+                  Install
+                </Button>
               </div>
-              <Button
-                onClick={onQuickNewPracticeScript}
-                variant="secondary"
-                size="xs"
-                className="shrink-0"
-              >
-                <Icon name="plus" className="h-3 w-3 mr-1" /> New Practice
-                Script
-              </Button>
-              <Button
-                onClick={onQuickNewInstall}
-                variant="ghost"
-                size="xs"
-                className="shrink-0"
-              >
-                <Icon name="plus" className="h-3 w-3 mr-1" /> New Install
-              </Button>
+
               {extraLeft}
             </div>
-            <div className="flex items-center gap-2 flex-wrap justify-end">
-              <div className="flex items-center space-x-1">
+
+            {/* Right side - Primary Actions */}
+            <div className="flex items-center gap-3">
+              {/* Export/Import Group */}
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={onOpenImport}
+                  variant="outline"
+                  size="sm"
+                  className="whitespace-nowrap"
+                >
+                  <Icon name="upload" className="h-4 w-4 mr-2" />
+                  Import CSV
+                </Button>
+
+                <div className="relative group">
+                  <Button
+                    onClick={() =>
+                      onExportScope ? onExportScope("selected") : onExportCSV()
+                    }
+                    variant="outline"
+                    size="sm"
+                    className="whitespace-nowrap pr-3"
+                    aria-haspopup="menu"
+                    aria-expanded="false"
+                  >
+                    <Icon name="download" className="h-4 w-4 mr-2" />
+                    Export
+                    <Icon name="chevron-down" className="h-3 w-3 ml-2" />
+                  </Button>
+
+                  {/* Dropdown Menu */}
+                  <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all pointer-events-none group-hover:pointer-events-auto absolute right-0 mt-2 min-w-[160px] bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-40">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start px-3 py-2 text-sm"
+                      onClick={() => onExportScope && onExportScope("selected")}
+                    >
+                      Selected Plays
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start px-3 py-2 text-sm"
+                      onClick={() => onExportScope && onExportScope("current")}
+                    >
+                      Current View
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start px-3 py-2 text-sm"
+                      onClick={() => onExportScope && onExportScope("all")}
+                    >
+                      All Plays
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* New Play Buttons */}
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={onOpenQuickPlayForm}
+                  variant="primary"
+                  size="sm"
+                  className="whitespace-nowrap font-medium"
+                >
+                  <Icon name="plus" className="h-4 w-4 mr-2" />
+                  New Play
+                  {playsCreated < 100 && (
+                    <Badge variant="warning" size="sm" className="ml-2 text-xs">
+                      {100 - playsCreated} left
+                    </Badge>
+                  )}
+                </Button>
+                <Button
+                  onClick={onOpenBuilder}
+                  variant="outline"
+                  size="sm"
+                  className="whitespace-nowrap"
+                  title="Create play diagram"
+                >
+                  <Icon name="edit" className="h-4 w-4 mr-2" />
+                  Diagram
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Secondary Actions Row */}
+          <div className="flex items-center justify-between gap-4">
+            {/* Left side - Presets and Filters */}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-slate-600 font-medium">
+                  View:
+                </label>
                 <select
                   value={activeServerPresetId || activePresetId || ""}
                   onChange={(e) => onApplyPreset(e.target.value)}
-                  className="text-sm border-slate-300 rounded px-2 py-1 min-w-[240px]"
+                  className="text-sm border border-slate-300 rounded-md px-3 py-1.5 min-w-[200px] bg-white"
                   disabled={serverPresetsLoading}
                   aria-busy={serverPresetsLoading}
                 >
                   <option value="" disabled={serverPresetsLoading}>
-                    {serverPresetsLoading ? "Loading presets…" : "Presets…"}
+                    {serverPresetsLoading ? "Loading presets…" : "Choose view…"}
                   </option>
                   {(recentServer.length > 0 || recentLocal.length > 0) && (
                     <optgroup label="Recent">
@@ -125,7 +234,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                       ))}
                       {recentLocal.map((p) => (
                         <option key={p.id} value={p.id}>
-                          {p.name} (local recent)
+                          {p.name} (recent)
                         </option>
                       ))}
                     </optgroup>
@@ -143,14 +252,15 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                     <optgroup label="Local">
                       {filterPresets.map((p) => (
                         <option key={p.id} value={p.id}>
-                          {p.name} (local)
+                          {p.name}
                         </option>
                       ))}
                     </optgroup>
                   )}
                 </select>
+
                 {(activeServerPresetId || activePresetId) && (
-                  <div className="flex items-center space-x-1">
+                  <div className="flex items-center gap-1">
                     <Button
                       onClick={() =>
                         activeServerPresetId
@@ -159,7 +269,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                       }
                       variant="ghost"
                       size="xs"
-                      className="px-2"
+                      className="px-2 text-xs"
                       title="Rename preset"
                       disabled={serverPresetsLoading}
                     >
@@ -173,7 +283,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                       }
                       variant="ghost"
                       size="xs"
-                      className="px-2"
+                      className="px-2 text-xs"
                       title="Delete preset"
                       disabled={serverPresetsLoading}
                     >
@@ -181,25 +291,25 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                     </Button>
                   </div>
                 )}
+
+                <Button
+                  onClick={onSavePreset}
+                  variant="ghost"
+                  size="sm"
+                  className="text-sm"
+                >
+                  Save View
+                </Button>
               </div>
-              <Button
-                onClick={onSavePreset}
-                variant="ghost"
-                size="sm"
-                className="px-3"
-              >
-                Save Preset
-              </Button>
+            </div>
+
+            {/* Right side - Bulk Operations */}
+            <div className="flex items-center gap-3">
               <Button
                 onClick={onToggleBulk}
                 variant={enableBulkOperations ? "primary" : "ghost"}
                 size="sm"
-                title={
-                  enableBulkOperations
-                    ? "Disable bulk operations"
-                    : "Enable bulk operations"
-                }
-                className="px-4 py-2"
+                className="whitespace-nowrap"
               >
                 <input
                   type="checkbox"
@@ -209,94 +319,25 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 />
                 Bulk Edit
               </Button>
-              <div className="relative group">
-                <Button
-                  onClick={() =>
-                    onExportScope ? onExportScope("selected") : onExportCSV()
-                  }
-                  variant="subtle"
-                  size="sm"
-                  className="px-3 py-2 pr-2 flex items-center"
-                  aria-haspopup="menu"
-                  aria-expanded="false"
-                >
-                  <Icon name="download" className="h-4 w-4 mr-2" /> Export
-                  <Icon
-                    name="chevron-down"
-                    className="h-3 w-3 ml-1 text-slate-500"
-                  />
-                </Button>
-                <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition pointer-events-none group-hover:pointer-events-auto absolute right-0 mt-1 min-w-[180px] surface-popover rounded-md shadow-lg border border-subtle py-1 z-40">
-                  <Button
-                    variant="ghost"
-                    size="xs"
-                    className="w-full justify-start !px-3 !py-1.5 text-xs"
-                    onClick={() => onExportScope && onExportScope("selected")}
-                  >
-                    Selected Plays
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="xs"
-                    className="w-full justify-start !px-3 !py-1.5 text-xs"
-                    onClick={() => onExportScope && onExportScope("current")}
-                  >
-                    Current View
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="xs"
-                    className="w-full justify-start !px-3 !py-1.5 text-xs"
-                    onClick={() => onExportScope && onExportScope("all")}
-                  >
-                    All Plays
-                  </Button>
-                </div>
-              </div>
-              <Button
-                onClick={onOpenImport}
-                variant="subtle"
-                size="sm"
-                className="px-4 py-2"
-              >
-                <Icon name="upload" className="h-4 w-4 mr-2" /> Import CSV
-              </Button>
-              <div className="relative">
-                <Button
-                  onClick={onOpenBuilder}
-                  variant="primary"
-                  size="sm"
-                  className="px-4 py-2"
-                >
-                  <Icon name="plus" className="h-4 w-4 mr-2" /> New Play
-                </Button>
-                {playsCreated < 100 && (
-                  <div className="absolute -top-2 -right-2">
-                    <Badge variant="warning" size="sm">
-                      {100 - playsCreated} to go!
-                    </Badge>
-                  </div>
-                )}
-              </div>
+
               {enableBulkOperations && (
-                <div className="text-xs text-slate-600 flex items-center gap-3 ml-2">
+                <div className="flex items-center gap-3 text-sm text-slate-600">
                   <span>
-                    Selected: <strong>{selectedCount}</strong>
-                  </span>
-                  <span className="text-slate-400">
-                    (persists across searches)
+                    <strong>{selectedCount}</strong> selected
                   </span>
                   {selectedCount > 0 && (
                     <Button
                       onClick={onClearSelection}
                       variant="ghost"
                       size="xs"
+                      className="text-xs"
                     >
                       Clear
                     </Button>
                   )}
                 </div>
               )}
+
               {extraRight}
             </div>
           </div>

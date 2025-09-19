@@ -45,7 +45,7 @@ export class RSVPService {
   ): Promise<void> {
     // TODO: Implement reminder logic when email service is integrated
     // console.info(
-    // console.info(`Sending RSVP reminders for event ${eventId} to users:`, userIds);
+    // console.info(`Sending RSVP reminders for event ${_eventId} to users:`, _userIds);
   }
 }
 

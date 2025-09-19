@@ -191,9 +191,7 @@ class ConflictResolutionService {
     const [local, remote, base] = versions;
 
     if (!strategy.canApply(local, remote)) {
-      /* console.warn(
-        `Strategy ${strategyName} cannot be applied to these data types`
-      ); */
+      // console.warn(`Strategy ${strategyName} cannot be applied to these data types`);
       return null;
     }
 

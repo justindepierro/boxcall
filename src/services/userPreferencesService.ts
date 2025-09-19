@@ -60,7 +60,7 @@ export class UserPreferencesService {
           ...(parsed.ui || {}),
         },
       };
-    } catch (error) {
+    } catch (_error) {
       // console.warn("Failed to load user preferences, using defaults:", error);
       return this.getDefaultPreferences();
     }
@@ -72,7 +72,7 @@ export class UserPreferencesService {
   static savePreferences(preferences: UserPreferences): void {
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(preferences));
-    } catch (error) {
+    } catch (_error) {
       // console.error("Failed to save user preferences:", error);
     }
   }

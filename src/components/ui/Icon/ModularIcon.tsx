@@ -10,7 +10,6 @@
 
 import React from "react";
 import { getComponentColor } from "../../../design-system/tokens";
-import dynamicIconImports from "lucide-react/dynamicIconImports";
 // Minimal static fallbacks for critical icons (Trophy Shelf + common)
 import {
   Trophy as FbkTrophy,
@@ -32,6 +31,23 @@ import {
   Users as FbkUsers,
   Home as FbkHome,
   Plus as FbkPlus,
+  File as FbkFile,
+  Search as FbkSearch,
+  Clock as FbkClock,
+  Upload as FbkUpload,
+  Download as FbkDownload,
+  ChevronDown as FbkChevronDown,
+  ChevronUp as FbkChevronUp,
+  Filter as FbkFilter,
+  ToggleLeft as FbkToggleLeft,
+  Settings as FbkSettings,
+  Tag as FbkTag,
+  Trash2 as FbkTrash2,
+  Lock as FbkLock,
+  Copy as FbkCopy,
+  Image as FbkImage,
+  Hash as FbkHash,
+  Gamepad2 as FbkGamepad2,
 } from "lucide-react";
 
 // Core types
@@ -41,7 +57,7 @@ type AccessibleSvgProps = Pick<
 >;
 
 export interface ModularIconProps extends AccessibleSvgProps {
-  name: ModularIconName;
+  name: ModularIconName | { name: ModularIconName };
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "touch" | number;
   className?: string;
   color?:
@@ -189,54 +205,19 @@ const toPascalKey = (id: string): string =>
 
 const importIcon = (id: string): Loader => {
   return () => {
-    const map = dynamicIconImports as unknown as Record<
-      string,
-      () => Promise<unknown>
-    >;
+    // Convert kebab-case to PascalCase for lucide-react component names
     const pascal = toPascalKey(id);
-    // lucide-react dynamicIconImports typically uses kebab-case OR PascalCase keys.
-    const candidates = [id, pascal];
-    const foundLoader = candidates
-      .map((key) => map[key])
-      .find((loader): loader is () => Promise<unknown> => Boolean(loader));
 
-    const tryModuleFallback = () =>
-      import("lucide-react").then((mod) => {
-        const Comp = (mod as Record<string, unknown>)[pascal] as unknown as
-          | LucideComponent
-          | undefined;
-        if (!Comp) {
-          const tried = candidates.join(", ");
-          throw new Error(
-            `Lucide icon not found in dynamic map or module: id='${id}' tried keys=[${tried}]`
-          );
-        }
-        return Comp as unknown as
-          | { default: LucideComponent }
-          | LucideComponent;
-      });
-
-    // In development, prefer module fallback first to avoid dynamic chunk fetch flakiness.
-    if (import.meta.env.DEV) {
-      return tryModuleFallback().catch(() => {
-        if (foundLoader) {
-          return foundLoader() as Promise<
-            { default: LucideComponent } | LucideComponent
-          >;
-        }
-        throw new Error(`Lucide icon not found (dev): id='${id}'`);
-      });
-    }
-
-    // In production, try dynamic chunk first for optimal tree-shaking, then fallback.
-    if (foundLoader) {
-      return (
-        foundLoader() as Promise<{ default: LucideComponent } | LucideComponent>
-      ).catch(() => tryModuleFallback());
-    }
-
-    // No loader in the map, go straight to module fallback.
-    return tryModuleFallback();
+    // Dynamic import the specific icon from lucide-react
+    return import("lucide-react").then((mod) => {
+      const Comp = (mod as Record<string, unknown>)[pascal] as unknown as
+        | LucideComponent
+        | undefined;
+      if (!Comp) {
+        throw new Error(`Lucide icon not found: '${id}' -> '${pascal}'`);
+      }
+      return Comp as unknown as { default: LucideComponent } | LucideComponent;
+    });
   };
 };
 
@@ -262,6 +243,23 @@ const fallbackIcons: Partial<Record<ModularIconName, LucideComponent>> = {
   users: FbkUsers as unknown as LucideComponent,
   home: FbkHome as unknown as LucideComponent,
   plus: FbkPlus as unknown as LucideComponent,
+  file: FbkFile as unknown as LucideComponent,
+  search: FbkSearch as unknown as LucideComponent,
+  clock: FbkClock as unknown as LucideComponent,
+  upload: FbkUpload as unknown as LucideComponent,
+  download: FbkDownload as unknown as LucideComponent,
+  "chevron-down": FbkChevronDown as unknown as LucideComponent,
+  "chevron-up": FbkChevronUp as unknown as LucideComponent,
+  filter: FbkFilter as unknown as LucideComponent,
+  "toggle-left": FbkToggleLeft as unknown as LucideComponent,
+  settings: FbkSettings as unknown as LucideComponent,
+  tag: FbkTag as unknown as LucideComponent,
+  delete: FbkTrash2 as unknown as LucideComponent,
+  lock: FbkLock as unknown as LucideComponent,
+  copy: FbkCopy as unknown as LucideComponent,
+  image: FbkImage as unknown as LucideComponent,
+  hash: FbkHash as unknown as LucideComponent,
+  "gamepad-2": FbkGamepad2 as unknown as LucideComponent,
 };
 
 const iconLoaders: Record<ModularIconName, Loader> = {
@@ -409,8 +407,18 @@ const colorMap = {
  * Perfect for new components that want bundle optimization
  */
 export const ModularIcon: React.FC<ModularIconProps> = (props) => {
+  // Extract the actual icon name for use throughout the component
+  const actualName = React.useMemo(
+    () =>
+      typeof props.name === "object" &&
+      props.name !== null &&
+      "name" in props.name
+        ? props.name.name
+        : props.name,
+    [props.name]
+  );
+
   const {
-    name,
     size = "md",
     className = "",
     color = "current",
@@ -425,12 +433,15 @@ export const ModularIcon: React.FC<ModularIconProps> = (props) => {
     (props as unknown as AriaHiddenProps)["aria-hidden"] ??
     (props as unknown as AriaHiddenProps).ariaHidden ??
     false;
-  const debugEnabled =
-    (typeof window !== "undefined" &&
-      // @ts-expect-error: custom debug flag
-      (window.__ICON_DEBUG__ === true ||
-        localStorage.getItem("debugIcons") === "1")) ||
-    false;
+  const debugEnabled = React.useMemo(
+    () =>
+      (typeof window !== "undefined" &&
+        // @ts-expect-error custom flag on window
+        (window.__ICON_DEBUG__ === true ||
+          localStorage.getItem("debugIcons") === "1")) ||
+      false, // DEBUGGING DISABLED - Issue resolved
+    []
+  );
   const [IconComponent, setIconComponent] = React.useState<React.ComponentType<{
     size?: number;
     color?: string;
@@ -438,34 +449,35 @@ export const ModularIcon: React.FC<ModularIconProps> = (props) => {
     className?: string;
   }> | null>(null);
   const [loading, setLoading] = React.useState(false);
-  const computedAriaLabel = ariaHidden ? undefined : (ariaLabel ?? name);
+  const computedAriaLabel = ariaHidden ? undefined : (ariaLabel ?? actualName);
 
   React.useEffect(() => {
     // Check if already loaded
-    if (iconRegistry.has(name)) {
-      setIconComponent(iconRegistry.get(name)!);
+    if (iconRegistry.has(actualName)) {
+      setIconComponent(iconRegistry.get(actualName)!);
       return;
     }
 
-    // In dev, if we have a static fallback for this icon, show it immediately for better UX
-    if (import.meta.env.DEV) {
-      const devFallback = fallbackIcons[name as ModularIconName];
-      if (devFallback) {
-        iconRegistry.set(name, devFallback);
-        setIconComponent(devFallback);
-        if (debugEnabled) {
-          // console.info(`[IconDebug] dev immediate fallback`, { name });
-        }
+    // Always use static fallback for critical icons (delete, lock, etc.) for immediate UX
+    const criticalFallback = fallbackIcons[actualName as ModularIconName];
+    if (criticalFallback) {
+      iconRegistry.set(actualName, criticalFallback);
+      setIconComponent(criticalFallback);
+      if (debugEnabled) {
+        console.info(`[IconDebug] critical fallback used`, {
+          name: actualName,
+        });
       }
+      return; // Don't load dynamically for critical icons
     }
 
-    // Load the icon dynamically (per-icon subpath to avoid bundling the whole library)
-    const loader = iconLoaders[name];
+    // Try dynamic loading first - it should work reliably now
+    const loader = iconLoaders[actualName];
     if (loader && !loading) {
       let isMounted = true;
       setLoading(true);
       if (debugEnabled) {
-        // console.info(`[IconDebug] start load`, { name });
+        console.info(`[IconDebug] start dynamic load`, { name: actualName });
       }
       loader()
         .then((mod) => {
@@ -479,28 +491,56 @@ export const ModularIcon: React.FC<ModularIconProps> = (props) => {
               : (component as { default?: LucideComponent }).default
           ) as LucideComponent;
           if (Comp) {
-            iconRegistry.set(name, Comp);
+            iconRegistry.set(actualName, Comp);
             setIconComponent(Comp);
             if (debugEnabled) {
-              // console.info(`[IconDebug] load success`, { name });
+              console.info(`[IconDebug] dynamic load success`, {
+                name: actualName,
+              });
+            }
+          } else {
+            // Dynamic loading returned invalid component, try static fallback
+            const staticFallback = fallbackIcons[actualName as ModularIconName];
+            if (staticFallback) {
+              iconRegistry.set(actualName, staticFallback);
+              setIconComponent(staticFallback);
+              if (debugEnabled) {
+                console.info(
+                  `[IconDebug] fell back to static after dynamic failure`,
+                  {
+                    name: actualName,
+                  }
+                );
+              }
             }
           }
           setLoading(false);
         })
-        .catch((error) => {
-          // Swallow errors during tests/SSR; keep placeholder visible
+        .catch((_error) => {
+          // Dynamic loading failed, try static fallback
           if (debugEnabled) {
-            // console.error(`[IconDebug] load error`, { name, error });
+            console.error(`[IconDebug] dynamic load error`, {
+              name: actualName,
+              error: _error,
+            });
           } else {
-            // console.error(`Failed to load icon: ${name}`, error);
+            console.error(
+              `Failed to load icon dynamically: ${actualName}`,
+              _error
+            );
           }
-          // Last-chance static fallback for critical icons
-          const Fallback = fallbackIcons[name as ModularIconName];
+          // Last-chance static fallback for any icon that has one
+          const Fallback = fallbackIcons[actualName as ModularIconName];
           if (Fallback) {
-            iconRegistry.set(name, Fallback);
+            iconRegistry.set(actualName, Fallback);
             setIconComponent(Fallback);
             if (debugEnabled) {
-              // console.info(`[IconDebug] used static fallback`, { name });
+              console.info(
+                `[IconDebug] used static fallback after dynamic error`,
+                {
+                  name: actualName,
+                }
+              );
             }
           }
           if (!isMounted) return;
@@ -510,14 +550,14 @@ export const ModularIcon: React.FC<ModularIconProps> = (props) => {
         isMounted = false;
       };
     }
-  }, [name, loading, debugEnabled]);
+  }, [actualName, debugEnabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!IconComponent) {
     // Return a minimal loading placeholder
     return (
       <svg
         data-icon-placeholder="true"
-        data-icon={name}
+        data-icon={actualName}
         role={role ?? "img"}
         aria-label={computedAriaLabel}
         aria-hidden={ariaHidden}
@@ -541,7 +581,7 @@ export const ModularIcon: React.FC<ModularIconProps> = (props) => {
 
   return (
     <span
-      data-icon={name}
+      data-icon={actualName}
       role={role ?? "img"}
       aria-label={computedAriaLabel}
       aria-hidden={ariaHidden}

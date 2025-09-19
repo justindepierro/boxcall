@@ -77,10 +77,7 @@ export const TeamBulletin: React.FC = () => {
   const loadingInitial = !user || !profile || !teamId;
 
   const handleCreateTeam = () => {
-    /* console.info("team.create.attempt", {
-      isSuperAdmin,
-      canCreateTeamUnlimited,
-    }); */
+    // console.info("team.create.attempt", { isSuperAdmin, canCreateTeamUnlimited });
     navigate(ROUTES.CREATE_TEAM);
   };
   const handleJoinTeam = () => {

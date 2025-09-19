@@ -275,14 +275,17 @@ function runContrastScan() {
   // Log summary table
   if (indicatorEl) updateIndicator(issues.length, near, scanned);
   if (issues.length) {
-    // console.info(
-    issues.slice(0, 50).map((i) => ({
-      text: i.node.textContent?.trim()?.slice(0, 40) || "(element)",
-      ratio: i.ratio.toFixed(2),
-      large: i.large,
-      fg: i.fg,
-      bg: i.bg,
-    }));
+    /*
+    console.info(
+      issues.slice(0, 50).map((i) => ({
+        text: i.node.textContent?.trim()?.slice(0, 40) || "(element)",
+        ratio: i.ratio.toFixed(2),
+        large: i.large,
+        fg: i.fg,
+        bg: i.bg,
+      }))
+    );
+    */
     /* console.info(`Contrast issues flagged: ${issues.length}`); */
   } else {
     /* console.info("No contrast issues detected by heuristic scanner."); */

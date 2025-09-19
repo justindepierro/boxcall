@@ -59,16 +59,14 @@ export async function testDatabaseConnection() {
 
     // Only log in development mode to reduce console noise
     if (import.meta.env.DEV) {
-      /* console.info(
-        `🔗 Database: ${accessibleTables.length} accessible tables, ${protectedCount.length} protected`
-      ); */
+      // console.info(`🔗 Database: ${accessibleTables.length} accessible tables, ${protectedCount.length} protected`);
       if (protectedCount.length > 0) {
         /* console.info(`🔒 Protected tables:`, protectedCount); */
       }
     }
 
     return true;
-  } catch (error) {
+  } catch (_error) {
     // console.error("❌ Database connection failed:", error);
     return false;
   }

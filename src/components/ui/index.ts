@@ -32,3 +32,5 @@ export type {
 export { DevHealthCheck } from "./DevHealthCheck";
 export { ErrorBoundary } from "./ErrorBoundary";
 export * from "./IconButton/IconButton";
+export { InlineEdit } from "./InlineEdit";
+export type { InlineEditProps } from "./InlineEdit";

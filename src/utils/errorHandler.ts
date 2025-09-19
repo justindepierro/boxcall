@@ -133,10 +133,10 @@ class ErrorHandler {
     });
   }
 
-  public handleError(error: Error, context?: Record<string, unknown>) {
+  public handleError(_error: Error, context?: Record<string, unknown>) {
     const errorReport: ErrorReport = {
-      message: error.message,
-      stack: error.stack,
+      message: _error.message,
+      stack: _error.stack,
       url: window.location.href,
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
@@ -169,14 +169,14 @@ class ErrorHandler {
     try {
       await this.sendErrors(errors);
       this.clearLocalErrors();
-    } catch (error) {
+    } catch (_error) {
       // Put errors back in queue if sending failed
       this.errorQueue.unshift(...errors);
       // console.warn("Failed to send error reports:", error);
     }
   }
 
-  private async sendErrors(errors: ErrorReport[]) {
+  private async sendErrors(_errors: ErrorReport[]) {
     // TODO: Integrate with actual error reporting service
     if (process.env.NODE_ENV === "development") {
       // console.info("Would send error reports:", errors);

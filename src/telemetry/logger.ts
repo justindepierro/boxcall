@@ -15,10 +15,10 @@ export const logger = {
   info(msg: string, fields?: Fields) {
     if (isDev) console.info(format(msg, fields));
   },
-  warn(msg: string, fields?: Fields) {
+  warn(_msg: string, _fields?: Fields) {
     // console.warn(format(msg, fields));
   },
-  error(msg: string, err?: unknown, fields?: Fields) {
+  error(_msg: string, _err?: unknown, _fields?: Fields) {
     // console.error(format(msg, fields), err);
   },
 };

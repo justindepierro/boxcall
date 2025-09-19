@@ -52,7 +52,7 @@ const selectStyles: SelectStylesConfig = {
     },
   },
   menu: {
-    base: "absolute z-50 w-full mt-1 rounded-md border-subtle elevation-dropdown overflow-hidden surface-card",
+    base: "absolute z-[60] w-full mt-1 rounded-md border-subtle elevation-dropdown overflow-hidden surface-card",
     positions: {
       top: "bottom-full mb-1 mt-0",
       bottom: "top-full mt-1",
@@ -212,6 +212,17 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
             filteredOptions[highlightedIndex]
           ) {
             handleOptionSelect(filteredOptions[highlightedIndex]);
+          } else if (
+            createOption &&
+            searchTerm &&
+            !filteredOptions.some(
+              (opt) => opt.label.toLowerCase() === searchTerm.toLowerCase()
+            )
+          ) {
+            // Create new option if no matches and createOption is enabled
+            onCreateOption?.(searchTerm);
+            setIsOpen(false);
+            setSearchTerm("");
           } else if (!isOpen) {
             setIsOpen(true);
           }
@@ -402,7 +413,11 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
         <div
           ref={ref}
           className={triggerClasses}
-          onClick={() => !disabled && !loading && setIsOpen(!isOpen)}
+          onClick={() => {
+            if (!disabled && !loading) {
+              setIsOpen(!isOpen);
+            }
+          }}
           onKeyDown={handleKeyDown}
           role="combobox"
           aria-expanded={isOpen}

@@ -93,6 +93,36 @@ console.info("Playbook check:", {
       description: "Team plays and strategies",
     });
   }
+  // Practice Planner - Coaches and super_admin only
+  if (
+    userRole === "admin" ||
+    userRole === "coach" ||
+    (userRole as string) === "super_admin"
+  ) {
+    items.push({
+      id: "practice-planner",
+      label: "Practice Planner",
+      icon: "clock",
+      href: "/practice-planner",
+      roles: ["admin", "coach", "super_admin"],
+      description: "Plan and schedule team practices",
+    });
+  }
+  // Game Plan - Coaches and super_admin only
+  if (
+    userRole === "admin" ||
+    userRole === "coach" ||
+    (userRole as string) === "super_admin"
+  ) {
+    items.push({
+      id: "game-plan",
+      label: "Game Plan",
+      icon: "target",
+      href: "/game-plan",
+      roles: ["admin", "coach", "super_admin"],
+      description: "Brian Billick situational methodology",
+    });
+  }
   // Calendar - Available to everyone
   items.push({
     id: "calendar",

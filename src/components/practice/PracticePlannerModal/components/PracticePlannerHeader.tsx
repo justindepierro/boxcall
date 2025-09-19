@@ -82,10 +82,7 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
     if (!scaffoldMode) {
       // Entering scaffold mode - store original blocks and convert to timeline allocation
       let blocksToConvert = practiceBlocks;
-      /* console.info(
-        "Entering scaffold mode with current blocks:",
-        practiceBlocks
-      ); */
+      // console.info("Entering scaffold mode with current blocks:", practiceBlocks);
 
       // Store current blocks as backup for cancel functionality
       onOriginalBlocksChange([...practiceBlocks]);

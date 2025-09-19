@@ -36,7 +36,6 @@ vi.mock("../lib/supabase", () => {
 // 2) Filter noisy console warnings/errors that are known and non-actionable in jsdom
 //    Keep real errors visible.
 const originalError = console.error;
-const originalWarn = console.warn;
 
 const NOISE_PATTERNS: RegExp[] = [
   /No `HydrateFallback` element provided to render during initial hydration/i,
@@ -58,7 +57,9 @@ console.error = (...args: unknown[]) => {
   originalError(...(args as []));
 };
 
+/*
 console.warn = (...args: unknown[]) => {
   if (isNoise(args)) return;
   originalWarn(...(args as []));
 };
+*/

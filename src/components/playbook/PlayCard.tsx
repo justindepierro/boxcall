@@ -381,6 +381,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     as="h4"
                     className="text-slate-700 flex items-center mb-2"
                   >
+                    <Icon name="settings" className="h-4 w-4 mr-1" />{" "}
                     Preferences
                   </Typography>
                   <dl className="space-y-1 text-sm">
@@ -457,7 +458,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     as="h4"
                     className="text-slate-700 mb-1"
                   >
-                    Notes
+                    <Icon name="file" className="h-4 w-4 mr-1 inline" /> Notes
                   </Typography>
                   <p className="text-sm text-slate-700 whitespace-pre-line">
                     {play.notes}
@@ -473,7 +474,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     as="h4"
                     className="text-slate-700"
                   >
-                    Tags & Roles
+                    <Icon name="tag" className="h-4 w-4 mr-1 inline" /> Tags &
+                    Roles
                   </Typography>
                   <Button
                     size="xs"
@@ -668,7 +670,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     as="h4"
                     className="text-slate-700 mb-1"
                   >
-                    Add to Workflow
+                    <Icon name="zap" className="h-4 w-4 mr-1 inline" /> Add to
+                    Workflow
                   </Typography>
                   <p className="text-xs text-slate-500">
                     Build practice scripts and game plans from this play

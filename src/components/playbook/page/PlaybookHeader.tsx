@@ -1,13 +1,21 @@
 import React from "react";
 import { Icon } from "../../ui/Icon";
-import { Badge, ProgressBadge, ComplexityBadge } from "../../ui/Badge";
+import { Badge } from "../../ui/Badge";
 import { Typography } from "../../design-system/Typography";
+import { UniversalSearchBar } from "../../playbook/UniversalSearchBar";
+import type { Play } from "../../../types/play";
 
 export type PlaybookHeaderProps = {
   title?: string;
   playsCreated: number;
   diagramCoverage: number;
   streakDays: number;
+  // Search functionality
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  onCreatePlay?: (playName: string) => void;
+  teamId: string;
+  plays?: Play[]; // For universal search
 };
 
 export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
@@ -15,92 +23,119 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
   playsCreated,
   diagramCoverage,
   streakDays,
+  searchQuery,
+  onSearchChange,
+  onCreatePlay,
+  teamId,
+  plays = [],
 }) => {
   return (
-    <header className="surface-subtle shadow-sm border-b border-subtle">
+    <header className="surface-subtle border-b border-subtle">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-4">
-            <Icon name="file" className="h-8 w-8 text-jade-600 mr-3" />
-            <div className="flex flex-col">
-              <Typography
-                variant="headline-md"
-                as="h1"
-                className="text-slate-900"
-              >
-                {title}
-              </Typography>
-              <div className="flex items-center space-x-2 mt-1">
-                <ProgressBadge
-                  progress={Math.round((playsCreated / 100) * 100)}
+        <div className="flex items-center justify-between py-6">
+          {/* Left side - Title, search, and branding */}
+          <div className="flex items-center space-x-6 flex-1">
+            <div className="flex items-center space-x-4">
+              <div className="surface-card flex items-center justify-center w-12 h-12 rounded-lg shadow-sm relative overflow-hidden">
+                <div className="absolute inset-0 bg-blue-600 opacity-10" />
+                <Icon
+                  name="file"
+                  className="h-6 w-6 text-blue-600 relative z-10"
+                />
+              </div>
+              <div>
+                <Typography
+                  variant="headline-lg"
+                  as="h1"
+                  className="text-slate-900 font-semibold"
                 >
-                  {playsCreated}/100 plays
-                </ProgressBadge>
-                <Badge variant="info" size="sm">
-                  Diagram {diagramCoverage}%
-                </Badge>
-                {streakDays > 0 && (
-                  <Badge variant="success" size="sm">
-                    {streakDays} day streak!
-                  </Badge>
-                )}
+                  {title}
+                </Typography>
+                <p className="text-sm text-slate-600 mt-0.5">
+                  Design, organize, and execute your offensive plays
+                </p>
               </div>
             </div>
+
+            {/* Search Bar - positioned next to title */}
+            <div className="flex-1 max-w-md">
+              <UniversalSearchBar
+                searchQuery={searchQuery}
+                onSearchChange={onSearchChange}
+                onCreatePlay={onCreatePlay}
+                teamId={teamId}
+                plays={plays}
+                placeholder="Search across all pages..."
+                className="w-full"
+              />
+            </div>
           </div>
-          <div />
-        </div>
-        <div className="mt-2 surface-card decorative-gradient bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-subtle">
-          <div className="flex items-center justify-between">
-            <div>
+
+          {/* Right side - Key metrics */}
+          <div className="flex items-center space-x-6">
+            {/* Plays Progress */}
+            <div className="text-center">
               <Typography
-                variant="label-lg"
-                as="h3"
-                className="text-purple-900 flex items-center gap-2"
+                variant="headline-md"
+                as="div"
+                className="text-slate-900 font-semibold"
               >
-                Week 3 Feature: Complexity Challenge System
-                <Badge variant="premium" size="sm">
-                  NEW
-                </Badge>
+                {playsCreated}
               </Typography>
-              <p className="text-sm text-purple-700 mt-1">
-                Your plays are analyzed for complexity and rewarded with badges.
-              </p>
+              <div className="text-xs text-slate-500 uppercase tracking-wide">
+                Plays Created
+              </div>
+              <div className="mt-1 w-16 h-1 bg-slate-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                  style={{
+                    width: `${Math.min((playsCreated / 100) * 100, 100)}%`,
+                  }}
+                />
+              </div>
             </div>
-            <div className="flex gap-2">
-              <ComplexityBadge
-                metrics={{
-                  routeCount: 12,
-                  formationComplexity: 10,
-                  personnelVariety: 15,
-                  conceptDifficulty: 8,
-                  totalScore: 45,
-                  badge: "intermediate",
-                }}
-                size="sm"
-              />
-              <ComplexityBadge
-                metrics={{
-                  routeCount: 25,
-                  formationComplexity: 20,
-                  personnelVariety: 20,
-                  conceptDifficulty: 15,
-                  totalScore: 80,
-                  badge: "expert",
-                }}
-                size="sm"
-              />
-              <ComplexityBadge
-                metrics={{
-                  routeCount: 30,
-                  formationComplexity: 20,
-                  personnelVariety: 25,
-                  conceptDifficulty: 20,
-                  totalScore: 95,
-                  badge: "innovative",
-                }}
-                size="sm"
-              />
+
+            {/* Diagram Coverage */}
+            <div className="text-center">
+              <Typography
+                variant="headline-md"
+                as="div"
+                className="text-slate-900 font-semibold"
+              >
+                {diagramCoverage}%
+              </Typography>
+              <div className="text-xs text-slate-500 uppercase tracking-wide">
+                Diagram Coverage
+              </div>
+              <div className="mt-1 w-16 h-1 bg-slate-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-green-600 rounded-full transition-all duration-500"
+                  style={{ width: `${diagramCoverage}%` }}
+                />
+              </div>
             </div>
+
+            {/* Streak */}
+            {streakDays > 0 && (
+              <div className="text-center">
+                <Typography
+                  variant="headline-md"
+                  as="div"
+                  className="text-slate-900 font-semibold"
+                >
+                  {streakDays}
+                </Typography>
+                <div className="text-xs text-slate-500 uppercase tracking-wide">
+                  Day Streak
+                </div>
+                <div className="mt-1 flex justify-center">
+                  <Badge variant="success" size="sm" className="text-xs">
+                    <Icon name="zap" className="h-3 w-3 mr-1" />
+                    Active
+                  </Badge>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

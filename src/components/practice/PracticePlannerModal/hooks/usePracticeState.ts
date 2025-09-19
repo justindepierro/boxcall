@@ -121,7 +121,7 @@ export const usePracticeState = (event: CalendarEvent) => {
         const savedBlocks = JSON.parse(savedPractice);
         const blocksWithTimes = recalculateBlockTimes(savedBlocks);
         setPracticeBlocks(blocksWithTimes);
-      } catch (error) {
+      } catch (_error) {
         // console.error("Error loading saved practice plan:", error);
       }
     }

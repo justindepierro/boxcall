@@ -8,6 +8,8 @@ export const ROUTES = {
   CALENDAR: "/calendar",
   TEAMS: "/teams",
   PLAYBOOK: "/playbook",
+  PRACTICE_PLANNER: "/practice-planner",
+  GAME_PLAN: "/game-plan",
   BOXCALL: "/boxcall",
   LOGOUT: "/logout",
   CREATE_TEAM: "/create-team",
@@ -21,6 +23,7 @@ export const ROUTES = {
   CONTACT: "/contact",
   DEV_DIAGNOSTICS: "/dev/diagnostics",
   COLLABORATIVE_DEMO: "/collaborative-demo",
+  TEMPLATES: "/templates",
 } as const;
 
 export const teamRoutes = {

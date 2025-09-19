@@ -26,7 +26,7 @@ export class AuthDebug {
       if (profiles && profiles.length > 0) {
         // console.info(`✅ Found ${profiles.length} profile(s):`);
         profiles.forEach((_profile) => {
-          // console.info(`  - ${_profile.full_name || "No Name"} (${_profile.email || "No Email"}) - Role: ${_profile.role}`);
+          // console.info(`  - ${_profile.full_name || "No Name"} (${_profile.email || "No Email"}) - Role: ${_profile.role}`)
         });
       } else {
         // console.info("⚠️ No profiles found in database!");

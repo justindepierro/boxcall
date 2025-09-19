@@ -392,7 +392,7 @@ export class ReactNativePlatformService {
     // Set up native app state
     this.nativeAppState = await this.getNativeAppState();
 
-    // console.info("React Native app initialized successfully", this.nativeAppState);
+    // console.info("React Native app initialized successfully", this.nativeAppState)
     return this.nativeAppState;
   }
 

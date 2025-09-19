@@ -24,7 +24,7 @@ export class ThumbnailUploadService {
       if (error) throw error;
       const { data } = supabase.storage.from("play-assets").getPublicUrl(path);
       return data.publicUrl;
-    } catch (e) {
+    } catch (_e) {
       // console.warn("Thumbnail upload failed; using data URL", e);
       return dataUrl; // graceful fallback
     }

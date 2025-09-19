@@ -200,7 +200,7 @@ export const loadPracticeFromStorage = (
   if (savedPractice) {
     try {
       return JSON.parse(savedPractice);
-    } catch (error) {
+    } catch (_error) {
       // console.error("Error loading saved practice plan:", error);
       return null;
     }

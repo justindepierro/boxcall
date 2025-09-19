@@ -156,7 +156,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         .getPublicUrl(`${currentProfile.id}/${avatarFile.name}`);
 
       return urlData?.publicUrl || null;
-    } catch (error) {
+    } catch (_error) {
       // console.error("Avatar upload failed:", error);
       return null;
     } finally {
@@ -191,7 +191,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         onProfileUpdate(updatedProfile);
         onClose();
       }
-    } catch (error) {
+    } catch (_error) {
       // console.error("Profile update failed:", error);
       // TODO: Show error message to user
     } finally {
@@ -215,7 +215,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
           ? "Quick Edit Profile"
           : `Edit ${userRole.charAt(0).toUpperCase() + userRole.slice(1)} Profile`
       }
-      size="lg"
+      size="lg xl:2xl"
       className="max-h-[90vh] overflow-y-auto"
     >
       <form onSubmit={handleSubmit} className="space-y-6">

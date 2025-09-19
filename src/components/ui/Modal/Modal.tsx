@@ -15,8 +15,18 @@ export interface ModalProps {
   title?: string;
   /** Modal content */
   children: ReactNode;
-  /** Modal size */
-  size?: "sm" | "md" | "lg" | "xl";
+  /** Modal size - can be responsive with space-separated values */
+  size?:
+    | "sm"
+    | "md"
+    | "lg"
+    | "xl"
+    | "2xl"
+    | "3xl"
+    | "4xl"
+    | "5xl"
+    | "full"
+    | string;
   /** Modal type for different styling */
   type?: "default" | "alert" | "confirm";
   /** Whether clicking the backdrop closes the modal */
@@ -29,8 +39,42 @@ export interface ModalProps {
   className?: string;
   /** Custom z-index */
   zIndex?: number;
+  /** Force landscape orientation on mobile */
+  forceLandscapeOnMobile?: boolean;
 }
 const getModalSizeStyles = (size: ModalProps["size"]) => {
+  // Handle responsive sizes (space-separated classes)
+  if (size && size.includes(" ")) {
+    return size
+      .split(" ")
+      .map((s) => {
+        switch (s) {
+          case "sm":
+            return "max-w-sm";
+          case "md":
+            return "max-w-md";
+          case "lg":
+            return "max-w-lg";
+          case "xl":
+            return "max-w-xl";
+          case "2xl":
+            return "max-w-2xl";
+          case "3xl":
+            return "max-w-3xl";
+          case "4xl":
+            return "max-w-4xl";
+          case "5xl":
+            return "max-w-5xl";
+          case "full":
+            return "max-w-full";
+          default:
+            return s.startsWith("max-w-") ? s : `max-w-${s}`;
+        }
+      })
+      .join(" ");
+  }
+
+  // Handle single sizes
   switch (size) {
     case "sm":
       return "max-w-sm";
@@ -40,6 +84,16 @@ const getModalSizeStyles = (size: ModalProps["size"]) => {
       return "max-w-lg";
     case "xl":
       return "max-w-xl";
+    case "2xl":
+      return "max-w-2xl";
+    case "3xl":
+      return "max-w-3xl";
+    case "4xl":
+      return "max-w-4xl";
+    case "5xl":
+      return "max-w-5xl";
+    case "full":
+      return "max-w-full";
     default:
       return "max-w-md";
   }
@@ -70,9 +124,63 @@ export const Modal: React.FC<ModalProps> = ({
   footer,
   className = "",
   zIndex = 9999,
+  forceLandscapeOnMobile = false,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
+  const previousOrientation = useRef<string | null>(null);
+
+  // Orientation management for mobile
+  useEffect(() => {
+    if (isOpen && forceLandscapeOnMobile) {
+      // Check if we're on mobile
+      const isMobile = window.innerWidth < 768;
+
+      if (
+        isMobile &&
+        "orientation" in window.screen &&
+        window.screen.orientation
+      ) {
+        // Store current orientation
+        previousOrientation.current = window.screen.orientation.type;
+
+        // Request landscape orientation if not already landscape
+        if (!window.screen.orientation.type.includes("landscape")) {
+          try {
+            // Use type assertion for extended orientation API
+            const orientation = window.screen
+              .orientation as ScreenOrientation & {
+              lock?: (orientation: string) => Promise<void>;
+            };
+            orientation.lock?.("landscape").catch((err: unknown) => {
+              console.warn("Could not lock orientation:", err);
+            });
+          } catch (err) {
+            console.warn("Orientation lock not supported:", err);
+          }
+        }
+      }
+    }
+
+    return () => {
+      // Restore previous orientation on close
+      if (
+        previousOrientation.current &&
+        "orientation" in window.screen &&
+        window.screen.orientation
+      ) {
+        try {
+          const orientation = window.screen.orientation as ScreenOrientation & {
+            unlock?: () => Promise<void>;
+          };
+          orientation.unlock?.();
+        } catch (err) {
+          console.warn("Could not unlock orientation:", err);
+        }
+      }
+      previousOrientation.current = null;
+    };
+  }, [isOpen, forceLandscapeOnMobile]);
   // Focus management
   useEffect(() => {
     if (isOpen) {

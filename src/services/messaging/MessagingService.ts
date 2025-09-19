@@ -158,9 +158,7 @@ export class MessagingService extends EventEmitter {
     this.isConnected = true;
 
     // In real implementation: WebSocket connection setup
-    /* console.info(
-      `[MessagingService] Connected user ${userId} to team ${teamId}`
-    ); */
+    // console.info(`[MessagingService] Connected user ${userId} to team ${teamId}`);
 
     this.emit("connected", { userId, teamId });
 

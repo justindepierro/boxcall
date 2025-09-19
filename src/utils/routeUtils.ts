@@ -42,7 +42,7 @@ export const useSmartPreloading = () => {
     routesToPreload.forEach((route) => {
       // Preload after a small delay to not interfere with current page loading
       setTimeout(() => {
-        preloadRoute(route).catch((error) => {
+        preloadRoute(route).catch((_error) => {
           // console.warn("Route preloading failed:", route, error);
         });
       }, 100);

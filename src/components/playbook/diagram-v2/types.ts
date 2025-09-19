@@ -59,6 +59,7 @@ export interface EditorToolState {
     | "add-player"
     | "route"
     | "draw"
+    | "shape"
     | "motion"
     | "delete";
   routeMode?: "line" | "curve"; // how new route segments should be created
@@ -70,6 +71,7 @@ export interface EditorToolState {
     | "curve"
     | "dashed"
     | "dotted"; // drawing subtype
+  shapeMode?: "rectangle" | "circle" | "triangle"; // shape creation subtype
   drawColor?: string;
   drawWidth?: number;
   drawArrowHead?: "none" | "start" | "end" | "both";
@@ -94,6 +96,12 @@ export interface EditorToolState {
     fromPlayerId?: string;
     toPlayerId?: string;
     freehand?: boolean; // capture continuous points
+  };
+  // Shape in-progress (rectangle/circle/triangle)
+  shaping?: {
+    type: NonNullable<EditorToolState["shapeMode"]>;
+    start: RoutePoint;
+    end: RoutePoint;
   };
   snap: boolean;
   snapGrid: number; // percent units (e.g., 2 => every 2%)
@@ -176,6 +184,7 @@ export type DiagramEditorAction =
     }
   | { type: "COMMIT_ROUTE_EDIT" }
   | { type: "DELETE_ROUTE"; routeId: string }
+  | { type: "SET_SHAPE_MODE"; mode: NonNullable<EditorToolState["shapeMode"]> }
   // Annotation actions
   | {
       type: "START_ANNOTATION";
@@ -234,7 +243,16 @@ export type DiagramEditorAction =
   | { type: "APPLY_FORMATION"; formation: string }
   | { type: "UNDO" }
   | { type: "REDO" }
-  | { type: "MARK_SAVED" };
+  | { type: "MARK_SAVED" }
+  // Shape creation actions
+  | {
+      type: "START_SHAPE";
+      shapeType: NonNullable<EditorToolState["shapeMode"]>;
+      start: RoutePoint;
+    }
+  | { type: "PREVIEW_SHAPE"; end: RoutePoint }
+  | { type: "COMMIT_SHAPE" }
+  | { type: "CANCEL_SHAPE" };
 
 export const createEmptyDocument = (): DiagramDocument => ({
   version: 1,
@@ -356,7 +374,10 @@ export type AnnotationType =
   | "connector"
   | "dashed"
   | "dotted"
-  | "curve";
+  | "curve"
+  | "rectangle"
+  | "circle"
+  | "triangle";
 export interface DiagramAnnotationBase {
   id: string;
   type: AnnotationType;
@@ -385,9 +406,34 @@ export interface DiagramAnnotationConnector extends DiagramAnnotationBase {
   fromPlayerId: string;
   toPlayerId: string;
 }
+export interface DiagramAnnotationRectangle extends DiagramAnnotationBase {
+  type: "rectangle";
+  x: number; // top-left x (0-100%)
+  y: number; // top-left y (0-100%)
+  width: number; // width in percent
+  height: number; // height in percent
+  fill?: string; // fill color
+}
+export interface DiagramAnnotationCircle extends DiagramAnnotationBase {
+  type: "circle";
+  x: number; // center x (0-100%)
+  y: number; // center y (0-100%)
+  radius: number; // radius in percent
+  fill?: string; // fill color
+}
+export interface DiagramAnnotationTriangle extends DiagramAnnotationBase {
+  type: "triangle";
+  x: number; // center x (0-100%)
+  y: number; // center y (0-100%)
+  size: number; // size in percent
+  fill?: string; // fill color
+}
 export type DiagramAnnotation =
   | DiagramAnnotationLine
   | DiagramAnnotationArrow
   | DiagramAnnotationCurve
   | DiagramAnnotationFreehand
-  | DiagramAnnotationConnector;
+  | DiagramAnnotationConnector
+  | DiagramAnnotationRectangle
+  | DiagramAnnotationCircle
+  | DiagramAnnotationTriangle;

@@ -124,9 +124,7 @@ export const usePracticeState = (event: CalendarEvent) => {
     (newScaffoldMode: boolean) => {
       if (newScaffoldMode && !scaffoldMode) {
         // Entering scaffold mode - convert existing blocks to timeline allocation
-        // console.info(
-        //   "🎯 ENTERING SCAFFOLD MODE - Converting blocks to timeline!"
-        // );
+        // console.info("🎯 ENTERING SCAFFOLD MODE - Converting blocks to timeline!");
         // console.info("📦 Current practice blocks:", practiceBlocks);
 
         // Store current blocks as backup for cancel functionality

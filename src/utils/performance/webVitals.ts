@@ -33,12 +33,7 @@ const reportVital = (vital: Omit<VitalsData, "timestamp">) => {
   pushGlobal(withTime);
   // Log to console in development
   if (process.env.NODE_ENV === "development") {
-    /* console.info("Core Web Vital:", {
-      name: withTime.name,
-      value: withTime.value,
-      threshold: withTime.threshold,
-      delta: withTime.value - withTime.threshold,
-    }); */
+    // console.info("Core Web Vital:", { name: withTime.name, value: withTime.value, threshold: withTime.threshold, delta: withTime.value - withTime.threshold });
   }
   // Send to analytics in production
   if (process.env.NODE_ENV === "production") {

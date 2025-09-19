@@ -30,12 +30,12 @@ function normalize(value: string | undefined | null): string {
  * Uses key offensive tags and formation fields for clarity.
  */
 export function generatePlayName(play: Play): string {
-  if (!play || typeof play !== "object") return "[Untitled Play]";
+  if (!play || typeof play !== "object") return "[UNTITLED PLAY]";
   const oneWord = safe(play.one_word_play);
   if (oneWord) {
     return oneWord.toUpperCase();
   }
-  return generateConcatenatedName(play);
+  return generateConcatenatedName(play).toUpperCase();
 }
 /**
  * Generates the concatenated name from play parts
@@ -94,9 +94,11 @@ export function generatePlayNamePlain(play: Play): string {
 export function getDisplayName(play: Play, showOneWord: boolean): string {
   if (showOneWord) {
     const oneWord = safe(play.one_word_play);
-    return oneWord ? oneWord.toUpperCase() : generatePlayName(play);
+    return oneWord
+      ? oneWord.toUpperCase()
+      : generatePlayName(play).toUpperCase();
   }
-  return generatePlayName(play);
+  return generatePlayName(play).toUpperCase();
 }
 /**
  * Gets the secondary/subtitle text
@@ -104,7 +106,7 @@ export function getDisplayName(play: Play, showOneWord: boolean): string {
 export function getSubtitleText(play: Play, showOneWord: boolean): string {
   if (showOneWord && play.one_word_play) {
     // When showing one-word, show the full concatenated name underneath
-    return generateConcatenatedName(play);
+    return generateConcatenatedName(play).toUpperCase();
   }
   return "";
 }

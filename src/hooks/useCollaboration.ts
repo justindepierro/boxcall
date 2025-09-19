@@ -330,7 +330,7 @@ export function useCollaboration(
       updateSubscribers.forEach((callback) => {
         try {
           callback(update);
-        } catch (error) {
+        } catch (_error) {
           // console.error("Error in update subscriber:", error);
         }
       });

@@ -7,7 +7,13 @@ import React, {
 } from "react";
 import { useDiagramEditor } from "./context";
 import { Button } from "../../ui/Button/Button";
-import type { DiagramAnnotation, DiagramAnnotationConnector } from "./types";
+import type {
+  DiagramAnnotation,
+  DiagramAnnotationConnector,
+  DiagramAnnotationRectangle,
+  DiagramAnnotationCircle,
+  DiagramAnnotationTriangle,
+} from "./types";
 import { telemetry } from "../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../telemetry/events";
 
@@ -747,12 +753,17 @@ export const FieldCanvas: React.FC<{
     if (state.ui.tool === "draw" && state.ui.annotating?.freehand) {
       dispatch({ type: "COMMIT_ANNOTATION" });
     }
+    // If in shape mode, commit on mouse up
+    if (state.ui.tool === "shape" && state.ui.shaping) {
+      dispatch({ type: "COMMIT_SHAPE" });
+    }
   }, [
     doc.players,
     selectionBox,
     dispatch,
     state.ui.tool,
     state.ui.annotating,
+    state.ui.shaping,
     state.ui.selectedAnnotationId,
   ]);
 
@@ -811,6 +822,13 @@ export const FieldCanvas: React.FC<{
         hasMoved: false,
       };
       // Don't clear selection yet; wait to see if this becomes a marquee drag.
+    } else if (state.ui.tool === "shape") {
+      const start = clientToWorld(e);
+      dispatch({
+        type: "START_SHAPE",
+        shapeType: state.ui.shapeMode || "rectangle",
+        start: { x: start.x, y: start.y },
+      });
     }
   };
   const endPan = () => {
@@ -924,6 +942,9 @@ export const FieldCanvas: React.FC<{
           dispatch({ type: "PREVIEW_ANNOTATION", point: { x, y } });
         }
       }
+    }
+    if (state.ui.tool === "shape" && state.ui.shaping) {
+      dispatch({ type: "PREVIEW_SHAPE", end: { x, y } });
     }
   };
 
@@ -2272,6 +2293,205 @@ export const FieldCanvas: React.FC<{
               </g>
             );
           })}
+          {/* Shape Annotations */}
+          {(doc.annotations || [])
+            .filter((a) => ["rectangle", "circle", "triangle"].includes(a.type))
+            .map((a: DiagramAnnotation) => {
+              const color = a.color || "#111827";
+              const width = a.width || 3;
+              const isSelected = state.ui.selectedAnnotationId === a.id;
+              const isHover = hoverAnnId === a.id;
+              const highlightStroke =
+                isSelected || isHover
+                  ? isSelected
+                    ? "#3b82f6"
+                    : "#22d3ee"
+                  : undefined;
+
+              if (a.type === "rectangle") {
+                const rect = a as DiagramAnnotationRectangle;
+                const x = (rect.x / 100) * 1600;
+                const y = (rect.y / 100) * 900;
+                const w = (rect.width / 100) * 1600;
+                const h = (rect.height / 100) * 900;
+                return (
+                  <g
+                    key={a.id}
+                    className="cursor-move"
+                    onMouseDown={(e) => {
+                      e.stopPropagation();
+                      dispatch({ type: "SELECT_ANNOTATION", id: a.id });
+                    }}
+                    onMouseEnter={(e) => {
+                      e.stopPropagation();
+                      setHoverAnnId(a.id);
+                    }}
+                    onMouseLeave={(e) => {
+                      e.stopPropagation();
+                      setHoverAnnId((curr) =>
+                        curr === a.id ? undefined : curr
+                      );
+                    }}
+                  >
+                    {isSelected && showSelectionPulse && (
+                      <rect
+                        x={x - 5}
+                        y={y - 5}
+                        width={w + 10}
+                        height={h + 10}
+                        fill="none"
+                        stroke="#3b82f6"
+                        strokeWidth={width + 5}
+                        opacity={0.35}
+                        className="animate-selectedBreathe"
+                      />
+                    )}
+                    {highlightStroke && (
+                      <rect
+                        x={x - 4}
+                        y={y - 4}
+                        width={w + 8}
+                        height={h + 8}
+                        fill="none"
+                        stroke={highlightStroke}
+                        strokeWidth={width + 4}
+                        opacity={0.25}
+                      />
+                    )}
+                    <rect
+                      x={x}
+                      y={y}
+                      width={w}
+                      height={h}
+                      fill={rect.fill || "transparent"}
+                      stroke={color}
+                      strokeWidth={width}
+                    />
+                  </g>
+                );
+              }
+
+              if (a.type === "circle") {
+                const circle = a as DiagramAnnotationCircle;
+                const cx = (circle.x / 100) * 1600;
+                const cy = (circle.y / 100) * 900;
+                const r = ((circle.radius / 100) * Math.sqrt(1600 * 900)) / 2;
+                return (
+                  <g
+                    key={a.id}
+                    className="cursor-move"
+                    onMouseDown={(e) => {
+                      e.stopPropagation();
+                      dispatch({ type: "SELECT_ANNOTATION", id: a.id });
+                    }}
+                    onMouseEnter={(e) => {
+                      e.stopPropagation();
+                      setHoverAnnId(a.id);
+                    }}
+                    onMouseLeave={(e) => {
+                      e.stopPropagation();
+                      setHoverAnnId((curr) =>
+                        curr === a.id ? undefined : curr
+                      );
+                    }}
+                  >
+                    {isSelected && showSelectionPulse && (
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r={r + 5}
+                        fill="none"
+                        stroke="#3b82f6"
+                        strokeWidth={width + 5}
+                        opacity={0.35}
+                        className="animate-selectedBreathe"
+                      />
+                    )}
+                    {highlightStroke && (
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r={r + 4}
+                        fill="none"
+                        stroke={highlightStroke}
+                        strokeWidth={width + 4}
+                        opacity={0.25}
+                      />
+                    )}
+                    <circle
+                      cx={cx}
+                      cy={cy}
+                      r={r}
+                      fill={circle.fill || "transparent"}
+                      stroke={color}
+                      strokeWidth={width}
+                    />
+                  </g>
+                );
+              }
+
+              if (a.type === "triangle") {
+                const triangle = a as DiagramAnnotationTriangle;
+                const cx = (triangle.x / 100) * 1600;
+                const cy = (triangle.y / 100) * 900;
+                const size =
+                  ((triangle.size / 100) * Math.sqrt(1600 * 900)) / 2;
+                const points = [
+                  [cx, cy - size],
+                  [cx - size * 0.866, cy + size * 0.5],
+                  [cx + size * 0.866, cy + size * 0.5],
+                ];
+                const pointsStr = points.map(([x, y]) => `${x},${y}`).join(" ");
+                return (
+                  <g
+                    key={a.id}
+                    className="cursor-move"
+                    onMouseDown={(e) => {
+                      e.stopPropagation();
+                      dispatch({ type: "SELECT_ANNOTATION", id: a.id });
+                    }}
+                    onMouseEnter={(e) => {
+                      e.stopPropagation();
+                      setHoverAnnId(a.id);
+                    }}
+                    onMouseLeave={(e) => {
+                      e.stopPropagation();
+                      setHoverAnnId((curr) =>
+                        curr === a.id ? undefined : curr
+                      );
+                    }}
+                  >
+                    {isSelected && showSelectionPulse && (
+                      <polygon
+                        points={pointsStr}
+                        fill="none"
+                        stroke="#3b82f6"
+                        strokeWidth={width + 5}
+                        opacity={0.35}
+                        className="animate-selectedBreathe"
+                      />
+                    )}
+                    {highlightStroke && (
+                      <polygon
+                        points={pointsStr}
+                        fill="none"
+                        stroke={highlightStroke}
+                        strokeWidth={width + 4}
+                        opacity={0.25}
+                      />
+                    )}
+                    <polygon
+                      points={pointsStr}
+                      fill={triangle.fill || "transparent"}
+                      stroke={color}
+                      strokeWidth={width}
+                    />
+                  </g>
+                );
+              }
+
+              return null;
+            })}
           {/* Player edit popover (single selection) */}
           {(() => {
             const sel = state.ui.selectedIds || [];
@@ -3129,6 +3349,83 @@ export const FieldCanvas: React.FC<{
                   strokeDasharray="6 4"
                 />
               );
+            })()}
+          {/* Shape preview */}
+          {state.ui.shaping &&
+            (() => {
+              const s = state.ui.shaping;
+              const color = state.ui.drawColor || "#111827";
+              const width = state.ui.drawWidth || 3;
+
+              if (s.type === "rectangle") {
+                const x = Math.min(s.start.x, s.end.x);
+                const y = Math.min(s.start.y, s.end.y);
+                const w = Math.abs(s.end.x - s.start.x);
+                const h = Math.abs(s.end.y - s.start.y);
+                return (
+                  <rect
+                    x={(x / 100) * 1600}
+                    y={(y / 100) * 900}
+                    width={(w / 100) * 1600}
+                    height={(h / 100) * 900}
+                    fill="transparent"
+                    stroke={color}
+                    strokeWidth={width}
+                    strokeDasharray="6 4"
+                  />
+                );
+              }
+
+              if (s.type === "circle") {
+                const centerX = (s.start.x + s.end.x) / 2;
+                const centerY = (s.start.y + s.end.y) / 2;
+                const radius =
+                  Math.sqrt(
+                    Math.pow(s.end.x - s.start.x, 2) +
+                      Math.pow(s.end.y - s.start.y, 2)
+                  ) / 2;
+                return (
+                  <circle
+                    cx={(centerX / 100) * 1600}
+                    cy={(centerY / 100) * 900}
+                    r={((radius / 100) * Math.sqrt(1600 * 900)) / 2}
+                    fill="transparent"
+                    stroke={color}
+                    strokeWidth={width}
+                    strokeDasharray="6 4"
+                  />
+                );
+              }
+
+              if (s.type === "triangle") {
+                const centerX = (s.start.x + s.end.x) / 2;
+                const centerY = (s.start.y + s.end.y) / 2;
+                const size =
+                  Math.sqrt(
+                    Math.pow(s.end.x - s.start.x, 2) +
+                      Math.pow(s.end.y - s.start.y, 2)
+                  ) / 2;
+                const cx = (centerX / 100) * 1600;
+                const cy = (centerY / 100) * 900;
+                const sz = ((size / 100) * Math.sqrt(1600 * 900)) / 2;
+                const points = [
+                  [cx, cy - sz],
+                  [cx - sz * 0.866, cy + sz * 0.5],
+                  [cx + sz * 0.866, cy + sz * 0.5],
+                ];
+                const pointsStr = points.map(([x, y]) => `${x},${y}`).join(" ");
+                return (
+                  <polygon
+                    points={pointsStr}
+                    fill="transparent"
+                    stroke={color}
+                    strokeWidth={width}
+                    strokeDasharray="6 4"
+                  />
+                );
+              }
+
+              return null;
             })()}
           {selectionBox && (
             <g>

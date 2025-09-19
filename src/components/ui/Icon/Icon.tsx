@@ -144,7 +144,7 @@ type AccessibleSvgProps = Pick<
 >;
 
 export interface IconProps extends AccessibleSvgProps {
-  name: IconName;
+  name: IconName | { name: IconName };
   size?: IconSize;
   color?: IconColor;
   className?: string;
@@ -182,76 +182,93 @@ export const Icon: React.FC<IconProps> = (props) => {
       : (color as unknown as ModularIconProps["color"]);
 
   // Runtime guard to ensure the name is a supported ModularIconName; fallback to 'help-circle'
-  const toModularName = (n: IconName): ModularIconName => {
+  const toModularName = (n: IconName | { name: IconName }): ModularIconName => {
+    // Handle case where an object with name property is passed
+    const actualName =
+      typeof n === "object" && n !== null && "name" in n ? n.name : n;
     const debugEnabled =
       (typeof window !== "undefined" &&
         // @ts-expect-error custom flag on window
         (window.__ICON_DEBUG__ === true ||
           localStorage.getItem("debugIcons") === "1")) ||
-      false;
+      false; // DEBUGGING DISABLED - Issue resolved
+    if (debugEnabled) {
+      console.info(`[IconDebug] toModularName input:`, {
+        input: n,
+        actualName,
+      });
+    }
     const supported = new Set<ModularIconName>([
-      "home",
       "menu",
       "close",
-      "settings",
-      "back",
-      "forward",
-      "chevron-up",
-      "chevron-down",
-      "chevron-left",
-      "chevron-right",
-      "play",
-      "pause",
-      "calendar",
-      "clock",
-      "team",
-      "user",
-      "users",
-      "book",
-      "edit",
-      "delete",
       "plus",
       "plus-circle",
       "minus",
-      "tag",
-      "save",
-      "download",
-      "upload",
-      "search",
-      "filter",
+      "edit",
+      "delete",
       "check",
-      "warning",
       "alert-triangle",
-      "refresh-cw",
+      "warning",
       "error",
       "info",
       "alert",
       "check-square",
       "clipboard",
-      "wrench",
-      "bug",
+      "tag",
+      "calendar",
+      "clock",
+      "users",
+      "user",
+      "user-plus",
       "target",
-      "zap",
+      "trophy",
       "award",
       "medal",
-      "trophy",
-      "flag",
       "star",
       "trending-up",
+      "zap",
+      "flag",
+      "shield",
       "activity",
       "chart",
       "bar-chart",
-      "shield",
-      "phone",
-      "mail",
+      "map",
+      "map-pin",
       "message",
-      "file",
-      "copy",
-      "folder",
-      "pdf",
-      "database",
+      "home",
+      "refresh-cw",
+      "refresh",
+      "wrench",
+      "help-circle",
+      "bug",
+      "wifi-off",
+      "server",
+      "save",
+      "download",
+      "upload",
+      "search",
+      "filter",
       "image",
       "camera",
+      "arrow-left",
+      "arrow-right",
+      "arrow-up",
+      "arrow-down",
+      "chevron-down",
+      "chevron-up",
+      "chevron-left",
+      "chevron-right",
+      "play",
+      "pause",
+      "team",
+      "book",
+      "file",
+      "pdf",
+      "copy",
+      "folder",
+      "database",
+      "phone",
+      "mail",
       "eye",
       "eye-off",
       "lock",
@@ -259,29 +276,23 @@ export const Icon: React.FC<IconProps> = (props) => {
       "key",
       "hash",
       "clipboard-list",
-      "user-plus",
       "check-circle",
       "grid",
       "power",
-      "arrow-up",
-      "arrow-down",
-      "arrow-left",
-      "arrow-right",
-      "map",
-      "map-pin",
-      "crown",
-      "football",
-      "wifi-off",
-      "server",
-      "toggle-right",
-      "toggle-left",
-      "gamepad-2",
       "pointer",
       "hand",
       "move",
       "pen-tool",
       "link",
       "sparkles",
+      "crown",
+      "football",
+      "toggle-right",
+      "toggle-left",
+      "back",
+      "forward",
+      "settings",
+      "gamepad-2",
       "inbox",
       "flask-conical",
       "sprout",
@@ -294,17 +305,26 @@ export const Icon: React.FC<IconProps> = (props) => {
       "graduation-cap",
       "shirt",
     ]);
-    const ok = supported.has(n as ModularIconName);
+    const ok = supported.has(actualName as ModularIconName);
     if (!ok && debugEnabled) {
       console.warn(`[IconDebug] unsupported icon name; falling back`, {
-        name: n,
+        name: actualName,
+        originalInput: n,
       });
     }
-    return ok ? (n as ModularIconName) : "help-circle";
+    return ok ? (actualName as ModularIconName) : "help-circle";
   };
 
+  // Extract the actual icon name for use throughout the component
+  const actualIconName =
+    typeof name === "object" && name !== null && "name" in name
+      ? name.name
+      : name;
+
   // If the icon is decorative (aria-hidden), do not provide an aria-label
-  const computedAriaLabel = ariaHidden ? undefined : (ariaLabel ?? name);
+  const computedAriaLabel = ariaHidden
+    ? undefined
+    : (ariaLabel ?? actualIconName);
 
   return (
     <ModularIcon

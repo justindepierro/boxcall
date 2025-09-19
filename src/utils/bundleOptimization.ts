@@ -71,7 +71,7 @@ export const analyzeBundleSize = () => {
         performanceEntries[0] as PerformanceNavigationTiming;
       // console.info("📦 Bundle Analysis");
       // console.info("Total Load Time:", _navigationEntry.loadEventEnd - _navigationEntry.fetchStart, "ms");
-      // console.info("DOMContentLoaded:", _navigationEntry.domContentLoadedEventEnd - _navigationEntry.fetchStart, "ms");
+      // console.info("DOMContentLoaded:", _navigationEntry.domContentLoadedEventEnd - _navigationEntry.fetchStart, "ms")
       // console.info("First Contentful Paint:", "Check Lighthouse for FCP metrics");
       // end group
     }

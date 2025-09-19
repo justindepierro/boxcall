@@ -29,6 +29,7 @@ const initialState: DiagramEditorState = {
     tool: "select",
     routeMode: "line",
     drawMode: "line",
+    shapeMode: "rectangle",
     drawColor: "#111827",
     drawWidth: 3,
     drawArrowHead: "end",
@@ -88,6 +89,8 @@ function reducer(
       return { ...state, ui: { ...state.ui, drawWidth: action.width } };
     case "SET_DRAW_ARROW_HEAD":
       return { ...state, ui: { ...state.ui, drawArrowHead: action.arrowHead } };
+    case "SET_SHAPE_MODE":
+      return { ...state, ui: { ...state.ui, shapeMode: action.mode } };
     case "SET_ACTIVE_PLAYER":
       return { ...state, ui: { ...state.ui, activePlayerId: action.id } };
     case "SET_SELECTION":
@@ -587,6 +590,107 @@ function reducer(
         nextDoc
       );
     }
+    // ===== Shape reducer cases =====
+    case "START_SHAPE": {
+      const nextUi = {
+        ...state.ui,
+        shaping: {
+          type: action.shapeType,
+          start: action.start,
+          end: action.start,
+        },
+        tool: "shape" as const,
+      };
+      return { ...state, ui: nextUi };
+    }
+    case "PREVIEW_SHAPE": {
+      if (!state.ui.shaping) return state;
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          shaping: { ...state.ui.shaping, end: action.end },
+        },
+      };
+    }
+    case "COMMIT_SHAPE": {
+      if (!state.ui.shaping)
+        return { ...state, ui: { ...state.ui, shaping: undefined } };
+      const s = state.ui.shaping;
+      const id = `shape_${Date.now()}`;
+      const color = state.ui.drawColor || "#111827";
+
+      let shape: any;
+      if (s.type === "rectangle") {
+        const x = Math.min(s.start.x, s.end.x);
+        const y = Math.min(s.start.y, s.end.y);
+        const width = Math.abs(s.end.x - s.start.x);
+        const height = Math.abs(s.end.y - s.start.y);
+        shape = {
+          id,
+          type: "rectangle",
+          x,
+          y,
+          width,
+          height,
+          color,
+          fill: "transparent",
+        };
+      } else if (s.type === "circle") {
+        const centerX = (s.start.x + s.end.x) / 2;
+        const centerY = (s.start.y + s.end.y) / 2;
+        const radius =
+          Math.sqrt(
+            Math.pow(s.end.x - s.start.x, 2) + Math.pow(s.end.y - s.start.y, 2)
+          ) / 2;
+        shape = {
+          id,
+          type: "circle",
+          x: centerX,
+          y: centerY,
+          radius,
+          color,
+          fill: "transparent",
+        };
+      } else if (s.type === "triangle") {
+        const centerX = (s.start.x + s.end.x) / 2;
+        const centerY = (s.start.y + s.end.y) / 2;
+        const size =
+          Math.sqrt(
+            Math.pow(s.end.x - s.start.x, 2) + Math.pow(s.end.y - s.start.y, 2)
+          ) / 2;
+        shape = {
+          id,
+          type: "triangle",
+          x: centerX,
+          y: centerY,
+          size,
+          color,
+          fill: "transparent",
+        };
+      }
+
+      const nextDoc: DiagramDocument = {
+        ...state.doc,
+        annotations: [...(state.doc.annotations || []), shape],
+        meta: { ...state.doc.meta!, updatedAt: Date.now() },
+      };
+      telemetry.enqueue({
+        type: TelemetryEventTypes.PlayDiagramUpdated,
+        data: {
+          players: nextDoc.players.length,
+          routes: nextDoc.routes.length,
+          annotations: (nextDoc.annotations || []).length,
+        },
+      });
+      const after = pushHistory(
+        { ...state, doc: nextDoc, dirty: true },
+        nextDoc
+      );
+      return { ...after, ui: { ...after.ui, shaping: undefined } };
+    }
+    case "CANCEL_SHAPE":
+      return { ...state, ui: { ...state.ui, shaping: undefined } };
     case "UPDATE_PLAYER": {
       const nextDoc: DiagramDocument = {
         ...state.doc,

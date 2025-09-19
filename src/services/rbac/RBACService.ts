@@ -32,7 +32,7 @@ export class RBACService {
 
     // [Target] SUPER ADMIN OVERRIDE - You get unlimited access
     if (user.email === SUPER_ADMIN_EMAIL) {
-      // console.info(`[Unlocked/Access] Super admin override: ${user.email} granted ${permission}`);
+      // console.info(`[Unlocked/Access] Super admin override: ${user.email} granted ${permission}`)
       return true;
     }
 

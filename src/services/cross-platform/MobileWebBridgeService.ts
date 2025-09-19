@@ -410,7 +410,7 @@ export class MobileWebBridgeService {
       async () => {
         try {
           await this.syncPlatforms(bridgeId);
-        } catch (error) {
+        } catch (_error) {
           // console.error(`Auto-sync failed for bridge ${bridgeId}:`, error);
         }
       },

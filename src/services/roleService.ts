@@ -90,7 +90,7 @@ export class RoleService {
         userId,
         lastUpdated: new Date(),
       };
-    } catch (error) {
+    } catch (_error) {
       // console.error("RoleService.getUserRoleContext error:", error);
       // Return safe fallback
       return {
@@ -123,7 +123,7 @@ export class RoleService {
       }
 
       return data.team_role;
-    } catch (error) {
+    } catch (_error) {
       // console.error("RoleService.getUserTeamRole error:", error);
       return null;
     }
@@ -163,7 +163,7 @@ export class RoleService {
       const teamRole = data.team_role as TeamRole;
       const defaultCapabilities = DEFAULT_TEAM_ROLE_CAPABILITIES[teamRole];
       return defaultCapabilities.includes(capability);
-    } catch (error) {
+    } catch (_error) {
       // console.error("RoleService.hasCapability error:", error);
       return false;
     }
@@ -317,7 +317,7 @@ export class RoleService {
         canEditOtherProfiles: isGlobalAdmin || teamPermissions.canManageTeam,
         canViewProfiles: true, // Everyone can view profiles
       };
-    } catch (error) {
+    } catch (_error) {
       // console.error("RoleService.getUIPermissions error:", error);
       // Return safe fallback permissions
       return {
@@ -371,7 +371,7 @@ export class RoleService {
       }
 
       return true;
-    } catch (error) {
+    } catch (_error) {
       // console.error("RoleService.updateUserAppRole error:", error);
       return false;
     }
@@ -416,7 +416,7 @@ export class RoleService {
       }
 
       return true;
-    } catch (error) {
+    } catch (_error) {
       // console.error("RoleService.updateUserTeamRole error:", error);
       return false;
     }
