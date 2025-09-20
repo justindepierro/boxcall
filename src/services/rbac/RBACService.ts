@@ -1,4 +1,8 @@
-import { Permission, DataScopeMode } from "../../types/rbac";
+import {
+  PERMISSIONS,
+  DATA_SCOPE_MODES,
+  type Permission,
+} from "../../types/rbac";
 
 import type { DevMode } from "../../app/dev-mode-types";
 import type { DataScope } from "../../types/rbac";
@@ -41,7 +45,7 @@ export class RBACService {
     // TODO: Implement regular permission checking logic for other users
     // For now, grant basic permissions to all authenticated users
     const basicPermissions: Permission[] = [
-      Permission.CREATE_TEAM, // Let authenticated users create teams for now
+      PERMISSIONS.CREATE_TEAM, // Let authenticated users create teams for now
     ];
 
     return basicPermissions.includes(permission);
@@ -58,7 +62,7 @@ export class RBACService {
 
     // Super admin gets everything
     if (user.email === SUPER_ADMIN_EMAIL) {
-      return Object.values(Permission);
+      return Object.values(PERMISSIONS);
     }
 
     // Dev mode overrides for testing
@@ -67,7 +71,7 @@ export class RBACService {
     }
 
     // TODO: Production permissions based on role
-    return [Permission.CREATE_TEAM]; // Basic permission for now
+    return [PERMISSIONS.CREATE_TEAM]; // Basic permission for now
   }
 
   /**
@@ -77,19 +81,19 @@ export class RBACService {
     switch (devMode) {
       case "test_as_head_coach":
         return [
-          Permission.CREATE_TEAM,
-          Permission.MANAGE_TEAM_SETTINGS,
-          Permission.INVITE_USERS,
-          Permission.EDIT_SCHEDULE,
+          PERMISSIONS.CREATE_TEAM,
+          PERMISSIONS.MANAGE_TEAM_SETTINGS,
+          PERMISSIONS.INVITE_USERS,
+          PERMISSIONS.EDIT_SCHEDULE,
         ];
       case "test_as_player":
         return []; // Players have minimal permissions
       case "test_as_coach":
-        return [Permission.EDIT_SCHEDULE];
+        return [PERMISSIONS.EDIT_SCHEDULE];
       case "test_as_family":
         return []; // View only
       default:
-        return [Permission.CREATE_TEAM];
+        return [PERMISSIONS.CREATE_TEAM];
     }
   }
 
@@ -99,7 +103,7 @@ export class RBACService {
   static getDataScope(user: UserProfile | null, devMode?: DevMode): DataScope {
     if (!user) {
       return {
-        mode: DataScopeMode.DEV_BLANK_SLATE,
+        mode: DATA_SCOPE_MODES.DEV_BLANK_SLATE,
         teamIds: [],
         restrictions: ["no_user"],
       };
@@ -109,8 +113,8 @@ export class RBACService {
     if (user.email === SUPER_ADMIN_EMAIL) {
       const mode =
         devMode === "blank_slate"
-          ? DataScopeMode.DEV_BLANK_SLATE
-          : DataScopeMode.SYSTEM_WIDE;
+          ? DATA_SCOPE_MODES.DEV_BLANK_SLATE
+          : DATA_SCOPE_MODES.SYSTEM_WIDE;
 
       return {
         mode,
@@ -122,7 +126,7 @@ export class RBACService {
 
     // Regular users see their team data
     return {
-      mode: DataScopeMode.PRODUCTION,
+      mode: DATA_SCOPE_MODES.PRODUCTION,
       teamIds: user.teamMemberships?.map((m) => m.teamId) || [],
       userId: user.id,
       restrictions: [],

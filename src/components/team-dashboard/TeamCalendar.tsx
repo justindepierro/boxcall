@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useCreateEvent, useTeamEvents } from "../../hooks/teamDataHooks";
 import { telemetry } from "../../lib/telemetry";
 import {
-  Capability,
+  CAPABILITIES,
   getCapabilitiesForRole,
   hasCapability,
 } from "@services/capabilities/capabilityMap";
@@ -44,7 +44,7 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
   });
   const caps = getCapabilitiesForRole(userRole);
   // Reuse CREATE_POST until a dedicated CREATE_EVENT capability constant is added
-  const canCreate = hasCapability(caps, Capability.CREATE_POST);
+  const canCreate = hasCapability(caps, CAPABILITIES.CREATE_POST);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

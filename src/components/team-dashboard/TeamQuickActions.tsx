@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import { telemetry } from "../../lib/telemetry";
 import {
-  Capability,
+  CAPABILITIES,
+  type Capability,
   getCapabilitiesForRole,
   hasCapability,
 } from "@services/capabilities/capabilityMap";
@@ -36,7 +37,7 @@ const ACTIONS: QuickActionConfig[] = [
     icon: "message",
     variant: "primary",
     onClick: () => console.info("action.create_post"),
-    requires: Capability.CREATE_POST,
+    requires: CAPABILITIES.CREATE_POST,
   },
   {
     id: "award_stickers",
@@ -44,14 +45,14 @@ const ACTIONS: QuickActionConfig[] = [
     icon: "award",
     variant: "outline", // constrained to allowed variants
     onClick: () => console.info("action.award_stickers"),
-    requires: Capability.AWARD_STICKERS,
+    requires: CAPABILITIES.AWARD_STICKERS,
   },
   {
     id: "practice_schedule",
     label: "Practice Schedule",
     icon: "calendar", // better semantic icon
     variant: "outline",
-    requires: Capability.VIEW_PRACTICE_SCHEDULE,
+    requires: CAPABILITIES.VIEW_PRACTICE_SCHEDULE,
     to: "practice",
   },
   {
@@ -60,7 +61,7 @@ const ACTIONS: QuickActionConfig[] = [
     icon: "upload",
     variant: "outline",
     onClick: () => console.info("action.upload_film"),
-    requires: Capability.UPLOAD_FILM,
+    requires: CAPABILITIES.UPLOAD_FILM,
   },
   {
     id: "manage_roster",
@@ -68,7 +69,7 @@ const ACTIONS: QuickActionConfig[] = [
     icon: "users",
     variant: "outline",
     onClick: () => console.info("action.manage_roster"),
-    requires: Capability.MANAGE_ROSTER,
+    requires: CAPABILITIES.MANAGE_ROSTER,
   },
   {
     id: "team_settings",
@@ -76,7 +77,7 @@ const ACTIONS: QuickActionConfig[] = [
     icon: "settings",
     variant: "ghost",
     to: "settings",
-    requires: Capability.MANAGE_TEAM_SETTINGS,
+    requires: CAPABILITIES.MANAGE_TEAM_SETTINGS,
   },
   // Player / shared
   {
@@ -85,7 +86,7 @@ const ACTIONS: QuickActionConfig[] = [
     icon: "bar-chart",
     variant: "primary",
     onClick: () => console.info("action.view_stats"),
-    requires: Capability.VIEW_STATS,
+    requires: CAPABILITIES.VIEW_STATS,
   },
   {
     id: "study_plays",
@@ -93,7 +94,7 @@ const ACTIONS: QuickActionConfig[] = [
     icon: "book",
     variant: "outline",
     onClick: () => console.info("action.study_plays"),
-    requires: Capability.STUDY_PLAYS,
+    requires: CAPABILITIES.STUDY_PLAYS,
   },
   {
     id: "rsvp_events",
@@ -101,7 +102,7 @@ const ACTIONS: QuickActionConfig[] = [
     icon: "calendar",
     variant: "outline",
     onClick: () => console.info("action.rsvp_events"),
-    requires: Capability.RSVP_EVENT,
+    requires: CAPABILITIES.RSVP_EVENT,
   },
   {
     id: "team_chat",
@@ -109,7 +110,7 @@ const ACTIONS: QuickActionConfig[] = [
     icon: "message",
     variant: "ghost",
     onClick: () => console.info("action.team_chat"),
-    requires: Capability.TEAM_CHAT,
+    requires: CAPABILITIES.TEAM_CHAT,
   },
   // Family
   {
@@ -118,7 +119,7 @@ const ACTIONS: QuickActionConfig[] = [
     icon: "trending-up",
     variant: "primary",
     onClick: () => console.info("action.player_progress"),
-    requires: Capability.PLAYER_PROGRESS,
+    requires: CAPABILITIES.PLAYER_PROGRESS,
   },
   {
     id: "team_photos",
@@ -126,7 +127,7 @@ const ACTIONS: QuickActionConfig[] = [
     icon: "folder",
     variant: "ghost",
     onClick: () => console.info("action.team_photos"),
-    requires: Capability.TEAM_PHOTOS,
+    requires: CAPABILITIES.TEAM_PHOTOS,
   },
 ];
 

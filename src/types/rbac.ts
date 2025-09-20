@@ -1,5 +1,5 @@
 // Core RBAC Types and Constants
-export const UserRole = {
+export const USER_ROLES = {
   SUPER_ADMIN: "super_admin",
   TEAM_OWNER: "team_owner",
   HEAD_COACH: "head_coach",
@@ -10,9 +10,9 @@ export const UserRole = {
   VIEWER: "viewer",
 } as const;
 
-export type UserRole = (typeof UserRole)[keyof typeof UserRole];
+export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
 
-export const Permission = {
+export const PERMISSIONS = {
   // Team Management
   CREATE_TEAM: "team:create",
   DELETE_TEAM: "team:delete",
@@ -34,16 +34,17 @@ export const Permission = {
   VIEW_ANALYTICS: "system:view_analytics",
 } as const;
 
-export type Permission = (typeof Permission)[keyof typeof Permission];
+export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
 
-export const DataScopeMode = {
+export const DATA_SCOPE_MODES = {
   PRODUCTION: "production",
   DEV_BLANK_SLATE: "dev_blank",
   DEV_MOCK_TEAM: "dev_mock",
   SYSTEM_WIDE: "system_wide",
 } as const;
 
-export type DataScopeMode = (typeof DataScopeMode)[keyof typeof DataScopeMode];
+export type DataScopeMode =
+  (typeof DATA_SCOPE_MODES)[keyof typeof DATA_SCOPE_MODES];
 
 export interface DataScope {
   mode: DataScopeMode;

@@ -26,7 +26,9 @@ describe("ProfileCard quick-edit and navigation", () => {
             path="/dashboard"
             element={
               <RoleProvider>
-                <DashboardContext.Provider value={{ profile, setProfile } as any}>
+                <DashboardContext.Provider
+                  value={{ profile, setProfile } as any}
+                >
                   <ProfileCard />
                 </DashboardContext.Provider>
               </RoleProvider>
@@ -43,9 +45,7 @@ describe("ProfileCard quick-edit and navigation", () => {
     const r1 = renderCard();
 
     // Avatar button
-    await user.click(
-      screen.getByRole("button", { name: /view profile/i })
-    );
+    await user.click(screen.getByRole("button", { name: /view profile/i }));
     expect(screen.getByText("Profile Page")).toBeInTheDocument();
     r1.unmount();
 
@@ -75,9 +75,7 @@ describe("ProfileCard quick-edit and navigation", () => {
     renderCard();
 
     // Use exact match to avoid 'Edit profile picture'
-    await user.click(
-      screen.getByRole("button", { name: /^Edit profile$/ })
-    );
+    await user.click(screen.getByRole("button", { name: /^Edit profile$/ }));
     // Modal title for quick mode
     expect(screen.getByText(/quick edit profile/i)).toBeInTheDocument();
     // Has display name and bio fields visible

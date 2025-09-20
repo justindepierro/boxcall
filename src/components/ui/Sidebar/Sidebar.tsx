@@ -98,7 +98,7 @@ const getBadgeStyles = () => {
     bg-jade-600 dark:bg-jade-600 text-white
   `;
 };
-const SidebarItem: React.FC<{
+const SidebarItemComponent: React.FC<{
   item: SidebarItem;
   level?: number;
   onItemClick?: (item: SidebarItem) => void;
@@ -148,7 +148,7 @@ const SidebarItem: React.FC<{
       {hasChildren && isExpanded && (
         <div>
           {item.children?.map((childItem) => (
-            <SidebarItem
+            <SidebarItemComponent
               key={childItem.id}
               item={childItem}
               level={level + 1}
@@ -272,7 +272,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           <nav className="py-4">
             {items.map((item) => (
-              <SidebarItem
+              <SidebarItemComponent
                 key={item.id}
                 item={item}
                 onItemClick={handleItemClick}
