@@ -14,6 +14,8 @@ export default [
       ".vscode/",
       "archive/**",
       "*.log",
+      "src/routes/__tests__/*.test.tsx",
+      "src/utils/errorHandler.tsx",
     ],
   },
   // Base configuration for all JS/TS files
@@ -26,6 +28,8 @@ export default [
         ...globals.browser,
         ...globals.node,
         React: "readonly", // Add React global for JSX
+        NodeJS: "readonly", // Add NodeJS global for timers
+        gtag: "readonly", // Add gtag global for Google Analytics
       },
     },
     plugins: {

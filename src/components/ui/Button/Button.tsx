@@ -282,7 +282,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       );
     };
     return (
-      // eslint-disable-next-line no-raw-button/no-raw-button
       <button
         ref={ref}
         type={type}

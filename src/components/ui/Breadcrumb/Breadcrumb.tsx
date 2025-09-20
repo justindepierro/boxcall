@@ -119,7 +119,7 @@ const CollapsedIndicator: React.FC<{
     </div>
   );
 };
-const BreadcrumbItem: React.FC<{
+const BreadcrumbItemComponent: React.FC<{
   item: BreadcrumbItem;
   showIcon: boolean;
   onItemClick: (item: BreadcrumbItem) => void;
@@ -210,7 +210,7 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
         {displayItems.map((item, index) => (
           <React.Fragment key={item.id}>
             <li className="flex items-center">
-              <BreadcrumbItem
+              <BreadcrumbItemComponent
                 item={item}
                 showIcon={showIcons}
                 onItemClick={handleItemClick}
