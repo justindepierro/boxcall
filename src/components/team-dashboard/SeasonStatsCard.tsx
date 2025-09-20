@@ -8,7 +8,7 @@ import {
 import { useToast } from "../../hooks/useToast";
 import { telemetry } from "../../lib/telemetry";
 import {
-  Capability,
+  CAPABILITIES,
   getCapabilitiesForRole,
   hasCapability,
 } from "@services/capabilities/capabilityMap";
@@ -43,7 +43,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
   });
   const [errors, setErrors] = useState<string[]>([]);
   const caps = getCapabilitiesForRole(userRole);
-  const canLog = hasCapability(caps, Capability.LOG_GAME_RESULT);
+  const canLog = hasCapability(caps, CAPABILITIES.LOG_GAME_RESULT);
   const toast = useToast();
 
   useEffect(() => {

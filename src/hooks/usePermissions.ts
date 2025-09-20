@@ -3,7 +3,7 @@ import { useCallback, useMemo } from "react";
 import { useAuth } from "../app/auth-store";
 import { useDevMode } from "../app/dev-mode-hooks";
 import { RBACService } from "@services/rbac/RBACService";
-import { Permission } from "../types/rbac";
+import { PERMISSIONS, type Permission } from "../types/rbac";
 
 /**
  * Hook for permission checking in React components
@@ -34,10 +34,10 @@ export const usePermissions = () => {
   );
 
   // Specific permission checks for common use cases
-  const canCreateTeam = hasPermission(Permission.CREATE_TEAM);
+  const canCreateTeam = hasPermission(PERMISSIONS.CREATE_TEAM);
   const canManageTeam = useCallback(
     (teamId: string) =>
-      hasPermission(Permission.MANAGE_TEAM_SETTINGS, { teamId }),
+      hasPermission(PERMISSIONS.MANAGE_TEAM_SETTINGS, { teamId }),
     [hasPermission]
   );
 

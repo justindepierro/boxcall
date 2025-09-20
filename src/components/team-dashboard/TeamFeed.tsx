@@ -8,7 +8,7 @@ import {
 import { useToast } from "../../hooks/useToast";
 import { telemetry } from "../../lib/telemetry";
 import {
-  Capability,
+  CAPABILITIES,
   getCapabilitiesForRole,
   hasCapability,
 } from "@services/capabilities/capabilityMap";
@@ -125,8 +125,8 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const toast = useToast();
   const caps = getCapabilitiesForRole(userRole);
-  const canCreate = hasCapability(caps, Capability.CREATE_POST);
-  const canPin = hasCapability(caps, Capability.PIN_POST);
+  const canCreate = hasCapability(caps, CAPABILITIES.CREATE_POST);
+  const canPin = hasCapability(caps, CAPABILITIES.PIN_POST);
 
   useEffect(() => {
     if (!open && triggerRef.current) triggerRef.current.focus();
