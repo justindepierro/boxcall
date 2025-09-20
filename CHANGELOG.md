@@ -18,6 +18,10 @@ The format is based on https://keepachangelog.com/en/1.1.0/ and this project adh
 - Lighthouse CI configuration and performance gating scripts.
 - Diagnostics page (/dev/diagnostics) for runtime + web vitals (development only).
 - Release versioning script (scripts/release-version.ts).
+- Assembly line workflow indicators with visual progress tracking across playbook → practice → game plan → boxcall workflow.
+- Data flow tracking with real-time metrics showing plays in practice plans, game plans, and maturity analytics.
+- Play maturity system with visual badges (New → Practice-Tested → Game-Ready → Proven) on play cards.
+- Database migration 021_assembly_line_workflow.sql with tables for play usage tracking, maturity levels, workflow progress, and data flow analytics.
 
 ### Changed
 

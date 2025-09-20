@@ -3,6 +3,12 @@ import { Icon } from "../../ui/Icon";
 import { Badge } from "../../ui/Badge";
 import { Typography } from "../../design-system/Typography";
 import { UniversalSearchBar } from "../../playbook/UniversalSearchBar";
+import {
+  WorkflowIndicators,
+  type WorkflowSection,
+} from "../../ui/WorkflowIndicators";
+import { DataFlowSummary } from "../../ui/DataFlowSummary";
+import { supabase } from "../../../lib/supabase";
 import type { Play } from "../../../types/play";
 
 export type PlaybookHeaderProps = {
@@ -29,6 +35,78 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
   teamId,
   plays = [],
 }) => {
+  const [workflowSections, setWorkflowSections] = React.useState<
+    WorkflowSection[]
+  >([
+    {
+      id: "playbook",
+      name: "Playbook",
+      icon: "file",
+      status: "in-progress",
+      description: "Database creation and play design",
+    },
+    {
+      id: "practice",
+      name: "Practice",
+      icon: "clipboard-list",
+      status: "not-started",
+      description: "Weekly practice planning and scripts",
+    },
+    {
+      id: "game-plan",
+      name: "Game Plan",
+      icon: "target",
+      status: "not-started",
+      description: "Situational strategy and execution",
+    },
+    {
+      id: "boxcall",
+      name: "BoxCall",
+      icon: "activity",
+      status: "not-started",
+      description: "Live execution and analytics",
+    },
+  ]);
+
+  // Fetch real workflow progress data
+  React.useEffect(() => {
+    const fetchWorkflowProgress = async () => {
+      if (!teamId) return;
+
+      try {
+        const { data, error } = await supabase
+          .from("workflow_progress")
+          .select("*")
+          .eq("team_id", teamId);
+
+        if (error) {
+          console.error("Error fetching workflow progress:", error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          // Update workflow sections with real data
+          setWorkflowSections((prevSections) =>
+            prevSections.map((section) => {
+              const progressData = data.find((p) => p.section === section.id);
+              if (progressData) {
+                return {
+                  ...section,
+                  status: progressData.status as WorkflowSection["status"],
+                };
+              }
+              return section;
+            })
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching workflow progress:", error);
+      }
+    };
+
+    fetchWorkflowProgress();
+  }, [teamId]);
+
   return (
     <header className="surface-subtle border-b border-subtle">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -71,71 +149,85 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
             </div>
           </div>
 
-          {/* Right side - Key metrics */}
-          <div className="flex items-center space-x-6">
-            {/* Plays Progress */}
-            <div className="text-center">
-              <Typography
-                variant="headline-md"
-                as="div"
-                className="text-slate-900 font-semibold"
-              >
-                {playsCreated}
-              </Typography>
-              <div className="text-xs text-slate-500 uppercase tracking-wide">
-                Plays Created
-              </div>
-              <div className="mt-1 w-16 h-1 bg-slate-200 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-blue-600 rounded-full transition-all duration-500"
-                  style={{
-                    width: `${Math.min((playsCreated / 100) * 100, 100)}%`,
-                  }}
-                />
-              </div>
-            </div>
+          {/* Center - Workflow Indicators */}
+          <div className="hidden lg:flex items-center justify-center px-8">
+            <WorkflowIndicators
+              currentSection="playbook"
+              sections={workflowSections}
+            />
+          </div>
 
-            {/* Diagram Coverage */}
-            <div className="text-center">
-              <Typography
-                variant="headline-md"
-                as="div"
-                className="text-slate-900 font-semibold"
-              >
-                {diagramCoverage}%
-              </Typography>
-              <div className="text-xs text-slate-500 uppercase tracking-wide">
-                Diagram Coverage
-              </div>
-              <div className="mt-1 w-16 h-1 bg-slate-200 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-green-600 rounded-full transition-all duration-500"
-                  style={{ width: `${diagramCoverage}%` }}
-                />
-              </div>
-            </div>
+          {/* Right side - Data flow and key metrics */}
+          <div className="flex items-center space-x-8">
+            {/* Data Flow Summary */}
+            <DataFlowSummary />
 
-            {/* Streak */}
-            {streakDays > 0 && (
+            {/* Key metrics */}
+            <div className="flex items-center space-x-6">
+              {/* Plays Progress */}
               <div className="text-center">
                 <Typography
                   variant="headline-md"
                   as="div"
                   className="text-slate-900 font-semibold"
                 >
-                  {streakDays}
+                  {playsCreated}
                 </Typography>
                 <div className="text-xs text-slate-500 uppercase tracking-wide">
-                  Day Streak
+                  Plays Created
                 </div>
-                <div className="mt-1 flex justify-center">
-                  <Badge variant="success" size="sm" className="text-xs">
-                    <Icon name="zap" className="h-3 w-3 mr-1" />
-                    Active
-                  </Badge>
+                <div className="mt-1 w-16 h-1 bg-slate-200 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                    style={{
+                      width: `${Math.min((playsCreated / 100) * 100, 100)}%`,
+                    }}
+                  />
                 </div>
               </div>
-            )}
+
+              {/* Diagram Coverage */}
+              <div className="text-center">
+                <Typography
+                  variant="headline-md"
+                  as="div"
+                  className="text-slate-900 font-semibold"
+                >
+                  {diagramCoverage}%
+                </Typography>
+                <div className="text-xs text-slate-500 uppercase tracking-wide">
+                  Diagram Coverage
+                </div>
+                <div className="mt-1 w-16 h-1 bg-slate-200 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-green-600 rounded-full transition-all duration-500"
+                    style={{ width: `${diagramCoverage}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Streak */}
+              {streakDays > 0 && (
+                <div className="text-center">
+                  <Typography
+                    variant="headline-md"
+                    as="div"
+                    className="text-slate-900 font-semibold"
+                  >
+                    {streakDays}
+                  </Typography>
+                  <div className="text-xs text-slate-500 uppercase tracking-wide">
+                    Day Streak
+                  </div>
+                  <div className="mt-1 flex justify-center">
+                    <Badge variant="success" size="sm" className="text-xs">
+                      <Icon name="zap" className="h-3 w-3 mr-1" />
+                      Active
+                    </Badge>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

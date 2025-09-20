@@ -13,6 +13,7 @@ import {
 } from "../../utils/localPlayFlags";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button/Button";
+import { PlayMaturityBadge } from "../ui/PlayMaturityBadge";
 import { INSTALL_PHASES, type InstallPhase } from "../../types/play";
 interface PlayCardProps {
   play: PlayType;
@@ -162,6 +163,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                     {phaseLabel}
                   </span>
                 )}
+                <PlayMaturityBadge playId={play.id} size="sm" />
                 <span
                   className={`text-xs font-medium ${getConfidenceColor(play.confidence_base)}`}
                 >
