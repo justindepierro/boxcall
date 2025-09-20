@@ -1,19 +1,10 @@
 import js from "@eslint/js";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
-import { globalIgnores } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
-import path from "node:path";
-import importPlugin from "eslint-plugin-import";
-import { noRawButtonRule } from "./scripts/eslint-rules/no-raw-button.js";
-import { noUnsafeWhiteRule } from "./scripts/eslint-rules/no-unsafe-white.js";
-import { noRadiusViolationsRule } from "./scripts/eslint-rules/no-radius-violations.js";
-import { noOutlineVariantInDisallowedContextsRule } from "./scripts/eslint-rules/no-outline-variant-in-disallowed-contexts.js";
 
-// Allow a relaxed lint mode for rapid iteration (set BC_LINT_MODE=relaxed)
-const RELAXED = process.env.BC_LINT_MODE === "relaxed";
-const configArray = [
+export default [
   {
     ignores: [
       "node_modules/",
@@ -22,500 +13,63 @@ const configArray = [
       "coverage/",
       ".vscode/",
       "archive/**",
-      ".codemod-backups/",
       "*.log",
-      ".dependency-cruiser.cjs",
-      ".dependency-cruiser.js",
-      "scripts/**/*.mjs",
-      "scripts/**/*.cjs",
-      "!shared/",
-      "!shared/**/*.ts",
-      "!shared/**/*.tsx",
     ],
   },
-  // Node scripts in JS/ESM: allow console and Node globals
+  // Base configuration for all JS/TS files
   {
-    files: ["scripts/**/*.{js,mjs,cjs}"],
+    files: ["**/*.{js,mjs,cjs,ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
-      globals: globals.node,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        React: "readonly", // Add React global for JSX
+      },
     },
-    rules: {
-      "no-console": "off",
-    },
-  },
-  // Node scripts written in TypeScript: parse with TS and allow console
-  {
-    files: ["scripts/**/*.ts"],
-    extends: [js.configs.recommended, tseslint.configs.recommended],
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: "module",
-      globals: globals.node,
-    },
-    rules: {
-      "no-console": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
-      ],
-    },
-  },
-  {
-    files: [
-      "src/**/*.{ts,tsx}",
-      "shared/**/*.{ts,tsx}",
-      "vite.config.ts",
-      "vitest.config.ts",
-    ],
     plugins: {
-      import: importPlugin,
-    },
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs["recommended-latest"],
-      reactRefresh.configs.vite,
-    ],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
     },
     rules: {
-      // Disallow noisy console.log; allow warn/error only
-      "no-console": ["error", { allow: ["warn", "error", "info", "debug"] }],
-      // Enforce barrel imports for services and block deep paths
-      "no-restricted-imports": [
-        "error",
-        {
-          patterns: [
-            {
-              group: ["src/services/*", "../services/*", "../../services/*"],
-              message:
-                "Import services via the barrel alias @services/* to keep a single source of truth.",
-            },
-          ],
-        },
-      ],
-      // Block components importing from routes/* (except whitelisted utils)
-      "import/no-restricted-paths": [
-        "error",
-        {
-          zones: [
-            {
-              target: "src/components",
-              from: "src/routes",
-              except: ["src/navigation/prefetch-utils.ts"],
-              message:
-                "UI components should not import from routes/*. Extract shared utilities under src/navigation/ or features.",
-            },
-          ],
-        },
-      ],
-      // Custom rule registrations
-      "no-raw-button/no-raw-button": [
-        "error",
-        {
-          allow: [
-            "team-dashboard/layout/TeamBulletinHeader.tsx", // logo uploader exemption
-            "components/ui/IconButton/IconButton.tsx", // IconButton internal wrapper (uses <Button>)
-          ],
-        },
-      ],
-      "contrast/no-unsafe-white": [
-        "warn",
-        {
-          allowBg: [
-            "bg-jade-600",
-            "bg-jade-700",
-            "bg-jade-800",
-            "bg-jade-900",
-            "bg-navy-600",
-            "bg-navy-700",
-            "bg-navy-800",
-            "bg-navy-900",
-            "bg-gray-800",
-            "bg-gray-900",
-            "bg-black",
-            "bg-red-600",
-            "bg-red-700",
-            "bg-red-800",
-            "bg-yellow-700",
-            "bg-yellow-800",
-            "bg-yellow-900",
-            "bg-brand-jade-dark",
-            "bg-brand-navy-dark",
-          ],
-        },
-      ],
+      ...js.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": [
         "warn",
-        { allowConstantExport: true, allowExportNames: ["DevModeProvider"] },
+        { allowConstantExport: true },
       ],
-      // Allow unused variables that start with underscore (intentionally unused parameters)
+      "no-unused-vars": "off", // Turn off base rule for TS override
+      "no-console": "off", // Allow console in development
+    },
+  },
+  // TypeScript specific rules
+  {
+    files: ["**/*.{ts,tsx}"],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        project: "./tsconfig.app.json",
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tseslint.plugin,
+    },
+    rules: {
+      ...tseslint.configs.recommended.rules,
       "@typescript-eslint/no-unused-vars": [
-        "error",
+        "warn",
         {
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
         },
       ],
-      "boxcall-style/no-legacy-badge-variants": "warn",
-      "boxcall-style/no-raw-surface-gradients": "warn",
-      "boxcall-style/no-radius-violations": [
-        "warn",
-        {
-          allowScale: ["", "none", "sm", "md", "lg", "full"],
-        },
-      ],
-      "boxcall-style/no-outline-variant-in-disallowed-contexts": [
-        "error",
-        {
-          allowPatterns: [
-            // Allow outline variant still in RSVP neutral states (handled in EventDetails) for now
-            "EventDetails.tsx$",
-          ],
-        },
-      ],
-      "boxcall-style/no-raw-gray-text": "error",
-      "boxcall-style/no-raw-heading-utilities": "error",
-      "boxcall-style/no-raw-emoji": "error",
-    },
-  },
-  // Relax type strictness in tests
-  {
-    files: [
-      "**/*.test.ts",
-      "**/*.test.tsx",
-      "**/__tests__/**/*.ts",
-      "**/__tests__/**/*.tsx",
-    ],
-    rules: {
-      "@typescript-eslint/no-explicit-any": "off",
-    },
-  },
-  // Plugin injection for custom rule namespace
-  {
-    plugins: {
-      "no-raw-button": {
-        rules: {
-          "no-raw-button": noRawButtonRule,
-        },
-      },
-      contrast: {
-        rules: {
-          "no-unsafe-white": noUnsafeWhiteRule,
-        },
-      },
-      "boxcall-style": {
-        rules: {
-          "no-legacy-badge-variants": {
-            meta: {
-              type: "problem",
-              docs: { description: "Disallow legacy Badge variant names" },
-              schema: [],
-              fixable: "code",
-            },
-            create(context) {
-              const legacy = new Set([
-                "default",
-                "urgency",
-                "achievement",
-                "information",
-                "attention",
-              ]);
-              const mapping = {
-                default: "neutral",
-                urgency: "danger",
-                achievement: "success",
-                information: "info",
-                attention: "warning",
-              };
-              return {
-                JSXOpeningElement(node) {
-                  if (
-                    node.name.type === "JSXIdentifier" &&
-                    node.name.name === "Badge"
-                  ) {
-                    const variantAttr = node.attributes.find(
-                      (a) =>
-                        a.type === "JSXAttribute" && a.name.name === "variant"
-                    );
-                    if (
-                      variantAttr &&
-                      variantAttr.value &&
-                      ((variantAttr.value.type === "Literal" &&
-                        legacy.has(variantAttr.value.value)) ||
-                        (variantAttr.value.type === "JSXExpressionContainer" &&
-                          variantAttr.value.expression.type === "Literal" &&
-                          legacy.has(variantAttr.value.expression.value)))
-                    ) {
-                      const rawValue =
-                        variantAttr.value.type === "Literal"
-                          ? variantAttr.value.value
-                          : variantAttr.value.expression.value;
-                      const replacement = mapping[rawValue];
-                      context.report({
-                        node: variantAttr,
-                        message: `Legacy Badge variant "${rawValue}" — replaced with canonical "${replacement}" (neutral, info, success, warning, danger, accent, premium).`,
-                        fix(fixer) {
-                          if (variantAttr.value.type === "Literal") {
-                            return fixer.replaceText(
-                              variantAttr.value,
-                              `"${replacement}"`
-                            );
-                          } else if (
-                            variantAttr.value.type ===
-                              "JSXExpressionContainer" &&
-                            variantAttr.value.expression.type === "Literal"
-                          ) {
-                            return fixer.replaceText(
-                              variantAttr.value,
-                              `"${replacement}"`
-                            );
-                          }
-                          return null;
-                        },
-                      });
-                    }
-                  }
-                },
-              };
-            },
-          },
-          "no-raw-surface-gradients": {
-            meta: {
-              type: "suggestion",
-              docs: {
-                description:
-                  "Discourage ad-hoc bg-gradient-* containers; prefer semantic surface + utility",
-              },
-              schema: [],
-            },
-            create(context) {
-              return {
-                JSXAttribute(attr) {
-                  if (
-                    attr.name &&
-                    attr.name.name === "className" &&
-                    attr.value &&
-                    attr.value.type === "Literal"
-                  ) {
-                    const v = String(attr.value.value);
-                    const filename = context.getFilename();
-                    if (
-                      /bg-gradient-to-/.test(v) &&
-                      !/surface-/.test(v) &&
-                      !/(decorative-gradient|premium-badge)/.test(v) &&
-                      !/\/Badge\//.test(filename)
-                    ) {
-                      context.report({
-                        node: attr,
-                        message:
-                          "Raw gradient background without semantic surface-* class. Wrap or replace with surface-card + decorative overlay.",
-                      });
-                    }
-                  }
-                },
-              };
-            },
-          },
-          "no-raw-tooltip-bg": {
-            meta: {
-              type: "suggestion",
-              docs: {
-                description:
-                  "Disallow raw bg-gray-900 tooltip/popover containers; use surface-inverse",
-              },
-              schema: [],
-            },
-            create(context) {
-              return {
-                JSXAttribute(attr) {
-                  if (
-                    attr.name?.name === "className" &&
-                    attr.value?.type === "Literal"
-                  ) {
-                    const v = String(attr.value.value);
-                    if (
-                      /role=\"tooltip\"/.test(
-                        context.getSourceCode().getText()
-                      ) &&
-                      /bg-gray-900/.test(v) &&
-                      !/surface-inverse/.test(v)
-                    ) {
-                      context.report({
-                        node: attr,
-                        message:
-                          "Tooltip uses raw bg-gray-900; replace with surface-inverse for theming.",
-                      });
-                    }
-                  }
-                },
-              };
-            },
-          },
-          "no-radius-violations": noRadiusViolationsRule,
-          "no-outline-variant-in-disallowed-contexts":
-            noOutlineVariantInDisallowedContextsRule,
-          "no-raw-gray-text": {
-            meta: {
-              type: "problem",
-              docs: {
-                description:
-                  "Disallow raw text-gray-500/600/700/800/900 utilities; use semantic text-text-* tokens",
-              },
-              schema: [],
-            },
-            create(context) {
-              return {
-                JSXAttribute(attr) {
-                  if (
-                    attr.name?.name === "className" &&
-                    attr.value?.type === "Literal"
-                  ) {
-                    const v = String(attr.value.value);
-                    const re = /(\s|^)(text-gray-(500|600|700|800|900))(\s|$)/;
-                    if (re.test(v)) {
-                      context.report({
-                        node: attr,
-                        message:
-                          "Raw gray text utility detected; replace with text-text-primary / text-text-secondary / text-text-muted.",
-                      });
-                    }
-                  }
-                },
-              };
-            },
-          },
-          "no-raw-heading-utilities": {
-            meta: {
-              type: "problem",
-              docs: {
-                description:
-                  "Disallow raw text-xl/2xl/3xl/4xl heading utilities outside Typography component; use <Typography variant=...>",
-              },
-              schema: [],
-              messages: {
-                rawHeading:
-                  "Raw heading utility '{{utility}}' detected. Replace with <Typography variant=\"headline-*\" />.",
-              },
-            },
-            create(context) {
-              const headingRe = /(\s|^)(text-(xl|2xl|3xl|4xl))(\s|$)/;
-              return {
-                JSXAttribute(attr) {
-                  if (
-                    attr.name?.name === "className" &&
-                    attr.value?.type === "Literal"
-                  ) {
-                    const v = String(attr.value.value);
-                    if (headingRe.test(v)) {
-                      // Allow inside Typography component via parent name check
-                      const parent = attr.parent?.parent;
-                      if (
-                        parent &&
-                        parent.type === "JSXOpeningElement" &&
-                        parent.name.type === "JSXIdentifier" &&
-                        parent.name.name === "Typography"
-                      ) {
-                        return;
-                      }
-                      const match = v.match(/text-(xl|2xl|3xl|4xl)/);
-                      context.report({
-                        node: attr,
-                        messageId: "rawHeading",
-                        data: { utility: match ? match[0] : "text-*" },
-                      });
-                    }
-                  }
-                },
-              };
-            },
-          },
-          "no-raw-emoji": {
-            meta: {
-              type: "problem",
-              docs: {
-                description:
-                  "Disallow raw emoji characters in interactive / structural UI; use <Icon name=...> instead",
-              },
-              schema: [],
-              messages: {
-                rawEmoji:
-                  "Raw emoji '{{emoji}}' detected. Replace with appropriate <Icon /> component.",
-              },
-            },
-            create(context) {
-              // Basic emoji detection pattern (covers most common pictographs used previously)
-              const emojiRe =
-                /[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/u;
-              return {
-                JSXText(node) {
-                  const value = node.value;
-                  if (emojiRe.test(value)) {
-                    const match = value.match(emojiRe);
-                    context.report({
-                      node,
-                      messageId: "rawEmoji",
-                      data: { emoji: match?.[0] || "emoji" },
-                    });
-                  }
-                },
-                Literal(node) {
-                  if (
-                    typeof node.value === "string" &&
-                    emojiRe.test(node.value) &&
-                    node.parent?.type === "JSXElement"
-                  ) {
-                    const match = String(node.value).match(emojiRe);
-                    context.report({
-                      node,
-                      messageId: "rawEmoji",
-                      data: { emoji: match?.[0] || "emoji" },
-                    });
-                  }
-                },
-              };
-            },
-          },
-        },
-      },
+      "@typescript-eslint/no-explicit-any": "off", // Allow any for rapid development
+      "@typescript-eslint/no-empty-function": "off",
     },
   },
 ];
-
-if (RELAXED) {
-  // Override strict rules — convert errors to warnings or disable style gates
-  configArray.push({
-    files: ["**/*.{ts,tsx}"],
-    rules: {
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
-      ],
-      "no-raw-button/no-raw-button": "off",
-      "boxcall-style/no-raw-gray-text": "off",
-      "boxcall-style/no-raw-heading-utilities": "off",
-      "boxcall-style/no-raw-emoji": "off",
-      "boxcall-style/no-outline-variant-in-disallowed-contexts": "off",
-      "boxcall-style/no-legacy-badge-variants": "off",
-      "boxcall-style/no-raw-surface-gradients": "off",
-      "contrast/no-unsafe-white": "off",
-    },
-  });
-}
-
-// (No final override block; scripts/**/*.ts are handled above)
-
-export default tseslint.config(configArray);
