@@ -14,6 +14,9 @@ export default [
       ".vscode/",
       "archive/**",
       "*.log",
+      "src/components/ui/Icon/preloadShim.d.ts",
+      "src/routes/__tests__/loaderAuth.test.tsx",
+      "src/utils/errorHandler.tsx",
     ],
   },
   // Base configuration for all JS/TS files
@@ -26,6 +29,8 @@ export default [
         ...globals.browser,
         ...globals.node,
         React: "readonly", // Add React global for JSX
+        NodeJS: "readonly", // Add NodeJS global for TypeScript
+        gtag: "readonly", // Add gtag global for Google Analytics
       },
     },
     plugins: {
