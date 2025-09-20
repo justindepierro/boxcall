@@ -252,37 +252,16 @@ export class AchievementService {
    * TODO: Implement real database query
    */
   static async getHelmetStickers(_userId: string): Promise<HelmetSticker[]> {
-    try {
-      // TODO: Query team_achievements or similar table
-      // const { data, error } = await supabase
-      //   .from('helmet_stickers')
-      //   .select(`
-      //     *,
-      //     teams (name),
-      //     awarded_by_profile:profiles!awarded_by (display_name)
-      //   `)
-      //   .eq('user_id', userId)
-      //   .order('created_at', { ascending: false });
-
-      // TODO: Implement real helmet stickers from database
-      return [];
-    } catch (error) {
-      console.error("Error fetching helmet stickers:", error);
-      return [];
-    }
+    // TODO: Implement real helmet stickers from database
+    return [];
   }
 
   /**
    * Get BoxCall platform medals for user
    */
   static async getBoxCallMedals(_userId: string): Promise<BoxCallMedal[]> {
-    try {
-      // TODO: Implement medal calculation based on user activity
-      return [];
-    } catch (error) {
-      console.error("Error calculating BoxCall medals:", error);
-      return [];
-    }
+    // TODO: Implement medal calculation based on user activity
+    return [];
   }
 
   /**

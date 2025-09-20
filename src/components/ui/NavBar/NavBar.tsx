@@ -59,7 +59,7 @@ const getBadgeStyles = () => {
     bg-jade-600 dark:bg-jade-600 text-white
   `;
 };
-const NavBarItem: React.FC<{
+const NavBarItemComponent: React.FC<{
   item: NavBarItem;
   isMobile?: boolean;
   onItemClick?: (item: NavBarItem) => void;
@@ -220,7 +220,7 @@ export const NavBar: React.FC<NavBarProps> = ({
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
               {items.map((item) => (
-                <NavBarItem
+                <NavBarItemComponent
                   key={`desktop-${item.id}`}
                   item={item}
                   onItemClick={handleItemClick}
@@ -271,7 +271,7 @@ export const NavBar: React.FC<NavBarProps> = ({
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-subtle dark:border-gray-700">
               {items.map((item) => (
-                <NavBarItem
+                <NavBarItemComponent
                   key={`mobile-${item.id}`}
                   item={item}
                   isMobile={true}

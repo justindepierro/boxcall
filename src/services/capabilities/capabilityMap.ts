@@ -4,7 +4,7 @@
  * These are UI/rendering capabilities (feature toggles) rather than persisted permissions.
  */
 
-export const Capability = {
+export const CAPABILITIES = {
   CREATE_POST: "create_post",
   LOG_GAME_RESULT: "log_game_result",
   AWARD_STICKERS: "award_stickers",
@@ -21,57 +21,57 @@ export const Capability = {
   PIN_POST: "pin_post",
 } as const;
 
-export type Capability = (typeof Capability)[keyof typeof Capability];
+export type Capability = (typeof CAPABILITIES)[keyof typeof CAPABILITIES];
 
 // Role → capabilities mapping (additive; head_coach extends coach)
 const BASE_ROLE_MAP: Record<string, Capability[]> = {
   head_coach: [
-    Capability.CREATE_POST,
-    Capability.LOG_GAME_RESULT,
-    Capability.AWARD_STICKERS,
-    Capability.VIEW_PRACTICE_SCHEDULE,
-    Capability.UPLOAD_FILM,
-    Capability.MANAGE_ROSTER,
-    Capability.MANAGE_TEAM_SETTINGS,
-    Capability.VIEW_STATS,
-    Capability.STUDY_PLAYS,
-    Capability.RSVP_EVENT,
-    Capability.TEAM_CHAT,
-    Capability.PLAYER_PROGRESS, // for evaluation reviews
-    Capability.TEAM_PHOTOS,
-    Capability.PIN_POST,
+    CAPABILITIES.CREATE_POST,
+    CAPABILITIES.LOG_GAME_RESULT,
+    CAPABILITIES.AWARD_STICKERS,
+    CAPABILITIES.VIEW_PRACTICE_SCHEDULE,
+    CAPABILITIES.UPLOAD_FILM,
+    CAPABILITIES.MANAGE_ROSTER,
+    CAPABILITIES.MANAGE_TEAM_SETTINGS,
+    CAPABILITIES.VIEW_STATS,
+    CAPABILITIES.STUDY_PLAYS,
+    CAPABILITIES.RSVP_EVENT,
+    CAPABILITIES.TEAM_CHAT,
+    CAPABILITIES.PLAYER_PROGRESS, // for evaluation reviews
+    CAPABILITIES.TEAM_PHOTOS,
+    CAPABILITIES.PIN_POST,
   ],
   coach: [
-    Capability.CREATE_POST,
-    Capability.LOG_GAME_RESULT,
-    Capability.AWARD_STICKERS,
-    Capability.VIEW_PRACTICE_SCHEDULE,
-    Capability.UPLOAD_FILM,
-    Capability.MANAGE_ROSTER,
-    Capability.MANAGE_TEAM_SETTINGS,
-    Capability.VIEW_STATS,
-    Capability.STUDY_PLAYS,
-    Capability.RSVP_EVENT,
-    Capability.TEAM_CHAT,
-    Capability.TEAM_PHOTOS,
+    CAPABILITIES.CREATE_POST,
+    CAPABILITIES.LOG_GAME_RESULT,
+    CAPABILITIES.AWARD_STICKERS,
+    CAPABILITIES.VIEW_PRACTICE_SCHEDULE,
+    CAPABILITIES.UPLOAD_FILM,
+    CAPABILITIES.MANAGE_ROSTER,
+    CAPABILITIES.MANAGE_TEAM_SETTINGS,
+    CAPABILITIES.VIEW_STATS,
+    CAPABILITIES.STUDY_PLAYS,
+    CAPABILITIES.RSVP_EVENT,
+    CAPABILITIES.TEAM_CHAT,
+    CAPABILITIES.TEAM_PHOTOS,
   ],
   manager: [
-    Capability.VIEW_PRACTICE_SCHEDULE,
-    Capability.MANAGE_ROSTER,
-    Capability.RSVP_EVENT,
-    Capability.TEAM_CHAT,
-    Capability.TEAM_PHOTOS,
+    CAPABILITIES.VIEW_PRACTICE_SCHEDULE,
+    CAPABILITIES.MANAGE_ROSTER,
+    CAPABILITIES.RSVP_EVENT,
+    CAPABILITIES.TEAM_CHAT,
+    CAPABILITIES.TEAM_PHOTOS,
   ],
   player: [
-    Capability.VIEW_STATS,
-    Capability.STUDY_PLAYS,
-    Capability.RSVP_EVENT,
-    Capability.TEAM_CHAT,
+    CAPABILITIES.VIEW_STATS,
+    CAPABILITIES.STUDY_PLAYS,
+    CAPABILITIES.RSVP_EVENT,
+    CAPABILITIES.TEAM_CHAT,
   ],
   family: [
-    Capability.RSVP_EVENT,
-    Capability.PLAYER_PROGRESS,
-    Capability.TEAM_PHOTOS,
+    CAPABILITIES.RSVP_EVENT,
+    CAPABILITIES.PLAYER_PROGRESS,
+    CAPABILITIES.TEAM_PHOTOS,
   ],
   viewer: [],
 };
