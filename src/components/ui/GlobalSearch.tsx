@@ -4,6 +4,7 @@ import { Typography } from "../design-system";
 import { rosterService } from "../../services";
 import type { RosterPlayerView } from "../../services/rosterService";
 import { useNavigate } from "react-router-dom";
+import { getActiveTeamId } from "../../utils/activeTeam";
 
 interface GlobalSearchProps {
   className?: string;
@@ -28,8 +29,8 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
   const resultsRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // Mock team ID - in real app this would come from context/auth
-  const teamId = "current-team";
+  // Get the current active team ID
+  const teamId = getActiveTeamId();
 
   useEffect(() => {
     const searchPlayers = async () => {
