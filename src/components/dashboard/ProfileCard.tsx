@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ProfileEditModal } from "../profile/ProfileEditModal";
-import { DashboardContext } from "../../context/DashboardContextInstance";
+import { DashboardContext } from "../../contexts/DashboardContextInstance";
 import { useRoles } from "../../hooks/useRoles";
 import { useAdaptiveWidget } from "../../hooks/useAdaptiveDashboard";
 

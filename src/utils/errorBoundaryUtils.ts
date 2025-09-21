@@ -50,7 +50,7 @@ export const reportError = (
     }).catch(() => {
       // Silently fail for error reporting
     });
-  } catch (_e) {
+  } catch {
     // Ignore errors in error reporting
   }
 };

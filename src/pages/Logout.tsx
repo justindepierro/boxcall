@@ -13,7 +13,7 @@ const Logout: React.FC = () => {
     (async () => {
       try {
         await signOut();
-      } catch (_err) {
+      } catch {
         // ignore, we’ll redirect anyway
       } finally {
         // allow a brief tick for state to settle

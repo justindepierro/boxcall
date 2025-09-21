@@ -395,11 +395,3 @@ export class GestureDetector {
     );
   }
 }
-
-export default {
-  HapticPatterns,
-  AnimationTimings,
-  AnimationUtils,
-  AnimationPerformanceMonitor,
-  GestureDetector,
-};

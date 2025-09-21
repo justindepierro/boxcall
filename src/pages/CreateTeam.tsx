@@ -279,7 +279,7 @@ export const CreateTeam: React.FC = () => {
       // Persist active team selection
       try {
         localStorage.setItem("activeTeamId", newTeamId);
-      } catch (_err) {
+      } catch {
         /* ignore */
       }
       setCreatedTeamId(newTeamId);

@@ -73,7 +73,7 @@ export class ErrorBoundary extends Component<Props, State> {
         type: TelemetryEventTypes.ErrorBoundary,
         data: errorReport,
       });
-    } catch (_) {
+    } catch {
       // swallow telemetry errors
     }
     // Example: sendToErrorService(errorReport);

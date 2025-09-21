@@ -20,7 +20,7 @@ const isEnabled = () =>
 // Lightweight diagnostic (safe if console blocked)
 try {
   console.info("[contrastDebug] loaded", { flag: isEnabled() });
-} catch (_err) {
+} catch {
   /* noop */
 }
 

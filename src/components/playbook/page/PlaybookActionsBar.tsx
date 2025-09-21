@@ -26,6 +26,7 @@ export type PlaybookActionsBarProps = {
   onOpenImport: () => void;
   playsCreated: number;
   onOpenBuilder: () => void;
+  onOpenSettings: () => void;
   selectedCount: number;
   onClearSelection: () => void;
   /** Optional slot rendered on the left side (after default left controls). */
@@ -56,6 +57,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
   onOpenImport,
   playsCreated,
   onOpenBuilder,
+  onOpenSettings,
   selectedCount,
   onClearSelection,
   extraLeft,
@@ -260,6 +262,15 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 className="px-4 py-2"
               >
                 <Icon name="upload" className="h-4 w-4 mr-2" /> Import CSV
+              </Button>
+              <Button
+                onClick={onOpenSettings}
+                variant="ghost"
+                size="sm"
+                className="px-4 py-2"
+                title="Playbook Settings"
+              >
+                <Icon name="settings" className="h-4 w-4 mr-2" /> Settings
               </Button>
               <div className="relative">
                 <Button

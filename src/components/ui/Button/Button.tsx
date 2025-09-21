@@ -307,4 +307,3 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 // Set display name for debugging
 Button.displayName = "Button";
-export default Button;

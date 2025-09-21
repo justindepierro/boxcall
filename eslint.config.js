@@ -16,7 +16,7 @@ export default [
       "*.log",
       "src/components/ui/Icon/preloadShim.d.ts",
       "src/routes/__tests__/loaderAuth.test.tsx",
-      "src/utils/errorHandler.tsx",
+      "src/utils/useErrorHandler.ts",
     ],
   },
   // Base configuration for all JS/TS files

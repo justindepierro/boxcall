@@ -397,5 +397,3 @@ export class AdaptiveContentService {
     return recommendations;
   }
 }
-
-export default AdaptiveContentService;

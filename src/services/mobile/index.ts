@@ -3,5 +3,3 @@ export class MobileOrchestrator {
     // Placeholder for future mobile initialization logic
   }
 }
-
-export default MobileOrchestrator;

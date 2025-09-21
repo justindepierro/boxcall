@@ -229,5 +229,3 @@ export const NotificationBadge: React.FC<
     {count > 99 ? "99+" : count}
   </Badge>
 );
-
-export default Badge;

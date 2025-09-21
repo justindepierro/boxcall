@@ -525,5 +525,3 @@ export class ReactNativePlatformService {
     return this.nativeAppState;
   }
 }
-
-export default ReactNativePlatformService;

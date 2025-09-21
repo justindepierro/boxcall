@@ -213,19 +213,3 @@ export const verifyTreeShaking = (moduleNames: string[]) => {
     // end group
   }
 };
-
-export default {
-  loadAsync,
-  createLazyComponent,
-  preloadResource,
-  preloadModule,
-  inlineCriticalCSS,
-  analyzeBundleSize,
-  dynamicImportWithRetry,
-  registerServiceWorker,
-  prefetchRoute,
-  createOptimizedImageSrc,
-  monitorMemoryUsage,
-  optimizeChunkLoading,
-  verifyTreeShaking,
-};

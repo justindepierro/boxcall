@@ -466,4 +466,3 @@ export class MobilePlatformAdapter {
     return response.data!;
   }
 }
-export default UnifiedApiGateway;

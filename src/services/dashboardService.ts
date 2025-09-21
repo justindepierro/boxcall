@@ -125,7 +125,7 @@ export class DashboardService {
       }
 
       return userTeams;
-    } catch (_error) {
+    } catch {
       // TODO: Handle error in getUserTeams (was: console.error)
       return [];
     }
@@ -156,7 +156,7 @@ export class DashboardService {
         activeTeams,
         recentActivity,
       };
-    } catch (_error) {
+    } catch {
       // TODO: Handle error fetching dashboard data (was: console.error)
       return {
         userTeams: [],

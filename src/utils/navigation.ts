@@ -33,7 +33,7 @@ export const getNavigationItems = (
   try {
     const stored = localStorage.getItem("activeTeamId");
     if (stored) activeTeamId = stored;
-  } catch (_err) {
+  } catch {
     /* ignore */
   }
   const items: NavigationItem[] = [

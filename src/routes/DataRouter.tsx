@@ -32,7 +32,7 @@ import {
 import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
 import { Layout } from "../components/layout/Layout";
-import { DashboardProvider } from "../context/DashboardContext";
+import { DashboardProvider } from "../contexts/DashboardContext";
 import { RoleProvider } from "../hooks/useRoles";
 import { PlaybookProvider } from "../contexts/PlaybookContext";
 import { ROUTES } from "./paths";

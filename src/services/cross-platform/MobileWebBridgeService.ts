@@ -434,4 +434,3 @@ export class MobileWebBridgeService {
     return Array.from(this.activeConnections.values());
   }
 }
-export default MobileWebBridgeService;
