@@ -33,15 +33,15 @@ export interface ModalProps {
 const getModalSizeStyles = (size: ModalProps["size"]) => {
   switch (size) {
     case "sm":
-      return "max-w-sm";
+      return "max-w-sm w-full";
     case "md":
-      return "max-w-md";
+      return "max-w-md w-full sm:max-w-lg";
     case "lg":
-      return "max-w-lg";
+      return "max-w-lg w-full sm:max-w-2xl lg:max-w-3xl";
     case "xl":
-      return "max-w-xl";
+      return "max-w-xl w-full sm:max-w-3xl lg:max-w-4xl xl:max-w-5xl";
     default:
-      return "max-w-md";
+      return "max-w-md w-full sm:max-w-lg";
   }
 };
 const getModalTypeStyles = (type: ModalProps["type"]) => {
@@ -158,6 +158,7 @@ export const Modal: React.FC<ModalProps> = ({
         className={`
           relative w-full ${getModalSizeStyles(size)} ${getModalTypeStyles(type)}
           transform transition-all duration-300 scale-100 opacity-100
+          max-h-[90vh] overflow-hidden flex flex-col
           ${className}
         `}
         role="dialog"
@@ -201,7 +202,9 @@ export const Modal: React.FC<ModalProps> = ({
           </div>
         )}
         {/* Content - More substantial padding */}
-        <div className="bc-card-padding">{children}</div>
+        <div className="bc-card-padding flex-1 overflow-y-auto min-h-0">
+          {children}
+        </div>
         {/* Footer - Enhanced styling */}
         {footer && (
           <div className="bc-card-padding border-t-2 border-subtle dark:border-gray-700 surface-subtle dark:bg-gray-900/50">

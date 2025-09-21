@@ -1,33 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
+import { Modal } from "../ui/Modal/Modal";
+import type { Play } from "../../types/play";
 
 interface AddNewPlayModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreatePlay?: (playData: Partial<Play>) => void;
-}
-
-interface Play {
-  id: string;
-  play_name: string;
-  formation?: string;
-  p_type?: string;
-  personnel?: string;
-  description?: string;
+  existingPlay?: Play | null;
 }
 
 export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   isOpen,
   onClose,
   onCreatePlay,
+  existingPlay,
 }) => {
-  const [playName, setPlayName] = useState("");
-  const [formation, setFormation] = useState("");
-  const [playType, setPlayType] = useState("");
-  const [personnel, setPersonnel] = useState("");
-  const [description, setDescription] = useState("");
+  const [playName, setPlayName] = useState(existingPlay?.play_name || "");
+  const [formation, setFormation] = useState(existingPlay?.formation || "");
+  const [playType, setPlayType] = useState(existingPlay?.p_type || "");
+  const [personnel, setPersonnel] = useState(existingPlay?.personnel || "");
+  const [description, setDescription] = useState(existingPlay?.notes || "");
+
+  // Update form when existingPlay changes
+  useEffect(() => {
+    if (existingPlay) {
+      setPlayName(existingPlay.play_name || "");
+      setFormation(existingPlay.formation || "");
+      setPlayType(existingPlay.p_type || "");
+      setPersonnel(existingPlay.personnel || "");
+      setDescription(existingPlay.notes || "");
+    } else {
+      // Reset form for new play
+      setPlayName("");
+      setFormation("");
+      setPlayType("");
+      setPersonnel("");
+      setDescription("");
+    }
+  }, [existingPlay]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
@@ -93,146 +106,144 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   ];
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Icon name="plus" className="h-6 w-6 text-blue-600" />
-              </div>
-              <div>
-                <Typography variant="headline-lg" className="text-xl font-bold">
-                  Create New Play
-                </Typography>
-                <Typography variant="body-sm" className="text-gray-600">
-                  Add a new play to your playbook
-                </Typography>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <Icon name="close" className="h-5 w-5" />
-            </button>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={existingPlay ? "Edit Play" : "Create New Play"}
+      size="lg"
+      footer={
+        <div className="flex justify-end gap-3">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={onClose}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={isSubmitting || !playName.trim()}
+            onClick={handleSubmit}
+          >
+            {isSubmitting ? (
+              <>{existingPlay ? "Updating..." : "Creating..."}</>
+            ) : (
+              <>
+                <Icon
+                  name={existingPlay ? "edit" : "plus"}
+                  className="h-4 w-4 mr-2"
+                />
+                {existingPlay ? "Update Play" : "Create Play"}
+              </>
+            )}
+          </Button>
+        </div>
+      }
+    >
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-2 bg-blue-100 rounded-lg">
+            <Icon name="plus" className="h-6 w-6 text-blue-600" />
+          </div>
+          <div>
+            <Typography variant="body-lg" className="text-gray-600">
+              {existingPlay
+                ? "Update play details"
+                : "Add a new play to your playbook"}
+            </Typography>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Play Name */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Play Name *
+            </label>
+            <input
+              type="text"
+              value={playName}
+              onChange={(e) => setPlayName(e.target.value)}
+              placeholder="e.g., Power Read, Slant Route, Zone Blitz"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Play Name */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Formation */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Play Name *
+                Formation
               </label>
-              <input
-                type="text"
-                value={playName}
-                onChange={(e) => setPlayName(e.target.value)}
-                placeholder="e.g., Power Read, Slant Route, Zone Blitz"
+              <select
+                value={formation}
+                onChange={(e) => setFormation(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              />
+              >
+                <option value="">Select formation...</option>
+                {formations.map((f) => (
+                  <option key={f} value={f}>
+                    {f}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Formation */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Formation
-                </label>
-                <select
-                  value={formation}
-                  onChange={(e) => setFormation(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="">Select formation...</option>
-                  {formations.map((f) => (
-                    <option key={f} value={f}>
-                      {f}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Play Type */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Play Type
-                </label>
-                <select
-                  value={playType}
-                  onChange={(e) => setPlayType(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="">Select type...</option>
-                  {playTypes.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Personnel */}
+            {/* Play Type */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Personnel
+                Play Type
               </label>
-              <input
-                type="text"
-                value={personnel}
-                onChange={(e) => setPersonnel(e.target.value)}
-                placeholder="e.g., 11 Personnel, 12 Personnel, Nickel"
+              <select
+                value={playType}
+                onChange={(e) => setPlayType(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-              <Typography variant="body-sm" className="text-gray-500 mt-1">
-                Personnel grouping (e.g., 11 = 1 RB, 1 TE, 1 WR)
-              </Typography>
-            </div>
-
-            {/* Description */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
-              </label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Brief description of the play..."
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-              />
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex justify-end gap-3 pt-4 border-t">
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={onClose}
-                disabled={isSubmitting}
               >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                variant="primary"
-                disabled={isSubmitting || !playName.trim()}
-              >
-                {isSubmitting ? (
-                  <>Creating...</>
-                ) : (
-                  <>
-                    <Icon name="plus" className="h-4 w-4 mr-2" />
-                    Create Play
-                  </>
-                )}
-              </Button>
+                <option value="">Select type...</option>
+                {playTypes.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
             </div>
-          </form>
-        </div>
+          </div>
+
+          {/* Personnel */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Personnel
+            </label>
+            <input
+              type="text"
+              value={personnel}
+              onChange={(e) => setPersonnel(e.target.value)}
+              placeholder="e.g., 11 Personnel, 12 Personnel, Nickel"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <Typography variant="body-sm" className="text-gray-500 mt-1">
+              Personnel grouping (e.g., 11 = 1 RB, 1 TE, 1 WR)
+            </Typography>
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Description
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Brief description of the play..."
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+            />
+          </div>
+        </form>
       </div>
-    </div>
+    </Modal>
   );
 };

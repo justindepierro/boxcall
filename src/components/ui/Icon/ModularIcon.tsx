@@ -12,6 +12,7 @@ import React from "react";
 import { getComponentColor } from "../../../design-system/tokens";
 
 // Import the official dynamic icon imports from lucide-react
+// @ts-ignore - dynamicIconImports has no type definitions but works at runtime
 import dynamicIconImports from "lucide-react/dist/esm/dynamicIconImports.js";
 
 // Core types
@@ -305,11 +306,18 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
     className?: string;
   }> | null>(null);
   const [loading, setLoading] = React.useState(false);
+  const [showFallback, setShowFallback] = React.useState(false);
 
   React.useEffect(() => {
+    // Reset states when name changes
+    setIconComponent(null);
+    setLoading(false);
+    setShowFallback(false);
+
     // Check if already loaded
     if (iconRegistry.has(name)) {
       setIconComponent(iconRegistry.get(name)!);
+      setShowFallback(false);
       return;
     }
 
@@ -318,9 +326,19 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
     if (loader && !loading) {
       let isMounted = true;
       setLoading(true);
+      setShowFallback(false);
+
+      // Set a timeout to show fallback after 500ms if still loading
+      const fallbackTimeout = setTimeout(() => {
+        if (isMounted) {
+          setShowFallback(true);
+        }
+      }, 500);
+
       loader()
         .then((mod) => {
           if (!isMounted) return;
+          clearTimeout(fallbackTimeout);
           const component = mod as
             | { default?: LucideComponent }
             | LucideComponent;
@@ -332,23 +350,30 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
           if (Comp) {
             iconRegistry.set(name, Comp);
             setIconComponent(Comp);
+            setShowFallback(false); // Reset fallback state
+            setLoading(false);
+          } else {
+            setLoading(false);
+            setShowFallback(true);
           }
-          setLoading(false);
         })
         .catch((error) => {
-          // Swallow errors during tests/SSR; keep placeholder visible
+          // Swallow errors during tests/SSR; show fallback
           console.error(`Failed to load icon: ${name}`, error);
           if (!isMounted) return;
+          clearTimeout(fallbackTimeout);
           setLoading(false);
+          setShowFallback(true);
         });
       return () => {
         isMounted = false;
+        clearTimeout(fallbackTimeout);
       };
     }
   }, [name, loading]);
 
-  if (loading || !IconComponent) {
-    // Return a minimal loading placeholder
+  if ((loading && !showFallback) || (!IconComponent && !showFallback)) {
+    // Show loading spinner for first 500ms or if no component and not in fallback mode
     return (
       <svg
         role={role ?? "img"}
@@ -356,15 +381,57 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
         aria-hidden={ariaHidden}
         focusable={focusable}
         tabIndex={tabIndex}
-        className={`inline-block surface-subtle rounded ${className}`}
+        className={`inline-block animate-spin ${className}`}
         width={typeof size === "number" ? size : sizeMap[size]}
         height={typeof size === "number" ? size : sizeMap[size]}
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        stroke={colorMap[color]}
+        strokeWidth={strokeWidth}
       >
-        {/* Simple neutral placeholder mark */}
-        <circle cx="12" cy="12" r="10" stroke="#00A86B" strokeWidth="2" />
+        {/* Loading spinner */}
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeOpacity="0.2"
+        />
+        <path
+          d="M12 6V12L16 14"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+
+  if (!IconComponent || showFallback) {
+    // Return a proper help-circle fallback when we have no icon component or are in fallback mode
+    return (
+      <svg
+        role={role ?? "img"}
+        aria-label={ariaLabel ?? name}
+        aria-hidden={ariaHidden}
+        focusable={focusable}
+        tabIndex={tabIndex}
+        className={`inline-block ${className}`}
+        width={typeof size === "number" ? size : sizeMap[size]}
+        height={typeof size === "number" ? size : sizeMap[size]}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        stroke={colorMap[color]}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {/* Help circle icon */}
+        <circle cx="12" cy="12" r="10" />
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+        <path d="M12 17h.01" />
       </svg>
     );
   }

@@ -3,6 +3,11 @@ export { Button } from "./Button";
 export type { ButtonProps } from "./Button";
 export { Input } from "./Input";
 export type { InputProps } from "./Input";
+export { InlineEditableText } from "./InlineEditableText";
+export type {
+  InlineEditableTextProps,
+  ValidationRule,
+} from "./InlineEditableText";
 export { TextArea } from "./TextArea";
 export type { TextAreaProps } from "./TextArea";
 export { Card } from "./Card";

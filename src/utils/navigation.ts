@@ -23,11 +23,14 @@ export interface NavigationItem {
 export const getNavigationItems = (
   userRole?: UserRole | null | string
 ): NavigationItem[] => {
-  console.info(
-    "getNavigationItems called with userRole:",
-    userRole,
-    typeof userRole
-  );
+  // Only log in development mode to reduce console noise
+  if (process.env.NODE_ENV === "development") {
+    console.info(
+      "getNavigationItems called with userRole:",
+      userRole,
+      typeof userRole
+    );
+  }
   // Dynamic team selection (persisted after creation)
   let activeTeamId = "1";
   try {
