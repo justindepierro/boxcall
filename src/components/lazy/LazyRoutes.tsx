@@ -57,8 +57,12 @@ export const LazyBoxCall = lazy(() => import("../../pages/BoxCall"));
 
 export const LazyPlaybookPage = lazy(() => import("../../pages/Playbook"));
 
-export const LazyPracticePlansPage = lazy(() => import("../../pages/PracticePlansPage"));
-export const LazyGamePlansPage = lazy(() => import("../../pages/GamePlansPage"));
+export const LazyPracticePlansPage = lazy(
+  () => import("../../pages/PracticePlansPage")
+);
+export const LazyGamePlansPage = lazy(
+  () => import("../../pages/GamePlansPage")
+);
 
 export const LazyTeamSettings = lazy(() => import("../../pages/TeamSettings"));
 export const LazyAnalyticsPage = lazy(

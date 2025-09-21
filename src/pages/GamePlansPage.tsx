@@ -29,7 +29,7 @@ export default function GamePlansPage() {
   };
 
   const handleDeletePlan = (planId: string) => {
-    setGamePlans(prev => prev.filter(p => p.id !== planId));
+    setGamePlans((prev) => prev.filter((p) => p.id !== planId));
     // TODO: Delete from database
   };
 
@@ -66,15 +66,15 @@ export default function GamePlansPage() {
             <Typography variant="headline-md" className="text-gray-900 mb-2">
               No Game Plans Yet
             </Typography>
-            <Typography variant="body-lg" className="text-gray-600 mb-8 max-w-md mx-auto">
-              Create your first game plan to strategize plays and formations for upcoming matches.
+            <Typography
+              variant="body-lg"
+              className="text-gray-600 mb-8 max-w-md mx-auto"
+            >
+              Create your first game plan to strategize plays and formations for
+              upcoming matches.
             </Typography>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                onClick={handleCreatePlan}
-                variant="primary"
-                size="lg"
-              >
+              <Button onClick={handleCreatePlan} variant="primary" size="lg">
                 <Icon name="plus" className="h-5 w-5 mr-2" />
                 Create New Plan
               </Button>
@@ -96,10 +96,7 @@ export default function GamePlansPage() {
               <Typography variant="headline-md" className="text-gray-900">
                 Your Game Plans ({gamePlans.length})
               </Typography>
-              <Button
-                onClick={handleCreatePlan}
-                variant="primary"
-              >
+              <Button onClick={handleCreatePlan} variant="primary">
                 <Icon name="plus" className="h-4 w-4 mr-2" />
                 New Plan
               </Button>
@@ -115,7 +112,10 @@ export default function GamePlansPage() {
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <Typography variant="headline-sm" className="text-gray-900 mb-1">
+                      <Typography
+                        variant="headline-sm"
+                        className="text-gray-900 mb-1"
+                      >
                         {plan.name}
                       </Typography>
                       <Typography variant="body-sm" className="text-gray-600">

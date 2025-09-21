@@ -4,7 +4,12 @@ import { Typography } from "../design-system/Typography";
 
 interface ActivityItem {
   id: string;
-  type: "created" | "updated" | "duplicated" | "added_to_script" | "added_to_gameplan";
+  type:
+    | "created"
+    | "updated"
+    | "duplicated"
+    | "added_to_script"
+    | "added_to_gameplan";
   playName: string;
   timestamp: Date;
   details?: string;
@@ -74,7 +79,9 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
 
   const formatTimeAgo = (date: Date) => {
     const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+    const diffInMinutes = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60)
+    );
 
     if (diffInMinutes < 1) return "Just now";
     if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
@@ -91,7 +98,9 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
   const displayedActivities = activities.slice(0, maxItems);
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 p-4 ${className}`}>
+    <div
+      className={`bg-white rounded-lg border border-gray-200 p-4 ${className}`}
+    >
       <div className="flex items-center mb-4">
         <Icon name="activity" className="h-5 w-5 text-jade-600 mr-2" />
         <Typography variant="headline-sm" className="text-gray-900">
@@ -101,7 +110,10 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
 
       {displayedActivities.length === 0 ? (
         <div className="text-center py-6 text-gray-500">
-          <Icon name="activity" className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+          <Icon
+            name="activity"
+            className="h-8 w-8 mx-auto mb-2 text-gray-300"
+          />
           <Typography variant="body-sm" className="text-gray-500">
             No recent activity
           </Typography>
@@ -110,7 +122,9 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
         <div className="space-y-3">
           {displayedActivities.map((activity) => (
             <div key={activity.id} className="flex items-start space-x-3">
-              <div className={`flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center`}>
+              <div
+                className={`flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center`}
+              >
                 <Icon
                   name={getActivityIcon(activity.type)}
                   className={`h-4 w-4 ${getActivityColor(activity.type)}`}
@@ -118,10 +132,16 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <Typography variant="body-sm" className="text-gray-900 font-medium truncate">
+                  <Typography
+                    variant="body-sm"
+                    className="text-gray-900 font-medium truncate"
+                  >
                     {activity.playName}
                   </Typography>
-                  <Typography variant="body-xs" className="text-gray-500 ml-2 flex-shrink-0">
+                  <Typography
+                    variant="body-xs"
+                    className="text-gray-500 ml-2 flex-shrink-0"
+                  >
                     {formatTimeAgo(activity.timestamp)}
                   </Typography>
                 </div>

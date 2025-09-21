@@ -16,7 +16,11 @@ interface KeyboardShortcutsGuideProps {
 const shortcuts: KeyboardShortcut[] = [
   // Navigation
   { key: "Ctrl+N", description: "Create new play", category: "Creation" },
-  { key: "Ctrl+P", description: "Create practice script", category: "Creation" },
+  {
+    key: "Ctrl+P",
+    description: "Create practice script",
+    category: "Creation",
+  },
   { key: "Ctrl+G", description: "Create game plan", category: "Creation" },
   { key: ",", description: "Open settings", category: "Navigation" },
 
@@ -29,7 +33,11 @@ const shortcuts: KeyboardShortcut[] = [
   { key: "Escape", description: "Clear selection", category: "Selection" },
 
   // Actions
-  { key: "Ctrl+D", description: "Duplicate selected play", category: "Actions" },
+  {
+    key: "Ctrl+D",
+    description: "Duplicate selected play",
+    category: "Actions",
+  },
   { key: "Delete", description: "Delete selected play", category: "Actions" },
   { key: "Enter", description: "Edit selected play", category: "Actions" },
 
@@ -39,7 +47,7 @@ const shortcuts: KeyboardShortcut[] = [
   { key: "Ctrl+3", description: "Switch to compact view", category: "View" },
 ];
 
-const categories = Array.from(new Set(shortcuts.map(s => s.category)));
+const categories = Array.from(new Set(shortcuts.map((s) => s.category)));
 
 export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
   isOpen,
@@ -78,7 +86,10 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
           <div className="space-y-6">
             {categories.map((category) => (
               <div key={category}>
-                <Typography variant="headline-sm" className="text-gray-900 mb-3">
+                <Typography
+                  variant="headline-sm"
+                  className="text-gray-900 mb-3"
+                >
                   {category}
                 </Typography>
                 <div className="grid gap-2">
@@ -106,7 +117,11 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
           <div className="mt-6 pt-4 border-t border-gray-200">
             <div className="flex items-center justify-between">
               <Typography variant="body-xs" className="text-gray-500">
-                Press <kbd className="px-1 py-0.5 bg-gray-100 border rounded text-xs">?</kbd> anywhere to show this guide
+                Press{" "}
+                <kbd className="px-1 py-0.5 bg-gray-100 border rounded text-xs">
+                  ?
+                </kbd>{" "}
+                anywhere to show this guide
               </Typography>
               <Button variant="primary" onClick={onClose}>
                 Got it

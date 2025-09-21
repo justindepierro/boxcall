@@ -12,7 +12,12 @@ interface PlaybookStats {
   playActionPlays: number;
   recentActivity: Array<{
     id: string;
-    type: "created" | "updated" | "duplicated" | "added_to_script" | "added_to_gameplan";
+    type:
+      | "created"
+      | "updated"
+      | "duplicated"
+      | "added_to_script"
+      | "added_to_gameplan";
     playName: string;
     timestamp: Date;
     details?: string;
@@ -28,20 +33,25 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
   stats,
   className = "",
 }) => {
-  const diagramCoverage = stats.totalPlays > 0
-    ? Math.round((stats.playsWithDiagrams / stats.totalPlays) * 100)
-    : 0;
+  const diagramCoverage =
+    stats.totalPlays > 0
+      ? Math.round((stats.playsWithDiagrams / stats.totalPlays) * 100)
+      : 0;
 
-  const passPercentage = stats.totalPlays > 0
-    ? Math.round((stats.passPlays / stats.totalPlays) * 100)
-    : 0;
+  const passPercentage =
+    stats.totalPlays > 0
+      ? Math.round((stats.passPlays / stats.totalPlays) * 100)
+      : 0;
 
-  const runPercentage = stats.totalPlays > 0
-    ? Math.round((stats.runPlays / stats.totalPlays) * 100)
-    : 0;
+  const runPercentage =
+    stats.totalPlays > 0
+      ? Math.round((stats.runPlays / stats.totalPlays) * 100)
+      : 0;
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 p-4 ${className}`}>
+    <div
+      className={`bg-white rounded-lg border border-gray-200 p-4 ${className}`}
+    >
       <div className="flex items-center mb-4">
         <Icon name="bar-chart" className="h-5 w-5 text-jade-600 mr-2" />
         <Typography variant="headline-sm" className="text-gray-900">
@@ -53,11 +63,15 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
         {/* Main Stats */}
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center p-3 bg-jade-50 rounded-lg">
-            <div className="text-2xl font-bold text-jade-700">{stats.totalPlays}</div>
+            <div className="text-2xl font-bold text-jade-700">
+              {stats.totalPlays}
+            </div>
             <div className="text-xs text-jade-600">Total Plays</div>
           </div>
           <div className="text-center p-3 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-700">{stats.formationsCount}</div>
+            <div className="text-2xl font-bold text-blue-700">
+              {stats.formationsCount}
+            </div>
             <div className="text-xs text-blue-600">Formations</div>
           </div>
         </div>
@@ -66,7 +80,9 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
         <div>
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-gray-600">Diagram Coverage</span>
-            <span className="text-sm font-medium text-gray-900">{diagramCoverage}%</span>
+            <span className="text-sm font-medium text-gray-900">
+              {diagramCoverage}%
+            </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div
@@ -84,11 +100,15 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Pass Plays</span>
-              <span className="text-sm font-medium">{stats.passPlays} ({passPercentage}%)</span>
+              <span className="text-sm font-medium">
+                {stats.passPlays} ({passPercentage}%)
+              </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Run Plays</span>
-              <span className="text-sm font-medium">{stats.runPlays} ({runPercentage}%)</span>
+              <span className="text-sm font-medium">
+                {stats.runPlays} ({runPercentage}%)
+              </span>
             </div>
             {stats.rpoPlays > 0 && (
               <div className="flex justify-between items-center">
@@ -99,7 +119,9 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
             {stats.playActionPlays > 0 && (
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">Play Action</span>
-                <span className="text-sm font-medium">{stats.playActionPlays}</span>
+                <span className="text-sm font-medium">
+                  {stats.playActionPlays}
+                </span>
               </div>
             )}
           </div>
@@ -113,11 +135,17 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
             </Typography>
             <div className="space-y-2">
               {stats.recentActivity.slice(0, 3).map((activity) => (
-                <div key={activity.id} className="flex items-center text-xs text-gray-600">
+                <div
+                  key={activity.id}
+                  className="flex items-center text-xs text-gray-600"
+                >
                   <Icon
                     name={
-                      activity.type === "created" ? "plus" :
-                      activity.type === "updated" ? "edit" : "copy"
+                      activity.type === "created"
+                        ? "plus"
+                        : activity.type === "updated"
+                          ? "edit"
+                          : "copy"
                     }
                     className="h-3 w-3 mr-2 text-gray-400"
                   />

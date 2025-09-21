@@ -13,7 +13,7 @@ export default function PracticePlansPage() {
   const [practiceScripts, setPracticeScripts] = useState<PracticeScript[]>([]);
 
   const handleCreateScript = (script: PracticeScript) => {
-    setPracticeScripts(prev => [...prev, script]);
+    setPracticeScripts((prev) => [...prev, script]);
     setShowCreateModal(false);
     // TODO: Save to database
     console.log("Created practice script:", script);
@@ -25,7 +25,7 @@ export default function PracticePlansPage() {
   };
 
   const handleDeleteScript = (scriptId: string) => {
-    setPracticeScripts(prev => prev.filter(s => s.id !== scriptId));
+    setPracticeScripts((prev) => prev.filter((s) => s.id !== scriptId));
     // TODO: Delete from database
   };
 
@@ -62,8 +62,12 @@ export default function PracticePlansPage() {
             <Typography variant="headline-md" className="text-gray-900 mb-2">
               No Practice Scripts Yet
             </Typography>
-            <Typography variant="body-lg" className="text-gray-600 mb-8 max-w-md mx-auto">
-              Create your first practice script to organize plays for your team's training sessions.
+            <Typography
+              variant="body-lg"
+              className="text-gray-600 mb-8 max-w-md mx-auto"
+            >
+              Create your first practice script to organize plays for your
+              team's training sessions.
             </Typography>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -111,7 +115,10 @@ export default function PracticePlansPage() {
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <Typography variant="headline-sm" className="text-gray-900 mb-1">
+                      <Typography
+                        variant="headline-sm"
+                        className="text-gray-900 mb-1"
+                      >
                         {script.name}
                       </Typography>
                       {script.opponent && (

@@ -37,7 +37,11 @@ export const QuickActionsBar: React.FC<QuickActionsBarProps> = ({
                 variant={action.variant || "secondary"}
                 size="sm"
                 className="shadow-lg hover:shadow-xl transition-shadow duration-200 min-w-[160px] justify-start"
-                title={action.shortcut ? `${action.label} (${action.shortcut})` : action.label}
+                title={
+                  action.shortcut
+                    ? `${action.label} (${action.shortcut})`
+                    : action.label
+                }
               >
                 <Icon name={action.icon as any} className="h-4 w-4 mr-2" />
                 {action.label}

@@ -144,7 +144,9 @@ export default function PlaybookPage() {
 
     return {
       totalPlays: state.playsCreated || 0,
-      playsWithDiagrams: Math.floor((state.playsCreated || 0) * (state.diagramCoverage / 100)),
+      playsWithDiagrams: Math.floor(
+        (state.playsCreated || 0) * (state.diagramCoverage / 100)
+      ),
       formationsCount: Math.max(1, Math.floor((state.playsCreated || 0) / 3)), // Rough estimate
       passPlays: Math.floor((state.playsCreated || 0) * 0.4),
       runPlays: Math.floor((state.playsCreated || 0) * 0.4),
@@ -419,12 +421,19 @@ export default function PlaybookPage() {
 
                 {/* Placeholder for practice scripts list */}
                 <div className="text-center py-12">
-                  <Icon name="file" className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                  <Typography variant="headline-sm" className="text-gray-600 mb-2">
+                  <Icon
+                    name="file"
+                    className="h-16 w-16 text-gray-300 mx-auto mb-4"
+                  />
+                  <Typography
+                    variant="headline-sm"
+                    className="text-gray-600 mb-2"
+                  >
                     No Practice Scripts Yet
                   </Typography>
                   <Typography variant="body-sm" className="text-gray-500 mb-6">
-                    Create your first practice script to organize plays for training sessions.
+                    Create your first practice script to organize plays for
+                    training sessions.
                   </Typography>
                   <Button
                     onClick={handleQuickNewPracticeScript}
@@ -443,10 +452,7 @@ export default function PlaybookPage() {
                   <Typography variant="headline-md" className="text-gray-900">
                     Game Plans
                   </Typography>
-                  <Button
-                    onClick={handleQuickNewGamePlan}
-                    variant="primary"
-                  >
+                  <Button onClick={handleQuickNewGamePlan} variant="primary">
                     <Icon name="plus" className="h-4 w-4 mr-2" />
                     New Plan
                   </Button>
@@ -454,17 +460,21 @@ export default function PlaybookPage() {
 
                 {/* Placeholder for game plans list */}
                 <div className="text-center py-12">
-                  <Icon name="target" className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                  <Typography variant="headline-sm" className="text-gray-600 mb-2">
+                  <Icon
+                    name="target"
+                    className="h-16 w-16 text-gray-300 mx-auto mb-4"
+                  />
+                  <Typography
+                    variant="headline-sm"
+                    className="text-gray-600 mb-2"
+                  >
                     No Game Plans Yet
                   </Typography>
                   <Typography variant="body-sm" className="text-gray-500 mb-6">
-                    Create your first game plan to strategize plays for upcoming matches.
+                    Create your first game plan to strategize plays for upcoming
+                    matches.
                   </Typography>
-                  <Button
-                    onClick={handleQuickNewGamePlan}
-                    variant="primary"
-                  >
+                  <Button onClick={handleQuickNewGamePlan} variant="primary">
                     <Icon name="plus" className="h-4 w-4 mr-2" />
                     Create New Plan
                   </Button>
