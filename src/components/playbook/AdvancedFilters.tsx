@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
 import { FORMATION_OPTIONS, PLAY_TYPE_OPTIONS } from "../../types/play";
 
@@ -155,77 +154,71 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
   };
 
   const selectedField = FILTER_FIELDS.find((f) => f.value === newFilter.field);
-  const availableOperators = OPERATORS.filter((op) =>
-    selectedField ? op.types.includes(selectedField.type) : false
-  );
 
   return (
-    <div className="surface-card rounded-lg shadow-sm border border-subtle dark:border-gray-700">
-      {/* Header */}
-      <div className="p-3 border-b border-subtle dark:border-gray-700">
+    <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+      {/* Compact Header */}
+      <div className="px-3 py-2 border-b border-gray-200">
         <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <Icon name="filter" className="h-4 w-4 text-text-secondary mr-2" />
-            <span className="Typography typography-label-lg text-text-primary">
-              Filters
-            </span>
+          <div className="flex items-center gap-2">
+            <Icon name="filter" className="h-4 w-4 text-gray-500" />
+            <span className="text-sm font-medium text-gray-700">Filters</span>
             {activeFilters.length > 0 && (
-              <span className="ml-2 px-1.5 py-0.5 text-xs bg-blue-100 text-blue-800 rounded">
+              <span className="px-1.5 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full">
                 {activeFilters.length}
               </span>
             )}
           </div>
-          {activeFilters.length > 0 && (
-            <Button
-              size="xs"
-              variant="danger"
-              onClick={clearAllFilters}
-              className="font-medium"
-            >
-              Clear All
-            </Button>
-          )}
-        </div>
-      </div>
-      {activeFilters.length > 0 && (
-        <div className="p-3 space-y-2">
-          {activeFilters.map((filter) => (
-            <div
-              key={filter.id}
-              className="flex items-center justify-between surface-subtle border border-subtle rounded px-2 py-1"
-            >
-              <span className="text-xs text-blue-900 truncate flex-1">
-                {filter.label}
-              </span>
-              <Button
-                size="xs"
-                variant="ghost"
-                onClick={() => removeFilter(filter.id)}
-                className="text-blue-600 hover:text-blue-800 h-auto px-1 py-0"
+          <div className="flex items-center gap-1">
+            {!showAddFilter && (
+              <button
+                onClick={() => setShowAddFilter(true)}
+                className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+                title="Add filter"
+              >
+                <Icon name="plus" className="h-3 w-3" />
+              </button>
+            )}
+            {activeFilters.length > 0 && (
+              <button
+                onClick={clearAllFilters}
+                className="p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded"
+                title="Clear all filters"
               >
                 <Icon name="close" className="h-3 w-3" />
-              </Button>
-            </div>
-          ))}
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Active Filters - Horizontal Layout */}
+      {activeFilters.length > 0 && (
+        <div className="px-3 py-2 border-b border-gray-200">
+          <div className="flex flex-wrap gap-1">
+            {activeFilters.map((filter) => (
+              <div
+                key={filter.id}
+                className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full border border-blue-200"
+              >
+                <span className="truncate max-w-32">{filter.label}</span>
+                <button
+                  onClick={() => removeFilter(filter.id)}
+                  className="text-blue-500 hover:text-blue-700 hover:bg-blue-100 rounded-full p-0.5"
+                >
+                  <Icon name="close" className="h-3 w-3" />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Add Filter Section */}
-      <div className="p-3 border-t border-slate-100 dark:border-gray-700">
-        {!showAddFilter ? (
-          <Button
-            size="xs"
-            variant="ghost"
-            onClick={() => setShowAddFilter(true)}
-            className="w-full flex items-center justify-center"
-          >
-            <Icon name="plus" className="h-3 w-3 mr-1" />
-            Add Filter
-          </Button>
-        ) : (
-          <div className="space-y-2">
-            {/* Field Selection */}
-            <div className="relative">
+      {/* Compact Add Filter */}
+      {showAddFilter && (
+        <div className="px-3 py-2 border-t border-gray-200">
+          <div className="flex gap-2 items-end">
+            <div className="flex-1 min-w-0">
               <select
                 value={newFilter.field}
                 onChange={(e) =>
@@ -236,9 +229,9 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                     value: "",
                   }))
                 }
-                className="w-full px-2 py-1.5 text-xs border-subtle rounded focus:outline-none focus:ring-1 focus:ring-jade-500 surface-card text-text-primary"
+                className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
               >
-                <option value="">Select field...</option>
+                <option value="">Field...</option>
                 {FILTER_FIELDS.map((field) => (
                   <option key={field.value} value={field.value}>
                     {field.label}
@@ -247,98 +240,72 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
               </select>
             </div>
 
-            {/* Operator Selection */}
             {newFilter.field && (
-              <div className="relative">
-                <select
-                  value={newFilter.operator}
-                  onChange={(e) =>
-                    setNewFilter((prev) => ({
-                      ...prev,
-                      operator: e.target.value as "equals" | "contains" | "in",
-                    }))
-                  }
-                  className="w-full px-2 py-1.5 text-xs border-subtle rounded focus:outline-none focus:ring-1 focus:ring-jade-500 surface-card text-text-primary"
-                >
-                  {availableOperators.map((op) => (
-                    <option key={op.id} value={op.id}>
-                      {op.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {/* Value Input */}
-            {newFilter.field && (
-              <div>
-                {selectedField?.type === "select" ? (
-                  <select
-                    value={newFilter.value}
-                    onChange={(e) =>
-                      setNewFilter((prev) => ({
-                        ...prev,
-                        value: e.target.value,
-                      }))
-                    }
-                    className="w-full px-2 py-1.5 text-xs border-subtle rounded focus:outline-none focus:ring-1 focus:ring-jade-500 surface-card text-text-primary"
-                  >
-                    <option value="">Select value...</option>
-                    {selectedField.options?.map(
-                      (option: FilterOption, index: number) => {
-                        return (
+              <>
+                <div className="flex-1 min-w-0">
+                  {selectedField?.type === "select" ? (
+                    <select
+                      value={newFilter.value}
+                      onChange={(e) =>
+                        setNewFilter((prev) => ({
+                          ...prev,
+                          value: e.target.value,
+                        }))
+                      }
+                      className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
+                    >
+                      <option value="">Value...</option>
+                      {selectedField.options?.map(
+                        (option: FilterOption, index: number) => (
                           <option
                             key={`${option.value}-${index}`}
                             value={option.value}
                           >
                             {option.label}
                           </option>
-                        );
+                        )
+                      )}
+                    </select>
+                  ) : (
+                    <input
+                      type={
+                        selectedField?.type === "number" ? "number" : "text"
                       }
-                    )}
-                  </select>
-                ) : (
-                  <input
-                    type={selectedField?.type === "number" ? "number" : "text"}
-                    value={newFilter.value}
-                    onChange={(e) =>
-                      setNewFilter((prev) => ({
-                        ...prev,
-                        value: e.target.value,
-                      }))
-                    }
-                    placeholder="Enter value..."
-                    className="w-full px-2 py-1.5 text-xs border-subtle rounded focus:outline-none focus:ring-1 focus:ring-jade-500 surface-card text-text-primary"
-                  />
-                )}
-              </div>
+                      value={newFilter.value}
+                      onChange={(e) =>
+                        setNewFilter((prev) => ({
+                          ...prev,
+                          value: e.target.value,
+                        }))
+                      }
+                      placeholder="Value..."
+                      className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  )}
+                </div>
+
+                <button
+                  onClick={addFilter}
+                  disabled={!newFilter.field || !newFilter.value}
+                  className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                >
+                  Add
+                </button>
+              </>
             )}
 
-            {/* Actions */}
-            <div className="flex gap-1">
-              <Button
-                size="xs"
-                variant="primary"
-                onClick={addFilter}
-                disabled={!newFilter.field || !newFilter.value}
-                className="flex-1"
-              >
-                Add
-              </Button>
-              <Button
-                size="xs"
-                variant="ghost"
-                onClick={() => {
-                  setShowAddFilter(false);
-                  setNewFilter({ field: "", operator: "equals", value: "" });
-                }}
-              >
-                Cancel
-              </Button>
-            </div>
+            <button
+              onClick={() => {
+                setShowAddFilter(false);
+                setNewFilter({ field: "", operator: "equals", value: "" });
+              }}
+              className="px-2 py-1 text-gray-500 hover:text-gray-700 text-xs"
+            >
+              ✕
+            </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

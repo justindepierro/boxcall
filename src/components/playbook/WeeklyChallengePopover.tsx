@@ -1,0 +1,185 @@
+import React from "react";
+import { Icon } from "../ui/Icon";
+import { Button } from "../ui/Button/Button";
+import { Badge } from "../ui/Badge";
+import { Typography } from "../design-system/Typography";
+
+interface WeeklyChallenge {
+  id: string;
+  title: string;
+  description: string;
+  progress: number;
+  target: number;
+  reward: string;
+  difficulty: "easy" | "medium" | "hard";
+  completed: boolean;
+}
+
+interface WeeklyChallengePopoverProps {
+  isOpen: boolean;
+  onClose: () => void;
+  challenges: WeeklyChallenge[];
+}
+
+export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
+  isOpen,
+  onClose,
+  challenges,
+}) => {
+  if (!isOpen) return null;
+
+  const completedCount = challenges.filter((c) => c.completed).length;
+  const totalCount = challenges.length;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-purple-600 to-purple-700 p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Icon name="trophy" size="lg" className="text-yellow-300" />
+              <div>
+                <Typography variant="headline-md" className="text-white">
+                  Weekly Challenges
+                </Typography>
+                <p className="text-purple-100 text-sm">
+                  Complete challenges to earn rewards!
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="text-white hover:bg-white/20"
+            >
+              <Icon name="close" size="sm" />
+            </Button>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mt-4">
+            <div className="flex justify-between text-sm text-purple-100 mb-2">
+              <span>Progress</span>
+              <span>
+                {completedCount}/{totalCount} completed
+              </span>
+            </div>
+            <div className="w-full bg-purple-800 rounded-full h-2">
+              <div
+                className="bg-yellow-300 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${(completedCount / totalCount) * 100}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Challenges List */}
+        <div className="p-6 max-h-96 overflow-y-auto">
+          <div className="space-y-4">
+            {challenges.map((challenge) => (
+              <div
+                key={challenge.id}
+                className={`p-4 rounded-lg border-2 transition-all ${
+                  challenge.completed
+                    ? "bg-green-50 border-green-200"
+                    : "bg-gray-50 border-gray-200"
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Typography variant="label-md" className="font-medium">
+                        {challenge.title}
+                      </Typography>
+                      <Badge
+                        variant={
+                          challenge.difficulty === "easy"
+                            ? "success"
+                            : challenge.difficulty === "medium"
+                              ? "warning"
+                              : "danger"
+                        }
+                        size="sm"
+                      >
+                        {challenge.difficulty}
+                      </Badge>
+                      {challenge.completed && (
+                        <Badge variant="success" size="sm">
+                          ✓ Completed
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {challenge.description}
+                    </p>
+
+                    {/* Progress */}
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 bg-gray-200 rounded-full h-2">
+                        <div
+                          className={`h-2 rounded-full transition-all duration-300 ${
+                            challenge.completed
+                              ? "bg-green-500"
+                              : "bg-purple-500"
+                          }`}
+                          style={{
+                            width: `${Math.min((challenge.progress / challenge.target) * 100, 100)}%`,
+                          }}
+                        />
+                      </div>
+                      <span className="text-xs text-gray-500">
+                        {challenge.progress}/{challenge.target}
+                      </span>
+                    </div>
+
+                    {/* Reward */}
+                    <div className="mt-2 flex items-center gap-1">
+                      <Icon
+                        name="trophy"
+                        size="xs"
+                        className="text-yellow-500"
+                      />
+                      <span className="text-xs text-gray-600">
+                        Reward: {challenge.reward}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {challenges.length === 0 && (
+            <div className="text-center py-8">
+              <Icon
+                name="trophy"
+                size="lg"
+                className="text-gray-300 mx-auto mb-4"
+              />
+              <Typography variant="label-md" className="text-gray-500">
+                No challenges available this week
+              </Typography>
+              <p className="text-sm text-gray-400 mt-1">
+                Check back next week for new challenges!
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="border-t bg-gray-50 px-6 py-4">
+          <div className="flex justify-between items-center">
+            <div className="text-sm text-gray-600">
+              Complete all challenges to unlock special rewards!
+            </div>
+            <Button variant="primary" size="sm" onClick={onClose}>
+              Got it!
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

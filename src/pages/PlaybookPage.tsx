@@ -1,26 +1,31 @@
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { PlaybookHeader } from "../components/playbook/page/PlaybookHeader";
-import { PlaybookActionsBar } from "../components/playbook/page/PlaybookActionsBar";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 import { PlayGrid } from "../components/playbook/PlayGrid";
 import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
 import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
 import { Button } from "../components/ui/Button/Button";
 import { Icon } from "../components/ui/Icon";
+import { Typography } from "../components/design-system/Typography";
 import { usePlaybook } from "../contexts/PlaybookContext";
 import type { CoachingView, PlaybookState } from "../contexts/PlaybookContext";
-import { CSVService, DataSyncService, PlaysService } from "@services";
+import { PlaysService } from "@services";
 import { PracticeScriptService, GamePlanService } from "../services";
-import { PracticePlannerModal } from "../components/practice/PracticePlannerModal";
+import { WorkflowStatusBar } from "../components/playbook/WorkflowStatusBar";
 import { AddNewPlayModal } from "../components/playbook/AddNewPlayModal";
 import { PlaybookSettingsModal } from "../components/playbook/PlaybookSettingsModal";
+import { PlaybookStatsDashboard } from "../components/playbook/PlaybookStatsDashboard";
+import { RecentActivityFeed } from "../components/playbook/RecentActivityFeed";
+import { QuickActionsBar } from "../components/playbook/QuickActionsBar";
+import { KeyboardShortcutsGuide } from "../components/playbook/KeyboardShortcutsGuide";
 import { useToast } from "../hooks/useToast";
 import type { Play } from "../types/play";
 
 export default function PlaybookPage() {
   const { state, dispatch } = usePlaybook();
   const toast = useToast();
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
 
   // Load settings from localStorage or use defaults
@@ -112,9 +117,44 @@ export default function PlaybookPage() {
 
   const [playbookSettings, setPlaybookSettings] = useState(loadSettings);
 
-  // Workflow modal states
-  const [showPracticePlanner, setShowPracticePlanner] = useState(false);
-  const [showGamePlanModal, setShowGamePlanModal] = useState(false);
+  // Calculate playbook stats
+  const calculatePlaybookStats = () => {
+    // Mock recent activity - in a real implementation, this would come from the database
+    const mockActivities = [
+      {
+        id: "1",
+        type: "created" as const,
+        playName: "Slant Route",
+        timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
+      },
+      {
+        id: "2",
+        type: "updated" as const,
+        playName: "Power Run",
+        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+      },
+      {
+        id: "3",
+        type: "added_to_script" as const,
+        playName: "Screen Pass",
+        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 4), // 4 hours ago
+        details: "Week 1 Practice",
+      },
+    ];
+
+    return {
+      totalPlays: state.playsCreated || 0,
+      playsWithDiagrams: Math.floor((state.playsCreated || 0) * (state.diagramCoverage / 100)),
+      formationsCount: Math.max(1, Math.floor((state.playsCreated || 0) / 3)), // Rough estimate
+      passPlays: Math.floor((state.playsCreated || 0) * 0.4),
+      runPlays: Math.floor((state.playsCreated || 0) * 0.4),
+      rpoPlays: Math.floor((state.playsCreated || 0) * 0.15),
+      playActionPlays: Math.floor((state.playsCreated || 0) * 0.05),
+      recentActivity: mockActivities,
+    };
+  };
+
+  const playbookStats = calculatePlaybookStats();
   const [_selectedPlayForWorkflow, _setSelectedPlayForWorkflow] =
     useState<Play | null>(null);
 
@@ -122,6 +162,7 @@ export default function PlaybookPage() {
   const [showAddNewPlayModal, setShowAddNewPlayModal] = useState(false);
   const [showPlaybookSettingsModal, setShowPlaybookSettingsModal] =
     useState(false);
+  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [editingPlay, setEditingPlay] = useState<Play | null>(null);
 
   // Example handlers (replace with real logic as needed)
@@ -222,17 +263,24 @@ export default function PlaybookPage() {
     }
   };
 
-  const handleQuickNewPracticeScript = () => {
-    setShowPracticePlanner(true);
-  };
+  const handleQuickNewPracticeScript = useCallback(() => {
+    navigate("/practice-plans");
+  }, [navigate]);
 
-  const handleQuickNewGamePlan = () => {
-    setShowGamePlanModal(true);
-  };
+  const handleQuickNewGamePlan = useCallback(() => {
+    navigate("/game-plans");
+  }, [navigate]);
 
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      // "?" for keyboard shortcuts guide
+      if (event.key === "?" && !event.ctrlKey && !event.metaKey) {
+        event.preventDefault();
+        setShowKeyboardShortcuts(true);
+        return;
+      }
+
       // Ctrl/Cmd + P for new practice script
       if (
         (event.ctrlKey || event.metaKey) &&
@@ -251,349 +299,188 @@ export default function PlaybookPage() {
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-  async function getDefaultPlaybookId(): Promise<string> {
-    return PlaysService.ensureUserHasPlaybook();
-  }
-
-  const handleExportScope = async (scope: "selected" | "current" | "all") => {
-    try {
-      setBusy(true);
-      const playbookId = await getDefaultPlaybookId();
-      const plays = await DataSyncService.getPlays(playbookId, true);
-      const now = new Date();
-      const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(
-        now.getDate()
-      ).padStart(2, "0")}`;
-
-      let exportPlays = plays;
-      if (scope === "selected" && state.selectedPlayIds?.size) {
-        exportPlays = plays.filter((p) => state.selectedPlayIds!.has(p.id));
-      }
-      const csv = CSVService.exportPlaysToCSV(exportPlays, {
-        includePrivateNotes: true,
-        formatForCoach: true,
-      });
-      CSVService.downloadCSV(csv, `boxcall-plays-${scope}-${date}.csv`);
-    } catch (e) {
-      console.error("CSV export failed", e);
-      toast.error("CSV export failed", "Please try again");
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const handleExportAll = () => handleExportScope("all");
-
-  const handleOpenImport = () => {
-    if (!fileInputRef.current) return;
-    fileInputRef.current.value = "";
-    fileInputRef.current.click();
-  };
-
-  const handleFileSelected: React.ChangeEventHandler<HTMLInputElement> = async (
-    e
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      setBusy(true);
-      const text = await file.text();
-      const playbookId = await getDefaultPlaybookId();
-      const result = await DataSyncService.importFromCSV(playbookId, text);
-      if (result.success) {
-        toast.success(
-          `Imported ${result.importedPlays} plays`,
-          `Processed ${result.totalRows} rows`
-        );
-      } else {
-        toast.warning(
-          `Import completed with issues`,
-          `Imported ${result.importedPlays} of ${result.totalRows} plays`
-        );
-      }
-      dispatch({ type: "INCREMENT_REFRESH" });
-    } catch (err) {
-      console.error("CSV import failed", err);
-      toast.error("CSV import failed", "Please check your file and try again");
-    } finally {
-      setBusy(false);
-    }
-  };
+  }, [handleQuickNewPracticeScript, handleQuickNewGamePlan]);
 
   return (
-    <div className="py-8">
+    <div className="py-8 min-h-screen">
       {/* Header */}
       <PlaybookHeader
         playsCreated={state.playsCreated}
         diagramCoverage={state.diagramCoverage}
         streakDays={state.streakDays}
-      />
-
-      {/* Actions Bar */}
-      <PlaybookActionsBar
         searchQuery={state.searchQuery}
         onSearchChange={handleSearchChange}
-        onQuickNewPracticeScript={handleQuickNewPracticeScript}
-        onQuickNewInstall={handleQuickNewGamePlan}
-        serverPresets={state.serverPresets}
-        filterPresets={state.filterPresets}
-        serverPresetsLoading={state.serverPresetsLoading}
-        activeServerPresetId={state.activeServerPresetId}
-        activePresetId={state.activePresetId}
-        onApplyPreset={() => {}}
-        onRenamePreset={() => {}}
-        onDeletePreset={() => {}}
-        onSavePreset={() => {}}
-        enableBulkOperations={state.enableBulkOperations}
-        onToggleBulk={() => {}}
-        onExportCSV={handleExportAll}
-        onExportScope={handleExportScope}
-        onOpenImport={handleOpenImport}
-        playsCreated={state.playsCreated}
-        onOpenBuilder={handleOpenBuilder}
         onOpenSettings={handleOpenSettings}
-        selectedCount={state.selectedPlayIds?.size || 0}
-        onClearSelection={handleClearSelection}
-        recentViews={state.recentViews}
       />
 
-      {/* View Tabs */}
-      <PlaybookViewTabs
-        currentView={state.currentView}
-        onViewChange={handleViewChange}
-      />
-
-      {/* Workflow Status Indicators */}
-      <div className="my-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-        <h3 className="text-sm font-medium text-blue-800 mb-2">
-          📋 Workflow Status
-        </h3>
-        <div className="flex gap-4 text-sm">
-          <span className="text-blue-600">
-            Practice Scripts: <span className="font-medium">Ready</span>
-          </span>
-          <span className="text-green-600">
-            Game Plans: <span className="font-medium">Ready</span>
-          </span>
-          <span className="text-purple-600">
-            PDF Export: <span className="font-medium">Available</span>
-          </span>
-        </div>
-        <div className="mt-2 text-xs text-blue-600">
-          ⌨️ <strong>Keyboard shortcuts:</strong> Ctrl+P (Practice Script) •
-          Ctrl+G (Game Plan)
+      {/* Full-width View Tabs */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <PlaybookViewTabs
+            currentView={state.currentView}
+            onViewChange={handleViewChange}
+          />
         </div>
       </div>
 
-      {/* Filters and Bulk Actions */}
-      <div className="my-6">
-        <AdvancedFilters
-          activeFilters={state.advancedFilters}
-          onFiltersChange={handleFiltersChange}
-        />
-        <BulkActionsToolbar
-          selectedCount={state.selectedPlayIds?.size || 0}
-          onClearSelection={handleClearSelection}
-          onBulkAction={handleBulkAction}
-        />
-      </div>
+      {/* Main Content - 2 Column Layout */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Left Sidebar - Controls */}
+        <div className="lg:col-span-1 space-y-6">
+          {/* Stats Dashboard */}
+          <PlaybookStatsDashboard stats={playbookStats} />
 
-      {/* Main Play Grid */}
-      <PlayGrid
-        searchQuery={state.searchQuery}
-        filters={state.selectedFilters}
-        onAddToPracticeScript={handleAddToPracticeScript}
-        onAddToGamePlan={handleAddToGamePlan}
-        onEdit={handleEditPlay}
-        onDuplicate={handleDuplicatePlay}
-      />
+          {/* Recent Activity */}
+          <RecentActivityFeed activities={playbookStats.recentActivity} />
 
-      {/* Example: Add a button for new play */}
-      <div className="mt-8 flex justify-end">
-        <Button variant="primary" size="md">
-          <Icon name="plus" className="mr-2" />
-          New Play
-        </Button>
-      </div>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".csv,text/csv"
-        onChange={handleFileSelected}
-        style={{ display: "none" }}
-      />
-      {busy && (
-        <div className="fixed bottom-4 right-4 text-xs py-1 px-2 rounded bg-black/70 text-text-inverse">
-          Working…
-        </div>
-      )}
+          {/* Filters */}
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <AdvancedFilters
+              activeFilters={state.advancedFilters}
+              onFiltersChange={handleFiltersChange}
+            />
+          </div>
 
-      {/* Workflow Modals */}
-      {showPracticePlanner && (
-        <PracticePlannerModal
-          event={{
-            id: "new-practice",
-            title: "New Practice Session",
-            start: new Date().toISOString(),
-            end: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(), // 2 hours later
-            type: "practice",
-            location: "Practice Field",
-            description: "",
-          }}
-          onClose={() => setShowPracticePlanner(false)}
-        />
-      )}
+          {/* Bulk Actions - Only show when items are selected */}
+          {(state.selectedPlayIds?.size || 0) > 0 && (
+            <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <BulkActionsToolbar
+                selectedCount={state.selectedPlayIds?.size || 0}
+                onClearSelection={handleClearSelection}
+                onBulkAction={handleBulkAction}
+              />
+            </div>
+          )}
 
-      {/* Game Plan Modal */}
-      {showGamePlanModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <Icon name="users" className="h-6 w-6 text-green-600" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold">Create Game Plan</h2>
-                    <p className="text-sm text-gray-600">
-                      Build your situational game plan
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowGamePlanModal(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <Icon name="close" className="h-5 w-5" />
-                </button>
-              </div>
+          {/* Action Buttons - Cleaned up */}
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <div className="space-y-3">
+              <Button
+                onClick={handleQuickNewPracticeScript}
+                variant="secondary"
+                size="sm"
+                className="w-full justify-start"
+              >
+                <Icon name="plus" className="h-4 w-4 mr-2" />
+                New Practice Script
+              </Button>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Opponent *
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g., Riverdale High"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    id="gameplan-opponent"
-                  />
-                </div>
+              <Button
+                onClick={handleQuickNewGamePlan}
+                variant="secondary"
+                size="sm"
+                className="w-full justify-start"
+              >
+                <Icon name="plus" className="h-4 w-4 mr-2" />
+                New Game Plan
+              </Button>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Week Number
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="20"
-                    defaultValue="1"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    id="gameplan-week"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Game Date
-                  </label>
-                  <input
-                    type="date"
-                    defaultValue={new Date().toISOString().split("T")[0]}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    id="gameplan-date"
-                  />
-                </div>
-
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h3 className="text-sm font-medium text-blue-800 mb-2">
-                    📋 Game Plan Structure
-                  </h3>
-                  <p className="text-xs text-blue-600 mb-2">
-                    Based on Brian Billick's 12-situation methodology:
-                  </p>
-                  <ul className="text-xs text-blue-700 space-y-1">
-                    <li>• Base Run (1st & 10, 2nd & short)</li>
-                    <li>• Base Pass (1st & 10, 2nd & medium)</li>
-                    <li>• Second & Long situations</li>
-                    <li>• Third Down conversions</li>
-                    <li>• Red Zone scoring</li>
-                    <li>• And more situational plays...</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
-                <Button
-                  variant="secondary"
-                  onClick={() => setShowGamePlanModal(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={async () => {
-                    try {
-                      const opponent = (
-                        document.getElementById(
-                          "gameplan-opponent"
-                        ) as HTMLInputElement
-                      )?.value?.trim();
-                      // TODO: Use week and date in GamePlanService.createGamePlan when extended
-                      parseInt(
-                        (
-                          document.getElementById(
-                            "gameplan-week"
-                          ) as HTMLInputElement
-                        )?.value || "1"
-                      );
-                      (
-                        document.getElementById(
-                          "gameplan-date"
-                        ) as HTMLInputElement
-                      )?.value;
-
-                      if (!opponent) {
-                        toast.error(
-                          "Opponent required",
-                          "Please enter an opponent name"
-                        );
-                        return;
-                      }
-
-                      const teamId = "current-team"; // TODO: Get from context/auth
-                      const gamePlan =
-                        await GamePlanService.createQuickGamePlan(
-                          opponent,
-                          teamId
-                        );
-
-                      console.log("✅ Game Plan created:", gamePlan);
-                      toast.success(
-                        `Game Plan "${gamePlan.name}" created successfully!`
-                      );
-
-                      setShowGamePlanModal(false);
-                    } catch (error) {
-                      console.error("Failed to create game plan:", error);
-                      toast.error(
-                        "Failed to create game plan",
-                        "Please try again"
-                      );
-                    }
-                  }}
-                >
-                  <Icon name="plus" className="h-4 w-4 mr-2" />
-                  Create Game Plan
-                </Button>
-              </div>
+              <Button
+                onClick={handleOpenBuilder}
+                variant="primary"
+                size="sm"
+                className="w-full justify-start"
+              >
+                <Icon name="plus" className="h-4 w-4 mr-2" />
+                New Play
+              </Button>
             </div>
           </div>
+        </div>
+
+        {/* Right Side - Main Content Area */}
+        <div className="lg:col-span-3">
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            {state.currentView === "playbook" && (
+              <PlayGrid
+                searchQuery={state.searchQuery}
+                filters={state.selectedFilters}
+                onAddToPracticeScript={handleAddToPracticeScript}
+                onAddToGamePlan={handleAddToGamePlan}
+                onEdit={handleEditPlay}
+                onDuplicate={handleDuplicatePlay}
+              />
+            )}
+
+            {state.currentView === "practice-script" && (
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <Typography variant="headline-md" className="text-gray-900">
+                    Practice Scripts
+                  </Typography>
+                  <Button
+                    onClick={handleQuickNewPracticeScript}
+                    variant="primary"
+                  >
+                    <Icon name="plus" className="h-4 w-4 mr-2" />
+                    New Script
+                  </Button>
+                </div>
+
+                {/* Placeholder for practice scripts list */}
+                <div className="text-center py-12">
+                  <Icon name="file" className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                  <Typography variant="headline-sm" className="text-gray-600 mb-2">
+                    No Practice Scripts Yet
+                  </Typography>
+                  <Typography variant="body-sm" className="text-gray-500 mb-6">
+                    Create your first practice script to organize plays for training sessions.
+                  </Typography>
+                  <Button
+                    onClick={handleQuickNewPracticeScript}
+                    variant="primary"
+                  >
+                    <Icon name="plus" className="h-4 w-4 mr-2" />
+                    Create New Script
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {state.currentView === "game-plan" && (
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <Typography variant="headline-md" className="text-gray-900">
+                    Game Plans
+                  </Typography>
+                  <Button
+                    onClick={handleQuickNewGamePlan}
+                    variant="primary"
+                  >
+                    <Icon name="plus" className="h-4 w-4 mr-2" />
+                    New Plan
+                  </Button>
+                </div>
+
+                {/* Placeholder for game plans list */}
+                <div className="text-center py-12">
+                  <Icon name="target" className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                  <Typography variant="headline-sm" className="text-gray-600 mb-2">
+                    No Game Plans Yet
+                  </Typography>
+                  <Typography variant="body-sm" className="text-gray-500 mb-6">
+                    Create your first game plan to strategize plays for upcoming matches.
+                  </Typography>
+                  <Button
+                    onClick={handleQuickNewGamePlan}
+                    variant="primary"
+                  >
+                    <Icon name="plus" className="h-4 w-4 mr-2" />
+                    Create New Plan
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Sticky Workflow Status Bar */}
+      <WorkflowStatusBar />
+
+      {busy && (
+        <div className="fixed bottom-4 right-4 text-xs py-1 px-2 rounded bg-black/70 text-text-inverse z-50">
+          Working…
         </div>
       )}
 
@@ -689,6 +576,46 @@ export default function PlaybookPage() {
           }}
         />
       )}
+
+      {/* Keyboard Shortcuts Guide */}
+      <KeyboardShortcutsGuide
+        isOpen={showKeyboardShortcuts}
+        onClose={() => setShowKeyboardShortcuts(false)}
+      />
+
+      {/* Quick Actions Bar */}
+      <QuickActionsBar
+        actions={[
+          {
+            id: "new-play",
+            label: "New Play",
+            icon: "plus",
+            onClick: handleOpenBuilder,
+            shortcut: "Ctrl+N",
+            variant: "primary",
+          },
+          {
+            id: "practice-script",
+            label: "Practice Script",
+            icon: "file",
+            onClick: handleQuickNewPracticeScript,
+            shortcut: "Ctrl+P",
+          },
+          {
+            id: "game-plan",
+            label: "Game Plan",
+            icon: "users",
+            onClick: handleQuickNewGamePlan,
+            shortcut: "Ctrl+G",
+          },
+          {
+            id: "settings",
+            label: "Settings",
+            icon: "settings",
+            onClick: handleOpenSettings,
+          },
+        ]}
+      />
     </div>
   );
 }

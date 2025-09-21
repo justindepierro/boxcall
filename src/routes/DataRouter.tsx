@@ -16,6 +16,8 @@ import {
   LazyAnalyticsPage,
   LazyBoxCall,
   LazyPlaybookPage,
+  LazyPracticePlansPage,
+  LazyGamePlansPage,
   LazyProfilePage,
   LazyTeamsPage,
   LazyCoachManagementPage,
@@ -176,6 +178,24 @@ export const DataRouterApp: React.FC = () => {
                     <PlaybookProvider>
                       <LazyPlaybookPage />
                     </PlaybookProvider>
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.PRACTICE_PLANS,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyPracticePlansPage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.GAME_PLANS,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyGamePlansPage />
                   </Suspense>
                 ),
               },

@@ -8,6 +8,8 @@ export const ROUTES = {
   CALENDAR: "/calendar",
   TEAMS: "/teams",
   PLAYBOOK: "/playbook",
+  PRACTICE_PLANS: "/practice-plans",
+  GAME_PLANS: "/game-plans",
   BOXCALL: "/boxcall",
   LOGOUT: "/logout",
   CREATE_TEAM: "/create-team",

@@ -88,11 +88,14 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
     "personnel"
   );
 
+  const [hasInitializedDefaults, setHasInitializedDefaults] = useState(false);
+
   // Initialize with default personnel configuration if none exists
   useEffect(() => {
     if (
-      !localSettings.personnelConfigurations ||
-      localSettings.personnelConfigurations.length === 0
+      !hasInitializedDefaults &&
+      (!localSettings.personnelConfigurations ||
+        localSettings.personnelConfigurations.length === 0)
     ) {
       const defaultConfig: PersonnelConfiguration = {
         id: "default",
@@ -117,8 +120,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
         ...prev,
         personnelConfigurations: [defaultConfig],
       }));
+      setHasInitializedDefaults(true);
     }
-  }, []);
+  }, [hasInitializedDefaults, localSettings.personnelConfigurations]);
 
   useEffect(() => {
     setLocalSettings(settings);
@@ -133,19 +137,6 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
     value: PersonnelSettings[K]
   ) => {
     setLocalSettings((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const updatePositionName = (
-    position: keyof PersonnelSettings["positionNames"],
-    name: string
-  ) => {
-    setLocalSettings((prev) => ({
-      ...prev,
-      positionNames: {
-        ...prev.positionNames,
-        [position]: name,
-      },
-    }));
   };
 
   const updateBulkSetting = <

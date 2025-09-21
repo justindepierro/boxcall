@@ -7,7 +7,7 @@ import {
   useAddComment,
 } from "../../state/calendar/hooks";
 import { Typography } from "../design-system/Typography";
-import { PracticePlannerModal } from "../practice/PracticePlannerModal";
+import { PracticeScriptModal } from "../practice/PracticeScriptModal";
 import { Button } from "../ui";
 import Icon from "../ui/Icon/Icon";
 
@@ -201,9 +201,13 @@ export const EventModal: React.FC<EventModalProps> = ({
         </div>
       </div>
       {showPracticePlanner && event && event.type === "practice" && (
-        <PracticePlannerModal
-          event={event}
+        <PracticeScriptModal
           onClose={() => setShowPracticePlanner(false)}
+          onSave={(script) => {
+            console.log("Practice script saved:", script);
+            // TODO: Save to database and show success message
+            setShowPracticePlanner(false);
+          }}
         />
       )}
     </>

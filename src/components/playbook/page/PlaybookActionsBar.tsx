@@ -6,8 +6,8 @@ import { AdvancedSearchBar } from "../../playbook/AdvancedSearchBar";
 import type { ServerPlaybookViewPreset } from "../../../types/playbookViewPreset";
 
 export type PlaybookActionsBarProps = {
-  searchQuery: string;
-  onSearchChange: (q: string) => void;
+  searchQuery?: string;
+  onSearchChange?: (q: string) => void;
   onQuickNewPracticeScript: () => void;
   onQuickNewInstall: () => void;
   serverPresets: ServerPlaybookViewPreset[];
@@ -79,14 +79,16 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
         <div className="py-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0 flex-1">
-              <div className="w-full max-w-lg">
-                <AdvancedSearchBar
-                  plays={[]}
-                  searchQuery={searchQuery}
-                  onSearchChange={onSearchChange}
-                  placeholder="Search plays, formations, or tags..."
-                />
-              </div>
+              {searchQuery !== undefined && onSearchChange && (
+                <div className="w-full max-w-lg">
+                  <AdvancedSearchBar
+                    plays={[]}
+                    searchQuery={searchQuery}
+                    onSearchChange={onSearchChange}
+                    placeholder="Search plays, formations, or tags..."
+                  />
+                </div>
+              )}
               <Button
                 onClick={onQuickNewPracticeScript}
                 variant="secondary"

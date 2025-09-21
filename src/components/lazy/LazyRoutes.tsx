@@ -57,6 +57,9 @@ export const LazyBoxCall = lazy(() => import("../../pages/BoxCall"));
 
 export const LazyPlaybookPage = lazy(() => import("../../pages/Playbook"));
 
+export const LazyPracticePlansPage = lazy(() => import("../../pages/PracticePlansPage"));
+export const LazyGamePlansPage = lazy(() => import("../../pages/GamePlansPage"));
+
 export const LazyTeamSettings = lazy(() => import("../../pages/TeamSettings"));
 export const LazyAnalyticsPage = lazy(
   () => import("../../pages/AnalyticsPage")
@@ -98,9 +101,9 @@ export const LazyPracticePlanner = lazy(
 );
 
 // Heavy component lazy loading
-export const LazyPracticePlannerModal = lazy(() =>
-  import("../practice/PracticePlannerModal/index").then((module) => ({
-    default: module.PracticePlannerModal,
+export const LazyPracticeScriptModal = lazy(() =>
+  import("../practice/PracticeScriptModal/index").then((module) => ({
+    default: module.PracticeScriptModal,
   }))
 );
 
