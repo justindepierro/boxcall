@@ -323,7 +323,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
 
     // Load the icon dynamically (per-icon subpath to avoid bundling the whole library)
     const loader = iconLoaders[name];
-    if (loader && !loading) {
+    if (loader) {
       let isMounted = true;
       setLoading(true);
       setShowFallback(false);
@@ -370,7 +370,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
         clearTimeout(fallbackTimeout);
       };
     }
-  }, [name, loading]);
+  }, [name]);
 
   if ((loading && !showFallback) || (!IconComponent && !showFallback)) {
     // Show loading spinner for first 500ms or if no component and not in fallback mode

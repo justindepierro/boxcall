@@ -9,11 +9,10 @@ import {
   getRoleDisplayInfo,
   toSidebarItems,
 } from "../../utils/navigation";
-import { NavBar } from "../ui/NavBar";
 import { Sidebar } from "../ui/Sidebar";
 import { DevTools } from "../dev";
-import { SidebarLogo, NavbarLogo } from "../ui/Logo";
-import { UserMenu } from "../auth/UserMenu";
+import { SidebarLogo } from "../ui/Logo";
+import { AppHeader } from "./AppHeader";
 import type { DevMode } from "../../types/dev";
 
 // Helper to get test role from dev mode
@@ -32,7 +31,6 @@ const getTestRole = (devMode: DevMode): UserRole | null => {
   }
 };
 import { Footer } from "./Footer";
-import { getRouteImporter } from "../../routes/importers";
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 interface LayoutProps {
   children: React.ReactNode;
@@ -59,16 +57,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const sidebarItems = toSidebarItems(navigationItems, currentRole);
   const roleInfo = getRoleDisplayInfo(currentRole);
 
-  // Convert navigationItems to NavBarItems format
-  const navBarItems = navigationItems.map((item, index) => ({
-    id: item.id || item.href || `nav-item-${index}`,
-    label: item.label,
-    href: item.href,
-    onClick: () => (window.location.href = item.href),
-    active: window.location.pathname === item.href,
-    importer: getRouteImporter(item.href),
-  }));
-
   // Set data-density attribute on body (once per render cycle)
   if (typeof document !== "undefined") {
     document.body.setAttribute("data-density", uiDensity);
@@ -76,13 +64,15 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen surface-app decorative-gradient bg-[radial-gradient(circle_at_20%_15%,#f5f9f6,#eef3f1)] dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 bg-fixed relative">
       <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' fill=\'none\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>')]" />
-      <NavBar
-        items={navBarItems}
-        brand={<NavbarLogo />}
-        actions={<UserMenu />}
+      
+      {/* App Header */}
+      <AppHeader
+        onMenuToggle={() => toggleSidebar()}
+        sidebarOpen={sidebarOpen}
       />
+      
       {/* Main content area with overlay sidebar and top padding for fixed nav */}
-      <div className="relative pt-0">
+      <div className="relative pt-16">
         {/* Sidebar - Now overlays instead of pushing content */}
         <Sidebar
           items={sidebarItems}

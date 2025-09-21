@@ -3,6 +3,9 @@ import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system/Typography";
 import { SidebarLogo } from "../ui/Logo";
+import { GlobalSearch } from "../ui/GlobalSearch";
+import { UserMenu } from "../auth/UserMenu";
+import { NotificationBell } from "../ui/NotificationBell";
 
 interface AppHeaderProps {
   onMenuToggle: () => void;
@@ -101,7 +104,22 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           {/* Spacer */}
           <div className="flex-1" />
 
-          {/* Future: User actions, notifications, etc. */}
+          {/* Global Search - Centered */}
+          <div className="flex items-center justify-center flex-1 max-w-md mx-4">
+            <GlobalSearch />
+          </div>
+
+          {/* Spacer */}
+          <div className="flex-1" />
+
+          {/* User Actions - Right side */}
+          <div className="flex items-center space-x-2">
+            <NotificationBell
+              unreadCount={0} // TODO: Connect to actual notification count
+              onClick={() => console.log("Notifications clicked")}
+            />
+            <UserMenu />
+          </div>
         </div>
       </header>
 
