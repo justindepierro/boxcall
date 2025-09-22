@@ -26,13 +26,17 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
   onClose,
   onImport,
 }) => {
-  const [step, setStep] = useState<"upload" | "preview" | "importing">("upload");
+  const [step, setStep] = useState<"upload" | "preview" | "importing">(
+    "upload"
+  );
   const [csvData, setCsvData] = useState<RosterCSVData[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
   const [warnings, setWarnings] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -108,9 +112,14 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
               <Typography variant="headline-md" className="mb-4">
                 Upload Roster CSV
               </Typography>
-              <Typography variant="body-lg" color="muted" className="mb-6 max-w-md mx-auto">
-                Select a CSV file exported from MaxPreps or in the standard roster format.
-                The file should include player names, jersey numbers, and positions.
+              <Typography
+                variant="body-lg"
+                color="muted"
+                className="mb-6 max-w-md mx-auto"
+              >
+                Select a CSV file exported from MaxPreps or in the standard
+                roster format. The file should include player names, jersey
+                numbers, and positions.
               </Typography>
 
               <div className="space-y-4">
@@ -136,7 +145,8 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                 <div className="text-sm text-gray-600">
                   <p className="mb-2">Expected CSV format:</p>
                   <div className="bg-gray-50 p-3 rounded text-left font-mono text-xs">
-                    First Name,Last Name,Jersey Number,Position,Grade,Height,Weight,Email
+                    First Name,Last Name,Jersey
+                    Number,Position,Grade,Height,Weight,Email
                     <br />
                     John,Doe,12,QB,12,6'2",185,john.doe@email.com
                     <br />
@@ -167,9 +177,15 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
               {errors.length > 0 && (
                 <Card className="border-red-200 bg-red-50">
                   <div className="flex items-start space-x-3">
-                    <Icon name="alert" className="h-5 w-5 text-red-600 mt-0.5" />
+                    <Icon
+                      name="alert"
+                      className="h-5 w-5 text-red-600 mt-0.5"
+                    />
                     <div>
-                      <Typography variant="body-sm" className="text-red-800 font-medium">
+                      <Typography
+                        variant="body-sm"
+                        className="text-red-800 font-medium"
+                      >
                         Import Errors ({errors.length})
                       </Typography>
                       <ul className="mt-2 text-sm text-red-700 space-y-1">
@@ -185,9 +201,15 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
               {warnings.length > 0 && (
                 <Card className="border-yellow-200 bg-yellow-50">
                   <div className="flex items-start space-x-3">
-                    <Icon name="alert" className="h-5 w-5 text-yellow-600 mt-0.5" />
+                    <Icon
+                      name="alert"
+                      className="h-5 w-5 text-yellow-600 mt-0.5"
+                    />
                     <div>
-                      <Typography variant="body-sm" className="text-yellow-800 font-medium">
+                      <Typography
+                        variant="body-sm"
+                        className="text-yellow-800 font-medium"
+                      >
                         Warnings ({warnings.length})
                       </Typography>
                       <ul className="mt-2 text-sm text-yellow-700 space-y-1">
@@ -251,7 +273,10 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                       ))}
                       {csvData.length > 10 && (
                         <tr>
-                          <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">
+                          <td
+                            colSpan={6}
+                            className="px-6 py-4 text-center text-sm text-gray-500"
+                          >
                             ... and {csvData.length - 10} more players
                           </td>
                         </tr>
@@ -316,52 +341,57 @@ function parseMaxPrepsCSV(csvText: string): {
   const warnings: string[] = [];
 
   try {
-    const lines = csvText.trim().split('\n');
+    const lines = csvText.trim().split("\n");
     if (lines.length < 2) {
-      errors.push("CSV file must contain at least a header row and one data row");
+      errors.push(
+        "CSV file must contain at least a header row and one data row"
+      );
       return { players, errors, warnings };
     }
 
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const headers = lines[0].split(",").map((h) => h.trim().toLowerCase());
 
     // Map common header variations
     const headerMap: { [key: string]: keyof RosterCSVData } = {
-      'first name': 'firstName',
-      'firstname': 'firstName',
-      'first': 'firstName',
-      'last name': 'lastName',
-      'lastname': 'lastName',
-      'last': 'lastName',
-      'jersey number': 'jerseyNumber',
-      'jersey': 'jerseyNumber',
-      'number': 'jerseyNumber',
-      'position': 'position',
-      'pos': 'position',
-      'grade': 'grade',
-      'class': 'grade',
-      'year': 'grade',
-      'height': 'height',
-      'weight': 'weight',
-      'email': 'email',
-      'e-mail': 'email',
+      "first name": "firstName",
+      firstname: "firstName",
+      first: "firstName",
+      "last name": "lastName",
+      lastname: "lastName",
+      last: "lastName",
+      "jersey number": "jerseyNumber",
+      jersey: "jerseyNumber",
+      number: "jerseyNumber",
+      position: "position",
+      pos: "position",
+      grade: "grade",
+      class: "grade",
+      year: "grade",
+      height: "height",
+      weight: "weight",
+      email: "email",
+      "e-mail": "email",
     };
 
-    const mappedHeaders = headers.map(h => headerMap[h] || h);
+    const mappedHeaders = headers.map((h) => headerMap[h] || h);
 
     // Check for required fields
-    if (!mappedHeaders.includes('firstName') || !mappedHeaders.includes('lastName')) {
+    if (
+      !mappedHeaders.includes("firstName") ||
+      !mappedHeaders.includes("lastName")
+    ) {
       errors.push("CSV must include 'First Name' and 'Last Name' columns");
       return { players, errors, warnings };
     }
 
     // Parse data rows
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',').map(v => v.trim());
-      if (values.length === 0 || values.every(v => v === '')) continue;
+      const values = lines[i].split(",").map((v) => v.trim());
+      if (values.length === 0 || values.every((v) => v === "")) continue;
 
       const player: RosterCSVData = {
-        firstName: '',
-        lastName: '',
+        firstName: "",
+        lastName: "",
       };
 
       mappedHeaders.forEach((field, index) => {
@@ -385,8 +415,8 @@ function parseMaxPrepsCSV(csvText: string): {
     }
 
     // Add warnings for missing optional data
-    const missingJersey = players.filter(p => !p.jerseyNumber).length;
-    const missingPosition = players.filter(p => !p.position).length;
+    const missingJersey = players.filter((p) => !p.jerseyNumber).length;
+    const missingPosition = players.filter((p) => !p.position).length;
 
     if (missingJersey > 0) {
       warnings.push(`${missingJersey} players missing jersey numbers`);
@@ -394,10 +424,11 @@ function parseMaxPrepsCSV(csvText: string): {
     if (missingPosition > 0) {
       warnings.push(`${missingPosition} players missing positions`);
     }
-
   } catch (error) {
     console.error("CSV parsing error:", error);
-    errors.push("Failed to parse CSV file. Please check the format and try again.");
+    errors.push(
+      "Failed to parse CSV file. Please check the format and try again."
+    );
   }
 
   return { players, errors, warnings };

@@ -1,12 +1,8 @@
-/**
- * Database Teams Hook
- *
- * Fetches teams data from Supabase database
- */
 import { useState, useEffect, useCallback } from "react";
 
 import { useAuth } from "../app/auth-store";
 import { supabase } from "../lib/supabase";
+import type { Play } from "../types/play";
 
 interface Team {
   id: string;
@@ -24,17 +20,6 @@ interface Playbook {
   name: string;
   description?: string;
   is_active: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Play {
-  id: string;
-  playbook_id: string;
-  formation: string;
-  play_name: string;
-  p_type: string;
-  notes?: string;
   created_at: string;
   updated_at: string;
 }

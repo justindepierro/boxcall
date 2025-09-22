@@ -11,7 +11,8 @@ function loadInitial(): string | null {
   try {
     const v =
       typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
-    return v || null;
+    // Treat "1" as invalid (old default) and return null instead
+    return v && v !== "1" ? v : null;
   } catch {
     return null;
   }

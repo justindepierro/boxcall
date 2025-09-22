@@ -126,11 +126,7 @@ export const BoxCallCalendar = forwardRef<
           ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView={initialView}
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay",
-          }}
+          headerToolbar={false}
           events={fullCalendarEvents}
           editable={editable}
           selectable={selectable}

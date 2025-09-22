@@ -4,6 +4,7 @@
 export type NavItemId =
   | "dashboard"
   | "calendar"
+  | "planner"
   | "playbook"
   | "practice"
   | "analytics"
@@ -28,6 +29,7 @@ export type NavTree = NavItem[];
 export const baseNav: NavTree = [
   { id: "dashboard", label: "Dashboard", path: "/", icon: "home" },
   { id: "calendar", label: "Calendar", path: "/calendar", icon: "calendar" },
+  { id: "planner", label: "Planner", path: "/planner", icon: "clipboard-list" },
   { id: "playbook", label: "Playbook", path: "/playbook", icon: "book" },
   {
     id: "practice",

@@ -30,6 +30,8 @@ import {
   LazyTermsOfServicePage,
   LazyContactPage,
   LazyCollaborativeDemoPage,
+  LazyCalendarShellPage,
+  LazyPlannerPage,
 } from "../components/lazy/LazyRoutes";
 import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
@@ -39,7 +41,6 @@ import { RoleProvider } from "../hooks/useRoles";
 import { PlaybookProvider } from "../contexts/PlaybookContext";
 import { ROUTES } from "./paths";
 import {
-  requireTeamCoachLoader,
   requireTeamAnalyticsLoader,
   requireAuthenticatedLoader,
   requireTeamMemberLoader,
@@ -139,10 +140,49 @@ export const DataRouterApp: React.FC = () => {
                   </Suspense>
                 ),
               },
+              // Calendar - Available to everyone
+              {
+                path: ROUTES.CALENDAR,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyCalendarShellPage />
+                  </Suspense>
+                ),
+              },
+              // Planner - Weekly planning dashboard for coaches
+              {
+                path: ROUTES.PLANNER,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyPlannerPage />
+                  </Suspense>
+                ),
+              },
+              // Awards - Give out awards to players and staff (coaches only)
+              {
+                path: "/awards",
+                loader: requireCoachOrAdminLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                      <div className="text-center">
+                        <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                          Awards System
+                        </h1>
+                        <p className="text-gray-600">
+                          Coming soon! Award management for players and staff.
+                        </p>
+                      </div>
+                    </div>
+                  </Suspense>
+                ),
+              },
               // Team Settings (coach/admin)
               {
                 path: "/team/:teamId/settings",
-                loader: requireTeamCoachLoader,
+                loader: requireAuthenticatedLoader,
                 element: (
                   <Suspense fallback={<RouteLoadingSpinner />}>
                     <LazyTeamSettings />

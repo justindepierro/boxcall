@@ -106,6 +106,29 @@ export const getNavigationItems = (
     href: "/calendar",
     description: "Personal and team calendars",
   });
+  // Planner - Available to everyone
+  items.push({
+    id: "planner",
+    label: "Planner",
+    icon: "clipboard-list",
+    href: "/planner",
+    description: "Weekly planning dashboard for coaches",
+  });
+  // Awards - Coaches and super_admin only
+  if (
+    userRole === "admin" ||
+    userRole === "coach" ||
+    (userRole as string) === "super_admin"
+  ) {
+    items.push({
+      id: "awards",
+      label: "Awards",
+      icon: "award",
+      href: "/awards",
+      roles: ["admin", "coach", "super_admin"],
+      description: "Give out awards and recognition to players and staff",
+    });
+  }
   // Profile - Available to everyone
   items.push({
     id: "profile",

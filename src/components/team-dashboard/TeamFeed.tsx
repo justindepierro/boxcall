@@ -12,6 +12,14 @@ import {
   getCapabilitiesForRole,
   hasCapability,
 } from "@services/capabilities/capabilityMap";
+import {
+  likePost,
+  unlikePost,
+  checkUserLike,
+  sharePost,
+  checkUserShare,
+} from "../../services/postsService";
+import { useAuth } from "../../app/auth-store";
 import { Typography } from "../design-system/Typography";
 import { OnboardingHint } from "../onboarding/OnboardingHint";
 import { Button } from "../ui/Button/Button";
@@ -33,6 +41,23 @@ interface PostItemProps {
   is_pinned: boolean | null;
   canPin: boolean;
   onTogglePin: (id: string, current: boolean | null) => void;
+  author?:
+    | {
+        id: string;
+        display_name: string | null;
+        full_name: string | null;
+        avatar_url: string | null;
+      }[]
+    | null;
+  likes_count: number;
+  comments_count: number;
+  shares_count: number;
+  userId?: string;
+  onLike?: (postId: string) => void;
+  onComment?: (postId: string) => void;
+  onShare?: (postId: string) => void;
+  isLiked?: boolean;
+  isShared?: boolean;
 }
 
 const PostItem: React.FC<PostItemProps> = ({
@@ -42,31 +67,76 @@ const PostItem: React.FC<PostItemProps> = ({
   is_pinned,
   canPin,
   onTogglePin,
+  author,
+  likes_count,
+  comments_count,
+  shares_count,
+  userId,
+  onLike,
+  onComment,
+  onShare,
+  isLiked,
+  isShared,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const MAX = 280;
   const over = content.length > MAX;
   const display = over && !expanded ? content.slice(0, MAX) + "…" : content;
+
+  // Get display name and avatar (author is an array from Supabase join)
+  const authorData = author?.[0];
+  const displayName =
+    authorData?.display_name || authorData?.full_name || "Team Member";
+  const avatarUrl = authorData?.avatar_url;
+
   return (
-    <li className="rounded border-subtle surface-card elevation-card p-3">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1">
-          <p className="text-sm text-text-primary whitespace-pre-wrap">
-            {display}
-          </p>
-          {over && (
-            <Button
-              type="button"
-              size="xs"
-              variant="link"
-              onClick={() => setExpanded((e) => !e)}
-              className="mt-1"
-              aria-expanded={expanded}
-            >
-              {expanded ? "Show less" : "Read more"}
-            </Button>
-          )}
+    <li className="rounded-lg border border-subtle surface-card elevation-card p-4 hover:shadow-md transition-shadow">
+      {/* Post Header with Author Info */}
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="flex items-center gap-3">
+          {/* Avatar */}
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt={`${displayName}'s avatar`}
+                className="w-full h-full rounded-full object-cover"
+              />
+            ) : (
+              displayName.charAt(0).toUpperCase()
+            )}
+          </div>
+
+          {/* Author and Timestamp */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <Typography
+                variant="body-sm"
+                className="font-semibold text-text-primary truncate"
+              >
+                {displayName}
+              </Typography>
+              {is_pinned && (
+                <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 rounded-full text-xs font-medium">
+                  <Icon name="star" size="sm" />
+                  Pinned
+                </span>
+              )}
+            </div>
+            <Typography variant="body-xs" color="muted" className="mt-0.5">
+              {created_at
+                ? new Date(created_at).toLocaleString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                : ""}
+            </Typography>
+          </div>
         </div>
+
+        {/* Pin Button */}
         {canPin && (
           <Button
             type="button"
@@ -85,29 +155,78 @@ const PostItem: React.FC<PostItemProps> = ({
           </Button>
         )}
       </div>
-      <div className="mt-2 flex items-center justify-between text-xs text-text-secondary">
-        <span>
-          {created_at
-            ? new Date(created_at).toLocaleString(undefined, {
-                month: "short",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            : ""}
-        </span>
-        {is_pinned && (
-          <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-300">
-            <Icon name="star" size="sm" />
-            Pinned
-          </span>
+
+      {/* Post Content */}
+      <div className="mb-3">
+        <p className="text-sm text-text-primary whitespace-pre-wrap leading-relaxed">
+          {display}
+        </p>
+        {over && (
+          <Button
+            type="button"
+            size="xs"
+            variant="link"
+            onClick={() => setExpanded((e) => !e)}
+            className="mt-2 p-0 h-auto font-normal text-blue-600 hover:text-blue-700"
+            aria-expanded={expanded}
+          >
+            {expanded ? "Show less" : "Read more"}
+          </Button>
         )}
+      </div>
+
+      {/* Post Actions */}
+      <div className="flex items-center justify-between pt-3 border-t border-subtle">
+        <div className="flex items-center gap-4">
+          <Button
+            type="button"
+            size="xs"
+            variant="ghost"
+            className={`text-text-secondary hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 p-2 ${
+              isLiked ? "text-red-600" : ""
+            }`}
+            onClick={() => onLike?.(id)}
+            aria-label={isLiked ? "Unlike post" : "Like post"}
+            disabled={!userId}
+          >
+            <Icon name="award" size="sm" className="mr-1" />
+            {likes_count > 0 ? likes_count : ""} {isLiked ? "Liked" : "Like"}
+          </Button>
+          <Button
+            type="button"
+            size="xs"
+            variant="ghost"
+            className="text-text-secondary hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 p-2"
+            onClick={() => onComment?.(id)}
+            aria-label="Comment on post"
+          >
+            <Icon name="message" size="sm" className="mr-1" />
+            {comments_count > 0 ? comments_count : ""} Comment
+            {comments_count !== 1 ? "s" : ""}
+          </Button>
+          <Button
+            type="button"
+            size="xs"
+            variant="ghost"
+            className={`text-text-secondary hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 p-2 ${
+              isShared ? "text-green-600" : ""
+            }`}
+            onClick={() => onShare?.(id)}
+            aria-label={isShared ? "Already shared" : "Share post"}
+            disabled={!userId || isShared}
+          >
+            <Icon name="upload" size="sm" className="mr-1" />
+            {shares_count > 0 ? shares_count : ""}{" "}
+            {isShared ? "Shared" : "Share"}
+          </Button>
+        </div>
       </div>
     </li>
   );
 };
 
 export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
+  const { user } = useAuth();
   const {
     data: posts = [],
     isLoading,
@@ -127,6 +246,13 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
   const caps = getCapabilitiesForRole(userRole);
   const canCreate = hasCapability(caps, CAPABILITIES.CREATE_POST);
   const canPin = hasCapability(caps, CAPABILITIES.PIN_POST);
+
+  // Interaction state
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+  const [sharedPosts, setSharedPosts] = useState<Set<string>>(new Set());
+  const [_loadingInteractions, setLoadingInteractions] = useState<Set<string>>(
+    new Set()
+  );
 
   useEffect(() => {
     if (!open && triggerRef.current) triggerRef.current.focus();
@@ -151,6 +277,94 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
   function togglePin(id: string, current: boolean | null) {
     pinMutate({ postId: id, pin: !current });
   }
+
+  // Interaction handlers
+  async function handleLike(postId: string) {
+    if (!user?.id) return;
+
+    setLoadingInteractions((prev) => new Set(prev).add(postId));
+
+    try {
+      const isCurrentlyLiked = likedPosts.has(postId);
+      if (isCurrentlyLiked) {
+        await unlikePost(postId);
+        setLikedPosts((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(postId);
+          return newSet;
+        });
+      } else {
+        await likePost(postId);
+        setLikedPosts((prev) => new Set(prev).add(postId));
+      }
+    } catch (error) {
+      toast.error("Failed to update like", (error as Error).message);
+    } finally {
+      setLoadingInteractions((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(postId);
+        return newSet;
+      });
+    }
+  }
+
+  async function handleShare(postId: string) {
+    if (!user?.id) return;
+
+    setLoadingInteractions((prev) => new Set(prev).add(postId));
+
+    try {
+      const isCurrentlyShared = sharedPosts.has(postId);
+      if (!isCurrentlyShared) {
+        await sharePost(postId);
+        setSharedPosts((prev) => new Set(prev).add(postId));
+        toast.success("Post shared!");
+      }
+    } catch (error) {
+      toast.error("Failed to share post", (error as Error).message);
+    } finally {
+      setLoadingInteractions((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(postId);
+        return newSet;
+      });
+    }
+  }
+
+  function handleComment(_postId: string) {
+    // TODO: Implement comment modal or inline comments
+    toast.info("Comments coming soon!");
+  }
+
+  // Load user's interaction state for posts
+  useEffect(() => {
+    if (!user?.id || posts.length === 0) return;
+
+    const loadInteractions = async () => {
+      const liked = new Set<string>();
+      const shared = new Set<string>();
+
+      await Promise.all(
+        posts.map(async (post) => {
+          try {
+            const [isLiked, isShared] = await Promise.all([
+              checkUserLike(post.id, user.id),
+              checkUserShare(post.id, user.id),
+            ]);
+            if (isLiked) liked.add(post.id);
+            if (isShared) shared.add(post.id);
+          } catch {
+            // Ignore individual post errors
+          }
+        })
+      );
+
+      setLikedPosts(liked);
+      setSharedPosts(shared);
+    };
+
+    loadInteractions();
+  }, [user?.id, posts]);
 
   if (!isLoading && !error && posts.length === 0) {
     return (
@@ -370,6 +584,16 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
             is_pinned={p.is_pinned}
             canPin={canPin}
             onTogglePin={togglePin}
+            author={p.author}
+            likes_count={p.likes_count}
+            comments_count={p.comments_count}
+            shares_count={p.shares_count}
+            userId={user?.id}
+            onLike={handleLike}
+            onComment={handleComment}
+            onShare={handleShare}
+            isLiked={likedPosts.has(p.id)}
+            isShared={sharedPosts.has(p.id)}
           />
         ))}
       </ul>

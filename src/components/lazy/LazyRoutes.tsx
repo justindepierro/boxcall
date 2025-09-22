@@ -19,6 +19,8 @@ export const LazyCalendarShellPage = lazy(
   () => import("../../pages/CalendarShellPage")
 );
 
+export const LazyPlannerPage = lazy(() => import("../../pages/PlannerPage"));
+
 export const LazyLoginPage = lazy(() => import("../../pages/LoginPage"));
 
 export const LazyProfilePage = lazy(() =>

@@ -6,6 +6,7 @@ export const ROUTES = {
   DASHBOARD: "/dashboard",
   PROFILE: "/profile",
   CALENDAR: "/calendar",
+  PLANNER: "/planner",
   TEAMS: "/teams",
   PLAYBOOK: "/playbook",
   PRACTICE_PLANS: "/practice-plans",

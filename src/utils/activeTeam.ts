@@ -10,18 +10,22 @@ import {
 export function getActiveTeamId(): string {
   try {
     const fromStore = getActiveTeamIdFromStore();
-    if (fromStore) return fromStore;
+    // Treat "1" as invalid (old default) and use demo team instead
+    if (fromStore && fromStore !== "1") return fromStore;
   } catch {
     // store may not be initialized yet
   }
   if (typeof window !== "undefined") {
     try {
-      return localStorage.getItem("activeTeamId") || "1";
+      const stored = localStorage.getItem("activeTeamId");
+      // Treat "1" as invalid and use demo team instead
+      if (stored && stored !== "1") return stored;
+      return "550e8400-e29b-41d4-a716-446655440000";
     } catch {
-      return "1";
+      return "550e8400-e29b-41d4-a716-446655440000";
     }
   }
-  return "1";
+  return "550e8400-e29b-41d4-a716-446655440000";
 }
 
 export function setActiveTeamId(teamId: string) {

@@ -9,6 +9,8 @@ import Input from "../components/ui/Input/Input";
 import { Modal } from "../components/ui/Modal/Modal";
 import Icon from "../components/ui/Icon/Icon";
 import { PDFExportTrigger } from "../components/practice/LazyPDFExport";
+import { useAuth } from "../app/auth-store";
+import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
 import {
   usePracticeBlocks,
   usePracticeSchedule,
@@ -34,6 +36,8 @@ export function PracticePlanner() {
   const [practiceStarted, setPracticeStarted] = useState(false);
   const [lockedSchedule, setLockedSchedule] = useState(false);
   // Hooks
+  const { user } = useAuth();
+  const { data: teamRole } = useTeamMembershipRole(teamId, user?.id);
   const { schedules, loading } = usePracticeSchedule(teamId || "");
   const { addBlock, reorderBlocks, deleteBlock } =
     usePracticeBlocks(selectedScheduleId);
@@ -302,6 +306,19 @@ export function PracticePlanner() {
                       <Icon name="pdf" size="sm" />
                       Print Practice to PDF
                     </Button>
+                    {/* Add/Edit Season Schedule Button - Team Owners Only */}
+                    {teamRole === "head_coach" && (
+                      <Button
+                        onClick={() =>
+                          navigate(`/teams/${teamId}/season-schedule`)
+                        }
+                        variant="secondary"
+                        className="surface-card border-subtle text-text-secondary hover:text-text-primary surface-subtle-hover flex items-center gap-2"
+                      >
+                        <Icon name="plus-circle" size="sm" />
+                        Add/Edit Season Schedule
+                      </Button>
+                    )}
                     {/* Practice Controls */}
                     {!practiceStarted ? (
                       <Button
