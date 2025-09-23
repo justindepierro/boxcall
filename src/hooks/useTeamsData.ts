@@ -35,10 +35,15 @@ export function useTeamsData() {
   const { user: _user } = useAuth(); // DEMO MODE: Not used during demo
 
   // DEMO MODE: Use service role client to bypass RLS
-  const demoSupabase = useMemo(() => createClient<Database>(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY
-  ), []);
+  const demoSupabase = useMemo(
+    () =>
+      createClient<Database>(
+        import.meta.env.VITE_SUPABASE_URL,
+        import.meta.env.SUPABASE_SERVICE_ROLE_KEY ||
+          import.meta.env.VITE_SUPABASE_ANON_KEY
+      ),
+    []
+  );
 
   // Function to manually refresh data
   const refreshData = useCallback(() => {
@@ -69,10 +74,11 @@ export function useTeamsData() {
         setTeams(teamsData || []);
 
         // Fetch playbooks
-        const { data: playbooksData, error: playbooksError } = await demoSupabase
-          .from("playbooks")
-          .select("*")
-          .order("created_at", { ascending: false });
+        const { data: playbooksData, error: playbooksError } =
+          await demoSupabase
+            .from("playbooks")
+            .select("*")
+            .order("created_at", { ascending: false });
 
         if (playbooksError) {
           console.error("Error fetching playbooks:", playbooksError);

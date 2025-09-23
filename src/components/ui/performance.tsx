@@ -3,8 +3,8 @@
  * Modern lazy loading, bundle splitting, and performance monitoring
  */
 
-import { lazy, Suspense, useEffect, useState } from 'react';
-import type { ComponentType } from 'react';
+import { lazy, Suspense, useEffect, useState } from "react";
+import type { ComponentType } from "react";
 
 // Lazy loading wrapper with performance monitoring
 interface LazyWrapperProps {
@@ -75,14 +75,15 @@ export const lazyRoute = (
 };
 
 // Image optimization component
-interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+interface OptimizedImageProps
+  extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   alt: string;
   width?: number;
   height?: number;
   quality?: number;
   priority?: boolean;
-  placeholder?: 'blur' | 'empty';
+  placeholder?: "blur" | "empty";
 }
 
 export const OptimizedImage: React.FC<OptimizedImageProps> = ({
@@ -92,8 +93,8 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   height,
   quality = 75,
   priority = false,
-  placeholder = 'empty',
-  className = '',
+  placeholder = "empty",
+  className = "",
   ...props
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -102,7 +103,9 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   // Generate responsive image URLs (would integrate with your image CDN)
   const generateSrcSet = (baseSrc: string) => {
     const sizes = [480, 768, 1024, 1280, 1920];
-    return sizes.map(size => `${baseSrc}?w=${size}&q=${quality} ${size}w`).join(', ');
+    return sizes
+      .map((size) => `${baseSrc}?w=${size}&q=${quality} ${size}w`)
+      .join(", ");
   };
 
   const handleLoad = () => {
@@ -126,7 +129,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      {!isLoaded && placeholder === 'blur' && (
+      {!isLoaded && placeholder === "blur" && (
         <div
           className="absolute inset-0 bg-gray-200 animate-pulse"
           style={{ width, height }}
@@ -139,12 +142,12 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         alt={alt}
         width={width}
         height={height}
-        loading={priority ? 'eager' : 'lazy'}
+        loading={priority ? "eager" : "lazy"}
         decoding="async"
         onLoad={handleLoad}
         onError={handleError}
         className={`transition-opacity duration-300 ${
-          isLoaded ? 'opacity-100' : 'opacity-0'
+          isLoaded ? "opacity-100" : "opacity-0"
         }`}
         {...props}
       />
@@ -156,7 +159,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 export const BundleAnalyzer: React.FC = () => {
   useEffect(() => {
     if (import.meta.env.DEV) {
-      console.info('📊 Bundle analyzer available in development mode');
+      console.info("📊 Bundle analyzer available in development mode");
       // TODO: Implement bundle analysis when vite-bundle-analyzer is properly configured
     }
   }, []);
@@ -173,7 +176,9 @@ export const usePerformanceMonitoring = (componentName: string) => {
 
     return () => {
       const renderTime = performance.now() - startTime;
-      console.info(`⚡ ${componentName} render time: ${renderTime.toFixed(2)}ms`);
+      console.info(
+        `⚡ ${componentName} render time: ${renderTime.toFixed(2)}ms`
+      );
     };
   }, [componentName]);
 };
@@ -192,7 +197,7 @@ export function VirtualList<T>({
   itemHeight,
   containerHeight,
   renderItem,
-  className = '',
+  className = "",
 }: VirtualListProps<T>) {
   const [scrollTop, setScrollTop] = useState(0);
 
@@ -216,17 +221,19 @@ export function VirtualList<T>({
       style={{ height: containerHeight }}
       onScroll={handleScroll}
     >
-      <div style={{ height: totalHeight, position: 'relative' }}>
+      <div style={{ height: totalHeight, position: "relative" }}>
         <div
           style={{
             transform: `translateY(${offsetY}px)`,
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
           }}
         >
-          {visibleItems.map((item, index) => renderItem(item, startIndex + index))}
+          {visibleItems.map((item, index) =>
+            renderItem(item, startIndex + index)
+          )}
         </div>
       </div>
     </div>

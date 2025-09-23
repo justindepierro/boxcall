@@ -116,7 +116,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const displayName = profile?.full_name || profile?.display_name || "Player";
 
   return (
-    <Card variant="glass" className={`compact-card h-full relative ${cardClassName}`}>
+    <Card
+      variant="glass"
+      className={`compact-card h-full relative ${cardClassName}`}
+    >
       {/* Header */}
       <div className="flex items-center justify-between pb-3">
         <Typography variant="headline-md" className="text-navy-800">

@@ -357,7 +357,10 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                           className="font-semibold"
                         />
                         {config.isDefault && (
-                          <Typography variant="caption" className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
+                          <Typography
+                            variant="caption"
+                            className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full"
+                          >
                             Default
                           </Typography>
                         )}
@@ -530,7 +533,11 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                         !localSettings.bulkOperations.enableBulkFormationAdd
                       }
                     />
-                    <Typography variant="caption" color="muted" className="mt-1">
+                    <Typography
+                      variant="caption"
+                      color="muted"
+                      className="mt-1"
+                    >
                       Number of formations to add when using bulk operations
                     </Typography>
                   </div>
@@ -578,7 +585,11 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                       }
                       disabled={!localSettings.bulkOperations.enableBulkPlayAdd}
                     />
-                    <Typography variant="caption" color="muted" className="mt-1">
+                    <Typography
+                      variant="caption"
+                      color="muted"
+                      className="mt-1"
+                    >
                       Number of plays to add when using bulk operations
                     </Typography>
                   </div>

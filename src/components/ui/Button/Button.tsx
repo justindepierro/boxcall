@@ -48,16 +48,22 @@ const buttonVariants: ButtonStylesConfig = {
   },
   glass: {
     base: "bg-white/20 text-white border border-white/30 backdrop-blur-sm",
-    hover: "hover:bg-white/30 hover:border-white/50 hover:shadow-lg hover:shadow-white/20",
+    hover:
+      "hover:bg-white/30 hover:border-white/50 hover:shadow-lg hover:shadow-white/20",
     active: "active:bg-white/40 active:scale-95",
-    disabled: "disabled:bg-white/10 disabled:border-white/20 disabled:cursor-not-allowed disabled:opacity-50",
-    focus: "focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent",
+    disabled:
+      "disabled:bg-white/10 disabled:border-white/20 disabled:cursor-not-allowed disabled:opacity-50",
+    focus:
+      "focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent",
   },
   ghost: {
     base: "bg-transparent text-[var(--semantic-text-primary)] border border-transparent",
-    hover: "hover:bg-[var(--semantic-bg-muted)] hover:border-[var(--semantic-border)]",
-    active: "active:bg-[color:var(--color-gray-200)] active:border-[var(--semantic-border)]",
-    disabled: "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
+    hover:
+      "hover:bg-[var(--semantic-bg-muted)] hover:border-[var(--semantic-border)]",
+    active:
+      "active:bg-[color:var(--color-gray-200)] active:border-[var(--semantic-border)]",
+    disabled:
+      "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   subtle: {

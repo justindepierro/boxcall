@@ -59,7 +59,10 @@ export const DashboardHeader: React.FC = () => {
       brand={<LogoFull size="md" />}
       actions={
         profile ? (
-          <Typography variant="body-sm" className="w-8 h-8 rounded-full bg-jade-100 flex items-center justify-center font-bold text-jade-800">
+          <Typography
+            variant="body-sm"
+            className="w-8 h-8 rounded-full bg-jade-100 flex items-center justify-center font-bold text-jade-800"
+          >
             {profile.full_name
               ? profile.full_name
                   .split(" ")

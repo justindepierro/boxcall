@@ -74,7 +74,11 @@ export const PracticeScriptPlayList: React.FC<PracticeScriptPlayListProps> = ({
                     play.defensiveCoverage ||
                     play.blitz ||
                     play.stunt) && (
-                    <Typography variant="body-sm" color="muted" className="mt-2">
+                    <Typography
+                      variant="body-sm"
+                      color="muted"
+                      className="mt-2"
+                    >
                       <span>Defense: </span>
                       {play.defenseFront && (
                         <span>Front: {play.defenseFront} </span>
@@ -87,7 +91,11 @@ export const PracticeScriptPlayList: React.FC<PracticeScriptPlayListProps> = ({
                     </Typography>
                   )}
                   {(play.hash || play.situation) && (
-                    <Typography variant="body-sm" color="muted" className="mt-1">
+                    <Typography
+                      variant="body-sm"
+                      color="muted"
+                      className="mt-1"
+                    >
                       {play.hash && <span>Hash: {play.hash} </span>}
                       {play.situation && (
                         <span>Situation: {play.situation}</span>

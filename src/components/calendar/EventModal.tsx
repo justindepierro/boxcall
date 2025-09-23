@@ -15,14 +15,26 @@ import { EventDetails } from "./EventModal/EventDetails";
 import { EventForm } from "./EventModal/EventForm";
 
 import type { UseMutationResult } from "@tanstack/react-query";
-import type { CalendarEvent, EventRSVP, CalendarEventCreate } from "../../domain/calendar/types";
+import type {
+  CalendarEvent,
+  EventRSVP,
+  CalendarEventCreate,
+} from "../../domain/calendar/types";
 import type { Database } from "../../types/database";
 
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
 
 // Mutation types for calendar operations
-type CreateEventMutation = UseMutationResult<CalendarEvent, Error, CalendarEventCreate>;
-type UpdateEventMutation = UseMutationResult<null, Error, { id: string; updates: Partial<CalendarEventCreate> }>;
+type CreateEventMutation = UseMutationResult<
+  CalendarEvent,
+  Error,
+  CalendarEventCreate
+>;
+type UpdateEventMutation = UseMutationResult<
+  null,
+  Error,
+  { id: string; updates: Partial<CalendarEventCreate> }
+>;
 type DeleteEventMutation = UseMutationResult<boolean, Error, string>;
 
 interface EventModalProps {

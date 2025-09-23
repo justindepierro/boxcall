@@ -33,9 +33,10 @@ export const LazyLoginPage = lazyRoute(
 );
 
 export const LazyProfilePage = lazyRoute(
-  () => import("../../pages/ProfilePage").then((module) => ({
-    default: module.ProfilePage,
-  })),
+  () =>
+    import("../../pages/ProfilePage").then((module) => ({
+      default: module.ProfilePage,
+    })),
   "Profile"
 );
 
@@ -55,23 +56,26 @@ export const LazyTeamsPage = lazyRoute(
 );
 
 export const LazyCreateTeam = lazyRoute(
-  () => import("../../pages/CreateTeam").then((module) => ({
-    default: module.CreateTeam,
-  })),
+  () =>
+    import("../../pages/CreateTeam").then((module) => ({
+      default: module.CreateTeam,
+    })),
   "Create Team"
 );
 
 export const LazyJoinTeam = lazyRoute(
-  () => import("../../pages/JoinTeam").then((module) => ({
-    default: module.JoinTeam,
-  })),
+  () =>
+    import("../../pages/JoinTeam").then((module) => ({
+      default: module.JoinTeam,
+    })),
   "Join Team"
 );
 
 export const LazyCreateCoachAccount = lazyRoute(
-  () => import("../../pages/CreateCoachAccount").then((module) => ({
-    default: module.CreateCoachAccount,
-  })),
+  () =>
+    import("../../pages/CreateCoachAccount").then((module) => ({
+      default: module.CreateCoachAccount,
+    })),
   "Create Coach Account"
 );
 
@@ -109,23 +113,26 @@ export const LazyAboutPage = lazyRoute(
 );
 
 export const LazyPrivacyPolicyPage = lazyRoute(
-  () => import("../../pages/legal/PrivacyPolicyPage").then((module) => ({
-    default: module.PrivacyPolicyPage,
-  })),
+  () =>
+    import("../../pages/legal/PrivacyPolicyPage").then((module) => ({
+      default: module.PrivacyPolicyPage,
+    })),
   "Privacy Policy"
 );
 
 export const LazyTermsOfServicePage = lazyRoute(
-  () => import("../../pages/legal/TermsOfServicePage").then((module) => ({
-    default: module.TermsOfServicePage,
-  })),
+  () =>
+    import("../../pages/legal/TermsOfServicePage").then((module) => ({
+      default: module.TermsOfServicePage,
+    })),
   "Terms of Service"
 );
 
 export const LazyContactPage = lazyRoute(
-  () => import("../../pages/legal/ContactPage").then((module) => ({
-    default: module.ContactPage,
-  })),
+  () =>
+    import("../../pages/legal/ContactPage").then((module) => ({
+      default: module.ContactPage,
+    })),
   "Contact"
 );
 
@@ -149,9 +156,10 @@ export const LazyPracticePlanner = lazyRoute(
 
 // Heavy component lazy loading
 export const LazyPracticeScriptModal = lazyRoute(
-  () => import("../practice/PracticeScriptModal/index").then((module) => ({
-    default: module.PracticeScriptModal,
-  })),
+  () =>
+    import("../practice/PracticeScriptModal/index").then((module) => ({
+      default: module.PracticeScriptModal,
+    })),
   "Practice Script Modal"
 );
 

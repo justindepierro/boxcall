@@ -71,7 +71,10 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
   if (upcomingLoading) {
     return (
-      <Card variant="glass" className="h-full flex items-center justify-center surface-card">
+      <Card
+        variant="glass"
+        className="h-full flex items-center justify-center surface-card"
+      >
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
         <span className="ml-3 text-text-secondary">Loading calendar...</span>
       </Card>

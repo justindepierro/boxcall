@@ -1,18 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "../../../ui/Button/Button";
 import { Input } from "../../../ui";
-import { TextArea } from ".        <div>
-          <Typography variant="label-md" className="block mb-1">
-            Hash
-          </Typography>
-          <Input
-            value={formData.hash}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              updateField("hash", e.target.value)
-            }
-            placeholder="e.g., Left, Right"
-          />
-        </div>";
+import { TextArea } from "../../../ui";
 import { Typography } from "../../../design-system/Typography";
 
 import type { PracticeScriptPlay } from "../types";

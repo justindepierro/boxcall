@@ -29,7 +29,12 @@ export type NavTree = NavItem[];
 // Seed data for visual iteration
 export const baseNav: NavTree = [
   { id: "dashboard", label: "Dashboard", path: "/", icon: "home" },
-  { id: "team-bulletin", label: "Team Bulletin", path: "/team-bulletin", icon: "users" },
+  {
+    id: "team-bulletin",
+    label: "Team Bulletin",
+    path: "/team-bulletin",
+    icon: "users",
+  },
   { id: "calendar", label: "Calendar", path: "/calendar", icon: "calendar" },
   { id: "planner", label: "Planner", path: "/planner", icon: "clipboard-list" },
   { id: "playbook", label: "Playbook", path: "/playbook", icon: "book" },

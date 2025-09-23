@@ -53,8 +53,6 @@ import {
 import RouteErrorElement from "./RouteErrorElement";
 import DiagramPaneRoute from "../components/playbook/DiagramPaneRoute";
 
-
-
 // Root wrapper so loaders run pre-render and providers are applied once
 const RootLayout: React.FC = () => (
   <>
@@ -102,7 +100,9 @@ export const DataRouterApp: React.FC = () => {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
-          <p className="font-medium text-text-secondary">Loading team bulletin...</p>
+          <p className="font-medium text-text-secondary">
+            Loading team bulletin...
+          </p>
         </div>
       </div>
     );
