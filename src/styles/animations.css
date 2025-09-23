@@ -1,20 +1,83 @@
-/* ===== SQUARE ANIMATION SYSTEM ===== */
-/* Masculine, confident, technical motion language */
+/* ===== MODERN MICRO-INTERACTIONS ===== */
+/* 2025 Design Trends - Glassmorphism, Subtle Motion, Performance */
 
-/* Base timing functions - Technical precision */
-:root {
-  /* Confident square timing - Fast start, controlled finish */
-  --timing-square-snap: cubic-bezier(0.4, 0, 0.2, 1);
-  --timing-square-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --timing-square-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  --timing-square-punch: cubic-bezier(0.76, 0, 0.24, 1);
+/* Glassmorphism Effects */
+.glass-effect {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
 
-  /* Duration tokens - Technical intervals */
-  --duration-instant: 100ms;
-  --duration-quick: 200ms;
-  --duration-smooth: 350ms;
-  --duration-confident: 500ms;
-  --duration-deliberate: 750ms;
+.glass-hover {
+  transition: all var(--transition-normal);
+}
+
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Modern Hover Effects */
+.modern-hover {
+  transition: all var(--transition-fast);
+  transform-origin: center;
+}
+
+.modern-hover:hover {
+  transform: var(--hover-lift) var(--hover-scale);
+  box-shadow: var(--hover-glow);
+}
+
+.modern-hover:active {
+  transform: scale(0.98);
+  transition-duration: var(--transition-fast);
+}
+
+/* Subtle Glow Effects */
+.glow-hover {
+  position: relative;
+  transition: all var(--transition-normal);
+}
+
+.glow-hover::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(0, 168, 107, 0.1), rgba(0, 168, 107, 0.05));
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  z-index: -1;
+}
+
+.glow-hover:hover::before {
+  opacity: 1;
+}
+
+/* Performance Optimized Animations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .modern-hover,
+  .glass-hover,
+  .glow-hover {
+    transition: none !important;
+  }
+
+  .modern-hover:hover,
+  .glass-hover:hover,
+  .glow-hover:hover {
+    transform: none !important;
+  }
 }
 
 /* === SLIDE TRANSITIONS === */

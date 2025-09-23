@@ -47,9 +47,9 @@ export function ContextualActionsPanel({
               <Icon name={action.icon} size={16} className="text-blue-600" />
               <div className="text-left">
                 <div className="font-medium">{action.title}</div>
-                <div className="text-sm text-text-muted">
+                <Typography variant="body-sm" color="muted">
                   {action.description}
-                </div>
+                </Typography>
               </div>
             </Button>
           ))}

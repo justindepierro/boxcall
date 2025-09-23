@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../../../ui/Button/Button";
+import { Typography } from "../../../design-system/Typography";
 import { PracticeScriptPlayForm } from "./PracticeScriptPlayForm";
 
 import type { PracticeScriptPlay } from "../types";
@@ -60,18 +61,20 @@ export const PracticeScriptPlayList: React.FC<PracticeScriptPlayListProps> = ({
                 <div className="flex-1">
                   <h4 className="font-medium">{play.playName}</h4>
                   {play.personnel && (
-                    <p className="text-sm text-gray-600">
+                    <Typography variant="body-sm" color="muted">
                       Personnel: {play.personnel}
-                    </p>
+                    </Typography>
                   )}
                   {play.notes && (
-                    <p className="text-sm text-gray-600">Notes: {play.notes}</p>
+                    <Typography variant="body-sm" color="muted">
+                      Notes: {play.notes}
+                    </Typography>
                   )}
                   {(play.defenseFront ||
                     play.defensiveCoverage ||
                     play.blitz ||
                     play.stunt) && (
-                    <div className="text-sm text-gray-600 mt-2">
+                    <Typography variant="body-sm" color="muted" className="mt-2">
                       <span>Defense: </span>
                       {play.defenseFront && (
                         <span>Front: {play.defenseFront} </span>
@@ -81,15 +84,15 @@ export const PracticeScriptPlayList: React.FC<PracticeScriptPlayListProps> = ({
                       )}
                       {play.blitz && <span>Blitz: {play.blitz} </span>}
                       {play.stunt && <span>Stunt: {play.stunt}</span>}
-                    </div>
+                    </Typography>
                   )}
                   {(play.hash || play.situation) && (
-                    <div className="text-sm text-gray-600 mt-1">
+                    <Typography variant="body-sm" color="muted" className="mt-1">
                       {play.hash && <span>Hash: {play.hash} </span>}
                       {play.situation && (
                         <span>Situation: {play.situation}</span>
                       )}
-                    </div>
+                    </Typography>
                   )}
                 </div>
                 <div className="flex space-x-2 ml-4">

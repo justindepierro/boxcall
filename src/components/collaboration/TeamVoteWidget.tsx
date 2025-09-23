@@ -259,7 +259,7 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
       className="team-vote-widget"
       mockCollaboration={mockCollaboration}
     >
-      <Card className="h-full p-4">
+      <Card variant="glass" className="h-full p-3">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <Typography variant="headline-sm" as="h3">
@@ -309,6 +309,7 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
               return (
                 <Card
                   key={vote.id}
+                  variant="glass"
                   className="p-4 border border-border-secondary"
                 >
                   {/* Vote Header */}
@@ -436,7 +437,7 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
         {/* Create Vote Modal Placeholder */}
         {isCreatingVote && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <Card className="p-6 max-w-md w-full mx-4">
+            <Card variant="glass" className="p-6 max-w-md w-full mx-4">
               <Typography variant="headline-sm" className="mb-4">
                 Create Team Vote
               </Typography>

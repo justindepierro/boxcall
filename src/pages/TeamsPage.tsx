@@ -1,8 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Layout } from "../components/layout/Layout";
 import { Typography } from "../components/design-system";
 import Card from "../components/ui/Card/Card";
 import { useTeamsData } from "../hooks/useTeamsData";
+import { useActiveTeamStore } from "../state/activeTeamStore";
+import { teamRoutes } from "../routes/paths";
 
 /**
  * Teams Page - Shows all teams from database
@@ -11,6 +14,13 @@ import { useTeamsData } from "../hooks/useTeamsData";
  */
 const TeamsPage: React.FC = () => {
   const { teams, loading, error } = useTeamsData();
+  const navigate = useNavigate();
+  const { setActiveTeamId } = useActiveTeamStore();
+
+  const handleTeamClick = (teamId: string) => {
+    setActiveTeamId(teamId);
+    navigate(teamRoutes.bulletin(teamId));
+  };
 
   return (
     <Layout>
@@ -60,7 +70,8 @@ const TeamsPage: React.FC = () => {
               {teams.map((team) => (
                 <Card
                   key={team.id}
-                  className="p-6 hover:shadow-lg transition-shadow"
+                  className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => handleTeamClick(team.id)}
                 >
                   <div className="space-y-3">
                     <div className="flex items-start justify-between">

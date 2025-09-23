@@ -46,14 +46,18 @@ const buttonVariants: ButtonStylesConfig = {
       "disabled:text-[color:var(--color-jade-300)] disabled:border-[color:var(--color-jade-200)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
+  glass: {
+    base: "bg-white/20 text-white border border-white/30 backdrop-blur-sm",
+    hover: "hover:bg-white/30 hover:border-white/50 hover:shadow-lg hover:shadow-white/20",
+    active: "active:bg-white/40 active:scale-95",
+    disabled: "disabled:bg-white/10 disabled:border-white/20 disabled:cursor-not-allowed disabled:opacity-50",
+    focus: "focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent",
+  },
   ghost: {
-    base: "bg-transparent text-[var(--semantic-text-secondary)] border border-transparent",
-    hover:
-      "hover:bg-[var(--semantic-bg-muted)] hover:text-[var(--semantic-text-primary)]",
-    active:
-      "active:bg-[color:var(--color-gray-200)] active:text-[var(--semantic-text-primary)]",
-    disabled:
-      "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
+    base: "bg-transparent text-[var(--semantic-text-primary)] border border-transparent",
+    hover: "hover:bg-[var(--semantic-bg-muted)] hover:border-[var(--semantic-border)]",
+    active: "active:bg-[color:var(--color-gray-200)] active:border-[var(--semantic-border)]",
+    disabled: "disabled:text-[var(--semantic-text-muted)] disabled:cursor-not-allowed",
     focus: "focus-ring focus-ring-offset",
   },
   subtle: {
@@ -237,6 +241,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       "font-sans", // radius via CSS var
       "transition-square hover-lift active-press focus-square",
       "focus:outline-none",
+      "overflow-hidden", // Handle overflow gracefully
       // Variant styles
       variantStyles.base,
       !isDisabled && variantStyles.hover,
@@ -298,7 +303,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {iconPosition === "only" ? (
           <span className={sizeStyles.iconSize}>{icon}</span>
         ) : (
-          children
+          <span className="text-center leading-tight">{children}</span>
         )}
         {renderIcon("right")}
       </button>

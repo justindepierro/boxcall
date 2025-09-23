@@ -168,7 +168,7 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
       className="shared-goal-tracker"
       mockCollaboration={mockCollaboration}
     >
-      <Card className="h-full p-4">
+      <Card variant="glass" className="h-full p-3">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <Typography variant="headline-sm" as="h3">
@@ -233,6 +233,7 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
             filteredGoals.map((goal) => (
               <Card
                 key={goal.id}
+                variant="glass"
                 className="p-3 hover:shadow-sm transition-shadow cursor-pointer"
                 onClick={() => setSelectedGoal(goal)}
               >
@@ -322,7 +323,7 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
         {/* Create Goal Modal Placeholder */}
         {isCreatingGoal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <Card className="p-6 max-w-md w-full mx-4">
+            <Card variant="glass" className="p-6 max-w-md w-full mx-4">
               <Typography variant="headline-sm" className="mb-4">
                 Create New Goal
               </Typography>

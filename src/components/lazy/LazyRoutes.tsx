@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import React from "react";
 
 import { Typography } from "../design-system/Typography";
 /**
@@ -8,109 +8,151 @@ import { Typography } from "../design-system/Typography";
  * Each page component is loaded only when the user navigates to it
  */
 import { Button } from "../ui";
+import { lazyRoute } from "../ui/performance";
 
 // Lazy load all major page components
-export const LazyDashboardPage = lazy(
-  () => import("../../pages/DashboardPage")
+export const LazyDashboardPage = lazyRoute(
+  () => import("../../pages/DashboardPage"),
+  "Dashboard"
 );
 
 // Calendar Shell (final) – load direct page wrapper (legacy shims removed)
-export const LazyCalendarShellPage = lazy(
-  () => import("../../pages/CalendarShellPage")
+export const LazyCalendarShellPage = lazyRoute(
+  () => import("../../pages/CalendarShellPage"),
+  "Calendar"
 );
 
-export const LazyPlannerPage = lazy(() => import("../../pages/PlannerPage"));
+export const LazyPlannerPage = lazyRoute(
+  () => import("../../pages/PlannerPage"),
+  "Planner"
+);
 
-export const LazyLoginPage = lazy(() => import("../../pages/LoginPage"));
+export const LazyLoginPage = lazyRoute(
+  () => import("../../pages/LoginPage"),
+  "Login"
+);
 
-export const LazyProfilePage = lazy(() =>
-  import("../../pages/ProfilePage").then((module) => ({
+export const LazyProfilePage = lazyRoute(
+  () => import("../../pages/ProfilePage").then((module) => ({
     default: module.ProfilePage,
-  }))
+  })),
+  "Profile"
 );
 
-export const LazyCollaborativeDemoPage = lazy(
-  () => import("../../pages/CollaborativeDemoPage")
+export const LazyCollaborativeDemoPage = lazyRoute(
+  () => import("../../pages/CollaborativeDemoPage"),
+  "Collaborative Demo"
 );
 
-export const LazyTeamBulletin = lazy(() => import("../../pages/TeamBulletin"));
+export const LazyTeamBulletin = lazyRoute(
+  () => import("../../pages/TeamBulletin"),
+  "Team Bulletin"
+);
 
-export const LazyTeamsPage = lazy(() => import("../../pages/TeamsPage"));
+export const LazyTeamsPage = lazyRoute(
+  () => import("../../pages/TeamsPage"),
+  "Teams"
+);
 
-export const LazyCreateTeam = lazy(() =>
-  import("../../pages/CreateTeam").then((module) => ({
+export const LazyCreateTeam = lazyRoute(
+  () => import("../../pages/CreateTeam").then((module) => ({
     default: module.CreateTeam,
-  }))
+  })),
+  "Create Team"
 );
 
-export const LazyJoinTeam = lazy(() =>
-  import("../../pages/JoinTeam").then((module) => ({
+export const LazyJoinTeam = lazyRoute(
+  () => import("../../pages/JoinTeam").then((module) => ({
     default: module.JoinTeam,
-  }))
+  })),
+  "Join Team"
 );
 
-export const LazyCreateCoachAccount = lazy(() =>
-  import("../../pages/CreateCoachAccount").then((module) => ({
+export const LazyCreateCoachAccount = lazyRoute(
+  () => import("../../pages/CreateCoachAccount").then((module) => ({
     default: module.CreateCoachAccount,
-  }))
+  })),
+  "Create Coach Account"
 );
 
-export const LazyBoxCall = lazy(() => import("../../pages/BoxCall"));
-
-export const LazyPlaybookPage = lazy(() => import("../../pages/Playbook"));
-
-export const LazyPracticePlansPage = lazy(
-  () => import("../../pages/PracticePlansPage")
-);
-export const LazyGamePlansPage = lazy(
-  () => import("../../pages/GamePlansPage")
+export const LazyBoxCall = lazyRoute(
+  () => import("../../pages/BoxCall"),
+  "BoxCall"
 );
 
-export const LazyTeamSettings = lazy(() => import("../../pages/TeamSettings"));
-export const LazyAnalyticsPage = lazy(
-  () => import("../../pages/AnalyticsPage")
+export const LazyPlaybookPage = lazyRoute(
+  () => import("../../pages/Playbook"),
+  "Playbook"
 );
 
-export const LazyAboutPage = lazy(() => import("../../pages/legal/AboutPage"));
+export const LazyPracticePlansPage = lazyRoute(
+  () => import("../../pages/PracticePlansPage"),
+  "Practice Plans"
+);
+export const LazyGamePlansPage = lazyRoute(
+  () => import("../../pages/GamePlansPage"),
+  "Game Plans"
+);
 
-export const LazyPrivacyPolicyPage = lazy(() =>
-  import("../../pages/legal/PrivacyPolicyPage").then((module) => ({
+export const LazyTeamSettings = lazyRoute(
+  () => import("../../pages/TeamSettings"),
+  "Team Settings"
+);
+export const LazyAnalyticsPage = lazyRoute(
+  () => import("../../pages/AnalyticsPage"),
+  "Analytics"
+);
+
+export const LazyAboutPage = lazyRoute(
+  () => import("../../pages/legal/AboutPage"),
+  "About"
+);
+
+export const LazyPrivacyPolicyPage = lazyRoute(
+  () => import("../../pages/legal/PrivacyPolicyPage").then((module) => ({
     default: module.PrivacyPolicyPage,
-  }))
+  })),
+  "Privacy Policy"
 );
 
-export const LazyTermsOfServicePage = lazy(() =>
-  import("../../pages/legal/TermsOfServicePage").then((module) => ({
+export const LazyTermsOfServicePage = lazyRoute(
+  () => import("../../pages/legal/TermsOfServicePage").then((module) => ({
     default: module.TermsOfServicePage,
-  }))
+  })),
+  "Terms of Service"
 );
 
-export const LazyContactPage = lazy(() =>
-  import("../../pages/legal/ContactPage").then((module) => ({
+export const LazyContactPage = lazyRoute(
+  () => import("../../pages/legal/ContactPage").then((module) => ({
     default: module.ContactPage,
-  }))
+  })),
+  "Contact"
 );
 
 // Role-specific dashboard pages
-export const LazyCoachManagementPage = lazy(
-  () => import("../../pages/roles/CoachManagementPage")
+export const LazyCoachManagementPage = lazyRoute(
+  () => import("../../pages/roles/CoachManagementPage"),
+  "Coach Management"
 );
 
-export const LazyPlayerDashboardPage = lazy(
-  () => import("../../pages/roles/PlayerDashboardPage")
+export const LazyPlayerDashboardPage = lazyRoute(
+  () => import("../../pages/roles/PlayerDashboardPage"),
+  "Player Dashboard"
 );
 
 // Route loading spinner component
 
-export const LazyPracticePlanner = lazy(
-  () => import("../../pages/PracticePlanner")
+export const LazyPracticePlanner = lazyRoute(
+  () => import("../../pages/PracticePlanner"),
+  "Practice Planner"
 );
 
 // Heavy component lazy loading
-export const LazyPracticeScriptModal = lazy(() =>
-  import("../practice/PracticeScriptModal/index").then((module) => ({
+export const LazyPracticeScriptModal = lazyRoute(
+  () => import("../practice/PracticeScriptModal/index").then((module) => ({
     default: module.PracticeScriptModal,
-  }))
+  })),
+  "Practice Script Modal"
 );
 
 // Loading component for lazy routes

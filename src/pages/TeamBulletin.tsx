@@ -243,9 +243,9 @@ export const TeamBulletin: React.FC = () => {
           id="main-content"
           role="main"
           aria-labelledby="team-dashboard-heading"
-          className="py-4"
+          className="py-2"
         >
-          <div className="px-4 sm:px-6 lg:px-8">
+          <div className="px-3 sm:px-4 lg:px-6">
             <TeamBulletinHeader
               headingId="team-dashboard-heading"
               teamId={teamId}
@@ -261,8 +261,8 @@ export const TeamBulletin: React.FC = () => {
             />
 
             {/* Team Collaboration Hub Section */}
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-6">
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
                 <div>
                   <Typography
                     variant="headline-sm"
@@ -277,7 +277,7 @@ export const TeamBulletin: React.FC = () => {
               </div>
 
               {/* Collaboration Widgets Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Shared Goals */}
                 <div
                   className="collaboration-goals min-h-[320px]"
@@ -352,7 +352,7 @@ export const TeamBulletin: React.FC = () => {
             </div>
 
             {/* Original Team Bulletin Content */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 bc-grid-gap">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               <TeamBulletinLeftPanel teamId={teamId} userRole={userRole} />
               <TeamBulletinFeedPanel teamId={teamId} userRole={userRole} />
               <TeamBulletinRightPanel teamId={teamId} />

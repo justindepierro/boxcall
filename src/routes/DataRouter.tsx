@@ -1,17 +1,19 @@
-import React, { Suspense, useMemo } from "react";
+import React, { Suspense, useMemo, useEffect } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
   Outlet,
   Navigate,
+  useNavigate,
 } from "react-router-dom";
 import type { RouteObject } from "react-router-dom";
 
 import { AuthProvider } from "../components/auth";
+import { useAuth } from "../app/auth-store";
+import { useActiveTeamStore } from "../state/activeTeamStore";
 import {
   LazyDashboardPage,
   LazyLoginPage,
-  LazyTeamSettings,
   LazyTeamBulletin,
   LazyAnalyticsPage,
   LazyBoxCall,
@@ -32,6 +34,7 @@ import {
   LazyCollaborativeDemoPage,
   LazyCalendarShellPage,
   LazyPlannerPage,
+  RouteLoadingSpinner,
 } from "../components/lazy/LazyRoutes";
 import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
@@ -50,15 +53,7 @@ import {
 import RouteErrorElement from "./RouteErrorElement";
 import DiagramPaneRoute from "../components/playbook/DiagramPaneRoute";
 
-// Local lightweight loading spinner (duplicated here to keep this file standalone)
-const RouteLoadingSpinner: React.FC = () => (
-  <div className="flex items-center justify-center min-h-screen surface-app">
-    <div className="text-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
-      <p className="font-medium text-text-secondary">Loading page...</p>
-    </div>
-  </div>
-);
+
 
 // Root wrapper so loaders run pre-render and providers are applied once
 const RootLayout: React.FC = () => (
@@ -83,6 +78,36 @@ const AppShell: React.FC = () => (
 );
 
 export const DataRouterApp: React.FC = () => {
+  // Team Bulletin Redirect Component
+  const TeamBulletinRedirectElement: React.FC = () => {
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const { activeTeamId } = useActiveTeamStore();
+
+    useEffect(() => {
+      if (!user) {
+        navigate(ROUTES.LOGIN);
+        return;
+      }
+
+      if (activeTeamId) {
+        navigate(`/team/${activeTeamId}/bulletin`);
+      } else {
+        // No active team, redirect to teams page
+        navigate(ROUTES.TEAMS);
+      }
+    }, [user, activeTeamId, navigate]);
+
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jade-600 mx-auto mb-4"></div>
+          <p className="font-medium text-text-secondary">Loading team bulletin...</p>
+        </div>
+      </div>
+    );
+  };
+
   // Role-gated non-team loaders created via factory
   const requirePlayerLoader = useMemo(() => requireRolesLoader(["player"]), []);
 
@@ -179,15 +204,11 @@ export const DataRouterApp: React.FC = () => {
                   </Suspense>
                 ),
               },
-              // Team Settings (coach/admin)
+              // Team Bulletin redirect — redirects to active team bulletin
               {
-                path: "/team/:teamId/settings",
+                path: "/team-bulletin",
                 loader: requireAuthenticatedLoader,
-                element: (
-                  <Suspense fallback={<RouteLoadingSpinner />}>
-                    <LazyTeamSettings />
-                  </Suspense>
-                ),
+                element: <TeamBulletinRedirectElement />,
               },
               // Team Bulletin — all members
               {
@@ -274,10 +295,26 @@ export const DataRouterApp: React.FC = () => {
               },
               {
                 path: ROUTES.TEAMS,
-                loader: requireAuthenticatedLoader,
+                // loader: requireAuthenticatedLoader, // Temporarily disabled for demo
                 element: (
                   <Suspense fallback={<RouteLoadingSpinner />}>
                     <LazyTeamsPage />
+                  </Suspense>
+                ),
+              },
+              // Team bulletin redirect - handles /team-bulletin navigation
+              {
+                path: "/team-bulletin",
+                loader: requireAuthenticatedLoader,
+                element: <TeamBulletinRedirectElement />,
+              },
+              // Team bulletin - requires team membership
+              {
+                path: "/team/:teamId/bulletin",
+                loader: requireTeamMemberLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyTeamBulletin />
                   </Suspense>
                 ),
               },

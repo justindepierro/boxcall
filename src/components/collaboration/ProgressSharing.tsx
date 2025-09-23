@@ -318,7 +318,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
       className="progress-sharing"
       mockCollaboration={mockCollaboration}
     >
-      <Card className="h-full p-4">
+      <Card variant="glass" className="h-full p-3">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <Typography variant="headline-sm" as="h3">
@@ -384,7 +384,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                 localMetrics.map((metric) => {
                   const percentage = getProgressPercentage(metric);
                   return (
-                    <Card key={metric.id} className="p-3">
+                    <Card key={metric.id} variant="glass" className="p-3">
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <Typography variant="body-sm" className="font-medium">
@@ -463,7 +463,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                 </div>
               ) : (
                 recentAchievements.map((achievement) => (
-                  <Card key={achievement.id} className="p-3">
+                  <Card key={achievement.id} variant="glass" className="p-3">
                     <div className="flex items-start gap-3">
                       <div
                         className={`p-2 rounded-lg bg-primary/10 ${getRarityColor(achievement.rarity)}`}
@@ -545,7 +545,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                 </div>
               ) : (
                 localInsights.map((insight) => (
-                  <Card key={insight.id} className="p-3">
+                  <Card key={insight.id} variant="glass" className="p-3">
                     <div className="flex items-start gap-3">
                       <div
                         className={`p-2 rounded-lg ${
@@ -610,16 +610,10 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
           )}
         </div>
 
-        {/* Summary Stats */}
-        <div className="flex items-center justify-between text-xs text-text-muted mt-4 pt-3 border-t border-border-secondary">
-          <span>{localMetrics.length} metrics tracked</span>
-          <span>{localAchievements.length} achievements earned</span>
-        </div>
-
         {/* Share Modal */}
         {isSharing && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <Card className="p-6 max-w-md w-full mx-4">
+            <Card variant="glass" className="p-6 max-w-md w-full mx-4">
               <Typography variant="headline-sm" className="mb-4">
                 Share Achievement
               </Typography>

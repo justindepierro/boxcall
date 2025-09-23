@@ -1,5 +1,6 @@
 import React from "react";
 import { Input } from "../../../ui";
+import { Typography } from "../../../design-system/Typography";
 
 import type { PracticeScriptFormData } from "../types";
 
@@ -22,7 +23,9 @@ export const PracticeScriptForm: React.FC<PracticeScriptFormProps> = ({
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium mb-1">Script Name *</label>
+        <Typography variant="label-md" className="block mb-1">
+          Script Name *
+        </Typography>
         <Input
           value={data.name}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -35,9 +38,9 @@ export const PracticeScriptForm: React.FC<PracticeScriptFormProps> = ({
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <Typography variant="label-md" className="block mb-1">
             Date (Optional)
-          </label>
+          </Typography>
           <Input
             type="date"
             value={data.date || ""}
@@ -48,9 +51,9 @@ export const PracticeScriptForm: React.FC<PracticeScriptFormProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <Typography variant="label-md" className="block mb-1">
             Opponent (Optional)
-          </label>
+          </Typography>
           <Input
             value={data.opponent || ""}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

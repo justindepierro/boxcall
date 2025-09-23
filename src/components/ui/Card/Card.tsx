@@ -7,20 +7,22 @@
 import { forwardRef } from "react";
 
 import type { CardProps, CardStylesConfig } from "./Card.types";
-// Card styles configuration - Square, substantial styling with jade/navy theme
+// Card styles configuration - Modern glassmorphism and clean design
 const cardStyles: CardStylesConfig = {
-  base: "rounded-none transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.06)]", // Thin professional shadow
+  base: "rounded-xl transition-all duration-200 border border-gray-200/50 bg-white/80 backdrop-blur-sm shadow-sm", // Modern glass effect
   variants: {
     default:
-      "bg-[#FCFDFC] border border-subtle dark:bg-gray-800 dark:border-gray-700 hover:shadow-[0_2px_4px_rgba(0,0,0,0.08)]",
+      "bg-white/90 border-gray-200/50 hover:shadow-md hover:border-gray-300/50 hover:bg-white/95", // Clean white with subtle glass
+    glass:
+      "bg-white/70 border-white/20 backdrop-blur-md shadow-lg hover:bg-white/80 hover:shadow-xl", // Full glassmorphism
     elevated:
-      "bg-[#FCFDFC] shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-subtle dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-900/30 hover:shadow-[0_6px_18px_rgba(0,0,0,0.12)]",
+      "bg-white shadow-lg border-gray-100 hover:shadow-xl hover:-translate-y-1", // Elevated with lift effect
     outlined:
-      "bg-transparent border border-brand-jade/60 dark:border-brand-jade/70 hover:bg-brand-jade/5", // Subtle outlined
+      "bg-transparent border-gray-300 hover:border-gray-400 hover:bg-gray-50/50", // Clean outlined
     filled:
-      "surface-subtle/60 border border-subtle dark:bg-gray-900 dark:border-gray-700 surface-subtle-hover dark:hover:bg-gray-800",
+      "bg-gray-50/80 border-gray-200 hover:bg-gray-100/80 hover:shadow-md", // Subtle filled
     accent:
-      "bg-surface-navy border border-brand-navy/70 dark:bg-surface-navy-dark dark:border-brand-navy", // Navy accent
+      "bg-gradient-to-br from-jade-50 to-jade-100/50 border-jade-200/50 hover:from-jade-100 hover:to-jade-50", // Jade accent
   },
   sizes: {
     sm: "p-3",
@@ -30,23 +32,19 @@ const cardStyles: CardStylesConfig = {
     xl: "p-8",
   },
   interactive:
-    "cursor-pointer hover:shadow-[0_3px_6px_rgba(0,0,0,0.12)] active:shadow-[0_1px_2px_rgba(0,0,0,0.10)] active:translate-y-px", // Refined lift
+    "cursor-pointer hover:shadow-lg hover:-translate-y-1 hover:scale-[1.02] transition-all duration-200 ease-out", // Modern lift and scale effect
   disabled: "opacity-50 cursor-not-allowed",
   loading: "animate-pulse",
 };
 // Header and footer styles with theme awareness
 const getSectionStyles = (type: "header" | "footer", size: string) => {
-  const base =
-    type === "header"
-      ? "border-b border-subtle dark:border-gray-700"
-      : "border-t border-subtle dark:border-gray-700";
   const sizes = {
     sm: type === "header" ? "pb-2 mb-3" : "pt-2 mt-3",
     md: type === "header" ? "pb-3 mb-4" : "pt-3 mt-4",
     lg: type === "header" ? "pb-4 mb-6" : "pt-4 mt-6",
     xl: type === "header" ? "pb-6 mb-8" : "pt-6 mt-8",
   };
-  return `${base} ${sizes[size as keyof typeof sizes]}`;
+  return sizes[size as keyof typeof sizes];
 };
 /**
  * Card Component

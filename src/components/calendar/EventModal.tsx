@@ -14,17 +14,16 @@ import Icon from "../ui/Icon/Icon";
 import { EventDetails } from "./EventModal/EventDetails";
 import { EventForm } from "./EventModal/EventForm";
 
-import type { CalendarEvent, EventRSVP } from "../../domain/calendar/types";
+import type { UseMutationResult } from "@tanstack/react-query";
+import type { CalendarEvent, EventRSVP, CalendarEventCreate } from "../../domain/calendar/types";
 import type { Database } from "../../types/database";
 
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
 
-// Minimal shape compatible with react-query mutation objects we pass in.
-type MinimalMutation<Args = unknown, Result = unknown> = {
-  status: string;
-  mutate: (...args: Args[]) => void;
-  mutateAsync: (...args: Args[]) => Promise<Result>;
-};
+// Mutation types for calendar operations
+type CreateEventMutation = UseMutationResult<CalendarEvent, Error, CalendarEventCreate>;
+type UpdateEventMutation = UseMutationResult<null, Error, { id: string; updates: Partial<CalendarEventCreate> }>;
+type DeleteEventMutation = UseMutationResult<boolean, Error, string>;
 
 interface EventModalProps {
   isOpen: boolean;
@@ -37,9 +36,9 @@ interface EventModalProps {
   setIsEditing: (v: boolean) => void;
   profile: UserProfile | null;
   userId: string | undefined;
-  createEventMutation: MinimalMutation;
-  updateEventMutation: MinimalMutation;
-  deleteEventMutation: MinimalMutation;
+  createEventMutation: CreateEventMutation;
+  updateEventMutation: UpdateEventMutation;
+  deleteEventMutation: DeleteEventMutation;
   onOpenPracticePlanner: (event: CalendarEvent) => void;
 }
 

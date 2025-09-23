@@ -47,7 +47,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
       setErrors(parsedData.errors);
       setWarnings(parsedData.warnings);
       setStep("preview");
-    } catch (error) {
+    } catch {
       setErrors(["Failed to parse CSV file. Please check the format."]);
     }
   };
@@ -62,7 +62,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
       setCsvData([]);
       setErrors([]);
       setWarnings([]);
-    } catch (error) {
+    } catch {
       setErrors(["Failed to import roster. Please try again."]);
       setStep("preview");
     }

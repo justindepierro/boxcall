@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../../ui/Button/Button";
+import { Typography } from "../../design-system/Typography";
 import { PracticeScriptForm } from "./components/PracticeScriptForm";
 import { PracticeScriptPlayList } from "./components/PracticeScriptPlayList";
 
@@ -88,7 +89,9 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
 
           {/* Play List */}
           <div className="mt-6">
-            <h3 className="text-lg font-medium mb-4">Practice Plays</h3>
+            <Typography variant="headline-md" className="mb-4">
+              Practice Plays
+            </Typography>
             <PracticeScriptPlayList
               plays={plays}
               onAddPlay={handleAddPlay}

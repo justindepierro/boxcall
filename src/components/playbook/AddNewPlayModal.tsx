@@ -159,9 +159,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Play Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <Typography variant="label-md" className="block mb-2">
               Play Name *
-            </label>
+            </Typography>
             <input
               type="text"
               value={playName}
@@ -175,9 +175,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Formation */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Typography variant="label-md" className="block mb-2">
                 Formation
-              </label>
+              </Typography>
               <select
                 value={formation}
                 onChange={(e) => setFormation(e.target.value)}
@@ -194,9 +194,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
             {/* Play Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Typography variant="label-md" className="block mb-2">
                 Play Type
-              </label>
+              </Typography>
               <select
                 value={playType}
                 onChange={(e) => setPlayType(e.target.value)}
@@ -214,9 +214,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
           {/* Personnel */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <Typography variant="label-md" className="block mb-2">
               Personnel
-            </label>
+            </Typography>
             <input
               type="text"
               value={personnel}
@@ -231,9 +231,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <Typography variant="label-md" className="block mb-2">
               Description
-            </label>
+            </Typography>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}

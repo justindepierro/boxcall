@@ -19,6 +19,8 @@ export { Sidebar } from "./Sidebar";
 export type { SidebarItem, SidebarProps } from "./Sidebar";
 export { Breadcrumb } from "./Breadcrumb";
 export type { BreadcrumbItem, BreadcrumbProps } from "./Breadcrumb";
+export { NavBar } from "./NavBar";
+export type { NavBarItem, NavBarProps } from "./NavBar";
 export { Table } from "./Table";
 export type { TableColumn, TableProps, TableRow } from "./Table";
 export { Form, FormActions, FormField } from "./Form";

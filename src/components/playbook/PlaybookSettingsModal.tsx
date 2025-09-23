@@ -309,14 +309,16 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center py-2 px-1 border-b-2 font-medium text-sm ${
+                className={`flex items-center py-2 px-1 border-b-2 font-medium ${
                   activeTab === tab.id
                     ? "border-blue-500 text-blue-600"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
                 <Icon name={tab.icon as any} size="sm" className="mr-2" />
-                {tab.label}
+                <Typography variant="body-sm" className="inline">
+                  {tab.label}
+                </Typography>
               </button>
             ))}
           </nav>
@@ -329,10 +331,10 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
               <Typography variant="headline-md" className="mb-4">
                 Personnel Management
               </Typography>
-              <p className="text-sm text-gray-600 mb-6">
+              <Typography variant="body-sm" color="muted" className="mb-6">
                 Configure your team's personnel groupings and position naming
                 conventions.
-              </p>
+              </Typography>
 
               {/* Personnel Configurations */}
               <div className="space-y-6">
@@ -355,9 +357,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                           className="font-semibold"
                         />
                         {config.isDefault && (
-                          <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                          <Typography variant="caption" className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
                             Default
-                          </span>
+                          </Typography>
                         )}
                       </div>
                       <div className="flex items-center gap-2">
@@ -389,9 +391,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {config.players.map((player) => (
                         <div key={player.id} className="space-y-2">
-                          <label className="block text-sm font-medium text-gray-700">
+                          <Typography variant="label-md" className="block">
                             {getPlayerCategoryLabel(player.category)}
-                          </label>
+                          </Typography>
 
                           {/* Category Dropdown */}
                           <Select
@@ -426,23 +428,25 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                           {/* Count for multi-position categories */}
                           {canHaveMultiple(player.category) && (
                             <div className="flex items-center gap-2">
-                              <label className="text-xs text-gray-600">
+                              <Typography variant="caption" color="muted">
                                 Count:
-                              </label>
-                              <input
-                                type="number"
-                                min="1"
-                                max="5"
-                                value={player.count}
-                                onChange={(e) =>
-                                  updatePlayerConfiguration(
-                                    config.id,
-                                    player.id,
-                                    { count: parseInt(e.target.value) || 1 }
-                                  )
-                                }
-                                className="w-16 px-2 py-1 text-xs border border-gray-300 rounded"
-                              />
+                              </Typography>
+                              <Typography variant="caption" className="flex-1">
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max="5"
+                                  value={player.count}
+                                  onChange={(e) =>
+                                    updatePlayerConfiguration(
+                                      config.id,
+                                      player.id,
+                                      { count: parseInt(e.target.value) || 1 }
+                                    )
+                                  }
+                                  className="w-16 px-2 py-1 border border-gray-300 rounded"
+                                />
+                              </Typography>
                             </div>
                           )}
                         </div>
@@ -471,10 +475,10 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
               <Typography variant="headline-md" className="mb-4">
                 Bulk Operations
               </Typography>
-              <p className="text-sm text-gray-600 mb-4">
+              <Typography variant="body-sm" color="muted" className="mb-4">
                 Configure bulk operations for efficiently adding multiple
                 formations and plays at once.
-              </p>
+              </Typography>
 
               {/* Bulk Formation Operations */}
               <div>
@@ -500,15 +504,15 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                       }
                       className="mr-2"
                     />
-                    <label htmlFor="enableBulkFormationAdd" className="text-sm">
+                    <Typography variant="body-sm" className="inline">
                       Enable Bulk Formation Add
-                    </label>
+                    </Typography>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <Typography variant="label-md" className="block mb-2">
                       Default Formation Count
-                    </label>
+                    </Typography>
                     <Input
                       type="number"
                       min="1"
@@ -526,9 +530,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                         !localSettings.bulkOperations.enableBulkFormationAdd
                       }
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <Typography variant="caption" color="muted" className="mt-1">
                       Number of formations to add when using bulk operations
-                    </p>
+                    </Typography>
                   </div>
                 </div>
               </div>
@@ -552,15 +556,15 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                       }
                       className="mr-2"
                     />
-                    <label htmlFor="enableBulkPlayAdd" className="text-sm">
+                    <Typography variant="body-sm" className="inline">
                       Enable Bulk Play Add
-                    </label>
+                    </Typography>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <Typography variant="label-md" className="block mb-2">
                       Default Play Count
-                    </label>
+                    </Typography>
                     <Input
                       type="number"
                       min="1"
@@ -574,9 +578,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                       }
                       disabled={!localSettings.bulkOperations.enableBulkPlayAdd}
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <Typography variant="caption" color="muted" className="mt-1">
                       Number of plays to add when using bulk operations
-                    </p>
+                    </Typography>
                   </div>
                 </div>
               </div>
@@ -640,9 +644,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     }
                     className="mr-2"
                   />
-                  <label htmlFor="autoTagging" className="text-sm">
+                  <Typography variant="body-sm" className="inline">
                     Enable Auto Tagging
-                  </label>
+                  </Typography>
                 </div>
 
                 <div className="flex items-center">
@@ -655,9 +659,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     }
                     className="mr-2"
                   />
-                  <label htmlFor="showComplexity" className="text-sm">
+                  <Typography variant="body-sm" className="inline">
                     Show Complexity Indicators
-                  </label>
+                  </Typography>
                 </div>
               </div>
 
@@ -668,9 +672,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                 </Typography>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <Typography variant="label-md" className="block mb-2">
                       Theme
-                    </label>
+                    </Typography>
                     <Select
                       options={[
                         { value: "light", label: "Light" },
@@ -688,9 +692,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <Typography variant="label-md" className="block mb-2">
                       Grid Density
-                    </label>
+                    </Typography>
                     <Select
                       options={[
                         { value: "comfortable", label: "Comfortable" },

@@ -42,6 +42,13 @@ export {
   printTokens,
 } from "../../design-system/utils";
 
+// Design system provider for consistency enforcement
+export {
+  DesignSystemProvider,
+  useDesignSystem,
+  withDesignSystem,
+} from "./DesignSystemProvider";
+
 // Spacing system
 export {
   semanticSpacing,

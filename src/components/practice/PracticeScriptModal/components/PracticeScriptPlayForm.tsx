@@ -1,7 +1,19 @@
 import React, { useState } from "react";
 import { Button } from "../../../ui/Button/Button";
 import { Input } from "../../../ui";
-import { TextArea } from "../../../ui";
+import { TextArea } from ".        <div>
+          <Typography variant="label-md" className="block mb-1">
+            Hash
+          </Typography>
+          <Input
+            value={formData.hash}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              updateField("hash", e.target.value)
+            }
+            placeholder="e.g., Left, Right"
+          />
+        </div>";
+import { Typography } from "../../../design-system/Typography";
 
 import type { PracticeScriptPlay } from "../types";
 
@@ -49,7 +61,9 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Play Name - with search functionality */}
       <div>
-        <label className="block text-sm font-medium mb-1">Play Name *</label>
+        <Typography variant="label-md" className="block mb-1">
+          Play Name *
+        </Typography>
         <div className="relative">
           <Input
             value={formData.playName}
@@ -61,14 +75,16 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
           />
           {/* TODO: Add playbook search dropdown with AdvancedSearchBar */}
         </div>
-        <p className="text-xs text-gray-500 mt-1">
+        <Typography variant="caption" color="muted" className="mt-1">
           Start typing to search existing plays, or enter a custom play name
-        </p>
+        </Typography>
       </div>
 
       {/* Personnel */}
       <div>
-        <label className="block text-sm font-medium mb-1">Personnel</label>
+        <Typography variant="label-md" className="block mb-1">
+          Personnel
+        </Typography>
         <Input
           value={formData.personnel}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -80,7 +96,9 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-sm font-medium mb-1">Notes</label>
+        <Typography variant="label-md" className="block mb-1">
+          Notes
+        </Typography>
         <TextArea
           value={formData.notes}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -94,9 +112,9 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
       {/* Defense Section */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <Typography variant="label-md" className="block mb-1">
             Defense Front
-          </label>
+          </Typography>
           <Input
             value={formData.defenseFront}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -107,9 +125,9 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <Typography variant="label-md" className="block mb-1">
             Defensive Coverage
-          </label>
+          </Typography>
           <Input
             value={formData.defensiveCoverage}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -120,7 +138,9 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Blitz</label>
+          <Typography variant="label-md" className="block mb-1">
+            Blitz
+          </Typography>
           <Input
             value={formData.blitz}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -131,7 +151,9 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Stunt</label>
+          <Typography variant="label-md" className="block mb-1">
+            Stunt
+          </Typography>
           <Input
             value={formData.stunt}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -145,7 +167,9 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
       {/* Hash and Situation */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Hash</label>
+          <Typography variant="label-md" className="block mb-1">
+            Hash
+          </Typography>
           <Input
             value={formData.hash}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -156,7 +180,9 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Situation</label>
+          <Typography variant="label-md" className="block mb-1">
+            Situation
+          </Typography>
           <Input
             value={formData.situation}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

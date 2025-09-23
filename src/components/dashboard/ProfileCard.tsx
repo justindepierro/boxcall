@@ -116,9 +116,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const displayName = profile?.full_name || profile?.display_name || "Player";
 
   return (
-    <Card className={`compact-card h-full relative ${cardClassName}`}>
+    <Card variant="glass" className={`compact-card h-full relative ${cardClassName}`}>
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-subtle pb-3">
+      <div className="flex items-center justify-between pb-3">
         <Typography variant="headline-md" className="text-navy-800">
           Profile
         </Typography>
@@ -130,7 +130,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             className="p-2 hover:bg-jade-50 rounded-lg"
             aria-label="Edit profile"
           >
-            <Icon name="edit" size={16} />
+            <Icon name="edit" size="sm" />
           </Button>
         )}
       </div>
@@ -158,7 +158,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 aria-label="Edit profile picture"
                 onClick={handleProfileEdit}
               >
-                <Icon name="plus" size={14} />
+                <Icon name="plus" size="xs" />
               </Button>
             )}
           </div>
@@ -236,7 +236,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         {isCoach && (
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
-              <Icon name="crown" size={14} color="navy" />
+              <Icon name="crown" size="xs" color="navy" />
               <Typography variant="body-sm" className="text-text-primary">
                 Coach
               </Typography>
@@ -245,14 +245,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         )}
         {isFamily && (
           <div className="flex items-center space-x-2">
-            <Icon name="users" size={14} color="primary" />
+            <Icon name="users" size="xs" color="primary" />
             <Typography variant="body-sm" className="text-text-primary">
               Family Member
             </Typography>
           </div>
         )}
         {/* Bio */}
-        <div className="pt-2 border-t border-subtle relative">
+        <div className="pt-2 relative">
           {profile?.bio ? (
             <>
               <Typography
@@ -289,7 +289,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               aria-label="Edit bio"
               onClick={handleProfileEdit}
             >
-              <Icon name="plus" size={14} />
+              <Icon name="plus" size="xs" />
             </Button>
           )}
           {/* Profile Edit Modal */}
@@ -312,8 +312,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         </div>
         {/* Contact Info */}
         {profile?.phone && !isViewMode && (
-          <div className="flex items-center space-x-2 pt-2 border-t border-subtle">
-            <Icon name="phone" size={14} color="navy" />
+          <div className="flex items-center space-x-2 pt-2">
+            <Icon name="phone" size="xs" color="navy" />
             <Typography variant="body-sm" className="text-text-secondary">
               {profile.phone}
             </Typography>
@@ -328,11 +328,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             onClick={() => navigate("/profile")}
             aria-label="View full profile"
           >
-            <Icon name="user" size={14} className="mr-2" /> View Profile
+            <Icon name="user" size="xs" className="mr-2" /> View Profile
           </Button>
           {!isViewMode && (
             <Button variant="primary" size="sm" onClick={handleProfileEdit}>
-              <Icon name="edit" size={14} className="mr-2" /> Edit
+              <Icon name="edit" size="xs" className="mr-2" /> Edit
             </Button>
           )}
         </div>

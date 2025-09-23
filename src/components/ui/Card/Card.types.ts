@@ -5,6 +5,7 @@ import type { HTMLAttributes, ReactNode } from "react";
 
 export type CardVariant =
   | "default" // Standard card
+  | "glass" // Glassmorphism effect
   | "elevated" // Card with shadow
   | "outlined" // Card with jade border
   | "filled" // Card with background fill

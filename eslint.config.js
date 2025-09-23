@@ -48,13 +48,42 @@ export default [
       "no-console": "off", // Allow console in development
     },
   },
-  // TypeScript specific rules
+  // TypeScript specific rules for app source files
   {
-    files: ["**/*.{ts,tsx}"],
+    files: ["src/**/*.{ts,tsx}"],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
         project: "./tsconfig.app.json",
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tseslint.plugin,
+    },
+    rules: {
+      ...tseslint.configs.recommended.rules,
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
+      "@typescript-eslint/no-explicit-any": "off", // Allow any for rapid development
+      "@typescript-eslint/no-empty-function": "off",
+    },
+  },
+  // TypeScript specific rules for scripts and config files
+  {
+    files: ["scripts/**/*.{ts,tsx}", "vite.config.ts"],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        project: "./tsconfig.node.json",
         ecmaFeatures: {
           jsx: true,
         },

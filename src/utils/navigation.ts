@@ -53,8 +53,16 @@ export const getNavigationItems = (
       id: "team-bulletin",
       label: "Team Bulletin",
       icon: "users",
-      href: `/team/${activeTeamId}/bulletin`,
+      href: "/team-bulletin",
       description: "Team-specific feed, announcements, and quick actions",
+    },
+    // Teams - Available to everyone
+    {
+      id: "teams",
+      label: "Teams",
+      icon: "users",
+      href: "/teams",
+      description: "View and manage your teams",
     },
   ];
   // BoxCall - Coaches and super_admin only (premium feature)

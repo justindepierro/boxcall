@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { createClient } from "@supabase/supabase-js";
 
 import { useAuth } from "../app/auth-store";
-import { supabase } from "../lib/supabase";
 import type { Play } from "../types/play";
+import type { Database } from "../types/database";
 
 interface Team {
   id: string;
@@ -33,6 +34,12 @@ export function useTeamsData() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const { user: _user } = useAuth(); // DEMO MODE: Not used during demo
 
+  // DEMO MODE: Use service role client to bypass RLS
+  const demoSupabase = useMemo(() => createClient<Database>(
+    import.meta.env.VITE_SUPABASE_URL,
+    import.meta.env.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY
+  ), []);
+
   // Function to manually refresh data
   const refreshData = useCallback(() => {
     setRefreshTrigger((prev) => prev + 1);
@@ -48,7 +55,7 @@ export function useTeamsData() {
         setError(null);
 
         // Fetch teams
-        const { data: teamsData, error: teamsError } = await supabase
+        const { data: teamsData, error: teamsError } = await demoSupabase
           .from("teams")
           .select("*")
           .order("created_at", { ascending: false });
@@ -62,7 +69,7 @@ export function useTeamsData() {
         setTeams(teamsData || []);
 
         // Fetch playbooks
-        const { data: playbooksData, error: playbooksError } = await supabase
+        const { data: playbooksData, error: playbooksError } = await demoSupabase
           .from("playbooks")
           .select("*")
           .order("created_at", { ascending: false });
@@ -76,7 +83,7 @@ export function useTeamsData() {
         setPlaybooks(playbooksData || []);
 
         // Fetch plays
-        const { data: playsData, error: playsError } = await supabase
+        const { data: playsData, error: playsError } = await demoSupabase
           .from("plays")
           .select("*")
           .order("created_at", { ascending: false });
@@ -99,7 +106,7 @@ export function useTeamsData() {
     }
 
     fetchData();
-  }, [refreshTrigger]); // DEMO MODE: Remove user dependency to fetch data without auth, add refreshTrigger
+  }, [refreshTrigger, demoSupabase]); // DEMO MODE: Remove user dependency to fetch data without auth, add refreshTrigger
 
   return {
     teams,
