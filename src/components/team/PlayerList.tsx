@@ -92,7 +92,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
   return (
     <div className="surface-card rounded-lg shadow-sm">
       {/* Search and Filters */}
-      <div className="bc-card-padding border-b border-subtle dark:border-gray-700">
+      <div className="bc-card-padding">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Search */}
           <div className="md:col-span-2">
@@ -137,9 +137,9 @@ export const PlayerList: React.FC<PlayerListProps> = ({
         </div>
         {/* Results Summary */}
         <div className="mt-4 flex items-center justify-between">
-          <p className="text-sm text-text-secondary">
+          <Typography variant="body-sm" color="muted">
             Showing {filteredPlayers.length} of {players.length} players
-          </p>
+          </Typography>
           <div className="space-x-2">
             <Button onClick={onAddPlayer} variant="primary" size="sm">
               <Icon name="user-plus" className="w-4 h-4 mr-2" /> Add Player
@@ -181,9 +181,11 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                         {player.first_name} {player.last_name}
                       </Typography>
                       <span
-                        className={`inline-block px-2 py-1 text-xs font-medium rounded-full text-text-inverse bg-${getTeamLevelColor(player.team_level)}-600`}
+                        className={`inline-block px-2 py-1 font-medium rounded-full text-text-inverse bg-${getTeamLevelColor(player.team_level)}-600`}
                       >
-                        {getTeamLevelLabel(player.team_level)}
+                        <Typography variant="caption" as="span">
+                          {getTeamLevelLabel(player.team_level)}
+                        </Typography>
                       </span>
                     </div>
                   </div>
@@ -217,46 +219,53 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     {player.positions.map((position) => (
                       <span
                         key={position}
-                        className="inline-block px-2 py-1 text-xs font-medium surface-subtle text-text-secondary rounded"
+                        className="inline-block px-2 py-1 font-medium surface-subtle text-text-secondary rounded"
                       >
-                        #{position}
+                        <Typography variant="caption" as="span">
+                          #{position}
+                        </Typography>
                       </span>
                     ))}
                   </div>
                 </div>
                 {/* Physical Stats */}
-                <div className="grid grid-cols-2 gap-2 text-sm text-text-secondary">
+                <div className="grid grid-cols-2 gap-2">
                   {player.height && (
-                    <div>
+                    <Typography variant="body-sm" color="muted">
                       <span className="font-medium">Height:</span>{" "}
                       {player.height}
-                    </div>
+                    </Typography>
                   )}
                   {player.weight && (
-                    <div>
+                    <Typography variant="body-sm" color="muted">
                       <span className="font-medium">Weight:</span>{" "}
                       {player.weight} lbs
-                    </div>
+                    </Typography>
                   )}
                   {player.graduation_year && (
-                    <div className="col-span-2">
+                    <Typography variant="body-sm" color="muted" className="col-span-2">
                       <span className="font-medium">Class:</span>{" "}
                       {player.graduation_year}
-                    </div>
+                    </Typography>
                   )}
                 </div>
                 {/* Contact Info */}
                 {(player.email || player.phone) && (
-                  <div className="mt-3 pt-3 border-t border-subtle dark:border-gray-700">
+                  <div className="mt-3 pt-3">
                     {player.email && (
-                      <div className="text-xs text-text-muted truncate flex items-center gap-1">
-                        <Icon name="mail" size="xs" /> {player.email}
+                      <div className="truncate flex items-center gap-1">
+                        <Icon name="mail" size="xs" />
+                        <Typography variant="caption" color="muted" as="span">
+                          {player.email}
+                        </Typography>
                       </div>
                     )}
                     {player.phone && (
-                      <div className="text-xs text-text-muted flex items-center gap-1">
+                      <div className="flex items-center gap-1">
                         <Icon name="phone" size="xs" />
-                        {player.phone}
+                        <Typography variant="caption" color="muted" as="span">
+                          {player.phone}
+                        </Typography>
                       </div>
                     )}
                   </div>

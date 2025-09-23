@@ -2,6 +2,7 @@ import React from "react";
 
 import { Card } from "../ui";
 import Icon from "../ui/Icon/Icon";
+import { Typography } from "../design-system/Typography";
 
 import type { EventSuggestion } from "./hooks/useAISuggestions";
 
@@ -22,9 +23,9 @@ export const AISuggestionsPanel: React.FC<AISuggestionsPanelProps> = ({
     <Card className={`calendar-card ${className || ""}`.trim()}>
       <div className="flex items-center gap-2 mb-4">
         <Icon name="lightbulb" size="lg" className="text-amber-600" />
-        <span className="Typography typography-label-lg text-text-primary">
+        <Typography variant="label-lg" className="text-text-primary">
           Smart Suggestions
-        </span>
+        </Typography>
       </div>
 
       <div className="space-y-3">
@@ -96,41 +97,51 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
             size="sm"
             className="text-navy-600"
           />
-          <span className="font-medium text-sm text-text-primary">
+          <Typography variant="body-sm" className="font-medium text-text-primary">
             {suggestion.title}
-          </span>
+          </Typography>
         </div>
         <div
-          className={`text-xs font-medium ${getConfidenceColor(suggestion.confidence)}`}
+          className={`font-medium ${getConfidenceColor(suggestion.confidence)}`}
         >
-          {Math.round(suggestion.confidence * 100)}% match
+          <Typography variant="caption" as="span">
+            {Math.round(suggestion.confidence * 100)}% match
+          </Typography>
         </div>
       </div>
 
-      <div className="text-xs text-text-muted mb-2">
+      <div className="mb-2">
         <div className="flex items-center gap-1 mb-1">
           <Icon name="calendar" size="xs" />
-          <span>
+          <Typography variant="caption" color="muted" as="span">
             {formatDate(suggestion.suggestedDate)} at{" "}
             {formatTime(suggestion.suggestedTime)}
-          </span>
+          </Typography>
         </div>
         <div className="flex items-center gap-1">
           <Icon name="clock" size="xs" />
-          <span>{suggestion.duration} minutes</span>
+          <Typography variant="caption" color="muted" as="span">
+            {suggestion.duration} minutes
+          </Typography>
         </div>
       </div>
 
-      <p className="text-xs text-text-secondary mb-3">{suggestion.reasoning}</p>
+      <Typography variant="caption" color="muted" className="mb-3">
+        {suggestion.reasoning}
+      </Typography>
 
       {suggestion.conflicts.length > 0 && (
         <div className="mb-3">
-          <div className="text-xs text-red-600 font-medium mb-1">
+          <Typography variant="caption" className="text-red-600 font-medium mb-1">
             ⚠️ Potential conflicts:
-          </div>
-          <ul className="text-xs text-red-600 ml-2">
+          </Typography>
+          <ul className="ml-2">
             {suggestion.conflicts.map((conflict, index) => (
-              <li key={index}>• {conflict}</li>
+              <li key={index}>
+                <Typography variant="caption" className="text-red-600">
+                  • {conflict}
+                </Typography>
+              </li>
             ))}
           </ul>
         </div>
@@ -139,20 +150,24 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex flex-wrap gap-1">
           {suggestion.benefits.slice(0, 2).map((benefit, index) => (
-            <span
+            <Typography
               key={index}
-              className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded"
+              variant="caption"
+              className="bg-green-100 text-green-700 px-2 py-1 rounded"
+              as="span"
             >
               {benefit}
-            </span>
+            </Typography>
           ))}
         </div>
 
         <button
           onClick={onApply}
-          className="text-xs bg-navy-600 text-white px-3 py-1 rounded hover:bg-navy-700 transition-colors"
+          className="bg-navy-600 text-white px-3 py-1 rounded hover:bg-navy-700 transition-colors"
         >
-          Apply
+          <Typography variant="caption" as="span">
+            Apply
+          </Typography>
         </button>
       </div>
     </div>

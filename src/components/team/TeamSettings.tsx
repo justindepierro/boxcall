@@ -85,13 +85,13 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
   return (
     <div className="surface-card rounded-lg shadow-sm">
       {/* Header */}
-      <div className="bc-card-padding border-b border-subtle dark:border-gray-700">
+      <div className="bc-card-padding">
         <Typography variant="headline-sm" as="h2" className="text-text-primary">
           Team Settings
         </Typography>
-        <p className="mt-1 text-text-secondary">
+        <Typography variant="body-sm" color="muted" className="mt-1">
           Configure your team information and preferences
-        </p>
+        </Typography>
       </div>
 
       {/* Message */}

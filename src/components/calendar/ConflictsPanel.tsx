@@ -2,6 +2,7 @@ import React from "react";
 
 import { Card } from "../ui";
 import Icon from "../ui/Icon/Icon";
+import { Typography } from "../design-system/Typography";
 
 import type { ConflictInfo } from "./hooks/useConflictDetection";
 
@@ -20,9 +21,9 @@ export const ConflictsPanel: React.FC<ConflictsPanelProps> = ({
     <Card className={`calendar-card ${className || ""}`.trim()}>
       <div className="flex items-center gap-2 mb-4">
         <Icon name="alert-triangle" size="lg" className="text-red-600" />
-        <span className="Typography typography-label-lg text-text-primary">
+        <Typography variant="label-lg" className="text-text-primary">
           Scheduling Conflicts ({conflicts.length})
-        </span>
+        </Typography>
       </div>
 
       <div className="space-y-3">
@@ -56,27 +57,31 @@ const ConflictCard: React.FC<ConflictCardProps> = ({ conflict }) => {
       <div className="flex items-start gap-2 mb-2">
         <Icon name={getSeverityIcon()} size="sm" />
         <div className="flex-1">
-          <div className="text-sm font-medium text-text-primary mb-1">
+          <Typography variant="body-sm" className="font-medium text-text-primary mb-1">
             {conflict.message}
-          </div>
-          <div className="text-xs text-text-muted">
+          </Typography>
+          <Typography variant="caption" color="muted">
             {conflict.conflictingEvents.length} overlapping event
             {conflict.conflictingEvents.length !== 1 ? "s" : ""}
-          </div>
+          </Typography>
         </div>
       </div>
 
       <div className="space-y-1">
         {conflict.conflictingEvents.slice(0, 3).map((event, index) => (
-          <div key={index} className="text-xs bg-white/50 rounded px-2 py-1">
-            <span className="font-medium">{event.title}</span>
-            <span className="text-text-muted ml-1">({event.type})</span>
+          <div key={index} className="bg-white/50 rounded px-2 py-1">
+            <Typography variant="caption" as="span" className="font-medium">
+              {event.title}
+            </Typography>
+            <Typography variant="caption" color="muted" as="span" className="ml-1">
+              ({event.type})
+            </Typography>
           </div>
         ))}
         {conflict.conflictingEvents.length > 3 && (
-          <div className="text-xs text-text-muted italic">
+          <Typography variant="caption" color="muted" className="italic">
             +{conflict.conflictingEvents.length - 3} more conflicts
-          </div>
+          </Typography>
         )}
       </div>
     </div>
