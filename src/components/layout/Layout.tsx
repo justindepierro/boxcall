@@ -3,6 +3,7 @@ import { Typography } from "../design-system/Typography";
 import { useAuthProfile } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
+import { useNavigate } from "react-router-dom";
 import type { Database } from "../../types/database";
 import {
   getNavigationItems,
@@ -46,6 +47,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const profile = useAuthProfile();
   const { devMode } = useDevMode();
   const { sidebarOpen, toggleSidebar, uiDensity } = useUI();
+  const navigate = useNavigate();
 
   // Use profile role, or test role based on dev mode
   const currentRole: UserRole | null =
@@ -54,7 +56,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const isDevMode = devMode !== "production";
 
   const navigationItems = getNavigationItems(currentRole);
-  const sidebarItems = toSidebarItems(navigationItems, currentRole);
+  const sidebarItems = toSidebarItems(navigationItems, currentRole, navigate);
   const roleInfo = getRoleDisplayInfo(currentRole);
 
   // Set data-density attribute on body (once per render cycle)
