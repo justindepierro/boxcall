@@ -26,7 +26,7 @@ export interface AchievementDefinition {
 
 export interface AchievementProgress {
   id: string;
-  player_id: string;
+  user_id: string;
   achievement_id: string;
   current_count: number;
   is_completed: boolean;
@@ -61,18 +61,6 @@ export class AchievementTracker {
     try {
       console.log(`[Achievement] Tracking action: ${action} for user: ${userId}`);
 
-      // Get the player's team player record
-      const { data: player } = await supabase
-        .from('team_players')
-        .select('id, team_id')
-        .eq('user_id', userId)
-        .single();
-
-      if (!player) {
-        console.log('[Achievement] No player record found for user');
-        return [];
-      }
-
       // Get all active achievements that could be triggered by this action
       const { data: relevantAchievements } = await supabase
         .from('achievement_definitions')
@@ -87,14 +75,14 @@ export class AchievementTracker {
       const earnedAchievements: EarnedAchievement[] = [];
 
       for (const achievement of relevantAchievements) {
-        const earned = await this.checkAndAwardAchievement(player.id, achievement, additionalData);
+        const earned = await this.checkAndAwardAchievement(userId, achievement, additionalData);
         if (earned) {
           earnedAchievements.push(earned);
         }
       }
 
       // Check milestone achievements
-      const milestoneAchievements = await this.checkMilestoneAchievements(player.id);
+      const milestoneAchievements = await this.checkMilestoneAchievements(userId);
       earnedAchievements.push(...milestoneAchievements);
 
       return earnedAchievements;
@@ -109,7 +97,7 @@ export class AchievementTracker {
    * Check and potentially award an achievement
    */
   private static async checkAndAwardAchievement(
-    playerId: string,
+    userId: string,
     achievement: AchievementDefinition,
     additionalData?: Record<string, any>
   ): Promise<EarnedAchievement | null> {
@@ -118,7 +106,7 @@ export class AchievementTracker {
       let { data: progress } = await supabase
         .from('achievement_progress')
         .select('*')
-        .eq('player_id', playerId)
+        .eq('user_id', userId)
         .eq('achievement_id', achievement.id)
         .single();
 
@@ -127,7 +115,7 @@ export class AchievementTracker {
         const { data: newProgress, error } = await supabase
           .from('achievement_progress')
           .insert({
-            player_id: playerId,
+            user_id: userId,
             achievement_id: achievement.id,
             current_count: 0,
             is_completed: false
@@ -178,7 +166,7 @@ export class AchievementTracker {
         const { data: earnedAchievement, error } = await supabase
           .from('achievements')
           .insert({
-            player_id: playerId,
+            player_id: userId, // Using existing column name for now
             definition_id: achievement.id,
             achievement_type: achievement.name,
             description: achievement.description,
@@ -190,7 +178,7 @@ export class AchievementTracker {
 
         if (error) throw error;
 
-        console.log(`[Achievement] 🎉 Awarded: ${achievement.name} to player ${playerId}`);
+        console.log(`[Achievement] 🎉 Awarded: ${achievement.name} to user ${userId}`);
 
         return {
           ...earnedAchievement,
@@ -209,7 +197,7 @@ export class AchievementTracker {
   /**
    * Check milestone achievements (points, total achievements earned)
    */
-  private static async checkMilestoneAchievements(playerId: string): Promise<EarnedAchievement[]> {
+  private static async checkMilestoneAchievements(userId: string): Promise<EarnedAchievement[]> {
     const earned: EarnedAchievement[] = [];
 
     try {
@@ -217,7 +205,7 @@ export class AchievementTracker {
       const { data: totalPoints } = await supabase
         .from('achievements')
         .select('points_earned')
-        .eq('player_id', playerId);
+        .eq('player_id', userId);
 
       const pointsSum = totalPoints?.reduce((sum: number, a: any) => sum + (a.points_earned || 0), 0) || 0;
 
@@ -225,7 +213,7 @@ export class AchievementTracker {
       for (const milestone of pointsMilestones) {
         if (pointsSum >= milestone) {
           const earnedAchievement = await this.awardMilestoneAchievement(
-            playerId,
+            userId,
             'points_milestone',
             milestone,
             `Reach ${milestone} total achievement points`,
@@ -242,7 +230,7 @@ export class AchievementTracker {
       for (const milestone of achievementMilestones) {
         if (totalAchievements >= milestone) {
           const earnedAchievement = await this.awardMilestoneAchievement(
-            playerId,
+            userId,
             'achievements_earned',
             milestone,
             `Earn ${milestone} different achievements`,
@@ -263,7 +251,7 @@ export class AchievementTracker {
    * Award a milestone achievement
    */
   private static async awardMilestoneAchievement(
-    playerId: string,
+    userId: string,
     triggerTarget: string,
     milestone: number,
     description: string,
@@ -274,7 +262,7 @@ export class AchievementTracker {
       const { data: existing } = await supabase
         .from('achievements')
         .select('id')
-        .eq('player_id', playerId)
+        .eq('player_id', userId)
         .eq('achievement_type', `Milestone: ${triggerTarget} ${milestone}`);
 
       if (existing?.length) return null;
@@ -283,7 +271,7 @@ export class AchievementTracker {
       const { data: earned, error } = await supabase
         .from('achievements')
         .insert({
-          player_id: playerId,
+          player_id: userId,
           achievement_type: `Milestone: ${triggerTarget} ${milestone}`,
           description,
           earned_date: new Date().toISOString().split('T')[0],
@@ -303,45 +291,89 @@ export class AchievementTracker {
   }
 
   /**
-   * Get all achievements for a user
+   * Initialize default achievements if none exist
    */
+  static async initializeDefaultAchievements(): Promise<void> {
+    try {
+      const defaultAchievements = [
+        // Gameplay achievements
+        { name: 'First Play', description: 'Create your first play in BoxCall', icon: 'football', category: 'gameplay' as const, trigger_type: 'action_count' as const, trigger_target: 'play_created' as const, trigger_count: 1, points: 10, rarity: 'common' as const },
+        { name: 'Playbook Builder', description: 'Create 10 plays for your team', icon: 'book', category: 'gameplay' as const, trigger_type: 'action_count' as const, trigger_target: 'play_created' as const, trigger_count: 10, points: 25, rarity: 'uncommon' as const },
+        { name: 'Master Strategist', description: 'Create 50 plays for your team', icon: 'crown', category: 'gameplay' as const, trigger_type: 'action_count' as const, trigger_target: 'play_created' as const, trigger_count: 50, points: 100, rarity: 'rare' as const },
+
+        // Social achievements
+        { name: 'Team Communicator', description: 'Send your first team post', icon: 'message-circle', category: 'social' as const, trigger_type: 'action_count' as const, trigger_target: 'post_sent' as const, trigger_count: 1, points: 10, rarity: 'common' as const },
+        { name: 'Social Butterfly', description: 'Send 25 team posts', icon: 'users', category: 'social' as const, trigger_type: 'action_count' as const, trigger_target: 'post_sent' as const, trigger_count: 25, points: 50, rarity: 'uncommon' as const },
+        { name: 'Team Captain', description: 'Send 100 team posts', icon: 'star', category: 'social' as const, trigger_type: 'action_count' as const, trigger_target: 'post_sent' as const, trigger_count: 100, points: 150, rarity: 'epic' as const },
+
+        // Teamwork achievements
+        { name: 'Roster Ready', description: 'Add your first player to the roster', icon: 'user-plus', category: 'teamwork' as const, trigger_type: 'action_count' as const, trigger_target: 'player_added' as const, trigger_count: 1, points: 15, rarity: 'common' as const },
+        { name: 'Team Builder', description: 'Add 10 players to your roster', icon: 'users', category: 'teamwork' as const, trigger_type: 'action_count' as const, trigger_target: 'player_added' as const, trigger_count: 10, points: 40, rarity: 'uncommon' as const },
+        { name: 'Squad Leader', description: 'Add 25 players to your roster', icon: 'shield', category: 'teamwork' as const, trigger_type: 'action_count' as const, trigger_target: 'player_added' as const, trigger_count: 25, points: 75, rarity: 'rare' as const },
+
+        // Leadership achievements
+        { name: 'First Victory', description: 'Win your first game', icon: 'trophy', category: 'leadership' as const, trigger_type: 'action_count' as const, trigger_target: 'game_won' as const, trigger_count: 1, points: 50, rarity: 'uncommon' as const },
+        { name: 'Undefeated', description: 'Win 5 games in a row', icon: 'zap', category: 'leadership' as const, trigger_type: 'streak' as const, trigger_target: 'game_won_streak' as const, trigger_count: 5, points: 200, rarity: 'epic' as const },
+        { name: 'Champion', description: 'Win 10 games', icon: 'crown', category: 'leadership' as const, trigger_type: 'action_count' as const, trigger_target: 'game_won' as const, trigger_count: 10, points: 300, rarity: 'legendary' as const },
+
+        // Milestone achievements
+        { name: 'Century Club', description: 'Reach 100 total achievement points', icon: 'target', category: 'milestone' as const, trigger_type: 'special' as const, trigger_target: 'points_milestone' as const, trigger_count: 100, points: 100, rarity: 'rare' as const },
+        { name: 'Achievement Hunter', description: 'Earn 25 different achievements', icon: 'award', category: 'milestone' as const, trigger_type: 'special' as const, trigger_target: 'achievements_earned' as const, trigger_count: 25, points: 250, rarity: 'epic' as const },
+        { name: 'BoxCall Legend', description: 'Earn 50 different achievements', icon: 'gem', category: 'milestone' as const, trigger_type: 'special' as const, trigger_target: 'achievements_earned' as const, trigger_count: 50, points: 500, rarity: 'legendary' as const }
+      ];
+
+      const { error } = await supabase
+        .from('achievement_definitions')
+        .insert(defaultAchievements);
+
+      if (error) {
+        console.error('[Achievement] Error initializing default achievements:', error);
+      } else {
+        console.log('[Achievement] Successfully initialized default achievements');
+      }
+    } catch (error) {
+      console.error('[Achievement] Error in initializeDefaultAchievements:', error);
+    }
+  }
   static async getUserAchievements(userId: string): Promise<{
     earned: EarnedAchievement[];
     progress: AchievementProgress[];
     definitions: AchievementDefinition[];
   }> {
     try {
-      // Get player record
-      const { data: player } = await supabase
-        .from('team_players')
-        .select('id')
-        .eq('user_id', userId)
-        .single();
+      // Get all active definitions
+      let definitions = await supabase
+        .from('achievement_definitions')
+        .select('*')
+        .eq('is_active', true)
+        .then(({ data }) => data);
 
-      if (!player) {
-        return { earned: [], progress: [], definitions: [] };
+      // If no definitions exist, initialize default achievements
+      if (!definitions || definitions.length === 0) {
+        console.log('[Achievement] No achievement definitions found, initializing defaults...');
+        await this.initializeDefaultAchievements();
+        
+        // Re-fetch definitions after initialization
+        const { data: newDefinitions } = await supabase
+          .from('achievement_definitions')
+          .select('*')
+          .eq('is_active', true);
+        
+        definitions = newDefinitions || [];
       }
 
-      // Get earned achievements
-      const { data: earned } = await supabase
-        .from('achievements')
-        .select('*, achievement_definitions(*)')
-        .eq('player_id', player.id);
+      // For now, return empty earned achievements since we're transitioning to new system
+      // TODO: Migrate existing achievements to new system
+      const earned: EarnedAchievement[] = [];
 
-      // Get progress
+      // Get progress from new system
       const { data: progress } = await supabase
         .from('achievement_progress')
         .select('*, achievement_definitions(*)')
-        .eq('player_id', player.id);
-
-      // Get all active definitions
-      const { data: definitions } = await supabase
-        .from('achievement_definitions')
-        .select('*')
-        .eq('is_active', true);
+        .eq('user_id', userId);
 
       return {
-        earned: earned || [],
+        earned,
         progress: progress || [],
         definitions: definitions || []
       };

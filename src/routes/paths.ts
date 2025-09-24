@@ -18,6 +18,7 @@ export const ROUTES = {
   CREATE_COACH_ACCOUNT: "/create-coach-account",
   COACH: "/coach",
   PLAYER: "/player",
+  ADMIN: "/admin",
   ABOUT: "/about",
   PRIVACY: "/privacy-policy",
   TERMS: "/terms-of-service",

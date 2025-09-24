@@ -24,6 +24,7 @@ import {
   LazyTeamsPage,
   LazyCoachManagementPage,
   LazyPlayerDashboardPage,
+  LazyAchievementAdminPage,
   LazyCreateTeam,
   LazyJoinTeam,
   LazyCreateCoachAccount,
@@ -153,6 +154,15 @@ export const DataRouterApp: React.FC = () => {
                 element: (
                   <Suspense fallback={<RouteLoadingSpinner />}>
                     <LazyPlayerDashboardPage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: ROUTES.ADMIN,
+                loader: requireCoachOrAdminLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazyAchievementAdminPage />
                   </Suspense>
                 ),
               },

@@ -147,6 +147,11 @@ export const LazyPlayerDashboardPage = lazyRoute(
   "Player Dashboard"
 );
 
+export const LazyAchievementAdminPage = lazyRoute(
+  () => import("../../pages/AchievementAdminPage"),
+  "Achievement Admin"
+);
+
 // Route loading spinner component
 
 export const LazyPracticePlanner = lazyRoute(
