@@ -1,77 +1,83 @@
 #!/usr/bin/env tsx
 
-import { createClient } from '@supabase/supabase-js';
-import { config } from 'dotenv';
+import { createClient } from "@supabase/supabase-js";
+import { config } from "dotenv";
 
 // Load environment variables
-config({ path: '../.env.local' });
+config({ path: "../.env.local" });
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const serviceRoleKey = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !serviceRoleKey) {
-  console.error('❌ Missing required environment variables');
+  console.error("❌ Missing required environment variables");
   process.exit(1);
 }
 
 const supabase = createClient(supabaseUrl, serviceRoleKey, {
-  auth: { autoRefreshToken: false, persistSession: false }
+  auth: { autoRefreshToken: false, persistSession: false },
 });
 
 async function createPlaybooksTable() {
-  console.log('📖 CREATING PLAYBOOKS TABLE');
-  console.log('===========================\n');
-  
+  console.log("📖 CREATING PLAYBOOKS TABLE");
+  console.log("===========================\n");
+
   try {
     // Check if playbooks table already exists
     const { data: existingTable, error: checkError } = await supabase
-      .from('playbooks')
-      .select('id')
+      .from("playbooks")
+      .select("id")
       .limit(1);
-    
+
     if (!checkError) {
-      console.log('✅ Playbooks table already exists');
-      
+      console.log("✅ Playbooks table already exists");
+
       // Create default playbook for admin team if none exists
       const { data: adminTeam, error: teamError } = await supabase
-        .from('teams')
-        .select('id')
+        .from("teams")
+        .select("id")
         .limit(1)
         .single();
-      
+
       if (!teamError) {
         const { data: existingPlaybook, error: playbookCheck } = await supabase
-          .from('playbooks')
-          .select('id')
-          .eq('team_id', adminTeam.id)
+          .from("playbooks")
+          .select("id")
+          .eq("team_id", adminTeam.id)
           .limit(1);
-        
-        if (!playbookCheck && (!existingPlaybook || existingPlaybook.length === 0)) {
+
+        if (
+          !playbookCheck &&
+          (!existingPlaybook || existingPlaybook.length === 0)
+        ) {
           const { error: insertError } = await supabase
-            .from('playbooks')
+            .from("playbooks")
             .insert({
               team_id: adminTeam.id,
-              name: 'Main Playbook',
-              description: 'Default playbook for the team'
+              name: "Main Playbook",
+              description: "Default playbook for the team",
             });
-          
+
           if (insertError) {
-            console.log('❌ Failed to create default playbook:', insertError.message);
+            console.log(
+              "❌ Failed to create default playbook:",
+              insertError.message
+            );
           } else {
-            console.log('✅ Default playbook created');
+            console.log("✅ Default playbook created");
           }
         } else {
-          console.log('✅ Default playbook already exists');
+          console.log("✅ Default playbook already exists");
         }
       }
-      
-      console.log('\n🎉 PLAYBOOKS TABLE ALREADY EXISTS');
-      console.log('==================================');
+
+      console.log("\n🎉 PLAYBOOKS TABLE ALREADY EXISTS");
+      console.log("==================================");
       return;
     }
-    
-    console.log('❌ Playbooks table does not exist - need to create manually');
-    console.log('Please run the following SQL in Supabase SQL Editor:');
+
+    console.log("❌ Playbooks table does not exist - need to create manually");
+    console.log("Please run the following SQL in Supabase SQL Editor:");
     console.log(`
 CREATE TABLE playbooks (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -119,9 +125,8 @@ FOR DELETE USING (
   )
 );
     `);
-    
   } catch (err) {
-    console.error('❌ Error:', (err as Error).message);
+    console.error("❌ Error:", (err as Error).message);
   }
 }
 

@@ -1,95 +1,96 @@
 #!/usr/bin/env tsx
 
-import { createClient } from '@supabase/supabase-js';
-import { config } from 'dotenv';
+import { createClient } from "@supabase/supabase-js";
+import { config } from "dotenv";
 
 // Load environment variables
-config({ path: '../.env.local' });
+config({ path: "../.env.local" });
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const serviceRoleKey = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !serviceRoleKey) {
-  console.error('❌ Missing required environment variables');
+  console.error("❌ Missing required environment variables");
   process.exit(1);
 }
 
 const supabase = createClient(supabaseUrl, serviceRoleKey, {
-  auth: { autoRefreshToken: false, persistSession: false }
+  auth: { autoRefreshToken: false, persistSession: false },
 });
 
 async function setupAdmin() {
-  const adminEmail = 'justindepierro@gmail.com';
-  
-  console.log('👑 SETTING UP ADMIN USER');
-  console.log('========================\n');
-  
+  const adminEmail = "justindepierro@gmail.com";
+
+  console.log("👑 SETTING UP ADMIN USER");
+  console.log("========================\n");
+
   try {
     // Check if admin user exists
-    const { data: users, error: listError } = await supabase.auth.admin.listUsers();
-    
+    const { data: users, error: listError } =
+      await supabase.auth.admin.listUsers();
+
     if (listError) {
-      console.log('❌ Failed to list users:', listError.message);
+      console.log("❌ Failed to list users:", listError.message);
       return;
     }
-    
-    const existingUser = users.users.find(user => user.email === adminEmail);
-    
+
+    const existingUser = users.users.find((user) => user.email === adminEmail);
+
     if (existingUser) {
-      console.log(`✅ Admin user exists: ${existingUser.email} (${existingUser.id})`);
-      
+      console.log(
+        `✅ Admin user exists: ${existingUser.email} (${existingUser.id})`
+      );
+
       // Ensure profile exists
       await ensureProfile(existingUser.id);
-      
     } else {
-      console.log('❌ Admin user not found - please create manually in Supabase dashboard');
+      console.log(
+        "❌ Admin user not found - please create manually in Supabase dashboard"
+      );
       return;
     }
-    
-    console.log('\n🎉 ADMIN SETUP COMPLETE');
-    console.log('=======================');
+
+    console.log("\n🎉 ADMIN SETUP COMPLETE");
+    console.log("=======================");
     console.log(`Email: ${adminEmail}`);
-    console.log('Password: TempPass123! (change immediately)');
-    console.log('\n💡 Next: Test login at http://localhost:5173');
-    
+    console.log("Password: TempPass123! (change immediately)");
+    console.log("\n💡 Next: Test login at http://localhost:5173");
   } catch (err) {
-    console.error('❌ Error:', (err as Error).message);
+    console.error("❌ Error:", (err as Error).message);
   }
 }
 
 async function ensureProfile(userId: string) {
-  console.log('Ensuring admin profile...');
-  
+  console.log("Ensuring admin profile...");
+
   const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
+    .from("profiles")
+    .select("*")
+    .eq("id", userId)
     .single();
-  
-  if (profileError && profileError.code !== 'PGRST116') {
-    console.log('❌ Profile check failed:', profileError.message);
+
+  if (profileError && profileError.code !== "PGRST116") {
+    console.log("❌ Profile check failed:", profileError.message);
     return;
   }
-  
+
   if (!profile) {
     // Try without role first
-    const { error: insertError } = await supabase
-      .from('profiles')
-      .insert({
-        id: userId,
-        full_name: 'Justin DePierro',
-        display_name: 'Justin'
-      });
-    
+    const { error: insertError } = await supabase.from("profiles").insert({
+      id: userId,
+      full_name: "Justin DePierro",
+      display_name: "Justin",
+    });
+
     if (insertError) {
-      console.log('❌ Failed to create profile:', insertError.message);
-      console.log('Profile table may not have expected columns');
+      console.log("❌ Failed to create profile:", insertError.message);
+      console.log("Profile table may not have expected columns");
       return;
     }
-    
-    console.log('✅ Profile created');
+
+    console.log("✅ Profile created");
   } else {
-    console.log('✅ Profile exists');
+    console.log("✅ Profile exists");
   }
 }
 
