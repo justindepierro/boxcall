@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 CREATE TABLE IF NOT EXISTS public.team_posts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   team_id UUID NOT NULL REFERENCES public.teams(id) ON DELETE CASCADE,
-  author_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  author_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   content TEXT NOT NULL,
   is_pinned BOOLEAN DEFAULT false,
   likes_count INTEGER DEFAULT 0,
@@ -59,19 +59,48 @@ CREATE INDEX IF NOT EXISTS idx_team_posts_is_pinned ON public.team_posts(is_pinn
 -- Enable RLS
 ALTER TABLE public.team_posts ENABLE ROW LEVEL SECURITY;
 
--- Simple RLS Policies (will be updated in migration 023)
-DROP POLICY IF EXISTS "team_posts_select" ON public.team_posts;
+-- Service role can do everything
+CREATE POLICY "team_posts_service_role" ON public.team_posts
+  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+
+-- Team members can view posts
 CREATE POLICY "team_posts_select" ON public.team_posts
-  FOR SELECT USING (true); -- Allow all for now, will be restricted later
+  FOR SELECT USING (
+    team_id IN (
+      SELECT tm.team_id FROM public.team_members tm
+      WHERE tm.user_id = auth.uid() AND tm.status = 'active'
+    )
+  );
 
-DROP POLICY IF EXISTS "team_posts_insert" ON public.team_posts;
+-- Team members can create posts
 CREATE POLICY "team_posts_insert" ON public.team_posts
-  FOR INSERT WITH CHECK (true); -- Allow all for now, will be restricted later
+  FOR INSERT WITH CHECK (
+    team_id IN (
+      SELECT tm.team_id FROM public.team_members tm
+      WHERE tm.user_id = auth.uid() AND tm.status = 'active'
+    ) AND author_id = auth.uid()
+  );
 
-DROP POLICY IF EXISTS "team_posts_update" ON public.team_posts;
+-- Users can update their own posts, coaches can update any post
 CREATE POLICY "team_posts_update" ON public.team_posts
-  FOR UPDATE USING (true); -- Allow all for now, will be restricted later
+  FOR UPDATE USING (
+    author_id = auth.uid() OR
+    team_id IN (
+      SELECT tm.team_id FROM public.team_members tm
+      WHERE tm.user_id = auth.uid()
+      AND tm.team_role IN ('head_coach', 'assistant_coach', 'coordinator')
+      AND tm.status = 'active'
+    )
+  );
 
-DROP POLICY IF EXISTS "team_posts_delete" ON public.team_posts;
+-- Users can delete their own posts, coaches can delete any post
 CREATE POLICY "team_posts_delete" ON public.team_posts
-  FOR DELETE USING (true); -- Allow all for now, will be restricted later
+  FOR DELETE USING (
+    author_id = auth.uid() OR
+    team_id IN (
+      SELECT tm.team_id FROM public.team_members tm
+      WHERE tm.user_id = auth.uid()
+      AND tm.team_role IN ('head_coach', 'assistant_coach', 'coordinator')
+      AND tm.status = 'active'
+    )
+  );

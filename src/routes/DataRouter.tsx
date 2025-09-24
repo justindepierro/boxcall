@@ -422,9 +422,7 @@ export const DataRouterApp: React.FC = () => {
 
   const router = useMemo(() => createBrowserRouter(routes), [routes]);
   return (
-    <Suspense fallback={<RouteLoadingSpinner />}>
-      <RouterProvider router={router} />
-    </Suspense>
+    <RouterProvider router={router} fallbackElement={<RouteLoadingSpinner />} />
   );
 };
 

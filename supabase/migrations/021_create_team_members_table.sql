@@ -21,50 +21,56 @@ CREATE TABLE IF NOT EXISTS public.team_members (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   team_id UUID NOT NULL REFERENCES public.teams(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  role TEXT NOT NULL CHECK (role IN ('head_coach', 'assistant_coach', 'coordinator', 'manager')),
-  permissions JSONB DEFAULT '{}',
-  joined_at TIMESTAMPTZ DEFAULT NOW(),
+  team_role TEXT NOT NULL CHECK (team_role IN ('head_coach', 'assistant_coach', 'coordinator', 'manager', 'coach')),
+  capabilities JSONB DEFAULT '{
+    "can_manage_team": false,
+    "can_manage_games": false,
+    "can_manage_social": false,
+    "can_manage_players": false,
+    "can_view_analytics": false,
+    "can_manage_playbook": false,
+    "can_manage_practice": false,
+    "can_manage_equipment": false
+  }',
+  role_notes TEXT,
+  assigned_at TIMESTAMPTZ DEFAULT NOW(),
+  status TEXT DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'pending')),
   UNIQUE(team_id, user_id)
 );
 
 -- Add indexes for performance
 CREATE INDEX IF NOT EXISTS idx_team_members_team_id ON public.team_members(team_id);
 CREATE INDEX IF NOT EXISTS idx_team_members_user_id ON public.team_members(user_id);
-CREATE INDEX IF NOT EXISTS idx_team_members_role ON public.team_members(role);
+CREATE INDEX IF NOT EXISTS idx_team_members_role ON public.team_members(team_role);
 
 -- Enable RLS
 ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies: Users can view team membership, team members can manage their team
+-- Service role can do everything
+CREATE POLICY "team_members_service_role" ON public.team_members
+  FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+
+-- Users can view team members for teams they belong to
 CREATE POLICY "team_members_select" ON public.team_members
   FOR SELECT USING (
-    auth.uid() = user_id OR
-    auth.uid() IN (
-      SELECT user_id FROM public.team_members tm
-      WHERE tm.team_id = team_members.team_id
+    user_id = auth.uid() OR
+    team_id IN (
+      SELECT tm.team_id FROM public.team_members tm
+      WHERE tm.user_id = auth.uid() AND tm.status = 'active'
     )
   );
 
-CREATE POLICY "team_members_insert" ON public.team_members
-  FOR INSERT WITH CHECK (
-    auth.uid() IN (
-      SELECT user_id FROM public.team_members
-      WHERE team_id = team_members.team_id AND role IN ('head_coach', 'manager')
-    )
-  );
+-- Users can manage their own membership
+CREATE POLICY "team_members_self_manage" ON public.team_members
+  FOR ALL USING (user_id = auth.uid());
 
-CREATE POLICY "team_members_update" ON public.team_members
-  FOR UPDATE USING (
-    auth.uid() IN (
-      SELECT user_id FROM public.team_members
-      WHERE team_id = team_members.team_id AND role IN ('head_coach', 'manager')
-    )
-  );
-
-CREATE POLICY "team_members_delete" ON public.team_members
-  FOR DELETE USING (
-    auth.uid() IN (
-      SELECT user_id FROM public.team_members
-      WHERE team_id = team_members.team_id AND role IN ('head_coach', 'manager')
+-- Team coaches can manage team members
+CREATE POLICY "team_members_coach_manage" ON public.team_members
+  FOR ALL USING (
+    team_id IN (
+      SELECT tm.team_id FROM public.team_members tm
+      WHERE tm.user_id = auth.uid()
+      AND tm.team_role IN ('head_coach', 'assistant_coach', 'coordinator')
+      AND tm.status = 'active'
     )
   );
