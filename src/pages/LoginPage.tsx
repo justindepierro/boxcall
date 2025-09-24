@@ -1,8 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Auth } from "../components/auth";
 import { Typography } from "../components/design-system";
 import { Icon } from "../components/ui/Icon/Icon";
+import { ROUTES } from "../routes/paths";
+
 /**
  * Login Page
  *
@@ -10,6 +13,13 @@ import { Icon } from "../components/ui/Icon/Icon";
  * Redirects authenticated users to dashboard.
  */
 const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleLoginSuccess = () => {
+    // Redirect to dashboard after successful login
+    navigate(ROUTES.DASHBOARD);
+  };
+
   return (
     <div className="min-h-screen surface-app flex items-center justify-center p-4">
       <div className="max-w-md w-full">
@@ -25,7 +35,7 @@ const LoginPage: React.FC = () => {
             Sign in to your football management platform
           </Typography>
         </div>
-        <Auth />
+        <Auth onSuccess={handleLoginSuccess} />
       </div>
     </div>
   );

@@ -216,10 +216,17 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
                     key={c.id}
                     className="p-2 surface-subtle rounded border border-subtle"
                   >
-                    <Typography variant="caption" color="muted" className="mb-1">
+                    <Typography
+                      variant="caption"
+                      color="muted"
+                      className="mb-1"
+                    >
                       {new Date(c.created_at).toLocaleString()} • {c.user_id}
                     </Typography>
-                    <Typography variant="body-sm" className="text-text-primary whitespace-pre-wrap">
+                    <Typography
+                      variant="body-sm"
+                      className="text-text-primary whitespace-pre-wrap"
+                    >
                       {c.body}
                     </Typography>
                   </div>

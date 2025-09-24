@@ -29,7 +29,12 @@
     "test": "vitest run",
     "test:watch": "vitest --watch",
     "clean": "rm -rf dist coverage .eslintcache",
-    "validate": "npm run type-check && npm run lint && npm run test"
+    "validate": "npm run type-check && npm run lint && npm run test",
+    "db:schema": "tsx scripts/apply-schema.ts",
+    "db:admin": "tsx scripts/setup-admin.ts",
+    "db:demo": "tsx scripts/setup-demo.ts",
+    "db:setup": "npm run db:schema && npm run db:admin && npm run db:demo",
+    "db:drop-script": "tsx scripts/generate-drop-script.ts"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.18",

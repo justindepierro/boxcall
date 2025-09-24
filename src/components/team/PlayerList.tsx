@@ -243,7 +243,11 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     </Typography>
                   )}
                   {player.graduation_year && (
-                    <Typography variant="body-sm" color="muted" className="col-span-2">
+                    <Typography
+                      variant="body-sm"
+                      color="muted"
+                      className="col-span-2"
+                    >
                       <span className="font-medium">Class:</span>{" "}
                       {player.graduation_year}
                     </Typography>

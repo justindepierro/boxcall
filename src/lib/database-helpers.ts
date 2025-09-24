@@ -14,13 +14,14 @@ import type {
 // Test connection and verify table access
 export async function testDatabaseConnection() {
   try {
-    // Test basic connection
+    // Test basic connection - check profiles table (no role column anymore)
     const { error: profileError } = await supabase
       .from("profiles")
-      .select("id, full_name, role, email")
+      .select("id, full_name, email, is_active")
       .limit(1)
       .single();
     if (profileError && profileError.code !== "PGRST116") {
+      console.error("Profile test failed:", profileError);
       return false;
     }
     // Profile check completed - connection working
@@ -31,10 +32,8 @@ export async function testDatabaseConnection() {
       "team_members",
       "playbooks",
       "play_calls",
-      "team_goals",
-      "team_files",
-      "post_reactions",
-      "team_memberships",
+      "team_posts",
+      "practice_schedules",
     ] as const;
 
     const accessibleTables: string[] = [];

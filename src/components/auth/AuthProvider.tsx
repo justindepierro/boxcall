@@ -21,10 +21,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      // TODO: Re-enable after setting up profiles table properly
-      // if (session?.user) {
-      //   fetchUserProfile(session.user.id);
-      // }
+      if (session?.user) {
+        fetchUserProfile(session.user.id);
+      }
     });
 
     // Listen for auth changes
@@ -33,12 +32,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      // TODO: Re-enable after setting up profiles table properly
-      // if (session?.user) {
-      //   await fetchUserProfile(session.user.id);
-      // } else {
-      //   setProfile(null);
-      // }
+      if (session?.user) {
+        await fetchUserProfile(session.user.id);
+      } else {
+        setProfile(null);
+      }
     });
 
     // Cleanup subscription on unmount

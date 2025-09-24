@@ -37,7 +37,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
   teamId,
   dashboardId,
   user,
-  autoConnect = true,
+  autoConnect = false,
 }) => {
   const [activeConflicts, setActiveConflicts] = useState<ConflictResolution[]>(
     []

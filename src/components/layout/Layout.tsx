@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Typography } from "../design-system/Typography";
 import { useAuthProfile } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
@@ -55,9 +55,18 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const isDevMode = devMode !== "production";
 
-  const navigationItems = getNavigationItems(currentRole);
-  const sidebarItems = toSidebarItems(navigationItems, currentRole, navigate);
-  const roleInfo = getRoleDisplayInfo(currentRole);
+  const navigationItems = useMemo(
+    () => getNavigationItems(currentRole),
+    [currentRole]
+  );
+  const sidebarItems = useMemo(
+    () => toSidebarItems(navigationItems, currentRole, navigate),
+    [navigationItems, currentRole, navigate]
+  );
+  const roleInfo = useMemo(
+    () => getRoleDisplayInfo(currentRole),
+    [currentRole]
+  );
 
   // Set data-density attribute on body (once per render cycle)
   if (typeof document !== "undefined") {

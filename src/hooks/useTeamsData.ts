@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { useState, useEffect, useCallback } from "react";
 
 import { useAuth } from "../app/auth-store";
+import { supabase } from "../lib/supabase";
 import type { Play } from "../types/play";
-import type { Database } from "../types/database";
 
 interface Team {
   id: string;
@@ -34,16 +33,7 @@ export function useTeamsData() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const { user: _user } = useAuth(); // DEMO MODE: Not used during demo
 
-  // DEMO MODE: Use service role client to bypass RLS
-  const demoSupabase = useMemo(
-    () =>
-      createClient<Database>(
-        import.meta.env.VITE_SUPABASE_URL,
-        import.meta.env.SUPABASE_SERVICE_ROLE_KEY ||
-          import.meta.env.VITE_SUPABASE_ANON_KEY
-      ),
-    []
-  );
+  // Use main supabase client (now configured with service role key for demo)
 
   // Function to manually refresh data
   const refreshData = useCallback(() => {
@@ -60,7 +50,7 @@ export function useTeamsData() {
         setError(null);
 
         // Fetch teams
-        const { data: teamsData, error: teamsError } = await demoSupabase
+        const { data: teamsData, error: teamsError } = await supabase
           .from("teams")
           .select("*")
           .order("created_at", { ascending: false });
@@ -74,33 +64,46 @@ export function useTeamsData() {
         setTeams(teamsData || []);
 
         // Fetch playbooks
-        const { data: playbooksData, error: playbooksError } =
-          await demoSupabase
+        let playbooksData = [];
+        try {
+          const { data, error: playbooksError } = await supabase
             .from("playbooks")
             .select("*")
             .order("created_at", { ascending: false });
 
-        if (playbooksError) {
-          console.error("Error fetching playbooks:", playbooksError);
-          setError(`Failed to fetch playbooks: ${playbooksError.message}`);
-          return;
+          if (playbooksError) {
+            console.warn("Playbooks table not available:", playbooksError.message);
+            // Continue without playbooks data
+          } else {
+            playbooksData = data || [];
+          }
+        } catch (err) {
+          console.warn("Error fetching playbooks:", err);
+          // Continue without playbooks data
         }
 
-        setPlaybooks(playbooksData || []);
+        setPlaybooks(playbooksData);
 
         // Fetch plays
-        const { data: playsData, error: playsError } = await demoSupabase
-          .from("plays")
-          .select("*")
-          .order("created_at", { ascending: false });
+        let playsData = [];
+        try {
+          const { data, error: playsError } = await supabase
+            .from("plays")
+            .select("*")
+            .order("created_at", { ascending: false });
 
-        if (playsError) {
-          console.error("Error fetching plays:", playsError);
-          setError(`Failed to fetch plays: ${playsError.message}`);
-          return;
+          if (playsError) {
+            console.warn("Plays table not available:", playsError.message);
+            // Continue without plays data
+          } else {
+            playsData = data || [];
+          }
+        } catch (err) {
+          console.warn("Error fetching plays:", err);
+          // Continue without plays data
         }
 
-        setPlays(playsData || []);
+        setPlays(playsData);
       } catch (err) {
         console.error("Unexpected error fetching data:", err);
         setError(
@@ -112,7 +115,7 @@ export function useTeamsData() {
     }
 
     fetchData();
-  }, [refreshTrigger, demoSupabase]); // DEMO MODE: Remove user dependency to fetch data without auth, add refreshTrigger
+  }, [refreshTrigger]); // DEMO MODE: Remove user dependency to fetch data without auth, add refreshTrigger
 
   return {
     teams,

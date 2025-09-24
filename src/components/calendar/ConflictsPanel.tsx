@@ -57,7 +57,10 @@ const ConflictCard: React.FC<ConflictCardProps> = ({ conflict }) => {
       <div className="flex items-start gap-2 mb-2">
         <Icon name={getSeverityIcon()} size="sm" />
         <div className="flex-1">
-          <Typography variant="body-sm" className="font-medium text-text-primary mb-1">
+          <Typography
+            variant="body-sm"
+            className="font-medium text-text-primary mb-1"
+          >
             {conflict.message}
           </Typography>
           <Typography variant="caption" color="muted">
@@ -73,7 +76,12 @@ const ConflictCard: React.FC<ConflictCardProps> = ({ conflict }) => {
             <Typography variant="caption" as="span" className="font-medium">
               {event.title}
             </Typography>
-            <Typography variant="caption" color="muted" as="span" className="ml-1">
+            <Typography
+              variant="caption"
+              color="muted"
+              as="span"
+              className="ml-1"
+            >
               ({event.type})
             </Typography>
           </div>

@@ -68,7 +68,7 @@ const getSidebarPosition = (
 };
 const getSidebarStyles = () => {
   return `
-    fixed top-0 bottom-0 z-50 flex flex-col
+    fixed top-0 bottom-0 z-[70] flex flex-col
   surface-nav border-subtle
     border-r shadow-lg
   `;
@@ -220,7 +220,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Overlay */}
       {showOverlay && (
         <div
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70"
+          className="fixed inset-0 z-[60] bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70"
           onClick={onClose}
         />
       )}

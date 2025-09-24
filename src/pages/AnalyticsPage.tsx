@@ -1,26 +1,16 @@
 import React from "react";
-import { Typography } from "../components/design-system/Typography";
-import { Icon } from "../components/ui/Icon/Icon";
+import { AnalyticsDashboard } from "../components/analytics/AnalyticsDashboard";
 
 /**
  * AnalyticsPage
- * Premium analytics landing for team-level insights. This mirrors the legacy
- * route content and allows reuse in both legacy and Data Router setups.
+ * Advanced analytics landing with comprehensive playbook insights
  */
 const AnalyticsPage: React.FC = () => {
+  // For now, we'll show the dashboard without a specific playbook
+  // In a real implementation, this would come from route params or context
   return (
-    <div className="p-8 text-center">
-      <Typography
-        variant="headline-md"
-        as="h1"
-        className="mb-4 flex items-center justify-center"
-      >
-        <Icon name="bar-chart" size="lg" className="mr-2" />
-        Premium Analytics
-      </Typography>
-      <p className="text-text-secondary">
-        Advanced team analytics and reporting tools.
-      </p>
+    <div className="container mx-auto px-4 py-8">
+      <AnalyticsDashboard />
     </div>
   );
 };

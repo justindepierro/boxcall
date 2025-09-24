@@ -116,26 +116,24 @@ export class AchievementService {
    * Get real achievements from database
    */
   private static async getRealAchievements(
-    userId: string
+    _userId: string
   ): Promise<AchievementData> {
     try {
-      // Get helmet stickers without joins first
-      const stickersResult = await supabase
-        .from("helmet_stickers")
-        .select("*")
-        .eq("user_id", userId)
-        .order("awarded_at", { ascending: false });
+      // Get helmet stickers for user (temporarily disabled - needs player context)
+      // const stickersResult = await supabase
+      //   .from("helmet_stickers")
+      //   .select("*")
+      //   .eq("player_id", userId)
+      //   .order("earned_date", { ascending: false });
+      const stickersResult = { data: [], error: null };
 
-      if (stickersResult.error) {
-        console.warn("Error fetching helmet stickers:", stickersResult.error);
-      }
-
-      // Try to get real achievements with error handling
-      const achievementsResult = await supabase
-        .from("achievements")
-        .select("*")
-        .eq("user_id", userId)
-        .order("earned_at", { ascending: false });
+      // Get achievements for user (temporarily disabled - needs player context)
+      // const achievementsResult = await supabase
+      //   .from("achievements")
+      //   .select("*")
+      //   .eq("player_id", userId)
+      //   .order("earned_date", { ascending: false });
+      const achievementsResult = { data: [], error: null };
 
       if (achievementsResult.error) {
         console.warn("Error fetching achievements:", achievementsResult.error);

@@ -1,13 +1,5 @@
 {
   "recommendations": [
-    "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint",
-    "ms-vscode.vscode-typescript-next",
-    "bradlc.vscode-tailwindcss",
-    "ms-playwright.playwright",
-    "ms-vscode.test-adapter-converter",
-    "usernamehw.errorlens",
-    "streetsidesoftware.code-spell-checker",
-    "ms-vscode.vscode-json"
+    "denoland.vscode-deno"
   ]
 }
