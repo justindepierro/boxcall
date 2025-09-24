@@ -1,3 +1,9 @@
+-- =====================================================
+-- DATABASE REBUILD MIGRATIONS (042-060)
+-- Complete schema rebuild after database issues
+-- Date: September 23-24, 2025
+-- =====================================================
+
 -- Migration: Enable UUID extension and create missing tables
 -- This ensures the extension is available before creating tables
 
