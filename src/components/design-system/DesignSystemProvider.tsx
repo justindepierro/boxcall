@@ -233,13 +233,13 @@ const DesignSystemDevTools: React.FC = () => {
   const metrics = getPerformanceMetrics();
 
   return (
-    <div className="fixed bottom-4 right-4 bg-black/80 text-text-inverse p-4 rounded-lg text-xs font-mono z-50 max-w-sm">
+    <div className="fixed bottom-4 right-4 bg-text-primary/80 text-text-inverse p-4 rounded-lg text-xs font-mono z-50 max-w-sm">
       <div className="font-bold mb-2">🎨 Design System DevTools</div>
       <div>Theme: {config.theme}</div>
       <div>Density: {config.density}</div>
       <div>Motion: {config.motion}</div>
       <div>Glassmorphism: {config.glassmorphism ? "✅" : "❌"}</div>
-      <div className="mt-2 pt-2 border-t border-white/20">
+      <div className="mt-2 pt-2 border-t border-text-inverse/20">
         <div>Load Time: {metrics.loadTime.toFixed(0)}ms</div>
         <div>LCP: {metrics.lcp.toFixed(0)}ms</div>
         <div>FID: {metrics.fid.toFixed(2)}ms</div>

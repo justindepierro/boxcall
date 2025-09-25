@@ -17,7 +17,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
   if (selectedCount === 0) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 surface-card rounded-lg shadow-lg border border-subtle dark:border-gray-700 p-3 z-50">
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 surface-card rounded-lg shadow-lg border border-border-medium p-3 z-50">
       <div className="flex items-center space-x-4">
         {/* Selection Count */}
         <div className="flex items-center space-x-2">
@@ -41,7 +41,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
         </div>
 
         {/* Divider */}
-        <div className="w-px h-6 bg-slate-200"></div>
+        <div className="w-px h-6 bg-border-medium"></div>
 
         {/* Bulk Actions */}
         <div className="flex items-center space-x-2">
@@ -99,7 +99,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
           </Button>
 
           {/* Divider */}
-          <div className="w-px h-6 bg-slate-200"></div>
+          <div className="w-px h-6 bg-border-medium"></div>
 
           <Button
             onClick={() => onBulkAction("delete")}

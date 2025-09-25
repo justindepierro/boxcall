@@ -50,7 +50,7 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
       {/* Overlay for mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-text-primary bg-opacity-50 z-40 lg:hidden"
           onClick={onClose}
           aria-hidden="true"
         />
@@ -120,7 +120,7 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
                       px-2 py-1 text-xs font-medium rounded-full min-w-[20px] text-center
                       ${
                         item.isActive
-                          ? "bg-white bg-opacity-20 text-text-on-primary"
+                          ? "bg-surface-primary bg-opacity-20 text-text-on-primary"
                           : "bg-primary text-text-on-primary"
                       }
                     `}

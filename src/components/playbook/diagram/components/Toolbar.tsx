@@ -21,7 +21,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       className="panel-cupertino px-3 py-2 z-10 flex flex-wrap items-center gap-2"
     >
       <div className="flex items-center gap-2 mr-4 whitespace-nowrap">
-        <span className="font-medium text-slate-700">Diagram Builder v2</span>
+        <span className="font-medium text-text-primary">Diagram Builder v2</span>
         {onClose && (
           <Button
             size="xs"
@@ -67,7 +67,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         >
           Motion
         </Button>
-        <div className="mx-2 w-px h-5 bg-slate-200" />
+        <div className="mx-2 w-px h-5 bg-border-medium" />
         <Button
           size="xs"
           variant={state.ui.snap ? "secondary" : "ghost"}

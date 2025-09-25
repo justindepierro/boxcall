@@ -19,7 +19,7 @@ const SkeletonBase: React.FC<SkeletonProps> = ({
   height = "1rem",
 }) => (
   <div
-    className={`animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] rounded ${className}`}
+    className={`animate-pulse bg-gradient-to-r from-border via-border-light to-border bg-[length:200%_100%] rounded ${className}`}
     style={{ width, height }}
   />
 );

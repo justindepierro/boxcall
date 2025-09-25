@@ -154,7 +154,7 @@ export const FormField: React.FC<FormFieldProps> = ({
           className="font-medium text-text-primary mb-1"
         >
           {field.label}
-          {field.required && <span className="text-red-500 ml-1">*</span>}
+          {field.required && <span className="text-text-error ml-1">*</span>}
         </Typography>
         {renderInput()}
       </label>
@@ -166,7 +166,7 @@ export const FormField: React.FC<FormFieldProps> = ({
       )}
 
       {error && (
-        <Typography variant="body-xs" className="text-red-600">
+        <Typography variant="body-xs" className="text-text-error">
           {error}
         </Typography>
       )}

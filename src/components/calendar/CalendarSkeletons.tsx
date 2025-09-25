@@ -83,10 +83,10 @@ export const CalendarErrorSkeleton: React.FC<{ message?: string }> = ({
 }) => (
   <div className="min-h-screen flex items-center justify-center">
     <div className="text-center space-y-4">
-      <div className="mx-auto h-14 w-14 rounded-full bg-red-100 flex items-center justify-center animate-pulse">
-        <div className="h-8 w-8 rounded-full bg-red-300" />
+      <div className="mx-auto h-14 w-14 rounded-full bg-surface-error flex items-center justify-center animate-pulse">
+        <div className="h-8 w-8 rounded-full bg-surface-error" />
       </div>
-      <p className="text-red-700 font-medium">Calendar Error</p>
+      <p className="text-text-error font-medium">Calendar Error</p>
       <p className="text-sm text-text-secondary max-w-sm mx-auto">{message}</p>
       <Button
         variant="primary"

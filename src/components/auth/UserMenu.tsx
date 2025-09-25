@@ -72,10 +72,10 @@ export const UserMenu: React.FC = () => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 surface-card rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
+        <div className="absolute right-0 mt-2 w-64 surface-card rounded-md shadow-lg ring-1 ring-text-primary ring-opacity-5 z-50">
           <div className="py-1">
             {/* User Info */}
-            <div className="px-4 py-2 border-b border-subtle dark:border-gray-700">
+            <div className="px-4 py-2 border-b border-border-medium">
               <Typography
                 variant="body-sm"
                 as="p"
@@ -113,7 +113,7 @@ export const UserMenu: React.FC = () => {
               Team Settings
             </Button>
 
-            <hr className="border-subtle dark:border-gray-700" />
+            <hr className="border-border-medium" />
 
             {/* Logout */}
             <Button

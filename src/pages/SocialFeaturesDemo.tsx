@@ -180,7 +180,7 @@ const SocialFeaturesDemo: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
                 <div className="w-20 h-20 bg-gradient-to-br from-electric-500 to-jade-500 rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-3xl font-bold text-white">BC</span>
+                  <span className="text-3xl font-bold text-text-inverse">BC</span>
                 </div>
                 <div>
                   <h3 className="text-2xl font-semibold text-text-primary">
@@ -246,7 +246,7 @@ const SocialFeaturesDemo: React.FC = () => {
               ].map((player) => (
                 <Card key={player.name} variant="outlined" className="p-4 text-center">
                   <div className="w-12 h-12 bg-gradient-to-br from-jade-500 to-electric-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <span className="text-white font-bold">{player.avatar}</span>
+                    <span className="text-text-inverse font-bold">{player.avatar}</span>
                   </div>
                   <h4 className="font-semibold text-text-primary">{player.name}</h4>
                   <p className="text-sm text-text-secondary mb-2">{player.role}</p>

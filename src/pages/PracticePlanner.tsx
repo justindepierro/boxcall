@@ -344,7 +344,7 @@ export function PracticePlanner() {
                           <Icon
                             name="power"
                             size="sm"
-                            className="text-red-700"
+                            className="text-text-error"
                           />
                           End Practice
                         </Button>
@@ -434,7 +434,7 @@ export function PracticePlanner() {
                                             <Icon
                                               name="lock"
                                               size="sm"
-                                              className="text-amber-500"
+                                              className="text-text-warning"
                                             />
                                           )}
                                           <span className="px-2 py-1 surface-subtle text-text-secondary rounded text-sm font-mono">
@@ -493,7 +493,7 @@ export function PracticePlanner() {
                                           handleDeleteBlock(block.id)
                                         }
                                         disabled={lockedSchedule}
-                                        className="text-red-600 hover:text-red-700 hover:surface-subtle"
+                                        className="text-text-error hover:text-text-error hover:surface-subtle"
                                       >
                                         <Icon name="delete" size="sm" />
                                       </Button>

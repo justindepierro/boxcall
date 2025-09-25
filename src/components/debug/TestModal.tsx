@@ -28,9 +28,9 @@ export const TestModal: React.FC = () => {
           }}
           title="Test Modal"
           size="sm"
-          className="bg-red-500 border-8 border-blue-500"
+          className="bg-text-error border-8 border-text-info"
         >
-          <div className="p-4 bg-yellow-300">
+          <div className="p-4 bg-surface-warning">
             <p>This is a test modal to debug rendering issues.</p>
             <Button onClick={() => setIsOpen(false)} className="mt-2">
               Close

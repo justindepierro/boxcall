@@ -37,7 +37,7 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
 
   const getCategoryColor = (_category: string) => {
     // TODO: Move to utility function
-    return "bg-blue-100 text-blue-800";
+    return "bg-surface-info text-text-info";
   };
 
   const getCategoryIcon = (_category: string) => {
@@ -47,7 +47,7 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 bg-text-primary bg-opacity-50 flex items-center justify-center p-4 z-50"
       onClick={(e) => {
         // Only close if clicking the backdrop, not the modal content
         if (e.target === e.currentTarget) {

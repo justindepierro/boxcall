@@ -313,7 +313,7 @@ export const AchievementAdminPage: React.FC = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => handleDelete(achievement.id)}
-                  className="text-red-600 hover:text-red-700"
+                  className="text-text-error hover:text-text-error"
                 >
                   <Icon name="delete" className="w-4 h-4" />
                 </Button>

@@ -39,7 +39,7 @@ export const RouteErrorElement: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center surface-app p-6">
       <div className="text-center max-w-lg">
         <div className="mb-4">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-600">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-surface-error text-text-error">
             !
           </span>
         </div>

@@ -169,7 +169,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                   <div
                     key={event.id}
                     onClick={() => handleEventClick(event)}
-                    className="flex items-start space-x-3 p-3 rounded-lg surface-subtle-hover transition-colors cursor-pointer border border-subtle dark:border-gray-700"
+                    className="flex items-start space-x-3 p-3 rounded-lg surface-subtle-hover transition-colors cursor-pointer border border-border-medium"
                   >
                     {/* Event Icon */}
                     <div className="flex-shrink-0 mt-1">
@@ -235,7 +235,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
       {/* Event Detail Modal */}
       {selectedEvent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-text-primary bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="surface-card rounded-lg shadow-xl max-w-md w-full max-h-96 overflow-y-auto">
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">

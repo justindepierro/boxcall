@@ -36,9 +36,9 @@ const visualFeedback = {
   light: "animate-pulse",
   medium: "animate-bounce",
   heavy: "animate-ping",
-  success: "animate-pulse text-green-600",
-  warning: "animate-pulse text-yellow-600",
-  error: "animate-pulse text-red-600",
+  success: "animate-pulse text-text-success",
+  warning: "animate-pulse text-text-warning",
+  error: "animate-pulse text-text-error",
   selection: "animate-pulse bg-electric-100",
   impact: "animate-bounce scale-110",
 } as const;

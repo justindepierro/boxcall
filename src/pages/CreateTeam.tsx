@@ -961,7 +961,7 @@ export const CreateTeam: React.FC = () => {
         )}
 
         {createError && (
-          <div className="mt-4 p-4 surface-subtle dark:bg-surface-error/20 border border-subtle dark:border-border-error rounded-lg text-sm text-red-700 dark:text-red-300">
+          <div className="mt-4 p-4 surface-subtle dark:bg-surface-error/20 border border-subtle dark:border-border-error rounded-lg text-sm text-text-error">
             Error creating team: {createError}
           </div>
         )}

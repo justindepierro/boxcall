@@ -71,7 +71,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
       className={`
         fixed bottom-0 left-0 right-0 z-50
   surface-card
-        border-t border-subtle dark:border-gray-700
+        border-t border-border-medium
         shadow-lg
         pb-safe-area-inset-bottom
         md:hidden
@@ -95,7 +95,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
                 onClick={() => handleItemClick(item)}
                 variant={item.isActive ? "primary" : "ghost"}
                 size="sm"
-                className={`relative flex flex-col items-center justify-center min-w-[60px] px-2 py-2 h-auto active:scale-95 focus-visible:ring-2 focus-visible:ring-jade-500 ${item.isActive ? "text-brand-jade dark:text-brand-jade-light" : "text-gray-500 hover:text-text-primary dark:hover:text-text-secondary"} text-text-secondary`}
+                className={`relative flex flex-col items-center justify-center min-w-[60px] px-2 py-2 h-auto active:scale-95 focus-visible:ring-2 focus-visible:ring-jade-500 ${item.isActive ? "text-brand-jade dark:text-brand-jade-light" : "text-text-muted hover:text-text-primary dark:hover:text-text-secondary"} text-text-secondary`}
                 style={{ minHeight: "60px" }}
                 aria-label={`Navigate to ${item.label}`}
               >

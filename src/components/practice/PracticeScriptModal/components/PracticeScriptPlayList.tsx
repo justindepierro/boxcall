@@ -115,7 +115,7 @@ export const PracticeScriptPlayList: React.FC<PracticeScriptPlayListProps> = ({
                     variant="ghost"
                     size="sm"
                     onClick={() => onDeletePlay(index)}
-                    className="text-red-600 hover:text-red-700"
+                    className="text-text-error hover:text-text-error"
                   >
                     Delete
                   </Button>

@@ -76,9 +76,9 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       {/* Icon */}
       <div className="mx-auto w-fit mb-6">
         <div
-          className={`bg-gray-100 rounded-full flex items-center justify-center ${styles.icon}`}
+          className={`bg-surface-secondary rounded-full flex items-center justify-center ${styles.icon}`}
         >
-          <Icon name={icon} className={`${styles.icon} text-gray-400`} />
+          <Icon name={icon} className={`${styles.icon} text-text-muted`} />
         </div>
       </div>
 

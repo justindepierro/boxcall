@@ -299,7 +299,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {showOverlay && (
         <div
           data-testid="sidebar-overlay"
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 backdrop-blur-[1px] transition-opacity motion-reduce:transition-none"
+          className="fixed inset-0 z-40 bg-text-primary bg-opacity-50 dark:bg-text-primary dark:bg-opacity-70 backdrop-blur-[1px] transition-opacity motion-reduce:transition-none"
           onClick={onClose}
         />
       )}

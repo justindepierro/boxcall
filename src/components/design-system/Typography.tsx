@@ -239,7 +239,7 @@ const TypographyBase = React.forwardRef(function TypographyBase<
   // Build class string
   const classes = [
     typographyClasses[actualVariant],
-    color ? colorClasses[color] : "text-gray-900 dark:text-gray-100", // Default text color when no color specified
+    color ? colorClasses[color] : "text-text-primary", // Default text color when no color specified
     align && alignClasses[align],
     truncate && "truncate",
     className,

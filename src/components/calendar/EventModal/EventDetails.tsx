@@ -158,7 +158,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
               Loading RSVP...
             </Typography>
           ) : rsvps.isError ? (
-            <Typography variant="body-sm" className="text-red-500">
+            <Typography variant="body-sm" className="text-text-error">
               Failed to load RSVP
             </Typography>
           ) : (
@@ -205,7 +205,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
               Loading comments...
             </Typography>
           ) : comments.isError ? (
-            <Typography variant="body-sm" className="text-red-500">
+            <Typography variant="body-sm" className="text-text-error">
               Failed to load comments
             </Typography>
           ) : (

@@ -183,7 +183,7 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
                   }))
                 }
                 rows={3}
-                className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border-medium rounded-md focus:outline-none focus:ring-2 focus:ring-text-info"
                 placeholder={`Join our ${type === "staff" ? "coaching staff" : "team"}! We're excited to have you on board.`}
               />
             </div>
@@ -199,7 +199,7 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
               >
                 {isSubmitting ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-text-inverse mr-2"></div>
                     Sending...
                   </>
                 ) : (

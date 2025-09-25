@@ -51,8 +51,8 @@ const logoAssets = {
 // Color classes for proper theming (since SVGs use currentColor)
 const colorClasses = {
   brand: "text-jade-600", // Brand green
-  white: "text-white", // White
-  black: "text-black", // Black
+  white: "text-text-inverse", // White
+  black: "text-text-primary", // Black
   current: "", // Inherit from parent
 } as const;
 

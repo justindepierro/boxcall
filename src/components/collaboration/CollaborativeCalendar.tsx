@@ -507,7 +507,7 @@ export const CollaborativeCalendar: React.FC<CollaborativeCalendarProps> = ({
 
         {/* Create Event Modal */}
         {isCreatingEvent && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-text-primary/50 flex items-center justify-center z-50">
             <Card className="p-6 max-w-md w-full mx-4">
               <Typography variant="headline-sm" className="mb-4">
                 Add Team Event

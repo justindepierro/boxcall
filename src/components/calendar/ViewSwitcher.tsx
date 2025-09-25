@@ -100,7 +100,7 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
             size="xs"
             className={
               (selected
-                ? "!bg-brand-jade-dark text-white border-brand-jade-dark"
+                ? "!bg-brand-jade-dark text-text-inverse border-brand-jade-dark"
                 : [
                     // Base unselected adopts subtle surface vs raw gray
                     "surface-card text-text-primary border-subtle",
