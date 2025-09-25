@@ -20,7 +20,7 @@ export const ConflictsPanel: React.FC<ConflictsPanelProps> = ({
   return (
     <Card className={`calendar-card ${className || ""}`.trim()}>
       <div className="flex items-center gap-2 mb-4">
-        <Icon name="alert-triangle" size="lg" className="text-red-600" />
+        <Icon name="alert-triangle" size="lg" className="text-text-error" />
         <Typography variant="label-lg" className="text-text-primary">
           Scheduling Conflicts ({conflicts.length})
         </Typography>
@@ -46,8 +46,8 @@ const ConflictCard: React.FC<ConflictCardProps> = ({ conflict }) => {
 
   const getSeverityColor = (severity: string) => {
     return severity === "error"
-      ? "text-red-600 border-red-200 bg-red-50"
-      : "text-amber-600 border-amber-200 bg-amber-50";
+      ? "text-text-error border-text-error bg-surface-error"
+      : "text-text-warning border-text-warning bg-surface-warning";
   };
 
   return (

@@ -77,7 +77,7 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
 
   // Handle notification click
   const handleNotificationClick = (notification: Notification) => {
-    if (!notification.read) {
+    if (!notification.is_read) {
       markAsRead(notification.id);
     }
     onNotificationClick?.(notification);

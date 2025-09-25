@@ -252,7 +252,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-gray-300 mb-2"
+                  className="block font-medium text-text-primary dark:text-border-light mb-2"
                 >
                   Address
                 </Typography>
@@ -268,7 +268,7 @@ export const ProfilePage: React.FC = () => {
               <Typography
                 variant="body-sm"
                 as="label"
-                className="block font-medium text-text-primary dark:text-gray-300 mb-2"
+                className="block font-medium text-text-primary dark:text-border-light mb-2"
               >
                 Bio
               </Typography>
@@ -277,7 +277,7 @@ export const ProfilePage: React.FC = () => {
                 placeholder="Tell us about yourself..."
                 value={formData.bio}
                 onChange={(e) => handleInputChange("bio", e.target.value)}
-                className="w-full px-3 py-2 border border-border-medium dark:border-gray-600 rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-gray-700 dark:text-text-inverse font-sans"
+                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-sm shadow-sm focus:ring-jade-500 focus:border-jade-500 dark:bg-text-primary dark:text-text-inverse font-sans"
               />
             </div>
           </div>
@@ -291,7 +291,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-gray-300 mb-2"
+                  className="block font-medium text-text-primary dark:text-border-light mb-2"
                 >
                   Password
                 </Typography>
@@ -300,7 +300,7 @@ export const ProfilePage: React.FC = () => {
                     type="password"
                     value="••••••••••"
                     disabled
-                    className="surface-subtle dark:bg-gray-700"
+                    className="surface-subtle dark:bg-text-primary"
                   />
                   <Button
                     type="button"
@@ -336,7 +336,7 @@ export const ProfilePage: React.FC = () => {
           </div>
         </form>
         {/* Account Info */}
-        <div className="mt-8 surface-subtle dark:bg-gray-800/50 rounded-lg p-6">
+        <div className="mt-8 surface-subtle dark:bg-surface-secondary/50 rounded-lg p-6">
           <Typography variant="headline-sm" as="h3" className="mb-3">
             Account Information
           </Typography>
@@ -361,7 +361,7 @@ export const ProfilePage: React.FC = () => {
             </div>
             <div>
               <span className="font-medium">User ID:</span>{" "}
-              <code className="text-xs surface-subtle dark:bg-gray-700 px-2 py-1 rounded">
+              <code className="text-xs surface-subtle dark:bg-text-primary px-2 py-1 rounded">
                 {profile.id.substring(0, 8)}...
               </code>
             </div>

@@ -164,7 +164,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             <Icon name="filter" className="h-4 w-4 text-text-muted" />
             <span className="text-sm font-medium text-text-secondary">Filters</span>
             {activeFilters.length > 0 && (
-              <span className="px-1.5 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full">
+              <span className="px-1.5 py-0.5 text-xs bg-surface-info text-text-info rounded-full">
                 {activeFilters.length}
               </span>
             )}
@@ -182,7 +182,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             {activeFilters.length > 0 && (
               <button
                 onClick={clearAllFilters}
-                className="p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded"
+                className="p-1 text-text-error hover:text-text-error-hover hover:bg-surface-error-hover rounded"
                 title="Clear all filters"
               >
                 <Icon name="close" className="h-3 w-3" />
@@ -199,12 +199,12 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             {activeFilters.map((filter) => (
               <div
                 key={filter.id}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full border border-blue-200"
+                className="inline-flex items-center gap-1 px-2 py-1 bg-surface-error text-text-error text-xs rounded-full border border-border-error"
               >
                 <span className="truncate max-w-32">{filter.label}</span>
                 <button
                   onClick={() => removeFilter(filter.id)}
-                  className="text-blue-500 hover:text-blue-700 hover:bg-blue-100 rounded-full p-0.5"
+                  className="text-text-info hover:text-text-info-hover hover:bg-surface-info-hover rounded-full p-0.5"
                 >
                   <Icon name="close" className="h-3 w-3" />
                 </button>
@@ -229,7 +229,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                     value: "",
                   }))
                 }
-                className="w-full px-2 py-1 text-xs border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-surface-primary"
+                className="w-full px-2 py-1 text-xs border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-focus-info bg-surface-primary"
               >
                 <option value="">Field...</option>
                 {FILTER_FIELDS.map((field) => (
@@ -252,7 +252,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                           value: e.target.value,
                         }))
                       }
-                      className="w-full px-2 py-1 text-xs border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-surface-primary"
+                      className="w-full px-2 py-1 text-xs border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-focus-info bg-surface-primary"
                     >
                       <option value="">Value...</option>
                       {selectedField.options?.map(
@@ -279,7 +279,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                         }))
                       }
                       placeholder="Value..."
-                      className="w-full px-2 py-1 text-xs border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full px-2 py-1 text-xs border border-border-medium rounded focus:outline-none focus:ring-1 focus:ring-focus-info"
                     />
                   )}
                 </div>
@@ -287,7 +287,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                 <button
                   onClick={addFilter}
                   disabled={!newFilter.field || !newFilter.value}
-                  className="px-3 py-1 bg-blue-600 text-text-inverse text-xs rounded hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="px-3 py-1 bg-surface-info text-text-inverse text-xs rounded hover:bg-surface-info-hover disabled:bg-surface-disabled disabled:cursor-not-allowed"
                 >
                   Add
                 </button>

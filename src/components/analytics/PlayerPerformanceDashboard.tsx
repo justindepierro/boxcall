@@ -32,10 +32,6 @@ export const PlayerPerformanceDashboard: React.FC<
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadPerformanceData();
-  }, [teamId]);
-
   const loadPerformanceData = useCallback(async () => {
     try {
       setLoading(true);
@@ -55,6 +51,10 @@ export const PlayerPerformanceDashboard: React.FC<
       setLoading(false);
     }
   }, [teamId]);
+
+  useEffect(() => {
+    loadPerformanceData();
+  }, [loadPerformanceData]);
 
   if (loading) {
     return (
@@ -357,7 +357,7 @@ export const PlayerPerformanceDashboard: React.FC<
                           ? "success"
                           : trend.trend === "down"
                             ? "danger"
-                            : "secondary"
+                            : "neutral"
                       }
                     >
                       {trend.trend === "up"
@@ -409,45 +409,45 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
       <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <Typography variant="h2">{player.playerName}</Typography>
+            <Typography variant="headline-lg">{player.playerName}</Typography>
             <Button variant="ghost" size="sm" onClick={onClose}>
-              <Icon name="x" />
+              <Icon name="close" />
             </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <Typography variant="h4" className="mb-2">
+              <Typography variant="headline-md" className="mb-2">
                 Overview
               </Typography>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <Typography variant="body2">Position:</Typography>
-                  <Typography variant="body2" className="font-medium">
+                  <Typography variant="body">Position:</Typography>
+                  <Typography variant="body" className="font-medium">
                     {player.position}
                   </Typography>
                 </div>
                 <div className="flex justify-between">
-                  <Typography variant="body2">Average Rating:</Typography>
-                  <Typography variant="body2" className="font-medium">
+                  <Typography variant="body">Average Rating:</Typography>
+                  <Typography variant="body" className="font-medium">
                     {player.averageRating}/10
                   </Typography>
                 </div>
                 <div className="flex justify-between">
-                  <Typography variant="body2">Total Activities:</Typography>
-                  <Typography variant="body2" className="font-medium">
+                  <Typography variant="body">Total Activities:</Typography>
+                  <Typography variant="body" className="font-medium">
                     {player.totalActivities}
                   </Typography>
                 </div>
                 <div className="flex justify-between">
-                  <Typography variant="body2">Trend:</Typography>
+                  <Typography variant="body">Trend:</Typography>
                   <Badge
                     variant={
                       player.improvementTrend === "improving"
                         ? "success"
                         : player.improvementTrend === "declining"
-                          ? "error"
-                          : "secondary"
+                          ? "danger"
+                          : "neutral"
                     }
                   >
                     {player.improvementTrend}
@@ -457,13 +457,13 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
             </div>
 
             <div>
-              <Typography variant="h4" className="mb-2">
+              <Typography variant="headline-md" className="mb-2">
                 Strengths & Weaknesses
               </Typography>
               <div className="space-y-3">
                 <div>
                   <Typography
-                    variant="body2"
+                    variant="body"
                     className="font-medium text-text-success mb-1"
                   >
                     Strengths:
@@ -478,7 +478,7 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 </div>
                 <div>
                   <Typography
-                    variant="body2"
+                    variant="body"
                     className="font-medium text-text-warning mb-1"
                   >
                     Weaknesses:
@@ -496,7 +496,7 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
           </div>
 
           <div>
-            <Typography variant="h4" className="mb-4">
+            <Typography variant="headline-md" className="mb-4">
               Recent Performance
             </Typography>
             <div className="space-y-2">
@@ -506,15 +506,15 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                   className="flex items-center justify-between p-3 border rounded-lg"
                 >
                   <div>
-                    <Typography variant="body2" className="font-medium">
+                    <Typography variant="body" className="font-medium">
                       {performance.activity}
                     </Typography>
-                    <Typography variant="body2" className="text-text-secondary">
+                    <Typography variant="body" className="text-text-secondary">
                       {performance.date}
                     </Typography>
                     {performance.notes && (
                       <Typography
-                        variant="body2"
+                        variant="body"
                         className="text-text-muted italic"
                       >
                         {performance.notes}
@@ -527,7 +527,7 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                         ? "success"
                         : performance.rating >= 6
                           ? "warning"
-                          : "error"
+                          : "danger"
                     }
                   >
                     {performance.rating}/10

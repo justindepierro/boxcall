@@ -53,7 +53,7 @@ export function PasswordStrengthIndicator({
   return (
     <div className={`mt-2 space-y-2 ${className}`}>
       {/* Strength bar */}
-      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+      <div className="w-full bg-border dark:bg-text-primary rounded-full h-2">
         <div
           className={`h-2 rounded-full transition-all duration-300 ${getStrengthColor(
             validation.strength
@@ -123,10 +123,10 @@ export function PasswordStrengthIndicator({
         variant="caption"
         className={`font-medium ${
           validation.strength === "strong"
-            ? "text-green-600 dark:text-green-400"
+            ? "text-text-success"
             : validation.strength === "medium"
-              ? "text-yellow-600 dark:text-yellow-400"
-              : "text-red-600 dark:text-red-400"
+              ? "text-text-warning"
+              : "text-text-error"
         }`}
       >
         {validation.message}

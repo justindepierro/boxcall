@@ -22,7 +22,7 @@ export const AISuggestionsPanel: React.FC<AISuggestionsPanelProps> = ({
   return (
     <Card className={`calendar-card ${className || ""}`.trim()}>
       <div className="flex items-center gap-2 mb-4">
-        <Icon name="lightbulb" size="lg" className="text-amber-600" />
+        <Icon name="lightbulb" size="lg" className="text-text-warning" />
         <Typography variant="label-lg" className="text-text-primary">
           Smart Suggestions
         </Typography>
@@ -83,9 +83,9 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
   };
 
   const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 0.8) return "text-green-600";
-    if (confidence >= 0.6) return "text-amber-600";
-    return "text-red-600";
+    if (confidence >= 0.8) return "text-text-success";
+    if (confidence >= 0.6) return "text-text-warning";
+    return "text-text-error";
   };
 
   return (
@@ -137,14 +137,14 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
         <div className="mb-3">
           <Typography
             variant="caption"
-            className="text-red-600 font-medium mb-1"
+            className="text-text-error font-medium mb-1"
           >
             ⚠️ Potential conflicts:
           </Typography>
           <ul className="ml-2">
             {suggestion.conflicts.map((conflict, index) => (
               <li key={index}>
-                <Typography variant="caption" className="text-red-600">
+                <Typography variant="caption" className="text-text-error">
                   • {conflict}
                 </Typography>
               </li>
@@ -159,7 +159,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
             <Typography
               key={index}
               variant="caption"
-              className="bg-green-100 text-green-700 px-2 py-1 rounded"
+              className="bg-surface-success text-text-success px-2 py-1 rounded"
               as="span"
             >
               {benefit}

@@ -39,7 +39,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <Icon
             name="search"
-            className={`h-4 w-4 ${isFocused ? "text-blue-500" : "text-gray-400"}`}
+            className={`h-4 w-4 ${isFocused ? "text-text-info" : "text-text-secondary"}`}
           />
         </div>
 
@@ -52,10 +52,10 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
           onBlur={() => setIsFocused(false)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className={`block w-full pl-10 pr-10 py-2 text-sm border border-gray-300 rounded-lg
-                     focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                     placeholder-gray-400 transition-all duration-200
-                     ${isFocused ? "bg-white shadow-md" : "bg-gray-50 hover:bg-white"}`}
+          className={`block w-full pl-10 pr-10 py-2 text-sm border border-border rounded-lg
+                     focus:ring-2 focus:ring-text-info focus:border-text-info
+                     placeholder-text-secondary transition-all duration-200
+                     ${isFocused ? "bg-surface-primary shadow-md" : "bg-surface-secondary hover:bg-surface-primary"}`}
         />
 
         {searchQuery && (

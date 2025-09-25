@@ -169,6 +169,22 @@ export const getNavigationItems = (
     href: "/about",
     description: "Learn about BoxCall",
   });
+  // Design System Showcase - Available to everyone (dev/demo feature)
+  items.push({
+    id: "design-system",
+    label: "Design System",
+    icon: "sparkles",
+    href: "/design-system",
+    description: "Explore our advanced design system and theming",
+  });
+  // Social Features Demo - Available to everyone (dev/demo feature)
+  items.push({
+    id: "social-demo",
+    label: "Social Demo",
+    icon: "message",
+    href: "/social-features-demo",
+    description: "Experience social features and interactions",
+  });
   // Templates - Coaches and super_admin only
   if (
     userRole === "admin" ||

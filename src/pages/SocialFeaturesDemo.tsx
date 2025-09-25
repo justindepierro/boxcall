@@ -1,12 +1,16 @@
 // Social Features Demo Page
 // Showcases all social features working together
 
-import React from "react";
+import React, { useState } from "react";
 import { ReactionButton } from "../components/social/ReactionButton";
 import { FollowButton } from "../components/social/FollowButton";
 import { CommentSection } from "../components/social/CommentSection";
 import { NotificationsBell } from "../components/social/NotificationsBell";
 import { ActivityFeed } from "../components/social/ActivityFeed";
+import { Button } from "../components/ui/Button/Button";
+import Card from "../components/ui/Card/Card";
+import { Badge } from "../components/ui/Badge/Badge";
+import { Tooltip } from "../components/ui/Tooltip";
 
 const SocialFeaturesDemo: React.FC = () => {
   // Demo content IDs - in a real app these would come from your data
@@ -14,211 +18,304 @@ const SocialFeaturesDemo: React.FC = () => {
   const demoTeamId = "demo-team-456";
   const demoUserId = "demo-user-789";
 
+  const [activeTab, setActiveTab] = useState<'feed' | 'interactions' | 'team'>('feed');
+
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
+    <div className="max-w-6xl mx-auto p-6 space-y-8">
       <div className="text-center relative">
         <div className="absolute top-0 right-0">
           <NotificationsBell userId={demoUserId} />
         </div>
         <h1 className="text-3xl font-bold text-text-primary mb-2">
-          Social Features Demo
+          🤝 Social Features Demo
         </h1>
-        <p className="text-text-secondary">
-          Experience the new social interactions in BoxCall
+        <p className="text-text-secondary mb-6">
+          Experience the complete social interaction system in BoxCall
         </p>
+
+        {/* Tab Navigation */}
+        <div className="flex justify-center gap-2 mb-8">
+          {[
+            { key: 'feed', label: 'Activity Feed', icon: '📱' },
+            { key: 'interactions', label: 'Interactions', icon: '👍' },
+            { key: 'team', label: 'Team Hub', icon: '👥' }
+          ].map(({ key, label, icon }) => (
+            <Button
+              key={key}
+              variant={activeTab === key ? 'primary' : 'outline'}
+              size="sm"
+              onClick={() => setActiveTab(key as any)}
+            >
+              {icon} {label}
+            </Button>
+          ))}
+        </div>
       </div>
 
-      {/* Demo Play Card */}
-      <div className="bg-surface-primary border border-border rounded-lg p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h2 className="text-xl font-semibold text-text-primary">
-              Triple Option Play
+      {activeTab === 'feed' && (
+        <div className="space-y-6">
+          {/* Activity Feed */}
+          <Card variant="elevated" className="p-6">
+            <h2 className="text-2xl font-semibold mb-6 text-text-primary">
+              📱 Live Activity Feed
             </h2>
-            <p className="text-text-secondary mt-1">
-              A classic triple option with multiple read options for the QB.
-            </p>
+            <ActivityFeed userId={demoUserId} limit={10} />
+          </Card>
+
+          {/* Recent Activity Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card variant="glass" className="p-4 text-center">
+              <div className="text-2xl mb-2">🔥</div>
+              <div className="text-xl font-bold text-text-primary">24</div>
+              <div className="text-sm text-text-secondary">Active Today</div>
+            </Card>
+            <Card variant="glass" className="p-4 text-center">
+              <div className="text-2xl mb-2">💬</div>
+              <div className="text-xl font-bold text-text-primary">156</div>
+              <div className="text-sm text-text-secondary">Comments This Week</div>
+            </Card>
+            <Card variant="glass" className="p-4 text-center">
+              <div className="text-2xl mb-2">❤️</div>
+              <div className="text-xl font-bold text-text-primary">89</div>
+              <div className="text-sm text-text-secondary">Reactions Given</div>
+            </Card>
           </div>
-          <div className="flex items-center gap-3">
-            <ReactionButton
+        </div>
+      )}
+
+      {activeTab === 'interactions' && (
+        <div className="space-y-6">
+          {/* Interactive Play Card */}
+          <Card variant="elevated" className="p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <Badge variant="success">Run Play</Badge>
+                  <Badge variant="info">Popular</Badge>
+                  <Badge variant="warning">High Success</Badge>
+                </div>
+                <h2 className="text-xl font-semibold text-text-primary">
+                  Triple Option Play
+                </h2>
+                <p className="text-text-secondary mt-1">
+                  A classic triple option with multiple read options for the QB. Perfect for keeping defenses honest.
+                </p>
+              </div>
+              <div className="flex items-center gap-3 ml-4">
+                <ReactionButton
+                  contentType="play"
+                  contentId={demoPlayId}
+                  size="lg"
+                  variant="button"
+                />
+                <Tooltip content="Save to favorites">
+                  <Button variant="ghost" size="sm">⭐</Button>
+                </Tooltip>
+              </div>
+            </div>
+
+            {/* Play visualization placeholder */}
+            <div className="bg-gradient-to-br from-surface-muted to-surface-secondary rounded-lg h-48 flex items-center justify-center mb-4 relative overflow-hidden">
+              <div className="absolute inset-0 opacity-10">
+                <svg width="100%" height="100%" viewBox="0 0 100 100" className="text-electric-500">
+                  <defs>
+                    <pattern id="play-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                      <path d="M10 2 L18 10 L10 18 L2 10 Z" fill="currentColor" opacity="0.3"/>
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#play-pattern)"/>
+                </svg>
+              </div>
+              <div className="text-center z-10">
+                <div className="text-4xl mb-2">🏈</div>
+                <span className="text-text-muted font-medium">Interactive Play Diagram</span>
+                <p className="text-xs text-text-muted mt-1">Click and drag to explore formations</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-sm text-text-muted">
+              <div className="flex gap-6">
+                <span>📈 89% Success Rate</span>
+                <span>🏈 23 Uses This Season</span>
+                <span>⭐ 4.8 Average Rating</span>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">View Details</Button>
+                <Button variant="primary" size="sm">Use in Practice</Button>
+              </div>
+            </div>
+          </Card>
+
+          {/* Comments Section */}
+          <Card variant="glass" className="p-6">
+            <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
+              💬 Discussion
+              <Badge variant="neutral">12 comments</Badge>
+            </h3>
+            <CommentSection
               contentType="play"
               contentId={demoPlayId}
-              size="md"
-              variant="button"
+              maxDepth={3}
+              showReactions={true}
             />
-            <FollowButton
-              followingType="team"
-              followingId={demoTeamId}
-              variant="button"
-              size="md"
-            />
-          </div>
+          </Card>
+
+          {/* Quick Actions */}
+          <Card variant="outlined" className="p-4">
+            <h4 className="font-semibold text-text-primary mb-3">Quick Actions</h4>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="success" size="sm">👍 Like This Play</Button>
+              <Button variant="outline" size="sm">📤 Share with Team</Button>
+              <Button variant="warning" size="sm">📝 Add to Practice Plan</Button>
+              <Button variant="secondary" size="sm">📊 View Analytics</Button>
+            </div>
+          </Card>
         </div>
+      )}
 
-        {/* Play visualization placeholder */}
-        <div className="bg-surface-muted rounded-lg h-48 flex items-center justify-center mb-4">
-          <span className="text-text-muted">Play Diagram Would Go Here</span>
+      {activeTab === 'team' && (
+        <div className="space-y-6">
+          {/* Team Profile Card */}
+          <Card variant="elevated" className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <div className="w-20 h-20 bg-gradient-to-br from-electric-500 to-jade-500 rounded-full flex items-center justify-center shadow-lg">
+                  <span className="text-3xl font-bold text-white">BC</span>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold text-text-primary">
+                    BoxCall High School
+                  </h3>
+                  <p className="text-text-secondary">
+                    Varsity Football Team • Est. 2024 • 3x Conference Champions
+                  </p>
+                  <div className="flex gap-4 mt-2 text-sm text-text-muted">
+                    <span>📍 Springfield, IL</span>
+                    <span>👔 Coach Johnson</span>
+                    <span>🏆 89-23 Record</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <FollowButton
+                  followingType="team"
+                  followingId={demoTeamId}
+                  variant="button"
+                  size="lg"
+                />
+                <Button variant="outline" size="lg">Join Team</Button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="text-center p-4 bg-surface-success/10 rounded-lg">
+                <div className="text-2xl font-bold text-text-success">24</div>
+                <div className="text-sm text-text-secondary">Active Players</div>
+              </div>
+              <div className="text-center p-4 bg-surface-info/10 rounded-lg">
+                <div className="text-2xl font-bold text-text-info">156</div>
+                <div className="text-sm text-text-secondary">Total Followers</div>
+              </div>
+              <div className="text-center p-4 bg-surface-warning/10 rounded-lg">
+                <div className="text-2xl font-bold text-text-warning">89</div>
+                <div className="text-sm text-text-secondary">Plays Created</div>
+              </div>
+              <div className="text-center p-4 bg-surface-error/10 rounded-lg">
+                <div className="text-2xl font-bold text-text-error">12</div>
+                <div className="text-sm text-text-secondary">Wins This Season</div>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <Button variant="primary">View Roster</Button>
+              <Button variant="outline">Team Settings</Button>
+              <Button variant="ghost">Export Stats</Button>
+            </div>
+          </Card>
+
+          {/* Team Members Spotlight */}
+          <Card variant="glass" className="p-6">
+            <h3 className="text-xl font-semibold text-text-primary mb-4">
+              🌟 Team Spotlight
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                { name: "Jake Thompson", role: "QB", stat: "2,847 pass yards", avatar: "JT" },
+                { name: "Marcus Johnson", role: "RB", stat: "1,456 rush yards", avatar: "MJ" },
+                { name: "Tyler Davis", role: "WR", stat: "89 receptions", avatar: "TD" }
+              ].map((player) => (
+                <Card key={player.name} variant="outlined" className="p-4 text-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-jade-500 to-electric-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-white font-bold">{player.avatar}</span>
+                  </div>
+                  <h4 className="font-semibold text-text-primary">{player.name}</h4>
+                  <p className="text-sm text-text-secondary mb-2">{player.role}</p>
+                  <p className="text-xs text-text-muted">{player.stat}</p>
+                  <div className="mt-3">
+                    <FollowButton
+                      followingType="user"
+                      followingId={`${player.name.toLowerCase().replace(' ', '-')}`}
+                      variant="button"
+                      size="sm"
+                    />
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </Card>
+
+          {/* Team Activity */}
+          <Card variant="elevated" className="p-6">
+            <h3 className="text-xl font-semibold text-text-primary mb-4">
+              📊 Team Activity
+            </h3>
+            <div className="space-y-4">
+              {[
+                { action: "New play added", user: "Coach Johnson", time: "2 hours ago", type: "play" },
+                { action: "Practice plan updated", user: "Coach Smith", time: "4 hours ago", type: "practice" },
+                { action: "Game stats recorded", user: "Coach Johnson", time: "1 day ago", type: "game" },
+                { action: "Team photo uploaded", user: "Jake Thompson", time: "2 days ago", type: "media" }
+              ].map((activity, index) => (
+                <div key={index} className="flex items-center gap-4 p-3 bg-surface-secondary/50 rounded-lg">
+                  <div className="w-8 h-8 bg-electric-500/20 rounded-full flex items-center justify-center">
+                    {activity.type === 'play' && '🏈'}
+                    {activity.type === 'practice' && '📋'}
+                    {activity.type === 'game' && '🏆'}
+                    {activity.type === 'media' && '📸'}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-text-primary">
+                      <span className="font-medium">{activity.user}</span> {activity.action}
+                    </p>
+                    <p className="text-xs text-text-muted">{activity.time}</p>
+                  </div>
+                  <Button variant="ghost" size="sm">View</Button>
+                </div>
+              ))}
+            </div>
+          </Card>
         </div>
+      )}
 
-        <div className="flex items-center gap-4 text-sm text-text-muted">
-          <span>Formation: Shotgun</span>
-          <span>Personnel: 11 Personnel</span>
-          <span>Play Type: Run</span>
-        </div>
-      </div>
-
-      {/* Comments Section */}
-      <div className="bg-surface-primary border border-border rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-text-primary mb-4">
-          Discussion
-        </h3>
-        <CommentSection
-          contentType="play"
-          contentId={demoPlayId}
-          maxDepth={3}
-          showReactions={true}
-        />
-      </div>
-
-      {/* Team Profile Card */}
-      <div className="bg-surface-primary border border-border rounded-lg p-6">
+      {/* Demo Controls */}
+      <Card variant="glass" className="p-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-surface-info rounded-full flex items-center justify-center">
-              <span className="text-2xl font-bold text-text-info">BC</span>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold text-text-primary">
-                BoxCall High School
-              </h3>
-              <p className="text-text-secondary">
-                Varsity Football Team • Est. 2024
-              </p>
-            </div>
-          </div>
-          <FollowButton
-            followingType="team"
-            followingId={demoTeamId}
-            variant="button"
-            size="lg"
-          />
-        </div>
-
-        <div className="mt-4 grid grid-cols-3 gap-4 text-center">
           <div>
-            <div className="text-2xl font-bold text-text-primary">24</div>
-            <div className="text-sm text-text-secondary">Players</div>
+            <h4 className="font-semibold text-text-primary">Demo Controls</h4>
+            <p className="text-sm text-text-secondary">Try all the interactive features above!</p>
           </div>
-          <div>
-            <div className="text-2xl font-bold text-text-primary">156</div>
-            <div className="text-sm text-text-secondary">Followers</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-text-primary">89</div>
-            <div className="text-sm text-text-secondary">Plays</div>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
+              🔄 Reset Demo
+            </Button>
+            <Button variant="primary" size="sm">
+              🚀 Start Using BoxCall
+            </Button>
           </div>
         </div>
-      </div>
-
-      {/* User Profile Card */}
-      <div className="bg-surface-primary border border-border rounded-lg p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-surface-success rounded-full flex items-center justify-center">
-              <span className="text-lg font-bold text-text-success">JD</span>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-text-primary">
-                John Doe
-              </h3>
-              <p className="text-text-secondary">
-                Head Coach • BoxCall High School
-              </p>
-            </div>
-          </div>
-          <FollowButton
-            followingType="user"
-            followingId={demoUserId}
-            variant="button"
-            size="md"
-          />
-        </div>
-
-        <div className="mt-4 flex gap-4 text-sm text-text-secondary">
-          <span>42 followers</span>
-          <span>156 plays created</span>
-          <span>23 game plans</span>
-        </div>
-      </div>
-
-      {/* Activity Feed */}
-      <div className="bg-surface-primary border border-border rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-text-primary mb-4">
-          Recent Activity
-        </h3>
-        <ActivityFeed limit={10} />
-      </div>
-
-      {/* Feature Overview */}
-      <div className="bg-gradient-to-r from-surface-info to-surface-secondary border border-text-info rounded-lg p-6">
-        <h3 className="text-xl font-semibold text-text-primary mb-4">
-          ✨ New Social Features
-        </h3>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div>
-            <h4 className="font-semibold text-text-primary mb-2">Reactions</h4>
-            <p className="text-text-secondary text-sm">
-              Express yourself with likes, loves, laughs, and more on plays,
-              comments, and content.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold text-text-primary mb-2">
-              Follow System
-            </h4>
-            <p className="text-text-secondary text-sm">
-              Follow your favorite teams, coaches, and players to stay updated
-              on their activity.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold text-text-primary mb-2">
-              Comments & Discussion
-            </h4>
-            <p className="text-text-secondary text-sm">
-              Engage in meaningful discussions with threaded comments and
-              replies.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold text-text-primary mb-2">@Mentions</h4>
-            <p className="text-text-secondary text-sm">
-              Tag other users in comments to notify them and create engaging
-              conversations.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold text-text-primary mb-2">
-              Notifications
-            </h4>
-            <p className="text-text-secondary text-sm">
-              Stay informed with real-time notifications for reactions, follows,
-              mentions, and more.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold text-text-primary mb-2">
-              Activity Feed
-            </h4>
-            <p className="text-text-secondary text-sm">
-              Stay connected with a personalized feed of social activity from
-              people you follow.
-            </p>
-          </div>
-        </div>
-      </div>
+      </Card>
     </div>
   );
-};
+}
 
 export default SocialFeaturesDemo;

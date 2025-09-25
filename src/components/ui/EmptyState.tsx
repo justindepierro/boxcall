@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "./Button/Button";
 import { Icon } from "./Icon";
+import type { IconName } from "./Icon";
 import { Typography } from "../design-system/Typography";
 
 /**
@@ -12,7 +13,7 @@ import { Typography } from "../design-system/Typography";
 
 export interface EmptyStateProps {
   /** Icon to display (from Lucide React) */
-  icon?: string;
+  icon?: IconName;
   /** Main heading text */
   title: string;
   /** Descriptive text */
@@ -21,13 +22,13 @@ export interface EmptyStateProps {
   primaryAction?: {
     label: string;
     onClick: () => void;
-    icon?: string;
+    icon?: IconName;
   };
   /** Secondary action button */
   secondaryAction?: {
     label: string;
     onClick: () => void;
-    icon?: string;
+    icon?: IconName;
   };
   /** Size variant */
   size?: "sm" | "md" | "lg";

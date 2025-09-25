@@ -53,6 +53,11 @@ export const LazyDesignSystemShowcase = lazyRoute(
   "Design System"
 );
 
+export const LazySocialFeaturesDemo = lazyRoute(
+  () => import("../../pages/SocialFeaturesDemo"),
+  "Social Features Demo"
+);
+
 export const LazyTeamBulletin = lazyRoute(
   () => import("../../pages/TeamBulletin"),
   "Team Bulletin"

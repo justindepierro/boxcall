@@ -34,6 +34,7 @@ import {
   LazyContactPage,
   LazyCollaborativeDemoPage,
   LazyDesignSystemShowcase,
+  LazySocialFeaturesDemo,
   LazyCalendarShellPage,
   LazyPlannerPage,
   RouteLoadingSpinner,
@@ -401,6 +402,16 @@ export const DataRouterApp: React.FC = () => {
                 element: (
                   <Suspense fallback={<RouteLoadingSpinner />}>
                     <LazyDesignSystemShowcase />
+                  </Suspense>
+                ),
+              },
+              // Social Features Demo (dev/demo feature)
+              {
+                path: ROUTES.SOCIAL_FEATURES_DEMO,
+                loader: requireAuthenticatedLoader,
+                element: (
+                  <Suspense fallback={<RouteLoadingSpinner />}>
+                    <LazySocialFeaturesDemo />
                   </Suspense>
                 ),
               },

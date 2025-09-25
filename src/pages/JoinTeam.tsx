@@ -220,7 +220,7 @@ export const JoinTeam: React.FC = () => {
                   className={`p-6 h-auto w-full justify-start text-left rounded-lg ${
                     method.primary
                       ? ""
-                      : "border-subtle dark:border-gray-700 bg-transparent"
+                      : "border-subtle dark:border-text-tertiary bg-surface-primary"
                   }`}
                 >
                   <div className="flex items-start gap-4">
@@ -360,7 +360,7 @@ export const JoinTeam: React.FC = () => {
                   {searchResults.map((team) => (
                     <div
                       key={team.id}
-                      className="border border-subtle dark:border-gray-700 rounded-lg p-6"
+                      className="border border-subtle dark:border-text-tertiary rounded-lg p-6"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -450,10 +450,10 @@ export const JoinTeam: React.FC = () => {
               request is approved.
             </Typography>
 
-            <div className="surface-subtle dark:bg-blue-900/20 border border-subtle dark:border-blue-800 rounded-lg p-4 mb-6">
+            <div className="surface-subtle dark:bg-surface-info/20 border border-subtle dark:border-text-info rounded-lg p-4 mb-6">
               <Typography
                 variant="body-sm"
-                className="text-blue-700 dark:text-blue-300"
+                className="text-text-info"
               >
                 <strong>What's next?</strong>
                 <br />
@@ -584,7 +584,7 @@ export const JoinTeam: React.FC = () => {
               <Button type="button" variant="brandLink" size="sm" className="">
                 Contact Support
               </Button>
-              <span className="text-gray-300">•</span>
+              <span className="text-border-light">•</span>
               <Button
                 type="button"
                 variant="link"

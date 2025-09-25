@@ -32,18 +32,18 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
   const totalCount = challenges.length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay-modal">
       <div className="bg-surface-primary rounded-xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-purple-700 p-6 text-text-inverse">
+        <div className="bg-gradient-primary p-6 text-text-inverse">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Icon name="trophy" size="lg" className="text-yellow-300" />
+              <Icon name="trophy" size="lg" className="text-text-warning" />
               <div>
                 <Typography variant="headline-md" className="text-text-inverse">
                   Weekly Challenges
                 </Typography>
-                <p className="text-purple-100 text-sm">
+                <p className="text-text-secondary text-sm">
                   Complete challenges to earn rewards!
                 </p>
               </div>
@@ -60,15 +60,15 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
 
           {/* Progress Bar */}
           <div className="mt-4">
-            <div className="flex justify-between text-sm text-purple-100 mb-2">
+            <div className="flex justify-between text-sm text-text-secondary mb-2">
               <span>Progress</span>
               <span>
                 {completedCount}/{totalCount} completed
               </span>
             </div>
-            <div className="w-full bg-purple-800 rounded-full h-2">
+            <div className="w-full bg-surface-secondary rounded-full h-2">
               <div
-                className="bg-yellow-300 h-2 rounded-full transition-all duration-300"
+                className="bg-accent-primary h-2 rounded-full transition-all duration-300"
                 style={{ width: `${(completedCount / totalCount) * 100}%` }}
               />
             </div>
@@ -83,8 +83,8 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
                 key={challenge.id}
                 className={`p-4 rounded-lg border-2 transition-all ${
                   challenge.completed
-                    ? "bg-green-50 border-green-200"
-                    : "bg-gray-50 border-gray-200"
+                    ? "bg-surface-success border-border-success"
+                    : "bg-surface-secondary border-border-medium"
                 }`}
               >
                 <div className="flex items-start justify-between">
@@ -117,12 +117,12 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
 
                     {/* Progress */}
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
+                      <div className="flex-1 bg-surface-tertiary rounded-full h-2">
                         <div
                           className={`h-2 rounded-full transition-all duration-300 ${
                             challenge.completed
-                              ? "bg-green-500"
-                              : "bg-purple-500"
+                              ? "bg-text-success"
+                              : "bg-accent-primary"
                           }`}
                           style={{
                             width: `${Math.min((challenge.progress / challenge.target) * 100, 100)}%`,
@@ -139,7 +139,7 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
                       <Icon
                         name="trophy"
                         size="xs"
-                        className="text-yellow-500"
+                        className="text-text-warning"
                       />
                       <span className="text-xs text-text-secondary">
                         Reward: {challenge.reward}

@@ -81,7 +81,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-overlay-modal flex items-center justify-center z-50 p-4">
       <div className="bg-surface-primary rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="p-6">
@@ -106,8 +106,8 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
         <div className="p-6 overflow-y-auto max-h-[60vh]">
           {step === "upload" && (
             <div className="text-center py-12">
-              <div className="mx-auto w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mb-6">
-                <Icon name="upload" className="h-12 w-12 text-blue-600" />
+              <div className="mx-auto w-24 h-24 bg-surface-info rounded-full flex items-center justify-center mb-6">
+                <Icon name="upload" className="h-12 w-12 text-text-info" />
               </div>
               <Typography variant="headline-md" className="mb-4">
                 Upload Roster CSV
@@ -175,20 +175,20 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
 
               {/* Errors and Warnings */}
               {errors.length > 0 && (
-                <Card className="border-red-200 bg-red-50">
+                <Card className="border-border-error bg-surface-error">
                   <div className="flex items-start space-x-3">
                     <Icon
                       name="alert"
-                      className="h-5 w-5 text-red-600 mt-0.5"
+                      className="h-5 w-5 text-text-error mt-0.5"
                     />
                     <div>
                       <Typography
                         variant="body-sm"
-                        className="text-red-800 font-medium"
+                        className="text-text-error font-medium"
                       >
                         Import Errors ({errors.length})
                       </Typography>
-                      <ul className="mt-2 text-sm text-red-700 space-y-1">
+                      <ul className="mt-2 text-sm text-text-error-hover space-y-1">
                         {errors.map((error, index) => (
                           <li key={index}>• {error}</li>
                         ))}
@@ -199,20 +199,20 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
               )}
 
               {warnings.length > 0 && (
-                <Card className="border-yellow-200 bg-yellow-50">
+                <Card className="border-border-warning bg-surface-warning">
                   <div className="flex items-start space-x-3">
                     <Icon
                       name="alert"
-                      className="h-5 w-5 text-yellow-600 mt-0.5"
+                      className="h-5 w-5 text-text-warning mt-0.5"
                     />
                     <div>
                       <Typography
                         variant="body-sm"
-                        className="text-yellow-800 font-medium"
+                        className="text-text-warning-hover font-medium"
                       >
                         Warnings ({warnings.length})
                       </Typography>
-                      <ul className="mt-2 text-sm text-yellow-700 space-y-1">
+                      <ul className="mt-2 text-sm text-text-warning-hover space-y-1">
                         {warnings.map((warning, index) => (
                           <li key={index}>• {warning}</li>
                         ))}
@@ -225,7 +225,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
               {/* Preview Table */}
               <div className="border border-border rounded-lg overflow-hidden">
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
+                  <table className="min-w-full divide-y divide-border">
                     <thead className="bg-surface-secondary">
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
@@ -248,7 +248,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-surface-primary divide-y divide-gray-200">
+                    <tbody className="bg-surface-primary divide-y divide-border">
                       {csvData.slice(0, 10).map((player, index) => (
                         <tr key={index}>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary">
@@ -290,7 +290,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
 
           {step === "importing" && (
             <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-text-info mx-auto mb-4"></div>
               <Typography variant="headline-md" className="mb-2">
                 Importing Roster...
               </Typography>

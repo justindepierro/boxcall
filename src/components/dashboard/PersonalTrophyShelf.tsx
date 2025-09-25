@@ -138,11 +138,11 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
     return (
       <Card
         variant="glass"
-        className="compact-card surface-card bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-subtle dark:border-red-800"
+        className="compact-card surface-card bg-surface-error border-subtle dark:border-text-error"
       >
         <Typography
           variant="headline-md"
-          className="text-red-600 dark:text-red-400 text-center"
+          className="text-text-error text-center"
         >
           Failed to load achievements
         </Typography>
@@ -157,7 +157,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Icon name="trophy" size="sm" className="text-yellow-600" />
+          <Icon name="trophy" size="sm" className="text-text-warning" />
           <Typography variant="headline-md" className="text-text-primary">
             Trophy Shelf
           </Typography>
@@ -185,11 +185,11 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
         <div className="flex flex-col gap-2 w-20">
           <div className="text-center p-2 surface-card/50 dark:surface-card/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
-              <Icon name="zap" size="sm" className="text-orange-500" />
+              <Icon name="zap" size="sm" className="text-text-warning" />
             </div>
             <Typography
               variant="body-sm"
-              className="font-bold text-orange-500 text-center"
+              className="font-bold text-text-warning text-center"
             >
               {weeklyStreak}
             </Typography>
@@ -221,11 +221,11 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
           </div>
           <div className="text-center p-2 surface-card/50 dark:surface-card/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
-              <Icon name="award" size="sm" className="text-blue-600" />
+              <Icon name="award" size="sm" className="text-text-info" />
             </div>
             <Typography
               variant="body-sm"
-              className="font-bold text-blue-600 text-center"
+              className="font-bold text-text-info text-center"
             >
               {boxcallMedals.filter((m) => m.earned).length}
             </Typography>
@@ -239,11 +239,11 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
           </div>
           <div className="text-center p-2 surface-card/50 dark:surface-card/30 rounded-lg">
             <div className="flex items-center justify-center mb-1">
-              <Icon name="target" size="sm" className="text-purple-600" />
+              <Icon name="target" size="sm" className="text-text-primary" />
             </div>
             <Typography
               variant="body-sm"
-              className="font-bold text-purple-600 text-center"
+              className="font-bold text-text-primary text-center"
             >
               {boxcallMedals.length}
             </Typography>
@@ -266,7 +266,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
                 allAchievements.map((achievement) => (
                   <div
                     key={`${achievement.type}-${achievement.id}`}
-                    className="flex items-center space-x-3 py-2 px-3 h-10 mb-1 surface-card/60 dark:surface-card/40 rounded-lg border border-subtle dark:border-gray-600/30"
+                    className="flex items-center space-x-3 py-2 px-3 h-10 mb-1 surface-card/60 dark:surface-card/40 rounded-lg border border-subtle dark:border-text-tertiary/30"
                   >
                     <div
                       className={`flex-shrink-0 w-4 h-4 flex items-center justify-center ${achievement.earned ? "" : "grayscale opacity-50"}`}

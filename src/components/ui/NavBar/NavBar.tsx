@@ -56,7 +56,7 @@ const getNavItemStyles = (item: NavBarItem) => {
 const getBadgeStyles = () => {
   return `
     absolute -top-1 -right-1 px-1.5 py-0.5 text-xs font-medium rounded-full
-    bg-jade-600 dark:bg-jade-600 text-white
+    bg-text-primary text-surface-primary
   `;
 };
 const NavBarItemComponent: React.FC<{
@@ -145,7 +145,7 @@ const NavBarItemComponent: React.FC<{
         <div
           className={`
           ${isMobile ? "ml-4 mt-1" : "absolute left-0 mt-2 w-48"}
-          surface-card border border-subtle dark:border-gray-700 rounded-md shadow-lg z-50
+          surface-card border border-subtle dark:border-text-tertiary rounded-md shadow-lg z-50
         `}
         >
           {item.children?.map((childItem, index) => (
@@ -155,8 +155,8 @@ const NavBarItemComponent: React.FC<{
                 block px-4 py-2 text-sm cursor-pointer
                 ${
                   childItem.disabled
-                    ? "text-gray-400 dark:text-gray-500"
-                    : "text-gray-700 dark:text-gray-300 surface-subtle-hover dark:hover:bg-gray-700 dark:hover:text-text-inverse"
+                    ? "text-text-secondary"
+                    : "text-text-primary surface-subtle-hover dark:hover:bg-text-tertiary dark:hover:text-surface-primary"
                 }
               `}
               onClick={() => {
@@ -269,7 +269,7 @@ export const NavBar: React.FC<NavBarProps> = ({
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-subtle dark:border-gray-700">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-subtle dark:border-text-tertiary">
               {items.map((item) => (
                 <NavBarItemComponent
                   key={`mobile-${item.id}`}
@@ -279,7 +279,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                 />
               ))}
               {/* Mobile Actions */}
-              <div className="pt-4 border-t border-subtle dark:border-gray-700">
+              <div className="pt-4 border-t border-subtle dark:border-text-tertiary">
                 {mergedActions}
               </div>
             </div>

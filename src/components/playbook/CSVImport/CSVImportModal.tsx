@@ -543,7 +543,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                                 </span>
                               </div>
                               <div>
-                                <span className="font-medium text-slate-600">
+                                <span className="font-medium text-text-secondary">
                                   Notes:
                                 </span>
                                 <span className="ml-1">
@@ -737,11 +737,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           <Typography
             variant="body-sm"
             as="h4"
-            className="font-medium text-amber-900 mb-2 tracking-tight"
+            className="font-medium text-text-warning mb-2 tracking-tight"
           >
             Import Warnings:
           </Typography>
-          <ul className="text-sm text-amber-800 list-disc list-inside space-y-1">
+          <ul className="text-sm text-text-warning list-disc list-inside space-y-1">
             {importResult.warnings
               .slice(0, 5)
               .map((warning: string, index: number) => (
@@ -759,11 +759,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           <Typography
             variant="body-sm"
             as="h4"
-            className="font-medium text-red-900 mb-2 tracking-tight"
+            className="font-medium text-text-error mb-2 tracking-tight"
           >
             Import Errors:
           </Typography>
-          <ul className="text-sm text-red-800 list-disc list-inside space-y-1">
+          <ul className="text-sm text-text-error list-disc list-inside space-y-1">
             {importResult.errors
               .slice(0, 5)
               .map((error: string, index: number) => (
@@ -807,7 +807,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     >
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div
-          className="fixed inset-0 bg-slate-900 bg-opacity-50 transition-opacity"
+          className="fixed inset-0 bg-text-primary bg-opacity-50 transition-opacity"
           onClick={onClose}
         />
         <div className="inline-block align-bottom surface-card elevation-modal rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
@@ -815,7 +815,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <Typography
               variant="headline-sm"
               as="h2"
-              className="text-slate-900"
+              className="text-text-primary"
             >
               CSV Import
             </Typography>

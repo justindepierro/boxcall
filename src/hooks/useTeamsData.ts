@@ -24,10 +24,22 @@ interface Playbook {
   updated_at: string;
 }
 
+// Database play type (raw from Supabase)
+interface DatabasePlay {
+  id: string;
+  playbook_id: string;
+  formation: string;
+  play_name: string;
+  p_type: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export function useTeamsData() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [playbooks, setPlaybooks] = useState<Playbook[]>([]);
-  const [plays, setPlays] = useState<Play[]>([]);
+  const [plays, setPlays] = useState<DatabasePlay[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -104,18 +116,17 @@ export function useTeamsData() {
         }
 
         setPlays(playsData);
+
+        setLoading(false);
       } catch (err) {
-        console.error("Unexpected error fetching data:", err);
-        setError(
-          `Unexpected error: ${err instanceof Error ? err.message : String(err)}`
-        );
-      } finally {
+        console.error("Unexpected error in fetchData:", err);
+        setError("An unexpected error occurred while fetching data");
         setLoading(false);
       }
     }
 
     fetchData();
-  }, [refreshTrigger]); // DEMO MODE: Remove user dependency to fetch data without auth, add refreshTrigger
+  }, [refreshTrigger]);
 
   return {
     teams,
@@ -123,7 +134,6 @@ export function useTeamsData() {
     plays,
     loading,
     error,
-    totalCount: teams.length + playbooks.length + plays.length,
-    refreshData, // Add refresh function to return value
+    refreshData,
   };
 }

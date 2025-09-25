@@ -78,12 +78,12 @@ const CommentItem: React.FC<CommentItemProps> = ({
 
   return (
     <div
-      className={`${depth > 0 ? "ml-8 border-l-2 border-gray-200 pl-4" : ""}`}
+      className={`${depth > 0 ? "ml-8 border-l-2 border-border-medium pl-4" : ""}`}
     >
       <div className="flex gap-3">
         {/* Avatar */}
         <div className="flex-shrink-0">
-          <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 bg-surface-secondary rounded-full flex items-center justify-center">
             {comment.user?.avatar_url ? (
               <img
                 src={comment.user.avatar_url}
@@ -117,7 +117,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               <textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full px-3 py-2 border border-border-medium rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-border-medium rounded-lg resize-none focus:ring-2 focus:ring-focus-info focus:border-border-info"
                 rows={3}
                 maxLength={1000}
               />
@@ -125,7 +125,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 <button
                   onClick={handleEdit}
                   disabled={isSubmitting || !editContent.trim()}
-                  className="px-3 py-1 bg-blue-600 text-text-inverse text-sm rounded hover:bg-blue-700 disabled:opacity-50"
+                  className="px-3 py-1 bg-surface-info text-text-inverse text-sm rounded hover:bg-surface-info-hover disabled:opacity-50"
                 >
                   {isSubmitting ? "Saving..." : "Save"}
                 </button>
@@ -134,7 +134,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                     setIsEditing(false);
                     setEditContent(comment.content);
                   }}
-                  className="px-3 py-1 text-text-secondary text-sm hover:text-gray-800"
+                  className="px-3 py-1 text-text-secondary text-sm hover:text-text-primary"
                 >
                   Cancel
                 </button>
@@ -193,7 +193,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                     {canDelete && (
                       <button
                         onClick={handleDelete}
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
+                        className="flex items-center gap-2 px-3 py-2 text-sm text-text-error hover:bg-surface-error-hover w-full text-left"
                       >
                         <Trash2 className="w-4 h-4" />
                         Delete
@@ -301,7 +301,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
       <div className="bg-surface-primary border border-border rounded-lg p-4">
         <div className="flex gap-3">
           <div className="flex-shrink-0">
-            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-surface-secondary rounded-full flex items-center justify-center">
               <span className="text-sm font-medium text-text-secondary">U</span>
             </div>
           </div>
@@ -348,7 +348,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
                       setNewComment("");
                       setReplyTo(null);
                     }}
-                    className="px-3 py-1 text-text-secondary text-sm hover:text-gray-800"
+                    className="px-3 py-1 text-text-secondary text-sm hover:text-text-primary"
                   >
                     Cancel
                   </button>
@@ -357,7 +357,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
                 <button
                   onClick={handleSubmitComment}
                   disabled={isSubmitting || !newComment.trim()}
-                  className="flex items-center gap-2 px-3 py-1 bg-blue-600 text-text-inverse text-sm rounded hover:bg-blue-700 disabled:opacity-50"
+                  className="flex items-center gap-2 px-3 py-1 bg-surface-info text-text-inverse text-sm rounded hover:bg-surface-info-hover disabled:opacity-50"
                 >
                   <Send className="w-4 h-4" />
                   {isSubmitting ? "Posting..." : replyTo ? "Reply" : "Comment"}
@@ -374,17 +374,17 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
               <div key={i} className="flex gap-3">
-                <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse" />
+                <div className="w-8 h-8 bg-surface-tertiary rounded-full animate-pulse" />
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-gray-200 rounded animate-pulse w-1/4" />
-                  <div className="h-16 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-4 bg-surface-tertiary rounded animate-pulse w-1/4" />
+                  <div className="h-16 bg-surface-tertiary rounded animate-pulse" />
                 </div>
               </div>
             ))}
           </div>
         ) : comments.length === 0 ? (
           <div className="text-center py-8 text-text-muted">
-            <MessageCircle className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+            <MessageCircle className="w-12 h-12 mx-auto mb-3 text-text-muted" />
             <p>No comments yet. Be the first to share your thoughts!</p>
           </div>
         ) : (
