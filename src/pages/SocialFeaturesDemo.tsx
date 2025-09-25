@@ -18,7 +18,9 @@ const SocialFeaturesDemo: React.FC = () => {
   const demoTeamId = "demo-team-456";
   const demoUserId = "demo-user-789";
 
-  const [activeTab, setActiveTab] = useState<'feed' | 'interactions' | 'team'>('feed');
+  const [activeTab, setActiveTab] = useState<"feed" | "interactions" | "team">(
+    "feed"
+  );
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
@@ -36,13 +38,13 @@ const SocialFeaturesDemo: React.FC = () => {
         {/* Tab Navigation */}
         <div className="flex justify-center gap-2 mb-8">
           {[
-            { key: 'feed', label: 'Activity Feed', icon: '📱' },
-            { key: 'interactions', label: 'Interactions', icon: '👍' },
-            { key: 'team', label: 'Team Hub', icon: '👥' }
+            { key: "feed", label: "Activity Feed", icon: "📱" },
+            { key: "interactions", label: "Interactions", icon: "👍" },
+            { key: "team", label: "Team Hub", icon: "👥" },
           ].map(({ key, label, icon }) => (
             <Button
               key={key}
-              variant={activeTab === key ? 'primary' : 'outline'}
+              variant={activeTab === key ? "primary" : "outline"}
               size="sm"
               onClick={() => setActiveTab(key as any)}
             >
@@ -52,7 +54,7 @@ const SocialFeaturesDemo: React.FC = () => {
         </div>
       </div>
 
-      {activeTab === 'feed' && (
+      {activeTab === "feed" && (
         <div className="space-y-6">
           {/* Activity Feed */}
           <Card variant="elevated" className="p-6">
@@ -72,7 +74,9 @@ const SocialFeaturesDemo: React.FC = () => {
             <Card variant="glass" className="p-4 text-center">
               <div className="text-2xl mb-2">💬</div>
               <div className="text-xl font-bold text-text-primary">156</div>
-              <div className="text-sm text-text-secondary">Comments This Week</div>
+              <div className="text-sm text-text-secondary">
+                Comments This Week
+              </div>
             </Card>
             <Card variant="glass" className="p-4 text-center">
               <div className="text-2xl mb-2">❤️</div>
@@ -83,7 +87,7 @@ const SocialFeaturesDemo: React.FC = () => {
         </div>
       )}
 
-      {activeTab === 'interactions' && (
+      {activeTab === "interactions" && (
         <div className="space-y-6">
           {/* Interactive Play Card */}
           <Card variant="elevated" className="p-6">
@@ -98,7 +102,8 @@ const SocialFeaturesDemo: React.FC = () => {
                   Triple Option Play
                 </h2>
                 <p className="text-text-secondary mt-1">
-                  A classic triple option with multiple read options for the QB. Perfect for keeping defenses honest.
+                  A classic triple option with multiple read options for the QB.
+                  Perfect for keeping defenses honest.
                 </p>
               </div>
               <div className="flex items-center gap-3 ml-4">
@@ -109,7 +114,9 @@ const SocialFeaturesDemo: React.FC = () => {
                   variant="button"
                 />
                 <Tooltip content="Save to favorites">
-                  <Button variant="ghost" size="sm">⭐</Button>
+                  <Button variant="ghost" size="sm">
+                    ⭐
+                  </Button>
                 </Tooltip>
               </div>
             </div>
@@ -117,19 +124,39 @@ const SocialFeaturesDemo: React.FC = () => {
             {/* Play visualization placeholder */}
             <div className="bg-gradient-to-br from-surface-muted to-surface-secondary rounded-lg h-48 flex items-center justify-center mb-4 relative overflow-hidden">
               <div className="absolute inset-0 opacity-10">
-                <svg width="100%" height="100%" viewBox="0 0 100 100" className="text-electric-500">
+                <svg
+                  width="100%"
+                  height="100%"
+                  viewBox="0 0 100 100"
+                  className="text-electric-500"
+                >
                   <defs>
-                    <pattern id="play-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                      <path d="M10 2 L18 10 L10 18 L2 10 Z" fill="currentColor" opacity="0.3"/>
+                    <pattern
+                      id="play-pattern"
+                      x="0"
+                      y="0"
+                      width="20"
+                      height="20"
+                      patternUnits="userSpaceOnUse"
+                    >
+                      <path
+                        d="M10 2 L18 10 L10 18 L2 10 Z"
+                        fill="currentColor"
+                        opacity="0.3"
+                      />
                     </pattern>
                   </defs>
-                  <rect width="100%" height="100%" fill="url(#play-pattern)"/>
+                  <rect width="100%" height="100%" fill="url(#play-pattern)" />
                 </svg>
               </div>
               <div className="text-center z-10">
                 <div className="text-4xl mb-2">🏈</div>
-                <span className="text-text-muted font-medium">Interactive Play Diagram</span>
-                <p className="text-xs text-text-muted mt-1">Click and drag to explore formations</p>
+                <span className="text-text-muted font-medium">
+                  Interactive Play Diagram
+                </span>
+                <p className="text-xs text-text-muted mt-1">
+                  Click and drag to explore formations
+                </p>
               </div>
             </div>
 
@@ -140,8 +167,12 @@ const SocialFeaturesDemo: React.FC = () => {
                 <span>⭐ 4.8 Average Rating</span>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm">View Details</Button>
-                <Button variant="primary" size="sm">Use in Practice</Button>
+                <Button variant="outline" size="sm">
+                  View Details
+                </Button>
+                <Button variant="primary" size="sm">
+                  Use in Practice
+                </Button>
               </div>
             </div>
           </Card>
@@ -162,25 +193,37 @@ const SocialFeaturesDemo: React.FC = () => {
 
           {/* Quick Actions */}
           <Card variant="outlined" className="p-4">
-            <h4 className="font-semibold text-text-primary mb-3">Quick Actions</h4>
+            <h4 className="font-semibold text-text-primary mb-3">
+              Quick Actions
+            </h4>
             <div className="flex flex-wrap gap-3">
-              <Button variant="success" size="sm">👍 Like This Play</Button>
-              <Button variant="outline" size="sm">📤 Share with Team</Button>
-              <Button variant="warning" size="sm">📝 Add to Practice Plan</Button>
-              <Button variant="secondary" size="sm">📊 View Analytics</Button>
+              <Button variant="success" size="sm">
+                👍 Like This Play
+              </Button>
+              <Button variant="outline" size="sm">
+                📤 Share with Team
+              </Button>
+              <Button variant="warning" size="sm">
+                📝 Add to Practice Plan
+              </Button>
+              <Button variant="secondary" size="sm">
+                📊 View Analytics
+              </Button>
             </div>
           </Card>
         </div>
       )}
 
-      {activeTab === 'team' && (
+      {activeTab === "team" && (
         <div className="space-y-6">
           {/* Team Profile Card */}
           <Card variant="elevated" className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
                 <div className="w-20 h-20 bg-gradient-to-br from-electric-500 to-jade-500 rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-3xl font-bold text-text-inverse">BC</span>
+                  <span className="text-3xl font-bold text-text-inverse">
+                    BC
+                  </span>
                 </div>
                 <div>
                   <h3 className="text-2xl font-semibold text-text-primary">
@@ -203,18 +246,24 @@ const SocialFeaturesDemo: React.FC = () => {
                   variant="button"
                   size="lg"
                 />
-                <Button variant="outline" size="lg">Join Team</Button>
+                <Button variant="outline" size="lg">
+                  Join Team
+                </Button>
               </div>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className="text-center p-4 bg-surface-success/10 rounded-lg">
                 <div className="text-2xl font-bold text-text-success">24</div>
-                <div className="text-sm text-text-secondary">Active Players</div>
+                <div className="text-sm text-text-secondary">
+                  Active Players
+                </div>
               </div>
               <div className="text-center p-4 bg-surface-info/10 rounded-lg">
                 <div className="text-2xl font-bold text-text-info">156</div>
-                <div className="text-sm text-text-secondary">Total Followers</div>
+                <div className="text-sm text-text-secondary">
+                  Total Followers
+                </div>
               </div>
               <div className="text-center p-4 bg-surface-warning/10 rounded-lg">
                 <div className="text-2xl font-bold text-text-warning">89</div>
@@ -222,7 +271,9 @@ const SocialFeaturesDemo: React.FC = () => {
               </div>
               <div className="text-center p-4 bg-surface-error/10 rounded-lg">
                 <div className="text-2xl font-bold text-text-error">12</div>
-                <div className="text-sm text-text-secondary">Wins This Season</div>
+                <div className="text-sm text-text-secondary">
+                  Wins This Season
+                </div>
               </div>
             </div>
 
@@ -240,21 +291,46 @@ const SocialFeaturesDemo: React.FC = () => {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
-                { name: "Jake Thompson", role: "QB", stat: "2,847 pass yards", avatar: "JT" },
-                { name: "Marcus Johnson", role: "RB", stat: "1,456 rush yards", avatar: "MJ" },
-                { name: "Tyler Davis", role: "WR", stat: "89 receptions", avatar: "TD" }
+                {
+                  name: "Jake Thompson",
+                  role: "QB",
+                  stat: "2,847 pass yards",
+                  avatar: "JT",
+                },
+                {
+                  name: "Marcus Johnson",
+                  role: "RB",
+                  stat: "1,456 rush yards",
+                  avatar: "MJ",
+                },
+                {
+                  name: "Tyler Davis",
+                  role: "WR",
+                  stat: "89 receptions",
+                  avatar: "TD",
+                },
               ].map((player) => (
-                <Card key={player.name} variant="outlined" className="p-4 text-center">
+                <Card
+                  key={player.name}
+                  variant="outlined"
+                  className="p-4 text-center"
+                >
                   <div className="w-12 h-12 bg-gradient-to-br from-jade-500 to-electric-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <span className="text-text-inverse font-bold">{player.avatar}</span>
+                    <span className="text-text-inverse font-bold">
+                      {player.avatar}
+                    </span>
                   </div>
-                  <h4 className="font-semibold text-text-primary">{player.name}</h4>
-                  <p className="text-sm text-text-secondary mb-2">{player.role}</p>
+                  <h4 className="font-semibold text-text-primary">
+                    {player.name}
+                  </h4>
+                  <p className="text-sm text-text-secondary mb-2">
+                    {player.role}
+                  </p>
                   <p className="text-xs text-text-muted">{player.stat}</p>
                   <div className="mt-3">
                     <FollowButton
                       followingType="user"
-                      followingId={`${player.name.toLowerCase().replace(' ', '-')}`}
+                      followingId={`${player.name.toLowerCase().replace(" ", "-")}`}
                       variant="button"
                       size="sm"
                     />
@@ -271,25 +347,51 @@ const SocialFeaturesDemo: React.FC = () => {
             </h3>
             <div className="space-y-4">
               {[
-                { action: "New play added", user: "Coach Johnson", time: "2 hours ago", type: "play" },
-                { action: "Practice plan updated", user: "Coach Smith", time: "4 hours ago", type: "practice" },
-                { action: "Game stats recorded", user: "Coach Johnson", time: "1 day ago", type: "game" },
-                { action: "Team photo uploaded", user: "Jake Thompson", time: "2 days ago", type: "media" }
+                {
+                  action: "New play added",
+                  user: "Coach Johnson",
+                  time: "2 hours ago",
+                  type: "play",
+                },
+                {
+                  action: "Practice plan updated",
+                  user: "Coach Smith",
+                  time: "4 hours ago",
+                  type: "practice",
+                },
+                {
+                  action: "Game stats recorded",
+                  user: "Coach Johnson",
+                  time: "1 day ago",
+                  type: "game",
+                },
+                {
+                  action: "Team photo uploaded",
+                  user: "Jake Thompson",
+                  time: "2 days ago",
+                  type: "media",
+                },
               ].map((activity, index) => (
-                <div key={index} className="flex items-center gap-4 p-3 bg-surface-secondary/50 rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center gap-4 p-3 bg-surface-secondary/50 rounded-lg"
+                >
                   <div className="w-8 h-8 bg-electric-500/20 rounded-full flex items-center justify-center">
-                    {activity.type === 'play' && '🏈'}
-                    {activity.type === 'practice' && '📋'}
-                    {activity.type === 'game' && '🏆'}
-                    {activity.type === 'media' && '📸'}
+                    {activity.type === "play" && "🏈"}
+                    {activity.type === "practice" && "📋"}
+                    {activity.type === "game" && "🏆"}
+                    {activity.type === "media" && "📸"}
                   </div>
                   <div className="flex-1">
                     <p className="text-sm text-text-primary">
-                      <span className="font-medium">{activity.user}</span> {activity.action}
+                      <span className="font-medium">{activity.user}</span>{" "}
+                      {activity.action}
                     </p>
                     <p className="text-xs text-text-muted">{activity.time}</p>
                   </div>
-                  <Button variant="ghost" size="sm">View</Button>
+                  <Button variant="ghost" size="sm">
+                    View
+                  </Button>
                 </div>
               ))}
             </div>
@@ -302,10 +404,16 @@ const SocialFeaturesDemo: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <h4 className="font-semibold text-text-primary">Demo Controls</h4>
-            <p className="text-sm text-text-secondary">Try all the interactive features above!</p>
+            <p className="text-sm text-text-secondary">
+              Try all the interactive features above!
+            </p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.location.reload()}
+            >
               🔄 Reset Demo
             </Button>
             <Button variant="primary" size="sm">
@@ -316,6 +424,6 @@ const SocialFeaturesDemo: React.FC = () => {
       </Card>
     </div>
   );
-}
+};
 
 export default SocialFeaturesDemo;

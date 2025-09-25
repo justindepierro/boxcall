@@ -16,7 +16,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   return (
     <div className="panel-cupertino px-3 py-2 z-10 flex flex-wrap items-center gap-2">
       <div className="flex items-center gap-2 mr-4 whitespace-nowrap">
-        <span className="font-medium text-text-primary">Diagram Builder v2</span>
+        <span className="font-medium text-text-primary">
+          Diagram Builder v2
+        </span>
         {onClose && (
           <Button
             size="xs"

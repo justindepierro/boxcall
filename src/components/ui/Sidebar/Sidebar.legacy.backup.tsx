@@ -1,18 +1,19 @@
+// @ts-nocheck - Legacy backup file, not actively maintained
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "../Button";
 import { Link, useLocation } from "react-router-dom";
 import { Icon } from "../Icon/Icon";
-import { getSidebarIcon } from "./getSidebarIcon";
+// import { getSidebarIcon } from "./getSidebarIcon"; // Commented out - module doesn't exist
 import { GestureDetector } from "../../../utils/touchUtils";
 
 import type { ReactNode } from "react";
-import {
-  getSidebarWidth,
-  getSidebarPosition,
-  getSidebarStyles,
-  getSidebarItemStyles,
-  getBadgeStyles,
-} from "./sidebarUtils";
+// import {
+//   getSidebarWidth,
+//   getSidebarPosition,
+//   getSidebarStyles,
+//   getSidebarItemStyles,
+//   getBadgeStyles,
+// } from "./sidebarUtils"; // Commented out - module doesn't exist
 
 export interface SidebarItem {
   /** Unique identifier for the sidebar item */

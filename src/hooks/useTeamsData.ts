@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 
 import { useAuth } from "../app/auth-store";
 import { supabase } from "../lib/supabase";
-import type { Play } from "../types/play";
 
 interface Team {
   id: string;
@@ -135,5 +134,6 @@ export function useTeamsData() {
     loading,
     error,
     refreshData,
+    totalCount: teams.length + playbooks.length + plays.length,
   };
 }

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useAuth, useAuthLoading, useAuthProfile } from "../app/auth-store";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
-import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system/Typography";
 import { supabase } from "../lib/supabase";
+import { PageLayout } from "../components/layout/PageLayout";
 /**
  * ProfilePage Component
  *
@@ -108,15 +108,17 @@ export const ProfilePage: React.FC = () => {
   };
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-text-primary"></div>
-      </div>
+      <PageLayout>
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-text-primary"></div>
+        </div>
+      </PageLayout>
     );
   }
   if (!profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
+      <PageLayout>
+        <div className="text-center py-12">
           <Typography variant="headline-md" as="h1" className="text-error mb-4">
             Profile Not Found
           </Typography>
@@ -124,44 +126,34 @@ export const ProfilePage: React.FC = () => {
             Unable to load your profile information.
           </p>
         </div>
-      </div>
+      </PageLayout>
     );
   }
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="bg-surface-primary border border-border rounded-lg p-6 mb-8">
-          <Typography
-            variant="headline-lg"
-            className="flex items-center mb-2"
-            as="h1"
-          >
-            <Icon name="user" size="xl" className="mr-3" /> My Profile
-          </Typography>
-          <Typography variant="body-md" color="muted">
-            Manage your account information and preferences
-          </Typography>
+    <PageLayout
+      title="My Profile"
+      subtitle="Manage your account information and preferences"
+      variant="form"
+    >
+      {/* Message Display */}
+      {message && (
+        <div
+          className={`mb-6 p-4 rounded-lg border ${
+            message.type === "success"
+              ? "bg-success-bg border-success text-success"
+              : "bg-error-bg border-error text-error"
+          }`}
+        >
+          {message.text}
         </div>
-        {/* Message Display */}
-        {message && (
-          <div
-            className={`mb-6 p-4 rounded-lg border ${
-              message.type === "success"
-                ? "bg-success-bg border-success text-success"
-                : "bg-error-bg border-error text-error"
-            }`}
-          >
-            {message.text}
-          </div>
-        )}
-        {/* Profile Form */}
-        <form onSubmit={handleSaveProfile} className="space-y-6">
-          {/* Basic Information */}
-          <div className="bg-surface-primary border border-border rounded-lg p-6">
-            <Typography variant="headline-sm" as="h2" className="mb-4">
-              Basic Information
-            </Typography>
+      )}
+      {/* Profile Form */}
+      <form onSubmit={handleSaveProfile} className="space-y-6">
+        {/* Basic Information */}
+        <div className="bg-surface-primary border border-border rounded-lg p-6">
+          <Typography variant="headline-sm" as="h2" className="mb-4">
+            Basic Information
+          </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <Typography
@@ -367,7 +359,6 @@ export const ProfilePage: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </PageLayout>
   );
 };

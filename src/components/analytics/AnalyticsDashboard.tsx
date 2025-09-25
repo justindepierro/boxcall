@@ -40,14 +40,6 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     | "game-planning"
   >("overview");
 
-  useEffect(() => {
-    if (playbookId) {
-      loadAnalytics();
-    } else {
-      setLoading(false);
-    }
-  }, [playbookId]);
-
   const loadAnalytics = useCallback(async () => {
     if (!playbookId) return;
 
@@ -63,6 +55,14 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       setLoading(false);
     }
   }, [playbookId]);
+
+  useEffect(() => {
+    if (playbookId) {
+      loadAnalytics();
+    } else {
+      setLoading(false);
+    }
+  }, [playbookId, loadAnalytics]);
 
   if (loading) {
     return (

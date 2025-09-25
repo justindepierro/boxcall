@@ -326,7 +326,8 @@ export class GamePlanningAnalyticsService {
 
       if (error) throw error;
       return data || [];
-    } catch (_error) {
+    } catch {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       console.warn('Game plan situations table may not exist yet');
       return [];
     }
@@ -344,7 +345,7 @@ export class GamePlanningAnalyticsService {
 
       if (error) throw error;
       return data || [];
-    } catch (_error) {
+    } catch {
       console.warn('Game plan plays table may not exist yet');
       return [];
     }
@@ -363,7 +364,7 @@ export class GamePlanningAnalyticsService {
 
       if (error) throw error;
       return data || [];
-    } catch (_error) {
+    } catch {
       console.warn('Game plan analytics table may not exist yet');
       return [];
     }

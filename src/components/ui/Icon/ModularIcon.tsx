@@ -138,7 +138,8 @@ export type ModularIconName =
   | "list"
   | "circle"
   | "graduation-cap"
-  | "shirt";
+  | "shirt"
+  | "undo";
 
 // Dynamic imports for perfect tree shaking (limited to our supported set)
 type LucideComponent = React.ComponentType<
@@ -250,6 +251,7 @@ const iconLoaders: Record<ModularIconName, Loader> = {
   circle: dynamicIconImports.circle,
   "graduation-cap": dynamicIconImports["graduation-cap"],
   shirt: dynamicIconImports.shirt,
+  undo: dynamicIconImports.undo,
 };
 
 // Icon registry for loaded components

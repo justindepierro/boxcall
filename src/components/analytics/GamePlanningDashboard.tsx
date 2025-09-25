@@ -244,7 +244,10 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
               ))}
             </ul>
           ) : (
-            <Typography variant="body-sm" className="text-text-secondary italic">
+            <Typography
+              variant="body-sm"
+              className="text-text-secondary italic"
+            >
               No significant strengths identified yet
             </Typography>
           )}
@@ -270,7 +273,10 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
               )}
             </ul>
           ) : (
-            <Typography variant="body-sm" className="text-text-secondary italic">
+            <Typography
+              variant="body-sm"
+              className="text-text-secondary italic"
+            >
               No significant weaknesses identified
             </Typography>
           )}
@@ -369,7 +375,10 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
                       size="sm"
                       className="text-text-secondary mt-0.5 mr-2 flex-shrink-0"
                     />
-                    <Typography variant="body-xs" className="text-text-secondary">
+                    <Typography
+                      variant="body-xs"
+                      className="text-text-secondary"
+                    >
                       {assessment}
                     </Typography>
                   </li>
@@ -397,7 +406,10 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
                     <Typography variant="body-sm" className="font-medium">
                       Priority Adjustment Suggested
                     </Typography>
-                    <Typography variant="body-xs" className="text-text-secondary">
+                    <Typography
+                      variant="body-xs"
+                      className="text-text-secondary"
+                    >
                       Situation: {opportunity.situationId}
                     </Typography>
                   </div>

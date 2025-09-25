@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button/Button";
 import Card from "../components/ui/Card/Card";
 import Icon from "../components/ui/Icon/Icon";
+import { PageLayout } from "../components/layout/PageLayout";
 
 export default function PlannerPage() {
   const navigate = useNavigate();
@@ -20,48 +21,42 @@ export default function PlannerPage() {
   const progressPercentage = (completedTasks / totalTasks) * 100;
 
   return (
-    <div className="min-h-screen bg-surface-secondary">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-text-primary">
-            Weekly Planning Dashboard
-          </h1>
-          <p className="mt-2 text-text-secondary">
-            Systematic planning tools for coaches to organize their week
-          </p>
-
-          {/* Progress Bar */}
-          <div className="mt-6 bg-surface-primary rounded-lg p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-text-primary">
-                Weekly Planning Progress
-              </h2>
-              <span className="text-sm text-text-secondary">
-                {completedTasks}/{totalTasks} tasks completed
-              </span>
-            </div>
-            <div className="w-full bg-border rounded-full h-3">
-              <div
-                className="bg-text-success h-3 rounded-full transition-all duration-300 ease-in-out"
-                style={{ width: `${progressPercentage}%` }}
-              ></div>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {Object.entries(planningProgress).map(([task, completed]) => (
-                <span
-                  key={task}
-                  className={`px-2 py-1 text-xs rounded-full ${
-                    completed
-                      ? "bg-surface-success text-text-success"
-                      : "bg-surface-secondary text-text-tertiary"
-                  }`}
-                >
-                  {task.replace(/([A-Z])/g, " $1").toLowerCase()}
-                </span>
-              ))}
-            </div>
-          </div>
+    <PageLayout
+      title="Weekly Planning Dashboard"
+      subtitle="Systematic planning tools for coaches to organize their week"
+      variant="dashboard"
+    >
+      {/* Progress Bar */}
+      <div className="bg-surface-primary rounded-lg p-6 shadow-sm mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-text-primary">
+            Weekly Planning Progress
+          </h2>
+          <span className="text-sm text-text-secondary">
+            {completedTasks}/{totalTasks} tasks completed
+          </span>
         </div>
+        <div className="w-full bg-border rounded-full h-3">
+          <div
+            className="bg-text-success h-3 rounded-full transition-all duration-300 ease-in-out"
+            style={{ width: `${progressPercentage}%` }}
+          ></div>
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {Object.entries(planningProgress).map(([task, completed]) => (
+            <span
+              key={task}
+              className={`px-2 py-1 text-xs rounded-full ${
+                completed
+                  ? "bg-surface-success text-text-success"
+                  : "bg-surface-secondary text-text-tertiary"
+              }`}
+            >
+              {task.replace(/([A-Z])/g, " $1").toLowerCase()}
+            </span>
+          ))}
+        </div>
+      </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Practice Schedule */}
@@ -254,7 +249,6 @@ export default function PlannerPage() {
             </div>
           </Card>
         </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 }

@@ -8,6 +8,8 @@
 @import "./styles/generated-themes.css";
 /* Density and spacing utilities */
 @import "./styles/density.css";
+/* Page layout system */
+@import "./styles/page-layout.css";
 /* Responsive dashboard layout */
 @import "./styles/responsive-dashboard.css";
 /* Import animation system */

@@ -2,369 +2,349 @@ import React from "react";
 import { Icon } from "../../components/ui/Icon/Icon";
 import { Typography } from "../../components/design-system/Typography";
 import { Button } from "../../components/ui/Button";
+import { PageLayout } from "../../components/layout/PageLayout";
 import ProfileCard from "../../components/dashboard/ProfileCard";
 
 /**
- * Player Dashboa                  <span className="text-sm text-text-secondary">
-                    Leadership
-                  </span>
-                  <div className="flex items-center">
-                    <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
-                      <div
-                        className="bg-text-warning h-2 rounded-full"
-                        style={{ width: "88%" }}
-                      ></div>
-                    </div>Only accessible by players
+ * Player Dashboard Page - Only accessible by players
  */
 const PlayerDashboardContent: React.FC = () => {
   return (
-    <div className="min-h-screen surface-app">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <Typography
-            variant="headline-lg"
-            as="h1"
-            className="flex items-center"
-          >
-            <Icon name="user" className="mr-3" /> Player Dashboard
-          </Typography>
-          <Typography variant="body-md" color="muted" className="mt-2">
-            Track your progress and stay updated with team activities
-          </Typography>
-        </div>
+    <PageLayout
+      variant="dashboard"
+      title="Player Dashboard"
+      subtitle="Track your progress and stay updated with team activities"
+    >
+      {/* Profile Card */}
+      <div className="mb-8 max-w-md">
+        <ProfileCard />
+      </div>
 
-        {/* Profile Card */}
-        <div className="mb-8 max-w-md">
-          <ProfileCard />
-        </div>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="surface-card elevation-card hoverable rounded-lg p-6">
-            <div className="flex items-center">
-              <div className="bg-surface-info rounded-full p-3">
-                <Icon name="target" className="text-text-info" />
-              </div>
-              <div className="ml-4">
-                <Typography
-                  variant="body-sm"
-                  as="p"
-                  className="font-medium text-text-secondary"
-                >
-                  Practices Attended
-                </Typography>
-                <Typography
-                  variant="headline-sm"
-                  as="p"
-                  className="text-text-primary"
-                >
-                  23/25
-                </Typography>
-              </div>
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="surface-card elevation-card hoverable rounded-lg p-6">
+          <div className="flex items-center">
+            <div className="bg-surface-info rounded-full p-3">
+              <Icon name="target" className="text-text-info" />
             </div>
-          </div>
-          <div className="surface-card elevation-card hoverable rounded-lg p-6">
-            <div className="flex items-center">
-              <div className="bg-surface-success rounded-full p-3">
-                <Icon name="trophy" className="text-text-success" />
-              </div>
-              <div className="ml-4">
-                <Typography
-                  variant="body-sm"
-                  as="p"
-                  className="font-medium text-text-secondary"
-                >
-                  Games Played
-                </Typography>
-                <Typography
-                  variant="headline-sm"
-                  as="p"
-                  className="text-text-primary"
-                >
-                  8
-                </Typography>
-              </div>
-            </div>
-          </div>
-          <div className="surface-card elevation-card hoverable rounded-lg p-6">
-            <div className="flex items-center">
-              <div className="bg-surface-info rounded-full p-3">
-                <Icon name="star" className="text-text-info" />
-              </div>
-              <div className="ml-4">
-                <Typography
-                  variant="body-sm"
-                  as="p"
-                  className="font-medium text-text-secondary"
-                >
-                  Skill Rating
-                </Typography>
-                <Typography
-                  variant="headline-sm"
-                  as="p"
-                  className="text-text-primary"
-                >
-                  8.5
-                </Typography>
-              </div>
-            </div>
-          </div>
-          <div className="surface-card elevation-card hoverable rounded-lg p-6">
-            <div className="flex items-center">
-              <div className="bg-surface-warning rounded-full p-3">
-                <Icon name="trending-up" className="text-text-warning" />
-              </div>
-              <div className="ml-4">
-                <Typography
-                  variant="body-sm"
-                  as="p"
-                  className="font-medium text-text-secondary"
-                >
-                  Improvement
-                </Typography>
-                <Typography
-                  variant="headline-sm"
-                  as="p"
-                  className="text-text-primary"
-                >
-                  +2.1
-                </Typography>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Upcoming Events */}
-          <div className="surface-card elevation-card rounded-lg">
-            <div className="px-6 py-4 border-b border-text-secondary">
+            <div className="ml-4">
+              <Typography
+                variant="body-sm"
+                as="p"
+                className="font-medium text-text-secondary"
+              >
+                Practices Attended
+              </Typography>
               <Typography
                 variant="headline-sm"
-                as="h3"
-                className="flex items-center"
+                as="p"
+                className="text-text-primary"
               >
-                <Icon name="calendar" className="mr-2" /> Upcoming Events
+                23/25
               </Typography>
-            </div>
-            <div className="p-6">
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="bg-surface-info rounded-full p-2">
-                    <Icon name="calendar" size="sm" />
-                  </div>
-                  <div className="flex-1">
-                    <Typography
-                      variant="body-sm"
-                      as="p"
-                      className="font-medium text-text-primary"
-                    >
-                      Practice Session
-                    </Typography>
-                    <p className="text-sm text-text-secondary">
-                      Thursday, 3:30 PM - 5:30 PM
-                    </p>
-                    <p className="text-xs text-text-secondary">
-                      Focus: Offensive Line Drills
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="bg-surface-success rounded-full p-2">
-                    <Icon name="flag" size="sm" />
-                  </div>
-                  <div className="flex-1">
-                    <Typography
-                      variant="body-sm"
-                      as="p"
-                      className="font-medium text-text-primary"
-                    >
-                      Game vs. Eagles
-                    </Typography>
-                    <p className="text-sm text-text-secondary">
-                      Saturday, 7:00 PM
-                    </p>
-                    <p className="text-xs text-text-secondary">
-                      Away Game - Memorial Stadium
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="bg-surface-info rounded-full p-2">
-                    <Icon name="users" size="sm" />
-                  </div>
-                  <div className="flex-1">
-                    <Typography
-                      variant="body-sm"
-                      as="p"
-                      className="font-medium text-text-primary"
-                    >
-                      Team Meeting
-                    </Typography>
-                    <p className="text-sm text-text-secondary">
-                      Monday, 4:00 PM - 5:00 PM
-                    </p>
-                    <p className="text-xs text-text-secondary">
-                      Film Review & Strategy
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Recent Performance */}
-          <div className="surface-card elevation-card rounded-lg">
-            <div className="px-6 py-4 border-b border-text-secondary">
-              <Typography
-                variant="headline-sm"
-                as="h3"
-                className="flex items-center text-text-primary"
-              >
-                <Icon name="bar-chart" className="mr-2" />
-                Recent Performance
-              </Typography>
-            </div>
-            <div className="p-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-text-secondary">
-                    Passing Accuracy
-                  </span>
-                  <div className="flex items-center">
-                    <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
-                      <div
-                        className="bg-text-success h-2 rounded-full"
-                        style={{ width: "85%" }}
-                      ></div>
-                    </div>
-                    <Typography
-                      variant="body-sm"
-                      as="span"
-                      className="font-medium text-text-primary"
-                    >
-                      85%
-                    </Typography>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-text-secondary">
-                    Speed & Agility
-                  </span>
-                  <div className="flex items-center">
-                    <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
-                      <div
-                        className="bg-text-success h-2 rounded-full"
-                        style={{ width: "78%" }}
-                      ></div>
-                    </div>
-                    <Typography
-                      variant="body-sm"
-                      as="span"
-                      className="font-medium text-text-primary"
-                    >
-                      78%
-                    </Typography>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-text-secondary">
-                    Team Coordination
-                  </span>
-                  <div className="flex items-center">
-                    <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
-                      <div
-                        className="bg-text-info h-2 rounded-full"
-                        style={{ width: "92%" }}
-                      ></div>
-                    </div>
-                    <Typography
-                      variant="body-sm"
-                      as="span"
-                      className="font-medium text-text-primary"
-                    >
-                      92%
-                    </Typography>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-text-secondary">
-                    Leadership
-                  </span>
-                  <div className="flex items-center">
-                    <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
-                      <div
-                        className="bg-text-warning h-2 rounded-full"
-                        style={{ width: "88%" }}
-                      ></div>
-                    </div>
-                    <Typography
-                      variant="body-sm"
-                      as="span"
-                      className="font-medium text-text-primary"
-                    >
-                      88%
-                    </Typography>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
-
-        {/* Quick Actions */}
-        <div className="mt-8">
-          <div className="surface-card elevation-card rounded-lg p-6">
-            <Typography
-              variant="headline-sm"
-              as="h3"
-              className="mb-4 text-text-primary"
-            >
-              Quick Actions
-            </Typography>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Button
-                variant="primary"
-                size="sm"
-                className="p-4 flex flex-col items-center justify-center space-y-2"
-                icon={<Icon name="book" size="sm" />}
-                iconPosition="left"
+        <div className="surface-card elevation-card hoverable rounded-lg p-6">
+          <div className="flex items-center">
+            <div className="bg-surface-success rounded-full p-3">
+              <Icon name="trophy" className="text-text-success" />
+            </div>
+            <div className="ml-4">
+              <Typography
+                variant="body-sm"
+                as="p"
+                className="font-medium text-text-secondary"
               >
-                View Playbook
-              </Button>
-              <Button
-                variant="success"
-                size="sm"
-                className="p-4 flex flex-col items-center justify-center space-y-2"
-                icon={<Icon name="calendar" size="sm" />}
-                iconPosition="left"
+                Games Played
+              </Typography>
+              <Typography
+                variant="headline-sm"
+                as="p"
+                className="text-text-primary"
               >
-                Check Schedule
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                className="p-4 flex flex-col items-center justify-center space-y-2"
-                icon={<Icon name="message" size="sm" />}
-                iconPosition="left"
+                8
+              </Typography>
+            </div>
+          </div>
+        </div>
+        <div className="surface-card elevation-card hoverable rounded-lg p-6">
+          <div className="flex items-center">
+            <div className="bg-surface-info rounded-full p-3">
+              <Icon name="star" className="text-text-info" />
+            </div>
+            <div className="ml-4">
+              <Typography
+                variant="body-sm"
+                as="p"
+                className="font-medium text-text-secondary"
               >
-                Team Chat
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-4 flex flex-col items-center justify-center space-y-2"
-                icon={<Icon name="user" size="sm" />}
-                iconPosition="left"
+                Skill Rating
+              </Typography>
+              <Typography
+                variant="headline-sm"
+                as="p"
+                className="text-text-primary"
               >
-                My Profile
-              </Button>
+                8.5
+              </Typography>
+            </div>
+          </div>
+        </div>
+        <div className="surface-card elevation-card hoverable rounded-lg p-6">
+          <div className="flex items-center">
+            <div className="bg-surface-warning rounded-full p-3">
+              <Icon name="trending-up" className="text-text-warning" />
+            </div>
+            <div className="ml-4">
+              <Typography
+                variant="body-sm"
+                as="p"
+                className="font-medium text-text-secondary"
+              >
+                Improvement
+              </Typography>
+              <Typography
+                variant="headline-sm"
+                as="p"
+                className="text-text-primary"
+              >
+                +2.1
+              </Typography>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Upcoming Events */}
+        <div className="surface-card elevation-card rounded-lg">
+          <div className="px-6 py-4 border-b border-text-secondary">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="flex items-center"
+            >
+              <Icon name="calendar" className="mr-2" /> Upcoming Events
+            </Typography>
+          </div>
+          <div className="p-6">
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <div className="bg-surface-info rounded-full p-2">
+                  <Icon name="calendar" size="sm" />
+                </div>
+                <div className="flex-1">
+                  <Typography
+                    variant="body-sm"
+                    as="p"
+                    className="font-medium text-text-primary"
+                  >
+                    Practice Session
+                  </Typography>
+                  <p className="text-sm text-text-secondary">
+                    Thursday, 3:30 PM - 5:30 PM
+                  </p>
+                  <p className="text-xs text-text-secondary">
+                    Focus: Offensive Line Drills
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="bg-surface-success rounded-full p-2">
+                  <Icon name="flag" size="sm" />
+                </div>
+                <div className="flex-1">
+                  <Typography
+                    variant="body-sm"
+                    as="p"
+                    className="font-medium text-text-primary"
+                  >
+                    Game vs. Eagles
+                  </Typography>
+                  <p className="text-sm text-text-secondary">
+                    Saturday, 7:00 PM
+                  </p>
+                  <p className="text-xs text-text-secondary">
+                    Away Game - Memorial Stadium
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="bg-surface-info rounded-full p-2">
+                  <Icon name="users" size="sm" />
+                </div>
+                <div className="flex-1">
+                  <Typography
+                    variant="body-sm"
+                    as="p"
+                    className="font-medium text-text-primary"
+                  >
+                    Team Meeting
+                  </Typography>
+                  <p className="text-sm text-text-secondary">
+                    Monday, 4:00 PM - 5:00 PM
+                  </p>
+                  <p className="text-xs text-text-secondary">
+                    Film Review & Strategy
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Performance */}
+        <div className="surface-card elevation-card rounded-lg">
+          <div className="px-6 py-4 border-b border-text-secondary">
+            <Typography
+              variant="headline-sm"
+              as="h3"
+              className="flex items-center text-text-primary"
+            >
+              <Icon name="bar-chart" className="mr-2" />
+              Recent Performance
+            </Typography>
+          </div>
+          <div className="p-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-text-secondary">
+                  Passing Accuracy
+                </span>
+                <div className="flex items-center">
+                  <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
+                    <div
+                      className="bg-text-success h-2 rounded-full"
+                      style={{ width: "85%" }}
+                    ></div>
+                  </div>
+                  <Typography
+                    variant="body-sm"
+                    as="span"
+                    className="font-medium text-text-primary"
+                  >
+                    85%
+                  </Typography>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-text-secondary">
+                  Speed & Agility
+                </span>
+                <div className="flex items-center">
+                  <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
+                    <div
+                      className="bg-text-success h-2 rounded-full"
+                      style={{ width: "78%" }}
+                    ></div>
+                  </div>
+                  <Typography
+                    variant="body-sm"
+                    as="span"
+                    className="font-medium text-text-primary"
+                  >
+                    78%
+                  </Typography>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-text-secondary">
+                  Team Coordination
+                </span>
+                <div className="flex items-center">
+                  <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
+                    <div
+                      className="bg-text-info h-2 rounded-full"
+                      style={{ width: "92%" }}
+                    ></div>
+                  </div>
+                  <Typography
+                    variant="body-sm"
+                    as="span"
+                    className="font-medium text-text-primary"
+                  >
+                    92%
+                  </Typography>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-text-secondary">
+                  Leadership
+                </span>
+                <div className="flex items-center">
+                  <div className="surface-subtle dark:bg-text-secondary rounded-full h-2 w-20 mr-2">
+                    <div
+                      className="bg-text-warning h-2 rounded-full"
+                      style={{ width: "88%" }}
+                    ></div>
+                  </div>
+                  <Typography
+                    variant="body-sm"
+                    as="span"
+                    className="font-medium text-text-primary"
+                  >
+                    88%
+                  </Typography>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="mt-8">
+        <div className="surface-card elevation-card rounded-lg p-6">
+          <Typography
+            variant="headline-sm"
+            as="h3"
+            className="mb-4 text-text-primary"
+          >
+            Quick Actions
+          </Typography>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Button
+              variant="primary"
+              size="sm"
+              className="p-4 flex flex-col items-center justify-center space-y-2"
+              icon={<Icon name="book" size="sm" />}
+              iconPosition="left"
+            >
+              View Playbook
+            </Button>
+            <Button
+              variant="success"
+              size="sm"
+              className="p-4 flex flex-col items-center justify-center space-y-2"
+              icon={<Icon name="calendar" size="sm" />}
+              iconPosition="left"
+            >
+              Check Schedule
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="p-4 flex flex-col items-center justify-center space-y-2"
+              icon={<Icon name="message" size="sm" />}
+              iconPosition="left"
+            >
+              Team Chat
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="p-4 flex flex-col items-center justify-center space-y-2"
+              icon={<Icon name="user" size="sm" />}
+              iconPosition="left"
+            >
+              My Profile
+            </Button>
+          </div>
+        </div>
+      </div>
+    </PageLayout>
   );
 };
 

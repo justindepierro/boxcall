@@ -81,7 +81,11 @@ export const WorkflowStatusBar: React.FC<WorkflowStatusBarProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <Icon name="clipboard-list" size="sm" className="text-text-info" />
+              <Icon
+                name="clipboard-list"
+                size="sm"
+                className="text-text-info"
+              />
               <Typography
                 variant="body-sm"
                 className="font-medium text-text-info"

@@ -9,6 +9,7 @@ import Input from "../components/ui/Input/Input";
 import { Modal } from "../components/ui/Modal/Modal";
 import Icon from "../components/ui/Icon/Icon";
 import { PDFExportTrigger } from "../components/practice/LazyPDFExport";
+import { PageLayout } from "../components/layout/PageLayout";
 import { useAuth } from "../app/auth-store";
 import { useTeamMembershipRole } from "../hooks/useTeamMembershipRole";
 import {
@@ -245,43 +246,34 @@ export function PracticePlanner() {
     );
   }
   return (
-    <div className="min-h-screen surface-app">
-      {/* Header */}
-      <div className="surface-header border-b border-subtle">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                onClick={() => navigate(`/team/${teamId}`)}
-                className="text-text-secondary hover:text-text-primary"
-              >
-                ← Back to Team
-              </Button>
-              <Typography
-                variant="headline-lg"
-                className="text-text-primary font-display"
-              >
-                Practice Schedule
-              </Typography>
+    <PageLayout
+      title="Practice Schedule"
+      subtitle="Plan and manage your team's practice sessions"
+      variant="dashboard"
+      actions={
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(`/team/${teamId}`)}
+            className="text-text-secondary hover:text-text-primary"
+          >
+            ← Back to Team
+          </Button>
+          {selectedSchedule && (
+            <div className="text-sm text-text-secondary">
+              {format(selectedSchedule.date, "MMM d, yyyy")} •{" "}
+              {selectedSchedule.location}
             </div>
-            <div className="flex items-center space-x-4">
-              {selectedSchedule && (
-                <div className="text-sm text-text-secondary">
-                  {format(selectedSchedule.date, "MMM d, yyyy")} •{" "}
-                  {selectedSchedule.location}
-                </div>
-              )}
-              {practiceStarted && (
-                <div className="flex items-center space-x-2 px-3 py-1 bg-jade-100 text-jade-800 rounded-md">
-                  <div className="w-2 h-2 bg-jade-600 rounded-full animate-pulse"></div>
-                  <span className="font-mono text-sm">Practice Live</span>
-                </div>
-              )}
+          )}
+          {practiceStarted && (
+            <div className="flex items-center space-x-2 px-3 py-1 bg-jade-100 text-jade-800 rounded-md">
+              <div className="w-2 h-2 bg-jade-600 rounded-full animate-pulse"></div>
+              <span className="font-mono text-sm">Practice Live</span>
             </div>
-          </div>
+          )}
         </div>
-      </div>
+      }
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Practice Schedule */}
@@ -705,7 +697,7 @@ export function PracticePlanner() {
           triggerElement={null} // Programmatically controlled
         />
       )}
-    </div>
+    </PageLayout>
   );
 }
 // Create Block Modal Component

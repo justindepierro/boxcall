@@ -162,7 +162,9 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Icon name="filter" className="h-4 w-4 text-text-muted" />
-            <span className="text-sm font-medium text-text-secondary">Filters</span>
+            <span className="text-sm font-medium text-text-secondary">
+              Filters
+            </span>
             {activeFilters.length > 0 && (
               <span className="px-1.5 py-0.5 text-xs bg-surface-info text-text-info rounded-full">
                 {activeFilters.length}

@@ -1,5 +1,6 @@
 import React from "react";
 import { AnalyticsDashboard } from "../components/analytics/AnalyticsDashboard";
+import { PageLayout } from "../components/layout/PageLayout";
 
 /**
  * AnalyticsPage
@@ -9,9 +10,12 @@ const AnalyticsPage: React.FC = () => {
   // For now, we'll show the dashboard without a specific playbook
   // In a real implementation, this would come from route params or context
   return (
-    <div className="container mx-auto px-4 py-8">
+    <PageLayout
+      title="Analytics"
+      subtitle="Comprehensive playbook insights and performance metrics"
+    >
       <AnalyticsDashboard />
-    </div>
+    </PageLayout>
   );
 };
 

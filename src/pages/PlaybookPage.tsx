@@ -21,6 +21,7 @@ import { QuickActionsBar } from "../components/playbook/QuickActionsBar";
 import { KeyboardShortcutsGuide } from "../components/playbook/KeyboardShortcutsGuide";
 import { useToast } from "../hooks/useToast";
 import type { Play } from "../types/play";
+import { PageLayout } from "../components/layout/PageLayout";
 
 export default function PlaybookPage() {
   const { state, dispatch } = usePlaybook();
@@ -304,8 +305,32 @@ export default function PlaybookPage() {
   }, [handleQuickNewPracticeScript, handleQuickNewGamePlan]);
 
   return (
-    <div className="py-8 min-h-screen">
-      {/* Header */}
+    <PageLayout
+      title="Playbook"
+      subtitle="Create, manage, and organize your football plays"
+      variant="dashboard"
+      actions={
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={handleOpenSettings}
+            variant="secondary"
+            size="sm"
+          >
+            <Icon name="settings" className="h-4 w-4 mr-2" />
+            Settings
+          </Button>
+          <Button
+            onClick={handleOpenBuilder}
+            variant="primary"
+            size="sm"
+          >
+            <Icon name="plus" className="h-4 w-4 mr-2" />
+            New Play
+          </Button>
+        </div>
+      }
+    >
+      {/* Header Stats */}
       <PlaybookHeader
         playsCreated={state.playsCreated}
         diagramCoverage={state.diagramCoverage}
@@ -316,8 +341,8 @@ export default function PlaybookPage() {
       />
 
       {/* Full-width View Tabs */}
-      <div className="bg-surface-primary border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="bg-surface-primary border-b border-border -mx-6 mb-6">
+        <div className="px-6 py-4">
           <PlaybookViewTabs
             currentView={state.currentView}
             onViewChange={handleViewChange}
@@ -326,7 +351,7 @@ export default function PlaybookPage() {
       </div>
 
       {/* Main Content - 2 Column Layout */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left Sidebar - Controls */}
         <div className="lg:col-span-1 space-y-6">
           {/* Stats Dashboard */}
@@ -638,6 +663,6 @@ export default function PlaybookPage() {
           },
         ]}
       />
-    </div>
+    </PageLayout>
   );
 }

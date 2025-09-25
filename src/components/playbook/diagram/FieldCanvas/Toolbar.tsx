@@ -11,18 +11,18 @@ export const Toolbar: React.FC<{
     {
       key: "select",
       label: "Select",
-      icon: "pointer",
+      icon: "pointer" as const,
       tooltip: "Select and move objects",
     },
-    { key: "line", label: "Line", icon: "type", tooltip: "Draw a line" },
+    { key: "line", label: "Line", icon: "pen-tool" as const, tooltip: "Draw a line" },
     {
       key: "arrow",
       label: "Arrow",
-      icon: "arrow-right",
+      icon: "arrow-right" as const,
       tooltip: "Draw an arrow",
     },
-    { key: "shape", label: "Shape", icon: "square", tooltip: "Draw a shape" },
-    { key: "text", label: "Text", icon: "type", tooltip: "Add text" },
+    { key: "shape", label: "Shape", icon: "circle" as const, tooltip: "Draw a shape" },
+    { key: "text", label: "Text", icon: "type" as const, tooltip: "Add text" },
   ];
   return (
     <nav
@@ -43,9 +43,9 @@ export const Toolbar: React.FC<{
           tabIndex={0}
         >
           <Icon
-            name={tool.icon as import("../../../ui/Icon/types").IconName}
+            name={tool.icon}
             size="sm"
-            color={tool.key === activeTool ? "navy" : "slate"}
+            color={tool.key === activeTool ? "navy" : "current"}
           />
           <span className="sr-only md:not-sr-only">{tool.label}</span>
         </Button>

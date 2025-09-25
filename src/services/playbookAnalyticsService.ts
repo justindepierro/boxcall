@@ -5,20 +5,6 @@ import { supabase } from "../lib/supabase";
  * Leverages the rich analytics foundation in the database
  */
 
-interface PlayData {
-  id: string;
-  play_name: string;
-  formation: string;
-  p_type: string;
-  confidence_base?: number;
-  times_called?: number;
-  times_successful?: number;
-  complexity_score?: number;
-  personnel?: string;
-  down_distance?: string;
-  field_position?: string;
-}
-
 export interface PlayAnalytics {
   playId: string;
   playName: string;

@@ -461,7 +461,10 @@ export function DesignSystemShowcase() {
                 Playbook Cards
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card variant="accent" className="p-4 cursor-pointer hover:shadow-lg transition-shadow">
+                <Card
+                  variant="accent"
+                  className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
+                >
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <h4 className="font-semibold text-text-primary">
@@ -537,9 +540,7 @@ export function DesignSystemShowcase() {
                   <div className="text-2xl font-bold text-text-info mb-1">
                     1,247
                   </div>
-                  <div className="text-sm text-text-secondary">
-                    Total Yards
-                  </div>
+                  <div className="text-sm text-text-secondary">Total Yards</div>
                   <div className="text-xs text-text-muted mt-1">
                     +89 from last game
                   </div>
@@ -549,9 +550,7 @@ export function DesignSystemShowcase() {
                   <div className="text-2xl font-bold text-text-warning mb-1">
                     23
                   </div>
-                  <div className="text-sm text-text-secondary">
-                    First Downs
-                  </div>
+                  <div className="text-sm text-text-secondary">First Downs</div>
                   <div className="text-xs text-text-muted mt-1">
                     +5 from last game
                   </div>
@@ -561,9 +560,7 @@ export function DesignSystemShowcase() {
                   <div className="text-2xl font-bold text-text-error mb-1">
                     2
                   </div>
-                  <div className="text-sm text-text-secondary">
-                    Turnovers
-                  </div>
+                  <div className="text-sm text-text-secondary">Turnovers</div>
                   <div className="text-xs text-text-muted mt-1">
                     -1 from last game
                   </div>
@@ -624,8 +621,14 @@ export function DesignSystemShowcase() {
                   </p>
                   <div className="flex gap-2">
                     <div className="w-3 h-3 bg-electric-500 rounded-full animate-bounce"></div>
-                    <div className="w-3 h-3 bg-electric-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-3 h-3 bg-electric-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div
+                      className="w-3 h-3 bg-electric-500 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.1s" }}
+                    ></div>
+                    <div
+                      className="w-3 h-3 bg-electric-500 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.2s" }}
+                    ></div>
                   </div>
                 </div>
                 <div className="p-4 bg-gradient-to-r from-electric-500/10 to-jade-500/10 rounded-lg">
@@ -657,9 +660,7 @@ export function DesignSystemShowcase() {
             </div>
 
             <div className="text-center">
-              <div className="text-3xl font-bold text-text-info mb-2">
-                0.8s
-              </div>
+              <div className="text-3xl font-bold text-text-info mb-2">0.8s</div>
               <div className="text-sm text-text-secondary mb-1">
                 First Contentful Paint
               </div>
@@ -675,9 +676,7 @@ export function DesignSystemShowcase() {
               <div className="text-sm text-text-secondary mb-1">
                 Lighthouse Accessibility
               </div>
-              <div className="text-xs text-text-muted">
-                WCAG AA Compliant
-              </div>
+              <div className="text-xs text-text-muted">WCAG AA Compliant</div>
             </div>
           </div>
 
@@ -686,7 +685,8 @@ export function DesignSystemShowcase() {
               ✅ Zero Design Violations
             </h4>
             <p className="text-sm text-text-secondary">
-              Eliminated 1,397 hardcoded Tailwind colors, replaced with semantic tokens for runtime theme switching
+              Eliminated 1,397 hardcoded Tailwind colors, replaced with semantic
+              tokens for runtime theme switching
             </p>
           </div>
         </Card>

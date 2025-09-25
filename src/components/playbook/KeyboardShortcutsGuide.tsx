@@ -100,7 +100,10 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
                         key={index}
                         className="flex items-center justify-between py-2 px-3 bg-surface-secondary rounded-lg"
                       >
-                        <Typography variant="body-sm" className="text-text-secondary">
+                        <Typography
+                          variant="body-sm"
+                          className="text-text-secondary"
+                        >
                           {shortcut.description}
                         </Typography>
                         <kbd className="px-2 py-1 bg-surface-primary border border-border-medium rounded text-xs font-mono text-text-secondary shadow-sm">

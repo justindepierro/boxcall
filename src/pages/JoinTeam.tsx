@@ -451,10 +451,7 @@ export const JoinTeam: React.FC = () => {
             </Typography>
 
             <div className="surface-subtle dark:bg-surface-info/20 border border-subtle dark:border-text-info rounded-lg p-4 mb-6">
-              <Typography
-                variant="body-sm"
-                className="text-text-info"
-              >
+              <Typography variant="body-sm" className="text-text-info">
                 <strong>What's next?</strong>
                 <br />
                 The team's coaching staff will review your request and either

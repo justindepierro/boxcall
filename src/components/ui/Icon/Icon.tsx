@@ -131,7 +131,8 @@ export type IconName =
   | "move"
   | "pen-tool"
   | "link"
-  | "sparkles";
+  | "sparkles"
+  | "undo";
 
 type AccessibleSvgProps = Pick<
   React.SVGProps<SVGSVGElement>,
@@ -258,6 +259,7 @@ export const Icon: React.FC<IconProps> = ({
       "pen-tool",
       "link",
       "sparkles",
+      "undo",
       "inbox",
       "flask-conical",
       "sprout",

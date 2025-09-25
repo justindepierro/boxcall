@@ -201,3 +201,16 @@ export const PageLoadingSkeleton: React.FC = () => {
     </div>
   );
 };
+
+export const PlayCardSkeleton: React.FC = () => (
+  <div className="surface-card elevation-card rounded-lg p-4">
+    <div className="flex items-start space-x-3">
+      <SkeletonBase width="2.5rem" height="2.5rem" className="rounded-full" />
+      <div className="flex-1 space-y-2">
+        <SkeletonBase width="60%" height="1rem" />
+        <SkeletonBase width="40%" height="0.75rem" />
+        <SkeletonBase width="80%" height="0.75rem" />
+      </div>
+    </div>
+  </div>
+);

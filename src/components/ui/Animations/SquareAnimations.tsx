@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Icon } from "../ui/Icon/Icon";
+import { Icon } from "../../ui/Icon/Icon";
 // Square Progress Bar Component
 interface ProgressBarProps {
   value: number; // 0-100

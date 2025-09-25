@@ -42,10 +42,23 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
   // Get plays data for search
   const { plays: allPlays } = useTeamsData();
 
+  // Transform DatabasePlay[] to Play[] by adding missing required fields
+  const transformedPlays = useMemo(() => {
+    return (allPlays || []).map((play): Play => ({
+      ...play,
+      confidence_base: 70, // default value
+      times_called: 0, // default value
+      times_successful: 0, // default value
+      created_by: "system", // default value
+      created_at: new Date(play.created_at),
+      updated_at: new Date(play.updated_at),
+    }));
+  }, [allPlays]);
+
   // Create search service instance for plays
   const searchService = useMemo(
-    () => new PlaybookSearchService(allPlays || []),
-    [allPlays]
+    () => new PlaybookSearchService(transformedPlays),
+    [transformedPlays]
   );
 
   useEffect(() => {
