@@ -141,7 +141,7 @@ export default function GamePlansPage() {
                           e.stopPropagation();
                           handleDeletePlan(plan.id);
                         }}
-                        className="p-1 text-text-muted hover:text-red-600 transition-colors"
+                        className="p-1 text-text-muted hover:text-text-error transition-colors"
                         title="Delete plan"
                       >
                         <Icon name="delete" className="h-4 w-4" />

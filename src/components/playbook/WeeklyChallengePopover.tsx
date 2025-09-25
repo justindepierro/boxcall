@@ -156,7 +156,7 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
               <Icon
                 name="trophy"
                 size="lg"
-                className="text-gray-300 mx-auto mb-4"
+                className="text-text-muted mx-auto mb-4"
               />
               <Typography variant="label-md" className="text-text-muted">
                 No challenges available this week

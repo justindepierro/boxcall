@@ -106,7 +106,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
       {imageError && (
         <div className="absolute inset-0 bg-surface-muted flex items-center justify-center">
           <div className="text-center text-text-muted">
-            <div className="w-12 h-12 mx-auto mb-2 bg-gray-200 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 mx-auto mb-2 bg-border rounded-full flex items-center justify-center">
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"

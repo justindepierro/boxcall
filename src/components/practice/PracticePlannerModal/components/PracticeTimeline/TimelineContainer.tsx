@@ -73,7 +73,7 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
                     " " +
                     getCategoryColor(allocation.category)
                   : isSelected
-                    ? "bg-blue-200 border-t-4 border-t-blue-500"
+                    ? "bg-surface-info border-t-4 border-t-text-info"
                     : "surface-subtle surface-subtle-hover"
               } ${is5MinuteBoundary ? "border-l-2 border-l-gray-400" : ""}`}
               style={{ minWidth: "3px" }}

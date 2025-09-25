@@ -218,7 +218,7 @@ export class LazyLoadErrorBoundary extends React.Component<
         this.props.fallback || (
           <div className="min-h-screen flex items-center justify-center">
             <div className="text-center">
-              <div className="text-red-500 mb-4">
+              <div className="text-text-error mb-4">
                 <svg
                   className="w-12 h-12 mx-auto"
                   fill="none"

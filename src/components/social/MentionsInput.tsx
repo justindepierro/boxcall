@@ -121,7 +121,7 @@ export const MentionsInput: React.FC<MentionsInputProps> = ({
                   className="w-6 h-6 rounded-full"
                 />
               ) : (
-                <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
+                <div className="w-6 h-6 bg-border-light rounded-full flex items-center justify-center">
                   <span className="text-xs text-text-secondary">
                     {suggestion.display_name.charAt(0).toUpperCase()}
                   </span>

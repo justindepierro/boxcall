@@ -23,7 +23,7 @@ export const CanvasPane: React.FC<{
     <div data-testid="canvas-pane-root" className={className}>
       {" "}
       {/* .flex-1 min-w-0 flex flex-col p-3 passes through */}
-      <div className="relative flex-1 min-h-0 rounded-md bg-emerald-800/60">
+      <div className="relative flex-1 min-h-0 rounded-md bg-surface-success/60">
         <div className="absolute inset-0">
           <ToolPalette />
           <FieldCanvas className="w-full h-full" />

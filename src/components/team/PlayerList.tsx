@@ -207,7 +207,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                       size="xs"
                       onClick={() => onDeletePlayer(player.id)}
                       aria-label="Remove Player"
-                      className="p-1 h-auto w-auto text-text-secondary hover:text-red-600"
+                      className="p-1 h-auto w-auto text-text-secondary hover:text-text-error"
                     >
                       <Icon name="delete" size="sm" />
                     </Button>

@@ -148,7 +148,7 @@ export default function PracticePlansPage() {
                           e.stopPropagation();
                           handleDeleteScript(script.id);
                         }}
-                        className="p-1 text-text-muted hover:text-red-600 transition-colors"
+                        className="p-1 text-text-muted hover:text-text-error transition-colors"
                         title="Delete script"
                       >
                         <Icon name="delete" className="h-4 w-4" />

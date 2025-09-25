@@ -44,7 +44,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
       aria-label={title}
     >
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-text-primary/40 backdrop-blur-sm"
         onClick={onClose}
       />
       <div

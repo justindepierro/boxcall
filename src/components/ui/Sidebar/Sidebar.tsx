@@ -88,7 +88,7 @@ const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
   }
   if (item.active) {
     // Strengthened active contrast (previously blue-50 background with blue-700 text could blend into light surfaces)
-    return `${baseStyles} bg-brand-navy text-white dark:bg-text-primary dark:text-surface-primary border-r-2 border-brand-jade-dark`;
+    return `${baseStyles} bg-brand-navy text-text-inverse dark:bg-text-primary dark:text-surface-primary border-r-2 border-brand-jade-dark`;
   }
   return `${baseStyles} text-text-secondary dark:text-text-secondary surface-subtle-hover dark:hover:bg-text-primary hover:text-text-primary dark:hover:text-text-primary`;
 };

@@ -31,7 +31,7 @@ export const Footer: React.FC = () => {
   }, []);
 
   return (
-    <footer className="surface-header border-t border-subtle dark:border-gray-700">
+    <footer className="surface-header border-t border-border-medium">
       {/* Mobile-first footer with proper spacing and safe area support */}
       <div className="max-w-7xl mx-auto py-4 pb-safe sm:py-6 bc-container-padding">
         <div className="flex flex-col items-center space-y-3 text-center md:flex-row md:justify-between md:space-y-0 md:text-left">

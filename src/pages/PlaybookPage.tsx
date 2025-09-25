@@ -501,7 +501,7 @@ export default function PlaybookPage() {
       <WorkflowStatusBar />
 
       {busy && (
-        <div className="fixed bottom-4 right-4 text-xs py-1 px-2 rounded bg-black/70 text-text-inverse z-50">
+        <div className="fixed bottom-4 right-4 text-xs py-1 px-2 rounded bg-text-primary/70 text-text-inverse z-50">
           Working…
         </div>
       )}
